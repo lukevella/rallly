@@ -4,7 +4,7 @@ import { cn } from "@rallly/ui";
 import { VoteIcon } from "@rallly/ui/vote-icon";
 import * as m from "motion/react-m";
 import { DemoScreen } from "../hero-demo/demo-frame";
-import { ACCENT } from "./accent";
+import { ACCENT, ACCENT_EDGE } from "./accent";
 import type { Playback } from "./motion";
 import { EASE_OUT, EXIT } from "./motion";
 
@@ -35,87 +35,99 @@ export const DecideStepDemo = ({ playback }: { playback: Playback }) => {
   return (
     <DemoScreen className="space-y-1.5 p-4">
       {ROWS.map((row, rowIndex) => (
-        <m.div
+        <div
           // biome-ignore lint/suspicious/noArrayIndexKey: static wireframe rows
           key={rowIndex}
+          // The winner's edge is the accent gradient, so it has to be a padded
+          // backdrop behind the surface rather than a border. Every row uses
+          // the same shape so the metrics stay identical.
           className={cn(
-            "flex items-center justify-between gap-3 rounded-md border px-2.5 py-2",
-            row.winner ? "border-indigo-200" : "border-gray-200",
+            "rounded-md p-px",
+            row.winner ? ACCENT_EDGE : "bg-gray-200",
           )}
-          initial={false}
-          animate={{
-            backgroundColor:
-              on && row.winner ? "rgb(238 242 255)" : "rgba(255,255,255,0)",
-          }}
-          transition={
-            instant
-              ? { duration: 0 }
-              : on
-                ? { duration: 0.34, ease: EASE_OUT, delay: WINNER_DELAY }
-                : EXIT
-          }
         >
-          <div className="min-w-0 space-y-1.5">
-            <div
-              className={cn(
-                "h-1.5 w-16 rounded-full",
-                row.winner ? "bg-indigo-400" : "bg-gray-300",
-              )}
-            />
-            <div className="flex items-center gap-2">
-              <div className="h-1.5 w-10 rounded-full bg-gray-200" />
-              {row.winner ? (
-                <m.div
-                  className={cn("h-1.5 w-12 rounded-full", ACCENT)}
-                  initial={false}
-                  animate={{ opacity: on ? 1 : 0, scaleX: on ? 1 : 0.4 }}
-                  style={{ originX: 0 }}
-                  transition={
-                    instant
-                      ? { duration: 0 }
-                      : on
-                        ? {
-                            type: "spring",
-                            duration: 0.5,
-                            bounce: 0.24,
-                            delay: WINNER_DELAY + 0.08,
-                          }
-                        : EXIT
-                  }
-                />
-              ) : null}
-            </div>
-          </div>
-          <div className="flex shrink-0 items-center gap-1">
-            {row.votes.map((vote, voteIndex) => (
+          <div className="relative overflow-hidden rounded-[5px] bg-white">
+            {/* The winning row's wash lives in its own layer and fades in,
+                because a gradient cannot be animated the way a colour can. */}
+            {row.winner ? (
               <m.div
-                // biome-ignore lint/suspicious/noArrayIndexKey: static wireframe votes
-                key={voteIndex}
+                className={cn("pointer-events-none absolute inset-0", ACCENT)}
                 initial={false}
-                animate={
-                  on
-                    ? { opacity: 1, scale: 1, y: 0 }
-                    : { opacity: 0, scale: 0.82, y: -3 }
-                }
+                animate={{ opacity: on ? 0.08 : 0 }}
                 transition={
                   instant
                     ? { duration: 0 }
                     : on
-                      ? {
-                          type: "spring",
-                          duration: 0.46,
-                          bounce: 0.38,
-                          delay:
-                            voteIndex * VOTER_STAGGER + rowIndex * ROW_STAGGER,
-                        }
+                      ? { duration: 0.34, ease: EASE_OUT, delay: WINNER_DELAY }
                       : EXIT
                 }
-              >
-                <VoteIcon type={vote} className="size-3.5" />
-              </m.div>
-            ))}
+              />
+            ) : null}
+            <div className="relative flex items-center justify-between gap-3 px-2.5 py-2">
+              <div className="min-w-0 space-y-1.5">
+                <div
+                  className={cn(
+                    "h-1.5 w-16 rounded-full",
+                    row.winner ? ACCENT : "bg-gray-300",
+                  )}
+                />
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-10 rounded-full bg-gray-200" />
+                  {row.winner ? (
+                    <m.div
+                      className={cn("h-1.5 w-12 rounded-full", ACCENT)}
+                      initial={false}
+                      animate={{ opacity: on ? 1 : 0, scaleX: on ? 1 : 0.4 }}
+                      style={{ originX: 0 }}
+                      transition={
+                        instant
+                          ? { duration: 0 }
+                          : on
+                            ? {
+                                type: "spring",
+                                duration: 0.5,
+                                bounce: 0.24,
+                                delay: WINNER_DELAY + 0.08,
+                              }
+                            : EXIT
+                      }
+                    />
+                  ) : null}
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-1">
+                {row.votes.map((vote, voteIndex) => (
+                  <m.div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static wireframe votes
+                    key={voteIndex}
+                    initial={false}
+                    animate={
+                      on
+                        ? { opacity: 1, scale: 1, y: 0 }
+                        : { opacity: 0, scale: 0.82, y: -3 }
+                    }
+                    transition={
+                      instant
+                        ? { duration: 0 }
+                        : on
+                          ? {
+                              type: "spring",
+                              duration: 0.46,
+                              bounce: 0.38,
+                              delay:
+                                voteIndex * VOTER_STAGGER +
+                                rowIndex * ROW_STAGGER,
+                            }
+                          : EXIT
+                    }
+                  >
+                    <VoteIcon type={vote} className="size-3.5" />
+                  </m.div>
+                ))}
+              </div>
+            </div>
           </div>
-        </m.div>
+        </div>
       ))}
     </DemoScreen>
   );
