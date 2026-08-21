@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { SpaceTier } from "@rallly/database";
+import type { SpaceTier, SpaceType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { createSpaceDTO } from "@/features/space/data";
@@ -14,16 +14,22 @@ export async function createSpace({
   name = "Personal",
   ownerId,
   tier = isSelfHosted ? "pro" : "hobby",
+  spaceType,
+  industry,
 }: {
   name?: string;
   ownerId: string;
   tier?: SpaceTier;
+  spaceType?: SpaceType;
+  industry?: string | null;
 }) {
   const space = await prisma.space.create({
     data: {
       name,
       ownerId,
       tier,
+      spaceType,
+      industry,
       members: {
         create: {
           userId: ownerId,
@@ -46,16 +52,19 @@ export async function updateSpace({
   spaceId,
   name,
   primaryColor,
+  industry,
 }: {
   spaceId: string;
   name?: string;
   primaryColor?: string | null;
+  industry?: string | null;
 }) {
   await prisma.space.update({
     where: { id: spaceId },
     data: {
       ...(name !== undefined && { name }),
       ...(primaryColor !== undefined && { primaryColor }),
+      ...(industry !== undefined && { industry }),
     },
   });
 }

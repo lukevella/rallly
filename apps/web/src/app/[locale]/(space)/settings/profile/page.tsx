@@ -1,3 +1,4 @@
+import { subject } from "@casl/ability";
 import { FieldGroup } from "@rallly/ui/field";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -18,6 +19,9 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { getActiveSpace } from "@/features/space/loaders";
+import { defineAbilityForMember } from "@/features/space/member/ability";
+import { inferIndustry } from "@/features/space/utils";
 import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -33,11 +37,12 @@ import {
 } from "./components/delete-account-setting";
 import { EmailAddressSetting } from "./components/email-address-setting";
 import { ProfileSettings } from "./components/profile-settings";
+import { WorkDetailsSettings } from "./components/work-details-settings";
 
 export default async function Page() {
   // Read from the database — the pending deletion notice depends on
   // deletedAt, which the session snapshot doesn't carry.
-  const user = await getCurrentUser();
+  const [user, space] = await Promise.all([getCurrentUser(), getActiveSpace()]);
 
   if (!user) {
     redirect(
@@ -68,6 +73,41 @@ export default async function Page() {
               <ProfileSettings name={user.name} image={user.image} />
             </PageSectionContent>
           </PageSection>
+
+          {space.spaceType === "work" ? (
+            <PageSection variant="card">
+              <PageSectionHeader>
+                <PageSectionTitle>
+                  <Trans i18nKey="profileWork" defaults="Work" />
+                </PageSectionTitle>
+                <PageSectionDescription>
+                  <Trans
+                    i18nKey="profileWorkDescription"
+                    defaults="Optional. Tells us which professional groups use Rallly so we can improve it for yours. Clear either field at any time to withdraw it."
+                  />
+                </PageSectionDescription>
+              </PageSectionHeader>
+              <PageSectionContent>
+                <WorkDetailsSettings
+                  jobTitle={user.jobTitle}
+                  industry={space.industry}
+                  suggestedIndustry={
+                    space.industry
+                      ? undefined
+                      : inferIndustry({
+                          email: user.email,
+                          organizationName: space.name,
+                        })
+                  }
+                  spaceName={space.name}
+                  canEditIndustry={defineAbilityForMember({
+                    user: { id: user.id },
+                    space,
+                  }).can("update", subject("Space", space))}
+                />
+              </PageSectionContent>
+            </PageSection>
+          ) : null}
 
           <PageSection variant="card">
             <PageSectionHeader>

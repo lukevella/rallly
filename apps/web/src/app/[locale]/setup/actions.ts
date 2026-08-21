@@ -1,9 +1,14 @@
 "use server";
 
+import { headers } from "next/headers";
 import * as z from "zod";
 import { adoptOrphanedPolls } from "@/features/poll/mutations";
 import { getOwnedSpace } from "@/features/space/data";
 import { createSpace } from "@/features/space/mutations";
+import { industrySchema } from "@/features/space/schema";
+import { inferIndustry } from "@/features/space/utils";
+import { jobTitleSchema } from "@/features/user/schema";
+import authLib from "@/lib/auth";
 import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
@@ -12,6 +17,12 @@ const setupSpaceSchema = z.discriminatedUnion("spaceType", [
   z.object({
     spaceType: z.literal("work"),
     organizationName: z.string().min(1).max(100),
+    // Both optional: a required field against a guessed taxonomy forces bad
+    // matches, and a skipped one reads as "none of these fit", which is
+    // itself signal. Optionality is also what makes consent workable as the
+    // legal basis for holding them.
+    industry: industrySchema.optional(),
+    jobTitle: jobTitleSchema.optional(),
   }),
 ]);
 
@@ -44,10 +55,28 @@ export const setupSpaceAction = authActionClient
         ? parsedInput.organizationName
         : "Personal";
 
+    const jobTitle =
+      parsedInput.spaceType === "work" ? parsedInput.jobTitle : undefined;
+
+    const industry =
+      parsedInput.spaceType === "work" ? parsedInput.industry : undefined;
+
     const space = await createSpace({
       name,
       ownerId: ctx.user.id,
+      spaceType: parsedInput.spaceType,
+      industry,
     });
+
+    if (jobTitle) {
+      // Session-defined target, so the Better-Auth endpoint rather than a
+      // mutation: it writes the row and refreshes the session snapshot and
+      // cookie cache in one step.
+      await authLib.api.updateUser({
+        body: { jobTitle },
+        headers: await headers(),
+      });
+    }
 
     // Guest linking migrates polls without a space; pull them into the one
     // just created.
@@ -66,8 +95,28 @@ export const setupSpaceAction = authActionClient
         tier: space.tier,
         member_count: 1,
         seat_count: 1,
+        industry,
       },
     });
+
+    if (industry) {
+      // Re-run the classifier here rather than trusting an "inferred" value
+      // posted by the form: the pair is what makes classifier accuracy
+      // queryable, so that half has to be the server's own guess.
+      track(ctx.user, {
+        event: "industry_set",
+        properties: {
+          inferred_industry: inferIndustry({
+            email: ctx.user.email,
+            organizationName: name,
+          }),
+          final_industry: industry,
+        },
+        groups: {
+          space: space.id,
+        },
+      });
+    }
 
     track(ctx.user, {
       event: "space_setup",
@@ -80,6 +129,9 @@ export const setupSpaceAction = authActionClient
         $set: {
           name: ctx.user.name,
           timeZone: ctx.user.timeZone ?? undefined,
+          // Person property, so the segment can be joined against anything
+          // the user does later — not just this event.
+          ...(jobTitle ? { job_title: jobTitle } : {}),
         },
       },
       groups: {

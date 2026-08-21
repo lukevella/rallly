@@ -1,9 +1,14 @@
 model Space {
-  id              String    @id @default(uuid())
+  id              String     @id @default(uuid())
   name            String
   image           String?
-  ownerId         String    @map("owner_id")
-  tier            SpaceTier @default(hobby)
+  ownerId         String     @map("owner_id")
+  tier            SpaceTier  @default(hobby)
+  spaceType       SpaceType? @map("space_type")
+  // Self-declared sector, optional. Stored as a string rather than an enum
+  // because the taxonomy is expected to change; validation lives in
+  // features/space/schema.ts.
+  industry        String?
   primaryColor    String?   @map("primary_color")
   showBranding    Boolean   @default(false) @map("show_branding")
   hideAttribution Boolean   @default(false) @map("hide_attribution")
@@ -30,6 +35,13 @@ model Space {
 enum SpaceMemberRole {
   ADMIN
   MEMBER
+}
+
+enum SpaceType {
+  personal
+  work
+
+  @@map("space_types")
 }
 
 enum SpaceTier {

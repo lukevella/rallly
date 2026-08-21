@@ -3,6 +3,7 @@ import "server-only";
 import type {
   SpaceMemberRole as DBSpaceMemberRole,
   SpaceTier as DBSpaceTier,
+  SpaceType as DBSpaceType,
 } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
@@ -14,7 +15,7 @@ import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberDTO } from "@/features/space/member/types";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { AuthorizedSpaceId, SpaceDTO } from "@/features/space/types";
-import { fromDBRole } from "@/features/space/utils";
+import { fromDBRole, parseIndustry } from "@/features/space/utils";
 import { isSelfHosted } from "@/lib/constants";
 import { AppError } from "@/lib/errors/app-error";
 
@@ -146,6 +147,8 @@ export function createSpaceDTO(space: {
   primaryColor?: string | null;
   showBranding: boolean;
   hideAttribution: boolean;
+  spaceType?: DBSpaceType | null;
+  industry?: string | null;
   memberCount: number;
   seatCount: number;
 }): SpaceDTO {
@@ -161,6 +164,8 @@ export function createSpaceDTO(space: {
     primaryColor: space.primaryColor ?? undefined,
     showBranding: space.showBranding,
     hideAttribution: space.hideAttribution,
+    spaceType: space.spaceType ?? undefined,
+    industry: parseIndustry(space.industry),
   };
 }
 
@@ -230,6 +235,8 @@ export const listSpacesForUser = cache(async (userId: string) => {
           primaryColor: true,
           showBranding: true,
           hideAttribution: true,
+          spaceType: true,
+          industry: true,
           _count: { select: { members: true } },
           subscriptions: {
             where: { active: true },

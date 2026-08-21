@@ -28,6 +28,7 @@ import { linkAnonymousUser } from "@/features/auth/mutations";
 import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
 import type { UserDTO } from "@/features/user/schema";
+import { jobTitleFieldSchema } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
@@ -252,6 +253,17 @@ export const authLib = betterAuth({
         type: "number",
         input: true,
         required: false,
+      },
+      // `input: true` is what lets the field be written at all — the update
+      // endpoint rejects fields marked otherwise — so it is reachable from
+      // authClient.updateUser too. The validator bounds it there as well as
+      // on the server actions that normally write it, and trims what it
+      // stores: Better-Auth persists the value the validator returns.
+      jobTitle: {
+        type: "string",
+        input: true,
+        required: false,
+        validator: { input: jobTitleFieldSchema },
       },
     },
   },
@@ -605,6 +617,7 @@ export const getSessionState = cache(async (): Promise<SessionState> => {
         timeZone: session.user.timeZone || undefined,
         timeFormat: parseTimeFormat(session.user.timeFormat),
         weekStart: session.user.weekStart ?? undefined,
+        jobTitle: session.user.jobTitle ?? undefined,
       };
 
       return {

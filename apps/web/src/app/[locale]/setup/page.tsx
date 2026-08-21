@@ -65,6 +65,7 @@ export default async function SetupPage(props: {
               defaultName={user.name}
               defaultTimeZone={user.timeZone ?? device.timeZone}
               defaultTimeFormat={user.timeFormat ?? device.timeFormat}
+              email={user.email}
             />
           </div>
         </article>

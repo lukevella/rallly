@@ -18,6 +18,7 @@ import {
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PasswordSetupAlert } from "./password-setup-alert";
+import { WorkDetailsAlert } from "./work-details-alert";
 
 export async function DashboardHome({
   openPollCount,
@@ -26,6 +27,7 @@ export async function DashboardHome({
   seatCount,
   hasNoAccounts,
   canManageBilling,
+  needsWorkDetails,
 }: {
   openPollCount: number;
   upcomingEventCount: number;
@@ -33,6 +35,7 @@ export async function DashboardHome({
   seatCount: number;
   hasNoAccounts: boolean;
   canManageBilling: boolean;
+  needsWorkDetails: boolean;
 }) {
   const { t, i18n } = await getTranslation();
 
@@ -47,6 +50,7 @@ export async function DashboardHome({
         {hasNoAccounts && isFeatureEnabled("emailLogin") ? (
           <PasswordSetupAlert />
         ) : null}
+        {needsWorkDetails ? <WorkDetailsAlert /> : null}
         <div className="space-y-4">
           <h2 className="text-muted-foreground text-sm">
             <Trans

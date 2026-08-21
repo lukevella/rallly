@@ -19,6 +19,11 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { setupSpaceAction } from "@/app/[locale]/setup/actions";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { IndustrySelect } from "@/features/space/components/industry-select";
+import { industries } from "@/features/space/constants";
+import { inferIndustry } from "@/features/space/utils";
+import { JobTitleSelect } from "@/features/user/components/job-title-select";
+import { JOB_TITLE_OTHER_MAX_LENGTH } from "@/features/user/constants";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
@@ -37,6 +42,11 @@ function useSetupFormSchema() {
         timeFormat: z.enum(["hours12", "hours24"]),
         spaceType: z.enum(["personal", "work"]),
         organizationName: z.string().max(100),
+        // Both optional: a required field against a guessed taxonomy forces
+        // bad matches, and a skipped one reads as "none of these fit", which
+        // is itself signal.
+        industry: z.enum(industries).nullable(),
+        jobTitle: z.string().max(JOB_TITLE_OTHER_MAX_LENGTH).nullable(),
       })
       .refine(
         (data) =>
@@ -80,10 +90,17 @@ export function SetupForm({
   defaultName,
   defaultTimeZone,
   defaultTimeFormat,
+  email,
 }: {
   defaultName: string;
   defaultTimeZone?: string;
   defaultTimeFormat?: TimeFormat;
+  /**
+   * Only used to guess an industry. The server runs the same classifier on
+   * the way in, so nothing here is trusted — this just lets the guess follow
+   * the organization name as it is typed, which the server can't see yet.
+   */
+  email: string;
 }) {
   const { t } = useTranslation();
   const { locale } = useLocale();
@@ -98,10 +115,29 @@ export function SetupForm({
       timeFormat: defaultTimeFormat ?? getLocaleDefaults(locale).timeFormat,
       spaceType: "personal" as const,
       organizationName: "",
+      industry: null,
+      jobTitle: null,
     },
   });
 
   const spaceType = form.watch("spaceType");
+  const organizationName = form.watch("organizationName");
+
+  // The inferred value is a prefill, not an answer: once the user touches the
+  // field it stops moving, and what gets stored is whatever they confirmed.
+  const industryTouched = React.useRef(false);
+  const setIndustryValue = form.setValue;
+
+  React.useEffect(() => {
+    if (industryTouched.current) {
+      return;
+    }
+
+    setIndustryValue(
+      "industry",
+      inferIndustry({ email, organizationName }) ?? null,
+    );
+  }, [email, organizationName, setIndustryValue]);
 
   return (
     <Form {...form}>
@@ -113,6 +149,8 @@ export function SetupForm({
             timeFormat,
             spaceType,
             organizationName,
+            industry,
+            jobTitle,
           }) => {
             const res = await authClient.updateUser({
               name,
@@ -134,7 +172,12 @@ export function SetupForm({
             // redirects onward while the button stays loading.
             await setupSpace.executeAsync(
               spaceType === "work"
-                ? { spaceType, organizationName: organizationName.trim() }
+                ? {
+                    spaceType,
+                    organizationName: organizationName.trim(),
+                    industry: industry ?? undefined,
+                    jobTitle: jobTitle ?? undefined,
+                  }
                 : { spaceType },
             );
           },
@@ -255,32 +298,85 @@ export function SetupForm({
           )}
         />
         {spaceType === "work" ? (
-          <FormField
-            control={form.control}
-            name="organizationName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <Trans
-                    i18nKey="organizationName"
-                    defaults="Organization name"
-                  />
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    data-1p-ignore
-                    autoFocus={true}
-                    placeholder={t("organizationNamePlaceholder", {
-                      defaultValue: "e.g. Acme Corp",
-                    })}
-                    disabled={form.formState.isSubmitting}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <>
+            <FormField
+              control={form.control}
+              name="organizationName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans
+                      i18nKey="organizationName"
+                      defaults="Organization name"
+                    />
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      data-1p-ignore
+                      autoFocus={true}
+                      placeholder={t("organizationNamePlaceholder", {
+                        defaultValue: "e.g. Acme Corp",
+                      })}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Industry first: confirming a sector primes a more precise
+                answer to the role question below. */}
+            <FormField
+              control={form.control}
+              name="industry"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="industry">
+                    <Trans i18nKey="industry" defaults="Industry" />
+                    <span className="ml-1 font-normal text-muted-foreground">
+                      <Trans i18nKey="optional" defaults="(optional)" />
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <IndustrySelect
+                      id="industry"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        industryTouched.current = true;
+                        field.onChange(value);
+                      }}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="jobTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="jobTitle">
+                    <Trans i18nKey="jobTitle" defaults="Your role" />
+                    <span className="ml-1 font-normal text-muted-foreground">
+                      <Trans i18nKey="optional" defaults="(optional)" />
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <JobTitleSelect
+                      id="jobTitle"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
         ) : null}
         {form.formState.errors.root?.message ? (
           <FormMessage>{form.formState.errors.root.message}</FormMessage>

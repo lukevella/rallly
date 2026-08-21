@@ -24,6 +24,7 @@ import {
   updateSpaceSchema,
   updateSpaceShowBrandingSchema,
 } from "@/features/space/schema";
+import { inferIndustry } from "@/features/space/utils";
 import { setActiveSpace } from "@/features/user/mutations";
 import { isSelfHosted } from "@/lib/constants";
 import { AppError } from "@/lib/errors/app-error";
@@ -195,14 +196,37 @@ export const updateSpaceAction = authActionClient
       spaceId: space.id,
       name: parsedInput.name,
       primaryColor: parsedInput.primaryColor,
+      industry: parsedInput.industry,
     });
 
-    if (parsedInput.name) {
+    if (parsedInput.name || parsedInput.industry !== undefined) {
       identifyGroup({
         groupType: "space",
         groupKey: space.id,
         properties: {
-          name: parsedInput.name,
+          ...(parsedInput.name ? { name: parsedInput.name } : {}),
+          ...(parsedInput.industry !== undefined
+            ? { industry: parsedInput.industry }
+            : {}),
+        },
+      });
+    }
+
+    if (parsedInput.industry !== undefined) {
+      // Re-run the classifier here rather than trusting an "inferred" value
+      // posted by the form: the pair is what makes classifier accuracy
+      // queryable, so that half has to be the server's own guess.
+      track(ctx.user, {
+        event: "industry_set",
+        properties: {
+          inferred_industry: inferIndustry({
+            email: ctx.user.email,
+            organizationName: parsedInput.name ?? space.name,
+          }),
+          final_industry: parsedInput.industry,
+        },
+        groups: {
+          space: space.id,
         },
       });
     }

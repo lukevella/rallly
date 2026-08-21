@@ -7,7 +7,7 @@ export default async function PrivacyPolicy() {
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Privacy Policy</h1>
-      <p>Last updated: 1 August 2023</p>
+      <p>Last updated: 21 August 2026</p>
       <p>
         At rallly.co, we take your privacy seriously. This privacy policy
         explains how we collect, use, and disclose your personal data, and your
@@ -18,12 +18,12 @@ export default async function PrivacyPolicy() {
       <h2>Information we collect</h2>
 
       <p>
-        We store personal data (names and email addresses) on
-        DigitalOcean&apos;s servers, which are located in the United States. The
-        reason for storing data in the US is to improve performance for users by
-        having the data stored closer to where our compute services are running.
-        By using our services, you acknowledge that your personal data may be
-        transferred to and stored in the United States.
+        We store personal data (names and email addresses) on Neon&apos;s
+        servers, which are located in the United States. The reason for storing
+        data in the US is to improve performance for users by having the data
+        stored closer to where our compute services are running. By using our
+        services, you acknowledge that your personal data may be transferred to
+        and stored in the United States.
       </p>
 
       <p>
@@ -41,6 +41,33 @@ export default async function PrivacyPolicy() {
         website.
       </p>
 
+      <h2>Optional information about your work</h2>
+
+      <p>
+        If you set up an account for work, we ask for two further pieces of
+        information about you, both self-declared:
+      </p>
+
+      <ul>
+        <li>Your role, chosen from a list or described in your own words.</li>
+        <li>The sector your organisation works in.</li>
+      </ul>
+
+      <p>
+        We use this to understand which professional groups use Rallly, so we
+        can improve the product for them and focus our documentation and
+        marketing on the people it is written for. This information is also
+        shared with Posthog, our analytics processor, for the same purpose.
+      </p>
+
+      <p>
+        Both fields are optional. You can skip them, leave them blank, or change
+        or clear them at any time from your{" "}
+        <a href="https://app.rallly.co/settings/profile">profile settings</a>.
+        Neither is required to use Rallly, and skipping them has no effect on
+        the service you receive.
+      </p>
+
       <h2>Legal basis for processing</h2>
 
       <p>
@@ -49,6 +76,13 @@ export default async function PrivacyPolicy() {
         your personal data as described in this privacy policy. We process your
         personal data to provide you with our services, and to fulfill our
         contractual obligations to you.
+      </p>
+
+      <p>
+        Your role and your organisation&apos;s sector are processed on the basis
+        of consent alone, since they are optional and are not needed to deliver
+        the service. You give that consent by filling either field in, and you
+        can withdraw it at any time by clearing them.
       </p>
 
       <h2>Retention of personal data</h2>
