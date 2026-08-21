@@ -120,11 +120,11 @@ export const DesktopDemo = ({
                 <Maximize2Icon className="size-4" />
               </div>
             </div>
-            {/* Sized to fit the longest participant name across every preset
-                without truncating: ~217px of text plus 62px of avatar, gap and
-                padding, with a little margin for font rendering differences.
-                The name span needs flex-1 to actually claim this width. */}
-            <div className="grid grid-cols-[292px_repeat(8,84px)] border-gray-100 border-t text-center">
+            {/* 235px matches the name column in the app's desktop poll, so the
+                demo reads as a replica of the real thing. Preset names are kept
+                short enough to fit it; the name span needs flex-1 to claim the
+                width. */}
+            <div className="grid grid-cols-[235px_repeat(8,84px)] border-gray-100 border-t text-center">
               <div />
               {monthGroups.map((group) => (
                 <div
