@@ -10,7 +10,10 @@ export function Mention({
   delay?: number;
 }>) {
   return (
-    <FadeIn delay={delay} className="flex flex-col space-y-4 rounded-md">
+    <FadeIn
+      delay={delay}
+      className="flex snap-start flex-col space-y-4 rounded-md"
+    >
       <div className="flex items-start justify-between">{logo}</div>
       <p className="grow text-base">{children}</p>
     </FadeIn>
@@ -18,5 +21,16 @@ export function Mention({
 }
 
 export function Mentions({ children }: { children: React.ReactNode }) {
-  return <div className="grid gap-8 md:grid-cols-4">{children}</div>;
+  return (
+    // Below xl the four mentions stay side by side and scroll horizontally,
+    // bleeding past the page gutters so the next one peeks in. The column width
+    // is pinned to what a mention gets in the xl grid — the page container maxes
+    // out at 72rem with 1.5rem gutters, so (69rem - 3 * 2rem) / 4 = 15.75rem —
+    // which keeps every quote breaking across the same lines at every width.
+    // The pb/-mb pair gives the mentions' fade-in-up room to land inside the
+    // scroll port, which would otherwise show a vertical scrollbar for it.
+    <div className="-mx-4 -mb-5 grid snap-x snap-mandatory scroll-px-4 grid-cols-[repeat(4,15.75rem)] gap-4 overflow-x-auto overflow-y-hidden px-4 pb-5 sm:-mx-6 sm:scroll-px-6 sm:px-6 md:gap-8 xl:mx-0 xl:mb-0 xl:grid-cols-4 xl:overflow-visible xl:px-0 xl:pb-0">
+      {children}
+    </div>
+  );
 }
