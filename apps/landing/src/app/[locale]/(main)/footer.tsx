@@ -212,6 +212,58 @@ export const Footer = async ({ locale }: { locale: string }) => {
                 />
               </LinkBase>
             </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/scheduling-for/committees"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="committees"
+                  defaults="Committees and boards"
+                />
+              </LinkBase>
+            </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/scheduling-for/sports-clubs"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="sportsClubs"
+                  defaults="Sports clubs"
+                />
+              </LinkBase>
+            </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/scheduling-for/thesis-defense"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="thesisDefense"
+                  defaults="Thesis defenses"
+                />
+              </LinkBase>
+            </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/scheduling-for/legal"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="legal"
+                  defaults="Law firms and mediators"
+                />
+              </LinkBase>
+            </li>
           </ul>
         </div>
       </div>

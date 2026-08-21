@@ -1,6 +1,7 @@
 {
   "blog": "Blog",
   "close": "Close",
+  "committees": "Committees and boards",
   "compare": "Compare",
   "cookiePolicy": "Cookie policy",
   "discussions": "Discussions",
@@ -14,6 +15,7 @@
   "getStarted": "Get started",
   "goToHome": "Go to home",
   "language": "Language",
+  "legal": "Law firms and mediators",
   "licensingThankYouGoHomeLink": "Return to home",
   "licensingThankYouLicense": "Next steps",
   "licensingThankYouLicenseEmailed": "Your license key has been sent to the email address you provided during checkout. Please check your inbox.",
@@ -32,8 +34,10 @@
   "resources": "Resources",
   "schedulingFor": "Scheduling for",
   "schedulingPoll": "Scheduling poll",
+  "sportsClubs": "Sports clubs",
   "status": "Status",
   "support": "Support",
   "termsOfUse": "Terms of use",
+  "thesisDefense": "Thesis defenses",
   "when2MeetAlternative": "When2Meet alternative"
 }
