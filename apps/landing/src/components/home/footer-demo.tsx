@@ -36,6 +36,12 @@ const EXIT_MS = 700;
 // viewport tall enough to hold the whole footer at once.
 const REVEAL_RATIO = 0.35;
 
+// Held before the card fades in, so the reveal reads as its own beat rather
+// than something that already happened while the slot was scrolling in. Only
+// on the way in: scrolling away fades out immediately, because a card that
+// lingers after it should have gone reads as a stutter rather than a beat.
+const REVEAL_DELAY_MS = 250;
+
 /**
  * Watches the slot and reports two separate things.
  *
@@ -146,9 +152,13 @@ function useCycle(enabled: boolean) {
 export function FooterDemo({ className }: { className?: string }) {
   const shouldReduceMotion = useReducedMotion();
   const ref = React.useRef<HTMLDivElement>(null);
-  // False on the server and in browsers without IntersectionObserver, where
-  // the cycle can never run and the card must show its finished state.
-  const [hasObserver, setHasObserver] = React.useState(false);
+  // null until the client has looked: false only in browsers without
+  // IntersectionObserver, where the cycle can never run and the card must show
+  // its finished state. Starting at null rather than false matters for the
+  // reveal — a false first paint would show the solved card for one frame
+  // before the effect hid it again, which is exactly the flash the fade is
+  // supposed to replace.
+  const [hasObserver, setHasObserver] = React.useState<boolean | null>(null);
   React.useEffect(() => {
     setHasObserver(typeof IntersectionObserver !== "undefined");
   }, []);
@@ -162,14 +172,21 @@ export function FooterDemo({ className }: { className?: string }) {
   const { visibleRows, showTimes, decided: cycleDecided } = useCycle(animated);
 
   // Show the solved poll only when no animation will play: reduced motion, or
-  // no IntersectionObserver at all. Otherwise the cycle owns the card from the
-  // first render, so it always begins on an empty card rather than snapping
-  // back from a populated one when the observer reports.
-  const solved = shouldReduceMotion || !hasObserver;
+  // a confirmed absence of IntersectionObserver. Otherwise the cycle owns the
+  // card from the first render, so it always begins on an empty card rather
+  // than snapping back from a populated one when the observer reports.
+  const solved = shouldReduceMotion || hasObserver === false;
 
   const rows = solved ? VOTES.length : visibleRows;
   const times = solved ? true : showTimes;
   const decided = solved ? true : cycleDecided;
+
+  // The card starts hidden and only appears once the observer says the slot is
+  // properly on screen, so scrolling down to the footer always shows the fade
+  // rather than a card that was already sitting there. `solved` is the escape
+  // hatch: with reduced motion or no observer nothing will ever reveal it, so
+  // it has to be visible from the first paint.
+  const shown = solved || revealed === true;
 
   return (
     // The observed slot itself never moves or fades. The reveal lives on the
@@ -215,13 +232,13 @@ export function FooterDemo({ className }: { className?: string }) {
         className={cn(
           "w-full max-w-sm space-y-1.5 rounded-xl border border-border-muted bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm",
           // Rises into place as the slot scrolls in and settles back as it
-          // scrolls away. `revealed === false` is the only state that hides it,
-          // so a missing observer or reduced motion leaves it plainly visible.
+          // scrolls away.
           "transition-all duration-700 ease-out",
-          revealed === false
-            ? "translate-y-4 opacity-0"
-            : "translate-y-0 opacity-100",
+          shown ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
         )}
+        // Only the entrance waits. Leaving has no delay, so scrolling away
+        // starts clearing the card at once.
+        style={{ transitionDelay: shown ? `${REVEAL_DELAY_MS}ms` : "0ms" }}
       >
         {/* The proposed times */}
         <div className="flex items-center gap-1.5">
@@ -284,9 +301,11 @@ export function FooterDemo({ className }: { className?: string }) {
                   key={column}
                   className={cn(
                     "flex h-5 flex-1 items-center justify-center rounded-md transition-all duration-500",
-                    // The winning column picks up a light fill so the whole
-                    // column, not just its header, reads as the agreed time.
-                    decided && column === WINNING_COLUMN && "bg-gray-100",
+                    // The winning column picks up a fill so the whole column,
+                    // not just its header, reads as the agreed time. Same
+                    // gray-200 as the name pills, so the card keeps one weight
+                    // of grey rather than introducing a second, lighter one.
+                    decided && column === WINNING_COLUMN && "bg-gray-200",
                     // Everything but the winning column recedes once decided,
                     // so the eye lands on the agreed time.
                     decided && column !== WINNING_COLUMN && "opacity-40",
