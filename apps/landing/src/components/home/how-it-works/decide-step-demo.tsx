@@ -14,7 +14,10 @@ import { EASE_OUT, EXIT } from "./motion";
 // section.
 //
 // On play the votes arrive a participant at a time, so each column drops in as
-// one response, and the winning row lights up once they're all in.
+// one response. Until they are all in every option looks the same: the winning
+// row starts as grey as the rest and only takes on the accent once the last
+// vote lands, so the demo shows the decision being made rather than announcing
+// it up front.
 const ROWS: { votes: ("yes" | "ifNeedBe" | "no")[]; winner: boolean }[] = [
   { votes: ["yes", "yes", "yes", "yes"], winner: true },
   { votes: ["yes", "no", "yes", "no"], winner: false },
@@ -32,45 +35,56 @@ const WINNER_DELAY = ROWS[0].votes.length * VOTER_STAGGER + 0.12;
 export const DecideStepDemo = ({ playback }: { playback: Playback }) => {
   const on = playback !== "idle";
   const instant = playback === "done";
+  // Every part of the winner's accent — edge, wash, label — arrives on the
+  // same beat, so the row reads as one thing lighting up.
+  const accentIn = instant
+    ? { duration: 0 }
+    : on
+      ? { duration: 0.34, ease: EASE_OUT, delay: WINNER_DELAY }
+      : EXIT;
   return (
     <DemoScreen className="space-y-1.5 p-4">
       {ROWS.map((row, rowIndex) => (
         <div
           // biome-ignore lint/suspicious/noArrayIndexKey: static wireframe rows
           key={rowIndex}
-          // The winner's edge is the accent gradient, so it has to be a padded
-          // backdrop behind the surface rather than a border. Every row uses
-          // the same shape so the metrics stay identical.
-          className={cn(
-            "rounded-md p-px",
-            row.winner ? ACCENT_EDGE : "bg-gray-200",
-          )}
+          // A gradient cannot live in border-color, so the edge is a padded
+          // backdrop behind the surface. Every row keeps the same shape, and
+          // the winner's gradient edge cross-fades over the grey one.
+          className="relative rounded-md bg-gray-200 p-px"
         >
+          {row.winner ? (
+            <m.div
+              className={cn(
+                "pointer-events-none absolute inset-0 rounded-md",
+                ACCENT_EDGE,
+              )}
+              initial={false}
+              animate={{ opacity: on ? 1 : 0 }}
+              transition={accentIn}
+            />
+          ) : null}
           <div className="relative overflow-hidden rounded-[5px] bg-white">
-            {/* The winning row's wash lives in its own layer and fades in,
-                because a gradient cannot be animated the way a colour can. */}
             {row.winner ? (
               <m.div
                 className={cn("pointer-events-none absolute inset-0", ACCENT)}
                 initial={false}
                 animate={{ opacity: on ? 0.08 : 0 }}
-                transition={
-                  instant
-                    ? { duration: 0 }
-                    : on
-                      ? { duration: 0.34, ease: EASE_OUT, delay: WINNER_DELAY }
-                      : EXIT
-                }
+                transition={accentIn}
               />
             ) : null}
             <div className="relative flex items-center justify-between gap-3 px-2.5 py-2">
               <div className="min-w-0 space-y-1.5">
-                <div
-                  className={cn(
-                    "h-1.5 w-16 rounded-full",
-                    row.winner ? ACCENT : "bg-gray-300",
-                  )}
-                />
+                <div className="relative h-1.5 w-16 overflow-hidden rounded-full bg-gray-300">
+                  {row.winner ? (
+                    <m.div
+                      className={cn("absolute inset-0", ACCENT)}
+                      initial={false}
+                      animate={{ opacity: on ? 1 : 0 }}
+                      transition={accentIn}
+                    />
+                  ) : null}
+                </div>
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-10 rounded-full bg-gray-200" />
                   {row.winner ? (
