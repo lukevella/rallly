@@ -1,8 +1,7 @@
-import { subject } from "@casl/ability";
-import type { Prisma } from "@rallly/database";
-import { prisma } from "@rallly/database";
 import { UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { connection } from "next/server";
+import { Suspense } from "react";
 import * as z from "zod";
 import {
   EmptyState,
@@ -19,88 +18,15 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { StackedList } from "@/components/stacked-list";
-import { defineAbilityFor } from "@/features/user/ability";
-import { requireAdmin } from "@/features/user/loaders";
+import { loadUsers } from "@/features/user/loaders";
+import { inactivityPeriodSchema, userSortSchema } from "@/features/user/schema";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { UserFilters } from "./user-filters";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";
+import { UsersListSkeleton } from "./users-list-skeleton";
 import { UsersTabbedView } from "./users-tabbed-view";
-
-async function loadData({
-  page,
-  pageSize,
-  q,
-  role,
-}: {
-  page: number;
-  pageSize: number;
-  q?: string;
-  role?: "admin" | "user";
-}) {
-  const user = await requireAdmin();
-
-  const where: Prisma.UserWhereInput = {
-    isAnonymous: false,
-  };
-
-  if (q) {
-    where.OR = [
-      {
-        name: {
-          contains: q,
-          mode: "insensitive",
-        },
-      },
-      {
-        email: {
-          contains: q,
-          mode: "insensitive",
-        },
-      },
-    ];
-  }
-
-  if (role) {
-    where.role = role;
-  }
-
-  const [allUsers, totalUsers] = await Promise.all([
-    prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        role: true,
-        banned: true,
-      },
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-      where,
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
-    prisma.user.count({
-      where,
-    }),
-  ]);
-
-  const ability = defineAbilityFor({ role: user.role, id: user.id });
-
-  return {
-    adminUser: user,
-    allUsers: allUsers.map((u) => ({
-      ...u,
-      image: u.image ?? undefined,
-      canChangeRole: ability.can("update", subject("User", u), "role"),
-      canBan: ability.can("update", subject("User", u), "banned"),
-      canDelete: ability.can("delete", subject("User", u)),
-    })),
-    totalUsers,
-  };
-}
 
 const searchParamsSchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -108,22 +34,82 @@ const searchParamsSchema = z.object({
 });
 
 const roleSchema = z.enum(["admin", "user"]).optional().catch(undefined);
+const inactiveForSchema = inactivityPeriodSchema.optional().catch(undefined);
+const sortSchema = userSortSchema.catch("newest");
 
-export default async function AdminPage(props: {
+async function UsersList({
+  searchParams: searchParamsPromise,
+}: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const searchParams = await props.searchParams;
-  const { page, pageSize } = searchParamsSchema.parse(searchParams);
+  // Inactivity is classified against the viewer's present, so the read is
+  // request-bound rather than prerenderable.
+  await connection();
 
-  const { allUsers, totalUsers } = await loadData({
+  const searchParams = await searchParamsPromise;
+  const { page, pageSize } = searchParamsSchema.parse(searchParams);
+  const inactiveFor = inactiveForSchema.parse(searchParams.inactiveFor);
+  const sort = sortSchema.parse(searchParams.sort);
+
+  const { users, totalUsers } = await loadUsers({
     page,
     pageSize,
     q: searchParams.q ? String(searchParams.q) : undefined,
     role: roleSchema.parse(searchParams.role),
+    inactiveFor,
+    sort,
   });
 
-  const totalItems = totalUsers;
+  if (users.length === 0) {
+    return (
+      <EmptyState className="py-16">
+        <EmptyStateIcon>
+          <UsersIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="noUsers" defaults="No users found" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="noUsersDescription"
+            defaults="Try adjusting your search"
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
 
+  return (
+    <div className="space-y-4">
+      <StackedList className="text-sm">
+        {users.map((user) => (
+          <UserRow
+            key={user.id}
+            name={user.name}
+            email={user.email}
+            userId={user.id}
+            image={user.image}
+            role={user.role}
+            banned={user.banned}
+            lastSeenAt={user.lastSeenAt}
+            canChangeRole={user.canChangeRole}
+            canBan={user.canBan}
+            canDelete={user.canDelete}
+          />
+        ))}
+      </StackedList>
+      <Pagination
+        currentPage={page}
+        totalItems={totalUsers}
+        pageSize={pageSize}
+      />
+    </div>
+  );
+}
+
+export default async function AdminPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   return (
     <SettingsPage>
       <SettingsPageHeader>
@@ -139,48 +125,14 @@ export default async function AdminPage(props: {
       </SettingsPageHeader>
       <SettingsPageContent>
         <div className="space-y-4">
-          <UserSearchInput />
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <UserSearchInput />
+            <UserFilters />
+          </div>
           <UsersTabbedView>
-            {allUsers.length > 0 ? (
-              <div className="space-y-4">
-                <StackedList className="text-sm">
-                  {allUsers.map((user) => (
-                    <UserRow
-                      key={user.id}
-                      name={user.name}
-                      email={user.email}
-                      userId={user.id}
-                      image={user.image}
-                      role={user.role}
-                      banned={user.banned}
-                      canChangeRole={user.canChangeRole}
-                      canBan={user.canBan}
-                      canDelete={user.canDelete}
-                    />
-                  ))}
-                </StackedList>
-                <Pagination
-                  currentPage={page}
-                  totalItems={totalItems}
-                  pageSize={pageSize}
-                />
-              </div>
-            ) : (
-              <EmptyState className="py-16">
-                <EmptyStateIcon>
-                  <UsersIcon />
-                </EmptyStateIcon>
-                <EmptyStateTitle>
-                  <Trans i18nKey="noUsers" defaults="No users found" />
-                </EmptyStateTitle>
-                <EmptyStateDescription>
-                  <Trans
-                    i18nKey="noUsersDescription"
-                    defaults="Try adjusting your search"
-                  />
-                </EmptyStateDescription>
-              </EmptyState>
-            )}
+            <Suspense fallback={<UsersListSkeleton />}>
+              <UsersList searchParams={props.searchParams} />
+            </Suspense>
           </UsersTabbedView>
         </div>
       </SettingsPageContent>

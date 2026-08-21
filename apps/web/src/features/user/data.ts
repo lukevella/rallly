@@ -1,8 +1,14 @@
 import "server-only";
 
-import type { User } from "@rallly/database";
+import type { Prisma, User } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import type { UserDTO } from "@/features/user/schema";
+import type {
+  InactivityPeriod,
+  UserDTO,
+  UserRole,
+  UserSort,
+} from "@/features/user/schema";
+import { getInactivityCutoff } from "@/features/user/utils";
 
 export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
@@ -99,3 +105,70 @@ export const getUserHasNoAccounts = async (userId: string) => {
   });
   return accountCount === 0;
 };
+
+/**
+ * Paginated user directory for the control panel.
+ *
+ * `inactiveFor` is classified against the current time, so callers must keep
+ * this read request-bound (behind connection()) rather than prerendering it.
+ */
+export async function getUsers({
+  page,
+  pageSize,
+  q,
+  role,
+  inactiveFor,
+  sort,
+}: {
+  page: number;
+  pageSize: number;
+  q?: string;
+  role?: UserRole;
+  inactiveFor?: InactivityPeriod;
+  sort: UserSort;
+}) {
+  const where: Prisma.UserWhereInput = {
+    isAnonymous: false,
+  };
+
+  if (q) {
+    where.OR = [
+      { name: { contains: q, mode: "insensitive" } },
+      { email: { contains: q, mode: "insensitive" } },
+    ];
+  }
+
+  if (role) {
+    where.role = role;
+  }
+
+  if (inactiveFor) {
+    where.lastSeenAt = { lt: getInactivityCutoff(inactiveFor, new Date()) };
+  }
+
+  const orderBy: Prisma.UserOrderByWithRelationInput =
+    sort === "leastRecentlyActive"
+      ? { lastSeenAt: "asc" }
+      : { createdAt: "desc" };
+
+  const [users, totalUsers] = await Promise.all([
+    prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+        banned: true,
+        lastSeenAt: true,
+      },
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      where,
+      orderBy,
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  return { users, totalUsers };
+}

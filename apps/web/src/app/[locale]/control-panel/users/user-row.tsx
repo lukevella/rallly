@@ -29,6 +29,7 @@ import { StackedListItem } from "@/components/stacked-list";
 import { changeRoleAction, unbanUserAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
 import { Trans, useTranslation } from "@/i18n/client";
+import { RelativeTime } from "@/lib/datetime/relative-time";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BanUserDialog } from "./dialogs/ban-user-dialog";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
@@ -40,6 +41,7 @@ export function UserRow({
   image,
   role,
   banned,
+  lastSeenAt,
   canChangeRole,
   canBan,
   canDelete,
@@ -50,6 +52,7 @@ export function UserRow({
   image?: string;
   role: "admin" | "user";
   banned: boolean;
+  lastSeenAt: Date;
   canChangeRole: boolean;
   canBan: boolean;
   canDelete: boolean;
@@ -75,6 +78,17 @@ export function UserRow({
         <div className="min-w-0 flex-1">
           <div className="font-semibold">{name}</div>
           <div className="truncate text-muted-foreground">{email}</div>
+          {/* Inactivity is what this screen is for, so it stays visible on
+              small screens where the dedicated column is dropped. */}
+          <div className="text-muted-foreground sm:hidden">
+            <Trans
+              i18nKey="userLastActive"
+              defaults="Active <relativeTime />"
+              components={{
+                relativeTime: <RelativeTime value={lastSeenAt} />,
+              }}
+            />
+          </div>
         </div>
         <div className="flex items-center gap-4">
           {banned ? (
@@ -82,6 +96,15 @@ export function UserRow({
               <Trans i18nKey="banned" defaults="Banned" />
             </Badge>
           ) : null}
+          <div className="hidden text-muted-foreground sm:block">
+            <Trans
+              i18nKey="userLastActive"
+              defaults="Active <relativeTime />"
+              components={{
+                relativeTime: <RelativeTime value={lastSeenAt} />,
+              }}
+            />
+          </div>
           <span className="capitalize">{role}</span>
           <DropdownMenu>
             <DropdownMenuTrigger
