@@ -30,13 +30,30 @@ const setupSpaceSchema = z.discriminatedUnion("spaceType", [
  * Creates the user's space at the end of onboarding — registration doesn't
  * create one, so this is where every account gets theirs. Accounts that
  * already own a space (pre-existing accounts sent through setup to backfill
- * profile fields, or a re-submit) only retry poll adoption: setup never
- * renames or duplicates an existing space.
+ * profile fields, or a re-submit) only re-persist the job title and retry
+ * poll adoption: setup never renames or duplicates an existing space.
  */
 export const setupSpaceAction = authActionClient
   .metadata({ actionName: "setup_space" })
   .inputSchema(setupSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
+    const jobTitle =
+      parsedInput.spaceType === "work" ? parsedInput.jobTitle : undefined;
+
+    if (jobTitle) {
+      // Written before the space, and before the early return below, so a
+      // retry after a partial failure still persists it — the answer belongs
+      // to the person, not to the space being created.
+      //
+      // Session-defined target, so the Better-Auth endpoint rather than a
+      // mutation: it writes the row and refreshes the session snapshot and
+      // cookie cache in one step.
+      await authLib.api.updateUser({
+        body: { jobTitle },
+        headers: await headers(),
+      });
+    }
+
     const ownedSpace = await getOwnedSpace(ctx.user.id);
 
     if (ownedSpace) {
@@ -55,9 +72,6 @@ export const setupSpaceAction = authActionClient
         ? parsedInput.organizationName
         : "Personal";
 
-    const jobTitle =
-      parsedInput.spaceType === "work" ? parsedInput.jobTitle : undefined;
-
     const industry =
       parsedInput.spaceType === "work" ? parsedInput.industry : undefined;
 
@@ -67,16 +81,6 @@ export const setupSpaceAction = authActionClient
       spaceType: parsedInput.spaceType,
       industry,
     });
-
-    if (jobTitle) {
-      // Session-defined target, so the Better-Auth endpoint rather than a
-      // mutation: it writes the row and refreshes the session snapshot and
-      // cookie cache in one step.
-      await authLib.api.updateUser({
-        body: { jobTitle },
-        headers: await headers(),
-      });
-    }
 
     // Guest linking migrates polls without a space; pull them into the one
     // just created.
@@ -104,7 +108,7 @@ export const setupSpaceAction = authActionClient
       // posted by the form: the pair is what makes classifier accuracy
       // queryable, so that half has to be the server's own guess.
       track(ctx.user, {
-        event: "industry_set",
+        event: "space:industry_set",
         properties: {
           inferred_industry: inferIndustry({
             email: ctx.user.email,

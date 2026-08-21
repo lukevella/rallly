@@ -101,16 +101,24 @@ export function JobTitleSelect({
 }) {
   const { t } = useTranslation();
 
+  const startsCustom = Boolean(value) && !isPicklistValue(value as string);
+
   // The text lives here rather than in the stored value so clearing the input
   // doesn't collapse the selection back to "nothing chosen".
   const [otherText, setOtherText] = React.useState(
-    value && !isPicklistValue(value) ? value : "",
+    startsCustom ? (value as string) : "",
   );
+
+  // "Other" is held as its own state rather than derived from the value.
+  // Deriving it meant typing free text that happens to match a picklist key —
+  // "sales", "recruiter", "other" — flipped the select to that entry and
+  // unmounted the input mid-keystroke, silently discarding what was typed.
+  const [isOther, setIsOther] = React.useState(startsCustom);
 
   // Unset renders the placeholder rather than "Prefer not to say" — an
   // untouched optional field hasn't been answered either way, and the opt-out
   // item exists to clear a value that was set.
-  const selected = value ? (isPicklistValue(value) ? value : "other") : null;
+  const selected = isOther ? "other" : (value ?? null);
 
   return (
     <div className="space-y-2">
@@ -127,6 +135,8 @@ export function JobTitleSelect({
         ]}
         value={selected}
         onValueChange={(next) => {
+          setIsOther(next === "other");
+
           if (next === NONE_VALUE) {
             onValueChange(null);
           } else if (next === "other") {
@@ -155,7 +165,7 @@ export function JobTitleSelect({
           ))}
         </SelectContent>
       </Select>
-      {selected === "other" ? (
+      {isOther ? (
         <Input
           value={otherText}
           maxLength={JOB_TITLE_OTHER_MAX_LENGTH}

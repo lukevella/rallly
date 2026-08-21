@@ -61,6 +61,15 @@ export default async function PrivacyPolicy() {
       </p>
 
       <p>
+        The sector field is suggested for you: we guess it from your email
+        address&apos;s domain and the organisation name you enter, so that the
+        field arrives filled in rather than blank. The guess is only a
+        suggestion. Nothing is recorded until you submit the form, and you can
+        change it to any other option, or to &quot;Prefer not to say&quot;,
+        before you do.
+      </p>
+
+      <p>
         Both fields are optional. You can skip either one when setting up your
         account, and neither is required to use Rallly — skipping them has no
         effect on the service you receive. To change or remove an answer you
@@ -82,8 +91,11 @@ export default async function PrivacyPolicy() {
       <p>
         Your role and your organisation&apos;s sector are processed on the basis
         of consent alone, since they are optional and are not needed to deliver
-        the service. You give that consent by filling either field in, and you
-        can withdraw it at any time by asking us to erase the answer.
+        the service. You give that consent by submitting the setup form with a
+        value in either field — including a suggested sector you choose to leave
+        as it is. Choosing &quot;Prefer not to say&quot;, or leaving a field
+        unanswered, gives no consent and stores nothing. You can withdraw
+        consent at any time by asking us to erase the answer.
       </p>
 
       <h2>Retention of personal data</h2>

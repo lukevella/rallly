@@ -106,10 +106,17 @@ type SpaceType = "personal" | "work";
  * One row per space: its id and the type it was set up as. A space can have
  * more than one `space_setup` event (the action is retry-safe), so collapse
  * to the earliest — the first answer is the one the user gave at setup.
+ *
+ * Pagination is driven by the raw page, not by `records`. Rows with an
+ * unrecognised space_type are dropped from `records`, so a full page holding
+ * even one of them would otherwise look short and end the run early, leaving
+ * every later space null.
  */
-async function fetchSetupPage(
-  after?: string,
-): Promise<Array<{ spaceId: string; spaceType: SpaceType }>> {
+async function fetchSetupPage(after?: string): Promise<{
+  records: Array<{ spaceId: string; spaceType: SpaceType }>;
+  lastSpaceId?: string;
+  isLastPage: boolean;
+}> {
   const rows = await hogqlQuery(`
     SELECT
       $group_0 AS space_id,
@@ -123,12 +130,29 @@ async function fetchSetupPage(
     LIMIT ${PAGE_SIZE}
   `);
 
-  return rows.flatMap(([spaceId, spaceType]) =>
-    typeof spaceId === "string" &&
-    (spaceType === "personal" || spaceType === "work")
-      ? [{ spaceId, spaceType }]
-      : [],
-  );
+  // Annotated so the literal keeps the narrowed union rather than widening
+  // spaceType to string — the return type no longer supplies that context.
+  const records: Array<{ spaceId: string; spaceType: SpaceType }> =
+    rows.flatMap(([spaceId, spaceType]) =>
+      typeof spaceId === "string" &&
+      (spaceType === "personal" || spaceType === "work")
+        ? [{ spaceId, spaceType }]
+        : [],
+    );
+
+  const lastSpaceId = rows.at(-1)?.[0];
+
+  if (lastSpaceId !== undefined && typeof lastSpaceId !== "string") {
+    // The cursor is the only thing advancing the scan; a non-string here
+    // would silently restart it from the same place forever.
+    throw new Error("HogQL returned a non-string space_id");
+  }
+
+  return {
+    records,
+    lastSpaceId,
+    isLastPage: rows.length < PAGE_SIZE,
+  };
 }
 
 (async function backfillSpaceType() {
@@ -157,13 +181,9 @@ async function fetchSetupPage(
   console.info(`📸 Reading space_setup events (HogQL, ${PAGE_SIZE}/page)…`);
 
   for (;;) {
-    const page = await fetchSetupPage(after);
+    const { records, lastSpaceId, isLastPage } = await fetchSetupPage(after);
 
-    if (page.length === 0) {
-      break;
-    }
-
-    for (const { spaceId, spaceType } of page) {
+    for (const { spaceId, spaceType } of records) {
       byType[spaceType].push(spaceId);
 
       if (
@@ -174,12 +194,11 @@ async function fetchSetupPage(
       }
     }
 
-    after = page[page.length - 1].spaceId;
-
-    // A short page means the grouped result set is exhausted.
-    if (page.length < PAGE_SIZE) {
+    if (isLastPage || lastSpaceId === undefined) {
       break;
     }
+
+    after = lastSpaceId;
   }
 
   const found = byType.personal.length + byType.work.length;

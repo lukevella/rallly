@@ -27,6 +27,23 @@ describe("inferIndustry", () => {
     expect(inferIndustry({ email: "ada@edu.example.com" })).toBeUndefined();
   });
 
+  it("does not let a subdomain claim a sector", () => {
+    // Anyone can point foo.edu.attacker.com at themselves; only the suffix
+    // is evidence.
+    expect(
+      inferIndustry({ email: "ada@foo.edu.attacker.com" }),
+    ).toBeUndefined();
+    expect(inferIndustry({ email: "ada@foo.org.example.com" })).toBeUndefined();
+    expect(inferIndustry({ email: "ada@gov.mil.attacker.co" })).toBeUndefined();
+  });
+
+  it("still matches a genuine multi-label suffix", () => {
+    expect(inferIndustry({ email: "ada@example.gov.uk" })).toBe("government");
+    expect(inferIndustry({ email: "ada@sales.example.ac.uk" })).toBe(
+      "education",
+    );
+  });
+
   it("falls through free-mail domains to the organization name", () => {
     expect(
       inferIndustry({
