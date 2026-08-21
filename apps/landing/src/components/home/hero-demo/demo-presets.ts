@@ -284,19 +284,19 @@ const sportsClubParticipants: DemoPreset["participants"] = [
 // has a hard "no" in it, which is what makes the single clear slot land.
 const thesisDefenseParticipants: DemoPreset["participants"] = [
   {
-    name: "Prof. Ingrid Halvorsen",
+    name: "Ingrid Halvorsen",
     votes: ["no", "yes", "no", "ifNeedBe", "no", "yes", "no", "yes"],
   },
   {
-    name: "Dr. Samuel Adeyemi",
+    name: "Samuel Adeyemi",
     votes: ["ifNeedBe", "no", "yes", "no", "yes", "no", "ifNeedBe", "yes"],
   },
   {
-    name: "Prof. Béatrice Rousseau",
+    name: "Béatrice Rousseau",
     votes: ["no", "no", "ifNeedBe", "yes", "no", "no", "yes", "yes"],
   },
   {
-    name: "Dr. Wei Zhang",
+    name: "Wei Zhang",
     votes: ["yes", "ifNeedBe", "no", "no", "yes", "no", "no", "yes"],
   },
 ];

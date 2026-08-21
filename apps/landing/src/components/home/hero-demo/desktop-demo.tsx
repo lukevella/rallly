@@ -120,7 +120,11 @@ export const DesktopDemo = ({
                 <Maximize2Icon className="size-4" />
               </div>
             </div>
-            <div className="grid grid-cols-[172px_repeat(8,84px)] border-gray-100 border-t text-center">
+            {/* Sized to fit the longest participant name across every preset
+                without truncating: ~217px of text plus 62px of avatar, gap and
+                padding, with a little margin for font rendering differences.
+                The name span needs flex-1 to actually claim this width. */}
+            <div className="grid grid-cols-[292px_repeat(8,84px)] border-gray-100 border-t text-center">
               <div />
               {monthGroups.map((group) => (
                 <div
@@ -188,10 +192,10 @@ export const DesktopDemo = ({
               {preset.participants.map((participant) => (
                 <React.Fragment key={participant.name}>
                   <div className="flex items-center gap-2.5 border-gray-100 border-t px-3 py-3 text-left">
-                    <span className="flex size-7 items-center justify-center rounded-full bg-gray-100 font-medium text-[10px] text-gray-600 uppercase">
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-100 font-medium text-[10px] text-gray-600 uppercase">
                       {getInitials(participant.name)}
                     </span>
-                    <span className="truncate text-gray-800 text-sm">
+                    <span className="min-w-0 flex-1 truncate text-gray-800 text-sm">
                       {participant.name}
                     </span>
                   </div>
