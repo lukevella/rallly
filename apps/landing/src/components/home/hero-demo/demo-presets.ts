@@ -66,7 +66,7 @@ export function getDemoPreset(
       description: t("heroDemoCommitteeDescription", {
         ns: "home",
         defaultValue:
-          "Please mark every date you could attend. We need five of the eight members present to be quorate, so do fill this in even if only one date works.",
+          "Please mark every date you could attend. We need a majority of members present to be quorate, so do fill this in even if only one date works.",
       }),
       organizer: t("heroDemoCommitteeOrganizer", {
         ns: "home",
