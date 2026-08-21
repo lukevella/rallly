@@ -22,11 +22,13 @@ export function Testimonial({
       <p className="max-w-2xl text-lg leading-normal sm:text-2xl">{children}</p>
       <div className="flex shrink-0 flex-col gap-y-4 sm:items-end sm:text-right">
         {logo}
-        <div>
-          <div className="font-semibold">{name}</div>
-          <div className="text-gray-600 text-sm">{title}</div>
+        <div className="flex items-center gap-x-3 sm:flex-col-reverse sm:items-end sm:gap-y-4">
+          {avatar}
+          <div>
+            <div className="font-semibold">{name}</div>
+            <div className="text-gray-600 text-sm">{title}</div>
+          </div>
         </div>
-        {avatar}
       </div>
     </FadeIn>
   );
