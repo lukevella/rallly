@@ -23,18 +23,23 @@ describe("inferIndustry", () => {
     expect(inferIndustry({ email: "ada@government.com" })).toBeUndefined();
   });
 
-  it("ignores the leftmost label, which is the organization's own name", () => {
+  it("does not let a label anywhere but the suffix claim a sector", () => {
+    // Each of these carries a sector label while ending in .com or .co, so
+    // anyone could register one and be classified. Only the suffix counts.
     expect(inferIndustry({ email: "ada@edu.example.com" })).toBeUndefined();
-  });
-
-  it("does not let a subdomain claim a sector", () => {
-    // Anyone can point foo.edu.attacker.com at themselves; only the suffix
-    // is evidence.
     expect(
       inferIndustry({ email: "ada@foo.edu.attacker.com" }),
     ).toBeUndefined();
+    expect(inferIndustry({ email: "ada@attacker.edu.com" })).toBeUndefined();
+    expect(inferIndustry({ email: "ada@attacker.gov.com" })).toBeUndefined();
     expect(inferIndustry({ email: "ada@foo.org.example.com" })).toBeUndefined();
     expect(inferIndustry({ email: "ada@gov.mil.attacker.co" })).toBeUndefined();
+  });
+
+  it("requires a label in front of the suffix", () => {
+    // A bare suffix is not somebody's organization.
+    expect(inferIndustry({ email: "ada@edu" })).toBeUndefined();
+    expect(inferIndustry({ email: "ada@org" })).toBeUndefined();
   });
 
   it("still matches a genuine multi-label suffix", () => {
@@ -42,6 +47,8 @@ describe("inferIndustry", () => {
     expect(inferIndustry({ email: "ada@sales.example.ac.uk" })).toBe(
       "education",
     );
+    expect(inferIndustry({ email: "ada@example.edu.au" })).toBe("education");
+    expect(inferIndustry({ email: "ada@charity.org.uk" })).toBe("non_profit");
   });
 
   it("falls through free-mail domains to the organization name", () => {

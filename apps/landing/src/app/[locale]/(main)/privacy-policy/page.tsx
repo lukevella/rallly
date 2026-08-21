@@ -45,12 +45,18 @@ export default async function PrivacyPolicy() {
 
       <p>
         If you set up an account for work, we ask for two further pieces of
-        information about you, both self-declared:
+        information about you:
       </p>
 
       <ul>
-        <li>Your role, chosen from a list or described in your own words.</li>
-        <li>The sector your organisation works in.</li>
+        <li>
+          Your role — self-declared, chosen from a list or described in your own
+          words.
+        </li>
+        <li>
+          The sector your organisation works in — suggested by us, and yours to
+          confirm or change.
+        </li>
       </ul>
 
       <p>

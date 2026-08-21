@@ -44,18 +44,13 @@ export function inferIndustry({
   const domain = email?.trim().toLowerCase().split("@")[1];
 
   if (domain) {
-    const parts = domain.split(".");
-
-    // Only the suffix is evidence of a sector, so look at the last two
-    // labels: "example.edu" -> ["edu"], "dept.cam.ac.uk" -> ["ac", "uk"].
-    // Scanning every label after the first would let an attacker-controlled
-    // host claim a sector with a subdomain — "foo.edu.attacker.com" would
-    // match "edu". The lower bound of 1 keeps an organization that happens
-    // to be *named* "edu" or "gov" from classifying itself.
-    const labels = new Set(parts.slice(Math.max(1, parts.length - 2)));
-
+    // The suffix has to match end-to-end, with at least one label in front of
+    // it. Matching labels individually is what let anyone claim a sector by
+    // registering around one: "attacker.edu.com" and "foo.edu.attacker.com"
+    // both contain the label "edu" while ending in ".com". Requiring a label
+    // before the suffix also stops a bare "edu" host from matching itself.
     for (const rule of industryDomainRules) {
-      if (rule.labels.some((label) => labels.has(label))) {
+      if (rule.suffixes.some((suffix) => domain.endsWith(`.${suffix}`))) {
         return rule.industry;
       }
     }

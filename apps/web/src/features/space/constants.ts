@@ -32,20 +32,52 @@ export const industries = [
 export type Industry = (typeof industries)[number];
 
 /**
- * Email domain labels that identify a sector on their own — matched against
- * whole labels rather than a string suffix, so ".edu" doesn't also fire on
- * "acme.education.com". Checked before the keyword table: a .edu address is
- * stronger evidence than any word in an organization name. Free-mail domains
- * (gmail.com, outlook.com) match nothing here and fall through to the
- * keyword check.
+ * Email domain suffixes that identify a sector on their own, matched as
+ * complete suffixes rather than as individual labels. Individual labels are
+ * not safe: "edu" appears in both "example.edu" (a university) and
+ * "attacker.edu.com" (anyone at all), and only the first is evidence.
+ *
+ * Checked before the keyword table — a .edu address outranks any word in an
+ * organization name. Free-mail domains (gmail.com, outlook.com) match nothing
+ * here and fall through to the keyword check.
+ *
+ * Deliberately not a public-suffix list: this is a prefill the user confirms,
+ * so covering the common registries beats carrying a dependency that has to
+ * be kept current. A suffix that isn't listed simply yields no guess.
  */
 export const industryDomainRules: ReadonlyArray<{
-  labels: readonly string[];
+  suffixes: readonly string[];
   industry: Industry;
 }> = [
-  { labels: ["edu", "ac", "sch"], industry: "education" },
-  { labels: ["gov", "mil"], industry: "government" },
-  { labels: ["org"], industry: "non_profit" },
+  {
+    suffixes: [
+      "edu",
+      "edu.au",
+      "edu.sg",
+      "edu.in",
+      "ac.uk",
+      "ac.nz",
+      "ac.jp",
+      "ac.za",
+      "ac.at",
+      "sch.uk",
+    ],
+    industry: "education",
+  },
+  {
+    suffixes: [
+      "gov",
+      "mil",
+      "gov.uk",
+      "gov.au",
+      "gov.in",
+      "gov.za",
+      "govt.nz",
+      "gc.ca",
+    ],
+    industry: "government",
+  },
+  { suffixes: ["org", "org.uk", "org.au", "org.nz"], industry: "non_profit" },
 ];
 
 /**

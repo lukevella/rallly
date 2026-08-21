@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { JobTitleSelect } from "@/features/user/components/job-title-select";
-import { render, screen } from "@/test/test-utils";
+import { render, screen, waitFor } from "@/test/test-utils";
 
 /**
  * Mirrors how the setup form drives the picker: the parent owns the value and
@@ -32,7 +32,9 @@ describe("JobTitleSelect", () => {
     await user.click(screen.getByRole("combobox"));
     await user.click(screen.getByRole("option", { name: "Recruiter" }));
 
-    expect(screen.getByTestId("value")).toHaveTextContent("recruiter");
+    await waitFor(() =>
+      expect(screen.getByTestId("value")).toHaveTextContent("recruiter"),
+    );
   });
 
   it("keeps the free text input mounted when the text matches a picklist key", async () => {
@@ -46,22 +48,31 @@ describe("JobTitleSelect", () => {
     // The bug this guards: "sales" is a picklist key, so deriving the mode
     // from the value unmounted the input mid-keystroke and silently turned
     // the answer into the Sales picklist entry.
+    await waitFor(() =>
+      expect(screen.getByTestId("value")).toHaveTextContent("sales"),
+    );
     expect(screen.getByLabelText("Describe your role")).toHaveValue("sales");
-    expect(screen.getByTestId("value")).toHaveTextContent("sales");
   });
 
-  it('falls back to "other" when the free text is cleared', async () => {
+  it("falls back to the Other key when the free text is cleared", async () => {
     const user = userEvent.setup();
     render(<Harness />);
 
     await chooseOther(user);
     const input = screen.getByLabelText("Describe your role");
     await user.type(input, "Practice manager");
-    expect(screen.getByTestId("value")).toHaveTextContent("Practice manager");
+    await waitFor(() =>
+      expect(screen.getByTestId("value")).toHaveTextContent("Practice manager"),
+    );
 
     await user.clear(input);
+    // waitFor, not a bare expect: clearing the input drives a state update in
+    // the parent harness, and asserting before React flushes it made this
+    // test fail intermittently under full-suite load.
+    await waitFor(() =>
+      expect(screen.getByTestId("value")).toHaveTextContent("other"),
+    );
     expect(screen.getByLabelText("Describe your role")).toBeInTheDocument();
-    expect(screen.getByTestId("value")).toHaveTextContent("other");
   });
 
   it("opens in Other mode for a stored free-text value", () => {
@@ -79,7 +90,9 @@ describe("JobTitleSelect", () => {
     await user.click(screen.getByRole("combobox"));
     await user.click(screen.getByRole("option", { name: "Prefer not to say" }));
 
-    expect(screen.getByTestId("value")).toHaveTextContent("null");
+    await waitFor(() =>
+      expect(screen.getByTestId("value")).toHaveTextContent("null"),
+    );
     expect(
       screen.queryByLabelText("Describe your role"),
     ).not.toBeInTheDocument();
