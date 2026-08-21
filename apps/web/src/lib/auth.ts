@@ -617,7 +617,6 @@ export const getSessionState = cache(async (): Promise<SessionState> => {
         timeZone: session.user.timeZone || undefined,
         timeFormat: parseTimeFormat(session.user.timeFormat),
         weekStart: session.user.weekStart ?? undefined,
-        jobTitle: session.user.jobTitle ?? undefined,
       };
 
       return {

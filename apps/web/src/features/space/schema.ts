@@ -7,9 +7,6 @@ export type MemberRole = z.infer<typeof memberRoleSchema>;
 export const spaceTierSchema = z.enum(["hobby", "pro"]);
 export type SpaceTier = z.infer<typeof spaceTierSchema>;
 
-export const spaceTypeSchema = z.enum(["personal", "work"]);
-export type SpaceType = z.infer<typeof spaceTypeSchema>;
-
 // The taxonomy is validated here rather than in the database so a v2 list
 // costs a deploy instead of an enum migration.
 export const industrySchema = z.enum(industries);
@@ -25,9 +22,6 @@ export const updateSpaceSchema = z.object({
     .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
     .nullable()
     .optional(),
-  // Nullable so the answer can be withdrawn — consent is the legal basis for
-  // holding it, which only works if it stays erasable.
-  industry: industrySchema.nullable().optional(),
 });
 
 export const updateSpaceShowBrandingSchema = z.object({

@@ -1,7 +1,6 @@
 import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@rallly/database";
 import type { Industry } from "@/features/space/constants";
 import {
-  industries,
   industryDomainRules,
   industryKeywordRules,
 } from "@/features/space/constants";
@@ -24,16 +23,6 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): MemberRole => {
       return "admin";
   }
 };
-
-/**
- * Narrow a stored industry to the current taxonomy. The column is a plain
- * string so the list can change without a migration, which means a row can
- * hold a value that no longer exists — treat that as unanswered rather than
- * rendering a select with a value it has no option for.
- */
-export function parseIndustry(value?: string | null): Industry | undefined {
-  return industries.find((industry) => industry === value);
-}
 
 /**
  * Guess a work space's sector from the owner's email domain and the

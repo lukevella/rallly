@@ -61,11 +61,12 @@ export default async function PrivacyPolicy() {
       </p>
 
       <p>
-        Both fields are optional. You can skip them, leave them blank, or change
-        or clear them at any time from your{" "}
-        <a href="https://app.rallly.co/settings/profile">profile settings</a>.
-        Neither is required to use Rallly, and skipping them has no effect on
-        the service you receive.
+        Both fields are optional. You can skip either one when setting up your
+        account, and neither is required to use Rallly — skipping them has no
+        effect on the service you receive. To change or remove an answer you
+        have already given, email us at{" "}
+        <a href="mailto:support@rallly.co">support@rallly.co</a> and we will
+        update or erase it.
       </p>
 
       <h2>Legal basis for processing</h2>
@@ -82,7 +83,7 @@ export default async function PrivacyPolicy() {
         Your role and your organisation&apos;s sector are processed on the basis
         of consent alone, since they are optional and are not needed to deliver
         the service. You give that consent by filling either field in, and you
-        can withdraw it at any time by clearing them.
+        can withdraw it at any time by asking us to erase the answer.
       </p>
 
       <h2>Retention of personal data</h2>

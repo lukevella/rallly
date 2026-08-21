@@ -16,7 +16,6 @@ export const createUserDTO = (user: User): UserDTO => ({
   locale: user.locale ?? undefined,
   weekStart: user.weekStart ?? undefined,
   customerId: user.customerId ?? undefined,
-  jobTitle: user.jobTitle ?? undefined,
   isGuest: user.isAnonymous,
   deletedAt: user.deletedAt ?? undefined,
 });

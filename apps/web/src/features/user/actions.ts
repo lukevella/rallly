@@ -7,11 +7,9 @@ import * as z from "zod";
 import { avatarAssetProfile } from "@/features/user/constants";
 import { isEmailTaken } from "@/features/user/data";
 import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
-import { jobTitleFieldSchema } from "@/features/user/schema";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
-import { track } from "@/lib/posthog";
 import {
   adminActionClient,
   authActionClient,
@@ -42,34 +40,6 @@ export const updateUserNameAction = authActionClient
     await authLib.api.updateUser({
       body: { name: parsedInput.name },
       headers: await headers(),
-    });
-  });
-
-/**
- * Self-declared role, collected at setup and editable on the profile page.
- * Optional and erasable — consent is the legal basis for holding it, so null
- * has to be a valid answer.
- */
-export const updateJobTitleAction = authActionClient
-  .metadata({ actionName: "update_job_title" })
-  .inputSchema(
-    z.object({
-      jobTitle: jobTitleFieldSchema,
-    }),
-  )
-  .action(async ({ ctx, parsedInput }) => {
-    await authLib.api.updateUser({
-      body: { jobTitle: parsedInput.jobTitle },
-      headers: await headers(),
-    });
-
-    track(ctx.user, {
-      event: "job_title_set",
-      properties: {
-        // Person property, so the segment can be joined against anything the
-        // user does later — not just this event.
-        $set: { job_title: parsedInput.jobTitle },
-      },
     });
   });
 
