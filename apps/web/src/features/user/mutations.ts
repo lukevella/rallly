@@ -155,9 +155,14 @@ const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
  *
  * Two guards, both required:
  *  - The `lastSeenAt` window IS the liveness check. Prod sessions live in
- *    Redis, so we can't probe them at delete time; but session TTL equals
- *    this window and every session refresh bumps `lastSeenAt`, so a guest
- *    below the cutoff provably has no live session left to orphan.
+ *    Redis, so we can't probe them at delete time. What rules out a live
+ *    session is the session TTL: it equals this window, so any session
+ *    belonging to a guest below the cutoff has already expired. `lastSeenAt`
+ *    is a lower bound on that expiry, not a record of it — a returning guest
+ *    gets a fresh session, and `session.create` writes `lastSeenAt`, lifting
+ *    them back above the cutoff. Note the value can also predate any session
+ *    at all: rows carrying the column's backfill default were never observed,
+ *    so read a stale `lastSeenAt` as "no session since", not "last active at".
  *  - The resource filter guards the cascade. A guest's polls/comments are
  *    onDelete: Cascade, so deleting one who still owns a live poll would
  *    destroy everyone's votes/comments.
