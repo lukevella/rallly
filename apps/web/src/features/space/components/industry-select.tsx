@@ -34,6 +34,15 @@ function IndustryLabel({ industry }: { industry: Industry }) {
       return <Trans i18nKey="industryNonProfit" defaults="Non-profit" />;
     case "government":
       return <Trans i18nKey="industryGovernment" defaults="Government" />;
+    case "legal":
+      return <Trans i18nKey="industryLegal" defaults="Legal" />;
+    case "sports_and_recreation":
+      return (
+        <Trans
+          i18nKey="industrySportsAndRecreation"
+          defaults="Sports and recreation"
+        />
+      );
     case "recruiting":
       return <Trans i18nKey="industryRecruiting" defaults="Recruiting" />;
     case "real_estate":

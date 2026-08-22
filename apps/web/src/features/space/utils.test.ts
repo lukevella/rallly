@@ -70,6 +70,19 @@ describe("inferIndustry", () => {
     ).toBe("education");
   });
 
+  it("infers legal and sports from the organization name", () => {
+    expect(inferIndustry({ organizationName: "Smith & Jones LLP" })).toBe(
+      "legal",
+    );
+    expect(inferIndustry({ organizationName: "Harbour Law" })).toBe("legal");
+    expect(inferIndustry({ organizationName: "Riverside FC" })).toBe(
+      "sports_and_recreation",
+    );
+    expect(inferIndustry({ organizationName: "Oakwood Tennis Club" })).toBe(
+      "sports_and_recreation",
+    );
+  });
+
   it("matches organization name keywords as whole words", () => {
     expect(inferIndustry({ organizationName: "Acme Software" })).toBe(
       "technology",
