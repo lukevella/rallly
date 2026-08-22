@@ -25,11 +25,18 @@ export type DemoPresetName =
 // slots each — so every participant needs exactly eight, or the scores and the
 // winning-column highlight fall out of alignment.
 //
-// Every preset holds to the same invariant: the last column is a "yes" from
-// everyone, and no other column ties it. The highlight lights up every column
-// matching the top score, so a tie would highlight several at once and lose the
-// "here is your answer" read. Note the score counts "ifNeedBe" as available, so
-// breaking a tie needs a hard "no", not an "ifNeedBe".
+// Every preset holds to the same invariant: column five is a "yes" from
+// everyone, and no other column ties it.
+//
+// It has to be column five, not the last one. The floating "You" card overlaps
+// the right of the table at every breakpoint, so columns seven and eight are
+// never visible — a winner parked there leaves the reader looking at a demo
+// with no answer in it. Five sits comfortably inside the visible range.
+//
+// The highlight lights up every column matching the top score, so a tie would
+// highlight several at once and lose the "here is your answer" read. Note the
+// score counts "ifNeedBe" as available, so breaking a tie needs a hard "no",
+// not an "ifNeedBe".
 //
 // Presets are built with literal t() calls rather than looked up by key: the
 // extractor works by static analysis and removeUnusedKeys is on, so a dynamic
@@ -185,11 +192,11 @@ export function getDemoPreset(
 const defaultParticipants: DemoPreset["participants"] = [
   {
     name: "Margaret Ellis",
-    votes: ["ifNeedBe", "yes", "no", "yes", "yes", "yes", "no", "yes"],
+    votes: ["ifNeedBe", "yes", "no", "yes", "yes", "yes", "no", "no"],
   },
   {
     name: "Priya Patel",
-    votes: ["yes", "yes", "yes", "no", "no", "yes", "no", "yes"],
+    votes: ["yes", "yes", "yes", "no", "yes", "yes", "no", "yes"],
   },
   {
     name: "Tom Becker",
@@ -203,16 +210,16 @@ const defaultParticipants: DemoPreset["participants"] = [
 
 // An interview panel: four colleagues plus the candidate, who is the one
 // external in the room and the reason the poll gets shared as a link. The
-// candidate's availability is the tightest, which is what leaves the last slot
-// as the only one that works for everyone.
+// candidate's availability is the tightest, which is what leaves a single slot
+// that works for everyone.
 const executiveAssistantParticipants: DemoPreset["participants"] = [
   {
     name: "Daniel Whitfield",
-    votes: ["no", "ifNeedBe", "no", "no", "no", "yes", "ifNeedBe", "yes"],
+    votes: ["no", "ifNeedBe", "no", "no", "yes", "yes", "ifNeedBe", "yes"],
   },
   {
     name: "Amara Osei",
-    votes: ["ifNeedBe", "no", "yes", "yes", "no", "ifNeedBe", "no", "yes"],
+    votes: ["ifNeedBe", "no", "yes", "yes", "yes", "ifNeedBe", "no", "yes"],
   },
   {
     name: "Henrik Lindqvist",
@@ -220,17 +227,17 @@ const executiveAssistantParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Claire Fontaine",
-    votes: ["yes", "no", "no", "ifNeedBe", "ifNeedBe", "no", "yes", "yes"],
+    votes: ["yes", "no", "no", "ifNeedBe", "yes", "no", "yes", "no"],
   },
   {
     name: "Jordan Reyes",
-    votes: ["no", "no", "no", "yes", "no", "no", "ifNeedBe", "yes"],
+    votes: ["no", "no", "no", "yes", "yes", "no", "ifNeedBe", "yes"],
   },
 ];
 
 // A standing committee, where the question is quorum rather than a full house:
-// the scattered middle columns are the ones that fall short, and the last is
-// the only date that clears it comfortably.
+// the scattered columns around it are the ones that fall short, and only one
+// date clears it comfortably.
 const committeeParticipants: DemoPreset["participants"] = [
   {
     name: "Margaret Ellis",
@@ -238,7 +245,7 @@ const committeeParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Raymond Osborne",
-    votes: ["no", "yes", "no", "yes", "no", "ifNeedBe", "no", "yes"],
+    votes: ["no", "yes", "no", "yes", "yes", "ifNeedBe", "no", "yes"],
   },
   {
     name: "Fiona Ashworth",
@@ -246,11 +253,11 @@ const committeeParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Nathaniel Boakye",
-    votes: ["no", "yes", "no", "ifNeedBe", "no", "no", "yes", "yes"],
+    votes: ["no", "yes", "no", "ifNeedBe", "yes", "no", "yes", "no"],
   },
   {
     name: "Helen Vasquez",
-    votes: ["yes", "no", "no", "yes", "ifNeedBe", "no", "no", "yes"],
+    votes: ["yes", "no", "no", "yes", "yes", "no", "no", "yes"],
   },
 ];
 
@@ -260,7 +267,7 @@ const committeeParticipants: DemoPreset["participants"] = [
 const sportsClubParticipants: DemoPreset["participants"] = [
   {
     name: "Callum Docherty",
-    votes: ["yes", "no", "yes", "no", "ifNeedBe", "yes", "no", "yes"],
+    votes: ["yes", "no", "yes", "no", "yes", "yes", "no", "yes"],
   },
   {
     name: "Ines Ferreira",
@@ -268,19 +275,19 @@ const sportsClubParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Marcus Thorne",
-    votes: ["ifNeedBe", "yes", "no", "no", "yes", "yes", "no", "yes"],
+    votes: ["ifNeedBe", "yes", "no", "no", "yes", "yes", "no", "no"],
   },
   {
     name: "Aisha Rahman",
-    votes: ["no", "no", "yes", "yes", "no", "ifNeedBe", "yes", "yes"],
+    votes: ["no", "no", "yes", "yes", "yes", "ifNeedBe", "yes", "yes"],
   },
   {
     name: "Tobias Lindgren",
-    votes: ["yes", "no", "ifNeedBe", "no", "no", "yes", "yes", "yes"],
+    votes: ["yes", "no", "ifNeedBe", "no", "yes", "yes", "yes", "yes"],
   },
   {
     name: "Erin Kavanagh",
-    votes: ["no", "ifNeedBe", "yes", "yes", "no", "no", "no", "yes"],
+    votes: ["no", "ifNeedBe", "yes", "yes", "yes", "no", "no", "yes"],
   },
 ];
 
@@ -290,7 +297,7 @@ const sportsClubParticipants: DemoPreset["participants"] = [
 const thesisDefenseParticipants: DemoPreset["participants"] = [
   {
     name: "Ingrid Halvorsen",
-    votes: ["no", "yes", "no", "ifNeedBe", "no", "yes", "no", "yes"],
+    votes: ["no", "yes", "no", "ifNeedBe", "yes", "yes", "no", "no"],
   },
   {
     name: "Samuel Adeyemi",
@@ -298,7 +305,7 @@ const thesisDefenseParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Béatrice Rousseau",
-    votes: ["no", "no", "ifNeedBe", "yes", "no", "no", "yes", "yes"],
+    votes: ["no", "no", "ifNeedBe", "yes", "yes", "no", "yes", "yes"],
   },
   {
     name: "Wei Zhang",
@@ -317,18 +324,18 @@ const legalParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Julian Okonkwo",
-    votes: ["no", "yes", "yes", "no", "no", "ifNeedBe", "no", "yes"],
+    votes: ["no", "yes", "yes", "no", "yes", "ifNeedBe", "no", "yes"],
   },
   {
     name: "Rosa Delgado",
-    votes: ["ifNeedBe", "yes", "no", "yes", "no", "no", "yes", "yes"],
+    votes: ["ifNeedBe", "yes", "no", "yes", "yes", "no", "yes", "yes"],
   },
   {
     name: "Peter Lindholm",
-    votes: ["no", "no", "yes", "ifNeedBe", "yes", "no", "no", "yes"],
+    votes: ["no", "no", "yes", "ifNeedBe", "yes", "no", "no", "no"],
   },
   {
     name: "Miriam Hassan",
-    votes: ["no", "ifNeedBe", "no", "yes", "no", "yes", "ifNeedBe", "yes"],
+    votes: ["no", "ifNeedBe", "no", "yes", "yes", "yes", "ifNeedBe", "yes"],
   },
 ];
