@@ -1,7 +1,6 @@
 import { FieldGroup } from "@rallly/ui/field";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import type { Params } from "@/app/[locale]/types";
 import {
   PageSection,
@@ -23,20 +22,11 @@ import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
-import {
-  AccountDeletionSummary,
-  AccountDeletionSummarySkeleton,
-} from "./components/account-deletion-summary";
-import {
-  DeleteAccountSetting,
-  PendingDeletionSetting,
-} from "./components/delete-account-setting";
+import { DeleteAccountSetting } from "./components/delete-account-setting";
 import { EmailAddressSetting } from "./components/email-address-setting";
 import { ProfileSettings } from "./components/profile-settings";
 
 export default async function Page() {
-  // Read from the database — the pending deletion notice depends on
-  // deletedAt, which the session snapshot doesn't carry.
   const user = await getCurrentUser();
 
   if (!user) {
@@ -95,18 +85,8 @@ export default async function Page() {
               </PageSectionTitle>
             </PageSectionHeader>
             <PageSectionContent>
-              <FieldGroup variant="divided">
-                {user.deletedAt ? (
-                  <PendingDeletionSetting deletedAt={user.deletedAt} />
-                ) : (
-                  <DeleteAccountSetting
-                    summary={
-                      <Suspense fallback={<AccountDeletionSummarySkeleton />}>
-                        <AccountDeletionSummary />
-                      </Suspense>
-                    }
-                  />
-                )}
+              <FieldGroup>
+                <DeleteAccountSetting />
               </FieldGroup>
             </PageSectionContent>
           </PageSection>

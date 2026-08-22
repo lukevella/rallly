@@ -1,26 +1,27 @@
 "use server";
 import { subject } from "@casl/ability";
-import { sendAccountDeletionScheduledEmail } from "@rallly/emails/templates/account-deletion-scheduled";
+import { sendAccountDeletedEmail } from "@rallly/emails/templates/account-deleted";
+import { sendConfirmAccountDeletionEmail } from "@rallly/emails/templates/confirm-account-deletion";
+import { createLogger } from "@rallly/logger";
 import { after } from "next/server";
+import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
+import { getActiveSubscriptionIds } from "@/features/billing/data";
 import {
-  resumeUserSubscriptionRenewals,
-  stopUserSubscriptionRenewals,
+  cancelSubscriptionsById,
+  deleteStripeCustomer,
 } from "@/features/billing/mutations";
 import {
-  cancelAccountDeletion,
-  scheduleAccountDeletion,
+  createAccountDeletionOTP,
+  verifyAccountDeletionOTP,
 } from "@/features/user/account-deletion/mutations";
-import { getScheduledDeletionDate } from "@/features/user/account-deletion/utils";
 import { hardDeleteUser } from "@/features/user/mutations";
 import { getLocale } from "@/i18n/server/get-locale";
-import { isSelfHosted } from "@/lib/constants";
-import { formatDateTime } from "@/lib/datetime/format";
+import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import {
   deletePostHogPerson,
   flushPostHog,
-  track,
   trackSystemEvent,
 } from "@/lib/posthog";
 import {
@@ -28,25 +29,15 @@ import {
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
 
-// Renewals are stopped (cancel_at_period_end) rather than the subscription
-// cancelled, so nothing here is irreversible: no charge can land during the
-// recovery window, the user keeps the Pro time they paid for, and cancelling
-// the deletion restores the subscription. deletedAt is written first; if the
-// Stripe call fails, it is rolled back so the two never drift apart. The
-// reaper hard-cancels at the end of the window.
-export const scheduleAccountDeletionAction = authActionClient
-  .metadata({ actionName: "schedule_account_deletion" })
-  // Each call hits Stripe and sends an email — keep the ceiling low.
-  .use(createRateLimitMiddleware(3, "1 h"))
-  .action(async ({ ctx }) => {
-    if (isSelfHosted) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message:
-          "Self-hosted instances delete accounts immediately instead of scheduling them",
-      });
-    }
+const logger = createLogger("account-deletion");
 
+// Deletion is irreversible and the session alone is not proof of intent: a
+// hijacked session or an unattended laptop already has it. Requiring a code
+// sent to the account email also leaves the owner a record of the attempt.
+export const requestAccountDeletionCodeAction = authActionClient
+  .metadata({ actionName: "request_account_deletion_code" })
+  .use(createRateLimitMiddleware(5, "1 h"))
+  .action(async ({ ctx }) => {
     if (ctx.ability.cannot("delete", subject("User", ctx.user))) {
       throw new AppError({
         code: "FORBIDDEN",
@@ -54,58 +45,32 @@ export const scheduleAccountDeletionAction = authActionClient
       });
     }
 
-    const deletedAt = await scheduleAccountDeletion({ userId: ctx.user.id });
-
-    let stoppedRenewals: number;
-    try {
-      stoppedRenewals = await stopUserSubscriptionRenewals({
-        userId: ctx.user.id,
-      });
-    } catch (error) {
-      await cancelAccountDeletion({ userId: ctx.user.id });
-      throw error;
-    }
-
-    track(ctx.user, {
-      event: "account_deletion_schedule",
-      properties: {
-        hadActiveSubscription: stoppedRenewals > 0,
-      },
-    });
-
+    const { email } = ctx.user;
     const locale = ctx.user.locale ?? (await getLocale());
     const branding = await getInstanceBranding();
-    const deletionDate = formatDateTime(getScheduledDeletionDate(deletedAt), {
-      preset: "dateLong",
-      locale,
-      timeZone: ctx.user.timeZone,
-    });
+
+    const code = await createAccountDeletionOTP({ userId: ctx.user.id });
 
     after(() =>
-      sendAccountDeletionScheduledEmail({
-        to: ctx.user.email,
+      sendConfirmAccountDeletionEmail({
+        to: email,
         locale,
         branding,
-        props: { deletionDate },
+        props: { code },
       }),
     );
   });
 
-// Self-hosted instances have no scheduler running the remove-deleted-users
-// reaper, so scheduling a deletion would promise a date that never comes.
-// Deletion happens immediately instead; there is no recovery window.
+// Deletion is immediate and irreversible. The user row goes first so the
+// account and its email address are genuinely released straight away; the
+// external cleanup that used to be retried by the reaper now runs after the
+// response. A failure there leaves an orphaned Stripe customer or PostHog
+// person rather than blocking the user, so it is logged loudly.
 export const deleteAccountAction = authActionClient
   .metadata({ actionName: "delete_account" })
-  .use(createRateLimitMiddleware(3, "1 h"))
-  .action(async ({ ctx }) => {
-    if (!isSelfHosted) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message:
-          "Immediate account deletion is only available on self-hosted instances",
-      });
-    }
-
+  .use(createRateLimitMiddleware(5, "1 h"))
+  .inputSchema(z.object({ otp: z.string().regex(/^\d{6}$/) }))
+  .action(async ({ ctx, parsedInput }) => {
     if (ctx.ability.cannot("delete", subject("User", ctx.user))) {
       throw new AppError({
         code: "FORBIDDEN",
@@ -113,20 +78,79 @@ export const deleteAccountAction = authActionClient
       });
     }
 
-    await deletePostHogPerson({ distinctId: ctx.user.id });
-    await hardDeleteUser({ userId: ctx.user.id });
+    // Keyed by the session's user id, never by client input, and in its own
+    // namespace so a login code can never satisfy a deletion. Consumed on
+    // success by the verifier.
+    const codeAccepted = await verifyAccountDeletionOTP({
+      userId: ctx.user.id,
+      code: parsedInput.otp,
+    });
+
+    if (!codeAccepted) {
+      return { ok: false as const, reason: "invalid_code" as const };
+    }
+
+    // Everything the cleanup and the confirmation email need has to be read
+    // before the row disappears — the subscription rows cascade away with it.
+    const { id: userId, email, customerId } = ctx.user;
+    const locale = ctx.user.locale ?? (await getLocale());
+    const branding = await getInstanceBranding();
+    const subscriptionIds = await getActiveSubscriptionIds(userId);
+
+    // Signed out before the row goes: signOut resolves the session from the
+    // request, so it has to run while that session still resolves. The
+    // nextCookies plugin applies the clearing headers to this response, which
+    // a client-side signOut cannot do once the user no longer exists.
+    await signOut();
+
+    await hardDeleteUser({ userId });
 
     // Personless by design — the person this event is about was just erased.
     trackSystemEvent({ event: "account_deletion_complete" });
-    after(() => flushPostHog());
-  });
 
-export const cancelAccountDeletionAction = authActionClient
-  .metadata({ actionName: "cancel_account_deletion" })
-  .use(createRateLimitMiddleware(10, "1 h"))
-  .action(async ({ ctx }) => {
-    await cancelAccountDeletion({ userId: ctx.user.id });
-    await resumeUserSubscriptionRenewals({ userId: ctx.user.id });
+    after(async () => {
+      // Billing first: this is the only cleanup whose failure costs the user
+      // money, and `after` gives no delivery guarantee — if the instance is
+      // recycled mid-callback, the steps that run last are the ones lost.
+      // Deleting the customer also cancels its subscriptions, so the explicit
+      // cancel is a best effort for the case where there is no customer id.
+      try {
+        await cancelSubscriptionsById({ subscriptionIds });
 
-    track(ctx.user, { event: "account_deletion_cancel" });
+        if (customerId) {
+          await deleteStripeCustomer({ customerId });
+        }
+      } catch (error) {
+        // Logged with the ids because nothing in the database refers to this
+        // account any more: these lines are the only record to reconcile from.
+        logger.error(
+          { error, customerId, subscriptionIds },
+          "Failed to clean up billing after account deletion — subscription may still be active",
+        );
+      }
+
+      try {
+        await deletePostHogPerson({ distinctId: userId });
+      } catch (error) {
+        logger.error(
+          { error },
+          "Failed to delete PostHog person after account deletion",
+        );
+      }
+
+      try {
+        await sendAccountDeletedEmail({
+          to: email,
+          locale,
+          branding,
+          props: {},
+        });
+      } catch (error) {
+        logger.error({ error }, "Failed to send account deletion email");
+      }
+
+      await flushPostHog();
+    });
+
+    return { ok: true as const };
   });

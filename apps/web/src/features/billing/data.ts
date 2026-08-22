@@ -3,6 +3,15 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import type { SpaceTier } from "@/features/space/schema";
 
+export async function getActiveSubscriptionIds(userId: string) {
+  const subscriptions = await prisma.subscription.findMany({
+    where: { userId, active: true },
+    select: { id: true },
+  });
+
+  return subscriptions.map((subscription) => subscription.id);
+}
+
 export async function getSpaceSubscription(spaceId: string) {
   const subscription = await prisma.subscription.findFirst({
     where: {
