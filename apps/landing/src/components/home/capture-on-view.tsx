@@ -1,21 +1,24 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
+import type { ReactNode } from "react";
 import * as React from "react";
 
 /**
  * Fires a PostHog event the first time its contents scroll into view.
  *
- * Uses a partial threshold rather than requiring the whole block to be visible:
- * a full-visibility threshold silently never fires when the block is taller
- * than the viewport, which would drop the event on small screens.
+ * Deliberately not a ratio threshold: a block taller than twice the viewport
+ * can never reach a 0.5 ratio, and one taller than the viewport can never
+ * reach 1, so either would silently stop reporting on small screens. Insetting
+ * the root bottom edge instead means "scrolled meaningfully into view" holds
+ * at any element height.
  */
 export function CaptureOnView({
   event,
   children,
 }: {
   event: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -32,7 +35,7 @@ export function CaptureOnView({
         observer.disconnect();
         posthog.capture(event);
       },
-      { threshold: 0.5 },
+      { rootMargin: "0px 0px -150px 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
