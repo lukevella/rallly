@@ -1,11 +1,15 @@
 import * as z from "zod";
-import { spaceIconAssetProfile } from "@/features/space/constants";
+import { industries, spaceIconAssetProfile } from "@/features/space/constants";
 
 export const memberRoleSchema = z.enum(["member", "admin"]);
 export type MemberRole = z.infer<typeof memberRoleSchema>;
 
 export const spaceTierSchema = z.enum(["hobby", "pro"]);
 export type SpaceTier = z.infer<typeof spaceTierSchema>;
+
+// The taxonomy is validated here rather than in the database so a v2 list
+// costs a deploy instead of an enum migration.
+export const industrySchema = z.enum(industries);
 
 export const createSpaceSchema = z.object({
   name: z.string().min(1).max(100),

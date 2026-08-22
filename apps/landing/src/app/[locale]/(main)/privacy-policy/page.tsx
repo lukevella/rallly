@@ -7,7 +7,7 @@ export default async function PrivacyPolicy() {
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Privacy Policy</h1>
-      <p>Last updated: 1 August 2023</p>
+      <p>Last updated: 21 August 2026</p>
       <p>
         At rallly.co, we take your privacy seriously. This privacy policy
         explains how we collect, use, and disclose your personal data, and your
@@ -18,12 +18,12 @@ export default async function PrivacyPolicy() {
       <h2>Information we collect</h2>
 
       <p>
-        We store personal data (names and email addresses) on
-        DigitalOcean&apos;s servers, which are located in the United States. The
-        reason for storing data in the US is to improve performance for users by
-        having the data stored closer to where our compute services are running.
-        By using our services, you acknowledge that your personal data may be
-        transferred to and stored in the United States.
+        We store personal data (names and email addresses) on Neon&apos;s
+        servers, which are located in the United States. The reason for storing
+        data in the US is to improve performance for users by having the data
+        stored closer to where our compute services are running. By using our
+        services, you acknowledge that your personal data may be transferred to
+        and stored in the United States.
       </p>
 
       <p>
@@ -41,6 +41,49 @@ export default async function PrivacyPolicy() {
         website.
       </p>
 
+      <h2>Optional information about your work</h2>
+
+      <p>
+        If you set up an account for work, we ask for two further pieces of
+        information about you:
+      </p>
+
+      <ul>
+        <li>
+          Your role — self-declared, chosen from a list or described in your own
+          words.
+        </li>
+        <li>
+          The sector your organisation works in — suggested by us, and yours to
+          confirm or change.
+        </li>
+      </ul>
+
+      <p>
+        We use this to understand which professional groups use Rallly, so we
+        can improve the product for them and focus our documentation and
+        marketing on the people it is written for. This information is also
+        shared with Posthog, our analytics processor, for the same purpose.
+      </p>
+
+      <p>
+        The sector field is suggested for you: we guess it from your email
+        address&apos;s domain and the organisation name you enter, so that the
+        field arrives filled in rather than blank. The guess is only a
+        suggestion. Nothing is recorded until you submit the form, and you can
+        change it to any other option, or to &quot;Prefer not to say&quot;,
+        before you do.
+      </p>
+
+      <p>
+        Both fields are optional. You can skip either one when setting up your
+        account, and neither is required to use Rallly — skipping them has no
+        effect on the service you receive. To change or remove an answer you
+        have already given, email us at{" "}
+        <a href="mailto:support@rallly.co">support@rallly.co</a> and we will
+        update or erase it.
+      </p>
+
       <h2>Legal basis for processing</h2>
 
       <p>
@@ -49,6 +92,16 @@ export default async function PrivacyPolicy() {
         your personal data as described in this privacy policy. We process your
         personal data to provide you with our services, and to fulfill our
         contractual obligations to you.
+      </p>
+
+      <p>
+        Your role and your organisation&apos;s sector are processed on the basis
+        of consent alone, since they are optional and are not needed to deliver
+        the service. You give that consent by submitting the setup form with a
+        value in either field — including a suggested sector you choose to leave
+        as it is. Choosing &quot;Prefer not to say&quot;, or leaving a field
+        unanswered, gives no consent and stores nothing. You can withdraw
+        consent at any time by asking us to erase the answer.
       </p>
 
       <h2>Retention of personal data</h2>
