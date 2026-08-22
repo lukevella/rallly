@@ -23,8 +23,13 @@ export type DemoPresetName =
 
 // Votes are indexed against the flattened option list — four Thursdays, two
 // slots each — so every participant needs exactly eight, or the scores and the
-// winning-column highlight fall out of alignment. The last column is a "yes"
-// from everyone in every preset, so the demo always resolves to a clear winner.
+// winning-column highlight fall out of alignment.
+//
+// Every preset holds to the same invariant: the last column is a "yes" from
+// everyone, and no other column ties it. The highlight lights up every column
+// matching the top score, so a tie would highlight several at once and lose the
+// "here is your answer" read. Note the score counts "ifNeedBe" as available, so
+// breaking a tie needs a hard "no", not an "ifNeedBe".
 //
 // Presets are built with literal t() calls rather than looked up by key: the
 // extractor works by static analysis and removeUnusedKeys is on, so a dynamic
@@ -184,7 +189,7 @@ const defaultParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Priya Patel",
-    votes: ["yes", "yes", "yes", "no", "yes", "yes", "no", "yes"],
+    votes: ["yes", "yes", "yes", "no", "no", "yes", "no", "yes"],
   },
   {
     name: "Tom Becker",
@@ -192,18 +197,18 @@ const defaultParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Grace Okafor",
-    votes: ["no", "yes", "no", "yes", "yes", "no", "no", "yes"],
+    votes: ["no", "no", "no", "yes", "yes", "no", "no", "yes"],
   },
 ];
 
 // An interview panel: four colleagues plus the candidate, who is the one
-// external in the room and the reason the poll gets shared as a link. Their
-// availability is the tightest, which is what makes the last slot the only one
-// that works for everyone.
+// external in the room and the reason the poll gets shared as a link. The
+// candidate's availability is the tightest, which is what leaves the last slot
+// as the only one that works for everyone.
 const executiveAssistantParticipants: DemoPreset["participants"] = [
   {
     name: "Daniel Whitfield",
-    votes: ["no", "ifNeedBe", "no", "yes", "no", "yes", "ifNeedBe", "no"],
+    votes: ["no", "ifNeedBe", "no", "no", "no", "yes", "ifNeedBe", "yes"],
   },
   {
     name: "Amara Osei",
@@ -211,11 +216,11 @@ const executiveAssistantParticipants: DemoPreset["participants"] = [
   },
   {
     name: "Henrik Lindqvist",
-    votes: ["no", "yes", "ifNeedBe", "yes", "yes", "yes", "no", "no"],
+    votes: ["no", "yes", "ifNeedBe", "no", "yes", "yes", "no", "yes"],
   },
   {
     name: "Claire Fontaine",
-    votes: ["yes", "no", "no", "yes", "ifNeedBe", "no", "yes", "ifNeedBe"],
+    votes: ["yes", "no", "no", "ifNeedBe", "ifNeedBe", "no", "yes", "yes"],
   },
   {
     name: "Jordan Reyes",
