@@ -30,40 +30,76 @@ const HOLD_MS = 2600;
 // back up, so the loop never shows an exit and an entrance at once.
 const EXIT_MS = 700;
 
+// How much of the slot must show before the card fades in, and below which it
+// fades back out. Low enough that the card is already there by the time the
+// slot is properly on screen, high enough to still have an off state on a
+// viewport tall enough to hold the whole footer at once.
+const REVEAL_RATIO = 0.35;
+
+// Held before the card fades in, so the reveal reads as its own beat rather
+// than something that already happened while the slot was scrolling in. Only
+// on the way in: scrolling away fades out immediately, because a card that
+// lingers after it should have gone reads as a stutter rather than a beat.
+const REVEAL_DELAY_MS = 250;
+
 /**
- * True while any part of the slot is on screen, false once none of it is.
+ * Watches the slot and reports two separate things.
  *
- * Deliberately no threshold or root margin. Anything that only counts the slot
- * as "in view" once some fraction of it shows leaves a band where it is on
- * screen but reported out of view — and in that band the card is visible while
- * the cycle is parked, so it reads as an empty panel. Plain intersection has no
- * such band: out of view means not a pixel of it is showing.
+ * `revealed` drives the card's fade. It needs a threshold: the slot lives at
+ * the bottom of the footer, so on a tall viewport it can never be scrolled off
+ * the bottom edge — a bare intersection test would latch true on the way down
+ * and the card would never fade back out. Requiring a fraction of the slot to
+ * show gives the fade a real off state in both directions.
+ *
+ * `active` drives the cycle, and deliberately keeps the strict test: true while
+ * any pixel is on screen. Running the cycle on the threshold instead would park
+ * it while the card is still visible, which reads as an empty panel. Gating the
+ * two on the same flag is what forced that trade-off before; they are separate
+ * now, so the fade can be generous while the cycle stays conservative.
  *
  * Plain IntersectionObserver rather than Motion's `useInView` so the reveal
  * does not depend on an animation frame being scheduled.
  */
-function useInView(ref: React.RefObject<Element | null>, enabled: boolean) {
-  // Starts null — "not yet known" — so the card can stay visible until an
+function useSlotVisibility(
+  ref: React.RefObject<Element | null>,
+  enabled: boolean,
+) {
+  // Both start null — "not yet known" — so the card stays visible until an
   // observer actually reports otherwise. Only ever hides on a real `false`.
-  const [inView, setInView] = React.useState<boolean | null>(null);
+  const [revealed, setRevealed] = React.useState<boolean | null>(null);
+  const [active, setActive] = React.useState<boolean | null>(null);
 
   React.useEffect(() => {
     const element = ref.current;
     // Without the API there is nothing to observe, and constructing it would
-    // throw before the solved-card fallback ever renders.
+    // throw before the solved-card fallback ever renders. Drop back to "not
+    // yet known" on the way out: a new observer does not report synchronously,
+    // so a stale answer left here would drive the card for the frames between
+    // re-enabling and the first callback — appearing at once with no fade, or
+    // staying hidden — instead of the fresh observation taking over cleanly.
     if (!enabled || !element || typeof IntersectionObserver === "undefined") {
+      setRevealed(null);
+      setActive(null);
       return;
     }
 
-    const observer = new IntersectionObserver(([entry]) =>
-      setInView(entry.isIntersecting),
+    // One observer, both thresholds. `intersectionRatio` is what separates the
+    // two answers, so a single set of callbacks can serve both.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setActive(entry.isIntersecting);
+        setRevealed(
+          entry.isIntersecting && entry.intersectionRatio >= REVEAL_RATIO,
+        );
+      },
+      { threshold: [0, REVEAL_RATIO] },
     );
     observer.observe(element);
 
     return () => observer.disconnect();
   }, [ref, enabled]);
 
-  return inView;
+  return { revealed, active };
 }
 
 // step 0: empty card. step 1: the proposed times appear. steps 2..n+1: one
@@ -122,30 +158,41 @@ function useCycle(enabled: boolean) {
 export function FooterDemo({ className }: { className?: string }) {
   const shouldReduceMotion = useReducedMotion();
   const ref = React.useRef<HTMLDivElement>(null);
-  // False on the server and in browsers without IntersectionObserver, where
-  // the cycle can never run and the card must show its finished state.
-  const [hasObserver, setHasObserver] = React.useState(false);
+  // null until the client has looked: false only in browsers without
+  // IntersectionObserver, where the cycle can never run and the card must show
+  // its finished state. Starting at null rather than false matters for the
+  // reveal — a false first paint would show the solved card for one frame
+  // before the effect hid it again, which is exactly the flash the fade is
+  // supposed to replace.
+  const [hasObserver, setHasObserver] = React.useState<boolean | null>(null);
   React.useEffect(() => {
     setHasObserver(typeof IntersectionObserver !== "undefined");
   }, []);
   // With reduced motion the observer never runs: nothing reveals, nothing
   // loops, the solved poll is simply there.
-  const inView = useInView(ref, !shouldReduceMotion);
+  const { revealed, active } = useSlotVisibility(ref, !shouldReduceMotion);
 
   // The cycle runs only while the card is in view, so scrolling to it always
   // starts from the top of the story rather than mid vote.
-  const animated = inView === true && !shouldReduceMotion;
+  const animated = active === true && !shouldReduceMotion;
   const { visibleRows, showTimes, decided: cycleDecided } = useCycle(animated);
 
   // Show the solved poll only when no animation will play: reduced motion, or
-  // no IntersectionObserver at all. Otherwise the cycle owns the card from the
-  // first render, so it always begins on an empty card rather than snapping
-  // back from a populated one when the observer reports.
-  const solved = shouldReduceMotion || !hasObserver;
+  // a confirmed absence of IntersectionObserver. Otherwise the cycle owns the
+  // card from the first render, so it always begins on an empty card rather
+  // than snapping back from a populated one when the observer reports.
+  const solved = shouldReduceMotion || hasObserver === false;
 
   const rows = solved ? VOTES.length : visibleRows;
   const times = solved ? true : showTimes;
   const decided = solved ? true : cycleDecided;
+
+  // The card starts hidden and only appears once the observer says the slot is
+  // properly on screen, so scrolling down to the footer always shows the fade
+  // rather than a card that was already sitting there. `solved` is the escape
+  // hatch: with reduced motion or no observer nothing will ever reveal it, so
+  // it has to be visible from the first paint.
+  const shown = solved || revealed === true;
 
   return (
     // The observed slot itself never moves or fades. The reveal lives on the
@@ -190,14 +237,14 @@ export function FooterDemo({ className }: { className?: string }) {
       <div
         className={cn(
           "w-full max-w-sm space-y-1.5 rounded-xl border border-border-muted bg-white/55 p-3 shadow-[0_1px_2px_--theme(--color-black/5%),0_8px_24px_-4px_--theme(--color-black/8%)] backdrop-blur-sm",
-          // Rises into place as the slot scrolls in. `inView === false` is the
-          // only state that hides it, so a missing observer or reduced motion
-          // leaves it plainly visible.
+          // Rises into place as the slot scrolls in and settles back as it
+          // scrolls away.
           "transition-all duration-700 ease-out",
-          inView === false
-            ? "translate-y-4 opacity-0"
-            : "translate-y-0 opacity-100",
+          shown ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
         )}
+        // Only the entrance waits. Leaving has no delay, so scrolling away
+        // starts clearing the card at once.
+        style={{ transitionDelay: shown ? `${REVEAL_DELAY_MS}ms` : "0ms" }}
       >
         {/* The proposed times */}
         <div className="flex items-center gap-1.5">
@@ -259,7 +306,12 @@ export function FooterDemo({ className }: { className?: string }) {
                   // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length wireframe votes
                   key={column}
                   className={cn(
-                    "flex h-5 flex-1 items-center justify-center transition-all duration-500",
+                    "flex h-5 flex-1 items-center justify-center rounded-md transition-all duration-500",
+                    // The winning column picks up a fill so the whole column,
+                    // not just its header, reads as the agreed time. Same
+                    // gray-200 as the name pills, so the card keeps one weight
+                    // of grey rather than introducing a second, lighter one.
+                    decided && column === WINNING_COLUMN && "bg-gray-200",
                     // Everything but the winning column recedes once decided,
                     // so the eye lands on the agreed time.
                     decided && column !== WINNING_COLUMN && "opacity-40",

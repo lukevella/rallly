@@ -100,7 +100,7 @@ export default async function Page(props: {
         </Testimonial>
       </Section>
       <Section>
-        <Mentions>
+        <Mentions locale={locale}>
           <Mention
             delay={0.25}
             logo={
