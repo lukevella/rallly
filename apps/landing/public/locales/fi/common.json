@@ -1,9 +1,11 @@
 {
   "blog": "Blogi",
+  "close": "Sulje",
   "compare": "Vertaa",
   "cookiePolicy": "Evästekäytäntö",
   "discussions": "Keskustelut",
   "doodleAlternative": "Vaihtoehto Doodlelle",
+  "executiveAssistants": "Johdon assistentit",
   "footerDiscordLabel": "Liity Discordiin",
   "footerGithubLabel": "Katso GitHub-repositoriomme",
   "footerLinkedinLabel": "Seuraa meitä LinkedInissä",
