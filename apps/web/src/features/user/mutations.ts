@@ -147,7 +147,12 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
   await prisma.user.delete({ where: { id: userId } });
 }
 
-const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
+// Each batch is one round trip, and the handler's budget is maxDuration (300s),
+// so this sets how much backlog a single run can clear. 100 left the job unable
+// to drain even a modest arrivals backlog inside the budget; 1000 keeps the
+// per-batch transaction small while giving a run an order of magnitude more
+// headroom. Raising it further trades that headroom against lock and WAL size.
+const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 1000;
 
 /**
  * Delete orphaned anonymous guest users: guests that own no resources and
