@@ -147,12 +147,21 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
   await prisma.user.delete({ where: { id: userId } });
 }
 
-// Each batch is one round trip, and the handler's budget is maxDuration (300s),
-// so this sets how much backlog a single run can clear. 100 left the job unable
-// to drain even a modest arrivals backlog inside the budget; 1000 keeps the
-// per-batch transaction small while giving a run an order of magnitude more
-// headroom. Raising it further trades that headroom against lock and WAL size.
-const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 1000;
+const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 500;
+
+// Hard ceiling on one invocation. The job runs hourly, so capacity is
+// 500/hour against an arrival rate well under that — the cap exists so a
+// run's cost stays flat regardless of how much backlog is waiting, rather
+// than to keep pace on its own. An unbounded loop is what timed out when
+// the cron was first enabled: the eligibility predicate spans fifteen
+// relations, so re-deriving it per batch is the dominant cost, and a large
+// backlog made the number of derivations unbounded too.
+//
+// A backlog therefore drains over hours rather than in one run, which is
+// the intended behaviour: this job maintains a steady state. A one-time
+// accumulation (a migration backfill, a long outage) wants a supervised
+// drain, not a bigger ceiling here.
+const DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN = 500;
 
 /**
  * Delete orphaned anonymous guest users: guests that own no resources and
@@ -213,17 +222,18 @@ export async function deleteOrphanedAnonymousUsers() {
   } satisfies Prisma.UserWhereInput;
 
   let deleted = 0;
-  let hasMore = true;
 
-  while (hasMore) {
+  while (deleted < DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN) {
     const batch = await prisma.user.findMany({
       where: orphanedAnonymousFilter,
       select: { id: true },
-      take: DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
+      take: Math.min(
+        DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
+        DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN - deleted,
+      ),
     });
 
     if (batch.length === 0) {
-      hasMore = false;
       break;
     }
 
@@ -238,6 +248,15 @@ export async function deleteOrphanedAnonymousUsers() {
     });
 
     deleted += count;
+
+    // A batch can select rows that the re-check then rejects, and a fully
+    // rejected batch leaves `deleted` unmoved. Those rows no longer match the
+    // filter, so the next pass excludes them — but only once the write that
+    // disqualified them is visible here, so stop rather than risk re-selecting
+    // the same batch indefinitely. The next scheduled run picks up the rest.
+    if (count < batch.length) {
+      break;
+    }
   }
 
   return deleted;
