@@ -32,31 +32,33 @@ export function PollFooter({
     <div className="flex flex-col items-center gap-3 py-6 text-center text-muted-foreground text-sm">
       <InstanceFooterLinks links={footerLinks} />
       {isAttributionHidden ? null : (
-        <Trans
-          defaults="Powered by <a>{name}</a>"
-          i18nKey="poweredByRallly"
-          values={{ name: "rallly.co" }}
-          components={{
-            a: (
-              <Link
-                prefetch={false}
-                className="rounded-none border-b border-b-gray-500 font-semibold hover:text-primary"
-                href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
-                onClick={() => {
-                  posthog?.capture("poll_footer:powered_by_link_click", {
-                    pollId: poll.id,
-                    spaceId: poll.spaceId,
-                    tier: poll.space?.tier,
-                    $groups: {
-                      poll: poll.id,
-                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
-                    },
-                  });
-                }}
-              />
-            ),
-          }}
-        />
+        <div>
+          <Trans
+            defaults="Powered by <a>{name}</a>"
+            i18nKey="poweredByRallly"
+            values={{ name: "rallly.co" }}
+            components={{
+              a: (
+                <Link
+                  prefetch={false}
+                  className="hover:underline"
+                  href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
+                  onClick={() => {
+                    posthog?.capture("poll_footer:powered_by_link_click", {
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                      tier: poll.space?.tier,
+                      $groups: {
+                        poll: poll.id,
+                        ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                      },
+                    });
+                  }}
+                />
+              ),
+            }}
+          />
+        </div>
       )}
     </div>
   );
