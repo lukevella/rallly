@@ -121,31 +121,25 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="doodleComparisonFreePolls"
-                    defaults="Free meeting polls"
+                    i18nKey="doodleComparisonPolls"
+                    defaults="Meeting polls"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <CompareTableCheck label={included} />
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
                 </CompareTableCell>
                 <CompareTableCell>
-                  <CompareTableCheck label={included} />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="doodleComparisonNoAccount"
-                    defaults="Create polls without an account"
+                    i18nKey="doodleComparisonPollsDoodle"
+                    defaults="1 on the free plan"
                   />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableCheck label={included} />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <CompareTableDash label={notIncluded} />
                 </CompareTableCell>
               </tr>
               <tr>
@@ -172,6 +166,22 @@ export default async function Page(props: {
                     i18nKey="doodleComparisonTimeSlotsDoodle"
                     defaults="10 on the free plan"
                   />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonNoAccount"
+                    defaults="Create polls without an account"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
                 </CompareTableCell>
               </tr>
               <tr>
