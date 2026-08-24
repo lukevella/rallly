@@ -27,9 +27,7 @@ export type SupportedEmailProviders = EmailProvider;
 
 let cachedTransport: Transporter | undefined;
 
-export function createTransportForProvider(
-  provider: EmailProvider,
-): Transporter {
+export function createTransportForProvider(provider: EmailProvider) {
   switch (provider) {
     case "ses": {
       const ses = new aws.SES({
