@@ -159,7 +159,6 @@ export function FooterLinksField({
         </Button>
         <Button
           type="submit"
-          variant="primary"
           loading={updateFooterLinks.isExecuting}
           disabled={!form.formState.isDirty}
         >
