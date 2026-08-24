@@ -25,7 +25,7 @@
     },
     {
       "path": "/api/house-keeping/delete-orphaned-anonymous-users",
-      "schedule": "30 7 * * *"
+      "schedule": "45 * * * *"
     }
   ]
 }
