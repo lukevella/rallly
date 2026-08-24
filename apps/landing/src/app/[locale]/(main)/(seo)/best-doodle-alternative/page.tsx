@@ -153,6 +153,32 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
+                    i18nKey="doodleComparisonTimeSlots"
+                    defaults="Time slots per poll"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonTimeSlotsDoodle"
+                    defaults="10 on the free plan"
+                  />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
                     i18nKey="doodleComparisonAdFree"
                     defaults="Ad-free experience"
                   />
@@ -191,7 +217,7 @@ export default async function Page(props: {
                     t={t}
                     ns="home"
                     i18nKey="doodleComparisonOpenSource"
-                    defaults="Open source"
+                    defaults="Open-source"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
@@ -207,7 +233,7 @@ export default async function Page(props: {
                     t={t}
                     ns="home"
                     i18nKey="doodleComparisonSelfHosting"
-                    defaults="Self-hosting option"
+                    defaults="Self-hostable"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
