@@ -27,7 +27,9 @@ export type SupportedEmailProviders = EmailProvider;
 
 let cachedTransport: Transporter | undefined;
 
-function createTransportForProvider(provider: EmailProvider): Transporter {
+export function createTransportForProvider(
+  provider: EmailProvider,
+): Transporter {
   switch (provider) {
     case "ses": {
       const ses = new aws.SES({
@@ -41,7 +43,17 @@ function createTransportForProvider(provider: EmailProvider): Transporter {
       });
     }
     case "smtp": {
-      const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
+      const hasAuth = Boolean(process.env.SMTP_USER && process.env.SMTP_PWD);
+
+      // Nodemailer requires both a user and a password for authenticated
+      // SMTP — passing just one produces a cryptic "Missing credentials for
+      // PLAIN" failure at send time instead of a clear config error.
+      if ((process.env.SMTP_USER || process.env.SMTP_PWD) && !hasAuth) {
+        console.warn(
+          "⚠️  Only one of SMTP_USER / SMTP_PWD is set — both are required for authenticated SMTP. Falling back to no authentication.",
+        );
+      }
+
       const port = process.env.SMTP_PORT
         ? Number.parseInt(process.env.SMTP_PORT, 10)
         : undefined;
