@@ -7,7 +7,6 @@ import { cacheLife } from "next/cache";
 import Image from "next/image";
 import type * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { Mention, Mentions } from "@/components/home/mentions";
 import {
   Section,
   SectionContent,
@@ -444,49 +443,6 @@ export default async function Page(props: {
             <Trans
               t={t}
               ns="home"
-              i18nKey="pressKitHeroTitle"
-              defaults="Hero image"
-            />
-          </SectionTitle>
-          <SectionDescription>
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="pressKitHeroDescription"
-              defaults="A ready-made header image for articles and blog posts."
-            />
-          </SectionDescription>
-        </SectionHeading>
-        <SectionContent>
-          <AssetCard
-            name={t("pressKitHeroName", {
-              ns: "home",
-              defaultValue: "Hero image",
-            })}
-            previewClassName="aspect-video"
-            preview={
-              <Image
-                src="/press/rallly-hero.png"
-                width={2560}
-                height={1440}
-                alt={t("pressKitHeroName", {
-                  ns: "home",
-                  defaultValue: "Hero image",
-                })}
-                className="size-full object-cover"
-                sizes="100vw"
-              />
-            }
-            links={[{ label: "PNG", href: "/press/rallly-hero.png" }]}
-          />
-        </SectionContent>
-      </Section>
-      <Section>
-        <SectionHeading>
-          <SectionTitle>
-            <Trans
-              t={t}
-              ns="home"
               i18nKey="pressKitScreenshotsTitle"
               defaults="Screenshots"
             />
@@ -526,102 +482,6 @@ export default async function Page(props: {
               />
             ))}
           </div>
-        </SectionContent>
-      </Section>
-      <Section>
-        <SectionHeading>
-          <SectionTitle>
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="pressKitCoverageTitle"
-              defaults="Press mentions"
-            />
-          </SectionTitle>
-        </SectionHeading>
-        <SectionContent>
-          <Mentions locale={locale}>
-            <Mention
-              delay={0.25}
-              logo={
-                <div className="relative h-8 w-14">
-                  <Image
-                    src="/static/images/pcmag-logo.svg"
-                    alt="PCMag"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              }
-            >
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="pcmagQuote"
-                defaults="“Set up a scheduling poll in as little time as possible.”"
-              />
-            </Mention>
-            <Mention
-              delay={0.5}
-              logo={
-                <div className="relative h-8 w-24">
-                  <Image
-                    src="/static/images/hubspot-logo.svg"
-                    alt="HubSpot"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              }
-            >
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="hubspotQuote"
-                defaults="“The simplest choice for availability polling for large groups.”"
-              />
-            </Mention>
-            <Mention
-              delay={0.75}
-              logo={
-                <div className="relative h-8 w-32">
-                  <Image
-                    src="/static/images/goodfirms-logo.svg"
-                    alt="Goodfirms"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              }
-            >
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="goodfirmsQuote"
-                defaults="“Unique in its simplicity and requires minimum interaction time.”"
-              />
-            </Mention>
-            <Mention
-              delay={1}
-              logo={
-                <div className="relative h-8 w-20">
-                  <Image
-                    src="/static/images/popsci-logo.svg"
-                    alt="PopSci"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              }
-            >
-              <Trans
-                t={t}
-                ns="home"
-                i18nKey="popsciQuote"
-                defaults="“The perfect pick if you want to keep your RSVPs simple.”"
-              />
-            </Mention>
-          </Mentions>
         </SectionContent>
       </Section>
       <Section>
