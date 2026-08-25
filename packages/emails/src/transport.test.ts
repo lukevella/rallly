@@ -56,42 +56,28 @@ test("enables auth when both SMTP_USER and SMTP_PWD are set", () => {
 
 test("does not send partial auth when only SMTP_USER is set", () => {
   process.env.SMTP_USER = "user@example.com";
-  const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   createTransportForProvider("smtp");
 
   expect(createTransport).toHaveBeenCalledWith(
     expect.objectContaining({ auth: undefined }),
   );
-  expect(warnSpy).toHaveBeenCalledWith(
-    expect.stringContaining("Only one of SMTP_USER / SMTP_PWD is set"),
-  );
-  warnSpy.mockRestore();
 });
 
 test("does not send partial auth when only SMTP_PWD is set", () => {
   process.env.SMTP_PWD = "password";
-  const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   createTransportForProvider("smtp");
 
   expect(createTransport).toHaveBeenCalledWith(
     expect.objectContaining({ auth: undefined }),
   );
-  expect(warnSpy).toHaveBeenCalled();
-  warnSpy.mockRestore();
 });
 
-test("leaves auth undefined and does not warn when neither is set", () => {
-  const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
+test("leaves auth undefined when neither is set", () => {
   createTransportForProvider("smtp");
 
   expect(createTransport).toHaveBeenCalledWith(
     expect.objectContaining({ auth: undefined }),
   );
-  expect(warnSpy).not.toHaveBeenCalledWith(
-    expect.stringContaining("Only one of SMTP_USER / SMTP_PWD is set"),
-  );
-  warnSpy.mockRestore();
 });

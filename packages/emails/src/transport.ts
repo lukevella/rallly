@@ -41,16 +41,11 @@ export function createTransportForProvider(provider: EmailProvider) {
       });
     }
     case "smtp": {
+      // Nodemailer refuses partial credentials at send time ("Missing
+      // credentials for PLAIN"), so a half-built auth object must never be
+      // passed. Env validation in apps/web rejects the one-without-the-other
+      // state at startup.
       const hasAuth = Boolean(process.env.SMTP_USER && process.env.SMTP_PWD);
-
-      // Nodemailer requires both a user and a password for authenticated
-      // SMTP — passing just one produces a cryptic "Missing credentials for
-      // PLAIN" failure at send time instead of a clear config error.
-      if ((process.env.SMTP_USER || process.env.SMTP_PWD) && !hasAuth) {
-        console.warn(
-          "⚠️  Only one of SMTP_USER / SMTP_PWD is set — both are required for authenticated SMTP. Falling back to no authentication.",
-        );
-      }
 
       const port = process.env.SMTP_PORT
         ? Number.parseInt(process.env.SMTP_PORT, 10)
