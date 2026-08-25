@@ -70,7 +70,7 @@ const faqLinkClassName =
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("days");
+  cacheLife("hours");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["common", "pricing", "home"]);
   const [pollCount, voterCount] = await Promise.all([
