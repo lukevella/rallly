@@ -21,7 +21,7 @@ function Harness({ initial = null }: { initial?: string | null }) {
 
 async function chooseOther(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("combobox"));
-  await user.click(screen.getByRole("option", { name: "Other" }));
+  await user.click(await screen.findByRole("option", { name: "Other" }));
 }
 
 describe("JobTitleSelect", () => {
@@ -30,7 +30,7 @@ describe("JobTitleSelect", () => {
     render(<Harness />);
 
     await user.click(screen.getByRole("combobox"));
-    await user.click(screen.getByRole("option", { name: "Recruiter" }));
+    await user.click(await screen.findByRole("option", { name: "Recruiter" }));
 
     await waitFor(() =>
       expect(screen.getByTestId("value")).toHaveTextContent("recruiter"),
@@ -88,7 +88,9 @@ describe("JobTitleSelect", () => {
     render(<Harness initial="recruiter" />);
 
     await user.click(screen.getByRole("combobox"));
-    await user.click(screen.getByRole("option", { name: "Prefer not to say" }));
+    await user.click(
+      await screen.findByRole("option", { name: "Prefer not to say" }),
+    );
 
     await waitFor(() =>
       expect(screen.getByTestId("value")).toHaveTextContent("null"),
