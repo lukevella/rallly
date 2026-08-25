@@ -200,18 +200,6 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="doodleComparisonLanguages"
-                    defaults="Languages"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>16</CompareTableCell>
-                <CompareTableCell>5</CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="home"
                     i18nKey="doodleComparisonOpenSource"
                     defaults="Open-source"
                   />
