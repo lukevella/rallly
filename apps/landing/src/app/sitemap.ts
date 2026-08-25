@@ -46,6 +46,15 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     })),
     {
+      url: absoluteUrl("/press-kit"),
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+      alternates: {
+        languages: getAlternateLanguages("/press-kit"),
+      },
+    },
+    {
       url: absoluteUrl("/blog"),
       lastModified: new Date(),
       changeFrequency: "weekly",

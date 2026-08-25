@@ -154,6 +154,19 @@ export const Footer = async ({ locale }: { locale: string }) => {
                 <Trans t={t} ns="common" i18nKey="status" defaults="Status" />
               </a>
             </li>
+            <li>
+              <LinkBase
+                href="/press-kit"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="pressKit"
+                  defaults="Press kit"
+                />
+              </LinkBase>
+            </li>
           </ul>
         </div>
         <div>
