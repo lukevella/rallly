@@ -5,6 +5,14 @@ import { cacheLife } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import {
+  CompareTable,
+  CompareTableCell,
+  CompareTableCheck,
+  CompareTableDash,
+  CompareTableFeature,
+  CompareTableHead,
+} from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
@@ -30,11 +38,19 @@ export default async function Page(props: {
 }) {
   cacheLife("hours");
   const { locale } = await props.params;
-  const { t } = await getTranslation(locale, ["home"]);
+  const { t } = await getTranslation(locale, ["home", "pricing"]);
   const [pollCount, voterCount] = await Promise.all([
     getMonthlyPollCount(),
     getMonthlyVoterCount(),
   ]);
+  const included = t("included", {
+    ns: "pricing",
+    defaultValue: "Included",
+  });
+  const notIncluded = t("notIncluded", {
+    ns: "pricing",
+    defaultValue: "Not included",
+  });
   return (
     <div className="divide-y">
       <Section>
@@ -63,6 +79,159 @@ export default async function Page(props: {
         </Stats>
       </Section>
       <HowItWorks locale={locale} />
+      <Section>
+        <SectionHeading>
+          <SectionTitle>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="doodleComparisonTitle"
+              defaults="How Rallly compares to Doodle"
+            />
+          </SectionTitle>
+          <SectionDescription>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="doodleComparisonDescription"
+              defaults="A side-by-side look at what you get with each tool."
+            />
+          </SectionDescription>
+        </SectionHeading>
+        <SectionContent>
+          <CompareTable>
+            <thead>
+              <tr className="border-b">
+                <th className="w-3/5">
+                  <span className="sr-only">
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareFeature"
+                      defaults="Feature"
+                    />
+                  </span>
+                </th>
+                <CompareTableHead>Rallly</CompareTableHead>
+                <CompareTableHead>Doodle</CompareTableHead>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonPolls"
+                    defaults="Group polls"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonPollsDoodle"
+                    defaults="1 on the free plan"
+                  />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonNoAccount"
+                    defaults="Create polls without an account"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonAdFree"
+                    defaults="Ad-free experience"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonPaidPlansOnly"
+                    defaults="Paid plans only"
+                  />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonTimeZones"
+                    defaults="Automatic time zone conversion"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonOpenSource"
+                    defaults="Open-source"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonSelfHosting"
+                    defaults="Self-hostable"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+            </tbody>
+          </CompareTable>
+        </SectionContent>
+      </Section>
       <Section>
         <Testimonial
           logo={

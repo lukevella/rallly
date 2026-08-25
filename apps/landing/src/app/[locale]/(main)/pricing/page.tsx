@@ -18,7 +18,15 @@ import {
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-
+import {
+  CompareTable,
+  CompareTableCell,
+  CompareTableCheck,
+  CompareTableDash,
+  CompareTableFeature,
+  CompareTableHead,
+  CompareTableTooltip,
+} from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
@@ -35,22 +43,12 @@ import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
-
 import {
   BillingIntervalPrice,
   BillingIntervalProvider,
   BillingIntervalSwitch,
   BillingIntervalValue,
 } from "./billing-interval";
-import {
-  CompareTable,
-  CompareTableCell,
-  CompareTableCheck,
-  CompareTableDash,
-  CompareTableFeature,
-  CompareTableHead,
-  CompareTableTooltip,
-} from "./compare-table";
 import {
   PlanBenefit,
   PlanBenefitName,
