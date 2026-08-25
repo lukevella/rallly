@@ -122,7 +122,7 @@ export default async function Page(props: {
                     t={t}
                     ns="home"
                     i18nKey="doodleComparisonPolls"
-                    defaults="Meeting polls"
+                    defaults="Group polls"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
@@ -139,32 +139,6 @@ export default async function Page(props: {
                     ns="home"
                     i18nKey="doodleComparisonPollsDoodle"
                     defaults="1 on the free plan"
-                  />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="doodleComparisonTimeSlots"
-                    defaults="Time slots per poll"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="doodleComparisonTimeSlotsDoodle"
-                    defaults="10 on the free plan"
                   />
                 </CompareTableCell>
               </tr>
