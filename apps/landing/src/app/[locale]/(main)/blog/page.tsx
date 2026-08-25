@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { getTranslation } from "@/i18n/server";
+import { getAlternates } from "@/lib/alternates";
 import { getAllPosts } from "@/lib/api";
 import { PostPreview } from "./post-preview";
 
@@ -56,6 +57,7 @@ export async function generateMetadata(props: {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, "blog");
   return {
+    alternates: getAlternates({ locale, path: "/blog" }),
     title: t("blogTitle", {
       ns: "blog",
       defaultValue: "Rallly - Blog",

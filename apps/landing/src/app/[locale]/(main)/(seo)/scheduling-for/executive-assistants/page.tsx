@@ -22,6 +22,7 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
+import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
 export default async function Page(props: {
@@ -375,6 +376,10 @@ export async function generateMetadata(props: {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, "home");
   return {
+    alternates: getAlternates({
+      locale,
+      path: "/scheduling-for/executive-assistants",
+    }),
     title: t("eaMetaTitle", {
       ns: "home",
       defaultValue:

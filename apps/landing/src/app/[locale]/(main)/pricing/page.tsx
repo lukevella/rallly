@@ -32,6 +32,7 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
+import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
 
@@ -933,6 +934,7 @@ export async function generateMetadata(props: {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["common", "pricing"]);
   return {
+    alternates: getAlternates({ locale, path: "/pricing" }),
     title: t("pricing", { ns: "common", defaultValue: "Pricing" }),
     description: t("pricingDescription", {
       ns: "pricing",
