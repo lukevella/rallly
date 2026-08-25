@@ -1,9 +1,12 @@
 {
   "blog": "Blog",
+  "close": "Bezárás",
+  "committees": "Bizottságok és tanácsok",
   "compare": "Összehasonlít",
   "cookiePolicy": "Cookie irányelvek",
   "discussions": "Beszélgetések",
   "doodleAlternative": "Doodle alternatíva",
+  "executiveAssistants": "Vezetői asszisztensek",
   "footerDiscordLabel": "Csatlakozz hozzánk Discordon",
   "footerGithubLabel": "Nézd meg a GitHub kódbázist",
   "footerLinkedinLabel": "Kövess minket LinkedIn-en",
@@ -12,6 +15,7 @@
   "getStarted": "Kezdj neki",
   "goToHome": "Irány a főoldal",
   "language": "Nyelv",
+  "legal": "Ügyvédi irodák és közvetítők",
   "licensingThankYouGoHomeLink": "Vissza a főoldalra",
   "licensingThankYouLicense": "Következő lépések",
   "licensingThankYouLicenseEmailed": "A licenckulcsod elküldtük a vásárlás során megadott email címre. Kérjük ellenőrizd a beérkező leveleid!",
@@ -28,9 +32,12 @@
   "privacyPolicy": "Adatvédelmi irányelvek",
   "product": "Termék",
   "resources": "Erőforrások",
+  "schedulingFor": "Ütemezés ennek:",
   "schedulingPoll": "Ütemező szavazás",
+  "sportsClubs": "Sportklubbok",
   "status": "Állapot",
   "support": "Segítség",
   "termsOfUse": "Felhasználási feltételek",
+  "thesisDefense": "Diplomavédés",
   "when2MeetAlternative": "When2Meet alternatíva"
 }
