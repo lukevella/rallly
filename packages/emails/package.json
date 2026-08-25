@@ -31,14 +31,14 @@
   "devDependencies": {
     "@rallly/tailwind-config": "workspace:*",
     "@rallly/tsconfig": "workspace:*",
-    "@react-email/ui": "^6.6.3",
+    "@react-email/ui": "^6.9.3",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^5.0.0",
     "i18next-cli": "^1.58.1",
     "jsdom": "^26.1.0",
-    "react-email": "^6.6.3",
+    "react-email": "^6.9.3",
     "vitest": "^4.0.16"
   }
 }
