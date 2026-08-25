@@ -7,6 +7,7 @@ import { cacheLife } from "next/cache";
 import Image from "next/image";
 import type * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { Mention, Mentions } from "@/components/home/mentions";
 import {
   Section,
   SectionContent,
@@ -16,6 +17,7 @@ import {
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
+import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
 function Fact({
   label,
@@ -79,9 +81,13 @@ function AssetCard({
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("max");
+  cacheLife("hours");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home"]);
+  const [pollCount, voterCount] = await Promise.all([
+    getMonthlyPollCount(),
+    getMonthlyVoterCount(),
+  ]);
 
   const logos = [
     {
@@ -122,6 +128,16 @@ export default async function Page(props: {
     {
       name: t("pressKitAppIcon", { ns: "home", defaultValue: "App icon" }),
       file: "rallly-app-icon",
+      width: 64,
+      height: 64,
+      dark: false,
+    },
+    {
+      name: t("pressKitAppIconSquare", {
+        ns: "home",
+        defaultValue: "App icon, square",
+      }),
+      file: "rallly-app-icon-square",
       width: 64,
       height: 64,
       dark: false,
@@ -217,14 +233,42 @@ export default async function Page(props: {
           </SectionTitle>
         </SectionHeading>
         <SectionContent className="space-y-8">
-          <p className="max-w-prose text-pretty text-gray-600 leading-relaxed">
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="pressKitAboutText"
-              defaults="Rallly is an open-source meeting scheduling tool that helps groups find the best time to meet, without the back and forth. Organizers create a poll with proposed times and share a link, participants vote on the times that work for them, and the best time wins. Polls can be created and voted on without an account, which makes Rallly a popular choice for scheduling with people outside your organization."
-            />
-          </p>
+          <div>
+            <div className="font-medium text-gray-800 text-sm">
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pressKitOneLinerLabel"
+                defaults="One-line description"
+              />
+            </div>
+            <p className="mt-1 max-w-prose text-pretty text-gray-600 leading-relaxed">
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pressKitOneLiner"
+                defaults="Rallly is an open-source meeting scheduling tool that helps you find the best time to meet, without the back and forth."
+              />
+            </p>
+          </div>
+          <div>
+            <div className="font-medium text-gray-800 text-sm">
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pressKitBoilerplateLabel"
+                defaults="Boilerplate"
+              />
+            </div>
+            <p className="mt-1 max-w-prose text-pretty text-gray-600 leading-relaxed">
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pressKitAboutText"
+                defaults="Rallly is an open-source meeting scheduling tool that helps groups find the best time to meet, without the back and forth. Organizers create a poll with proposed times and share a link, participants vote on the times that work for them, and the best time wins. Polls can be created and voted on without an account, which makes Rallly a popular choice for scheduling with people outside your organization."
+              />
+            </p>
+          </div>
           <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Fact
               label={
@@ -299,6 +343,24 @@ export default async function Page(props: {
               }
             >
               AGPL-3.0
+            </Fact>
+            <Fact
+              label={
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="pressKitFactUsage"
+                  defaults="Last 30 days"
+                />
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pressKitFactUsageValue"
+                defaults="{voterCount, plural, one {# person} other {# people}} voted on {pollCount, plural, one {# poll} other {# polls}}"
+                values={{ voterCount, pollCount }}
+              />
             </Fact>
           </dl>
         </SectionContent>
@@ -382,6 +444,49 @@ export default async function Page(props: {
             <Trans
               t={t}
               ns="home"
+              i18nKey="pressKitHeroTitle"
+              defaults="Hero image"
+            />
+          </SectionTitle>
+          <SectionDescription>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="pressKitHeroDescription"
+              defaults="A ready-made header image for articles and blog posts."
+            />
+          </SectionDescription>
+        </SectionHeading>
+        <SectionContent>
+          <AssetCard
+            name={t("pressKitHeroName", {
+              ns: "home",
+              defaultValue: "Hero image",
+            })}
+            previewClassName="aspect-video"
+            preview={
+              <Image
+                src="/press/rallly-hero.png"
+                width={2560}
+                height={1440}
+                alt={t("pressKitHeroName", {
+                  ns: "home",
+                  defaultValue: "Hero image",
+                })}
+                className="size-full object-cover"
+                sizes="100vw"
+              />
+            }
+            links={[{ label: "PNG", href: "/press/rallly-hero.png" }]}
+          />
+        </SectionContent>
+      </Section>
+      <Section>
+        <SectionHeading>
+          <SectionTitle>
+            <Trans
+              t={t}
+              ns="home"
               i18nKey="pressKitScreenshotsTitle"
               defaults="Screenshots"
             />
@@ -421,6 +526,102 @@ export default async function Page(props: {
               />
             ))}
           </div>
+        </SectionContent>
+      </Section>
+      <Section>
+        <SectionHeading>
+          <SectionTitle>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="pressKitCoverageTitle"
+              defaults="Press mentions"
+            />
+          </SectionTitle>
+        </SectionHeading>
+        <SectionContent>
+          <Mentions locale={locale}>
+            <Mention
+              delay={0.25}
+              logo={
+                <div className="relative h-8 w-14">
+                  <Image
+                    src="/static/images/pcmag-logo.svg"
+                    alt="PCMag"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pcmagQuote"
+                defaults="“Set up a scheduling poll in as little time as possible.”"
+              />
+            </Mention>
+            <Mention
+              delay={0.5}
+              logo={
+                <div className="relative h-8 w-24">
+                  <Image
+                    src="/static/images/hubspot-logo.svg"
+                    alt="HubSpot"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="hubspotQuote"
+                defaults="“The simplest choice for availability polling for large groups.”"
+              />
+            </Mention>
+            <Mention
+              delay={0.75}
+              logo={
+                <div className="relative h-8 w-32">
+                  <Image
+                    src="/static/images/goodfirms-logo.svg"
+                    alt="Goodfirms"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="goodfirmsQuote"
+                defaults="“Unique in its simplicity and requires minimum interaction time.”"
+              />
+            </Mention>
+            <Mention
+              delay={1}
+              logo={
+                <div className="relative h-8 w-20">
+                  <Image
+                    src="/static/images/popsci-logo.svg"
+                    alt="PopSci"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="popsciQuote"
+                defaults="“The perfect pick if you want to keep your RSVPs simple.”"
+              />
+            </Mention>
+          </Mentions>
         </SectionContent>
       </Section>
       <Section>
