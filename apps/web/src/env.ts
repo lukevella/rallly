@@ -294,4 +294,17 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  createFinalSchema: (shape) =>
+    z.object(shape).superRefine((env, ctx) => {
+      // Authenticated SMTP needs both credentials; nodemailer fails at send
+      // time with a cryptic "Missing credentials" error if one is missing.
+      if (Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PWD)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [env.SMTP_USER ? "SMTP_PWD" : "SMTP_USER"],
+          message:
+            "SMTP_USER and SMTP_PWD must be set together. Set both to use authenticated SMTP, or neither to connect without authentication.",
+        });
+      }
+    }),
 });
