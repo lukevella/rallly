@@ -1,9 +1,12 @@
 {
   "blog": "Blog",
+  "close": "Zavřít",
+  "committees": "Výbory a rady",
   "compare": "Porovnat",
   "cookiePolicy": "Zásady používání cookies",
   "discussions": "Diskuze",
   "doodleAlternative": "Alternativa k Doodle",
+  "executiveAssistants": "Výkonní asistenti",
   "footerDiscordLabel": "Přidejte se k nám na Discordu",
   "footerGithubLabel": "Zobrazit náš repozitář na GitHubu",
   "footerLinkedinLabel": "Sledujte nás na LinkedIn",
@@ -12,6 +15,7 @@
   "getStarted": "Začínáme",
   "goToHome": "Přejít domů",
   "language": "Jazyk",
+  "legal": "Právnické firmy a mediátoři",
   "licensingThankYouGoHomeLink": "Zpět na hlavní stránku",
   "licensingThankYouLicense": "Další kroky",
   "licensingThankYouLicenseEmailed": "Váš licenční klíč byl odeslán na e-mailovou adresu, kterou jste zadali při placení. Zkontrolujte prosím svou doručenou poštu.",
@@ -28,9 +32,12 @@
   "privacyPolicy": "Zásady ochrany osobních údajů",
   "product": "Produkt",
   "resources": "Zdroje",
+  "schedulingFor": "Plánování pro",
   "schedulingPoll": "Plánovací hlasování",
+  "sportsClubs": "Sportovní kluby",
   "status": "Stav",
   "support": "Podpora",
   "termsOfUse": "Podmínky používání",
+  "thesisDefense": "Obhajoby diplomové práce",
   "when2MeetAlternative": "Alternativa k When2Meet"
 }

@@ -1,4 +1,10 @@
 {
+  "committeesDescription": "Najít datum, kdy má čas celá komise bez řetězových e-mailů všem zúčastněným. Sdílejte jeden odkaz, sledujte příchozí odpovědi a potvrďte schůzku, jakmile víte, že jste usnášeníschopní. Služba zdarma, členové nepotřebují účet.",
+  "committeesFaqBranding": "Mohou ankety nést značku naší organizace?",
+  "committeesFaqBrandingAnswer": "S <0>Rallly Pro</0> můžete přidat vlastní logo a barvy a odstranit zmínku o aplikaci Rallly, takže anketa, kterou odešlete, bude vypadat, jako by pocházela od vaší organizace. Všechno ostatní je zdarma.",
+  "committeesFaqExternalMembers": "Mohou odpovědět externí správci a kooptovaní členové?",
+  "committeesFaqExternalMembersAnswer": "Ano. Odpovědět může každý, kdo má odkaz, bez ohledu na to, zda používá Rallly a jaký kalendářový systém jeho organizace používá. Počet pozvaných členů není omezen, takže správci, kooptovaní členové i poradci odpovídají stejným způsobem.",
+  "committeesFaqQuorum": "Jak se pozná, že jsme usnášeníschopní?",
   "createAPoll": "Vytvořit hlasování",
   "doodleAlternative": "Nejlepší bezplatná alternativa k Doodle",
   "doodleAlternativeDescription": "Rallly je tady pro vás, pokud hledáte alternativu k Doodle. Tisíce uživatelů již přešly a nyní si užívají profesionální hlasování o termínech schůzek bez reklam v intuitivním a snadno použitelném rozhraní.        ",
