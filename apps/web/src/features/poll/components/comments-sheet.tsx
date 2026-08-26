@@ -314,6 +314,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                               <DropdownMenuTrigger
                                 render={
                                   <Button
+                                    className="ml-auto"
                                     aria-label={t("moreOptions", {
                                       defaultValue: "More options",
                                     })}
@@ -324,7 +325,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                               >
                                 <MoreHorizontalIcon />
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="start">
+                              <DropdownMenuContent align="end">
                                 <DropdownMenuItem
                                   variant="destructive"
                                   onClick={() => {
