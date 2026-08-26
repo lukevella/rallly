@@ -286,13 +286,17 @@ function CommentsSheetInner({ className }: { className?: string }) {
             ) : null}
             <div className="flex grow flex-col pb-6">
               {count > 0 ? (
-                <div className="space-y-4">
+                <div className="divide-y">
                   {sortedComments.map((comment) => {
                     const canDelete =
                       role === "admin" || session.ownsObject(comment);
 
                     return (
-                      <div data-testid="comment" key={comment.id}>
+                      <div
+                        data-testid="comment"
+                        key={comment.id}
+                        className="py-4 first:pt-0 last:pb-0"
+                      >
                         <div className="mb-1 flex items-center space-x-2">
                           <Participant>
                             <OptimizedAvatarImage
