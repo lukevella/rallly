@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { Metadata } from "next";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
@@ -157,5 +158,8 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(params.locale);
   return {
     title: t("login"),
+    alternates: {
+      canonical: absoluteUrl("/login"),
+    },
   };
 }
