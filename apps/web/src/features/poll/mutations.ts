@@ -3,6 +3,7 @@ import "server-only";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
+import { recordPollActivities } from "@/features/poll/activity/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 
 export type PollOption = {
@@ -39,48 +40,61 @@ export const createPoll = async ({
 }: CreatePollParams) => {
   const kind = options.some((o) => o.duration > 0) ? "time" : "date";
 
-  const poll = await prisma.poll.create({
-    data: {
-      id: nanoid(),
-      title,
-      description,
-      location,
-      timeZone,
-      requireParticipantEmail,
-      hideParticipants,
-      hideScores,
-      disableComments,
-      userId,
-      spaceId,
-      kind,
-      options: { createMany: { data: options } },
-    },
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      location: true,
-      timeZone: true,
-      status: true,
-      createdAt: true,
-      disableComments: true,
-      user: {
-        select: {
-          name: true,
-          image: true,
+  const poll = await prisma.$transaction(async (tx) => {
+    const poll = await tx.poll.create({
+      data: {
+        id: nanoid(),
+        title,
+        description,
+        location,
+        timeZone,
+        requireParticipantEmail,
+        hideParticipants,
+        hideScores,
+        disableComments,
+        userId,
+        spaceId,
+        kind,
+        options: { createMany: { data: options } },
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        location: true,
+        timeZone: true,
+        status: true,
+        createdAt: true,
+        disableComments: true,
+        user: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+        options: {
+          select: {
+            id: true,
+            startTime: true,
+            duration: true,
+          },
+          orderBy: {
+            startTime: "asc",
+          },
         },
       },
-      options: {
-        select: {
-          id: true,
-          startTime: true,
-          duration: true,
-        },
-        orderBy: {
-          startTime: "asc",
-        },
+    });
+
+    await recordPollActivities(tx, [
+      {
+        pollId: poll.id,
+        type: "poll_created",
+        userId,
+        payload: { title },
       },
-    },
+    ]);
+
+    return poll;
   });
 
   return poll;
@@ -117,35 +131,53 @@ const pollResponseSelect = {
  * the poll unchanged without altering its `closedReason` (so a poll auto-closed
  * by the cron job keeps `closedReason: "auto"`). Returns `null` when the poll
  * does not exist in the space, letting the caller surface a 404.
+ *
+ * `userId` attributes the activity event when the actor is known; API key
+ * callers act as the space rather than a user and leave it unset.
  */
 export const closePoll = async ({
   pollId,
   spaceId,
+  userId,
 }: {
   pollId: string;
   spaceId: AuthorizedSpaceId;
+  userId?: string;
 }) => {
-  const poll = await prisma.poll.findFirst({
-    where: {
-      id: pollId,
-      spaceId,
-      deletedAt: null,
-    },
-    select: pollResponseSelect,
-  });
+  return prisma.$transaction(async (tx) => {
+    const poll = await tx.poll.findFirst({
+      where: {
+        id: pollId,
+        spaceId,
+        deletedAt: null,
+      },
+      select: pollResponseSelect,
+    });
 
-  if (!poll) {
-    return null;
-  }
+    if (!poll) {
+      return null;
+    }
 
-  if (poll.status === "closed") {
-    return poll;
-  }
+    if (poll.status === "closed") {
+      return poll;
+    }
 
-  return prisma.poll.update({
-    where: { id: pollId },
-    data: { status: "closed", closedReason: "manual" },
-    select: pollResponseSelect,
+    const closedPoll = await tx.poll.update({
+      where: { id: pollId },
+      data: { status: "closed", closedReason: "manual" },
+      select: pollResponseSelect,
+    });
+
+    await recordPollActivities(tx, [
+      {
+        pollId,
+        type: "poll_closed",
+        userId: userId ?? null,
+        payload: { reason: "manual" },
+      },
+    ]);
+
+    return closedPoll;
   });
 };
 
@@ -289,25 +321,39 @@ export async function deleteInactivePolls() {
  * Raw SQL because the option-end comparison (start_time + duration) can't be
  * expressed in a Prisma `where`. It also deliberately does not touch
  * `updated_at`, so closing a poll doesn't reset the inactivity clock that
- * delete-inactive-polls keys off.
+ * delete-inactive-polls keys off. RETURNING feeds the activity writes, which
+ * commit in the same transaction as the closes.
  */
 export async function autoClosePolls() {
-  const closed = await prisma.$executeRaw`
-    UPDATE polls p
-    SET status = 'closed', closed_reason = 'auto'
-    WHERE p.status = 'open'
-      AND p.deleted = false
-      AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
-      AND NOT EXISTS (
-        SELECT 1 FROM options o
-        WHERE o.poll_id = p.id
-          AND o.start_time + (CASE WHEN o.duration_minutes = 0
-                THEN interval '24 hours'
-                ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
-      )
-  `;
+  return prisma.$transaction(async (tx) => {
+    const closed = await tx.$queryRaw<{ id: string }[]>`
+      UPDATE polls p
+      SET status = 'closed', closed_reason = 'auto'
+      WHERE p.status = 'open'
+        AND p.deleted = false
+        AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
+        AND NOT EXISTS (
+          SELECT 1 FROM options o
+          WHERE o.poll_id = p.id
+            AND o.start_time + (CASE WHEN o.duration_minutes = 0
+                  THEN interval '24 hours'
+                  ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+        )
+      RETURNING p.id
+    `;
 
-  return closed;
+    await recordPollActivities(
+      tx,
+      closed.map(({ id }) => ({
+        pollId: id,
+        type: "poll_closed" as const,
+        userId: null,
+        payload: { reason: "auto" as const },
+      })),
+    );
+
+    return closed.length;
+  });
 }
 
 const REMOVE_DELETED_POLLS_BATCH_SIZE = 100;

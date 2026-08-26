@@ -9,6 +9,7 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { getNotificationRecipient } from "@/features/notifications/data";
+import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { hasPollAdminAccess } from "@/features/poll/data";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
@@ -222,14 +223,52 @@ export const participants = router({
 
       const participant = await canModifyParticipant(participantId, actor.id);
 
-      await prisma.participant.update({
-        where: {
-          id: participantId,
-        },
-        data: {
-          deleted: true,
-          deletedAt: new Date(),
-        },
+      await prisma.$transaction(async (tx) => {
+        // Snapshot before the delete: the activity payload is the historical
+        // record of the removed response, so it carries the name and votes.
+        const snapshot = await tx.participant.findUniqueOrThrow({
+          where: { id: participantId },
+          select: {
+            name: true,
+            votes: {
+              select: {
+                optionId: true,
+                type: true,
+                option: {
+                  select: { startTime: true, duration: true },
+                },
+              },
+            },
+          },
+        });
+
+        await tx.participant.update({
+          where: {
+            id: participantId,
+          },
+          data: {
+            deleted: true,
+            deletedAt: new Date(),
+          },
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId: participant.pollId,
+            type: "response_deleted",
+            userId: actor.id,
+            participantId,
+            payload: {
+              name: snapshot.name,
+              votes: snapshot.votes.map((vote) => ({
+                optionId: vote.optionId,
+                start: vote.option.startTime.toISOString(),
+                duration: vote.option.duration,
+                type: vote.type,
+              })),
+            },
+          },
+        ]);
       });
 
       track(
@@ -301,54 +340,68 @@ export const participants = router({
           existingOptionIds.has(optionId),
         );
 
-        const participant = await prisma.participant.create({
-          data: {
-            pollId: pollId,
-            name: name,
-            email,
-            note,
-            timeZone,
-            userId: ctx.user.id,
-            locale: ctx.locale,
-            votes: {
-              createMany: {
-                data: validVotes.map(({ optionId, type }) => ({
-                  pollId,
-                  optionId,
-                  type,
-                })),
+        const participant = await prisma.$transaction(async (tx) => {
+          const participant = await tx.participant.create({
+            data: {
+              pollId: pollId,
+              name: name,
+              email,
+              note,
+              timeZone,
+              userId: ctx.user.id,
+              locale: ctx.locale,
+              votes: {
+                createMany: {
+                  data: validVotes.map(({ optionId, type }) => ({
+                    pollId,
+                    optionId,
+                    type,
+                  })),
+                },
               },
             },
-          },
-          include: {
-            votes: {
-              select: {
-                optionId: true,
-                type: true,
+            include: {
+              votes: {
+                select: {
+                  optionId: true,
+                  type: true,
+                },
               },
-            },
-            user: {
-              select: {
-                image: true,
+              user: {
+                select: {
+                  image: true,
+                },
               },
-            },
-            poll: {
-              select: {
-                id: true,
-                title: true,
-                space: {
-                  select: {
-                    id: true,
-                    tier: true,
-                    showBranding: true,
-                    hideAttribution: true,
-                    primaryColor: true,
-                    image: true,
+              poll: {
+                select: {
+                  id: true,
+                  title: true,
+                  space: {
+                    select: {
+                      id: true,
+                      tier: true,
+                      showBranding: true,
+                      hideAttribution: true,
+                      primaryColor: true,
+                      image: true,
+                    },
                   },
                 },
               },
             },
-          },
+          });
+
+          await recordPollActivities(tx, [
+            {
+              pollId,
+              type: "response_created",
+              userId: ctx.user.id,
+              participantId: participant.id,
+              payload: { name: participant.name },
+            },
+          ]);
+
+          return participant;
         });
 
         const totalResponses = participantCount + 1;
@@ -422,16 +475,28 @@ export const participants = router({
     .mutation(async ({ input: { participantId, newName, token }, ctx }) => {
       const { id: userId } = await resolveActor(token, ctx.user);
 
-      await canModifyParticipant(participantId, userId);
+      const participant = await canModifyParticipant(participantId, userId);
 
-      await prisma.participant.update({
-        where: {
-          id: participantId,
-        },
-        data: {
-          name: newName,
-        },
-        select: null,
+      await prisma.$transaction(async (tx) => {
+        await tx.participant.update({
+          where: {
+            id: participantId,
+          },
+          data: {
+            name: newName,
+          },
+          select: null,
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId: participant.pollId,
+            type: "response_updated",
+            userId,
+            participantId,
+            payload: { name: newName },
+          },
+        ]);
       });
     }),
   update: publicProcedure
@@ -494,7 +559,7 @@ export const participants = router({
         // Bump `updatedAt` so it reflects this vote change; the poll cleanup
         // job uses it to detect recent activity. An empty `data: {}` update is
         // a no-op for `@updatedAt`, so set it explicitly.
-        return tx.participant.update({
+        const updatedParticipant = await tx.participant.update({
           where: {
             id: participantId,
           },
@@ -513,6 +578,18 @@ export const participants = router({
             },
           },
         });
+
+        await recordPollActivities(tx, [
+          {
+            pollId,
+            type: "response_updated",
+            userId: actor.id,
+            participantId,
+            payload: { name: updatedParticipant.name },
+          },
+        ]);
+
+        return updatedParticipant;
       });
 
       track(

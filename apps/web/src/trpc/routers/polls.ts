@@ -9,6 +9,7 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { moderateContent } from "@/features/moderation/mutations";
+import { recordPollActivities } from "@/features/poll/activity/mutations";
 import {
   canUserManagePoll,
   getPolls,
@@ -184,33 +185,46 @@ export const polls = router({
 
       const kind = isTimePoll ? "time" : "date";
 
-      const poll = await prisma.poll.create({
-        include: {
-          options: {
-            select: {
-              id: true,
+      const poll = await prisma.$transaction(async (tx) => {
+        const poll = await tx.poll.create({
+          include: {
+            options: {
+              select: {
+                id: true,
+              },
             },
           },
-        },
-        data: {
-          id: pollId,
-          title,
-          timeZone,
-          location,
-          description,
-          userId: ctx.user.id,
-          kind,
-          options: {
-            createMany: {
-              data: optionsData,
+          data: {
+            id: pollId,
+            title,
+            timeZone,
+            location,
+            description,
+            userId: ctx.user.id,
+            kind,
+            options: {
+              createMany: {
+                data: optionsData,
+              },
             },
+            hideParticipants: input.hideParticipants,
+            disableComments: input.disableComments,
+            hideScores: input.hideScores,
+            requireParticipantEmail: input.requireParticipantEmail,
+            spaceId,
           },
-          hideParticipants: input.hideParticipants,
-          disableComments: input.disableComments,
-          hideScores: input.hideScores,
-          requireParticipantEmail: input.requireParticipantEmail,
-          spaceId,
-        },
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId,
+            type: "poll_created",
+            userId: ctx.user.id,
+            payload: { title },
+          },
+        ]);
+
+        return poll;
       });
 
       const pollLink = absoluteUrl(`/poll/${pollId}`);
@@ -388,22 +402,39 @@ export const polls = router({
           reopen = poll?.status === "closed" && poll.closedReason === "auto";
         }
 
-        if (input.optionsToDelete && input.optionsToDelete.length > 0) {
+        // Snapshot before the delete: option_deleted events carry the dates
+        // they removed, since the rows are gone once the activity renders.
+        const deletedOptions =
+          input.optionsToDelete && input.optionsToDelete.length > 0
+            ? await tx.option.findMany({
+                where: {
+                  pollId,
+                  id: {
+                    in: input.optionsToDelete,
+                  },
+                },
+                select: { id: true, startTime: true, duration: true },
+              })
+            : [];
+
+        if (deletedOptions.length > 0) {
           await tx.option.deleteMany({
             where: {
               pollId,
               id: {
-                in: input.optionsToDelete,
+                in: deletedOptions.map((option) => option.id),
               },
             },
           });
         }
 
-        if (newOptions.length > 0) {
-          await tx.option.createMany({
-            data: newOptions,
-          });
-        }
+        const addedOptions =
+          newOptions.length > 0
+            ? await tx.option.createManyAndReturn({
+                data: newOptions,
+                select: { id: true, startTime: true, duration: true },
+              })
+            : [];
 
         const remainingOptions = await tx.option.count({ where: { pollId } });
         if (remainingOptions === 0) {
@@ -439,6 +470,59 @@ export const polls = router({
             ...(reopen ? { status: "open" as const, closedReason: null } : {}),
           },
         });
+
+        const detailsOrSettingsChanged =
+          input.title !== undefined ||
+          input.location !== undefined ||
+          input.description !== undefined ||
+          input.timeZone !== undefined ||
+          input.hideParticipants !== undefined ||
+          input.disableComments !== undefined ||
+          input.hideScores !== undefined ||
+          input.requireParticipantEmail !== undefined;
+
+        await recordPollActivities(tx, [
+          ...deletedOptions.map((option) => ({
+            pollId,
+            type: "option_deleted" as const,
+            userId: ctx.user.id,
+            optionId: option.id,
+            payload: {
+              start: option.startTime.toISOString(),
+              duration: option.duration,
+            },
+          })),
+          ...addedOptions.map((option) => ({
+            pollId,
+            type: "option_added" as const,
+            userId: ctx.user.id,
+            optionId: option.id,
+            payload: {
+              start: option.startTime.toISOString(),
+              duration: option.duration,
+            },
+          })),
+          ...(detailsOrSettingsChanged
+            ? [
+                {
+                  pollId,
+                  type: "poll_updated" as const,
+                  userId: ctx.user.id,
+                  payload: {},
+                },
+              ]
+            : []),
+          ...(reopen
+            ? [
+                {
+                  pollId,
+                  type: "poll_reopened" as const,
+                  userId: ctx.user.id,
+                  payload: {},
+                },
+              ]
+            : []),
+        ]);
       });
 
       // Get updated poll data for group update
@@ -949,6 +1033,19 @@ export const polls = router({
           },
         });
 
+        await recordPollActivities(tx, [
+          {
+            pollId: poll.id,
+            type: "poll_scheduled",
+            userId: ctx.user.id,
+            optionId: input.optionId,
+            payload: {
+              start: option.startTime.toISOString(),
+              duration: option.duration,
+            },
+          },
+        ]);
+
         return event;
       });
 
@@ -1108,8 +1205,8 @@ export const polls = router({
         });
       }
 
-      await prisma.$transaction(async () => {
-        const poll = await prisma.poll.update({
+      await prisma.$transaction(async (tx) => {
+        const poll = await tx.poll.update({
           where: {
             id: input.pollId,
           },
@@ -1120,12 +1217,21 @@ export const polls = router({
         });
 
         if (poll.scheduledEventId) {
-          await prisma.scheduledEvent.delete({
+          await tx.scheduledEvent.delete({
             where: {
               id: poll.scheduledEventId,
             },
           });
         }
+
+        await recordPollActivities(tx, [
+          {
+            pollId: input.pollId,
+            type: "poll_reopened",
+            userId: ctx.user.id,
+            payload: {},
+          },
+        ]);
       });
 
       track(
@@ -1155,14 +1261,25 @@ export const polls = router({
         });
       }
 
-      await prisma.poll.update({
-        where: {
-          id: input.pollId,
-        },
-        data: {
-          status: "closed",
-          closedReason: "manual",
-        },
+      await prisma.$transaction(async (tx) => {
+        await tx.poll.update({
+          where: {
+            id: input.pollId,
+          },
+          data: {
+            status: "closed",
+            closedReason: "manual",
+          },
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId: input.pollId,
+            type: "poll_closed",
+            userId: ctx.user.id,
+            payload: { reason: "manual" },
+          },
+        ]);
       });
 
       track(
@@ -1219,27 +1336,40 @@ export const polls = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
-      const newPoll = await prisma.poll.create({
-        select: {
-          id: true,
-        },
-        data: {
-          id: nanoid(),
-          title: input.newTitle,
-          userId: ctx.user.id,
-          timeZone: poll.timeZone,
-          location: poll.location,
-          spaceId: poll.spaceId,
-          requireParticipantEmail: poll.requireParticipantEmail,
-          description: poll.description,
-          hideParticipants: poll.hideParticipants,
-          hideScores: poll.hideScores,
-          disableComments: poll.disableComments,
-          kind: poll.kind,
-          options: {
-            create: poll.options,
+      const newPoll = await prisma.$transaction(async (tx) => {
+        const newPoll = await tx.poll.create({
+          select: {
+            id: true,
           },
-        },
+          data: {
+            id: nanoid(),
+            title: input.newTitle,
+            userId: ctx.user.id,
+            timeZone: poll.timeZone,
+            location: poll.location,
+            spaceId: poll.spaceId,
+            requireParticipantEmail: poll.requireParticipantEmail,
+            description: poll.description,
+            hideParticipants: poll.hideParticipants,
+            hideScores: poll.hideScores,
+            disableComments: poll.disableComments,
+            kind: poll.kind,
+            options: {
+              create: poll.options,
+            },
+          },
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId: newPoll.id,
+            type: "poll_created",
+            userId: ctx.user.id,
+            payload: { title: input.newTitle },
+          },
+        ]);
+
+        return newPoll;
       });
 
       return newPoll;
