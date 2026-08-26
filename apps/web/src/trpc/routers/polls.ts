@@ -1206,22 +1206,13 @@ export const polls = router({
       }
 
       await prisma.$transaction(async (tx) => {
-        // Idempotence guard: a repeated call must not append a lifecycle
-        // event for a transition that didn't happen.
-        const poll = await tx.poll.findUnique({
+        // Conditional transition: only the call that actually flips the
+        // status appends a lifecycle event, so repeated or concurrent calls
+        // can't record a reopen that didn't happen.
+        const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-          },
-          select: { status: true, scheduledEventId: true },
-        });
-
-        if (!poll || poll.status === "open") {
-          return;
-        }
-
-        await tx.poll.update({
-          where: {
-            id: input.pollId,
+            status: { not: "open" },
           },
           data: {
             status: "open",
@@ -1229,7 +1220,18 @@ export const polls = router({
           },
         });
 
-        if (poll.scheduledEventId) {
+        if (count === 0) {
+          return;
+        }
+
+        const poll = await tx.poll.findUnique({
+          where: {
+            id: input.pollId,
+          },
+          select: { scheduledEventId: true },
+        });
+
+        if (poll?.scheduledEventId) {
           await tx.scheduledEvent.delete({
             where: {
               id: poll.scheduledEventId,
@@ -1275,29 +1277,25 @@ export const polls = router({
       }
 
       await prisma.$transaction(async (tx) => {
-        // Idempotence guard, matching closePoll in features/poll/mutations:
-        // an already-closed poll keeps its closedReason (so an auto-close
-        // stays "auto") and gets no duplicate lifecycle event.
-        const poll = await tx.poll.findUnique({
+        // Conditional transition, matching closePoll in features/poll/
+        // mutations: an already-closed poll keeps its closedReason (so an
+        // auto-close stays "auto"), and only the call that actually flips
+        // the status appends a lifecycle event — repeated or concurrent
+        // calls can't record a close that didn't happen.
+        const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-          },
-          select: { status: true },
-        });
-
-        if (!poll || poll.status === "closed") {
-          return;
-        }
-
-        await tx.poll.update({
-          where: {
-            id: input.pollId,
+            status: { not: "closed" },
           },
           data: {
             status: "closed",
             closedReason: "manual",
           },
         });
+
+        if (count === 0) {
+          return;
+        }
 
         await recordPollActivities(tx, [
           {
