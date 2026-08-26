@@ -78,6 +78,8 @@
   "mobileVotingBlogBadge": "Uutta",
   "pcmagQuote": "”Luo aikataulukysely niin lyhyessä ajassa kuin vain mahdollista.”",
   "popsciQuote": "”Täydellinen valinta, jos haluat vastaukset kutsuihisi vaivattomasti.”",
+  "socialProofDescription": "Kysy keneltä tahansa, joka on käyttänyt sitä: nopein tapa sopia ryhmän aikataulusta on myös yksinkertaisin.",
+  "socialProofTitle": "Rakastettu yksinkertaisuudestaan",
   "statsLast30Days": "<0>{voterCount, plural, one {# henkilö} other {# henkilöä}}</0> on äänestänyt <1>{pollCount, plural, one {# kyselyssä} other {# kyselyssä}}</1> viimeisen 30 päivän aikana",
   "subheading": "Luo kysely, jaa linkki ja anna kaikkien äänestää sopivista ajoista. Se on ilmaista, eikä tilille tarvitse rekisteröityä.",
   "when2meetAlternative": "Moderni vaihtoehto When2Meetille",
