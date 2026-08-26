@@ -145,6 +145,22 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = !!user && !user.isGuest;
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
+  // There is no CSS selector for "sticky element is stuck": a sentinel after
+  // the bar tells us when it has settled into its natural resting position.
+  const [isDocked, setIsDocked] = React.useState(false);
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) {
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      setIsDocked(entries[entries.length - 1].isIntersecting);
+    });
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -280,8 +296,15 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
             <PollSettingsForm />
           </div>
         </form>
-        <div className="pointer-events-none sticky bottom-0 z-20 flex justify-center pt-4 pb-6">
-          <div className="pointer-events-auto flex w-full max-w-md items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
+        <div className="pointer-events-none sticky bottom-0 z-20 flex justify-center pt-4 pb-6 lg:pb-16">
+          <div
+            className={cn(
+              "pointer-events-auto flex w-full items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 transition-[max-width,box-shadow] duration-300",
+              isDocked
+                ? "max-w-full shadow-none"
+                : "max-w-md shadow-2xl shadow-black/40",
+            )}
+          >
             <p className="min-w-0 truncate text-muted-foreground text-sm">
               <SelectedOptionsCount />
             </p>
@@ -290,6 +313,10 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
             </div>
           </div>
         </div>
+        {/* Overlaps the bar's bottom padding: a hairline sentinel sitting
+            exactly on the viewport edge misses intersection under fractional
+            scaling, so give it height inside the resting zone. */}
+        <div ref={sentinelRef} className="-mt-6 h-6" aria-hidden="true" />
       </main>
       <Dialog open={!!createdPollId}>
         <DialogContent showCloseButton={false}>
