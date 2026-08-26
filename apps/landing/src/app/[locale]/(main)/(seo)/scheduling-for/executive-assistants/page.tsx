@@ -64,25 +64,7 @@ export default async function Page(props: {
         </Stats>
       </Section>
       <HowItWorks locale={locale} />
-      <SocialProof
-        locale={locale}
-        title={
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="eaSocialProofTitle"
-            defaults="Loved by executive assistants"
-          />
-        }
-        description={
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="eaSocialProofDescription"
-            defaults="When scheduling is your job, simplicity matters. Here's what assistants and the press have to say."
-          />
-        }
-      />
+      <SocialProof locale={locale} />
       <div>
         <Section>
           <SectionHeading>
