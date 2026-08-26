@@ -391,15 +391,38 @@ export const polls = router({
             }
           }) ?? [];
 
+        // Prior persisted values, read before the update so poll_updated is
+        // recorded only when a detail or setting actually changes (the edit
+        // forms always send some fields, e.g. timeZone on option-only edits).
+        const prior = await tx.poll.findUnique({
+          where: { id: pollId },
+          select: {
+            title: true,
+            location: true,
+            description: true,
+            timeZone: true,
+            hideParticipants: true,
+            hideScores: true,
+            disableComments: true,
+            requireParticipantEmail: true,
+          },
+        });
+
+        if (!prior) {
+          throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
         // Reopen an auto-closed poll when new future dates are added. Manually
-        // closed polls stay closed — that was the organizer's decision.
-        let reopen = false;
+        // closed polls stay closed — that was the organizer's decision. The
+        // transition is conditional so concurrent modifies can't both record
+        // a poll_reopened event.
+        let reopened = false;
         if (newOptions.some(optionEndsInFuture)) {
-          const poll = await tx.poll.findUnique({
-            where: { id: pollId },
-            select: { status: true, closedReason: true },
+          const { count } = await tx.poll.updateMany({
+            where: { id: pollId, status: "closed", closedReason: "auto" },
+            data: { status: "open", closedReason: null },
           });
-          reopen = poll?.status === "closed" && poll.closedReason === "auto";
+          reopened = count === 1;
         }
 
         // Snapshot before the delete: option_deleted events carry the dates
@@ -467,19 +490,35 @@ export const polls = router({
             disableComments: input.disableComments,
             requireParticipantEmail: input.requireParticipantEmail,
             kind,
-            ...(reopen ? { status: "open" as const, closedReason: null } : {}),
           },
         });
 
+        // The effective persisted timeZone: forced null for date-only polls,
+        // untouched when the input omits it.
+        const nextTimeZone =
+          kind === "time"
+            ? input.timeZone === undefined
+              ? prior.timeZone
+              : input.timeZone
+            : null;
+
+        // Empty strings and null are the same absent value to the reader, so
+        // normalize before comparing.
         const detailsOrSettingsChanged =
-          input.title !== undefined ||
-          input.location !== undefined ||
-          input.description !== undefined ||
-          input.timeZone !== undefined ||
-          input.hideParticipants !== undefined ||
-          input.disableComments !== undefined ||
-          input.hideScores !== undefined ||
-          input.requireParticipantEmail !== undefined;
+          (input.title !== undefined && input.title !== prior.title) ||
+          (input.location !== undefined &&
+            (input.location || null) !== (prior.location || null)) ||
+          (input.description !== undefined &&
+            (input.description || null) !== (prior.description || null)) ||
+          nextTimeZone !== prior.timeZone ||
+          (input.hideParticipants !== undefined &&
+            input.hideParticipants !== prior.hideParticipants) ||
+          (input.disableComments !== undefined &&
+            input.disableComments !== prior.disableComments) ||
+          (input.hideScores !== undefined &&
+            input.hideScores !== prior.hideScores) ||
+          (input.requireParticipantEmail !== undefined &&
+            input.requireParticipantEmail !== prior.requireParticipantEmail);
 
         await recordPollActivities(tx, [
           ...deletedOptions.map((option) => ({
@@ -512,7 +551,7 @@ export const polls = router({
                 },
               ]
             : []),
-          ...(reopen
+          ...(reopened
             ? [
                 {
                   pollId,
