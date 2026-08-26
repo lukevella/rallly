@@ -148,8 +148,6 @@
   "commentPlaceholder": "Írj hozzászólást ehhez a szavazáshoz (mindenki láthatja)",
   "comments": "Hozzászólások",
   "commentsSettingDescription": "Engedélyezd a résztvevőknek, hogy nyilvánosan hozzászólhassanak a szavazáshoz.",
-  "commentsSettingLegacyBadge": "Régi",
-  "commentsSettingPhaseOutHint": "Hozzászolás funkció kivezetésre kerülnek. Helyette a résztvevők megjegyzéseket fűzhetnek a válaszaikhoz.",
   "commentsSettingTitle": "Hozzászólások",
   "commentsSheetDescription": "Tekintsd meg és adj hozzá kommenteket ehhez a szavazáshoz",
   "commentsSheetEmpty": "Még nincsenek hozzászólások",
