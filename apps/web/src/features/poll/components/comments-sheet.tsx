@@ -355,7 +355,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                         <div className="w-fit whitespace-pre-wrap pl-8 text-foreground text-sm leading-relaxed">
                           <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                         </div>
-                        <div className="mt-1 pl-8 text-muted-foreground text-xs dark:text-muted-foreground/75">
+                        <div className="mt-2 pl-8 text-muted-foreground text-xs dark:text-muted-foreground/75">
                           <RelativeTime value={comment.createdAt} />
                         </div>
                       </div>
