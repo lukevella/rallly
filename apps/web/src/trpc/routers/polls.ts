@@ -935,9 +935,13 @@ export const polls = router({
       }
 
       // create event in database
-      const option = await prisma.option.findUnique({
+      const option = await prisma.option.findFirst({
         where: {
           id: input.optionId,
+          // Admin access was proven for input.pollId, so the option must
+          // belong to that poll — an unscoped lookup would let an admin
+          // schedule one poll with another poll's option.
+          pollId: input.pollId,
         },
         select: {
           startTime: true,
