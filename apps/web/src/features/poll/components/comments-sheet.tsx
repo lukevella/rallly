@@ -294,7 +294,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                         key={comment.id}
                         className="py-4 first:pt-0 last:pb-0"
                       >
-                        <div className="mb-1 flex items-center space-x-2">
+                        <div className="mb-1 flex items-center space-x-2 text-muted-foreground">
                           <Participant>
                             <OptimizedAvatarImage
                               name={comment.authorName}
@@ -309,45 +309,43 @@ function CommentsSheetInner({ className }: { className?: string }) {
                               </Badge>
                             ) : null}
                           </Participant>
-                          <div className="flex items-center gap-2 text-sm">
-                            <div className="text-muted-foreground">
-                              <RelativeTime value={comment.createdAt} />
-                            </div>
-                            {canDelete && (
-                              <DropdownMenu>
-                                <DropdownMenuTrigger
-                                  render={
-                                    <Button
-                                      aria-label={t("moreOptions", {
-                                        defaultValue: "More options",
-                                      })}
-                                      variant="ghost"
-                                      size="icon-xs"
-                                    />
-                                  }
+                          {canDelete && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                render={
+                                  <Button
+                                    aria-label={t("moreOptions", {
+                                      defaultValue: "More options",
+                                    })}
+                                    variant="ghost"
+                                    size="icon-xs"
+                                  />
+                                }
+                              >
+                                <MoreHorizontalIcon />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="start">
+                                <DropdownMenuItem
+                                  variant="destructive"
+                                  onClick={() => {
+                                    deleteComment.mutate({
+                                      commentId: comment.id,
+                                      token,
+                                    });
+                                  }}
                                 >
-                                  <MoreHorizontalIcon />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start">
-                                  <DropdownMenuItem
-                                    variant="destructive"
-                                    onClick={() => {
-                                      deleteComment.mutate({
-                                        commentId: comment.id,
-                                        token,
-                                      });
-                                    }}
-                                  >
-                                    <TrashIcon />
-                                    <Trans i18nKey="delete" />
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            )}
-                          </div>
+                                  <TrashIcon />
+                                  <Trans i18nKey="delete" />
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
                         </div>
                         <div className="w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
                           <TruncatedLinkify>{comment.content}</TruncatedLinkify>
+                        </div>
+                        <div className="mt-1 pl-8 text-muted-foreground text-xs">
+                          <RelativeTime value={comment.createdAt} />
                         </div>
                       </div>
                     );
