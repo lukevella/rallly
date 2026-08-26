@@ -26,9 +26,7 @@ export class PollPage {
     await page.getByRole("button", { name: "Comments" }).click();
 
     const sheet = page.getByRole("dialog", { name: "Comments" });
-    await sheet
-      .getByPlaceholder("Leave a comment on this poll")
-      .fill("This is a comment!");
+    await sheet.getByPlaceholder("Write a comment").fill("This is a comment!");
     await sheet.getByPlaceholder("Your name…").fill("Test user");
 
     await sheet.getByRole("button", { name: "Add comment" }).click();
