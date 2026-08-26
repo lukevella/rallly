@@ -222,7 +222,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
 
   return (
     <>
-      <Button className={className} onClick={() => dialog.trigger()}>
+      <Button className={className} size="lg" onClick={() => dialog.trigger()}>
         <MessageCircleIcon data-icon="inline-start" />
         <Trans i18nKey="comments" defaults="Comments" />
         {count > 0 ? <Badge>{count}</Badge> : null}
