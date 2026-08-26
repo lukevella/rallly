@@ -11,7 +11,7 @@ Knowing that there is value in what I've built is a huge morale boost and drives
 
 ## What's new?
 
-I've been burning the midnight oil to roll out features based on the [feedback](https://feedback.rallly.co) I've received. Here's some highlights:
+I've been burning the midnight oil to roll out features based on the feedback I've received. Here's some highlights:
 
 **Easier Poll Creation** - Creating a meeting poll is now quicker than ever with the revamped poll creation form. I've streamlined the process, condensing everything onto a single page for a faster and more efficient setup.
 
@@ -26,7 +26,6 @@ You can keep your participant details private by hiding the participant list or 
 
 If you haven't jumped aboard yet, the launch price for Rallly Pro is still up for grabs.
 **As an early adopter, you will not be impacted by future price increases**, so you will be benefitting from significantly reduced rates once more features are added.
-If you haven't already, you should check out the new [feedback portal](https://feedback.rallly.co) to see what features are coming next.
 
 Ready to go Pro? You can upgrade from your [billing page](https://app.rallly.co/settings/billing).
 
