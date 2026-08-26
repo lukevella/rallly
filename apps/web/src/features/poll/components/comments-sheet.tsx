@@ -35,6 +35,12 @@ import {
 } from "lucide-react";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePoll, useRole } from "@/features/poll/client";
 import { useEditToken } from "@/features/poll/components/mutations";
@@ -294,7 +300,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                         key={comment.id}
                         className="py-4 first:pt-0 last:pb-0"
                       >
-                        <div className="mb-1 flex items-center space-x-2 text-muted-foreground dark:text-muted-foreground/75">
+                        <div className="relative mb-1 flex items-center gap-x-2 text-muted-foreground dark:text-muted-foreground/75">
                           <Participant>
                             <OptimizedAvatarImage
                               name={comment.authorName}
@@ -314,7 +320,11 @@ function CommentsSheetInner({ className }: { className?: string }) {
                               <DropdownMenuTrigger
                                 render={
                                   <Button
-                                    className="ml-auto"
+                                    // Out of flow: the menu mounts focus-guard
+                                    // spans into the row, which would re-target
+                                    // space-x-2's not-last-child margin and
+                                    // shift an in-flow trigger while open.
+                                    className="absolute top-1/2 right-0 -translate-y-1/2"
                                     aria-label={t("moreOptions", {
                                       defaultValue: "More options",
                                     })}
@@ -353,15 +363,23 @@ function CommentsSheetInner({ className }: { className?: string }) {
                   })}
                 </div>
               ) : (
-                <div className="flex grow flex-col items-center justify-center gap-2 text-center">
-                  <MessageCircleIcon className="size-5 text-muted-foreground" />
-                  <p className="text-muted-foreground text-sm">
+                <EmptyState className="grow">
+                  <EmptyStateIcon>
+                    <MessageCircleIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
                     <Trans
                       i18nKey="commentsSheetEmpty"
                       defaults="No comments yet"
                     />
-                  </p>
-                </div>
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      i18nKey="commentsSheetEmptyDescription"
+                      defaults="Be the first to share your thoughts on this poll."
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
               )}
             </div>
           </div>

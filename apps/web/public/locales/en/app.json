@@ -153,6 +153,7 @@
   "commentsSettingTitle": "Comments",
   "commentsSheetDescription": "View and add comments on this poll",
   "commentsSheetEmpty": "No comments yet",
+  "commentsSheetEmptyDescription": "Be the first to share your thoughts on this poll.",
   "commentsSheetSubmitted": "Your comment has been added",
   "commentsTriggerLabel": "{count, plural, =0 {Comments} one {1 Comment} other {# Comments}}",
   "configuredByEnvironmentVariable": "This setting has been configured by environment variable.",
