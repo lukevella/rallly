@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Ny",
   "pcmagQuote": "“Set up a scheduling poll in as little time as possible.”",
   "popsciQuote": "\"Det perfekta valet om du vill hålla dina OSA enkla.\"",
+  "socialProofDescription": "Fråga vem som helst som har använt det: det snabbaste sättet att planera med en grupp är också det enklaste.",
+  "socialProofTitle": "Älskad för sin enkelhet",
   "statsLast30Days": "<0>{voterCount, plural, one {# person} other {# personer}}</0> har röstat i <1>{pollCount, plural, one {# omröstning} other {# omröstningar}}</1> under de senaste 30 dagarna",
   "subheading": "Skapa en förfrågan, dela länken och låt alla rösta på tider som passar. Det är gratis och ingen behöver ett konto.",
   "when2meetAlternative": "Ett modernt alternativ till When2Meet",

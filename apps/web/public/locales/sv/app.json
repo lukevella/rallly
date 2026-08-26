@@ -148,8 +148,6 @@
   "commentPlaceholder": "Lämna en kommentar på denna förfrågan (synlig för alla)",
   "comments": "Kommentarer",
   "commentsSettingDescription": "Tillåt deltagare att publicera offentliga kommentarer på förfrågan.",
-  "commentsSettingLegacyBadge": "Utfasat",
-  "commentsSettingPhaseOutHint": "Kommentarer fasas ut. Deltagare kan istället lägga till en anteckning i sitt svar.",
   "commentsSettingTitle": "Kommentarer",
   "commentsSheetDescription": "Visa och lägg till kommentarer i den här omröstningen",
   "commentsSheetEmpty": "Inga kommentarer än",

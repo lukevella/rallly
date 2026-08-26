@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Nouveau",
   "pcmagQuote": "« Mettre en place un sondage de planification le plus rapidement possible »",
   "popsciQuote": "« Le choix parfait si vous voulez garder vos RSVPs simple. »",
+  "socialProofDescription": "Demandez à ceux qui l'ont utilisé : la façon la plus rapide de planifier avec un groupe est aussi la plus simple.",
+  "socialProofTitle": "Apprécié pour sa simplicité",
   "statsLast30Days": "<0>{voterCount, plural, one {# personne} other {# personnes}}</0> ont voté sur <1>{pollCount, plural, one {# sondage} other {# sondages}}</1> au cours des 30 derniers jours",
   "subheading": "Créez un sondage, partagez le lien et laissez chacun voter pour les créneaux qui conviennent. C'est gratuit et personne n'a besoin d'un compte.",
   "when2meetAlternative": "Une alternative moderne à When2Meet",

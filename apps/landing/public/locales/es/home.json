@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Nuevo",
   "pcmagQuote": "Configura una encuesta de horarios disponibles en el menor tiempo posible",
   "popsciQuote": "La elección perfecta si quieres mantener tus confirmaciones de asistencia simples",
+  "socialProofDescription": "Pregunta a cualquiera que lo haya usado: la forma más rápida de coordinar a un grupo es también la más sencilla.",
+  "socialProofTitle": "Apreciado por su sencillez",
   "statsLast30Days": "<0>{voterCount, plural, one {# persona} other {# personas}}</0> han votado en <1>{pollCount, plural, one {# encuesta} other {# encuestas}}</1> en los últimos 30 días",
   "subheading": "Crea una encuesta, comparte el enlace y deja que todos voten los horarios que les convengan. Es gratis y no hace falta una cuenta.",
   "when2meetAlternative": "Una alternativa moderna a When2Meet",

@@ -148,8 +148,6 @@
   "commentPlaceholder": "Оставить комментарий в этом опросе (будет виден всем)",
   "comments": "Комментарии",
   "commentsSettingDescription": "Разрешить участникам оставлять публичные комментарии к опросу.",
-  "commentsSettingLegacyBadge": "Устаревшее",
-  "commentsSettingPhaseOutHint": "Комментарии постепенно убираются. Участники могут вместо этого добавить примечание к своему ответу.",
   "commentsSettingTitle": "Комментарии",
   "commentsSheetDescription": "Просмотреть и добавить комментарии к этому опросу",
   "commentsSheetEmpty": "Комментариев пока нет",

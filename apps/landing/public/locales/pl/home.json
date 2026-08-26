@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Nowość",
   "pcmagQuote": "\"Skonfiguruj ankietę planowania w jak najkrótszym czasie.\"",
   "popsciQuote": "\"Idealny wybór, jeśli chcesz zachować prostotę RSVP.\"",
+  "socialProofDescription": "Zapytaj każdego, kto go używał: najszybszy sposób na umówienie grupy jest też najprostszy.",
+  "socialProofTitle": "Ceniony za prostotę",
   "statsLast30Days": "<0>{voterCount, plural, one {# osoba} few {# osoby} many {# osób} other {# osoby}}</0> zagłosowało w <1>{pollCount, plural, one {# ankiecie} few {# ankietach} many {# ankietach} other {# ankietach}}</1> w ciągu ostatnich 30 dni",
   "subheading": "Utwórz ankietę, udostępnij link i pozwól wszystkim głosować na pasujące terminy. To za darmo i nie trzeba konta.",
   "when2meetAlternative": "Nowoczesna alternatywa dla When2Meet",
