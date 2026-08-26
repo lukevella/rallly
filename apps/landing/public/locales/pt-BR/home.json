@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Novo",
   "pcmagQuote": "“Configure uma enquete agendada no menor tempo possível”",
   "popsciQuote": "“A escolha perfeita se você quiser manter seus RSVPs simples.”",
+  "socialProofDescription": "Pergunte a qualquer pessoa que já usou: o jeito mais rápido de agendar com um grupo é também o mais simples.",
+  "socialProofTitle": "Amado pela simplicidade",
   "statsLast30Days": "<0>{voterCount, plural, one {# pessoa} other {# pessoas}}</0> votaram em <1>{pollCount, plural, one {# enquete} other {# enquetes}}</1> nos últimos 30 dias",
   "subheading": "Crie uma enquete, compartilhe o link e deixe todos votarem nos horários que funcionam. É grátis e ninguém precisa de uma conta.",
   "when2meetAlternative": "Uma alternativa moderna ao When2Meet",
