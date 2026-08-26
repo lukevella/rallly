@@ -106,7 +106,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
         onSubmitted();
       })}
     >
-      <InputGroup className="bg-background shadow-lg dark:bg-card">
+      <InputGroup>
         <InputGroupAddon align="block-start" className="border-b">
           {user && !user.isGuest ? (
             <>
@@ -255,12 +255,9 @@ function CommentsSheetInner({ className }: { className?: string }) {
       <Sheet {...dialog.dialogProps}>
         <SheetContent className="flex flex-col sm:max-w-md">
           <SheetHeader>
-            <div className="flex items-center gap-2">
-              <SheetTitle>
-                <Trans i18nKey="comments" defaults="Comments" />
-              </SheetTitle>
-              {count > 0 ? <Badge>{count}</Badge> : null}
-            </div>
+            <SheetTitle>
+              <Trans i18nKey="comments" defaults="Comments" />
+            </SheetTitle>
             <SheetDescription className="sr-only">
               <Trans
                 i18nKey="commentsSheetDescription"
@@ -268,22 +265,22 @@ function CommentsSheetInner({ className }: { className?: string }) {
               />
             </SheetDescription>
           </SheetHeader>
-          <div className="-mx-6 -mb-6 flex grow flex-col overflow-y-auto px-6">
-            {!poll.event ? (
-              <div className="sticky top-0 z-10 pb-3">
-                {hasCommented ? (
-                  <div className="flex items-center gap-2 rounded-lg border bg-background p-3 text-muted-foreground text-sm shadow-lg dark:bg-card">
-                    <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
-                    <Trans
-                      i18nKey="commentsSheetSubmitted"
-                      defaults="Your comment has been added"
-                    />
-                  </div>
-                ) : (
-                  <NewCommentForm onSubmitted={() => setHasCommented(true)} />
-                )}
-              </div>
-            ) : null}
+          {!poll.event ? (
+            <div className="pb-4">
+              {hasCommented ? (
+                <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-muted-foreground text-sm">
+                  <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
+                  <Trans
+                    i18nKey="commentsSheetSubmitted"
+                    defaults="Your comment has been added"
+                  />
+                </div>
+              ) : (
+                <NewCommentForm onSubmitted={() => setHasCommented(true)} />
+              )}
+            </div>
+          ) : null}
+          <div className="-mx-6 -mb-6 flex grow flex-col overflow-y-auto border-t px-6 pt-4">
             <div className="flex grow flex-col pb-6">
               {count > 0 ? (
                 <div className="divide-y">
