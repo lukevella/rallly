@@ -300,7 +300,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                         key={comment.id}
                         className="py-4 first:pt-0 last:pb-0"
                       >
-                        <div className="relative mb-1 flex items-center gap-x-2 text-muted-foreground dark:text-muted-foreground/75">
+                        <div className="relative mb-1 flex items-center gap-x-2 text-foreground">
                           <Participant>
                             <OptimizedAvatarImage
                               name={comment.authorName}
@@ -324,7 +324,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                                     // spans into the row, which would re-target
                                     // space-x-2's not-last-child margin and
                                     // shift an in-flow trigger while open.
-                                    className="absolute top-1/2 right-0 -translate-y-1/2"
+                                    className="absolute top-1/2 right-0 -translate-y-1/2 text-muted-foreground"
                                     aria-label={t("moreOptions", {
                                       defaultValue: "More options",
                                     })}
