@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Nuovo",
   "pcmagQuote": "Imposta un sondaggio di pianificazione in pochissimo tempo",
   "popsciQuote": "La scelta perfetta se volete mantenere il vostro RSVP semplice",
+  "socialProofDescription": "Chiedi a chiunque l'abbia usato: il modo più veloce per organizzare un gruppo è anche il più semplice.",
+  "socialProofTitle": "Amato per la sua semplicità",
   "statsLast30Days": "<0>{voterCount, plural, one {# persona} other {# persone}}</0> hanno votato in <1>{pollCount, plural, one {# sondaggio} other {# sondaggi}}</1> negli ultimi 30 giorni",
   "subheading": "Crea un sondaggio, condividi il link e lascia che tutti votino gli orari disponibili. È gratis e non serve un account.",
   "when2meetAlternative": "Un'alternativa moderna a When2Meet",
