@@ -148,8 +148,6 @@
   "commentPlaceholder": "Lascia un commento su questo sondaggio (visibile a tutti)",
   "comments": "Commenti",
   "commentsSettingDescription": "Consenti ai partecipanti di pubblicare commenti pubblici sul sondaggio.",
-  "commentsSettingLegacyBadge": "Obsoleto",
-  "commentsSettingPhaseOutHint": "I commenti sono in fase di eliminazione. I Partecipanti possono invece aggiungere una nota alla loro risposta.",
   "commentsSettingTitle": "Commenti",
   "commentsSheetDescription": "Visualizza e aggiungi commenti a questo sondaggio",
   "commentsSheetEmpty": "Ancora nessun commento",
