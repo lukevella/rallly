@@ -231,6 +231,17 @@ function CommentsSheetInner({ className }: { className?: string }) {
 
   const count = comments?.length ?? 0;
 
+  const sortedComments = React.useMemo(
+    () =>
+      comments
+        ? [...comments].sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          )
+        : [],
+    [comments],
+  );
+
   return (
     <>
       <Button className={className} size="lg" onClick={() => dialog.trigger()}>
@@ -258,10 +269,25 @@ function CommentsSheetInner({ className }: { className?: string }) {
             </SheetDescription>
           </SheetHeader>
           <div className="-mx-6 -mb-6 flex grow flex-col overflow-y-auto px-6">
-            <div className="flex grow flex-col">
+            {!poll.event ? (
+              <div className="sticky top-0 z-10 pb-3">
+                {hasCommented ? (
+                  <div className="flex items-center gap-2 rounded-lg border bg-background p-3 text-muted-foreground text-sm shadow-lg dark:bg-card">
+                    <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
+                    <Trans
+                      i18nKey="commentsSheetSubmitted"
+                      defaults="Your comment has been added"
+                    />
+                  </div>
+                ) : (
+                  <NewCommentForm onSubmitted={() => setHasCommented(true)} />
+                )}
+              </div>
+            ) : null}
+            <div className="flex grow flex-col pb-6">
               {count > 0 ? (
                 <div className="space-y-4">
-                  {comments?.map((comment) => {
+                  {sortedComments.map((comment) => {
                     const canDelete =
                       role === "admin" || session.ownsObject(comment);
 
@@ -338,21 +364,6 @@ function CommentsSheetInner({ className }: { className?: string }) {
                 </div>
               )}
             </div>
-            {!poll.event ? (
-              <div className="sticky bottom-0 pt-3 pb-6">
-                {hasCommented ? (
-                  <div className="flex items-center gap-2 rounded-lg border bg-background p-3 text-muted-foreground text-sm shadow-lg dark:bg-card">
-                    <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
-                    <Trans
-                      i18nKey="commentsSheetSubmitted"
-                      defaults="Your comment has been added"
-                    />
-                  </div>
-                ) : (
-                  <NewCommentForm onSubmitted={() => setHasCommented(true)} />
-                )}
-              </div>
-            ) : null}
           </div>
         </SheetContent>
       </Sheet>
