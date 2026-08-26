@@ -237,7 +237,10 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <VotingFooter className="px-3 pb-3" />
+            {/* 3px + the page's p-3 and the card's 1px border puts the
+                footer's edges at 16px from the viewport, flush with the
+                floating comments button (right-4). */}
+            <VotingFooter className="px-[3px] pb-3" />
           </m.div>
         ) : null}
       </AnimatePresence>
