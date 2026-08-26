@@ -5,7 +5,7 @@ import DiscordIcon from "@/assets/discord.svg";
 import GithubIcon from "@/assets/github.svg";
 import LinkedinIcon from "@/assets/linkedin.svg";
 import XIcon from "@/assets/x.svg";
-import { FooterDemo } from "@/components/home/footer-demo";
+import { FooterPattern } from "@/components/home/footer-pattern";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { LanguageSelect } from "./language-select";
@@ -79,7 +79,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
         </div>
         {/* Decorative, and there is no room for it beside the tagline until
             the footer goes side by side, so it only shows from `lg` up. */}
-        <FooterDemo className="hidden w-full lg:flex lg:min-w-0 lg:flex-1" />
+        <FooterPattern className="hidden w-full lg:block lg:min-w-0 lg:flex-1 lg:self-stretch" />
       </div>
       <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
