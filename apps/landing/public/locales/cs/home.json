@@ -103,6 +103,8 @@
   "mobileVotingBlogBadge": "Nové",
   "pcmagQuote": "„Vytvořte hlasování v co nejkratším čase.\"",
   "popsciQuote": "„Dokonalá volba, pokud chcete udržet své RSVP jednoduché.“",
+  "socialProofDescription": "Zeptejte se kohokoli, kdo ho použil: nejrychlejší způsob, jak domluvit termín ve skupině, je i ten nejjednodušší.",
+  "socialProofTitle": "Oblíbené pro svou jednoduchost",
   "statsLast30Days": "<0>{voterCount, plural, one {# osoba} few {# osoby} other {# osob}}</0> hlasovalo v <1>{pollCount, plural, one {# hlasování} few {# hlasováních} other {# hlasováních}}</1> za posledních 30 dní",
   "subheading": "Vytvořte hlasování, sdílejte odkaz a nechte všechny hlasovat o vyhovujících termínech. Je to zdarma a nikdo nepotřebuje účet.",
   "when2meetAlternative": "Moderní alternativa k When2Meet",
