@@ -32,39 +32,21 @@ function TestForm({ enableComments = false }: { enableComments?: boolean }) {
 }
 
 describe("PollSettingsForm comments setting", () => {
-  it("shows comments off by default with a legacy badge and no hint", () => {
+  it("shows comments off by default", () => {
     render(<TestForm />);
-    const commentsSwitch = screen.getByRole("switch", { name: /comments/i });
-    expect(commentsSwitch).not.toBeChecked();
-    expect(screen.getByText("Legacy")).toBeInTheDocument();
-    expect(
-      screen.queryByText(/comments are being phased out/i),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole("switch", { name: /comments/i })).not.toBeChecked();
   });
 
-  it("reveals the phase out hint when comments are switched on", async () => {
+  it("can be switched on", async () => {
     const user = userEvent.setup();
     render(<TestForm />);
     const commentsSwitch = screen.getByRole("switch", { name: /comments/i });
     await user.click(commentsSwitch);
     expect(commentsSwitch).toBeChecked();
-    expect(
-      screen.getByText(/participants can include a note with their response/i),
-    ).toBeInTheDocument();
   });
 
-  it("shows the hint immediately for polls that already have comments enabled", () => {
+  it("reflects polls that already have comments enabled", () => {
     render(<TestForm enableComments={true} />);
     expect(screen.getByRole("switch", { name: /comments/i })).toBeChecked();
-    expect(
-      screen.getByText(/comments are being phased out/i),
-    ).toBeInTheDocument();
-  });
-
-  it("renders the phase out hint as an alert", () => {
-    render(<TestForm enableComments={true} />);
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      /comments are being phased out/i,
-    );
   });
 });
