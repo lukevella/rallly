@@ -98,7 +98,7 @@
 
   --popover: var(--color-gray-800);
   --popover-border: var(--color-gray-700);
-  --popover-foreground: var(--color-gray-300);
+  --popover-foreground: var(--color-gray-100);
   --popover-accent: var(--color-gray-700);
 
   --card: oklch(0.24 0.006 286.033);
