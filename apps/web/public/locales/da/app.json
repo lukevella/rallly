@@ -148,8 +148,6 @@
   "commentPlaceholder": "Giv en kommentar for denne afstemning (Synlig for alle)",
   "comments": "Kommentarer",
   "commentsSettingDescription": "Tillad deltagere at skrive offentlige kommentarer på afstemningen.",
-  "commentsSettingLegacyBadge": "Forældet",
-  "commentsSettingPhaseOutHint": "Kommentarer udfases. Deltagere kan i stedet tilføje en note til deres svar.",
   "commentsSettingTitle": "Kommentarer",
   "commentsSheetDescription": "Se og tilføj kommentarer til denne afstemning",
   "commentsSheetEmpty": "Ingen kommentarer endnu",
