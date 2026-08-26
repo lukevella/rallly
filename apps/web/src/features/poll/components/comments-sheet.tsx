@@ -294,7 +294,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
                         key={comment.id}
                         className="py-4 first:pt-0 last:pb-0"
                       >
-                        <div className="mb-1 flex items-center space-x-2 text-muted-foreground">
+                        <div className="mb-1 flex items-center space-x-2 text-muted-foreground dark:text-muted-foreground/75">
                           <Participant>
                             <OptimizedAvatarImage
                               name={comment.authorName}
@@ -341,10 +341,10 @@ function CommentsSheetInner({ className }: { className?: string }) {
                             </DropdownMenu>
                           )}
                         </div>
-                        <div className="w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
+                        <div className="w-fit whitespace-pre-wrap pl-8 text-foreground text-sm leading-relaxed">
                           <TruncatedLinkify>{comment.content}</TruncatedLinkify>
                         </div>
-                        <div className="mt-1 pl-8 text-muted-foreground text-xs">
+                        <div className="mt-1 pl-8 text-muted-foreground text-xs dark:text-muted-foreground/75">
                           <RelativeTime value={comment.createdAt} />
                         </div>
                       </div>
