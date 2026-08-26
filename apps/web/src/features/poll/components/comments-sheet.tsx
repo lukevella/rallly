@@ -224,8 +224,11 @@ function CommentsSheetInner({ className }: { className?: string }) {
     <>
       <Button className={className} size="lg" onClick={() => dialog.trigger()}>
         <MessageCircleIcon data-icon="inline-start" />
-        <Trans i18nKey="comments" defaults="Comments" />
-        {count > 0 ? <Badge>{count}</Badge> : null}
+        <Trans
+          i18nKey="commentsTriggerLabel"
+          defaults="{count, plural, =0 {Comments} one {1 Comment} other {# Comments}}"
+          values={{ count }}
+        />
       </Button>
       <Sheet {...dialog.dialogProps}>
         <SheetContent className="flex flex-col sm:max-w-md">
