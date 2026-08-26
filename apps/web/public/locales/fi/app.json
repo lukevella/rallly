@@ -148,8 +148,6 @@
   "commentPlaceholder": "Jätä kommentti tähän kyselyyn (kaikkien nähtävissä)",
   "comments": "Kommentit",
   "commentsSettingDescription": "Salli osallistujien jättää julkisia kommentteja kyselyyn.",
-  "commentsSettingLegacyBadge": "Vanha",
-  "commentsSettingPhaseOutHint": "Kommentit poistuvat käytöstä. Osallistujat voivat sen sijaan lisätä vastaukseensa muistiinpanon.",
   "commentsSettingTitle": "Kommentit",
   "commentsSheetDescription": "Katso ja lisää kommentteja tähän kyselyyn",
   "commentsSheetEmpty": "Ei kommentteja vielä",
