@@ -161,7 +161,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
           }}
         />
         <InputGroupAddon align="block-end">
-          <InputGroupText className="text-muted-foreground">
+          <InputGroupText className="text-muted-foreground text-xs">
             <EyeIcon />
             <Trans
               i18nKey="commentsComposerVisibility"
