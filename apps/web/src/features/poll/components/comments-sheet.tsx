@@ -146,6 +146,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
         </InputGroupAddon>
         <InputGroupTextarea
           id="comment"
+          className="max-h-40 min-h-9"
           maxLength={MAX_COMMENT_LENGTH}
           placeholder={t("commentsComposerPlaceholder", {
             defaultValue: "Write a comment…",
