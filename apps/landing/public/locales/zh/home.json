@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "新",
   "pcmagQuote": "“在尽可能短的时间内进行一次投票。”",
   "popsciQuote": "“如果你想要保持你的RSVP简单，这是完美的选择。”",
+  "socialProofDescription": "问问用过的人就知道：最快敲定团体时间的方法，也是最简单的方法。",
+  "socialProofTitle": "因简单而备受喜爱",
   "statsLast30Days": "过去 30 天内，<0>{voterCount, plural, other {# 人}}</0>在<1>{pollCount, plural, other {# 个投票}}</1>中投了票",
   "subheading": "创建投票，分享链接，让大家对合适的时间投票。免费，无需账号。",
   "when2meetAlternative": "现代 When2Meet 替代品",
