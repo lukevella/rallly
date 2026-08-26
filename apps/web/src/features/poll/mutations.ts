@@ -325,8 +325,9 @@ export async function deleteInactivePolls() {
  * commit in the same transaction as the closes.
  */
 export async function autoClosePolls() {
-  return prisma.$transaction(async (tx) => {
-    const closed = await tx.$queryRaw<{ id: string }[]>`
+  return prisma.$transaction(
+    async (tx) => {
+      const closed = await tx.$queryRaw<{ id: string }[]>`
       UPDATE polls p
       SET status = 'closed', closed_reason = 'auto'
       WHERE p.status = 'open'
@@ -342,18 +343,22 @@ export async function autoClosePolls() {
       RETURNING p.id
     `;
 
-    await recordPollActivities(
-      tx,
-      closed.map(({ id }) => ({
-        pollId: id,
-        type: "poll_closed" as const,
-        userId: null,
-        payload: { reason: "auto" as const },
-      })),
-    );
+      await recordPollActivities(
+        tx,
+        closed.map(({ id }) => ({
+          pollId: id,
+          type: "poll_closed" as const,
+          userId: null,
+          payload: { reason: "auto" as const },
+        })),
+      );
 
-    return closed.length;
-  });
+      return closed.length;
+    },
+    // The UPDATE scans every open poll's options, which can outlast Prisma's
+    // 5s default on large instances or after cron downtime.
+    { timeout: 30_000 },
+  );
 }
 
 const REMOVE_DELETED_POLLS_BATCH_SIZE = 100;

@@ -1206,7 +1206,20 @@ export const polls = router({
       }
 
       await prisma.$transaction(async (tx) => {
-        const poll = await tx.poll.update({
+        // Idempotence guard: a repeated call must not append a lifecycle
+        // event for a transition that didn't happen.
+        const poll = await tx.poll.findUnique({
+          where: {
+            id: input.pollId,
+          },
+          select: { status: true, scheduledEventId: true },
+        });
+
+        if (!poll || poll.status === "open") {
+          return;
+        }
+
+        await tx.poll.update({
           where: {
             id: input.pollId,
           },
@@ -1262,6 +1275,20 @@ export const polls = router({
       }
 
       await prisma.$transaction(async (tx) => {
+        // Idempotence guard, matching closePoll in features/poll/mutations:
+        // an already-closed poll keeps its closedReason (so an auto-close
+        // stays "auto") and gets no duplicate lifecycle event.
+        const poll = await tx.poll.findUnique({
+          where: {
+            id: input.pollId,
+          },
+          select: { status: true },
+        });
+
+        if (!poll || poll.status === "closed") {
+          return;
+        }
+
         await tx.poll.update({
           where: {
             id: input.pollId,
