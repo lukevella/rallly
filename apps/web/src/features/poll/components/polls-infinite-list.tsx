@@ -39,6 +39,7 @@ import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
 
 interface PollsInfiniteListProps {
@@ -65,6 +66,7 @@ function PollListItem({
 }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
   const deletePollDialog = useDialog();
   // Refresh server components so server-fetched data that depends on poll
   // status (e.g. the status tab counts) stays in sync with the list.
@@ -79,7 +81,9 @@ function PollListItem({
           <PollStatusIcon status={status} showTooltip={false} />
           <HoverPrefetchLink
             className="min-w-0 text-sm hover:underline focus:ring-ring focus-visible:ring-2"
-            href={absoluteUrl(`/poll/${id}`)}
+            href={
+              isPollAdminEnabled ? `/polls/${id}` : absoluteUrl(`/poll/${id}`)
+            }
           >
             <span className="absolute inset-0" />
             <span className="block truncate">{title}</span>

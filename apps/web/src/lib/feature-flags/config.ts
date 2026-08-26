@@ -22,4 +22,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   registration: isEmailLoginEnabled && isRegistrationEnabled,
   calendars: isCalendarsEnabled,
   eventTypes: isEventTypesEnabled,
+  // The new poll admin at /polls/[pollId] is dev-only until it reaches
+  // feature parity with the legacy admin and cuts over.
+  pollAdmin: env.NODE_ENV === "development",
 };
