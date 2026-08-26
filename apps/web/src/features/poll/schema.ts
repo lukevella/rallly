@@ -35,3 +35,20 @@ export const setPollMutedSchema = z.object({
   pollId: z.string(),
   muted: z.boolean(),
 });
+
+export const closePollSchema = z.object({
+  pollId: z.string(),
+});
+
+export const reopenPollSchema = z.object({
+  pollId: z.string(),
+});
+
+export const deletePollSchema = z.object({
+  pollId: z.string(),
+});
+
+export const duplicatePollSchema = z.object({
+  pollId: z.string(),
+  title: z.string().trim().min(1),
+});

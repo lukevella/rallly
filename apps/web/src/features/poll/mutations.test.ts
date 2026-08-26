@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";
+import {
+  closePoll,
+  deleteInactivePolls,
+  reopenPoll,
+  setPollMuted,
+} from "./mutations";
 
 const { mockUpdateMany, mockFindFirst, mockUpdate, mockActivityCreateMany } =
   vi.hoisted(() => ({
@@ -231,6 +236,64 @@ describe("closePoll", () => {
         where: { id: "p1", spaceId, deletedAt: null },
       }),
     );
+  });
+});
+
+describe("reopenPoll", () => {
+  const spaceId = "space-1" as AuthorizedSpaceId;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns notFound when the poll does not exist in the space", async () => {
+    mockFindFirst.mockResolvedValue(null);
+
+    const result = await reopenPoll({ pollId: "missing", spaceId });
+
+    expect(result).toEqual({ ok: false, reason: "notFound" });
+    expect(mockUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("refuses to reopen a scheduled poll", async () => {
+    mockFindFirst.mockResolvedValue({ status: "scheduled" });
+
+    const result = await reopenPoll({ pollId: "p1", spaceId });
+
+    expect(result).toEqual({ ok: false, reason: "notClosed" });
+    expect(mockUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("reopens a closed poll, clears closedReason and records poll_reopened", async () => {
+    mockFindFirst.mockResolvedValue({ status: "closed" });
+    mockUpdateMany.mockResolvedValue({ count: 1 });
+
+    const result = await reopenPoll({ pollId: "p1", spaceId, userId: "u1" });
+
+    expect(mockUpdateMany).toHaveBeenCalledWith({
+      where: { id: "p1", status: "closed" },
+      data: { status: "open", closedReason: null },
+    });
+    expect(mockActivityCreateMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          pollId: "p1",
+          type: "poll_reopened",
+          userId: "u1",
+        }),
+      ],
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("records nothing when the conditional transition matched no row", async () => {
+    mockFindFirst.mockResolvedValue({ status: "open" });
+    mockUpdateMany.mockResolvedValue({ count: 0 });
+
+    const result = await reopenPoll({ pollId: "p1", spaceId });
+
+    expect(mockActivityCreateMany).not.toHaveBeenCalled();
+    expect(result).toEqual({ ok: true });
   });
 });
 

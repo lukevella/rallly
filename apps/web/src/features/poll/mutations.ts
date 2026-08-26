@@ -182,6 +182,150 @@ export const closePoll = async ({
 };
 
 /**
+ * Reopens a closed poll. Conditional transition, matching closePoll: only the
+ * call that actually flips the status appends a lifecycle event, so repeated
+ * or concurrent calls can't record a reopen that didn't happen. Scheduled
+ * polls are read-only records (there is no unschedule), so only a closed poll
+ * can reopen.
+ */
+export const reopenPoll = async ({
+  pollId,
+  spaceId,
+  userId,
+}: {
+  pollId: string;
+  spaceId: AuthorizedSpaceId;
+  userId?: string;
+}) => {
+  return prisma.$transaction(async (tx) => {
+    const poll = await tx.poll.findFirst({
+      where: {
+        id: pollId,
+        spaceId,
+        deletedAt: null,
+      },
+      select: { status: true },
+    });
+
+    if (!poll) {
+      return { ok: false as const, reason: "notFound" as const };
+    }
+
+    if (poll.status === "scheduled" || poll.status === "canceled") {
+      return { ok: false as const, reason: "notClosed" as const };
+    }
+
+    const { count } = await tx.poll.updateMany({
+      where: {
+        id: pollId,
+        status: "closed",
+      },
+      data: {
+        status: "open",
+        closedReason: null,
+      },
+    });
+
+    // count 0 means the poll was already open (or a concurrent call won the
+    // transition) — the desired state holds, but this call records nothing.
+    if (count > 0) {
+      await recordPollActivities(tx, [
+        {
+          pollId,
+          type: "poll_reopened",
+          userId: userId ?? null,
+          payload: {},
+        },
+      ]);
+    }
+
+    return { ok: true as const };
+  });
+};
+
+/**
+ * Creates a new open poll from an existing poll's details, settings and
+ * options. Responses are not copied — duplication starts a fresh round of
+ * scheduling with the same choices.
+ */
+export const duplicatePoll = async ({
+  pollId,
+  spaceId,
+  userId,
+  title,
+}: {
+  pollId: string;
+  spaceId: AuthorizedSpaceId;
+  userId: string;
+  title: string;
+}) => {
+  const source = await prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deletedAt: null,
+    },
+    select: {
+      description: true,
+      location: true,
+      timeZone: true,
+      hideParticipants: true,
+      hideScores: true,
+      requireParticipantEmail: true,
+      disableComments: true,
+      kind: true,
+      options: {
+        select: {
+          startTime: true,
+          duration: true,
+        },
+        orderBy: {
+          startTime: "asc",
+        },
+      },
+    },
+  });
+
+  if (!source) {
+    return null;
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const poll = await tx.poll.create({
+      data: {
+        id: nanoid(),
+        title,
+        userId,
+        spaceId,
+        description: source.description,
+        location: source.location,
+        timeZone: source.timeZone,
+        hideParticipants: source.hideParticipants,
+        hideScores: source.hideScores,
+        requireParticipantEmail: source.requireParticipantEmail,
+        disableComments: source.disableComments,
+        kind: source.kind,
+        options: {
+          create: source.options,
+        },
+      },
+      select: { id: true },
+    });
+
+    await recordPollActivities(tx, [
+      {
+        pollId: poll.id,
+        type: "poll_created",
+        userId,
+        payload: { title },
+      },
+    ]);
+
+    return poll;
+  });
+};
+
+/**
  * Muting is a per-owner notification preference, so the scope is the owner's
  * userId rather than a space.
  */

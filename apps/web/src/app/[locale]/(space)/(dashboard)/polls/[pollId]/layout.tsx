@@ -8,13 +8,16 @@ import {
   PageContainer,
   PageContent,
   PageHeader,
+  PageHeaderActions,
   PageHeaderContent,
   PageTitle,
 } from "@/components/page-layout";
 import { loadPoll } from "@/features/poll/loaders";
+import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PollDetailSheet } from "./poll-detail-sheet";
+import { PollOverflowMenu } from "./poll-overflow-menu";
 import { PollShellTabs } from "./poll-shell-tabs";
 
 async function PollPageTitle({
@@ -25,6 +28,25 @@ async function PollPageTitle({
   const { pollId } = await params;
   const poll = await loadPoll(pollId);
   return poll.title;
+}
+
+async function PollShellMenu({
+  params,
+}: {
+  params: Promise<{ pollId: string }>;
+}) {
+  const { pollId } = await params;
+  const [poll, user] = await Promise.all([loadPoll(pollId), requireUser()]);
+
+  return (
+    <PollOverflowMenu
+      pollId={poll.id}
+      pollTitle={poll.title}
+      status={poll.status}
+      muted={poll.muted}
+      canToggleNotifications={poll.userId === user.id}
+    />
+  );
 }
 
 export default function Layout({
@@ -57,6 +79,11 @@ export default function Layout({
             </Suspense>
           </PageTitle>
         </PageHeaderContent>
+        <PageHeaderActions>
+          <Suspense fallback={<Skeleton className="size-9" />}>
+            <PollShellMenu params={params} />
+          </Suspense>
+        </PageHeaderActions>
       </PageHeader>
       <PageContent>
         <PollShellTabs />

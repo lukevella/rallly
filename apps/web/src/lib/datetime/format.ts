@@ -135,6 +135,27 @@ export function formatDate(
   });
 }
 
+/**
+ * Naive "YYYY-MM-DD HH:mm:ss" timestamp in the given zone, for machine
+ * readable exports: spreadsheet apps only recognise a value without "T" or
+ * an offset as a date, so the zone belongs in the surrounding label, not the
+ * value. en-CA is the locale whose date pattern is YYYY-MM-DD.
+ */
+export function formatNaiveDateTime(value: DateInput, timeZone: string) {
+  return new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+    timeZone,
+  })
+    .format(toDate(value))
+    .replace(",", "");
+}
+
 export type DateParts = {
   weekday: string;
   day: string;

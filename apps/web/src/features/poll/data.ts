@@ -12,7 +12,7 @@ export async function getPoll({
   pollId: string;
   spaceId: AuthorizedSpaceId;
 }) {
-  return prisma.poll.findFirst({
+  const poll = await prisma.poll.findFirst({
     where: {
       id: pollId,
       spaceId,
@@ -22,6 +22,85 @@ export async function getPoll({
       id: true,
       title: true,
       status: true,
+      closedReason: true,
+      muted: true,
+      userId: true,
+      scheduledEvent: {
+        select: {
+          id: true,
+          title: true,
+          start: true,
+          end: true,
+          allDay: true,
+          timeZone: true,
+        },
+      },
+      _count: {
+        select: {
+          participants: {
+            where: { deleted: false },
+          },
+        },
+      },
+    },
+  });
+
+  if (!poll) {
+    return null;
+  }
+
+  const { _count, ...rest } = poll;
+
+  return {
+    ...rest,
+    participantCount: _count.participants,
+  };
+}
+
+export async function getPollExportData({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId: AuthorizedSpaceId;
+}) {
+  return prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deleted: false,
+    },
+    select: {
+      id: true,
+      title: true,
+      timeZone: true,
+      options: {
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+        },
+        orderBy: {
+          startTime: "asc",
+        },
+      },
+      participants: {
+        where: { deleted: false },
+        select: {
+          name: true,
+          email: true,
+          createdAt: true,
+          votes: {
+            select: {
+              optionId: true,
+              type: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
     },
   });
 }
