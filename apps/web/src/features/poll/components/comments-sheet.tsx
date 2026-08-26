@@ -259,7 +259,7 @@ function CommentsSheetInner({ className }: { className?: string }) {
         />
       </Button>
       <Sheet {...dialog.dialogProps}>
-        <SheetContent className="flex flex-col sm:max-w-md">
+        <SheetContent className="flex flex-col p-4 sm:max-w-md sm:p-6">
           <SheetHeader>
             <SheetTitle>
               <Trans i18nKey="comments" defaults="Comments" />
@@ -286,8 +286,8 @@ function CommentsSheetInner({ className }: { className?: string }) {
               )}
             </div>
           ) : null}
-          <div className="-mx-6 -mb-6 flex grow flex-col overflow-y-auto border-t px-6 pt-4">
-            <div className="flex grow flex-col pb-6">
+          <div className="-mx-4 -mb-4 flex grow flex-col overflow-y-auto border-t px-4 pt-4 sm:-mx-6 sm:-mb-6 sm:px-6">
+            <div className="flex grow flex-col pb-4 sm:pb-6">
               {count > 0 ? (
                 <div className="divide-y">
                   {sortedComments.map((comment) => {
