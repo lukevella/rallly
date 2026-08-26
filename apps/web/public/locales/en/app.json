@@ -149,8 +149,6 @@
   "commentPlaceholder": "Leave a comment on this poll (visible to everyone)",
   "comments": "Comments",
   "commentsSettingDescription": "Allow participants to post public comments on the poll.",
-  "commentsSettingLegacyBadge": "Legacy",
-  "commentsSettingPhaseOutHint": "Comments are being phased out. Participants can include a note with their response instead.",
   "commentsSettingTitle": "Comments",
   "commentsSheetDescription": "View and add comments on this poll",
   "commentsSheetEmpty": "No comments yet",
