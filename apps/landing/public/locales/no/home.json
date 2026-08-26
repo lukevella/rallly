@@ -77,6 +77,8 @@
   "mobileVotingBlogBadge": "Nytt",
   "pcmagQuote": "“Konfigurer en planleggingsavstemning på så lite tid som mulig.”",
   "popsciQuote": "“Det perfekte valg hvis du vil holde RSVP-ene dine enkle.”",
+  "socialProofDescription": "Spør hvem som helst som har brukt det: den raskeste måten å planlegge med en gruppe på er også den enkleste.",
+  "socialProofTitle": "Elsket for sin enkelhet",
   "statsLast30Days": "<0>{voterCount, plural, one {# person} other {# personer}}</0> har stemt i <1>{pollCount, plural, one {# avstemning} other {# avstemninger}}</1> de siste 30 dagene",
   "subheading": "Lag en avstemning, del lenken og la alle stemme på de tidspunktene som passer. Det er gratis, og ingen trenger konto.",
   "when2meetAlternative": "Et moderne alternativ til When2Meet",
