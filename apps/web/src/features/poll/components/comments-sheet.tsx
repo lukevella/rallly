@@ -26,8 +26,9 @@ import {
 } from "@rallly/ui/sheet";
 import { toast } from "@rallly/ui/sonner";
 import {
+  ArrowUpIcon,
   CheckCircle2Icon,
-  CornerDownLeftIcon,
+  EyeIcon,
   MessageCircleIcon,
   MoreHorizontalIcon,
   TrashIcon,
@@ -137,21 +138,30 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
             </>
           )}
         </InputGroupAddon>
-        <div className="flex w-full items-end">
-          <InputGroupTextarea
-            id="comment"
-            maxLength={MAX_COMMENT_LENGTH}
-            placeholder={t("commentPlaceholder")}
-            aria-invalid={!!formState.errors.content}
-            {...register("content", { validate: requiredString })}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                e.currentTarget.form?.requestSubmit();
-              }
-            }}
-          />
-          <InputGroupAddon align="inline-end" className="pb-1.5">
+        <InputGroupTextarea
+          id="comment"
+          maxLength={MAX_COMMENT_LENGTH}
+          placeholder={t("commentsComposerPlaceholder", {
+            defaultValue: "Write a comment…",
+          })}
+          aria-invalid={!!formState.errors.content}
+          {...register("content", { validate: requiredString })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
+        />
+        <InputGroupAddon align="block-end">
+          <InputGroupText className="text-muted-foreground">
+            <EyeIcon />
+            <Trans
+              i18nKey="commentsComposerVisibility"
+              defaults="Visible to everyone"
+            />
+          </InputGroupText>
+          <div className="ml-auto flex items-center gap-2">
             <MaxCharLength
               length={contentLength}
               maxLength={MAX_COMMENT_LENGTH}
@@ -164,13 +174,14 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
             <InputGroupButton
               type="submit"
               size="icon-sm"
+              variant="primary"
               aria-label={t("addComment", { defaultValue: "Add comment" })}
               loading={formState.isSubmitting}
             >
-              <CornerDownLeftIcon />
+              <ArrowUpIcon />
             </InputGroupButton>
-          </InputGroupAddon>
-        </div>
+          </div>
+        </InputGroupAddon>
       </InputGroup>
     </form>
   );
