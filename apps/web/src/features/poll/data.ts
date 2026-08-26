@@ -5,6 +5,27 @@ import { prisma } from "@rallly/database";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 
+export async function getPoll({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId: AuthorizedSpaceId;
+}) {
+  return prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deleted: false,
+    },
+    select: {
+      id: true,
+      title: true,
+      status: true,
+    },
+  });
+}
+
 export async function getPollResults({
   pollId,
   spaceId,
