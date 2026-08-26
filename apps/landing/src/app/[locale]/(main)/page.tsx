@@ -87,125 +87,143 @@ export default async function Page(props: {
       </Section>
       <HowItWorks locale={locale} />
       <Section>
-        <Testimonial
-          logo={
-            <Image
-              src="/static/images/mit-logo.svg"
-              width={54}
-              height={28}
-              alt=""
-            />
-          }
-          avatar={
-            <Image
-              className="rounded-full"
-              src="/static/images/eric.png"
-              width={48}
-              height={48}
-              alt=""
-            />
-          }
-          name="Eric Fletcher"
-          title={
+        <SectionHeading>
+          <SectionTitle>
             <Trans
               t={t}
               ns="home"
-              i18nKey="ericJobTitle"
-              defaults="Executive Assistant at MIT"
+              i18nKey="socialProofTitle"
+              defaults="Loved for its simplicity"
             />
-          }
-        >
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="ericQuote"
-            defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
-          />
-        </Testimonial>
-      </Section>
-      <Section>
-        <Mentions locale={locale}>
-          <Mention
-            delay={0.25}
+          </SectionTitle>
+          <SectionDescription>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="socialProofDescription"
+              defaults="Ask anyone who's used it. The fastest way to schedule a group is also the simplest."
+            />
+          </SectionDescription>
+        </SectionHeading>
+        <SectionContent className="space-y-12 sm:space-y-16">
+          <Testimonial
             logo={
-              <div className="relative h-8 w-14">
-                <Image
-                  src="/static/images/pcmag-logo.svg"
-                  alt="PCMag"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
+              <Image
+                src="/static/images/mit-logo.svg"
+                width={54}
+                height={28}
+                alt=""
+              />
+            }
+            avatar={
+              <Image
+                className="rounded-full"
+                src="/static/images/eric.png"
+                width={48}
+                height={48}
+                alt=""
+              />
+            }
+            name="Eric Fletcher"
+            title={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="ericJobTitle"
+                defaults="Executive Assistant at MIT"
+              />
             }
           >
             <Trans
               t={t}
               ns="home"
-              i18nKey="pcmagQuote"
-              defaults="“Set up a scheduling poll in as little time as possible.”"
+              i18nKey="ericQuote"
+              defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
             />
-          </Mention>
-          <Mention
-            delay={0.5}
-            logo={
-              <div className="relative h-8 w-24">
-                <Image
-                  src="/static/images/hubspot-logo.svg"
-                  alt="HubSpot"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="hubspotQuote"
-              defaults="“The simplest choice for availability polling for large groups.”"
-            />
-          </Mention>
-          <Mention
-            delay={0.75}
-            logo={
-              <div className="relative h-8 w-32">
-                <Image
-                  src="/static/images/goodfirms-logo.svg"
-                  alt="Goodfirms"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="goodfirmsQuote"
-              defaults="“Unique in its simplicity and requires minimum interaction time.”"
-            />
-          </Mention>
-          <Mention
-            delay={1}
-            logo={
-              <div className="relative h-8 w-20">
-                <Image
-                  src="/static/images/popsci-logo.svg"
-                  alt="PopSci"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="popsciQuote"
-              defaults="“The perfect pick if you want to keep your RSVPs simple.”"
-            />
-          </Mention>
-        </Mentions>
+          </Testimonial>
+          <Mentions locale={locale}>
+            <Mention
+              delay={0.25}
+              logo={
+                <div className="relative h-8 w-14">
+                  <Image
+                    src="/static/images/pcmag-logo.svg"
+                    alt="PCMag"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="pcmagQuote"
+                defaults="“Set up a scheduling poll in as little time as possible.”"
+              />
+            </Mention>
+            <Mention
+              delay={0.5}
+              logo={
+                <div className="relative h-8 w-24">
+                  <Image
+                    src="/static/images/hubspot-logo.svg"
+                    alt="HubSpot"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="hubspotQuote"
+                defaults="“The simplest choice for availability polling for large groups.”"
+              />
+            </Mention>
+            <Mention
+              delay={0.75}
+              logo={
+                <div className="relative h-8 w-32">
+                  <Image
+                    src="/static/images/goodfirms-logo.svg"
+                    alt="Goodfirms"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="goodfirmsQuote"
+                defaults="“Unique in its simplicity and requires minimum interaction time.”"
+              />
+            </Mention>
+            <Mention
+              delay={1}
+              logo={
+                <div className="relative h-8 w-20">
+                  <Image
+                    src="/static/images/popsci-logo.svg"
+                    alt="PopSci"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="popsciQuote"
+                defaults="“The perfect pick if you want to keep your RSVPs simple.”"
+              />
+            </Mention>
+          </Mentions>
+        </SectionContent>
       </Section>
       <div>
         <Section>
