@@ -7,7 +7,7 @@ import { Section, SectionContent } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getAllPosts } from "@/lib/api";
-import { PostPreview } from "./post-preview";
+import { PostsList } from "./posts-list";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
@@ -33,18 +33,16 @@ export default async function Page(props: {
         })}
       />
       <SectionContent>
-        <div className="-my-8 divide-y">
-          {allPosts.map((post) => (
-            <PostPreview
-              key={post.slug}
-              title={post.title}
-              category={post.category}
-              date={post.date}
-              slug={post.slug}
-              excerpt={post.excerpt}
-            />
-          ))}
-        </div>
+        <PostsList
+          posts={allPosts.map((post) => ({
+            title: post.title,
+            category: post.category,
+            date: post.date,
+            slug: post.slug,
+            excerpt: post.excerpt,
+          }))}
+          allLabel={t("blogFilterAll", { ns: "blog", defaultValue: "All" })}
+        />
       </SectionContent>
     </Section>
   );
