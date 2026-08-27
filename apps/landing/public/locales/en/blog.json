@@ -1,5 +1,7 @@
 {
   "blogDescription": "News, updates and announcements about Rallly.",
   "blogFilterAll": "All",
-  "blogTitle": "Rallly - Blog"
+  "blogPublishedOn": "Published on",
+  "blogTitle": "Rallly - Blog",
+  "blogWrittenBy": "Written by"
 }

@@ -29,7 +29,7 @@ function FilterPill({
       className={cn(
         "rounded-full border px-3.5 py-1.5 text-sm transition-colors",
         active
-          ? "border-gray-300 bg-gray-200/50 font-medium text-gray-800"
+          ? "border-gray-300 bg-gray-200/50 text-gray-800"
           : "bg-white text-gray-600 hover:border-gray-300",
       )}
     >
