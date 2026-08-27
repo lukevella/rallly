@@ -2,21 +2,32 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";
 
-const { mockUpdateMany, mockFindFirst, mockUpdate } = vi.hoisted(() => ({
-  mockUpdateMany: vi.fn(),
-  mockFindFirst: vi.fn(),
-  mockUpdate: vi.fn(),
-}));
+const { mockUpdateMany, mockFindFirst, mockUpdate, mockActivityCreateMany } =
+  vi.hoisted(() => ({
+    mockUpdateMany: vi.fn(),
+    mockFindFirst: vi.fn(),
+    mockUpdate: vi.fn(),
+    mockActivityCreateMany: vi.fn(),
+  }));
 
-vi.mock("@rallly/database", () => ({
-  prisma: {
+vi.mock("@rallly/database", () => {
+  const client = {
     poll: {
       updateMany: mockUpdateMany,
       findFirst: mockFindFirst,
       update: mockUpdate,
     },
-  },
-}));
+    pollActivity: {
+      createMany: mockActivityCreateMany,
+    },
+  };
+  return {
+    prisma: {
+      ...client,
+      $transaction: (fn: (tx: typeof client) => unknown) => fn(client),
+    },
+  };
+});
 
 const NOW = new Date("2026-07-21T12:00:00Z");
 
@@ -188,7 +199,26 @@ describe("closePoll", () => {
     const result = await closePoll({ pollId: "p1", spaceId });
 
     expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockActivityCreateMany).not.toHaveBeenCalled();
     expect(result).toBe(closed);
+  });
+
+  it("records a poll_closed activity alongside the close", async () => {
+    mockFindFirst.mockResolvedValue({ id: "p1", status: "open" });
+    mockUpdate.mockResolvedValue({ id: "p1", status: "closed" });
+
+    await closePoll({ pollId: "p1", spaceId, userId: "u1" });
+
+    expect(mockActivityCreateMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          pollId: "p1",
+          type: "poll_closed",
+          userId: "u1",
+          payload: { reason: "manual" },
+        }),
+      ],
+    });
   });
 
   it("scopes the lookup to the space and excludes deleted polls", async () => {
