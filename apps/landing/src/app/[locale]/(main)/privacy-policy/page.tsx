@@ -7,7 +7,7 @@ export default async function PrivacyPolicy() {
   return (
     <div className="prose mx-auto max-w-3xl">
       <h1>Privacy Policy</h1>
-      <p>Last updated: 21 August 2026</p>
+      <p>Last updated: 27 August 2026</p>
       <p>
         At rallly.co, we take your privacy seriously. This privacy policy
         explains how we collect, use, and disclose your personal data, and your
@@ -18,12 +18,13 @@ export default async function PrivacyPolicy() {
       <h2>Information we collect</h2>
 
       <p>
-        We store personal data (names and email addresses) on Neon&apos;s
-        servers, which are located in the United States. The reason for storing
-        data in the US is to improve performance for users by having the data
-        stored closer to where our compute services are running. By using our
-        services, you acknowledge that your personal data may be transferred to
-        and stored in the United States.
+        We store personal data (names and email addresses) in a database hosted
+        by DigitalOcean on servers located in the United States. We also use
+        Upstash to store session data and rate limiting data in the United
+        States. The reason for storing data in the US is to improve performance
+        for users by having the data stored closer to where our compute services
+        are running. By using our services, you acknowledge that your personal
+        data may be transferred to and stored in the United States.
       </p>
 
       <p>
