@@ -99,6 +99,20 @@ export const linkAnonymousUser = async (
             userId: authenticatedUserId,
           },
         }),
+
+        // Transfer poll activity actor refs. They are soft references (no
+        // FK), so nothing else migrates them; without this the guest's
+        // events would point at the anonymous user forever, which is
+        // deleted after linking. Account deletion leaves refs inert on
+        // purpose — linking is the opposite case: the person still exists.
+        tx.pollActivity.updateMany({
+          where: {
+            userId: anonymousUserId,
+          },
+          data: {
+            userId: authenticatedUserId,
+          },
+        }),
       ]);
     });
 
