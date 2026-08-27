@@ -1,6 +1,7 @@
 ---
 title: Introducing Dark Mode
 date: "2026-01-01"
+coverImage: "/images/blog/introducing-dark-mode.svg"
 excerpt: A new dark theme that's easy on the eyes and perfect for late night scheduling.
 ---
 

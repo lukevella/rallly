@@ -1,6 +1,7 @@
 ---
 title: Rallly Pro Launch
 date: "2023-07-05"
+coverImage: "/images/blog/rallly-pro-launch.svg"
 excerpt: Introducing Rallly Pro, the premium subscription plan that will complete your scheduling workflow.
 ---
 

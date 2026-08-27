@@ -8,10 +8,10 @@ type Props = {
 const PostHeader = ({ title, date }: Props) => {
   return (
     <header>
-      <h1 className="mb-2 font-bold text-2xl tracking-tighter sm:text-4xl">
+      <h1 className="text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
         {title}
       </h1>
-      <div className="mb-2 text-gray-400 text-lg">
+      <div className="mt-2 text-gray-500">
         <DateFormatter dateString={date} />
       </div>
     </header>

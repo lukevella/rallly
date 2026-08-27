@@ -1,6 +1,7 @@
 ---
 title: Introducing Rallly 3.0 - What's new?
 date: "2023-06-19"
+coverImage: "/images/blog/rallly-3-0.svg"
 excerpt: Rallly 3.0 is a significant stepping stone as I head towards expanding Rallly with more features.
 ---
 

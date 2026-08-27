@@ -31,10 +31,10 @@ export default async function Page(props: {
   }
 
   return (
-    <div>
-      <nav className="mb-4">
+    <div className="mx-auto max-w-2xl py-8 sm:py-16">
+      <nav className="mb-8">
         <Link href="/blog" className={buttonVariants({ variant: "ghost" })}>
-          <ArrowLeftIcon className="size-4" /> All Posts
+          <ArrowLeftIcon className="size-4" /> All posts
         </Link>
       </nav>
       <article className="space-y-4">

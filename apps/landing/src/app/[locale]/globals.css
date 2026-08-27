@@ -15,13 +15,13 @@ body {
     @apply mb-4 mt-8;
   }
   h2 {
-    @apply text-2xl font-semibold tracking-tight;
+    @apply text-2xl font-medium tracking-tight text-gray-800;
   }
   h3 {
-    @apply text-xl font-semibold;
+    @apply text-xl font-medium tracking-tight text-gray-800;
   }
   h4 {
-    @apply text-lg font-semibold;
+    @apply text-lg font-medium tracking-tight text-gray-800;
   }
   p {
     @apply mb-6 leading-relaxed;

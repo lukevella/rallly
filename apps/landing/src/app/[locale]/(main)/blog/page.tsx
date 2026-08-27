@@ -2,7 +2,8 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
-import { Trans } from "react-i18next/TransWithoutContext";
+import { Hero } from "@/components/home/hero";
+import { Section, SectionContent } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getAllPosts } from "@/lib/api";
@@ -13,7 +14,7 @@ export default async function Page(props: {
 }) {
   cacheLife("max");
   const { locale } = await props.params;
-  const { t } = await getTranslation(locale, "blog");
+  const { t } = await getTranslation(locale, ["blog", "common"]);
   const allPosts = getAllPosts([
     "title",
     "date",
@@ -23,30 +24,29 @@ export default async function Page(props: {
     "excerpt",
   ]);
   return (
-    <section className="space-y-12">
-      <header className="sm:p-6">
-        <h1 className="font-bold text-4xl tracking-tight">
-          <Trans
-            t={t}
-            ns="blog"
-            i18nKey="recentPosts"
-            defaults="Recent posts"
-          />
-        </h1>
-      </header>
-      <div className="mb-16 grid grid-cols-1 gap-4">
-        {allPosts.map((post) => (
-          <PostPreview
-            key={post.slug}
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            slug={post.slug}
-            excerpt={post.excerpt}
-          />
-        ))}
-      </div>
-    </section>
+    <Section>
+      <Hero
+        title={t("blog", { ns: "common", defaultValue: "Blog" })}
+        description={t("blogDescription", {
+          ns: "blog",
+          defaultValue: "News, updates and announcements about Rallly.",
+        })}
+      />
+      <SectionContent>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {allPosts.map((post) => (
+            <PostPreview
+              key={post.slug}
+              title={post.title}
+              coverImage={post.coverImage}
+              date={post.date}
+              slug={post.slug}
+              excerpt={post.excerpt}
+            />
+          ))}
+        </div>
+      </SectionContent>
+    </Section>
   );
 }
 

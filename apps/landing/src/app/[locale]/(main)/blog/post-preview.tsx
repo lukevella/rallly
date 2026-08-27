@@ -2,6 +2,7 @@
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import Image from "next/image";
 import Link from "next/link";
 
 dayjs.extend(localizedFormat);
@@ -14,28 +15,43 @@ type Props = {
   slug: string;
 };
 
-export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
+export const PostPreview = ({
+  title,
+  coverImage,
+  date,
+  excerpt,
+  slug,
+}: Props) => {
   return (
-    <article className="flex flex-col gap-2 sm:flex-row sm:gap-8">
-      <div>
-        <div className="w-48 pt-1 text-muted-foreground sm:text-right">
-          <time dateTime={date}>{dayjs(date).format("LL")}</time>
-        </div>
-      </div>
-      <div className="grow">
-        <h3 className="mb-2 font-bold text-lg tracking-tight">
-          <Link
-            as={`/blog/${slug}`}
-            href="/blog/[slug]"
-            className="hover:text-indigo-600 hover:underline"
-          >
+    <article className="h-full">
+      <Link
+        href={`/blog/${slug}`}
+        className="flex h-full flex-col rounded-2xl border bg-white p-1 transition-colors hover:border-gray-300"
+      >
+        {coverImage ? (
+          <div className="overflow-hidden rounded-xl border">
+            <Image
+              src={coverImage}
+              alt=""
+              width={640}
+              height={400}
+              unoptimized
+              className="w-full"
+            />
+          </div>
+        ) : null}
+        <div className="p-3">
+          <time dateTime={date} className="text-gray-500 text-sm">
+            {dayjs(date).format("LL")}
+          </time>
+          <h2 className="mt-2 font-medium text-gray-900 tracking-tight">
             {title}
-          </Link>
-        </h3>
-        <p className="mb-4 text-base text-gray-600 leading-relaxed">
-          {excerpt}
-        </p>
-      </div>
+          </h2>
+          <p className="mt-2 text-pretty text-base/6 text-gray-500 sm:text-sm/5">
+            {excerpt}
+          </p>
+        </div>
+      </Link>
     </article>
   );
 };

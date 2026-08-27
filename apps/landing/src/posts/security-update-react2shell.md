@@ -1,6 +1,7 @@
 ---
 title: "Security Update: React2Shell"
 date: "2025-12-12"
+coverImage: "/images/blog/security-update-react2shell.svg"
 excerpt: Important security updates addressing React Server Components vulnerabilities including React2Shell. Self-hosters should update immediately.
 ---
 

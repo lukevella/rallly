@@ -1,6 +1,7 @@
 ---
 title: Mobile Poll UI Refresh
 date: "2022-04-20"
+coverImage: "/images/blog/mobile-ui-update.svg"
 excerpt: An update focusing on improving the usability of the app on mobile devices.
 ---
 
