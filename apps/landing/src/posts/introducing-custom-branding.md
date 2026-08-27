@@ -1,7 +1,7 @@
 ---
 title: Introducing Custom Branding
 date: "2026-04-09"
-coverImage: "/images/blog/introducing-custom-branding.svg"
+category: Product
 excerpt: You can now show your logo and brand colors to your participants.
 ---
 

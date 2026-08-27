@@ -20,7 +20,7 @@ export default async function Page(props: {
     "date",
     "slug",
     "author",
-    "coverImage",
+    "category",
     "excerpt",
   ]);
   return (
@@ -33,12 +33,12 @@ export default async function Page(props: {
         })}
       />
       <SectionContent>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="-my-8 divide-y">
           {allPosts.map((post) => (
             <PostPreview
               key={post.slug}
               title={post.title}
-              coverImage={post.coverImage}
+              category={post.category}
               date={post.date}
               slug={post.slug}
               excerpt={post.excerpt}

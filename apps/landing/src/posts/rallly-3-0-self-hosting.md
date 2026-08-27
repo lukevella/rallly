@@ -1,7 +1,7 @@
 ---
 title: Rallly 3.0 Self-Hosting
 date: "2023-09-13"
-coverImage: "/images/blog/rallly-3-0-self-hosting.svg"
+category: Self-hosting
 excerpt: An exciting announcement for self-hosters.
 ---
 

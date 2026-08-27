@@ -1,7 +1,7 @@
 ---
 title: White Labeling for Self-Hosted Instances
 date: "2026-01-15"
-coverImage: "/images/blog/white-labeling-support.svg"
+category: Self-hosting
 excerpt: Customize your Rallly instance with your own branding, colors, and logos.
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: A clearer way to vote on your phone
 date: "2026-08-14"
-coverImage: "/images/blog/mobile-voting-redesign.svg"
+category: Product
 excerpt: We redesigned the mobile voting experience so that choosing your availability is obvious at a glance.
 ---
 

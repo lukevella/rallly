@@ -1,7 +1,7 @@
 ---
 title: Quick Create
 date: "2025-01-21"
-coverImage: "/images/blog/introducing-quick-create.svg"
+category: Product
 excerpt: Introducing Quick Create, a streamlined way to get started with Rallly.
 ---
 

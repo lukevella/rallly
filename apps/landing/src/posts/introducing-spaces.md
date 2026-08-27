@@ -1,7 +1,7 @@
 ---
 title: Introducing Spaces
 date: "2025-08-21"
-coverImage: "/images/blog/introducing-spaces.svg"
+category: Product
 excerpt: Centralized billing, member management, and seamless collaboration in one place.
 ---
 
