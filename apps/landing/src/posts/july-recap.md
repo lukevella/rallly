@@ -1,6 +1,7 @@
 ---
 title: July Recap & Pricing Updates
 date: "2023-08-16"
+category: Company
 excerpt: A recap of what has changed and some information about the upcoming pricing changes.
 ---
 

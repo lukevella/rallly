@@ -1,6 +1,7 @@
 ---
 title: Introducing Rallly 2.0
 date: "2022-04-08"
+category: Company
 tags: ["announcement"]
 draft: false
 excerpt: A look at Rallly's first major update.

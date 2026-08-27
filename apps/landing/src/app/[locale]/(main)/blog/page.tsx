@@ -2,51 +2,49 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
-import { Trans } from "react-i18next/TransWithoutContext";
+import { Hero } from "@/components/home/hero";
+import { Section, SectionContent } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getAllPosts } from "@/lib/api";
-import { PostPreview } from "./post-preview";
+import { PostsList } from "./posts-list";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
   cacheLife("max");
   const { locale } = await props.params;
-  const { t } = await getTranslation(locale, "blog");
+  const { t } = await getTranslation(locale, ["blog", "common"]);
   const allPosts = getAllPosts([
     "title",
     "date",
     "slug",
     "author",
-    "coverImage",
+    "category",
     "excerpt",
   ]);
   return (
-    <section className="space-y-12">
-      <header className="sm:p-6">
-        <h1 className="font-bold text-4xl tracking-tight">
-          <Trans
-            t={t}
-            ns="blog"
-            i18nKey="recentPosts"
-            defaults="Recent posts"
-          />
-        </h1>
-      </header>
-      <div className="mb-16 grid grid-cols-1 gap-4">
-        {allPosts.map((post) => (
-          <PostPreview
-            key={post.slug}
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            slug={post.slug}
-            excerpt={post.excerpt}
-          />
-        ))}
-      </div>
-    </section>
+    <Section>
+      <Hero
+        title={t("blog", { ns: "common", defaultValue: "Blog" })}
+        description={t("blogDescription", {
+          ns: "blog",
+          defaultValue: "News, updates and announcements about Rallly.",
+        })}
+      />
+      <SectionContent>
+        <PostsList
+          posts={allPosts.map((post) => ({
+            title: post.title,
+            category: post.category,
+            date: post.date,
+            slug: post.slug,
+            excerpt: post.excerpt,
+          }))}
+          allLabel={t("blogFilterAll", { ns: "blog", defaultValue: "All" })}
+        />
+      </SectionContent>
+    </Section>
   );
 }
 

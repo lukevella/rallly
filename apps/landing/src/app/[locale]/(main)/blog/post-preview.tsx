@@ -8,34 +8,38 @@ dayjs.extend(localizedFormat);
 
 type Props = {
   title: string;
-  coverImage?: string;
+  category?: string;
   date: string;
   excerpt?: string;
   slug: string;
 };
 
-export const PostPreview = ({ title, date, excerpt, slug }: Props) => {
+export const PostPreview = ({
+  title,
+  category,
+  date,
+  excerpt,
+  slug,
+}: Props) => {
   return (
-    <article className="flex flex-col gap-2 sm:flex-row sm:gap-8">
-      <div>
-        <div className="w-48 pt-1 text-muted-foreground sm:text-right">
-          <time dateTime={date}>{dayjs(date).format("LL")}</time>
-        </div>
+    <article className="py-8">
+      <div className="flex items-center gap-2 text-gray-500 text-sm">
+        {category ? (
+          <>
+            <span>{category}</span>
+            <span aria-hidden="true">·</span>
+          </>
+        ) : null}
+        <time dateTime={date}>{dayjs(date).format("LL")}</time>
       </div>
-      <div className="grow">
-        <h3 className="mb-2 font-bold text-lg tracking-tight">
-          <Link
-            as={`/blog/${slug}`}
-            href="/blog/[slug]"
-            className="hover:text-indigo-600 hover:underline"
-          >
-            {title}
-          </Link>
-        </h3>
-        <p className="mb-4 text-base text-gray-600 leading-relaxed">
-          {excerpt}
-        </p>
-      </div>
+      <h2 className="mt-2 text-balance font-medium text-gray-800 text-xl tracking-tight">
+        <Link href={`/blog/${slug}`} className="hover:underline">
+          {title}
+        </Link>
+      </h2>
+      <p className="mt-2 max-w-prose text-pretty text-base/6 text-gray-500">
+        {excerpt}
+      </p>
     </article>
   );
 };
