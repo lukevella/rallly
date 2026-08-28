@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldLabel,
-} from "@rallly/ui/field";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { toast } from "@rallly/ui/sonner";
+import { UserIcon, UsersIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -21,6 +16,37 @@ import { useSpace } from "@/features/space/client";
 import { spaceContentVisibilitySchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+
+function SharingOption({
+  value,
+  icon,
+  title,
+  description,
+}: {
+  value: string;
+  icon: React.ReactNode;
+  title: React.ReactNode;
+  description: React.ReactNode;
+}) {
+  const id = React.useId();
+  return (
+    <label
+      htmlFor={id}
+      className="group flex cursor-pointer items-start gap-3 rounded-xl border border-input bg-card p-4 transition-colors hover:bg-accent has-data-disabled:cursor-not-allowed has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-disabled:opacity-60 has-data-disabled:hover:bg-card"
+    >
+      <span className="mt-0.5 text-muted-foreground group-has-data-checked:text-primary [&_svg]:size-4">
+        {icon}
+      </span>
+      <span className="flex-1 space-y-1">
+        <span className="block font-medium text-sm">{title}</span>
+        <span className="block text-muted-foreground text-sm">
+          {description}
+        </span>
+      </span>
+      <RadioGroupItem value={value} id={id} />
+    </label>
+  );
+}
 
 export function SharingSection({ disabled = false }: { disabled?: boolean }) {
   const { data: space } = useSpace();
@@ -72,39 +98,35 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
           value={contentVisibility}
           onValueChange={handleChange}
           disabled={disabled || updateContentVisibility.isExecuting}
-          className="gap-4"
+          className="gap-3"
         >
-          <Field orientation="horizontal">
-            <RadioGroupItem value="space" id="sharing-together" />
-            <FieldContent>
-              <FieldLabel htmlFor="sharing-together">
-                <Trans i18nKey="spaceSharingTogether" defaults="Together" />
-              </FieldLabel>
-              <FieldDescription>
-                <Trans
-                  i18nKey="spaceSharingTogetherDescription"
-                  defaults="Members see everything created in this space."
-                />
-              </FieldDescription>
-            </FieldContent>
-          </Field>
-          <Field orientation="horizontal">
-            <RadioGroupItem value="owner" id="sharing-independently" />
-            <FieldContent>
-              <FieldLabel htmlFor="sharing-independently">
-                <Trans
-                  i18nKey="spaceSharingIndependently"
-                  defaults="Independently"
-                />
-              </FieldLabel>
-              <FieldDescription>
-                <Trans
-                  i18nKey="spaceSharingIndependentlyDescription"
-                  defaults="Members see only what they create themselves."
-                />
-              </FieldDescription>
-            </FieldContent>
-          </Field>
+          <SharingOption
+            value="space"
+            icon={<UsersIcon />}
+            title={<Trans i18nKey="spaceSharingTogether" defaults="Together" />}
+            description={
+              <Trans
+                i18nKey="spaceSharingTogetherDescription"
+                defaults="Members see everything created in this space."
+              />
+            }
+          />
+          <SharingOption
+            value="owner"
+            icon={<UserIcon />}
+            title={
+              <Trans
+                i18nKey="spaceSharingIndependently"
+                defaults="Independently"
+              />
+            }
+            description={
+              <Trans
+                i18nKey="spaceSharingIndependentlyDescription"
+                defaults="Members see only what they create themselves."
+              />
+            }
+          />
         </RadioGroup>
         <p className="text-muted-foreground text-sm">
           <Trans
