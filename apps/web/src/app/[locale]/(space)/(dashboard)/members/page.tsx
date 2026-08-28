@@ -10,6 +10,7 @@ import {
 } from "@/components/page-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { SharingSection } from "./components/sharing-section";
 import { MembersPageActions, MembersPageContent } from "./members-page";
 
 export default function Page() {
@@ -37,6 +38,7 @@ export default function Page() {
         >
           <MembersPageContent />
         </Suspense>
+        <SharingSection />
       </PageContent>
     </PageContainer>
   );

@@ -32,7 +32,6 @@ import { Trans } from "@/i18n/client";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
-import { SharingSection } from "./components/sharing-section";
 
 export function GeneralSettingsPageClient() {
   const { data: space, getMemberAbility } = useSpace();
@@ -69,7 +68,6 @@ export function GeneralSettingsPageClient() {
             </Alert>
           ) : null}
           <CustomBrandingSection disabled={!isAdmin} />
-          <SharingSection disabled={!isAdmin} />
           {!isOwner || canDeleteSpace ? (
             <PageSection variant="card">
               <PageSectionHeader>
