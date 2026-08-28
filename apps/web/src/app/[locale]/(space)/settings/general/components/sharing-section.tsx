@@ -15,10 +15,12 @@ import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldGroup,
   FieldLabel,
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { UsersIcon } from "lucide-react";
 import React from "react";
 import {
   PageSection,
@@ -27,6 +29,7 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
+import { SettingIcon } from "@/components/setting-icon";
 import { updateSpaceSharedAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -92,25 +95,30 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
-        <Field orientation="horizontal">
-          <FieldContent>
-            <FieldLabel htmlFor="space-shared">
-              <Trans i18nKey="spaceSharedLabel" defaults="Shared space" />
-            </FieldLabel>
-            <FieldDescription>
-              <Trans
-                i18nKey="spaceSharedHint"
-                defaults="Members see everything created in this space."
-              />
-            </FieldDescription>
-          </FieldContent>
-          <Switch
-            id="space-shared"
-            checked={shared}
-            onCheckedChange={handleToggle}
-            disabled={disabled || updateShared.isExecuting}
-          />
-        </Field>
+        <FieldGroup>
+          <Field orientation="horizontal">
+            <SettingIcon>
+              <UsersIcon />
+            </SettingIcon>
+            <FieldContent>
+              <FieldLabel htmlFor="space-shared">
+                <Trans i18nKey="spaceSharedLabel" defaults="Shared space" />
+              </FieldLabel>
+              <FieldDescription>
+                <Trans
+                  i18nKey="spaceSharedHint"
+                  defaults="Members see everything created in this space."
+                />
+              </FieldDescription>
+            </FieldContent>
+            <Switch
+              id="space-shared"
+              checked={shared}
+              onCheckedChange={handleToggle}
+              disabled={disabled || updateShared.isExecuting}
+            />
+          </Field>
+        </FieldGroup>
         <Dialog {...confirmDialog.dialogProps}>
           <DialogContent size="sm">
             <DialogHeader>
