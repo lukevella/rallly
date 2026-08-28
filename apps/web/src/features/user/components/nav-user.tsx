@@ -34,7 +34,10 @@ import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/lib/theme";
 
-export function NavUser() {
+// The line under the user's name defaults to their email; surfaces with a
+// space context pass their role in the space instead (composed at the app
+// layer — user cannot import space without creating a feature cycle).
+export function NavUser({ subtitle }: { subtitle?: React.ReactNode }) {
   const { user } = useUser();
   const [isPending, setIsPending] = React.useState(false);
   const { theme, setTheme } = useTheme();
@@ -57,7 +60,7 @@ export function NavUser() {
           <div className="flex-1 truncate text-left">
             <div className="font-medium">{user.name}</div>
             <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
-              {user.email}
+              {subtitle ?? user.email}
             </div>
           </div>
           <ChevronDownIcon className="text-muted-foreground" />

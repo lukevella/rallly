@@ -17,7 +17,7 @@ import {
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { NavUser } from "@/features/user/components/nav-user";
+import { SpaceNavUser } from "@/features/space/components/space-nav-user";
 import { Trans } from "@/i18n/client";
 import {
   AccountSidebarMenu,
@@ -75,7 +75,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
           <DeveloperSidebarMenu />
         </SidebarContent>
         <SidebarFooter>
-          <NavUser />
+          <SpaceNavUser />
         </SidebarFooter>
       </Sidebar>
       <SidebarInset id="main-content" tabIndex={-1}>
