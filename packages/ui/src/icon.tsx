@@ -45,7 +45,7 @@ export function Icon({
     props: {
       className: cn(
         iconVariants({ size, variant }),
-        "group shrink-0 group-[.bg-destructive]:text-destructive-foreground group-[.bg-primary]:text-primary-foreground",
+        "group shrink-0 group-[.bg-destructive]:text-destructive-foreground",
         className,
       ),
     },
