@@ -34,6 +34,10 @@ export async function createSpace({
       tier,
       spaceType,
       industry,
+      // New spaces start with members working independently; sharing
+      // everything is opt-in. The column default stays "space" so existing
+      // spaces keep today's behavior.
+      contentVisibility: "owner",
       members: {
         create: {
           userId: ownerId,
