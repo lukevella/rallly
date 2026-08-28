@@ -35,8 +35,8 @@ export async function createSpace({
       spaceType,
       industry,
       // New spaces start with members working independently; sharing
-      // everything is opt-in. The column default stays "space" so existing
-      // spaces keep today's behavior.
+      // everything is opt-in. Matches the column default — explicit here so
+      // the decision is visible in code, not just the schema.
       contentVisibility: "owner",
       members: {
         create: {

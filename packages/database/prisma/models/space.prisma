@@ -14,9 +14,11 @@ model Space {
   hideAttribution Boolean   @default(false) @map("hide_attribution")
   // Whether members work together (space: everyone sees everything) or
   // independently (owner: members only see what they create; admins see
-  // everything). When the org layer lands, "owner" spaces map to
-  // organizations and "space" spaces map to teams.
-  contentVisibility SpaceContentVisibility @default(space) @map("content_visibility")
+  // everything). Defaults to owner — sharing everything is opt-in; the
+  // backfill kept existing multi-member spaces (and spaces with pending
+  // invites) on "space" to preserve their behavior. When the org layer
+  // lands, "owner" spaces map to organizations and "space" spaces to teams.
+  contentVisibility SpaceContentVisibility @default(owner) @map("content_visibility")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
