@@ -13,7 +13,7 @@ export function SharingMode() {
 
   return (
     <p className="mt-1 text-muted-foreground text-sm">
-      {space.contentVisibility === "space" ? (
+      {space.shared ? (
         <Trans
           i18nKey="membersSharingModeTogether"
           defaults="Members work together in this space and see everything created here."

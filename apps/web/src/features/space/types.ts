@@ -1,7 +1,4 @@
-import type {
-  MemberRole,
-  SpaceContentVisibility,
-} from "@/features/space/schema";
+import type { MemberRole } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/lib/tenant-scope";
 
 // Defined in lib so content features that space itself imports can use them
@@ -14,7 +11,9 @@ export type SpaceDTO = {
   ownerId: string;
   tier: "hobby" | "pro";
   role: MemberRole;
-  contentVisibility: SpaceContentVisibility;
+  // Whether members share everything they create; when false, everyone
+  // (admins included) only sees their own content.
+  shared: boolean;
   memberCount: number;
   seatCount: number;
   image?: string;

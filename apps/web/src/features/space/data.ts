@@ -1,7 +1,6 @@
 import "server-only";
 
 import type {
-  SpaceContentVisibility as DBSpaceContentVisibility,
   SpaceMemberRole as DBSpaceMemberRole,
   SpaceTier as DBSpaceTier,
 } from "@rallly/database";
@@ -147,7 +146,7 @@ export function createSpaceDTO(space: {
   primaryColor?: string | null;
   showBranding: boolean;
   hideAttribution: boolean;
-  contentVisibility: DBSpaceContentVisibility;
+  shared: boolean;
   memberCount: number;
   seatCount: number;
 }): SpaceDTO {
@@ -157,7 +156,7 @@ export function createSpaceDTO(space: {
     ownerId: space.ownerId,
     tier: isSelfHosted ? "pro" : space.tier,
     role: fromDBRole(space.role),
-    contentVisibility: space.contentVisibility,
+    shared: space.shared,
     memberCount: space.memberCount,
     seatCount: space.seatCount,
     image: space.image ?? undefined,
@@ -233,7 +232,7 @@ export const listSpacesForUser = cache(async (userId: string) => {
           primaryColor: true,
           showBranding: true,
           hideAttribution: true,
-          contentVisibility: true,
+          shared: true,
           _count: { select: { members: true } },
           subscriptions: {
             where: { active: true },

@@ -12,18 +12,18 @@ import {
   createSpace,
   deleteSpace,
   updateSpace,
-  updateSpaceContentVisibility,
   updateSpaceHideAttribution,
   updateSpaceImage,
+  updateSpaceShared,
   updateSpaceShowBranding,
 } from "@/features/space/mutations";
 import {
   createSpaceSchema,
   spaceImageUploadSchema,
-  updateSpaceContentVisibilitySchema,
   updateSpaceHideAttributionSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
+  updateSpaceSharedSchema,
   updateSpaceShowBrandingSchema,
 } from "@/features/space/schema";
 import { setActiveSpace } from "@/features/user/mutations";
@@ -306,32 +306,32 @@ export const updateSpaceHideAttributionAction = authActionClient
     });
   });
 
-export const updateSpaceContentVisibilityAction = authActionClient
-  .metadata({ actionName: "update_space_content_visibility" })
+export const updateSpaceSharedAction = authActionClient
+  .metadata({ actionName: "update_space_shared" })
   .use(spaceUpdateAbilityMiddleware)
-  .inputSchema(updateSpaceContentVisibilitySchema)
+  .inputSchema(updateSpaceSharedSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
 
     // No tier gate: free spaces cannot invite members, so the setting only
     // has an effect on Pro spaces anyway.
-    await updateSpaceContentVisibility({
+    await updateSpaceShared({
       spaceId: space.id,
-      contentVisibility: parsedInput.contentVisibility,
+      shared: parsedInput.shared,
     });
 
     identifyGroup({
       groupType: "space",
       groupKey: space.id,
       properties: {
-        content_visibility: parsedInput.contentVisibility,
+        shared: parsedInput.shared,
       },
     });
 
     track(ctx.user, {
-      event: "space_update_content_visibility",
+      event: "space_update_shared",
       properties: {
-        content_visibility: parsedInput.contentVisibility,
+        shared: parsedInput.shared,
       },
       groups: {
         space: space.id,

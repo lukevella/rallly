@@ -411,13 +411,13 @@ export async function canUserManagePoll(
         ...effectiveSpaceMemberWhere({ userId: user.id }),
       },
       select: {
-        space: { select: { contentVisibility: true } },
+        space: { select: { shared: true } },
       },
     });
 
-    if (membership && membership.space.contentVisibility === "space") {
-      // Members manage each other's polls only when the space works
-      // together. Uniform across roles: admins are members here too.
+    if (membership?.space.shared) {
+      // Members manage each other's polls only in a shared space. Uniform
+      // across roles: admins are members here too.
       return true;
     }
   }
@@ -432,11 +432,11 @@ export const hasPollAdminAccess = async (pollId: string, userId: string) => {
       deleted: false,
       OR: [
         { userId: userId },
-        // Members reach each other's polls only when the space works
-        // together. Uniform across roles: admins are members here too.
+        // Members reach each other's polls only in a shared space. Uniform
+        // across roles: admins are members here too.
         {
           space: {
-            contentVisibility: "space",
+            shared: true,
             members: { some: effectiveSpaceMemberWhere({ userId }) },
           },
         },

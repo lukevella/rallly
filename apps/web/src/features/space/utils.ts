@@ -4,10 +4,7 @@ import {
   industryDomainRules,
   industryKeywordRules,
 } from "@/features/space/constants";
-import type {
-  MemberRole,
-  SpaceContentVisibility,
-} from "@/features/space/schema";
+import type { MemberRole } from "@/features/space/schema";
 import type { SpaceContentScope, SpaceDTO } from "@/features/space/types";
 
 export const toDBRole = (role: MemberRole): PrismaSpaceMemberRole => {
@@ -29,32 +26,22 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): MemberRole => {
 };
 
 /**
- * Whether members of this space see content created by other members.
- * Uniform for every role: visibility is a property of the space, while
- * roles only grant administrative capabilities (members, billing). Admins
- * can still reach everything by switching the space to work together,
- * which every member can see on the members page.
- */
-export function canViewAllSpaceContent(space: {
-  contentVisibility: SpaceContentVisibility;
-}) {
-  return space.contentVisibility === "space";
-}
-
-/**
  * The visibility scope space-scoped content reads must apply for this
- * member. One rule for all content types and all roles: when the space is
- * set to work independently, reads are restricted to what the member
- * created themselves.
+ * member. One rule for all content types and all roles: in an unshared
+ * space, reads are restricted to what the member created themselves —
+ * visibility is a property of the space, while roles only grant
+ * administrative capabilities (members, billing). Admins can still reach
+ * everything by making the space shared, which every member can see on
+ * the members page.
  */
 export function createSpaceContentScope({
   space,
   userId,
 }: {
-  space: Pick<SpaceDTO, "id" | "contentVisibility">;
+  space: Pick<SpaceDTO, "id" | "shared">;
   userId: string;
 }): SpaceContentScope {
-  return canViewAllSpaceContent(space)
+  return space.shared
     ? { spaceId: space.id }
     : { spaceId: space.id, createdBy: userId };
 }

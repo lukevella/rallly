@@ -1,10 +1,6 @@
 import "server-only";
 
-import type {
-  SpaceContentVisibility,
-  SpaceTier,
-  SpaceType,
-} from "@rallly/database";
+import type { SpaceTier, SpaceType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { createSpaceDTO } from "@/features/space/data";
@@ -34,10 +30,10 @@ export async function createSpace({
       tier,
       spaceType,
       industry,
-      // New spaces start with members working independently; sharing
-      // everything is opt-in. Matches the column default — explicit here so
-      // the decision is visible in code, not just the schema.
-      contentVisibility: "owner",
+      // New spaces start unshared; sharing everything is opt-in. Matches
+      // the column default — explicit here so the decision is visible in
+      // code, not just the schema.
+      shared: false,
       members: {
         create: {
           userId: ownerId,
@@ -100,16 +96,16 @@ export async function updateSpaceHideAttribution({
   });
 }
 
-export async function updateSpaceContentVisibility({
+export async function updateSpaceShared({
   spaceId,
-  contentVisibility,
+  shared,
 }: {
   spaceId: string;
-  contentVisibility: SpaceContentVisibility;
+  shared: boolean;
 }) {
   await prisma.space.update({
     where: { id: spaceId },
-    data: { contentVisibility },
+    data: { shared },
   });
 }
 

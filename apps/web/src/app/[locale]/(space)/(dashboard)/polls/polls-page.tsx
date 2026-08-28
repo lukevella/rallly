@@ -24,7 +24,6 @@ import { SearchInput } from "@/components/search-input";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import type { PollStatus } from "@/features/poll/schema";
 import { useSpace } from "@/features/space/client";
-import { canViewAllSpaceContent } from "@/features/space/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { PollsTabbedView } from "./polls-tabbed-view";
@@ -92,7 +91,7 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
   const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
   // Filtering by member is pointless when the space restricts this member
   // to their own polls.
-  const showMemberFilter = canViewAllSpaceContent(space);
+  const showMemberFilter = space.shared;
 
   const { status, q, member } = searchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),

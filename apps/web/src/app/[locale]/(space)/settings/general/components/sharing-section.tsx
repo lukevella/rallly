@@ -11,9 +11,14 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+} from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
-import { UserIcon, UsersIcon } from "lucide-react";
+import { Switch } from "@rallly/ui/switch";
 import React from "react";
 import {
   PageSection,
@@ -22,90 +27,50 @@ import {
   PageSectionHeader,
   PageSectionTitle,
 } from "@/components/page-layout";
-import { updateSpaceContentVisibilityAction } from "@/features/space/actions";
+import { updateSpaceSharedAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
-import type { SpaceContentVisibility } from "@/features/space/schema";
-import { spaceContentVisibilitySchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-
-function SharingOption({
-  value,
-  icon,
-  title,
-  description,
-}: {
-  value: string;
-  icon: React.ReactNode;
-  title: React.ReactNode;
-  description: React.ReactNode;
-}) {
-  const id = React.useId();
-  return (
-    <label
-      htmlFor={id}
-      className="group flex cursor-pointer items-start gap-3 rounded-xl border border-input bg-card p-4 transition-colors hover:bg-accent has-data-disabled:cursor-not-allowed has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-disabled:opacity-60 has-data-disabled:hover:bg-card"
-    >
-      <span className="mt-0.5 text-muted-foreground group-has-data-checked:text-primary [&_svg]:size-4">
-        {icon}
-      </span>
-      <span className="flex-1 space-y-1">
-        <span className="block font-medium text-sm">{title}</span>
-        <span className="block text-pretty text-muted-foreground text-sm">
-          {description}
-        </span>
-      </span>
-      <RadioGroupItem value={value} id={id} />
-    </label>
-  );
-}
 
 export function SharingSection({ disabled = false }: { disabled?: boolean }) {
   const { data: space } = useSpace();
   const { t } = useTranslation();
 
-  const updateContentVisibility = useSafeAction(
-    updateSpaceContentVisibilityAction,
-  );
+  const updateShared = useSafeAction(updateSpaceSharedAction);
 
   // Optimistic value shown until the post-action router refresh delivers
   // the updated space data; reverts automatically if the action fails.
-  const [contentVisibility, setOptimisticContentVisibility] =
-    React.useOptimistic(space.contentVisibility);
+  const [shared, setOptimisticShared] = React.useOptimistic(space.shared);
 
-  // Switching mode changes what every member can see the moment it saves,
-  // and switching to together exposes content that was private until then —
-  // so a selection is staged behind a confirmation dialog instead of saving
-  // on change. The radio group keeps showing the committed value until the
-  // change is confirmed.
+  // Toggling changes what every member can see the moment it saves, and
+  // turning sharing on exposes content that was private until then — so
+  // the toggle is staged behind a confirmation dialog instead of saving on
+  // change. The switch keeps showing the committed value until confirmed.
   const confirmDialog = useDialog();
-  const [pendingVisibility, setPendingVisibility] =
-    React.useState<SpaceContentVisibility | null>(null);
+  const [pendingShared, setPendingShared] = React.useState<boolean | null>(
+    null,
+  );
 
-  const handleChange = (value: unknown) => {
-    const parsed = spaceContentVisibilitySchema.safeParse(value);
-
-    if (!parsed.success || parsed.data === contentVisibility) {
+  const handleToggle = (nextShared: boolean) => {
+    if (nextShared === shared) {
       return;
     }
 
-    setPendingVisibility(parsed.data);
+    setPendingShared(nextShared);
     confirmDialog.trigger();
   };
 
   const handleConfirm = () => {
-    if (!pendingVisibility) {
+    if (pendingShared === null) {
       return;
     }
 
-    const next = pendingVisibility;
+    const next = pendingShared;
     confirmDialog.dismiss();
 
     React.startTransition(async () => {
-      setOptimisticContentVisibility(next);
-      const result = await updateContentVisibility.executeAsync({
-        contentVisibility: next,
-      });
+      setOptimisticShared(next);
+      const result = await updateShared.executeAsync({ shared: next });
 
       if (!result?.serverError && !result?.validationErrors) {
         toast.success(t("saved", { defaultValue: "Saved" }));
@@ -127,71 +92,56 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
-        <RadioGroup
-          value={contentVisibility}
-          onValueChange={handleChange}
-          disabled={disabled || updateContentVisibility.isExecuting}
-          className="gap-3 sm:grid-cols-2"
-        >
-          <SharingOption
-            value="owner"
-            icon={<UserIcon />}
-            title={
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldLabel htmlFor="space-shared">
+              <Trans i18nKey="spaceSharedLabel" defaults="Shared space" />
+            </FieldLabel>
+            <FieldDescription>
               <Trans
-                i18nKey="spaceSharingIndependently"
-                defaults="Independently"
-              />
-            }
-            description={
-              <Trans
-                i18nKey="spaceSharingIndependentlyDescription"
-                defaults="Members see only what they create themselves."
-              />
-            }
-          />
-          <SharingOption
-            value="space"
-            icon={<UsersIcon />}
-            title={<Trans i18nKey="spaceSharingTogether" defaults="Together" />}
-            description={
-              <Trans
-                i18nKey="spaceSharingTogetherDescription"
+                i18nKey="spaceSharedHint"
                 defaults="Members see everything created in this space."
               />
-            }
+            </FieldDescription>
+          </FieldContent>
+          <Switch
+            id="space-shared"
+            checked={shared}
+            onCheckedChange={handleToggle}
+            disabled={disabled || updateShared.isExecuting}
           />
-        </RadioGroup>
-        <p className="text-muted-foreground text-sm">
+        </Field>
+        <p className="text-pretty text-muted-foreground text-sm">
           <Trans
             i18nKey="spaceSharingNote"
-            defaults="This applies to everyone in the space, including admins, and covers polls, events and anything created in it."
+            defaults="When off, everyone in the space, including admins, only sees what they create themselves. Invite links and participant pages are not affected."
           />
         </p>
         <Dialog {...confirmDialog.dialogProps}>
           <DialogContent size="sm">
             <DialogHeader>
               <DialogTitle>
-                {pendingVisibility === "space" ? (
+                {pendingShared ? (
                   <Trans
-                    i18nKey="spaceSharingConfirmTogetherTitle"
-                    defaults="Switch to Together?"
+                    i18nKey="spaceSharedConfirmOnTitle"
+                    defaults="Turn on sharing?"
                   />
                 ) : (
                   <Trans
-                    i18nKey="spaceSharingConfirmIndependentlyTitle"
-                    defaults="Switch to Independently?"
+                    i18nKey="spaceSharedConfirmOffTitle"
+                    defaults="Turn off sharing?"
                   />
                 )}
               </DialogTitle>
               <DialogDescription>
-                {pendingVisibility === "space" ? (
+                {pendingShared ? (
                   <Trans
-                    i18nKey="spaceSharingConfirmTogetherDescription"
+                    i18nKey="spaceSharedConfirmOnDescription"
                     defaults="Everyone in this space will immediately see everything created in it, including polls and events created before now."
                   />
                 ) : (
                   <Trans
-                    i18nKey="spaceSharingConfirmIndependentlyDescription"
+                    i18nKey="spaceSharedConfirmOffDescription"
                     defaults="Everyone in this space, including you and other admins, will only see what they create themselves."
                   />
                 )}
@@ -202,7 +152,11 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
                 <Trans i18nKey="cancel" defaults="Cancel" />
               </DialogClose>
               <Button variant="primary" onClick={handleConfirm}>
-                <Trans i18nKey="spaceSharingConfirmButton" defaults="Switch" />
+                {pendingShared ? (
+                  <Trans i18nKey="spaceSharedConfirmOn" defaults="Turn on" />
+                ) : (
+                  <Trans i18nKey="spaceSharedConfirmOff" defaults="Turn off" />
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>

@@ -1,40 +1,26 @@
 import { describe, expect, it } from "vitest";
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import {
-  canViewAllSpaceContent,
-  createSpaceContentScope,
-  inferIndustry,
-} from "@/features/space/utils";
+import { createSpaceContentScope, inferIndustry } from "@/features/space/utils";
 
 const spaceId = "space-1" as AuthorizedSpaceId;
 
 describe("createSpaceContentScope", () => {
-  it("does not restrict members of a space that works together", () => {
+  it("does not restrict members of a shared space", () => {
     expect(
       createSpaceContentScope({
-        space: { id: spaceId, contentVisibility: "space" },
+        space: { id: spaceId, shared: true },
         userId: "user-1",
       }),
     ).toEqual({ spaceId });
   });
 
-  it("restricts members of a space that works independently to their own content", () => {
+  it("restricts members of an unshared space to their own content", () => {
     expect(
       createSpaceContentScope({
-        space: { id: spaceId, contentVisibility: "owner" },
+        space: { id: spaceId, shared: false },
         userId: "user-1",
       }),
     ).toEqual({ spaceId, createdBy: "user-1" });
-  });
-});
-
-describe("canViewAllSpaceContent", () => {
-  it("is true when the space works together", () => {
-    expect(canViewAllSpaceContent({ contentVisibility: "space" })).toBe(true);
-  });
-
-  it("is false when the space works independently", () => {
-    expect(canViewAllSpaceContent({ contentVisibility: "owner" })).toBe(false);
   });
 });
 

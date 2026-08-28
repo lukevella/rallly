@@ -21,7 +21,6 @@ import {
 import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
 import { useSpace } from "@/features/space/client";
-import { canViewAllSpaceContent } from "@/features/space/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { EventsInfiniteList } from "./events-infinite-list";
@@ -108,7 +107,7 @@ function EventsPageContent() {
   const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
   // Filtering by member is pointless when the space restricts this member
   // to their own events.
-  const showMemberFilter = canViewAllSpaceContent(space);
+  const showMemberFilter = space.shared;
 
   const { status, q, member } = eventsSearchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
