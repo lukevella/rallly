@@ -4,7 +4,11 @@ import {
   industryDomainRules,
   industryKeywordRules,
 } from "@/features/space/constants";
-import type { MemberRole } from "@/features/space/schema";
+import type {
+  MemberRole,
+  SpaceContentVisibility,
+} from "@/features/space/schema";
+import type { SpaceContentScope, SpaceDTO } from "@/features/space/types";
 
 export const toDBRole = (role: MemberRole): PrismaSpaceMemberRole => {
   switch (role) {
@@ -23,6 +27,35 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): MemberRole => {
       return "admin";
   }
 };
+
+/**
+ * Whether the requesting member sees content created by other members.
+ * Admins always do; members only when the space is set to work together
+ * (contentVisibility "space").
+ */
+export function canViewAllSpaceContent(space: {
+  role: MemberRole;
+  contentVisibility: SpaceContentVisibility;
+}) {
+  return space.role === "admin" || space.contentVisibility === "space";
+}
+
+/**
+ * The visibility scope space-scoped content reads must apply for this
+ * member. One rule for all content types: when the member cannot see the
+ * whole space, reads are restricted to what they created themselves.
+ */
+export function createSpaceContentScope({
+  space,
+  userId,
+}: {
+  space: Pick<SpaceDTO, "id" | "role" | "contentVisibility">;
+  userId: string;
+}): SpaceContentScope {
+  return canViewAllSpaceContent(space)
+    ? { spaceId: space.id }
+    : { spaceId: space.id, createdBy: userId };
+}
 
 /**
  * Guess a work space's sector from the owner's email domain and the

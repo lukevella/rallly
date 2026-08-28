@@ -3,6 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { createSpaceContentScope } from "@/features/space/utils";
 import { createUserDTO } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
 import { isSelfHosted } from "@/lib/constants";
@@ -164,6 +165,10 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
       space,
+      // Visibility scope space-scoped content reads must apply for this
+      // member — restricts non-admin members of "independently" spaces to
+      // their own content.
+      contentScope: createSpaceContentScope({ space, userId: ctx.user.id }),
     },
   });
 });

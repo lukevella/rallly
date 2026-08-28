@@ -1,5 +1,64 @@
 import { describe, expect, it } from "vitest";
-import { inferIndustry } from "@/features/space/utils";
+import type { AuthorizedSpaceId } from "@/features/space/types";
+import {
+  canViewAllSpaceContent,
+  createSpaceContentScope,
+  inferIndustry,
+} from "@/features/space/utils";
+
+const spaceId = "space-1" as AuthorizedSpaceId;
+
+describe("createSpaceContentScope", () => {
+  it("does not restrict members of a space that works together", () => {
+    expect(
+      createSpaceContentScope({
+        space: { id: spaceId, role: "member", contentVisibility: "space" },
+        userId: "user-1",
+      }),
+    ).toEqual({ spaceId });
+  });
+
+  it("restricts members of a space that works independently to their own content", () => {
+    expect(
+      createSpaceContentScope({
+        space: { id: spaceId, role: "member", contentVisibility: "owner" },
+        userId: "user-1",
+      }),
+    ).toEqual({ spaceId, createdBy: "user-1" });
+  });
+
+  it("never restricts admins", () => {
+    expect(
+      createSpaceContentScope({
+        space: { id: spaceId, role: "admin", contentVisibility: "owner" },
+        userId: "user-1",
+      }),
+    ).toEqual({ spaceId });
+  });
+});
+
+describe("canViewAllSpaceContent", () => {
+  it("is true for members when the space works together", () => {
+    expect(
+      canViewAllSpaceContent({ role: "member", contentVisibility: "space" }),
+    ).toBe(true);
+  });
+
+  it("is false for members when the space works independently", () => {
+    expect(
+      canViewAllSpaceContent({ role: "member", contentVisibility: "owner" }),
+    ).toBe(false);
+  });
+
+  it("is true for admins in both modes", () => {
+    expect(
+      canViewAllSpaceContent({ role: "admin", contentVisibility: "owner" }),
+    ).toBe(true);
+    expect(
+      canViewAllSpaceContent({ role: "admin", contentVisibility: "space" }),
+    ).toBe(true);
+  });
+});
 
 describe("inferIndustry", () => {
   it("infers education from an academic domain", () => {

@@ -12,6 +12,11 @@ model Space {
   primaryColor    String?   @map("primary_color")
   showBranding    Boolean   @default(false) @map("show_branding")
   hideAttribution Boolean   @default(false) @map("hide_attribution")
+  // Whether members work together (space: everyone sees everything) or
+  // independently (owner: members only see what they create; admins see
+  // everything). When the org layer lands, "owner" spaces map to
+  // organizations and "space" spaces map to teams.
+  contentVisibility SpaceContentVisibility @default(space) @map("content_visibility")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
@@ -49,6 +54,13 @@ enum SpaceTier {
   pro
 
   @@map("space_tiers")
+}
+
+enum SpaceContentVisibility {
+  space
+  owner
+
+  @@map("space_content_visibility")
 }
 
 model SpaceMember {

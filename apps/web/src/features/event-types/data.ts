@@ -4,6 +4,7 @@ import type { EventType, User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import type { EventTypeDTO } from "@/features/event-types/types";
+import type { SpaceContentScope } from "@/features/space/types";
 import type { Location } from "@/lib/location";
 import { locationSchema } from "@/lib/location";
 
@@ -42,10 +43,13 @@ export function createEventTypeDTO(
   };
 }
 
-export async function getEventTypes(spaceId: string): Promise<EventTypeDTO[]> {
+export async function getEventTypes(
+  scope: SpaceContentScope,
+): Promise<EventTypeDTO[]> {
   const rows = await prisma.eventType.findMany({
     where: {
-      spaceId,
+      spaceId: scope.spaceId,
+      ...(scope.createdBy && { hostId: scope.createdBy }),
       deleted: false,
     },
     orderBy: { updatedAt: "desc" },

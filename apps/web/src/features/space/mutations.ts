@@ -1,6 +1,10 @@
 import "server-only";
 
-import type { SpaceTier, SpaceType } from "@rallly/database";
+import type {
+  SpaceContentVisibility,
+  SpaceTier,
+  SpaceType,
+} from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { createSpaceDTO } from "@/features/space/data";
@@ -89,6 +93,19 @@ export async function updateSpaceHideAttribution({
   await prisma.space.update({
     where: { id: spaceId },
     data: { hideAttribution },
+  });
+}
+
+export async function updateSpaceContentVisibility({
+  spaceId,
+  contentVisibility,
+}: {
+  spaceId: string;
+  contentVisibility: SpaceContentVisibility;
+}) {
+  await prisma.space.update({
+    where: { id: spaceId },
+    data: { contentVisibility },
   });
 }
 

@@ -68,7 +68,7 @@ export const polls = router({
         member,
         page,
         pageSize,
-        spaceId: ctx.space.id,
+        scope: ctx.contentScope,
       });
 
       let nextCursor: number | undefined;

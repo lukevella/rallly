@@ -287,7 +287,6 @@
         "src/app/*/(auth)/login/verify/page.tsx",
         "src/app/*/(optional-space)/layout.tsx",
         "src/app/*/(space)/(dashboard)/layout.tsx",
-        "src/app/*/(space)/(dashboard)/polls/page.tsx",
         "src/app/*/(space)/settings/api-keys/components/api-keys-list.tsx",
         "src/app/*/(space)/settings/api-keys/page.tsx",
         "src/app/*/(space)/settings/billing/page.tsx",

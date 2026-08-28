@@ -12,6 +12,7 @@ import {
   createSpace,
   deleteSpace,
   updateSpace,
+  updateSpaceContentVisibility,
   updateSpaceHideAttribution,
   updateSpaceImage,
   updateSpaceShowBranding,
@@ -19,6 +20,7 @@ import {
 import {
   createSpaceSchema,
   spaceImageUploadSchema,
+  updateSpaceContentVisibilitySchema,
   updateSpaceHideAttributionSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
@@ -297,6 +299,39 @@ export const updateSpaceHideAttributionAction = authActionClient
       event: "space_update_hide_attribution",
       properties: {
         hide_attribution: parsedInput.hideAttribution,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
+  });
+
+export const updateSpaceContentVisibilityAction = authActionClient
+  .metadata({ actionName: "update_space_content_visibility" })
+  .use(spaceUpdateAbilityMiddleware)
+  .inputSchema(updateSpaceContentVisibilitySchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const { space } = ctx;
+
+    // No tier gate: free spaces cannot invite members, so the setting only
+    // has an effect on Pro spaces anyway.
+    await updateSpaceContentVisibility({
+      spaceId: space.id,
+      contentVisibility: parsedInput.contentVisibility,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        content_visibility: parsedInput.contentVisibility,
+      },
+    });
+
+    track(ctx.user, {
+      event: "space_update_content_visibility",
+      properties: {
+        content_visibility: parsedInput.contentVisibility,
       },
       groups: {
         space: space.id,

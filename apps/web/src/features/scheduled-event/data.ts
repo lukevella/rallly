@@ -6,6 +6,7 @@ import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
+import type { SpaceContentScope } from "@/features/space/types";
 import type { Status } from "./schema";
 import { pastScheduledEventWhere, upcomingScheduledEventWhere } from "./utils";
 
@@ -280,12 +281,12 @@ function transformEvent(event: RawEventData) {
 
 // Common base where clause builder
 function buildBaseWhere(
-  spaceId: string,
+  scope: SpaceContentScope,
   search?: string,
   member?: string,
 ): Prisma.ScheduledEventWhereInput {
   const baseWhere: Prisma.ScheduledEventWhereInput = {
-    spaceId,
+    spaceId: scope.spaceId,
     deletedAt: null,
   };
 
@@ -293,8 +294,14 @@ function buildBaseWhere(
     baseWhere.title = { contains: search, mode: "insensitive" };
   }
 
-  if (member) {
-    baseWhere.userId = member;
+  // The scope restriction and the member filter both apply: a restricted
+  // member asking for someone else's events gets an empty result.
+  const creatorIds = [scope.createdBy, member].filter((id): id is string =>
+    Boolean(id),
+  );
+
+  if (creatorIds.length > 0) {
+    baseWhere.AND = creatorIds.map((userId) => ({ userId }));
   }
 
   return baseWhere;
@@ -302,15 +309,16 @@ function buildBaseWhere(
 
 // Get upcoming events (confirmed events in the future)
 export async function getUpcomingEventCount({
-  spaceId,
+  scope,
   timeZone,
 }: {
-  spaceId: string;
+  scope: SpaceContentScope;
   timeZone: string;
 }) {
   return prisma.scheduledEvent.count({
     where: {
-      spaceId,
+      spaceId: scope.spaceId,
+      ...(scope.createdBy && { userId: scope.createdBy }),
       ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
     },
   });
@@ -321,18 +329,18 @@ export const getUpcomingEvents = async ({
   member,
   page = 1,
   pageSize = 20,
-  spaceId,
+  scope,
   timeZone,
 }: {
   search?: string;
   member?: string;
   page?: number;
   pageSize?: number;
-  spaceId: string;
+  scope: SpaceContentScope;
   timeZone: string;
 }) => {
   const where: Prisma.ScheduledEventWhereInput = {
-    ...buildBaseWhere(spaceId, search, member),
+    ...buildBaseWhere(scope, search, member),
     ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
   };
 
@@ -367,18 +375,18 @@ export const getPastEvents = async ({
   member,
   page = 1,
   pageSize = 20,
-  spaceId,
+  scope,
   timeZone,
 }: {
   search?: string;
   member?: string;
   page?: number;
   pageSize?: number;
-  spaceId: string;
+  scope: SpaceContentScope;
   timeZone: string;
 }) => {
   const where: Prisma.ScheduledEventWhereInput = {
-    ...buildBaseWhere(spaceId, search, member),
+    ...buildBaseWhere(scope, search, member),
     ...pastScheduledEventWhere({ now: new Date(), timeZone }),
   };
 
@@ -413,16 +421,16 @@ export const getUnconfirmedEvents = async ({
   member,
   page = 1,
   pageSize = 20,
-  spaceId,
+  scope,
 }: {
   search?: string;
   member?: string;
   page?: number;
   pageSize?: number;
-  spaceId: string;
+  scope: SpaceContentScope;
 }) => {
   const where: Prisma.ScheduledEventWhereInput = {
-    ...buildBaseWhere(spaceId, search, member),
+    ...buildBaseWhere(scope, search, member),
     status: "unconfirmed",
   };
 
@@ -457,16 +465,16 @@ export const getCanceledEvents = async ({
   member,
   page = 1,
   pageSize = 20,
-  spaceId,
+  scope,
 }: {
   search?: string;
   member?: string;
   page?: number;
   pageSize?: number;
-  spaceId: string;
+  scope: SpaceContentScope;
 }) => {
   const where: Prisma.ScheduledEventWhereInput = {
-    ...buildBaseWhere(spaceId, search, member),
+    ...buildBaseWhere(scope, search, member),
     status: "canceled",
   };
 
@@ -502,7 +510,7 @@ export const getEventsChronological = async ({
   member,
   page = 1,
   pageSize = 20,
-  spaceId,
+  scope,
   timeZone,
 }: {
   status?: Status;
@@ -510,10 +518,10 @@ export const getEventsChronological = async ({
   member?: string;
   page?: number;
   pageSize?: number;
-  spaceId: string;
+  scope: SpaceContentScope;
   timeZone: string;
 }) => {
-  const commonParams = { search, member, page, pageSize, spaceId };
+  const commonParams = { search, member, page, pageSize, scope };
 
   switch (status) {
     case "upcoming":
