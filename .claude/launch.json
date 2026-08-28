@@ -22,8 +22,11 @@
     },
     {
       "name": "landing",
-      "runtimeExecutable": "pnpm",
+      "runtimeExecutable": "env",
       "runtimeArgs": [
+        "NEXT_PUBLIC_APP_BASE_URL=https://app.rallly.co",
+        "DATABASE_URL=postgres://postgres:postgres@localhost:5450/rallly",
+        "pnpm",
         "--dir",
         "apps/landing",
         "exec",

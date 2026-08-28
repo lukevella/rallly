@@ -108,6 +108,19 @@ export const Footer = async ({ locale }: { locale: string }) => {
                 />
               </LinkBase>
             </li>
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/security"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="security"
+                  defaults="Security"
+                />
+              </LinkBase>
+            </li>
           </ul>
         </div>
         <div>
