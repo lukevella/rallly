@@ -1,5 +1,4 @@
 import { buttonVariants } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import { ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -13,9 +12,7 @@ export async function QuickCreateButton() {
       href="/quick-create"
       className={buttonVariants({ className: "rounded-full" })}
     >
-      <Icon>
-        <ZapIcon className="size-4" />
-      </Icon>
+      <ZapIcon className="size-4 text-muted-foreground" />
       <Trans
         t={t}
         i18n={i18n}

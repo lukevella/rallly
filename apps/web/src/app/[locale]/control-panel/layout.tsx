@@ -1,4 +1,3 @@
-import { Icon } from "@rallly/ui/icon";
 import { SidebarInset, SidebarTrigger } from "@rallly/ui/sidebar";
 import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
@@ -38,9 +37,7 @@ async function AdminGate({ children }: { children: React.ReactNode }) {
                 <div className="flex items-center gap-4">
                   <SidebarTrigger />
                   <div className="flex items-center gap-2">
-                    <Icon>
-                      <GaugeIcon />
-                    </Icon>
+                    <GaugeIcon className="size-4 shrink-0 text-muted-foreground" />
                     <span className="font-medium text-sm">
                       <Trans i18nKey="controlPanel" defaults="Control Panel" />
                     </span>

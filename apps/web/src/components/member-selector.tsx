@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
 import {
   Select,
   SelectContent,
@@ -47,9 +46,7 @@ export function MemberSelector({ members }: MemberSelectorProps) {
       value: "all",
       label: (
         <div className="flex items-center gap-2">
-          <Icon>
-            <UsersIcon />
-          </Icon>
+          <UsersIcon className="size-4 shrink-0 text-muted-foreground" />
           <span>
             <Trans i18nKey="allMembers" defaults="All" />
           </span>

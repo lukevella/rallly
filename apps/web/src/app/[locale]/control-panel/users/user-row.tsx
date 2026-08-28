@@ -15,7 +15,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import {
   BanIcon,
   MoreHorizontal,
@@ -95,16 +94,12 @@ export function UserRow({
                 />
               }
             >
-              <Icon>
-                <MoreHorizontal />
-              </Icon>
+              <MoreHorizontal className="text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger disabled={!canChangeRole}>
-                  <Icon>
-                    <UserPenIcon />
-                  </Icon>
+                  <UserPenIcon />
                   <Trans i18nKey="changeRole" defaults="Change role" />
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
@@ -138,9 +133,7 @@ export function UserRow({
                   }}
                   disabled={!canBan}
                 >
-                  <Icon>
-                    <UserCheckIcon />
-                  </Icon>
+                  <UserCheckIcon />
                   <Trans i18nKey="unbanUser" defaults="Unban user" />
                 </DropdownMenuItem>
               ) : (

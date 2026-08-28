@@ -2,7 +2,6 @@
 
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { UserPlusIcon } from "lucide-react";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -34,9 +33,7 @@ export function InviteMemberButton({
           }
         }}
       >
-        <Icon>
-          <UserPlusIcon />
-        </Icon>
+        <UserPlusIcon className="text-muted-foreground" />
         <Trans i18nKey="inviteMember" defaults="Invite member" />
       </Button>
       <InviteMemberDialog {...inviteMemberDialog.dialogProps} />

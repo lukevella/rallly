@@ -3,7 +3,6 @@
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
 import { ArmchairIcon, CreditCardIcon, DotIcon } from "lucide-react";
 import { openCustomerPortalAction } from "@/features/billing/actions";
 import { SubscriptionStatusBadge } from "@/features/billing/components/subscription-status-badge";
@@ -107,9 +106,7 @@ export function ProPlanCard({
               defaults="{count, plural, one {# seat} other {# seats}}"
               values={{ count: seats }}
             />
-            <Icon>
-              <DotIcon />
-            </Icon>
+            <DotIcon className="size-4 shrink-0 text-muted-foreground" />
             {endsAtPeriodEnd ? (
               <Trans
                 i18nKey="subscriptionCardEndsOn"
@@ -169,9 +166,7 @@ export function ProPlanCard({
               openCustomerPortal.execute({});
             }}
           >
-            <Icon>
-              <CreditCardIcon />
-            </Icon>
+            <CreditCardIcon className="text-muted-foreground" />
             <Trans
               i18nKey="manageSubscription"
               defaults="Manage subscription"
@@ -187,9 +182,7 @@ export function ProPlanCard({
                 />
               }
             >
-              <Icon>
-                <ArmchairIcon />
-              </Icon>
+              <ArmchairIcon className="text-muted-foreground" />
               <Trans i18nKey="manageSeats" defaults="Manage seats" />
             </DialogTrigger>
           </ManageSeatsDialog>

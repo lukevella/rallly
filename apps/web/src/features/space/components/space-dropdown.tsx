@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import {
   ChevronsUpDownIcon,
   PlusIcon,
@@ -76,9 +75,7 @@ export function SpaceDropdown({
               <SpaceTierLabel tier={displayedSpace.tier} />
             </div>
           </div>
-          <Icon>
-            <ChevronsUpDownIcon />
-          </Icon>
+          <ChevronsUpDownIcon className="text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="min-w-[var(--anchor-width)]"
@@ -107,22 +104,16 @@ export function SpaceDropdown({
             ))}
           </DropdownMenuRadioGroup>
           <DropdownMenuItem onClick={newSpaceDialog.trigger}>
-            <Icon>
-              <PlusIcon />
-            </Icon>
+            <PlusIcon />
             <Trans i18nKey="createSpace" defaults="Create space" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem render={<Link href="/settings/general" />}>
-            <Icon>
-              <SettingsIcon />
-            </Icon>
+            <SettingsIcon />
             <Trans i18nKey="spaceSettings" defaults="Space settings" />
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href="/members" />}>
-            <Icon>
-              <UserPlusIcon />
-            </Icon>
+            <UserPlusIcon />
             <Trans i18nKey="spaceInviteMember" defaults="Invite member" />
           </DropdownMenuItem>
         </DropdownMenuContent>

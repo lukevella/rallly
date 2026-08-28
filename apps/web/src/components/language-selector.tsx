@@ -1,5 +1,4 @@
 import languages from "@rallly/languages";
-import { Icon } from "@rallly/ui/icon";
 import {
   Select,
   SelectContent,
@@ -29,9 +28,7 @@ export const LanguageSelect: React.FunctionComponent<{
       }}
     >
       <SelectTrigger id={id} className={className} {...ariaProps}>
-        <Icon>
-          <LanguagesIcon />
-        </Icon>
+        <LanguagesIcon className="size-4 shrink-0 text-muted-foreground" />
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

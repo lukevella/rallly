@@ -18,7 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
@@ -191,9 +190,7 @@ function PollListItem({
                       });
                     }}
                   >
-                    <Icon>
-                      <CircleStopIcon />
-                    </Icon>
+                    <CircleStopIcon />
                     <Trans i18nKey="closePoll" defaults="Close" />
                   </DropdownMenuItem>
                 )}
@@ -213,16 +210,12 @@ function PollListItem({
                       });
                     }}
                   >
-                    <Icon>
-                      <PlayIcon />
-                    </Icon>
+                    <PlayIcon />
                     <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
-                  <Icon>
-                    <TrashIcon />
-                  </Icon>
+                  <TrashIcon />
                   <span>
                     <Trans i18nKey="deleteMenuItem" defaults="Delete" />
                   </span>
@@ -366,9 +359,7 @@ export function PollsInfiniteList({
 
       {!hasNextPage && data.pages.length > 1 && (
         <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground text-sm">
-          <Icon>
-            <StickerIcon />
-          </Icon>
+          <StickerIcon className="size-4 shrink-0 text-muted-foreground" />
           <Trans
             i18nKey="endOfList"
             defaults="You've reached the end of the list"

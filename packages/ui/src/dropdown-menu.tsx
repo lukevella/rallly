@@ -6,7 +6,6 @@ import { cva } from "class-variance-authority";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import type * as React from "react";
 
-import { Icon } from "./icon";
 import { cn } from "./lib/utils";
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
@@ -111,9 +110,7 @@ function DropdownMenuRadioItem({
     >
       <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
         <MenuPrimitive.RadioItemIndicator>
-          <Icon>
-            <CheckIcon />
-          </Icon>
+          <CheckIcon />
         </MenuPrimitive.RadioItemIndicator>
       </span>
       {children}

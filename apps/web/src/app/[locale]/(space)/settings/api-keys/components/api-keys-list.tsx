@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@rallly/ui/badge";
-import { Icon } from "@rallly/ui/icon";
 import { KeyIcon } from "lucide-react";
 import {
   EmptyState,
@@ -45,9 +44,7 @@ export function ApiKeysList({ apiKeys }: { apiKeys: ApiKey[] }) {
         <StackedListItem key={apiKey.id}>
           <div className="flex flex-1 items-center gap-4">
             <div className="flex size-10 items-center justify-center rounded-lg border bg-card-accent">
-              <Icon>
-                <KeyIcon />
-              </Icon>
+              <KeyIcon className="size-4 shrink-0 text-muted-foreground" />
             </div>
             <div>
               <div className="flex items-center gap-2">

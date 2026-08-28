@@ -18,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import {
   Select,
@@ -166,9 +165,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                   </FormLabel>
                   <Tooltip>
                     <TooltipTrigger type="button">
-                      <Icon>
-                        <InfoIcon />
-                      </Icon>
+                      <InfoIcon className="size-4 shrink-0 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent align="start" side="right">
                       <div className="w-60 space-y-3">
