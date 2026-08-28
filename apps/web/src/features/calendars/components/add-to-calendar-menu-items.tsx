@@ -4,7 +4,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { DownloadIcon } from "lucide-react";
 import GoogleCalendarIcon from "@/features/calendars/assets/google-calendar.svg";
 import Microsoft365Icon from "@/features/calendars/assets/microsoft-365.svg";
@@ -71,9 +70,7 @@ export function AddToCalendarMenuItems({ eventId }: { eventId: string }) {
       <DropdownMenuItem
         render={<a href={`/api/event/${eventId}/ics`} download />}
       >
-        <Icon>
-          <DownloadIcon />
-        </Icon>
+        <DownloadIcon />
         <Trans i18nKey="downloadICSFile" defaults="Download ICS file" />
       </DropdownMenuItem>
     </>

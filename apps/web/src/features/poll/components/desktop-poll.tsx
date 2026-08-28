@@ -4,7 +4,6 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
-import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -110,9 +109,7 @@ function TableControls({
                     disabled={!canScrollPrev}
                     onClick={onGoToPreviousPage}
                   >
-                    <Icon>
-                      <ArrowLeftIcon />
-                    </Icon>
+                    <ArrowLeftIcon className="text-muted-foreground" />
                   </Button>
                 }
               />
@@ -133,9 +130,7 @@ function TableControls({
                     disabled={!canScrollNext}
                     onClick={onGoToNextPage}
                   >
-                    <Icon>
-                      <ArrowRightIcon />
-                    </Icon>
+                    <ArrowRightIcon className="text-muted-foreground" />
                     {showScrollIndicator ? (
                       <span className="absolute -top-0.5 -right-0.5 flex size-2">
                         <span className="absolute top-0 right-0 inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
@@ -161,9 +156,7 @@ function TableControls({
                   size="icon"
                   onClick={onCollapse}
                 >
-                  <Icon>
-                    <ShrinkIcon />
-                  </Icon>
+                  <ShrinkIcon className="text-muted-foreground" />
                 </Button>
               }
             />
@@ -182,9 +175,7 @@ function TableControls({
                   size="icon"
                   onClick={onExpand}
                 >
-                  <Icon>
-                    <ExpandIcon />
-                  </Icon>
+                  <ExpandIcon className="text-muted-foreground" />
                 </Button>
               }
             />
@@ -296,9 +287,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                       votingForm.newParticipant();
                     }}
                   >
-                    <Icon>
-                      <PlusIcon />
-                    </Icon>
+                    <PlusIcon className="text-muted-foreground" />
                   </Button>
                 ) : null}
               </div>

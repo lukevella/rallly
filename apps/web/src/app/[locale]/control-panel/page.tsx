@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import { Tile, TileGrid, TileTitle } from "@rallly/ui/tile";
 import {
   InfinityIcon,
@@ -76,9 +75,7 @@ export default async function AdminPage() {
                     />
                     /
                     {userLimit === Number.POSITIVE_INFINITY ? (
-                      <Icon className="inline-flex">
-                        <InfinityIcon />
-                      </Icon>
+                      <InfinityIcon className="inline-flex size-4 shrink-0 text-muted-foreground" />
                     ) : (
                       userLimit
                     )}

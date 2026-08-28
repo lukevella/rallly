@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { RefreshCwIcon } from "lucide-react";
 import { Trans } from "@/i18n/client";
@@ -20,9 +19,7 @@ export function RefreshLicenseButton() {
             loading={refreshInstanceLicense.isExecuting}
             onClick={async () => await refreshInstanceLicense.executeAsync()}
           >
-            <Icon>
-              <RefreshCwIcon />
-            </Icon>
+            <RefreshCwIcon className="text-muted-foreground" />
             <span className="sr-only">
               <Trans i18nKey="refreshLicense" defaults="Refresh license" />
             </span>

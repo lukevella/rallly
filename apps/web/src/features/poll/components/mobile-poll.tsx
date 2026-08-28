@@ -2,7 +2,6 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
-import { Icon } from "@rallly/ui/icon";
 import {
   Select,
   SelectContent,
@@ -89,9 +88,7 @@ const MobilePoll: React.FunctionComponent = () => {
       label: (
         <div className="flex items-center gap-x-2.5">
           <div>
-            <Icon>
-              <UsersIcon />
-            </Icon>
+            <UsersIcon className="size-4 shrink-0 text-muted-foreground" />
           </div>
           <span>
             {t("allParticipants", {

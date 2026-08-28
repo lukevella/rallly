@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { Icon } from "@rallly/ui/icon";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -17,11 +16,7 @@ function SSOImage({ provider }: { provider: string }) {
   }
 
   if (provider === "oidc") {
-    return (
-      <Icon>
-        <UserIcon />
-      </Icon>
-    );
+    return <UserIcon className="text-muted-foreground" />;
   }
 
   return null;

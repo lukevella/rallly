@@ -1,5 +1,4 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
-import { Icon } from "@rallly/ui/icon";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { BarChart2Icon, CalendarIcon, InfoIcon } from "lucide-react";
 import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
@@ -28,9 +27,7 @@ export async function AccountDeletionSummary() {
         <ul className="space-y-2">
           {activePollCount > 0 ? (
             <li className="flex items-center gap-x-2">
-              <Icon>
-                <BarChart2Icon />
-              </Icon>
+              <BarChart2Icon className="size-4 shrink-0 text-muted-foreground" />
               <Trans
                 i18nKey="deleteAccountActivePolls"
                 defaults="{count, plural, one {# active poll} other {# active polls}}"
@@ -40,9 +37,7 @@ export async function AccountDeletionSummary() {
           ) : null}
           {upcomingEventCount > 0 ? (
             <li className="flex items-center gap-x-2">
-              <Icon>
-                <CalendarIcon />
-              </Icon>
+              <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
               <Trans
                 i18nKey="deleteAccountUpcomingEvents"
                 defaults="{count, plural, one {# upcoming event} other {# upcoming events}}"

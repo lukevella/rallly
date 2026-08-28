@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
 import { Input } from "@rallly/ui/input";
 import debounce from "lodash/debounce";
 import { SearchIcon } from "lucide-react";
@@ -55,9 +54,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
       }}
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
-        <Icon>
-          <SearchIcon />
-        </Icon>
+        <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
       </div>
       <Input
         ref={inputRef}

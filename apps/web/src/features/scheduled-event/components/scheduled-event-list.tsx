@@ -24,7 +24,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { CalendarPlusIcon, MoreVerticalIcon } from "lucide-react";
@@ -175,16 +174,12 @@ export function ScheduledEventListItem({
               />
             }
           >
-            <Icon>
-              <MoreVerticalIcon />
-            </Icon>
+            <MoreVerticalIcon className="text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
-                <Icon>
-                  <CalendarPlusIcon />
-                </Icon>
+                <CalendarPlusIcon />
                 <Trans i18nKey="addToCalendar" defaults="Add to calendar" />
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>

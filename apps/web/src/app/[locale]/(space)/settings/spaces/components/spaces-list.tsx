@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { CrownIcon, LayersIcon, MoreVerticalIcon } from "lucide-react";
 import { useState } from "react";
@@ -108,9 +107,7 @@ export function SpacesList({ spaces, currentUserId }: SpacesListProps) {
                     />
                   }
                 >
-                  <Icon>
-                    <MoreVerticalIcon />
-                  </Icon>
+                  <MoreVerticalIcon className="text-muted-foreground" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
