@@ -108,7 +108,7 @@ export default async function Page(props: {
               </div>
             </dl>
           </aside>
-          <article className="blog-content min-w-0 max-w-2xl lg:order-1">
+          <article className="longform min-w-0 max-w-2xl lg:order-1">
             <MDXRemote source={post.content} />
           </article>
         </div>
