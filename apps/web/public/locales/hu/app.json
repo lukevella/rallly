@@ -155,6 +155,7 @@
   "commentsSheetEmpty": "Még nincsenek hozzászólások",
   "commentsSheetEmptyDescription": "Legyél te az első, aki megosztja gondolatait a szavazásról.",
   "commentsSheetSubmitted": "Hozzászólásod rögzítésre került",
+  "commentsTriggerLabel": "{count, plural, =0 {Hozzászólások} one {1 hozzászólás} other {# hozzászólás}}",
   "configuredByEnvironmentVariable": "Ez a beállítás környezeti változó által lett konfigurálva.",
   "confirm": "Megerősítés",
   "confirmSpaceName": "Kérjük, add meg a munkaterület nevét a megerősítéshez:",
