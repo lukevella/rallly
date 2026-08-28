@@ -48,6 +48,15 @@ body {
   hr {
     @apply my-12;
   }
+  table {
+    @apply mb-6 w-full text-left text-sm;
+  }
+  th {
+    @apply border-b border-gray-200 py-2 pr-4 font-medium text-gray-800;
+  }
+  td {
+    @apply border-b border-gray-100 py-2 pr-4 align-top;
+  }
   a {
     @apply text-primary hover:underline;
   }
