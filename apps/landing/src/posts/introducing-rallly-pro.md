@@ -1,6 +1,7 @@
 ---
 title: Coming Soon - Rallly Pro
 date: "2023-06-19"
+category: Product
 excerpt: I'm excited to announce a significant update that will be available soon.
 ---
 

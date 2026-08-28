@@ -46,6 +46,14 @@ function createMemberDTO(member: {
   } satisfies MemberDTO;
 }
 
+export async function spaceExists(spaceId: string) {
+  const space = await prisma.space.findUnique({
+    where: { id: spaceId },
+    select: { id: true },
+  });
+  return space !== null;
+}
+
 export async function getSpaceSeatCount(spaceId: string) {
   return await prisma.spaceMember.count({
     where: {

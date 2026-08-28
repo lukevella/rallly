@@ -9,7 +9,6 @@ import {
   CommandList,
 } from "@rallly/ui/command";
 import { useDialog } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -72,9 +71,7 @@ export function CommandMenu() {
             heading={<Trans i18nKey="commandMenuActions" defaults="Actions" />}
           >
             <CommandItem onSelect={() => handleSelect("/new")}>
-              <Icon>
-                <PlusIcon />
-              </Icon>
+              <PlusIcon className="size-4 shrink-0 text-muted-foreground" />
               <Trans i18nKey="createNewPoll" defaults="Create new poll" />
             </CommandItem>
           </CommandGroup>

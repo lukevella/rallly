@@ -26,14 +26,21 @@ import {
 } from "@rallly/ui/sheet";
 import { toast } from "@rallly/ui/sonner";
 import {
+  ArrowUpIcon,
   CheckCircle2Icon,
-  CornerDownLeftIcon,
+  EyeIcon,
   MessageCircleIcon,
   MoreHorizontalIcon,
   TrashIcon,
 } from "lucide-react";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePoll, useRole } from "@/features/poll/client";
 import { useEditToken } from "@/features/poll/components/mutations";
@@ -105,7 +112,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
         onSubmitted();
       })}
     >
-      <InputGroup className="bg-background shadow-lg dark:bg-card">
+      <InputGroup>
         <InputGroupAddon align="block-start" className="border-b">
           {user && !user.isGuest ? (
             <>
@@ -137,21 +144,31 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
             </>
           )}
         </InputGroupAddon>
-        <div className="flex w-full items-end">
-          <InputGroupTextarea
-            id="comment"
-            maxLength={MAX_COMMENT_LENGTH}
-            placeholder={t("commentPlaceholder")}
-            aria-invalid={!!formState.errors.content}
-            {...register("content", { validate: requiredString })}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                e.currentTarget.form?.requestSubmit();
-              }
-            }}
-          />
-          <InputGroupAddon align="inline-end" className="pb-1.5">
+        <InputGroupTextarea
+          id="comment"
+          className="max-h-40 min-h-9"
+          maxLength={MAX_COMMENT_LENGTH}
+          placeholder={t("commentsComposerPlaceholder", {
+            defaultValue: "Write a comment…",
+          })}
+          aria-invalid={!!formState.errors.content}
+          {...register("content", { validate: requiredString })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
+        />
+        <InputGroupAddon align="block-end">
+          <InputGroupText className="text-muted-foreground text-xs">
+            <EyeIcon />
+            <Trans
+              i18nKey="commentsComposerVisibility"
+              defaults="Visible to everyone"
+            />
+          </InputGroupText>
+          <div className="ml-auto flex items-center gap-2">
             <MaxCharLength
               length={contentLength}
               maxLength={MAX_COMMENT_LENGTH}
@@ -164,13 +181,14 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
             <InputGroupButton
               type="submit"
               size="icon-sm"
+              variant="primary"
               aria-label={t("addComment", { defaultValue: "Add comment" })}
               loading={formState.isSubmitting}
             >
-              <CornerDownLeftIcon />
+              <ArrowUpIcon />
             </InputGroupButton>
-          </InputGroupAddon>
-        </div>
+          </div>
+        </InputGroupAddon>
       </InputGroup>
     </form>
   );
@@ -220,22 +238,33 @@ function CommentsSheetInner({ className }: { className?: string }) {
 
   const count = comments?.length ?? 0;
 
+  const sortedComments = React.useMemo(
+    () =>
+      comments
+        ? [...comments].sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          )
+        : [],
+    [comments],
+  );
+
   return (
     <>
-      <Button className={className} onClick={() => dialog.trigger()}>
+      <Button className={className} size="lg" onClick={() => dialog.trigger()}>
         <MessageCircleIcon data-icon="inline-start" />
-        <Trans i18nKey="comments" defaults="Comments" />
-        {count > 0 ? <Badge>{count}</Badge> : null}
+        <Trans
+          i18nKey="commentsTriggerLabel"
+          defaults="{count, plural, =0 {Comments} one {1 Comment} other {# Comments}}"
+          values={{ count }}
+        />
       </Button>
       <Sheet {...dialog.dialogProps}>
-        <SheetContent className="flex flex-col sm:max-w-md">
+        <SheetContent className="flex flex-col p-4 sm:max-w-md sm:p-6">
           <SheetHeader>
-            <div className="flex items-center gap-2">
-              <SheetTitle>
-                <Trans i18nKey="comments" defaults="Comments" />
-              </SheetTitle>
-              {count > 0 ? <Badge>{count}</Badge> : null}
-            </div>
+            <SheetTitle>
+              <Trans i18nKey="comments" defaults="Comments" />
+            </SheetTitle>
             <SheetDescription className="sr-only">
               <Trans
                 i18nKey="commentsSheetDescription"
@@ -243,17 +272,36 @@ function CommentsSheetInner({ className }: { className?: string }) {
               />
             </SheetDescription>
           </SheetHeader>
-          <div className="-mx-6 -mb-6 flex grow flex-col overflow-y-auto px-6">
-            <div className="flex grow flex-col">
+          {!poll.event ? (
+            <div className="pb-4">
+              {hasCommented ? (
+                <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-muted-foreground text-sm">
+                  <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
+                  <Trans
+                    i18nKey="commentsSheetSubmitted"
+                    defaults="Your comment has been added"
+                  />
+                </div>
+              ) : (
+                <NewCommentForm onSubmitted={() => setHasCommented(true)} />
+              )}
+            </div>
+          ) : null}
+          <div className="-mx-4 -mb-4 flex grow flex-col overflow-y-auto border-t px-4 pt-4 sm:-mx-6 sm:-mb-6 sm:px-6">
+            <div className="flex grow flex-col pb-4 sm:pb-6">
               {count > 0 ? (
-                <div className="space-y-4">
-                  {comments?.map((comment) => {
+                <div className="divide-y">
+                  {sortedComments.map((comment) => {
                     const canDelete =
                       role === "admin" || session.ownsObject(comment);
 
                     return (
-                      <div data-testid="comment" key={comment.id}>
-                        <div className="mb-1 flex items-center space-x-2">
+                      <div
+                        data-testid="comment"
+                        key={comment.id}
+                        className="py-4 first:pt-0 last:pb-0"
+                      >
+                        <div className="relative mb-1 flex items-center gap-x-2 text-foreground">
                           <Participant>
                             <OptimizedAvatarImage
                               name={comment.authorName}
@@ -268,77 +316,73 @@ function CommentsSheetInner({ className }: { className?: string }) {
                               </Badge>
                             ) : null}
                           </Participant>
-                          <div className="flex items-center gap-2 text-sm">
-                            <div className="text-muted-foreground">
-                              <RelativeTime value={comment.createdAt} />
-                            </div>
-                            {canDelete && (
-                              <DropdownMenu>
-                                <DropdownMenuTrigger
-                                  render={
-                                    <Button
-                                      aria-label={t("moreOptions", {
-                                        defaultValue: "More options",
-                                      })}
-                                      variant="ghost"
-                                      size="icon-xs"
-                                    />
-                                  }
+                          {canDelete && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                render={
+                                  <Button
+                                    // Out of flow: the menu mounts focus-guard
+                                    // spans into the row, which would re-target
+                                    // space-x-2's not-last-child margin and
+                                    // shift an in-flow trigger while open.
+                                    className="absolute top-1/2 right-0 -translate-y-1/2 text-muted-foreground"
+                                    aria-label={t("moreOptions", {
+                                      defaultValue: "More options",
+                                    })}
+                                    variant="ghost"
+                                    size="icon-xs"
+                                  />
+                                }
+                              >
+                                <MoreHorizontalIcon />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  variant="destructive"
+                                  onClick={() => {
+                                    deleteComment.mutate({
+                                      commentId: comment.id,
+                                      token,
+                                    });
+                                  }}
                                 >
-                                  <MoreHorizontalIcon />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start">
-                                  <DropdownMenuItem
-                                    variant="destructive"
-                                    onClick={() => {
-                                      deleteComment.mutate({
-                                        commentId: comment.id,
-                                        token,
-                                      });
-                                    }}
-                                  >
-                                    <TrashIcon />
-                                    <Trans i18nKey="delete" />
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            )}
-                          </div>
+                                  <TrashIcon />
+                                  <Trans i18nKey="delete" />
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
                         </div>
-                        <div className="w-fit whitespace-pre-wrap pl-8 text-sm leading-relaxed">
+                        <div className="w-fit whitespace-pre-wrap pl-8 text-foreground text-sm leading-relaxed">
                           <TruncatedLinkify>{comment.content}</TruncatedLinkify>
+                        </div>
+                        <div className="mt-2 pl-8 text-muted-foreground text-xs dark:text-muted-foreground/75">
+                          <RelativeTime value={comment.createdAt} />
                         </div>
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                <div className="flex grow flex-col items-center justify-center gap-2 text-center">
-                  <MessageCircleIcon className="size-5 text-muted-foreground" />
-                  <p className="text-muted-foreground text-sm">
+                <EmptyState className="grow">
+                  <EmptyStateIcon>
+                    <MessageCircleIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
                     <Trans
                       i18nKey="commentsSheetEmpty"
                       defaults="No comments yet"
                     />
-                  </p>
-                </div>
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      i18nKey="commentsSheetEmptyDescription"
+                      defaults="Be the first to share your thoughts on this poll."
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
               )}
             </div>
-            {!poll.event ? (
-              <div className="sticky bottom-0 pt-3 pb-6">
-                {hasCommented ? (
-                  <div className="flex items-center gap-2 rounded-lg border bg-background p-3 text-muted-foreground text-sm shadow-lg dark:bg-card">
-                    <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
-                    <Trans
-                      i18nKey="commentsSheetSubmitted"
-                      defaults="Your comment has been added"
-                    />
-                  </div>
-                ) : (
-                  <NewCommentForm onSubmitted={() => setHasCommented(true)} />
-                )}
-              </div>
-            ) : null}
           </div>
         </SheetContent>
       </Sheet>

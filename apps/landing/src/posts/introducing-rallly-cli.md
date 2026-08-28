@@ -1,6 +1,7 @@
 ---
 title: Introducing the Rallly CLI
 date: "2026-04-29"
+category: Self-hosting
 excerpt: A new CLI for installing, configuring, and managing self-hosted Rallly instances, with HTTPS and image uploads working out of the box.
 ---
 

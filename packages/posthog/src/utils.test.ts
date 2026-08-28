@@ -4,6 +4,7 @@ import {
   getPostHogCookieName,
   isAbortError,
   isResizeObserverLoopError,
+  isUnsymbolicatedMinifiedException,
   parsePostHogCookieDistinctId,
 } from "./utils";
 
@@ -100,6 +101,84 @@ describe("isResizeObserverLoopError", () => {
   it("does not match when the exception list is missing", () => {
     expect(
       isResizeObserverLoopError({
+        properties: {},
+      } as unknown as CaptureResult),
+    ).toBe(false);
+  });
+});
+
+describe("isUnsymbolicatedMinifiedException", () => {
+  const event = (exceptionList: unknown) =>
+    ({
+      properties: { $exception_list: exceptionList },
+    }) as unknown as CaptureResult;
+
+  const documentFrames = [
+    { filename: "https://app.rallly.co/", function: "?" },
+    { filename: "https://app.rallly.co/", function: "?" },
+  ];
+
+  it("matches a minified identifier with no /_next/static frame", () => {
+    for (const value of ["fa", "ga", "Ba", "Ca"]) {
+      expect(
+        isUnsymbolicatedMinifiedException(
+          event([
+            { type: "Error", value, stacktrace: { frames: documentFrames } },
+          ]),
+        ),
+      ).toBe(true);
+    }
+  });
+
+  it("does not match when a frame resolves to a /_next/static chunk", () => {
+    expect(
+      isUnsymbolicatedMinifiedException(
+        event([
+          {
+            type: "Error",
+            value: "Ca",
+            stacktrace: {
+              frames: [
+                ...documentFrames,
+                { filename: "https://app.rallly.co/_next/static/chunk.js" },
+              ],
+            },
+          },
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not match a readable error message", () => {
+    expect(
+      isUnsymbolicatedMinifiedException(
+        event([
+          {
+            type: "TypeError",
+            value: "x is not a function",
+            stacktrace: { frames: documentFrames },
+          },
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not match a minified value without a stack", () => {
+    expect(
+      isUnsymbolicatedMinifiedException(
+        event([{ type: "Error", value: "Ca", stacktrace: { frames: [] } }]),
+      ),
+    ).toBe(false);
+    expect(
+      isUnsymbolicatedMinifiedException(
+        event([{ type: "Error", value: "Ca" }]),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not match when the exception list is missing", () => {
+    expect(
+      isUnsymbolicatedMinifiedException({
         properties: {},
       } as unknown as CaptureResult),
     ).toBe(false);

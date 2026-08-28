@@ -37,7 +37,7 @@ export function SectionDescription({
   return (
     <p
       className={cn(
-        "max-w-prose text-pretty text-gray-500 text-sm sm:text-lg",
+        "max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg",
         className,
       )}
       {...props}

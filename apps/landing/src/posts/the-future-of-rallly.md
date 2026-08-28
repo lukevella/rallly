@@ -1,6 +1,7 @@
 ---
 title: The Future of Rallly
 date: "2023-06-18"
+category: Company
 excerpt: Rallly has always been about simplifying group scheduling, but my aim is to evolve it into more than just a polling platform.
 ---
 

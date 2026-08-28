@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import {
   ArmchairIcon,
   CalendarRangeIcon,
@@ -114,9 +113,7 @@ function EventTypeCard({
                 />
               }
             >
-              <Icon>
-                <MoreVerticalIcon />
-              </Icon>
+              <MoreVerticalIcon className="text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={onEdit}>

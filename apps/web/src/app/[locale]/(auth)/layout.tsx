@@ -1,5 +1,7 @@
+import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { Logo } from "@/features/branding/components/logo";
 import { LOGO_VIEWBOX } from "@/features/branding/constants";
+import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { QuickCreateButton } from "@/features/quick-create/components/quick-create-button";
 import { QuickCreateWidget } from "@/features/quick-create/components/quick-create-widget";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
@@ -12,9 +14,10 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const [locale, deviceDateTimeConfig] = await Promise.all([
+  const [locale, deviceDateTimeConfig, footerLinks] = await Promise.all([
     getLocale(),
     getDeviceDateTimeConfig(),
+    loadFooterLinks(),
   ]);
 
   return (
@@ -41,9 +44,15 @@ export default async function Layout({
                 <QuickCreateButton />
               </div>
             ) : null}
-            {/* empty spacer matching the header's logo slot height so the
-                vertically centered content sits at the true middle of the page */}
-            <footer style={{ height: LOGO_VIEWBOX.height }} />
+            {/* Balances the header's logo slot so the vertically centered
+                content sits at the true middle of the page. Keeps its height
+                as a bare spacer when no links are configured. */}
+            <footer
+              className="flex items-center justify-center"
+              style={{ minHeight: LOGO_VIEWBOX.height }}
+            >
+              <InstanceFooterLinks links={footerLinks} />
+            </footer>
           </div>
           {isQuickCreateEnabled ? (
             <div className="relative hidden flex-1 flex-col justify-center rounded-lg border bg-muted/50 lg:flex lg:p-16">

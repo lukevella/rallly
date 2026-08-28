@@ -185,10 +185,14 @@ app.get("/remove-deleted-users", async (c) => {
 app.get("/delete-orphaned-anonymous-users", async (c) => {
   const deleted = await deleteOrphanedAnonymousUsers();
 
-  logger.info(
-    { task: "delete-orphaned-anonymous-users", deleted },
-    "Deleted orphaned anonymous guest users idle longer than the session length",
-  );
+  // Runs hourly and most runs find nothing, so stay quiet unless there was
+  // work — otherwise the signal is buried in 24 no-op lines a day.
+  if (deleted > 0) {
+    logger.info(
+      { task: "delete-orphaned-anonymous-users", deleted },
+      "Deleted orphaned anonymous guest users idle longer than the session length",
+    );
+  }
 
   return c.json({
     success: true,

@@ -1,5 +1,4 @@
 import { buttonVariants } from "@rallly/ui";
-import { Icon } from "@rallly/ui/icon";
 import {
   Sidebar,
   SidebarContent,
@@ -42,9 +41,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                       size: "icon",
                     })}
                   >
-                    <Icon>
-                      <ArrowLeftIcon />
-                    </Icon>
+                    <ArrowLeftIcon className="text-muted-foreground" />
                     <span className="sr-only">
                       <Trans i18nKey="back" defaults="Back" />
                     </span>
@@ -87,9 +84,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
             <div className="flex items-center gap-4">
               <SidebarTrigger />
               <div className="flex items-center gap-2">
-                <Icon>
-                  <SettingsIcon />
-                </Icon>
+                <SettingsIcon className="size-4 shrink-0 text-muted-foreground" />
                 <span className="font-medium text-sm">
                   <Trans i18nKey="settings" defaults="Settings" />
                 </span>

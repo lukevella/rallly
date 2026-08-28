@@ -1,6 +1,7 @@
 ---
 title: Mobile Poll UI Refresh
 date: "2022-04-20"
+category: Product
 excerpt: An update focusing on improving the usability of the app on mobile devices.
 ---
 

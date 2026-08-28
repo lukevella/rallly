@@ -1,7 +1,7 @@
+import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card } from "@rallly/ui/card";
-import { Icon } from "@rallly/ui/icon";
 import {
   Select,
   SelectContent,
@@ -12,7 +12,7 @@ import {
 import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
-import type * as React from "react";
+import * as React from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
@@ -61,6 +61,25 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const isEditing = votingForm.watch("mode") !== "view";
 
+  // True while the sticky footer is pinned to the viewport (floating over
+  // the option list) rather than resting at the card's end. Tracked via a
+  // sentinel after the footer: while the card's end is off-screen, the
+  // footer is stuck.
+  const footerSentinelRef = React.useRef<HTMLDivElement>(null);
+  const [isFooterFloating, setIsFooterFloating] = React.useState(true);
+
+  React.useEffect(() => {
+    const sentinel = footerSentinelRef.current;
+    if (!sentinel) {
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsFooterFloating(!entry.isIntersecting);
+    });
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
   const { t } = useTranslation();
 
   const participantOptions = [
@@ -69,9 +88,7 @@ const MobilePoll: React.FunctionComponent = () => {
       label: (
         <div className="flex items-center gap-x-2.5">
           <div>
-            <Icon>
-              <UsersIcon />
-            </Icon>
+            <UsersIcon className="size-4 shrink-0 text-muted-foreground" />
           </div>
           <span>
             {t("allParticipants", {
@@ -237,10 +254,20 @@ const MobilePoll: React.FunctionComponent = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <VotingFooter className="px-3 pb-3" />
+            {/* While floating, 3px + the page's p-3 and the card's 1px
+                border puts the footer's edges at 16px from the viewport,
+                flush with the floating comments button (right-4). At rest
+                it returns to the card's normal inset. */}
+            <VotingFooter
+              className={cn(
+                "pb-3 transition-[padding] duration-200 ease-out",
+                isFooterFloating ? "px-[3px]" : "px-3",
+              )}
+            />
           </m.div>
         ) : null}
       </AnimatePresence>
+      <div ref={footerSentinelRef} aria-hidden="true" />
     </Card>
   );
 };

@@ -10,30 +10,16 @@ export type DemoDay = {
   options: DemoOption[];
 };
 
-// Participant names are sample data and stay untranslated; votes are indexed
-// against the flattened option list (four Thursdays, two slots each).
-export const demoParticipants: { name: string; votes: DemoVote[] }[] = [
-  {
-    name: "Margaret Ellis",
-    votes: ["ifNeedBe", "yes", "no", "yes", "yes", "yes", "no", "yes"],
-  },
-  {
-    name: "Priya Patel",
-    votes: ["yes", "yes", "yes", "no", "yes", "yes", "no", "yes"],
-  },
-  {
-    name: "Tom Becker",
-    votes: ["yes", "yes", "yes", "yes", "yes", "no", "ifNeedBe", "yes"],
-  },
-  {
-    name: "Grace Okafor",
-    votes: ["no", "yes", "no", "yes", "yes", "no", "no", "yes"],
-  },
-];
-
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 const SLOT_HOURS = [12, 18];
+
+// How the four demo days are spread. "weekly" gives one day a week over a
+// month, the unhurried shape of planning a standing meeting. "consecutive"
+// gives four days in one week, which reads as coordination under time
+// pressure. Either way it is four days of two slots — the vote arrays and the
+// options grid are both fixed at eight.
+export type DemoSpacing = "weekly" | "consecutive";
 
 // The first Thursday at least a week out, as a plain YYYY-MM-DD string. This is
 // the only thing about the demo that depends on the current time, so it is the
@@ -52,11 +38,19 @@ export function getDemoAnchor(now: Date) {
 // The demo dates are floating wall times constructed in UTC and always
 // formatted with timeZone: "UTC", so the rendered clock times don't depend
 // on the server's time zone.
-export function getDemoDays(anchor: string): DemoDay[] {
+export function getDemoDays(
+  anchor: string,
+  spacing: DemoSpacing = "weekly",
+): DemoDay[] {
   const [year, month, day] = anchor.split("-").map(Number);
-  const firstThursday = Date.UTC(year, month - 1, day);
-  return [0, 1, 2, 3].map((week) => {
-    const midnight = firstThursday + week * 7 * DAY_MS;
+  const anchorThursday = Date.UTC(year, month - 1, day);
+  // Consecutive runs Monday to Thursday of the anchor's week, so it stays on
+  // weekdays and still ends on the anchor itself.
+  const start =
+    spacing === "consecutive" ? anchorThursday - 3 * DAY_MS : anchorThursday;
+  const step = spacing === "consecutive" ? DAY_MS : 7 * DAY_MS;
+  return [0, 1, 2, 3].map((index) => {
+    const midnight = start + index * step;
     return {
       date: new Date(midnight),
       options: SLOT_HOURS.map((hour) => ({
@@ -75,10 +69,13 @@ export function getInitials(name: string) {
 }
 
 // The count badge in the app includes both yes and if-need-be votes.
-export function getScores(days: DemoDay[]) {
+export function getScores(
+  days: DemoDay[],
+  participants: { votes: DemoVote[] }[],
+) {
   const optionCount = days.reduce((sum, day) => sum + day.options.length, 0);
   return Array.from({ length: optionCount }, (_, index) =>
-    demoParticipants.reduce(
+    participants.reduce(
       (score, participant) =>
         participant.votes[index] === "no" ? score : score + 1,
       0,

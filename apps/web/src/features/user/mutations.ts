@@ -147,7 +147,21 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
   await prisma.user.delete({ where: { id: userId } });
 }
 
-const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
+const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 500;
+
+// Hard ceiling on one invocation. The job runs hourly, so capacity is
+// 500/hour against an arrival rate well under that — the cap exists so a
+// run's cost stays flat regardless of how much backlog is waiting, rather
+// than to keep pace on its own. An unbounded loop is what timed out when
+// the cron was first enabled: the eligibility predicate spans fifteen
+// relations, so re-deriving it per batch is the dominant cost, and a large
+// backlog made the number of derivations unbounded too.
+//
+// A backlog therefore drains over hours rather than in one run, which is
+// the intended behaviour: this job maintains a steady state. A one-time
+// accumulation (a migration backfill, a long outage) wants a supervised
+// drain, not a bigger ceiling here.
+const DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN = 500;
 
 /**
  * Delete orphaned anonymous guest users: guests that own no resources and
@@ -155,15 +169,34 @@ const DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE = 100;
  *
  * Two guards, both required:
  *  - The `lastSeenAt` window IS the liveness check. Prod sessions live in
- *    Redis, so we can't probe them at delete time; but session TTL equals
- *    this window and every session refresh bumps `lastSeenAt`, so a guest
- *    below the cutoff provably has no live session left to orphan.
+ *    Redis, so we can't probe them at delete time. What rules out a live
+ *    session is the session TTL: it equals this window, so any session
+ *    belonging to a guest below the cutoff has already expired. `lastSeenAt`
+ *    is a lower bound on that expiry, not a record of it — a returning guest
+ *    gets a fresh session, and `session.create` writes `lastSeenAt`, lifting
+ *    them back above the cutoff. Note the value can also predate any session
+ *    at all: rows carrying the column's backfill default were never observed,
+ *    so read a stale `lastSeenAt` as "no session since", not "last active at".
  *  - The resource filter guards the cascade. A guest's polls/comments are
  *    onDelete: Cascade, so deleting one who still owns a live poll would
  *    destroy everyone's votes/comments.
  *
  * `scheduledEventInvites` is the invitee link (invitee_id, SetNull); a guest
  * on that relation is a live participant elsewhere and must be retained.
+ *
+ * The filter below is the canonical list of guarded relations, and it must
+ * stay exhaustive: every `onDelete: Cascade` relation on `User` is inside
+ * this delete's blast radius. `scripts/check-user-cascade-relations.mjs`
+ * fails CI when the schema grows one that is neither guarded here nor
+ * recorded as deliberately ignored (auth plumbing — sessions, accounts,
+ * notification preferences — which every guest has and which hold no data
+ * worth keeping).
+ *
+ * Most of these can't be reached by an anonymous guest today: the
+ * user-create hook in `lib/auth.ts` returns early for anonymous users, so no
+ * space is provisioned and the space-scoped relations stay empty. That is an
+ * application-code invariant, not a database constraint, so the filter does
+ * not rely on it holding.
  */
 export async function deleteOrphanedAnonymousUsers() {
   const cutoff = new Date(Date.now() - SESSION_TTL_SECONDS * 1000);
@@ -176,20 +209,31 @@ export async function deleteOrphanedAnonymousUsers() {
     comments: { none: {} },
     participants: { none: {} },
     scheduledEventInvites: { none: {} },
+    scheduledEvents: { none: {} },
+    hostedEventTypes: { none: {} },
+    hostedSheets: { none: {} },
+    spaces: { none: {} },
+    memberOf: { none: {} },
+    spaceMemberInvites: { none: {} },
+    subscriptions: { none: {} },
+    paymentMethods: { none: {} },
+    calendarConnections: { none: {} },
+    credentials: { none: {} },
   } satisfies Prisma.UserWhereInput;
 
   let deleted = 0;
-  let hasMore = true;
 
-  while (hasMore) {
+  while (deleted < DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN) {
     const batch = await prisma.user.findMany({
       where: orphanedAnonymousFilter,
       select: { id: true },
-      take: DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
+      take: Math.min(
+        DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
+        DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN - deleted,
+      ),
     });
 
     if (batch.length === 0) {
-      hasMore = false;
       break;
     }
 
@@ -204,6 +248,15 @@ export async function deleteOrphanedAnonymousUsers() {
     });
 
     deleted += count;
+
+    // A batch can select rows that the re-check then rejects, and a fully
+    // rejected batch leaves `deleted` unmoved. Those rows no longer match the
+    // filter, so the next pass excludes them — but only once the write that
+    // disqualified them is visible here, so stop rather than risk re-selecting
+    // the same batch indefinitely. The next scheduled run picks up the rest.
+    if (count < batch.length) {
+      break;
+    }
   }
 
   return deleted;

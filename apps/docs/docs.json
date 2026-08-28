@@ -4,7 +4,7 @@
   "name": "Rallly",
   "colors": {
     "primary": "#4f39f6",
-    "light": "#F8FAFC",
+    "light": "#615fff",
     "dark": "#4f39f6"
   },
   "favicon": "/favicon.png",
@@ -18,7 +18,7 @@
             "pages": ["introduction", "faq"]
           },
           {
-            "group": "How it Works",
+            "group": "How it works",
             "pages": ["workflow/create", "workflow/invite", "workflow/schedule"]
           },
           {

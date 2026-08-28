@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import { Icon } from "@rallly/ui/icon";
 import { Label } from "@rallly/ui/label";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { Switch } from "@rallly/ui/switch";
@@ -51,8 +50,8 @@ function KeyBenefitsItem({
 }) {
   return (
     <li className="flex items-center gap-3">
-      <div className="mt-1.5 inline-flex size-9 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
-        <Icon>{icon}</Icon>
+      <div className="mt-1.5 inline-flex size-9 items-center justify-center rounded-lg border bg-muted text-muted-foreground [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground">
+        {icon}
       </div>
       <div>
         <div className="mt-2 font-medium text-sm">{title}</div>
@@ -239,7 +238,7 @@ export function PayWallDialog({
                   />
                 </label>
               )}
-              {selectedPlan === "pro" ? (
+              {selectedPlan === "pro" && (
                 <TabsContent value="pro">
                   <UpgradeButton
                     className="w-full"
@@ -261,7 +260,8 @@ export function PayWallDialog({
                     />
                   </UpgradeButton>
                 </TabsContent>
-              ) : (
+              )}
+              {selectedPlan === "hobby" && (
                 <Button disabled={true} size="xl" className="w-full">
                   <Trans i18nKey="currentPlan" defaults="Current plan" />
                 </Button>

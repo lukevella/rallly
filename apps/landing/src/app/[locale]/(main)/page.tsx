@@ -2,17 +2,16 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
-import Image from "next/image";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { AnimatedStat } from "@/components/home/animated-number";
+import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
-import { Mention, Mentions } from "@/components/home/mentions";
+import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
+import { SocialProof } from "@/components/home/social-proof";
 import { Stats } from "@/components/home/stats";
-import { Testimonial } from "@/components/home/testimonial";
 import {
   Section,
   SectionContent,
@@ -21,12 +20,13 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
+import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("days");
+  cacheLife("hours");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["home", "common"]);
   const [pollCount, voterCount] = await Promise.all([
@@ -74,135 +74,17 @@ export default async function Page(props: {
             t={t}
             ns="home"
             i18nKey="statsLast30Days"
-            defaults="<b>{voterCount, plural, one {# person} other {# people}}</b> voted on <b>{pollCount, plural, one {# poll} other {# polls}}</b> in the last 30 days"
+            defaults="<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days"
             values={{ voterCount, pollCount }}
-            components={{
-              b: <AnimatedStat locale={locale} />,
-            }}
+            components={[
+              <PeopleBadge key="people" locale={locale} live />,
+              <PollsBadge key="polls" locale={locale} live />,
+            ]}
           />
         </Stats>
       </Section>
-      <Section>
-        <Testimonial
-          logo={
-            <Image
-              src="/static/images/mit-logo.svg"
-              width={54}
-              height={28}
-              alt=""
-            />
-          }
-          avatar={
-            <Image
-              className="rounded-full"
-              src="/static/images/eric.png"
-              width={48}
-              height={48}
-              alt=""
-            />
-          }
-          name="Eric Fletcher"
-          title={
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="ericJobTitle"
-              defaults="Executive Assistant at MIT"
-            />
-          }
-        >
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="ericQuote"
-            defaults="“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”"
-          />
-        </Testimonial>
-      </Section>
-      <Section>
-        <Mentions>
-          <Mention
-            delay={0.25}
-            logo={
-              <div className="relative h-8 w-14">
-                <Image
-                  src="/static/images/pcmag-logo.svg"
-                  alt="PCMag"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="pcmagQuote"
-              defaults="“Set up a scheduling poll in as little time as possible.”"
-            />
-          </Mention>
-          <Mention
-            delay={0.5}
-            logo={
-              <div className="relative h-8 w-24">
-                <Image
-                  src="/static/images/hubspot-logo.svg"
-                  alt="HubSpot"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="hubspotQuote"
-              defaults="“The simplest choice for availability polling for large groups.”"
-            />
-          </Mention>
-          <Mention
-            delay={0.75}
-            logo={
-              <div className="relative h-8 w-32">
-                <Image
-                  src="/static/images/goodfirms-logo.svg"
-                  alt="Goodfirms"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="goodfirmsQuote"
-              defaults="“Unique in its simplicity and requires minimum interaction time.”"
-            />
-          </Mention>
-          <Mention
-            delay={1}
-            logo={
-              <div className="relative h-8 w-20">
-                <Image
-                  src="/static/images/popsci-logo.svg"
-                  alt="PopSci"
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </div>
-            }
-          >
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="popsciQuote"
-              defaults="“The perfect pick if you want to keep your RSVPs simple.”"
-            />
-          </Mention>
-        </Mentions>
-      </Section>
+      <HowItWorks locale={locale} />
+      <SocialProof locale={locale} />
       <div>
         <Section>
           <SectionHeading>
@@ -279,71 +161,6 @@ export default async function Page(props: {
                       key="pricing"
                       className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                       href="/pricing"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqNonprofit"
-                    defaults="Do you offer discounts for nonprofits?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqNonprofitAnswer"
-                  defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. Email us at <0>support@rallly.co</0> and we will get you set up."
-                  components={[
-                    <a
-                      key="email"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="mailto:support@rallly.co"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqTeams"
-                    defaults="How does Rallly work for teams?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqTeamsAnswer"
-                  defaults="You can invite your team into a shared space where everyone creates and manages polls together. Billing is centralized. A single subscription covers the whole team, and you can add or remove seats as your team changes."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqSelfHost"
-                    defaults="Can I self-host Rallly?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqSelfHostAnswer"
-                  defaults="Yes. Rallly is open source and can be deployed on your own infrastructure with Docker. Check the <0>self-hosting docs</0> to get started."
-                  components={[
-                    <a
-                      key="docs"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="https://support.rallly.co/self-hosting/installation/docker"
                     />,
                   ]}
                 />
@@ -457,6 +274,7 @@ export async function generateMetadata(props: {
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, "home");
   return {
+    alternates: getAlternates({ locale }),
     title: t("metaTitle", {
       defaultValue: "Rallly: Free Group Meeting Scheduling Tool",
       ns: "home",

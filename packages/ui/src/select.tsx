@@ -4,7 +4,6 @@ import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { buttonVariants } from "./button-variants";
-import { Icon } from "./icon";
 import { cn } from "./lib/utils";
 
 function Select<Value, Multiple extends boolean | undefined = false>(
@@ -107,9 +106,7 @@ function SelectItem({
     >
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Icon>
-            <CheckIcon className="size-4" />
-          </Icon>
+          <CheckIcon className="size-4 shrink-0 text-muted-foreground" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

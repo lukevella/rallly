@@ -3,6 +3,7 @@ import { GithubIcon, HomeIcon, LifeBuoyIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
+import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { getTranslation } from "@/i18n/server";
 
 export default async function NotFoundPage() {
@@ -12,6 +13,7 @@ export default async function NotFoundPage() {
 
   return (
     <ErrorPage
+      logo={<DefaultLogo />}
       label={t("notFoundLabel", { defaultValue: "404" })}
       title={t("notFoundTitle", { defaultValue: "Page not found" })}
       description={t("notFoundDescription", {

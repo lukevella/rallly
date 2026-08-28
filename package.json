@@ -1,7 +1,7 @@
 {
   "name": "rallly",
   "private": true,
-  "version": "4.12.0",
+  "version": "4.13.0",
   "scripts": {
     "dev": "turbo dev --filter=@rallly/web",
     "dev:emails": "turbo dev --filter=@rallly/emails",
@@ -30,6 +30,7 @@
     "check:fix": "biome check . --write",
     "check:locales": "node scripts/check-locale-braces.mjs",
     "check:structure": "node scripts/check-feature-structure.mjs && node scripts/check-feature-cycles.mjs",
+    "check:cascades": "node scripts/check-user-cascade-relations.mjs",
     "i18n:scan": "turbo i18n:scan",
     "type-check": "turbo type-check",
     "release": "./scripts/create-release.sh",
@@ -56,6 +57,11 @@
   },
   "engines": {
     "node": "24"
+  },
+  "pnpm": {
+    "overrides": {
+      "next@16.3.0": "16.3.3"
+    }
   },
   "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
 }

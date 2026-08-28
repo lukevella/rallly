@@ -8,6 +8,7 @@ import {
   isGlobalPrivacyControlEnabled,
   isInjectedExtensionException,
   isResizeObserverLoopError,
+  isUnsymbolicatedMinifiedException,
 } from "./utils";
 
 if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
@@ -30,7 +31,8 @@ if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_API_KEY) {
         event?.event === "$exception" &&
         (isInjectedExtensionException(event) ||
           isAbortError(event) ||
-          isResizeObserverLoopError(event))
+          isResizeObserverLoopError(event) ||
+          isUnsymbolicatedMinifiedException(event))
       ) {
         return null;
       }

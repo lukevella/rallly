@@ -1,4 +1,9 @@
 import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@rallly/database";
+import type { Industry } from "@/features/space/constants";
+import {
+  industryDomainRules,
+  industryKeywordRules,
+} from "@/features/space/constants";
 import type { MemberRole } from "@/features/space/schema";
 
 export const toDBRole = (role: MemberRole): PrismaSpaceMemberRole => {
@@ -18,3 +23,53 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): MemberRole => {
       return "admin";
   }
 };
+
+/**
+ * Guess a work space's sector from the owner's email domain and the
+ * organization name. Domain first — a .edu address outranks any word in a
+ * name — then whole-word keywords against the name. Returns undefined when
+ * nothing matches: the field has no default, the user picks.
+ *
+ * The guess is only ever a prefill. What gets stored is what the user
+ * confirms, and both values are reported to PostHog so the classifier's
+ * accuracy stays measurable.
+ */
+export function inferIndustry({
+  email,
+  organizationName,
+}: {
+  email?: string | null;
+  organizationName?: string | null;
+}): Industry | undefined {
+  const domain = email?.trim().toLowerCase().split("@")[1];
+
+  if (domain) {
+    // The suffix has to match end-to-end, with at least one label in front of
+    // it. Matching labels individually is what let anyone claim a sector by
+    // registering around one: "attacker.edu.com" and "foo.edu.attacker.com"
+    // both contain the label "edu" while ending in ".com". Requiring a label
+    // before the suffix also stops a bare "edu" host from matching itself.
+    for (const rule of industryDomainRules) {
+      if (rule.suffixes.some((suffix) => domain.endsWith(`.${suffix}`))) {
+        return rule.industry;
+      }
+    }
+  }
+
+  const words = organizationName
+    ?.toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+
+  if (words?.length) {
+    const wordSet = new Set(words);
+
+    for (const rule of industryKeywordRules) {
+      if (rule.keywords.some((keyword) => wordSet.has(keyword))) {
+        return rule.industry;
+      }
+    }
+  }
+
+  return undefined;
+}

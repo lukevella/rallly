@@ -1,17 +1,18 @@
-import { supportedLngs } from "@rallly/languages";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { MetadataRoute } from "next";
-
+import { getAlternateLanguages } from "@/lib/alternates";
 import { getAllPosts } from "@/lib/api";
 
-const alternateLanguages = supportedLngs.filter((lng) => lng !== "en");
-
-const getAlternateLanguages = (path: string) => {
-  return alternateLanguages.reduce<Record<string, string>>((acc, locale) => {
-    acc[locale] = absoluteUrl(`/${locale}${path}`);
-    return acc;
-  }, {});
-};
+const seoPages = [
+  "/best-doodle-alternative",
+  "/scheduling-for/executive-assistants",
+  "/scheduling-for/committees",
+  "/scheduling-for/sports-clubs",
+  "/scheduling-for/thesis-defense",
+  "/scheduling-for/legal",
+  "/free-scheduling-poll",
+  "/when2meet-alternative",
+];
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = getAllPosts(["slug"]);
@@ -33,6 +34,24 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
       alternates: {
         languages: getAlternateLanguages("/pricing"),
+      },
+    },
+    ...seoPages.map((path) => ({
+      url: absoluteUrl(path),
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+      alternates: {
+        languages: getAlternateLanguages(path),
+      },
+    })),
+    {
+      url: absoluteUrl("/press-kit"),
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+      alternates: {
+        languages: getAlternateLanguages("/press-kit"),
       },
     },
     {

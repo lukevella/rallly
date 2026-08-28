@@ -14,7 +14,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import {
   ChevronDownIcon,
   LogOutIcon,
@@ -61,9 +60,7 @@ export function NavUser() {
               {user.email}
             </div>
           </div>
-          <Icon>
-            <ChevronDownIcon />
-          </Icon>
+          <ChevronDownIcon className="text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="w-(--anchor-width)"
@@ -74,43 +71,31 @@ export function NavUser() {
             <Trans i18nKey="account" defaults="Account" />
           </DropdownMenuLabel>
           <DropdownMenuItem render={<Link href="/settings/profile" />}>
-            <Icon>
-              <UserIcon />
-            </Icon>
+            <UserIcon />
             <Trans i18nKey="profile" defaults="Profile" />
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href="/settings/preferences" />}>
-            <Icon>
-              <Settings2Icon />
-            </Icon>
+            <Settings2Icon />
             <Trans i18nKey="preferences" defaults="Preferences" />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icon>
-                <SunMoonIcon />
-              </Icon>
+              <SunMoonIcon />
               <Trans i18nKey="theme" defaults="Theme" />
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
                 <DropdownMenuRadioItem value="system">
-                  <Icon>
-                    <MonitorIcon />
-                  </Icon>
+                  <MonitorIcon />
                   <Trans i18nKey="themeSystem" defaults="System" />
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="light">
-                  <Icon>
-                    <SunIcon />
-                  </Icon>
+                  <SunIcon />
                   <Trans i18nKey="themeLight" defaults="Light" />
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="dark">
-                  <Icon>
-                    <MoonIcon />
-                  </Icon>
+                  <MoonIcon />
                   <Trans i18nKey="themeDark" defaults="Dark" />
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
@@ -128,9 +113,7 @@ export function NavUser() {
               }
             }}
           >
-            <Icon>
-              <LogOutIcon />
-            </Icon>
+            <LogOutIcon />
             <Trans i18nKey="signOut" defaults="Sign out" />
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
 import { StickerIcon } from "lucide-react";
 import React from "react";
 import { Spinner } from "@/components/spinner";
@@ -125,9 +124,7 @@ export function EventsInfiniteList({
 
       {!hasNextPage && data.pages.length > 1 && (
         <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground text-sm">
-          <Icon>
-            <StickerIcon />
-          </Icon>
+          <StickerIcon className="size-4 shrink-0 text-muted-foreground" />
           <Trans
             i18nKey="endOfList"
             defaults="You've reached the end of the list"

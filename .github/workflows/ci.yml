@@ -53,6 +53,9 @@ jobs:
       - name: Check locale files for unbalanced braces
         run: pnpm check:locales
 
+      - name: Check User cascade relations are covered by the guest purge
+        run: pnpm check:cascades
+
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest

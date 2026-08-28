@@ -18,7 +18,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { MoreVerticalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
 import {
@@ -82,9 +81,7 @@ export function MemberDropdownMenu({
             />
           }
         >
-          <Icon>
-            <MoreVerticalIcon />
-          </Icon>
+          <MoreVerticalIcon className="text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {member.role === "member" ? (
@@ -92,9 +89,7 @@ export function MemberDropdownMenu({
               onClick={() => handleRoleChange("admin")}
               disabled={!canUpdate}
             >
-              <Icon>
-                <ShieldIcon className="size-4" />
-              </Icon>
+              <ShieldIcon className="size-4" />
               <Trans i18nKey="makeAdmin" defaults="Make admin" />
             </DropdownMenuItem>
           ) : (
@@ -102,9 +97,7 @@ export function MemberDropdownMenu({
               onClick={() => handleRoleChange("member")}
               disabled={!canUpdate}
             >
-              <Icon>
-                <UserIcon />
-              </Icon>
+              <UserIcon />
               <Trans i18nKey="makeMember" defaults="Make member" />
             </DropdownMenuItem>
           )}

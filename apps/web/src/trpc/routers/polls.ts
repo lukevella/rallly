@@ -9,6 +9,7 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { moderateContent } from "@/features/moderation/mutations";
+import { recordPollActivities } from "@/features/poll/activity/mutations";
 import {
   canUserManagePoll,
   getPolls,
@@ -184,33 +185,46 @@ export const polls = router({
 
       const kind = isTimePoll ? "time" : "date";
 
-      const poll = await prisma.poll.create({
-        include: {
-          options: {
-            select: {
-              id: true,
+      const poll = await prisma.$transaction(async (tx) => {
+        const poll = await tx.poll.create({
+          include: {
+            options: {
+              select: {
+                id: true,
+              },
             },
           },
-        },
-        data: {
-          id: pollId,
-          title,
-          timeZone,
-          location,
-          description,
-          userId: ctx.user.id,
-          kind,
-          options: {
-            createMany: {
-              data: optionsData,
+          data: {
+            id: pollId,
+            title,
+            timeZone,
+            location,
+            description,
+            userId: ctx.user.id,
+            kind,
+            options: {
+              createMany: {
+                data: optionsData,
+              },
             },
+            hideParticipants: input.hideParticipants,
+            disableComments: input.disableComments,
+            hideScores: input.hideScores,
+            requireParticipantEmail: input.requireParticipantEmail,
+            spaceId,
           },
-          hideParticipants: input.hideParticipants,
-          disableComments: input.disableComments,
-          hideScores: input.hideScores,
-          requireParticipantEmail: input.requireParticipantEmail,
-          spaceId,
-        },
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId,
+            type: "poll_created",
+            userId: ctx.user.id,
+            payload: { title },
+          },
+        ]);
+
+        return poll;
       });
 
       const pollLink = absoluteUrl(`/poll/${pollId}`);
@@ -377,33 +391,73 @@ export const polls = router({
             }
           }) ?? [];
 
-        // Reopen an auto-closed poll when new future dates are added. Manually
-        // closed polls stay closed — that was the organizer's decision.
-        let reopen = false;
-        if (newOptions.some(optionEndsInFuture)) {
-          const poll = await tx.poll.findUnique({
-            where: { id: pollId },
-            select: { status: true, closedReason: true },
-          });
-          reopen = poll?.status === "closed" && poll.closedReason === "auto";
+        // Prior persisted values, read before the update so poll_updated is
+        // recorded only when a detail or setting actually changes (the edit
+        // forms always send some fields, e.g. timeZone on option-only edits).
+        const prior = await tx.poll.findUnique({
+          where: { id: pollId },
+          select: {
+            title: true,
+            location: true,
+            description: true,
+            timeZone: true,
+            hideParticipants: true,
+            hideScores: true,
+            disableComments: true,
+            requireParticipantEmail: true,
+          },
+        });
+
+        if (!prior) {
+          throw new TRPCError({ code: "NOT_FOUND" });
         }
 
-        if (input.optionsToDelete && input.optionsToDelete.length > 0) {
+        // Reopen an auto-closed poll when new future dates are added. Manually
+        // closed polls stay closed — that was the organizer's decision. The
+        // transition is conditional so concurrent modifies can't both record
+        // a poll_reopened event.
+        let reopened = false;
+        if (newOptions.some(optionEndsInFuture)) {
+          const { count } = await tx.poll.updateMany({
+            where: { id: pollId, status: "closed", closedReason: "auto" },
+            data: { status: "open", closedReason: null },
+          });
+          reopened = count === 1;
+        }
+
+        // Snapshot before the delete: option_deleted events carry the dates
+        // they removed, since the rows are gone once the activity renders.
+        const deletedOptions =
+          input.optionsToDelete && input.optionsToDelete.length > 0
+            ? await tx.option.findMany({
+                where: {
+                  pollId,
+                  id: {
+                    in: input.optionsToDelete,
+                  },
+                },
+                select: { id: true, startTime: true, duration: true },
+              })
+            : [];
+
+        if (deletedOptions.length > 0) {
           await tx.option.deleteMany({
             where: {
               pollId,
               id: {
-                in: input.optionsToDelete,
+                in: deletedOptions.map((option) => option.id),
               },
             },
           });
         }
 
-        if (newOptions.length > 0) {
-          await tx.option.createMany({
-            data: newOptions,
-          });
-        }
+        const addedOptions =
+          newOptions.length > 0
+            ? await tx.option.createManyAndReturn({
+                data: newOptions,
+                select: { id: true, startTime: true, duration: true },
+              })
+            : [];
 
         const remainingOptions = await tx.option.count({ where: { pollId } });
         if (remainingOptions === 0) {
@@ -436,9 +490,78 @@ export const polls = router({
             disableComments: input.disableComments,
             requireParticipantEmail: input.requireParticipantEmail,
             kind,
-            ...(reopen ? { status: "open" as const, closedReason: null } : {}),
           },
         });
+
+        // The effective persisted timeZone: forced null for date-only polls,
+        // untouched when the input omits it.
+        const nextTimeZone =
+          kind === "time"
+            ? input.timeZone === undefined
+              ? prior.timeZone
+              : input.timeZone
+            : null;
+
+        // Empty strings and null are the same absent value to the reader, so
+        // normalize before comparing.
+        const detailsOrSettingsChanged =
+          (input.title !== undefined && input.title !== prior.title) ||
+          (input.location !== undefined &&
+            (input.location || null) !== (prior.location || null)) ||
+          (input.description !== undefined &&
+            (input.description || null) !== (prior.description || null)) ||
+          nextTimeZone !== prior.timeZone ||
+          (input.hideParticipants !== undefined &&
+            input.hideParticipants !== prior.hideParticipants) ||
+          (input.disableComments !== undefined &&
+            input.disableComments !== prior.disableComments) ||
+          (input.hideScores !== undefined &&
+            input.hideScores !== prior.hideScores) ||
+          (input.requireParticipantEmail !== undefined &&
+            input.requireParticipantEmail !== prior.requireParticipantEmail);
+
+        await recordPollActivities(tx, [
+          ...deletedOptions.map((option) => ({
+            pollId,
+            type: "option_deleted" as const,
+            userId: ctx.user.id,
+            optionId: option.id,
+            payload: {
+              start: option.startTime.toISOString(),
+              duration: option.duration,
+            },
+          })),
+          ...addedOptions.map((option) => ({
+            pollId,
+            type: "option_added" as const,
+            userId: ctx.user.id,
+            optionId: option.id,
+            payload: {
+              start: option.startTime.toISOString(),
+              duration: option.duration,
+            },
+          })),
+          ...(detailsOrSettingsChanged
+            ? [
+                {
+                  pollId,
+                  type: "poll_updated" as const,
+                  userId: ctx.user.id,
+                  payload: {},
+                },
+              ]
+            : []),
+          ...(reopened
+            ? [
+                {
+                  pollId,
+                  type: "poll_reopened" as const,
+                  userId: ctx.user.id,
+                  payload: {},
+                },
+              ]
+            : []),
+        ]);
       });
 
       // Get updated poll data for group update
@@ -812,9 +935,13 @@ export const polls = router({
       }
 
       // create event in database
-      const option = await prisma.option.findUnique({
+      const option = await prisma.option.findFirst({
         where: {
           id: input.optionId,
+          // Admin access was proven for input.pollId, so the option must
+          // belong to that poll — an unscoped lookup would let an admin
+          // schedule one poll with another poll's option.
+          pollId: input.pollId,
         },
         select: {
           startTime: true,
@@ -948,6 +1075,19 @@ export const polls = router({
             scheduledEventId: event.id,
           },
         });
+
+        await recordPollActivities(tx, [
+          {
+            pollId: poll.id,
+            type: "poll_scheduled",
+            userId: ctx.user.id,
+            optionId: input.optionId,
+            payload: {
+              start: option.startTime.toISOString(),
+              duration: option.duration,
+            },
+          },
+        ]);
 
         return event;
       });
@@ -1108,10 +1248,14 @@ export const polls = router({
         });
       }
 
-      await prisma.$transaction(async () => {
-        const poll = await prisma.poll.update({
+      await prisma.$transaction(async (tx) => {
+        // Conditional transition: only the call that actually flips the
+        // status appends a lifecycle event, so repeated or concurrent calls
+        // can't record a reopen that didn't happen.
+        const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
+            status: { not: "open" },
           },
           data: {
             status: "open",
@@ -1119,13 +1263,33 @@ export const polls = router({
           },
         });
 
-        if (poll.scheduledEventId) {
-          await prisma.scheduledEvent.delete({
+        if (count === 0) {
+          return;
+        }
+
+        const poll = await tx.poll.findUnique({
+          where: {
+            id: input.pollId,
+          },
+          select: { scheduledEventId: true },
+        });
+
+        if (poll?.scheduledEventId) {
+          await tx.scheduledEvent.delete({
             where: {
               id: poll.scheduledEventId,
             },
           });
         }
+
+        await recordPollActivities(tx, [
+          {
+            pollId: input.pollId,
+            type: "poll_reopened",
+            userId: ctx.user.id,
+            payload: {},
+          },
+        ]);
       });
 
       track(
@@ -1155,14 +1319,35 @@ export const polls = router({
         });
       }
 
-      await prisma.poll.update({
-        where: {
-          id: input.pollId,
-        },
-        data: {
-          status: "closed",
-          closedReason: "manual",
-        },
+      await prisma.$transaction(async (tx) => {
+        // Conditional transition, matching closePoll in features/poll/
+        // mutations: an already-closed poll keeps its closedReason (so an
+        // auto-close stays "auto"), and only the call that actually flips
+        // the status appends a lifecycle event — repeated or concurrent
+        // calls can't record a close that didn't happen.
+        const { count } = await tx.poll.updateMany({
+          where: {
+            id: input.pollId,
+            status: { not: "closed" },
+          },
+          data: {
+            status: "closed",
+            closedReason: "manual",
+          },
+        });
+
+        if (count === 0) {
+          return;
+        }
+
+        await recordPollActivities(tx, [
+          {
+            pollId: input.pollId,
+            type: "poll_closed",
+            userId: ctx.user.id,
+            payload: { reason: "manual" },
+          },
+        ]);
       });
 
       track(
@@ -1219,27 +1404,40 @@ export const polls = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
-      const newPoll = await prisma.poll.create({
-        select: {
-          id: true,
-        },
-        data: {
-          id: nanoid(),
-          title: input.newTitle,
-          userId: ctx.user.id,
-          timeZone: poll.timeZone,
-          location: poll.location,
-          spaceId: poll.spaceId,
-          requireParticipantEmail: poll.requireParticipantEmail,
-          description: poll.description,
-          hideParticipants: poll.hideParticipants,
-          hideScores: poll.hideScores,
-          disableComments: poll.disableComments,
-          kind: poll.kind,
-          options: {
-            create: poll.options,
+      const newPoll = await prisma.$transaction(async (tx) => {
+        const newPoll = await tx.poll.create({
+          select: {
+            id: true,
           },
-        },
+          data: {
+            id: nanoid(),
+            title: input.newTitle,
+            userId: ctx.user.id,
+            timeZone: poll.timeZone,
+            location: poll.location,
+            spaceId: poll.spaceId,
+            requireParticipantEmail: poll.requireParticipantEmail,
+            description: poll.description,
+            hideParticipants: poll.hideParticipants,
+            hideScores: poll.hideScores,
+            disableComments: poll.disableComments,
+            kind: poll.kind,
+            options: {
+              create: poll.options,
+            },
+          },
+        });
+
+        await recordPollActivities(tx, [
+          {
+            pollId: newPoll.id,
+            type: "poll_created",
+            userId: ctx.user.id,
+            payload: { title: input.newTitle },
+          },
+        ]);
+
+        return newPoll;
       });
 
       return newPoll;

@@ -18,7 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { Icon } from "@rallly/ui/icon";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
@@ -39,6 +38,7 @@ import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
 
 interface PollsInfiniteListProps {
@@ -65,6 +65,7 @@ function PollListItem({
 }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
   const deletePollDialog = useDialog();
   // Refresh server components so server-fetched data that depends on poll
   // status (e.g. the status tab counts) stays in sync with the list.
@@ -79,7 +80,9 @@ function PollListItem({
           <PollStatusIcon status={status} showTooltip={false} />
           <HoverPrefetchLink
             className="min-w-0 text-sm hover:underline focus:ring-ring focus-visible:ring-2"
-            href={absoluteUrl(`/poll/${id}`)}
+            href={
+              isPollAdminEnabled ? `/polls/${id}` : absoluteUrl(`/poll/${id}`)
+            }
           >
             <span className="absolute inset-0" />
             <span className="block truncate">{title}</span>
@@ -187,9 +190,7 @@ function PollListItem({
                       });
                     }}
                   >
-                    <Icon>
-                      <CircleStopIcon />
-                    </Icon>
+                    <CircleStopIcon />
                     <Trans i18nKey="closePoll" defaults="Close" />
                   </DropdownMenuItem>
                 )}
@@ -209,16 +210,12 @@ function PollListItem({
                       });
                     }}
                   >
-                    <Icon>
-                      <PlayIcon />
-                    </Icon>
+                    <PlayIcon />
                     <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
-                  <Icon>
-                    <TrashIcon />
-                  </Icon>
+                  <TrashIcon />
                   <span>
                     <Trans i18nKey="deleteMenuItem" defaults="Delete" />
                   </span>
@@ -362,9 +359,7 @@ export function PollsInfiniteList({
 
       {!hasNextPage && data.pages.length > 1 && (
         <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground text-sm">
-          <Icon>
-            <StickerIcon />
-          </Icon>
+          <StickerIcon className="size-4 shrink-0 text-muted-foreground" />
           <Trans
             i18nKey="endOfList"
             defaults="You've reached the end of the list"

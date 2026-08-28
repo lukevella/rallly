@@ -21,6 +21,7 @@ import {
 } from "@/features/billing/webhook/utils";
 import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
+import { spaceExists } from "@/features/space/data";
 import { identifyGroup, posthog } from "@/lib/posthog";
 
 async function getExpandedSubscription(subscriptionId: string) {
@@ -237,6 +238,12 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  // Cascade-deleted with its owner — nothing to sync, and failing would
+  // make Stripe retry the event
+  if (!(await spaceExists(spaceId))) {
+    return;
+  }
+
   const subscriptionItem = subscription.items.data[0];
 
   if (!subscriptionItem) {
@@ -369,6 +376,12 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
   const { userId, spaceId } = res.data;
 
+  // Cascade-deleted with its owner — nothing to sync, and failing would
+  // make Stripe retry the event
+  if (!(await spaceExists(spaceId))) {
+    return;
+  }
+
   const tier = await prisma.$transaction(async (tx) => {
     // updateMany so a missing row (e.g. already cascade-deleted with the user
     // or space) doesn't abort the transaction before the tier sync runs
@@ -433,6 +446,12 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   }
 
   const { userId, spaceId } = res.data;
+
+  // Cascade-deleted with its owner — nothing to sync, and failing would
+  // make Stripe retry the event
+  if (!(await spaceExists(spaceId))) {
+    return;
+  }
 
   const subscriptionItem = subscription.items.data[0];
 

@@ -1,8 +1,6 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { Alert, AlertDescription } from "@rallly/ui/alert";
-import { Badge } from "@rallly/ui/badge";
 import { Card, CardContent, CardTitle } from "@rallly/ui/card";
 import {
   Field,
@@ -15,7 +13,6 @@ import { FormField } from "@rallly/ui/form";
 import { Switch } from "@rallly/ui/switch";
 import {
   BarChart2Icon,
-  InfoIcon,
   MailIcon,
   MessageCircleIcon,
   VenetianMaskIcon,
@@ -161,54 +158,32 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
             control={form.control}
             name="enableComments"
             render={({ field }) => (
-              <div className="flex flex-col gap-3">
-                <Field orientation="horizontal">
-                  <SettingIcon>
-                    <MessageCircleIcon />
-                  </SettingIcon>
-                  <FieldContent>
-                    <FieldLabel htmlFor="enable-comments">
-                      <Trans
-                        i18nKey="commentsSettingTitle"
-                        defaults="Comments"
-                      />
-                      <Badge size="sm">
-                        <Trans
-                          i18nKey="commentsSettingLegacyBadge"
-                          defaults="Legacy"
-                        />
-                      </Badge>
-                    </FieldLabel>
-                    <FieldDescription>
-                      <Trans
-                        i18nKey="commentsSettingDescription"
-                        defaults="Allow participants to post public comments on the poll."
-                      />
-                    </FieldDescription>
-                  </FieldContent>
-                  <Switch
-                    id="enable-comments"
-                    checked={!!field.value}
-                    onCheckedChange={(checked) => {
-                      field.onChange(checked);
-                      posthog?.capture("poll_settings:comments_toggle_click", {
-                        enabled: checked,
-                      });
-                    }}
-                  />
-                </Field>
-                {field.value ? (
-                  <Alert variant="info">
-                    <InfoIcon />
-                    <AlertDescription>
-                      <Trans
-                        i18nKey="commentsSettingPhaseOutHint"
-                        defaults="Comments are being phased out. Participants can include a note with their response instead."
-                      />
-                    </AlertDescription>
-                  </Alert>
-                ) : null}
-              </div>
+              <Field orientation="horizontal">
+                <SettingIcon>
+                  <MessageCircleIcon />
+                </SettingIcon>
+                <FieldContent>
+                  <FieldLabel htmlFor="enable-comments">
+                    <Trans i18nKey="commentsSettingTitle" defaults="Comments" />
+                  </FieldLabel>
+                  <FieldDescription>
+                    <Trans
+                      i18nKey="commentsSettingDescription"
+                      defaults="Allow participants to post public comments on the poll."
+                    />
+                  </FieldDescription>
+                </FieldContent>
+                <Switch
+                  id="enable-comments"
+                  checked={!!field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    posthog?.capture("poll_settings:comments_toggle_click", {
+                      enabled: checked,
+                    });
+                  }}
+                />
+              </Field>
             )}
           />
         </FieldGroup>

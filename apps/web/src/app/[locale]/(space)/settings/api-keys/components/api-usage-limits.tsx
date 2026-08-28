@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@rallly/ui/icon";
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import {
@@ -31,9 +30,7 @@ export function ApiUsageLimits() {
         className="inline-flex items-center gap-1 text-primary text-sm underline-offset-4 hover:underline"
       >
         <Trans i18nKey="apiViewDocs" defaults="View API docs" />
-        <Icon>
-          <ArrowUpRightIcon />
-        </Icon>
+        <ArrowUpRightIcon className="size-4 shrink-0 text-muted-foreground" />
       </Link>
     </div>
   );

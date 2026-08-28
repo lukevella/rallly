@@ -1,12 +1,56 @@
 import * as z from "zod";
 
-// Override runtime canonicalization when ICU data lags behind IANA updates.
+// CLDR/ICU keeps pre-2008 tzdb IDs canonical for stability, so the runtime
+// reports (and `Intl.supportedValuesOf` lists) the outdated spellings. Map them
+// back to the modern tzdb-canonical names for display.
 const ianaOverrides: Record<string, string> = {
+  "America/Buenos_Aires": "America/Argentina/Buenos_Aires",
+  "Asia/Calcutta": "Asia/Kolkata",
+  "Asia/Katmandu": "Asia/Kathmandu",
+  "Asia/Rangoon": "Asia/Yangon",
+  "Asia/Saigon": "Asia/Ho_Chi_Minh",
   "Europe/Kiev": "Europe/Kyiv",
 };
 
 export function normalizeLegacyIanaId(id: string): string {
   return ianaOverrides[id] ?? id;
+}
+
+const legacyIdsByModernId = Object.entries(ianaOverrides).reduce<
+  Record<string, string[]>
+>((acc, [legacy, modern]) => {
+  acc[modern] = [...(acc[modern] ?? []), legacy];
+  return acc;
+}, {});
+
+/**
+ * Every spelling of a zone we know about — modern and legacy — for the given
+ * ID, whichever spelling it arrives in. Used for search, so a query matches an
+ * alias no matter which form the runtime happens to list.
+ */
+export function getIanaIdAliases(id: string) {
+  const modern = normalizeLegacyIanaId(id);
+  return Array.from(
+    new Set([id, modern, ...(legacyIdsByModernId[modern] ?? [])]),
+  );
+}
+
+/**
+ * Fold an IANA ID to whatever spelling this runtime treats as canonical.
+ *
+ * The inverse of `normalizeLegacyIanaId`: that maps legacy IDs to modern names
+ * for display, this maps either spelling to the runtime's own. Comparing IDs by
+ * this form matches a curated `Asia/Kolkata` against a runtime `Asia/Calcutta`
+ * without depending on the override map covering that pair, so engines whose
+ * affected set differs are handled too. Unknown IDs are returned unchanged.
+ */
+export function toRuntimeCanonicalIanaId(id: string): string {
+  try {
+    return Intl.DateTimeFormat(undefined, { timeZone: id }).resolvedOptions()
+      .timeZone;
+  } catch {
+    return id;
+  }
 }
 
 const fixedOffsetPrefixes = ["etc/", "gmt", "utc"];

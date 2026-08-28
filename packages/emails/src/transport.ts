@@ -27,7 +27,7 @@ export type SupportedEmailProviders = EmailProvider;
 
 let cachedTransport: Transporter | undefined;
 
-function createTransportForProvider(provider: EmailProvider): Transporter {
+export function createTransportForProvider(provider: EmailProvider) {
   switch (provider) {
     case "ses": {
       const ses = new aws.SES({
@@ -41,7 +41,12 @@ function createTransportForProvider(provider: EmailProvider): Transporter {
       });
     }
     case "smtp": {
-      const hasAuth = process.env.SMTP_USER || process.env.SMTP_PWD;
+      // Nodemailer refuses partial credentials at send time ("Missing
+      // credentials for PLAIN"), so a half-built auth object must never be
+      // passed. Env validation in apps/web rejects the one-without-the-other
+      // state at startup.
+      const hasAuth = Boolean(process.env.SMTP_USER && process.env.SMTP_PWD);
+
       const port = process.env.SMTP_PORT
         ? Number.parseInt(process.env.SMTP_PORT, 10)
         : undefined;

@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from "./dialog";
 import { usePlatform } from "./hooks/use-platform";
-import { Icon } from "./icon";
 import { cn } from "./lib/utils";
 
 const Command = React.forwardRef<
@@ -70,13 +69,11 @@ const CommandInput = React.forwardRef<
     className="flex items-center gap-x-2.5 border-b px-3"
     cmdk-input-wrapper=""
   >
-    <Icon>
-      <SearchIcon className="shrink-0" />
-    </Icon>
+    <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-hidden placeholder:text-foreground-muted focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-hidden placeholder:text-muted-foreground focus:ring-0 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
