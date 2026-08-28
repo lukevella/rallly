@@ -97,8 +97,12 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
   const { status, q, member } = searchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
   );
+  // Ignore a member URL param when the filter is hidden — a bookmarked
+  // ?member= URL would otherwise show an empty list with no visible
+  // control to clear it.
+  const visibleMember = showMemberFilter ? member : undefined;
 
-  const hasFilters = Boolean(q || member);
+  const hasFilters = Boolean(q || visibleMember);
   const showClosedPollsPointer =
     status === "open" && !hasFilters && counts.closed > 0;
 
@@ -130,7 +134,7 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
           <PollsInfiniteList
             status={status}
             search={q}
-            member={member}
+            member={visibleMember}
             emptyState={
               showClosedPollsPointer ? (
                 <NoOpenPollsEmptyState closedCount={counts.closed} />

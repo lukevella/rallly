@@ -113,6 +113,10 @@ function EventsPageContent() {
   const { status, q, member } = eventsSearchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
   );
+  // Ignore a member URL param when the filter is hidden — a bookmarked
+  // ?member= URL would otherwise show an empty list with no visible
+  // control to clear it.
+  const visibleMember = showMemberFilter ? member : undefined;
 
   return (
     <PageContainer>
@@ -134,7 +138,7 @@ function EventsPageContent() {
           <EventsInfiniteList
             status={status}
             search={q}
-            member={member}
+            member={visibleMember}
             emptyState={<EventsEmptyState status={status || "upcoming"} />}
           />
         </EventsTabbedView>
