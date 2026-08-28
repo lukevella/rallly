@@ -782,7 +782,6 @@
   "spaceSharedHint": "Members see everything created in this space.",
   "spaceSharedLabel": "Shared space",
   "spaceSharingDescription": "How members work in this space",
-  "spaceSharingNote": "When off, everyone in the space, including admins, only sees what they create themselves. Invite links and participant pages are not affected.",
   "spaceSharingTitle": "Sharing",
   "spaceTypeLabel": "What will you be using it for?",
   "spaceTypePersonal": "Personal",

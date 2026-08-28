@@ -111,12 +111,6 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
             disabled={disabled || updateShared.isExecuting}
           />
         </Field>
-        <p className="text-pretty text-muted-foreground text-sm">
-          <Trans
-            i18nKey="spaceSharingNote"
-            defaults="When off, everyone in the space, including admins, only sees what they create themselves. Invite links and participant pages are not affected."
-          />
-        </p>
         <Dialog {...confirmDialog.dialogProps}>
           <DialogContent size="sm">
             <DialogHeader>
