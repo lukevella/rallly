@@ -1,5 +1,7 @@
 {
   "blogDescription": "Hírek, frissítések és bejelentések a Rallly-ról.",
+  "blogFilterAll": "Összes",
+  "blogPublishedOn": "Közzétéve:",
   "blogTitle": "Rallly - Blog",
-  "recentPosts": "Legutóbbi bejegyzések"
+  "blogWrittenBy": "Írta: "
 }
