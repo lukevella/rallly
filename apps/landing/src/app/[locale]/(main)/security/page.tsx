@@ -144,8 +144,9 @@ export default async function Security(props: {
               icon={<EyeOffIcon className="size-4" />}
               title="Privacy-first"
             >
-              Names and email addresses, nothing more. No sensitive personal
-              information, no advertising trackers, and we never sell data.
+              We collect the minimum needed to run the service: a name, an email
+              address, and a timezone. No sensitive personal information, no
+              advertising trackers, and we never sell data.
             </SecurityFeature>
             <SecurityFeature
               icon={<DatabaseIcon className="size-4" />}
