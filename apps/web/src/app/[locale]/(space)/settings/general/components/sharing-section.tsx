@@ -1,5 +1,16 @@
 "use client";
 
+import { Button } from "@rallly/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  useDialog,
+} from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import { toast } from "@rallly/ui/sonner";
 import { UserIcon, UsersIcon } from "lucide-react";
@@ -13,6 +24,7 @@ import {
 } from "@/components/page-layout";
 import { updateSpaceContentVisibilityAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
+import type { SpaceContentVisibility } from "@/features/space/schema";
 import { spaceContentVisibilitySchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -39,7 +51,7 @@ function SharingOption({
       </span>
       <span className="flex-1 space-y-1">
         <span className="block font-medium text-sm">{title}</span>
-        <span className="block text-muted-foreground text-sm">
+        <span className="block text-pretty text-muted-foreground text-sm">
           {description}
         </span>
       </span>
@@ -61,6 +73,15 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
   const [contentVisibility, setOptimisticContentVisibility] =
     React.useOptimistic(space.contentVisibility);
 
+  // Switching mode changes what every member can see the moment it saves,
+  // and switching to together exposes content that was private until then —
+  // so a selection is staged behind a confirmation dialog instead of saving
+  // on change. The radio group keeps showing the committed value until the
+  // change is confirmed.
+  const confirmDialog = useDialog();
+  const [pendingVisibility, setPendingVisibility] =
+    React.useState<SpaceContentVisibility | null>(null);
+
   const handleChange = (value: unknown) => {
     const parsed = spaceContentVisibilitySchema.safeParse(value);
 
@@ -68,10 +89,22 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
       return;
     }
 
+    setPendingVisibility(parsed.data);
+    confirmDialog.trigger();
+  };
+
+  const handleConfirm = () => {
+    if (!pendingVisibility) {
+      return;
+    }
+
+    const next = pendingVisibility;
+    confirmDialog.dismiss();
+
     React.startTransition(async () => {
-      setOptimisticContentVisibility(parsed.data);
+      setOptimisticContentVisibility(next);
       const result = await updateContentVisibility.executeAsync({
-        contentVisibility: parsed.data,
+        contentVisibility: next,
       });
 
       if (!result?.serverError && !result?.validationErrors) {
@@ -98,19 +131,8 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
           value={contentVisibility}
           onValueChange={handleChange}
           disabled={disabled || updateContentVisibility.isExecuting}
-          className="gap-3"
+          className="gap-3 sm:grid-cols-2"
         >
-          <SharingOption
-            value="space"
-            icon={<UsersIcon />}
-            title={<Trans i18nKey="spaceSharingTogether" defaults="Together" />}
-            description={
-              <Trans
-                i18nKey="spaceSharingTogetherDescription"
-                defaults="Members see everything created in this space."
-              />
-            }
-          />
           <SharingOption
             value="owner"
             icon={<UserIcon />}
@@ -127,6 +149,17 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
               />
             }
           />
+          <SharingOption
+            value="space"
+            icon={<UsersIcon />}
+            title={<Trans i18nKey="spaceSharingTogether" defaults="Together" />}
+            description={
+              <Trans
+                i18nKey="spaceSharingTogetherDescription"
+                defaults="Members see everything created in this space."
+              />
+            }
+          />
         </RadioGroup>
         <p className="text-muted-foreground text-sm">
           <Trans
@@ -134,6 +167,46 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
             defaults="Admins can always see everything. This applies to polls, events and anything created in this space."
           />
         </p>
+        <Dialog {...confirmDialog.dialogProps}>
+          <DialogContent size="sm">
+            <DialogHeader>
+              <DialogTitle>
+                {pendingVisibility === "space" ? (
+                  <Trans
+                    i18nKey="spaceSharingConfirmTogetherTitle"
+                    defaults="Switch to Together?"
+                  />
+                ) : (
+                  <Trans
+                    i18nKey="spaceSharingConfirmIndependentlyTitle"
+                    defaults="Switch to Independently?"
+                  />
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {pendingVisibility === "space" ? (
+                  <Trans
+                    i18nKey="spaceSharingConfirmTogetherDescription"
+                    defaults="Members will immediately see everything in this space, including polls and events created before now."
+                  />
+                ) : (
+                  <Trans
+                    i18nKey="spaceSharingConfirmIndependentlyDescription"
+                    defaults="Members will only see what they create themselves. They will lose access to everything else in this space."
+                  />
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose render={<Button />}>
+                <Trans i18nKey="cancel" defaults="Cancel" />
+              </DialogClose>
+              <Button variant="primary" onClick={handleConfirm}>
+                <Trans i18nKey="spaceSharingConfirmButton" defaults="Switch" />
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </PageSectionContent>
     </PageSection>
   );
