@@ -7,8 +7,8 @@ body {
   @apply bg-gray-100;
 }
 
-/* Blog post content styles */
-.blog-content {
+/* Long-form content styles (blog posts, policy pages) */
+.longform {
   h2,
   h3,
   h4 {
