@@ -16,8 +16,8 @@ import Link from "next/link";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
-import { SpaceNavUser } from "@/features/space/components/space-nav-user";
 import { listSpacesForUser } from "@/features/space/data";
+import { NavUser } from "@/features/user/components/nav-user";
 import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
@@ -71,7 +71,7 @@ export default async function Layout({
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarSeparator className="my-1" />
-          <SpaceNavUser />
+          <NavUser />
         </SidebarFooter>
       </Sidebar>
       <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
