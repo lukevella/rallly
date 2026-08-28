@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
@@ -38,6 +39,11 @@ export const useSpaceMenu = () => {
   const { t } = useTranslation();
   const pathname = usePathname();
   const isCalendarsEnabled = useFeatureFlag("calendars");
+  const { data: space } = useSpace();
+  // The members page is a management surface (inviting, roles, the
+  // collaboration setting); members meet the roster through in-context
+  // pickers instead.
+  const isAdmin = space.role === "admin";
   const config = React.useMemo<NavigationConfig>(
     () => ({
       sections: [
@@ -76,18 +82,22 @@ export const useSpaceMenu = () => {
                   },
                 ]
               : []),
-            {
-              id: "members",
-              label: t("members", { defaultValue: "Members" }),
-              href: "/members",
-              icon: UsersIcon,
-              isActive: pathname === "/members",
-            },
+            ...(isAdmin
+              ? [
+                  {
+                    id: "members",
+                    label: t("members", { defaultValue: "Members" }),
+                    href: "/members",
+                    icon: UsersIcon,
+                    isActive: pathname === "/members",
+                  },
+                ]
+              : []),
           ],
         },
       ],
     }),
-    [pathname, t, isCalendarsEnabled],
+    [pathname, t, isCalendarsEnabled, isAdmin],
   );
 
   return React.useMemo(

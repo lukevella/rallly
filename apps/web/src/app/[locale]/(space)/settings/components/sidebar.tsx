@@ -104,6 +104,8 @@ export function AccountSidebarMenu() {
 export function SpaceSidebarMenu() {
   const { t } = useTranslation();
   const pathname = usePathname();
+  const { data: space } = useSpace();
+  const isAdmin = space.role === "admin";
   const isBillingEnabled = useFeatureFlag("billing");
   const isEventTypesEnabled = useFeatureFlag("eventTypes");
   const menuItems: {
@@ -126,16 +128,22 @@ export function SpaceSidebarMenu() {
       icon: <HandshakeIcon />,
       href: "/settings/collaboration",
     },
-    {
-      id: "members",
-      label: t("members", { defaultValue: "Members" }),
-      icon: <UsersIcon />,
-      href: "/members",
-      suffix: <ArrowUpRightIcon className="ml-auto" />,
-      onClick: () => {
-        posthog?.capture("space_settings:members_link_click");
-      },
-    },
+    // The members page is a management surface; members meet the roster
+    // through in-context pickers instead.
+    ...(isAdmin
+      ? [
+          {
+            id: "members",
+            label: t("members", { defaultValue: "Members" }),
+            icon: <UsersIcon />,
+            href: "/members",
+            suffix: <ArrowUpRightIcon className="ml-auto" />,
+            onClick: () => {
+              posthog?.capture("space_settings:members_link_click");
+            },
+          },
+        ]
+      : []),
     ...(isEventTypesEnabled
       ? [
           {

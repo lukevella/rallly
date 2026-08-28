@@ -26,6 +26,7 @@ export async function DashboardHome({
   seatCount,
   hasNoAccounts,
   canManageBilling,
+  canManageMembers,
 }: {
   openPollCount: number;
   upcomingEventCount: number;
@@ -33,6 +34,7 @@ export async function DashboardHome({
   seatCount: number;
   hasNoAccounts: boolean;
   canManageBilling: boolean;
+  canManageMembers: boolean;
 }) {
   const { t, i18n } = await getTranslation();
 
@@ -154,28 +156,30 @@ export async function DashboardHome({
               </TileTitle>
             </Tile>
 
-            <Tile render={<HoverPrefetchLink href="/members" />}>
-              <MembersPageIcon />
-              <TileTitle>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="members"
-                  defaults="Members"
-                />
-              </TileTitle>
-              <TileDescription>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="memberCount"
-                  defaults="{count, plural, =0 {No members} one {1 member} other {# members}}"
-                  values={{ count: memberCount }}
-                />
-              </TileDescription>
-            </Tile>
+            {canManageMembers ? (
+              <Tile render={<HoverPrefetchLink href="/members" />}>
+                <MembersPageIcon />
+                <TileTitle>
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="members"
+                    defaults="Members"
+                  />
+                </TileTitle>
+                <TileDescription>
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="memberCount"
+                    defaults="{count, plural, =0 {No members} one {1 member} other {# members}}"
+                    values={{ count: memberCount }}
+                  />
+                </TileDescription>
+              </Tile>
+            ) : null}
 
             {isFeatureEnabled("billing") && canManageBilling ? (
               <Tile render={<HoverPrefetchLink href="/settings/billing" />}>
