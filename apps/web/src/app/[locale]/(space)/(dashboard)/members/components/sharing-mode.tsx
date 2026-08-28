@@ -16,7 +16,7 @@ export function SharingMode() {
       {space.shared ? (
         <Trans
           i18nKey="membersSharingModeTogether"
-          defaults="Members work together in this space and see everything created here."
+          defaults="Members work together in this space and can see and manage everything created here."
         />
       ) : (
         <Trans

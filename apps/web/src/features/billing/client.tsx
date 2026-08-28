@@ -38,6 +38,7 @@ export type PayWallTrigger = {
     | "custom-branding"
     | "api-keys"
     | "space-members"
+    | "space-sharing"
     | "billing-settings"
     | "sidebar";
   setting?: string;

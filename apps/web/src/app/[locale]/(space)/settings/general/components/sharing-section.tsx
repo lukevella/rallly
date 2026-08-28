@@ -1,16 +1,7 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  useDialog,
-} from "@rallly/ui/dialog";
 import {
   Field,
   FieldContent,
@@ -30,6 +21,8 @@ import {
   PageSectionTitle,
 } from "@/components/page-layout";
 import { SettingIcon } from "@/components/setting-icon";
+import { showPayWall, useIsFree } from "@/features/billing/client";
+import { ProBadge } from "@/features/billing/components/pro-badge";
 import { updateSpaceSharedAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -38,41 +31,45 @@ import { useSafeAction } from "@/lib/safe-action/client";
 export function SharingSection({ disabled = false }: { disabled?: boolean }) {
   const { data: space } = useSpace();
   const { t } = useTranslation();
+  const isFree = useIsFree();
 
   const updateShared = useSafeAction(updateSpaceSharedAction);
 
   // Optimistic value shown until the post-action router refresh delivers
   // the updated space data; reverts automatically if the action fails.
-  const [shared, setOptimisticShared] = React.useOptimistic(space.shared);
+  const [optimisticShared, setOptimisticShared] = React.useOptimistic(
+    space.shared,
+  );
 
-  // Toggling changes what every member can see the moment it saves, and
-  // turning sharing on exposes content that was private until then — so
-  // the toggle is staged behind a confirmation dialog instead of saving on
-  // change. The switch keeps showing the committed value until confirmed.
-  const confirmDialog = useDialog();
+  // Toggling changes what every member can see the moment it saves, so the
+  // switch only stages the change; nothing persists until Save is pressed.
   const [pendingShared, setPendingShared] = React.useState<boolean | null>(
     null,
   );
 
+  const checked = pendingShared ?? optimisticShared;
+  const isDirty = pendingShared !== null && pendingShared !== optimisticShared;
+  const showSaveButton = isDirty && !disabled;
+
   const handleToggle = (nextShared: boolean) => {
-    if (nextShared === shared) {
+    if (nextShared && isFree) {
+      showPayWall({ from: "space-sharing" });
       return;
     }
 
-    setPendingShared(nextShared);
-    confirmDialog.trigger();
+    setPendingShared(nextShared === optimisticShared ? null : nextShared);
   };
 
-  const handleConfirm = () => {
+  const handleSave = () => {
     if (pendingShared === null) {
       return;
     }
 
     const next = pendingShared;
-    confirmDialog.dismiss();
 
     React.startTransition(async () => {
       setOptimisticShared(next);
+      setPendingShared(null);
       const result = await updateShared.executeAsync({ shared: next });
 
       if (!result?.serverError && !result?.validationErrors) {
@@ -103,66 +100,36 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
             <FieldContent>
               <FieldLabel htmlFor="space-shared">
                 <Trans i18nKey="spaceSharedLabel" defaults="Shared space" />
+                {space.tier !== "pro" && <ProBadge />}
               </FieldLabel>
               <FieldDescription>
                 <Trans
                   i18nKey="spaceSharedHint"
-                  defaults="Members see everything created in this space."
+                  defaults="Members can see and manage everything created in this space."
                 />
               </FieldDescription>
             </FieldContent>
-            <Switch
-              id="space-shared"
-              checked={shared}
-              onCheckedChange={handleToggle}
-              disabled={disabled || updateShared.isExecuting}
-            />
+            <div className="flex items-center gap-3">
+              {/* Kept mounted so the row doesn't shift when it appears;
+                  `invisible` also keeps it out of the tab order. */}
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={handleSave}
+                loading={updateShared.isExecuting}
+                className={cn(!showSaveButton && "invisible")}
+              >
+                <Trans i18nKey="save" defaults="Save" />
+              </Button>
+              <Switch
+                id="space-shared"
+                checked={checked}
+                onCheckedChange={handleToggle}
+                disabled={disabled || updateShared.isExecuting}
+              />
+            </div>
           </Field>
         </FieldGroup>
-        <Dialog {...confirmDialog.dialogProps}>
-          <DialogContent size="sm">
-            <DialogHeader>
-              <DialogTitle>
-                {pendingShared ? (
-                  <Trans
-                    i18nKey="spaceSharedConfirmOnTitle"
-                    defaults="Turn on sharing?"
-                  />
-                ) : (
-                  <Trans
-                    i18nKey="spaceSharedConfirmOffTitle"
-                    defaults="Turn off sharing?"
-                  />
-                )}
-              </DialogTitle>
-              <DialogDescription>
-                {pendingShared ? (
-                  <Trans
-                    i18nKey="spaceSharedConfirmOnDescription"
-                    defaults="Everyone in this space will immediately see everything created in it, including polls and events created before now."
-                  />
-                ) : (
-                  <Trans
-                    i18nKey="spaceSharedConfirmOffDescription"
-                    defaults="Everyone in this space, including you and other admins, will only see what they create themselves."
-                  />
-                )}
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose render={<Button />}>
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </DialogClose>
-              <Button variant="primary" onClick={handleConfirm}>
-                {pendingShared ? (
-                  <Trans i18nKey="spaceSharedConfirmOn" defaults="Turn on" />
-                ) : (
-                  <Trans i18nKey="spaceSharedConfirmOff" defaults="Turn off" />
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </PageSectionContent>
     </PageSection>
   );

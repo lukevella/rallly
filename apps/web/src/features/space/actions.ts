@@ -313,8 +313,13 @@ export const updateSpaceSharedAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
 
-    // No tier gate: free spaces cannot invite members, so the setting only
-    // has an effect on Pro spaces anyway.
+    if (parsedInput.shared && space.tier !== "pro") {
+      throw new AppError({
+        code: "PAYMENT_REQUIRED",
+        message: "You need a Pro subscription to share a space",
+      });
+    }
+
     await updateSpaceShared({
       spaceId: space.id,
       shared: parsedInput.shared,
