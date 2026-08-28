@@ -48,10 +48,9 @@ function SharingOption({
   );
 }
 
-export function SharingSection() {
+export function SharingSection({ disabled = false }: { disabled?: boolean }) {
   const { data: space } = useSpace();
   const { t } = useTranslation();
-  const isAdmin = space.role === "admin";
 
   const updateContentVisibility = useSafeAction(
     updateSpaceContentVisibilityAction,
@@ -98,7 +97,7 @@ export function SharingSection() {
         <RadioGroup
           value={contentVisibility}
           onValueChange={handleChange}
-          disabled={!isAdmin || updateContentVisibility.isExecuting}
+          disabled={disabled || updateContentVisibility.isExecuting}
           className="gap-3"
         >
           <SharingOption
