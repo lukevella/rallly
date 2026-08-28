@@ -33,7 +33,7 @@ export function InviteMemberButton({
           }
         }}
       >
-        <UserPlusIcon className="text-muted-foreground" />
+        <UserPlusIcon data-icon="inline-start" />
         <Trans i18nKey="inviteMember" defaults="Invite member" />
       </Button>
       <InviteMemberDialog {...inviteMemberDialog.dialogProps} />
