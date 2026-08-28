@@ -15,6 +15,7 @@ import {
   BoltIcon,
   CalendarIcon,
   CreditCardIcon,
+  HandshakeIcon,
   KeyIcon,
   LockIcon,
   PanelsTopLeftIcon,
@@ -118,6 +119,12 @@ export function SpaceSidebarMenu() {
       label: t("general", { defaultValue: "General" }),
       icon: <BoltIcon />,
       href: "/settings/general",
+    },
+    {
+      id: "collaboration",
+      label: t("collaboration", { defaultValue: "Collaboration" }),
+      icon: <HandshakeIcon />,
+      href: "/settings/collaboration",
     },
     {
       id: "members",
