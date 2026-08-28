@@ -17,7 +17,7 @@ export type AuthorizedSpaceId = string & {
 export type SpaceContentScope = {
   spaceId: AuthorizedSpaceId;
   // When set, reads must only return content created by this user: the
-  // requester is a non-admin member of a space where members work
-  // independently.
+  // requester is a member of a space where members work independently.
+  // Uniform across roles — admins and owners are restricted too.
   createdBy?: string;
 };

@@ -8,8 +8,8 @@ export const spaceTierSchema = z.enum(["hobby", "pro"]);
 export type SpaceTier = z.infer<typeof spaceTierSchema>;
 
 // "space": members see everything created in the space (Together).
-// "owner": members see only what they create themselves; admins always see
-// everything (Independently).
+// "owner": everyone, admins included, sees only what they create
+// themselves (Independently).
 export const spaceContentVisibilitySchema = z.enum(["space", "owner"]);
 export type SpaceContentVisibility = z.infer<
   typeof spaceContentVisibilitySchema

@@ -164,7 +164,7 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
         <p className="text-muted-foreground text-sm">
           <Trans
             i18nKey="spaceSharingNote"
-            defaults="Admins can always see everything. This applies to polls, events and anything created in this space."
+            defaults="This applies to everyone in the space, including admins, and covers polls, events and anything created in it."
           />
         </p>
         <Dialog {...confirmDialog.dialogProps}>
@@ -187,12 +187,12 @@ export function SharingSection({ disabled = false }: { disabled?: boolean }) {
                 {pendingVisibility === "space" ? (
                   <Trans
                     i18nKey="spaceSharingConfirmTogetherDescription"
-                    defaults="Members will immediately see everything in this space, including polls and events created before now."
+                    defaults="Everyone in this space will immediately see everything created in it, including polls and events created before now."
                   />
                 ) : (
                   <Trans
                     i18nKey="spaceSharingConfirmIndependentlyDescription"
-                    defaults="Members will only see what they create themselves. They will lose access to everything else in this space."
+                    defaults="Everyone in this space, including you and other admins, will only see what they create themselves."
                   />
                 )}
               </DialogDescription>

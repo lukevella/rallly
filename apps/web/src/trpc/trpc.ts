@@ -166,8 +166,8 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
     ctx: {
       space,
       // Visibility scope space-scoped content reads must apply for this
-      // member — restricts non-admin members of "independently" spaces to
-      // their own content.
+      // member — restricts members of "independently" spaces to their own
+      // content, regardless of role.
       contentScope: createSpaceContentScope({ space, userId: ctx.user.id }),
     },
   });
