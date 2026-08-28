@@ -4,9 +4,9 @@ import type { EventType, User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import type { EventTypeDTO } from "@/features/event-types/types";
-import type { SpaceContentScope } from "@/features/space/types";
 import type { Location } from "@/lib/location";
 import { locationSchema } from "@/lib/location";
+import type { SpaceContentScope } from "@/lib/tenant-scope";
 
 const logger = createLogger("event-types/data");
 

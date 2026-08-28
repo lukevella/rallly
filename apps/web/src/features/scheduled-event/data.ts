@@ -6,7 +6,9 @@ import { parseConferencing } from "@/features/conferencing/data";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
-import type { SpaceContentScope } from "@/features/space/types";
+// From lib, not features/space: space imports this feature for its loaders,
+// so importing space back would create a feature cycle.
+import type { SpaceContentScope } from "@/lib/tenant-scope";
 import type { Status } from "./schema";
 import { pastScheduledEventWhere, upcomingScheduledEventWhere } from "./utils";
 

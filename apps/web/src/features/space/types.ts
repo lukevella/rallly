@@ -2,23 +2,11 @@ import type {
   MemberRole,
   SpaceContentVisibility,
 } from "@/features/space/schema";
+import type { AuthorizedSpaceId } from "@/lib/tenant-scope";
 
-// Tenant scope proven by auth. Minted only by the session gate and the API
-// key middleware; parameterized DAL reads require it.
-export type AuthorizedSpaceId = string & {
-  readonly __brand: "AuthorizedSpaceId";
-};
-
-// Visibility scope for space-scoped content reads. Built from the session
-// via createSpaceContentScope (spaceProcedure, loaders); API key handlers
-// mint { spaceId } directly — a space-level credential sees everything.
-export type SpaceContentScope = {
-  spaceId: AuthorizedSpaceId;
-  // When set, reads must only return content created by this user: the
-  // requester is a non-admin member of a space where members work
-  // independently.
-  createdBy?: string;
-};
+// Defined in lib so content features that space itself imports can use them
+// without creating a feature cycle; re-exported here as the public path.
+export type { AuthorizedSpaceId, SpaceContentScope } from "@/lib/tenant-scope";
 
 export type SpaceDTO = {
   id: AuthorizedSpaceId;
