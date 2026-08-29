@@ -26,11 +26,11 @@ import { prisma } from "@rallly/database";
  * Requires in packages/posthog/.env (see .env.sample):
  *   POSTHOG_PERSONAL_API_KEY  personal API key with query:read
  *   POSTHOG_PROJECT_ID
- *   POSTHOG_API_HOST          optional, defaults to https://us.posthog.com
+ *   POSTHOG_API_HOST          optional, defaults to https://eu.posthog.com
  *   DATABASE_URL
  */
 
-const API_HOST = process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
+const API_HOST = process.env.POSTHOG_API_HOST ?? "https://eu.posthog.com";
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
 const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 

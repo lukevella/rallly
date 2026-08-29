@@ -1,3 +1,4 @@
+import { createLogger } from "@rallly/logger";
 import { PostHog } from "@rallly/posthog/server";
 import {
   getPostHogCookieName,
@@ -6,6 +7,8 @@ import {
 import type { NextRequest } from "next/server";
 import { after } from "next/server";
 import { env } from "@/env";
+
+const logger = createLogger("posthog");
 
 let instance: PostHog | undefined;
 
@@ -139,9 +142,13 @@ export async function flushPostHog() {
  * Erase a person from PostHog (profile plus their events) so analytics data
  * keyed to a userId does not outlive the account. PostHog is optional config
  * that can run in any deployment mode, so this guards on configuration
- * presence and no-ops when the personal API key or project id is missing.
- * Reads process.env directly (same pattern as features/billing/service.ts);
- * the personal API key needs the person:write scope.
+ * presence and no-ops when the personal API key or project id is missing —
+ * with a warning when analytics is ingesting, since the skipped erasure
+ * leaves person data behind. Reads process.env directly (same pattern as
+ * features/billing/service.ts); the personal API key needs the person:write
+ * scope. POSTHOG_API_HOST is the region app host serving the private
+ * management API — not NEXT_PUBLIC_POSTHOG_API_HOST, which is an ingestion
+ * host (in production a reverse proxy that does not forward the private API).
  */
 export async function deletePostHogPerson({
   distinctId,
@@ -152,10 +159,22 @@ export async function deletePostHogPerson({
   const projectId = process.env.POSTHOG_PROJECT_ID;
 
   if (!personalApiKey || !projectId) {
+    if (env.NEXT_PUBLIC_POSTHOG_API_KEY) {
+      logger.warn(
+        {
+          distinctId,
+          missingEnvVars: [
+            !personalApiKey && "POSTHOG_PERSONAL_API_KEY",
+            !projectId && "POSTHOG_PROJECT_ID",
+          ].filter(Boolean),
+        },
+        "PostHog erasure skipped: analytics data will outlive the account",
+      );
+    }
     return;
   }
 
-  const apiHost = process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
+  const apiHost = process.env.POSTHOG_API_HOST ?? "https://eu.posthog.com";
   const headers = { Authorization: `Bearer ${personalApiKey}` };
 
   const lookupRes = await fetch(
