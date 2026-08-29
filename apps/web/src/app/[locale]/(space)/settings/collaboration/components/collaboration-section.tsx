@@ -109,7 +109,7 @@ export function CollaborationSection() {
                 <FieldDescription>
                   <Trans
                     i18nKey="teamCollaborationSettingDescription"
-                    defaults="Give members full access to everything created in this space."
+                    defaults="Allow all members of this space to see and manage each other's polls, events and other content."
                   />
                 </FieldDescription>
               </FieldContent>

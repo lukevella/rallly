@@ -801,7 +801,7 @@
   "syncCalendarSuccess": "Calendar synced",
   "teamCollaboration": "Team collaboration",
   "teamCollaborationDescription": "Invite team members with centralized billing",
-  "teamCollaborationSettingDescription": "Give members full access to everything created in this space.",
+  "teamCollaborationSettingDescription": "Allow all members of this space to see and manage each other's polls, events and other content.",
   "temporaryEmailNotAllowed": "Temporary or disposable email addresses are not allowed.",
   "theme": "Theme",
   "themeDark": "Dark",
