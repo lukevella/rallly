@@ -24,12 +24,13 @@ import { PostHog } from "posthog-node";
  *
  * Requires in packages/posthog/.env (see .env.sample):
  *   POSTHOG_PUBLIC_API_KEY   project API key (ingestion)
- *   POSTHOG_API_HOST         ingestion host, e.g. https://eu.i.posthog.com
+ *   POSTHOG_INGESTION_HOST   e.g. https://eu.i.posthog.com — NOT the
+ *                            management host the other scripts use
  *   DATABASE_URL
  */
 
 const API_KEY = process.env.POSTHOG_PUBLIC_API_KEY;
-const API_HOST = process.env.POSTHOG_API_HOST;
+const API_HOST = process.env.POSTHOG_INGESTION_HOST;
 
 const PAGE_SIZE = 500;
 const SAMPLE_SIZE = 10;
@@ -86,7 +87,7 @@ function toGroupProperties(
   if (!process.env.DATABASE_URL || (apply && (!API_KEY || !API_HOST))) {
     console.error(
       apply
-        ? "❌ POSTHOG_PUBLIC_API_KEY, POSTHOG_API_HOST and DATABASE_URL must be set — see packages/posthog/.env.sample"
+        ? "❌ POSTHOG_PUBLIC_API_KEY, POSTHOG_INGESTION_HOST and DATABASE_URL must be set — see packages/posthog/.env.sample"
         : "❌ DATABASE_URL must be set — see packages/posthog/.env.sample",
     );
     process.exit(1);
