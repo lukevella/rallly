@@ -10,6 +10,8 @@ import {
   getSpaceSeatCount,
   getTotalSeatsForSpace,
 } from "@/features/space/data";
+import type { SpaceContentScope } from "@/features/space/types";
+import { createSpaceContentScope } from "@/features/space/utils";
 import { requireUser } from "@/features/user/loaders";
 import { getSessionState } from "@/lib/auth";
 import { getDeviceTimeZone } from "@/lib/datetime/server";
@@ -96,15 +98,27 @@ export const getActiveSpace = cache(async () => {
 });
 
 /**
+ * The visibility scope space-scoped content reads must apply for the
+ * signed-in user in their active space. Same gating as getActiveSpace;
+ * server component/page use only.
+ */
+export const getActiveSpaceContentScope = cache(
+  async (): Promise<SpaceContentScope> => {
+    const [space, user] = await Promise.all([getActiveSpace(), requireUser()]);
+    return createSpaceContentScope({ space, userId: user.id });
+  },
+);
+
+/**
  * Upcoming event count for the signed-in user's active space. Lives here
  * rather than in scheduled-event/loaders.ts because account-deletion (user)
  * imports scheduled-event, so a scheduled-event → space/user loader would
  * close a feature import cycle; space → scheduled-event is a forward edge.
  */
 export const loadUpcomingEventCount = cache(async () => {
-  const [user, space, deviceTimeZone] = await Promise.all([
+  const [user, scope, deviceTimeZone] = await Promise.all([
     requireUser(),
-    getActiveSpace(),
+    getActiveSpaceContentScope(),
     getDeviceTimeZone(),
   ]);
 
@@ -113,7 +127,7 @@ export const loadUpcomingEventCount = cache(async () => {
   // hasn't been set yet.
   const timeZone = deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
 
-  return getUpcomingEventCount({ spaceId: space.id, timeZone });
+  return getUpcomingEventCount({ scope, timeZone });
 });
 
 /**

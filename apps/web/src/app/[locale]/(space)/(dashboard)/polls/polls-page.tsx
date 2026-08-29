@@ -23,6 +23,7 @@ import {
 import { SearchInput } from "@/components/search-input";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import type { PollStatus } from "@/features/poll/schema";
+import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { PollsTabbedView } from "./polls-tabbed-view";
@@ -86,13 +87,21 @@ function PollsEmptyState() {
 export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const { data: space } = useSpace();
   const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
+  // Filtering by member is pointless when the space restricts this member
+  // to their own polls.
+  const showMemberFilter = space.shared;
 
   const { status, q, member } = searchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
   );
+  // Ignore a member URL param when the filter is hidden — a bookmarked
+  // ?member= URL would otherwise show an empty list with no visible
+  // control to clear it.
+  const visibleMember = showMemberFilter ? member : undefined;
 
-  const hasFilters = Boolean(q || member);
+  const hasFilters = Boolean(q || visibleMember);
   const showClosedPollsPointer =
     status === "open" && !hasFilters && counts.closed > 0;
 
@@ -119,12 +128,12 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
                 defaultValue: "Search polls by title...",
               })}
             />
-            <MemberSelector members={members} />
+            {showMemberFilter ? <MemberSelector members={members} /> : null}
           </div>
           <PollsInfiniteList
             status={status}
             search={q}
-            member={member}
+            member={visibleMember}
             emptyState={
               showClosedPollsPointer ? (
                 <NoOpenPollsEmptyState closedCount={counts.closed} />

@@ -23,7 +23,7 @@ const eventTypeProcedure = spaceProcedure.use(requireEventTypesEnabled);
 
 export const eventTypes = router({
   list: eventTypeProcedure.query(async ({ ctx }) => {
-    const eventTypes = await getEventTypes(ctx.space.id);
+    const eventTypes = await getEventTypes(ctx.contentScope);
     return { eventTypes };
   }),
 

@@ -42,7 +42,7 @@ export const events = router({
         member,
         page,
         pageSize,
-        spaceId: ctx.space.id,
+        scope: ctx.contentScope,
         timeZone,
       });
 

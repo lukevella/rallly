@@ -3,19 +3,23 @@ import "server-only";
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
-import type { AuthorizedSpaceId } from "@/features/space/types";
+import type {
+  AuthorizedSpaceId,
+  SpaceContentScope,
+} from "@/features/space/types";
 
 export async function getPoll({
   pollId,
-  spaceId,
+  scope,
 }: {
   pollId: string;
-  spaceId: AuthorizedSpaceId;
+  scope: SpaceContentScope;
 }) {
   return prisma.poll.findFirst({
     where: {
       id: pollId,
-      spaceId,
+      spaceId: scope.spaceId,
+      ...(scope.createdBy && { userId: scope.createdBy }),
       deleted: false,
     },
     select: {
@@ -247,7 +251,7 @@ type PollFilters = {
   pageSize?: number;
   q?: string;
   member?: string;
-  spaceId: string;
+  scope: SpaceContentScope;
 };
 
 export const getPolls = async ({
@@ -256,15 +260,23 @@ export const getPolls = async ({
   member,
   page = 1,
   pageSize = 20,
-  spaceId,
+  scope,
 }: PollFilters) => {
+  // The scope restriction and the member filter both apply: a restricted
+  // member asking for someone else's polls gets an empty result.
+  const creatorIds = [scope.createdBy, member].filter((id): id is string =>
+    Boolean(id),
+  );
+
   // Build the where clause based on filters
   const where: Prisma.PollWhereInput = {
-    spaceId,
+    spaceId: scope.spaceId,
     deletedAt: null,
     ...(status && { status }),
     ...(q && { title: { contains: q, mode: "insensitive" } }),
-    ...(member && { userId: member }),
+    ...(creatorIds.length > 0 && {
+      AND: creatorIds.map((userId) => ({ userId })),
+    }),
   };
 
   // Get total count and paginated polls in a transaction
@@ -341,14 +353,15 @@ export const getPolls = async ({
 };
 
 export const getPollStatusCounts = async ({
-  spaceId,
+  scope,
 }: {
-  spaceId: AuthorizedSpaceId;
+  scope: SpaceContentScope;
 }) => {
   const res = await prisma.poll.groupBy({
     by: ["status"],
     where: {
-      spaceId,
+      spaceId: scope.spaceId,
+      ...(scope.createdBy && { userId: scope.createdBy }),
       deletedAt: null,
     },
     _count: {
@@ -392,15 +405,19 @@ export async function canUserManagePoll(
   }
 
   if (poll.spaceId) {
-    const space = await prisma.spaceMember.findFirst({
+    const membership = await prisma.spaceMember.findFirst({
       where: {
         spaceId: poll.spaceId,
         ...effectiveSpaceMemberWhere({ userId: user.id }),
       },
+      select: {
+        space: { select: { shared: true } },
+      },
     });
 
-    if (space) {
-      // user a member of this space
+    if (membership?.space.shared) {
+      // Members manage each other's polls only in a shared space. Uniform
+      // across roles: admins are members here too.
       return true;
     }
   }
@@ -415,7 +432,14 @@ export const hasPollAdminAccess = async (pollId: string, userId: string) => {
       deleted: false,
       OR: [
         { userId: userId },
-        { space: { members: { some: effectiveSpaceMemberWhere({ userId }) } } },
+        // Members reach each other's polls only in a shared space. Uniform
+        // across roles: admins are members here too.
+        {
+          space: {
+            shared: true,
+            members: { some: effectiveSpaceMemberWhere({ userId }) },
+          },
+        },
       ],
     },
     select: {

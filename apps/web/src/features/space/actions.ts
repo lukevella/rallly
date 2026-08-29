@@ -14,6 +14,7 @@ import {
   updateSpace,
   updateSpaceHideAttribution,
   updateSpaceImage,
+  updateSpaceShared,
   updateSpaceShowBranding,
 } from "@/features/space/mutations";
 import {
@@ -22,6 +23,7 @@ import {
   updateSpaceHideAttributionSchema,
   updateSpaceImageSchema,
   updateSpaceSchema,
+  updateSpaceSharedSchema,
   updateSpaceShowBrandingSchema,
 } from "@/features/space/schema";
 import { setActiveSpace } from "@/features/user/mutations";
@@ -297,6 +299,44 @@ export const updateSpaceHideAttributionAction = authActionClient
       event: "space_update_hide_attribution",
       properties: {
         hide_attribution: parsedInput.hideAttribution,
+      },
+      groups: {
+        space: space.id,
+      },
+    });
+  });
+
+export const updateSpaceSharedAction = authActionClient
+  .metadata({ actionName: "update_space_shared" })
+  .use(spaceUpdateAbilityMiddleware)
+  .inputSchema(updateSpaceSharedSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const { space } = ctx;
+
+    if (parsedInput.shared && space.tier !== "pro") {
+      throw new AppError({
+        code: "PAYMENT_REQUIRED",
+        message: "You need a Pro subscription to share a space",
+      });
+    }
+
+    await updateSpaceShared({
+      spaceId: space.id,
+      shared: parsedInput.shared,
+    });
+
+    identifyGroup({
+      groupType: "space",
+      groupKey: space.id,
+      properties: {
+        shared: parsedInput.shared,
+      },
+    });
+
+    track(ctx.user, {
+      event: "space_update_shared",
+      properties: {
+        shared: parsedInput.shared,
       },
       groups: {
         space: space.id,

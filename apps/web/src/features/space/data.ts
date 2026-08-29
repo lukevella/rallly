@@ -146,6 +146,7 @@ export function createSpaceDTO(space: {
   primaryColor?: string | null;
   showBranding: boolean;
   hideAttribution: boolean;
+  shared: boolean;
   memberCount: number;
   seatCount: number;
 }): SpaceDTO {
@@ -155,6 +156,7 @@ export function createSpaceDTO(space: {
     ownerId: space.ownerId,
     tier: isSelfHosted ? "pro" : space.tier,
     role: fromDBRole(space.role),
+    shared: space.shared,
     memberCount: space.memberCount,
     seatCount: space.seatCount,
     image: space.image ?? undefined,
@@ -230,6 +232,7 @@ export const listSpacesForUser = cache(async (userId: string) => {
           primaryColor: true,
           showBranding: true,
           hideAttribution: true,
+          shared: true,
           _count: { select: { members: true } },
           subscriptions: {
             where: { active: true },

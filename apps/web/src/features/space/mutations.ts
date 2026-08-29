@@ -30,6 +30,10 @@ export async function createSpace({
       tier,
       spaceType,
       industry,
+      // New spaces start unshared; sharing everything is opt-in. Matches
+      // the column default — explicit here so the decision is visible in
+      // code, not just the schema.
+      shared: false,
       members: {
         create: {
           userId: ownerId,
@@ -89,6 +93,19 @@ export async function updateSpaceHideAttribution({
   await prisma.space.update({
     where: { id: spaceId },
     data: { hideAttribution },
+  });
+}
+
+export async function updateSpaceShared({
+  spaceId,
+  shared,
+}: {
+  spaceId: string;
+  shared: boolean;
+}) {
+  await prisma.space.update({
+    where: { id: spaceId },
+    data: { shared },
   });
 }
 

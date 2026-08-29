@@ -29,6 +29,7 @@ export default async function Page() {
       seatCount={space.seatCount}
       hasNoAccounts={hasNoAccounts}
       canManageBilling={ability.can("manage", "Billing")}
+      canManageMembers={space.role === "admin"}
     />
   );
 }

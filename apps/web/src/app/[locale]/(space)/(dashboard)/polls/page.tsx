@@ -1,7 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
-import { getPollStatusCounts } from "@/features/poll/data";
-import { getActiveSpace } from "@/features/space/loaders";
+import { loadPollStatusCounts } from "@/features/poll/loaders";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { PollsPage } from "./polls-page";
@@ -13,11 +12,10 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const { status, q, member } = searchParamsSchema.parse(searchParams);
 
-  const space = await getActiveSpace();
   const helpers = await createPrivateSSRHelper();
 
   const [counts] = await Promise.all([
-    getPollStatusCounts({ spaceId: space.id }),
+    loadPollStatusCounts(),
     helpers.spaces.listMembers.prefetch(),
     helpers.polls.infiniteChronological.prefetchInfinite({
       status,

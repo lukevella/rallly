@@ -12,6 +12,15 @@ model Space {
   primaryColor    String?   @map("primary_color")
   showBranding    Boolean   @default(false) @map("show_branding")
   hideAttribution Boolean   @default(false) @map("hide_attribution")
+  // The Team collaboration setting (Settings -> Collaboration).
+  // Whether members share everything they create (everyone sees
+  // everything) or work independently (everyone, admins included, only
+  // sees what they create; roles grant administrative capabilities, not
+  // visibility). Defaults to not shared — sharing is opt-in; the backfill
+  // kept existing multi-member spaces (and spaces with pending invites)
+  // shared to preserve their behavior. When the org layer lands, shared
+  // spaces map to teams and unshared spaces to organizations.
+  shared          Boolean   @default(false)
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 

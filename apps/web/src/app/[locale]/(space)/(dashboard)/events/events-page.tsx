@@ -20,6 +20,7 @@ import {
 } from "@/components/page-layout";
 import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
+import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { EventsInfiniteList } from "./events-infinite-list";
@@ -102,11 +103,19 @@ function EventsEmptyState({ status }: { status: Status }) {
 function EventsPageContent() {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const { data: space } = useSpace();
   const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
+  // Filtering by member is pointless when the space restricts this member
+  // to their own events.
+  const showMemberFilter = space.shared;
 
   const { status, q, member } = eventsSearchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
   );
+  // Ignore a member URL param when the filter is hidden — a bookmarked
+  // ?member= URL would otherwise show an empty list with no visible
+  // control to clear it.
+  const visibleMember = showMemberFilter ? member : undefined;
 
   return (
     <PageContainer>
@@ -123,12 +132,12 @@ function EventsPageContent() {
                 defaultValue: "Search events by title...",
               })}
             />
-            <MemberSelector members={members} />
+            {showMemberFilter ? <MemberSelector members={members} /> : null}
           </div>
           <EventsInfiniteList
             status={status}
             search={q}
-            member={member}
+            member={visibleMember}
             emptyState={<EventsEmptyState status={status || "upcoming"} />}
           />
         </EventsTabbedView>

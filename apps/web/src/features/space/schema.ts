@@ -32,6 +32,10 @@ export const updateSpaceHideAttributionSchema = z.object({
   hideAttribution: z.boolean(),
 });
 
+export const updateSpaceSharedSchema = z.object({
+  shared: z.boolean(),
+});
+
 export const spaceImageUploadSchema = z.object({
   fileType: z.enum(spaceIconAssetProfile.accept),
   fileSize: z.number().int().positive().max(spaceIconAssetProfile.maxSize),

@@ -1,5 +1,28 @@
 import { describe, expect, it } from "vitest";
-import { inferIndustry } from "@/features/space/utils";
+import type { AuthorizedSpaceId } from "@/features/space/types";
+import { createSpaceContentScope, inferIndustry } from "@/features/space/utils";
+
+const spaceId = "space-1" as AuthorizedSpaceId;
+
+describe("createSpaceContentScope", () => {
+  it("does not restrict members of a shared space", () => {
+    expect(
+      createSpaceContentScope({
+        space: { id: spaceId, shared: true },
+        userId: "user-1",
+      }),
+    ).toEqual({ spaceId });
+  });
+
+  it("restricts members of an unshared space to their own content", () => {
+    expect(
+      createSpaceContentScope({
+        space: { id: spaceId, shared: false },
+        userId: "user-1",
+      }),
+    ).toEqual({ spaceId, createdBy: "user-1" });
+  });
+});
 
 describe("inferIndustry", () => {
   it("infers education from an academic domain", () => {
