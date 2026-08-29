@@ -1,3 +1,4 @@
+import { createLogger } from "@rallly/logger";
 import { PostHog } from "@rallly/posthog/server";
 import {
   getPostHogCookieName,
@@ -6,6 +7,8 @@ import {
 import type { NextRequest } from "next/server";
 import { after } from "next/server";
 import { env } from "@/env";
+
+const logger = createLogger("posthog");
 
 let instance: PostHog | undefined;
 
@@ -137,11 +140,21 @@ export async function flushPostHog() {
 
 /**
  * Erase a person from PostHog (profile plus their events) so analytics data
- * keyed to a userId does not outlive the account. PostHog is optional config
- * that can run in any deployment mode, so this guards on configuration
- * presence and no-ops when the personal API key or project id is missing.
- * Reads process.env directly (same pattern as features/billing/service.ts);
- * the personal API key needs the person:write scope.
+ * keyed to a userId does not outlive the account. Reads process.env directly
+ * (same pattern as features/billing/service.ts); the personal API key needs
+ * the person:write scope.
+ *
+ * POSTHOG_API_HOST must name the region app host (e.g.
+ * https://eu.posthog.com) explicitly. It cannot default to a region — a
+ * wrong-region lookup finds no person and reports the erasure complete —
+ * and it cannot be derived from NEXT_PUBLIC_POSTHOG_API_HOST, which is an
+ * ingestion host and may be a reverse proxy that does not forward the
+ * private management API.
+ *
+ * PostHog is optional config, so a deployment with no PostHog at all skips
+ * silently — there is nothing to erase. Any partial config is a misconfig
+ * that leaves analytics data behind, so it logs a warning per skipped
+ * erasure instead of no-oping invisibly.
  */
 export async function deletePostHogPerson({
   distinctId,
@@ -150,12 +163,32 @@ export async function deletePostHogPerson({
 }) {
   const personalApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
   const projectId = process.env.POSTHOG_PROJECT_ID;
+  const apiHost = process.env.POSTHOG_API_HOST;
 
-  if (!personalApiKey || !projectId) {
+  if (
+    !env.NEXT_PUBLIC_POSTHOG_API_KEY &&
+    !personalApiKey &&
+    !projectId &&
+    !apiHost
+  ) {
     return;
   }
 
-  const apiHost = process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
+  if (!personalApiKey || !projectId || !apiHost) {
+    logger.warn(
+      {
+        distinctId,
+        missingEnvVars: [
+          !personalApiKey && "POSTHOG_PERSONAL_API_KEY",
+          !projectId && "POSTHOG_PROJECT_ID",
+          !apiHost && "POSTHOG_API_HOST",
+        ].filter(Boolean),
+      },
+      "PostHog erasure skipped: erasure config is incomplete, analytics data will outlive the account",
+    );
+    return;
+  }
+
   const headers = { Authorization: `Bearer ${personalApiKey}` };
 
   const lookupRes = await fetch(

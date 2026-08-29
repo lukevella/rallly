@@ -26,11 +26,11 @@ import { prisma } from "@rallly/database";
  * Requires in packages/posthog/.env (see .env.sample):
  *   POSTHOG_PERSONAL_API_KEY  personal API key with query:read
  *   POSTHOG_PROJECT_ID
- *   POSTHOG_API_HOST          optional, defaults to https://us.posthog.com
+ *   POSTHOG_API_HOST          region app host, e.g. https://eu.posthog.com
  *   DATABASE_URL
  */
 
-const API_HOST = process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
+const API_HOST = process.env.POSTHOG_API_HOST;
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
 const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 
@@ -158,9 +158,9 @@ async function fetchSetupPage(after?: string): Promise<{
 (async function backfillSpaceType() {
   const apply = process.argv.slice(2).includes("--apply");
 
-  if (!process.env.DATABASE_URL || !API_KEY || !PROJECT_ID) {
+  if (!process.env.DATABASE_URL || !API_KEY || !PROJECT_ID || !API_HOST) {
     console.error(
-      "❌ POSTHOG_PERSONAL_API_KEY, POSTHOG_PROJECT_ID and DATABASE_URL must be set — see packages/posthog/.env.sample",
+      "❌ POSTHOG_PERSONAL_API_KEY, POSTHOG_PROJECT_ID, POSTHOG_API_HOST and DATABASE_URL must be set — see packages/posthog/.env.sample",
     );
     process.exit(1);
   }
