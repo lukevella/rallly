@@ -371,7 +371,7 @@ export default async function Security(props: {
               retention schedule. Inactive polls are automatically scheduled for
               deletion with a 30 day grace period and advance notice. On
               request, we delete an organization&apos;s data and confirm
-              deletion in writing, and we provide an export of your data.
+              deletion in writing.
             </FaqItem>
             <FaqItem question="Do you hold SOC 2 or ISO 27001 certification?">
               Not currently. Our infrastructure providers are SOC 2 Type 2
