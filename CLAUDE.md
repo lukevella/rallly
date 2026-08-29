@@ -140,6 +140,15 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - **Headings and dialog titles are not exempt.** Title Case has no single agreed rule (Chicago, AP and APA disagree), so it cannot be applied consistently; it degrades screen reader pronunciation and removes word-shape cues used by readers with dyslexia and low vision; and the same string often serves as both a button label and a dialog title, so a position-based rule would force two strings for one concept.
 - **Changing `defaults` alone is not enough.** `pnpm i18n:scan` will not overwrite an existing key's value — the UI keeps rendering the old copy. Run `pnpm i18n:sync` (`--sync-primary`) to push changed English values through. Never run `--sync-all`; it clears other locales' translations.
 
+### Permission-Gated UI
+Choose the presentation by **why the user lacks the capability**, never ad hoc per surface:
+- **Role or ownership** (another member could act; the user has no self-serve path) → **hide** the control, nav item, or tile — including inline controls and destructive menu items (per-row: omit inapplicable items; omit the menu when empty). If a whole page exists for the capability, show a read-only view of the current values (general settings pattern) or a denied state naming who can act (billing settings pattern). Deep links get the denied state, never a silent 404.
+- **Plan** (the space gains it by paying) → keep the control **enabled with a `ProBadge`**; the click opens the pay wall via `showPayWall`. Never hide or plain-disable a plan-gated control. Turning a Pro setting off is always allowed. Upsells stay visible to all members; the pay wall routes non-owners to ask the space owner to upgrade.
+- **Temporary state** (seat limit reached, poll already scheduled, action in flight) → **disabled with the reason discoverable in place** (adjacent alert or tooltip).
+- **Environment/config** (self-hosted, feature flag) → hide client-side, `notFound()` server-side.
+- **Composite gates: role wins.** A member of a free space sees neither a disabled control nor a pay wall trigger.
+- **Never enabled-but-broken.** Any affordance whose action can fail server-side authorization must be gated client-side by the same ability the server checks.
+
 ### State Management
 - tRPC with TanStack Query for server state
 - React Context for client state (auth, preferences, etc.)
