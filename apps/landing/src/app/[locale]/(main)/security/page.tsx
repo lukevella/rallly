@@ -381,6 +381,16 @@ export default async function Security(props: {
               real-time uptime monitoring, and direct access to the people who
               build the product.
             </FaqItem>
+            <FaqItem question="Do you offer a Data Processing Agreement (DPA)?">
+              Yes. Our GDPR Article 28{" "}
+              <a className="text-primary hover:underline" href="/dpa">
+                Data Processing Agreement
+              </a>{" "}
+              is published openly and incorporated into our terms of use, so it
+              applies automatically without paperwork. It includes our technical
+              and organizational measures and the full subprocessor list, and we
+              countersign an execution copy on request.
+            </FaqItem>
             <FaqItem question="How is the application secured?">
               Sign in works with email verification codes, Google, or Microsoft
               accounts. All inputs are schema-validated, database access goes

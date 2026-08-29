@@ -11,9 +11,7 @@ export default async function TermsOfUse() {
       <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
         Terms of use
       </h1>
-      <p className="mt-4 text-gray-500 text-sm">
-        Last updated: 3 December 2025
-      </p>
+      <p className="mt-4 text-gray-500 text-sm">Last updated: 29 August 2026</p>
       <div className="longform mt-8 max-w-2xl">
         <p>
           This website and the Rallly software and services are operated by
@@ -199,7 +197,22 @@ export default async function TermsOfUse() {
 
         <hr />
 
-        <h2>6. Limitation of liability</h2>
+        <h2>6. Data protection</h2>
+        <p>
+          6.1 Where we process personal data on your behalf in providing the
+          hosted Rallly service, we do so as a processor under our{" "}
+          <a href="/dpa">Data Processing Agreement</a>, which is incorporated
+          into these Terms by reference and forms part of them.
+        </p>
+        <p>
+          6.2 Our processing of personal data for our own purposes as a
+          controller is described in our{" "}
+          <a href="/privacy-policy">Privacy Policy</a>.
+        </p>
+
+        <hr />
+
+        <h2>7. Limitation of liability</h2>
         <p>
           To the maximum extent permitted by law, we will not be liable for any
           damages arising from the use or inability to use this website, the
@@ -214,7 +227,7 @@ export default async function TermsOfUse() {
 
         <hr />
 
-        <h2>7. Modifications to these terms</h2>
+        <h2>8. Modifications to these terms</h2>
         <p>
           We reserve the right to modify these Terms at any time, without prior
           notice to you. The &quot;Last updated&quot; date above will be revised
@@ -225,7 +238,7 @@ export default async function TermsOfUse() {
 
         <hr />
 
-        <h2>8. Contact</h2>
+        <h2>9. Contact</h2>
         <p>
           If you have any questions about these Terms, please contact us at:
         </p>
