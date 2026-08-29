@@ -60,6 +60,25 @@ function SecurityFeature({
   );
 }
 
+function TransferMechanismCell({
+  href,
+  fallback,
+  children,
+}: {
+  href: string;
+  fallback: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <td>
+      <a href={href} target="_blank" rel="noreferrer noopener">
+        {children}
+      </a>
+      <div className="mt-0.5 text-gray-500 text-xs">{fallback}</div>
+    </td>
+  );
+}
+
 export default async function Security(props: {
   params: Promise<{ locale: string }>;
 }) {
@@ -194,15 +213,12 @@ export default async function Security(props: {
                   </td>
                   <td>Application hosting</td>
                   <td>United States</td>
-                  <td>
-                    <a
-                      href="https://vercel.com/legal/dpa"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU-US DPF + UK Extension (SCCs fallback)
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://vercel.com/legal/dpa"
+                    fallback="SCCs fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -217,15 +233,12 @@ export default async function Security(props: {
                   </td>
                   <td>Managed PostgreSQL database</td>
                   <td>United States</td>
-                  <td>
-                    <a
-                      href="https://www.digitalocean.com/legal/data-processing-agreement"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://www.digitalocean.com/legal/data-processing-agreement"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -240,15 +253,12 @@ export default async function Security(props: {
                   </td>
                   <td>Session data, rate limiting</td>
                   <td>United States</td>
-                  <td>
-                    <a
-                      href="https://upstash.com/trust/dpa.pdf"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://upstash.com/trust/dpa.pdf"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -263,16 +273,12 @@ export default async function Security(props: {
                   </td>
                   <td>Transactional email, object storage</td>
                   <td>United States</td>
-                  <td>
-                    <a
-                      href="https://d1.awsstatic.com/legal/aws-gdpr/AWS_GDPR_DPA.pdf"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU-US DPF + UK Extension, certified under Amazon.com, Inc.
-                      (SCCs fallback)
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://d1.awsstatic.com/legal/aws-gdpr/AWS_GDPR_DPA.pdf"
+                    fallback="Certified under Amazon.com, Inc. · SCCs fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -287,15 +293,12 @@ export default async function Security(props: {
                   </td>
                   <td>Payment processing (billing contact data only)</td>
                   <td>United States</td>
-                  <td>
-                    <a
-                      href="https://stripe.com/legal/dpa"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://stripe.com/legal/dpa"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -310,15 +313,12 @@ export default async function Security(props: {
                   </td>
                   <td>Product analytics</td>
                   <td>European Union</td>
-                  <td>
-                    <a
-                      href="https://posthog.com/privacy"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU data residency, no US transfer
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://posthog.com/privacy"
+                    fallback="No US transfer"
+                  >
+                    EU data residency
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -333,15 +333,12 @@ export default async function Security(props: {
                   </td>
                   <td>Error monitoring</td>
                   <td>United States</td>
-                  <td>
-                    <a
-                      href="https://sentry.io/legal/dpa/"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
-                    </a>
-                  </td>
+                  <TransferMechanismCell
+                    href="https://sentry.io/legal/dpa/"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
               </tbody>
             </table>
