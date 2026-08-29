@@ -4,13 +4,13 @@ import { buttonVariants } from "@rallly/ui";
 import {
   ActivityIcon,
   ArrowRightIcon,
+  CodeIcon,
   DatabaseIcon,
   EyeOffIcon,
   LockIcon,
   ServerIcon,
 } from "lucide-react";
 import { cacheLife } from "next/cache";
-import GithubIcon from "@/assets/github.svg";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
@@ -120,7 +120,7 @@ export default async function Security(props: {
         <SectionContent>
           <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             <SecurityFeature
-              icon={<GithubIcon className="size-4" />}
+              icon={<CodeIcon className="size-4" />}
               title="Open source"
               link={{
                 label: "Browse source code",
