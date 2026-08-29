@@ -10,7 +10,6 @@ import {
 } from "@/components/page-layout";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { CollaborationMode } from "./components/collaboration-mode";
 import { MembersPageActions, MembersPageContent } from "./members-page";
 
 export default function Page() {
@@ -21,7 +20,6 @@ export default function Page() {
           <PageTitle>
             <Trans i18nKey="members" defaults="Members" />
           </PageTitle>
-          <CollaborationMode />
         </PageHeaderContent>
         <Suspense>
           <MembersPageActions />
