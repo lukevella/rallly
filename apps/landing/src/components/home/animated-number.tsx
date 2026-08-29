@@ -165,10 +165,15 @@ function AnimatedNumber({
       className="relative inline-block tabular-nums"
     >
       {/* Invisible copy of the final number holds its width for the whole
-          animation so the surrounding text doesn't shift as digits roll in */}
-      <span className="invisible" aria-hidden="true">
-        {sizerText}
-      </span>
+          animation so the surrounding text doesn't shift as digits roll in.
+          Rendered as a pseudo-element rather than a text node so extractors
+          (search snippets, reader mode) don't see the number twice — the
+          readable copy is NumberFlow's own light-DOM text */}
+      <span
+        className="invisible before:content-[attr(data-value)]"
+        data-value={sizerText}
+        aria-hidden="true"
+      />
       {/* NumberFlow's box is taller than the text (mask padding) but
           symmetric around the glyphs, so centering it on the sizer — also
           symmetric — puts both baselines in the same place */}
