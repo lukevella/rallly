@@ -60,6 +60,25 @@ function SecurityFeature({
   );
 }
 
+function TransferMechanismCell({
+  href,
+  fallback,
+  children,
+}: {
+  href: string;
+  fallback: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <td>
+      <a href={href} target="_blank" rel="noreferrer noopener">
+        {children}
+      </a>
+      <div className="mt-0.5 text-gray-500 text-xs">{fallback}</div>
+    </td>
+  );
+}
+
 export default async function Security(props: {
   params: Promise<{ locale: string }>;
 }) {
@@ -168,13 +187,16 @@ export default async function Security(props: {
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="longform max-w-2xl">
-            <table>
+          <div className="longform overflow-x-auto">
+            {/* Below lg the table is wider than the viewport: keep cells on
+                one line and let the wrapper scroll instead of wrapping */}
+            <table className="whitespace-nowrap lg:whitespace-normal">
               <thead>
                 <tr>
                   <th>Provider</th>
                   <th>Purpose</th>
                   <th>Location</th>
+                  <th>Transfer mechanism</th>
                 </tr>
               </thead>
               <tbody>
@@ -191,6 +213,12 @@ export default async function Security(props: {
                   </td>
                   <td>Application hosting</td>
                   <td>United States</td>
+                  <TransferMechanismCell
+                    href="https://vercel.com/legal/dpa"
+                    fallback="SCCs fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -205,6 +233,12 @@ export default async function Security(props: {
                   </td>
                   <td>Managed PostgreSQL database</td>
                   <td>United States</td>
+                  <TransferMechanismCell
+                    href="https://www.digitalocean.com/legal/data-processing-agreement"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -219,6 +253,12 @@ export default async function Security(props: {
                   </td>
                   <td>Session data, rate limiting</td>
                   <td>United States</td>
+                  <TransferMechanismCell
+                    href="https://upstash.com/trust/dpa.pdf"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -233,6 +273,12 @@ export default async function Security(props: {
                   </td>
                   <td>Transactional email, object storage</td>
                   <td>United States</td>
+                  <TransferMechanismCell
+                    href="https://d1.awsstatic.com/legal/aws-gdpr/AWS_GDPR_DPA.pdf"
+                    fallback="Certified under Amazon.com, Inc. · SCCs fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -247,6 +293,12 @@ export default async function Security(props: {
                   </td>
                   <td>Payment processing (billing contact data only)</td>
                   <td>United States</td>
+                  <TransferMechanismCell
+                    href="https://stripe.com/legal/dpa"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -261,6 +313,12 @@ export default async function Security(props: {
                   </td>
                   <td>Product analytics</td>
                   <td>European Union</td>
+                  <TransferMechanismCell
+                    href="https://posthog.com/privacy"
+                    fallback="No US transfer"
+                  >
+                    EU data residency
+                  </TransferMechanismCell>
                 </tr>
                 <tr>
                   <td>
@@ -275,6 +333,12 @@ export default async function Security(props: {
                   </td>
                   <td>Error monitoring</td>
                   <td>United States</td>
+                  <TransferMechanismCell
+                    href="https://sentry.io/legal/dpa/"
+                    fallback="SCCs + UK Addendum fallback"
+                  >
+                    EU-US DPF + UK Extension
+                  </TransferMechanismCell>
                 </tr>
               </tbody>
             </table>
