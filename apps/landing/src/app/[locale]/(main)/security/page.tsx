@@ -168,13 +168,14 @@ export default async function Security(props: {
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="longform max-w-2xl">
+          <div className="longform max-w-4xl overflow-x-auto">
             <table>
               <thead>
                 <tr>
                   <th>Provider</th>
                   <th>Purpose</th>
                   <th>Location</th>
+                  <th>Transfer mechanism</th>
                 </tr>
               </thead>
               <tbody>
@@ -191,6 +192,15 @@ export default async function Security(props: {
                   </td>
                   <td>Application hosting</td>
                   <td>United States</td>
+                  <td>
+                    <a
+                      href="https://vercel.com/legal/dpa"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU-US DPF + UK Extension (SCCs fallback)
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -205,6 +215,15 @@ export default async function Security(props: {
                   </td>
                   <td>Managed PostgreSQL database</td>
                   <td>United States</td>
+                  <td>
+                    <a
+                      href="https://www.digitalocean.com/legal/data-processing-agreement"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -219,6 +238,15 @@ export default async function Security(props: {
                   </td>
                   <td>Session data, rate limiting</td>
                   <td>United States</td>
+                  <td>
+                    <a
+                      href="https://upstash.com/trust/dpa.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -233,6 +261,16 @@ export default async function Security(props: {
                   </td>
                   <td>Transactional email, object storage</td>
                   <td>United States</td>
+                  <td>
+                    <a
+                      href="https://d1.awsstatic.com/legal/aws-gdpr/AWS_GDPR_DPA.pdf"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU-US DPF + UK Extension, certified under Amazon.com, Inc.
+                      (SCCs fallback)
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -247,6 +285,15 @@ export default async function Security(props: {
                   </td>
                   <td>Payment processing (billing contact data only)</td>
                   <td>United States</td>
+                  <td>
+                    <a
+                      href="https://stripe.com/legal/dpa"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -261,6 +308,15 @@ export default async function Security(props: {
                   </td>
                   <td>Product analytics</td>
                   <td>European Union</td>
+                  <td>
+                    <a
+                      href="https://posthog.com/privacy"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU data residency, no US transfer
+                    </a>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -275,6 +331,15 @@ export default async function Security(props: {
                   </td>
                   <td>Error monitoring</td>
                   <td>United States</td>
+                  <td>
+                    <a
+                      href="https://sentry.io/legal/dpa/"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      EU-US DPF + UK Extension (SCCs + UK Addendum fallback)
+                    </a>
+                  </td>
                 </tr>
               </tbody>
             </table>
