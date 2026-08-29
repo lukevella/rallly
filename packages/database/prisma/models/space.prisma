@@ -12,6 +12,7 @@ model Space {
   primaryColor    String?   @map("primary_color")
   showBranding    Boolean   @default(false) @map("show_branding")
   hideAttribution Boolean   @default(false) @map("hide_attribution")
+  // The Team collaboration setting (Settings -> Collaboration).
   // Whether members share everything they create (everyone sees
   // everything) or work independently (everyone, admins included, only
   // sees what they create; roles grant administrative capabilities, not
