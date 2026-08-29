@@ -365,12 +365,13 @@ export default async function Security(props: {
             </FaqItem>
             <FaqItem question="How long do you keep data, and can we delete it?">
               Data is retained while your account is active. You can delete
-              polls and your account at any time, and account deletion takes
-              effect immediately. Inactive polls are automatically scheduled for
+              polls and your account at any time. Account deletion starts a 7
+              day recovery window, after which your data is permanently erased
+              and remaining backup copies expire on our database provider&apos;s
+              retention schedule. Inactive polls are automatically scheduled for
               deletion with a 30 day grace period and advance notice. On
               request, we delete an organization&apos;s data and confirm
-              deletion in writing, and your data is exportable in standard
-              formats at any time.
+              deletion in writing.
             </FaqItem>
             <FaqItem question="Do you hold SOC 2 or ISO 27001 certification?">
               Not currently. Our infrastructure providers are SOC 2 Type 2
