@@ -100,12 +100,15 @@ export function CollaborationSection() {
               </SettingIcon>
               <FieldContent>
                 <FieldLabel htmlFor="space-shared">
-                  <Trans i18nKey="workTogether" defaults="Work together" />
+                  <Trans
+                    i18nKey="enableCollaboration"
+                    defaults="Enable collaboration"
+                  />
                   {space.tier !== "pro" && <ProBadge />}
                 </FieldLabel>
                 <FieldDescription>
                   <Trans
-                    i18nKey="workTogetherDescription"
+                    i18nKey="enableCollaborationDescription"
                     defaults="Give members full access to everything created in this space."
                   />
                 </FieldDescription>
