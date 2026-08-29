@@ -32,10 +32,10 @@
  * Requires in packages/posthog/.env (see .env.sample):
  *   POSTHOG_PERSONAL_API_KEY  personal API key with query:read + person:write
  *   POSTHOG_PROJECT_ID
- *   POSTHOG_API_HOST          region app host, e.g. https://eu.posthog.com
+ *   POSTHOG_API_HOST          optional, defaults to https://eu.posthog.com
  */
 
-const API_HOST = process.env.POSTHOG_API_HOST;
+const API_HOST = process.env.POSTHOG_API_HOST ?? "https://eu.posthog.com";
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
 const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 
@@ -359,9 +359,9 @@ async function purge(ids: string[]) {
 }
 
 (async function purgeGuestProfiles() {
-  if (!PROJECT_ID || !API_KEY || !API_HOST) {
+  if (!PROJECT_ID || !API_KEY) {
     console.error(
-      "❌ POSTHOG_PROJECT_ID, POSTHOG_PERSONAL_API_KEY and POSTHOG_API_HOST must be set — see packages/posthog/.env.sample",
+      "❌ POSTHOG_PROJECT_ID and POSTHOG_PERSONAL_API_KEY must be set — see packages/posthog/.env.sample",
     );
     process.exit(1);
   }
