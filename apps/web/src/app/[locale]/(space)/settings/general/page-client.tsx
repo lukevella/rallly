@@ -29,6 +29,7 @@ import {
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
+import { CollaborationSection } from "./components/collaboration-section";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
 import { LeaveSpaceButton } from "./components/leave-space-button";
@@ -68,6 +69,7 @@ export function GeneralSettingsPageClient() {
             </Alert>
           ) : null}
           <CustomBrandingSection disabled={!isAdmin} />
+          <CollaborationSection disabled={!isAdmin} />
           {!isOwner || canDeleteSpace ? (
             <PageSection variant="card">
               <PageSectionHeader>
