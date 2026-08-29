@@ -187,7 +187,7 @@ export default async function Security(props: {
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="longform max-w-4xl overflow-x-auto">
+          <div className="longform overflow-x-auto">
             {/* Below lg the table is wider than the viewport: keep cells on
                 one line and let the wrapper scroll instead of wrapping */}
             <table className="whitespace-nowrap lg:whitespace-normal">
