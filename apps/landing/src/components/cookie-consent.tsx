@@ -2,7 +2,7 @@
 import { useCookieConsent } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { Analytics } from "@vercel/analytics/react";
-import Link from "next/link";
+import { LinkBase } from "@/i18n/client/link";
 import { Trans } from "@/i18n/client/trans";
 import { useTranslation } from "@/i18n/client/use-translation";
 
@@ -30,7 +30,7 @@ export function CookieConsent() {
               defaults="Learn more in our <policyLink>cookie policy</policyLink>."
               components={{
                 policyLink: (
-                  <Link className="underline" href="/cookie-policy" />
+                  <LinkBase className="underline" href="/cookie-policy" />
                 ),
               }}
             />
