@@ -160,14 +160,6 @@ export const Footer = async ({ locale }: { locale: string }) => {
               </a>
             </li>
             <li>
-              <a
-                href="https://rallly.openstatus.dev"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
-                <Trans t={t} ns="common" i18nKey="status" defaults="Status" />
-              </a>
-            </li>
-            <li>
               <LinkBase
                 href="/press-kit"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
@@ -293,7 +285,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </ul>
         </div>
       </div>
-      <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
         <div className="flex flex-col gap-x-8 gap-y-2 sm:flex-row sm:items-center">
           <p className="whitespace-nowrap text-gray-600 text-sm leading-loose">
             &copy; 2026 Stack Snap Ltd.
@@ -325,7 +317,19 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
           </ul>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-4">
+          <a
+            href="https://rallly.openstatus.dev"
+            rel="noopener"
+            className="inline-flex h-9 items-center rounded-lg bg-background/80 px-0.5 ring-1 ring-button-outline ring-inset hover:bg-accent"
+          >
+            {/* biome-ignore lint/performance/noImgElement: dynamic external badge, not optimizable via next/image */}
+            <img
+              src="https://rallly.openstatus.dev/badge/v2"
+              alt={t("statusBadgeAlt", { defaultValue: "Rallly status" })}
+              className="mix-blend-multiply"
+            />
+          </a>
           <div className="w-48">
             <LanguageSelect />
           </div>
