@@ -18,23 +18,29 @@ export function CookieConsent() {
           aria-label={t("cookieConsentLabel", {
             defaultValue: "Cookie consent",
           })}
-          className="fixed bottom-4 left-4 z-50 max-w-sm rounded-xl border bg-white p-4 shadow-lg"
+          className="fixed bottom-4 left-4 z-50 flex max-w-[calc(100vw-2rem)] flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border bg-white p-4 shadow-lg"
         >
-          <p className="text-sm">
+          <p className="min-w-0 flex-1 basis-56 text-sm">
             <Trans
-              i18nKey="cookieConsentMessage"
-              defaults="We use cookies to improve your experience. You can opt out of certain cookies."
+              i18nKey="cookieConsentIntro"
+              defaults="We use cookies to improve your experience."
             />{" "}
-            <Link className="underline" href="/cookie-policy">
-              <Trans i18nKey="cookieConsentLearnMore" defaults="Learn more" />
-            </Link>
+            <Trans
+              i18nKey="cookieConsentPolicy"
+              defaults="Learn more in our <policyLink>cookie policy</policyLink>."
+              components={{
+                policyLink: (
+                  <Link className="underline" href="/cookie-policy" />
+                ),
+              }}
+            />
           </p>
-          <div className="mt-4 flex gap-2">
+          <div className="flex gap-2">
+            <Button onClick={reject}>
+              <Trans i18nKey="cookieConsentOptOut" defaults="Opt out" />
+            </Button>
             <Button variant="primary" onClick={accept}>
               <Trans i18nKey="cookieConsentAccept" defaults="Accept" />
-            </Button>
-            <Button onClick={reject}>
-              <Trans i18nKey="cookieConsentReject" defaults="Reject" />
             </Button>
           </div>
         </section>
