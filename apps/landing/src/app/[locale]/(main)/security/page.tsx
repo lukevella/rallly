@@ -400,7 +400,7 @@ export default async function Security(props: {
               upcoming organization features.
             </FaqItem>
             <FaqItem question="How do you handle backups and recovery?">
-              The production database is backed up automatically every day with
+              The production database is backed up continuously with
               point-in-time recovery, managed by our database provider. The
               application runs on globally distributed serverless infrastructure
               and can be redeployed rapidly.
