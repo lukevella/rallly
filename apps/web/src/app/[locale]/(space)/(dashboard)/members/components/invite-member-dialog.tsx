@@ -27,13 +27,13 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { InfoIcon } from "lucide-react";
-import { useMemo } from "react";
+import { CheckIcon, XIcon } from "lucide-react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { inviteMemberAction } from "@/features/space/member/actions";
+import type { MemberRole } from "@/features/space/schema";
 import { memberRoleSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -41,7 +41,7 @@ import { useSafeAction } from "@/lib/safe-action/client";
 function useInviteMemberFormSchema() {
   const { t } = useTranslation();
 
-  return useMemo(() => {
+  return React.useMemo(() => {
     return z.object({
       email: z.email({
         message: t("invalidEmailAddress", {
@@ -53,9 +53,75 @@ function useInviteMemberFormSchema() {
   }, [t]);
 }
 
+function RolePermission({
+  allowed,
+  children,
+}: {
+  allowed: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="flex items-center gap-2">
+      {allowed ? (
+        <CheckIcon className="size-4 shrink-0 text-green-600" />
+      ) : (
+        <XIcon className="size-4 shrink-0 text-muted-foreground" />
+      )}
+      <span className="sr-only">
+        {allowed ? (
+          <Trans
+            i18nKey="inviteMemberDialogPermissionAllowed"
+            defaults="Allowed:"
+          />
+        ) : (
+          <Trans
+            i18nKey="inviteMemberDialogPermissionNotAllowed"
+            defaults="Not allowed:"
+          />
+        )}
+      </span>
+      <span className={allowed ? undefined : "text-muted-foreground"}>
+        {children}
+      </span>
+    </li>
+  );
+}
+
+function RolePermissions({ role, id }: { role: MemberRole; id?: string }) {
+  const isAdmin = role === "admin";
+  return (
+    <ul
+      id={id}
+      aria-live="polite"
+      aria-atomic="true"
+      className="mt-2 grid gap-2 rounded-lg border border-card-border bg-card p-3 text-sm"
+    >
+      <RolePermission allowed={true}>
+        <Trans
+          i18nKey="inviteMemberDialogPermissionPollsEvents"
+          defaults="Create and manage polls and events"
+        />
+      </RolePermission>
+      <RolePermission allowed={isAdmin}>
+        <Trans
+          i18nKey="inviteMemberDialogPermissionMembers"
+          defaults="Invite and remove members"
+        />
+      </RolePermission>
+      <RolePermission allowed={isAdmin}>
+        <Trans
+          i18nKey="inviteMemberDialogPermissionSettings"
+          defaults="Manage space settings"
+        />
+      </RolePermission>
+    </ul>
+  );
+}
+
 export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   const { t } = useTranslation();
   const formSchema = useInviteMemberFormSchema();
+  const rolePermissionsId = React.useId();
 
   const form = useForm({
     defaultValues: {
@@ -159,42 +225,9 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center gap-x-1">
-                  <FormLabel>
-                    <Trans i18nKey="role" defaults="Role" />
-                  </FormLabel>
-                  <Tooltip>
-                    <TooltipTrigger type="button">
-                      <InfoIcon className="size-4 shrink-0 text-muted-foreground" />
-                    </TooltipTrigger>
-                    <TooltipContent align="start" side="right">
-                      <div className="w-60 space-y-3">
-                        <div>
-                          <h4 className="font-medium text-sm">
-                            <Trans i18nKey="member" defaults="Member" />
-                          </h4>
-                          <p className="mt-1 opacity-75">
-                            <Trans
-                              i18nKey="memberRoleDescription"
-                              defaults="Can create and manage all scheduling tools in this space"
-                            />
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm">
-                            <Trans i18nKey="admin" defaults="Admin" />
-                          </h4>
-                          <p className="mt-1 opacity-75">
-                            <Trans
-                              i18nKey="adminRoleDescription"
-                              defaults="Full member access plus space management and member permissions"
-                            />
-                          </p>
-                        </div>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
+                <FormLabel>
+                  <Trans i18nKey="role" defaults="Role" />
+                </FormLabel>
                 <FormControl>
                   <Select
                     items={Object.values(memberRoleSchema.enum).map((role) => ({
@@ -208,12 +241,11 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                     }}
                     value={field.value}
                   >
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder={t("rolePlaceholder", {
-                          defaultValue: "Select role...",
-                        })}
-                      />
+                    <SelectTrigger
+                      className="w-full"
+                      aria-describedby={rolePermissionsId}
+                    >
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.values(memberRoleSchema.enum).map((role) => (
@@ -224,6 +256,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                     </SelectContent>
                   </Select>
                 </FormControl>
+                <RolePermissions role={field.value} id={rolePermissionsId} />
               </FormItem>
             )}
           />

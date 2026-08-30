@@ -107,6 +107,21 @@
   --card-accent: oklch(0.26 0.006 286.033);
 }
 
+/*
+ * Surface-relative card: inside an elevated surface (dialog, popover) a card
+ * steps once more away from that surface — darker in light mode, lighter in
+ * dark mode — so it never blends into the surface it sits on. Works because
+ * the card utilities resolve var(--card) at the element (@theme inline), so
+ * the nearest surface's override wins through normal CSS inheritance.
+ */
+:where([data-slot="dialog-content"], [data-slot="popover-content"]) {
+  --card: var(--color-gray-50);
+}
+
+.dark :where([data-slot="dialog-content"], [data-slot="popover-content"]) {
+  --card: oklch(0.31 0.006 286.033);
+}
+
 @theme inline {
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
