@@ -112,9 +112,9 @@ export default async function Security(props: {
         <SectionHeading>
           <SectionTitle>Secure by design</SectionTitle>
           <SectionDescription>
-            How we run the service, where your data lives, and what we commit
-            to. Where most vendors ask you to take their word for it, we publish
-            the evidence.
+            Rallly is built in the open. The source code is public, uptime is
+            independently measured, and this page lists exactly where your data
+            lives.
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
