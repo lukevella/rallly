@@ -20,7 +20,7 @@ export function CookieConsent() {
           })}
           className="fixed bottom-4 left-4 z-50 flex max-w-[calc(100vw-2rem)] flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border bg-white p-4 shadow-lg"
         >
-          <p className="min-w-0 flex-1 basis-56 text-sm">
+          <p className="min-w-0 max-w-prose flex-1 basis-56 text-pretty text-sm">
             <Trans
               i18nKey="cookieConsentIntro"
               defaults="We use cookies to improve your experience."
