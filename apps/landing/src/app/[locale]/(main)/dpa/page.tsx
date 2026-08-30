@@ -152,7 +152,7 @@ export default async function DataProcessingAgreement() {
             appropriate technical and organizational measures, insofar as this
             is possible, in fulfilling your obligation to respond to data
             subject requests. The Service includes self-service tools for
-            access, export, correction, and deletion; where those tools are
+            access, correction, and deletion; where those tools are
             insufficient, we will assist on request;
           </li>
           <li>
@@ -235,7 +235,8 @@ export default async function DataProcessingAgreement() {
           relevant Sub-processor is certified under the EU-US Data Privacy
           Framework (including the UK Extension), or the transfer is governed by
           the applicable Standard Contractual Clauses or the UK International
-          Data Transfer Addendum.
+          Data Transfer Addendum. The mechanism relied on for each Sub-processor
+          is listed in Annex 2.
         </p>
 
         <hr />
@@ -264,20 +265,21 @@ export default async function DataProcessingAgreement() {
 
         <h2>9. Deletion and return</h2>
         <p>
-          9.1 You can export Customer Data in standard formats at any time
-          through the Service.
+          9.1 On request, we will provide you with a copy of Customer Data in a
+          structured, commonly used, machine-readable format.
         </p>
         <p>
-          9.2 Deleting a poll or your account through the Service deletes the
-          associated Customer Data, and account deletion takes effect
-          immediately. On written request at the end of the provision of the
-          Service, we will delete all remaining Customer Data and confirm
-          deletion in writing, unless applicable law requires us to retain it.
+          9.2 Deleting a poll through the Service deletes the associated
+          Customer Data. Account deletion starts a 7 day recovery window, after
+          which the data is permanently erased. On written request at the end of
+          the provision of the Service, we will delete all remaining Customer
+          Data and confirm deletion in writing, unless applicable law requires
+          us to retain it.
         </p>
         <p>
-          9.3 Residual copies of deleted Customer Data in encrypted backups are
-          removed in the ordinary course of backup rotation and in any event
-          within 35 days of deletion.
+          9.3 Residual copies of deleted Customer Data in encrypted backups
+          expire on our database provider&apos;s retention schedule and in any
+          event within 35 days of deletion.
         </p>
 
         <hr />
@@ -369,108 +371,124 @@ export default async function DataProcessingAgreement() {
           We use the following Sub-processors to provide the Service. Changes to
           this list are notified as set out in Section 6.
         </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Provider</th>
-              <th>Purpose</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a
-                  href="https://vercel.com/security"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Vercel
-                </a>
-              </td>
-              <td>Application hosting</td>
-              <td>United States</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://neon.com/security"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Neon
-                </a>
-              </td>
-              <td>Managed PostgreSQL database</td>
-              <td>United States</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://upstash.com/docs/common/help/compliance"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Upstash
-                </a>
-              </td>
-              <td>Session data, rate limiting</td>
-              <td>United States</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://aws.amazon.com/compliance/"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Amazon Web Services
-                </a>
-              </td>
-              <td>Transactional email, object storage</td>
-              <td>United States</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://stripe.com/docs/security"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Stripe
-                </a>
-              </td>
-              <td>Payment processing (billing contact data only)</td>
-              <td>United States</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://posthog.com/privacy"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  PostHog (EU)
-                </a>
-              </td>
-              <td>Product analytics</td>
-              <td>European Union</td>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="https://sentry.io/security/"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Sentry
-                </a>
-              </td>
-              <td>Error monitoring</td>
-              <td>United States</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="whitespace-nowrap lg:whitespace-normal">
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th>Purpose</th>
+                <th>Location</th>
+                <th>Transfer mechanism</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a
+                    href="https://vercel.com/security"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Vercel
+                  </a>
+                </td>
+                <td>Application hosting</td>
+                <td>United States</td>
+                <td>EU-US DPF + UK Extension (SCCs fallback)</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://neon.com/security"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Neon
+                  </a>
+                </td>
+                <td>Managed PostgreSQL database</td>
+                <td>United States</td>
+                <td>
+                  EU-US DPF + UK Extension, certified under Databricks, Inc.
+                  (SCCs fallback)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://upstash.com/docs/common/help/compliance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Upstash
+                  </a>
+                </td>
+                <td>Session data, rate limiting</td>
+                <td>United States</td>
+                <td>EU-US DPF + UK Extension (SCCs + UK Addendum fallback)</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://aws.amazon.com/compliance/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Amazon Web Services
+                  </a>
+                </td>
+                <td>Transactional email, object storage</td>
+                <td>United States</td>
+                <td>
+                  EU-US DPF + UK Extension, certified under Amazon.com, Inc.
+                  (SCCs fallback)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://stripe.com/docs/security"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Stripe
+                  </a>
+                </td>
+                <td>Payment processing (billing contact data only)</td>
+                <td>United States</td>
+                <td>EU-US DPF + UK Extension (SCCs + UK Addendum fallback)</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://posthog.com/privacy"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    PostHog (EU)
+                  </a>
+                </td>
+                <td>Product analytics</td>
+                <td>European Union</td>
+                <td>EU data residency (no US transfer)</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://sentry.io/security/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Sentry
+                  </a>
+                </td>
+                <td>Error monitoring</td>
+                <td>United States</td>
+                <td>EU-US DPF + UK Extension (SCCs + UK Addendum fallback)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <p>
           Stripe, PostHog, and Sentry primarily support processing for which we
           act as a controller (billing, product analytics, and error monitoring)
