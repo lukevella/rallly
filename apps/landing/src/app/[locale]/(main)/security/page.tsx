@@ -113,8 +113,7 @@ export default async function Security(props: {
           <SectionTitle>Secure by design</SectionTitle>
           <SectionDescription>
             How we run the service, where your data lives, and what we commit
-            to. Where most vendors ask you to take their word for it, we publish
-            the evidence.
+            to, backed by evidence you can verify yourself.
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
