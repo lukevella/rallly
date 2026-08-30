@@ -337,10 +337,10 @@ export default async function DataProcessingAgreement() {
           </li>
           <li>
             <strong>Availability and resilience:</strong> the production
-            database is backed up automatically every day with point-in-time
-            recovery. The application runs on globally distributed serverless
-            infrastructure and can be redeployed rapidly. Uptime is published in
-            real time on an independent status page.
+            database is backed up continuously with point-in-time recovery. The
+            application runs on globally distributed serverless infrastructure
+            and can be redeployed rapidly. Uptime is published in real time on
+            an independent status page.
           </li>
           <li>
             <strong>Monitoring and incident response:</strong> monitoring and
@@ -394,11 +394,11 @@ export default async function DataProcessingAgreement() {
             <tr>
               <td>
                 <a
-                  href="https://www.digitalocean.com/trust"
+                  href="https://neon.com/security"
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  DigitalOcean
+                  Neon
                 </a>
               </td>
               <td>Managed PostgreSQL database</td>
