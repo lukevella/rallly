@@ -9,6 +9,7 @@ import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import type React from "react";
 import type { Params } from "@/app/[locale]/types";
+import { CookieConsentBanner } from "@/components/cookie-consent-banner";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
@@ -83,6 +84,7 @@ export default async function Root({
                     <TimeZoneSync>
                       <TooltipProvider>{children}</TooltipProvider>
                     </TimeZoneSync>
+                    <CookieConsentBanner />
                   </LazyMotion>
                 </TRPCProvider>
               </I18nProvider>
