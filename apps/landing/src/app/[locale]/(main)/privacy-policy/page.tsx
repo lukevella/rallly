@@ -10,7 +10,7 @@ export default async function PrivacyPolicy() {
       <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
         Privacy policy
       </h1>
-      <p className="mt-4 text-gray-500 text-sm">Last updated: 27 August 2026</p>
+      <p className="mt-4 text-gray-500 text-sm">Last updated: 30 August 2026</p>
       <div className="longform mt-8 max-w-2xl">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
@@ -23,9 +23,9 @@ export default async function PrivacyPolicy() {
 
         <p>
           We store personal data (names and email addresses) in a database
-          hosted by DigitalOcean on servers located in the United States. We
-          also use Upstash to store session data and rate limiting data in the
-          United States. The reason for storing data in the US is to improve
+          hosted by Neon on servers located in the United States. We also use
+          Upstash to store session data and rate limiting data in the United
+          States. The reason for storing data in the US is to improve
           performance for users by having the data stored closer to where our
           compute services are running. By using our services, you acknowledge
           that your personal data may be transferred to and stored in the United

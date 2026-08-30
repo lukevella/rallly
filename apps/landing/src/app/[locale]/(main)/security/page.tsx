@@ -224,18 +224,18 @@ export default async function Security(props: {
                   <td>
                     <a
                       className="text-gray-800 hover:underline"
-                      href="https://www.digitalocean.com/trust"
+                      href="https://neon.com/security"
                       target="_blank"
                       rel="noreferrer noopener"
                     >
-                      DigitalOcean
+                      Neon
                     </a>
                   </td>
                   <td>Managed PostgreSQL database</td>
                   <td>United States</td>
                   <TransferMechanismCell
-                    href="https://www.digitalocean.com/legal/data-processing-agreement"
-                    fallback="SCCs + UK Addendum fallback"
+                    href="https://www.databricks.com/legal/dpf"
+                    fallback="Certified under Databricks, Inc. · SCCs fallback"
                   >
                     EU-US DPF + UK Extension
                   </TransferMechanismCell>
