@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import languages from "@rallly/languages";
+import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { cacheLife } from "next/cache";
@@ -37,6 +38,10 @@ export default async function Root(props: {
           <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
             {children}
             <CookieConsent />
+            {/* Cookieless (daily-rotating server-side hash, nothing stored
+                on the device), so it runs outside the consent gate — same
+                posture as PostHog's pre-consent cookieless capture. */}
+            <Analytics />
           </I18nProvider>
         </LazyMotion>
       </body>
