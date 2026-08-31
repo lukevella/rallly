@@ -1,0 +1,48 @@
+name: Delete stale preview branches
+# -----------------------------------------------------------------
+# Workflow Purpose:
+#   Preview deployments get a Neon branch containing a copy of
+#   production data. This job deletes any preview/* branch older
+#   than the TTL so those copies never outlive the retention
+#   commitments in our DPA. The Vercel integration recreates a
+#   branch (with fresh data) on the next push to that git branch.
+# Trigger: Nightly at 03:30 UTC, or manually.
+# Secrets: NEON_API_KEY (project-scoped), NEON_PROJECT_ID
+# -----------------------------------------------------------------
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+env:
+  TTL_DAYS: 7
+
+jobs:
+  delete-stale-preview-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete preview branches older than TTL
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          cutoff=$(date -u -d "${TTL_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
+          branches=$(curl -sf "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/branches" \
+            -H "Authorization: Bearer ${NEON_API_KEY}" -H "Accept: application/json")
+          stale=$(echo "$branches" | jq -r --arg cutoff "$cutoff" '
+            .branches[]
+            | select(.name | startswith("preview/"))
+            | select(.default == false and .protected == false)
+            | select(.created_at < $cutoff)
+            | .id + " " + .name')
+          if [ -z "$stale" ]; then
+            echo "No preview branches older than ${TTL_DAYS} days."
+            exit 0
+          fi
+          echo "$stale" | while read -r id name; do
+            echo "Deleting $name ($id, older than ${TTL_DAYS} days)"
+            curl -sf -X DELETE \
+              "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/branches/${id}" \
+              -H "Authorization: Bearer ${NEON_API_KEY}" -H "Accept: application/json" > /dev/null
+          done
