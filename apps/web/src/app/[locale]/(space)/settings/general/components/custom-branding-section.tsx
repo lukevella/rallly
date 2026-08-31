@@ -124,15 +124,19 @@ export function CustomBrandingSection({
         <FieldGroup variant="divided">
           <SpaceSettingsForm space={space} disabled={disabled} />
           {!spaceBrandingAllowed ? (
-            <Alert variant="note">
-              <LockIcon />
-              <AlertDescription>
-                <Trans
-                  i18nKey="customBrandingManagedByInstance"
-                  defaults="Branding is managed by your instance administrator."
-                />
-              </AlertDescription>
-            </Alert>
+            // The divided field group pads its children directly, which would
+            // land inside the alert's border — the wrapper takes it instead
+            <div>
+              <Alert variant="note">
+                <LockIcon />
+                <AlertDescription>
+                  <Trans
+                    i18nKey="customBrandingManagedByInstance"
+                    defaults="Branding is managed by your instance administrator."
+                  />
+                </AlertDescription>
+              </Alert>
+            </div>
           ) : (
             <>
               <Field orientation="responsive">
