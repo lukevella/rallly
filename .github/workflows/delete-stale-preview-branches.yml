@@ -20,6 +20,7 @@ env:
 jobs:
   delete-stale-preview-branches:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Delete preview branches older than TTL
         env:
@@ -27,22 +28,39 @@ jobs:
           NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
         run: |
           set -euo pipefail
+          base="https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}"
           cutoff=$(date -u -d "${TTL_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
-          branches=$(curl -sf "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/branches" \
-            -H "Authorization: Bearer ${NEON_API_KEY}" -H "Accept: application/json")
-          stale=$(echo "$branches" | jq -r --arg cutoff "$cutoff" '
-            .branches[]
-            | select(.name | startswith("preview/"))
-            | select(.default == false and .protected == false)
-            | select(.created_at < $cutoff)
-            | .id + " " + .name')
-          if [ -z "$stale" ]; then
+
+          stale=""
+          cursor=""
+          while :; do
+            page=$(curl -sfG "${base}/branches" \
+              --data-urlencode "limit=200" \
+              ${cursor:+--data-urlencode "cursor=${cursor}"} \
+              -H "Authorization: Bearer ${NEON_API_KEY}" -H "Accept: application/json")
+            stale+=$(echo "$page" | jq -r --arg cutoff "$cutoff" '
+              .branches[]
+              | select(.name | startswith("preview/"))
+              | select(.default == false and .protected == false)
+              | select(.created_at < $cutoff)
+              | .id + " " + .name')$'\n'
+            cursor=$(echo "$page" | jq -r '.pagination.next // empty')
+            [ -n "$cursor" ] || break
+          done
+
+          if ! grep -q '[^[:space:]]' <<< "$stale"; then
             echo "No preview branches older than ${TTL_DAYS} days."
             exit 0
           fi
-          echo "$stale" | while read -r id name; do
+
+          failed=0
+          while read -r id name; do
+            [ -n "$id" ] || continue
             echo "Deleting $name ($id, older than ${TTL_DAYS} days)"
-            curl -sf -X DELETE \
-              "https://console.neon.tech/api/v2/projects/${NEON_PROJECT_ID}/branches/${id}" \
-              -H "Authorization: Bearer ${NEON_API_KEY}" -H "Accept: application/json" > /dev/null
-          done
+            if ! curl -sf -X DELETE "${base}/branches/${id}" \
+              -H "Authorization: Bearer ${NEON_API_KEY}" -H "Accept: application/json" > /dev/null; then
+              echo "::error::Failed to delete $name ($id); continuing"
+              failed=1
+            fi
+          done <<< "$stale"
+          exit "$failed"
