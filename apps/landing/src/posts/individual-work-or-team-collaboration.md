@@ -9,7 +9,7 @@ Spaces let a team share one Rallly subscription. Until now, they worked one way:
 
 So spaces now have a team collaboration setting.
 
-![The Collaboration section in space settings](https://support.rallly.co/images/spaces/collaboration-settings.png)
+![The Collaboration section in space settings](/static/images/team-collaboration/collaboration-settings.png)
 
 With team collaboration on, your space is a shared workspace. Everyone in it can see and manage everything created there, which is ideal when a team runs its scheduling together and needs to cover for each other.
 
