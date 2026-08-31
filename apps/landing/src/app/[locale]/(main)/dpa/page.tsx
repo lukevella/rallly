@@ -281,6 +281,11 @@ export default async function DataProcessingAgreement() {
           expire on our database provider&apos;s retention schedule and in any
           event within 35 days of deletion.
         </p>
+        <p>
+          9.4 Short-lived copies of Customer Data used in access-restricted
+          preview environments are deleted automatically no later than 7 days
+          after they are created.
+        </p>
 
         <hr />
 
