@@ -7,7 +7,7 @@ name: Delete stale preview branches
 #   commitments in our DPA. The Vercel integration recreates a
 #   branch (with fresh data) on the next push to that git branch.
 # Trigger: Nightly at 03:30 UTC, or manually.
-# Secrets: NEON_API_KEY (project-scoped), NEON_PROJECT_ID
+# Config: NEON_API_KEY secret (project-scoped), NEON_PROJECT_ID variable
 # -----------------------------------------------------------------
 on:
   schedule:
@@ -24,7 +24,7 @@ jobs:
       - name: Delete preview branches older than TTL
         env:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
-          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
         run: |
           set -euo pipefail
           cutoff=$(date -u -d "${TTL_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
