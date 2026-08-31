@@ -48,12 +48,12 @@ export default async function Page(props: {
           })}
           announcement={
             <HeroAnnouncement
-              href="/blog/mobile-voting-redesign"
+              href="/blog/individual-work-or-team-collaboration"
               badge={
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="mobileVotingBlogBadge"
+                  i18nKey="teamCollaborationBlogBadge"
                   defaults="New"
                 />
               }
@@ -61,8 +61,8 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="mobileVotingBlog"
-                defaults="A clearer way to vote on your phone"
+                i18nKey="teamCollaborationBlog"
+                defaults="Set up your space for individual work or team collaboration"
               />
             </HeroAnnouncement>
           }
