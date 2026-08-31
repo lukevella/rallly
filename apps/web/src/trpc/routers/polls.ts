@@ -8,6 +8,7 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { isSpaceBrandingAllowed } from "@/features/branding/data";
 import { moderateContent } from "@/features/moderation/mutations";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import {
@@ -832,6 +833,8 @@ export const polls = router({
           }
         : null;
 
+      const spaceBrandingAllowed = await isSpaceBrandingAllowed();
+
       return {
         ...res,
         // Space-level attribution removal is cloud-only; self-hosted
@@ -840,6 +843,10 @@ export const polls = router({
         space: res.space
           ? {
               ...res.space,
+              showBranding: res.space.showBranding && spaceBrandingAllowed,
+              primaryColor: spaceBrandingAllowed
+                ? res.space.primaryColor
+                : null,
               hideAttribution: !isSelfHosted && res.space.hideAttribution,
             }
           : null,

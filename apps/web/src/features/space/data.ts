@@ -9,6 +9,7 @@ import { createLogger } from "@rallly/logger";
 import { cache } from "react";
 
 import { getSpaceSubscription } from "@/features/billing/data";
+import { isSpaceBrandingAllowed } from "@/features/branding/data";
 import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberDTO } from "@/features/space/member/types";
@@ -198,8 +199,8 @@ export const getMember = async (id: string) => {
   return createMemberDTO(member);
 };
 
-export function getSpaceBranding(spaceId: string) {
-  return prisma.space.findUnique({
+export async function getSpaceBranding(spaceId: string) {
+  const space = await prisma.space.findUnique({
     where: { id: spaceId },
     select: {
       name: true,
@@ -208,6 +209,16 @@ export function getSpaceBranding(spaceId: string) {
       primaryColor: true,
     },
   });
+
+  if (!space) {
+    return null;
+  }
+
+  if (!(await isSpaceBrandingAllowed())) {
+    return { ...space, showBranding: false, primaryColor: null };
+  }
+
+  return space;
 }
 
 export const getOwnedSpace = cache(async (userId: string) => {

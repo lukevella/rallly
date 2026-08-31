@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { parseColor } from "@rallly/ui/color-picker";
 import {
   Field,
@@ -11,6 +12,7 @@ import {
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { LockIcon } from "lucide-react";
 import React from "react";
 import { ColorPickerWithSaveButton } from "@/components/color-picker-with-save-button";
 import { IfCloudHosted } from "@/components/environment";
@@ -23,6 +25,7 @@ import {
 } from "@/components/page-layout";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
+import { useBranding } from "@/features/branding/client";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
 import {
   updateSpaceAction,
@@ -44,6 +47,7 @@ export function CustomBrandingSection({
   const { data: space } = useSpace();
   const user = useAuthedUser();
   const isFree = useIsFree();
+  const { spaceBrandingAllowed } = useBranding();
   const { t } = useTranslation();
 
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
@@ -119,66 +123,80 @@ export function CustomBrandingSection({
       <PageSectionContent>
         <FieldGroup variant="divided">
           <SpaceSettingsForm space={space} disabled={disabled} />
-          <Field orientation="responsive">
-            <FieldContent>
-              <FieldTitle id="primary-color-label">
+          {!spaceBrandingAllowed ? (
+            <Alert variant="note">
+              <LockIcon />
+              <AlertDescription>
                 <Trans
-                  i18nKey="primaryColorSettingTitle"
-                  defaults="Primary color"
+                  i18nKey="customBrandingManagedByInstance"
+                  defaults="Branding is managed by your instance administrator."
                 />
-              </FieldTitle>
-              <FieldDescription>
-                <Trans
-                  i18nKey="primaryColorSettingHint"
-                  defaults="Used for buttons and highlights."
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <>
+              <Field orientation="responsive">
+                <FieldContent>
+                  <FieldTitle id="primary-color-label">
+                    <Trans
+                      i18nKey="primaryColorSettingTitle"
+                      defaults="Primary color"
+                    />
+                  </FieldTitle>
+                  <FieldDescription>
+                    <Trans
+                      i18nKey="primaryColorSettingHint"
+                      defaults="Used for buttons and highlights."
+                    />
+                  </FieldDescription>
+                </FieldContent>
+                <ColorPickerWithSaveButton
+                  value={color}
+                  onChange={setColor}
+                  disabled={disabled}
+                  isSaving={updateSpace.isExecuting}
+                  onSave={handleSave}
+                  onReset={handleReset}
+                  showReset={!isDefault}
+                  aria-labelledby="primary-color-label"
                 />
-              </FieldDescription>
-            </FieldContent>
-            <ColorPickerWithSaveButton
-              value={color}
-              onChange={setColor}
-              disabled={disabled}
-              isSaving={updateSpace.isExecuting}
-              onSave={handleSave}
-              onReset={handleReset}
-              showReset={!isDefault}
-              aria-labelledby="primary-color-label"
-            />
-          </Field>
-          <IfCloudHosted>
-            <RemoveAttributionSetting disabled={disabled} />
-          </IfCloudHosted>
-          <Field>
-            <Field orientation="horizontal">
-              <FieldContent>
-                <FieldLabel htmlFor="show-branding">
-                  <Trans
-                    i18nKey="customBrandingSettingTitle"
-                    defaults="Custom branding"
+              </Field>
+              <IfCloudHosted>
+                <RemoveAttributionSetting disabled={disabled} />
+              </IfCloudHosted>
+              <Field>
+                <Field orientation="horizontal">
+                  <FieldContent>
+                    <FieldLabel htmlFor="show-branding">
+                      <Trans
+                        i18nKey="customBrandingSettingTitle"
+                        defaults="Custom branding"
+                      />
+                      {space.tier !== "pro" && <ProBadge />}
+                    </FieldLabel>
+                    <FieldDescription>
+                      <Trans
+                        i18nKey="customBrandingSettingLabel"
+                        defaults="Show your logo and colors to participants."
+                      />
+                    </FieldDescription>
+                  </FieldContent>
+                  <Switch
+                    id="show-branding"
+                    checked={showBranding}
+                    onCheckedChange={handleToggle}
+                    disabled={disabled || updateShowBranding.isExecuting}
                   />
-                  {space.tier !== "pro" && <ProBadge />}
-                </FieldLabel>
-                <FieldDescription>
-                  <Trans
-                    i18nKey="customBrandingSettingLabel"
-                    defaults="Show your logo and colors to participants."
-                  />
-                </FieldDescription>
-              </FieldContent>
-              <Switch
-                id="show-branding"
-                checked={showBranding}
-                onCheckedChange={handleToggle}
-                disabled={disabled || updateShowBranding.isExecuting}
-              />
-            </Field>
-            <BrandingPreview
-              spaceName={space.name}
-              spaceImage={space.image}
-              primaryColor={hexColor}
-              hostName={user.name}
-            />
-          </Field>
+                </Field>
+                <BrandingPreview
+                  spaceName={space.name}
+                  spaceImage={space.image}
+                  primaryColor={hexColor}
+                  hostName={user.name}
+                />
+              </Field>
+            </>
+          )}
         </FieldGroup>
       </PageSectionContent>
     </PageSection>

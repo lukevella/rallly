@@ -2,6 +2,7 @@
 
 import { posthog } from "@rallly/posthog/client";
 import React from "react";
+import { useBranding } from "@/features/branding/client";
 import { getPrimaryColorVars } from "@/features/branding/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import type { SpaceDTO } from "@/features/space/types";
@@ -52,8 +53,10 @@ export function SpaceProvider({
     posthog?.group("space", space.id);
   }, [space.id]);
 
+  const { spaceBrandingAllowed } = useBranding();
+
   const primaryColorVars =
-    space.showBranding && space.primaryColor
+    spaceBrandingAllowed && space.showBranding && space.primaryColor
       ? getPrimaryColorVars(space.primaryColor)
       : null;
 

@@ -204,6 +204,7 @@
   "customBranding": "Custom branding",
   "customBrandingAlertDescription": "Custom branding is available to Enterprise license holders as a paid add-on.",
   "customBrandingDescription": "Show your logo and brand colors to your participants",
+  "customBrandingManagedByInstance": "Branding is managed by your instance administrator.",
   "customBrandingSettingLabel": "Show your logo and colors to participants.",
   "customBrandingSettingTitle": "Custom branding",
   "dangerZone": "Danger zone",
