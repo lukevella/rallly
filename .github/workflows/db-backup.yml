@@ -1,0 +1,60 @@
+name: Database backup
+
+# Nightly logical backup of the cloud database to S3, independent of the
+# database provider. Retention is handled by an S3 lifecycle rule on the
+# bucket (expire after 30 days), not by this workflow.
+#
+# Required repository secrets:
+#   BACKUP_DATABASE_URL   unpooled connection string, read access is enough
+#   BACKUP_AWS_ACCESS_KEY_ID / BACKUP_AWS_SECRET_ACCESS_KEY
+#     IAM user limited to s3:PutObject on the bucket below
+#   BACKUP_S3_BUCKET      bucket name
+#
+# A failed run notifies via GitHub's standard workflow-failure email.
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+# The workflow never uses GITHUB_TOKEN; deny it everything explicitly.
+permissions: {}
+
+jobs:
+  backup:
+    if: github.repository == 'lukevella/rallly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Install PostgreSQL 18 client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -qq postgresql-client-18
+
+      - name: Dump database
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          /usr/lib/postgresql/18/bin/pg_dump -Fc --no-owner --no-acl \
+            -d "$BACKUP_DATABASE_URL" -f backup.bak
+
+      - name: Verify dump is readable and plausibly sized
+        run: |
+          /usr/lib/postgresql/18/bin/pg_restore -l backup.bak > /dev/null
+          size=$(stat -c%s backup.bak)
+          echo "dump size: $((size / 1048576)) MB"
+          # Full dump was ~650MB at migration time; fail if it shrinks
+          # drastically, which would indicate a partial or empty dump.
+          test "$size" -gt 400000000
+
+      - name: Upload to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+          BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+        run: |
+          aws s3 cp backup.bak "s3://$BUCKET/rallly/$(date -u +%F).bak" \
+            --sse AES256 --only-show-errors
