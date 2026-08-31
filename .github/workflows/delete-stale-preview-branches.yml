@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 env:
-  TTL_DAYS: 7
+  TTL_DAYS: 6
 
 jobs:
   delete-stale-preview-branches:
