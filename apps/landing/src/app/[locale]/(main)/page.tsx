@@ -19,6 +19,7 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -239,7 +240,7 @@ export default async function Page(props: {
                   i18nKey="homeFaqEveryoneFreeAnswer"
                   defaults="Yes. Create a <0>free scheduling poll</0>, add the times you want to offer, and participants mark the ones they can make. It works just as well as a meeting poll for a shortlist of times or as an availability poll across a wider range of dates."
                   components={[
-                    <Link
+                    <LinkBase
                       key="scheduling-poll"
                       className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                       href="/free-scheduling-poll"
