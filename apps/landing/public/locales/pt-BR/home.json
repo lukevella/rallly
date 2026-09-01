@@ -30,8 +30,6 @@
   "faqTitle": "Perguntas frequentes",
   "faqWhatIsRallly": "O que é o Rallly?",
   "faqWhatIsRalllyAnswer": "O Rallly é uma ferramenta para agendar reuniões. Você cria uma enquete com alguns horários propostos, compartilha um link e os participantes votam nos horários que funcionam para eles. Quando os votos são contabilizados, você vê rapidamente qual horário é melhor para todos.",
-  "faqWhen2meetDifference": "Como o Rallly é diferente do When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "O Rallly faz tudo o que você usa o When2Meet para, com uma interface mais limpa que funciona muito bem em dispositivos móveis. Você recebe notificações quando os participantes respondem e pode gerenciar todas as suas enquetes em um só lugar.",
   "finalCtaDescription": "Crie sua enquete em menos de um minuto. Sem conta, sem downloads, sem ficar correndo atrás das respostas.",
   "finalCtaTitle": "Pronto para encontrar o melhor horário para se reunir?",
   "freeSchedulingPollDescription": "Rallly te permite criar enquetes de agendamento bonitas e fáceis de usar para que você possa encontrar o melhor horário do seu próximo evento.",
@@ -79,10 +77,5 @@
   "socialProofTitle": "Amado pela simplicidade",
   "statsLast30Days": "<0>{voterCount, plural, one {# pessoa} other {# pessoas}}</0> votaram em <1>{pollCount, plural, one {# enquete} other {# enquetes}}</1> nos últimos 30 dias",
   "subheading": "Crie uma enquete, compartilhe o link e deixe todos votarem nos horários que funcionam. É grátis e ninguém precisa de uma conta.",
-  "when2meetAlternative": "Uma alternativa moderna ao When2Meet",
-  "when2meetAlternativeDescription": "O Rallly oferece tudo o que você usa no When2Meet, sem as partes complicadas. Crie enquetes de agendamento claras que funcionam muito bem no celular, receba notificações quando os participantes responderem e gerencie todas as suas enquetes em um só lugar. Gratuito, sem anúncios e sem necessidade de conta para votar. Vindo do When2Meet ou do WhenIsGood? O Rallly vai parecer familiar desde o início.",
-  "when2meetAlternativeFinalCtaDescription": "Crie uma enquete em segundos e aproveite uma forma mais prática de encontrar um horário que funcione.",
-  "when2meetAlternativeFinalCtaTitle": "Pronto para uma nova abordagem do When2Meet?",
-  "when2meetAlternativeMetaDescription": "O Rallly é uma alternativa gratuita ao When2Meet com interface limpa, ótimo suporte móvel, notificações de respostas e sem anúncios. Não é preciso ter conta para votar.",
-  "when2meetAlternativeMetaTitle": "Melhor alternativa gratuita ao When2Meet | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Crie uma enquete em segundos e aproveite uma forma mais prática de encontrar um horário que funcione."
 }
