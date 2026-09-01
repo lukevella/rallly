@@ -2,6 +2,7 @@
 
 import { cacheLife } from "next/cache";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 
 export default async function PrivacyPolicy() {
   cacheLife("max");
@@ -146,7 +147,7 @@ export default async function PrivacyPolicy() {
           Rallly, for example the details of people invited to that
           organization&apos;s polls and events, we act as a processor and that
           processing is governed by our{" "}
-          <a href="/dpa">Data Processing Agreement</a>.
+          <LinkBase href="/dpa">Data Processing Agreement</LinkBase>.
         </p>
 
         <h2>Your rights</h2>
