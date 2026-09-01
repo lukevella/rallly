@@ -2,6 +2,7 @@
 
 import { cacheLife } from "next/cache";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 
 export default async function PrivacyPolicy() {
   cacheLife("max");
@@ -10,7 +11,9 @@ export default async function PrivacyPolicy() {
       <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
         Privacy policy
       </h1>
-      <p className="mt-4 text-gray-500 text-sm">Last updated: 30 August 2026</p>
+      <p className="mt-4 text-gray-500 text-sm">
+        Last updated: 1 September 2026
+      </p>
       <div className="longform mt-8 max-w-2xl">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
@@ -135,6 +138,16 @@ export default async function PrivacyPolicy() {
           For example, we use Featurebase to make it easy for users to submit
           feedback. Your name and email may be shared with Featurbase to provide
           a seamless transition between the two services.
+        </p>
+
+        <h2>Processing on behalf of organizations</h2>
+
+        <p>
+          Where we process personal data on behalf of an organization using
+          Rallly, for example the details of people invited to that
+          organization&apos;s polls and events, we act as a processor and that
+          processing is governed by our{" "}
+          <LinkBase href="/dpa">Data Processing Agreement</LinkBase>.
         </p>
 
         <h2>Your rights</h2>
