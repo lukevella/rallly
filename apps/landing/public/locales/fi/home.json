@@ -72,8 +72,6 @@
   "faqTitle": "Usein kysytyt kysymykset",
   "faqWhatIsRallly": "Mikä on Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly on kokousten aikataulutustyökalu. Luot kyselyn muutamalla ehdotetulla ajalla, jaat linkin, ja osallistujat äänestävät heille sopivista ajoista. Kun äänet on laskettu, näet yhdellä silmäyksellä, mikä aika sopii parhaiten kaikille.",
-  "faqWhen2meetDifference": "Miten Rallly eroaa When2Meetistä?",
-  "faqWhen2meetDifferenceAnswer": "Rallly tekee kaiken, mihin käyttäisit When2Meetiä, ja tarjoaa selkeämmän käyttöliittymän, joka toimii erinomaisesti mobiilissa. Saat ilmoituksia, kun osallistujat vastaavat, ja voit hallita kaikkia kyselyjäsi samasta paikasta.",
   "finalCtaDescription": "Luo kysely alle minuutissa. Ei tiliä, ei latauksia, eikä tarvitse jahdata vastaajia.",
   "finalCtaTitle": "Valmiina löytämään paras tapaamisajankohta?",
   "freeSchedulingPollDescription": "Ralllyn avulla luot kauniita ja helppokäyttöisiä aikataulukyselyitä, joilla löydät parhaan ajankohdan seuraavaa tapahtumaasi varten.",
@@ -231,10 +229,5 @@
   "thesisDefenseMetaDescription": "Rallly on ilmainen aikataulutyökalu väitöstilaisuuksia ja muita opinnäytetöiden tarkastustilaisuuksia varten. Löydä yhdellä linkillä kaikille tarkastajille sopiva aika aikavyöhykkeestä riippumatta. Käyttäjätiliä ei tarvita.",
   "thesisDefenseMetaTitle": "Sovi väitöstilaisuuden ajankohta | Ilmainen kysely tarkastajille sopivista ajoista",
   "thesisDefenseTitle": "Väitöstilaisuuden aikatauluttaminen",
-  "when2meetAlternative": "Moderni vaihtoehto When2Meetille",
-  "when2meetAlternativeDescription": "Rallly hoitaa kaiken mitä When2Meetikin, mutta ilman kömpelyyksiä. Luo siistejä ja hienosti mobiililaitteilla toimivia aikataulukyselyjä, saa ilmoitukset osallistujien vastattua ja hallitse kaikkia kyselyitäsi yhdessä paikassa. Ilmainen, ei mainoksia eikä äänestämiseen tarvitse tiliä. Vaihdatko When2Meetistä tai WhenIsGoodista? Rallly tuntuu heti tutulta.",
-  "when2meetAlternativeFinalCtaDescription": "Luo kysely sekunneissa ja nauti selkeämmästä tavasta löytää sopiva aika.",
-  "when2meetAlternativeFinalCtaTitle": "Valmiina uuteen vaihtoehtoon When2Meetille?",
-  "when2meetAlternativeMetaDescription": "Rallly on ilmainen vaihtoehto When2Meetille. Siinä on selkeä käyttöliittymä, erinomainen mobiilituki, ilmoitukset vastauksista eikä lainkaan mainoksia. Äänestämiseen ei tarvitse tiliä.",
-  "when2meetAlternativeMetaTitle": "Paras ilmainen vaihtoehto When2Meetille | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Luo kysely sekunneissa ja nauti selkeämmästä tavasta löytää sopiva aika."
 }
