@@ -40,8 +40,6 @@
   "faqTitle": "Häufig gestellte Fragen",
   "faqWhatIsRallly": "Was ist Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly ist ein Tool zur Terminplanung. Du erstellst eine Umfrage mit einigen Terminvorschlägen, teilst einen Link und Teilnehmer stimmen für die Zeiten, die ihnen passen. Wenn die Stimmen eingegangen sind, siehst du auf einen Blick, welche Zeit für alle am besten passt.",
-  "faqWhen2meetDifference": "Worin unterscheidet sich Rallly von When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "Rallly übernimmt alles, wofür du When2Meet nutzt, und bietet eine aufgeräumtere Oberfläche, die auf Mobilgeräten gut funktioniert. Du wirst benachrichtigt, wenn Teilnehmer antworten, und kannst alle deine Umfragen an einem Ort verwalten.",
   "finalCtaDescription": "Erstelle deine Umfrage in weniger als einer Minute. Kein Konto, keine Downloads, kein Nachhaken bei Teilnehmern.",
   "finalCtaTitle": "Bereit, die beste Zeit für ein Treffen zu finden?",
   "freeSchedulingPollDescription": "Rallly ermöglicht es dir, schöne und einfach zu verwendende Terminumfragen zu erstellen, damit du die beste Zeit für dein nächstes Event finden kannst.",
@@ -128,10 +126,5 @@
   "socialProofTitle": "Beliebt für seine Einfachheit",
   "statsLast30Days": "<0>{voterCount, plural, one {# Person} other {# Personen}}</0> haben in den letzten 30 Tagen bei <1>{pollCount, plural, one {# Umfrage} other {# Umfragen}}</1> abgestimmt",
   "subheading": "Erstelle eine Umfrage, teile den Link und lass alle für passende Zeiten abstimmen. Es ist kostenlos und niemand braucht ein Konto.",
-  "when2meetAlternative": "Eine moderne Alternative zu When2Meet",
-  "when2meetAlternativeDescription": "Rallly kann alles, wofür du When2Meet verwendest, nur ohne die umständlichen Teile. Erstelle übersichtliche Terminumfragen, die auch mobil gut funktionieren, werde benachrichtigt, wenn Teilnehmer antworten, und verwalte alle deine Umfragen an einem Ort. Kostenlos, werbefrei und ohne Konto zum Abstimmen. Du kommst von When2Meet oder WhenIsGood? Rallly wird dir sofort vertraut sein.",
-  "when2meetAlternativeFinalCtaDescription": "Erstelle in Sekundenschnelle eine Umfrage und finde auf übersichtlichere Weise eine passende Zeit.",
-  "when2meetAlternativeFinalCtaTitle": "Bereit für einen frischen Blick auf When2Meet?",
-  "when2meetAlternativeMetaDescription": "Rallly ist eine kostenlose When2Meet Alternative mit übersichtlicher Oberfläche, hervorragender mobiler Unterstützung, Benachrichtigungen bei Antworten und ohne Werbung. Zum Abstimmen ist kein Konto nötig.",
-  "when2meetAlternativeMetaTitle": "Beste kostenlose When2Meet Alternative | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Erstelle in Sekundenschnelle eine Umfrage und finde auf übersichtlichere Weise eine passende Zeit."
 }
