@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { setRefCookie } from "@/lib/acquisition";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 import {
   hashBypassToken,
@@ -65,6 +66,8 @@ export const proxy = async (req: NextRequest) => {
   const res = NextResponse.rewrite(newUrl);
 
   setLocaleCookie(req, res, locale);
+
+  setRefCookie(req, res);
 
   res.headers.set("x-locale", locale);
 

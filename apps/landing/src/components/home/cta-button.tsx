@@ -4,6 +4,7 @@ import { buttonVariants, cn } from "@rallly/ui";
 import Link from "next/link";
 import type React from "react";
 import { linkToApp } from "@/lib/linkToApp";
+import { useRefSlug } from "@/lib/use-ref-slug";
 
 export function CtaButton({
   captureEvent,
@@ -16,9 +17,10 @@ export function CtaButton({
   className?: string;
   children: React.ReactNode;
 }) {
+  const ref = useRefSlug();
   return (
     <Link
-      href={linkToApp("/new")}
+      href={linkToApp("/new", { ref })}
       className={buttonVariants({
         size,
         variant: "primary",

@@ -7,12 +7,14 @@ import * as React from "react";
 import { Trans } from "@/i18n/client/trans";
 import { useTranslation } from "@/i18n/client/use-translation";
 import { linkToApp } from "@/lib/linkToApp";
+import { useRefSlug } from "@/lib/use-ref-slug";
 
 // The action bar of the phone demo, plus the confirmation it opens. The
 // surrounding poll layout stays on the server. Must be a direct child of the
 // relative DemoScreen so the confirmation overlay covers the whole screen.
 export const VoteActions = () => {
   const { t } = useTranslation("home");
+  const ref = useRefSlug();
   const [submitted, setSubmitted] = React.useState(false);
 
   return (
@@ -108,7 +110,7 @@ export const VoteActions = () => {
               className="mt-4"
             >
               <Link
-                href={linkToApp("/new")}
+                href={linkToApp("/new", { ref })}
                 onClick={() => {
                   posthog?.capture("landing:hero_demo_modal_cta_click");
                 }}
