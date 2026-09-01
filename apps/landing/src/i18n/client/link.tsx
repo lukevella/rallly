@@ -8,10 +8,12 @@ export const LinkBase = ({
   href,
   children,
   className,
+  prefetch,
 }: {
   href: string;
   children?: React.ReactNode;
   className?: string;
+  prefetch?: boolean;
 }) => {
   const { i18n } = useTranslation();
   const locale =
@@ -19,7 +21,7 @@ export const LinkBase = ({
   const newHref = href.startsWith("/") ? `${locale}${href}` : href;
 
   return (
-    <Link className={className} href={newHref}>
+    <Link className={className} href={newHref} prefetch={prefetch}>
       {children}
     </Link>
   );
