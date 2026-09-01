@@ -2,6 +2,7 @@
 import { Card, CardContent } from "@rallly/ui/card";
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
+import { useBranding } from "@/features/branding/client";
 import { usePoll } from "@/features/poll/client";
 import {
   EventMetaDescription,
@@ -45,6 +46,7 @@ function IconDescription({
 
 export function EventCard() {
   const poll = usePoll();
+  const branding = useBranding();
   return (
     <Card>
       <RandomGradientBar />
@@ -58,6 +60,19 @@ export function EventCard() {
             />
             <p className="mt-2 font-medium text-muted-foreground text-sm">
               {poll.space.name}
+            </p>
+          </div>
+        ) : !branding.spaceBrandingAllowed ? (
+          // Instance branding is enforced: the space chip is suppressed, so
+          // the slot carries the instance's logo icon and name instead
+          <div className="mb-2">
+            <SpaceIcon
+              name={branding.appName}
+              src={branding.logoIcon}
+              size="xl"
+            />
+            <p className="mt-2 font-medium text-muted-foreground text-sm">
+              {branding.appName}
             </p>
           </div>
         ) : null}
