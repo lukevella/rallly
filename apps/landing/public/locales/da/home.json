@@ -30,8 +30,6 @@
   "faqTitle": "Ofte Stillede Spørgsmål",
   "faqWhatIsRallly": "Hvad er Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly er et værktøj til at planlægge møder. Du opretter en afstemning med et par foreslåede tidspunkter, deler et link, og deltagere stemmer på de tidspunkter, der passer dem. Når stemmerne er talt, kan du med et blik se, hvilket tidspunkt der passer bedst for alle.",
-  "faqWhen2meetDifference": "Hvordan adskiller Rallly sig fra When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "Rallly kan det hele, som du bruger When2Meet til, men med et renere interface, der fungerer godt på mobil. Du får besked, når deltagere svarer, og du kan administrere alle dine afstemninger på ét sted.",
   "finalCtaDescription": "Opret din afstemning på under et minut. Ingen konto, ingen downloads, ingen jagt på svar.",
   "finalCtaTitle": "Klar til at finde det bedste tidspunkt at mødes?",
   "freeSchedulingPollDescription": "Rallly lader dig oprette pæne og lette planlægningsafstemninger, så du kan finde det bedste tidspunkt for din næste begivenhed.",
@@ -79,10 +77,5 @@
   "socialProofTitle": "Elsket for sin enkelhed",
   "statsLast30Days": "<0>{voterCount, plural, one {# person} other {# personer}}</0> har stemt i <1>{pollCount, plural, one {# afstemning} other {# afstemninger}}</1> i løbet af de sidste 30 dage",
   "subheading": "Opret en afstemning, del linket, og lad alle stemme på tider, der passer. Det er gratis, og ingen behøver en konto.",
-  "when2meetAlternative": "Et moderne alternativ til When2Meet",
-  "when2meetAlternativeDescription": "Rallly kan alt det, du bruger When2Meet til, uden de besværlige dele. Opret overskuelige mødeafstemninger, der fungerer godt på mobilen, få besked når deltagerne svarer, og administrer alle dine afstemninger ét sted. Gratis, uden reklamer og uden konto for at stemme. Kommer du fra When2Meet eller WhenIsGood? Så vil Rallly straks føles velkendt.",
-  "when2meetAlternativeFinalCtaDescription": "Opret en afstemning på få sekunder og få en mere overskuelig måde at finde et tidspunkt, der passer.",
-  "when2meetAlternativeFinalCtaTitle": "Klar til en frisk tilgang til When2Meet?",
-  "when2meetAlternativeMetaDescription": "Rallly er et gratis alternativ til When2Meet med en overskuelig grænseflade, god mobilunderstøttelse, notifikationer ved svar og ingen reklamer. Ingen konto nødvendig for at stemme.",
-  "when2meetAlternativeMetaTitle": "Bedste gratis alternativ til When2Meet | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Opret en afstemning på få sekunder og få en mere overskuelig måde at finde et tidspunkt, der passer."
 }
