@@ -69,7 +69,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="freeSchedulingPollUseCasesTitle"
-              defaults="Meeting poll, availability poll, or calendar poll?"
+              defaults="Use it as a meeting poll, availability poll, or calendar poll"
             />
           </SectionTitle>
           <SectionDescription>
@@ -77,7 +77,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="freeSchedulingPollUseCasesDescription"
-              defaults="Different names, same job. Rallly gives you one simple poll that finds a time that works for everyone."
+              defaults="The same simple poll adapts to how you schedule. Offer a shortlist of times, collect availability across a wider range, or put whole dates to a vote."
             />
           </SectionDescription>
         </SectionHeading>
@@ -176,7 +176,7 @@ export default async function Page(props: {
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollFaqWhatIsAnswer"
-                  defaults="A scheduling poll is a quick way to find the best time for a group to meet. You propose a few times, participants vote on the ones that work for them, and the most popular option wins. People also call it a meeting poll, an availability poll, or a calendar poll. It is the same idea either way."
+                  defaults="A scheduling poll is a quick way to find the best time for a group to meet. You propose a few times, participants vote on the ones that work for them, and the most popular option wins. People also call it a meeting poll, an availability poll, or a calendar poll, depending on how they use it."
                 />
               </FaqItem>
               <FaqItem
