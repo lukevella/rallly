@@ -72,8 +72,6 @@
   "faqTitle": "Gyakran ismételt kérdések",
   "faqWhatIsRallly": "Mi az a Rallly?",
   "faqWhatIsRalllyAnswer": "A Rallly egy találkozóütemező eszköz. Létrehozol egy szavazást néhány javasolt időponttal, megosztasz egy linket, és a résztvevők szavaznak azokra az időpontokra, amelyek megfelelnek nekik. Amikor beérkeznek a szavazatok, egy pillantással láthatod, melyik időpont felel meg leginkább mindenkinek.",
-  "faqWhen2meetDifference": "Miben különbözik a Rallly a When2Meet-től?",
-  "faqWhen2meetDifferenceAnswer": "A Rallly mindent tud, amire a When2Meet-et használod, tisztább felülettel, ami mobilon is jól működik. Értesítést kapsz, amikor a résztvevők válaszolnak, és az összes szavazásodat egy helyen kezelheted.",
   "finalCtaDescription": "Készítsd el a szavazásod pillanatok alatt. Nem kell fiók, nem kell letölteni semmit, nem kell üldözd az embereket a válaszokért.",
   "finalCtaTitle": "Készen állsz megtalálni a legjobb időpontot a találkozóhoz?",
   "freeSchedulingPollDescription": "A Rallly segít, hogy létrehozhass gyönyörű és könnyen használható szavazásokat, hogy megtaláld a legjobb időpontot a következő eseményedhez.",
@@ -133,6 +131,8 @@
   "howItWorksStepLabel": "{number}. lépés",
   "howItWorksTitle": "Hogyan működik",
   "hubspotQuote": "\"A legegyszerűbb választás elérhetőség felméréshez nagy csoportok számára.\"",
+  "isDoodleStillFreeBlog": "Még mindig ingyenes a Doodle? Mi változott 2026-ban",
+  "isDoodleStillFreeBlogBadge": "Új",
   "legalDescription": "Találj egy időpontot, ami mindkét félnek, az ügyfélnek és a semleges félnek is megfelel anélkül, hogy egy hétig leveleznétek az irodák között. Ossz meg egy linket, nézd meg pontosan, ki tud részt venni az egyes időpontokban, és erősítsd meg a dátumot. Ingyenes, és a jogi képviselőnek nincs szüksége fiókra.",
   "legalFaqAllParties": "Mindenkinek részt kell vennie, nem csak a többségnek. Ez működik?",
   "legalFaqAllPartiesAnswer": "Igen. Minden időpont pontosan mutatja, hogy ki tud részt venni és ki nem, így megtalálhatod azokat a dátumokat, amikor mindkét fél ügyvédje, az ügyfelek és a semleges fél is mind ráérnek, és kizárhatod azokat, amikor a szükséges fél nemet mondott.",
@@ -213,6 +213,8 @@
   "sportsClubsTitle": "Ütemezés sportkluboknak és csapatoknak",
   "statsLast30Days": "Az elmúlt 30 napban <0>{voterCount, plural, one {# ember} other {# ember}}</0> szavazott <1>{pollCount, plural, one {# szavazásban} other {# szavazásban}}</1>",
   "subheading": "Hozz létre egy szavazást, oszd meg a linket, és hagyd, hogy mindenki az alkalmas időpontokra szavazzon. Ingyenes, és senkinek nincs szüksége fiókra.",
+  "teamCollaborationBlog": "Állíts be munkateret saját vagy csapattal való közös munkádhoz",
+  "teamCollaborationBlogBadge": "Új",
   "thesisDefenseDescription": "Szervezd meg a felügyelőt, a belső és külső vizsgáztatót, akár egy másik országban, anélkül, hogy hónapokig leveleznétek. Ossz meg egy linket, hagyd, hogy minden vizsgáztató a saját időzónájában jelezze, mikor ér rá, és erősítsd meg az időpontot. Ingyenes, és a vizsgáztatóknak nincs szükségük fiókra.",
   "thesisDefenseFaqBranding": "A szavazásokon megjeleníthető az egyetem arculata?",
   "thesisDefenseFaqBrandingAnswer": "<0>Rallly Pro</0> csomaggal megjelenítheted a saját logód és arculati színeid, illetve eltávolíthatod a Rallly megjelölést, így a szavazás, amit kiküldesz egy külső vizsgáztatónak, még inkább illeszkedik a tanszéked arculatához. Minden mást pedig ingyen használhatsz.",
@@ -229,10 +231,5 @@
   "thesisDefenseMetaDescription": "A Rallly egy ingyenes időpontfoglaló eszköz diplomavédéshez és vizsgafelkészítőkhöz. Találd meg azt az időpontot, ami minden vizsgáztató számára megfelelő, egy link segítségével, időzónákon keresztül. Nincs szükség fiókra.",
   "thesisDefenseMetaTitle": "Tanszéki diplomavédés vagy vizsgafelkészítő ütemezése | Ingyenes vizsgáztatói elérhetőség szavazás",
   "thesisDefenseTitle": "Egy diplomavédés időpontjának megszervezése",
-  "when2meetAlternative": "Egy modern When2Meet alternatíva",
-  "when2meetAlternativeDescription": "A Rallly mindent tud, amiért a When2Meet-et használod, a nehézkes részen nélkül. Hozz létre egyszerű ütemező szavazásokat, amik telefonról is jól kitölthetőek, értesülj, ha a résztvevők szavaznak és kezeld egy helyen az összes szavazásod. Ingyenes, reklámmentes és nem szükséges fiók a szavazáshoz. When2Meet-ről vagy WhenIsGood-ról váltasz? A Rallly azonnal ismerős lesz számodra.",
-  "when2meetAlternativeFinalCtaDescription": "Hozz létre másodpercek alatt egy szavazást, és találd meg egyszerűbben a megfelelő időpontot.",
-  "when2meetAlternativeFinalCtaTitle": "Készen állsz egy frissebb megoldásra a When2Meet helyett?",
-  "when2meetAlternativeMetaDescription": "A Rallly egy ingyenes When2Meet alternatíva letisztült felülettel, kiváló telefonos támogatással, kitöltés értesítésekkel és reklámok nélkül. Nincs szükség fiókra a szavazáshoz.",
-  "when2meetAlternativeMetaTitle": "Legjobb ingyenes When2Meet alternatíva | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Hozz létre másodpercek alatt egy szavazást, és találd meg egyszerűbben a megfelelő időpontot."
 }
