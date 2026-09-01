@@ -30,8 +30,6 @@
   "faqTitle": "Veelgestelde vragen",
   "faqWhatIsRallly": "Wat is Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly is een tool om afspraken te plannen. Je maakt een poll met een paar voorgestelde tijden, deelt een link en deelnemers stemmen op de tijden die voor hen werken. Als de stemmen binnen zijn, zie je in één oogopslag welke tijd het beste voor iedereen is.",
-  "faqWhen2meetDifference": "Hoe verschilt Rallly van When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "Rallly doet alles waarvoor je When2Meet gebruikt, met een schonere interface die goed werkt op mobiel. Je krijgt een melding wanneer deelnemers reageren en je kunt al je polls op één plek beheren.",
   "finalCtaDescription": "Maak je poll in minder dan een minuut aan. Geen account, geen downloads, geen mensen najagen voor antwoorden.",
   "finalCtaTitle": "Klaar om de beste tijd te vinden om af te spreken?",
   "freeSchedulingPollDescription": "Rallly laat je mooie en gemakkelijk te gebruiken polls maken, zodat je het beste tijdstip voor je volgende evenement kunt vinden.",
@@ -79,10 +77,5 @@
   "socialProofTitle": "Geliefd om zijn eenvoud",
   "statsLast30Days": "<0>{voterCount, plural, one {# persoon} other {# personen}}</0> hebben gestemd in <1>{pollCount, plural, one {# poll} other {# polls}}</1> in de afgelopen 30 dagen",
   "subheading": "Maak een poll, deel de link en laat iedereen stemmen op de tijden die passen. Het is gratis en niemand heeft een account nodig.",
-  "when2meetAlternative": "Een modern alternatief voor When2Meet",
-  "when2meetAlternativeDescription": "Rallly doet alles waarvoor je When2Meet gebruikt, zonder de omslachtige onderdelen. Maak overzichtelijke planningspolls die goed werken op mobiel, krijg een melding wanneer deelnemers reageren en beheer al je polls op één plek. Gratis, zonder advertenties en zonder account om te stemmen. Kom je van When2Meet of WhenIsGood? Rallly voelt meteen vertrouwd.",
-  "when2meetAlternativeFinalCtaDescription": "Maak in enkele seconden een poll en vind eenvoudiger een geschikt tijdstip.",
-  "when2meetAlternativeFinalCtaTitle": "Klaar voor een frisse kijk op When2Meet?",
-  "when2meetAlternativeMetaDescription": "Rallly is een gratis alternatief voor When2Meet met een overzichtelijke interface, uitstekende mobiele ondersteuning, meldingen bij reacties en geen advertenties. Geen account nodig om te stemmen.",
-  "when2meetAlternativeMetaTitle": "Beste gratis alternatief voor When2Meet | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Maak in enkele seconden een poll en vind eenvoudiger een geschikt tijdstip."
 }
