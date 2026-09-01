@@ -55,3 +55,22 @@ export const getInstanceBrandingConfig = cache(async () => {
     ? getCustomBrandingConfig()
     : getDefaultBrandingConfig();
 });
+
+/**
+ * Whether spaces may apply their own branding on top of the instance
+ * branding. A white label instance is branded by its operator, so space
+ * branding is suppressed everywhere it would render. Interim rule until
+ * organizations own branding enforcement.
+ */
+export const isSpaceBrandingAllowed = cache(async () => {
+  if (!isSelfHosted) {
+    return true;
+  }
+  if (isMaintenanceModeEnabled()) {
+    // Skip the license lookup so pages can render while the database is
+    // unreachable; nothing space-branded renders in maintenance mode
+    return true;
+  }
+  const license = await loadInstanceLicense();
+  return !(license?.whiteLabelAddon ?? false);
+});

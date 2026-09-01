@@ -4,6 +4,7 @@ import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
+import { isSpaceBrandingAllowed } from "@/features/branding/data";
 import { spaceIconAssetProfile } from "@/features/space/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -193,6 +194,13 @@ export const updateSpaceAction = authActionClient
       });
     }
 
+    if (parsedInput.primaryColor && !(await isSpaceBrandingAllowed())) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Space branding is managed by the instance administrator",
+      });
+    }
+
     await updateSpace({
       spaceId: space.id,
       name: parsedInput.name,
@@ -231,6 +239,13 @@ export const updateSpaceShowBrandingAction = authActionClient
       throw new AppError({
         code: "PAYMENT_REQUIRED",
         message: "You need a Pro subscription to enable custom branding",
+      });
+    }
+
+    if (parsedInput.showBranding && !(await isSpaceBrandingAllowed())) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Space branding is managed by the instance administrator",
       });
     }
 

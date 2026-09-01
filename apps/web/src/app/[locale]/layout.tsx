@@ -12,7 +12,10 @@ import type { Params } from "@/app/[locale]/types";
 import { CookieConsentBanner } from "@/components/cookie-consent-banner";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
-import { getInstanceBrandingConfig } from "@/features/branding/data";
+import {
+  getInstanceBrandingConfig,
+  isSpaceBrandingAllowed,
+} from "@/features/branding/data";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
@@ -32,14 +35,15 @@ export const viewport: Viewport = {
 };
 
 async function loadData(locale: string) {
-  const [brandingConfig, { i18n }] = await Promise.all([
+  const [brandingConfig, spaceBrandingAllowed, { i18n }] = await Promise.all([
     getInstanceBrandingConfig(),
+    isSpaceBrandingAllowed(),
     initI18next({ lng: locale }),
   ]);
 
   return {
     resources: i18n.store.data,
-    brandingConfig,
+    brandingConfig: { ...brandingConfig, spaceBrandingAllowed },
   };
 }
 
