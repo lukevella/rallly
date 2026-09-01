@@ -130,9 +130,36 @@ export default async function PrivacyPolicy() {
         </p>
 
         <p>
-          For example, we use Featurebase to make it easy for users to submit
-          feedback. Your name and email may be shared with Featurbase to provide
-          a seamless transition between the two services.
+          We rely on the following service providers to operate rallly.co, each
+          of which may process personal data for the purpose described:
+        </p>
+
+        <ul>
+          <li>Vercel — application hosting (United States)</li>
+          <li>Neon — managed PostgreSQL database (United States)</li>
+          <li>Upstash — session data and rate limiting (United States)</li>
+          <li>
+            Amazon Web Services — transactional email and object storage (United
+            States)
+          </li>
+          <li>
+            Stripe — payment processing, billing contact data only (United
+            States)
+          </li>
+          <li>PostHog — product analytics (European Union)</li>
+          <li>Sentry — error monitoring (United States)</li>
+        </ul>
+
+        <p>
+          The same providers are listed, with transfer mechanisms, in the
+          Sub-processor annex of our{" "}
+          <LinkBase href="/dpa">Data Processing Agreement</LinkBase>.
+        </p>
+
+        <p>
+          We also use Featurebase to make it easy for users to submit feedback.
+          Your name and email may be shared with Featurebase to provide a
+          seamless transition between the two services.
         </p>
 
         <h2>Processing on behalf of organizations</h2>
