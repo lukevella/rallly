@@ -72,8 +72,6 @@
   "faqTitle": "Často kladené otázky",
   "faqWhatIsRallly": "Co je Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly je nástroj pro plánování schůzek. Vytvoříte hlasování s několika navrženými časy, sdílíte odkaz a účastníci hlasují pro časy, které jim vyhovují. Když jsou hlasy sečteny, na první pohled vidíte, který čas nejlépe vyhovuje všem.",
-  "faqWhen2meetDifference": "V čem se Rallly liší od When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "Rallly zvládne vše, k čemu používáte When2Meet, a nabízí čistší rozhraní, které skvěle funguje na mobilu. Dostanete oznámení, když účastníci odpoví, a můžete spravovat všechna svá hlasování na jednom místě.",
   "finalCtaDescription": "Vytvořte své hlasování za méně než minutu. Bez účtu, bez stahování, bez dohánění lidí kvůli odpovědím.",
   "finalCtaTitle": "Připraveni najít nejlepší čas na setkání?",
   "freeSchedulingPollDescription": "Rallly vám umožňuje vytvořit přehledné a jednoduché plánovací ankety, abyste vždy našli nejlepší čas pro další událost.",
@@ -231,10 +229,5 @@
   "thesisDefenseMetaDescription": "Rallly je bezplatný nástroj pro plánování obhajob diplomových prací a ústních zkoušek. Najděte pomocí jednoho odkazu termín, který vyhovuje každému oponentovi napříč časovými pásmy. Vlastní účet netřeba.",
   "thesisDefenseMetaTitle": "Plánujte obhajobu diplomové práce nebo ústní zkoušku | Bezplatné ankety dostupnosti oponentů",
   "thesisDefenseTitle": "Plánování obhajoby diplomové práce",
-  "when2meetAlternative": "Moderní alternativa k When2Meet",
-  "when2meetAlternativeDescription": "Rallly umí vše, k čemu používáte When2Meet, jen bez těžkopádných částí. Vytvářejte přehledné plánovací ankety, které skvěle fungují na mobilu, dostávejte upozornění, když účastníci odpoví, a spravujte všechny své ankety na jednom místě. Zdarma, bez reklam a k hlasování není potřeba účet. Přecházíte z When2Meet nebo WhenIsGood? Rallly vám bude hned povědomé.",
-  "when2meetAlternativeFinalCtaDescription": "Vytvořte hlasování za pár sekund a využijte přehlednější způsob hledání vyhovujícího termínu.",
-  "when2meetAlternativeFinalCtaTitle": "Připraveni na nový přístup k When2Meet?",
-  "when2meetAlternativeMetaDescription": "Rallly je bezplatná alternativa k When2Meet s přehledným rozhraním, skvělou podporou mobilů, upozorněními na odpovědi a bez reklam. K hlasování není potřeba účet.",
-  "when2meetAlternativeMetaTitle": "Nejlepší bezplatná alternativa k When2Meet | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Vytvořte hlasování za pár sekund a využijte přehlednější způsob hledání vyhovujícího termínu."
 }
