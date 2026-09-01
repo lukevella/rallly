@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <!-- Textless wireframe in the how-it-works style: bars stand in for copy so
+       the illustration doesn't compete with the post. Left screen is a space
+       with collaboration off (each member keeps to their own polls), right
+       screen is the same space with collaboration on (one shared pool). The
+       hero accent gradient marks the switched-on toggle. -->
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#615fff"/>
+      <stop offset="1" stop-color="#8e51ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="#f4f4f5"/>
+
+  <!-- Collaboration off: members work independently -->
+  <rect x="44.5" y="45.5" width="343" height="359" rx="12" fill="#ffffff" stroke="#e4e4e7"/>
+  <rect x="64" y="65" width="34" height="18" rx="9" fill="#e4e4e7"/>
+  <circle cx="73" cy="74" r="7" fill="#ffffff"/>
+  <rect x="106" y="70" width="64" height="8" rx="4" fill="#d4d4d8"/>
+  <line x1="64" y1="97.5" x2="368" y2="97.5" stroke="#e4e4e7" stroke-opacity="0.6"/>
+
+  <g>
+    <rect x="64.5" y="111.5" width="303" height="80" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+    <circle cx="90" cy="151" r="10" fill="#d4d4d8"/>
+    <rect x="114.5" y="129.5" width="114" height="44" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="124" y="141" width="56" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="124" y="155" width="36" height="6" rx="3" fill="#e4e4e7"/>
+    <rect x="240.5" y="129.5" width="114" height="44" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="250" y="141" width="56" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="250" y="155" width="36" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+  <g>
+    <rect x="64.5" y="201.5" width="303" height="80" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+    <circle cx="90" cy="241" r="10" fill="#d4d4d8"/>
+    <rect x="114.5" y="219.5" width="114" height="44" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="124" y="231" width="56" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="124" y="245" width="36" height="6" rx="3" fill="#e4e4e7"/>
+    <rect x="240.5" y="219.5" width="114" height="44" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="250" y="231" width="56" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="250" y="245" width="36" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+  <g>
+    <rect x="64.5" y="291.5" width="303" height="80" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+    <circle cx="90" cy="331" r="10" fill="#d4d4d8"/>
+    <rect x="114.5" y="309.5" width="114" height="44" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="124" y="321" width="56" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="124" y="335" width="36" height="6" rx="3" fill="#e4e4e7"/>
+    <rect x="240.5" y="309.5" width="114" height="44" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="250" y="321" width="56" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="250" y="335" width="36" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+
+  <!-- Collaboration on: one shared workspace -->
+  <rect x="412.5" y="45.5" width="343" height="359" rx="12" fill="#ffffff" stroke="#e4e4e7"/>
+  <rect x="432" y="65" width="34" height="18" rx="9" fill="url(#accent)"/>
+  <circle cx="457" cy="74" r="7" fill="#ffffff"/>
+  <rect x="474" y="70" width="64" height="8" rx="4" fill="#d4d4d8"/>
+  <line x1="432" y1="97.5" x2="736" y2="97.5" stroke="#e4e4e7" stroke-opacity="0.6"/>
+
+  <g stroke="#ffffff" stroke-width="3" fill="#d4d4d8">
+    <circle cx="446" cy="125" r="12"/>
+    <circle cx="464" cy="125" r="12"/>
+    <circle cx="482" cy="125" r="12"/>
+    <circle cx="500" cy="125" r="12"/>
+  </g>
+  <rect x="524" y="115" width="88" height="6" rx="3" fill="#e4e4e7"/>
+  <rect x="524" y="129" width="56" height="6" rx="3" fill="#e4e4e7"/>
+
+  <rect x="432.5" y="154.5" width="303" height="230" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+  <g>
+    <rect x="444.5" y="166.5" width="133" height="97" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="454" y="180" width="64" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="454" y="194" width="44" height="6" rx="3" fill="#e4e4e7"/>
+    <circle cx="460" cy="243" r="6" fill="#d4d4d8"/>
+    <rect x="472" y="240" width="32" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+  <g>
+    <rect x="590.5" y="166.5" width="133" height="97" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="600" y="180" width="64" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="600" y="194" width="44" height="6" rx="3" fill="#e4e4e7"/>
+    <circle cx="606" cy="243" r="6" fill="#d4d4d8"/>
+    <rect x="618" y="240" width="32" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+  <g>
+    <rect x="444.5" y="275.5" width="133" height="97" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="454" y="289" width="64" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="454" y="303" width="44" height="6" rx="3" fill="#e4e4e7"/>
+    <circle cx="460" cy="352" r="6" fill="#d4d4d8"/>
+    <rect x="472" y="349" width="32" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+  <g>
+    <rect x="590.5" y="275.5" width="133" height="97" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="600" y="289" width="64" height="6" rx="3" fill="#d4d4d8"/>
+    <rect x="600" y="303" width="44" height="6" rx="3" fill="#e4e4e7"/>
+    <circle cx="606" cy="352" r="6" fill="#d4d4d8"/>
+    <rect x="618" y="349" width="32" height="6" rx="3" fill="#e4e4e7"/>
+  </g>
+</svg>
