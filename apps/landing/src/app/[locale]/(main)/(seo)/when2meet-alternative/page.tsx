@@ -4,6 +4,14 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import {
+  CompareTable,
+  CompareTableCell,
+  CompareTableCheck,
+  CompareTableDash,
+  CompareTableFeature,
+  CompareTableHead,
+} from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
@@ -28,20 +36,31 @@ export default async function Page(props: {
 }) {
   cacheLife("hours");
   const { locale } = await props.params;
-  const { t } = await getTranslation(locale, ["home"]);
+  const { t } = await getTranslation(locale, ["home", "pricing"]);
   const [pollCount, voterCount] = await Promise.all([
     getMonthlyPollCount(),
     getMonthlyVoterCount(),
   ]);
+  const included = t("included", {
+    ns: "pricing",
+    defaultValue: "Included",
+  });
+  const notIncluded = t("notIncluded", {
+    ns: "pricing",
+    defaultValue: "Not included",
+  });
   return (
     <div className="divide-y">
       <Section>
         <Hero
           title={t("when2meetAlternative", {
             ns: "home",
+            defaultValue: "A modern When2meet alternative",
           })}
           description={t("when2meetAlternativeDescription", {
             ns: "home",
+            defaultValue:
+              "Rallly does everything you use When2meet for, without the clunky parts. Participants vote with a tap instead of dragging over a grid, you get notified when responses come in, and all your polls live in one place. Free, no ads, and no account needed to vote.",
           })}
         >
           <HeroDemo locale={locale} />
@@ -61,6 +80,197 @@ export default async function Page(props: {
         </Stats>
       </Section>
       <HowItWorks locale={locale} />
+      <Section>
+        <SectionHeading>
+          <SectionTitle>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="when2meetComparisonTitle"
+              defaults="When2meet vs Rallly"
+            />
+          </SectionTitle>
+          <SectionDescription>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="when2meetComparisonDescription"
+              defaults="When2meet is free and does the basics well. Here is what you get on top when you switch to Rallly."
+            />
+          </SectionDescription>
+        </SectionHeading>
+        <SectionContent>
+          <CompareTable>
+            <thead>
+              <tr className="border-b">
+                <th className="w-3/5">
+                  <span className="sr-only">
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareFeature"
+                      defaults="Feature"
+                    />
+                  </span>
+                </th>
+                <CompareTableHead>Rallly</CompareTableHead>
+                <CompareTableHead>When2meet</CompareTableHead>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonFree"
+                    defaults="Free to use"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonNoAccount"
+                    defaults="Vote without creating an account"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonAdFree"
+                    defaults="Ad-free experience"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonMobile"
+                    defaults="Easy voting on mobile"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonNotifications"
+                    defaults="Email notifications when people respond"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonComments"
+                    defaults="Comments from participants"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonFinalize"
+                    defaults="Finalize a time and notify everyone"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonWithPro"
+                    defaults="With Rallly Pro"
+                  />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonManage"
+                    defaults="Manage all your polls in one place"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetComparisonOpenSource"
+                    defaults="Open-source and self-hostable"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+            </tbody>
+          </CompareTable>
+        </SectionContent>
+      </Section>
       <SocialProof locale={locale} />
       <div>
         <Section>
@@ -107,7 +317,7 @@ export default async function Page(props: {
                     t={t}
                     ns="home"
                     i18nKey="faqWhen2meetDifference"
-                    defaults="How is Rallly different from When2Meet?"
+                    defaults="How is Rallly different from When2meet?"
                   />
                 }
               >
@@ -115,7 +325,41 @@ export default async function Page(props: {
                   t={t}
                   ns="home"
                   i18nKey="faqWhen2meetDifferenceAnswer"
-                  defaults="Rallly does everything you use When2Meet for, with a cleaner interface that works great on mobile. You get notified when participants respond, and you can manage all your polls in one place."
+                  defaults="When2meet asks everyone to paint their availability on a grid, which can be fiddly, especially on a phone. Rallly keeps it simple: you suggest times, participants vote with a tap, and you get notified as responses come in. Participants can leave comments, and when the votes are in you can confirm a final time so everyone knows what was decided."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="faqWhen2meetFree"
+                    defaults="Is When2meet free?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="faqWhen2meetFreeAnswer"
+                  defaults="Yes, When2meet is free, and if all you need is a quick availability grid it works fine. Rallly is also free, without the ads, and adds the parts When2meet leaves out: an interface that works well on mobile, email notifications when people respond, comments, and a dashboard to manage all your polls."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="faqWhen2meetMobile"
+                    defaults="Does Rallly work well on mobile?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="faqWhen2meetMobileAnswer"
+                  defaults="Yes. Voting on a Rallly poll is a matter of tapping the times that work for you, so it feels natural on a phone. There is no drag-select grid to wrestle with on a small screen."
                 />
               </FaqItem>
               <FaqItem
@@ -227,7 +471,7 @@ export default async function Page(props: {
                 t={t}
                 ns="home"
                 i18nKey="when2meetAlternativeFinalCtaTitle"
-                defaults="Ready for a fresh take on When2Meet?"
+                defaults="Ready for a fresh take on When2meet?"
               />
             }
             description={
@@ -271,9 +515,12 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/when2meet-alternative" }),
     title: t("when2meetAlternativeMetaTitle", {
       ns: "home",
+      defaultValue: "Best Free When2meet Alternative | Rallly",
     }),
     description: t("when2meetAlternativeMetaDescription", {
       ns: "home",
+      defaultValue:
+        "Rallly is a free When2meet alternative with a clean interface, great mobile support, response notifications, and no ads. No account needed to vote.",
     }),
   };
 }

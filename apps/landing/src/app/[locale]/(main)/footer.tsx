@@ -201,7 +201,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
                   t={t}
                   ns="common"
                   i18nKey="when2MeetAlternative"
-                  defaults="When2Meet alternative"
+                  defaults="When2meet alternative"
                 />
               </LinkBase>
             </li>
