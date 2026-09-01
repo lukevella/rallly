@@ -1,17 +1,14 @@
 "use cache";
 
 import { cacheLife } from "next/cache";
+import { LegalPageLayout } from "@/components/legal-page-layout";
 import { Section } from "@/components/section";
 
 export default async function CookiePolicy() {
   cacheLife("max");
   return (
     <Section>
-      <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
-        Cookie policy
-      </h1>
-      <p className="mt-4 text-gray-500 text-sm">Last updated: 4 April 2026</p>
-      <div className="longform mt-8 max-w-2xl">
+      <LegalPageLayout title="Cookie policy" lastUpdated="2026-04-04">
         <p>
           This Policy explains how we use cookies and other similar technologies
           on our website, and your options to control them.
@@ -62,7 +59,7 @@ export default async function CookiePolicy() {
           this policy regularly to stay informed about how we use cookies on our
           website.
         </p>
-      </div>
+      </LegalPageLayout>
     </Section>
   );
 }

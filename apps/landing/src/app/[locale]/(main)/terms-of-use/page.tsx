@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
+import { LegalPageLayout } from "@/components/legal-page-layout";
 import { Section } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
 
@@ -9,11 +10,7 @@ export default async function TermsOfUse() {
   cacheLife("max");
   return (
     <Section>
-      <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
-        Terms of use
-      </h1>
-      <p className="mt-4 text-gray-500 text-sm">Last updated: 29 August 2026</p>
-      <div className="longform mt-8 max-w-2xl">
+      <LegalPageLayout title="Terms of use" lastUpdated="2026-08-29">
         <p>
           This website and the Rallly software and services are operated by
           Stack Snap Ltd. References to &quot;we&quot;, &quot;us&quot; or
@@ -260,7 +257,7 @@ export default async function TermsOfUse() {
           <br />
           United Kingdom
         </p>
-      </div>
+      </LegalPageLayout>
     </Section>
   );
 }
