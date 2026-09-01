@@ -1,7 +1,7 @@
 import { Badge } from "@rallly/ui/badge";
 import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
 import type * as React from "react";
+import { LinkBase } from "@/i18n/client/link";
 
 export function HeroAnnouncement({
   href,
@@ -13,7 +13,7 @@ export function HeroAnnouncement({
   children: React.ReactNode;
 }) {
   return (
-    <Link
+    <LinkBase
       href={href}
       prefetch={false}
       className="group -ml-1 inline-flex max-w-full items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-all hover:bg-gray-200"
@@ -26,7 +26,7 @@ export function HeroAnnouncement({
         className="size-3 shrink-0 text-gray-500 transition-transform group-hover:translate-x-0.5 group-active:translate-x-0.5"
         aria-hidden="true"
       />
-    </Link>
+    </LinkBase>
   );
 }
 
