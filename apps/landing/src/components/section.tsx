@@ -22,7 +22,7 @@ export function SectionTitle({
   return (
     <h2
       className={cn(
-        "text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl",
+        "max-w-2xl text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl",
         className,
       )}
       {...props}
@@ -37,7 +37,7 @@ export function SectionDescription({
   return (
     <p
       className={cn(
-        "max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg",
+        "max-w-2xl text-pretty text-base/6 text-gray-500 sm:text-lg",
         className,
       )}
       {...props}
