@@ -223,6 +223,30 @@ export default async function Page(props: {
                   ]}
                 />
               </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="homeFaqEveryoneFree"
+                    defaults="Can I use Rallly to find out when everyone is free?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="homeFaqEveryoneFreeAnswer"
+                  defaults="Yes. Create a <0>free scheduling poll</0>, add the times you want to offer, and participants mark the ones they can make. It works just as well as a meeting poll for a shortlist of times or as an availability poll across a wider range of dates."
+                  components={[
+                    <Link
+                      key="scheduling-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
+                />
+              </FaqItem>
             </Faq>
           </SectionContent>
         </Section>

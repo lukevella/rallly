@@ -62,6 +62,84 @@ export default async function Page(props: {
       </Section>
       <HowItWorks locale={locale} />
       <SocialProof locale={locale} />
+      <Section>
+        <SectionHeading>
+          <SectionTitle>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="freeSchedulingPollUseCasesTitle"
+              defaults="Meeting poll, availability poll, or calendar poll?"
+            />
+          </SectionTitle>
+          <SectionDescription>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="freeSchedulingPollUseCasesDescription"
+              defaults="Different names, same job. Rallly gives you one simple poll that finds a time that works for everyone."
+            />
+          </SectionDescription>
+        </SectionHeading>
+        <SectionContent>
+          <div className="grid gap-8 sm:grid-cols-3">
+            <div>
+              <h3 className="font-medium text-base text-gray-800">
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollMeetingPollTitle"
+                  defaults="Meeting poll"
+                />
+              </h3>
+              <p className="mt-2 max-w-prose text-gray-500 text-sm leading-relaxed sm:text-base">
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollMeetingPollDescription"
+                  defaults="Propose a shortlist of times for your next meeting and let participants vote. The results show the best meeting time at a glance, so you can confirm it with one message."
+                />
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium text-base text-gray-800">
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollAvailabilityPollTitle"
+                  defaults="Availability poll"
+                />
+              </h3>
+              <p className="mt-2 max-w-prose text-gray-500 text-sm leading-relaxed sm:text-base">
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollAvailabilityPollDescription"
+                  defaults="Not sure when everyone is free? Offer a wider range of dates or times and collect availability first. Each person answers yes, no, or if need be, giving you a clear picture before you decide."
+                />
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium text-base text-gray-800">
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollCalendarPollTitle"
+                  defaults="Calendar poll"
+                />
+              </h3>
+              <p className="mt-2 max-w-prose text-gray-500 text-sm leading-relaxed sm:text-base">
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollCalendarPollDescription"
+                  defaults="Scheduling an event rather than a meeting? Offer whole dates on a calendar and find the day that suits the most people, whether it is a game night, a rehearsal, or a family gathering."
+                />
+              </p>
+            </div>
+          </div>
+        </SectionContent>
+      </Section>
       <div>
         <Section>
           <SectionHeading>
@@ -84,6 +162,23 @@ export default async function Page(props: {
           </SectionHeading>
           <SectionContent>
             <Faq>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="freeSchedulingPollFaqWhatIs"
+                    defaults="What is a scheduling poll?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollFaqWhatIsAnswer"
+                  defaults="A scheduling poll is a quick way to find the best time for a group to meet. You propose a few times, participants vote on the ones that work for them, and the most popular option wins. People also call it a meeting poll, an availability poll, or a calendar poll. It is the same idea either way."
+                />
+              </FaqItem>
               <FaqItem
                 question={
                   <Trans
@@ -200,6 +295,57 @@ export default async function Page(props: {
                   ]}
                 />
               </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="freeSchedulingPollFaqMeetingTimes"
+                    defaults="How do I create a poll for meeting times?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollFaqMeetingTimesAnswer"
+                  defaults="Pick a few times that could work, give the poll a title, and share the link with your group. Participants vote on the meeting times that suit them without creating an account, and you can see the winning time as the responses come in."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="freeSchedulingPollFaqEveryoneFree"
+                    defaults="How do I find out when everyone is free?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollFaqEveryoneFreeAnswer"
+                  defaults="Use your poll as an availability poll. Offer a wider set of dates or times and ask everyone to respond with yes, no, or if need be. The results give you a clear picture of the group's availability, so you can pick a time that works for everyone."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="freeSchedulingPollFaqMeetingVsAvailability"
+                    defaults="What is the difference between a meeting poll and an availability poll?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="freeSchedulingPollFaqMeetingVsAvailabilityAnswer"
+                  defaults="A meeting poll asks people to choose between a few proposed times, while an availability poll collects when everyone is free before you decide. Rallly handles both. Offer a shortlist when you already have one, or a broad set of options when you want to see the group's availability first."
+                />
+              </FaqItem>
             </Faq>
           </SectionContent>
         </Section>
@@ -257,6 +403,8 @@ export async function generateMetadata(props: {
     }),
     description: t("freeSchedulingPollMetaDescription", {
       ns: "home",
+      defaultValue:
+        "Create a free scheduling poll in seconds. Propose times, share a link, and see when everyone is free. Works as a meeting poll, availability poll, or calendar poll.",
     }),
   };
 }

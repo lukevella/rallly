@@ -92,6 +92,30 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
+                    i18nKey="committeesFaqAvailability"
+                    defaults="How do I ask members for their availability?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="committeesFaqAvailabilityAnswer"
+                  defaults="Create a <0>scheduling poll</0> with the dates you can offer and send members the link. Each member marks the dates they can make, and the responses build into a clear picture of the committee's availability without a single reply-all email."
+                  components={[
+                    <Link
+                      key="scheduling-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
                     i18nKey="committeesFaqQuorum"
                     defaults="How do I tell whether we will have quorum?"
                   />

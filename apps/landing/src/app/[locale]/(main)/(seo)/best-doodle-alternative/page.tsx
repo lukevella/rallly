@@ -312,6 +312,30 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
+                    i18nKey="doodleAlternativeFaqMeetingPoll"
+                    defaults="Can I create a meeting poll with Rallly for free?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="doodleAlternativeFaqMeetingPollAnswer"
+                  defaults="Yes. Creating a <0>meeting poll</0> is free with no limit on participants. Propose the times that could work, share one link, and watch the votes come in. Nobody needs an account to respond."
+                  components={[
+                    <Link
+                      key="meeting-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
                     i18nKey="faqNeedAccount"
                     defaults="Do I need an account to use Rallly?"
                   />

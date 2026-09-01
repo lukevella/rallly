@@ -123,6 +123,30 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
+                    i18nKey="when2meetAlternativeFaqAvailability"
+                    defaults="Can I use Rallly to see when everyone is available?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="when2meetAlternativeFaqAvailabilityAnswer"
+                  defaults="Yes. Like When2Meet, Rallly works as an <0>availability poll</0>. Offer the times you want to compare and participants respond with yes, no, or if need be, so you can see at a glance when everyone is free."
+                  components={[
+                    <Link
+                      key="availability-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
                     i18nKey="faqNeedAccount"
                     defaults="Do I need an account to use Rallly?"
                   />
