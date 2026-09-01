@@ -15,7 +15,7 @@ import {
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
-import { Hero } from "@/components/home/hero";
+import { Hero, HeroAnnouncement } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { SocialProof } from "@/components/home/social-proof";
@@ -59,6 +59,26 @@ export default async function Page(props: {
           description={t("doodleAlternativeDescription", {
             ns: "home",
           })}
+          announcement={
+            <HeroAnnouncement
+              href="/blog/is-doodle-still-free"
+              badge={
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="isDoodleStillFreeBlogBadge"
+                  defaults="New"
+                />
+              }
+            >
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="isDoodleStillFreeBlog"
+                defaults="Is Doodle still free? What changed in 2026"
+              />
+            </HeroAnnouncement>
+          }
         >
           <HeroDemo locale={locale} />
         </Hero>
