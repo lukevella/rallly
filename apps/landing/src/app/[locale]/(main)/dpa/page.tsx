@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
+import { LegalPageLayout } from "@/components/legal-page-layout";
 import { Section } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
 
@@ -9,11 +10,10 @@ export default async function DataProcessingAgreement() {
   cacheLife("max");
   return (
     <Section>
-      <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
-        Data processing agreement
-      </h1>
-      <p className="mt-4 text-gray-500 text-sm">Last updated: 29 August 2026</p>
-      <div className="longform mt-8 max-w-2xl">
+      <LegalPageLayout
+        title="Data processing agreement"
+        lastUpdated="2026-08-29"
+      >
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
           <LinkBase href="/terms-of-use">Terms of Use</LinkBase> between Stack
@@ -524,7 +524,7 @@ export default async function DataProcessingAgreement() {
           <br />
           United Kingdom
         </p>
-      </div>
+      </LegalPageLayout>
     </Section>
   );
 }
