@@ -11,6 +11,7 @@
   "cookiePolicy": "Cookie irányelvek",
   "discussions": "Beszélgetések",
   "doodleAlternative": "Doodle alternatíva",
+  "dpa": "AFM",
   "executiveAssistants": "Vezetői asszisztensek",
   "footerDiscordLabel": "Csatlakozz hozzánk Discordon",
   "footerGithubLabel": "Nézd meg a GitHub kódbázist",
@@ -45,5 +46,6 @@
   "support": "Segítség",
   "termsOfUse": "Felhasználási feltételek",
   "thesisDefense": "Diplomavédés",
-  "useCases": "Használati esetek"
+  "useCases": "Használati esetek",
+  "when2MeetAlternative": "When2meet alternatíva"
 }
