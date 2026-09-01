@@ -155,6 +155,22 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
+                    i18nKey="when2meetComparisonAdFree"
+                    defaults="Ad-free experience"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
                     i18nKey="when2meetComparisonMobile"
                     defaults="Easy voting on mobile"
                   />
@@ -326,7 +342,7 @@ export default async function Page(props: {
                   t={t}
                   ns="home"
                   i18nKey="faqWhen2meetFreeAnswer"
-                  defaults="Yes, When2meet is free, and if all you need is a quick availability grid it works fine. Rallly is also free, and adds the parts When2meet leaves out: an interface that works well on mobile, email notifications when people respond, comments, and a dashboard to manage all your polls."
+                  defaults="Yes, When2meet is free, and if all you need is a quick availability grid it works fine. Rallly is also free, without the ads, and adds the parts When2meet leaves out: an interface that works well on mobile, email notifications when people respond, comments, and a dashboard to manage all your polls."
                 />
               </FaqItem>
               <FaqItem
