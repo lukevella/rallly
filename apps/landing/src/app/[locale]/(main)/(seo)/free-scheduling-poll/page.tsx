@@ -105,7 +105,7 @@ export default async function Page(props: {
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollMeetingPollDescription"
-                  defaults="Propose a shortlist of times for your next meeting and let participants vote. The results show the best meeting time at a glance, so you can confirm it with one message."
+                  defaults="Propose a shortlist of times and let participants vote. The best meeting time shows at a glance."
                 />
               </ContentGridDescription>
             </ContentGridItem>
@@ -124,7 +124,7 @@ export default async function Page(props: {
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollAvailabilityPollDescription"
-                  defaults="Not sure when everyone is free? Offer a wider range of dates or times and collect availability first. Each person answers yes, no, or if need be, giving you a clear picture before you decide."
+                  defaults="Not sure when everyone is free? Offer a wider range of times and each person answers yes, no, or if need be."
                 />
               </ContentGridDescription>
             </ContentGridItem>
@@ -143,7 +143,7 @@ export default async function Page(props: {
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollCalendarPollDescription"
-                  defaults="Scheduling an event rather than a meeting? Offer whole dates on a calendar and find the day that suits the most people, whether it is a game night, a rehearsal, or a family gathering."
+                  defaults="Scheduling an event? Offer whole dates on a calendar and find the day that suits the most people."
                 />
               </ContentGridDescription>
             </ContentGridItem>
