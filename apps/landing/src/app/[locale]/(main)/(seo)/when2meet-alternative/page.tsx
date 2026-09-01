@@ -87,7 +87,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="when2meetComparisonTitle"
-              defaults="How Rallly compares to When2meet"
+              defaults="When2meet vs Rallly"
             />
           </SectionTitle>
           <SectionDescription>
