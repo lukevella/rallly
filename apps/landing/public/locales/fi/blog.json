@@ -1,4 +1,7 @@
 {
   "blogDescription": "Uutisia, päivityksiä ja tiedotteita Ralllysta.",
-  "blogTitle": "Rallly - Blogi"
+  "blogFilterAll": "Kaikki",
+  "blogPublishedOn": "Julkaistu",
+  "blogTitle": "Rallly - Blogi",
+  "blogWrittenBy": "Kirjoittanut"
 }

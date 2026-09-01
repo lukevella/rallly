@@ -8,6 +8,7 @@ import React from "react";
 import { CtaButton } from "@/components/home/cta-button";
 import { LinkBase } from "@/i18n/client/link";
 import { linkToApp } from "@/lib/linkToApp";
+import { getRefSlug } from "@/lib/ref-slug";
 
 const PANEL_ID = "mobile-menu-panel";
 // Matches the `lg:hidden` on the panel below. Tailwind's default `lg`.
@@ -113,7 +114,7 @@ export const MobileMenu = ({
         </nav>
         <div className="flex flex-col gap-3 border-t px-4 py-6 sm:px-6">
           <LinkBase
-            href={linkToApp("/login")}
+            href={linkToApp("/login", { ref: getRefSlug(pathname) })}
             className={buttonVariants({
               variant: "default",
               size: "lg",
