@@ -16,14 +16,14 @@ export function HeroAnnouncement({
     <Link
       href={href}
       prefetch={false}
-      className="group -ml-1 inline-flex items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-all hover:bg-gray-200"
+      className="group -ml-1 inline-flex max-w-full items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-all hover:bg-gray-200"
     >
-      <Badge variant="primary" className="rounded-full">
+      <Badge variant="primary" className="shrink-0 rounded-full">
         {badge}
       </Badge>
-      <span className="flex items-center gap-x-1">{children}</span>
+      <span className="min-w-0 truncate">{children}</span>
       <ArrowRightIcon
-        className="size-3 text-gray-500 transition-transform group-hover:translate-x-0.5 group-active:translate-x-0.5"
+        className="size-3 shrink-0 text-gray-500 transition-transform group-hover:translate-x-0.5 group-active:translate-x-0.5"
         aria-hidden="true"
       />
     </Link>
