@@ -30,8 +30,6 @@
   "faqTitle": "常见问题",
   "faqWhatIsRallly": "什么是 Rallly？",
   "faqWhatIsRalllyAnswer": "Rallly 是一款会议日程安排工具。你创建包含若干候选时间的投票，分享链接，参与者对适合自己的时间进行投票。投票结束后，你可以一目了然地看到最适合大家的时间。",
-  "faqWhen2meetDifference": "Rallly 与 When2Meet 有何不同？",
-  "faqWhen2meetDifferenceAnswer": "Rallly 覆盖你使用 When2Meet 的所有功能，界面更清爽并更适合移动端使用。参与者回复时你会收到通知，且可在同一处管理所有投票。",
   "finalCtaDescription": "在一分钟内创建投票。无需账号、无需下载，也不用催促他人回复。",
   "finalCtaTitle": "准备好找到最佳开会时间了吗？",
   "freeSchedulingPollDescription": "Rallly 可让您创建美观且易于使用的日程投票，以便您确定下一次活动的最佳时间。",
@@ -79,10 +77,5 @@
   "socialProofTitle": "因简单而备受喜爱",
   "statsLast30Days": "过去 30 天内，<0>{voterCount, plural, other {# 人}}</0>在<1>{pollCount, plural, other {# 个投票}}</1>中投了票",
   "subheading": "创建投票，分享链接，让大家对合适的时间投票。免费，无需账号。",
-  "when2meetAlternative": "现代 When2Meet 替代品",
-  "when2meetAlternativeDescription": "Rallly 能满足你使用 When2Meet 的所有需求，而没有那些繁琐之处。创建清爽的日程投票，在手机上也能流畅使用；参与者回复时会收到通知；所有投票都能在一个地方管理。免费、无广告，投票无需注册账号。从 When2Meet 或 WhenIsGood 转过来？你会立刻上手 Rallly。",
-  "when2meetAlternativeFinalCtaDescription": "几秒内创建投票，用更简洁的方式找到合适时间。",
-  "when2meetAlternativeFinalCtaTitle": "准备好以全新方式体验 When2Meet 吗？",
-  "when2meetAlternativeMetaDescription": "Rallly 是 When2Meet 的免费替代品，界面清爽、移动端体验出色、支持回复通知且没有广告。投票无需注册账号。",
-  "when2meetAlternativeMetaTitle": "最佳免费 When2Meet 替代品 | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "几秒内创建投票，用更简洁的方式找到合适时间。"
 }
