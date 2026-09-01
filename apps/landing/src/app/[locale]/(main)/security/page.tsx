@@ -22,6 +22,7 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
 function SecurityFeature({
@@ -383,9 +384,9 @@ export default async function Security(props: {
             </FaqItem>
             <FaqItem question="Do you offer a Data Processing Agreement (DPA)?">
               Yes. Our GDPR Article 28{" "}
-              <a className="text-primary hover:underline" href="/dpa">
+              <LinkBase className="text-primary hover:underline" href="/dpa">
                 Data Processing Agreement
-              </a>{" "}
+              </LinkBase>{" "}
               is published openly and incorporated into our terms of use, so it
               applies automatically without paperwork. It includes our technical
               and organizational measures and the full subprocessor list, and we

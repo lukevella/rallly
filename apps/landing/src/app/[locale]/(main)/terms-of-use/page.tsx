@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 
 export default async function TermsOfUse() {
   cacheLife("max");
@@ -201,13 +202,13 @@ export default async function TermsOfUse() {
         <p>
           6.1 Where we process personal data on your behalf in providing the
           hosted Rallly service, we do so as a processor under our{" "}
-          <a href="/dpa">Data Processing Agreement</a>, which is incorporated
-          into these Terms by reference and forms part of them.
+          <LinkBase href="/dpa">Data Processing Agreement</LinkBase>, which is
+          incorporated into these Terms by reference and forms part of them.
         </p>
         <p>
           6.2 Our processing of personal data for our own purposes as a
           controller is described in our{" "}
-          <a href="/privacy-policy">Privacy Policy</a>.
+          <LinkBase href="/privacy-policy">Privacy Policy</LinkBase>.
         </p>
 
         <hr />

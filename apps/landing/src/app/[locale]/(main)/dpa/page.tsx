@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 
 export default async function DataProcessingAgreement() {
   cacheLife("max");
@@ -15,11 +16,11 @@ export default async function DataProcessingAgreement() {
       <div className="longform mt-8 max-w-2xl">
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
-          <a href="/terms-of-use">Terms of Use</a> between Stack Snap Ltd
-          (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) and the customer
-          (&quot;you&quot;, &quot;your&quot;) and governs our processing of
-          personal data on your behalf when we provide the hosted Rallly service
-          at rallly.co.
+          <LinkBase href="/terms-of-use">Terms of Use</LinkBase> between Stack
+          Snap Ltd (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) and the
+          customer (&quot;you&quot;, &quot;your&quot;) and governs our
+          processing of personal data on your behalf when we provide the hosted
+          Rallly service at rallly.co.
         </p>
         <p>
           This DPA is incorporated into the Terms of Use by reference and
@@ -77,7 +78,7 @@ export default async function DataProcessingAgreement() {
           personal data we process for our own purposes: managing accounts and
           billing, securing and improving the Service, and communicating with
           users. That processing is described in our{" "}
-          <a href="/privacy-policy">Privacy Policy</a>.
+          <LinkBase href="/privacy-policy">Privacy Policy</LinkBase>.
         </p>
         <p>
           2.3 This DPA applies for as long as we process Customer Data. If there
@@ -246,10 +247,10 @@ export default async function DataProcessingAgreement() {
           8.1 We will make available to you the information reasonably necessary
           to demonstrate compliance with this DPA. We support this primarily
           through documentation: this DPA, our{" "}
-          <a href="/security">security page</a>, our publicly auditable source
-          code, our public real-time status page, and the audit reports and
-          certifications of our Sub-processors, which are available from each
-          provider.
+          <LinkBase href="/security">security page</LinkBase>, our publicly
+          auditable source code, our public real-time status page, and the audit
+          reports and certifications of our Sub-processors, which are available
+          from each provider.
         </p>
         <p>
           8.2 Where that documentation is not sufficient to demonstrate
@@ -311,7 +312,8 @@ export default async function DataProcessingAgreement() {
         <h2>Annex 1: Technical and organizational measures</h2>
         <p>
           The measures below describe how we protect Customer Data. Further
-          detail is published on our <a href="/security">security page</a>.
+          detail is published on our{" "}
+          <LinkBase href="/security">security page</LinkBase>.
         </p>
         <ul>
           <li>
