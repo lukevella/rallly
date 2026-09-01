@@ -29,6 +29,10 @@ Branding is configured from the [Control Panel](/self-hosting/control-panel) und
 2. Set the app name, primary colors, logos, and attribution settings.
 3. Each field saves on its own, so you can change one setting at a time.
 
+<Frame>
+  <img src="/images/self-hosting/whitelabel-branding-page.png" alt="The Branding page in the Control Panel" />
+</Frame>
+
 The same settings can also be supplied as environment variables. A value saved in the Control Panel takes precedence over the matching environment variable, and clearing it falls back to the environment variable, then to the Rallly default. Precedence is applied per field, so you can set some values in `.env` and others in the UI.
 
 When a field is backed by an environment variable and has no saved value yet, the Branding page shows a note saying so. Saving a value in the UI overrides it.
@@ -39,7 +43,7 @@ The three logo slots serve different purposes:
 
 - **Logo** - The wordmark shown on light backgrounds
 - **Logo (dark mode)** - The wordmark shown on dark backgrounds. Falls back to the light logo if not set
-- **Logo icon** - A square icon shown at the top of emails
+- **Logo icon** - A square icon shown on polls and at the top of emails
 
 ### Uploading a logo
 
@@ -67,6 +71,27 @@ Because the slot is fixed, the shape of your asset determines how large it rende
 - For the dark mode logo, supply a variant that reads well on a dark background rather than reusing the light one.
 
 The Branding page previews each logo inside the slot it renders in, on the background it will appear against, so you can check the result before rolling it out.
+
+## How branding applies to spaces
+
+<Note>
+This behavior applies from v4.14.0. On earlier versions, spaces can override the instance branding with their own colors and logo.
+</Note>
+
+While the white label add-on is active, your instance branding applies everywhere. Spaces cannot show their own colors or logo to participants:
+
+- Polls, scheduled event pages, and emails always use the instance's colors, and polls display the instance's logo icon and app name.
+- The branding controls in each space's settings are replaced with a note explaining that branding is managed by the instance administrator. Space admins can still set the space's name and logo, but these are only used to identify the space inside the app.
+
+<Frame>
+  <img src="/images/self-hosting/whitelabel-poll.png" alt="A poll showing the instance logo icon and app name" />
+</Frame>
+
+<Frame>
+  <img src="/images/self-hosting/whitelabel-space-settings.png" alt="Space settings showing that branding is managed by the instance administrator" />
+</Frame>
+
+There is nothing to configure. The behavior is tied to the white label add-on on your license. Any space branding that was set before is preserved but not shown, so if the add-on is removed, spaces return to using their own branding.
 
 ## Environment variables
 
