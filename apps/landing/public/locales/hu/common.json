@@ -3,6 +3,11 @@
   "close": "Bezárás",
   "committees": "Bizottságok és tanácsok",
   "compare": "Összehasonlít",
+  "cookieConsentAccept": "Elfogadom",
+  "cookieConsentIntro": "Sütiket használunk a felhasználói élmény javítása érdekében.",
+  "cookieConsentLabel": "Süti hozzájárulás",
+  "cookieConsentOptOut": "Visszavonom",
+  "cookieConsentPolicy": "Tudj meg többet a <policyLink>cookie szabályzatunkról</policyLink>.",
   "cookiePolicy": "Cookie irányelvek",
   "discussions": "Beszélgetések",
   "doodleAlternative": "Doodle alternatíva",
@@ -36,8 +41,9 @@
   "schedulingPoll": "Ütemező szavazás",
   "security": "Biztonság",
   "sportsClubs": "Sportklubok",
+  "statusBadgeAlt": "Rallly állapot",
   "support": "Segítség",
   "termsOfUse": "Felhasználási feltételek",
   "thesisDefense": "Diplomavédés",
-  "when2MeetAlternative": "When2Meet alternatíva"
+  "useCases": "Használati esetek"
 }
