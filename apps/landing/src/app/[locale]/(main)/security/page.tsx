@@ -94,7 +94,6 @@ export default async function Security(props: {
     <div className="divide-y">
       <Section>
         <Hero
-          className="max-w-2xl"
           title="Securely scheduling for thousands of organizations"
           description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
         />

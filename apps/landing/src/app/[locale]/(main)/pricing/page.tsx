@@ -92,7 +92,7 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <Hero
-          className="text-center"
+          className="mx-auto max-w-2xl text-center"
           title={t("pricingTitle", {
             ns: "pricing",
             defaultValue: "Get started for free",
