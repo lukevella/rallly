@@ -1,9 +1,16 @@
 "use cache";
 
+import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import {
+  ContentGrid,
+  ContentGridDescription,
+  ContentGridItem,
+  ContentGridTitle,
+} from "@/components/content-grid";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
@@ -82,62 +89,65 @@ export default async function Page(props: {
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div>
-              <h3 className="font-medium text-base text-gray-800">
+          <ContentGrid>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <ClockIcon />
                 <Trans
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollMeetingPollTitle"
                   defaults="Meeting poll"
                 />
-              </h3>
-              <p className="mt-2 max-w-prose text-gray-500 text-sm leading-relaxed sm:text-base">
+              </ContentGridTitle>
+              <ContentGridDescription>
                 <Trans
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollMeetingPollDescription"
                   defaults="Propose a shortlist of times for your next meeting and let participants vote. The results show the best meeting time at a glance, so you can confirm it with one message."
                 />
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-base text-gray-800">
+              </ContentGridDescription>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <UsersIcon />
                 <Trans
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollAvailabilityPollTitle"
                   defaults="Availability poll"
                 />
-              </h3>
-              <p className="mt-2 max-w-prose text-gray-500 text-sm leading-relaxed sm:text-base">
+              </ContentGridTitle>
+              <ContentGridDescription>
                 <Trans
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollAvailabilityPollDescription"
                   defaults="Not sure when everyone is free? Offer a wider range of dates or times and collect availability first. Each person answers yes, no, or if need be, giving you a clear picture before you decide."
                 />
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-base text-gray-800">
+              </ContentGridDescription>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <CalendarIcon />
                 <Trans
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollCalendarPollTitle"
                   defaults="Calendar poll"
                 />
-              </h3>
-              <p className="mt-2 max-w-prose text-gray-500 text-sm leading-relaxed sm:text-base">
+              </ContentGridTitle>
+              <ContentGridDescription>
                 <Trans
                   t={t}
                   ns="home"
                   i18nKey="freeSchedulingPollCalendarPollDescription"
                   defaults="Scheduling an event rather than a meeting? Offer whole dates on a calendar and find the day that suits the most people, whether it is a game night, a rehearsal, or a family gathering."
                 />
-              </p>
-            </div>
-          </div>
+              </ContentGridDescription>
+            </ContentGridItem>
+          </ContentGrid>
         </SectionContent>
       </Section>
       <div>

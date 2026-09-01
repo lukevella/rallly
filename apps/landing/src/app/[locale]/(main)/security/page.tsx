@@ -3,7 +3,6 @@
 import { buttonVariants } from "@rallly/ui";
 import {
   ActivityIcon,
-  ArrowRightIcon,
   CodeIcon,
   DatabaseIcon,
   EyeOffIcon,
@@ -11,6 +10,13 @@ import {
   ServerIcon,
 } from "lucide-react";
 import { cacheLife } from "next/cache";
+import {
+  ContentGrid,
+  ContentGridDescription,
+  ContentGridItem,
+  ContentGridLink,
+  ContentGridTitle,
+} from "@/components/content-grid";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
@@ -23,42 +29,6 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
-
-function SecurityFeature({
-  icon,
-  title,
-  link,
-  children,
-}: {
-  icon: React.ReactNode;
-  title: React.ReactNode;
-  link?: { label: React.ReactNode; href: string };
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <h3 className="flex items-center gap-x-2.5 font-medium text-base text-gray-800">
-        <span className="text-gray-500">{icon}</span>
-        {title}
-      </h3>
-      <p className="mt-2 text-pretty text-gray-500 text-sm leading-relaxed">
-        {children}
-      </p>
-      {link ? (
-        <a
-          className="group mt-2 inline-flex items-center gap-x-1 font-medium text-primary text-sm hover:underline"
-          href={link.href}
-        >
-          {link.label}
-          <ArrowRightIcon
-            className="size-3 transition-transform group-hover:translate-x-0.5"
-            aria-hidden="true"
-          />
-        </a>
-      ) : null}
-    </div>
-  );
-}
 
 function TransferMechanismCell({
   href,
@@ -118,63 +88,72 @@ export default async function Security(props: {
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            <SecurityFeature
-              icon={<CodeIcon className="size-4" />}
-              title="Open source"
-              link={{
-                label: "Browse source code",
-                href: "https://github.com/lukevella/rallly",
-              }}
-            >
-              The full source code is public and auditable on GitHub. Anyone can
-              review exactly how data is handled.
-            </SecurityFeature>
-            <SecurityFeature
-              icon={<ActivityIcon className="size-4" />}
-              title="Verified uptime"
-              link={{
-                label: "View live status",
-                href: "https://rallly.openstatus.dev",
-              }}
-            >
-              Measured uptime above 99.9%, published in real time on an
-              independent status page. Not self-reported.
-            </SecurityFeature>
-            <SecurityFeature
-              icon={<ServerIcon className="size-4" />}
-              title="Self-hostable"
-              link={{
-                label: "Learn more",
-                href: "https://support.rallly.co/self-hosting/introduction",
-              }}
-            >
-              Prefer full control? Run Rallly on your own infrastructure and
-              your data never reaches us.
-            </SecurityFeature>
-            <SecurityFeature
-              icon={<LockIcon className="size-4" />}
-              title="Encryption everywhere"
-            >
-              TLS 1.2 or higher for all traffic, AES-256 encryption at rest, and
-              HTTPS enforced across the platform.
-            </SecurityFeature>
-            <SecurityFeature
-              icon={<EyeOffIcon className="size-4" />}
-              title="Privacy-first"
-            >
-              We collect the minimum needed to run the service. No sensitive
-              personal information, no advertising trackers, and we never sell
-              data.
-            </SecurityFeature>
-            <SecurityFeature
-              icon={<DatabaseIcon className="size-4" />}
-              title="Tenant isolation"
-            >
-              Data is scoped to its owner at the access layer, with the
-              architecture rules enforced by static analysis in the codebase.
-            </SecurityFeature>
-          </div>
+          <ContentGrid>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <CodeIcon /> Open source
+              </ContentGridTitle>
+              <ContentGridDescription>
+                The full source code is public and auditable on GitHub. Anyone
+                can review exactly how data is handled.
+              </ContentGridDescription>
+              <ContentGridLink href="https://github.com/lukevella/rallly">
+                Browse source code
+              </ContentGridLink>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <ActivityIcon /> Verified uptime
+              </ContentGridTitle>
+              <ContentGridDescription>
+                Measured uptime above 99.9%, published in real time on an
+                independent status page. Not self-reported.
+              </ContentGridDescription>
+              <ContentGridLink href="https://rallly.openstatus.dev">
+                View live status
+              </ContentGridLink>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <ServerIcon /> Self-hostable
+              </ContentGridTitle>
+              <ContentGridDescription>
+                Prefer full control? Run Rallly on your own infrastructure and
+                your data never reaches us.
+              </ContentGridDescription>
+              <ContentGridLink href="https://support.rallly.co/self-hosting/introduction">
+                Learn more
+              </ContentGridLink>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <LockIcon /> Encryption everywhere
+              </ContentGridTitle>
+              <ContentGridDescription>
+                TLS 1.2 or higher for all traffic, AES-256 encryption at rest,
+                and HTTPS enforced across the platform.
+              </ContentGridDescription>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <EyeOffIcon /> Privacy-first
+              </ContentGridTitle>
+              <ContentGridDescription>
+                We collect the minimum needed to run the service. No sensitive
+                personal information, no advertising trackers, and we never sell
+                data.
+              </ContentGridDescription>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <DatabaseIcon /> Tenant isolation
+              </ContentGridTitle>
+              <ContentGridDescription>
+                Data is scoped to its owner at the access layer, with the
+                architecture rules enforced by static analysis in the codebase.
+              </ContentGridDescription>
+            </ContentGridItem>
+          </ContentGrid>
         </SectionContent>
       </Section>
       <Section>
