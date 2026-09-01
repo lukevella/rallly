@@ -30,8 +30,6 @@
   "faqTitle": "Często zadawane pytania",
   "faqWhatIsRallly": "Czym jest Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly to narzędzie do umawiania spotkań. Tworzysz ankietę z kilkoma proponowanymi terminami, udostępniasz link, a uczestnicy głosują na terminy, które im pasują. Gdy głosy zostaną oddane, od razu zobaczysz, który termin najlepiej pasuje wszystkim.",
-  "faqWhen2meetDifference": "Czym Rallly różni się od When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "Rallly robi wszystko, do czego używasz When2Meet, oferując czystszy interfejs, który świetnie działa na urządzeniach mobilnych. Otrzymujesz powiadomienia, gdy uczestnicy odpowiadają, i możesz zarządzać wszystkimi ankietami w jednym miejscu.",
   "finalCtaDescription": "Utwórz ankietę w mniej niż minutę. Bez konta, bez pobierania, bez dopominania się o odpowiedzi.",
   "finalCtaTitle": "Gotowy znaleźć najlepszy termin spotkania?",
   "freeSchedulingPollDescription": "Rallly pozwala tworzyć piękne i łatwe w użyciu ankiety do planowania, dzięki czemu możesz znaleźć najlepszy termin na swoje następne wydarzenie.",
@@ -79,10 +77,5 @@
   "socialProofTitle": "Ceniony za prostotę",
   "statsLast30Days": "<0>{voterCount, plural, one {# osoba} few {# osoby} many {# osób} other {# osoby}}</0> zagłosowało w <1>{pollCount, plural, one {# ankiecie} few {# ankietach} many {# ankietach} other {# ankietach}}</1> w ciągu ostatnich 30 dni",
   "subheading": "Utwórz ankietę, udostępnij link i pozwól wszystkim głosować na pasujące terminy. To za darmo i nie trzeba konta.",
-  "when2meetAlternative": "Nowoczesna alternatywa dla When2Meet",
-  "when2meetAlternativeDescription": "Rallly robi wszystko, do czego używasz When2Meet, bez uciążliwych elementów. Twórz przejrzyste ankiety terminów, które świetnie działają na telefonie, otrzymuj powiadomienia, gdy uczestnicy odpowiadają, i zarządzaj wszystkimi ankietami w jednym miejscu. Za darmo, bez reklam i bez konta, aby głosować. Przechodzisz z When2Meet lub WhenIsGood? Rallly od razu będzie Ci znajome.",
-  "when2meetAlternativeFinalCtaDescription": "Utwórz ankietę w kilka sekund i odkryj prostszy sposób na znalezienie odpowiedniego terminu.",
-  "when2meetAlternativeFinalCtaTitle": "Gotowy na świeże podejście do When2Meet?",
-  "when2meetAlternativeMetaDescription": "Rallly to darmowa alternatywa dla When2Meet z przejrzystym interfejsem, świetną obsługą urządzeń mobilnych, powiadomieniami o odpowiedziach i bez reklam. Do głosowania nie jest potrzebne konto.",
-  "when2meetAlternativeMetaTitle": "Najlepsza darmowa alternatywa dla When2Meet | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Utwórz ankietę w kilka sekund i odkryj prostszy sposób na znalezienie odpowiedniego terminu."
 }
