@@ -209,12 +209,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
         </div>
         <div>
           <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
-            <Trans
-              t={t}
-              ns="common"
-              i18nKey="schedulingFor"
-              defaults="Scheduling for"
-            />
+            <Trans t={t} ns="common" i18nKey="useCases" defaults="Use cases" />
           </div>
           <ul className="grid gap-3 text-sm">
             <li>
