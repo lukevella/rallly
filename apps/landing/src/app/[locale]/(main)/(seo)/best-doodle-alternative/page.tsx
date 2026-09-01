@@ -27,6 +27,7 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -305,6 +306,30 @@ export default async function Page(props: {
                   ns="home"
                   i18nKey="faqDoodleDifferenceAnswer"
                   defaults="Rallly gives you professional, ad-free meeting polls in a clean and easy to use interface. Participants can vote without creating an account, and if you want full control of your data you can even host Rallly on your own server."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleAlternativeFaqMeetingPoll"
+                    defaults="Can I create a meeting poll with Rallly for free?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="doodleAlternativeFaqMeetingPollAnswer"
+                  defaults="Yes. Creating a <0>meeting poll</0> is free with no limit on participants. Propose the times that could work, share one link, and watch the votes come in. Nobody needs an account to respond."
+                  components={[
+                    <LinkBase
+                      key="meeting-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
                 />
               </FaqItem>
               <FaqItem

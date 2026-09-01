@@ -27,6 +27,7 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -360,6 +361,30 @@ export default async function Page(props: {
                   ns="home"
                   i18nKey="faqWhen2meetMobileAnswer"
                   defaults="Yes. Voting on a Rallly poll is a matter of tapping the times that work for you, so it feels natural on a phone. There is no drag-select grid to wrestle with on a small screen."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="when2meetAlternativeFaqAvailability"
+                    defaults="Can I use Rallly to see when everyone is available?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="when2meetAlternativeFaqAvailabilityAnswer"
+                  defaults="Yes. Like When2meet, Rallly works as an <0>availability poll</0>. Offer the times you want to compare and participants respond with yes, no, or if need be, so you can see at a glance when everyone is free."
+                  components={[
+                    <LinkBase
+                      key="availability-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
                 />
               </FaqItem>
               <FaqItem

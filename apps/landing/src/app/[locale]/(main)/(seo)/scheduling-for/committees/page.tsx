@@ -19,6 +19,7 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -87,6 +88,30 @@ export default async function Page(props: {
           </SectionHeading>
           <SectionContent>
             <Faq>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="committeesFaqAvailability"
+                    defaults="How do I ask members for their availability?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="committeesFaqAvailabilityAnswer"
+                  defaults="Create a <0>scheduling poll</0> with the dates you can offer and send members the link. Each member marks the dates they can make, and the responses build into a clear picture of the committee's availability without a single reply-all email."
+                  components={[
+                    <LinkBase
+                      key="scheduling-poll"
+                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                      href="/free-scheduling-poll"
+                    />,
+                  ]}
+                />
+              </FaqItem>
               <FaqItem
                 question={
                   <Trans
