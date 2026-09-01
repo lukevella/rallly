@@ -38,7 +38,6 @@
   "privacyPolicy": "Privacy policy",
   "product": "Product",
   "resources": "Resources",
-  "schedulingFor": "Scheduling for",
   "schedulingPoll": "Scheduling poll",
   "security": "Security",
   "sportsClubs": "Sports clubs",
@@ -46,5 +45,6 @@
   "support": "Support",
   "termsOfUse": "Terms of use",
   "thesisDefense": "Thesis defenses",
+  "useCases": "Use cases",
   "when2MeetAlternative": "When2Meet alternative"
 }
