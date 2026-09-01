@@ -30,8 +30,6 @@
   "faqTitle": "Domande frequenti",
   "faqWhatIsRallly": "Cos'è Rallly?",
   "faqWhatIsRalllyAnswer": "Rallly è uno strumento per organizzare riunioni. Crei un sondaggio con alcuni orari proposti, condividi un link e i partecipanti votano gli orari che funzionano per loro. Quando i voti sono raccolti, puoi vedere a colpo d'occhio quale orario è più adatto per tutti.",
-  "faqWhen2meetDifference": "In cosa Rallly è diverso da When2Meet?",
-  "faqWhen2meetDifferenceAnswer": "Rallly fa tutto ciò per cui usi When2Meet, con un'interfaccia più pulita che funziona bene su mobile. Ricevi notifiche quando i partecipanti rispondono e puoi gestire tutti i tuoi sondaggi in un unico posto.",
   "finalCtaDescription": "Crea un sondaggio, condividi il link e lascia che tutti votino gli orari che vanno bene.",
   "finalCtaTitle": "Pronto a trovare il momento migliore per incontrarvi?",
   "freeSchedulingPollDescription": "Rallly ti permette di creare sondaggi di pianificazione belli e facili da usare, così puoi trovare l'orario migliore per il tuo prossimo evento.",
@@ -79,10 +77,5 @@
   "socialProofTitle": "Amato per la sua semplicità",
   "statsLast30Days": "<0>{voterCount, plural, one {# persona} other {# persone}}</0> hanno votato in <1>{pollCount, plural, one {# sondaggio} other {# sondaggi}}</1> negli ultimi 30 giorni",
   "subheading": "Crea un sondaggio, condividi il link e lascia che tutti votino gli orari disponibili. È gratis e non serve un account.",
-  "when2meetAlternative": "Un'alternativa moderna a When2Meet",
-  "when2meetAlternativeDescription": "Rallly fa tutto ciò per cui usi When2Meet, senza le parti macchinose. Crea sondaggi di pianificazione chiari che funzionano benissimo da mobile, ricevi una notifica quando i partecipanti rispondono e gestisci tutti i tuoi sondaggi in un unico posto. Gratuito, senza pubblicità e senza bisogno di un account per votare. Arrivi da When2Meet o WhenIsGood? Rallly ti sembrerà subito familiare.",
-  "when2meetAlternativeFinalCtaDescription": "Crea un sondaggio in pochi secondi e scopri un modo più semplice per trovare un orario che vada bene.",
-  "when2meetAlternativeFinalCtaTitle": "Pronto per un nuovo approccio a When2Meet?",
-  "when2meetAlternativeMetaDescription": "Rallly è un'alternativa gratuita a When2Meet con un'interfaccia chiara, un ottimo supporto mobile, notifiche delle risposte e nessuna pubblicità. Non serve un account per votare.",
-  "when2meetAlternativeMetaTitle": "La migliore alternativa gratuita a When2Meet | Rallly"
+  "when2meetAlternativeFinalCtaDescription": "Crea un sondaggio in pochi secondi e scopri un modo più semplice per trovare un orario che vada bene."
 }
