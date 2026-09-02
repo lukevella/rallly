@@ -13,7 +13,6 @@
   "changeEmail_preview": "Dein 6-stelliger Code lautet: {code}",
   "changeEmail_subject": "Bestätige deine neue E-Mail-Adresse",
   "changeEmail_text": "Bitte gib den folgenden 6-stelligen Bestätigungscode ein, um deine neue E-Mail-Adresse zu bestätigen",
-  "common_disableNotifications": "Du kannst <a>deine Benachrichtigungseinstellungen verwalten</a>, um diese E-Mails nicht mehr zu erhalten.",
   "common_poweredBy": "Betrieben von <a>{domain}</a>",
   "common_viewOn": "Auf {domain} ansehen",
   "eventCanceledContent": "<b>{hostName}</b> hat <b>{title}</b> abgesagt, das für folgenden Termin geplant war:",
