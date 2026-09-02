@@ -1,4 +1,7 @@
 {
   "blogDescription": "Новости, обновления и анонсы о Rallly.",
-  "blogTitle": "Rallly - Блог"
+  "blogFilterAll": "Все",
+  "blogPublishedOn": "Опубликовано",
+  "blogTitle": "Rallly - Блог",
+  "blogWrittenBy": "Написано"
 }
