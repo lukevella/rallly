@@ -3,8 +3,9 @@ import "server-only";
 import type { SpaceTier, SpaceType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
-import { createSpaceDTO } from "@/features/space/data";
-import { isSelfHosted } from "@/lib/constants";
+import { resolveSpaceTier } from "@/features/billing/utils";
+import { getInstancePolicy } from "@/features/instance-policy/data";
+import { createSpaceDTO } from "@/features/space/utils";
 import {
   deleteStoredAsset,
   replaceStoredAsset,
@@ -13,7 +14,9 @@ import {
 export async function createSpace({
   name = "Personal",
   ownerId,
-  tier = isSelfHosted ? "pro" : "hobby",
+  // Stored as what reads resolve an unpaid space to, so the row matches
+  // behavior on instances without billing
+  tier = resolveSpaceTier("hobby"),
   spaceType,
   industry,
 }: {
@@ -23,6 +26,8 @@ export async function createSpace({
   spaceType?: SpaceType;
   industry?: string | null;
 }) {
+  const policy = await getInstancePolicy();
+
   const space = await prisma.space.create({
     data: {
       name,
@@ -32,8 +37,9 @@ export async function createSpace({
       industry,
       // New spaces start unshared; sharing everything is opt-in. Matches
       // the column default — explicit here so the decision is visible in
-      // code, not just the schema.
-      shared: false,
+      // code, not just the schema. Stored as shared where the policy forces
+      // it so the row matches what reads coerce it to.
+      shared: policy.spacesAlwaysShared,
       members: {
         create: {
           userId: ownerId,
@@ -45,10 +51,13 @@ export async function createSpace({
   });
 
   return createSpaceDTO({
-    ...space,
-    role: "ADMIN",
-    memberCount: 1,
-    seatCount: 1,
+    space: {
+      ...space,
+      role: "ADMIN",
+      memberCount: 1,
+      seatCount: 1,
+    },
+    policy,
   });
 }
 

@@ -2,6 +2,7 @@ import "server-only";
 
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { getInstancePolicy } from "@/features/instance-policy/data";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type {
   AuthorizedSpaceId,
@@ -415,7 +416,9 @@ export async function canUserManagePoll(
       },
     });
 
-    if (membership?.space.shared) {
+    const { spacesAlwaysShared } = await getInstancePolicy();
+
+    if (membership && (spacesAlwaysShared || membership.space.shared)) {
       // Members manage each other's polls only in a shared space. Uniform
       // across roles: admins are members here too.
       return true;
@@ -426,6 +429,8 @@ export async function canUserManagePoll(
 }
 
 export const hasPollAdminAccess = async (pollId: string, userId: string) => {
+  const { spacesAlwaysShared } = await getInstancePolicy();
+
   const poll = await prisma.poll.findFirst({
     where: {
       id: pollId,
@@ -436,7 +441,9 @@ export const hasPollAdminAccess = async (pollId: string, userId: string) => {
         // across roles: admins are members here too.
         {
           space: {
-            shared: true,
+            // The row is not coerced the way the DTO is, so the policy has
+            // to override it here
+            ...(spacesAlwaysShared ? {} : { shared: true }),
             members: { some: effectiveSpaceMemberWhere({ userId }) },
           },
         },

@@ -5,10 +5,8 @@ import { env } from "@/env";
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { DEFAULT_PRIMARY_COLOR } from "./constants";
-import { getCustomBrandingConfig, isSpaceBrandingAllowed } from "./data";
+import { getCustomBrandingConfig } from "./data";
 import { getPrimaryColorVars } from "./utils";
-
-export const loadSpaceBrandingAllowed = cache(() => isSpaceBrandingAllowed());
 
 /**
  * Raw branding values for the control panel branding page. Editable fields

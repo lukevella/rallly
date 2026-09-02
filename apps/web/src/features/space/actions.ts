@@ -4,7 +4,7 @@ import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
-import { isSpaceBrandingAllowed } from "@/features/branding/data";
+import { getInstancePolicy } from "@/features/instance-policy/data";
 import { spaceIconAssetProfile } from "@/features/space/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -28,7 +28,6 @@ import {
   updateSpaceShowBrandingSchema,
 } from "@/features/space/schema";
 import { setActiveSpace } from "@/features/user/mutations";
-import { isSelfHosted } from "@/lib/constants";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import {
@@ -194,7 +193,9 @@ export const updateSpaceAction = authActionClient
       });
     }
 
-    if (parsedInput.primaryColor && !(await isSpaceBrandingAllowed())) {
+    const { spaceBrandingAllowed } = await getInstancePolicy();
+
+    if (parsedInput.primaryColor && !spaceBrandingAllowed) {
       throw new AppError({
         code: "FORBIDDEN",
         message: "Space branding is managed by the instance administrator",
@@ -242,7 +243,9 @@ export const updateSpaceShowBrandingAction = authActionClient
       });
     }
 
-    if (parsedInput.showBranding && !(await isSpaceBrandingAllowed())) {
+    const { spaceBrandingAllowed } = await getInstancePolicy();
+
+    if (parsedInput.showBranding && !spaceBrandingAllowed) {
       throw new AppError({
         code: "FORBIDDEN",
         message: "Space branding is managed by the instance administrator",
@@ -280,10 +283,9 @@ export const updateSpaceHideAttributionAction = authActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
 
-    // Space-level attribution removal is a cloud feature. On self-hosted
-    // instances attribution is licensed at instance level (white label
-    // addon + HIDE_ATTRIBUTION), where every space reports as "pro".
-    if (isSelfHosted) {
+    const { spaceAttributionConfigurable } = await getInstancePolicy();
+
+    if (!spaceAttributionConfigurable) {
       throw new AppError({
         code: "FORBIDDEN",
         message: "Attribution removal is not available on this instance",
@@ -327,6 +329,14 @@ export const updateSpaceSharedAction = authActionClient
   .inputSchema(updateSpaceSharedSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { space } = ctx;
+    const { spacesAlwaysShared } = await getInstancePolicy();
+
+    if (spacesAlwaysShared) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Spaces are always shared on this instance",
+      });
+    }
 
     if (parsedInput.shared && space.tier !== "pro") {
       throw new AppError({

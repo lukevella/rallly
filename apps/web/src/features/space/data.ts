@@ -1,22 +1,18 @@
 import "server-only";
 
-import type {
-  SpaceMemberRole as DBSpaceMemberRole,
-  SpaceTier as DBSpaceTier,
-} from "@rallly/database";
+import type { SpaceMemberRole as DBSpaceMemberRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { cache } from "react";
 
+import { isBillingEnabled } from "@/features/billing/constants";
 import { getSpaceSubscription } from "@/features/billing/data";
-import { isSpaceBrandingAllowed } from "@/features/branding/data";
+import { getInstancePolicy } from "@/features/instance-policy/data";
 import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberDTO } from "@/features/space/member/types";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
-import type { AuthorizedSpaceId, SpaceDTO } from "@/features/space/types";
-import { fromDBRole } from "@/features/space/utils";
-import { isSelfHosted } from "@/lib/constants";
+import { createSpaceDTO, fromDBRole } from "@/features/space/utils";
 import { AppError } from "@/lib/errors/app-error";
 
 const logger = createLogger("space/data");
@@ -95,8 +91,8 @@ function getSelfHostedSeatLimit(licenseType: LicenseType | null): number {
  */
 export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
   try {
-    if (isSelfHosted) {
-      // For self-hosted instances, get seat limit from instance license
+    if (!isBillingEnabled) {
+      // Without billing, seats come from the instance license
       const license = await cached_getInstanceLicense();
 
       if (!license) {
@@ -135,36 +131,6 @@ export async function getTotalSeatsForSpace(spaceId: string): Promise<number> {
       cause: error,
     });
   }
-}
-
-export function createSpaceDTO(space: {
-  id: string;
-  ownerId: string;
-  name: string;
-  role: DBSpaceMemberRole;
-  image?: string | null;
-  tier: DBSpaceTier;
-  primaryColor?: string | null;
-  showBranding: boolean;
-  hideAttribution: boolean;
-  shared: boolean;
-  memberCount: number;
-  seatCount: number;
-}): SpaceDTO {
-  return {
-    id: space.id as AuthorizedSpaceId,
-    name: space.name,
-    ownerId: space.ownerId,
-    tier: isSelfHosted ? "pro" : space.tier,
-    role: fromDBRole(space.role),
-    shared: space.shared,
-    memberCount: space.memberCount,
-    seatCount: space.seatCount,
-    image: space.image ?? undefined,
-    primaryColor: space.primaryColor ?? undefined,
-    showBranding: space.showBranding,
-    hideAttribution: space.hideAttribution,
-  };
 }
 
 export const getMember = async (id: string) => {
@@ -214,7 +180,9 @@ export async function getSpaceBranding(spaceId: string) {
     return null;
   }
 
-  if (!(await isSpaceBrandingAllowed())) {
+  const { spaceBrandingAllowed } = await getInstancePolicy();
+
+  if (!spaceBrandingAllowed) {
     return { ...space, showBranding: false, primaryColor: null };
   }
 
@@ -255,12 +223,17 @@ export const listSpacesForUser = cache(async (userId: string) => {
     },
   });
 
+  const policy = await getInstancePolicy();
+
   return result.map((spaceMember) =>
     createSpaceDTO({
-      ...spaceMember.space,
-      role: spaceMember.role,
-      memberCount: spaceMember.space._count.members,
-      seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
+      space: {
+        ...spaceMember.space,
+        role: spaceMember.role,
+        memberCount: spaceMember.space._count.members,
+        seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
+      },
+      policy,
     }),
   );
 });
@@ -290,9 +263,12 @@ export const getActiveSpaceForUser = cache(async (userId: string) => {
   }
 
   return createSpaceDTO({
-    ...spaceMember.space,
-    role: spaceMember.role,
-    memberCount: spaceMember.space._count.members,
-    seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
+    space: {
+      ...spaceMember.space,
+      role: spaceMember.role,
+      memberCount: spaceMember.space._count.members,
+      seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
+    },
+    policy: await getInstancePolicy(),
   });
 });

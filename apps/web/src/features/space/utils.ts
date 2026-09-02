@@ -1,11 +1,20 @@
-import type { SpaceMemberRole as PrismaSpaceMemberRole } from "@rallly/database";
+import type {
+  SpaceMemberRole as PrismaSpaceMemberRole,
+  SpaceTier as PrismaSpaceTier,
+} from "@rallly/database";
+import { resolveSpaceTier } from "@/features/billing/utils";
+import type { InstancePolicy } from "@/features/instance-policy/types";
 import type { Industry } from "@/features/space/constants";
 import {
   industryDomainRules,
   industryKeywordRules,
 } from "@/features/space/constants";
 import type { MemberRole } from "@/features/space/schema";
-import type { SpaceContentScope, SpaceDTO } from "@/features/space/types";
+import type {
+  AuthorizedSpaceId,
+  SpaceContentScope,
+  SpaceDTO,
+} from "@/features/space/types";
 
 export const toDBRole = (role: MemberRole): PrismaSpaceMemberRole => {
   switch (role) {
@@ -24,6 +33,45 @@ export const fromDBRole = (role: PrismaSpaceMemberRole): MemberRole => {
       return "admin";
   }
 };
+
+export function createSpaceDTO({
+  space,
+  policy,
+}: {
+  space: {
+    id: string;
+    ownerId: string;
+    name: string;
+    role: PrismaSpaceMemberRole;
+    image?: string | null;
+    tier: PrismaSpaceTier;
+    primaryColor?: string | null;
+    showBranding: boolean;
+    hideAttribution: boolean;
+    shared: boolean;
+    memberCount: number;
+    seatCount: number;
+  };
+  policy: Pick<InstancePolicy, "spacesAlwaysShared">;
+}): SpaceDTO {
+  return {
+    id: space.id as AuthorizedSpaceId,
+    name: space.name,
+    ownerId: space.ownerId,
+    tier: resolveSpaceTier(space.tier),
+    role: fromDBRole(space.role),
+    // Coerced at read time: migrations are shared with cloud, so the column
+    // cannot be backfilled per deployment. Every reader of `shared` must go
+    // through this DTO rather than the row.
+    shared: policy.spacesAlwaysShared || space.shared,
+    memberCount: space.memberCount,
+    seatCount: space.seatCount,
+    image: space.image ?? undefined,
+    primaryColor: space.primaryColor ?? undefined,
+    showBranding: space.showBranding,
+    hideAttribution: space.hideAttribution,
+  };
+}
 
 /**
  * The visibility scope space-scoped content reads must apply for this

@@ -8,7 +8,6 @@ import {
 import { Badge } from "@rallly/ui/badge";
 import { InfoIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
-import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PageHeaderActions } from "@/components/page-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
@@ -23,6 +22,7 @@ import {
 import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { InviteMemberButton } from "./components/invite-member-button";
 import { MemberDropdownMenu } from "./components/member-dropdown-menu";
 import { PendingInvites } from "./components/pending-invites";
@@ -92,7 +92,7 @@ export async function MembersPageContent() {
         <Alert variant="info">
           <InfoIcon />
           <AlertDescription>
-            <IfCloudHosted>
+            {isFeatureEnabled("billing") ? (
               <p>
                 <Trans
                   i18nKey="noSeatsAvailableAlertBillingDescription"
@@ -107,8 +107,7 @@ export async function MembersPageContent() {
                   }}
                 />
               </p>
-            </IfCloudHosted>
-            <IfSelfHosted>
+            ) : (
               <p>
                 <Trans
                   i18nKey="noSeatsAvailableAlertSelfHostedDescription"
@@ -124,7 +123,7 @@ export async function MembersPageContent() {
                   }}
                 />
               </p>
-            </IfSelfHosted>
+            )}
           </AlertDescription>
         </Alert>
       ) : null}

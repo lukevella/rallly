@@ -26,6 +26,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { useInstancePolicy } from "@/features/instance-policy/client";
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
@@ -37,6 +38,7 @@ import { LeaveSpaceButton } from "./components/leave-space-button";
 export function GeneralSettingsPageClient() {
   const { data: space, getMemberAbility } = useSpace();
   const user = useAuthedUser();
+  const { spacesAlwaysShared } = useInstancePolicy();
   const ability = getMemberAbility();
   const isAdmin = space.role === "admin";
   const canDeleteSpace = ability.can("delete", subject("Space", { ...space }));
@@ -69,7 +71,9 @@ export function GeneralSettingsPageClient() {
             </Alert>
           ) : null}
           <CustomBrandingSection disabled={!isAdmin} />
-          <CollaborationSection disabled={!isAdmin} />
+          {!spacesAlwaysShared ? (
+            <CollaborationSection disabled={!isAdmin} />
+          ) : null}
           {!isOwner || canDeleteSpace ? (
             <PageSection variant="card">
               <PageSectionHeader>

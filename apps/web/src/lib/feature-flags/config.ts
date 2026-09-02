@@ -4,6 +4,7 @@ import { isBillingEnabled } from "@/features/billing/constants";
 import { isCalendarsEnabled } from "@/features/calendars/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
+import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import type { FeatureFlagConfig } from "@/lib/feature-flags/types";
 import { isStorageEnabled } from "@/lib/storage";
 
@@ -25,4 +26,5 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // The new poll admin at /polls/[pollId] is dev-only until it reaches
   // feature parity with the legacy admin and cuts over.
   pollAdmin: env.NODE_ENV === "development",
+  quickCreate: isQuickCreateEnabled,
 };

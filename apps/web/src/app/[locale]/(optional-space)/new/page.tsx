@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BrandStyle } from "@/features/branding/components/brand-style";
-import { loadSpaceBrandingAllowed } from "@/features/branding/loaders";
+import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { CreatePoll } from "@/features/poll/components/create-poll";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { Trans } from "@/i18n/client";
@@ -32,7 +32,7 @@ export default async function Page() {
   const primaryColor =
     space?.showBranding &&
     space.primaryColor &&
-    (await loadSpaceBrandingAllowed())
+    (await loadInstancePolicy()).spaceBrandingAllowed
       ? space.primaryColor
       : null;
 

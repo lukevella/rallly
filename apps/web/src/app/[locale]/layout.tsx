@@ -12,10 +12,9 @@ import type { Params } from "@/app/[locale]/types";
 import { CookieConsentBanner } from "@/components/cookie-consent-banner";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
-import {
-  getInstanceBrandingConfig,
-  isSpaceBrandingAllowed,
-} from "@/features/branding/data";
+import { getInstanceBrandingConfig } from "@/features/branding/data";
+import { InstancePolicyProvider } from "@/features/instance-policy/client";
+import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
@@ -35,15 +34,16 @@ export const viewport: Viewport = {
 };
 
 async function loadData(locale: string) {
-  const [brandingConfig, spaceBrandingAllowed, { i18n }] = await Promise.all([
+  const [brandingConfig, instancePolicy, { i18n }] = await Promise.all([
     getInstanceBrandingConfig(),
-    isSpaceBrandingAllowed(),
+    loadInstancePolicy(),
     initI18next({ lng: locale }),
   ]);
 
   return {
     resources: i18n.store.data,
-    brandingConfig: { ...brandingConfig, spaceBrandingAllowed },
+    brandingConfig,
+    instancePolicy,
   };
 }
 
@@ -60,7 +60,7 @@ export default async function Root({
     notFound();
   }
 
-  const { brandingConfig, resources } = await loadData(locale);
+  const { brandingConfig, instancePolicy, resources } = await loadData(locale);
 
   const brandingStyles = {
     "--primary-light": brandingConfig.primaryColor.light,
@@ -79,20 +79,22 @@ export default async function Root({
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
-            <BrandingProvider value={brandingConfig}>
-              <Toaster />
-              <I18nProvider locale={locale} resources={resources}>
-                <TRPCProvider>
-                  <LazyMotion features={domAnimation}>
-                    <SkipNavLink />
-                    <TimeZoneSync>
-                      <TooltipProvider>{children}</TooltipProvider>
-                    </TimeZoneSync>
-                    <CookieConsentBanner />
-                  </LazyMotion>
-                </TRPCProvider>
-              </I18nProvider>
-            </BrandingProvider>
+            <InstancePolicyProvider value={instancePolicy}>
+              <BrandingProvider value={brandingConfig}>
+                <Toaster />
+                <I18nProvider locale={locale} resources={resources}>
+                  <TRPCProvider>
+                    <LazyMotion features={domAnimation}>
+                      <SkipNavLink />
+                      <TimeZoneSync>
+                        <TooltipProvider>{children}</TooltipProvider>
+                      </TimeZoneSync>
+                      <CookieConsentBanner />
+                    </LazyMotion>
+                  </TRPCProvider>
+                </I18nProvider>
+              </BrandingProvider>
+            </InstancePolicyProvider>
           </FeatureFlagsProvider>
         </ThemeProvider>
       </body>
