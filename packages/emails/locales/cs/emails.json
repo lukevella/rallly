@@ -13,7 +13,6 @@
   "changeEmail_preview": "Váš 6-místný kód je: {code}",
   "changeEmail_subject": "Ověřte svou novou e-mailovou adresu",
   "changeEmail_text": "Pro potvrzení své nové e-mailové adresy použijte následující 6-místný ověřovací kód",
-  "common_disableNotifications": "Můžete <a>upravit nastavení svých oznámení</a>, abyste přestali dostávat tyto e-maily.",
   "common_poweredBy": "Běží na <a>{domain}</a>",
   "common_viewOn": "Zobrazit na {domain}",
   "eventCanceledContent": "<b>{hostName}</b> zrušil <b>{title}</b>, která byla naplánována na:",
