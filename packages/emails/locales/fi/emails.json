@@ -13,7 +13,6 @@
   "changeEmail_preview": "6-numeroinen koodisi on: {code}",
   "changeEmail_subject": "Vahvista uusi sähköpostiosoitteesi",
   "changeEmail_text": "Käytä seuraavaa 6-numeroista vahvistuskoodia vahvistaaksesi uuden sähköpostiosoitteesi",
-  "common_disableNotifications": "Voit <a>hallita ilmoitusasetuksiasi</a>, jos et halua saada tällaisia sähköposteja.",
   "common_poweredBy": "Palvelun tarjoaa <a>{domain}</a>",
   "common_viewOn": "Näytä osoitteessa {domain}",
   "eventCanceledContent": "<b>{hostName}</b> on perunut tapahtuman <b>{title}</b>, jonka ajankohta oli:",
