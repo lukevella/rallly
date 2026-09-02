@@ -21,3 +21,7 @@ export const updateNotificationPreferenceSchema = z.object({
 });
 
 export type NotificationPreferences = Record<ActivityEventType, boolean>;
+
+export const unsubscribeWithTokenSchema = z.object({
+  token: z.string().min(1),
+});

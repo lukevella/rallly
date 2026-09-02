@@ -26,6 +26,7 @@ type NewCommentEmailProps = {
   authorName: string;
   content: string;
   pollUrl: string;
+  unsubscribeUrl: string;
   disableNotificationsUrl: string;
 };
 
@@ -36,6 +37,7 @@ async function NewCommentEmail({
   authorName,
   content,
   pollUrl,
+  unsubscribeUrl,
   disableNotificationsUrl,
   locale = "en",
   chrome,
@@ -111,10 +113,17 @@ async function NewCommentEmail({
               t={t}
               i18n={i18n}
               ns="emails"
-              i18nKey="common_disableNotifications"
-              defaults="You can <a>manage your notification settings</a> to stop receiving these emails."
+              i18nKey="common_notificationFooter"
+              defaults="You can <a>mute this poll</a> or <b>manage your notification settings</b>."
               components={{
                 a: (
+                  <Link
+                    color={chrome.primaryColor}
+                    style={{ whiteSpace: "nowrap" }}
+                    href={unsubscribeUrl}
+                  />
+                ),
+                b: (
                   <Link
                     color={chrome.primaryColor}
                     style={{ whiteSpace: "nowrap" }}
@@ -137,6 +146,7 @@ NewCommentEmail.PreviewProps = {
   content:
     "Hi everyone! I can make most of these times work, but Tuesday afternoon would be best for me.\nLooking forward to it!",
   pollUrl: "https://rallly.co",
+  unsubscribeUrl: "https://rallly.co",
   disableNotificationsUrl: "https://rallly.co",
   locale: "en",
   chrome: previewChrome,

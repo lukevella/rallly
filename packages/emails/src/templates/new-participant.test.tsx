@@ -7,6 +7,7 @@ const baseProps = {
   title: "Team Meeting",
   participantName: "Jane Doe",
   pollUrl: "https://rallly.co/poll/abc",
+  unsubscribeUrl: "https://rallly.co/unsubscribe/token",
   disableNotificationsUrl: "https://rallly.co/settings",
   chrome: previewChrome,
 };

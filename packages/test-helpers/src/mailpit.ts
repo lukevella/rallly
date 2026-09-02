@@ -108,6 +108,15 @@ export async function captureOne(
   throw new Error(`No email received for ${to} within ${timeout}ms`);
 }
 
+export async function getMessageHeaders(
+  messageId: string,
+): Promise<Record<string, string[]>> {
+  const response = await fetch(
+    `${MAILPIT_API_URL}/v1/message/${messageId}/headers`,
+  );
+  return (await response.json()) as Record<string, string[]>;
+}
+
 export async function getAttachmentText(
   messageId: string,
   partId: string,

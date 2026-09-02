@@ -21,6 +21,13 @@ export type SendArgs<P> = {
   replyTo?: string;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
+  /**
+   * HTTPS URL that mutes this kind of mail for the recipient. Emitted as
+   * `List-Unsubscribe` + `List-Unsubscribe-Post` (RFC 8058 one-click), which
+   * Gmail and Yahoo expect on recurring notification mail. The URL must
+   * accept an unauthenticated POST.
+   */
+  listUnsubscribeUrl?: string;
 };
 
 function resolveFrom(from?: From): From {
@@ -41,8 +48,19 @@ type DispatchOptions = {
   text?: string;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
+  listUnsubscribeUrl?: string;
   errorLabel: string;
 };
+
+function buildHeaders(listUnsubscribeUrl?: string) {
+  if (!listUnsubscribeUrl) {
+    return undefined;
+  }
+  return {
+    "List-Unsubscribe": `<${listUnsubscribeUrl}>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+  };
+}
 
 async function dispatch(options: DispatchOptions) {
   if (!process.env.SUPPORT_EMAIL) {
@@ -60,6 +78,7 @@ async function dispatch(options: DispatchOptions) {
       text: options.text,
       attachments: options.attachments,
       icalEvent: options.icalEvent,
+      headers: buildHeaders(options.listUnsubscribeUrl),
     });
   } catch (e) {
     // Operational (SMTP/transport) failures are logged, not thrown — sending is
@@ -84,6 +103,7 @@ export async function sendRenderedEmail(options: {
   replyTo?: string;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
+  listUnsubscribeUrl?: string;
 }) {
   const [html, text] = await Promise.all([
     render(options.element),
@@ -99,6 +119,7 @@ export async function sendRenderedEmail(options: {
     text,
     attachments: options.attachments,
     icalEvent: options.icalEvent,
+    listUnsubscribeUrl: options.listUnsubscribeUrl,
     errorLabel: options.subject,
   });
 }
@@ -112,6 +133,7 @@ export type SendRawEmailOptions = {
   replyTo?: string;
   attachments?: EmailAttachments;
   icalEvent?: IcalEvent;
+  listUnsubscribeUrl?: string;
 };
 
 /**

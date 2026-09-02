@@ -1,9 +1,15 @@
 "use server";
 
-import { updateNotificationPreference } from "@/features/notifications/mutations";
-import { updateNotificationPreferenceSchema } from "@/features/notifications/schema";
+import {
+  unsubscribeWithToken,
+  updateNotificationPreference,
+} from "@/features/notifications/mutations";
+import {
+  unsubscribeWithTokenSchema,
+  updateNotificationPreferenceSchema,
+} from "@/features/notifications/schema";
 import { track } from "@/lib/posthog";
-import { authActionClient } from "@/lib/safe-action/server";
+import { actionClient, authActionClient } from "@/lib/safe-action/server";
 
 export const updateNotificationPreferenceAction = authActionClient
   .metadata({ actionName: "update_notification_preference" })
@@ -22,4 +28,12 @@ export const updateNotificationPreferenceAction = authActionClient
         enabled: parsedInput.enabled,
       },
     });
+  });
+
+// Public: the signed token is the credential, verified in the mutation.
+export const unsubscribeWithTokenAction = actionClient
+  .metadata({ actionName: "unsubscribe_with_token" })
+  .inputSchema(unsubscribeWithTokenSchema)
+  .action(async ({ parsedInput }) => {
+    return unsubscribeWithToken({ token: parsedInput.token });
   });
