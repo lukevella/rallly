@@ -13,7 +13,6 @@
   "changeEmail_preview": "Je 6-cijferige code is: {code}",
   "changeEmail_subject": "Bevestig je nieuwe e-mailadres",
   "changeEmail_text": "Gebruik de volgende 6-cijferige verificatiecode om je nieuwe e-mailadres te bevestigen",
-  "common_disableNotifications": "Pas je <a>meldingsinstellingen</a> aan om deze e-mails niet meer te ontvangen.",
   "common_poweredBy": "Mogelijk gemaakt door <a>{domain}</a>",
   "common_viewOn": "Bekijken op {domain}",
   "eventCanceledContent": "<b>{hostName}</b> heeft het evenement <b>{title}</b> geannuleerd dat was gepland voor:",
