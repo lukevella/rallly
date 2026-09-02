@@ -1,3 +1,5 @@
+<div align="center">
+
 <img src="./assets/images/app-icon.svg" width="96" height="96" alt="" />
 
 # Rallly
@@ -12,8 +14,9 @@
 [![Discord](https://img.shields.io/badge/-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/uzg4ZcHbuM)
 [![Donate](https://img.shields.io/badge/-Donate%20with%20Paypal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E)
 
-<img src="./assets/images/screenshot.png" alt="A Rallly poll showing participants' availability across four time slots" />
+</div>
 
+<img src="./assets/images/screenshot.png" alt="A Rallly poll showing participants' availability across four time slots" />
 
 Rallly is an open-source scheduling tool that helps you find the best date and time to meet. Create a poll with a few options, share the link, and let your participants vote on when they're available. No more back-and-forth emails.
 
