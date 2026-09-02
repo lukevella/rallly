@@ -106,6 +106,10 @@ pnpm sherif               # Check package dependencies
 - **Cloud Hosted**: Full SaaS with Stripe billing on Vercel
 - **Self Hosted**: Docker-based deployment without billing features
 - Environment variable `NEXT_PUBLIC_SELF_HOSTED=true` toggles features
+- **Every cloud vs self-hosted behavior difference lives in one of two files, one line per field with the reason on the line, so the files are the inventory:**
+  - **Capabilities** ("can this instance do X?") — `lib/feature-flags/config.ts` (`featureFlagConfig`, `isFeatureEnabled` server-side, `useFeatureFlag` client-side). Behavior forks key on a capability such as `billing`, never on `isSelfHosted` directly; "no billing ⇒ every paid feature is on" is derived once in `features/billing/utils.ts` (`resolveSpaceTier`).
+  - **Policies** ("what does this instance's org decide for its spaces?") — `features/instance-policy/` (`deriveInstancePolicy` in `utils.ts` is the inventory; `getInstancePolicy` from `data.ts` for server code, `loadInstancePolicy` from `loaders.ts` for pages, `useInstancePolicy` from `client.tsx`). When the organization layer lands this becomes the org's policy with the same field names.
+  - `isSelfHosted` is for infrastructure wiring (Stripe webhook, licensing routes, updates route, storage). A few legacy product forks still key on it directly (account deletion mode, control panel footer links, the cookie banner link, API access, the guest poll upsell); they shrink toward zero and are never a precedent. A new `isSelfHosted` product fork is a review blocker: add a capability or policy field instead.
 
 ## Testing
 

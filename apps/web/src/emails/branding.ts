@@ -1,10 +1,7 @@
 import type { EmailBranding } from "@rallly/emails";
 
-import {
-  getInstanceBrandingConfig,
-  isSpaceBrandingAllowed,
-} from "@/features/branding/data";
-import { isSelfHosted } from "@/lib/constants";
+import { getInstanceBrandingConfig } from "@/features/branding/data";
+import { getInstancePolicy } from "@/features/instance-policy/data";
 import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 /**
@@ -31,17 +28,15 @@ export async function getSpaceBranding(space: {
   primaryColor: string | null;
   image: string | null;
 }): Promise<EmailBranding> {
-  const [instance, spaceBrandingAllowed] = await Promise.all([
-    getInstanceBranding(),
-    isSpaceBrandingAllowed(),
-  ]);
+  const [instance, { spaceBrandingAllowed, spaceAttributionConfigurable }] =
+    await Promise.all([getInstanceBranding(), getInstancePolicy()]);
   return {
     ...instance,
-    // Space-level attribution removal is cloud-only; self-hosted attribution
-    // is licensed at instance level and already reflected in the instance
-    // branding.
+    // Where attribution is licensed at instance level it is already
+    // reflected in the instance branding
     hideAttribution:
-      instance.hideAttribution || (!isSelfHosted && space.hideAttribution),
+      instance.hideAttribution ||
+      (spaceAttributionConfigurable && space.hideAttribution),
     ...(space.showBranding && spaceBrandingAllowed
       ? {
           primaryColor: space.primaryColor ?? instance.primaryColor,

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@rallly/ui/card";
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { useBranding } from "@/features/branding/client";
+import { useInstancePolicy } from "@/features/instance-policy/client";
 import { usePoll } from "@/features/poll/client";
 import {
   EventMetaDescription,
@@ -47,6 +48,7 @@ function IconDescription({
 export function EventCard() {
   const poll = usePoll();
   const branding = useBranding();
+  const { spaceBrandingAllowed } = useInstancePolicy();
   return (
     <Card>
       <RandomGradientBar />
@@ -62,7 +64,7 @@ export function EventCard() {
               {poll.space.name}
             </p>
           </div>
-        ) : !branding.spaceBrandingAllowed ? (
+        ) : !spaceBrandingAllowed ? (
           // Instance branding is enforced: the space chip is suppressed, so
           // the slot carries the instance's logo icon and name instead
           <div className="mb-2">

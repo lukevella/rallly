@@ -6,7 +6,6 @@ import { getActiveSpaceForUser } from "@/features/space/data";
 import { createSpaceContentScope } from "@/features/space/utils";
 import { createUserDTO } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
-import { isSelfHosted } from "@/lib/constants";
 import { AppError } from "@/lib/errors/app-error";
 import { isMaintenanceActiveForRequest } from "@/lib/maintenance-server";
 import { createRatelimit } from "@/lib/rate-limit";
@@ -174,7 +173,8 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
 });
 
 export const proProcedure = spaceProcedure.use(async ({ ctx, next }) => {
-  if (!isSelfHosted && ctx.space.tier !== "pro") {
+  // ctx.space is the coerced DTO: without billing every space is pro here
+  if (ctx.space.tier !== "pro") {
     throw new TRPCError({
       code: "PAYMENT_REQUIRED",
       message:

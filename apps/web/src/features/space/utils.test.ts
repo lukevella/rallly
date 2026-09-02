@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { createSpaceContentScope, inferIndustry } from "@/features/space/utils";
+import {
+  createSpaceContentScope,
+  createSpaceDTO,
+  inferIndustry,
+} from "@/features/space/utils";
 
 const spaceId = "space-1" as AuthorizedSpaceId;
 
@@ -147,5 +151,38 @@ describe("inferIndustry", () => {
         organizationName: "City Council",
       }),
     ).toBe("government");
+  });
+});
+
+describe("createSpaceDTO", () => {
+  const space = {
+    id: "space-1",
+    ownerId: "user-1",
+    name: "My Team",
+    role: "MEMBER" as const,
+    tier: "hobby" as const,
+    showBranding: false,
+    hideAttribution: false,
+    shared: false,
+    memberCount: 1,
+    seatCount: 1,
+  };
+
+  it("keeps the stored sharing setting when spaces are not always shared", () => {
+    expect(
+      createSpaceDTO({ space, policy: { spacesAlwaysShared: false } }).shared,
+    ).toBe(false);
+    expect(
+      createSpaceDTO({
+        space: { ...space, shared: true },
+        policy: { spacesAlwaysShared: false },
+      }).shared,
+    ).toBe(true);
+  });
+
+  it("coerces an unshared space to shared when spaces are always shared", () => {
+    expect(
+      createSpaceDTO({ space, policy: { spacesAlwaysShared: true } }).shared,
+    ).toBe(true);
   });
 });

@@ -15,7 +15,6 @@ import { Switch } from "@rallly/ui/switch";
 import { LockIcon } from "lucide-react";
 import React from "react";
 import { ColorPickerWithSaveButton } from "@/components/color-picker-with-save-button";
-import { IfCloudHosted } from "@/components/environment";
 import {
   PageSection,
   PageSectionContent,
@@ -25,8 +24,8 @@ import {
 } from "@/components/page-layout";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
-import { useBranding } from "@/features/branding/client";
 import { DEFAULT_PRIMARY_COLOR } from "@/features/branding/constants";
+import { useInstancePolicy } from "@/features/instance-policy/client";
 import {
   updateSpaceAction,
   updateSpaceShowBrandingAction,
@@ -47,7 +46,8 @@ export function CustomBrandingSection({
   const { data: space } = useSpace();
   const user = useAuthedUser();
   const isFree = useIsFree();
-  const { spaceBrandingAllowed } = useBranding();
+  const { spaceBrandingAllowed, spaceAttributionConfigurable } =
+    useInstancePolicy();
   const { t } = useTranslation();
 
   const currentColor = space.primaryColor ?? DEFAULT_PRIMARY_COLOR;
@@ -165,9 +165,9 @@ export function CustomBrandingSection({
                   aria-labelledby="primary-color-label"
                 />
               </Field>
-              <IfCloudHosted>
+              {spaceAttributionConfigurable ? (
                 <RemoveAttributionSetting disabled={disabled} />
-              </IfCloudHosted>
+              ) : null}
               <Field>
                 <Field orientation="horizontal">
                   <FieldContent>

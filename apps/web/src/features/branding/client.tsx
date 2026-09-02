@@ -18,18 +18,12 @@ export interface BrandingConfig {
   appName: string;
 }
 
-export interface BrandingContextValue extends BrandingConfig {
-  // False when the instance holds the white label addon: space branding is
-  // suppressed and branding is managed from the control panel
-  spaceBrandingAllowed: boolean;
-}
-
-const BrandingContext = React.createContext<BrandingContextValue | undefined>(
+const BrandingContext = React.createContext<BrandingConfig | undefined>(
   undefined,
 );
 
 interface BrandingProviderProps {
-  value: BrandingContextValue;
+  value: BrandingConfig;
   children: React.ReactNode;
 }
 
@@ -41,7 +35,7 @@ export function BrandingProvider({ value, children }: BrandingProviderProps) {
   );
 }
 
-export function useBranding(): BrandingContextValue {
+export function useBranding(): BrandingConfig {
   const context = React.useContext(BrandingContext);
   if (context === undefined) {
     throw new Error("useBranding must be used within a BrandingProvider");

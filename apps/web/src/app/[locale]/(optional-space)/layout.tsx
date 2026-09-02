@@ -3,13 +3,13 @@ import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SessionRefresher } from "@/components/session-refresher";
 import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
+import { resolveSpaceTier } from "@/features/billing/utils";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { UserProvider } from "@/features/user/client";
 import { requireUser } from "@/features/user/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
-import { isSelfHosted } from "@/lib/constants";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 
@@ -31,7 +31,8 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
 
   const space =
     user && !user.isGuest ? await getActiveSpaceForUser(user.id) : null;
-  const tier = space?.tier ?? (isSelfHosted ? "pro" : "hobby");
+  // Guests have no space; they get whatever an unpaid space resolves to
+  const tier = space?.tier ?? resolveSpaceTier("hobby");
 
   return (
     <>
