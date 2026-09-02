@@ -8,7 +8,7 @@
   "accountDeletionScheduled_text": "Your {appName} account is scheduled for deletion on {date}. Your polls, events, votes, and comments will be permanently deleted.",
   "allDay": "All day",
   "changeEmail_codeValid": "This code is valid for 15 minutes",
-  "changeEmail_content2": "You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you, contact <a>{supportEmail}</a>.",
+  "changeEmail_content2": "You're receiving this email because a request was made to change the email address of an account on <domain />. If this wasn't you contact <a>{supportEmail}</a>.",
   "changeEmail_heading": "Verify your new email address",
   "changeEmail_preview": "Your 6-digit code is: {code}",
   "changeEmail_subject": "Verify your new email address",
