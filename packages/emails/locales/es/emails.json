@@ -13,7 +13,6 @@
   "changeEmail_preview": "Tu código de 6 dígitos es: {code}",
   "changeEmail_subject": "Verifica tu nueva dirección de correo electrónico",
   "changeEmail_text": "Por favor, utiliza el siguiente código de verificación de 6 dígitos para confirmar tu nueva dirección de correo electrónico",
-  "common_disableNotifications": "Puedes <a>gestionar tus configuraciones de notificación</a> para dejar de recibir estos correos electrónicos.",
   "common_poweredBy": "Con tecnología de <a>{domain}</a>",
   "common_viewOn": "Ver en {domain}",
   "eventCanceledContent": "<b>{hostName}</b> ha cancelado <b>{title}</b> que estaba programado para:",
