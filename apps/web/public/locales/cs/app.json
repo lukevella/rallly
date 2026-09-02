@@ -204,6 +204,7 @@
   "customBranding": "Vlastní značka",
   "customBrandingAlertDescription": "Vlastní značka je dostupná držitelům Enterprise licence jako placený doplňek.",
   "customBrandingDescription": "Zobrazte své logo a barvy značky vašim účastníkům",
+  "customBrandingManagedByInstance": "Branding je spravován administrátorem instance.",
   "customBrandingSettingLabel": "Zobrazte své logo a barvy účastníkům.",
   "customBrandingSettingTitle": "Vlastní značka",
   "dangerZone": "Nebezpečná zóna",
