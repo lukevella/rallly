@@ -6,6 +6,7 @@ export {
   deleteAllMessages,
   getAttachmentText,
   getMessage,
+  getMessageHeaders,
   getMessages,
   type MailpitAttachment,
   type MailpitEmailAddress,

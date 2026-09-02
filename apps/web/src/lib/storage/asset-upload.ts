@@ -1,28 +1,26 @@
 import "server-only";
-import crypto from "node:crypto";
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { after } from "next/server";
 import { env } from "@/env";
 import { isSelfHosted } from "@/lib/constants";
 import { AppError } from "@/lib/errors/app-error";
+import { createSignature, verifySignature } from "@/lib/signature";
 import type { AssetProfile } from "./asset-profile";
 import { extensionByMimeType, parseAssetKey } from "./asset-profile";
 import { isStorageKey } from "./resolve-storage-url";
 import { getS3Client } from "./s3";
 
 const UPLOAD_TOKEN_TTL_SECONDS = 3600;
-
-function computeSignature(payload: string) {
-  return crypto
-    .createHmac("sha256", env.SECRET_PASSWORD)
-    .update(payload)
-    .digest("hex");
-}
+const SIGNING_CONTEXT = "asset-upload";
 
 export function signUploadKey(key: string) {
   const expiry = Math.floor(Date.now() / 1000) + UPLOAD_TOKEN_TTL_SECONDS;
-  const signature = computeSignature(`${key}:${expiry}`);
+  const signature = createSignature({
+    context: SIGNING_CONTEXT,
+    payload: `${key}:${expiry}`,
+    secret: env.SECRET_PASSWORD,
+  });
   return `${expiry}.${signature}`;
 }
 
@@ -34,13 +32,12 @@ export function verifyUploadToken(key: string, token: string) {
   if (!Number.isInteger(expiry)) return false;
   if (expiry <= Math.floor(Date.now() / 1000)) return false;
 
-  const expected = computeSignature(`${key}:${expiry}`);
-  const expectedBuf = Buffer.from(expected, "hex");
-  const tokenBuf = Buffer.from(signature, "hex");
-  if (expectedBuf.length === 0 || expectedBuf.length !== tokenBuf.length) {
-    return false;
-  }
-  return crypto.timingSafeEqual(expectedBuf, tokenBuf);
+  return verifySignature({
+    context: SIGNING_CONTEXT,
+    payload: `${key}:${expiry}`,
+    secret: env.SECRET_PASSWORD,
+    signature,
+  });
 }
 
 export async function createAssetUploadUrl({

@@ -8,7 +8,9 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { env } from "@/env";
 import { getNotificationRecipient } from "@/features/notifications/data";
+import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { hasPollAdminAccess } from "@/features/poll/data";
 import { AppError } from "@/lib/errors/app-error";
@@ -95,16 +97,23 @@ async function sendNewResponseNotificationEmail({
       return;
     }
 
+    const unsubscribeToken = createUnsubscribeToken({
+      target: { kind: "poll", pollId, userId: recipient.id },
+      secret: env.SECRET_PASSWORD,
+    });
+
     await sendNewParticipantEmail({
       to: recipient.email,
       locale: recipient.locale ?? undefined,
       branding: await getInstanceBranding(),
       replyTo: participantEmail ?? undefined,
+      listUnsubscribeUrl: absoluteUrl(`/api/unsubscribe/${unsubscribeToken}`),
       props: {
         participantName,
         note: note ?? undefined,
         canReply: !!participantEmail,
         pollUrl: absoluteUrl(`/poll/${pollId}`),
+        unsubscribeUrl: absoluteUrl(`/unsubscribe/${unsubscribeToken}`),
         disableNotificationsUrl: absoluteUrl("/settings/notifications"),
         title: pollTitle,
       },

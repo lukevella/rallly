@@ -13,7 +13,7 @@
   "changeEmail_preview": "Your 6-digit code is: {code}",
   "changeEmail_subject": "Verify your new email address",
   "changeEmail_text": "Please use the following 6-digit verification code to confirm your new email address",
-  "common_disableNotifications": "You can <a>manage your notification settings</a> to stop receiving these emails.",
+  "common_notificationFooter": "You can <0>mute this poll</0> or <1>manage your notification settings</1>.",
   "common_poweredBy": "Powered by <a>{domain}</a>",
   "common_viewOn": "View on {domain}",
   "eventCanceledContent": "<b>{hostName}</b> has canceled <b>{title}</b> that was scheduled for:",

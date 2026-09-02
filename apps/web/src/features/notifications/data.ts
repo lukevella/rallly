@@ -87,3 +87,20 @@ export async function getNotificationRecipient({
     locale: creator.locale,
   };
 }
+
+/**
+ * The poll an unsubscribe token points at, scoped to the owner the token was
+ * issued for so a token can't reveal anything about a poll that changed hands.
+ */
+export async function getPollMuteTarget({
+  pollId,
+  userId,
+}: {
+  pollId: string;
+  userId: string;
+}) {
+  return prisma.poll.findFirst({
+    where: { id: pollId, userId, deleted: false },
+    select: { id: true, title: true, muted: true },
+  });
+}

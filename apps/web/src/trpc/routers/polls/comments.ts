@@ -6,7 +6,9 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
+import { env } from "@/env";
 import { getNotificationRecipient } from "@/features/notifications/data";
+import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { hasPollAdminAccess } from "@/features/poll/data";
 import {
   MAX_COMMENT_AUTHOR_NAME_LENGTH,
@@ -154,15 +156,23 @@ export const comments = router({
         });
 
         if (recipient) {
+          const unsubscribeToken = createUnsubscribeToken({
+            target: { kind: "poll", pollId, userId: recipient.id },
+            secret: env.SECRET_PASSWORD,
+          });
           after(async () =>
             sendNewCommentEmail({
               to: recipient.email,
               locale: recipient.locale ?? undefined,
               branding: await getInstanceBranding(),
+              listUnsubscribeUrl: absoluteUrl(
+                `/api/unsubscribe/${unsubscribeToken}`,
+              ),
               props: {
                 authorName,
                 content: newComment.content,
                 pollUrl: absoluteUrl(`/poll/${poll.id}`),
+                unsubscribeUrl: absoluteUrl(`/unsubscribe/${unsubscribeToken}`),
                 disableNotificationsUrl: absoluteUrl("/settings/notifications"),
                 title: poll.title,
               },

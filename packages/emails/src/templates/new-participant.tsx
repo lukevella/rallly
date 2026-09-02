@@ -27,6 +27,7 @@ type NewParticipantEmailProps = {
   note?: string;
   canReply?: boolean;
   pollUrl: string;
+  unsubscribeUrl: string;
   disableNotificationsUrl: string;
 };
 
@@ -38,6 +39,7 @@ async function NewParticipantEmail({
   note,
   canReply,
   pollUrl,
+  unsubscribeUrl,
   disableNotificationsUrl,
   locale = "en",
   chrome,
@@ -129,17 +131,22 @@ async function NewParticipantEmail({
               t={t}
               i18n={i18n}
               ns="emails"
-              i18nKey="common_disableNotifications"
-              defaults="You can <a>manage your notification settings</a> to stop receiving these emails."
-              components={{
-                a: (
-                  <Link
-                    color={chrome.primaryColor}
-                    style={{ whiteSpace: "nowrap" }}
-                    href={disableNotificationsUrl}
-                  />
-                ),
-              }}
+              i18nKey="common_notificationFooter"
+              defaults="You can <0>mute this poll</0> or <1>manage your notification settings</1>."
+              components={[
+                <Link
+                  key="unsubscribe"
+                  color={chrome.primaryColor}
+                  style={{ whiteSpace: "nowrap" }}
+                  href={unsubscribeUrl}
+                />,
+                <Link
+                  key="settings"
+                  color={chrome.primaryColor}
+                  style={{ whiteSpace: "nowrap" }}
+                  href={disableNotificationsUrl}
+                />,
+              ]}
             />
           </Text>
           <PoweredBy chrome={chrome} locale={locale} />
@@ -155,6 +162,7 @@ NewParticipantEmail.PreviewProps = {
   canReply: true,
   title: "Untitled Poll",
   pollUrl: "https://rallly.co",
+  unsubscribeUrl: "https://rallly.co",
   disableNotificationsUrl: "https://rallly.co",
   locale: "en",
   chrome: previewChrome,

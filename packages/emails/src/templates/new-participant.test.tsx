@@ -7,6 +7,7 @@ const baseProps = {
   title: "Team Meeting",
   participantName: "Jane Doe",
   pollUrl: "https://rallly.co/poll/abc",
+  unsubscribeUrl: "https://rallly.co/unsubscribe/token",
   disableNotificationsUrl: "https://rallly.co/settings",
   chrome: previewChrome,
 };
@@ -33,6 +34,12 @@ describe("NewParticipantEmail", () => {
   it("renders no quote block without a note", async () => {
     const html = await renderEmail();
     expect(html).not.toContain("border-left");
+  });
+
+  it("links both footer actions", async () => {
+    const html = await renderEmail();
+    expect(html).toContain('href="https://rallly.co/unsubscribe/token"');
+    expect(html).toContain('href="https://rallly.co/settings"');
   });
 
   it("shows reply guidance only when a reply address exists", async () => {
