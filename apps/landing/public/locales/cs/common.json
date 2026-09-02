@@ -11,6 +11,7 @@
   "cookiePolicy": "Zásady používání cookies",
   "discussions": "Diskuze",
   "doodleAlternative": "Alternativa k Doodle",
+  "dpa": "DPA",
   "executiveAssistants": "Výkonní asistenti",
   "footerDiscordLabel": "Přidejte se k nám na Discordu",
   "footerGithubLabel": "Zobrazit náš repozitář na GitHubu",
@@ -44,5 +45,7 @@
   "statusBadgeAlt": "Stav Rallly",
   "support": "Podpora",
   "termsOfUse": "Podmínky používání",
-  "thesisDefense": "Obhajoby diplomové práce"
+  "thesisDefense": "Obhajoby diplomové práce",
+  "useCases": "Příklady použití",
+  "when2MeetAlternative": "Alternativa k When2Meet"
 }
