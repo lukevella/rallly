@@ -13,7 +13,6 @@
   "changeEmail_preview": "Twój 6-cyfrowy kod to: {code}",
   "changeEmail_subject": "Zweryfikuj swój nowy adres e-mail",
   "changeEmail_text": "Użyj następującego 6-cyfrowego kodu weryfikacyjnego, aby potwierdzić swój nowy adres e-mail",
-  "common_disableNotifications": "Możesz <a>zarządzać ustawieniami powiadomień</a>, aby przestać otrzymywać te wiadomości e-mail.",
   "common_poweredBy": "Obsługiwane przez <a>{domain}</a>",
   "common_viewOn": "Zobacz na {domain}",
   "eventCanceledContent": "<b>{title}</b>, zaplanowane przez <b>{hostName}</b>, zostało odwołane. Pierwotny termin:",

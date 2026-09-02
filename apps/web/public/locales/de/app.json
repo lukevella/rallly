@@ -204,6 +204,7 @@
   "customBranding": "Eigenes Branding",
   "customBrandingAlertDescription": "Benutzerdefiniertes Branding ist für Inhaber einer Enterprise-Lizenz als kostenpflichtiges Zusatzmodul verfügbar.",
   "customBrandingDescription": "Präsentiere deinen Teilnehmern dein Logo und deine Markenfarben",
+  "customBrandingManagedByInstance": "Das Branding wird von deinem Instanz-Administrator verwaltet.",
   "customBrandingSettingLabel": "Zeige Teilnehmern dein Logo und deine Farben.",
   "customBrandingSettingTitle": "Eigenes Branding",
   "dangerZone": "Gefahrenzone",

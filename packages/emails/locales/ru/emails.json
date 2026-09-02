@@ -13,7 +13,6 @@
   "changeEmail_preview": "Ваш 6-значный код: {code}",
   "changeEmail_subject": "Подтвердите новый адрес электронной почты",
   "changeEmail_text": "Пожалуйста, используйте следующий 6-значный код, чтобы подтвердить новый адрес электронной почты.",
-  "common_disableNotifications": "Вы можете <a>управлять настройками уведомлений</a>, чтобы перестать получать эти письма.",
   "common_poweredBy": "Работает с помощью <a>{domain}</a>",
   "common_viewOn": "Посмотреть на {domain}",
   "eventCanceledContent": "<b>{hostName}</b> отменил <b>{title}</b>, который был запланирован на:",

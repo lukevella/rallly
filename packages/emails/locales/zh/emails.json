@@ -13,7 +13,6 @@
   "changeEmail_preview": "您的 6 位验证码是：{code}",
   "changeEmail_subject": "验证您的新邮箱地址",
   "changeEmail_text": "请使用以下6位验证码来确认您的新邮箱地址",
-  "common_disableNotifications": "您可以 <a>管理您的通知设置</a> 以停止接收这些电子邮件。",
   "common_poweredBy": "由 <a>{domain}</a> 提供支持",
   "common_viewOn": "在 {domain} 上查看",
   "eventCanceledContent": "<b>{hostName}</b> 已取消了原定于以下时间的 <b>{title}</b>：",

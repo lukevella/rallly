@@ -13,7 +13,6 @@
   "changeEmail_preview": "Din 6-siffriga kod är: {code}",
   "changeEmail_subject": "Verifiera din nya e-postadress",
   "changeEmail_text": "Använd följande 6-siffriga verifieringskod för att bekräfta din nya e-postadress",
-  "common_disableNotifications": "Du kan <a>hantera dina aviseringar</a> för att sluta få dessa e-postmeddelanden.",
   "common_poweredBy": "Drivs av <a>{domain}</a>",
   "common_viewOn": "Visa på {domain}",
   "eventCanceledContent": "<b>{hostName}</b> har avlyst <b>{title}</b> som var planerat för:",
