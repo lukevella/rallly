@@ -1,14 +1,10 @@
-<div align="center">
+<img src="./assets/images/app-icon.svg" width="96" height="96" alt="" />
 
-<img src="./assets/images/logo-color.svg" width="200px" alt="Rallly" />
+# Rallly
 
-### Schedule group meetings, without the back-and-forth
+**Schedule group meetings, without the back-and-forth**
 
-<p>
-  <a href="https://rallly.co"><strong>Website</strong></a> ·
-  <a href="https://support.rallly.co"><strong>Documentation</strong></a> ·
-  <a href="https://discord.gg/uzg4ZcHbuM"><strong>Discord</strong></a>
-</p>
+[**Website**](https://rallly.co) · [**Documentation**](https://support.rallly.co) · [**Discord**](https://discord.gg/uzg4ZcHbuM)
 
 [![Actions Status](https://github.com/lukevella/rallly/actions/workflows/ci.yml/badge.svg)](https://github.com/lukevella/rallly/actions)
 [![Crowdin](https://badges.crowdin.net/rallly/localized.svg)](https://crowdin.com/project/rallly)
@@ -16,13 +12,8 @@
 [![Discord](https://img.shields.io/badge/-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/uzg4ZcHbuM)
 [![Donate](https://img.shields.io/badge/-Donate%20with%20Paypal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E)
 
-</div>
+<img src="./assets/images/screenshot.png" alt="A Rallly poll showing participants' availability across four time slots" />
 
-<br />
-
-<img src="./assets/images/splash.png" alt="Rallly screenshot" />
-
-<br />
 
 Rallly is an open-source scheduling tool that helps you find the best date and time to meet. Create a poll with a few options, share the link, and let your participants vote on when they're available. No more back-and-forth emails.
 
