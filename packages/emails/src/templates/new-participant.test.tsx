@@ -36,6 +36,12 @@ describe("NewParticipantEmail", () => {
     expect(html).not.toContain("border-left");
   });
 
+  it("links both footer actions", async () => {
+    const html = await renderEmail();
+    expect(html).toContain('href="https://rallly.co/unsubscribe/token"');
+    expect(html).toContain('href="https://rallly.co/settings"');
+  });
+
   it("shows reply guidance only when a reply address exists", async () => {
     const withReply = await renderEmail({ note: "A note", canReply: true });
     expect(withReply).toContain("You can reply to this email");

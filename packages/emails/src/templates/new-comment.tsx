@@ -114,23 +114,21 @@ async function NewCommentEmail({
               i18n={i18n}
               ns="emails"
               i18nKey="common_notificationFooter"
-              defaults="You can <a>mute this poll</a> or <b>manage your notification settings</b>."
-              components={{
-                a: (
-                  <Link
-                    color={chrome.primaryColor}
-                    style={{ whiteSpace: "nowrap" }}
-                    href={unsubscribeUrl}
-                  />
-                ),
-                b: (
-                  <Link
-                    color={chrome.primaryColor}
-                    style={{ whiteSpace: "nowrap" }}
-                    href={disableNotificationsUrl}
-                  />
-                ),
-              }}
+              defaults="You can <0>mute this poll</0> or <1>manage your notification settings</1>."
+              components={[
+                <Link
+                  key="unsubscribe"
+                  color={chrome.primaryColor}
+                  style={{ whiteSpace: "nowrap" }}
+                  href={unsubscribeUrl}
+                />,
+                <Link
+                  key="settings"
+                  color={chrome.primaryColor}
+                  style={{ whiteSpace: "nowrap" }}
+                  href={disableNotificationsUrl}
+                />,
+              ]}
             />
           </Text>
           <PoweredBy chrome={chrome} locale={locale} />
