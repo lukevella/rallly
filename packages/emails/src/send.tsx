@@ -52,9 +52,17 @@ type DispatchOptions = {
   errorLabel: string;
 };
 
-function buildHeaders(listUnsubscribeUrl?: string) {
+function buildHeaders(
+  listUnsubscribeUrl?: string,
+): Record<string, string> | undefined {
   if (!listUnsubscribeUrl) {
     return undefined;
+  }
+  // RFC 8058 one-click requires an https URI. A plain-http instance (local
+  // dev, self-hosted on a LAN) still gets the mailto-style link header, just
+  // not the one-click flag.
+  if (!listUnsubscribeUrl.startsWith("https://")) {
+    return { "List-Unsubscribe": `<${listUnsubscribeUrl}>` };
   }
   return {
     "List-Unsubscribe": `<${listUnsubscribeUrl}>`,

@@ -87,9 +87,10 @@ test.describe("List-Unsubscribe", () => {
     const headers = await getMessageHeaders(email.ID);
     const listUnsubscribe = headers["List-Unsubscribe"]?.[0] ?? "";
     expect(listUnsubscribe).toMatch(/^<https?:\/\/.+\/api\/unsubscribe\/.+>$/);
-    expect(headers["List-Unsubscribe-Post"]?.[0]).toBe(
-      "List-Unsubscribe=One-Click",
-    );
+    // The test server is plain http, and RFC 8058 one-click requires https,
+    // so the flag must be withheld here. Its emission over https is covered
+    // by the send unit test in packages/emails.
+    expect(headers["List-Unsubscribe-Post"]).toBeUndefined();
     oneClickUrl = listUnsubscribe.slice(1, -1);
 
     const $ = load(email.HTML);

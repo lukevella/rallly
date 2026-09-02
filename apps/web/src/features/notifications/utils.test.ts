@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { createSignature } from "@/lib/signature";
 import type { UnsubscribeTarget } from "./utils";
 import { createUnsubscribeToken, parseUnsubscribeToken } from "./utils";
 
@@ -40,14 +41,17 @@ describe("unsubscribe token", () => {
   });
 
   it("rejects an unknown kind even when correctly signed", () => {
-    const token = createUnsubscribeToken({ target, secret }).replace(
-      /^[^~]+/,
-      Buffer.from(
-        JSON.stringify({ k: "sheet", p: "poll_123", u: "user_456" }),
-      ).toString("base64url"),
-    );
-    // The signature no longer matches, and even a valid one must not parse.
-    expect(parseUnsubscribeToken({ token, secret })).toBeNull();
+    const payload = Buffer.from(
+      JSON.stringify({ k: "sheet", p: "poll_123", u: "user_456" }),
+    ).toString("base64url");
+    const signature = createSignature({
+      context: "unsubscribe",
+      payload,
+      secret,
+    });
+    expect(
+      parseUnsubscribeToken({ token: `${payload}~${signature}`, secret }),
+    ).toBeNull();
   });
 
   it("rejects malformed tokens", () => {

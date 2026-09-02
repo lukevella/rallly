@@ -44,6 +44,25 @@ test("emits one-click unsubscribe headers when a URL is given", async () => {
   });
 });
 
+test("omits the one-click flag for a non-https URL", async () => {
+  await sendRawEmail({
+    to: "user@example.com",
+    subject: "Hello",
+    text: "Hi",
+    listUnsubscribeUrl: "http://localhost:3000/api/unsubscribe/token",
+  });
+
+  expect(sendMail).toHaveBeenCalledTimes(1);
+  expect(sendMail.mock.calls[0][0]).toMatchObject({
+    headers: {
+      "List-Unsubscribe": "<http://localhost:3000/api/unsubscribe/token>",
+    },
+  });
+  expect(sendMail.mock.calls[0][0]).not.toHaveProperty(
+    "headers.List-Unsubscribe-Post",
+  );
+});
+
 test("omits unsubscribe headers when no URL is given", async () => {
   await sendRawEmail({
     to: "user@example.com",
