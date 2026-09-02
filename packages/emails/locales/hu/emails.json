@@ -13,7 +13,7 @@
   "changeEmail_preview": "A hatjegyű kódod: {code}",
   "changeEmail_subject": "Hitelesítsd az új email címed",
   "changeEmail_text": "Kérjük, használd a következő hatjegyű ellenőrző kódot az új email címed megerősítéséhez",
-  "common_notificationFooter": "<0>Kikapcsolhatod a szavazás</0> értesítéseit vagy átállíthatod az <1>értesítés beállításaid</1> között.",
+  "common_notificationFooter": "<0>Kikapcsolhatod a szavazás értesítéseit</0> vagy <1>kezelheted az értesítési beállításaidat</1>.",
   "common_poweredBy": "Működteti a <a>{domain}</a>",
   "common_viewOn": "Nézd meg itt: {domain}",
   "eventCanceledContent": "<b>{hostName}</b> lemondta a(z) <b>{title}</b> eseményt, ami ekkorra lett ütemezve:",
