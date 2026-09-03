@@ -1,4 +1,3 @@
-// apps/web/src/features/poll/invite/actions.ts
 "use server";
 
 import { hasPollAdminAccess } from "@/features/poll/data";
