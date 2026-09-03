@@ -39,7 +39,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
         <p className="font-medium text-sm">
           <Trans i18nKey="inviteLink" defaults="Invite link" />
         </p>
-        <p className="truncate text-muted-foreground text-sm">{inviteLink}</p>
+        <p className="truncate text-muted-foreground text-xs">{inviteLink}</p>
       </div>
       <Button
         className="shrink-0"
