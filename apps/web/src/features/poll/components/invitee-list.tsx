@@ -76,7 +76,7 @@ export function InviteeListPreview() {
     <ul
       aria-hidden="true"
       inert
-      className="pointer-events-none select-none opacity-50 [mask-image:linear-gradient(to_bottom,black_20%,transparent)]"
+      className="pointer-events-none select-none opacity-40 [mask-image:radial-gradient(ellipse_70%_90%_at_center,transparent_40%,black_100%)]"
     >
       {PREVIEW_ROWS.map((row) => (
         <InviteeRow key={row.email} email={row.email} status={row.status}>
