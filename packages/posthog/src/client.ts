@@ -60,6 +60,12 @@ export function initPostHog({ distinctId }: { distinctId?: string } = {}) {
  * tree is not enough once Suspense boundaries stream in out of order. Pass
  * the logged-in user's id so the session is identified from its first
  * event; omit it for anonymous visitors and guests.
+ *
+ * Identity is fixed for the life of the document: a cookieless instance
+ * cannot identify later, and a bootstrapped one must not be re-pointed at
+ * another user. Sign-in flows therefore end in a full navigation, never a
+ * router.refresh(), and sign-out calls posthog.reset() so events after it
+ * are anonymous until the next document load.
  */
 export function PostHogInit({
   distinctId,
