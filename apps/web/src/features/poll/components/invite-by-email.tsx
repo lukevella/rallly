@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
@@ -17,11 +16,15 @@ import { RegisterLink } from "@/components/register-link";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
+import type { InviteeRowStatus } from "@/features/poll/components/invitee-list";
+import {
+  InviteeListPreview,
+  InviteeRow,
+} from "@/features/poll/components/invitee-list";
 import {
   revokePollInviteAction,
   sendPollInviteAction,
 } from "@/features/poll/invite/actions";
-import type { PollInviteStatus } from "@/features/poll/invite/utils";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -30,35 +33,10 @@ import { trpc } from "@/trpc/client";
 type Row = {
   id: string;
   email: string;
-  status: PollInviteStatus | "sending";
+  status: InviteeRowStatus;
 };
 
 const emailPattern = /^[^\s@<>",;]+@[^\s@<>",;]+\.[^\s@<>",;]+$/;
-
-function StatusPill({ status }: { status: Row["status"] }) {
-  const label = {
-    sent: <Trans i18nKey="inviteStatusSent" defaults="Sent" />,
-    opened: <Trans i18nKey="inviteStatusOpened" defaults="Opened" />,
-    responded: <Trans i18nKey="inviteStatusResponded" defaults="Responded" />,
-    sending: <Trans i18nKey="inviteStatusSending" defaults="Sending" />,
-  }[status];
-
-  return (
-    <span
-      className={cn(
-        "inline-flex h-5 shrink-0 items-center rounded-full px-2 font-medium text-xs",
-        status === "responded" &&
-          "bg-green-500/10 text-green-700 dark:text-green-400",
-        status === "opened" && "bg-sky-500/10 text-sky-700 dark:text-sky-400",
-        (status === "sent" || status === "sending") &&
-          "bg-muted text-muted-foreground",
-        status === "sending" && "italic",
-      )}
-    >
-      {label}
-    </span>
-  );
-}
 
 export function InviteByEmail() {
   const poll = usePoll();
@@ -410,23 +388,26 @@ export function InviteByEmail() {
 
           <div className="space-y-1.5">
             {rows.length === 0 ? (
-              <EmptyState className="py-8">
-                <EmptyStateIcon>
-                  <MailIcon />
-                </EmptyStateIcon>
-                <EmptyStateTitle>
-                  <Trans
-                    i18nKey="shareDialogNoInvitesTitle"
-                    defaults="No one invited yet"
-                  />
-                </EmptyStateTitle>
-                <EmptyStateDescription>
-                  <Trans
-                    i18nKey="shareDialogNoInvitesDescription"
-                    defaults="Enter an address above to send the first invite."
-                  />
-                </EmptyStateDescription>
-              </EmptyState>
+              <div className="relative">
+                <InviteeListPreview />
+                <EmptyState className="absolute inset-0 py-0">
+                  <EmptyStateIcon>
+                    <MailIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans
+                      i18nKey="shareDialogNoInvitesTitle"
+                      defaults="No one invited yet"
+                    />
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      i18nKey="shareDialogNoInvitesDescription"
+                      defaults="Enter an address above to send the first invite."
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
+              </div>
             ) : (
               <>
                 <h4
@@ -445,20 +426,11 @@ export function InviteByEmail() {
                       row.status === "sent" || row.status === "opened";
                     const tabIndex = row.id === activeRowId ? 0 : -1;
                     return (
-                      <li
+                      <InviteeRow
                         key={row.id}
-                        className="flex h-11 items-center gap-2.5 rounded-lg px-1.5 hover:bg-accent has-[:focus-visible]:bg-accent"
+                        email={row.email}
+                        status={row.status}
                       >
-                        <span
-                          aria-hidden="true"
-                          className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground"
-                        >
-                          <MailIcon className="size-3.5" />
-                        </span>
-                        <span className="min-w-0 flex-1 truncate text-sm">
-                          {row.email}
-                        </span>
-                        <StatusPill status={row.status} />
                         {revocable ? (
                           <Button
                             variant="ghost"
@@ -491,7 +463,7 @@ export function InviteByEmail() {
                             }
                           />
                         )}
-                      </li>
+                      </InviteeRow>
                     );
                   })}
                 </ul>
