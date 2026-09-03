@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@rallly/ui/input-group";
+import { Button } from "@rallly/ui/button";
+import { Input } from "@rallly/ui/input";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -28,35 +25,37 @@ export function InviteLinkField({ inviteLink }: { inviteLink: string }) {
   }, [didCopy]);
 
   return (
-    <InputGroup>
-      <InputGroupInput
+    <div className="flex gap-2">
+      <Input
         readOnly
         value={inviteLink}
         aria-label={t("inviteLink", { defaultValue: "Invite link" })}
         onFocus={(event) => event.currentTarget.select()}
-        className="font-mono text-xs"
+        className="min-w-0 flex-1"
       />
-      <InputGroupAddon align="inline-end">
-        <InputGroupButton
-          size="sm"
-          className="min-w-20"
-          onClick={() => {
-            copyToClipboard(inviteLink);
-            setDidCopy(true);
-          }}
-        >
-          {didCopy ? (
-            <Trans i18nKey="copied" defaults="Copied" />
-          ) : (
-            <Trans i18nKey="copyLink" defaults="Copy link" />
-          )}
-        </InputGroupButton>
-      </InputGroupAddon>
+      <Button
+        className="shrink-0"
+        onClick={() => {
+          copyToClipboard(inviteLink);
+          setDidCopy(true);
+        }}
+      >
+        {didCopy ? (
+          <CheckIcon data-icon="inline-start" />
+        ) : (
+          <CopyIcon data-icon="inline-start" />
+        )}
+        {didCopy ? (
+          <Trans i18nKey="copied" defaults="Copied" />
+        ) : (
+          <Trans i18nKey="copy" defaults="Copy" />
+        )}
+      </Button>
       <p className="sr-only" aria-live="polite">
         {didCopy
           ? t("inviteLinkCopied", { defaultValue: "Invite link copied" })
           : ""}
       </p>
-    </InputGroup>
+    </div>
   );
 }
