@@ -788,6 +788,7 @@
   "shareDialogInviteSentAnnouncement": "Invite sent to {email}. {count}",
   "shareDialogNoInvites": "No one invited yet. Enter an address above to send the first invite.",
   "shareDialogPollClosed": "Reopen the poll to send invites",
+  "shareDialogRevokeFailed": "Couldn't revoke that invite. Try again.",
   "shareDialogRevokeInvite": "Revoke invite for {email}",
   "shareDialogSendFailed": "Couldn't send to {email}. Try again.",
   "shareDialogSendInvite": "Send invite",

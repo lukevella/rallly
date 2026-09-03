@@ -72,10 +72,17 @@ export function InviteByEmail() {
   const [email, setEmail] = React.useState("");
   const [invalid, setInvalid] = React.useState(false);
   const [sending, setSending] = React.useState<string[]>([]);
+  const [revoking, setRevoking] = React.useState<string[]>([]);
   const [announcement, setAnnouncement] = React.useState("");
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [pendingFocus, setPendingFocus] = React.useState<
+    { kind: "row"; id: string } | { kind: "field" } | null
+  >(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLUListElement>(null);
+  const announceTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const rows: Row[] = [
     ...sending.map((address) => ({
@@ -87,9 +94,21 @@ export function InviteByEmail() {
   ];
 
   const announce = (message: string) => {
+    if (announceTimeout.current) {
+      clearTimeout(announceTimeout.current);
+    }
     setAnnouncement("");
-    setTimeout(() => setAnnouncement(message), 30);
+    announceTimeout.current = setTimeout(() => setAnnouncement(message), 30);
   };
+
+  React.useEffect(
+    () => () => {
+      if (announceTimeout.current) {
+        clearTimeout(announceTimeout.current);
+      }
+    },
+    [],
+  );
 
   const countLabel = (count: number) =>
     t("shareDialogInvitedCount", {
@@ -97,22 +116,58 @@ export function InviteByEmail() {
       count,
     });
 
+  const focusRowElement = (id: string) => {
+    const el = listRef.current?.querySelector<HTMLElement>(
+      `[data-row-id="${CSS.escape(id)}"]`,
+    );
+    if (!el) return false;
+    el.focus();
+    el.closest("li")?.scrollIntoView({ block: "nearest" });
+    return true;
+  };
+
+  // An effect with no dependency array, not a callback: the row we want to
+  // focus after a revoke only exists once the refetched list has re-rendered,
+  // so this has to retry on every render until the target shows up.
+  React.useEffect(() => {
+    if (!pendingFocus) return;
+    if (pendingFocus.kind === "row") {
+      if (focusRowElement(pendingFocus.id)) {
+        setActiveId(pendingFocus.id);
+        setPendingFocus(null);
+        return;
+      }
+      if (rows.some((row) => row.id === pendingFocus.id)) return;
+      inputRef.current?.focus();
+      setPendingFocus(null);
+      return;
+    }
+    inputRef.current?.focus();
+    setPendingFocus(null);
+  });
+
   const sendInvite = useSafeAction(sendPollInviteAction, {
     onSuccess: async ({ data, input }) => {
-      setSending((prev) => prev.filter((address) => address !== input.email));
-      if (!data) return;
+      if (!data) {
+        setSending((prev) => prev.filter((address) => address !== input.email));
+        return;
+      }
       if (data.ok) {
         await queryClient.polls.invites.list.invalidate({ pollId: poll.id });
-        const total = (invites.data?.length ?? 0) + 1;
+        const fresh = queryClient.polls.invites.list.getData({
+          pollId: poll.id,
+        });
         announce(
           t("shareDialogInviteSentAnnouncement", {
             defaultValue: "Invite sent to {email}. {count}",
             email: input.email,
-            count: countLabel(total),
+            count: countLabel(fresh?.length ?? 0),
           }),
         );
+        setSending((prev) => prev.filter((address) => address !== input.email));
         return;
       }
+      setSending((prev) => prev.filter((address) => address !== input.email));
       const messages = {
         alreadyInvited: t("shareDialogAlreadyInvited", {
           defaultValue: "{email} is already invited",
@@ -152,8 +207,32 @@ export function InviteByEmail() {
   });
 
   const revokeInvite = useSafeAction(revokePollInviteAction, {
-    onSuccess: async () => {
+    onSuccess: async ({ data, input }) => {
+      const row = rows.find((candidate) => candidate.id === input.inviteId);
+      if (!data?.ok) {
+        setRevoking((prev) => prev.filter((id) => id !== input.inviteId));
+        setPendingFocus(null);
+        const message = t("shareDialogRevokeFailed", {
+          defaultValue: "Couldn't revoke that invite. Try again.",
+        });
+        toast.error(message);
+        announce(message);
+        return;
+      }
       await queryClient.polls.invites.list.invalidate({ pollId: poll.id });
+      const fresh = queryClient.polls.invites.list.getData({ pollId: poll.id });
+      announce(
+        t("shareDialogInviteRevokedAnnouncement", {
+          defaultValue: "Invite for {email} revoked. {count}",
+          email: row?.email ?? "",
+          count: countLabel(fresh?.length ?? 0),
+        }),
+      );
+      setRevoking((prev) => prev.filter((id) => id !== input.inviteId));
+    },
+    onError: ({ input }) => {
+      setRevoking((prev) => prev.filter((id) => id !== input.inviteId));
+      setPendingFocus(null);
     },
   });
 
@@ -202,30 +281,16 @@ export function InviteByEmail() {
       return;
     }
     setActiveId(target.id);
-    requestAnimationFrame(() => {
-      const el = listRef.current?.querySelector<HTMLElement>(
-        `[data-row-id="${CSS.escape(target.id)}"]`,
-      );
-      el?.focus();
-      el?.closest("li")?.scrollIntoView({ block: "nearest" });
-    });
+    focusRowElement(target.id);
   };
 
-  const handleRevoke = (row: Row, index: number) => {
-    const remaining = rows.length - 1;
+  const handleRevoke = (row: Row) => {
+    const invited = invites.data ?? [];
+    const index = invited.findIndex((invite) => invite.id === row.id);
+    const next = invited[index + 1] ?? invited[index - 1];
+    setPendingFocus(next ? { kind: "row", id: next.id } : { kind: "field" });
+    setRevoking((prev) => [...prev, row.id]);
     revokeInvite.execute({ pollId: poll.id, inviteId: row.id });
-    announce(
-      t("shareDialogInviteRevokedAnnouncement", {
-        defaultValue: "Invite for {email} revoked. {count}",
-        email: row.email,
-        count: countLabel(remaining),
-      }),
-    );
-    if (remaining === 0) {
-      inputRef.current?.focus();
-    } else {
-      focusRow(Math.min(index, remaining - 1));
-    }
   };
 
   const handleListKeyDown = (
@@ -254,7 +319,7 @@ export function InviteByEmail() {
       case "Backspace":
         if (row.status === "sent" || row.status === "opened") {
           event.preventDefault();
-          handleRevoke(row, index);
+          handleRevoke(row);
         }
         break;
     }
@@ -380,6 +445,7 @@ export function InviteByEmail() {
                           size="icon-sm"
                           tabIndex={tabIndex}
                           data-row-id={row.id}
+                          disabled={revoking.includes(row.id)}
                           aria-label={t("shareDialogRevokeInvite", {
                             defaultValue: "Revoke invite for {email}",
                             email: row.email,
@@ -388,7 +454,7 @@ export function InviteByEmail() {
                           onKeyDown={(event) =>
                             handleListKeyDown(event, row, index)
                           }
-                          onClick={() => handleRevoke(row, index)}
+                          onClick={() => handleRevoke(row)}
                         >
                           <XIcon />
                         </Button>
