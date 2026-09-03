@@ -8,7 +8,7 @@ export default async function CookiePolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Cookie policy" lastUpdated="2026-04-04">
+      <LegalPageLayout title="Cookie policy" lastUpdated="2026-09-03">
         <p>
           This Policy explains how we use cookies and other similar technologies
           on our website, and your options to control them.
@@ -30,26 +30,33 @@ export default async function CookiePolicy() {
           enable you to access secure areas of the website. They cannot be
           disabled.
         </p>
-        <h3>Analytics cookies</h3>
+        <h3>Attribution cookies</h3>
         <p>
-          We use PostHog to collect anonymous analytics data that helps us
-          understand how visitors use our website and identify areas for
-          improvement. PostHog sets cookies to distinguish between users and
-          sessions. The data collected includes pages visited, events triggered,
-          device type, and IP address (used for approximate geolocation only).
-          This information is stored on PostHog&apos;s EU-based servers and is
-          not used for advertising or shared with third parties.
+          When you open the app from a link on this website, we set a cookie
+          named <code>rallly_ref</code> (and, where applicable,{" "}
+          <code>rallly_cta</code>) that records which page and button you came
+          from. It exists only so we can tell which pages lead people to sign
+          up. It is set by us, not by a third party, expires after 30 days, is
+          read once if you create an account, and is not shared with anyone.
+        </p>
+
+        <h2>Analytics</h2>
+        <p>
+          We use PostHog for product analytics. PostHog does not set cookies and
+          does not store anything on your device. Users who are signed in are
+          recognised through their account. Visitors who are not signed in are
+          counted using a hash derived from IP address and browser that changes
+          every day and cannot be used to identify anyone. The data collected
+          includes pages visited, events triggered, and device type. It is
+          stored on PostHog&apos;s servers in the EU and is not used for
+          advertising or shared with third parties.
         </p>
 
         <h2>Your options</h2>
         <p>
           Most web browsers allow you to control cookies through their settings
-          preferences. You can also opt out of analytics cookies by enabling the{" "}
-          <a href="https://globalprivacycontrol.org/" rel="noopener noreferrer">
-            Global Privacy Control
-          </a>{" "}
-          signal in your browser. Please be aware that disabling essential
-          cookies may prevent you from accessing certain parts of our website.
+          preferences. Please be aware that disabling essential cookies may
+          prevent you from accessing certain parts of our website.
         </p>
 
         <h2>Changes to this policy</h2>
