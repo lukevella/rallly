@@ -1,7 +1,11 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { Input } from "@rallly/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
 import { MailIcon, XIcon } from "lucide-react";
 import React from "react";
@@ -338,24 +342,31 @@ export function InviteByEmail() {
             <label htmlFor="share-dialog-email" className="sr-only">
               <Trans i18nKey="emailAddress" defaults="Email address" />
             </label>
-            <Input
-              ref={inputRef}
-              id="share-dialog-email"
-              type="email"
-              inputMode="email"
-              autoComplete="off"
-              placeholder={t("emailAddress", { defaultValue: "Email address" })}
-              value={email}
-              disabled={!isOpen}
-              aria-invalid={invalid || undefined}
-              aria-describedby={
-                isOpen ? undefined : "share-dialog-closed-reason"
-              }
-              onChange={(event) => {
-                setEmail(event.target.value);
-                setInvalid(false);
-              }}
-            />
+            <InputGroup className="min-w-0 flex-1">
+              <InputGroupAddon>
+                <MailIcon />
+              </InputGroupAddon>
+              <InputGroupInput
+                ref={inputRef}
+                id="share-dialog-email"
+                type="email"
+                inputMode="email"
+                autoComplete="off"
+                placeholder={t("emailAddress", {
+                  defaultValue: "Email address",
+                })}
+                value={email}
+                disabled={!isOpen}
+                aria-invalid={invalid || undefined}
+                aria-describedby={
+                  isOpen ? undefined : "share-dialog-closed-reason"
+                }
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setInvalid(false);
+                }}
+              />
+            </InputGroup>
             <Button
               type="submit"
               variant="primary"
