@@ -18,7 +18,6 @@ import {
   FormItem,
   FormMessage,
 } from "@rallly/ui/form";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -42,7 +41,6 @@ export function RsvpVerifyEmail({
   const isCaptchaEnabled = useFeatureFlag("captcha");
   const isTurnstileEnabled = isCaptchaEnabled && !!turnstileSiteKey;
   const { t, i18n } = useTranslation();
-  const router = useRouter();
   const dialog = useDialog();
   const turnstileRef = React.useRef<TurnstileInstance>(null);
   const [otpSent, setOtpSent] = React.useState(false);
@@ -131,7 +129,10 @@ export function RsvpVerifyEmail({
     }
 
     dialog.dismiss();
-    router.refresh();
+    // A full reload, not router.refresh(): the PostHog client fixes its
+    // identity at page load (cookieless for the guest who opened this page),
+    // and only a new document can start it as the signed-in user.
+    window.location.reload();
   });
 
   return (

@@ -280,18 +280,15 @@ export const participants = router({
         ]);
       });
 
-      track(
-        { ...actor, anonymousDistinctId: ctx.anonymousDistinctId },
-        {
-          event: "poll_response_delete",
-          properties: {
-            participant_id: participant.id,
-          },
-          groups: {
-            poll: participant.pollId,
-          },
+      track(actor, {
+        event: "poll_response_delete",
+        properties: {
+          participant_id: participant.id,
         },
-      );
+        groups: {
+          poll: participant.pollId,
+        },
+      });
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 10, "1 h"))
@@ -448,27 +445,24 @@ export const participants = router({
           }),
         );
 
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "poll_response_submit",
-            properties: {
-              participant_id: participant.id,
-              // plain properties, not groups: guest events are personless and
-              // PostHog drops group associations without person processing
-              poll_id: pollId,
-              space_id: participant.poll.space?.id,
-              tier: participant.poll.space?.tier,
-              has_email: !!email,
-              has_note: !!participant.note,
-              note_length: participant.note?.length,
-              total_responses: totalResponses,
-            },
-            groups: {
-              poll: pollId,
-            },
+        track(ctx.user, {
+          event: "poll_response_submit",
+          properties: {
+            participant_id: participant.id,
+            // plain properties, not groups: guest events are personless and
+            // PostHog drops group associations without person processing
+            poll_id: pollId,
+            space_id: participant.poll.space?.id,
+            tier: participant.poll.space?.tier,
+            has_email: !!email,
+            has_note: !!participant.note,
+            note_length: participant.note?.length,
+            total_responses: totalResponses,
           },
-        );
+          groups: {
+            poll: pollId,
+          },
+        });
 
         return createParticipantFullDTO(participant);
       },
@@ -601,15 +595,12 @@ export const participants = router({
         return updatedParticipant;
       });
 
-      track(
-        { ...actor, anonymousDistinctId: ctx.anonymousDistinctId },
-        {
-          event: "poll_response_update",
-          groups: {
-            poll: pollId,
-          },
+      track(actor, {
+        event: "poll_response_update",
+        groups: {
+          poll: pollId,
         },
-      );
+      });
 
       return createParticipantFullDTO(participant);
     }),
