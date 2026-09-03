@@ -12,10 +12,10 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import type React from "react";
 import { usePoll } from "@/features/poll/client";
-import { InviteDialog } from "@/features/poll/components/invite-dialog";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
+import { ShareDialog } from "@/features/poll/components/share-dialog";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
@@ -23,7 +23,7 @@ const AdminControls = () => {
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <InviteDialog />
+      <ShareDialog />
     </div>
   );
 };
