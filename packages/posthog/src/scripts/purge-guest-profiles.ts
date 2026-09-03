@@ -1,5 +1,11 @@
 /**
- * Deletes guest person profiles (no email property) from PostHog.
+ * Deletes disposable person profiles from PostHog: profiles with no email
+ * that were never identified and whose every distinct id is one nothing can
+ * reattach to — a cookieless daily hash, a legacy `user-` guest id, or an
+ * anonymous browser uuid. Profiles carrying a real user id, an email used as
+ * a distinct id (license buyers) or an old cuid are left alone even when
+ * they lack an email: deleting those would detach the account's event
+ * history from the profile PostHog recreates on its next event.
  *
  * Two-phase design so the delete loop never paginates a table it is mutating:
  *
@@ -48,16 +54,20 @@ const DELETE_BATCH_SIZE = 1000;
 const DELETE_INTERVAL_MS = 800;
 const MAX_RATE_LIMIT_RETRIES = 5;
 
-// Guests are persons with no usable email. `email = ''` matched 0 rows in
-// production, but keep it in the predicate for correctness.
-const GUEST_PREDICATE = "isNull(properties.email) OR properties.email = ''";
-const GUEST_COUNT_QUERY = `SELECT count() FROM persons WHERE ${GUEST_PREDICATE}`;
+// A distinct id nothing can reattach to: the cookieless server hash rotates
+// daily, `user-` ids are legacy guest ids from before guests captured
+// personless, and 36-char uuids are anonymous browser ids from the old
+// cookie persistence (ignored since the client went memory-only).
+const DISPOSABLE_DISTINCT_ID =
+  "startsWith(distinct_id, 'cookieless_') OR startsWith(distinct_id, 'user-') OR length(distinct_id) = 36";
 
-// Persons REST filter for the sample/canary reads (that endpoint uses property
-// filters, not HogQL). Matches the "email not set" pass of the predicate.
-const GUEST_REST_PROPERTIES = [
-  { key: "email", operator: "is_not_set", value: "is_not_set", type: "person" },
-];
+// No email, never identified, and every distinct id disposable. `email = ''`
+// matched 0 rows in production, but keep it in the predicate for correctness.
+const GUEST_PREDICATE = `(isNull(properties.email) OR properties.email = '')
+  AND NOT is_identified
+  AND id IN (SELECT person_id FROM person_distinct_ids WHERE ${DISPOSABLE_DISTINCT_ID})
+  AND id NOT IN (SELECT person_id FROM person_distinct_ids WHERE NOT (${DISPOSABLE_DISTINCT_ID}))`;
+const GUEST_COUNT_QUERY = `SELECT count() FROM persons WHERE ${GUEST_PREDICATE}`;
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -158,65 +168,66 @@ async function snapshotGuestIds(): Promise<string[]> {
   return ids;
 }
 
-async function fetchGuestPage({
-  properties,
-  limit,
-}: {
-  properties: unknown[];
-  limit: number;
-}): Promise<
-  {
-    id: string | number;
-    uuid?: string;
-    distinct_ids?: string[];
-    properties?: Record<string, unknown>;
-    created_at?: string;
-  }[]
+async function fetchGuestSample(
+  limit: number,
+): Promise<
+  { id: string; created_at: string; distinctId: string | undefined }[]
 > {
-  const params = new URLSearchParams({
-    properties: JSON.stringify(properties),
-    limit: String(limit),
-  });
-  const data = await apiRequest({
-    path: `/api/projects/${PROJECT_ID}/persons/?${params}`,
-  });
-  return data.results ?? [];
+  const rows = await hogqlQuery(
+    `SELECT id, created_at FROM persons WHERE ${GUEST_PREDICATE} ORDER BY created_at DESC LIMIT ${limit}`,
+  );
+  if (rows.length === 0) return [];
+
+  const ids = rows.map((row) => `toUUID('${quoteUuid(String(row[0]))}')`);
+  const distinctRows = await hogqlQuery(
+    `SELECT person_id, any(distinct_id) FROM person_distinct_ids WHERE person_id IN (${ids.join(", ")}) GROUP BY person_id`,
+  );
+  const distinctIdByPerson = new Map(
+    distinctRows.map((row) => [String(row[0]), String(row[1])]),
+  );
+
+  return rows.map((row) => ({
+    id: String(row[0]),
+    created_at: String(row[1]),
+    distinctId: distinctIdByPerson.get(String(row[0])),
+  }));
 }
 
 async function preflight() {
   console.info("🔎 Pre-flight counts (HogQL):\n");
 
-  const guests = await hogqlCount(
+  const noEmail = await hogqlCount(
     "SELECT count() FROM persons WHERE isNull(properties.email) OR properties.email = ''",
   );
-  const identifiedGuests = await hogqlCount(
-    "SELECT count() FROM persons WHERE (isNull(properties.email) OR properties.email = '') AND is_identified",
-  );
+  const disposable = await hogqlCount(GUEST_COUNT_QUERY);
   const withEmail = await hogqlCount(
     "SELECT count() FROM persons WHERE isNotNull(properties.email) AND properties.email != ''",
   );
 
-  console.info(`• Guest profiles (no email):        ${guests}`);
-  console.info(`• …of which is_identified:          ${identifiedGuests}`);
-  console.info(`• Profiles with an email:           ${withEmail}`);
+  console.info(`• Profiles with no email:                    ${fmt(noEmail)}`);
+  console.info(
+    `• …of which disposable (will be deleted):    ${fmt(disposable)}`,
+  );
+  console.info(
+    `• …kept (real user id, email id, or cuid):   ${fmt(noEmail - disposable)}`,
+  );
+  console.info(
+    `• Profiles with an email:                    ${fmt(withEmail)}`,
+  );
   console.info(
     "\n⚠️  Sanity check: the with-email count should roughly match the registered user count in Postgres before you run --apply.",
   );
 
-  return guests;
+  return disposable;
 }
 
 async function printSample() {
-  const sample = await fetchGuestPage({
-    properties: GUEST_REST_PROPERTIES,
-    limit: SAMPLE_SIZE,
-  });
+  const sample = await fetchGuestSample(SAMPLE_SIZE);
 
   console.info(`\n📋 Sample of ${sample.length} matched profiles:\n`);
   for (const person of sample) {
-    const email = person.properties?.email;
     console.info(
-      `• ${person.id} created=${person.created_at ?? "?"} email=${JSON.stringify(email ?? null)} distinct_id=${person.distinct_ids?.[0] ?? "?"}`,
+      `• ${person.id} created=${person.created_at} distinct_id=${person.distinctId ?? "?"}`,
     );
   }
 }
@@ -256,27 +267,24 @@ async function verifyCanary() {
     "🧪 Canary check — deletes ONE real guest profile and asserts its events are preserved.\n",
   );
 
-  const sample = await fetchGuestPage({
-    properties: GUEST_REST_PROPERTIES,
-    limit: SAMPLE_SIZE,
-  });
+  const sample = await fetchGuestSample(SAMPLE_SIZE);
 
   let canary:
     | {
-        id: string | number;
+        id: string;
         uuid: string;
         distinctId: string;
         eventCount: number;
       }
     | undefined;
   for (const person of sample) {
-    const distinctId = person.distinct_ids?.[0];
+    const distinctId = person.distinctId;
     if (!distinctId) continue;
     const eventCount = await countEvents(distinctId);
     if (eventCount > 0) {
       canary = {
         id: person.id,
-        uuid: person.uuid ?? String(person.id),
+        uuid: person.id,
         distinctId,
         eventCount,
       };
