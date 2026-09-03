@@ -164,7 +164,10 @@ export default async function Page(props: {
               </PlanCardPrice>
               <div>
                 <Link
-                  href={linkToApp("/", { ref: "pricing" })}
+                  href={linkToApp("/", {
+                    ref: "pricing",
+                    cta: "pricing_free",
+                  })}
                   className={buttonVariants({
                     className: "w-full",
                   })}
@@ -270,7 +273,10 @@ export default async function Page(props: {
               </PlanCardPrice>
               <div>
                 <Link
-                  href={linkToApp("/settings/billing", { ref: "pricing" })}
+                  href={linkToApp("/settings/billing", {
+                    ref: "pricing",
+                    cta: "pricing_pro",
+                  })}
                   className={buttonVariants({
                     variant: "primary",
                     className: "w-full",
@@ -784,6 +790,7 @@ export default async function Page(props: {
                         className={faqLinkClassName}
                         href={linkToApp("/settings/billing", {
                           ref: "pricing",
+                          cta: "pricing_faq",
                         })}
                       />
                     ),
@@ -812,6 +819,7 @@ export default async function Page(props: {
                         className={faqLinkClassName}
                         href={linkToApp("/settings/billing", {
                           ref: "pricing",
+                          cta: "pricing_faq",
                         })}
                       />
                     ),

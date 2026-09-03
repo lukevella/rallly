@@ -26,7 +26,7 @@ export function Cta({
         </p>
       </div>
       <div className="mt-6 flex flex-col items-center gap-4 sm:items-start">
-        <CtaButton size="lg" captureEvent="landing:final_cta_click">
+        <CtaButton size="lg" captureEvent="landing:final_cta_click" cta="final">
           {buttonLabel}
         </CtaButton>
         <p
