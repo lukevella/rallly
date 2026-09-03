@@ -14,6 +14,7 @@ import { BrandStyle } from "@/features/branding/components/brand-style";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { CreatePoll } from "@/features/poll/components/create-poll";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { isSpaceBrandingActive } from "@/features/space/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getSession } from "@/lib/auth";
@@ -30,9 +31,11 @@ export default async function Page() {
   }
 
   const primaryColor =
-    space?.showBranding &&
-    space.primaryColor &&
-    (await loadInstancePolicy()).spaceBrandingAllowed
+    space?.primaryColor &&
+    isSpaceBrandingActive({
+      ...space,
+      spaceBrandingAllowed: (await loadInstancePolicy()).spaceBrandingAllowed,
+    })
       ? space.primaryColor
       : null;
 

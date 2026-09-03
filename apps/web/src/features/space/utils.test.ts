@@ -4,6 +4,7 @@ import {
   createSpaceContentScope,
   createSpaceDTO,
   inferIndustry,
+  isSpaceBrandingActive,
 } from "@/features/space/utils";
 
 const spaceId = "space-1" as AuthorizedSpaceId;
@@ -25,6 +26,48 @@ describe("createSpaceContentScope", () => {
         userId: "user-1",
       }),
     ).toEqual({ spaceId, createdBy: "user-1" });
+  });
+});
+
+describe("isSpaceBrandingActive", () => {
+  it("applies branding for a pro space that turned it on", () => {
+    expect(
+      isSpaceBrandingActive({
+        tier: "pro",
+        showBranding: true,
+        spaceBrandingAllowed: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("ignores a stored colour once the space is on hobby", () => {
+    expect(
+      isSpaceBrandingActive({
+        tier: "hobby",
+        showBranding: true,
+        spaceBrandingAllowed: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("respects the switch being off", () => {
+    expect(
+      isSpaceBrandingActive({
+        tier: "pro",
+        showBranding: false,
+        spaceBrandingAllowed: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("defers to instance policy", () => {
+    expect(
+      isSpaceBrandingActive({
+        tier: "pro",
+        showBranding: true,
+        spaceBrandingAllowed: false,
+      }),
+    ).toBe(false);
   });
 });
 

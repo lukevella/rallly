@@ -9,7 +9,7 @@ import {
   industryDomainRules,
   industryKeywordRules,
 } from "@/features/space/constants";
-import type { MemberRole } from "@/features/space/schema";
+import type { MemberRole, SpaceTier } from "@/features/space/schema";
 import type {
   AuthorizedSpaceId,
   SpaceContentScope,
@@ -71,6 +71,27 @@ export function createSpaceDTO({
     showBranding: space.showBranding,
     hideAttribution: space.hideAttribution,
   };
+}
+
+/**
+ * Whether a space's stored colour and logo are applied wherever the space is
+ * shown (app chrome, poll pages, emails). Custom branding is a paid feature:
+ * the setting may stay on after a downgrade so it comes back on upgrade, but
+ * the stored values must not render until then. Accepts the stored tier;
+ * resolving is idempotent, so an already resolved DTO tier is fine too.
+ */
+export function isSpaceBrandingActive({
+  tier,
+  showBranding,
+  spaceBrandingAllowed,
+}: {
+  tier: SpaceTier;
+  showBranding: boolean;
+  spaceBrandingAllowed: boolean;
+}) {
+  return (
+    spaceBrandingAllowed && showBranding && resolveSpaceTier(tier) === "pro"
+  );
 }
 
 /**

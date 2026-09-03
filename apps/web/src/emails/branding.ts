@@ -2,6 +2,8 @@ import type { EmailBranding } from "@rallly/emails";
 
 import { getInstanceBrandingConfig } from "@/features/branding/data";
 import { getInstancePolicy } from "@/features/instance-policy/data";
+import type { SpaceTier } from "@/features/space/schema";
+import { isSpaceBrandingActive } from "@/features/space/utils";
 import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 /**
@@ -23,6 +25,7 @@ export async function getInstanceBranding(): Promise<EmailBranding> {
  * space's logo/color applied when the space has custom branding enabled.
  */
 export async function getSpaceBranding(space: {
+  tier: SpaceTier;
   showBranding: boolean;
   hideAttribution: boolean;
   primaryColor: string | null;
@@ -37,7 +40,7 @@ export async function getSpaceBranding(space: {
     hideAttribution:
       instance.hideAttribution ||
       (spaceAttributionConfigurable && space.hideAttribution),
-    ...(space.showBranding && spaceBrandingAllowed
+    ...(isSpaceBrandingActive({ ...space, spaceBrandingAllowed })
       ? {
           primaryColor: space.primaryColor ?? instance.primaryColor,
           logoUrl: space.image
