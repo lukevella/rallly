@@ -14,7 +14,6 @@ export function InviteLinkField({ inviteLink }: { inviteLink: string }) {
   const { t } = useTranslation();
   const [didCopy, setDidCopy] = React.useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
-  const display = inviteLink.replace(/^https?:\/\//, "");
 
   React.useEffect(() => {
     if (state.error) {
@@ -32,7 +31,7 @@ export function InviteLinkField({ inviteLink }: { inviteLink: string }) {
     <InputGroup>
       <InputGroupInput
         readOnly
-        value={display}
+        value={inviteLink}
         aria-label={t("inviteLink", { defaultValue: "Invite link" })}
         onFocus={(event) => event.currentTarget.select()}
         className="font-mono text-xs"

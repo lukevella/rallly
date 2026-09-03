@@ -6,6 +6,12 @@ import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
 import { MailIcon, XIcon } from "lucide-react";
 import React from "react";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
 import { showPayWall, useIsFree } from "@/features/billing/client";
@@ -401,80 +407,93 @@ export function InviteByEmail() {
           ) : null}
 
           <div className="space-y-1.5">
-            <h4
-              id="share-dialog-invited-heading"
-              className="text-muted-foreground text-sm tabular-nums"
-            >
-              {countLabel(rows.length)}
-            </h4>
             {rows.length === 0 ? (
-              <p className="rounded-lg border border-dashed p-4 text-center text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="shareDialogNoInvites"
-                  defaults="No one invited yet. Enter an address above to send the first invite."
-                />
-              </p>
+              <EmptyState className="py-8">
+                <EmptyStateIcon>
+                  <MailIcon />
+                </EmptyStateIcon>
+                <EmptyStateTitle>
+                  <Trans
+                    i18nKey="shareDialogNoInvitesTitle"
+                    defaults="No one invited yet"
+                  />
+                </EmptyStateTitle>
+                <EmptyStateDescription>
+                  <Trans
+                    i18nKey="shareDialogNoInvitesDescription"
+                    defaults="Enter an address above to send the first invite."
+                  />
+                </EmptyStateDescription>
+              </EmptyState>
             ) : (
-              <ul
-                ref={listRef}
-                aria-labelledby="share-dialog-invited-heading"
-                className="-mx-1.5 max-h-72 min-h-0 overflow-y-auto px-1.5"
-              >
-                {rows.map((row, index) => {
-                  const revocable =
-                    row.status === "sent" || row.status === "opened";
-                  const tabIndex = row.id === activeRowId ? 0 : -1;
-                  return (
-                    <li
-                      key={row.id}
-                      className="flex h-11 items-center gap-2.5 rounded-lg px-1.5 hover:bg-accent has-[:focus-visible]:bg-accent"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground"
+              <>
+                <h4
+                  id="share-dialog-invited-heading"
+                  className="text-muted-foreground text-sm tabular-nums"
+                >
+                  {countLabel(rows.length)}
+                </h4>
+                <ul
+                  ref={listRef}
+                  aria-labelledby="share-dialog-invited-heading"
+                  className="-mx-1.5 max-h-72 min-h-0 overflow-y-auto px-1.5"
+                >
+                  {rows.map((row, index) => {
+                    const revocable =
+                      row.status === "sent" || row.status === "opened";
+                    const tabIndex = row.id === activeRowId ? 0 : -1;
+                    return (
+                      <li
+                        key={row.id}
+                        className="flex h-11 items-center gap-2.5 rounded-lg px-1.5 hover:bg-accent has-[:focus-visible]:bg-accent"
                       >
-                        <MailIcon className="size-3.5" />
-                      </span>
-                      <span className="min-w-0 flex-1 truncate text-sm">
-                        {row.email}
-                      </span>
-                      <StatusPill status={row.status} />
-                      {revocable ? (
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          tabIndex={tabIndex}
-                          data-row-id={row.id}
-                          disabled={revoking.includes(row.id)}
-                          aria-label={t("shareDialogRevokeInvite", {
-                            defaultValue: "Revoke invite for {email}",
-                            email: row.email,
-                          })}
-                          onFocus={() => setActiveId(row.id)}
-                          onKeyDown={(event) =>
-                            handleListKeyDown(event, row, index)
-                          }
-                          onClick={() => handleRevoke(row)}
-                        >
-                          <XIcon />
-                        </Button>
-                      ) : (
                         <span
-                          role="note"
-                          tabIndex={tabIndex}
-                          data-row-id={row.id}
-                          aria-label={`${row.email}, ${row.status}`}
-                          className="size-7 shrink-0 rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
-                          onFocus={() => setActiveId(row.id)}
-                          onKeyDown={(event) =>
-                            handleListKeyDown(event, row, index)
-                          }
-                        />
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
+                          aria-hidden="true"
+                          className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground"
+                        >
+                          <MailIcon className="size-3.5" />
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-sm">
+                          {row.email}
+                        </span>
+                        <StatusPill status={row.status} />
+                        {revocable ? (
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            tabIndex={tabIndex}
+                            data-row-id={row.id}
+                            disabled={revoking.includes(row.id)}
+                            aria-label={t("shareDialogRevokeInvite", {
+                              defaultValue: "Revoke invite for {email}",
+                              email: row.email,
+                            })}
+                            onFocus={() => setActiveId(row.id)}
+                            onKeyDown={(event) =>
+                              handleListKeyDown(event, row, index)
+                            }
+                            onClick={() => handleRevoke(row)}
+                          >
+                            <XIcon />
+                          </Button>
+                        ) : (
+                          <span
+                            role="note"
+                            tabIndex={tabIndex}
+                            data-row-id={row.id}
+                            aria-label={`${row.email}, ${row.status}`}
+                            className="size-7 shrink-0 rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
+                            onFocus={() => setActiveId(row.id)}
+                            onKeyDown={(event) =>
+                              handleListKeyDown(event, row, index)
+                            }
+                          />
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
             )}
           </div>
         </>
