@@ -43,7 +43,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
       </div>
       <Button
         variant="ghost"
-        className="shrink-0"
+        className="shrink-0 text-primary"
         onClick={() => {
           copyToClipboard(inviteLink);
           setDidCopy(true);
