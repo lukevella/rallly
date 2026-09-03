@@ -5,6 +5,7 @@ import { getPrimaryColorVars } from "@/features/branding/utils";
 import { useInstancePolicy } from "@/features/instance-policy/client";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import type { SpaceDTO } from "@/features/space/types";
+import { isSpaceBrandingActive } from "@/features/space/utils";
 import { useAuthedUser } from "@/features/user/client";
 import { defineAbilityForSpace } from "./ability";
 
@@ -46,7 +47,8 @@ export function SpaceProvider({
   const { spaceBrandingAllowed } = useInstancePolicy();
 
   const primaryColorVars =
-    spaceBrandingAllowed && space.showBranding && space.primaryColor
+    isSpaceBrandingActive({ ...space, spaceBrandingAllowed }) &&
+    space.primaryColor
       ? getPrimaryColorVars(space.primaryColor)
       : null;
 
