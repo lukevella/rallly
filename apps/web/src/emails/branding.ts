@@ -3,7 +3,10 @@ import type { EmailBranding } from "@rallly/emails";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import type { SpaceTier } from "@/features/space/schema";
-import { isSpaceBrandingActive } from "@/features/space/utils";
+import {
+  isSpaceAttributionHidden,
+  isSpaceBrandingActive,
+} from "@/features/space/utils";
 import { resolveStorageUrl } from "@/lib/storage/resolve-storage-url";
 
 /**
@@ -39,7 +42,7 @@ export async function getSpaceBranding(space: {
     // reflected in the instance branding
     hideAttribution:
       instance.hideAttribution ||
-      (spaceAttributionConfigurable && space.hideAttribution),
+      isSpaceAttributionHidden({ ...space, spaceAttributionConfigurable }),
     ...(isSpaceBrandingActive({ ...space, spaceBrandingAllowed })
       ? {
           primaryColor: space.primaryColor ?? instance.primaryColor,

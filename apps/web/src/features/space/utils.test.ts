@@ -4,6 +4,7 @@ import {
   createSpaceContentScope,
   createSpaceDTO,
   inferIndustry,
+  isSpaceAttributionHidden,
   isSpaceBrandingActive,
 } from "@/features/space/utils";
 
@@ -66,6 +67,48 @@ describe("isSpaceBrandingActive", () => {
         tier: "pro",
         showBranding: true,
         spaceBrandingAllowed: false,
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("isSpaceAttributionHidden", () => {
+  it("hides attribution for a pro space that turned it on", () => {
+    expect(
+      isSpaceAttributionHidden({
+        tier: "pro",
+        hideAttribution: true,
+        spaceAttributionConfigurable: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("ignores the stored setting once the space is on hobby", () => {
+    expect(
+      isSpaceAttributionHidden({
+        tier: "hobby",
+        hideAttribution: true,
+        spaceAttributionConfigurable: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("respects the switch being off", () => {
+    expect(
+      isSpaceAttributionHidden({
+        tier: "pro",
+        hideAttribution: false,
+        spaceAttributionConfigurable: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("defers to instance policy", () => {
+    expect(
+      isSpaceAttributionHidden({
+        tier: "pro",
+        hideAttribution: true,
+        spaceAttributionConfigurable: false,
       }),
     ).toBe(false);
   });

@@ -95,6 +95,27 @@ export function isSpaceBrandingActive({
 }
 
 /**
+ * Whether the "Powered by" credit is dropped from a space's polls and emails.
+ * Same shape as branding: paid, and the stored setting survives a downgrade
+ * without taking effect until the space is pro again.
+ */
+export function isSpaceAttributionHidden({
+  tier,
+  hideAttribution,
+  spaceAttributionConfigurable,
+}: {
+  tier: SpaceTier;
+  hideAttribution: boolean;
+  spaceAttributionConfigurable: boolean;
+}) {
+  return (
+    spaceAttributionConfigurable &&
+    hideAttribution &&
+    resolveSpaceTier(tier) === "pro"
+  );
+}
+
+/**
  * The visibility scope space-scoped content reads must apply for this
  * member. One rule for all content types and all roles: in an unshared
  * space, reads are restricted to what the member created themselves —

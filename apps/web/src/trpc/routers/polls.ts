@@ -19,7 +19,10 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
-import { isSpaceBrandingActive } from "@/features/space/utils";
+import {
+  isSpaceAttributionHidden,
+  isSpaceBrandingActive,
+} from "@/features/space/utils";
 import { dayjs } from "@/lib/dayjs";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -825,8 +828,10 @@ export const polls = router({
               ...res.space,
               showBranding: brandingActive,
               primaryColor: brandingActive ? res.space.primaryColor : null,
-              hideAttribution:
-                spaceAttributionConfigurable && res.space.hideAttribution,
+              hideAttribution: isSpaceAttributionHidden({
+                ...res.space,
+                spaceAttributionConfigurable,
+              }),
             }
           : null,
         canManage,

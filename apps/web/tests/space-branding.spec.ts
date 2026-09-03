@@ -68,4 +68,28 @@ test.describe("space branding on the invite page", () => {
 
     expect(await readPrimaryVar(page)).toBe(defaultPrimary);
   });
+
+  test("pro space with attribution removed hides the footer credit", async ({
+    page,
+  }) => {
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "pro", hideAttribution: true },
+    });
+
+    await readPrimaryVar(page);
+    await expect(page.getByText("Powered by")).toBeHidden();
+  });
+
+  test("hobby space with attribution removed still shows the footer credit", async ({
+    page,
+  }) => {
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "hobby", hideAttribution: true },
+    });
+
+    await readPrimaryVar(page);
+    await expect(page.getByText("Powered by")).toBeVisible();
+  });
 });
