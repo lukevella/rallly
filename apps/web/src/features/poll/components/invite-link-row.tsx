@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { CheckIcon, CopyIcon, GlobeIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -31,24 +31,23 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
     <div className="flex items-center gap-3 px-1 py-2">
       <span
         aria-hidden="true"
-        className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground"
+        className="grid size-9 shrink-0 place-items-center rounded-lg bg-card text-muted-foreground shadow-xs ring-1 ring-button-outline ring-inset"
       >
-        <GlobeIcon className="size-4" />
+        <LinkIcon className="size-4" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="font-medium text-sm">
-          <Trans
-            i18nKey="shareDialogAnyoneWithLink"
-            defaults="Anyone with the link"
-          />
+          <Trans i18nKey="inviteLink" defaults="Invite link" />
         </p>
         <p className="text-muted-foreground text-sm">
-          <Trans i18nKey="shareDialogCanRespond" defaults="Can respond" />
+          <Trans
+            i18nKey="shareDialogInviteLinkDescription"
+            defaults="Anyone can respond with this link"
+          />
         </p>
       </div>
       <Button
-        variant="ghost"
-        className="shrink-0 text-primary"
+        className="shrink-0"
         onClick={() => {
           copyToClipboard(inviteLink);
           setDidCopy(true);
