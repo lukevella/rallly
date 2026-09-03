@@ -318,7 +318,7 @@ export function InviteByEmail() {
     : (rows[0]?.id ?? null);
 
   return (
-    <div className="space-y-3">
+    <div className="min-w-0 space-y-3">
       {isGuest ? (
         <div className="space-y-2 rounded-lg bg-muted p-3 text-sm">
           <p className="text-muted-foreground">
@@ -338,7 +338,11 @@ export function InviteByEmail() {
         </div>
       ) : (
         <>
-          <form onSubmit={handleSubmit} className="flex gap-2" noValidate>
+          <form
+            onSubmit={handleSubmit}
+            className="flex min-w-0 gap-2"
+            noValidate
+          >
             <label htmlFor="share-dialog-email" className="sr-only">
               <Trans i18nKey="emailAddress" defaults="Email address" />
             </label>
