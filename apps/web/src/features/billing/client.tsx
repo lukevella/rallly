@@ -40,7 +40,8 @@ export type PayWallTrigger = {
     | "space-members"
     | "space-collaboration"
     | "billing-settings"
-    | "sidebar";
+    | "sidebar"
+    | "invite-dialog";
   setting?: string;
   action?: string;
   pollId?: string;
