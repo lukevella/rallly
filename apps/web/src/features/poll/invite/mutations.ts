@@ -1,7 +1,6 @@
-// apps/web/src/features/poll/invite/mutations.ts
 import "server-only";
 
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { sendPollInviteEmail } from "@rallly/emails/templates/poll-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
@@ -47,7 +46,6 @@ export async function sendPollInvite({
     prisma.poll.findFirst({
       where: { id: pollId, deleted: false },
       select: {
-        id: true,
         title: true,
         status: true,
         space: {
@@ -105,8 +103,15 @@ export async function sendPollInvite({
 
   const existing = await prisma.pollInvite.findUnique({
     where: { pollId_email: { pollId, email } },
-    select: { id: true, revokedAt: true },
+    select: { id: true, revokedAt: true, participantId: true },
   });
+
+  // A converted invite belongs to the response now, regardless of
+  // revokedAt: reactivating it here would clear revokedAt and rotate the
+  // token on a row that still points at a participant.
+  if (existing?.participantId) {
+    return { ok: false, reason: "alreadyResponded" };
+  }
 
   if (existing && existing.revokedAt === null) {
     return { ok: false, reason: "alreadyInvited" };
@@ -114,32 +119,44 @@ export async function sendPollInvite({
 
   const token = generateInviteToken();
 
-  const invite = await prisma.$transaction(async (tx) => {
-    // A revoked row is reactivated with a fresh token so a leaked old link
-    // never regains access.
-    const row = existing
-      ? await tx.pollInvite.update({
-          where: { id: existing.id },
-          data: { revokedAt: null, token },
-          select: { id: true, email: true },
-        })
-      : await tx.pollInvite.create({
-          data: { pollId, email, token },
-          select: { id: true, email: true },
-        });
+  let invite: { id: string; email: string };
+  try {
+    invite = await prisma.$transaction(async (tx) => {
+      // A revoked row is reactivated with a fresh token so a leaked old link
+      // never regains access.
+      const row = existing
+        ? await tx.pollInvite.update({
+            where: { id: existing.id },
+            data: { revokedAt: null, token },
+            select: { id: true, email: true },
+          })
+        : await tx.pollInvite.create({
+            data: { pollId, email, token },
+            select: { id: true, email: true },
+          });
 
-    await recordPollActivities(tx, [
-      {
-        pollId,
-        type: "invite_sent",
-        userId,
-        inviteId: row.id,
-        payload: { email: row.email },
-      },
-    ]);
+      await recordPollActivities(tx, [
+        {
+          pollId,
+          type: "invite_sent",
+          userId,
+          inviteId: row.id,
+          payload: { email: row.email },
+        },
+      ]);
 
-    return row;
-  });
+      return row;
+    });
+  } catch (error) {
+    // A concurrent send for the same poll/email raced the unique index.
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return { ok: false, reason: "alreadyInvited" };
+    }
+    throw error;
+  }
 
   try {
     await sendPollInviteEmail({
@@ -161,19 +178,26 @@ export async function sendPollInvite({
     );
     // Undo the row and its activity so the list never shows an invite that
     // was never delivered. A reactivated row goes back to revoked.
-    await prisma.$transaction(async (tx) => {
-      await tx.pollActivity.deleteMany({
-        where: { pollId, inviteId: invite.id, type: "invite_sent" },
-      });
-      if (existing) {
-        await tx.pollInvite.update({
-          where: { id: invite.id },
-          data: { revokedAt: new Date() },
+    try {
+      await prisma.$transaction(async (tx) => {
+        await tx.pollActivity.deleteMany({
+          where: { pollId, inviteId: invite.id, type: "invite_sent" },
         });
-      } else {
-        await tx.pollInvite.delete({ where: { id: invite.id } });
-      }
-    });
+        if (existing) {
+          await tx.pollInvite.update({
+            where: { id: invite.id },
+            data: { revokedAt: new Date() },
+          });
+        } else {
+          await tx.pollInvite.delete({ where: { id: invite.id } });
+        }
+      });
+    } catch (rollbackError) {
+      logger.error(
+        { error: rollbackError, pollId, inviteId: invite.id },
+        "Failed to roll back undelivered poll invite",
+      );
+    }
     return { ok: false, reason: "sendFailed" };
   }
 
