@@ -31,7 +31,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
     <div className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-3">
       <span
         aria-hidden="true"
-        className="grid size-9 shrink-0 place-items-center rounded-lg border border-primary/10 bg-primary/5 text-primary"
+        className="grid size-9 shrink-0 place-items-center rounded-lg border border-primary/10 bg-primary/5 text-muted-foreground"
       >
         <LinkIcon className="size-4" />
       </span>
