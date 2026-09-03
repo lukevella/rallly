@@ -14,9 +14,11 @@ import type { PostHogConfig } from "posthog-js";
  *   in this mode, which is why the identified branch bootstraps at init
  *   instead of identifying after the fact.
  *
- * Person profiles stay identified-only in both branches. Registering a group
- * (posthog.group) turns person processing on for whatever distinct id is
- * current, so callers must never call group() on the cookieless branch.
+ * Person profiles stay identified-only in both branches. Never call
+ * posthog.group() from the browser: registering a group turns person
+ * processing on for whatever distinct id is current, identified or not,
+ * which is how cookieless visitors ended up with a fresh empty person per
+ * day. Group membership is attached server-side by track() and identifyGroup.
  */
 export function getPostHogInitOptions({
   distinctId,
