@@ -28,7 +28,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
   }, [didCopy]);
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-foreground/20 bg-foreground/5 p-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-foreground/10 bg-foreground/5 p-3">
       <span
         aria-hidden="true"
         className="grid size-9 shrink-0 place-items-center rounded-lg border border-foreground/10 bg-foreground/5 text-muted-foreground"
