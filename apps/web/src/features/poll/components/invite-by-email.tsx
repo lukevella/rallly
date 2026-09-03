@@ -393,7 +393,7 @@ export function InviteByEmail() {
 
           <div className="space-y-1.5">
             {rows.length === 0 ? (
-              <div className="relative">
+              <div className="relative mt-2">
                 <InviteeListPreview />
                 <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
                   <EmptyStateIcon>
