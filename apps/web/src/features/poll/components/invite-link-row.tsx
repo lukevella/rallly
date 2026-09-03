@@ -42,6 +42,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
         <p className="truncate text-muted-foreground text-xs">{inviteLink}</p>
       </div>
       <Button
+        variant="ghost"
         className="shrink-0"
         onClick={() => {
           copyToClipboard(inviteLink);
