@@ -1,6 +1,12 @@
 {
   "blog": "Блог",
+  "close": "Закрыть",
   "compare": "Сравнить",
+  "cookieConsentAccept": "Принять",
+  "cookieConsentIntro": "Мы используем файлы cookie, чтобы улучшить ваш опыт.",
+  "cookieConsentLabel": "Согласие на использование файлов cookie",
+  "cookieConsentOptOut": "Отказаться",
+  "cookieConsentPolicy": "Узнайте больше в нашей <policyLink>политике о файлах cookie</policyLink>.",
   "cookiePolicy": "Политика использования файлов cookie",
   "discussions": "Обсуждения",
   "doodleAlternative": "Альтернатива Doodle",
@@ -29,6 +35,10 @@
   "product": "Продукт",
   "resources": "Ресурсы",
   "schedulingPoll": "Планирование опроса",
+  "security": "Безопасность",
+  "sportsClubs": "Спортивные клубы",
+  "statusBadgeAlt": "Статус Rallly",
   "support": "Поддержка",
-  "termsOfUse": "Условия использования"
+  "termsOfUse": "Условия использования",
+  "useCases": "Варианты использования"
 }
