@@ -31,7 +31,12 @@ import type { UserDTO } from "@/features/user/schema";
 import { jobTitleFieldSchema } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
-import { parseRefParam, REF_COOKIE_NAME } from "@/lib/acquisition";
+import {
+  CTA_COOKIE_NAME,
+  parseCtaParam,
+  parseRefParam,
+  REF_COOKIE_NAME,
+} from "@/lib/acquisition";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
@@ -485,6 +490,7 @@ export const authLib = betterAuth({
             return;
           }
           const ref = parseRefParam(ctx?.getCookie(REF_COOKIE_NAME));
+          const cta = parseCtaParam(ctx?.getCookie(CTA_COOKIE_NAME));
           // No space is created here — /setup owns space creation, and the
           // active-space gate keeps redirecting there until it happens.
           track(
@@ -494,6 +500,7 @@ export const authLib = betterAuth({
               properties: {
                 method: user.lastLoginMethod,
                 ref,
+                cta,
                 $set: {
                   name: user.name,
                   email: user.email,
@@ -501,7 +508,12 @@ export const authLib = betterAuth({
                   timeZone: user.timeZone ?? undefined,
                   locale: user.locale ?? undefined,
                 },
-                ...(ref && { $set_once: { initial_ref: ref } }),
+                ...((ref || cta) && {
+                  $set_once: {
+                    ...(ref && { initial_ref: ref }),
+                    ...(cta && { initial_cta: cta }),
+                  },
+                }),
               },
             },
           );

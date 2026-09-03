@@ -65,7 +65,11 @@ export default async function Root(props: {
               <div className="hidden sm:block">
                 <LoginButton />
               </div>
-              <CtaButton size="default" captureEvent="landing:header_cta_click">
+              <CtaButton
+                size="default"
+                captureEvent="landing:header_cta_click"
+                cta="header"
+              >
                 <Trans
                   t={t}
                   ns="home"

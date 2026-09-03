@@ -1,8 +1,10 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { MenuIcon, XIcon } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { CtaButton } from "@/components/home/cta-button";
@@ -113,20 +115,30 @@ export const MobileMenu = ({
           ))}
         </nav>
         <div className="flex flex-col gap-3 border-t px-4 py-6 sm:px-6">
-          <LinkBase
-            href={linkToApp("/login", { ref: getRefSlug(pathname) })}
+          <Link
+            href={linkToApp("/login", {
+              ref: getRefSlug(pathname),
+              cta: "mobile_menu_login",
+            })}
             className={buttonVariants({
               variant: "default",
               size: "lg",
               className: "w-full",
             })}
+            onClick={() => {
+              posthog.capture("landing:login_click", {
+                cta: "mobile_menu_login",
+                ref: getRefSlug(pathname),
+              });
+            }}
           >
             {loginLabel}
-          </LinkBase>
+          </Link>
           <CtaButton
             size="lg"
             className="w-full"
             captureEvent="landing:mobile_menu_cta_click"
+            cta="mobile_menu"
           >
             {ctaLabel}
           </CtaButton>
