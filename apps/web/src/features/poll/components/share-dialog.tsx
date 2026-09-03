@@ -12,7 +12,7 @@ import { Separator } from "@rallly/ui/separator";
 import { Share2Icon } from "lucide-react";
 import { usePoll } from "@/features/poll/client";
 import { InviteByEmail } from "@/features/poll/components/invite-by-email";
-import { InviteLinkField } from "@/features/poll/components/invite-link-field";
+import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import { Trans } from "@/i18n/client";
 
 export function ShareDialog() {
@@ -34,29 +34,9 @@ export function ShareDialog() {
               <Trans i18nKey="share" defaults="Share" />
             </DialogTitle>
           </DialogHeader>
-          <section
-            aria-labelledby="share-dialog-link-heading"
-            className="space-y-2"
-          >
-            <h3
-              id="share-dialog-link-heading"
-              className="font-semibold text-sm"
-            >
-              <Trans
-                i18nKey="shareDialogInviteByLink"
-                defaults="Invite by link"
-              />
-            </h3>
-            <InviteLinkField inviteLink={poll.inviteLink} />
-            <p className="text-muted-foreground text-sm">
-              <Trans
-                i18nKey="inviteParticipantLinkInfo"
-                defaults="Anyone with this link will be able to vote on your poll."
-              />
-            </p>
-          </section>
-          <Separator />
           <InviteByEmail />
+          <Separator />
+          <InviteLinkRow inviteLink={poll.inviteLink} />
         </DialogContent>
       </Dialog>
     </>

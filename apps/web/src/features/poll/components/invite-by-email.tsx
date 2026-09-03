@@ -314,11 +314,7 @@ export function InviteByEmail() {
     : (rows[0]?.id ?? null);
 
   return (
-    <section aria-labelledby="share-dialog-email-heading" className="space-y-3">
-      <h3 id="share-dialog-email-heading" className="font-semibold text-sm">
-        <Trans i18nKey="shareDialogInviteByEmail" defaults="Invite by email" />
-      </h3>
-
+    <div className="space-y-3">
       {isGuest ? (
         <div className="space-y-2 rounded-lg bg-muted p-3 text-sm">
           <p className="text-muted-foreground">
@@ -476,6 +472,6 @@ export function InviteByEmail() {
       <p className="sr-only" aria-live="polite">
         {announcement}
       </p>
-    </section>
+    </div>
   );
 }
