@@ -352,9 +352,7 @@ export function InviteByEmail() {
                 type="email"
                 inputMode="email"
                 autoComplete="off"
-                placeholder={t("emailAddress", {
-                  defaultValue: "Email address",
-                })}
+                placeholder="jessie.smith@example.com"
                 value={email}
                 disabled={!isOpen}
                 aria-invalid={invalid || undefined}
