@@ -778,6 +778,7 @@
   "shareDialogAlreadyInvited": "{email} is already invited",
   "shareDialogAlreadyResponded": "{email} has already responded",
   "shareDialogDailyLimit": "You've reached today's limit of 100 invites",
+  "shareDialogDescription": "Share the invite link, or invite people by email.",
   "shareDialogGuestPrompt": "Create an account to invite people by email. Your invites and their responses stay attached to your account instead of this browser.",
   "shareDialogInvalidEmail": "Enter a single valid email address",
   "shareDialogInvitedCount": "{count, plural, one {# invited} other {# invited}}",

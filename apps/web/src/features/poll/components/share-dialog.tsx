@@ -4,6 +4,7 @@ import { Button } from "@rallly/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   useDialog,
@@ -33,10 +34,16 @@ export function ShareDialog() {
             <DialogTitle>
               <Trans i18nKey="share" defaults="Share" />
             </DialogTitle>
+            <DialogDescription>
+              <Trans
+                i18nKey="shareDialogDescription"
+                defaults="Share the invite link, or invite people by email."
+              />
+            </DialogDescription>
           </DialogHeader>
-          <InviteByEmail />
-          <Separator />
           <InviteLinkRow inviteLink={poll.inviteLink} />
+          <Separator />
+          <InviteByEmail />
         </DialogContent>
       </Dialog>
     </>
