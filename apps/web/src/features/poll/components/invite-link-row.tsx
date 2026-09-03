@@ -7,8 +7,8 @@ import { useCopyToClipboard } from "react-use";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
- * Footer row describing who the invite link admits, with the copy action.
- * The URL itself is never shown; copying is the only thing hosts do with it.
+ * The invite link with its copy action. The URL is shown because hosts have
+ * learned to look for something that looks like a link.
  */
 export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
   const { t } = useTranslation();
@@ -39,12 +39,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
         <p className="font-medium text-sm">
           <Trans i18nKey="inviteLink" defaults="Invite link" />
         </p>
-        <p className="text-muted-foreground text-sm">
-          <Trans
-            i18nKey="shareDialogInviteLinkDescription"
-            defaults="Anyone can respond with this link"
-          />
-        </p>
+        <p className="truncate text-muted-foreground text-sm">{inviteLink}</p>
       </div>
       <Button
         className="shrink-0"
@@ -54,14 +49,14 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
         }}
       >
         {didCopy ? (
-          <Trans i18nKey="copied" defaults="Copied" />
+          <CheckIcon data-icon="inline-start" />
         ) : (
-          <Trans i18nKey="copyLink" defaults="Copy link" />
+          <CopyIcon data-icon="inline-start" />
         )}
         {didCopy ? (
-          <CheckIcon data-icon="inline-end" />
+          <Trans i18nKey="copied" defaults="Copied" />
         ) : (
-          <CopyIcon data-icon="inline-end" />
+          <Trans i18nKey="copy" defaults="Copy" />
         )}
       </Button>
       <p className="sr-only" aria-live="polite">

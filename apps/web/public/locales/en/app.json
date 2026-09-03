@@ -782,7 +782,6 @@
   "shareDialogGuestPrompt": "Create an account to invite people by email. Your invites and their responses stay attached to your account instead of this browser.",
   "shareDialogInvalidEmail": "Enter a single valid email address",
   "shareDialogInvitedCount": "{count, plural, one {# invited} other {# invited}}",
-  "shareDialogInviteLinkDescription": "Anyone can respond with this link",
   "shareDialogInviteRevokedAnnouncement": "Invite for {email} revoked. {count}",
   "shareDialogInviteSentAnnouncement": "Invite sent to {email}. {count}",
   "shareDialogNoInvitesDescription": "Enter an address above to send the first invite.",
