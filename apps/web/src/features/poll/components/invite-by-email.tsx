@@ -391,7 +391,9 @@ export function InviteByEmail() {
               }
             >
               <Trans i18nKey="shareDialogSendInvite" defaults="Send invite" />
-              {isFree ? <ProBadge className="ml-1.5" /> : null}
+              {isFree ? (
+                <ProBadge className="ml-1.5 bg-primary-foreground/20 text-primary-foreground" />
+              ) : null}
             </Button>
           </form>
           {!isOpen ? (
