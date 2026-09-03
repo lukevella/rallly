@@ -386,7 +386,7 @@ export function InviteByEmail() {
             {rows.length === 0 ? (
               <div className="relative">
                 <InviteeListPreview />
-                <EmptyState className="absolute inset-0 py-0">
+                <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
                   <EmptyStateIcon>
                     <MailIcon />
                   </EmptyStateIcon>
