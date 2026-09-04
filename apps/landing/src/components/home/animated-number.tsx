@@ -219,7 +219,7 @@ function AnimatedStat({
     // opts back into optical centering with self-center.
     // leading-none keeps the badge shorter than the paragraph's loose line
     // boxes, so wrapped lines show a gap between stacked badges.
-    <strong className="inline-flex items-baseline gap-x-1.5 whitespace-nowrap rounded-lg bg-gray-200 px-3 py-1.5 font-normal text-gray-800 leading-none [&_svg]:-ml-1 [&_svg]:size-[1em] [&_svg]:shrink-0 [&_svg]:self-center">
+    <strong className="inline-flex items-baseline gap-x-1.5 whitespace-nowrap rounded-lg bg-gray-200 px-2.5 py-1.5 font-normal text-gray-800 leading-none [&_svg]:size-[1em] [&_svg]:shrink-0 [&_svg]:self-center">
       {icon}
       {/* Inner span keeps the number and its unit in normal inline flow so
           the space between them survives the flex container */}
