@@ -22,6 +22,7 @@ import {
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
+import { Perimeter } from "@/components/home/perimeter";
 import { Stats } from "@/components/home/stats";
 import {
   Section,
@@ -140,22 +141,30 @@ export default async function Security(props: {
   const format = new Intl.NumberFormat(locale);
   return (
     <div className="divide-y">
-      <Section>
-        <Hero
-          className="max-w-2xl"
-          title="Securely scheduling for thousands of organizations"
-          description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
-        />
-        <Stats className="mx-0 mt-8 text-left sm:mt-24">
-          <PeopleBadge locale={locale} live>
-            {format.format(voterCount)} people
-          </PeopleBadge>{" "}
-          voted on{" "}
-          <PollsBadge locale={locale} live>
-            {format.format(pollCount)} polls
-          </PollsBadge>{" "}
-          in the last 30 days
-        </Stats>
+      <Section className="relative border-b-0">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48rem] translate-x-1/2 text-gray-700 [mask-composite:intersect] [mask-image:radial-gradient(closest-side,black_30%,transparent_100%),linear-gradient(to_right,black_40%,transparent_52%)] lg:block xl:w-[52rem] xl:translate-x-1/4 xl:[mask-image:radial-gradient(closest-side,black_30%,transparent_100%)]"
+        >
+          <Perimeter />
+        </div>
+        <div className="relative">
+          <Hero
+            className="max-w-2xl"
+            title="Securely scheduling for thousands of organizations"
+            description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
+          />
+          <Stats className="mx-0 mt-8 text-left sm:mt-24">
+            <PeopleBadge locale={locale} live>
+              {format.format(voterCount)} people
+            </PeopleBadge>{" "}
+            voted on{" "}
+            <PollsBadge locale={locale} live>
+              {format.format(pollCount)} polls
+            </PollsBadge>{" "}
+            in the last 30 days
+          </Stats>
+        </div>
       </Section>
       <Section>
         <SectionHeading>
