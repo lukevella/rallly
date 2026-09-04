@@ -419,10 +419,7 @@ export function InviteByEmail() {
               </div>
             ) : (
               <>
-                <h4
-                  id="share-dialog-invited-heading"
-                  className="mb-1.5 text-muted-foreground text-sm tabular-nums"
-                >
+                <h4 id="share-dialog-invited-heading" className="sr-only">
                   {countLabel(rows.length)}
                 </h4>
                 <ul
