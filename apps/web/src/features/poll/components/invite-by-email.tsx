@@ -260,7 +260,14 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
               ) : null}
             </Button>
           </form>
-          {!isOpen ? (
+          {isOpen ? (
+            <p className="mt-2 text-muted-foreground text-sm">
+              <Trans
+                i18nKey="shareDialogRepliesGoToYou"
+                defaults="Replies go to you"
+              />
+            </p>
+          ) : (
             <p
               id="share-dialog-closed-reason"
               className="mt-3 text-muted-foreground text-sm"
@@ -270,7 +277,7 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
                 defaults="Reopen the poll to send invites"
               />
             </p>
-          ) : null}
+          )}
 
           <div className="mt-3">
             {rows.length === 0 ? (

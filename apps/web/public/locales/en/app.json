@@ -779,6 +779,7 @@
   "shareDialogNoInvitesDescription": "Enter an address above to send the first invite.",
   "shareDialogNoInvitesTitle": "No one invited yet",
   "shareDialogPollClosed": "Reopen the poll to send invites",
+  "shareDialogRepliesGoToYou": "Replies go to you",
   "shareDialogSendFailed": "Couldn't send to {email}. Try again.",
   "shareDialogSendInvite": "Send invite",
   "showParticipantVotes": "Show participant votes",
