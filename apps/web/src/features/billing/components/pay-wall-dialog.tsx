@@ -20,7 +20,6 @@ import {
   CalendarSearchIcon,
   ClockIcon,
   EyeOffIcon,
-  LifeBuoyIcon,
   MailPlusIcon,
   PaletteIcon,
   SparklesIcon,
@@ -172,17 +171,6 @@ const proBenefitsList = [
       <Trans
         i18nKey="teamCollaborationDescription"
         defaults="Invite team members with centralized billing"
-      />
-    ),
-  },
-  {
-    key: "prioritySupport",
-    icon: <LifeBuoyIcon />,
-    title: <Trans i18nKey="prioritySupport" defaults="Priority support" />,
-    description: (
-      <Trans
-        i18nKey="prioritySupportDescription"
-        defaults="Get faster response times and dedicated assistance"
       />
     ),
   },

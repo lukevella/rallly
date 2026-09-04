@@ -9,7 +9,6 @@ import {
   ClockIcon,
   CopyIcon,
   EyeOffIcon,
-  LifeBuoyIcon,
   MailPlusIcon,
   PaletteIcon,
   Settings2Icon,
@@ -435,16 +434,6 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
-                <PlanBenefit icon={<LifeBuoyIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="prioritySupport"
-                      defaults="Priority support"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
               </PlanBenefits>
             </PlanCard>
           </PlanCards>
@@ -715,22 +704,6 @@ export default async function Page(props: {
                     ns="pricing"
                     i18nKey="teamCollaboration"
                     defaults="Team collaboration"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableDash label={notIncluded} />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <CompareTableCheck label={included} />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="prioritySupport"
-                    defaults="Priority support"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
