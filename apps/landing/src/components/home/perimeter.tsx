@@ -93,6 +93,11 @@ export function Perimeter({ className }: { className?: string }) {
     };
 
     const draw = (now: number, dt: number, animate: boolean) => {
+      // A hidden canvas measures 0x0, which would make the grid step 0 and
+      // the loops below never terminate.
+      if (width <= 0 || height <= 0) {
+        return;
+      }
       const radius = height / 2;
       const cx = width / 2;
       const cy = height / 2;
