@@ -35,10 +35,13 @@ async function respondAsGuest(
   name: string,
 ) {
   const context = await browser.newContext();
-  const guestPage = await context.newPage();
-  await guestPage.goto(inviteUrl.replace(/&amp;/g, "&"));
-  await new InvitePage(guestPage).addParticipant(name);
-  await context.close();
+  try {
+    const guestPage = await context.newPage();
+    await guestPage.goto(inviteUrl.replace(/&amp;/g, "&"));
+    await new InvitePage(guestPage).addParticipant(name);
+  } finally {
+    await context.close();
+  }
 }
 
 test.describe("Email invites", () => {
@@ -102,8 +105,10 @@ test.describe("Email invites", () => {
       /href="([^"]*\/invite\/[^"]*invite=[^"]*)"/,
     )?.[1];
     expect(inviteUrl).toBeTruthy();
+    const browser = page.context().browser();
+    expect(browser).toBeTruthy();
     await respondAsGuest(
-      page.context().browser() as Browser,
+      browser as Browser,
       inviteUrl as string,
       "Invited Guest",
     );

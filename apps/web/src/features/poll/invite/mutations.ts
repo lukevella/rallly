@@ -233,6 +233,6 @@ export async function attachParticipantToInvite(
 
   await tx.pollInvite.updateMany({
     where: { pollId, participantId: null, revokedAt: null, ...match },
-    data: { participantId, openedAt: new Date() },
+    data: { participantId },
   });
 }
