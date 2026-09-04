@@ -36,8 +36,7 @@ import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 const unitedStates = { flag: "🇺🇸", label: "United States" };
 const europeanUnion = { flag: "🇪🇺", label: "European Union" };
 
-// Logo heights are tuned per wordmark so they sit at the same visual weight;
-// the brightness filter flattens every logo to one tone until hovered
+// Logo heights are tuned per wordmark so they sit at the same visual weight
 const providers = [
   {
     name: "Vercel",
@@ -234,17 +233,22 @@ export default async function Security(props: {
               edge so only the inner grid lines remain */}
           <div className="overflow-hidden">
             <ul className="-mt-px -ml-px grid grid-cols-2 sm:grid-cols-3">
-              {providers.map((provider) => (
+              {providers.map((provider, index) => (
                 <li
                   key={provider.name}
-                  className="flex flex-col gap-y-4 border-t border-l p-4 sm:p-6"
+                  className={cn(
+                    "flex flex-col gap-y-4 border-t border-l p-4 sm:p-6",
+                    // First column sits flush with the section heading
+                    index % 2 === 0 && "pl-0",
+                    index % 3 === 0 ? "sm:pl-0" : "sm:pl-6",
+                  )}
                 >
                   <div className="flex items-start justify-between gap-x-4">
                     <a
                       href={provider.href}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="flex h-9 items-center rounded-sm"
+                      className="group flex h-9 items-center rounded-sm"
                     >
                       <Image
                         src={provider.logo.src}
@@ -252,7 +256,7 @@ export default async function Security(props: {
                         height={provider.logo.height}
                         alt={provider.name}
                         className={cn(
-                          "w-auto opacity-60 brightness-0 transition hover:opacity-100 hover:brightness-100",
+                          "w-auto transition-transform group-hover:-translate-y-1",
                           provider.logo.className,
                         )}
                       />
