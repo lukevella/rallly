@@ -11,8 +11,7 @@ test.describe("edit options", () => {
     page = await browser.newPage();
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const dialog = await newPollPage.create({ name: "Monthly Meetup" });
-    const pollPage = await dialog.goToPollPage();
+    const pollPage = await newPollPage.create({ name: "Monthly Meetup" });
     await pollPage.addParticipant("Mark");
     editOptionsPage = await pollPage.editOptions();
   });

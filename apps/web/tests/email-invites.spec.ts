@@ -66,8 +66,7 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: PRO_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const created = await newPollPage.create({ name: POLL_TITLE });
-    await created.goToPollPage();
+    await newPollPage.create({ name: POLL_TITLE });
     await deleteAllMessages();
 
     await page.getByRole("button", { name: "Share" }).click();
@@ -127,8 +126,7 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: FREE_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const created = await newPollPage.create({ name: `${POLL_TITLE} Free` });
-    await created.goToPollPage();
+    await newPollPage.create({ name: `${POLL_TITLE} Free` });
 
     await page.getByRole("button", { name: "Share" }).click();
     const dialog = page.getByRole("dialog", { name: "Share" });

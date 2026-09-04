@@ -14,8 +14,7 @@ test.describe.serial(() => {
   test("create a new poll", async () => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const dialog = await newPollPage.create({ name: "Monthly Meetup" });
-    await dialog.goToPollPage();
+    await newPollPage.create({ name: "Monthly Meetup" });
 
     await expect(
       page.getByRole("heading", { name: "Monthly Meetup" }),

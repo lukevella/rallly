@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Separator } from "@rallly/ui/separator";
 import { Share2Icon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
@@ -25,13 +26,30 @@ export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
   const dialog = useDialog();
   const isFree = useIsFree();
   const isOpen = dialog.dialogProps.open;
+  const hasShareParam = useSearchParams().has("share");
+  const openSource = React.useRef<"poll_created" | "manual">("manual");
+
+  // The create page redirects here with ?share so the dialog is the
+  // confirmation. Drop the param once consumed so refresh and back don't
+  // reopen it; replaceState keeps the layout mounted and the dialog open.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per param arrival
+  React.useEffect(() => {
+    if (!hasShareParam) return;
+    openSource.current = "poll_created";
+    dialog.trigger();
+    const url = new URL(window.location.href);
+    url.searchParams.delete("share");
+    window.history.replaceState(window.history.state, "", url);
+  }, [hasShareParam]);
 
   React.useEffect(() => {
     if (!isOpen) return;
     posthog?.capture("poll_share:dialog_open", {
       poll_id: poll.id,
       tier: isFree ? "free" : "pro",
+      source: openSource.current,
     });
+    openSource.current = "manual";
   }, [isOpen, poll.id, isFree]);
 
   return (

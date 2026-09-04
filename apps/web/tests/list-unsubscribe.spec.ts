@@ -57,8 +57,7 @@ test.describe("List-Unsubscribe", () => {
 
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const dialog = await newPollPage.create({ name: POLL_TITLE });
-    const pollPage = await dialog.goToPollPage();
+    const pollPage = await newPollPage.create({ name: POLL_TITLE });
 
     const match = page.url().match(/\/poll\/([a-zA-Z0-9]+)/);
     pollId = match?.[1] ?? "";

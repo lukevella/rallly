@@ -9,8 +9,7 @@ test.describe(() => {
     const page = await browser.newPage();
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const dialog = await newPollPage.create({ name: "Mobile Meetup" });
-    const pollPage = await dialog.goToPollPage();
+    const pollPage = await newPollPage.create({ name: "Mobile Meetup" });
     inviteUrl = await pollPage.copyInviteLink();
     await page.close();
   });
