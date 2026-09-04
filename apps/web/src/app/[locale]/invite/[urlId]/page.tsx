@@ -7,6 +7,7 @@ import { cache } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PermissionProvider } from "@/features/poll/client";
+import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
@@ -41,7 +42,7 @@ const getPollMetadata = cache(async (urlId: string) => {
 
 export default async function Page(props: {
   params: Promise<{ urlId: string }>;
-  searchParams: Promise<{ token?: string }>;
+  searchParams: Promise<{ token?: string; invite?: string }>;
 }) {
   const params = await props.params;
 
@@ -49,7 +50,7 @@ export default async function Page(props: {
 
   const trpc = await createPublicSSRHelper();
 
-  const token = (await props.searchParams).token;
+  const { token, invite: inviteToken } = await props.searchParams;
 
   const [locale, session, deviceDateTimeConfig, footerLinks] =
     await Promise.all([
@@ -73,6 +74,9 @@ export default async function Page(props: {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SessionRefresher />
+      {inviteToken ? (
+        <InviteOpenRecorder pollId={params.urlId} token={inviteToken} />
+      ) : null}
       <UserProvider user={session?.user ?? null}>
         <DeviceDateTimeProvider
           locale={locale}

@@ -1,11 +1,18 @@
 "use server";
 
 import { hasPollAdminAccess } from "@/features/poll/data";
-import { sendPollInvite } from "@/features/poll/invite/mutations";
-import { sendPollInviteSchema } from "@/features/poll/invite/schema";
+import {
+  recordPollInviteOpen,
+  sendPollInvite,
+} from "@/features/poll/invite/mutations";
+import {
+  recordPollInviteOpenSchema,
+  sendPollInviteSchema,
+} from "@/features/poll/invite/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import {
+  actionClient,
   authActionClient,
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
@@ -45,4 +52,13 @@ export const sendPollInviteAction = authActionClient
     );
 
     return result;
+  });
+
+// Public: invitees are not users, and the token from the emailed link is the
+// credential. The mutation ignores tokens it does not recognise.
+export const recordPollInviteOpenAction = actionClient
+  .metadata({ actionName: "record_poll_invite_open" })
+  .inputSchema(recordPollInviteOpenSchema)
+  .action(async ({ parsedInput }) => {
+    await recordPollInviteOpen(parsedInput);
   });

@@ -6,3 +6,8 @@ export const sendPollInviteSchema = z.object({
   // citext unique index the same way the stored row does.
   email: z.string().trim().toLowerCase().pipe(z.email()),
 });
+
+export const recordPollInviteOpenSchema = z.object({
+  pollId: z.string().min(1),
+  token: z.string().min(1),
+});

@@ -1,5 +1,5 @@
 // apps/web/tests/email-invites.spec.ts
-import type { Browser } from "@playwright/test";
+import type { Browser, Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { captureOne, deleteAllMessages } from "@rallly/test-helpers";
@@ -29,19 +29,23 @@ async function cleanup() {
   });
 }
 
-async function respondAsGuest(
-  browser: Browser,
-  inviteUrl: string,
-  name: string,
-) {
+async function openAsGuest(browser: Browser, inviteUrl: string) {
   const context = await browser.newContext();
-  try {
-    const guestPage = await context.newPage();
-    await guestPage.goto(inviteUrl.replace(/&amp;/g, "&"));
-    await new InvitePage(guestPage).addParticipant(name);
-  } finally {
-    await context.close();
-  }
+  const guestPage = await context.newPage();
+  await guestPage.goto(inviteUrl.replace(/&amp;/g, "&"));
+  return { guestPage, close: () => context.close() };
+}
+
+async function reopenShareDialog(page: Page) {
+  // Load the poll page without the post-creation `share` param: the dialog
+  // strips it with a raw replaceState the router does not track, and a
+  // router refresh (dev HMR, revalidation) can bring it back before a
+  // reload, which would reopen the dialog and block the Share button.
+  const url = new URL(page.url());
+  url.searchParams.delete("share");
+  await page.goto(url.toString());
+  await page.getByRole("button", { name: "Share" }).click();
+  return page.getByRole("dialog", { name: "Share" });
 }
 
 test.describe("Email invites", () => {
@@ -94,28 +98,64 @@ test.describe("Email invites", () => {
     // Same address again is refused without sending.
     await field.fill(INVITEE);
     await field.press("Enter");
-    await expect(page.getByText(`${INVITEE} is already invited`)).toBeVisible();
+    // Scoped to the dialog: the same message also lands in a toast.
+    await expect(
+      dialog.getByText(`${INVITEE} is already invited`),
+    ).toBeVisible();
     await expect(
       dialog.getByRole("heading", { name: "1 invited" }),
     ).toBeVisible();
 
-    // Responding through the emailed link joins the response to the invite.
+    // Opening the emailed link records the open once: a second visit
+    // neither moves the timestamp nor adds another activity event.
     const inviteUrl = email.HTML.match(
       /href="([^"]*\/invite\/[^"]*invite=[^"]*)"/,
     )?.[1];
     expect(inviteUrl).toBeTruthy();
     const browser = page.context().browser();
     expect(browser).toBeTruthy();
-    await respondAsGuest(
-      browser as Browser,
-      inviteUrl as string,
-      "Invited Guest",
-    );
+    const guest = await openAsGuest(browser as Browser, inviteUrl as string);
+    const invite = await prisma.pollInvite.findFirstOrThrow({
+      where: { email: INVITEE, poll: { title: POLL_TITLE } },
+      select: { id: true },
+    });
+    await expect
+      .poll(async () => {
+        const row = await prisma.pollInvite.findUniqueOrThrow({
+          where: { id: invite.id },
+          select: { openedAt: true },
+        });
+        return row.openedAt;
+      })
+      .not.toBeNull();
+    const { openedAt } = await prisma.pollInvite.findUniqueOrThrow({
+      where: { id: invite.id },
+      select: { openedAt: true },
+    });
 
-    await page.reload();
-    await page.getByRole("button", { name: "Share" }).click();
-    const reopened = page.getByRole("dialog", { name: "Share" });
-    const respondedRow = reopened
+    await guest.guestPage.reload();
+    await expect(guest.guestPage.getByText(POLL_TITLE)).toBeVisible();
+
+    const openedRow = (await reopenShareDialog(page))
+      .getByRole("listitem")
+      .filter({ hasText: INVITEE });
+    await expect(openedRow.getByText("Opened")).toBeVisible();
+    const reread = await prisma.pollInvite.findUniqueOrThrow({
+      where: { id: invite.id },
+      select: { openedAt: true },
+    });
+    expect(reread.openedAt).toEqual(openedAt);
+    expect(
+      await prisma.pollActivity.count({
+        where: { inviteId: invite.id, type: "invite_opened" },
+      }),
+    ).toBe(1);
+
+    // Responding through the emailed link joins the response to the invite.
+    await new InvitePage(guest.guestPage).addParticipant("Invited Guest");
+    await guest.close();
+
+    const respondedRow = (await reopenShareDialog(page))
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(respondedRow.getByText("Responded")).toBeVisible();
