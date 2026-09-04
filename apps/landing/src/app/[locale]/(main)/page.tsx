@@ -48,12 +48,12 @@ export default async function Page(props: {
           })}
           announcement={
             <HeroAnnouncement
-              href="/blog/individual-work-or-team-collaboration"
+              href="/blog/introducing-email-invites"
               badge={
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="teamCollaborationBlogBadge"
+                  i18nKey="emailInvitesBlogBadge"
                   defaults="New"
                 />
               }
@@ -61,8 +61,8 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="teamCollaborationBlog"
-                defaults="Set up your space for individual work or team collaboration"
+                i18nKey="emailInvitesBlog"
+                defaults="Invite people to your poll by email and see who has responded"
               />
             </HeroAnnouncement>
           }
