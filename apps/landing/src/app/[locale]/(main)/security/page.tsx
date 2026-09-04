@@ -1,6 +1,7 @@
 "use cache";
 
 import { buttonVariants, cn } from "@rallly/ui";
+import { Badge } from "@rallly/ui/badge";
 import {
   ActivityIcon,
   ArrowRightIcon,
@@ -33,8 +34,8 @@ import {
 import { LinkBase } from "@/i18n/client/link";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
-const unitedStates = { flag: "🇺🇸", label: "United States" };
-const europeanUnion = { flag: "🇪🇺", label: "European Union" };
+const unitedStates = { code: "US", label: "United States" };
+const europeanUnion = { code: "EU", label: "European Union" };
 
 // Logo heights are tuned per wordmark so they sit at the same visual weight
 const providers = [
@@ -256,13 +257,9 @@ export default async function Security(props: {
                         )}
                       />
                     </a>
-                    <span
-                      role="img"
-                      aria-label={provider.location.label}
-                      className="text-base leading-none"
-                    >
-                      {provider.location.flag}
-                    </span>
+                    <Badge size="sm" aria-label={provider.location.label}>
+                      {provider.location.code}
+                    </Badge>
                   </div>
                   <p className="text-gray-500 text-sm">{provider.purpose}</p>
                 </li>
