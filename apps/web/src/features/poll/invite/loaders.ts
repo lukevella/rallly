@@ -1,10 +1,14 @@
 import "server-only";
 
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { cache } from "react";
 import { hasPollAdminAccess } from "@/features/poll/data";
 import { listPollInvites } from "@/features/poll/invite/data";
 import type { PollInviteListItem } from "@/features/poll/invite/types";
-import { derivePollInviteStatus } from "@/features/poll/invite/utils";
+import {
+  derivePollInviteStatus,
+  getPollInvitePath,
+} from "@/features/poll/invite/utils";
 import { getCurrentUser } from "@/features/user/loaders";
 
 /**
@@ -26,6 +30,9 @@ export const loadPollInvites = cache(
       id: invite.id,
       email: invite.email,
       status: derivePollInviteStatus(invite),
+      inviteUrl: absoluteUrl(
+        getPollInvitePath({ pollId, token: invite.token }),
+      ),
     }));
   },
 );
