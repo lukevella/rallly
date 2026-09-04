@@ -217,8 +217,6 @@
   "sportsClubsTitle": "Aikataulut urheiluseuroille ja -joukkueille",
   "statsLast30Days": "<0>{voterCount, plural, one {# henkilö} other {# henkilöä}}</0> on äänestänyt <1>{pollCount, plural, one {# kyselyssä} other {# kyselyssä}}</1> viimeisen 30 päivän aikana",
   "subheading": "Luo kysely, jaa linkki ja anna kaikkien äänestää sopivista ajoista. Se on ilmaista, eikä tilille tarvitse rekisteröityä.",
-  "teamCollaborationBlog": "Määritä tila omaan käyttöösi tai tiimityöskentelyyn",
-  "teamCollaborationBlogBadge": "Uutta",
   "thesisDefenseDescription": "Sovita ohjaajan, oman yliopiston tarkastajan ja toisessa maassa olevan tarkastajan aikataulut yhteen ilman viikkojen sähköpostirumbaa. Jaa yksi linkki, anna jokaisen tarkastajan merkitä sopivat ajat omalla aikavyöhykkeellään ja vahvista lopullinen ajankohta. Ilmainen, eikä tarkastajilta vaadita käyttäjätiliä.",
   "thesisDefenseFaqBranding": "Voiko kyselyissä käyttää yliopistomme brändi-ilmettä?",
   "thesisDefenseFaqBrandingAnswer": "<0>Rallly Prolla</0> voit lisätä oman logosi ja värisi sekä poistaa Rallly-maininnan, jolloin tarkastajalle lähettämäsi kysely näyttää oman yliopistosi tekemältä. Kaikki muu on käytettävissä ilmaiseksi.",
