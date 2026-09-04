@@ -246,8 +246,11 @@ export default async function Security(props: {
         </SectionHeading>
         <SectionContent>
           {/* Tiles carry a top and left border; the wrapper clips the outer
-              edge so only the inner grid lines remain */}
-          <div className="overflow-hidden">
+              edge so only the inner grid lines remain. The grid bleeds into
+              the page gutters by one cell padding so the outer columns'
+              content lines up with the heading while every cell stays the
+              same size */}
+          <div className="-mx-4 overflow-hidden sm:-mx-6">
             <ul className="-mt-px -ml-px grid grid-cols-2 sm:grid-cols-3">
               {providers.map((provider) => (
                 <li
