@@ -233,15 +233,10 @@ export default async function Security(props: {
               edge so only the inner grid lines remain */}
           <div className="overflow-hidden">
             <ul className="-mt-px -ml-px grid grid-cols-2 sm:grid-cols-3">
-              {providers.map((provider, index) => (
+              {providers.map((provider) => (
                 <li
                   key={provider.name}
-                  className={cn(
-                    "flex flex-col gap-y-4 border-t border-l p-4 sm:p-6",
-                    // First column sits flush with the section heading
-                    index % 2 === 0 && "pl-0",
-                    index % 3 === 0 ? "sm:pl-0" : "sm:pl-6",
-                  )}
+                  className="flex flex-col gap-y-4 border-t border-l p-4 sm:p-6"
                 >
                   <div className="flex items-start justify-between gap-x-4">
                     <a
