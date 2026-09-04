@@ -16,8 +16,10 @@ import { Switch } from "@rallly/ui/switch";
 import { Tabs, TabsContent } from "@rallly/ui/tabs";
 import {
   BadgeDollarSignIcon,
+  CalendarCheckIcon,
   CalendarSearchIcon,
   ClockIcon,
+  EyeOffIcon,
   LifeBuoyIcon,
   MailPlusIcon,
   PaletteIcon,
@@ -121,6 +123,28 @@ const proBenefitsList = [
       <Trans
         i18nKey="emailInvitesDescription"
         defaults="Invite people by email and see who has responded."
+      />
+    ),
+  },
+  {
+    key: "removeAttribution",
+    icon: <EyeOffIcon />,
+    title: <Trans i18nKey="removeAttribution" defaults="Remove attribution" />,
+    description: (
+      <Trans
+        i18nKey="removeAttributionBenefitDescription"
+        defaults='Hide "Powered by Rallly" from your participants'
+      />
+    ),
+  },
+  {
+    key: "schedulePoll",
+    icon: <CalendarCheckIcon />,
+    title: <Trans i18nKey="featureNameSchedule" defaults="Schedule poll" />,
+    description: (
+      <Trans
+        i18nKey="schedulePollDescription"
+        defaults="Select a final date for your event."
       />
     ),
   },
