@@ -276,10 +276,10 @@ export default async function Security(props: {
             covering international transfers.
           </p>
           <LinkBase
-            href="/dpa"
+            href="/dpa#annex-2"
             className="group mt-2 inline-flex items-center gap-x-1 font-medium text-primary text-sm hover:underline"
           >
-            See the full subprocessor list in our DPA
+            See the full subprocessor list in Annex 2 of our DPA
             <ArrowRightIcon
               className="size-3 transition-transform group-hover:translate-x-0.5"
               aria-hidden="true"

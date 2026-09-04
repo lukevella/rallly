@@ -309,7 +309,9 @@ export default async function DataProcessingAgreement() {
 
         <hr />
 
-        <h2>Annex 1: Technical and organizational measures</h2>
+        <h2 id="annex-1" className="scroll-mt-24">
+          Annex 1: Technical and organizational measures
+        </h2>
         <p>
           The measures below describe how we protect Customer Data. Further
           detail is published on our{" "}
@@ -373,7 +375,9 @@ export default async function DataProcessingAgreement() {
 
         <hr />
 
-        <h2>Annex 2: Sub-processors</h2>
+        <h2 id="annex-2" className="scroll-mt-24">
+          Annex 2: Sub-processors
+        </h2>
         <p>
           We use the following Sub-processors to provide the Service. Changes to
           this list are notified as set out in Section 6.
