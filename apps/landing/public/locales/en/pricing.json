@@ -37,7 +37,7 @@
   "planFreeDescription": "For casual users",
   "planProDescription": "For power users and professionals",
   "pollLimit": "Is there a limit on how many polls I can create?",
-  "pollLimitAnswer": "No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. The only difference on the free plan is that polls are deleted 30 days after they become inactive. On a paid plan, polls are kept indefinitely.",
+  "pollLimitAnswer": "No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted 30 days after they become inactive, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list.",
   "pricingDescription": "Get started for free. No login required.",
   "pricingFaqDescription": "Everything you need to know about our plans and billing.",
   "pricingFinalCtaDescription": "Create your first poll in under a minute. Upgrade when you need more.",
