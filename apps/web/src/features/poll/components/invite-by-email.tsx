@@ -318,7 +318,7 @@ export function InviteByEmail() {
     : (rows[0]?.id ?? null);
 
   return (
-    <div className="min-w-0 space-y-3">
+    <div className="min-w-0">
       {isGuest ? (
         <div className="space-y-2 rounded-lg bg-muted p-3 text-sm">
           <p className="text-muted-foreground">
@@ -386,7 +386,7 @@ export function InviteByEmail() {
           {!isOpen ? (
             <p
               id="share-dialog-closed-reason"
-              className="text-muted-foreground text-sm"
+              className="mt-3 text-muted-foreground text-sm"
             >
               <Trans
                 i18nKey="shareDialogPollClosed"
@@ -395,7 +395,7 @@ export function InviteByEmail() {
             </p>
           ) : null}
 
-          <div className="space-y-1.5">
+          <div className="mt-3">
             {rows.length === 0 ? (
               <div className="relative mt-2">
                 <InviteeListPreview />
@@ -421,7 +421,7 @@ export function InviteByEmail() {
               <>
                 <h4
                   id="share-dialog-invited-heading"
-                  className="text-muted-foreground text-sm tabular-nums"
+                  className="mb-1.5 text-muted-foreground text-sm tabular-nums"
                 >
                   {countLabel(rows.length)}
                 </h4>
