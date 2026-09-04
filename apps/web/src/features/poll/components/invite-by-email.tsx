@@ -27,10 +27,10 @@ import {
 } from "@/features/poll/components/invitee-list";
 import { sendPollInviteAction } from "@/features/poll/invite/actions";
 import { sendPollInviteSchema } from "@/features/poll/invite/schema";
+import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 
 type Row = {
   id: string;
@@ -38,20 +38,19 @@ type Row = {
   status: InviteeRowStatus;
 };
 
-export function InviteByEmail() {
+/**
+ * `invites` is server data passed down from the route; the send action's
+ * success handler refreshes the route, which is what replaces an optimistic
+ * "Sending" row with the real one.
+ */
+export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
   const poll = usePoll();
   const { user } = useUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
-  const queryClient = trpc.useUtils();
 
   const isGuest = !user || user.isGuest;
   const isOpen = poll.status === "open";
-
-  const invites = trpc.polls.invites.list.useQuery(
-    { pollId: poll.id },
-    { enabled: !isGuest },
-  );
 
   const [email, setEmail] = React.useState("");
   const [invalid, setInvalid] = React.useState(false);
@@ -62,13 +61,28 @@ export function InviteByEmail() {
     null,
   );
 
+  const invitedEmails = React.useMemo(
+    () => new Set(invites.map((invite) => invite.email.toLowerCase())),
+    [invites],
+  );
+
+  // An optimistic row lives until the refreshed server list carries it.
+  React.useEffect(() => {
+    setSending((prev) => {
+      const next = prev.filter((address) => !invitedEmails.has(address));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [invitedEmails]);
+
   const rows: Row[] = [
-    ...sending.map((address) => ({
-      id: `sending:${address}`,
-      email: address,
-      status: "sending" as const,
-    })),
-    ...(invites.data ?? []),
+    ...sending
+      .filter((address) => !invitedEmails.has(address))
+      .map((address) => ({
+        id: `sending:${address}`,
+        email: address,
+        status: "sending" as const,
+      })),
+    ...invites,
   ];
 
   const announce = (message: string) => {
@@ -101,18 +115,12 @@ export function InviteByEmail() {
         return;
       }
       if (data.ok) {
-        await queryClient.polls.invites.list.invalidate({ pollId: poll.id });
-        const fresh = queryClient.polls.invites.list.getData({
-          pollId: poll.id,
-        });
         announce(
-          t("shareDialogInviteSentAnnouncement", {
-            defaultValue: "Invite sent to {email}. {count}",
+          t("shareDialogInviteSent", {
+            defaultValue: "Invite sent to {email}",
             email: input.email,
-            count: countLabel(fresh?.length ?? 0),
           }),
         );
-        setSending((prev) => prev.filter((address) => address !== input.email));
         return;
       }
       setSending((prev) => prev.filter((address) => address !== input.email));

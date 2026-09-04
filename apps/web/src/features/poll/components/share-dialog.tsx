@@ -17,9 +17,10 @@ import { useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
 import { InviteByEmail } from "@/features/poll/components/invite-by-email";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
+import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
 
-export function ShareDialog() {
+export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
   const poll = usePoll();
   const dialog = useDialog();
   const isFree = useIsFree();
@@ -56,7 +57,7 @@ export function ShareDialog() {
           </DialogHeader>
           <InviteLinkRow inviteLink={poll.inviteLink} />
           <Separator />
-          <InviteByEmail />
+          <InviteByEmail invites={invites} />
         </DialogContent>
       </Dialog>
     </>
