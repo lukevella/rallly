@@ -1,7 +1,7 @@
 "use cache";
 
 import { PLAN_NAMES, pricingData } from "@rallly/billing";
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
   CalendarCheckIcon,
@@ -40,6 +40,7 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
+import { handwritten } from "@/fonts/handwritten";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -127,7 +128,12 @@ export default async function Page(props: {
                 />
               }
               badge={
-                <Badge variant="green">
+                <span
+                  className={cn(
+                    "whitespace-nowrap text-gray-600 text-sm",
+                    handwritten.className,
+                  )}
+                >
                   <Trans
                     t={t}
                     ns="pricing"
@@ -135,7 +141,7 @@ export default async function Page(props: {
                     defaults="{count, plural, one {# month free} other {# months free}}"
                     values={{ count: freeMonths }}
                   />
-                </Badge>
+                </span>
               }
             />
           </div>
