@@ -19,6 +19,8 @@ const generateInviteToken = customAlphabet(
   32,
 );
 
+class InviteClaimedElsewhere extends Error {}
+
 export type SendPollInviteResult =
   | { ok: true; invite: { id: string; email: string } }
   | {
@@ -77,9 +79,12 @@ export async function sendPollInvite({
     return { ok: false, reason: "paymentRequired" };
   }
 
+  // Counted against the sender, not the poll owner, so a co-member on a
+  // shared space poll spends their own quota. The activity log records who
+  // sent what; a failed send deletes its event, so it does not count.
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const sentToday = await prisma.pollInvite.count({
-    where: { poll: { userId }, createdAt: { gte: since } },
+  const sentToday = await prisma.pollActivity.count({
+    where: { type: "invite_sent", userId, createdAt: { gte: since } },
   });
 
   if (sentToday >= MAX_POLL_INVITES_PER_DAY) {
@@ -122,18 +127,25 @@ export async function sendPollInvite({
   let invite: { id: string; email: string };
   try {
     invite = await prisma.$transaction(async (tx) => {
-      // A revoked row is reactivated with a fresh token so a leaked old link
-      // never regains access.
-      const row = existing
-        ? await tx.pollInvite.update({
-            where: { id: existing.id },
-            data: { revokedAt: null, token },
-            select: { id: true, email: true },
-          })
-        : await tx.pollInvite.create({
-            data: { pollId, email, token },
-            select: { id: true, email: true },
-          });
+      let row: { id: string; email: string };
+      if (existing) {
+        // A revoked row is reactivated with a fresh token so a leaked old
+        // link never regains access. The claim only succeeds while the row
+        // is still revoked, so two concurrent sends cannot both take it.
+        const { count } = await tx.pollInvite.updateMany({
+          where: { id: existing.id, revokedAt: { not: null } },
+          data: { revokedAt: null, token },
+        });
+        if (count === 0) {
+          throw new InviteClaimedElsewhere();
+        }
+        row = { id: existing.id, email };
+      } else {
+        row = await tx.pollInvite.create({
+          data: { pollId, email, token },
+          select: { id: true, email: true },
+        });
+      }
 
       await recordPollActivities(tx, [
         {
@@ -148,10 +160,12 @@ export async function sendPollInvite({
       return row;
     });
   } catch (error) {
-    // A concurrent send for the same poll/email raced the unique index.
+    // A concurrent send for the same poll/email either claimed the revoked
+    // row first or raced the unique index on create.
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
+      error instanceof InviteClaimedElsewhere ||
+      (error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002")
     ) {
       return { ok: false, reason: "alreadyInvited" };
     }
@@ -183,13 +197,15 @@ export async function sendPollInvite({
         await tx.pollActivity.deleteMany({
           where: { pollId, inviteId: invite.id, type: "invite_sent" },
         });
+        // Matching the token as well as the id leaves a later send that
+        // re-rotated the row alone.
         if (existing) {
-          await tx.pollInvite.update({
-            where: { id: invite.id },
+          await tx.pollInvite.updateMany({
+            where: { id: invite.id, token },
             data: { revokedAt: new Date() },
           });
         } else {
-          await tx.pollInvite.delete({ where: { id: invite.id } });
+          await tx.pollInvite.deleteMany({ where: { id: invite.id, token } });
         }
       });
     } catch (rollbackError) {
@@ -206,9 +222,9 @@ export async function sendPollInvite({
 
 /**
  * Joins a new response to the invite it answers, so the host's list flips
- * from Sent to Responded. The emailed link carries the token; when the
- * participant arrived another way, a matching address on the poll's invites
- * is the next best evidence. Runs inside the response's transaction so the
+ * from Sent to Responded. Only the token from the emailed link counts as
+ * proof: a typed address is unverified, so matching on it would let anyone
+ * claim someone else's invite. Runs inside the response's transaction so the
  * join commits with the participant.
  */
 export async function attachParticipantToInvite(
@@ -217,22 +233,18 @@ export async function attachParticipantToInvite(
     pollId,
     participantId,
     inviteToken,
-    email,
   }: {
     pollId: string;
     participantId: string;
     inviteToken?: string;
-    email?: string;
   },
 ) {
-  const match = inviteToken ? { token: inviteToken } : email ? { email } : null;
-
-  if (!match) {
+  if (!inviteToken) {
     return false;
   }
 
   const { count } = await tx.pollInvite.updateMany({
-    where: { pollId, participantId: null, revokedAt: null, ...match },
+    where: { pollId, participantId: null, revokedAt: null, token: inviteToken },
     data: { participantId },
   });
 

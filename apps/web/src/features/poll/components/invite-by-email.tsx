@@ -26,6 +26,7 @@ import {
   InviteeRow,
 } from "@/features/poll/components/invitee-list";
 import { sendPollInviteAction } from "@/features/poll/invite/actions";
+import { sendPollInviteSchema } from "@/features/poll/invite/schema";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -36,8 +37,6 @@ type Row = {
   email: string;
   status: InviteeRowStatus;
 };
-
-const emailPattern = /^[^\s@<>",;]+@[^\s@<>",;]+\.[^\s@<>",;]+$/;
 
 export function InviteByEmail() {
   const poll = usePoll();
@@ -157,12 +156,13 @@ export function InviteByEmail() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const address = email.trim().toLowerCase();
-    if (!address) {
+    if (!email.trim()) {
       inputRef.current?.focus();
       return;
     }
-    if (!emailPattern.test(address)) {
+    // Same rule as the server so a client accepted address is never refused
+    const parsed = sendPollInviteSchema.shape.email.safeParse(email);
+    if (!parsed.success) {
       setInvalid(true);
       announce(
         t("shareDialogInvalidEmail", {
@@ -172,6 +172,7 @@ export function InviteByEmail() {
       inputRef.current?.focus();
       return;
     }
+    const address = parsed.data;
     if (isFree) {
       showPayWall({ from: "invite-dialog", pollId: poll.id });
       return;

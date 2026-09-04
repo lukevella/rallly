@@ -414,7 +414,6 @@ export const participants = router({
               pollId,
               participantId: participant.id,
               inviteToken,
-              email,
             });
 
             return { participant, viaInvite };

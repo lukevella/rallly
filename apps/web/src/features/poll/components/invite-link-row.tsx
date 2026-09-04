@@ -18,11 +18,18 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
   const [didCopy, setDidCopy] = React.useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
 
+  // react-use records a failed copy as `error` and a successful one as
+  // `value`; the button only claims success in the second case.
   React.useEffect(() => {
     if (state.error) {
       console.error(`Unable to copy value: ${state.error.message}`);
+      return;
     }
-  }, [state]);
+    if (state.value) {
+      setDidCopy(true);
+      posthog?.capture("poll_share:invite_link_copy", { poll_id: poll.id });
+    }
+  }, [state, poll.id]);
 
   React.useEffect(() => {
     if (!didCopy) return;
@@ -47,11 +54,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
       <Button
         variant="ghost"
         className="shrink-0 text-primary"
-        onClick={() => {
-          copyToClipboard(inviteLink);
-          setDidCopy(true);
-          posthog?.capture("poll_share:invite_link_copy", { poll_id: poll.id });
-        }}
+        onClick={() => copyToClipboard(inviteLink)}
       >
         {didCopy ? (
           <CheckIcon data-icon="inline-start" />
