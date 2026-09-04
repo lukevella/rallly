@@ -317,7 +317,7 @@ export default async function Page(props: {
                         t={t}
                         ns="pricing"
                         i18nKey="emailInvitesDescription"
-                        defaults="Invite people by email and see who has responded."
+                        defaults="Invite people by email and see who has responded"
                       />
                     }
                   >
@@ -662,7 +662,7 @@ export default async function Page(props: {
                         t={t}
                         ns="pricing"
                         i18nKey="emailInvitesDescription"
-                        defaults="Invite people by email and see who has responded."
+                        defaults="Invite people by email and see who has responded"
                       />
                     }
                   >
