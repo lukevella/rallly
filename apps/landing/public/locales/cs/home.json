@@ -241,8 +241,6 @@
   "sportsClubsTitle": "Plánování pro sportovní kluby a týmy",
   "statsLast30Days": "<0>{voterCount, plural, one {# osoba} few {# osoby} other {# osob}}</0> hlasovalo v <1>{pollCount, plural, one {# hlasování} few {# hlasováních} other {# hlasováních}}</1> za posledních 30 dní",
   "subheading": "Vytvořte hlasování, sdílejte odkaz a nechte všechny hlasovat o vyhovujících termínech. Je to zdarma a nikdo nepotřebuje účet.",
-  "teamCollaborationBlog": "Nastavte svůj prostor pro individuální práci nebo týmovou spolupráci",
-  "teamCollaborationBlogBadge": "Nový",
   "thesisDefenseDescription": "Domluvte se s vedoucím, interním i externím zkoušejícím z různých zemí bez měsíčního přeposílání e-mailů. Sdílejte jeden odkaz, nechte každého zkoušejícího označit, co jim vyhovuje v jejich časové zóně a potvrďte nejlepší čas. Zdarma, zkoušející nemusejí mít účet.",
   "thesisDefenseFaqBranding": "Mohou ankety nést branding naší univerzity?",
   "thesisDefenseFaqBrandingAnswer": "S <0>Rallly Pro</0> můžete přidat vlastní logo a barvy a odstranit zmínku o aplikaci Rallly, takže anketa, kterou rozešlete externím hodnotitelům bude vypadat, jako by pocházela z vašeho oddělení. Všechno ostatní je zdarma k použití.",
