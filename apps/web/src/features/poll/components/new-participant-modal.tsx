@@ -25,6 +25,7 @@ import { Textarea } from "@rallly/ui/textarea";
 import { TRPCClientError } from "@trpc/client";
 import { CircleCheckIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -174,6 +175,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const noteLength = watch("note")?.length ?? 0;
   const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipantMutation();
+  // The emailed invite link carries the invitee token; joining the response
+  // to it lets the host see who has responded.
+  const inviteToken = useSearchParams()?.get("invite") ?? undefined;
 
   if (formState.isSubmitSuccessful) {
     return (
@@ -267,6 +271,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 note: data.note,
                 pollId: poll.id,
                 timeZone,
+                inviteToken,
               });
               props.onSubmit?.(newParticipant);
             } catch (error) {

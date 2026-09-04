@@ -203,3 +203,36 @@ export async function sendPollInvite({
 
   return { ok: true, invite };
 }
+
+/**
+ * Joins a new response to the invite it answers, so the host's list flips
+ * from Sent to Responded. The emailed link carries the token; when the
+ * participant arrived another way, a matching address on the poll's invites
+ * is the next best evidence. Runs inside the response's transaction so the
+ * join commits with the participant.
+ */
+export async function attachParticipantToInvite(
+  tx: Prisma.TransactionClient,
+  {
+    pollId,
+    participantId,
+    inviteToken,
+    email,
+  }: {
+    pollId: string;
+    participantId: string;
+    inviteToken?: string;
+    email?: string;
+  },
+) {
+  const match = inviteToken ? { token: inviteToken } : email ? { email } : null;
+
+  if (!match) {
+    return;
+  }
+
+  await tx.pollInvite.updateMany({
+    where: { pollId, participantId: null, revokedAt: null, ...match },
+    data: { participantId, openedAt: new Date() },
+  });
+}

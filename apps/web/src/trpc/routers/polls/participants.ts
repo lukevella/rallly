@@ -13,6 +13,7 @@ import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { hasPollAdminAccess } from "@/features/poll/data";
+import { attachParticipantToInvite } from "@/features/poll/invite/mutations";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import {
@@ -303,6 +304,7 @@ export const participants = router({
         email: z.string().optional(),
         note: responseNoteInput,
         timeZone: z.string().optional(),
+        inviteToken: z.string().optional(),
         votes: z
           .object({
             optionId: z.string(),
@@ -314,7 +316,7 @@ export const participants = router({
     .mutation(
       async ({
         ctx,
-        input: { pollId, votes, name, email, note, timeZone },
+        input: { pollId, votes, name, email, note, timeZone, inviteToken },
       }) => {
         const participantCount = await prisma.participant.count({
           where: {
@@ -409,6 +411,13 @@ export const participants = router({
               payload: { name: participant.name },
             },
           ]);
+
+          await attachParticipantToInvite(tx, {
+            pollId,
+            participantId: participant.id,
+            inviteToken,
+            email,
+          });
 
           return participant;
         });
