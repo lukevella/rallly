@@ -55,7 +55,7 @@ export function PlanCardPrice({
   return (
     <div
       className={cn(
-        "flex min-h-14 flex-wrap items-center gap-x-1.5",
+        "flex min-h-14 flex-wrap items-baseline gap-x-1.5",
         className,
       )}
       {...props}
