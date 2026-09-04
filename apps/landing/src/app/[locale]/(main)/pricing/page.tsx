@@ -732,8 +732,25 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="pricing"
-                  i18nKey="canUseFreeAnswer2"
-                  defaults="Yes, most of Rallly's features are free and many users will never need to pay for anything. However, there are some features that are only available to paying customers. These features are designed to help you get the most out of Rallly."
+                  i18nKey="canUseFreeAnswer3"
+                  defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="pollLimit"
+                    defaults="Is there a limit on how many polls I can create?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="pollLimitAnswer"
+                  defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. The only difference on the free plan is that polls are deleted 30 days after they become inactive. On a paid plan, polls are kept indefinitely."
                 />
               </FaqItem>
               <FaqItem
