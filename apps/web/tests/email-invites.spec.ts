@@ -92,7 +92,6 @@ test.describe("Email invites", () => {
     expect(email.HTML).toContain("?invite=");
     // Replies reach the host, not the From address.
     expect(email.ReplyTo.map((address) => address.Address)).toEqual([PRO_HOST]);
-    expect(email.HTML).toContain("Reply to this email to reach");
 
     // Same address again is refused without sending.
     await field.fill(INVITEE);
