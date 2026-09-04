@@ -12,23 +12,27 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import type React from "react";
 import { usePoll } from "@/features/poll/client";
-import { InviteDialog } from "@/features/poll/components/invite-dialog";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
+import { ShareDialog } from "@/features/poll/components/share-dialog";
+import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
 
-const AdminControls = () => {
+const AdminControls = ({ invites }: { invites: PollInviteListItem[] }) => {
   return (
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <InviteDialog />
+      <ShareDialog invites={invites} />
     </div>
   );
 };
 
-const Layout = ({ children }: React.PropsWithChildren) => {
+const Layout = ({
+  children,
+  invites,
+}: React.PropsWithChildren<{ invites: PollInviteListItem[] }>) => {
   const poll = usePoll();
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
@@ -67,7 +71,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
             </Breadcrumb>
           </div>
           <div>
-            <AdminControls />
+            <AdminControls invites={invites} />
           </div>
         </div>
       </div>
@@ -78,7 +82,10 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export const PollLayout = ({ children }: React.PropsWithChildren) => {
+export const PollLayout = ({
+  children,
+  invites,
+}: React.PropsWithChildren<{ invites: PollInviteListItem[] }>) => {
   const params = useParams();
 
   const urlId = params?.urlId as string;
@@ -90,7 +97,7 @@ export const PollLayout = ({ children }: React.PropsWithChildren) => {
 
   return (
     <LegacyPollContextProvider>
-      <Layout>{children}</Layout>
+      <Layout invites={invites}>{children}</Layout>
     </LegacyPollContextProvider>
   );
 };
