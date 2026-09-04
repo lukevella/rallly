@@ -17,6 +17,7 @@ import { useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
 import { InviteByEmail } from "@/features/poll/components/invite-by-email";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
+import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
 import { useFlash } from "@/lib/flash/client";
@@ -26,7 +27,7 @@ export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
   const dialog = useDialog();
   const isFree = useIsFree();
   const isOpen = dialog.dialogProps.open;
-  const sharePollFlash = useFlash("share-poll");
+  const sharePollFlash = useFlash(SHARE_POLL_FLASH_KEY);
   const openSource = React.useRef<"poll_created" | "manual">("manual");
 
   // The create page flashes the new poll's id so this dialog is the

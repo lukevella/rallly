@@ -2,10 +2,9 @@
 
 import Cookies from "js-cookie";
 import React from "react";
-import type { FlashKey } from "@/lib/flash/constants";
 import { FLASH_MAX_AGE, flashCookieName } from "@/lib/flash/constants";
 
-export function setFlash(key: FlashKey, value: string) {
+export function setFlash(key: string, value: string) {
   Cookies.set(flashCookieName(key), value, {
     path: "/",
     sameSite: "lax",
@@ -16,7 +15,7 @@ export function setFlash(key: FlashKey, value: string) {
 
 // Resolves to the flash value on the first mount after it was set and clears
 // it in the same step, so a reload or a later visit never replays it.
-export function useFlash(key: FlashKey) {
+export function useFlash(key: string) {
   const [value, setValue] = React.useState<string | null>(null);
 
   React.useEffect(() => {
