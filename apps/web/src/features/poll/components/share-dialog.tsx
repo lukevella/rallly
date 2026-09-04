@@ -12,7 +12,6 @@ import {
 } from "@rallly/ui/dialog";
 import { Separator } from "@rallly/ui/separator";
 import { Share2Icon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
@@ -20,27 +19,25 @@ import { InviteByEmail } from "@/features/poll/components/invite-by-email";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
+import { useFlash } from "@/lib/flash/client";
 
 export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
   const poll = usePoll();
   const dialog = useDialog();
   const isFree = useIsFree();
   const isOpen = dialog.dialogProps.open;
-  const hasShareParam = useSearchParams().has("share");
+  const sharePollFlash = useFlash("share-poll");
   const openSource = React.useRef<"poll_created" | "manual">("manual");
 
-  // The create page redirects here with ?share so the dialog is the
-  // confirmation. Drop the param once consumed so refresh and back don't
-  // reopen it; replaceState keeps the layout mounted and the dialog open.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per param arrival
+  // The create page flashes the new poll's id so this dialog is the
+  // confirmation. The flash is consumed on read, so refresh and back don't
+  // reopen it.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per flash arrival
   React.useEffect(() => {
-    if (!hasShareParam) return;
+    if (sharePollFlash !== poll.id) return;
     openSource.current = "poll_created";
     dialog.trigger();
-    const url = new URL(window.location.href);
-    url.searchParams.delete("share");
-    window.history.replaceState(window.history.state, "", url);
-  }, [hasShareParam]);
+  }, [sharePollFlash, poll.id]);
 
   React.useEffect(() => {
     if (!isOpen) return;

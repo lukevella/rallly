@@ -6,18 +6,10 @@ import { InvitePage } from "./invite-page";
 export class PollPage {
   constructor(public readonly page: Page) {}
 
-  async closeDialog() {
-    const page = this.page;
-
-    const dialog = page.getByRole("dialog");
-
-    await dialog.waitFor({ state: "visible" });
-
-    const closeDialogButton = dialog.getByRole("button", { name: "Close" });
-
-    await closeDialogButton.waitFor({ state: "visible" });
-
-    await closeDialogButton.click();
+  async closeShareDialog() {
+    const dialog = this.page.getByRole("dialog", { name: "Share" });
+    await dialog.getByRole("button", { name: "Close" }).click();
+    await expect(dialog).toBeHidden();
   }
 
   async addComment() {
@@ -33,11 +25,12 @@ export class PollPage {
   }
 
   async openShareDialog() {
-    const page = this.page;
-
-    await page.getByRole("button", { name: "Share" }).click();
-
-    return page.getByRole("dialog");
+    const dialog = this.page.getByRole("dialog", { name: "Share" });
+    if (!(await dialog.isVisible())) {
+      await this.page.getByRole("button", { name: "Share" }).click();
+    }
+    await expect(dialog).toBeVisible();
+    return dialog;
   }
 
   async copyInviteLink() {
