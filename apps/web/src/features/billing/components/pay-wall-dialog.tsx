@@ -117,13 +117,10 @@ const proBenefitsList = [
     key: "emailInvites",
     icon: <MailPlusIcon />,
     title: <Trans i18nKey="emailInvites" defaults="Email invites" />,
-    // The limit quoted here is MAX_POLL_INVITES_PER_DAY in
-    // features/poll/invite/constants.ts. Not imported: poll already depends
-    // on billing, so importing it here would create a feature cycle.
     description: (
       <Trans
         i18nKey="emailInvitesDescription"
-        defaults="Invite people by email and see who has responded. Up to 100 invites a day."
+        defaults="Invite people by email and see who has responded."
       />
     ),
   },

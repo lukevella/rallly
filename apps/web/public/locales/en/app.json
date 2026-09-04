@@ -286,7 +286,7 @@
   "emailChangeVerifyError": "Verification failed. Please try again.",
   "emailDoesNotMatch": "The email address does not match.",
   "emailInvites": "Email invites",
-  "emailInvitesDescription": "Invite people by email and see who has responded. Up to 100 invites a day.",
+  "emailInvitesDescription": "Invite people by email and see who has responded.",
   "emailMismatch": "Email does not match the account email",
   "emailPlaceholder": "jessie.smith@example.com",
   "enabled": "Enabled",

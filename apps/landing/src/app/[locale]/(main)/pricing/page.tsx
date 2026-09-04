@@ -291,8 +291,6 @@ export default async function Page(props: {
                   />
                 </Link>
               </div>
-              {/* The email invite limit quoted below is MAX_POLL_INVITES_PER_DAY in
-                  apps/web/src/features/poll/invite/constants.ts. */}
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
                 <PlanBenefit icon={<PaletteIcon />}>
                   <PlanBenefitTooltip
@@ -320,7 +318,7 @@ export default async function Page(props: {
                         t={t}
                         ns="pricing"
                         i18nKey="emailInvitesDescription"
-                        defaults="Invite people by email and see who has responded. Up to 100 invites a day."
+                        defaults="Invite people by email and see who has responded."
                       />
                     }
                   >
@@ -675,7 +673,7 @@ export default async function Page(props: {
                         t={t}
                         ns="pricing"
                         i18nKey="emailInvitesDescription"
-                        defaults="Invite people by email and see who has responded. Up to 100 invites a day."
+                        defaults="Invite people by email and see who has responded."
                       />
                     }
                   >

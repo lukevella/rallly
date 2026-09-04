@@ -10,7 +10,7 @@ export default async function TermsOfUse() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Terms of use" lastUpdated="2026-08-29">
+      <LegalPageLayout title="Terms of use" lastUpdated="2026-09-04">
         <p>
           This website and the Rallly software and services are operated by
           Stack Snap Ltd. References to &quot;we&quot;, &quot;us&quot; or
@@ -78,6 +78,15 @@ export default async function TermsOfUse() {
         <p>
           2.3 You are responsible for keeping your account credentials
           confidential and for all activity under your account.
+        </p>
+        <p>
+          2.4 Fair use. Features of the hosted service that are described as
+          unlimited or included in a plan are subject to reasonable use limits
+          designed to protect the service and prevent abuse. These limits are
+          set well above what an individual or team needs for normal scheduling.
+          We may throttle, restrict, or suspend use that materially exceeds
+          reasonable use, and we will tell you within the product when a limit
+          has been reached.
         </p>
 
         <hr />

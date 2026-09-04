@@ -21,7 +21,7 @@
   "duplicatePolls": "Duplicate polls",
   "duplicatePollsDescription": "Create a new poll based on an existing one",
   "emailInvites": "Email invites",
-  "emailInvitesDescription": "Invite people by email and see who has responded. Up to 100 invites a day.",
+  "emailInvitesDescription": "Invite people by email and see who has responded.",
   "extendedPollLifetimeDescription": "Keep polls indefinitely",
   "faq": "Frequently asked questions",
   "featureNameExtendedPollLifetime": "Extended poll lifetime",
