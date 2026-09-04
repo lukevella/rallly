@@ -1,7 +1,6 @@
 "use cache";
 
 import { buttonVariants, cn } from "@rallly/ui";
-import { Badge } from "@rallly/ui/badge";
 import {
   ActivityIcon,
   ArrowRightIcon,
@@ -33,6 +32,21 @@ import {
 } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
+
+function RegionBadge({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="inline-flex h-5 items-center rounded-full bg-gray-200 px-2 font-medium text-gray-600 text-xs tracking-wide">
+      <span aria-hidden="true">{children}</span>
+      <span className="sr-only">{label}</span>
+    </span>
+  );
+}
 
 const unitedStates = { code: "US", label: "United States" };
 const europeanUnion = { code: "EU", label: "European Union" };
@@ -258,9 +272,9 @@ export default async function Security(props: {
                         )}
                       />
                     </a>
-                    <Badge size="sm" aria-label={provider.location.label}>
+                    <RegionBadge label={provider.location.label}>
                       {provider.location.code}
-                    </Badge>
+                    </RegionBadge>
                   </div>
                   <p className="text-gray-500 text-sm">{provider.purpose}</p>
                 </li>
