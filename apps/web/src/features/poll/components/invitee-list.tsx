@@ -2,17 +2,28 @@
 
 import { cn } from "@rallly/ui";
 import { MailIcon } from "lucide-react";
+import { Spinner } from "@/components/spinner";
 import type { PollInviteStatus } from "@/features/poll/invite/utils";
 import { Trans } from "@/i18n/client";
 
 export type InviteeRowStatus = PollInviteStatus | "sending";
 
 export function InviteeStatusPill({ status }: { status: InviteeRowStatus }) {
+  if (status === "sending") {
+    return (
+      <span className="inline-flex h-5 shrink-0 items-center">
+        <Spinner className="size-4" />
+        <span className="sr-only">
+          <Trans i18nKey="inviteStatusSending" defaults="Sending" />
+        </span>
+      </span>
+    );
+  }
+
   const label = {
     sent: <Trans i18nKey="inviteStatusSent" defaults="Sent" />,
     opened: <Trans i18nKey="inviteStatusOpened" defaults="Opened" />,
     responded: <Trans i18nKey="inviteStatusResponded" defaults="Responded" />,
-    sending: <Trans i18nKey="inviteStatusSending" defaults="Sending" />,
   }[status];
 
   return (
@@ -22,9 +33,8 @@ export function InviteeStatusPill({ status }: { status: InviteeRowStatus }) {
         status === "responded" &&
           "bg-green-500/10 text-green-700 dark:text-green-400",
         status === "opened" && "bg-sky-500/10 text-sky-700 dark:text-sky-400",
-        (status === "sent" || status === "sending") &&
+        status === "sent" &&
           "bg-white text-muted-foreground ring-1 ring-black/10 ring-inset dark:bg-white/10 dark:ring-white/10",
-        status === "sending" && "italic",
       )}
     >
       {label}
