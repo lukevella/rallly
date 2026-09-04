@@ -1,5 +1,4 @@
 "use client";
-import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { badgeVariants } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -10,30 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@rallly/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@rallly/ui/dialog";
 import { Form } from "@rallly/ui/form";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@rallly/ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { toast } from "@rallly/ui/sonner";
-import { shortUrl } from "@rallly/utils/absolute-url";
-import { ArrowLeftIcon, CheckIcon, CopyIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useCopyToClipboard } from "react-use";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
@@ -142,6 +126,7 @@ const CreatePollActions = ({
 
 export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = !!user && !user.isGuest;
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
@@ -161,9 +146,6 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, []);
-  const [, copy] = useCopyToClipboard();
-  const [didCopy, setDidCopy] = React.useState(false);
-
   const form = useForm<NewEventData>({
     defaultValues: {
       title: "",
@@ -253,6 +235,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
               clear();
               form.reset();
               setCreatedPollId(res.data.id);
+              router.push(`/poll/${res.data.id}?share=1`);
             } else {
               toast.error(
                 t("inappropriateContent", {
@@ -318,82 +301,6 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
             scaling, so give it height inside the resting zone. */}
         <div ref={sentinelRef} className="-mt-6 h-6" aria-hidden="true" />
       </main>
-      <Dialog open={!!createdPollId}>
-        <DialogContent showCloseButton={false}>
-          <DialogHeader>
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="p-2">
-                <div className="inline-flex size-10 items-center justify-center rounded-full bg-green-500/10">
-                  <CheckIcon className="size-4 text-green-500" />
-                </div>
-              </div>
-              <div>
-                <DialogTitle>
-                  <Trans
-                    i18nKey="createPollPollCreated"
-                    defaults="Poll created"
-                  />
-                </DialogTitle>
-                <DialogDescription>
-                  <Trans
-                    i18nKey="inviteParticipantsDescription"
-                    defaults="Copy and share the invite link to start gathering responses from your participants."
-                  />
-                </DialogDescription>
-              </div>
-            </div>
-          </DialogHeader>
-          <InputGroup className="w-full">
-            <InputGroupInput
-              className="text-center"
-              value={shortUrl(`/invite/${createdPollId}`)}
-              readOnly
-            />
-            <InputGroupAddon align="inline-end">
-              <InputGroupButton
-                variant="ghost"
-                size="icon-xs"
-                disabled={didCopy}
-                aria-label={
-                  didCopy
-                    ? t("copied", { defaultValue: "Copied" })
-                    : t("copyLink", { defaultValue: "Copy link" })
-                }
-                onClick={() => {
-                  copy(shortUrl(`/invite/${createdPollId}`));
-                  setDidCopy(true);
-                  setTimeout(() => setDidCopy(false), 2000);
-                  posthog?.capture("poll_creation:invite_link_copy");
-                }}
-              >
-                {didCopy ? <CheckIcon /> : <CopyIcon />}
-              </InputGroupButton>
-            </InputGroupAddon>
-          </InputGroup>
-          <DialogFooter className="grid grid-cols-2 gap-2">
-            <Link
-              href={`/poll/${createdPollId}`}
-              className={buttonVariants({ variant: "primary" })}
-              onClick={() => {
-                posthog?.capture("poll_creation:manage_button_click");
-              }}
-            >
-              <Trans i18nKey="manage" defaults="Manage" />
-            </Link>
-
-            <Link
-              href={`/invite/${createdPollId}`}
-              prefetch={false}
-              className={buttonVariants()}
-              onClick={() => {
-                posthog?.capture("poll_creation:view_button_click");
-              }}
-            >
-              <Trans i18nKey="viewPoll" defaults="View poll" />
-            </Link>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Form>
   );
 };

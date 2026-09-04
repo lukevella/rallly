@@ -63,8 +63,7 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
       const page = await browser.newPage();
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
-      const dialog = await newPollPage.create({ name: "Accessibility Scan" });
-      await dialog.goToPollPage();
+      await newPollPage.create({ name: "Accessibility Scan" });
       const match = page.url().match(/\/poll\/([a-zA-Z0-9]+)/);
       if (!match) {
         throw new Error(`could not extract poll id from ${page.url()}`);

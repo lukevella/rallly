@@ -1,21 +1,6 @@
-import type { Locator, Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 import { PollPage } from "./poll-page";
-
-export class CreatePollSuccessDialog {
-  constructor(private readonly page: Page) {}
-
-  get dialog(): Locator {
-    return this.page.getByRole("dialog");
-  }
-
-  async goToPollPage() {
-    await this.page.getByRole("link", { name: "Manage" }).click();
-    await this.page.waitForURL(/\/poll\/[^/]+/);
-    await this.dialog.waitFor({ state: "detached" });
-    return new PollPage(this.page);
-  }
-}
 
 export class NewPollPage {
   constructor(public readonly page: Page) {}
@@ -30,7 +15,7 @@ export class NewPollPage {
   }: {
     name: string;
     enableComments?: boolean;
-  }): Promise<CreatePollSuccessDialog> {
+  }): Promise<PollPage> {
     const page = this.page;
 
     await page.getByLabel(/title|event/i).fill(name);
@@ -66,8 +51,14 @@ export class NewPollPage {
 
     await page.getByRole("button", { name: /^create poll$/i }).click();
 
-    const successDialog = new CreatePollSuccessDialog(page);
-    await successDialog.dialog.waitFor({ state: "visible" });
-    return successDialog;
+    // Creation redirects to the poll page with the Share dialog open; the
+    // poll page is what callers want, so dismiss the dialog before returning.
+    await page.waitForURL(/\/poll\/[^/?]+/);
+    const pollPage = new PollPage(page);
+    await pollPage.closeDialog();
+    await page
+      .getByRole("dialog", { name: "Share" })
+      .waitFor({ state: "hidden" });
+    return pollPage;
   }
 }
