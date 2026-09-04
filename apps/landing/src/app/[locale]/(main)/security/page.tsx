@@ -37,7 +37,8 @@ import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 const unitedStates = { code: "US", label: "United States" };
 const europeanUnion = { code: "EU", label: "European Union" };
 
-// Logo heights are tuned per wordmark so they sit at the same visual weight
+// Logo heights are tuned per wordmark so they sit at the same visual weight;
+// the brightness filter flattens every logo to one tone until hovered
 const providers = [
   {
     name: "Vercel",
@@ -252,7 +253,7 @@ export default async function Security(props: {
                         height={provider.logo.height}
                         alt={provider.name}
                         className={cn(
-                          "w-auto transition-transform group-hover:-translate-y-1",
+                          "w-auto opacity-60 brightness-0 transition group-hover:opacity-100 group-hover:brightness-100",
                           provider.logo.className,
                         )}
                       />
