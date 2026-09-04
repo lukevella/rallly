@@ -85,6 +85,7 @@
   "pollInvite_content": "<b>{hostName}</b> is finding a time for <b>{pollTitle}</b> and wants to know when you're available.",
   "pollInvite_heading": "You're invited",
   "pollInvite_preview": "{hostName} wants to know when you're available",
+  "pollInvite_reply": "Reply to this email to reach {hostName}",
   "pollInvite_subject": "{hostName} invited you to respond to {pollTitle}",
   "register_codeValid": "This code is valid for 15 minutes",
   "register_heading": "Verify your email address",

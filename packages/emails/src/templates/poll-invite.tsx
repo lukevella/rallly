@@ -66,6 +66,12 @@ async function PollInviteEmail({
           <Button href={inviteUrl} id="inviteUrl" color={chrome.primaryColor}>
             {t("pollInvite_button", { defaultValue: "Respond" })}
           </Button>
+          <Text light={true}>
+            {t("pollInvite_reply", {
+              defaultValue: "Reply to this email to reach {hostName}",
+              hostName,
+            })}
+          </Text>
           <Hr style={{ margin: "16px 0" }} />
           <PoweredBy chrome={chrome} locale={locale} />
         </Container>
