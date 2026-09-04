@@ -154,7 +154,7 @@
   "commentsSettingTitle": "Комментарии",
   "commentsSheetDescription": "Просмотреть и добавить комментарии к этому опросу",
   "commentsSheetEmpty": "Комментариев пока нет",
-  "commentsSheetEmptyDescription": "Будьте первым, кто поделиться своими мыслями в этом опросе.",
+  "commentsSheetEmptyDescription": "Будьте первым, кто поделится своими мыслями в этом опросе.",
   "commentsSheetSubmitted": "Ваш комментарий добавлен",
   "commentsTriggerLabel": "{count, plural, =0 {Комментарии} one {# Комментарий} few {# Комментария} many {# Комментариев} other {# Комментариев}}",
   "configuredByEnvironmentVariable": "Эта настройка задана через переменную окружения.",
