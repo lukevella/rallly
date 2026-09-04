@@ -508,7 +508,7 @@
   "muteNotifications": "Ztlumit oznámení",
   "mutePollConfirmDescription": "Přestanete dostávat e-maily o nových odpovědích a komentářích k anketě <b>{pollTitle}</b>. Vaše ostatní ankety nebudou ovlivněny.",
   "mutePollConfirmTitle": "Ztlumit tuto anketu?",
-  "mutePollDoneDescription": "Už nebudete dostávat e-maily k anketě <b>{pollTitle}</b>. Nastavení můžete měnit na stránce ankety.",
+  "mutePollDoneDescription": "Už nebudete dostávat e-maily k anketě <b>{pollTitle}</b>. Ztlumení můžete zrušit na stránce ankety.",
   "mutePollDoneTitle": "Anketa ztlumena",
   "mutePollGoToPoll": "Přejít na anketu",
   "mutePollManageSettings": "Spravovat nastavení oznámení",
