@@ -81,131 +81,82 @@ export const Footer = async ({ locale }: { locale: string }) => {
             the footer goes side by side, so it only shows from `lg` up. */}
         <FooterPattern className="hidden w-full lg:block lg:min-w-0 lg:flex-1 lg:self-stretch" />
       </div>
-      <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
-            <Trans t={t} ns="common" i18nKey="product" defaults="Product" />
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-8">
+        <div className="space-y-8">
+          <div>
+            <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+              <Trans t={t} ns="common" i18nKey="product" defaults="Product" />
+            </div>
+            <ul className="grid gap-3 text-sm">
+              <li>
+                <LinkBase
+                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  href="/pricing"
+                >
+                  <Trans t={t} i18nKey="pricing" defaults="Pricing" />
+                </LinkBase>
+              </li>
+              <li>
+                <LinkBase
+                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  href="/free-scheduling-poll"
+                >
+                  <Trans
+                    t={t}
+                    ns="common"
+                    i18nKey="schedulingPoll"
+                    defaults="Scheduling poll"
+                  />
+                </LinkBase>
+              </li>
+              <li>
+                <LinkBase
+                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  href="/security"
+                >
+                  <Trans
+                    t={t}
+                    ns="common"
+                    i18nKey="security"
+                    defaults="Security"
+                  />
+                </LinkBase>
+              </li>
+            </ul>
           </div>
-          <ul className="grid gap-3 text-sm">
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/pricing"
-              >
-                <Trans t={t} i18nKey="pricing" defaults="Pricing" />
-              </LinkBase>
-            </li>
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/free-scheduling-poll"
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="schedulingPoll"
-                  defaults="Scheduling poll"
-                />
-              </LinkBase>
-            </li>
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/security"
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="security"
-                  defaults="Security"
-                />
-              </LinkBase>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
-            <Trans t={t} ns="common" i18nKey="resources" defaults="Resources" />
+          <div>
+            <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+              <Trans t={t} ns="common" i18nKey="compare" defaults="Compare" />
+            </div>
+            <ul className="grid gap-3 text-sm">
+              <li>
+                <LinkBase
+                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  href="/best-doodle-alternative"
+                >
+                  <Trans
+                    t={t}
+                    ns="common"
+                    i18nKey="doodleAlternative"
+                    defaults="Doodle alternative"
+                  />
+                </LinkBase>
+              </li>
+              <li>
+                <LinkBase
+                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  href="/when2meet-alternative"
+                >
+                  <Trans
+                    t={t}
+                    ns="common"
+                    i18nKey="when2MeetAlternative"
+                    defaults="When2meet alternative"
+                  />
+                </LinkBase>
+              </li>
+            </ul>
           </div>
-          <ul className="grid gap-3 text-sm">
-            <li>
-              <LinkBase
-                href="/blog"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
-                <Trans t={t} ns="common" i18nKey="blog" defaults="Blog" />
-              </LinkBase>
-            </li>
-            <li>
-              <a
-                target="_blank"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="https://github.com/lukevella/rallly/discussions"
-                rel="noopener"
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="discussions"
-                  defaults="Discussions"
-                />
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://support.rallly.co"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
-                <Trans t={t} ns="common" i18nKey="support" defaults="Support" />
-              </a>
-            </li>
-            <li>
-              <LinkBase
-                href="/press-kit"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="pressKit"
-                  defaults="Press kit"
-                />
-              </LinkBase>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
-            <Trans t={t} ns="common" i18nKey="compare" defaults="Compare" />
-          </div>
-          <ul className="grid gap-3 text-sm">
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/best-doodle-alternative"
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="doodleAlternative"
-                  defaults="Doodle alternative"
-                />
-              </LinkBase>
-            </li>
-            <li>
-              <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/when2meet-alternative"
-              >
-                <Trans
-                  t={t}
-                  ns="common"
-                  i18nKey="when2MeetAlternative"
-                  defaults="When2meet alternative"
-                />
-              </LinkBase>
-            </li>
-          </ul>
         </div>
         <div>
           <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
@@ -279,47 +230,116 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
           </ul>
         </div>
-      </div>
-      <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
-        <div className="flex flex-col gap-x-8 gap-y-2 sm:flex-row sm:items-center">
-          <p className="whitespace-nowrap text-gray-600 text-sm leading-loose">
-            &copy; 2026 Stack Snap Ltd.
-          </p>
-          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm leading-loose">
+        <div>
+          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+            <Trans t={t} ns="common" i18nKey="resources" defaults="Resources" />
+          </div>
+          <ul className="grid gap-3 text-sm">
             <li>
               <LinkBase
+                href="/blog"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans t={t} ns="common" i18nKey="blog" defaults="Blog" />
+              </LinkBase>
+            </li>
+            <li>
+              <a
+                target="_blank"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="https://github.com/lukevella/rallly/discussions"
+                rel="noopener"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="discussions"
+                  defaults="Discussions"
+                />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://support.rallly.co"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans t={t} ns="common" i18nKey="support" defaults="Support" />
+              </a>
+            </li>
+            <li>
+              <LinkBase
+                href="/press-kit"
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+              >
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="pressKit"
+                  defaults="Press kit"
+                />
+              </LinkBase>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+            <Trans t={t} ns="common" i18nKey="footerLegal" defaults="Legal" />
+          </div>
+          <ul className="grid gap-3 text-sm">
+            <li>
+              <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/privacy-policy"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans t={t} ns="common" i18nKey="privacyPolicy" />
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="privacyPolicy"
+                  defaults="Privacy policy"
+                />
               </LinkBase>
             </li>
             <li>
               <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/cookie-policy"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans t={t} ns="common" i18nKey="cookiePolicy" />
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="cookiePolicy"
+                  defaults="Cookie policy"
+                />
               </LinkBase>
             </li>
             <li>
               <LinkBase
+                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
                 href="/terms-of-use"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
               >
-                <Trans t={t} ns="common" i18nKey="termsOfUse" />
+                <Trans
+                  t={t}
+                  ns="common"
+                  i18nKey="termsOfUse"
+                  defaults="Terms of use"
+                />
               </LinkBase>
             </li>
             <li>
               <LinkBase
-                href="/dpa"
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                href="/dpa"
               >
                 <Trans t={t} ns="common" i18nKey="dpa" defaults="DPA" />
               </LinkBase>
             </li>
           </ul>
         </div>
+      </div>
+      <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
+        <p className="whitespace-nowrap text-gray-600 text-sm leading-loose">
+          &copy; 2026 Stack Snap Ltd.
+        </p>
         <div className="flex flex-wrap items-center gap-4">
           <a
             href="https://rallly.openstatus.dev"
