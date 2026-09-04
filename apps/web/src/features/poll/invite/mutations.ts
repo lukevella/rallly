@@ -8,6 +8,7 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { MAX_POLL_INVITES_PER_DAY } from "@/features/poll/invite/constants";
+import { getPollInvitePath } from "@/features/poll/invite/utils";
 import { generateAccessToken } from "@/features/poll/utils";
 
 const logger = createLogger("poll/invite/mutations");
@@ -56,7 +57,7 @@ export async function sendPollInvite({
     }),
     prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, locale: true },
+      select: { name: true, email: true, locale: true },
     }),
   ]);
 
@@ -172,6 +173,9 @@ export async function sendPollInvite({
   try {
     await sendPollInviteEmail({
       to: email,
+      // Sent on the host's behalf, so replies go to them rather than the
+      // From address. Reply-To is outside DMARC alignment.
+      replyTo: sender.email,
       locale: sender.locale ?? "en",
       branding: poll.space
         ? await getSpaceBranding(poll.space)
@@ -179,7 +183,7 @@ export async function sendPollInvite({
       props: {
         hostName: sender.name,
         pollTitle: poll.title,
-        inviteUrl: absoluteUrl(`/invite/${pollId}?invite=${token}`),
+        inviteUrl: absoluteUrl(getPollInvitePath({ pollId, token })),
       },
     });
   } catch (error) {

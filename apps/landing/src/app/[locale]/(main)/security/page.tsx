@@ -1,8 +1,9 @@
 "use cache";
 
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import {
   ActivityIcon,
+  ArrowRightIcon,
   CodeIcon,
   DatabaseIcon,
   EyeOffIcon,
@@ -10,6 +11,7 @@ import {
   ServerIcon,
 } from "lucide-react";
 import { cacheLife } from "next/cache";
+import Image from "next/image";
 import {
   ContentGrid,
   ContentGridDescription,
@@ -20,6 +22,7 @@ import {
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Faq, FaqItem } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
+import { Perimeter } from "@/components/home/perimeter";
 import { Stats } from "@/components/home/stats";
 import {
   Section,
@@ -31,24 +34,100 @@ import {
 import { LinkBase } from "@/i18n/client/link";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
-function TransferMechanismCell({
-  href,
-  fallback,
+function RegionBadge({
+  label,
   children,
 }: {
-  href: string;
-  fallback: React.ReactNode;
+  label: string;
   children: React.ReactNode;
 }) {
   return (
-    <td>
-      <a href={href} target="_blank" rel="noreferrer noopener">
-        {children}
-      </a>
-      <div className="mt-0.5 text-gray-500 text-xs">{fallback}</div>
-    </td>
+    <span className="inline-flex h-5 items-center rounded-full bg-gray-200 px-2 font-medium text-gray-600 text-xs tracking-wide">
+      <span aria-hidden="true">{children}</span>
+      <span className="sr-only">{label}</span>
+    </span>
   );
 }
+
+const unitedStates = { code: "US", label: "United States" };
+const europeanUnion = { code: "EU", label: "European Union" };
+
+// Logo heights are tuned per wordmark so they sit at the same visual weight;
+// the brightness filter flattens every logo to one tone until hovered
+const providers = [
+  {
+    name: "Vercel",
+    href: "https://vercel.com/security",
+    purpose: "Application hosting",
+    location: unitedStates,
+    logo: {
+      src: "/static/images/partners/vercel.svg",
+      width: 4438,
+      height: 1000,
+      className: "h-5",
+    },
+  },
+  {
+    name: "Neon",
+    href: "https://neon.com/security",
+    purpose: "Managed PostgreSQL database",
+    location: unitedStates,
+    logo: {
+      src: "/static/images/partners/neon.svg",
+      width: 157,
+      height: 45,
+      className: "h-6",
+    },
+  },
+  {
+    name: "Upstash",
+    href: "https://upstash.com/docs/common/help/compliance",
+    purpose: "Session data, rate limiting",
+    location: unitedStates,
+    logo: {
+      src: "/static/images/partners/upstash.svg",
+      width: 1631,
+      height: 472,
+      className: "h-7",
+    },
+  },
+  {
+    name: "Amazon Web Services",
+    href: "https://aws.amazon.com/compliance/",
+    purpose: "Transactional email, object storage",
+    location: unitedStates,
+    logo: {
+      src: "/static/images/partners/aws.svg",
+      width: 304,
+      height: 182,
+      className: "h-9",
+    },
+  },
+  {
+    name: "Stripe",
+    href: "https://stripe.com/docs/security",
+    purpose: "Payment processing",
+    location: unitedStates,
+    logo: {
+      src: "/static/images/partners/stripe.svg",
+      width: 360,
+      height: 150,
+      className: "h-8",
+    },
+  },
+  {
+    name: "PostHog",
+    href: "https://posthog.com/privacy",
+    purpose: "Product analytics",
+    location: europeanUnion,
+    logo: {
+      src: "/static/images/partners/posthog.svg",
+      width: 160,
+      height: 28,
+      className: "h-6",
+    },
+  },
+];
 
 export default async function Security(props: {
   params: Promise<{ locale: string }>;
@@ -62,30 +141,38 @@ export default async function Security(props: {
   const format = new Intl.NumberFormat(locale);
   return (
     <div className="divide-y">
-      <Section>
-        <Hero
-          className="max-w-2xl"
-          title="Securely scheduling for thousands of organizations"
-          description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
-        />
-        <Stats className="mx-0 mt-8 text-left sm:mt-24">
-          <PeopleBadge locale={locale} live>
-            {format.format(voterCount)} people
-          </PeopleBadge>{" "}
-          voted on{" "}
-          <PollsBadge locale={locale} live>
-            {format.format(pollCount)} polls
-          </PollsBadge>{" "}
-          in the last 30 days
-        </Stats>
+      <Section className="relative border-b-0">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48rem] translate-x-1/2 text-gray-700 [mask-composite:intersect] [mask-image:radial-gradient(closest-side,black_30%,transparent_100%),linear-gradient(to_right,black_40%,transparent_52%)] lg:block xl:w-[52rem] xl:translate-x-1/4 xl:[mask-image:radial-gradient(closest-side,black_30%,transparent_100%)]"
+        >
+          <Perimeter />
+        </div>
+        <div className="relative">
+          <Hero
+            className="max-w-2xl"
+            title="Securely scheduling for thousands of organizations"
+            description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
+          />
+          <Stats className="mx-0 mt-8 text-left sm:mt-24">
+            <PeopleBadge locale={locale} live>
+              {format.format(voterCount)} people
+            </PeopleBadge>{" "}
+            voted on{" "}
+            <PollsBadge locale={locale} live>
+              {format.format(pollCount)} polls
+            </PollsBadge>{" "}
+            in the last 30 days
+          </Stats>
+        </div>
       </Section>
       <Section>
         <SectionHeading>
           <SectionTitle>Secure by design</SectionTitle>
           <SectionDescription>
             Rallly is built in the open. The source code is public, uptime is
-            independently measured, and this page lists exactly where your data
-            lives.
+            independently measured, and every provider that touches your data is
+            listed openly.
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
@@ -163,166 +250,64 @@ export default async function Security(props: {
           <SectionDescription>
             Rallly runs on the world&apos;s leading infrastructure providers,
             giving you the security and performance you should expect. Here is
-            the complete list, and where your data lives.
+            where your data lives.
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="longform overflow-x-auto">
-            {/* Below lg the table is wider than the viewport: keep cells on
-                one line and let the wrapper scroll instead of wrapping */}
-            <table className="whitespace-nowrap lg:whitespace-normal">
-              <thead>
-                <tr>
-                  <th>Provider</th>
-                  <th>Purpose</th>
-                  <th>Location</th>
-                  <th>Transfer mechanism</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
+          {/* Tiles carry a top and left border; the wrapper clips the outer
+              edge so only the inner grid lines remain. The grid bleeds into
+              the page gutters by one cell padding so the outer columns'
+              content lines up with the heading while every cell stays the
+              same size */}
+          <div className="-mx-4 overflow-hidden sm:-mx-6">
+            <ul className="-mt-px -ml-px grid grid-cols-2 sm:grid-cols-3">
+              {providers.map((provider) => (
+                <li
+                  key={provider.name}
+                  className="flex flex-col gap-y-4 border-t border-l p-4 sm:p-6"
+                >
+                  <div className="flex items-start justify-between gap-x-4">
                     <a
-                      className="text-gray-800 hover:underline"
-                      href="https://vercel.com/security"
+                      href={provider.href}
                       target="_blank"
                       rel="noreferrer noopener"
+                      className="group flex h-9 items-center rounded-sm"
                     >
-                      Vercel
+                      <Image
+                        src={provider.logo.src}
+                        width={provider.logo.width}
+                        height={provider.logo.height}
+                        alt={provider.name}
+                        className={cn(
+                          "w-auto opacity-60 brightness-0 transition group-hover:opacity-100 group-hover:brightness-100",
+                          provider.logo.className,
+                        )}
+                      />
                     </a>
-                  </td>
-                  <td>Application hosting</td>
-                  <td>United States</td>
-                  <TransferMechanismCell
-                    href="https://vercel.com/legal/dpa"
-                    fallback="SCCs fallback"
-                  >
-                    EU-US DPF + UK Extension
-                  </TransferMechanismCell>
-                </tr>
-                <tr>
-                  <td>
-                    <a
-                      className="text-gray-800 hover:underline"
-                      href="https://neon.com/security"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Neon
-                    </a>
-                  </td>
-                  <td>Managed PostgreSQL database</td>
-                  <td>United States</td>
-                  <TransferMechanismCell
-                    href="https://www.databricks.com/legal/dpf"
-                    fallback="Certified under Databricks, Inc. · SCCs fallback"
-                  >
-                    EU-US DPF + UK Extension
-                  </TransferMechanismCell>
-                </tr>
-                <tr>
-                  <td>
-                    <a
-                      className="text-gray-800 hover:underline"
-                      href="https://upstash.com/docs/common/help/compliance"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Upstash
-                    </a>
-                  </td>
-                  <td>Session data, rate limiting</td>
-                  <td>United States</td>
-                  <TransferMechanismCell
-                    href="https://upstash.com/trust/dpa.pdf"
-                    fallback="SCCs + UK Addendum fallback"
-                  >
-                    EU-US DPF + UK Extension
-                  </TransferMechanismCell>
-                </tr>
-                <tr>
-                  <td>
-                    <a
-                      className="text-gray-800 hover:underline"
-                      href="https://aws.amazon.com/compliance/"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Amazon Web Services
-                    </a>
-                  </td>
-                  <td>Transactional email, object storage</td>
-                  <td>United States</td>
-                  <TransferMechanismCell
-                    href="https://d1.awsstatic.com/legal/aws-gdpr/AWS_GDPR_DPA.pdf"
-                    fallback="Certified under Amazon.com, Inc. · SCCs fallback"
-                  >
-                    EU-US DPF + UK Extension
-                  </TransferMechanismCell>
-                </tr>
-                <tr>
-                  <td>
-                    <a
-                      className="text-gray-800 hover:underline"
-                      href="https://stripe.com/docs/security"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Stripe
-                    </a>
-                  </td>
-                  <td>Payment processing (billing contact data only)</td>
-                  <td>United States</td>
-                  <TransferMechanismCell
-                    href="https://stripe.com/legal/dpa"
-                    fallback="SCCs + UK Addendum fallback"
-                  >
-                    EU-US DPF + UK Extension
-                  </TransferMechanismCell>
-                </tr>
-                <tr>
-                  <td>
-                    <a
-                      className="text-gray-800 hover:underline"
-                      href="https://posthog.com/privacy"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      PostHog (EU)
-                    </a>
-                  </td>
-                  <td>Product analytics</td>
-                  <td>European Union</td>
-                  <TransferMechanismCell
-                    href="https://posthog.com/privacy"
-                    fallback="No US transfer"
-                  >
-                    EU data residency
-                  </TransferMechanismCell>
-                </tr>
-                <tr>
-                  <td>
-                    <a
-                      className="text-gray-800 hover:underline"
-                      href="https://sentry.io/security/"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Sentry
-                    </a>
-                  </td>
-                  <td>Error monitoring</td>
-                  <td>United States</td>
-                  <TransferMechanismCell
-                    href="https://sentry.io/legal/dpa/"
-                    fallback="SCCs + UK Addendum fallback"
-                  >
-                    EU-US DPF + UK Extension
-                  </TransferMechanismCell>
-                </tr>
-              </tbody>
-            </table>
+                    <RegionBadge label={provider.location.label}>
+                      {provider.location.code}
+                    </RegionBadge>
+                  </div>
+                  <p className="text-gray-500 text-sm">{provider.purpose}</p>
+                </li>
+              ))}
+            </ul>
           </div>
+          <p className="mt-6 max-w-prose text-pretty text-gray-500 text-sm">
+            Every provider is bound by a data processing agreement, with EU-US
+            Data Privacy Framework certification or Standard Contractual Clauses
+            covering international transfers.
+          </p>
+          <LinkBase
+            href="/dpa#annex-2"
+            className="group mt-2 inline-flex items-center gap-x-1 font-medium text-primary text-sm hover:underline"
+          >
+            See the full subprocessor list in Annex 2 of our DPA
+            <ArrowRightIcon
+              className="size-3 transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </LinkBase>
         </SectionContent>
       </Section>
       <Section>

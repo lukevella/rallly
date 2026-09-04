@@ -1,10 +1,22 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
-import { MailIcon } from "lucide-react";
+import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
+import { toast } from "@rallly/ui/sonner";
+import { LinkIcon, MailIcon, MoreHorizontalIcon } from "lucide-react";
+import React from "react";
+import { useCopyToClipboard } from "react-use";
 import { Spinner } from "@/components/spinner";
+import { usePoll } from "@/features/poll/client";
 import type { PollInviteStatus } from "@/features/poll/invite/utils";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 export type InviteeRowStatus = PollInviteStatus | "sending";
 
@@ -42,12 +54,89 @@ export function InviteeStatusPill({ status }: { status: InviteeRowStatus }) {
   );
 }
 
+/**
+ * The per invitee link is the only thing that joins a response to its
+ * invite, so a host who reaches someone through another channel copies
+ * this rather than the generic invite link.
+ */
+function InviteeRowMenu({
+  email,
+  status,
+  inviteUrl,
+}: {
+  email: string;
+  status: PollInviteStatus;
+  inviteUrl: string;
+}) {
+  const poll = usePoll();
+  const { t } = useTranslation();
+  const [state, copyToClipboard] = useCopyToClipboard();
+
+  // react-use records a failed copy as `error` and a successful one as
+  // `value`; the toast only claims success in the second case.
+  React.useEffect(() => {
+    if (state.error) {
+      console.error(`Unable to copy value: ${state.error.message}`);
+      toast.error(
+        t("shareDialogCopyFailed", {
+          defaultValue: "Couldn't copy the link. Try again.",
+        }),
+      );
+      return;
+    }
+    if (state.value) {
+      toast(
+        t("shareDialogPersonalLinkCopied", {
+          defaultValue: "Personal link for {email} copied",
+          email,
+        }),
+      );
+      posthog?.capture("poll_share:invitee_link_copy", {
+        poll_id: poll.id,
+        status,
+      });
+    }
+  }, [state, email, status, poll.id, t]);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            aria-label={t("inviteeRowOptions", {
+              defaultValue: "Options for {email}",
+              email,
+            })}
+            variant="ghost"
+            size="icon"
+            className="shrink-0"
+          />
+        }
+      >
+        <MoreHorizontalIcon className="text-muted-foreground" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => copyToClipboard(inviteUrl)}>
+          <LinkIcon />
+          <Trans
+            i18nKey="shareDialogCopyPersonalLink"
+            defaults="Copy personal link"
+          />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function InviteeRow({
   email,
   status,
+  inviteUrl,
 }: {
   email: string;
   status: InviteeRowStatus;
+  // Absent while the invite is still sending and on preview rows.
+  inviteUrl?: string;
 }) {
   return (
     <li className="flex h-11 items-center gap-2.5 rounded-lg px-1.5 hover:bg-accent has-[:focus-visible]:bg-accent">
@@ -59,6 +148,9 @@ export function InviteeRow({
       </span>
       <span className="min-w-0 flex-1 truncate text-sm">{email}</span>
       <InviteeStatusPill status={status} />
+      {status !== "sending" && inviteUrl ? (
+        <InviteeRowMenu email={email} status={status} inviteUrl={inviteUrl} />
+      ) : null}
     </li>
   );
 }

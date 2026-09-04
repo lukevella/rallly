@@ -17,3 +17,17 @@ export function derivePollInviteStatus(invite: {
   }
   return "sent";
 }
+
+/**
+ * The per invitee link, relative. Shared by the email and the host's copy
+ * action so the two can never point at different places.
+ */
+export function getPollInvitePath({
+  pollId,
+  token,
+}: {
+  pollId: string;
+  token: string;
+}) {
+  return `/invite/${pollId}?invite=${token}`;
+}

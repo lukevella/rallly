@@ -17,12 +17,7 @@ import { getLocale } from "@/i18n/server/get-locale";
 import { isSelfHosted } from "@/lib/constants";
 import { formatDateTime } from "@/lib/datetime/format";
 import { AppError } from "@/lib/errors/app-error";
-import {
-  deletePostHogPerson,
-  flushPostHog,
-  track,
-  trackSystemEvent,
-} from "@/lib/posthog";
+import { deletePostHogPerson, track, trackSystemEvent } from "@/lib/posthog";
 import {
   authActionClient,
   createRateLimitMiddleware,
@@ -118,7 +113,6 @@ export const deleteAccountAction = authActionClient
 
     // Personless by design — the person this event is about was just erased.
     trackSystemEvent({ event: "account_deletion_complete" });
-    after(() => flushPostHog());
   });
 
 export const cancelAccountDeletionAction = authActionClient

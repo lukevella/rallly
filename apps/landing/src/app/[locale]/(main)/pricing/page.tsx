@@ -24,8 +24,9 @@ import {
   CompareTableCheck,
   CompareTableDash,
   CompareTableFeature,
+  CompareTableFeatureDescription,
+  CompareTableFeatureName,
   CompareTableHead,
-  CompareTableTooltip,
 } from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
@@ -53,7 +54,6 @@ import {
   PlanBenefit,
   PlanBenefitName,
   PlanBenefits,
-  PlanBenefitTooltip,
   PlanCard,
   PlanCardDescription,
   PlanCardHeader,
@@ -182,42 +182,24 @@ export default async function Page(props: {
               </div>
               <PlanBenefits>
                 <PlanBenefit icon={<CalendarSearchIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="basicPollsDescription"
-                        defaults="Create simple scheduling polls"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="basicPolls"
                       defaults="Basic polls"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<TimerResetIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="thirtyDayPollRetentionDescription"
-                        defaults="Polls are kept for 30 days after their final date"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="thirtyDayPollRetention"
                       defaults="30 day poll retention"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
               </PlanBenefits>
             </PlanCard>
@@ -292,137 +274,74 @@ export default async function Page(props: {
               </div>
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
                 <PlanBenefit icon={<PaletteIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="customBrandingDescription"
-                        defaults="Show your logo and brand colors to your participants"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="customBranding"
                       defaults="Custom branding"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<MailPlusIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="emailInvitesDescription"
-                        defaults="Invite people by email and see who has responded"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="emailInvites"
                       defaults="Email invites"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<EyeOffIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="removeAttributionBenefitDescription"
-                        defaults='Hide "Powered by Rallly" from your participants'
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="removeAttribution"
                       defaults="Remove attribution"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<CalendarCheckIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="schedulePollDescription"
-                        defaults="Select a final date for your event."
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="finalizeDate"
                       defaults="Finalize date"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<ClockIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="extendedPollLifetimeDescription"
-                        defaults="Keep polls indefinitely"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="featureNameExtendedPollLifetime"
                       defaults="Extended poll lifetime"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<CopyIcon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="duplicatePollsDescription"
-                        defaults="Create a new poll based on an existing one"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="duplicatePolls"
                       defaults="Duplicate polls"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<Settings2Icon />}>
-                  <PlanBenefitTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="advancedPollSettingsDescription"
-                        defaults="Require participant emails, hide participant names, and hide votes"
-                      />
-                    }
-                  >
+                  <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="advancedPollSettings"
                       defaults="Advanced poll settings"
                     />
-                  </PlanBenefitTooltip>
+                  </PlanBenefitName>
                 </PlanBenefit>
                 <PlanBenefit icon={<UserPlusIcon />}>
                   <PlanBenefitName>
@@ -492,83 +411,102 @@ export default async function Page(props: {
             <tbody className="divide-y">
               <tr>
                 <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareSchedulingPolls"
-                    defaults="Scheduling polls"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareParticipants"
-                    defaults="Participants"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="comparePollRetention"
-                    defaults="Poll retention"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="thirtyDayPollRetentionDescription"
-                        defaults="Polls are kept for 30 days after their final date"
-                      />
-                    }
-                  >
+                  <CompareTableFeatureName>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="comparePollRetention30Days"
-                      defaults="30 days"
+                      i18nKey="compareSchedulingPolls"
+                      defaults="Scheduling polls"
                     />
-                  </CompareTableTooltip>
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareSchedulingPollsDescription"
+                      defaults="Create polls to find the best time to meet"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareParticipants"
+                      defaults="Participants"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareParticipantsDescription"
+                      defaults="People who can vote on your polls"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="compareUnlimited"
+                    defaults="Unlimited"
+                  />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="comparePollRetention"
+                      defaults="Poll retention"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="comparePollRetentionDescription"
+                      defaults="How long polls are kept after their final date"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="comparePollRetention30Days"
+                    defaults="30 days"
+                  />
                 </CompareTableCell>
                 <CompareTableCell>
                   <Trans
@@ -581,12 +519,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="finalizeDate"
-                    defaults="Finalize date"
-                  />
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="finalizeDate"
+                      defaults="Finalize date"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="finalizeDateDescription"
+                      defaults="Select a final date for your event"
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -597,12 +545,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="duplicatePolls"
-                    defaults="Duplicate polls"
-                  />
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="duplicatePolls"
+                      defaults="Duplicate polls"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="duplicatePollsDescription"
+                      defaults="Create a new poll based on an existing one"
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -613,23 +571,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <CompareTableTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="advancedPollSettingsDescription"
-                        defaults="Require participant emails, hide participant names, and hide votes"
-                      />
-                    }
-                  >
+                  <CompareTableFeatureName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="advancedPollSettings"
                       defaults="Advanced poll settings"
                     />
-                  </CompareTableTooltip>
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="advancedPollSettingsDescription"
+                      defaults="Require participant emails, hide participant names, and hide votes"
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -640,12 +597,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="customBranding"
-                    defaults="Custom branding"
-                  />
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="customBranding"
+                      defaults="Custom branding"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="customBrandingDescription"
+                      defaults="Show your logo and brand colors to your participants"
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -656,23 +623,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <CompareTableTooltip
-                    content={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="emailInvitesDescription"
-                        defaults="Invite people by email and see who has responded"
-                      />
-                    }
-                  >
+                  <CompareTableFeatureName>
                     <Trans
                       t={t}
                       ns="pricing"
                       i18nKey="emailInvites"
                       defaults="Email invites"
                     />
-                  </CompareTableTooltip>
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="emailInvitesDescription"
+                      defaults="Invite people by email and see who has responded"
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -683,12 +649,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="removeAttribution"
-                    defaults="Remove attribution"
-                  />
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="removeAttribution"
+                      defaults="Remove attribution"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="removeAttributionBenefitDescription"
+                      defaults='Hide "Powered by Rallly" from your participants'
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -699,12 +675,22 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="teamCollaboration"
-                    defaults="Team collaboration"
-                  />
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="teamCollaboration"
+                      defaults="Team collaboration"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="teamCollaborationDescription"
+                      defaults="Invite your team to manage polls together"
+                    />
+                  </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />

@@ -13,6 +13,7 @@ export async function listPollInvites({ pollId }: { pollId: string }) {
     select: {
       id: true,
       email: true,
+      token: true,
       openedAt: true,
       participantId: true,
       createdAt: true,

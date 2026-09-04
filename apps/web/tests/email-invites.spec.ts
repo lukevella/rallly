@@ -90,6 +90,22 @@ test.describe("Email invites", () => {
     );
     expect(email.HTML).toContain("/invite/");
     expect(email.HTML).toContain("?invite=");
+    // Replies reach the host, not the From address.
+    expect(email.ReplyTo.map((address) => address.Address)).toEqual([PRO_HOST]);
+
+    // The row menu copies the same personal link the email carried, so a
+    // host reaching the invitee another way keeps the response attributed.
+    const emailedUrl = email.HTML.match(
+      /href="([^"]*\/invite\/[^"]*invite=[^"]*)"/,
+    )?.[1];
+    await row.getByRole("button", { name: `Options for ${INVITEE}` }).click();
+    await page.getByRole("menuitem", { name: "Copy personal link" }).click();
+    await expect(
+      page.getByText(`Personal link for ${INVITEE} copied`),
+    ).toBeVisible();
+    expect(await page.evaluate("navigator.clipboard.readText()")).toBe(
+      emailedUrl,
+    );
 
     // Same address again is refused without sending.
     await field.fill(INVITEE);
@@ -104,13 +120,10 @@ test.describe("Email invites", () => {
 
     // Opening the emailed link records the open once: a second visit
     // neither moves the timestamp nor adds another activity event.
-    const inviteUrl = email.HTML.match(
-      /href="([^"]*\/invite\/[^"]*invite=[^"]*)"/,
-    )?.[1];
-    expect(inviteUrl).toBeTruthy();
+    expect(emailedUrl).toBeTruthy();
     const browser = page.context().browser();
     expect(browser).toBeTruthy();
-    const guest = await openAsGuest(browser as Browser, inviteUrl as string);
+    const guest = await openAsGuest(browser as Browser, emailedUrl as string);
     const invite = await prisma.pollInvite.findFirstOrThrow({
       where: { email: INVITEE, poll: { title: POLL_TITLE } },
       select: { id: true },
@@ -130,7 +143,9 @@ test.describe("Email invites", () => {
     });
 
     await guest.guestPage.reload();
-    await expect(guest.guestPage.getByText(POLL_TITLE)).toBeVisible();
+    await expect(
+      guest.guestPage.getByRole("heading", { name: POLL_TITLE }),
+    ).toBeVisible();
 
     const openedRow = (await reopenShareDialog(page))
       .getByRole("listitem")
