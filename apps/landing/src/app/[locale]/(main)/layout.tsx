@@ -33,7 +33,7 @@ export default async function Root(props: {
 
   const { t } = await getTranslation(locale, ["common", "home"]);
   return (
-    <div className="relative z-10 flex min-h-full flex-col">
+    <div className="relative z-10 flex min-h-full flex-col overflow-x-clip">
       <header className="sticky top-0 z-20 bg-gray-100">
         <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-4 sm:px-6 sm:py-6">
           <div className="flex grow items-center gap-x-12">
