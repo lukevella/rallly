@@ -1,9 +1,5 @@
 import { createLogger } from "@rallly/logger";
 import { PostHog } from "@rallly/posthog/server";
-import {
-  getPostHogCookieName,
-  parsePostHogCookieDistinctId,
-} from "@rallly/posthog/utils";
 import type { NextRequest } from "next/server";
 import { after } from "next/server";
 import { env } from "@/env";
@@ -31,56 +27,32 @@ export function posthog() {
  * server — importing the raw `posthog` client is lint-restricted (see
  * noRestrictedImports in apps/web/biome.json) so the guest decision cannot
  * be forgotten at individual capture sites. Guests are captured as anonymous
- * events (no person profile — they are transient and rarely convert);
- * identified users get person processing as usual. Note: PostHog drops
- * group associations on personless events, so `groups` passed here only
- * take effect for identified users — put poll/space/tier on plain
- * properties when guest events need them.
+ * events under their guest user id (no person profile — they are transient
+ * and rarely convert); registered users get person processing as usual.
+ * Note: PostHog drops group associations on personless events, so `groups`
+ * passed here only take effect for identified users — put poll/space/tier on
+ * plain properties when guest events need them.
  *
- * When a guest's client-side anonymous distinct_id is known (read from the
- * posthog-js persistence cookie via getClientAnonymousDistinctId), guest
- * events adopt it so server events stitch to the same journey as the guest's
- * pageviews. Without it (ad blocker, GPC opt-out, cookie not yet written) we
- * fall back to the guest user id — the event is still captured, just
- * unstitched. Registered users always capture under their user id.
+ * The browser client stores nothing on the device (see
+ * packages/posthog/src/client-config.ts), so there is no anonymous id to
+ * stitch guest server events to; they stand alone.
  */
 export function track(
-  user: { id: string; isGuest: boolean; anonymousDistinctId?: string },
+  user: { id: string; isGuest: boolean },
   event: {
     event: string;
     properties?: Record<string, unknown>;
     groups?: Record<string, string>;
   },
 ) {
-  const distinctId =
-    user.isGuest && user.anonymousDistinctId
-      ? user.anonymousDistinctId
-      : user.id;
-
   posthog()?.capture({
     ...event,
-    distinctId,
+    distinctId: user.id,
     properties: {
       ...event.properties,
       $process_person_profile: !user.isGuest,
     },
   });
-}
-
-/**
- * Read the client's anonymous distinct_id from the posthog-js persistence
- * cookie (persistence: "cookie"). Absent or malformed cookies yield undefined.
- */
-export function getClientAnonymousDistinctId(req: NextRequest) {
-  if (!env.NEXT_PUBLIC_POSTHOG_API_KEY) {
-    return undefined;
-  }
-
-  const cookie = req.cookies.get(
-    getPostHogCookieName(env.NEXT_PUBLIC_POSTHOG_API_KEY),
-  );
-
-  return parsePostHogCookieDistinctId(cookie?.value) ?? undefined;
 }
 
 // Without an explicit distinctId, groupIdentify defaults to

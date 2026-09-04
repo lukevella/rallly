@@ -110,9 +110,12 @@ export const VoteActions = () => {
               className="mt-4"
             >
               <Link
-                href={linkToApp("/new", { ref })}
+                href={linkToApp("/new", { ref, cta: "hero_demo_modal" })}
                 onClick={() => {
-                  posthog?.capture("landing:hero_demo_modal_cta_click");
+                  posthog?.capture("landing:hero_demo_modal_cta_click", {
+                    cta: "hero_demo_modal",
+                    ref,
+                  });
                 }}
                 className="font-medium text-indigo-600 text-xs hover:underline"
               >

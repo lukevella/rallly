@@ -87,6 +87,7 @@ export function getScheduledEventRsvpEmailData(eventId: string) {
       user: { select: { name: true, email: true } },
       space: {
         select: {
+          tier: true,
           showBranding: true,
           hideAttribution: true,
           primaryColor: true,

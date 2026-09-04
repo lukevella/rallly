@@ -164,7 +164,10 @@ export default async function Page(props: {
               </PlanCardPrice>
               <div>
                 <Link
-                  href={linkToApp("/", { ref: "pricing" })}
+                  href={linkToApp("/", {
+                    ref: "pricing",
+                    cta: "pricing_free",
+                  })}
                   className={buttonVariants({
                     className: "w-full",
                   })}
@@ -270,7 +273,10 @@ export default async function Page(props: {
               </PlanCardPrice>
               <div>
                 <Link
-                  href={linkToApp("/settings/billing", { ref: "pricing" })}
+                  href={linkToApp("/settings/billing", {
+                    ref: "pricing",
+                    cta: "pricing_pro",
+                  })}
                   className={buttonVariants({
                     variant: "primary",
                     className: "w-full",
@@ -726,8 +732,25 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="pricing"
-                  i18nKey="canUseFreeAnswer2"
-                  defaults="Yes, most of Rallly's features are free and many users will never need to pay for anything. However, there are some features that are only available to paying customers. These features are designed to help you get the most out of Rallly."
+                  i18nKey="canUseFreeAnswer3"
+                  defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+                />
+              </FaqItem>
+              <FaqItem
+                question={
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="pollLimit"
+                    defaults="Is there a limit on how many polls I can create?"
+                  />
+                }
+              >
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="pollLimitAnswer"
+                  defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
                 />
               </FaqItem>
               <FaqItem
@@ -784,6 +807,7 @@ export default async function Page(props: {
                         className={faqLinkClassName}
                         href={linkToApp("/settings/billing", {
                           ref: "pricing",
+                          cta: "pricing_faq",
                         })}
                       />
                     ),
@@ -812,6 +836,7 @@ export default async function Page(props: {
                         className={faqLinkClassName}
                         href={linkToApp("/settings/billing", {
                           ref: "pricing",
+                          cta: "pricing_faq",
                         })}
                       />
                     ),

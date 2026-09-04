@@ -22,14 +22,20 @@ export function UserProvider({
   const isGuest = user?.isGuest;
   const { locale } = useLocale();
 
-  // Changing the language refreshes the router with a new [locale] param, so
-  // this re-runs; posthog-js turns a repeat identify into a $set and drops it
-  // when the properties are unchanged.
+  const name = user?.name;
+  const email = user?.email;
+
+  // The client is already identified as this user from init (bootstrap in
+  // packages/posthog/src/client-config.ts), so no identify() here. Name and
+  // email ride along so a profile PostHog has to recreate for an existing
+  // account is never empty. Changing the language refreshes the router with
+  // a new [locale] param, so this re-runs; posthog-js drops a repeat $set
+  // with unchanged properties.
   React.useEffect(() => {
     if (userId && !isGuest) {
-      posthog.identify(userId, { locale });
+      posthog.setPersonProperties({ name, email, locale });
     }
-  }, [userId, isGuest, locale]);
+  }, [userId, isGuest, name, email, locale]);
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }

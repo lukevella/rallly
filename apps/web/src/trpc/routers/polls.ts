@@ -19,6 +19,10 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import {
+  isSpaceAttributionHidden,
+  isSpaceBrandingActive,
+} from "@/features/space/utils";
 import { dayjs } from "@/lib/dayjs";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -141,17 +145,14 @@ export const polls = router({
       });
 
       if (moderation.verdict !== "safe") {
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "flagged_content",
-            properties: {
-              action: "create_poll",
-              verdict: moderation.verdict,
-              reason: moderation.reason,
-            },
+        track(ctx.user, {
+          event: "flagged_content",
+          properties: {
+            action: "create_poll",
+            verdict: moderation.verdict,
+            reason: moderation.reason,
           },
-        );
+        });
       }
 
       if (moderation.verdict === "flagged") {
@@ -274,30 +275,27 @@ export const polls = router({
         },
       });
 
-      track(
-        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-        {
-          event: "poll_create",
-          properties: {
-            title: poll.title,
-            kind,
-            source: "web",
-            optionCount: poll.options.length,
-            hasLocation: !!location,
-            hasDescription: !!description,
-            timezone: input.timeZone,
-            disableComments: poll.disableComments,
-            hideParticipants: poll.hideParticipants,
-            hideScores: poll.hideScores,
-            requireParticipantEmail: poll.requireParticipantEmail,
-            isGuest: ctx.user.isGuest,
-          },
-          groups: {
-            poll: poll.id,
-            ...(poll.spaceId ? { space: poll.spaceId } : {}),
-          },
+      track(ctx.user, {
+        event: "poll_create",
+        properties: {
+          title: poll.title,
+          kind,
+          source: "web",
+          optionCount: poll.options.length,
+          hasLocation: !!location,
+          hasDescription: !!description,
+          timezone: input.timeZone,
+          disableComments: poll.disableComments,
+          hideParticipants: poll.hideParticipants,
+          hideScores: poll.hideScores,
+          requireParticipantEmail: poll.requireParticipantEmail,
+          isGuest: ctx.user.isGuest,
         },
-      );
+        groups: {
+          poll: poll.id,
+          ...(poll.spaceId ? { space: poll.spaceId } : {}),
+        },
+      });
 
       return { ok: true as const, data: { id: poll.id } };
     }),
@@ -351,17 +349,14 @@ export const polls = router({
       });
 
       if (moderation.verdict !== "safe") {
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "flagged_content",
-            properties: {
-              action: "update_poll",
-              verdict: moderation.verdict,
-              reason: moderation.reason,
-            },
+        track(ctx.user, {
+          event: "flagged_content",
+          properties: {
+            action: "update_poll",
+            verdict: moderation.verdict,
+            reason: moderation.reason,
           },
-        );
+        });
       }
 
       if (moderation.verdict === "flagged") {
@@ -633,54 +628,45 @@ export const polls = router({
         input.requireParticipantEmail !== undefined;
 
       if (hasDetailsUpdate) {
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "poll_update_details",
-            properties: {
-              title: updatedPoll.title,
-              has_location: !!updatedPoll.location,
-              has_description: !!updatedPoll.description,
-              is_guest: ctx.user.isGuest,
-            },
-            groups: {
-              poll: pollId,
-            },
+        track(ctx.user, {
+          event: "poll_update_details",
+          properties: {
+            title: updatedPoll.title,
+            has_location: !!updatedPoll.location,
+            has_description: !!updatedPoll.description,
+            is_guest: ctx.user.isGuest,
           },
-        );
+          groups: {
+            poll: pollId,
+          },
+        });
       }
 
       if (hasOptionsUpdate) {
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "poll_update_options",
-            properties: {
-              option_count: updatedPoll._count.options,
-            },
-            groups: {
-              poll: pollId,
-            },
+        track(ctx.user, {
+          event: "poll_update_options",
+          properties: {
+            option_count: updatedPoll._count.options,
           },
-        );
+          groups: {
+            poll: pollId,
+          },
+        });
       }
 
       if (hasSettingsUpdate) {
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "poll_update_settings",
-            properties: {
-              disable_comments: !!updatedPoll.disableComments,
-              hide_participants: !!updatedPoll.hideParticipants,
-              hide_scores: !!updatedPoll.hideScores,
-              require_participant_email: !!updatedPoll.requireParticipantEmail,
-            },
-            groups: {
-              poll: pollId,
-            },
+        track(ctx.user, {
+          event: "poll_update_settings",
+          properties: {
+            disable_comments: !!updatedPoll.disableComments,
+            hide_participants: !!updatedPoll.hideParticipants,
+            hide_scores: !!updatedPoll.hideScores,
+            require_participant_email: !!updatedPoll.requireParticipantEmail,
           },
-        );
+          groups: {
+            poll: pollId,
+          },
+        });
       }
 
       return { ok: true as const };
@@ -708,15 +694,12 @@ export const polls = router({
       });
 
       // Track poll deletion analytics
-      track(
-        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-        {
-          event: "poll_delete",
-          groups: {
-            poll: pollId,
-          },
+      track(ctx.user, {
+        event: "poll_delete",
+        groups: {
+          poll: pollId,
         },
-      );
+      });
     }),
   // END LEGACY ROUTES
   get: publicProcedure
@@ -836,18 +819,21 @@ export const polls = router({
 
       const { spaceBrandingAllowed, spaceAttributionConfigurable } =
         await getInstancePolicy();
+      const brandingActive = res.space
+        ? isSpaceBrandingActive({ ...res.space, spaceBrandingAllowed })
+        : false;
 
       return {
         ...res,
         space: res.space
           ? {
               ...res.space,
-              showBranding: res.space.showBranding && spaceBrandingAllowed,
-              primaryColor: spaceBrandingAllowed
-                ? res.space.primaryColor
-                : null,
-              hideAttribution:
-                spaceAttributionConfigurable && res.space.hideAttribution,
+              showBranding: brandingActive,
+              primaryColor: brandingActive ? res.space.primaryColor : null,
+              hideAttribution: isSpaceAttributionHidden({
+                ...res.space,
+                spaceAttributionConfigurable,
+              }),
             }
           : null,
         canManage,
@@ -888,6 +874,7 @@ export const polls = router({
           hideParticipants: true,
           space: {
             select: {
+              tier: true,
               showBranding: true,
               hideAttribution: true,
               primaryColor: true,
@@ -1223,20 +1210,17 @@ export const polls = router({
           );
         }
 
-        track(
-          { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-          {
-            event: "poll_schedule",
-            properties: {
-              attendee_count: attendees.length,
-              days_since_created: dayjs().diff(poll.createdAt, "day"),
-              participant_count: poll.participants.length,
-            },
-            groups: {
-              poll: poll.id,
-            },
+        track(ctx.user, {
+          event: "poll_schedule",
+          properties: {
+            attendee_count: attendees.length,
+            days_since_created: dayjs().diff(poll.createdAt, "day"),
+            participant_count: poll.participants.length,
           },
-        );
+          groups: {
+            poll: poll.id,
+          },
+        });
       }
     }),
   reopen: privateProcedure
@@ -1299,15 +1283,12 @@ export const polls = router({
         ]);
       });
 
-      track(
-        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-        {
-          event: "poll_reopen",
-          groups: {
-            poll: input.pollId,
-          },
+      track(ctx.user, {
+        event: "poll_reopen",
+        groups: {
+          poll: input.pollId,
         },
-      );
+      });
     }),
   close: possiblyPublicProcedure
     .input(
@@ -1357,15 +1338,12 @@ export const polls = router({
         ]);
       });
 
-      track(
-        { ...ctx.user, anonymousDistinctId: ctx.anonymousDistinctId },
-        {
-          event: "poll_close",
-          groups: {
-            poll: input.pollId,
-          },
+      track(ctx.user, {
+        event: "poll_close",
+        groups: {
+          poll: input.pollId,
         },
-      );
+      });
     }),
   duplicate: proProcedure
     .input(

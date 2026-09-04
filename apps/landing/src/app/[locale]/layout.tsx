@@ -1,11 +1,11 @@
 import "./globals.css";
 
 import languages from "@rallly/languages";
+import { PostHogInit } from "@rallly/posthog/client";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { cacheLife } from "next/cache";
-import { CookieConsent } from "@/components/cookie-consent";
 import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client/i18n-provider";
 import { getTranslation } from "@/i18n/server";
@@ -36,11 +36,9 @@ export default async function Root(props: {
       <body>
         <LazyMotion features={domAnimation}>
           <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
-            {children}
-            <CookieConsent />
-            {/* Cookieless (daily-rotating server-side hash, nothing stored
-                on the device), so it runs outside the consent gate — same
-                posture as PostHog's pre-consent cookieless capture. */}
+            {/* Both cookieless (daily-rotating server-side hash, nothing
+                stored on the device), so neither needs consent. */}
+            <PostHogInit>{children}</PostHogInit>
             <Analytics />
           </I18nProvider>
         </LazyMotion>

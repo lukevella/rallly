@@ -12,7 +12,11 @@ import { cached_getInstanceLicense } from "@/features/licensing/data";
 import type { LicenseType } from "@/features/licensing/schema";
 import type { MemberDTO } from "@/features/space/member/types";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
-import { createSpaceDTO, fromDBRole } from "@/features/space/utils";
+import {
+  createSpaceDTO,
+  fromDBRole,
+  isSpaceBrandingActive,
+} from "@/features/space/utils";
 import { AppError } from "@/lib/errors/app-error";
 
 const logger = createLogger("space/data");
@@ -171,6 +175,7 @@ export async function getSpaceBranding(spaceId: string) {
     select: {
       name: true,
       image: true,
+      tier: true,
       showBranding: true,
       primaryColor: true,
     },
@@ -182,7 +187,7 @@ export async function getSpaceBranding(spaceId: string) {
 
   const { spaceBrandingAllowed } = await getInstancePolicy();
 
-  if (!spaceBrandingAllowed) {
+  if (!isSpaceBrandingActive({ ...space, spaceBrandingAllowed })) {
     return { ...space, showBranding: false, primaryColor: null };
   }
 
