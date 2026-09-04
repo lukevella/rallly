@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import type * as React from "react";
 
 export function PlanCards({
@@ -117,22 +116,5 @@ export function PlanBenefitName({
       className={cn("font-medium text-gray-800 text-sm", className)}
       {...props}
     />
-  );
-}
-
-export function PlanBenefitTooltip({
-  content,
-  children,
-}: {
-  content: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger className="cursor-help text-left font-medium text-gray-800 text-sm underline decoration-gray-400 decoration-dotted underline-offset-4">
-        {children}
-      </TooltipTrigger>
-      <TooltipContent className="max-w-64">{content}</TooltipContent>
-    </Tooltip>
   );
 }
