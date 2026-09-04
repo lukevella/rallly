@@ -202,6 +202,28 @@ test.describe("Email invites", () => {
     await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
     await expect(dialog).toBeVisible();
 
+    // Removing a pending invite drops the row and stops its token; sending
+    // to the same address again reactivates it.
+    await row.getByRole("button", { name: `Options for ${INVITEE}` }).click();
+    await page.getByRole("menuitem", { name: "Remove invite" }).click();
+    await expect(page.getByText(`Invite for ${INVITEE} removed`)).toBeVisible();
+    await expect(row).toBeHidden();
+    await expect(dialog.getByText("No one invited yet")).toBeVisible();
+    const revoked = await prisma.pollInvite.findFirstOrThrow({
+      where: { email: INVITEE, poll: { title: `${POLL_TITLE} Clean URL` } },
+      select: { id: true, revokedAt: true },
+    });
+    expect(revoked.revokedAt).not.toBeNull();
+    expect(
+      await prisma.pollActivity.count({
+        where: { inviteId: revoked.id, type: "invite_revoked" },
+      }),
+    ).toBe(1);
+
+    await field.fill(INVITEE);
+    await field.press("Enter");
+    await expect(row.getByText("Sent")).toBeVisible();
+
     await page.reload();
     await expect(page.getByRole("button", { name: "Share" })).toBeVisible();
     await expect(dialog).toBeHidden();

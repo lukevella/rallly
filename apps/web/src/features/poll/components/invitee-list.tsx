@@ -10,13 +10,20 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
-import { LinkIcon, MailIcon, MoreHorizontalIcon } from "lucide-react";
+import {
+  LinkIcon,
+  MailIcon,
+  MoreHorizontalIcon,
+  Trash2Icon,
+} from "lucide-react";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
 import { Spinner } from "@/components/spinner";
 import { usePoll } from "@/features/poll/client";
+import { revokePollInviteAction } from "@/features/poll/invite/actions";
 import type { PollInviteStatus } from "@/features/poll/invite/utils";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 
 export type InviteeRowStatus = PollInviteStatus | "sending";
 
@@ -57,13 +64,16 @@ export function InviteeStatusPill({ status }: { status: InviteeRowStatus }) {
 /**
  * The per invitee link is the only thing that joins a response to its
  * invite, so a host who reaches someone through another channel copies
- * this rather than the generic invite link.
+ * this rather than the generic invite link. Removing is offered only while
+ * the invite is pending: a converted one belongs to the response.
  */
 function InviteeRowMenu({
+  inviteId,
   email,
   status,
   inviteUrl,
 }: {
+  inviteId: string;
   email: string;
   status: PollInviteStatus;
   inviteUrl: string;
@@ -71,6 +81,32 @@ function InviteeRowMenu({
   const poll = usePoll();
   const { t } = useTranslation();
   const [state, copyToClipboard] = useCopyToClipboard();
+
+  // The success handler refreshes the route, which is what drops the row.
+  const revoke = useSafeAction(revokePollInviteAction, {
+    onSuccess: ({ data }) => {
+      if (!data) return;
+      if (data.ok) {
+        toast(
+          t("shareDialogInviteRemoved", {
+            defaultValue: "Invite for {email} removed",
+            email,
+          }),
+        );
+        return;
+      }
+      toast.error(
+        data.reason === "alreadyResponded"
+          ? t("shareDialogAlreadyResponded", {
+              defaultValue: "{email} has already responded",
+              email,
+            })
+          : t("actionErrorNotFound", {
+              defaultValue: "The resource was not found",
+            }),
+      );
+    },
+  });
 
   // react-use records a failed copy as `error` and a successful one as
   // `value`; the toast only claims success in the second case.
@@ -123,19 +159,31 @@ function InviteeRowMenu({
             defaults="Copy personal link"
           />
         </DropdownMenuItem>
+        {status !== "responded" ? (
+          <DropdownMenuItem
+            variant="destructive"
+            disabled={revoke.isPending}
+            onClick={() => revoke.execute({ pollId: poll.id, inviteId })}
+          >
+            <Trash2Icon />
+            <Trans i18nKey="shareDialogRemoveInvite" defaults="Remove invite" />
+          </DropdownMenuItem>
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
 export function InviteeRow({
+  inviteId,
   email,
   status,
   inviteUrl,
 }: {
   email: string;
   status: InviteeRowStatus;
-  // Absent while the invite is still sending and on preview rows.
+  // Both absent while the invite is still sending and on preview rows.
+  inviteId?: string;
   inviteUrl?: string;
 }) {
   return (
@@ -148,8 +196,13 @@ export function InviteeRow({
       </span>
       <span className="min-w-0 flex-1 truncate text-sm">{email}</span>
       <InviteeStatusPill status={status} />
-      {status !== "sending" && inviteUrl ? (
-        <InviteeRowMenu email={email} status={status} inviteUrl={inviteUrl} />
+      {status !== "sending" && inviteId && inviteUrl ? (
+        <InviteeRowMenu
+          inviteId={inviteId}
+          email={email}
+          status={status}
+          inviteUrl={inviteUrl}
+        />
       ) : null}
     </li>
   );
