@@ -32,13 +32,14 @@ export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
 
   // The create page flashes the new poll's id so this dialog is the
   // confirmation. The flash is consumed on read, so refresh and back don't
-  // reopen it.
+  // reopen it. Keyed on the flash alone so a later poll id change can't
+  // replay it.
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per flash arrival
   React.useEffect(() => {
     if (sharePollFlash !== poll.id) return;
     openSource.current = "poll_created";
     dialog.trigger();
-  }, [sharePollFlash, poll.id]);
+  }, [sharePollFlash]);
 
   React.useEffect(() => {
     if (!isOpen) return;
