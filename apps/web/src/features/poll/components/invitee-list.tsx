@@ -32,18 +32,12 @@ export function InviteeStatusPill({ status }: { status: InviteeRowStatus }) {
   );
 }
 
-/**
- * One invited person. `children` is the trailing action slot (a revoke
- * button, or a focusable spacer for rows without one).
- */
 export function InviteeRow({
   email,
   status,
-  children,
 }: {
   email: string;
   status: InviteeRowStatus;
-  children?: React.ReactNode;
 }) {
   return (
     <li className="flex h-11 items-center gap-2.5 rounded-lg px-1.5 hover:bg-accent has-[:focus-visible]:bg-accent">
@@ -55,7 +49,6 @@ export function InviteeRow({
       </span>
       <span className="min-w-0 flex-1 truncate text-sm">{email}</span>
       <InviteeStatusPill status={status} />
-      {children}
     </li>
   );
 }
@@ -79,9 +72,7 @@ export function InviteeListPreview() {
       className="pointer-events-none select-none [mask-image:radial-gradient(ellipse_at_center,transparent,rgba(0,0,0,0.1))]"
     >
       {PREVIEW_ROWS.map((row) => (
-        <InviteeRow key={row.email} email={row.email} status={row.status}>
-          <span className="size-7 shrink-0" />
-        </InviteeRow>
+        <InviteeRow key={row.email} email={row.email} status={row.status} />
       ))}
     </ul>
   );

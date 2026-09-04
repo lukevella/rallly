@@ -7,7 +7,7 @@ import {
   InputGroupInput,
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
-import { MailIcon, XIcon } from "lucide-react";
+import { MailIcon } from "lucide-react";
 import React from "react";
 import {
   EmptyState,
@@ -25,10 +25,7 @@ import {
   InviteeListPreview,
   InviteeRow,
 } from "@/features/poll/components/invitee-list";
-import {
-  revokePollInviteAction,
-  sendPollInviteAction,
-} from "@/features/poll/invite/actions";
+import { sendPollInviteAction } from "@/features/poll/invite/actions";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
@@ -60,14 +57,8 @@ export function InviteByEmail() {
   const [email, setEmail] = React.useState("");
   const [invalid, setInvalid] = React.useState(false);
   const [sending, setSending] = React.useState<string[]>([]);
-  const [revoking, setRevoking] = React.useState<string[]>([]);
   const [announcement, setAnnouncement] = React.useState("");
-  const [activeId, setActiveId] = React.useState<string | null>(null);
-  const [pendingFocus, setPendingFocus] = React.useState<
-    { kind: "row"; id: string } | { kind: "field" } | null
-  >(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const listRef = React.useRef<HTMLUListElement>(null);
   const announceTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -103,36 +94,6 @@ export function InviteByEmail() {
       defaultValue: "{count, plural, one {# invited} other {# invited}}",
       count,
     });
-
-  const focusRowElement = (id: string) => {
-    const el = listRef.current?.querySelector<HTMLElement>(
-      `[data-row-id="${CSS.escape(id)}"]`,
-    );
-    if (!el) return false;
-    el.focus();
-    el.closest("li")?.scrollIntoView({ block: "nearest" });
-    return true;
-  };
-
-  // An effect with no dependency array, not a callback: the row we want to
-  // focus after a revoke only exists once the refetched list has re-rendered,
-  // so this has to retry on every render until the target shows up.
-  React.useEffect(() => {
-    if (!pendingFocus) return;
-    if (pendingFocus.kind === "row") {
-      if (focusRowElement(pendingFocus.id)) {
-        setActiveId(pendingFocus.id);
-        setPendingFocus(null);
-        return;
-      }
-      if (rows.some((row) => row.id === pendingFocus.id)) return;
-      inputRef.current?.focus();
-      setPendingFocus(null);
-      return;
-    }
-    inputRef.current?.focus();
-    setPendingFocus(null);
-  });
 
   const sendInvite = useSafeAction(sendPollInviteAction, {
     onSuccess: async ({ data, input }) => {
@@ -194,36 +155,6 @@ export function InviteByEmail() {
     },
   });
 
-  const revokeInvite = useSafeAction(revokePollInviteAction, {
-    onSuccess: async ({ data, input }) => {
-      const row = rows.find((candidate) => candidate.id === input.inviteId);
-      if (!data?.ok) {
-        setRevoking((prev) => prev.filter((id) => id !== input.inviteId));
-        setPendingFocus(null);
-        const message = t("shareDialogRevokeFailed", {
-          defaultValue: "Couldn't revoke that invite. Try again.",
-        });
-        toast.error(message);
-        announce(message);
-        return;
-      }
-      await queryClient.polls.invites.list.invalidate({ pollId: poll.id });
-      const fresh = queryClient.polls.invites.list.getData({ pollId: poll.id });
-      announce(
-        t("shareDialogInviteRevokedAnnouncement", {
-          defaultValue: "Invite for {email} revoked. {count}",
-          email: row?.email ?? "",
-          count: countLabel(fresh?.length ?? 0),
-        }),
-      );
-      setRevoking((prev) => prev.filter((id) => id !== input.inviteId));
-    },
-    onError: ({ input }) => {
-      setRevoking((prev) => prev.filter((id) => id !== input.inviteId));
-      setPendingFocus(null);
-    },
-  });
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const address = email.trim().toLowerCase();
@@ -261,61 +192,6 @@ export function InviteByEmail() {
     inputRef.current?.focus();
     sendInvite.execute({ pollId: poll.id, email: address });
   };
-
-  const focusRow = (index: number) => {
-    const target = rows[Math.max(0, Math.min(index, rows.length - 1))];
-    if (!target) {
-      inputRef.current?.focus();
-      return;
-    }
-    setActiveId(target.id);
-    focusRowElement(target.id);
-  };
-
-  const handleRevoke = (row: Row) => {
-    const invited = invites.data ?? [];
-    const index = invited.findIndex((invite) => invite.id === row.id);
-    const next = invited[index + 1] ?? invited[index - 1];
-    setPendingFocus(next ? { kind: "row", id: next.id } : { kind: "field" });
-    setRevoking((prev) => [...prev, row.id]);
-    revokeInvite.execute({ pollId: poll.id, inviteId: row.id });
-  };
-
-  const handleListKeyDown = (
-    event: React.KeyboardEvent,
-    row: Row,
-    index: number,
-  ) => {
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        focusRow(index + 1);
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        focusRow(index - 1);
-        break;
-      case "Home":
-        event.preventDefault();
-        focusRow(0);
-        break;
-      case "End":
-        event.preventDefault();
-        focusRow(rows.length - 1);
-        break;
-      case "Delete":
-      case "Backspace":
-        if (row.status === "sent" || row.status === "opened") {
-          event.preventDefault();
-          handleRevoke(row);
-        }
-        break;
-    }
-  };
-
-  const activeRowId = rows.some((row) => row.id === activeId)
-    ? activeId
-    : (rows[0]?.id ?? null);
 
   return (
     <div className="min-w-0">
@@ -423,55 +299,16 @@ export function InviteByEmail() {
                   {countLabel(rows.length)}
                 </h4>
                 <ul
-                  ref={listRef}
                   aria-labelledby="share-dialog-invited-heading"
                   className="-mx-1.5 max-h-72 min-h-0 overflow-y-auto px-1.5"
                 >
-                  {rows.map((row, index) => {
-                    const revocable =
-                      row.status === "sent" || row.status === "opened";
-                    const tabIndex = row.id === activeRowId ? 0 : -1;
-                    return (
-                      <InviteeRow
-                        key={row.id}
-                        email={row.email}
-                        status={row.status}
-                      >
-                        {revocable ? (
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            tabIndex={tabIndex}
-                            data-row-id={row.id}
-                            disabled={revoking.includes(row.id)}
-                            aria-label={t("shareDialogRevokeInvite", {
-                              defaultValue: "Revoke invite for {email}",
-                              email: row.email,
-                            })}
-                            onFocus={() => setActiveId(row.id)}
-                            onKeyDown={(event) =>
-                              handleListKeyDown(event, row, index)
-                            }
-                            onClick={() => handleRevoke(row)}
-                          >
-                            <XIcon />
-                          </Button>
-                        ) : (
-                          <span
-                            role="note"
-                            tabIndex={tabIndex}
-                            data-row-id={row.id}
-                            aria-label={`${row.email}, ${row.status}`}
-                            className="size-7 shrink-0 rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
-                            onFocus={() => setActiveId(row.id)}
-                            onKeyDown={(event) =>
-                              handleListKeyDown(event, row, index)
-                            }
-                          />
-                        )}
-                      </InviteeRow>
-                    );
-                  })}
+                  {rows.map((row) => (
+                    <InviteeRow
+                      key={row.id}
+                      email={row.email}
+                      status={row.status}
+                    />
+                  ))}
                 </ul>
               </>
             )}
