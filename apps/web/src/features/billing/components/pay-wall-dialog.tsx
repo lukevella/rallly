@@ -16,11 +16,10 @@ import { Switch } from "@rallly/ui/switch";
 import { Tabs, TabsContent } from "@rallly/ui/tabs";
 import {
   BadgeDollarSignIcon,
-  CalendarCheckIcon,
   CalendarSearchIcon,
   ClockIcon,
-  EyeOffIcon,
   LifeBuoyIcon,
+  MailPlusIcon,
   PaletteIcon,
   SparklesIcon,
   TimerResetIcon,
@@ -32,6 +31,7 @@ import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
+import type { PayWallTrigger } from "../client";
 import { usePayWallStore } from "../client";
 import { PLAN_NAMES } from "../constants";
 
@@ -101,6 +101,81 @@ function PlanRadioGroupItem({
   );
 }
 
+const proBenefitsList = [
+  {
+    key: "customBranding",
+    icon: <PaletteIcon />,
+    title: <Trans i18nKey="customBranding" defaults="Custom branding" />,
+    description: (
+      <Trans
+        i18nKey="customBrandingDescription"
+        defaults="Show your logo and brand colors to your participants"
+      />
+    ),
+  },
+  {
+    key: "emailInvites",
+    icon: <MailPlusIcon />,
+    title: <Trans i18nKey="emailInvites" defaults="Email invites" />,
+    // The limit quoted here is MAX_POLL_INVITES_PER_DAY in
+    // features/poll/invite/constants.ts. Not imported: poll already depends
+    // on billing, so importing it here would create a feature cycle.
+    description: (
+      <Trans
+        i18nKey="emailInvitesDescription"
+        defaults="Invite people by email and see who has responded. Up to 100 invites a day."
+      />
+    ),
+  },
+  {
+    key: "extendedPollLifetime",
+    icon: <ClockIcon />,
+    title: (
+      <Trans
+        i18nKey="featureNameExtendedPollLifetime"
+        defaults="Extended poll lifetime"
+      />
+    ),
+    description: (
+      <Trans
+        i18nKey="extendedPollLifetimeDescription"
+        defaults="Keep polls indefinitely"
+      />
+    ),
+  },
+  {
+    key: "teamCollaboration",
+    icon: <UserPlusIcon />,
+    title: <Trans i18nKey="teamCollaboration" defaults="Team collaboration" />,
+    description: (
+      <Trans
+        i18nKey="teamCollaborationDescription"
+        defaults="Invite team members with centralized billing"
+      />
+    ),
+  },
+  {
+    key: "prioritySupport",
+    icon: <LifeBuoyIcon />,
+    title: <Trans i18nKey="prioritySupport" defaults="Priority support" />,
+    description: (
+      <Trans
+        i18nKey="prioritySupportDescription"
+        defaults="Get faster response times and dedicated assistance"
+      />
+    ),
+  },
+];
+
+// The benefit that triggered the pay wall leads the list.
+function getProBenefits(from: PayWallTrigger["from"] | undefined) {
+  if (from !== "invite-dialog") return proBenefitsList;
+  return [
+    ...proBenefitsList.filter((benefit) => benefit.key === "emailInvites"),
+    ...proBenefitsList.filter((benefit) => benefit.key !== "emailInvites"),
+  ];
+}
+
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -118,6 +193,7 @@ export function PayWallDialog({
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
   const [isAnnual, setIsAnnual] = React.useState(true);
   const trigger = usePayWallStore((state) => state.trigger);
+  const proBenefits = getProBenefits(trigger?.from);
 
   const handleChangePlan = (value: string) => {
     setSelectedPlan(spaceTierSchema.parse(value));
@@ -331,96 +407,14 @@ export function PayWallDialog({
                   <Trans i18nKey="keyBenefits" defaults="Key benefits" />
                 </SubHeading>
                 <KeyBenefits>
-                  <KeyBenefitsItem
-                    icon={<PaletteIcon />}
-                    title={
-                      <Trans
-                        i18nKey="customBranding"
-                        defaults="Custom branding"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="customBrandingDescription"
-                        defaults="Show your logo and brand colors to your participants"
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<EyeOffIcon />}
-                    title={
-                      <Trans
-                        i18nKey="removeAttribution"
-                        defaults="Remove attribution"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="removeAttributionBenefitDescription"
-                        defaults='Hide "Powered by Rallly" from your participants'
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<CalendarCheckIcon />}
-                    title={
-                      <Trans
-                        i18nKey="featureNameSchedule"
-                        defaults="Schedule poll"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="schedulePollDescription"
-                        defaults="Select a final date for your event."
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<ClockIcon />}
-                    title={
-                      <Trans
-                        i18nKey="featureNameExtendedPollLifetime"
-                        defaults="Extended poll lifetime"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="extendedPollLifetimeDescription"
-                        defaults="Keep polls indefinitely"
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<UserPlusIcon />}
-                    title={
-                      <Trans
-                        i18nKey="teamCollaboration"
-                        defaults="Team collaboration"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="teamCollaborationDescription"
-                        defaults="Invite team members with centralized billing"
-                      />
-                    }
-                  />
-                  <KeyBenefitsItem
-                    icon={<LifeBuoyIcon />}
-                    title={
-                      <Trans
-                        i18nKey="prioritySupport"
-                        defaults="Priority support"
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="prioritySupportDescription"
-                        defaults="Get faster response times and dedicated assistance"
-                      />
-                    }
-                  />
+                  {proBenefits.map((benefit) => (
+                    <KeyBenefitsItem
+                      key={benefit.key}
+                      icon={benefit.icon}
+                      title={benefit.title}
+                      description={benefit.description}
+                    />
+                  ))}
                 </KeyBenefits>
               </div>
             </TabsContent>
