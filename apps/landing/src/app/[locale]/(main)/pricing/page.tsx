@@ -9,7 +9,7 @@ import {
   ClockIcon,
   CopyIcon,
   EyeOffIcon,
-  LifeBuoyIcon,
+  MailPlusIcon,
   PaletteIcon,
   Settings2Icon,
   TimerResetIcon,
@@ -310,6 +310,25 @@ export default async function Page(props: {
                     />
                   </PlanBenefitTooltip>
                 </PlanBenefit>
+                <PlanBenefit icon={<MailPlusIcon />}>
+                  <PlanBenefitTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="emailInvitesDescription"
+                        defaults="Invite people by email and see who has responded"
+                      />
+                    }
+                  >
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="emailInvites"
+                      defaults="Email invites"
+                    />
+                  </PlanBenefitTooltip>
+                </PlanBenefit>
                 <PlanBenefit icon={<EyeOffIcon />}>
                   <PlanBenefitTooltip
                     content={
@@ -412,16 +431,6 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="teamCollaboration"
                       defaults="Team collaboration"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<LifeBuoyIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="prioritySupport"
-                      defaults="Priority support"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
@@ -647,6 +656,33 @@ export default async function Page(props: {
               </tr>
               <tr>
                 <CompareTableFeature>
+                  <CompareTableTooltip
+                    content={
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="emailInvitesDescription"
+                        defaults="Invite people by email and see who has responded"
+                      />
+                    }
+                  >
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="emailInvites"
+                      defaults="Email invites"
+                    />
+                  </CompareTableTooltip>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
                   <Trans
                     t={t}
                     ns="pricing"
@@ -668,22 +704,6 @@ export default async function Page(props: {
                     ns="pricing"
                     i18nKey="teamCollaboration"
                     defaults="Team collaboration"
-                  />
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableDash label={notIncluded} />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <CompareTableCheck label={included} />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="prioritySupport"
-                    defaults="Priority support"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
