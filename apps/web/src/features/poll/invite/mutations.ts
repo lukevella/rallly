@@ -124,6 +124,10 @@ export async function sendPollInvite({
 
   const token = generateInviteToken();
 
+  // A reactivated invite keeps its id and gains a second invite_sent event,
+  // so the rollback below must only touch events from this attempt.
+  const attemptStartedAt = new Date();
+
   let invite: { id: string; email: string };
   try {
     invite = await prisma.$transaction(async (tx) => {
@@ -195,7 +199,13 @@ export async function sendPollInvite({
     try {
       await prisma.$transaction(async (tx) => {
         await tx.pollActivity.deleteMany({
-          where: { pollId, inviteId: invite.id, type: "invite_sent" },
+          where: {
+            pollId,
+            inviteId: invite.id,
+            type: "invite_sent",
+            userId,
+            createdAt: { gte: attemptStartedAt },
+          },
         });
         // Matching the token as well as the id leaves a later send that
         // re-rotated the row alone.

@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@rallly/ui/button";
 import {
   InputGroup,
@@ -9,6 +10,7 @@ import {
 import { toast } from "@rallly/ui/sonner";
 import { MailIcon } from "lucide-react";
 import React from "react";
+import { useForm } from "react-hook-form";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -38,6 +40,10 @@ type Row = {
   status: InviteeRowStatus;
 };
 
+// Same rule as the server, so a client accepted address is never refused
+const inviteFormSchema = sendPollInviteSchema.pick({ email: true });
+type InviteFormValues = { email: string };
+
 /**
  * `invites` is server data passed down from the route; the send action's
  * success handler refreshes the route, which is what replaces an optimistic
@@ -52,11 +58,12 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
   const isGuest = !user || user.isGuest;
   const isOpen = poll.status === "open";
 
-  const [email, setEmail] = React.useState("");
-  const [invalid, setInvalid] = React.useState(false);
+  const form = useForm<InviteFormValues>({
+    resolver: zodResolver(inviteFormSchema),
+    defaultValues: { email: "" },
+  });
   const [sending, setSending] = React.useState<string[]>([]);
   const [announcement, setAnnouncement] = React.useState("");
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const announceTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -153,34 +160,25 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
       toast.error(messages[data.reason]);
       announce(messages[data.reason]);
       if (data.reason === "sendFailed") {
-        setEmail(input.email);
+        form.setValue("email", input.email);
       }
     },
     onError: ({ input }) => {
       setSending((prev) => prev.filter((address) => address !== input.email));
-      setEmail(input.email);
+      form.setValue("email", input.email);
     },
   });
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!email.trim()) {
-      inputRef.current?.focus();
-      return;
-    }
-    // Same rule as the server so a client accepted address is never refused
-    const parsed = sendPollInviteSchema.shape.email.safeParse(email);
-    if (!parsed.success) {
-      setInvalid(true);
-      announce(
-        t("shareDialogInvalidEmail", {
-          defaultValue: "Enter a single valid email address",
-        }),
-      );
-      inputRef.current?.focus();
-      return;
-    }
-    const address = parsed.data;
+  const onInvalid = () => {
+    announce(
+      t("shareDialogInvalidEmail", {
+        defaultValue: "Enter a single valid email address",
+      }),
+    );
+    form.setFocus("email");
+  };
+
+  const onValid = ({ email: address }: InviteFormValues) => {
     if (isFree) {
       showPayWall({ from: "invite-dialog", pollId: poll.id });
       return;
@@ -192,13 +190,12 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
       });
       toast(message);
       announce(message);
-      inputRef.current?.select();
+      form.setFocus("email");
       return;
     }
     setSending((prev) => [address, ...prev]);
-    setEmail("");
-    setInvalid(false);
-    inputRef.current?.focus();
+    form.reset();
+    form.setFocus("email");
     sendInvite.execute({ pollId: poll.id, email: address });
   };
 
@@ -224,7 +221,7 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
       ) : (
         <>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={form.handleSubmit(onValid, onInvalid)}
             className="flex min-w-0 gap-2"
             noValidate
           >
@@ -236,22 +233,17 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
                 <MailIcon />
               </InputGroupAddon>
               <InputGroupInput
-                ref={inputRef}
+                {...form.register("email")}
                 id="share-dialog-email"
                 type="email"
                 inputMode="email"
                 autoComplete="off"
                 placeholder="jessie.smith@example.com"
-                value={email}
                 disabled={!isOpen}
-                aria-invalid={invalid || undefined}
+                aria-invalid={form.formState.errors.email ? true : undefined}
                 aria-describedby={
                   isOpen ? undefined : "share-dialog-closed-reason"
                 }
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                  setInvalid(false);
-                }}
               />
             </InputGroup>
             <Button
