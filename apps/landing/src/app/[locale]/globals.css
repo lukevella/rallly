@@ -15,7 +15,7 @@ body {
     @apply mb-4 mt-8;
   }
   h2 {
-    @apply text-2xl font-medium tracking-tight text-gray-800;
+    @apply scroll-mt-24 text-2xl font-medium tracking-tight text-gray-800;
   }
   h3 {
     @apply text-xl font-medium tracking-tight text-gray-800;
