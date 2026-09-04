@@ -11,3 +11,8 @@ export const recordPollInviteOpenSchema = z.object({
   pollId: z.string().min(1),
   token: z.string().min(1),
 });
+
+export const revokePollInviteSchema = z.object({
+  pollId: z.string().min(1),
+  inviteId: z.string().min(1),
+});

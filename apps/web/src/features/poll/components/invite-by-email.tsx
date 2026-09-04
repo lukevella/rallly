@@ -309,6 +309,7 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
                       key={row.id}
                       email={row.email}
                       status={row.status}
+                      inviteId={row.inviteUrl ? row.id : undefined}
                       inviteUrl={row.inviteUrl}
                     />
                   ))}
