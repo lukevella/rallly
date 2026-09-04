@@ -12,7 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { Separator } from "@rallly/ui/separator";
 import { Share2Icon } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
@@ -26,7 +26,6 @@ export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
   const dialog = useDialog();
   const isFree = useIsFree();
   const isOpen = dialog.dialogProps.open;
-  const pathname = usePathname();
   const hasShareParam = useSearchParams().has("share");
   const openSource = React.useRef<"poll_created" | "manual">("manual");
 
@@ -38,7 +37,9 @@ export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
     if (!hasShareParam) return;
     openSource.current = "poll_created";
     dialog.trigger();
-    window.history.replaceState(null, "", pathname);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("share");
+    window.history.replaceState(window.history.state, "", url);
   }, [hasShareParam]);
 
   React.useEffect(() => {
