@@ -23,7 +23,7 @@ export function InviteeStatusPill({ status }: { status: InviteeRowStatus }) {
           "bg-green-500/10 text-green-700 dark:text-green-400",
         status === "opened" && "bg-sky-500/10 text-sky-700 dark:text-sky-400",
         (status === "sent" || status === "sending") &&
-          "bg-muted text-muted-foreground",
+          "bg-white text-muted-foreground ring-1 ring-black/10 ring-inset dark:bg-white/10 dark:ring-white/10",
         status === "sending" && "italic",
       )}
     >
@@ -49,7 +49,7 @@ export function InviteeRow({
     <li className="flex h-11 items-center gap-2.5 rounded-lg px-1.5 hover:bg-accent has-[:focus-visible]:bg-accent">
       <span
         aria-hidden="true"
-        className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground"
+        className="grid size-7 shrink-0 place-items-center rounded-full bg-white text-muted-foreground ring-1 ring-black/10 ring-inset dark:bg-white/10 dark:ring-white/10"
       >
         <MailIcon className="size-3.5" />
       </span>
