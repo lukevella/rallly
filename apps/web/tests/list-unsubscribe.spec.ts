@@ -64,7 +64,7 @@ test.describe("List-Unsubscribe", () => {
     expect(pollId).not.toBe("");
 
     inviteUrl = await pollPage.copyInviteLink();
-    await pollPage.closeDialog();
+    await pollPage.closeShareDialog();
     await page.close();
 
     // Drop the login OTP so the first capture is the notification.

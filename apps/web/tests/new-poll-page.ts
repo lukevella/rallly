@@ -51,14 +51,10 @@ export class NewPollPage {
 
     await page.getByRole("button", { name: /^create poll$/i }).click();
 
-    // Creation redirects to the poll page with the Share dialog open; the
-    // poll page is what callers want, so dismiss the dialog before returning.
+    // The Share dialog opening on the poll page is the success signal, so
+    // assert it here; callers that need the page behind it close it.
     await page.waitForURL(/\/poll\/[^/?]+/);
-    const pollPage = new PollPage(page);
-    await pollPage.closeDialog();
-    await page
-      .getByRole("dialog", { name: "Share" })
-      .waitFor({ state: "hidden" });
-    return pollPage;
+    await expect(page.getByRole("dialog", { name: "Share" })).toBeVisible();
+    return new PollPage(page);
   }
 }

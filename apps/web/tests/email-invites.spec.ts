@@ -18,6 +18,7 @@ import {
 
 const PRO_HOST = "email-invites-pro@rallly.co";
 const FREE_HOST = "email-invites-free@rallly.co";
+const CLEAN_URL_HOST = "email-invites-clean-url@rallly.co";
 const INVITEE = "email-invitee@rallly.co";
 const POLL_TITLE = "Email Invites Poll";
 
@@ -25,7 +26,7 @@ test.describe.configure({ mode: "serial" });
 
 async function cleanup() {
   await prisma.user.deleteMany({
-    where: { email: { in: [PRO_HOST, FREE_HOST] } },
+    where: { email: { in: [PRO_HOST, FREE_HOST, CLEAN_URL_HOST] } },
   });
 }
 
@@ -36,14 +37,10 @@ async function openAsGuest(browser: Browser, inviteUrl: string) {
   return { guestPage, close: () => context.close() };
 }
 
+// The invite list is server data, so a guest's activity only shows after
+// the host's page reloads.
 async function reopenShareDialog(page: Page) {
-  // Load the poll page without the post-creation `share` param: the dialog
-  // strips it with a raw replaceState the router does not track, and a
-  // router refresh (dev HMR, revalidation) can bring it back before a
-  // reload, which would reopen the dialog and block the Share button.
-  const url = new URL(page.url());
-  url.searchParams.delete("share");
-  await page.goto(url.toString());
+  await page.reload();
   await page.getByRole("button", { name: "Share" }).click();
   return page.getByRole("dialog", { name: "Share" });
 }
@@ -73,7 +70,6 @@ test.describe("Email invites", () => {
     await newPollPage.create({ name: POLL_TITLE });
     await deleteAllMessages();
 
-    await page.getByRole("button", { name: "Share" }).click();
     const dialog = page.getByRole("dialog", { name: "Share" });
     await expect(dialog.getByRole("button", { name: "Copy" })).toBeVisible();
 
@@ -161,6 +157,41 @@ test.describe("Email invites", () => {
     await expect(respondedRow.getByText("Responded")).toBeVisible();
   });
 
+  test("creation opens the dialog and leaves the URL clean", async ({
+    page,
+  }) => {
+    const user = await createUserInDb({
+      email: CLEAN_URL_HOST,
+      name: "Clean URL Host",
+    });
+    const space = await prisma.space.findFirstOrThrow({
+      where: { ownerId: user.id },
+    });
+    await upgradeSpaceToPro({ spaceId: space.id, userId: user.id, seats: 1 });
+
+    await loginWithEmail(page, { email: CLEAN_URL_HOST });
+    const newPollPage = new NewPollPage(page);
+    await newPollPage.goto();
+    await newPollPage.create({ name: `${POLL_TITLE} Clean URL` });
+
+    const dialog = page.getByRole("dialog", { name: "Share" });
+    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+
+    // Sending an invite refreshes the route; a router sync must not put the
+    // consumed param back on the address bar.
+    const field = dialog.getByLabel("Email address");
+    await field.fill(INVITEE);
+    await field.press("Enter");
+    const row = dialog.getByRole("listitem").filter({ hasText: INVITEE });
+    await expect(row.getByText("Sent")).toBeVisible();
+    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+    await expect(dialog).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByRole("button", { name: "Share" })).toBeVisible();
+    await expect(dialog).toBeHidden();
+  });
+
   test("free host sees the pay wall and nothing is sent", async ({ page }) => {
     await createUserInDb({ email: FREE_HOST, name: "Free Host" });
     await loginWithEmail(page, { email: FREE_HOST });
@@ -168,7 +199,6 @@ test.describe("Email invites", () => {
     await newPollPage.goto();
     await newPollPage.create({ name: `${POLL_TITLE} Free` });
 
-    await page.getByRole("button", { name: "Share" }).click();
     const dialog = page.getByRole("dialog", { name: "Share" });
     const sendButton = dialog.getByRole("button", { name: /Send invite/ });
     await expect(sendButton).toBeEnabled();

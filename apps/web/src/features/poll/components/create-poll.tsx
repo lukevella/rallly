@@ -22,9 +22,11 @@ import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-f
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
+import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
+import { setFlash } from "@/lib/flash/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
 
@@ -235,7 +237,8 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
               clear();
               form.reset();
               setCreatedPollId(res.data.id);
-              router.push(`/poll/${res.data.id}?share=1`);
+              setFlash(SHARE_POLL_FLASH_KEY, res.data.id);
+              router.push(`/poll/${res.data.id}`);
             } else {
               toast.error(
                 t("inappropriateContent", {
