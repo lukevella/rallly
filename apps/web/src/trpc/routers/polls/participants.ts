@@ -351,76 +351,78 @@ export const participants = router({
           existingOptionIds.has(optionId),
         );
 
-        const participant = await prisma.$transaction(async (tx) => {
-          const participant = await tx.participant.create({
-            data: {
-              pollId: pollId,
-              name: name,
-              email,
-              note,
-              timeZone,
-              userId: ctx.user.id,
-              locale: ctx.locale,
-              votes: {
-                createMany: {
-                  data: validVotes.map(({ optionId, type }) => ({
-                    pollId,
-                    optionId,
-                    type,
-                  })),
+        const { participant, viaInvite } = await prisma.$transaction(
+          async (tx) => {
+            const participant = await tx.participant.create({
+              data: {
+                pollId: pollId,
+                name: name,
+                email,
+                note,
+                timeZone,
+                userId: ctx.user.id,
+                locale: ctx.locale,
+                votes: {
+                  createMany: {
+                    data: validVotes.map(({ optionId, type }) => ({
+                      pollId,
+                      optionId,
+                      type,
+                    })),
+                  },
                 },
               },
-            },
-            include: {
-              votes: {
-                select: {
-                  optionId: true,
-                  type: true,
+              include: {
+                votes: {
+                  select: {
+                    optionId: true,
+                    type: true,
+                  },
                 },
-              },
-              user: {
-                select: {
-                  image: true,
+                user: {
+                  select: {
+                    image: true,
+                  },
                 },
-              },
-              poll: {
-                select: {
-                  id: true,
-                  title: true,
-                  space: {
-                    select: {
-                      id: true,
-                      tier: true,
-                      showBranding: true,
-                      hideAttribution: true,
-                      primaryColor: true,
-                      image: true,
+                poll: {
+                  select: {
+                    id: true,
+                    title: true,
+                    space: {
+                      select: {
+                        id: true,
+                        tier: true,
+                        showBranding: true,
+                        hideAttribution: true,
+                        primaryColor: true,
+                        image: true,
+                      },
                     },
                   },
                 },
               },
-            },
-          });
+            });
 
-          await recordPollActivities(tx, [
-            {
+            await recordPollActivities(tx, [
+              {
+                pollId,
+                type: "response_created",
+                userId: ctx.user.id,
+                participantId: participant.id,
+                payload: { name: participant.name },
+              },
+            ]);
+
+            const viaInvite = await attachParticipantToInvite(tx, {
               pollId,
-              type: "response_created",
-              userId: ctx.user.id,
               participantId: participant.id,
-              payload: { name: participant.name },
-            },
-          ]);
+              inviteToken,
+              email,
+            });
 
-          await attachParticipantToInvite(tx, {
-            pollId,
-            participantId: participant.id,
-            inviteToken,
-            email,
-          });
-
-          return participant;
-        });
+            return { participant, viaInvite };
+          },
+        );
 
         const totalResponses = participantCount + 1;
 
@@ -469,6 +471,7 @@ export const participants = router({
               space_id: participant.poll.space?.id,
               tier: participant.poll.space?.tier,
               has_email: !!email,
+              via_invite: viaInvite,
               has_note: !!participant.note,
               note_length: participant.note?.length,
               total_responses: totalResponses,

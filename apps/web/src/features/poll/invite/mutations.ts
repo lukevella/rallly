@@ -228,11 +228,13 @@ export async function attachParticipantToInvite(
   const match = inviteToken ? { token: inviteToken } : email ? { email } : null;
 
   if (!match) {
-    return;
+    return false;
   }
 
-  await tx.pollInvite.updateMany({
+  const { count } = await tx.pollInvite.updateMany({
     where: { pollId, participantId: null, revokedAt: null, ...match },
     data: { participantId },
   });
+
+  return count > 0;
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
+import { usePoll } from "@/features/poll/client";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
@@ -11,6 +13,7 @@ import { Trans, useTranslation } from "@/i18n/client";
  * learned to look for something that looks like a link.
  */
 export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
+  const poll = usePoll();
   const { t } = useTranslation();
   const [didCopy, setDidCopy] = React.useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
@@ -47,6 +50,7 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
         onClick={() => {
           copyToClipboard(inviteLink);
           setDidCopy(true);
+          posthog?.capture("poll_share:invite_link_copy", { poll_id: poll.id });
         }}
       >
         {didCopy ? (

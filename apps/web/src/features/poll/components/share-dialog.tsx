@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -11,6 +12,8 @@ import {
 } from "@rallly/ui/dialog";
 import { Separator } from "@rallly/ui/separator";
 import { Share2Icon } from "lucide-react";
+import React from "react";
+import { useIsFree } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
 import { InviteByEmail } from "@/features/poll/components/invite-by-email";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
@@ -19,6 +22,16 @@ import { Trans } from "@/i18n/client";
 export function ShareDialog() {
   const poll = usePoll();
   const dialog = useDialog();
+  const isFree = useIsFree();
+  const isOpen = dialog.dialogProps.open;
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    posthog?.capture("poll_share:dialog_open", {
+      poll_id: poll.id,
+      tier: isFree ? "free" : "pro",
+    });
+  }, [isOpen, poll.id, isFree]);
 
   return (
     <>
