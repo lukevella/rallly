@@ -70,7 +70,7 @@ export function LegalPageIndex({
                 className={cn(
                   "-ml-px block border-l py-1 pl-3 text-sm transition-colors",
                   isActive
-                    ? "border-gray-800 font-medium text-gray-800"
+                    ? "border-gray-800 text-gray-800"
                     : "border-transparent text-gray-500 hover:text-gray-800",
                 )}
               >
