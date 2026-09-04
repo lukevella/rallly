@@ -750,7 +750,7 @@ export default async function Page(props: {
                   t={t}
                   ns="pricing"
                   i18nKey="pollLimitAnswer"
-                  defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted 30 days after they become inactive, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+                  defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
                 />
               </FaqItem>
               <FaqItem
