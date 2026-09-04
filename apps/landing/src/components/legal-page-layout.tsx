@@ -26,6 +26,15 @@ function slugify(title: string) {
 
 function indexHeadings(children: React.ReactNode) {
   const items: { id: string; title: string }[] = [];
+  const used = new Set<string>();
+  const uniqueId = (base: string) => {
+    let id = base;
+    for (let n = 2; used.has(id); n++) {
+      id = `${base}-${n}`;
+    }
+    used.add(id);
+    return id;
+  };
   const content = React.Children.map(children, (child) => {
     if (
       !React.isValidElement<{ id?: string; children?: React.ReactNode }>(
@@ -36,7 +45,10 @@ function indexHeadings(children: React.ReactNode) {
       return child;
     }
     const title = textOf(child.props.children);
-    const id = child.props.id ?? slugify(title);
+    if (child.props.id) {
+      used.add(child.props.id);
+    }
+    const id = child.props.id ?? uniqueId(slugify(title));
     items.push({ id, title });
     return React.cloneElement(child, { id });
   });
