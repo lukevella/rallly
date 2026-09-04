@@ -260,3 +260,55 @@ export async function attachParticipantToInvite(
 
   return count > 0;
 }
+
+/**
+ * Marks an invite as opened the first time its emailed link is followed.
+ * The token is the only credential, so an unknown, revoked or converted
+ * token is a no-op rather than an error. First open wins: the claim on
+ * `openedAt IS NULL` also serialises concurrent opens of the same link, so
+ * the activity event is written exactly once.
+ */
+export async function recordPollInviteOpen({
+  pollId,
+  token,
+}: {
+  pollId: string;
+  token: string;
+}) {
+  return prisma.$transaction(async (tx) => {
+    const invite = await tx.pollInvite.findFirst({
+      where: {
+        pollId,
+        token,
+        revokedAt: null,
+        participantId: null,
+        openedAt: null,
+      },
+      select: { id: true, email: true },
+    });
+
+    if (!invite) {
+      return false;
+    }
+
+    const { count } = await tx.pollInvite.updateMany({
+      where: { id: invite.id, openedAt: null },
+      data: { openedAt: new Date() },
+    });
+
+    if (count === 0) {
+      return false;
+    }
+
+    await recordPollActivities(tx, [
+      {
+        pollId,
+        type: "invite_opened",
+        inviteId: invite.id,
+        payload: { email: invite.email },
+      },
+    ]);
+
+    return true;
+  });
+}
