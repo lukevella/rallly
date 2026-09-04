@@ -9,6 +9,7 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { MAX_POLL_INVITES_PER_DAY } from "@/features/poll/invite/constants";
+import { getPollInvitePath } from "@/features/poll/invite/utils";
 
 const logger = createLogger("poll/invite/mutations");
 
@@ -189,7 +190,7 @@ export async function sendPollInvite({
       props: {
         hostName: sender.name,
         pollTitle: poll.title,
-        inviteUrl: absoluteUrl(`/invite/${pollId}?invite=${token}`),
+        inviteUrl: absoluteUrl(getPollInvitePath({ pollId, token })),
       },
     });
   } catch (error) {

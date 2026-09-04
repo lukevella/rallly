@@ -4,4 +4,5 @@ export type PollInviteListItem = {
   id: string;
   email: string;
   status: PollInviteStatus;
+  inviteUrl: string;
 };

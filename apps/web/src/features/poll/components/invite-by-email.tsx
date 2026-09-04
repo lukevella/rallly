@@ -38,6 +38,7 @@ type Row = {
   id: string;
   email: string;
   status: InviteeRowStatus;
+  inviteUrl?: string;
 };
 
 // Same rule as the server, so a client accepted address is never refused
@@ -308,6 +309,7 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
                       key={row.id}
                       email={row.email}
                       status={row.status}
+                      inviteUrl={row.inviteUrl}
                     />
                   ))}
                 </ul>
