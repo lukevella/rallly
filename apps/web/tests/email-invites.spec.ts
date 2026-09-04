@@ -147,9 +147,15 @@ test.describe("Email invites", () => {
       }),
     ).toBe(1);
 
-    // Responding through the emailed link joins the response to the invite.
+    // Responding through the emailed link joins the response to the invite,
+    // and the response takes the invite's token as its own.
     await new InvitePage(guest.guestPage).addParticipant("Invited Guest");
     await guest.close();
+    const converted = await prisma.pollInvite.findUniqueOrThrow({
+      where: { id: invite.id },
+      select: { token: true, participant: { select: { token: true } } },
+    });
+    expect(converted.participant?.token).toBe(converted.token);
 
     const respondedRow = (await reopenShareDialog(page))
       .getByRole("listitem")

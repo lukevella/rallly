@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
@@ -486,6 +487,7 @@ test.describe("House-keeping API", () => {
         name: "Guest Participant",
         pollId: hostedPoll.id,
         userId: guestParticipant.id,
+        token: randomUUID().replace(/-/g, ""),
       },
     });
 

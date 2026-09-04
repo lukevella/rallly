@@ -13,7 +13,11 @@ import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { hasPollAdminAccess } from "@/features/poll/data";
-import { attachParticipantToInvite } from "@/features/poll/invite/mutations";
+import {
+  attachParticipantToInvite,
+  findPendingPollInvite,
+} from "@/features/poll/invite/mutations";
+import { generateAccessToken } from "@/features/poll/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import {
@@ -38,7 +42,8 @@ function createParticipantFullDTO(
     votes: { optionId: string; type: VoteType }[];
   },
 ) {
-  const { votes, user, ...rest } = participant;
+  // The token is the edit credential: it never leaves the server.
+  const { votes, user, token: _token, ...rest } = participant;
   return {
     ...rest,
     image: user?.image ?? null,
@@ -350,6 +355,12 @@ export const participants = router({
 
         const { participant, viaInvite } = await prisma.$transaction(
           async (tx) => {
+            // A response answering an emailed invite takes the invite's
+            // token, so the link the invitee already holds names it.
+            const invite = inviteToken
+              ? await findPendingPollInvite(tx, { pollId, token: inviteToken })
+              : null;
+
             const participant = await tx.participant.create({
               data: {
                 pollId: pollId,
@@ -357,6 +368,7 @@ export const participants = router({
                 email,
                 note,
                 timeZone,
+                token: invite?.token ?? generateAccessToken(),
                 userId: ctx.user.id,
                 locale: ctx.locale,
                 votes: {
@@ -410,13 +422,14 @@ export const participants = router({
               },
             ]);
 
-            const viaInvite = await attachParticipantToInvite(tx, {
-              pollId,
-              participantId: participant.id,
-              inviteToken,
-            });
+            if (invite) {
+              await attachParticipantToInvite(tx, {
+                inviteId: invite.id,
+                participantId: participant.id,
+              });
+            }
 
-            return { participant, viaInvite };
+            return { participant, viaInvite: invite !== null };
           },
         );
 
