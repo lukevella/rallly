@@ -13,7 +13,7 @@
   "comparePlansDescription": "Посмотрите, что входит в каждый план.",
   "comparePollRetention": "Хранение опросов",
   "comparePollRetention30Days": "30 дней",
-  "comparePollRetentionDescription": "Сколько опросы хранятся после последней даты",
+  "comparePollRetentionDescription": "Как долго хранятся опросы после последней даты",
   "comparePollRetentionIndefinite": "Бессрочно",
   "compareSchedulingPolls": "Опросы для планирования",
   "compareSchedulingPollsDescription": "Создавайте опросы, чтобы найти лучшее время для встречи",
