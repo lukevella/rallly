@@ -262,13 +262,10 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, "home");
   return {
     alternates: getAlternates({ locale, path: "/scheduling-for/legal" }),
-    title: {
-      absolute: t("legalMetaTitle", {
-        ns: "home",
-        defaultValue:
-          "Scheduling for Law Firms and Mediators | Free Availability Poll",
-      }),
-    },
+    title: t("legalMetaTitle", {
+      ns: "home",
+      defaultValue: "Scheduling for Law Firms and Mediators",
+    }),
     description: t("legalMetaDescription", {
       ns: "home",
       defaultValue:
