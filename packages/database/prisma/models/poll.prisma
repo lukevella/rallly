@@ -104,7 +104,7 @@ model PollInvite {
 
   openedAt   DateTime? @map("opened_at")
   remindedAt DateTime? @map("reminded_at")
-  /// Revocation is always explicit: set when the host removes a pending invite, never as a side effect of close, schedule or reopen. Deleting a response clears participantId instead, reverting the invite to pending with its token intact. Cleared only by re-inviting (reactivation), which also rotates the token
+  /// Revocation is always explicit: set when the host removes a pending invite, never as a side effect of close, schedule or reopen. Deleting a response instead hard deletes the participant, so the SetNull FK clears participantId and reverts the invite to pending with its token intact — the token the deleted response held is freed with it, so the next response through the same link can take it again. Cleared only by re-inviting (reactivation), which also rotates the token
   revokedAt  DateTime? @map("revoked_at")
 
   /// Conversion join, merges invite history into the response timeline. Set only when the invitee responds via their token: a typed email is unverified, so a generic link response never claims an invite
