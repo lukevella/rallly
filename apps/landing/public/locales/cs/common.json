@@ -1,4 +1,5 @@
 {
+  "assistants": "Asistenti",
   "blog": "Blog",
   "close": "Zavřít",
   "committees": "Výbory a rady",
@@ -14,6 +15,7 @@
   "dpa": "DPA",
   "footerDiscordLabel": "Přidejte se k nám na Discordu",
   "footerGithubLabel": "Zobrazit náš repozitář na GitHubu",
+  "footerLegal": "Právní informace",
   "footerLinkedinLabel": "Sledujte nás na LinkedIn",
   "footerTagline": "Rallly je open source nástroj pro plánování schůzek, který vám pomůže najít nejlepší čas na setkání bez zbytečného dopisování.",
   "footerXLabel": "Sledujte nás na X",
