@@ -131,7 +131,6 @@ export const participants = router({
       const rawParticipants = await prisma.participant.findMany({
         where: {
           pollId,
-          deleted: false,
         },
         include: {
           votes: {
@@ -305,7 +304,6 @@ export const participants = router({
         const participantCount = await prisma.participant.count({
           where: {
             pollId,
-            deleted: false,
           },
         });
 
