@@ -81,8 +81,6 @@ model Participant {
   timeZone  String?   @map("time_zone")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  deleted   Boolean   @default(false)
-  deletedAt DateTime? @map("deleted_at")
 
   votes  Vote[]
   invite PollInvite?
