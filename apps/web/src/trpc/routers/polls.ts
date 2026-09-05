@@ -577,9 +577,7 @@ export const polls = router({
           muted: true,
           _count: {
             select: {
-              participants: {
-                where: { deleted: false },
-              },
+              participants: true,
               comments: true,
               options: true,
             },
@@ -888,7 +886,6 @@ export const polls = router({
             },
           },
           participants: {
-            where: { deleted: false },
             select: {
               id: true,
               name: true,

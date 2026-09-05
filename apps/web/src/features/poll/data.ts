@@ -63,9 +63,7 @@ export async function getPollResults({
         },
         _count: {
           select: {
-            participants: {
-              where: { deleted: false },
-            },
+            participants: true,
           },
         },
       },
@@ -74,7 +72,6 @@ export async function getPollResults({
       by: ["optionId", "type"],
       where: {
         pollId,
-        participant: { deleted: false },
       },
       _count: true,
     }),
@@ -157,7 +154,6 @@ export async function getPollParticipants({
     select: {
       id: true,
       participants: {
-        where: { deleted: false },
         select: {
           id: true,
           name: true,
@@ -225,9 +221,7 @@ export async function listPolls({
       },
       _count: {
         select: {
-          participants: {
-            where: { deleted: false },
-          },
+          participants: true,
         },
       },
     },
@@ -465,7 +459,7 @@ export async function getParticipant({
   participantId: string;
 }) {
   return prisma.participant.findFirst({
-    where: { id: participantId, deleted: false },
+    where: { id: participantId },
     select: { id: true, pollId: true, userId: true },
   });
 }
@@ -494,7 +488,6 @@ export async function listParticipantIdsByToken({
       where: {
         pollId,
         userId: payload.userId,
-        deleted: false,
         email: { not: null },
       },
       select: { id: true },
@@ -503,7 +496,7 @@ export async function listParticipantIdsByToken({
   }
 
   const participant = await prisma.participant.findFirst({
-    where: { pollId, token, deleted: false },
+    where: { pollId, token },
     select: { id: true },
   });
   return participant ? [participant.id] : [];

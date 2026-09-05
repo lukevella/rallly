@@ -90,7 +90,6 @@ export async function sendPollInvite({
   const participant = await prisma.participant.findFirst({
     where: {
       pollId,
-      deleted: false,
       email: { equals: email, mode: "insensitive" },
     },
     select: { id: true },
