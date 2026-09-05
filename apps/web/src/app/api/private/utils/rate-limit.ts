@@ -4,6 +4,7 @@ import {
   API_RATE_LIMIT_PER_DAY,
   API_RATE_LIMIT_PER_MINUTE,
 } from "@/features/api-keys/constants";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { redis } from "@/lib/kv";
 import { apiError } from "./poll";
 
@@ -65,9 +66,67 @@ local dayHits, dayTtl = bump(KEYS[2], tonumber(ARGV[2]))
 return { minuteHits, minuteTtl, dayHits, dayTtl }
 `;
 
-const incrementScript = redis
-  ? redis.createScript<[number, number, number, number]>(INCREMENT_SCRIPT)
-  : null;
+type Counters = [
+  minuteHits: number,
+  minuteTtlMs: number,
+  dayHits: number,
+  dayTtlMs: number,
+];
+
+type RateLimitStore = {
+  increment: (spaceId: string) => Promise<Counters>;
+};
+
+function createRedisStore(client: NonNullable<typeof redis>): RateLimitStore {
+  const script = client.createScript<Counters>(INCREMENT_SCRIPT);
+  return {
+    increment: (spaceId) =>
+      script.exec(
+        [`hrl:private-api:${spaceId}`, `hrl:private-api:daily:${spaceId}`],
+        [MINUTE_WINDOW_MS.toString(), DAY_WINDOW_MS.toString()],
+      ),
+  };
+}
+
+/**
+ * Same semantics as the Lua script, held in process. Exact only when one
+ * process serves every request, which is what the `inProcessRateLimit`
+ * capability asserts. Expired counters are dropped on their next hit, and
+ * the map is bounded by the number of spaces holding API keys.
+ */
+export function createMemoryStore(): RateLimitStore {
+  const counters = new Map<string, { hits: number; expiresAt: number }>();
+
+  const bump = (key: string, windowMs: number): [number, number] => {
+    const now = Date.now();
+    const current = counters.get(key);
+    if (!current || current.expiresAt <= now) {
+      counters.set(key, { hits: 1, expiresAt: now + windowMs });
+      return [1, windowMs];
+    }
+    current.hits += 1;
+    return [current.hits, current.expiresAt - now];
+  };
+
+  return {
+    increment: async (spaceId) => [
+      ...bump(`minute:${spaceId}`, MINUTE_WINDOW_MS),
+      ...bump(`day:${spaceId}`, DAY_WINDOW_MS),
+    ],
+  };
+}
+
+function selectStore(): RateLimitStore | null {
+  if (redis) {
+    return createRedisStore(redis);
+  }
+  if (isFeatureEnabled("inProcessRateLimit")) {
+    return createMemoryStore();
+  }
+  return null;
+}
+
+const store = selectStore();
 
 function toWindow(limit: number, hits: number, ttlMs: number): RateLimitWindow {
   return {
@@ -126,31 +185,23 @@ function serviceUnavailable(c: Context, failure: RateLimitFailure) {
  * keys do not raise them. Must run after `spaceApiKeyAuth` so that
  * `apiAuth.spaceId` is populated.
  *
- * Fails closed: the API is cloud only and cloud always has KV, so a missing
- * client is a misconfiguration and an unreachable store is an outage. Both
- * answer 503 rather than letting traffic through unmetered, and both are
- * surfaced on the wide event via `rateLimitFailure`.
+ * Fails closed: without KV, and without the `inProcessRateLimit` capability
+ * that makes a per-process counter exact, a missing store is a
+ * misconfiguration and an unreachable store is an outage. Both answer 503
+ * rather than letting traffic through unmetered, and both are surfaced on
+ * the wide event via `rateLimitFailure`.
  */
 export const rateLimit = createMiddleware<RateLimitEnv>(async (c, next) => {
-  if (!incrementScript) {
+  if (!store) {
     return serviceUnavailable(c, {
       reason: "store_unavailable",
       message: "Rate limit store is not configured",
     });
   }
 
-  const spaceId = c.get("apiAuth").spaceId;
-  const keys = [
-    `hrl:private-api:${spaceId}`,
-    `hrl:private-api:daily:${spaceId}`,
-  ];
-
-  let result: [number, number, number, number];
+  let result: Counters;
   try {
-    result = await incrementScript.exec(keys, [
-      MINUTE_WINDOW_MS.toString(),
-      DAY_WINDOW_MS.toString(),
-    ]);
+    result = await store.increment(c.get("apiAuth").spaceId);
   } catch (error) {
     return serviceUnavailable(c, {
       reason: "store_error",

@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { FakeRedis } from "./fake-redis";
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/feature-flags/server", () => ({
+  isFeatureEnabled: () => false,
+}));
 
 let clock = Date.parse("2026-01-01T00:00:00.000Z");
 

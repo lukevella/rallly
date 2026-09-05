@@ -5,6 +5,7 @@ import { isCalendarsEnabled } from "@/features/calendars/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
+import { isSelfHosted } from "@/lib/constants";
 import type { FeatureFlagConfig } from "@/lib/feature-flags/types";
 import { isStorageEnabled } from "@/lib/storage";
 
@@ -27,4 +28,8 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // feature parity with the legacy admin and cuts over.
   pollAdmin: env.NODE_ENV === "development",
   quickCreate: isQuickCreateEnabled,
+  // Self-hosted runs one process, so a per-process counter is an exact rate
+  // limit and Redis is not required. Cloud runs many short-lived instances,
+  // where a per-process counter is no limit at all, so it must use KV.
+  inProcessRateLimit: isSelfHosted,
 };

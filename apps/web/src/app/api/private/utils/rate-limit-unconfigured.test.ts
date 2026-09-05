@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/kv", () => ({ redis: null }));
+vi.mock("@/lib/feature-flags/server", () => ({
+  isFeatureEnabled: () => false,
+}));
 
 import type { RateLimitFailure } from "./rate-limit";
 import { rateLimit } from "./rate-limit";

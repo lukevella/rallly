@@ -57,6 +57,10 @@ vi.mock("next/server", () => ({
   after: vi.fn(),
 }));
 
+vi.mock("@/lib/feature-flags/server", () => ({
+  isFeatureEnabled: () => false,
+}));
+
 vi.mock("@/lib/kv", async () => ({
   redis: (await import("../utils/fake-redis")).createFakeRedis(),
 }));
