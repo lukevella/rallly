@@ -132,6 +132,16 @@ const nextConfig: NextConfig = {
         destination: "/:locale/free-scheduling-poll",
         permanent: true,
       },
+      {
+        source: "/scheduling-for/executive-assistants",
+        destination: "/scheduling-for/assistants",
+        permanent: true,
+      },
+      {
+        source: "/:locale/scheduling-for/executive-assistants",
+        destination: "/:locale/scheduling-for/assistants",
+        permanent: true,
+      },
     ];
   },
 };

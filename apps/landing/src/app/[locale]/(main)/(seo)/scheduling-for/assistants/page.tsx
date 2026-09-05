@@ -256,7 +256,7 @@ export async function generateMetadata(props: {
   return {
     alternates: getAlternates({
       locale,
-      path: "/scheduling-for/executive-assistants",
+      path: "/scheduling-for/assistants",
     }),
     title: t("eaMetaTitle", {
       ns: "home",
