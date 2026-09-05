@@ -296,9 +296,6 @@ export const getPolls = async ({
           },
         },
         participants: {
-          where: {
-            deletedAt: null,
-          },
           select: {
             id: true,
             name: true,
