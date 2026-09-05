@@ -1,4 +1,5 @@
 {
+  "assistants": "Asszisztensek",
   "blog": "Blog",
   "close": "Bezárás",
   "committees": "Bizottságok és tanácsok",
@@ -14,6 +15,7 @@
   "dpa": "AFM",
   "footerDiscordLabel": "Csatlakozz hozzánk Discordon",
   "footerGithubLabel": "Nézd meg a GitHub kódbázist",
+  "footerLegal": "Jogi tudnivalók",
   "footerLinkedinLabel": "Kövess minket LinkedIn-en",
   "footerTagline": "A Rallly egy nyílt forráskódú találkozó ütemező eszköz, ami segít megtalálni a legjobb időpontot a találkozásra, adok-kapok kommunikáció nélkül.",
   "footerXLabel": "Kövess minket X-en",

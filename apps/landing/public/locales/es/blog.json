@@ -1,3 +1,7 @@
 {
-  "blogDescription": "Noticias, actualizaciones y anuncios sobre Rallly."
+  "blogDescription": "Noticias, actualizaciones y anuncios sobre Rallly.",
+  "blogFilterAll": "Todos",
+  "blogPublishedOn": "Publicado el",
+  "blogTitle": "Blog",
+  "blogWrittenBy": "Escrito por"
 }

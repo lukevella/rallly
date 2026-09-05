@@ -1,3 +1,7 @@
 {
-  "blogDescription": "Nyheder, opdateringer og meddelelser om Rallly."
+  "blogDescription": "Nyheder, opdateringer og meddelelser om Rallly.",
+  "blogFilterAll": "Alle",
+  "blogPublishedOn": "Udgivet den",
+  "blogTitle": "Blog",
+  "blogWrittenBy": "Skrevet af"
 }

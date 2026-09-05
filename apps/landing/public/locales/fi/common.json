@@ -1,4 +1,5 @@
 {
+  "assistants": "Assistentit",
   "blog": "Blogi",
   "close": "Sulje",
   "committees": "Toimikunnille ja hallituksille",
@@ -11,8 +12,10 @@
   "cookiePolicy": "Evästekäytäntö",
   "discussions": "Keskustelut",
   "doodleAlternative": "Vaihtoehto Doodlelle",
+  "dpa": "Tietojenkäsittelysopimus",
   "footerDiscordLabel": "Liity Discordiin",
   "footerGithubLabel": "Katso GitHub-repositoriomme",
+  "footerLegal": "Oikeudelliset tiedot",
   "footerLinkedinLabel": "Seuraa meitä LinkedInissä",
   "footerTagline": "Rallly on avoimen lähdekoodin työkalu kokousten aikatauluttamiseen, joka auttaa löytämään parhaan tapaamisajan ilman edestakaista viestittelyä.",
   "footerXLabel": "Seuraa meitä X:ssä",
@@ -43,5 +46,7 @@
   "statusBadgeAlt": "Ralllyn tila",
   "support": "Tuki",
   "termsOfUse": "Käyttöehdot",
-  "thesisDefense": "Väitöstilaisuuksiin"
+  "thesisDefense": "Väitöstilaisuuksiin",
+  "useCases": "Käyttökohteet",
+  "when2MeetAlternative": "When2meet-vaihtoehto"
 }

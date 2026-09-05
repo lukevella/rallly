@@ -1,3 +1,7 @@
 {
-  "blogDescription": "有关 Rallly 的新闻、更新和公告。"
+  "blogDescription": "有关 Rallly 的新闻、更新和公告。",
+  "blogFilterAll": "全部",
+  "blogPublishedOn": "发布于",
+  "blogTitle": "博客",
+  "blogWrittenBy": "作者"
 }

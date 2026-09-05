@@ -1,4 +1,5 @@
 {
+  "assistants": "Assistenz",
   "blog": "Blog",
   "close": "Schließen",
   "committees": "Ausschüsse und Gremien",
@@ -11,8 +12,10 @@
   "cookiePolicy": "Cookie-Richtlinie",
   "discussions": "Diskussion",
   "doodleAlternative": "Doodle-Alternative",
+  "dpa": "AVV",
   "footerDiscordLabel": "Tritt unserem Discord bei",
   "footerGithubLabel": "Sieh dir unser GitHub-Repository an",
+  "footerLegal": "Rechtliches",
   "footerLinkedinLabel": "Folge uns auf LinkedIn",
   "footerTagline": "Rallly ist ein Open-Source-Tool zur Terminplanung, mit dem du ohne Hin und Her die beste Zeit für ein Treffen findest.",
   "footerXLabel": "Folge uns auf X",
@@ -42,5 +45,8 @@
   "sportsClubs": "Sportvereine",
   "statusBadgeAlt": "Rallly-Status",
   "support": "Hilfe",
-  "termsOfUse": "Nutzungsbedingungen"
+  "termsOfUse": "Nutzungsbedingungen",
+  "thesisDefense": "Disputationen",
+  "useCases": "Anwendungsfälle",
+  "when2MeetAlternative": "When2meet-Alternative"
 }
