@@ -280,11 +280,13 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, "home");
   return {
     alternates: getAlternates({ locale, path: "/scheduling-for/committees" }),
-    title: t("committeesMetaTitle", {
-      ns: "home",
-      defaultValue:
-        "Scheduling for Committees and Boards | Free Meeting Poll Tool",
-    }),
+    title: {
+      absolute: t("committeesMetaTitle", {
+        ns: "home",
+        defaultValue:
+          "Scheduling for Committees and Boards | Free Meeting Poll Tool",
+      }),
+    },
     description: t("committeesMetaDescription", {
       ns: "home",
       defaultValue:

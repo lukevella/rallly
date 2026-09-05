@@ -58,7 +58,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/blog" }),
     title: t("blogTitle", {
       ns: "blog",
-      defaultValue: "Rallly - Blog",
+      defaultValue: "Blog",
     }),
     description: t("blogDescription", {
       ns: "blog",

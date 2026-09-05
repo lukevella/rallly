@@ -258,10 +258,12 @@ export async function generateMetadata(props: {
       locale,
       path: "/scheduling-for/assistants",
     }),
-    title: t("assistantsMetaTitle", {
-      ns: "home",
-      defaultValue: "Scheduling for Assistants | Free Meeting Poll Tool",
-    }),
+    title: {
+      absolute: t("assistantsMetaTitle", {
+        ns: "home",
+        defaultValue: "Scheduling for Assistants | Free Meeting Poll Tool",
+      }),
+    },
     description: t("assistantsMetaDescription", {
       ns: "home",
       defaultValue:

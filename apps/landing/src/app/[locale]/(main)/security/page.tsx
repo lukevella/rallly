@@ -422,7 +422,7 @@ export default async function Security(props: {
 export async function generateMetadata() {
   cacheLife("max");
   return {
-    title: "Rallly: Security",
+    title: "Security",
     description:
       "How Rallly runs its service, where your data lives, and what we commit to.",
   };

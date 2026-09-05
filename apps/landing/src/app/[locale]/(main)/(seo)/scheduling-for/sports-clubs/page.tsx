@@ -255,11 +255,13 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, "home");
   return {
     alternates: getAlternates({ locale, path: "/scheduling-for/sports-clubs" }),
-    title: t("sportsClubsMetaTitle", {
-      ns: "home",
-      defaultValue:
-        "Scheduling for Sports Clubs and Teams | Free Availability Poll",
-    }),
+    title: {
+      absolute: t("sportsClubsMetaTitle", {
+        ns: "home",
+        defaultValue:
+          "Scheduling for Sports Clubs and Teams | Free Availability Poll",
+      }),
+    },
     description: t("sportsClubsMetaDescription", {
       ns: "home",
       defaultValue:
