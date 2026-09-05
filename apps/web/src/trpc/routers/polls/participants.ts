@@ -237,13 +237,13 @@ export const participants = router({
           },
         });
 
-        await tx.participant.update({
+        // Hard delete: votes cascade, the invite's SetNull FK reverts it to
+        // pending, and the response frees the token it took from that invite
+        // so the next response through the same link can take it again. The
+        // activity row above is the historical record.
+        await tx.participant.delete({
           where: {
             id: participantId,
-          },
-          data: {
-            deleted: true,
-            deletedAt: new Date(),
           },
         });
 

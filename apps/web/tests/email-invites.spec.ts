@@ -65,6 +65,26 @@ async function renameThroughInviteLink(
   }
 }
 
+/**
+ * The poll holds one response, so the menu resolves without disambiguation.
+ */
+async function deleteResponse(page: Page, name: string) {
+  await page.getByTestId("participant-menu").click();
+  await page.getByRole("menuitem", { name: "Delete" }).click();
+  const dialog = page.getByRole("dialog", { name: `Delete ${name}?` });
+  await dialog.getByRole("button", { name: "Delete" }).click();
+  await expect(dialog).toBeHidden();
+  // The list update is optimistic, so wait for the row to actually be gone
+  // before reading the invite it released.
+  await expect
+    .poll(async () =>
+      prisma.participant.count({
+        where: { name, poll: { title: POLL_TITLE } },
+      }),
+    )
+    .toBe(0);
+}
+
 async function reopenShareDialog(page: Page) {
   await page.reload();
   await page.getByRole("button", { name: "Share" }).click();
@@ -211,6 +231,41 @@ test.describe("Email invites", () => {
     });
     await page.reload();
     await expect(page.getByText("Renamed Guest")).toBeVisible();
+
+    // Deleting the response reverts the invite to pending: the row goes back
+    // to Opened, and the link keeps working because the response released
+    // the token it had taken from the invite.
+    await deleteResponse(page, "Renamed Guest");
+    const revertedRow = (await reopenShareDialog(page))
+      .getByRole("listitem")
+      .filter({ hasText: INVITEE });
+    await expect(revertedRow.getByText("Opened")).toBeVisible();
+    await page.keyboard.press("Escape");
+
+    const reverted = await prisma.pollInvite.findUniqueOrThrow({
+      where: { id: invite.id },
+      select: { participantId: true, token: true, revokedAt: true },
+    });
+    expect(reverted.participantId).toBeNull();
+    expect(reverted.revokedAt).toBeNull();
+    expect(reverted.token).toBe(converted.token);
+
+    // Responding through the same link a second time converts it again and
+    // takes the token back.
+    const second = await openAsGuest(browser as Browser, emailedUrl as string);
+    await new InvitePage(second.guestPage).addParticipant("Second Response");
+    await second.close();
+
+    const reconverted = await prisma.pollInvite.findUniqueOrThrow({
+      where: { id: invite.id },
+      select: { token: true, participant: { select: { token: true } } },
+    });
+    expect(reconverted.participant?.token).toBe(reconverted.token);
+
+    const respondedAgainRow = (await reopenShareDialog(page))
+      .getByRole("listitem")
+      .filter({ hasText: INVITEE });
+    await expect(respondedAgainRow.getByText("Responded")).toBeVisible();
   });
 
   test("creation opens the dialog and leaves the URL clean", async ({
