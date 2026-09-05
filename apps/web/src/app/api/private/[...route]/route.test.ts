@@ -57,8 +57,8 @@ vi.mock("next/server", () => ({
   after: vi.fn(),
 }));
 
-vi.mock("@/lib/kv", () => ({
-  redis: null,
+vi.mock("@/lib/kv", async () => ({
+  redis: (await import("../utils/fake-redis")).createFakeRedis(),
 }));
 
 vi.mock("@/lib/posthog", () => ({
@@ -71,6 +71,7 @@ import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
+import { redis } from "@/lib/kv";
 import {
   createPollRequestExamples,
   patchPollRequestExamples,
@@ -85,6 +86,7 @@ import {
   listPollsSuccessResponseSchema,
   patchPollSuccessResponseSchema,
 } from "../schemas";
+import type { FakeRedis } from "../utils/fake-redis";
 import { RATE_LIMIT_PER_MINUTE } from "../utils/rate-limit";
 import { app } from "./route";
 
@@ -124,6 +126,7 @@ const mockApiKey = {
 describe("Private API - /polls", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (redis as unknown as FakeRedis).reset();
 
     // Mock findMany for the timing-safe lookup
     vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([mockApiKey]);
@@ -1742,9 +1745,8 @@ describe("Private API - /polls", () => {
   });
 
   describe("Rate limiting", () => {
-    // The rate limiter is keyed per space and shares a module-level memory
-    // store across the whole file. Use a dedicated space id here so the
-    // requests below don't count against (or get counted by) other tests.
+    // The rate limiter is keyed per space. Use a dedicated space id here so
+    // the requests below don't count against (or get counted by) other tests.
     const rateLimitSpaceId = "rate-limit-space-id";
 
     beforeEach(() => {

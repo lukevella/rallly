@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
-import { rateLimiter } from "hono-rate-limiter";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const info = vi.fn();
@@ -19,13 +18,23 @@ vi.mock("@rallly/logger", () => ({
   }),
 }));
 
+import type { RateLimitFailure, RateLimitInfo } from "./rate-limit";
 import { wideEvent } from "./wide-event";
 
 type TestEnv = {
   Variables: {
     apiAuth?: { spaceId: string; apiKeyId: string };
+    rateLimit?: RateLimitInfo;
+    rateLimitFailure?: RateLimitFailure;
   };
 };
+
+const window = (limit: number, used: number) => ({
+  limit,
+  used,
+  remaining: limit - used,
+  resetTime: new Date("2026-01-01T00:01:00.000Z"),
+});
 
 const buildApp = () => {
   const app = new Hono<TestEnv>();
@@ -35,14 +44,25 @@ const buildApp = () => {
     "/ok",
     async (c, next) => {
       c.set("apiAuth", { spaceId: "space-1", apiKeyId: "key-1" });
+      c.set("rateLimit", { minute: window(5, 1), day: window(100, 7) });
       await next();
     },
-    rateLimiter({
-      windowMs: 60_000,
-      limit: 5,
-      keyGenerator: () => "space-1",
-    }),
     (c) => c.json({ ok: true }),
+  );
+
+  app.get(
+    "/store-down",
+    async (c, next) => {
+      c.set("apiAuth", { spaceId: "space-1", apiKeyId: "key-1" });
+      await next();
+    },
+    (c) => {
+      c.set("rateLimitFailure", {
+        reason: "store_error",
+        message: "connection refused",
+      });
+      return c.json({ error: {} }, 503);
+    },
   );
 
   app.get(
@@ -82,8 +102,27 @@ describe("wideEvent middleware", () => {
       rateLimiter: "private-api",
       rateLimiterConsumedPoints: 1,
       rateLimiterRemainingPoints: 4,
+      rateLimiterDailyConsumedPoints: 7,
+      rateLimiterDailyRemainingPoints: 93,
     });
     expect(typeof event.durationMs).toBe("number");
+  });
+
+  it("logs an error event with the store failure when the limiter fails closed", async () => {
+    const res = await buildApp().request("/store-down");
+
+    expect(res.status).toBe(503);
+    expect(error).toHaveBeenCalledTimes(1);
+    expect(error.mock.calls[0][0]).toMatchObject({
+      statusCode: 503,
+      spaceId: "space-1",
+      rateLimiter: "private-api",
+      rateLimiterError: "store_error",
+      errorType: "RateLimitStoreError",
+      errorCode: "SERVICE_UNAVAILABLE",
+      errorMessage: "connection refused",
+      isRetriable: true,
+    });
   });
 
   it("warns and captures a 401 without auth context", async () => {

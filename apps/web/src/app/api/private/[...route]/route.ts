@@ -46,7 +46,11 @@ import {
 } from "../schemas";
 import { spaceApiKeyAuth } from "../utils/api-key";
 import { apiError } from "../utils/poll";
-import { RATE_LIMIT_PER_MINUTE, rateLimit } from "../utils/rate-limit";
+import {
+  RATE_LIMIT_PER_DAY,
+  RATE_LIMIT_PER_MINUTE,
+  rateLimit,
+} from "../utils/rate-limit";
 import { wideEvent } from "../utils/wide-event";
 
 type Env = {
@@ -132,6 +136,16 @@ const rateLimitExceededResponse = {
   },
 };
 
+const serviceUnavailableResponse = {
+  description:
+    "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header.",
+  content: {
+    "application/json": {
+      schema: resolver(errorResponseSchema),
+    },
+  },
+};
+
 async function buildOpenApiSpec() {
   const spec = await generateSpecs(app, {
     documentation: {
@@ -141,9 +155,11 @@ async function buildOpenApiSpec() {
         description: [
           "## Rate limits",
           "",
-          `All endpoints share a single limit of **${RATE_LIMIT_PER_MINUTE} requests per minute per space**. The limit is per space, not per API key, so creating additional keys does not increase throughput.`,
+          `All endpoints share two limits per space: **${RATE_LIMIT_PER_MINUTE} requests per minute** and **${RATE_LIMIT_PER_DAY} requests per day**. Both are fixed windows that open with the first request and reset when they expire. Both limits are per space, not per API key, so creating additional keys does not increase throughput.`,
           "",
-          "Every response includes the standard `RateLimit-*` headers describing the current limit, remaining quota, and reset time. When the limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
+          "Every response includes the standard `RateLimit-*` headers. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
+          "",
+          "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
         ].join("\n"),
       },
       components: {
@@ -232,6 +248,7 @@ app.post(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
     },
   }),
   validator("json", createPollInputSchema),
@@ -472,6 +489,7 @@ app.get(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
     },
   }),
   validator("query", listPollsQuerySchema),
@@ -519,6 +537,7 @@ app.get(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -606,6 +625,7 @@ app.patch(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -679,6 +699,7 @@ app.get(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -740,6 +761,7 @@ app.get(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
       404: {
         description: "Poll not found",
         content: {
@@ -801,6 +823,7 @@ app.delete(
       },
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
       404: {
         description: "Poll not found",
         content: {
