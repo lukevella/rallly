@@ -39,12 +39,12 @@ export default async function Page(props: {
         <Hero
           title={t("eaTitle", {
             ns: "home",
-            defaultValue: "Scheduling for executive assistants",
+            defaultValue: "Scheduling for assistants",
           })}
           description={t("eaDescription", {
             ns: "home",
             defaultValue:
-              "Find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
+              "Whether you support one executive or a whole department, find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
           })}
         >
           <HeroDemo locale={locale} preset="executiveAssistant" />
@@ -110,7 +110,7 @@ export default async function Page(props: {
                     t={t}
                     ns="home"
                     i18nKey="eaFaqOnBehalf"
-                    defaults="Can I schedule on behalf of an executive?"
+                    defaults="Can I schedule on behalf of someone else?"
                   />
                 }
               >
@@ -260,13 +260,12 @@ export async function generateMetadata(props: {
     }),
     title: t("eaMetaTitle", {
       ns: "home",
-      defaultValue:
-        "Scheduling for Executive Assistants | Free Meeting Poll Tool",
+      defaultValue: "Scheduling for Assistants | Free Meeting Poll Tool",
     }),
     description: t("eaMetaDescription", {
       ns: "home",
       defaultValue:
-        "Rallly is a free scheduling tool for executive assistants. Coordinate meetings across busy calendars and time zones with one link. No account needed to respond.",
+        "Rallly is a free scheduling tool for executive, administrative and personal assistants. Coordinate meetings across busy calendars and time zones with one link. No account needed to respond.",
     }),
   };
 }

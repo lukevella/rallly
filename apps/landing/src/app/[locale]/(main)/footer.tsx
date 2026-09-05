@@ -172,7 +172,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
                   t={t}
                   ns="common"
                   i18nKey="executiveAssistants"
-                  defaults="Executive assistants"
+                  defaults="Assistants"
                 />
               </LinkBase>
             </li>
