@@ -15,7 +15,7 @@ export type DemoPreset = {
 
 export type DemoPresetName =
   | "default"
-  | "executiveAssistant"
+  | "assistants"
   | "committee"
   | "sportsClub"
   | "thesisDefense"
@@ -45,27 +45,27 @@ export function getDemoPreset(
   t: TFunction<"home">,
   preset: DemoPresetName,
 ): DemoPreset {
-  if (preset === "executiveAssistant") {
+  if (preset === "assistants") {
     return {
-      title: t("heroDemoEaTitle", {
+      title: t("heroDemoAssistantsTitle", {
         ns: "home",
         defaultValue: "Interview panel: Head of Finance",
       }),
-      description: t("heroDemoEaDescription", {
+      description: t("heroDemoAssistantsDescription", {
         ns: "home",
         defaultValue:
           "Please mark every slot you could make this week. The candidate is flying in on Monday, so I'd like to confirm as early as I can.",
       }),
-      organizer: t("heroDemoEaOrganizer", {
+      organizer: t("heroDemoAssistantsOrganizer", {
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoEaLocation", {
+      location: t("heroDemoAssistantsLocation", {
         ns: "home",
         defaultValue: "Meeting room 3 and Zoom",
       }),
       spacing: "consecutive",
-      participants: executiveAssistantParticipants,
+      participants: assistantsParticipants,
     };
   }
 
@@ -212,7 +212,7 @@ const defaultParticipants: DemoPreset["participants"] = [
 // external in the room and the reason the poll gets shared as a link. The
 // candidate's availability is the tightest, which is what leaves a single slot
 // that works for everyone.
-const executiveAssistantParticipants: DemoPreset["participants"] = [
+const assistantsParticipants: DemoPreset["participants"] = [
   {
     name: "Daniel Whitfield",
     votes: ["no", "ifNeedBe", "no", "no", "yes", "yes", "ifNeedBe", "yes"],

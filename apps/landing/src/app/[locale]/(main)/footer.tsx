@@ -166,13 +166,13 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <li>
               <LinkBase
                 className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="/scheduling-for/executive-assistants"
+                href="/scheduling-for/assistants"
               >
                 <Trans
                   t={t}
                   ns="common"
-                  i18nKey="executiveAssistants"
-                  defaults="Executive assistants"
+                  i18nKey="assistants"
+                  defaults="Assistants"
                 />
               </LinkBase>
             </li>
