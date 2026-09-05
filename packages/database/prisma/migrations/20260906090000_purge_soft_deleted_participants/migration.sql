@@ -1,0 +1,28 @@
+-- Response deletion became a hard delete in #3191, so nothing writes
+-- `deleted = true` any more and this backlog is closed ended.
+--
+-- It is purged rather than left to age out. Inactivity poll deletion only
+-- collects polls that have gone quiet, so a poll kept in use for years never
+-- reaches it and accumulates soft deleted responses indefinitely: names and
+-- emails retained on responses their authors explicitly deleted, and ghost
+-- rows that leak into counts and scores wherever a read forgets its
+-- `deleted = false` filter.
+--
+-- Cloud's backlog was drained by hand before this shipped, so here it clears
+-- the remainder. On a self hosted instance, which has no scheduler and never
+-- ran the manual drain, this is the whole purge — those backlogs are small
+-- and finish in well under a second. Measured at ~2.6ms per response
+-- including cascade, so no chunking: a few thousand rows is seconds, and
+-- keeping it one statement means it either applies or rolls back cleanly.
+--
+-- Votes cascade. `poll_invites.participant_id` is SetNull, so an invite whose
+-- response is purged reverts to pending with its token intact — the rule the
+-- column documents. `poll_activities.participant_id` is a soft reference with
+-- no FK, so the `response_deleted` rows that are these responses' historical
+-- record survive untouched.
+--
+-- The activity feed is deliberately not backfilled for rows deleted before
+-- `response_deleted` existed: there is no true timestamp for those events,
+-- and dating them today would put invented history at the top of hosts' feeds
+-- for polls they settled long ago.
+DELETE FROM "participants" WHERE "deleted" = true;
