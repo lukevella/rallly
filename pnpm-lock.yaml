@@ -571,8 +571,6 @@ importers:
         specifier: ^4.6.2
         version: 4.21.0
 
-  packages/dayjs: {}
-
   packages/emails:
     dependencies:
       '@aws-sdk/client-ses':

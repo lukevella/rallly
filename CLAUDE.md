@@ -13,7 +13,8 @@ Rallly is a meeting scheduling application built with Next.js that allows users 
 - Better-Auth for authentication
 - TailwindCSS for styling
 - TypeScript throughout
-- dayjs for date handling
+- `Intl` for all user-facing date and number formatting, wrapped in `lib/datetime/` (`format.ts`, `relative-time.tsx`, `duration.tsx`). dayjs is legacy: it survives only for calendar arithmetic and machine-format ISO strings in the poll options form, slot generator and CSV export. Never add a new dayjs import and never use it to render a date to a user
+- Base UI (`@base-ui/react`) for primitives in `packages/ui`. Radix was removed; never reintroduce it
 
 ## Development Commands
 
@@ -43,8 +44,9 @@ pnpm dev
 ```bash
 # Development
 pnpm dev                    # Start web app dev server
-pnpm dev:landing           # Start landing page dev server  
+pnpm dev:landing           # Start landing page dev server
 pnpm dev:emails            # Start email template dev server
+pnpm docs:dev              # Start docs site (Mintlify)
 
 # Building
 pnpm build                 # Build web app
@@ -56,6 +58,7 @@ pnpm build:test           # Build for testing
 pnpm db:migrate           # Run database migrations
 pnpm db:push              # Push schema changes
 pnpm db:deploy            # Deploy migrations (production)
+pnpm db:seed              # Seed the database (db:reset runs this automatically)
 
 # Testing
 pnpm test:unit            # Run unit tests (Vitest)
@@ -65,10 +68,17 @@ pnpm test:integration     # Run integration tests (Playwright)
 pnpm check                # Run Biome linter/formatter
 pnpm check:fix            # Auto-fix linting issues
 pnpm type-check           # Run TypeScript type checking
+pnpm check:structure      # Enforce the feature file vocabulary and no feature cycles
+pnpm check:cascades       # Fail on User cascade relations the deletion code does not account for
+pnpm check:locales        # Verify ICU brace balance in locale files
 
 # Utilities
 pnpm i18n:scan            # Scan for translation keys
+pnpm --filter @rallly/web i18n:sync   # Push changed English defaults into app.json (no root script)
 pnpm sherif               # Check package dependencies
+pnpm screenshots          # Capture marketing screenshots (packages/screenshots)
+pnpm release              # Cut a release (scripts/create-release.sh)
+pnpm proxy:start          # Start the portless .test proxy
 ```
 
 ## Architecture
@@ -84,6 +94,11 @@ pnpm sherif               # Check package dependencies
   - `posthog/` - Analytics client
   - `billing/` - Stripe integration
   - `utils/` - Shared utilities
+  - `languages/` - Supported locale list
+  - `logger/` - Shared logger
+  - `screenshots/` - Playwright capture scripts for marketing screenshots
+  - `test-helpers/` - Shared test fixtures
+  - `tailwind-config/`, `tsconfig/` - Shared config
 
 ### Key Features & Structure
 - **Polls**: Core scheduling functionality in `apps/web/src/features/poll/`
@@ -95,7 +110,7 @@ pnpm sherif               # Check package dependencies
 ### Database
 - PostgreSQL with Prisma ORM
 - Multi-model schema split across files in `packages/database/prisma/models/`
-- Supports both cloud (Vercel KV) and self-hosted Redis for rate limiting
+- Rate limiting uses Upstash Redis over REST (`lib/kv.ts`, `lib/rate-limit/`), configured by `KV_REST_API_URL` and `KV_REST_API_TOKEN`. There is no other Redis path; when the vars are absent rate limiting is off
 
 ### Authentication & Authorization
 - Better-Auth with multiple providers (Google, Microsoft, OIDC, email OTP, guest)
@@ -109,7 +124,7 @@ pnpm sherif               # Check package dependencies
 - **Every cloud vs self-hosted behavior difference lives in one of two files, one line per field with the reason on the line, so the files are the inventory:**
   - **Capabilities** ("can this instance do X?") — `lib/feature-flags/config.ts` (`featureFlagConfig`, `isFeatureEnabled` server-side, `useFeatureFlag` client-side). Behavior forks key on a capability such as `billing`, never on `isSelfHosted` directly; "no billing ⇒ every paid feature is on" is derived once in `features/billing/utils.ts` (`resolveSpaceTier`).
   - **Policies** ("what does this instance's org decide for its spaces?") — `features/instance-policy/` (`deriveInstancePolicy` in `utils.ts` is the inventory; `getInstancePolicy` from `data.ts` for server code, `loadInstancePolicy` from `loaders.ts` for pages, `useInstancePolicy` from `client.tsx`). When the organization layer lands this becomes the org's policy with the same field names.
-  - `isSelfHosted` is for infrastructure wiring (Stripe webhook, licensing routes, updates route, storage). A few legacy product forks still key on it directly (account deletion mode, control panel footer links, the cookie banner link, API access, the guest poll upsell); they shrink toward zero and are never a precedent. A new `isSelfHosted` product fork is a review blocker: add a capability or policy field instead.
+  - `isSelfHosted` is for infrastructure wiring (Stripe webhook, licensing routes, updates route, storage). A few legacy product forks still key on it directly (account deletion mode, control panel footer links, API access, the guest poll upsell, the admin setup page, the license limit warning); they shrink toward zero and are never a precedent. `components/environment.tsx` (`IfSelfHosted`/`IfCloudHosted`) belongs to that legacy set, not to the sanctioned API. A new `isSelfHosted` product fork is a review blocker: add a capability or policy field instead.
 
 ## Testing
 
@@ -142,7 +157,7 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
   - Product feature names: "Event Types", "Quick Create", "Control Panel"
   - Sample/placeholder data standing in for user content: "Jessie Smith", "My Team"
 - **Headings and dialog titles are not exempt.** Title Case has no single agreed rule (Chicago, AP and APA disagree), so it cannot be applied consistently; it degrades screen reader pronunciation and removes word-shape cues used by readers with dyslexia and low vision; and the same string often serves as both a button label and a dialog title, so a position-based rule would force two strings for one concept.
-- **Changing `defaults` alone is not enough.** `pnpm i18n:scan` will not overwrite an existing key's value — the UI keeps rendering the old copy. Run `pnpm i18n:sync` (`--sync-primary`) to push changed English values through. Never run `--sync-all`; it clears other locales' translations.
+- **Changing `defaults` alone is not enough.** `pnpm i18n:scan` will not overwrite an existing key's value — the UI keeps rendering the old copy. Run `pnpm --filter @rallly/web i18n:sync` (`--sync-primary`; there is no root script) to push changed English values through. Never run `--sync-all`; it clears other locales' translations.
 
 ### Permission-Gated UI
 Choose the presentation by **why the user lacks the capability**, never ad hoc per surface:
@@ -212,7 +227,7 @@ Reads filtered or grouped by the viewer's present ("upcoming", "past", agenda gr
 
 **What is a feature** — a feature owns at least one of: a database entity, an external integration, or server-side lifecycle logic. UI-only folders are NOT features — they belong in `components/` or an owning feature's `components/`. Create the folder when the first server logic for a new domain noun appears — never speculatively, never for a component alone. Sub-concerns are subdirectories of their parent feature (e.g. `space/member/`), not sibling features.
 
-**Feature file vocabulary** — closed set; new file names require a team decision. Applies recursively in sub-concern directories:
+**Feature file vocabulary** — closed set, enforced by `pnpm check:structure` (`scripts/check-feature-structure.mjs`; update the script when the set changes). New file names require a team decision. Applies recursively in sub-concern directories:
 
 - `data.ts` — parameterized reads (Prisma queries), must start with `import "server-only"`. Trusts its input: every query takes explicit arguments and carries its tenant scope in the where clause. Never reads the request — no `next/headers`, `next/navigation`, or session state (lint enforced)
 - `loaders.ts` — request facing reads: resolve the actor from the session, apply page semantics (redirects to /login and /setup, `InvalidSessionError` on bans), and delegate to `data.ts` with proven scope. Loaders always consume `data.ts`, never the reverse, and never import `@rallly/database` — so query logic cannot fork between the session path and the API path. Server components call loaders; API routes, webhooks and cron call `data.ts` with proven scope from their own gate (API routes are lint banned from `@/features/**/loaders`). Naming note: `session-data.ts` and `queries.ts` were considered and rejected
