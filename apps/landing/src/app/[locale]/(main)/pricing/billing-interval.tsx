@@ -57,7 +57,7 @@ export function BillingIntervalSwitch({
           <svg
             aria-hidden="true"
             viewBox="0 0 48 32"
-            className="pointer-events-none absolute top-0 -right-16 hidden h-9 w-16 text-gray-400 sm:block"
+            className="pointer-events-none absolute top-0 -right-16 h-9 w-16 text-gray-400"
             fill="none"
           >
             <path
