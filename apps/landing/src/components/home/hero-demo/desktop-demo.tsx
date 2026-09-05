@@ -45,7 +45,9 @@ export const DesktopDemo = ({
   return (
     <DemoFrame>
       <DemoScreen className="bg-gray-100 p-4 sm:p-6">
-        <div className="mx-auto w-fit space-y-3 text-left">
+        {/* Pinned to the grid width (235px + 8 × 84px) so a long description
+            wraps instead of stretching the card past the table. */}
+        <div className="mx-auto w-[907px] space-y-3 text-left">
           <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
             <div className="h-1.5 bg-linear-to-r from-indigo-500 to-violet-500" />
             <div className="space-y-3 p-4 sm:p-5">
