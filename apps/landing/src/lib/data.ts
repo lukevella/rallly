@@ -14,7 +14,6 @@ export const getMonthlyPollCount = async () => {
       participants: {
         some: {
           createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
-          deleted: false,
         },
       },
     },
@@ -27,7 +26,6 @@ export const getMonthlyVoterCount = async () => {
   return prisma.participant.count({
     where: {
       createdAt: { gte: new Date(Date.now() - THIRTY_DAYS_MS) },
-      deleted: false,
     },
   });
 };
