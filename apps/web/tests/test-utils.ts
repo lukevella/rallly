@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import type { SpaceTier, UserRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
@@ -141,6 +142,7 @@ export async function createTestPoll({
       participants: {
         create: {
           name: "Test Participant",
+          token: randomUUID().replace(/-/g, ""),
           createdAt: participantActiveAt,
           updatedAt: participantActiveAt,
         },

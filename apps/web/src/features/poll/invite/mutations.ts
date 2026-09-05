@@ -4,21 +4,14 @@ import { Prisma, prisma } from "@rallly/database";
 import { sendPollInviteEmail } from "@rallly/emails/templates/poll-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { customAlphabet } from "nanoid";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import { MAX_POLL_INVITES_PER_DAY } from "@/features/poll/invite/constants";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import { generateAccessToken } from "@/features/poll/utils";
 
 const logger = createLogger("poll/invite/mutations");
-
-// Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
-// floor documented on PollInvite.token.
-const generateInviteToken = customAlphabet(
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-  32,
-);
 
 class InviteClaimedElsewhere extends Error {}
 
@@ -123,7 +116,7 @@ export async function sendPollInvite({
     return { ok: false, reason: "alreadyInvited" };
   }
 
-  const token = generateInviteToken();
+  const token = generateAccessToken();
 
   // A reactivated invite keeps its id and gains a second invite_sent event,
   // so the rollback below must only touch events from this attempt.
@@ -235,34 +228,37 @@ export async function sendPollInvite({
 }
 
 /**
+ * The pending invite behind an emailed link. Only the token counts as proof:
+ * a typed address is unverified, so matching on it would let anyone claim
+ * someone else's invite. Read inside the response's transaction so the
+ * response can take the invite's token as its own. Two responses racing on
+ * one link both find the row; the second fails on the participant token's
+ * unique index rather than silently claiming a token already in use.
+ */
+export async function findPendingPollInvite(
+  tx: Prisma.TransactionClient,
+  { pollId, token }: { pollId: string; token: string },
+) {
+  return tx.pollInvite.findFirst({
+    where: { pollId, token, participantId: null, revokedAt: null },
+    select: { id: true, token: true },
+  });
+}
+
+/**
  * Joins a new response to the invite it answers, so the host's list flips
- * from Sent to Responded. Only the token from the emailed link counts as
- * proof: a typed address is unverified, so matching on it would let anyone
- * claim someone else's invite. Runs inside the response's transaction so the
- * join commits with the participant.
+ * from Sent to Responded. Runs inside the response's transaction so the join
+ * commits with the participant.
  */
 export async function attachParticipantToInvite(
   tx: Prisma.TransactionClient,
-  {
-    pollId,
-    participantId,
-    inviteToken,
-  }: {
-    pollId: string;
-    participantId: string;
-    inviteToken?: string;
-  },
+  { inviteId, participantId }: { inviteId: string; participantId: string },
 ) {
-  if (!inviteToken) {
-    return false;
-  }
-
-  const { count } = await tx.pollInvite.updateMany({
-    where: { pollId, participantId: null, revokedAt: null, token: inviteToken },
+  await tx.pollInvite.update({
+    where: { id: inviteId },
     data: { participantId },
+    select: { id: true },
   });
-
-  return count > 0;
 }
 
 /**

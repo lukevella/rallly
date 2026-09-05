@@ -73,7 +73,7 @@ model Participant {
   name      String
   email     String?
   note      String?
-  /// Per person edit link: grants edit access to this response without a session. App minted, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet — url safe with no linkifier edge cases, unlike base64url); never a DB default, nullable because it's only minted when a link is issued
+  /// Per response edit link: grants edit access to this response without a session. App minted at creation, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet — url safe with no linkifier edge cases, unlike base64url); never a DB default. A response created through an emailed invite takes the invite's token. Rows that predate minting were backfilled with gen_random_uuid() hex. Nullable only until the minting code is live everywhere: until then a code path that forgets to mint inserts NULL; once the follow-up migration makes the column required, it fails loudly instead
   token     String?   @unique
   userId    String?   @map("user_id")
   pollId    String    @map("poll_id")

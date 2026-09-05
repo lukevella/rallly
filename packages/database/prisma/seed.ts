@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 import {
@@ -147,6 +148,7 @@ async function main() {
           email: part.email,
           note: part.note,
           userId: part.userId,
+          token: randomUUID().replace(/-/g, ""),
         },
       });
       participantCount++;
