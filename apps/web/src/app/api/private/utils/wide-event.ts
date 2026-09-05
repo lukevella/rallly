@@ -1,6 +1,6 @@
 import { createWideEvent, logger } from "@rallly/logger";
 import { createMiddleware } from "hono/factory";
-import type { RateLimitInfo } from "hono-rate-limiter";
+import type { RateLimitFailure, RateLimitInfo } from "./rate-limit";
 
 type WideEventEnv = {
   Variables: {
@@ -9,6 +9,7 @@ type WideEventEnv = {
       apiKeyId: string;
     };
     rateLimit?: RateLimitInfo;
+    rateLimitFailure?: RateLimitFailure;
   };
 };
 
@@ -56,8 +57,22 @@ export const wideEvent = createMiddleware<WideEventEnv>(async (c, next) => {
     const rateLimit = c.get("rateLimit");
     if (rateLimit) {
       event.rateLimiter = "private-api";
-      event.rateLimiterConsumedPoints = rateLimit.used;
-      event.rateLimiterRemainingPoints = rateLimit.remaining;
+      event.rateLimiterConsumedPoints = rateLimit.minute.used;
+      event.rateLimiterRemainingPoints = rateLimit.minute.remaining;
+      event.rateLimiterDailyConsumedPoints = rateLimit.day.used;
+      event.rateLimiterDailyRemainingPoints = rateLimit.day.remaining;
+    }
+
+    // A fail-closed 503 from the rate limiter is returned, not thrown, so
+    // `c.error` is empty; carry its cause so an outage is queryable.
+    const rateLimitFailure = c.get("rateLimitFailure");
+    if (rateLimitFailure) {
+      event.rateLimiter = "private-api";
+      event.rateLimiterError = rateLimitFailure.reason;
+      event.errorType = "RateLimitStoreError";
+      event.errorCode = "SERVICE_UNAVAILABLE";
+      event.errorMessage = rateLimitFailure.message;
+      event.isRetriable = true;
     }
 
     event.durationMs = Date.now() - startTime;
