@@ -20,21 +20,25 @@ export const useRole = () => {
   return pathname?.includes("/poll") ? "admin" : "participant";
 };
 
+/**
+ * Responses the emailed link in the URL may edit, resolved on the server
+ * from the same token the tRPC routes check.
+ */
 const PermissionsContext = React.createContext<{
-  impersonatedUserId: string | null;
+  linkedParticipantIds: string[];
 }>({
-  impersonatedUserId: null,
+  linkedParticipantIds: [],
 });
 
 export const PermissionProvider = ({
   children,
-  impersonatedUserId,
+  linkedParticipantIds,
 }: {
   children: React.ReactNode;
-  impersonatedUserId: string | null;
+  linkedParticipantIds: string[];
 }) => {
   return (
-    <PermissionsContext.Provider value={{ impersonatedUserId }}>
+    <PermissionsContext.Provider value={{ linkedParticipantIds }}>
       {children}
     </PermissionsContext.Provider>
   );
@@ -47,8 +51,6 @@ export const usePermissions = () => {
   const role = useRole();
   const { participants } = useParticipants();
   return {
-    isUser: (userId: string) =>
-      userId === user?.id || userId === context.impersonatedUserId,
     canAddNewParticipant: poll.status === "open",
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
@@ -67,15 +69,10 @@ export const usePermissions = () => {
         return false;
       }
 
-      if (
-        participant.userId === user?.id ||
-        (context.impersonatedUserId &&
-          participant.userId === context.impersonatedUserId)
-      ) {
-        return true;
-      }
-
-      return false;
+      return (
+        (!!user && participant.userId === user.id) ||
+        context.linkedParticipantIds.includes(participantId)
+      );
     },
   };
 };

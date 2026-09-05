@@ -15,9 +15,13 @@ export const normalizeVotes = (
   }));
 };
 
+/**
+ * The token from an emailed link: a response's edit token, an invite token,
+ * or a legacy seal. `invite` is the param older invite emails carry.
+ */
 export const useEditToken = () => {
   const searchParams = useSearchParams();
-  return searchParams.get("token") ?? undefined;
+  return searchParams.get("token") ?? searchParams.get("invite") ?? undefined;
 };
 
 export const useAddParticipantMutation = () => {

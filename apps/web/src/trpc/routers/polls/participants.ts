@@ -12,7 +12,10 @@ import { env } from "@/env";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
-import { hasPollAdminAccess } from "@/features/poll/data";
+import {
+  hasPollAdminAccess,
+  listParticipantIdsByToken,
+} from "@/features/poll/data";
 import {
   attachParticipantToInvite,
   findPendingPollInvite,
@@ -27,11 +30,7 @@ import {
   router,
 } from "../../trpc";
 import { responseNoteInput } from "./schema";
-import {
-  createParticipantEditToken,
-  resolveActor,
-  tryResolveUserId,
-} from "./utils";
+import { authorizeParticipantEdit } from "./utils";
 
 const logger = createLogger("participants");
 
@@ -50,31 +49,6 @@ function createParticipantFullDTO(
     votes,
     hidden: false,
   };
-}
-
-async function canModifyParticipant(participantId: string, userId: string) {
-  const participant = await prisma.participant.findUnique({
-    where: { id: participantId },
-    select: { id: true, pollId: true, userId: true },
-  });
-
-  if (!participant) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Participant not found",
-    });
-  }
-
-  const isOwner = participant.userId === userId;
-
-  if (!isOwner && !(await hasPollAdminAccess(participant.pollId, userId))) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "You are not allowed to modify this participant",
-    });
-  }
-
-  return participant;
 }
 
 async function sendNewResponseNotificationEmail({
@@ -186,18 +160,22 @@ export const participants = router({
         ? await hasPollAdminAccess(pollId, ctx.user.id)
         : false;
 
-      // Fall back to the edit token so a guest can still see their own
-      // response when opening the email link in a fresh browser.
-      const viewerId = isAdmin ? null : await tryResolveUserId(token, ctx.user);
+      // The emailed link names the viewer's own response, so a guest still
+      // sees it as theirs when opening the link in a fresh browser.
+      const linkedIds = new Set(
+        token && !isAdmin
+          ? await listParticipantIdsByToken({ pollId, token })
+          : [],
+      );
+      const isOwn = (participant: { id: string; userId: string | null }) =>
+        linkedIds.has(participant.id) ||
+        (!!ctx.user && participant.userId === ctx.user.id);
 
       // Response notes are visible to the host and their author only: strip
       // them from every other payload rather than hiding them in the UI.
       const participants = rawParticipants.map((participant) => {
         const dto = createParticipantFullDTO(participant);
-        if (
-          isAdmin ||
-          (participant.userId && participant.userId === viewerId)
-        ) {
+        if (isAdmin || isOwn(participant)) {
           return dto;
         }
         return { ...dto, note: null };
@@ -208,7 +186,7 @@ export const participants = router({
       if (poll.hideParticipants) {
         if (!isAdmin) {
           return participants.map((participant) => {
-            if (viewerId && participant.userId === viewerId) {
+            if (isOwn(participant)) {
               return participant;
             }
 
@@ -234,9 +212,11 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, token }, ctx }) => {
-      const actor = await resolveActor(token, ctx.user);
-
-      const participant = await canModifyParticipant(participantId, actor.id);
+      const { participant, actor } = await authorizeParticipantEdit({
+        participantId,
+        token,
+        ctxUser: ctx.user,
+      });
 
       await prisma.$transaction(async (tx) => {
         // Snapshot before the delete: the activity payload is the historical
@@ -271,7 +251,7 @@ export const participants = router({
           {
             pollId: participant.pollId,
             type: "response_deleted",
-            userId: actor.id,
+            userId: actor?.id,
             participantId,
             payload: {
               name: snapshot.name,
@@ -286,15 +266,17 @@ export const participants = router({
         ]);
       });
 
-      track(actor, {
-        event: "poll_response_delete",
-        properties: {
-          participant_id: participant.id,
-        },
-        groups: {
-          poll: participant.pollId,
-        },
-      });
+      if (actor) {
+        track(actor, {
+          event: "poll_response_delete",
+          properties: {
+            participant_id: participant.id,
+          },
+          groups: {
+            poll: participant.pollId,
+          },
+        });
+      }
     }),
   add: publicProcedure
     .use(createRateLimitMiddleware("add_participant", 10, "1 h"))
@@ -306,7 +288,7 @@ export const participants = router({
         email: z.string().optional(),
         note: responseNoteInput,
         timeZone: z.string().optional(),
-        inviteToken: z.string().optional(),
+        token: z.string().optional(),
         votes: z
           .object({
             optionId: z.string(),
@@ -318,7 +300,7 @@ export const participants = router({
     .mutation(
       async ({
         ctx,
-        input: { pollId, votes, name, email, note, timeZone, inviteToken },
+        input: { pollId, votes, name, email, note, timeZone, token },
       }) => {
         const participantCount = await prisma.participant.count({
           where: {
@@ -353,13 +335,14 @@ export const participants = router({
           existingOptionIds.has(optionId),
         );
 
-        const { participant, viaInvite } = await prisma.$transaction(
+        const { participant, editToken, viaInvite } = await prisma.$transaction(
           async (tx) => {
             // A response answering an emailed invite takes the invite's
             // token, so the link the invitee already holds names it.
-            const invite = inviteToken
-              ? await findPendingPollInvite(tx, { pollId, token: inviteToken })
+            const invite = token
+              ? await findPendingPollInvite(tx, { pollId, token })
               : null;
+            const editToken = invite?.token ?? generateAccessToken();
 
             const participant = await tx.participant.create({
               data: {
@@ -368,7 +351,7 @@ export const participants = router({
                 email,
                 note,
                 timeZone,
-                token: invite?.token ?? generateAccessToken(),
+                token: editToken,
                 userId: ctx.user.id,
                 locale: ctx.locale,
                 votes: {
@@ -429,15 +412,13 @@ export const participants = router({
               });
             }
 
-            return { participant, viaInvite: invite !== null };
+            return { participant, editToken, viaInvite: invite !== null };
           },
         );
 
         const totalResponses = participantCount + 1;
 
         if (email) {
-          const token = await createParticipantEditToken(ctx.user.id);
-
           const space = participant.poll.space;
 
           after(async () =>
@@ -450,7 +431,7 @@ export const participants = router({
               props: {
                 title: participant.poll.title,
                 editSubmissionUrl: absoluteUrl(
-                  `/invite/${participant.poll.id}?token=${token}`,
+                  `/invite/${participant.poll.id}?token=${editToken}`,
                 ),
               },
             }),
@@ -500,9 +481,11 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, newName, token }, ctx }) => {
-      const { id: userId } = await resolveActor(token, ctx.user);
-
-      const participant = await canModifyParticipant(participantId, userId);
+      const { participant, actor } = await authorizeParticipantEdit({
+        participantId,
+        token,
+        ctxUser: ctx.user,
+      });
 
       await prisma.$transaction(async (tx) => {
         await tx.participant.update({
@@ -519,7 +502,7 @@ export const participants = router({
           {
             pollId: participant.pollId,
             type: "response_updated",
-            userId,
+            userId: actor?.id,
             participantId,
             payload: { name: newName },
           },
@@ -541,12 +524,12 @@ export const participants = router({
       }),
     )
     .mutation(async ({ input: { participantId, votes, token }, ctx }) => {
-      const actor = await resolveActor(token, ctx.user);
-
-      const existingParticipant = await canModifyParticipant(
-        participantId,
-        actor.id,
-      );
+      const { participant: existingParticipant, actor } =
+        await authorizeParticipantEdit({
+          participantId,
+          token,
+          ctxUser: ctx.user,
+        });
 
       const pollId = existingParticipant.pollId;
 
@@ -610,7 +593,7 @@ export const participants = router({
           {
             pollId,
             type: "response_updated",
-            userId: actor.id,
+            userId: actor?.id,
             participantId,
             payload: { name: updatedParticipant.name },
           },
@@ -619,12 +602,14 @@ export const participants = router({
         return updatedParticipant;
       });
 
-      track(actor, {
-        event: "poll_response_update",
-        groups: {
-          poll: pollId,
-        },
-      });
+      if (actor) {
+        track(actor, {
+          event: "poll_response_update",
+          groups: {
+            poll: pollId,
+          },
+        });
+      }
 
       return createParticipantFullDTO(participant);
     }),

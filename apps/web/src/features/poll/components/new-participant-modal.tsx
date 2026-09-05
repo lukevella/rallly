@@ -25,13 +25,15 @@ import { Textarea } from "@rallly/ui/textarea";
 import { TRPCClientError } from "@trpc/client";
 import { CircleCheckIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
 import { usePoll } from "@/features/poll/client";
-import { useAddParticipantMutation } from "@/features/poll/components/mutations";
+import {
+  useAddParticipantMutation,
+  useEditToken,
+} from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { MAX_RESPONSE_NOTE_LENGTH } from "@/features/poll/schema";
 import { useUser } from "@/features/user/client";
@@ -175,9 +177,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const noteLength = watch("note")?.length ?? 0;
   const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipantMutation();
-  // The emailed invite link carries the invitee token; joining the response
-  // to it lets the host see who has responded.
-  const inviteToken = useSearchParams()?.get("invite") ?? undefined;
+  // An emailed invite link carries the invite token; the response takes it
+  // over so the host sees who responded and the same link edits it later.
+  const token = useEditToken();
 
   if (formState.isSubmitSuccessful) {
     return (
@@ -271,7 +273,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 note: data.note,
                 pollId: poll.id,
                 timeZone,
-                inviteToken,
+                token,
               });
               props.onSubmit?.(newParticipant);
             } catch (error) {

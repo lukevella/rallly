@@ -13,7 +13,8 @@ import {
 
 /**
  * The Share dialog sends one email invite per submit and lists every invite
- * with its status. Free hosts see the pay wall instead of sending.
+ * with its status. Free hosts see the pay wall instead of sending. The
+ * emailed link keeps granting the invitee edit access to their response.
  */
 
 const PRO_HOST = "email-invites-pro@rallly.co";
@@ -39,6 +40,31 @@ async function openAsGuest(browser: Browser, inviteUrl: string) {
 
 // The invite list is server data, so a guest's activity only shows after
 // the host's page reloads.
+/**
+ * A fresh context has no guest cookie, so the only thing identifying the
+ * viewer is the token in the link.
+ */
+async function renameThroughInviteLink(
+  browser: Browser,
+  inviteUrl: string,
+  { from, to }: { from: string; to: string },
+) {
+  const guest = await openAsGuest(browser, inviteUrl);
+  try {
+    const { guestPage } = guest;
+    await expect(guestPage.getByText(from)).toBeVisible();
+    await guestPage.getByTestId("participant-menu").click();
+    await guestPage.getByRole("menuitem", { name: "Change name" }).click();
+    const dialog = guestPage.getByRole("dialog", { name: "Change name" });
+    await dialog.getByLabel("Name").fill(to);
+    await dialog.getByRole("button", { name: "Save" }).click();
+    await expect(dialog).toBeHidden();
+    await expect(guestPage.getByText(to)).toBeVisible();
+  } finally {
+    await guest.close();
+  }
+}
+
 async function reopenShareDialog(page: Page) {
   await page.reload();
   await page.getByRole("button", { name: "Share" }).click();
@@ -89,14 +115,14 @@ test.describe("Email invites", () => {
       `Pro Host invited you to respond to ${POLL_TITLE}`,
     );
     expect(email.HTML).toContain("/invite/");
-    expect(email.HTML).toContain("?invite=");
+    expect(email.HTML).toContain("?token=");
     // Replies reach the host, not the From address.
     expect(email.ReplyTo.map((address) => address.Address)).toEqual([PRO_HOST]);
 
     // The row menu copies the same personal link the email carried, so a
     // host reaching the invitee another way keeps the response attributed.
     const emailedUrl = email.HTML.match(
-      /href="([^"]*\/invite\/[^"]*invite=[^"]*)"/,
+      /href="([^"]*\/invite\/[^"]*token=[^"]*)"/,
     )?.[1];
     await row.getByRole("button", { name: `Options for ${INVITEE}` }).click();
     await page.getByRole("menuitem", { name: "Copy personal link" }).click();
@@ -176,6 +202,15 @@ test.describe("Email invites", () => {
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(respondedRow.getByText("Responded")).toBeVisible();
+    await page.keyboard.press("Escape");
+
+    // Opening the same link again, with no cookie, edits that response.
+    await renameThroughInviteLink(browser as Browser, emailedUrl as string, {
+      from: "Invited Guest",
+      to: "Renamed Guest",
+    });
+    await page.reload();
+    await expect(page.getByText("Renamed Guest")).toBeVisible();
   });
 
   test("creation opens the dialog and leaves the URL clean", async ({

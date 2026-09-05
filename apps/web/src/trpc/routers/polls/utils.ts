@@ -1,70 +1,62 @@
 import { TRPCError } from "@trpc/server";
-import { createToken, decryptToken } from "@/lib/session";
-
-export async function getUserIdFromToken(
-  token: string | undefined,
-): Promise<string | null> {
-  if (!token) {
-    return null;
-  }
-
-  const payload = await decryptToken<{ userId: string }>(token);
-  return payload?.userId ?? null;
-}
-
-export async function createParticipantEditToken(
-  userId: string,
-): Promise<string> {
-  return await createToken(
-    { userId },
-    {
-      ttl: 0, // basically forever
-    },
-  );
-}
-
-export async function tryResolveUserId(
-  token: string | undefined,
-  ctxUser: { id: string } | undefined,
-): Promise<string | null> {
-  const userIdFromToken = await getUserIdFromToken(token);
-  return userIdFromToken ?? ctxUser?.id ?? null;
-}
+import {
+  getParticipant,
+  hasPollAdminAccess,
+  listParticipantIdsByToken,
+} from "@/features/poll/data";
 
 type Actor = { id: string; isGuest: boolean };
 
 /**
- * Resolve the acting user along with whether they should be treated as a guest
- * for analytics (person-processing) purposes.
+ * Proves the caller may edit a response. Two proofs are accepted: the token
+ * from the emailed link, which names the response itself, and a session that
+ * owns the response or administers its poll. Admin access is bound to the
+ * session only, so a link never unlocks other people's responses.
  *
- * Participant/comment edit tokens are only ever issued to guest participants,
- * so a token-resolved actor is treated as a guest. A signed-in real user always
- * acts through their session (`ctxUser`), never a token.
+ * The returned actor is for attribution (activity log, analytics): the
+ * session when there is one, otherwise the user the response was created
+ * under, who was a guest at the time.
  */
-export async function tryResolveActor(
-  token: string | undefined,
-  ctxUser: Actor | undefined,
-): Promise<Actor | null> {
-  const userIdFromToken = await getUserIdFromToken(token);
-  if (userIdFromToken) {
-    return { id: userIdFromToken, isGuest: true };
-  }
-  if (ctxUser) {
-    return { id: ctxUser.id, isGuest: ctxUser.isGuest };
-  }
-  return null;
-}
+export async function authorizeParticipantEdit({
+  participantId,
+  token,
+  ctxUser,
+}: {
+  participantId: string;
+  token: string | undefined;
+  ctxUser: Actor | undefined;
+}) {
+  const participant = await getParticipant({ participantId });
 
-export async function resolveActor(
-  token: string | undefined,
-  ctxUser: Actor | undefined,
-): Promise<Actor> {
-  const actor = await tryResolveActor(token, ctxUser);
-  if (!actor) {
+  if (!participant) {
     throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "This method requires a user or valid token",
+      code: "NOT_FOUND",
+      message: "Participant not found",
     });
   }
-  return actor;
+
+  const ownedBySession = ctxUser
+    ? participant.userId === ctxUser.id ||
+      (await hasPollAdminAccess(participant.pollId, ctxUser.id))
+    : false;
+
+  const ownedByLink =
+    !ownedBySession && token
+      ? (
+          await listParticipantIdsByToken({ pollId: participant.pollId, token })
+        ).includes(participant.id)
+      : false;
+
+  if (!ownedBySession && !ownedByLink) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "You are not allowed to modify this participant",
+    });
+  }
+
+  const actor: Actor | null =
+    ctxUser ??
+    (participant.userId ? { id: participant.userId, isGuest: true } : null);
+
+  return { participant, actor };
 }

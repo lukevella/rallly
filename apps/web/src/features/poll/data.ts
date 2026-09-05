@@ -3,11 +3,13 @@ import "server-only";
 import type { PollStatus, Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { getInstancePolicy } from "@/features/instance-policy/data";
+import { isLegacyEditToken } from "@/features/poll/utils";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type {
   AuthorizedSpaceId,
   SpaceContentScope,
 } from "@/features/space/types";
+import { decryptToken } from "@/lib/session";
 
 export async function getPoll({
   pollId,
@@ -456,3 +458,53 @@ export const hasPollAdminAccess = async (pollId: string, userId: string) => {
 
   return poll !== null;
 };
+
+export async function getParticipant({
+  participantId,
+}: {
+  participantId: string;
+}) {
+  return prisma.participant.findFirst({
+    where: { id: participantId, deleted: false },
+    select: { id: true, pollId: true, userId: true },
+  });
+}
+
+/**
+ * The responses an emailed link may edit. A response token names exactly one
+ * row. A legacy seal names a guest user instead, so it resolves to that
+ * user's responses in the poll that carry an email, the only rows such a
+ * link was ever sent for.
+ */
+export async function listParticipantIdsByToken({
+  pollId,
+  token,
+}: {
+  pollId: string;
+  token: string;
+}) {
+  if (isLegacyEditToken(token)) {
+    const payload = await decryptToken<{ userId: string }>(token).catch(
+      () => null,
+    );
+    if (!payload?.userId) {
+      return [];
+    }
+    const participants = await prisma.participant.findMany({
+      where: {
+        pollId,
+        userId: payload.userId,
+        deleted: false,
+        email: { not: null },
+      },
+      select: { id: true },
+    });
+    return participants.map((participant) => participant.id);
+  }
+
+  const participant = await prisma.participant.findFirst({
+    where: { pollId, token, deleted: false },
+    select: { id: true },
+  });
+  return participant ? [participant.id] : [];
+}
