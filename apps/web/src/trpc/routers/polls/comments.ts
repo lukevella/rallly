@@ -21,7 +21,6 @@ import {
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import { resolveActor } from "./utils";
 
 const logger = createLogger("comments");
 
@@ -200,14 +199,14 @@ export const comments = router({
       return newComment;
     }),
   delete: publicProcedure
+    .use(requireUserMiddleware)
     .input(
       z.object({
         commentId: z.string(),
-        token: z.string().optional(),
       }),
     )
-    .mutation(async ({ input: { commentId, token }, ctx }) => {
-      const actor = await resolveActor(token, ctx.user);
+    .mutation(async ({ input: { commentId }, ctx }) => {
+      const actor = ctx.user;
 
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },

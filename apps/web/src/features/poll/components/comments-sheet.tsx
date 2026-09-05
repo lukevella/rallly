@@ -43,7 +43,6 @@ import {
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePoll, useRole } from "@/features/poll/client";
-import { useEditToken } from "@/features/poll/components/mutations";
 import {
   Participant,
   ParticipantName,
@@ -200,7 +199,6 @@ function CommentsSheetInner({ className }: { className?: string }) {
   const dialog = useDialog();
 
   const pollId = poll.id;
-  const token = useEditToken();
 
   const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
 
@@ -342,7 +340,6 @@ function CommentsSheetInner({ className }: { className?: string }) {
                                   onClick={() => {
                                     deleteComment.mutate({
                                       commentId: comment.id,
-                                      token,
                                     });
                                   }}
                                 >

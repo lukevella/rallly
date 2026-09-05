@@ -36,7 +36,7 @@ describe("derivePollInviteStatus", () => {
 describe("getPollInvitePath", () => {
   it("builds the per invitee path the email and the host copy share", () => {
     expect(getPollInvitePath({ pollId: "poll1", token: "AbC123" })).toBe(
-      "/invite/poll1?invite=AbC123",
+      "/invite/poll1?token=AbC123",
     );
   });
 });

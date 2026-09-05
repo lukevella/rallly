@@ -8,12 +8,12 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PermissionProvider } from "@/features/poll/client";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
+import { loadParticipantIdsByToken } from "@/features/poll/loaders";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
-import { decryptToken } from "@/lib/session";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { InvitePageLoader } from "./invite-page-loader";
 import Providers from "./providers";
@@ -42,7 +42,10 @@ const getPollMetadata = cache(async (urlId: string) => {
 
 export default async function Page(props: {
   params: Promise<{ urlId: string }>;
-  searchParams: Promise<{ token?: string; invite?: string }>;
+  searchParams: Promise<{
+    token?: string | string[];
+    invite?: string | string[];
+  }>;
 }) {
   const params = await props.params;
 
@@ -50,32 +53,36 @@ export default async function Page(props: {
 
   const trpc = await createPublicSSRHelper();
 
-  const { token, invite: inviteToken } = await props.searchParams;
+  // `invite` is the param older invite emails carry; both name the same
+  // token and the client reads them the same way. A repeated param arrives
+  // as an array; only a single value is a token.
+  const searchParams = await props.searchParams;
+  const token = [searchParams.token, searchParams.invite].find(
+    (value): value is string => typeof value === "string",
+  );
 
-  const [locale, session, deviceDateTimeConfig, footerLinks] =
-    await Promise.all([
-      getLocale(),
-      getSession(),
-      getDeviceDateTimeConfig(),
-      loadFooterLinks(),
-      trpc.polls.get.prefetch({ urlId: params.urlId }),
-      trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
-      trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
-    ]);
-
-  let impersonatedUserId: string | null = null;
-  if (token) {
-    const res = await decryptToken<{ userId: string }>(token);
-    if (res) {
-      impersonatedUserId = res.userId;
-    }
-  }
+  const [
+    locale,
+    session,
+    deviceDateTimeConfig,
+    footerLinks,
+    linkedParticipantIds,
+  ] = await Promise.all([
+    getLocale(),
+    getSession(),
+    getDeviceDateTimeConfig(),
+    loadFooterLinks(),
+    token ? loadParticipantIdsByToken(params.urlId, token) : [],
+    trpc.polls.get.prefetch({ urlId: params.urlId }),
+    trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
+    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SessionRefresher />
-      {inviteToken ? (
-        <InviteOpenRecorder pollId={params.urlId} token={inviteToken} />
+      {token ? (
+        <InviteOpenRecorder pollId={params.urlId} token={token} />
       ) : null}
       <UserProvider user={session?.user ?? null}>
         <DeviceDateTimeProvider
@@ -84,7 +91,7 @@ export default async function Page(props: {
           timeFormat={deviceDateTimeConfig.timeFormat}
         >
           <Providers>
-            <PermissionProvider impersonatedUserId={impersonatedUserId}>
+            <PermissionProvider linkedParticipantIds={linkedParticipantIds}>
               <InvitePageLoader footerLinks={footerLinks} />
             </PermissionProvider>
           </Providers>
