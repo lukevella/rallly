@@ -74,7 +74,7 @@ export default async function CookiePolicy() {
 export async function generateMetadata() {
   cacheLife("max");
   return {
-    title: "Rallly: Cookie Policy",
+    title: "Cookie Policy",
     description: "The cookie policy for Rallly.",
   };
 }

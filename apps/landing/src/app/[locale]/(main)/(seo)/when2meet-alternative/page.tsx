@@ -538,10 +538,12 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, "home");
   return {
     alternates: getAlternates({ locale, path: "/when2meet-alternative" }),
-    title: t("when2meetAlternativeMetaTitle", {
-      ns: "home",
-      defaultValue: "Best Free When2meet Alternative | Rallly",
-    }),
+    title: {
+      absolute: t("when2meetAlternativeMetaTitle", {
+        ns: "home",
+        defaultValue: "Best Free When2meet Alternative | Rallly",
+      }),
+    },
     description: t("when2meetAlternativeMetaDescription", {
       ns: "home",
       defaultValue:

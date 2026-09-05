@@ -274,7 +274,7 @@ export default async function TermsOfUse() {
 export async function generateMetadata(): Promise<Metadata> {
   cacheLife("max");
   return {
-    title: "Rallly: Terms of Use",
+    title: "Terms of Use",
     description: "The terms of use for Rallly.",
   };
 }

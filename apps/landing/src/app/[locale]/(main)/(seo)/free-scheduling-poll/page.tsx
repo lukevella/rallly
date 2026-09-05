@@ -410,6 +410,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/free-scheduling-poll" }),
     title: t("freeSchedulingPollMetaTitle", {
       ns: "home",
+      defaultValue: "Create a Free Scheduling Poll Instantly",
     }),
     description: t("freeSchedulingPollMetaDescription", {
       ns: "home",

@@ -299,10 +299,12 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, "home");
   return {
     alternates: getAlternates({ locale }),
-    title: t("metaTitle", {
-      defaultValue: "Rallly: Free Group Meeting Scheduling Tool",
-      ns: "home",
-    }),
+    title: {
+      absolute: t("metaTitle", {
+        defaultValue: "Rallly: Free Group Meeting Scheduling Tool",
+        ns: "home",
+      }),
+    },
     description: t("metaDescription", {
       ns: "home",
       defaultValue:

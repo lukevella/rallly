@@ -48,6 +48,7 @@ export default async function Root(props: {
 }
 
 export const metadata: Metadata = {
+  title: { template: "%s | Rallly", default: "Rallly" },
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL
     ? new URL(process.env.NEXT_PUBLIC_BASE_URL)
     : undefined,

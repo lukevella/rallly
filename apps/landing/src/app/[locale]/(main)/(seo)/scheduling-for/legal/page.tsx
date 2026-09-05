@@ -264,8 +264,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/scheduling-for/legal" }),
     title: t("legalMetaTitle", {
       ns: "home",
-      defaultValue:
-        "Scheduling for Law Firms and Mediators | Free Availability Poll",
+      defaultValue: "Scheduling for Law Firms and Mediators",
     }),
     description: t("legalMetaDescription", {
       ns: "home",

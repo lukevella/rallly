@@ -224,7 +224,7 @@ export default async function PrivacyPolicy() {
 export async function generateMetadata() {
   cacheLife("max");
   return {
-    title: "Rallly: Privacy Policy",
+    title: "Privacy Policy",
     description: "The privacy policy for Rallly.",
   };
 }

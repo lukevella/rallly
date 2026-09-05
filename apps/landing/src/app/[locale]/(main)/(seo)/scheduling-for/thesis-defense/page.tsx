@@ -260,8 +260,7 @@ export async function generateMetadata(props: {
     }),
     title: t("thesisDefenseMetaTitle", {
       ns: "home",
-      defaultValue:
-        "Schedule a Thesis Defense or Viva | Free Examiner Availability Poll",
+      defaultValue: "Schedule a Thesis Defense or Viva",
     }),
     description: t("thesisDefenseMetaDescription", {
       ns: "home",

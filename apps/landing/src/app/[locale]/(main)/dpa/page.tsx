@@ -536,7 +536,7 @@ export default async function DataProcessingAgreement() {
 export async function generateMetadata(): Promise<Metadata> {
   cacheLife("max");
   return {
-    title: "Rallly: Data Processing Agreement",
+    title: "Data Processing Agreement",
     description:
       "The GDPR Article 28 Data Processing Agreement for the hosted Rallly service, including technical and organizational measures and the subprocessor list.",
   };

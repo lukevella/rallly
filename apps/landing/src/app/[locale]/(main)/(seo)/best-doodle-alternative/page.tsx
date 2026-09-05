@@ -483,9 +483,11 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, "home");
   return {
     alternates: getAlternates({ locale, path: "/best-doodle-alternative" }),
-    title: t("doodleAlternativeMetaTitle", {
-      ns: "home",
-    }),
+    title: {
+      absolute: t("doodleAlternativeMetaTitle", {
+        ns: "home",
+      }),
+    },
     description: t("doodleAlternativeMetaDescription", {
       ns: "home",
     }),

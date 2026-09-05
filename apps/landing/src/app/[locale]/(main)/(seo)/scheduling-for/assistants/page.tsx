@@ -260,7 +260,7 @@ export async function generateMetadata(props: {
     }),
     title: t("assistantsMetaTitle", {
       ns: "home",
-      defaultValue: "Scheduling for Assistants | Free Meeting Poll Tool",
+      defaultValue: "Scheduling for Assistants",
     }),
     description: t("assistantsMetaDescription", {
       ns: "home",
