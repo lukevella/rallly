@@ -171,7 +171,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
                 <Trans
                   t={t}
                   ns="common"
-                  i18nKey="executiveAssistants"
+                  i18nKey="assistants"
                   defaults="Assistants"
                 />
               </LinkBase>

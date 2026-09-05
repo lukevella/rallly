@@ -37,17 +37,17 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <Hero
-          title={t("eaTitle", {
+          title={t("assistantsTitle", {
             ns: "home",
             defaultValue: "Scheduling for assistants",
           })}
-          description={t("eaDescription", {
+          description={t("assistantsDescription", {
             ns: "home",
             defaultValue:
               "Whether you support one executive or a whole department, find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
           })}
         >
-          <HeroDemo locale={locale} preset="executiveAssistant" />
+          <HeroDemo locale={locale} preset="assistants" />
         </Hero>
         <Stats className="mt-8 sm:mt-24">
           <Trans
@@ -92,7 +92,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="eaFaqExternalGuests"
+                    i18nKey="assistantsFaqExternalGuests"
                     defaults="Can I invite people outside my organization?"
                   />
                 }
@@ -100,7 +100,7 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="eaFaqExternalGuestsAnswer"
+                  i18nKey="assistantsFaqExternalGuestsAnswer"
                   defaults="Yes. Anyone with the link can respond, whether or not they use Rallly and whichever calendar system their company runs on. They don't need an account and there is no limit on how many people you invite, so board members, clients and external counsel can all reply the same way."
                 />
               </FaqItem>
@@ -109,7 +109,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="eaFaqOnBehalf"
+                    i18nKey="assistantsFaqOnBehalf"
                     defaults="Can I schedule on behalf of someone else?"
                   />
                 }
@@ -117,7 +117,7 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="eaFaqOnBehalfAnswer"
+                  i18nKey="assistantsFaqOnBehalfAnswer"
                   defaults="Yes. You create and manage the poll, so the responses come back to you and you decide the final time. You can also add participants and fill in availability on someone's behalf, which is useful when a principal sends you their times directly instead of clicking the link."
                 />
               </FaqItem>
@@ -126,7 +126,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="eaFaqTimeZones"
+                    i18nKey="assistantsFaqTimeZones"
                     defaults="Does it handle meetings across time zones?"
                   />
                 }
@@ -134,7 +134,7 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="eaFaqTimeZonesAnswer"
+                  i18nKey="assistantsFaqTimeZonesAnswer"
                   defaults="Yes. Each participant sees the proposed times in their own time zone automatically, so a London board member and a San Francisco executive are looking at the same slot without either of you converting anything by hand."
                 />
               </FaqItem>
@@ -143,7 +143,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="eaFaqChasing"
+                    i18nKey="assistantsFaqChasing"
                     defaults="Do I still have to chase people for replies?"
                   />
                 }
@@ -151,7 +151,7 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="eaFaqChasingAnswer"
+                  i18nKey="assistantsFaqChasingAnswer"
                   defaults="You can see at a glance who has responded and who hasn't, and get an email as responses come in. That turns the usual round of follow-up emails into a single reminder to the few people still outstanding."
                 />
               </FaqItem>
@@ -160,7 +160,7 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
-                    i18nKey="eaFaqBranding"
+                    i18nKey="assistantsFaqBranding"
                     defaults="Can polls carry our company branding?"
                   />
                 }
@@ -168,7 +168,7 @@ export default async function Page(props: {
                 <Trans
                   t={t}
                   ns="home"
-                  i18nKey="eaFaqBrandingAnswer"
+                  i18nKey="assistantsFaqBrandingAnswer"
                   defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to a board or a client looks like it came from your organization. Everything else is free to use."
                   components={[
                     <Link
@@ -212,7 +212,7 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="eaFinalCtaTitle"
+                i18nKey="assistantsFinalCtaTitle"
                 defaults="Ready to get that meeting in the diary?"
               />
             }
@@ -220,7 +220,7 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="eaFinalCtaDescription"
+                i18nKey="assistantsFinalCtaDescription"
                 defaults="Set up your poll in under a minute, send one link, and stop chasing replies."
               />
             }
@@ -258,11 +258,11 @@ export async function generateMetadata(props: {
       locale,
       path: "/scheduling-for/assistants",
     }),
-    title: t("eaMetaTitle", {
+    title: t("assistantsMetaTitle", {
       ns: "home",
       defaultValue: "Scheduling for Assistants | Free Meeting Poll Tool",
     }),
-    description: t("eaMetaDescription", {
+    description: t("assistantsMetaDescription", {
       ns: "home",
       defaultValue:
         "Rallly is a free scheduling tool for executive, administrative and personal assistants. Coordinate meetings across busy calendars and time zones with one link. No account needed to respond.",

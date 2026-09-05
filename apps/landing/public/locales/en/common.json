@@ -1,4 +1,5 @@
 {
+  "assistants": "Assistants",
   "blog": "Blog",
   "close": "Close",
   "committees": "Committees and boards",
@@ -12,7 +13,6 @@
   "discussions": "Discussions",
   "doodleAlternative": "Doodle alternative",
   "dpa": "DPA",
-  "executiveAssistants": "Assistants",
   "footerDiscordLabel": "Join us on Discord",
   "footerGithubLabel": "View our GitHub repository",
   "footerLegal": "Legal",
