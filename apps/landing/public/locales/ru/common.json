@@ -1,6 +1,8 @@
 {
+  "assistants": "Ассистенты",
   "blog": "Блог",
   "close": "Закрыть",
+  "committees": "Комитеты и советы",
   "compare": "Сравнить",
   "cookieConsentAccept": "Принять",
   "cookieConsentIntro": "Мы используем файлы cookie, чтобы улучшить ваш опыт.",
@@ -10,14 +12,17 @@
   "cookiePolicy": "Политика использования файлов cookie",
   "discussions": "Обсуждения",
   "doodleAlternative": "Альтернатива Doodle",
+  "dpa": "Соглашение об обработке данных",
   "footerDiscordLabel": "Присоединиться к нам в Discord",
   "footerGithubLabel": "Посмотреть наш репозиторий на GitHub",
+  "footerLegal": "Правовая информация",
   "footerLinkedinLabel": "Подписаться на LinkedIn",
   "footerTagline": "Rallly — это инструмент с открытым исходным кодом для планирования встреч, который помогает найти лучшее время для встречи без лишней переписки.",
   "footerXLabel": "Подписаться на X",
   "getStarted": "Начать",
   "goToHome": "Вернуться на главную",
   "language": "Язык",
+  "legal": "Юридические фирмы и медиаторы",
   "licensingThankYouGoHomeLink": "Вернуться на главную",
   "licensingThankYouLicense": "Следующие шаги",
   "licensingThankYouLicenseEmailed": "Ваш лицензионный ключ был отправлен на адрес электронной почты, который вы указали во время оформления заказа. Пожалуйста, проверьте свой почтовый ящик.",
@@ -30,6 +35,7 @@
   "menu": "Меню",
   "notFoundDescription": "Мы не смогли найти страницу, которую вы ищете.",
   "notFoundTitle": "404: Не найдено",
+  "pressKit": "Пресс-кит",
   "pricing": "Цены",
   "privacyPolicy": "Политика конфиденциальности",
   "product": "Продукт",
@@ -40,5 +46,7 @@
   "statusBadgeAlt": "Статус Rallly",
   "support": "Поддержка",
   "termsOfUse": "Условия использования",
-  "useCases": "Варианты использования"
+  "thesisDefense": "Защиты диссертаций",
+  "useCases": "Варианты использования",
+  "when2MeetAlternative": "Альтернатива When2meet"
 }
