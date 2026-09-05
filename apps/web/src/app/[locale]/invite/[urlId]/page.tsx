@@ -42,7 +42,10 @@ const getPollMetadata = cache(async (urlId: string) => {
 
 export default async function Page(props: {
   params: Promise<{ urlId: string }>;
-  searchParams: Promise<{ token?: string; invite?: string }>;
+  searchParams: Promise<{
+    token?: string | string[];
+    invite?: string | string[];
+  }>;
 }) {
   const params = await props.params;
 
@@ -51,9 +54,12 @@ export default async function Page(props: {
   const trpc = await createPublicSSRHelper();
 
   // `invite` is the param older invite emails carry; both name the same
-  // token and the client reads them the same way.
+  // token and the client reads them the same way. A repeated param arrives
+  // as an array; only a single value is a token.
   const searchParams = await props.searchParams;
-  const token = searchParams.token ?? searchParams.invite;
+  const token = [searchParams.token, searchParams.invite].find(
+    (value): value is string => typeof value === "string",
+  );
 
   const [
     locale,
