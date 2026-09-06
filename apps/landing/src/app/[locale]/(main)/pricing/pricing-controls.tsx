@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/select";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
+import { readCurrencyCookie } from "@/lib/currency";
 
 type BillingInterval = "monthly" | "yearly";
 
@@ -48,6 +49,15 @@ export function PricingProvider({
   const currency = prices[selectedCurrency]
     ? selectedCurrency
     : defaultCurrency;
+
+  // The page is served from cache in the default currency; the proxy stamps
+  // the detected one in a cookie, applied here after hydration.
+  React.useEffect(() => {
+    const detected = readCurrencyCookie();
+    if (detected && prices[detected]) {
+      setCurrency(detected);
+    }
+  }, [prices]);
   const value = React.useMemo(
     () => ({ interval, setInterval, currency, setCurrency, prices, locale }),
     [interval, currency, prices, locale],
