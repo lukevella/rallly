@@ -43,7 +43,6 @@
   "pollLimit": "Czy istnieje limit ankiet, które mogę utworzyć?",
   "pollLimitAnswer": "Nie. W żadnym planie nie ma limitu liczby ankiet, które możesz utworzyć, ani liczby osób, które mogą w nich głosować. W planie bezpłatnym ankiety są usuwane po upływie wszystkich ich terminów i po 30 dniach bez aktywności, a niektóre funkcje, takie jak własna identyfikacja wizualna i zaawansowane ustawienia ankiet, są dostępne wyłącznie w planie płatnym. Pełną listę znajdziesz w tabeli porównawczej powyżej.",
   "pricingDescription": "Rozpocznij za darmo. Logowanie nie jest wymagane.",
-  "pricingFaqDescription": "Wszystko, co musisz wiedzieć o planach i rozliczeniach.",
   "pricingFinalCtaDescription": "Stwórz pierwszą ankietę w mniej niż minutę. Uaktualnij, gdy będziesz potrzebować więcej.",
   "pricingSubtitle": "Przejdź na płatny plan, aby uzyskać dostęp do funkcji premium",
   "recommended": "Polecany",
