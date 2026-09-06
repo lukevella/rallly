@@ -10,15 +10,15 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary/90 text-primary-foreground ring-1 ring-button-outline ring-inset hover:bg-primary dark:bg-primary/80 dark:hover:bg-primary",
+          "bg-primary/90 text-primary-foreground ring-1 ring-button-outline ring-inset dark:bg-primary/80",
         destructive:
-          "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive/90 dark:bg-destructive/80",
+          "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset dark:bg-destructive/80",
         default:
-          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent data-[state=open]:bg-accent dark:bg-foreground/5",
+          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg data-[state=open]:bg-accent dark:bg-foreground/5",
         ghost:
           "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent data-[state=open]:bg-accent [&>svg]:opacity-75",
         actionBar:
-          "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 data-[state=open]:bg-action-bar-foreground/20",
+          "border-transparent bg-action-bar text-action-bar-foreground data-[state=open]:bg-action-bar-foreground/20",
         link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
