@@ -26,10 +26,6 @@ export const displayedCurrencies = ["usd", "eur", "gbp"] as const;
 // the cookie domain so the pay wall opens in the same currency.
 export const CURRENCY_COOKIE_NAME = "rallly_currency";
 
-// The first release stamped a host only cookie under this name before the
-// shared domain existed; the landing proxy migrates it and expires it.
-export const LEGACY_CURRENCY_COOKIE_NAME = "currency";
-
 export type DisplayedCurrency = (typeof displayedCurrencies)[number];
 
 export function isDisplayedCurrency(value: string): value is DisplayedCurrency {
