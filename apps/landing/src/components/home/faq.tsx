@@ -1,5 +1,6 @@
 import { PlusIcon } from "lucide-react";
 import type * as React from "react";
+import { Trans } from "react-i18next/TransWithoutContext";
 import {
   SectionContent,
   SectionDescription,
@@ -7,6 +8,7 @@ import {
   SectionSplit,
   SectionTitle,
 } from "@/components/section";
+import { getTranslation } from "@/i18n/server";
 
 export function FaqItem({
   question,
@@ -32,20 +34,41 @@ export function Faq({ children }: { children: React.ReactNode }) {
   return <div className="divide-y">{children}</div>;
 }
 
-export function FaqSection({
+export async function FaqSection({
+  locale,
   title,
   description,
   children,
 }: {
+  locale: string;
   title: React.ReactNode;
   description: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const { t, i18n } = await getTranslation<"home">(locale, "home");
   return (
     <SectionSplit>
       <SectionHeading>
         <SectionTitle>{title}</SectionTitle>
         <SectionDescription>{description}</SectionDescription>
+        <p className="max-w-prose text-pretty text-gray-500 text-sm sm:text-base">
+          <Trans
+            t={t}
+            i18n={i18n}
+            ns="home"
+            i18nKey="faqSectionContact"
+            defaults="Something we missed? <0>Let us know</0>. We're here to help."
+            components={[
+              <a
+                key="support"
+                className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                href="mailto:support@rallly.co"
+              >
+                Let us know
+              </a>,
+            ]}
+          />
+        </p>
       </SectionHeading>
       <SectionContent>
         <Faq>{children}</Faq>

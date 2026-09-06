@@ -63,6 +63,7 @@ export default async function Page(props: {
       <SocialProof locale={locale} />
       <div className="divide-y">
         <FaqSection
+          locale={locale}
           title={
             <Trans
               t={t}

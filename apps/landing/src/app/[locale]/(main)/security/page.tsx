@@ -313,6 +313,7 @@ export default async function Security(props: {
         </SectionContent>
       </Section>
       <FaqSection
+        locale={locale}
         title="Frequently asked questions"
         description="The answers we give when organizations evaluate Rallly. If your review needs something not covered here, we are happy to complete your security questionnaire."
       >

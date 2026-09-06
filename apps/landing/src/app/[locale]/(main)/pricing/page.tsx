@@ -733,6 +733,7 @@ export default async function Page(props: {
       </Section>
       <div className="divide-y">
         <FaqSection
+          locale={locale}
           title={
             <Trans
               t={t}
