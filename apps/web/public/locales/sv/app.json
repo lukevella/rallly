@@ -554,7 +554,6 @@
   "numberOfSeats": "Antal platser",
   "oidcAutoSignInDescription": "Du omdirigeras till inloggningssidan...",
   "openPollCount": "{count, plural, one {# öppen} other {# öppna}}",
-  "optional": "frivilligt",
   "optionalLabel": "(Valfritt)",
   "optionCount": "{count, plural, one {# val} other {# val}}",
   "optionsSelected": "{count, plural, =0 {Inget valt} one {# valt alternativ} other {# valda alternativ}}",
