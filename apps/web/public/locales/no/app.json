@@ -554,7 +554,6 @@
   "numberOfSeats": "Antall plasser",
   "oidcAutoSignInDescription": "Du blir videresendt til innloggingssiden...",
   "openPollCount": "{count, plural, one {1 åpen} other {# åpne}}",
-  "optional": "valgfritt",
   "optionalLabel": "(Valgfritt)",
   "optionCount": "{count, plural, one {# alternativ} other {# alternativer}}",
   "optionsSelected": "{count, plural, =0 {Ingen valgt} one {# alternativ valgt} other {# alternativer valgt}}",
