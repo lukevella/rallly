@@ -19,7 +19,12 @@ export async function proxy(req: NextRequest) {
       getCountryCurrency(req.headers.get("x-vercel-ip-country") ?? undefined, [
         ...displayedCurrencies,
       ]),
-      { path: "/", maxAge: ONE_YEAR_SECONDS, sameSite: "lax" },
+      {
+        path: "/",
+        maxAge: ONE_YEAR_SECONDS,
+        sameSite: "lax",
+        domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined,
+      },
     );
   }
 
