@@ -8,3 +8,13 @@ export const pricingData = {
     currency: "usd",
   },
 };
+
+export function yearlySavingsPercent({
+  monthly,
+  yearly,
+}: {
+  monthly: number;
+  yearly: number;
+}) {
+  return Math.round((1 - yearly / (monthly * 12)) * 100);
+}

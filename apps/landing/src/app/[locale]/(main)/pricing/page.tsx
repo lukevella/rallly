@@ -1,6 +1,7 @@
 "use cache";
 
-import { PLAN_NAMES, pricingData } from "@rallly/billing";
+import type { PriceAmounts } from "@rallly/billing";
+import { PLAN_NAMES, yearlySavingsPercent } from "@rallly/billing";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
@@ -43,14 +44,12 @@ import {
 import { handwritten } from "@/fonts/handwritten";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
-import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
-import { linkToApp } from "@/lib/linkToApp";
 import {
-  BillingIntervalPrice,
-  BillingIntervalProvider,
-  BillingIntervalSwitch,
-  BillingIntervalValue,
-} from "./billing-interval";
+  getMonthlyPollCount,
+  getMonthlyVoterCount,
+  getPricing,
+} from "@/lib/data";
+import { linkToApp } from "@/lib/linkToApp";
 import {
   PlanBenefit,
   PlanBenefitName,
@@ -64,6 +63,15 @@ import {
   PlanCardPriceLabel,
   PlanCards,
 } from "./plan-card";
+import {
+  BillingIntervalSwitch,
+  BillingIntervalValue,
+  CurrencySelect,
+  PlanPrice,
+  PricingControls,
+  PricingProvider,
+  YearlySavingsBadge,
+} from "./pricing-controls";
 
 const faqLinkClassName =
   "text-gray-800 underline underline-offset-2 hover:text-gray-600";
@@ -74,12 +82,25 @@ export default async function Page(props: {
   cacheLife("hours");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["common", "pricing", "home"]);
-  const [pollCount, voterCount] = await Promise.all([
+  const [pollCount, voterCount, prices] = await Promise.all([
     getMonthlyPollCount(),
     getMonthlyVoterCount(),
+    getPricing(),
   ]);
-  const freeMonths = Math.round(
-    12 - pricingData.yearly.amount / pricingData.monthly.amount,
+  const savingsLabels = Object.fromEntries(
+    Object.entries(prices).map(
+      ([currency, amounts]: [string, PriceAmounts]) => [
+        currency,
+        <Trans
+          key={currency}
+          t={t}
+          ns="pricing"
+          i18nKey="yearlySavePercent"
+          defaults="Save {percent}%"
+          values={{ percent: yearlySavingsPercent(amounts) }}
+        />,
+      ],
+    ),
   );
   const included = t("included", {
     ns: "pricing",
@@ -104,29 +125,13 @@ export default async function Page(props: {
               "Upgrade to a paid plan to get access to premium features",
           })}
         />
-        <BillingIntervalProvider>
+        <PricingProvider
+          prices={prices}
+          defaultCurrency={prices.usd ? "usd" : Object.keys(prices)[0]}
+          locale={locale}
+        >
           <div className="mt-8 flex justify-center sm:mt-12">
-            <BillingIntervalSwitch
-              switchLabel={t("payYearly", {
-                ns: "pricing",
-                defaultValue: "Pay yearly",
-              })}
-              monthlyLabel={
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="payMonthly"
-                  defaults="Pay monthly"
-                />
-              }
-              yearlyLabel={
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="payYearly"
-                  defaults="Pay yearly"
-                />
-              }
+            <PricingControls
               badge={
                 <span
                   className={cn(
@@ -134,16 +139,39 @@ export default async function Page(props: {
                     handwritten.className,
                   )}
                 >
+                  <YearlySavingsBadge labels={savingsLabels} />
+                </span>
+              }
+            >
+              <CurrencySelect
+                label={t("currency", {
+                  ns: "pricing",
+                  defaultValue: "Currency",
+                })}
+              />
+              <BillingIntervalSwitch
+                switchLabel={t("payYearly", {
+                  ns: "pricing",
+                  defaultValue: "Pay yearly",
+                })}
+                monthlyLabel={
                   <Trans
                     t={t}
                     ns="pricing"
-                    i18nKey="yearlyFreeMonths"
-                    defaults="{count, plural, one {# month free} other {# months free}}"
-                    values={{ count: freeMonths }}
+                    i18nKey="payMonthly"
+                    defaults="Pay monthly"
                   />
-                </span>
-              }
-            />
+                }
+                yearlyLabel={
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="payYearly"
+                    defaults="Pay yearly"
+                  />
+                }
+              />
+            </PricingControls>
           </div>
           <PlanCards className="mx-auto mt-4 max-w-6xl sm:mt-6">
             <PlanCard>
@@ -233,10 +261,7 @@ export default async function Page(props: {
               </PlanCardHeader>
               <PlanCardPrice>
                 <PlanCardPriceAmount>
-                  <BillingIntervalPrice
-                    monthly={pricingData.monthly.amount / 100}
-                    yearly={pricingData.yearly.amount / 100 / 12}
-                  />
+                  <PlanPrice />
                 </PlanCardPriceAmount>
                 <PlanCardPriceLabel>
                   <BillingIntervalValue
@@ -362,7 +387,7 @@ export default async function Page(props: {
               </PlanBenefits>
             </PlanCard>
           </PlanCards>
-        </BillingIntervalProvider>
+        </PricingProvider>
         <Stats className="mt-8 sm:mt-24">
           <Trans
             t={t}
