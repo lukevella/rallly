@@ -572,7 +572,6 @@
   "numberOfSeats": "Nombre de places",
   "oidcAutoSignInDescription": "Vous êtes redirigé vers la page de connexion...",
   "openPollCount": "{count, plural, one {# ouvert}  other {# ouverts}}",
-  "optional": "facultatif",
   "optionalLabel": "(Facultatif)",
   "optionCount": "{count, plural, one {# option} other {# options}}",
   "optionsSelected": "{count, plural, =0 {Aucune option sélectionnée} one {# option sélectionnée} other {# options sélectionnées}}",
