@@ -1,3 +1,4 @@
+import { ArrowUpRightIcon } from "lucide-react";
 import Image from "next/image";
 import { Trans } from "react-i18next/TransWithoutContext";
 
@@ -9,6 +10,29 @@ import { FooterPattern } from "@/components/home/footer-pattern";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { LanguageSelect } from "./language-select";
+
+function FooterExternalLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      target="_blank"
+      rel="noopener"
+      href={href}
+      className="group inline-flex items-center gap-1 font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+    >
+      {children}
+      <ArrowUpRightIcon
+        aria-hidden="true"
+        className="size-3.5 -translate-x-0.5 translate-y-0.5 opacity-0 transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 motion-reduce:transition-none"
+      />
+    </a>
+  );
+}
 
 export const Footer = async ({ locale }: { locale: string }) => {
   const { t } = await getTranslation(locale, "common");
@@ -244,27 +268,19 @@ export const Footer = async ({ locale }: { locale: string }) => {
               </LinkBase>
             </li>
             <li>
-              <a
-                target="_blank"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-                href="https://github.com/lukevella/rallly/discussions"
-                rel="noopener"
-              >
+              <FooterExternalLink href="https://github.com/lukevella/rallly/discussions">
                 <Trans
                   t={t}
                   ns="common"
                   i18nKey="discussions"
                   defaults="Discussions"
                 />
-              </a>
+              </FooterExternalLink>
             </li>
             <li>
-              <a
-                href="https://support.rallly.co"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
-              >
+              <FooterExternalLink href="https://support.rallly.co">
                 <Trans t={t} ns="common" i18nKey="support" defaults="Support" />
-              </a>
+              </FooterExternalLink>
             </li>
             <li>
               <LinkBase
