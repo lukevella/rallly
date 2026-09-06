@@ -53,15 +53,15 @@ export async function FaqSection({
             t={t}
             i18n={i18n}
             ns="home"
-            i18nKey="faqSectionSupportLine"
-            defaults="Didn't find yours? <0>Drop us a line</0> and a person will answer."
+            i18nKey="faqSectionNotAnswered"
+            defaults="Not answered here? <0>Email us</0>."
             components={[
               <a
                 key="support"
                 className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                 href="mailto:support@rallly.co"
               >
-                Drop us a line
+                Email us
               </a>,
             ]}
           />
