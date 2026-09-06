@@ -8,6 +8,7 @@ vi.mock("@/lib/feature-flags/server", () => ({
 }));
 
 import {
+  createMemoryStore,
   RATE_LIMIT_PER_DAY,
   RATE_LIMIT_PER_MINUTE,
   rateLimit,
@@ -63,6 +64,26 @@ describe("rateLimit middleware with the in-process store", () => {
     expect(released.headers.get("RateLimit-Remaining")).toBe(
       String(RATE_LIMIT_PER_MINUTE - 1),
     );
+  });
+
+  it("sweeps expired counters for other spaces without touching active ones", async () => {
+    const store = createMemoryStore();
+    await store.increment("dormant");
+    vi.advanceTimersByTime(60_000);
+    // Mid-window for "active": its minute counter must survive the sweep.
+    await store.increment("active");
+    vi.advanceTimersByTime(30_000);
+    await store.increment("active");
+
+    // The dormant minute counter expired and was swept; a fresh request
+    // starts a new window instead of continuing the old count.
+    const [dormantMinuteHits, , dormantDayHits] =
+      await store.increment("dormant");
+    expect(dormantMinuteHits).toBe(1);
+    expect(dormantDayHits).toBe(2);
+
+    const [activeMinuteHits] = await store.increment("active");
+    expect(activeMinuteHits).toBe(3);
   });
 
   it("keeps counters separate per space", async () => {

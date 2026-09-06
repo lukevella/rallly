@@ -91,14 +91,29 @@ function createRedisStore(client: NonNullable<typeof redis>): RateLimitStore {
 /**
  * Same semantics as the Lua script, held in process. Exact only when one
  * process serves every request, which is what the `inProcessRateLimit`
- * capability asserts. Expired counters are dropped on their next hit, and
- * the map is bounded by the number of spaces holding API keys.
+ * capability asserts. Expired counters are swept lazily, at most once a
+ * minute on the request path, so revoked or dormant spaces do not pin
+ * entries until restart. Active counters are never evicted early.
  */
 export function createMemoryStore(): RateLimitStore {
   const counters = new Map<string, { hits: number; expiresAt: number }>();
+  let lastSweepAt = 0;
+
+  const sweep = (now: number) => {
+    if (now - lastSweepAt < MINUTE_WINDOW_MS) {
+      return;
+    }
+    lastSweepAt = now;
+    for (const [key, entry] of counters) {
+      if (entry.expiresAt <= now) {
+        counters.delete(key);
+      }
+    }
+  };
 
   const bump = (key: string, windowMs: number): [number, number] => {
     const now = Date.now();
+    sweep(now);
     const current = counters.get(key);
     if (!current || current.expiresAt <= now) {
       counters.set(key, { hits: 1, expiresAt: now + windowMs });
