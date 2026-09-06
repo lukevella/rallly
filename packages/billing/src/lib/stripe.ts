@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { displayedCurrencies } from "../pricing";
 
 export type { Stripe } from "stripe";
 
@@ -47,9 +48,10 @@ export function mapProPrices(prices: Stripe.Price[]) {
   const monthlyAmounts = unitAmountsByCurrency(monthly);
   const yearlyAmounts = unitAmountsByCurrency(yearly);
   const currencies: PricesByCurrency = {};
-  for (const [currency, monthlyAmount] of Object.entries(monthlyAmounts)) {
+  for (const currency of displayedCurrencies) {
+    const monthlyAmount = monthlyAmounts[currency];
     const yearlyAmount = yearlyAmounts[currency];
-    if (yearlyAmount !== undefined) {
+    if (monthlyAmount !== undefined && yearlyAmount !== undefined) {
       currencies[currency] = { monthly: monthlyAmount, yearly: yearlyAmount };
     }
   }

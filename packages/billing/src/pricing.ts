@@ -18,3 +18,5 @@ export function yearlySavingsPercent({
 }) {
   return Math.round((1 - yearly / (monthly * 12)) * 100);
 }
+
+export const displayedCurrencies = ["usd", "eur", "gbp"] as const;

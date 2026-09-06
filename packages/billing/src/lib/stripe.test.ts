@@ -44,16 +44,20 @@ describe("mapProPrices", () => {
     expect(result.yearly.amount).toBe(5600);
   });
 
-  it("builds a per currency map from the base currency and the options both prices share", () => {
+  it("builds a per currency map limited to the displayed currencies both prices carry", () => {
     const result = mapProPrices([
       price("pro-monthly", 700, { eur: 650, gbp: 560, chf: 650, inr: 58000 }),
-      price("pro-yearly", 5600, { eur: 5200, gbp: 4500, chf: 5600 }),
+      price("pro-yearly", 5600, {
+        eur: 5200,
+        gbp: 4500,
+        chf: 5600,
+        inr: 580000,
+      }),
     ]);
     expect(result.currencies).toEqual({
       usd: { monthly: 700, yearly: 5600 },
       eur: { monthly: 650, yearly: 5200 },
       gbp: { monthly: 560, yearly: 4500 },
-      chf: { monthly: 650, yearly: 5600 },
     });
   });
 
