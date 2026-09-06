@@ -17,7 +17,7 @@ export function HeroAnnouncement({
     <LinkBase
       href={href}
       prefetch={false}
-      className="group -ml-1 inline-flex max-w-full items-center gap-x-2 rounded-full p-1 pr-3 text-sm transition-colors hover:bg-gray-200/50"
+      className="group -ml-1 inline-flex max-w-full items-center gap-x-2 rounded-full bg-gray-200/50 p-1 pr-3 text-sm transition-colors hover:bg-gray-200"
     >
       <Badge variant="primary" className="shrink-0 rounded-full">
         {badge}
