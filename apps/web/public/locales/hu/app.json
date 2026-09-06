@@ -573,7 +573,6 @@
   "numberOfSeats": "Helyek száma",
   "oidcAutoSignInDescription": "Átirányítunk a bejelentkező oldalra...",
   "openPollCount": "{count, plural,other {# aktív}}",
-  "optional": "opcionális",
   "optionalLabel": "(Opcionális)",
   "optionCount": "{count, plural, one {# lehetőség} other {# lehetőség}}",
   "optionsSelected": "{count, plural, =0 {Nincs kiválasztva} one {# lehetőség kiválasztva} other {# lehetőség kiválasztva}}",
