@@ -71,14 +71,6 @@ export default async function Page(props: {
               defaults="Frequently asked questions"
             />
           }
-          description={
-            <Trans
-              t={t}
-              ns="home"
-              i18nKey="faqDescription"
-              defaults="Quick answers about how Rallly works, pricing, and privacy."
-            />
-          }
         >
           <FaqItem
             question={

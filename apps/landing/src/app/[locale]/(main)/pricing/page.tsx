@@ -742,14 +742,6 @@ export default async function Page(props: {
               defaults="Frequently asked questions"
             />
           }
-          description={
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="pricingFaqDescription"
-              defaults="Everything you need to know about our plans and billing."
-            />
-          }
         >
           <FaqItem
             question={

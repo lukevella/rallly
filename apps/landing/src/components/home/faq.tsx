@@ -42,7 +42,7 @@ export async function FaqSection({
 }: {
   locale: string;
   title: React.ReactNode;
-  description: React.ReactNode;
+  description?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const { t, i18n } = await getTranslation<"home">(locale, "home");
@@ -50,7 +50,9 @@ export async function FaqSection({
     <SectionSplit>
       <SectionHeading>
         <SectionTitle>{title}</SectionTitle>
-        <SectionDescription>{description}</SectionDescription>
+        {description ? (
+          <SectionDescription>{description}</SectionDescription>
+        ) : null}
         <p className="max-w-prose text-pretty text-gray-500 text-sm sm:text-base">
           <Trans
             t={t}
