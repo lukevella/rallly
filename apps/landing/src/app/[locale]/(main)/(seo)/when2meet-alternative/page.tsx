@@ -54,6 +54,7 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <Hero
+          wideDescription
           title={t("when2meetAlternative", {
             ns: "home",
             defaultValue: "A modern When2meet alternative",

@@ -54,6 +54,7 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <Hero
+          wideDescription
           title={t("doodleAlternative", {
             ns: "home",
           })}

@@ -23,9 +23,9 @@ export const TryItPrompt = ({ text }: { text: string }) => (
       handwritten.className,
     )}
   >
-    <span className="whitespace-nowrap rounded-full bg-gray-800/80 px-2.5 py-1 text-sm text-white backdrop-blur-sm">
+    <span className="whitespace-nowrap rounded-full bg-gray-900 px-2.5 py-1 text-sm text-white">
       {text}
     </span>
-    <ScribbleArrow className="mt-2.5 -ml-0.5 size-6 text-gray-800/80" />
+    <ScribbleArrow className="mt-2.5 -ml-0.5 size-6 text-gray-900" />
   </div>
 );
