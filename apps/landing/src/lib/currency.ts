@@ -1,7 +1,10 @@
-import { CURRENCY_COOKIE_NAME } from "@rallly/billing/pricing";
+import {
+  CURRENCY_COOKIE_NAME,
+  LEGACY_CURRENCY_COOKIE_NAME,
+} from "@rallly/billing/pricing";
 import Cookies from "js-cookie";
 
-export { CURRENCY_COOKIE_NAME };
+export { CURRENCY_COOKIE_NAME, LEGACY_CURRENCY_COOKIE_NAME };
 
 export const currencyCookieAttributes = {
   path: "/",
