@@ -48,6 +48,9 @@ const getStripePricing = async (secretKey: string) => {
   const { currencies } = await getProPricing({
     stripe: createStripeClient({ secretKey }),
   });
+  if (Object.keys(currencies).length === 0) {
+    throw new Error("Stripe prices carry none of the displayed currencies");
+  }
   return currencies;
 };
 
