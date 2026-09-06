@@ -43,7 +43,6 @@
   "pollLimit": "Y a-t-il une limite au nombre de sondages que je peux créer ?",
   "pollLimitAnswer": "Non. Le nombre de sondages que vous pouvez créer et le nombre de personnes qui peuvent y voter ne sont limités sur aucune offre. Avec l'offre gratuite, les sondages sont supprimés une fois toutes leurs dates passées et après 30 jours sans activité, et certaines fonctionnalités comme la personnalisation de l'identité visuelle et les paramètres avancés ne sont disponibles qu'avec une offre payante. Consultez le tableau comparatif ci-dessus pour la liste complète.",
   "pricingDescription": "Commencez gratuitement. Pas de connexion requise.",
-  "pricingFaqDescription": "Tout ce que vous devez savoir sur nos forfaits et la facturation.",
   "pricingFinalCtaDescription": "Créez votre premier sondage en moins d'une minute. Passez à un plan supérieur lorsque vous avez besoin de plus.",
   "pricingSubtitle": "Passez à une offre payante pour accéder aux fonctionnalités premium",
   "recommended": "Recommandé",
