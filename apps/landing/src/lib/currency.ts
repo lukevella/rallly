@@ -1,10 +1,7 @@
+import { CURRENCY_COOKIE_NAME } from "@rallly/billing/pricing";
 import Cookies from "js-cookie";
 
-// Set by the proxy from the request country so the cached pricing page can
-// still open in the visitor's currency, and rewritten when the visitor picks
-// another one. Shared with the app through the cookie domain so the pay wall
-// can honor the same choice.
-export const CURRENCY_COOKIE_NAME = "currency";
+export { CURRENCY_COOKIE_NAME };
 
 export const currencyCookieAttributes = {
   path: "/",
