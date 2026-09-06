@@ -9,6 +9,7 @@ export interface FeatureFlagConfig {
   eventTypes: boolean;
   pollAdmin: boolean;
   quickCreate: boolean;
+  inProcessRateLimit: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;

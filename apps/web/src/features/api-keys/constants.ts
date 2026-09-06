@@ -9,6 +9,17 @@
 export const API_RATE_LIMIT_PER_MINUTE = 60;
 
 /**
+ * Requests per 24 hour window allowed for a single space. The window
+ * opens with the first request and both windows are fixed, not sliding. Bounds the
+ * monthly worst case at roughly 150,000 requests so a runaway integration
+ * stays a nuisance rather than a cost. The heaviest real integration does
+ * about 45 requests a day, so this is not a limit anyone should reach.
+ *
+ * Same single-source-of-truth rule as the per-minute limit.
+ */
+export const API_RATE_LIMIT_PER_DAY = 5000;
+
+/**
  * Path segment for the current version of the public API. Keeping it here
  * means moving between versions (e.g. `private` → `v1`) only touches one
  * place, and every link stays pointed at the latest docs.
