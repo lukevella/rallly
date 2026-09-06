@@ -1,10 +1,10 @@
 import "server-only";
 
+import { getCountryCurrency } from "@rallly/billing";
 import { headers } from "next/headers";
 import { cache } from "react";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { getProPrices } from "@/features/billing/data";
-import { getCountryCurrency } from "@/features/billing/utils";
 
 /**
  * Prices for the pay wall plus the currency to show first, from the request
