@@ -45,10 +45,7 @@ export async function getSpaceSubscription(spaceId: string) {
 // Prices change on the order of years; an hour is a compromise between
 // picking up a repricing without a deploy and not calling Stripe per render.
 export const getProPrices = unstable_cache(
-  async () => {
-    const { currencies } = await getProPricing({ stripe: getStripe() });
-    return currencies;
-  },
+  async () => (await getProPricing({ stripe: getStripe() })).currencies,
   ["pro-prices"],
   { revalidate: 60 * 60 },
 );
