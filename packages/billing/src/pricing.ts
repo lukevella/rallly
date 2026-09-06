@@ -20,3 +20,9 @@ export function yearlySavingsPercent({
 }
 
 export const displayedCurrencies = ["usd", "eur", "gbp"] as const;
+
+export type DisplayedCurrency = (typeof displayedCurrencies)[number];
+
+export function isDisplayedCurrency(value: string): value is DisplayedCurrency {
+  return (displayedCurrencies as readonly string[]).includes(value);
+}

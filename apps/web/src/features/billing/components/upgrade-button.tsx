@@ -1,4 +1,5 @@
 "use client";
+import type { DisplayedCurrency } from "@rallly/billing";
 import { Button } from "@rallly/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
@@ -16,7 +17,7 @@ export const UpgradeButton = ({
   onClick,
 }: React.PropsWithChildren<{
   annual?: boolean;
-  currency?: string;
+  currency?: DisplayedCurrency;
   className?: string;
   onClick?: () => void;
 }>) => {

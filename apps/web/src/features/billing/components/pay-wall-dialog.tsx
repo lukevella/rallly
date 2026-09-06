@@ -1,6 +1,6 @@
 "use client";
 
-import { pricingData } from "@rallly/billing/pricing";
+import { isDisplayedCurrency, pricingData } from "@rallly/billing/pricing";
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
@@ -394,7 +394,9 @@ export function PayWallDialog({
                   <UpgradeButton
                     className="w-full"
                     annual={isAnnual}
-                    currency={currency}
+                    currency={
+                      isDisplayedCurrency(currency) ? currency : undefined
+                    }
                     onClick={() => {
                       posthog?.capture("paywall:upgrade_button_click", {
                         from: trigger?.from,
