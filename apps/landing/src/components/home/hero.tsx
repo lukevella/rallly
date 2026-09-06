@@ -38,6 +38,7 @@ export function Hero({
   children,
   className,
   centered = false,
+  wideDescription = false,
 }: {
   title: React.ReactNode;
   description: React.ReactNode;
@@ -45,6 +46,7 @@ export function Hero({
   children?: React.ReactNode;
   className?: string;
   centered?: boolean;
+  wideDescription?: boolean;
 }) {
   return (
     <div className={cn(centered && "text-center", className)}>
@@ -58,7 +60,8 @@ export function Hero({
       </h1>
       <p
         className={cn(
-          "mt-4 max-w-prose text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed",
+          "mt-4 text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed",
+          wideDescription ? "max-w-[760px]" : "max-w-[620px]",
           centered && "mx-auto",
         )}
       >

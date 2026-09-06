@@ -151,6 +151,7 @@ export default async function Security(props: {
         <div className="relative">
           <Hero
             className="max-w-2xl"
+            wideDescription
             title="Securely scheduling for thousands of organizations"
             description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
           />
@@ -396,17 +397,17 @@ export default async function Security(props: {
         </SectionContent>
       </Section>
       <Section>
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-          <h2 className="text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
+        <div className="text-center">
+          <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
             Evaluating Rallly for your organization?
           </h2>
-          <p className="max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg">
+          <p className="mx-auto mt-4 max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg">
             We are happy to answer questions, complete your security review, or
             talk through deployment options, including self-hosting on your own
             infrastructure.
           </p>
         </div>
-        <div className="mt-6 flex flex-wrap items-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <a
             className={buttonVariants({ size: "lg", variant: "primary" })}
             href="mailto:support@rallly.co"

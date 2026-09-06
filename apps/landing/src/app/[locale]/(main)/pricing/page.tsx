@@ -96,7 +96,7 @@ export default async function Page(props: {
           centered
           title={t("pricingTitle", {
             ns: "pricing",
-            defaultValue: "Get started for free",
+            defaultValue: "Pricing",
           })}
           description={t("pricingSubtitle", {
             ns: "pricing",
@@ -932,7 +932,7 @@ export default async function Page(props: {
                 t={t}
                 ns="pricing"
                 i18nKey="pricingFinalCtaTitle"
-                defaults="Try Rallly for free"
+                defaults="Get started for free"
               />
             }
             description={
