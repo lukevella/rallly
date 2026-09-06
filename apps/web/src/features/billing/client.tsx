@@ -77,28 +77,3 @@ export type PayWallPricing = {
   prices: PricesByCurrency;
   defaultCurrency: string;
 };
-
-const PayWallPricingContext = React.createContext<PayWallPricing | null>(null);
-
-/**
- * Stripe prices for the pay wall and the currency to show first. Null means
- * the layout could not load them; the dialog then shows the built in USD
- * prices, so a Stripe outage degrades the copy rather than the upgrade path.
- */
-export function PayWallPricingProvider({
-  pricing,
-  children,
-}: {
-  pricing: PayWallPricing | null;
-  children: React.ReactNode;
-}) {
-  return (
-    <PayWallPricingContext.Provider value={pricing}>
-      {children}
-    </PayWallPricingContext.Provider>
-  );
-}
-
-export function usePayWallPricing() {
-  return React.useContext(PayWallPricingContext);
-}

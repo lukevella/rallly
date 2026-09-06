@@ -1,10 +1,7 @@
 import { Suspense } from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SessionRefresher } from "@/components/session-refresher";
-import {
-  PayWallPricingProvider,
-  TierProvider,
-} from "@/features/billing/client";
+import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { loadPayWallPricing } from "@/features/billing/loaders";
 import { resolveSpaceTier } from "@/features/billing/utils";
@@ -55,10 +52,8 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
           weekStart={user?.weekStart ?? undefined}
         >
           <TierProvider tier={tier}>
-            <PayWallPricingProvider pricing={payWallPricing}>
-              {children}
-              <PayWall />
-            </PayWallPricingProvider>
+            {children}
+            <PayWall pricing={payWallPricing} />
           </TierProvider>
         </DeviceDateTimeProvider>
       </UserProvider>

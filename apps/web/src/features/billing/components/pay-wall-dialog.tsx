@@ -40,8 +40,8 @@ import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import type { PayWallTrigger } from "../client";
-import { usePayWallPricing, usePayWallStore } from "../client";
+import type { PayWallPricing, PayWallTrigger } from "../client";
+import { usePayWallStore } from "../client";
 import { PLAN_NAMES } from "../constants";
 
 function KeyBenefits({ children }: { children?: React.ReactNode }) {
@@ -213,9 +213,11 @@ function currencyLabel(currency: string, locale: string) {
 }
 
 export function PayWallDialog({
+  pricing,
   isOpen,
   onOpenChange,
 }: {
+  pricing: PayWallPricing | null;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -223,7 +225,6 @@ export function PayWallDialog({
   const [isAnnual, setIsAnnual] = React.useState(true);
   const trigger = usePayWallStore((state) => state.trigger);
   const proBenefits = getProBenefits(trigger?.from);
-  const pricing = usePayWallPricing();
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
   const prices = pricing?.prices ?? fallbackPrices;
