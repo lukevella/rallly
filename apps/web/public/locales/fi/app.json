@@ -566,7 +566,6 @@
   "numberOfSeats": "Paikkojen määrä",
   "oidcAutoSignInDescription": "Sinut ohjataan kirjautumissivulle...",
   "openPollCount": "{count, plural, one {# avoin} other {# avointa}}",
-  "optional": "valinnainen",
   "optionalLabel": "(Valinnainen)",
   "optionCount": "{count, plural, one {# vaihtoehto} other {# vaihtoehtoa}}",
   "optionsSelected": "{count, plural, =0 {Ei vaihtoehtoa valittu} one {# vaihtoehto valittu} other {# vaihtoehtoa valittu}}",
