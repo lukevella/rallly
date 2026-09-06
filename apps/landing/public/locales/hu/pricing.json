@@ -43,7 +43,6 @@
   "pollLimit": "Van korlát arra, hogy hány szavazást hozhatok létre?",
   "pollLimitAnswer": "Nincs. Egyik csomagban sincs korlátozva a létrehozható szavazások száma, sem az, hogy hányan szavazhatnak rájuk. Az ingyenes csomagban a szavazások törlődnek, miután minden időpontjuk elmúlt, és 30 napig nem volt rajtuk aktivitás; egyes funkciók pedig, például az egyedi arculat és a haladó szavazási beállítások, csak a fizetős csomagban érhetők el. A teljes listát a fenti összehasonlító táblázatban találja.",
   "pricingDescription": "Vágj bele ingyen. Bejelentkezés nem szükséges.",
-  "pricingFaqDescription": "Minden, amit tudnod kell a csomagjainkról és számlázásról.",
   "pricingFinalCtaDescription": "Hozd létre az első szavazásod egy pillanat alatt. Bővíts csomagot, amikor szükséged van rá.",
   "pricingFinalCtaTitle": "Kezdj hozzá ingyen",
   "pricingSubtitle": "Fizess elő, hogy hozzáférhess a prémium funkciókhoz",
