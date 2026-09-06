@@ -89,7 +89,7 @@ async function PricingSection({
     getDetectedCurrency(),
   ]);
   const defaultCurrency =
-    detectedCurrency && prices[detectedCurrency]
+    detectedCurrency && Object.hasOwn(prices, detectedCurrency)
       ? detectedCurrency
       : prices.usd
         ? "usd"

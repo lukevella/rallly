@@ -45,7 +45,7 @@ export function PricingProvider({
 }) {
   const [interval, setInterval] = React.useState<BillingInterval>("yearly");
   const [selectedCurrency, setCurrency] = React.useState(defaultCurrency);
-  const currency = prices[selectedCurrency]
+  const currency = Object.hasOwn(prices, selectedCurrency)
     ? selectedCurrency
     : defaultCurrency;
   const value = React.useMemo(
