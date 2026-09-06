@@ -43,7 +43,6 @@
   "pollLimit": "Onko luotavien kyselyiden määrää rajoitettu?",
   "pollLimitAnswer": "Ei. Missään tilauksessa ei ole rajoitettu luotavien kyselyiden määrää eikä niissä äänestävien henkilöiden määrää. Ilmaisessa tilauksessa kyselyt poistetaan, kun kaikki niiden päivämäärät ovat menneet ja toimintaa ei ole ollut 30 päivään, ja jotkin ominaisuudet, kuten oma ilme ja kyselyiden lisäasetukset, ovat käytettävissä vain maksullisessa tilauksessa. Täydellinen luettelo löytyy yllä olevasta vertailutaulukosta.",
   "pricingDescription": "Aloita ilmaiseksi. Kirjautumista ei tarvita.",
-  "pricingFaqDescription": "Kaikki tietoa suunnitelmista ja laskutuksesta.",
   "pricingFinalCtaDescription": "Luo ensimmäinen kyselysi alle minuutissa. Päivitä, kun tarvitset lisää.",
   "pricingFinalCtaTitle": "Aloita ilmaiseksi",
   "pricingSubtitle": "Vaihda maksulliseen sopimukseen saadaksesi lisäominaisuuksia käyttöösi",
