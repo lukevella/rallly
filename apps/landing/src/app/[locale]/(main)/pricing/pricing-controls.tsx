@@ -12,7 +12,7 @@ import {
 } from "@rallly/ui/select";
 import { Switch } from "@rallly/ui/switch";
 import React from "react";
-import { readCurrencyCookie } from "@/lib/currency";
+import { readCurrencyCookie, writeCurrencyCookie } from "@/lib/currency";
 
 type BillingInterval = "monthly" | "yearly";
 
@@ -92,6 +92,7 @@ export function CurrencySelect({ label }: { label: string }) {
       onValueChange={(value) => {
         if (value) {
           setCurrency(value);
+          writeCurrencyCookie(value);
         }
       }}
     >

@@ -116,6 +116,9 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
+      js-cookie:
+        specifier: ^3.0.1
+        version: 3.0.5
       intl-messageformat:
         specifier: ^10.7.15
         version: 10.7.18
@@ -168,6 +171,9 @@ importers:
       '@types/color-hash':
         specifier: ^1.0.2
         version: 1.0.5
+      '@types/js-cookie':
+        specifier: ^3.0.1
+        version: 3.0.6
       '@types/lodash':
         specifier: ^4.14.178
         version: 4.17.23
