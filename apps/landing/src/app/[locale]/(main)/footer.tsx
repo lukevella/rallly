@@ -28,7 +28,7 @@ function FooterExternalLink({
       {children}
       <ArrowUpRightIcon
         aria-hidden="true"
-        className="size-3.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+        className="size-3.5 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
       />
     </a>
   );
