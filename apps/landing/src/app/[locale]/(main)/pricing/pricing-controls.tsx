@@ -84,7 +84,10 @@ export function CurrencySelect({ label }: { label: string }) {
         }
       }}
     >
-      <SelectTrigger aria-label={label}>
+      <SelectTrigger
+        aria-label={label}
+        className="-ml-2 bg-transparent px-2 shadow-none ring-0 hover:bg-gray-200/60"
+      >
         <SelectValue>{currencyLabel(currency, locale)}</SelectValue>
       </SelectTrigger>
       <SelectContent>
@@ -102,10 +105,12 @@ export function BillingIntervalSwitch({
   monthlyLabel,
   yearlyLabel,
   switchLabel,
+  badge,
 }: {
   monthlyLabel: React.ReactNode;
   yearlyLabel: React.ReactNode;
   switchLabel: string;
+  badge?: React.ReactNode;
 }) {
   const { interval, setInterval } = usePricing();
   const isYearly = interval === "yearly";
@@ -116,7 +121,7 @@ export function BillingIntervalSwitch({
         aria-pressed={!isYearly}
         onClick={() => setInterval("monthly")}
         className={cn(
-          "cursor-pointer rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+          "cursor-pointer whitespace-nowrap rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           isYearly ? "text-gray-500" : "text-gray-800",
         )}
       >
@@ -129,57 +134,39 @@ export function BillingIntervalSwitch({
           setInterval(checked ? "yearly" : "monthly")
         }
       />
-      <button
-        type="button"
-        aria-pressed={isYearly}
-        onClick={() => setInterval("yearly")}
-        className={cn(
-          "cursor-pointer rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-          isYearly ? "text-gray-800" : "text-gray-500",
-        )}
-      >
-        {yearlyLabel}
-      </button>
+      <div className="flex items-center gap-x-2">
+        <button
+          type="button"
+          aria-pressed={isYearly}
+          onClick={() => setInterval("yearly")}
+          className={cn(
+            "cursor-pointer whitespace-nowrap rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+            isYearly ? "text-gray-800" : "text-gray-500",
+          )}
+        >
+          {yearlyLabel}
+        </button>
+        {badge}
+      </div>
     </div>
   );
 }
 
-export function PricingControls({
-  badge,
-  children,
-}: {
-  badge?: React.ReactNode;
-  children: React.ReactNode;
-}) {
+export function PricingControls({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-y-4">
-      {badge ? (
-        <div className="relative">
-          {badge}
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 48 32"
-            className="pointer-events-none absolute top-0 -right-16 h-9 w-16 text-gray-400"
-            fill="none"
-          >
-            <path
-              d="M2 7c17-6 31 1 30 15"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-            <path
-              d="M26 18l6 5 4-5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      ) : null}
-      <div className="flex items-center gap-x-4">{children}</div>
+    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+      {children}
     </div>
+  );
+}
+
+export function PricingControlsDivider() {
+  // Hidden when the currency select renders nothing and the divider becomes the first child.
+  return (
+    <div
+      aria-hidden="true"
+      className="hidden h-5 w-px bg-gray-200 first:hidden sm:block"
+    />
   );
 }
 

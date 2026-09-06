@@ -2,7 +2,7 @@
 
 import type { PriceAmounts } from "@rallly/billing";
 import { PLAN_NAMES, yearlySavingsPercent } from "@rallly/billing";
-import { buttonVariants, cn } from "@rallly/ui";
+import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
   CalendarCheckIcon,
@@ -32,7 +32,6 @@ import {
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { Faq, FaqItem } from "@/components/home/faq";
-import { Hero } from "@/components/home/hero";
 import { Stats } from "@/components/home/stats";
 import {
   Section,
@@ -41,7 +40,6 @@ import {
   SectionHeading,
   SectionTitle,
 } from "@/components/section";
-import { handwritten } from "@/fonts/handwritten";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import {
@@ -69,6 +67,7 @@ import {
   CurrencySelect,
   PlanPrice,
   PricingControls,
+  PricingControlsDivider,
   PricingProvider,
   YearlySavingsBadge,
 } from "./pricing-controls";
@@ -113,42 +112,35 @@ export default async function Page(props: {
   return (
     <div className="divide-y">
       <Section>
-        <Hero
-          centered
-          title={t("pricingTitle", {
-            ns: "pricing",
-            defaultValue: "Pricing",
-          })}
-          description={t("pricingSubtitle", {
-            ns: "pricing",
-            defaultValue:
-              "Upgrade to a paid plan to get access to premium features",
-          })}
-        />
         <PricingProvider
           prices={prices}
           defaultCurrency={prices.usd ? "usd" : Object.keys(prices)[0]}
           locale={locale}
         >
-          <div className="mt-8 flex justify-center sm:mt-12">
-            <PricingControls
-              badge={
-                <span
-                  className={cn(
-                    "whitespace-nowrap text-gray-600 text-sm",
-                    handwritten.className,
-                  )}
-                >
-                  <YearlySavingsBadge labels={savingsLabels} />
-                </span>
-              }
-            >
+          <div className="flex flex-col items-center gap-y-8 text-center">
+            <div>
+              <h1 className="mx-auto max-w-[700px] text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-[2.75rem]/none">
+                {t("pricingTitle", {
+                  ns: "pricing",
+                  defaultValue: "Pricing",
+                })}
+              </h1>
+              <p className="mx-auto mt-4 max-w-[620px] text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed">
+                {t("pricingSubtitle", {
+                  ns: "pricing",
+                  defaultValue:
+                    "Upgrade to a paid plan to get access to premium features",
+                })}
+              </p>
+            </div>
+            <PricingControls>
               <CurrencySelect
                 label={t("currency", {
                   ns: "pricing",
                   defaultValue: "Currency",
                 })}
               />
+              <PricingControlsDivider />
               <BillingIntervalSwitch
                 switchLabel={t("payYearly", {
                   ns: "pricing",
@@ -170,10 +162,15 @@ export default async function Page(props: {
                     defaults="Pay yearly"
                   />
                 }
+                badge={
+                  <Badge variant="pill">
+                    <YearlySavingsBadge labels={savingsLabels} />
+                  </Badge>
+                }
               />
             </PricingControls>
           </div>
-          <PlanCards className="mx-auto mt-4 max-w-6xl sm:mt-6">
+          <PlanCards className="mx-auto mt-8 sm:mt-10">
             <PlanCard>
               <PlanCardHeader>
                 <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
@@ -388,7 +385,7 @@ export default async function Page(props: {
             </PlanCard>
           </PlanCards>
         </PricingProvider>
-        <Stats className="mt-8 sm:mt-24">
+        <Stats className="mt-8 sm:mt-12">
           <Trans
             t={t}
             ns="home"
