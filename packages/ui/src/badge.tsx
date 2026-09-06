@@ -17,6 +17,7 @@ const badgeVariants = cva(
         green:
           "bg-green-400/10 text-green-600 dark:bg-green-500/10 dark:text-green-500",
         secondary: "bg-primary/10 text-primary",
+        pill: "rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200",
       },
       size: {
         sm: "h-5 min-w-5 px-1.5 text-xs",

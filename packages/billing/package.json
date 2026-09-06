@@ -13,6 +13,7 @@
     "subscription-data-sync": "dotenv -e .env -- pnpx tsx ./src/scripts/subscription-data-sync.ts",
     "sync-payment-methods": "dotenv -e .env -- pnpx tsx ./src/scripts/sync-payment-methods.ts",
     "sync-space-subscription": "dotenv -e .env -- pnpx tsx ./src/scripts/sync-space-subscription.ts",
+    "test:unit": "vitest run",
     "type-check": "tsc --pretty --noEmit"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "stripe": "^13.2.0"
   },
   "devDependencies": {
-    "@rallly/tsconfig": "workspace:*"
+    "@rallly/tsconfig": "workspace:*",
+    "vitest": "^4.0.16"
   }
 }
