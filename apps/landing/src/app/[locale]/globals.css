@@ -7,6 +7,15 @@ body {
   @apply bg-gray-100;
 }
 
+@theme {
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+}
+
 /* Long-form content styles (blog posts, policy pages) */
 .longform {
   h2,

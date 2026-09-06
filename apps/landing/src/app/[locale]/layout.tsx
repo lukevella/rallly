@@ -2,10 +2,12 @@ import "./globals.css";
 
 import languages from "@rallly/languages";
 import { PostHogInit } from "@rallly/posthog/client";
+import { cn } from "@rallly/ui";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { cacheLife } from "next/cache";
+import { display } from "@/fonts/display";
 import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client/i18n-provider";
 import { getTranslation } from "@/i18n/server";
@@ -32,7 +34,10 @@ export default async function Root(props: {
   const translations = i18n.store.data;
 
   return (
-    <html lang={i18n.resolvedLanguage} className={sans.className}>
+    <html
+      lang={i18n.resolvedLanguage}
+      className={cn(sans.className, display.variable)}
+    >
       <body>
         <LazyMotion features={domAnimation}>
           <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
