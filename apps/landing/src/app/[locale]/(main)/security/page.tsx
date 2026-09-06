@@ -20,7 +20,7 @@ import {
   ContentGridTitle,
 } from "@/components/content-grid";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
-import { Faq, FaqItem } from "@/components/home/faq";
+import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
 import { Perimeter } from "@/components/home/perimeter";
 import { Stats } from "@/components/home/stats";
@@ -29,7 +29,6 @@ import {
   SectionContent,
   SectionDescription,
   SectionHeading,
-  SectionSplit,
   SectionTitle,
 } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
@@ -313,91 +312,80 @@ export default async function Security(props: {
           </LinkBase>
         </SectionContent>
       </Section>
-      <SectionSplit>
-        <SectionHeading>
-          <SectionTitle>Frequently asked questions</SectionTitle>
-          <SectionDescription>
-            The answers we give when organizations evaluate Rallly. If your
-            review needs something not covered here, we are happy to complete
-            your security questionnaire.
-          </SectionDescription>
-        </SectionHeading>
-        <SectionContent>
-          <Faq>
-            <FaqItem question="What personal data do you collect?">
-              Very little by design. Account holders provide a name, email
-              address, and timezone preference. Poll participants provide a name
-              and optionally an email address, and vote as guests without
-              needing accounts. We collect no sensitive personal information, no
-              government identifiers, and no financial account details.
-            </FaqItem>
-            <FaqItem question="How long do you keep data, and can we delete it?">
-              Data is retained while your account is active. You can delete
-              polls and your account at any time. Account deletion starts a 7
-              day recovery window, after which your data is permanently erased
-              and remaining backup copies expire on our database provider&apos;s
-              retention schedule. Inactive polls are automatically scheduled for
-              deletion with a 30 day grace period and advance notice. On
-              request, we delete an organization&apos;s data and confirm
-              deletion in writing.
-            </FaqItem>
-            <FaqItem question="Do you hold SOC 2 or ISO 27001 certification?">
-              Not currently. Our infrastructure providers are SOC 2 Type 2
-              and/or ISO 27001 certified, and their attestations are available
-              from each provider. In place of certification we offer what most
-              certified vendors cannot: fully auditable source code, public
-              real-time uptime monitoring, and direct access to the people who
-              build the product.
-            </FaqItem>
-            <FaqItem question="Do you offer a Data Processing Agreement (DPA)?">
-              Yes. Our GDPR Article 28{" "}
-              <LinkBase className="text-primary hover:underline" href="/dpa">
-                Data Processing Agreement
-              </LinkBase>{" "}
-              is published openly and incorporated into our terms of use, so it
-              applies automatically without paperwork. It includes our technical
-              and organizational measures and the full subprocessor list, and we
-              countersign an execution copy on request.
-            </FaqItem>
-            <FaqItem question="How is the application secured?">
-              Sign in works with email verification codes, Google, or Microsoft
-              accounts. All inputs are schema-validated, database access goes
-              through a typed ORM with parameterized queries, and dependencies
-              are monitored for vulnerabilities with automated security updates.
-              Every production change goes through version control, code review,
-              automated tests, and staged deployment with instant rollback.
-            </FaqItem>
-            <FaqItem question="What happens if there is a security incident?">
-              Monitoring and alerting route directly to the engineering team. If
-              a security incident affects your data, we will notify you within
-              72 hours of becoming aware of it. Rallly has had no data breaches.
-            </FaqItem>
-            <FaqItem question="Do you support single sign-on?">
-              Members can sign in with their Google or Microsoft accounts today.
-              Organization-wide SSO enforcement is on our roadmap as part of
-              upcoming organization features.
-            </FaqItem>
-            <FaqItem question="How do you handle backups and recovery?">
-              The production database is backed up continuously with
-              point-in-time recovery, managed by our database provider. The
-              application runs on globally distributed serverless infrastructure
-              and can be redeployed rapidly.
-            </FaqItem>
-            <FaqItem question="Can you complete our vendor security questionnaire?">
-              Yes. We complete security and privacy questionnaires for
-              organizational customers, and most answers map directly to the
-              information on this page. Send it to{" "}
-              <a
-                className="text-primary hover:underline"
-                href="mailto:support@rallly.co"
-              >
-                support@rallly.co
-              </a>
-              .
-            </FaqItem>
-          </Faq>
-        </SectionContent>
-      </SectionSplit>
+      <FaqSection
+        title="Frequently asked questions"
+        description="The answers we give when organizations evaluate Rallly. If your review needs something not covered here, we are happy to complete your security questionnaire."
+      >
+        <FaqItem question="What personal data do you collect?">
+          Very little by design. Account holders provide a name, email address,
+          and timezone preference. Poll participants provide a name and
+          optionally an email address, and vote as guests without needing
+          accounts. We collect no sensitive personal information, no government
+          identifiers, and no financial account details.
+        </FaqItem>
+        <FaqItem question="How long do you keep data, and can we delete it?">
+          Data is retained while your account is active. You can delete polls
+          and your account at any time. Account deletion starts a 7 day recovery
+          window, after which your data is permanently erased and remaining
+          backup copies expire on our database provider&apos;s retention
+          schedule. Inactive polls are automatically scheduled for deletion with
+          a 30 day grace period and advance notice. On request, we delete an
+          organization&apos;s data and confirm deletion in writing.
+        </FaqItem>
+        <FaqItem question="Do you hold SOC 2 or ISO 27001 certification?">
+          Not currently. Our infrastructure providers are SOC 2 Type 2 and/or
+          ISO 27001 certified, and their attestations are available from each
+          provider. In place of certification we offer what most certified
+          vendors cannot: fully auditable source code, public real-time uptime
+          monitoring, and direct access to the people who build the product.
+        </FaqItem>
+        <FaqItem question="Do you offer a Data Processing Agreement (DPA)?">
+          Yes. Our GDPR Article 28{" "}
+          <LinkBase className="text-primary hover:underline" href="/dpa">
+            Data Processing Agreement
+          </LinkBase>{" "}
+          is published openly and incorporated into our terms of use, so it
+          applies automatically without paperwork. It includes our technical and
+          organizational measures and the full subprocessor list, and we
+          countersign an execution copy on request.
+        </FaqItem>
+        <FaqItem question="How is the application secured?">
+          Sign in works with email verification codes, Google, or Microsoft
+          accounts. All inputs are schema-validated, database access goes
+          through a typed ORM with parameterized queries, and dependencies are
+          monitored for vulnerabilities with automated security updates. Every
+          production change goes through version control, code review, automated
+          tests, and staged deployment with instant rollback.
+        </FaqItem>
+        <FaqItem question="What happens if there is a security incident?">
+          Monitoring and alerting route directly to the engineering team. If a
+          security incident affects your data, we will notify you within 72
+          hours of becoming aware of it. Rallly has had no data breaches.
+        </FaqItem>
+        <FaqItem question="Do you support single sign-on?">
+          Members can sign in with their Google or Microsoft accounts today.
+          Organization-wide SSO enforcement is on our roadmap as part of
+          upcoming organization features.
+        </FaqItem>
+        <FaqItem question="How do you handle backups and recovery?">
+          The production database is backed up continuously with point-in-time
+          recovery, managed by our database provider. The application runs on
+          globally distributed serverless infrastructure and can be redeployed
+          rapidly.
+        </FaqItem>
+        <FaqItem question="Can you complete our vendor security questionnaire?">
+          Yes. We complete security and privacy questionnaires for
+          organizational customers, and most answers map directly to the
+          information on this page. Send it to{" "}
+          <a
+            className="text-primary hover:underline"
+            href="mailto:support@rallly.co"
+          >
+            support@rallly.co
+          </a>
+          .
+        </FaqItem>
+      </FaqSection>
       <Section>
         <div className="text-center">
           <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">

@@ -6,19 +6,13 @@ import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
-import { Faq, FaqItem } from "@/components/home/faq";
+import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { SocialProof } from "@/components/home/social-proof";
 import { Stats } from "@/components/home/stats";
-import {
-  Section,
-  SectionContent,
-  SectionDescription,
-  SectionHeading,
-  SectionTitle,
-} from "@/components/section";
+import { Section } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -66,154 +60,149 @@ export default async function Page(props: {
       </Section>
       <HowItWorks locale={locale} />
       <SocialProof locale={locale} />
-      <div>
-        <Section>
-          <SectionHeading>
-            <SectionTitle>
+      <div className="divide-y">
+        <FaqSection
+          title={
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqTitle"
+              defaults="Frequently asked questions"
+            />
+          }
+          description={
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqDescription"
+              defaults="Quick answers about how Rallly works, pricing, and privacy."
+            />
+          }
+        >
+          <FaqItem
+            question={
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="faqTitle"
-                defaults="Frequently asked questions"
+                i18nKey="legalFaqOpposingCounsel"
+                defaults="Can opposing counsel respond without signing up?"
               />
-            </SectionTitle>
-            <SectionDescription>
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="legalFaqOpposingCounselAnswer"
+              defaults="Yes. Anyone with the link can reply whether or not they use Rallly, and whichever system their own firm runs. That matters when you are coordinating across firms, because the other side has no reason to adopt a tool just to give you three dates."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="faqDescription"
-                defaults="Quick answers about how Rallly works, pricing, and privacy."
+                i18nKey="legalFaqAllParties"
+                defaults="Everyone has to attend, not just a majority. Does that work?"
               />
-            </SectionDescription>
-          </SectionHeading>
-          <SectionContent>
-            <Faq>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="legalFaqOpposingCounsel"
-                    defaults="Can opposing counsel respond without signing up?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="legalFaqOpposingCounselAnswer"
-                  defaults="Yes. Anyone with the link can reply whether or not they use Rallly, and whichever system their own firm runs. That matters when you are coordinating across firms, because the other side has no reason to adopt a tool just to give you three dates."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="legalFaqAllParties"
-                    defaults="Everyone has to attend, not just a majority. Does that work?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="legalFaqAllPartiesAnswer"
-                  defaults="Yes. Every slot shows exactly who can attend and who cannot, rather than only a total, so you can find the dates where counsel for both sides, the clients and the neutral are all free, and rule out the ones where a required party said no."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="legalFaqConfidential"
-                    defaults="Will the poll reveal our client or matter details?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="legalFaqConfidentialAnswer"
-                  defaults="Only what you choose to put in it. Many firms title the poll by matter reference rather than by party name, and leave the description empty. With <0>Rallly Pro</0> you can also hide participant names, so one side cannot see who else was invited, and hide votes until someone has responded themselves."
-                  components={[
-                    <Link
-                      key="pricing"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="/pricing"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="legalFaqTimeZones"
-                    defaults="Does it handle parties in different jurisdictions?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="legalFaqTimeZonesAnswer"
-                  defaults="Yes. Each participant sees the proposed slots in their own time zone automatically, so counsel in London and a client in New York are looking at the same slot without either of them converting anything by hand."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="legalFaqBranding"
-                    defaults="Can polls carry our firm branding?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="legalFaqBrandingAnswer"
-                  defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to another firm or a client looks like it came from your practice. Everything else is free to use."
-                  components={[
-                    <Link
-                      key="pricing"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="/pricing"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqPrivacy"
-                    defaults="Is my data private?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqPrivacyAnswer"
-                  defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
-                  components={[
-                    <Link
-                      key="privacy"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="/privacy-policy"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-            </Faq>
-          </SectionContent>
-        </Section>
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="legalFaqAllPartiesAnswer"
+              defaults="Yes. Every slot shows exactly who can attend and who cannot, rather than only a total, so you can find the dates where counsel for both sides, the clients and the neutral are all free, and rule out the ones where a required party said no."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="legalFaqConfidential"
+                defaults="Will the poll reveal our client or matter details?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="legalFaqConfidentialAnswer"
+              defaults="Only what you choose to put in it. Many firms title the poll by matter reference rather than by party name, and leave the description empty. With <0>Rallly Pro</0> you can also hide participant names, so one side cannot see who else was invited, and hide votes until someone has responded themselves."
+              components={[
+                <Link
+                  key="pricing"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/pricing"
+                />,
+              ]}
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="legalFaqTimeZones"
+                defaults="Does it handle parties in different jurisdictions?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="legalFaqTimeZonesAnswer"
+              defaults="Yes. Each participant sees the proposed slots in their own time zone automatically, so counsel in London and a client in New York are looking at the same slot without either of them converting anything by hand."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="legalFaqBranding"
+                defaults="Can polls carry our firm branding?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="legalFaqBrandingAnswer"
+              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to another firm or a client looks like it came from your practice. Everything else is free to use."
+              components={[
+                <Link
+                  key="pricing"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/pricing"
+                />,
+              ]}
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqPrivacy"
+                defaults="Is my data private?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqPrivacyAnswer"
+              defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
+              components={[
+                <Link
+                  key="privacy"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/privacy-policy"
+                />,
+              ]}
+            />
+          </FaqItem>
+        </FaqSection>
         <Section className="sm:py-24">
           <Cta
             title={

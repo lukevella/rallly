@@ -1,5 +1,12 @@
 import { PlusIcon } from "lucide-react";
 import type * as React from "react";
+import {
+  SectionContent,
+  SectionDescription,
+  SectionHeading,
+  SectionSplit,
+  SectionTitle,
+} from "@/components/section";
 
 export function FaqItem({
   question,
@@ -23,4 +30,26 @@ export function FaqItem({
 
 export function Faq({ children }: { children: React.ReactNode }) {
   return <div className="divide-y">{children}</div>;
+}
+
+export function FaqSection({
+  title,
+  description,
+  children,
+}: {
+  title: React.ReactNode;
+  description: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <SectionSplit>
+      <SectionHeading>
+        <SectionTitle>{title}</SectionTitle>
+        <SectionDescription>{description}</SectionDescription>
+      </SectionHeading>
+      <SectionContent>
+        <Faq>{children}</Faq>
+      </SectionContent>
+    </SectionSplit>
+  );
 }

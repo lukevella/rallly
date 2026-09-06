@@ -31,14 +31,13 @@ import {
 } from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
-import { Faq, FaqItem } from "@/components/home/faq";
+import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Stats } from "@/components/home/stats";
 import {
   Section,
   SectionContent,
   SectionDescription,
   SectionHeading,
-  SectionSplit,
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
@@ -733,221 +732,216 @@ export default async function Page(props: {
         </SectionContent>
       </Section>
       <div className="divide-y">
-        <SectionSplit>
-          <SectionHeading>
-            <SectionTitle>
+        <FaqSection
+          title={
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="faq"
+              defaults="Frequently asked questions"
+            />
+          }
+          description={
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="pricingFaqDescription"
+              defaults="Everything you need to know about our plans and billing."
+            />
+          }
+        >
+          <FaqItem
+            question={
               <Trans
                 t={t}
                 ns="pricing"
-                i18nKey="faq"
-                defaults="Frequently asked questions"
+                i18nKey="canUseFree"
+                defaults="Can I use Rallly for free?"
               />
-            </SectionTitle>
-            <SectionDescription>
+            }
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="canUseFreeAnswer3"
+              defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
               <Trans
                 t={t}
                 ns="pricing"
-                i18nKey="pricingFaqDescription"
-                defaults="Everything you need to know about our plans and billing."
+                i18nKey="pollLimit"
+                defaults="Is there a limit on how many polls I can create?"
               />
-            </SectionDescription>
-          </SectionHeading>
-          <SectionContent>
-            <Faq>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="canUseFree"
-                    defaults="Can I use Rallly for free?"
+            }
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="pollLimitAnswer"
+              defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="whyUpgrade"
+                defaults="Why should I upgrade?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="whyUpgradeAnswer2"
+              defaults="Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="whenPollInactive"
+                defaults="When does a poll become inactive?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="whenPollInactiveAnswer"
+              defaults="Polls become inactive when all date options are in the past AND there has been no activity for over 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="howToUpgrade"
+                defaults="How do I upgrade to a paid plan?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="howToUpgradeAnswer"
+              components={{
+                a: (
+                  <Link
+                    className={faqLinkClassName}
+                    href={linkToApp("/settings/billing", {
+                      ref: "pricing",
+                      cta: "pricing_faq",
+                    })}
                   />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="canUseFreeAnswer3"
-                  defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="pollLimit"
-                    defaults="Is there a limit on how many polls I can create?"
+                ),
+                b: <strong />,
+              }}
+              defaults="To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="cancelSubscription"
+                defaults="How do I cancel my subscription?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="pricing"
+              i18nKey="cancelSubscriptionAnswer"
+              components={{
+                a: (
+                  <Link
+                    className={faqLinkClassName}
+                    href={linkToApp("/settings/billing", {
+                      ref: "pricing",
+                      cta: "pricing_faq",
+                    })}
                   />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="pollLimitAnswer"
-                  defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="whyUpgrade"
-                    defaults="Why should I upgrade?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="whyUpgradeAnswer2"
-                  defaults="Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="whenPollInactive"
-                    defaults="When does a poll become inactive?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="whenPollInactiveAnswer"
-                  defaults="Polls become inactive when all date options are in the past AND there has been no activity for over 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="howToUpgrade"
-                    defaults="How do I upgrade to a paid plan?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="howToUpgradeAnswer"
-                  components={{
-                    a: (
-                      <Link
-                        className={faqLinkClassName}
-                        href={linkToApp("/settings/billing", {
-                          ref: "pricing",
-                          cta: "pricing_faq",
-                        })}
-                      />
-                    ),
-                    b: <strong />,
-                  }}
-                  defaults="To upgrade, you can go to your <a>billing settings</a> and click on <b>Upgrade</b>."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="cancelSubscription"
-                    defaults="How do I cancel my subscription?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="pricing"
-                  i18nKey="cancelSubscriptionAnswer"
-                  components={{
-                    a: (
-                      <Link
-                        className={faqLinkClassName}
-                        href={linkToApp("/settings/billing", {
-                          ref: "pricing",
-                          cta: "pricing_faq",
-                        })}
-                      />
-                    ),
-                    b: <strong />,
-                  }}
-                  defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqNonprofit"
-                    defaults="Do you offer discounts for nonprofits?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqNonprofitAnswer"
-                  defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. Email us at <0>support@rallly.co</0> and we will get you set up."
-                  components={[
-                    <a
-                      key="email"
-                      className={faqLinkClassName}
-                      href="mailto:support@rallly.co"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqTeams"
-                    defaults="How does Rallly work for teams?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqTeamsAnswer"
-                  defaults="You can invite your team into a shared space where everyone creates and manages polls together. Billing is centralized. A single subscription covers the whole team, and you can add or remove seats as your team changes."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqSelfHost"
-                    defaults="Can I self-host Rallly?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqSelfHostAnswer"
-                  defaults="Yes. Rallly is open source and can be deployed on your own infrastructure with Docker. Check the <0>self-hosting docs</0> to get started."
-                  components={[
-                    <a
-                      key="docs"
-                      className={faqLinkClassName}
-                      href="https://support.rallly.co/self-hosting/installation/docker"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-            </Faq>
-          </SectionContent>
-        </SectionSplit>
+                ),
+                b: <strong />,
+              }}
+              defaults="You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqNonprofit"
+                defaults="Do you offer discounts for nonprofits?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqNonprofitAnswer"
+              defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. Email us at <0>support@rallly.co</0> and we will get you set up."
+              components={[
+                <a
+                  key="email"
+                  className={faqLinkClassName}
+                  href="mailto:support@rallly.co"
+                />,
+              ]}
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqTeams"
+                defaults="How does Rallly work for teams?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqTeamsAnswer"
+              defaults="You can invite your team into a shared space where everyone creates and manages polls together. Billing is centralized. A single subscription covers the whole team, and you can add or remove seats as your team changes."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqSelfHost"
+                defaults="Can I self-host Rallly?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqSelfHostAnswer"
+              defaults="Yes. Rallly is open source and can be deployed on your own infrastructure with Docker. Check the <0>self-hosting docs</0> to get started."
+              components={[
+                <a
+                  key="docs"
+                  className={faqLinkClassName}
+                  href="https://support.rallly.co/self-hosting/installation/docker"
+                />,
+              ]}
+            />
+          </FaqItem>
+        </FaqSection>
         <Section className="sm:py-24">
           <Cta
             title={
