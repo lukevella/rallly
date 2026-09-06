@@ -732,7 +732,7 @@ export default async function Page(props: {
           </CompareTable>
         </SectionContent>
       </Section>
-      <div>
+      <div className="divide-y">
         <SectionSplit>
           <SectionHeading>
             <SectionTitle>

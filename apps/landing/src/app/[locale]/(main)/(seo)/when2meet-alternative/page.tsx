@@ -275,7 +275,7 @@ export default async function Page(props: {
         </SectionContent>
       </Section>
       <SocialProof locale={locale} />
-      <div>
+      <div className="divide-y">
         <SectionSplit>
           <SectionHeading>
             <SectionTitle>
