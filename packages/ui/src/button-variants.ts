@@ -4,22 +4,22 @@ import { cn } from "./lib/utils";
 
 export const buttonVariants = cva(
   cn(
-    "group inline-flex shrink-0 items-center justify-center whitespace-nowrap font-normal transition-colors active:opacity-80 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-90",
+    "group inline-flex shrink-0 items-center justify-center whitespace-nowrap font-normal transition-colors disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-90",
   ),
   {
     variants: {
       variant: {
         primary:
-          "bg-primary/90 text-primary-foreground ring-1 ring-button-outline ring-inset dark:bg-primary/80",
+          "bg-primary/90 text-primary-foreground ring-1 ring-button-outline ring-inset active:translate-y-0.5 dark:bg-primary/80",
         destructive:
-          "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset dark:bg-destructive/80",
+          "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset active:translate-y-0.5 dark:bg-destructive/80",
         default:
-          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg data-[state=open]:bg-accent dark:bg-foreground/5",
+          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg active:translate-y-0.5 data-[state=open]:bg-accent dark:bg-foreground/5",
         ghost:
-          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent data-[state=open]:bg-accent [&>svg]:opacity-75",
+          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent active:opacity-80 data-[state=open]:bg-accent [&>svg]:opacity-75",
         actionBar:
-          "border-transparent bg-action-bar text-action-bar-foreground data-[state=open]:bg-action-bar-foreground/20",
-        link: "border-transparent text-primary underline-offset-4 hover:underline",
+          "border-transparent bg-action-bar text-action-bar-foreground active:translate-y-0.5 data-[state=open]:bg-action-bar-foreground/20",
+        link: "border-transparent text-primary underline-offset-4 hover:underline active:opacity-80",
       },
       size: {
         default:
