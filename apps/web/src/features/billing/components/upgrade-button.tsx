@@ -1,4 +1,5 @@
 "use client";
+import type { DisplayedCurrency } from "@rallly/billing";
 import { Button } from "@rallly/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
@@ -11,10 +12,12 @@ import { useSafeAction } from "@/lib/safe-action/client";
 export const UpgradeButton = ({
   children,
   annual,
+  currency,
   className,
   onClick,
 }: React.PropsWithChildren<{
   annual?: boolean;
+  currency?: DisplayedCurrency;
   className?: string;
   onClick?: () => void;
 }>) => {
@@ -38,6 +41,7 @@ export const UpgradeButton = ({
         }
         upgradeToPro.execute({
           period: annual ? "yearly" : "monthly",
+          currency,
           returnPath: pathname,
         });
       }}

@@ -3,6 +3,7 @@ import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SessionRefresher } from "@/components/session-refresher";
 import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
+import { loadPayWallPricing } from "@/features/billing/loaders";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
@@ -21,11 +22,13 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
     await requireUser();
   }
 
-  const [locale, deviceDateTimeConfig, session] = await Promise.all([
-    getLocale(),
-    getDeviceDateTimeConfig(),
-    getSession(),
-  ]);
+  const [locale, deviceDateTimeConfig, session, payWallPricing] =
+    await Promise.all([
+      getLocale(),
+      getDeviceDateTimeConfig(),
+      getSession(),
+      loadPayWallPricing(),
+    ]);
 
   const user = session?.user;
 
@@ -50,7 +53,7 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
         >
           <TierProvider tier={tier}>
             {children}
-            <PayWall />
+            <PayWall pricing={payWallPricing} />
           </TierProvider>
         </DeviceDateTimeProvider>
       </UserProvider>

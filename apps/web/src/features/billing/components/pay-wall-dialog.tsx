@@ -1,6 +1,6 @@
 "use client";
 
-import { pricingData } from "@rallly/billing/pricing";
+import { isDisplayedCurrency, pricingData } from "@rallly/billing/pricing";
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
@@ -12,10 +12,17 @@ import {
 } from "@rallly/ui/dialog";
 import { Label } from "@rallly/ui/label";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
 import { Switch } from "@rallly/ui/switch";
 import { Tabs, TabsContent } from "@rallly/ui/tabs";
 import {
-  BadgeDollarSignIcon,
+  BadgePercentIcon,
   CalendarCheckIcon,
   CalendarSearchIcon,
   ClockIcon,
@@ -31,8 +38,9 @@ import { PageIcon } from "@/components/page-icons";
 import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
-import { Trans } from "@/i18n/client";
-import type { PayWallTrigger } from "../client";
+import { Trans, useTranslation } from "@/i18n/client";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import type { PayWallPricing, PayWallTrigger } from "../client";
 import { usePayWallStore } from "../client";
 import { PLAN_NAMES } from "../constants";
 
@@ -185,17 +193,31 @@ function getProBenefits(from: PayWallTrigger["from"] | undefined) {
   ];
 }
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
+const fallbackPrices = {
+  [pricingData.monthly.currency]: {
+    monthly: pricingData.monthly.amount,
+    yearly: pricingData.yearly.amount,
+  },
+};
+
+function currencyLabel(currency: string, locale: string) {
+  const code = currency.toUpperCase();
+  const symbol = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: code,
+    currencyDisplay: "narrowSymbol",
+  })
+    .formatToParts(0)
+    .find((part) => part.type === "currency")?.value;
+  return symbol && symbol !== code ? `${symbol} ${code}` : code;
+}
 
 export function PayWallDialog({
+  pricing,
   isOpen,
   onOpenChange,
 }: {
+  pricing: PayWallPricing | null;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -203,20 +225,38 @@ export function PayWallDialog({
   const [isAnnual, setIsAnnual] = React.useState(true);
   const trigger = usePayWallStore((state) => state.trigger);
   const proBenefits = getProBenefits(trigger?.from);
+  const { t } = useTranslation();
+  const { locale } = useDateTimeConfig();
+  const prices = pricing?.prices ?? fallbackPrices;
+  const currencies = Object.keys(prices);
+  const defaultCurrency = pricing?.defaultCurrency ?? currencies[0];
+  const [selectedCurrency, setSelectedCurrency] =
+    React.useState(defaultCurrency);
+  const currency = prices[selectedCurrency]
+    ? selectedCurrency
+    : defaultCurrency;
+  const amounts = prices[currency];
 
   const handleChangePlan = (value: string) => {
     setSelectedPlan(spaceTierSchema.parse(value));
   };
 
+  const currencyFormatter = React.useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: currency.toUpperCase(),
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [locale, currency],
+  );
+
   const getProPrice = () => {
     if (isAnnual) {
-      const yearlyPrice = pricingData.yearly.amount / 100;
-      const monthlyEquivalent = yearlyPrice / 12;
-      return currencyFormatter.format(monthlyEquivalent);
-    } else {
-      const monthlyPrice = pricingData.monthly.amount / 100;
-      return currencyFormatter.format(monthlyPrice);
+      return currencyFormatter.format(amounts.yearly / 12 / 100);
     }
+    return currencyFormatter.format(amounts.monthly / 100);
   };
 
   return (
@@ -227,6 +267,7 @@ export function PayWallDialog({
         if (!open) {
           setSelectedPlan("pro");
           setIsAnnual(true);
+          setSelectedCurrency(defaultCurrency);
         }
       }}
     >
@@ -241,13 +282,41 @@ export function PayWallDialog({
         >
           <div className="flex flex-col p-6">
             <DialogHeader>
-              <div className="flex items-center gap-3">
-                <PageIcon size="sm" color="primary">
-                  <SparklesIcon />
-                </PageIcon>
-                <DialogTitle>
-                  <Trans i18nKey="upgradePromptTitle" />
-                </DialogTitle>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <PageIcon size="sm" color="primary">
+                    <SparklesIcon />
+                  </PageIcon>
+                  <DialogTitle>
+                    <Trans i18nKey="upgradePromptTitle" />
+                  </DialogTitle>
+                </div>
+                {currencies.length > 1 && (
+                  <Select
+                    value={currency}
+                    onValueChange={(value) => {
+                      if (value) {
+                        setSelectedCurrency(value);
+                      }
+                    }}
+                  >
+                    <SelectTrigger
+                      className="h-8"
+                      aria-label={t("currency", { defaultValue: "Currency" })}
+                    >
+                      <SelectValue>
+                        {currencyLabel(currency, locale)}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((code) => (
+                        <SelectItem key={code} value={code}>
+                          {currencyLabel(code, locale)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
             </DialogHeader>
             <div className="mt-6 flex flex-1 flex-col gap-4">
@@ -290,7 +359,7 @@ export function PayWallDialog({
                   htmlFor="annual-switch"
                   className="relative flex select-none items-start justify-between gap-4 overflow-hidden rounded-lg bg-gray-50 p-4 ring ring-button-outline ring-inset hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700"
                 >
-                  <BadgeDollarSignIcon className="pointer-events-none absolute -top-5 right-16 size-24 opacity-5" />
+                  <BadgePercentIcon className="pointer-events-none absolute -top-5 right-16 size-24 opacity-5" />
 
                   <div className="flex-1">
                     <div className="text-sm">
@@ -305,12 +374,10 @@ export function PayWallDialog({
                         i18nKey="yearlyBillingDescription"
                         values={{
                           yearlyPrice: currencyFormatter.format(
-                            pricingData.yearly.amount / 100,
+                            amounts.yearly / 100,
                           ),
                           savings: currencyFormatter.format(
-                            (pricingData.monthly.amount * 12 -
-                              pricingData.yearly.amount) /
-                              100,
+                            (amounts.monthly * 12 - amounts.yearly) / 100,
                           ),
                         }}
                       />
@@ -328,6 +395,9 @@ export function PayWallDialog({
                   <UpgradeButton
                     className="w-full"
                     annual={isAnnual}
+                    currency={
+                      isDisplayedCurrency(currency) ? currency : undefined
+                    }
                     onClick={() => {
                       posthog?.capture("paywall:upgrade_button_click", {
                         from: trigger?.from,
@@ -336,6 +406,7 @@ export function PayWallDialog({
                         poll_id: trigger?.pollId,
                         plan: selectedPlan,
                         interval: isAnnual ? "year" : "month",
+                        currency,
                       });
                     }}
                   >

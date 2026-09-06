@@ -1,6 +1,9 @@
 import "server-only";
 
+import { getProPricing } from "@rallly/billing";
 import { prisma } from "@rallly/database";
+import { unstable_cache } from "next/cache";
+import { getStripe } from "@/features/billing/service";
 import type { SpaceTier } from "@/features/space/schema";
 
 export async function getSpaceSubscription(spaceId: string) {
@@ -38,3 +41,11 @@ export async function getSpaceSubscription(spaceId: string) {
     active: subscription.active,
   };
 }
+
+// Prices change on the order of years; an hour is a compromise between
+// picking up a repricing without a deploy and not calling Stripe per render.
+export const getProPrices = unstable_cache(
+  async () => (await getProPricing({ stripe: getStripe() })).currencies,
+  ["pro-prices"],
+  { revalidate: 60 * 60 },
+);

@@ -1,5 +1,6 @@
 "use client";
 
+import type { PricesByCurrency } from "@rallly/billing";
 import { posthog } from "@rallly/posthog/client";
 import React from "react";
 import { create } from "zustand";
@@ -71,3 +72,8 @@ export const usePayWallStore = create<PayWallStore>((set) => ({
 
 export const showPayWall = (trigger: PayWallTrigger) =>
   usePayWallStore.getState().show(trigger);
+
+export type PayWallPricing = {
+  prices: PricesByCurrency;
+  defaultCurrency: string;
+};
