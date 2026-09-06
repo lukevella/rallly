@@ -567,7 +567,6 @@
   "numberOfSeats": "Количество мест",
   "oidcAutoSignInDescription": "Вы перенаправляетесь на страницу входа...",
   "openPollCount": "{count, plural, one {# открытая} few {# открытые} many {# открытых} other {# открытых}}",
-  "optional": "необязательно",
   "optionalLabel": "(Необязательно)",
   "optionCount": "{count, plural, one {# вариант} few {# варианта} other {# вариантов}}",
   "optionsSelected": "{count, plural, =0 {Ничего не выбрано} one {# вариант выбран} few {# варианта выбрано} many {# вариантов выбрано} other {# вариантов выбрано}}",
