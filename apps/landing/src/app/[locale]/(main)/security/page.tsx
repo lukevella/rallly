@@ -149,6 +149,7 @@ export default async function Security(props: {
           <Perimeter />
         </div>
         <div className="relative">
+          {/* Capped below the Hero widths so the copy clears the Perimeter at xl. */}
           <Hero
             className="max-w-2xl"
             wideDescription
