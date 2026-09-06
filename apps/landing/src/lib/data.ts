@@ -7,8 +7,6 @@ import {
 } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { cacheLife } from "next/cache";
-import { cookies, headers } from "next/headers";
-import { CURRENCY_COOKIE_NAME, CURRENCY_HEADER_NAME } from "@/lib/currency";
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -60,6 +58,9 @@ const getStripePricing = async (secretKey: string) => {
 export const getPricing = async (): Promise<PricesByCurrency> => {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) {
+    console.warn(
+      "STRIPE_SECRET_KEY is not set; the pricing page shows the built in USD prices",
+    );
     return fallbackPricing;
   }
   try {
@@ -68,16 +69,4 @@ export const getPricing = async (): Promise<PricesByCurrency> => {
     console.error("Failed to load prices from Stripe", error);
     return fallbackPricing;
   }
-};
-
-// The cookie wins so a visitor's own choice sticks; the header covers the
-// first visit, before the proxy's cookie exists. Not cached: it reads the
-// request, and the callers stream it under Suspense.
-export const getDetectedCurrency = async () => {
-  const [cookieStore, headersList] = await Promise.all([cookies(), headers()]);
-  return (
-    cookieStore.get(CURRENCY_COOKIE_NAME)?.value ??
-    headersList.get(CURRENCY_HEADER_NAME) ??
-    undefined
-  );
 };
