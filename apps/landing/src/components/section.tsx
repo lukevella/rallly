@@ -51,3 +51,25 @@ export function SectionContent({
 }: React.ComponentProps<"div">) {
   return <div className={cn("mt-8 sm:mt-12", className)} {...props} />;
 }
+
+/**
+ * Two-column section for large screens: the heading sits in a sticky left
+ * column while the content scrolls on the right. Stacks below `lg`.
+ * The sticky offset matches the site header (`top-24`).
+ */
+export function SectionSplit({
+  className,
+  ...props
+}: React.ComponentProps<"section">) {
+  return (
+    <Section
+      className={cn(
+        "lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start lg:gap-x-16",
+        "[&>header]:lg:sticky [&>header]:lg:top-24",
+        "[&>header+div]:lg:mt-0",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

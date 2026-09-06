@@ -14,7 +14,7 @@ import {
 } from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
-import { Faq, FaqItem } from "@/components/home/faq";
+import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
@@ -253,188 +253,176 @@ export default async function Page(props: {
         </SectionContent>
       </Section>
       <SocialProof locale={locale} />
-      <div>
-        <Section>
-          <SectionHeading>
-            <SectionTitle>
+      <div className="divide-y">
+        <FaqSection
+          locale={locale}
+          title={
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqTitle"
+              defaults="Frequently asked questions"
+            />
+          }
+        >
+          <FaqItem
+            question={
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="faqTitle"
-                defaults="Frequently asked questions"
+                i18nKey="faqWhatIsRallly"
+                defaults="What is Rallly?"
               />
-            </SectionTitle>
-            <SectionDescription>
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqWhatIsRalllyAnswer"
+              defaults="Rallly is a meeting scheduling tool. You create a poll with a few proposed times, share a link, and participants vote on the times that work for them. When the votes are in, you can see at a glance which time suits everyone best."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="faqDescription"
-                defaults="Quick answers about how Rallly works, pricing, and privacy."
+                i18nKey="faqDoodleDifference"
+                defaults="How is Rallly different from Doodle?"
               />
-            </SectionDescription>
-          </SectionHeading>
-          <SectionContent>
-            <Faq>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqWhatIsRallly"
-                    defaults="What is Rallly?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqWhatIsRalllyAnswer"
-                  defaults="Rallly is a meeting scheduling tool. You create a poll with a few proposed times, share a link, and participants vote on the times that work for them. When the votes are in, you can see at a glance which time suits everyone best."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqDoodleDifference"
-                    defaults="How is Rallly different from Doodle?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqDoodleDifferenceAnswer"
-                  defaults="Rallly gives you professional, ad-free meeting polls in a clean and easy to use interface. Participants can vote without creating an account, and if you want full control of your data you can even host Rallly on your own server."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="doodleAlternativeFaqMeetingPoll"
-                    defaults="Can I create a meeting poll with Rallly for free?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="doodleAlternativeFaqMeetingPollAnswer"
-                  defaults="Yes. Creating a <0>meeting poll</0> is free with no limit on participants. Propose the times that could work, share one link, and watch the votes come in. Nobody needs an account to respond."
-                  components={[
-                    <LinkBase
-                      key="meeting-poll"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="/free-scheduling-poll"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqNeedAccount"
-                    defaults="Do I need an account to use Rallly?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqNeedAccountAnswer"
-                  defaults="No. You can create a poll and vote on one without signing up. Creating a free account lets you manage your polls from any device and get notified when people respond."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqIsFree"
-                    defaults="Is Rallly free?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqIsFreeAnswer"
-                  defaults="Yes. 99% of people use Rallly completely free. Creating polls, sharing them, and collecting votes costs nothing and there is no limit on participants. We also offer <0>Rallly Pro</0>, a paid subscription with features that are useful if you use Rallly professionally, like adding your own branding, removing Rallly attribution from your polls, and keeping polls around indefinitely."
-                  components={[
-                    <Link
-                      key="pricing"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="/pricing"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqTimeZones"
-                    defaults="Does Rallly work across time zones?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqTimeZonesAnswer"
-                  defaults="Yes. When you create a poll with specific times, each participant sees the options in their own time zone automatically, so nobody has to do the math."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqAfterVoting"
-                    defaults="What happens after everyone votes?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqAfterVotingAnswer"
-                  defaults="The results show which times work for the most people. With Rallly Pro you can finalize the poll, which notifies participants of the chosen time by email."
-                />
-              </FaqItem>
-              <FaqItem
-                question={
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="faqPrivacy"
-                    defaults="Is my data private?"
-                  />
-                }
-              >
-                <Trans
-                  t={t}
-                  ns="home"
-                  i18nKey="faqPrivacyAnswer"
-                  defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
-                  components={[
-                    <Link
-                      key="privacy"
-                      className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
-                      href="/privacy-policy"
-                    />,
-                  ]}
-                />
-              </FaqItem>
-            </Faq>
-          </SectionContent>
-        </Section>
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqDoodleDifferenceAnswer"
+              defaults="Rallly gives you professional, ad-free meeting polls in a clean and easy to use interface. Participants can vote without creating an account, and if you want full control of your data you can even host Rallly on your own server."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="doodleAlternativeFaqMeetingPoll"
+                defaults="Can I create a meeting poll with Rallly for free?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="doodleAlternativeFaqMeetingPollAnswer"
+              defaults="Yes. Creating a <0>meeting poll</0> is free with no limit on participants. Propose the times that could work, share one link, and watch the votes come in. Nobody needs an account to respond."
+              components={[
+                <LinkBase
+                  key="meeting-poll"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/free-scheduling-poll"
+                />,
+              ]}
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqNeedAccount"
+                defaults="Do I need an account to use Rallly?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqNeedAccountAnswer"
+              defaults="No. You can create a poll and vote on one without signing up. Creating a free account lets you manage your polls from any device and get notified when people respond."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqIsFree"
+                defaults="Is Rallly free?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqIsFreeAnswer"
+              defaults="Yes. 99% of people use Rallly completely free. Creating polls, sharing them, and collecting votes costs nothing and there is no limit on participants. We also offer <0>Rallly Pro</0>, a paid subscription with features that are useful if you use Rallly professionally, like adding your own branding, removing Rallly attribution from your polls, and keeping polls around indefinitely."
+              components={[
+                <Link
+                  key="pricing"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/pricing"
+                />,
+              ]}
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqTimeZones"
+                defaults="Does Rallly work across time zones?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqTimeZonesAnswer"
+              defaults="Yes. When you create a poll with specific times, each participant sees the options in their own time zone automatically, so nobody has to do the math."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqAfterVoting"
+                defaults="What happens after everyone votes?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqAfterVotingAnswer"
+              defaults="The results show which times work for the most people. With Rallly Pro you can finalize the poll, which notifies participants of the chosen time by email."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqPrivacy"
+                defaults="Is my data private?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqPrivacyAnswer"
+              defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
+              components={[
+                <Link
+                  key="privacy"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/privacy-policy"
+                />,
+              ]}
+            />
+          </FaqItem>
+        </FaqSection>
         <Section className="sm:py-24">
           <Cta
             title={
