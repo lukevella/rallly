@@ -25,6 +25,7 @@ import {
   SectionContent,
   SectionDescription,
   SectionHeading,
+  SectionSplit,
   SectionTitle,
 } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
@@ -275,7 +276,7 @@ export default async function Page(props: {
       </Section>
       <SocialProof locale={locale} />
       <div>
-        <Section>
+        <SectionSplit>
           <SectionHeading>
             <SectionTitle>
               <Trans
@@ -489,7 +490,7 @@ export default async function Page(props: {
               </FaqItem>
             </Faq>
           </SectionContent>
-        </Section>
+        </SectionSplit>
         <Section className="sm:py-24">
           <Cta
             title={

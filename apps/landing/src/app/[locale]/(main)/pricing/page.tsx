@@ -38,6 +38,7 @@ import {
   SectionContent,
   SectionDescription,
   SectionHeading,
+  SectionSplit,
   SectionTitle,
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
@@ -732,7 +733,7 @@ export default async function Page(props: {
         </SectionContent>
       </Section>
       <div>
-        <Section>
+        <SectionSplit>
           <SectionHeading>
             <SectionTitle>
               <Trans
@@ -946,7 +947,7 @@ export default async function Page(props: {
               </FaqItem>
             </Faq>
           </SectionContent>
-        </Section>
+        </SectionSplit>
         <Section className="sm:py-24">
           <Cta
             title={

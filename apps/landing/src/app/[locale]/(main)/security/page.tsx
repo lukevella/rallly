@@ -29,6 +29,7 @@ import {
   SectionContent,
   SectionDescription,
   SectionHeading,
+  SectionSplit,
   SectionTitle,
 } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
@@ -312,7 +313,7 @@ export default async function Security(props: {
           </LinkBase>
         </SectionContent>
       </Section>
-      <Section>
+      <SectionSplit>
         <SectionHeading>
           <SectionTitle>Frequently asked questions</SectionTitle>
           <SectionDescription>
@@ -396,7 +397,7 @@ export default async function Security(props: {
             </FaqItem>
           </Faq>
         </SectionContent>
-      </Section>
+      </SectionSplit>
       <Section>
         <div className="text-center">
           <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
