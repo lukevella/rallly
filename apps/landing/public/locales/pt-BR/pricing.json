@@ -43,7 +43,6 @@
   "pollLimit": "Existe um limite de quantas enquetes eu posso criar?",
   "pollLimitAnswer": "Não. Não há limite para o número de enquetes que você pode criar nem para o número de pessoas que podem votar nelas, em nenhum plano. No plano gratuito, as enquetes são excluídas depois que todas as suas datas passam e ficam 30 dias sem atividade, e alguns recursos, como identidade visual personalizada e configurações avançadas, estão disponíveis apenas em um plano pago. Veja a tabela comparativa acima para a lista completa.",
   "pricingDescription": "Comece grátis. Nenhum login é necessário.",
-  "pricingFaqDescription": "Tudo o que você precisa saber sobre nossos planos e faturamento.",
   "pricingFinalCtaDescription": "Crie sua primeira enquete em menos de um minuto. Atualize quando precisar de mais.",
   "pricingSubtitle": "Atualize para um plano pago para ter acesso aos recursos premium",
   "recommended": "Recomendado",
