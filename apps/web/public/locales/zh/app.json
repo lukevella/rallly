@@ -552,7 +552,6 @@
   "numberOfSeats": "席位数",
   "oidcAutoSignInDescription": "正在重定向至登录页面...",
   "openPollCount": "{count, plural, other {# 个进行中的投票}}",
-  "optional": "可选",
   "optionalLabel": "(可选)",
   "optionCount": "{count, plural, other {# 个选项}}",
   "optionsSelected": "{count, plural, =0 {未选择} other {已选择 # 个选项}}",
