@@ -1,7 +1,4 @@
-import type { SpaceTier } from "@rallly/database";
-import { prisma } from "@rallly/database";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
-import { Scalar } from "@scalar/hono-api-reference";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import {
@@ -15,9 +12,12 @@ import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
   getPollParticipants,
   getPollResults,
+  getPollWithOptions,
   listPolls,
 } from "@/features/poll/data";
 import { closePoll, createPoll, deletePoll } from "@/features/poll/mutations";
+import { getSpaceMemberByEmail } from "@/features/space/member/data";
+import type { SpaceTier } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import type { SlotGeneratorInput } from "@/lib/datetime/slot-generator";
 import {
@@ -64,7 +64,7 @@ type Env = {
   };
 };
 
-const app = new Hono<Env>().basePath("/api/private");
+const app = new Hono<Env>().basePath("/api/v1");
 
 function toPollResponseBody(poll: {
   id: string;
@@ -103,7 +103,7 @@ function toPollResponseBody(poll: {
   };
 }
 
-app.use("*", wideEvent({ service: "api-private" }));
+app.use("*", wideEvent({ service: "api-v1" }));
 
 app.use("*", async (c, next) => {
   if (isMaintenanceModeEnabled()) {
@@ -159,9 +159,13 @@ async function buildOpenApiSpec() {
   const spec = await generateSpecs(app, {
     documentation: {
       info: {
-        title: "Rallly Private API",
-        version: "0.0.1",
+        title: "Rallly API",
+        version: "1.0.0",
         description: [
+          "## Versioning",
+          "",
+          "`v1` is stable. Additive changes (new endpoints, new optional fields) may land on this path at any time; breaking changes only arrive under a new version prefix.",
+          "",
           "## Rate limits",
           "",
           `All endpoints share two limits per space: **${RATE_LIMIT_PER_MINUTE} requests per minute** and **${RATE_LIMIT_PER_DAY} requests per day**. Both are fixed windows that open with the first request and reset when they expire. Both limits are per space, not per API key, so creating additional keys does not increase throughput.`,
@@ -171,6 +175,7 @@ async function buildOpenApiSpec() {
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
         ].join("\n"),
       },
+      servers: [{ url: absoluteUrl() }],
       components: {
         securitySchemes: {
           bearerAuth: {
@@ -185,8 +190,7 @@ async function buildOpenApiSpec() {
   // hono-openapi's validator middleware owns the request body schema and
   // overwrites any content set via describeRoute, so named examples have to
   // be attached to the generated spec instead.
-  const createPollRequestBody =
-    spec.paths["/api/private/polls"]?.post?.requestBody;
+  const createPollRequestBody = spec.paths["/api/v1/polls"]?.post?.requestBody;
   if (createPollRequestBody && "content" in createPollRequestBody) {
     const media = createPollRequestBody.content?.["application/json"];
     if (media) {
@@ -195,7 +199,7 @@ async function buildOpenApiSpec() {
   }
 
   const patchPollRequestBody =
-    spec.paths["/api/private/polls/{pollId}"]?.patch?.requestBody;
+    spec.paths["/api/v1/polls/{pollId}"]?.patch?.requestBody;
   if (patchPollRequestBody && "content" in patchPollRequestBody) {
     const media = patchPollRequestBody.content?.["application/json"];
     if (media) {
@@ -212,15 +216,6 @@ app.get("/openapi", async (c) => {
   openApiSpec ??= await buildOpenApiSpec();
   return c.json(openApiSpec);
 });
-
-app.get(
-  "/docs",
-  Scalar({
-    url: "/api/private/openapi",
-    pageTitle: "Rallly Private API Documentation",
-    theme: "purple",
-  }),
-);
 
 app.post(
   "/polls",
@@ -269,18 +264,9 @@ app.post(
     let organizerUserId = spaceOwnerId;
 
     if (input.organizer) {
-      const spaceMember = await prisma.spaceMember.findFirst({
-        where: {
-          spaceId,
-          user: {
-            email: input.organizer.email,
-          },
-        },
-        include: {
-          user: {
-            select: { id: true, email: true },
-          },
-        },
+      const spaceMember = await getSpaceMemberByEmail({
+        spaceId,
+        email: input.organizer.email,
       });
 
       if (!spaceMember) {
@@ -293,7 +279,7 @@ app.post(
         );
       }
 
-      organizerUserId = spaceMember.user.id;
+      organizerUserId = spaceMember.userId;
     }
 
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
@@ -561,38 +547,7 @@ app.get(
     const { pollId } = c.req.param();
     const { spaceId } = c.get("apiAuth");
 
-    const poll = await prisma.poll.findFirst({
-      where: {
-        id: pollId,
-        spaceId,
-        deleted: false,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        location: true,
-        timeZone: true,
-        status: true,
-        createdAt: true,
-        user: {
-          select: {
-            name: true,
-            image: true,
-          },
-        },
-        options: {
-          select: {
-            id: true,
-            startTime: true,
-            duration: true,
-          },
-          orderBy: {
-            startTime: "asc",
-          },
-        },
-      },
-    });
+    const poll = await getPollWithOptions({ pollId, spaceId });
 
     if (!poll) {
       return c.json(

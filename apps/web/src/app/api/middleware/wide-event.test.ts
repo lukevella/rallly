@@ -38,7 +38,7 @@ const window = (limit: number, used: number) => ({
 
 const buildApp = () => {
   const app = new Hono<TestEnv>();
-  app.use("*", wideEvent);
+  app.use("*", wideEvent({ service: "api-test" }));
 
   app.get(
     "/ok",
@@ -93,7 +93,7 @@ describe("wideEvent middleware", () => {
 
     const event = info.mock.calls[0][0];
     expect(event).toMatchObject({
-      service: "private-api",
+      service: "api-test",
       method: "GET",
       path: "/ok",
       statusCode: 200,
