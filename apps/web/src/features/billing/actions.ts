@@ -1,6 +1,6 @@
 "use server";
 
-import { getProPricing } from "@rallly/billing";
+import { displayedCurrencies, getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
@@ -29,6 +29,7 @@ export const upgradeToProAction = authActionClient
   .inputSchema(
     z.object({
       period: z.enum(["monthly", "yearly"]).optional(),
+      currency: z.enum(displayedCurrencies).optional(),
       returnPath: returnPathSchema.optional(),
     }),
   )
@@ -73,7 +74,7 @@ export const upgradeToProAction = authActionClient
       );
     }
 
-    const { period, returnPath } = parsedInput;
+    const { period, currency, returnPath } = parsedInput;
 
     const stripe = getStripe();
 
@@ -109,6 +110,9 @@ export const upgradeToProAction = authActionClient
         address: "auto",
       },
       mode: "subscription",
+      // The currency the user saw on the pay wall; without it Stripe picks
+      // one from the IP and the two can disagree.
+      currency,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
       tax_id_collection: {
@@ -156,6 +160,7 @@ export const upgradeToProAction = authActionClient
       event: "billing:checkout_start",
       properties: {
         interval: period === "yearly" ? "year" : "month",
+        currency,
       },
       groups: {
         space: space.id,

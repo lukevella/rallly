@@ -11,10 +11,12 @@ import { useSafeAction } from "@/lib/safe-action/client";
 export const UpgradeButton = ({
   children,
   annual,
+  currency,
   className,
   onClick,
 }: React.PropsWithChildren<{
   annual?: boolean;
+  currency?: string;
   className?: string;
   onClick?: () => void;
 }>) => {
@@ -38,6 +40,7 @@ export const UpgradeButton = ({
         }
         upgradeToPro.execute({
           period: annual ? "yearly" : "monthly",
+          currency,
           returnPath: pathname,
         });
       }}
