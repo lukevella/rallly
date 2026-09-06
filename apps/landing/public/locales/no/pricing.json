@@ -55,6 +55,5 @@
   "whenPollInactive": "Når blir en avstemning inaktiv?",
   "whenPollInactiveAnswer": "Avstemninger blir inaktive når alle datovalgene ligger i fortiden OG det ikke har vært noen aktivitet på over 30 dager. Aktivitet inkluderer nye stemmer, kommentarer eller endringer i avstemningen. Inaktive avstemninger blir automatisk slettet hvis du ikke har et betalt abonnement.",
   "whyUpgrade": "Hvorfor bør jeg oppgradere?",
-  "whyUpgradeAnswer2": "Oppgradering til en betalt plan gir mening hvis du bruker Rallly ofte eller på jobb. Dagens abonnementspris er en spesiell tidligpris og vil økes i fremtiden. Ved å oppgradere nå, vil du få tidlig tilgang til nye planleggingsverktøy av høy kvalitet så fort de gis ut, og abonnementsprisen din låses, slik at du ikke påvirkes av fremtidige prisøkninger.",
-  "yearlyFreeMonths": "{count, plural, one {# måned gratis} other {# måneder gratis}}"
+  "whyUpgradeAnswer2": "Oppgradering til en betalt plan gir mening hvis du bruker Rallly ofte eller på jobb. Dagens abonnementspris er en spesiell tidligpris og vil økes i fremtiden. Ved å oppgradere nå, vil du få tidlig tilgang til nye planleggingsverktøy av høy kvalitet så fort de gis ut, og abonnementsprisen din låses, slik at du ikke påvirkes av fremtidige prisøkninger."
 }
