@@ -126,9 +126,17 @@ const spaceNotProResponse = {
   },
 };
 
+const retryAfterHeader = {
+  "Retry-After": {
+    description: "Seconds to wait before retrying the request.",
+    schema: { type: "integer" as const },
+  },
+};
+
 const rateLimitExceededResponse = {
   description:
     "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+  headers: retryAfterHeader,
   content: {
     "application/json": {
       schema: resolver(errorResponseSchema),
@@ -138,7 +146,8 @@ const rateLimitExceededResponse = {
 
 const serviceUnavailableResponse = {
   description:
-    "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header.",
+    "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+  headers: retryAfterHeader,
   content: {
     "application/json": {
       schema: resolver(errorResponseSchema),
@@ -157,7 +166,7 @@ async function buildOpenApiSpec() {
           "",
           `All endpoints share two limits per space: **${RATE_LIMIT_PER_MINUTE} requests per minute** and **${RATE_LIMIT_PER_DAY} requests per day**. Both are fixed windows that open with the first request and reset when they expire. Both limits are per space, not per API key, so creating additional keys does not increase throughput.`,
           "",
-          "Every response includes the standard `RateLimit-*` headers. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
+          "Every response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
           "",
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
         ].join("\n"),
