@@ -312,11 +312,7 @@ export default async function Security(props: {
           </LinkBase>
         </SectionContent>
       </Section>
-      <FaqSection
-        locale={locale}
-        title="Frequently asked questions"
-        description="The answers we give when organizations evaluate Rallly. If your review needs something not covered here, we are happy to complete your security questionnaire."
-      >
+      <FaqSection locale={locale} title="Frequently asked questions">
         <FaqItem question="What personal data do you collect?">
           Very little by design. Account holders provide a name, email address,
           and timezone preference. Poll participants provide a name and
