@@ -554,7 +554,6 @@
   "numberOfSeats": "Aantal plaatsen",
   "oidcAutoSignInDescription": "Je wordt doorgestuurd naar de inlogpagina...",
   "openPollCount": "{count, plural, one {1 open} other {# open}}",
-  "optional": "optioneel",
   "optionalLabel": "(Optioneel)",
   "optionCount": "{count, plural, one {# optie} other {# opties}}",
   "optionsSelected": "{count, plural, =0 {Geen opties geselecteerd} one {# optie geselecteerd} other {# opties geselecteerd}}",
