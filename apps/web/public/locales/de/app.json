@@ -573,7 +573,6 @@
   "numberOfSeats": "Anzahl der Benutzerplätze",
   "oidcAutoSignInDescription": "Du wirst zur Anmeldeseite weitergeleitet...",
   "openPollCount": "{count, plural, other {# live}}",
-  "optional": "optional",
   "optionalLabel": "(Optional)",
   "optionCount": "{count, plural, one {# Option} other {# Optionen}}",
   "optionsSelected": "{count, plural, =0 {Keine Optionen ausgewählt} one {# Option ausgewählt} other {# Optionen ausgewählt}}",
