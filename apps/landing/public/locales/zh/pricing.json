@@ -43,7 +43,6 @@
   "pollLimit": "我能创建的投票数量有限制吗？",
   "pollLimitAnswer": "没有。任何套餐都不限制您可以创建的投票数量，也不限制参与投票的人数。在免费套餐中，当投票的所有日期均已过去且连续 30 天没有任何活动时，该投票将被删除；此外，自定义品牌标识和高级投票设置等部分功能仅在付费套餐中提供。完整清单请参阅上方的对比表。",
   "pricingDescription": "无需登录即可开始免费使用。",
-  "pricingFaqDescription": "了解有关我们套餐与计费的所有信息。",
   "pricingFinalCtaDescription": "在一分钟内创建第一个投票。需要更多功能时再升级。",
   "pricingSubtitle": "升级到付费计划以获得高级功能",
   "recommended": "推荐",
