@@ -115,7 +115,7 @@ async function PricingSection({
       defaultCurrency={defaultCurrency}
       locale={locale}
     >
-      <div className="flex justify-center">
+      <div className="mt-8 flex justify-center">
         <PricingControls>
           <CurrencySelect
             label={t("currency", {
