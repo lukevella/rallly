@@ -1,5 +1,3 @@
-"use cache";
-
 import type { PriceAmounts } from "@rallly/billing";
 import { PLAN_NAMES, yearlySavingsPercent } from "@rallly/billing";
 import { buttonVariants } from "@rallly/ui";
@@ -18,6 +16,7 @@ import {
 } from "lucide-react";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import {
   CompareTable,
@@ -43,6 +42,7 @@ import {
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import {
+  getDetectedCurrency,
   getMonthlyPollCount,
   getMonthlyVoterCount,
   getPricing,
@@ -75,17 +75,25 @@ import {
 const faqLinkClassName =
   "text-gray-800 underline underline-offset-2 hover:text-gray-600";
 
-export default async function Page(props: {
-  params: Promise<{ locale: string }>;
+// Reads the request, so it streams under Suspense while the rest of the page
+// stays static: the visitor sees their currency from the first paint.
+async function PricingSection({
+  locale,
+  t,
+}: {
+  locale: string;
+  t: Awaited<ReturnType<typeof getTranslation>>["t"];
 }) {
-  cacheLife("hours");
-  const { locale } = await props.params;
-  const { t } = await getTranslation(locale, ["common", "pricing", "home"]);
-  const [pollCount, voterCount, prices] = await Promise.all([
-    getMonthlyPollCount(),
-    getMonthlyVoterCount(),
+  const [prices, detectedCurrency] = await Promise.all([
     getPricing(),
+    getDetectedCurrency(),
   ]);
+  const defaultCurrency =
+    detectedCurrency && prices[detectedCurrency]
+      ? detectedCurrency
+      : prices.usd
+        ? "usd"
+        : Object.keys(prices)[0];
   const savingsLabels = Object.fromEntries(
     Object.entries(prices).map(
       ([currency, amounts]: [string, PriceAmounts]) => [
@@ -101,6 +109,267 @@ export default async function Page(props: {
       ],
     ),
   );
+  return (
+    <PricingProvider
+      prices={prices}
+      defaultCurrency={defaultCurrency}
+      locale={locale}
+    >
+      <div className="flex justify-center">
+        <PricingControls>
+          <CurrencySelect
+            label={t("currency", {
+              ns: "pricing",
+              defaultValue: "Currency",
+            })}
+          />
+          <PricingControlsDivider />
+          <BillingIntervalSwitch
+            switchLabel={t("payYearly", {
+              ns: "pricing",
+              defaultValue: "Pay yearly",
+            })}
+            monthlyLabel={
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="payMonthly"
+                defaults="Pay monthly"
+              />
+            }
+            yearlyLabel={
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="payYearly"
+                defaults="Pay yearly"
+              />
+            }
+            badge={
+              <Badge variant="pill">
+                <YearlySavingsBadge labels={savingsLabels} />
+              </Badge>
+            }
+          />
+        </PricingControls>
+      </div>
+      <PlanCards className="mx-auto mt-8 sm:mt-10">
+        <PlanCard>
+          <PlanCardHeader>
+            <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
+            <PlanCardDescription>
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="planFreeDescription"
+                defaults="For casual users"
+              />
+            </PlanCardDescription>
+          </PlanCardHeader>
+          <PlanCardPrice>
+            <PlanCardPriceAmount>
+              <Trans t={t} ns="pricing" i18nKey="planFree" defaults="Free" />
+            </PlanCardPriceAmount>
+          </PlanCardPrice>
+          <div>
+            <Link
+              href={linkToApp("/", {
+                ref: "pricing",
+                cta: "pricing_free",
+              })}
+              className={buttonVariants({
+                className: "w-full",
+              })}
+            >
+              <Trans
+                t={t}
+                ns="common"
+                i18nKey="getStarted"
+                defaults="Get started"
+              />
+            </Link>
+          </div>
+          <PlanBenefits>
+            <PlanBenefit icon={<CalendarSearchIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="basicPolls"
+                  defaults="Basic polls"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<TimerResetIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="thirtyDayPollRetention"
+                  defaults="30 day poll retention"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+          </PlanBenefits>
+        </PlanCard>
+        <PlanCard>
+          <PlanCardHeader>
+            <div className="flex items-center justify-between gap-x-4">
+              <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
+              <Badge variant="secondary">
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="recommended"
+                  defaults="Recommended"
+                />
+              </Badge>
+            </div>
+            <PlanCardDescription>
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="planProDescription"
+                defaults="For power users and professionals"
+              />
+            </PlanCardDescription>
+          </PlanCardHeader>
+          <PlanCardPrice>
+            <PlanCardPriceAmount>
+              <PlanPrice />
+            </PlanCardPriceAmount>
+            <PlanCardPriceLabel>
+              <BillingIntervalValue
+                yearly={
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="perSeatMonthBilledYearly"
+                    defaults="/seat/mo, billed yearly"
+                  />
+                }
+                monthly={
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="perSeatMonth"
+                    defaults="/seat/mo"
+                  />
+                }
+              />
+            </PlanCardPriceLabel>
+          </PlanCardPrice>
+          <div>
+            <Link
+              href={linkToApp("/settings/billing", {
+                ref: "pricing",
+                cta: "pricing_pro",
+              })}
+              className={buttonVariants({
+                variant: "primary",
+                className: "w-full",
+              })}
+            >
+              <Trans t={t} ns="pricing" i18nKey="getPro" defaults="Get Pro" />
+            </Link>
+          </div>
+          <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+            <PlanBenefit icon={<PaletteIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="customBranding"
+                  defaults="Custom branding"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<MailPlusIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="emailInvites"
+                  defaults="Email invites"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<EyeOffIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="removeAttribution"
+                  defaults="Remove attribution"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<CalendarCheckIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="finalizeDate"
+                  defaults="Finalize date"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<ClockIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="featureNameExtendedPollLifetime"
+                  defaults="Extended poll lifetime"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<CopyIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="duplicatePolls"
+                  defaults="Duplicate polls"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<Settings2Icon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="advancedPollSettings"
+                  defaults="Advanced poll settings"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+            <PlanBenefit icon={<UserPlusIcon />}>
+              <PlanBenefitName>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="teamCollaboration"
+                  defaults="Team collaboration"
+                />
+              </PlanBenefitName>
+            </PlanBenefit>
+          </PlanBenefits>
+        </PlanCard>
+      </PlanCards>
+    </PricingProvider>
+  );
+}
+
+export default async function Page(props: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await props.params;
+  const { t } = await getTranslation(locale, ["common", "pricing", "home"]);
+  const [pollCount, voterCount] = await Promise.all([
+    getMonthlyPollCount(),
+    getMonthlyVoterCount(),
+  ]);
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -112,279 +381,26 @@ export default async function Page(props: {
   return (
     <div className="divide-y">
       <Section>
-        <PricingProvider
-          prices={prices}
-          defaultCurrency={prices.usd ? "usd" : Object.keys(prices)[0]}
-          locale={locale}
+        <div className="text-center">
+          <h1 className="mx-auto max-w-[700px] text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-[2.75rem]/none">
+            {t("pricingTitle", {
+              ns: "pricing",
+              defaultValue: "Pricing",
+            })}
+          </h1>
+          <p className="mx-auto mt-4 max-w-[620px] text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed">
+            {t("pricingSubtitle", {
+              ns: "pricing",
+              defaultValue:
+                "Upgrade to a paid plan to get access to premium features",
+            })}
+          </p>
+        </div>
+        <Suspense
+          fallback={<div aria-hidden className="mt-8 min-h-[36rem] sm:mt-10" />}
         >
-          <div className="flex flex-col items-center gap-y-8 text-center">
-            <div>
-              <h1 className="mx-auto max-w-[700px] text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-[2.75rem]/none">
-                {t("pricingTitle", {
-                  ns: "pricing",
-                  defaultValue: "Pricing",
-                })}
-              </h1>
-              <p className="mx-auto mt-4 max-w-[620px] text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed">
-                {t("pricingSubtitle", {
-                  ns: "pricing",
-                  defaultValue:
-                    "Upgrade to a paid plan to get access to premium features",
-                })}
-              </p>
-            </div>
-            <PricingControls>
-              <CurrencySelect
-                label={t("currency", {
-                  ns: "pricing",
-                  defaultValue: "Currency",
-                })}
-              />
-              <PricingControlsDivider />
-              <BillingIntervalSwitch
-                switchLabel={t("payYearly", {
-                  ns: "pricing",
-                  defaultValue: "Pay yearly",
-                })}
-                monthlyLabel={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="payMonthly"
-                    defaults="Pay monthly"
-                  />
-                }
-                yearlyLabel={
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="payYearly"
-                    defaults="Pay yearly"
-                  />
-                }
-                badge={
-                  <Badge variant="pill">
-                    <YearlySavingsBadge labels={savingsLabels} />
-                  </Badge>
-                }
-              />
-            </PricingControls>
-          </div>
-          <PlanCards className="mx-auto mt-8 sm:mt-10">
-            <PlanCard>
-              <PlanCardHeader>
-                <PlanCardName>{PLAN_NAMES.HOBBY}</PlanCardName>
-                <PlanCardDescription>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="planFreeDescription"
-                    defaults="For casual users"
-                  />
-                </PlanCardDescription>
-              </PlanCardHeader>
-              <PlanCardPrice>
-                <PlanCardPriceAmount>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="planFree"
-                    defaults="Free"
-                  />
-                </PlanCardPriceAmount>
-              </PlanCardPrice>
-              <div>
-                <Link
-                  href={linkToApp("/", {
-                    ref: "pricing",
-                    cta: "pricing_free",
-                  })}
-                  className={buttonVariants({
-                    className: "w-full",
-                  })}
-                >
-                  <Trans
-                    t={t}
-                    ns="common"
-                    i18nKey="getStarted"
-                    defaults="Get started"
-                  />
-                </Link>
-              </div>
-              <PlanBenefits>
-                <PlanBenefit icon={<CalendarSearchIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="basicPolls"
-                      defaults="Basic polls"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<TimerResetIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="thirtyDayPollRetention"
-                      defaults="30 day poll retention"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-              </PlanBenefits>
-            </PlanCard>
-            <PlanCard>
-              <PlanCardHeader>
-                <div className="flex items-center justify-between gap-x-4">
-                  <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
-                  <Badge variant="secondary">
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="recommended"
-                      defaults="Recommended"
-                    />
-                  </Badge>
-                </div>
-                <PlanCardDescription>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="planProDescription"
-                    defaults="For power users and professionals"
-                  />
-                </PlanCardDescription>
-              </PlanCardHeader>
-              <PlanCardPrice>
-                <PlanCardPriceAmount>
-                  <PlanPrice />
-                </PlanCardPriceAmount>
-                <PlanCardPriceLabel>
-                  <BillingIntervalValue
-                    yearly={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="perSeatMonthBilledYearly"
-                        defaults="/seat/mo, billed yearly"
-                      />
-                    }
-                    monthly={
-                      <Trans
-                        t={t}
-                        ns="pricing"
-                        i18nKey="perSeatMonth"
-                        defaults="/seat/mo"
-                      />
-                    }
-                  />
-                </PlanCardPriceLabel>
-              </PlanCardPrice>
-              <div>
-                <Link
-                  href={linkToApp("/settings/billing", {
-                    ref: "pricing",
-                    cta: "pricing_pro",
-                  })}
-                  className={buttonVariants({
-                    variant: "primary",
-                    className: "w-full",
-                  })}
-                >
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="getPro"
-                    defaults="Get Pro"
-                  />
-                </Link>
-              </div>
-              <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
-                <PlanBenefit icon={<PaletteIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="customBranding"
-                      defaults="Custom branding"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<MailPlusIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="emailInvites"
-                      defaults="Email invites"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<EyeOffIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="removeAttribution"
-                      defaults="Remove attribution"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<CalendarCheckIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="finalizeDate"
-                      defaults="Finalize date"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<ClockIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="featureNameExtendedPollLifetime"
-                      defaults="Extended poll lifetime"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<CopyIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="duplicatePolls"
-                      defaults="Duplicate polls"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<Settings2Icon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="advancedPollSettings"
-                      defaults="Advanced poll settings"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<UserPlusIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="teamCollaboration"
-                      defaults="Team collaboration"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-              </PlanBenefits>
-            </PlanCard>
-          </PlanCards>
-        </PricingProvider>
+          <PricingSection locale={locale} t={t} />
+        </Suspense>
         <Stats className="mt-8 sm:mt-12">
           <Trans
             t={t}
@@ -991,6 +1007,7 @@ export default async function Page(props: {
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
 }) {
+  "use cache";
   cacheLife("max");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["common", "pricing"]);
