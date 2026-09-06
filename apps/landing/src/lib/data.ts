@@ -58,6 +58,9 @@ const getStripePricing = async (secretKey: string) => {
 export const getPricing = async (): Promise<PricesByCurrency> => {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) {
+    console.warn(
+      "STRIPE_SECRET_KEY is not set; the pricing page shows the built in USD prices",
+    );
     return fallbackPricing;
   }
   try {
