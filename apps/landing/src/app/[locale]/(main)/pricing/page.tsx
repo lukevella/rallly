@@ -163,7 +163,10 @@ export default async function Page(props: {
                   />
                 }
                 badge={
-                  <Badge variant="pill">
+                  <Badge
+                    variant="pill"
+                    className="bg-lime-300 font-semibold text-lime-900"
+                  >
                     <YearlySavingsBadge labels={savingsLabels} />
                   </Badge>
                 }
