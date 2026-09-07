@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 
 // Mock server-only before any imports that might need it
 vi.mock("server-only", () => ({}));
@@ -74,6 +74,7 @@ vi.mock("@/lib/posthog", () => ({
   flushPostHog: vi.fn(),
 }));
 
+import { logger } from "@rallly/logger";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
@@ -88,6 +89,7 @@ import {
   createPollInputSchema,
   createPollSuccessResponseSchema,
   deletePollSuccessResponseSchema,
+  errorResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
   getPollSuccessResponseSchema,
@@ -105,6 +107,22 @@ const expectMatchesContract = (
   const result = schema.safeParse(body);
   expect(result.error).toBeUndefined();
   expect(result.success).toBe(true);
+};
+
+// Every failure must be the documented `{ error: { code, message } }` JSON
+// envelope, whichever layer produced it (bearer auth, validator, handler,
+// notFound, onError).
+const expectErrorEnvelope = async (
+  res: Response,
+  { status, code }: { status: number; code: string },
+) => {
+  expect(res.status).toBe(status);
+  expect(res.headers.get("content-type")).toMatch(/^application\/json/);
+  const json = await res.json();
+  expectMatchesContract(errorResponseSchema, json);
+  expect(json.error.code).toBe(code);
+  expect(typeof json.error.message).toBe("string");
+  return json as { error: { code: string; message: string } };
 };
 
 // Pre-generated test API key fixture. The stored hash deliberately uses the
@@ -173,7 +191,8 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(401);
+      await expectErrorEnvelope(res, { status: 401, code: "UNAUTHORIZED" });
+      expect(res.headers.get("WWW-Authenticate")).not.toBeNull();
     });
 
     it("should return 401 with invalid API key", async () => {
@@ -191,7 +210,8 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(401);
+      await expectErrorEnvelope(res, { status: 401, code: "UNAUTHORIZED" });
+      expect(res.headers.get("WWW-Authenticate")).not.toBeNull();
     });
 
     it("should return 401 with revoked API key", async () => {
@@ -210,7 +230,8 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(401);
+      await expectErrorEnvelope(res, { status: 401, code: "UNAUTHORIZED" });
+      expect(res.headers.get("WWW-Authenticate")).not.toBeNull();
     });
 
     it("should return 401 with expired API key", async () => {
@@ -229,7 +250,8 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(401);
+      await expectErrorEnvelope(res, { status: 401, code: "UNAUTHORIZED" });
+      expect(res.headers.get("WWW-Authenticate")).not.toBeNull();
     });
   });
 
@@ -781,12 +803,12 @@ describe("API v1 - /polls", () => {
       // (e.g. TOO_MANY_OPTIONS) can't mask a regression.
       expect(res.status).toBe(400);
       expect(mockCreatePoll).not.toHaveBeenCalled();
-      const json = await res.json();
-      const issue = json.error.find((e: { path: (string | number)[] }) =>
-        e.path.includes("endDate"),
-      );
-      expect(issue).toBeDefined();
-      expect(issue.message).toContain(String(MAX_SLOT_GENERATION_DAYS));
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("endDate");
+      expect(json.error.message).toContain(String(MAX_SLOT_GENERATION_DAYS));
     });
 
     it("should reject a slot generator range where endDate precedes startDate", async () => {
@@ -816,11 +838,11 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(400);
       expect(mockCreatePoll).not.toHaveBeenCalled();
-      const json = await res.json();
-      const issue = json.error.find((e: { path: (string | number)[] }) =>
-        e.path.includes("endDate"),
-      );
-      expect(issue).toBeDefined();
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("endDate");
     });
 
     it("should reject a range spanning exactly MAX_SLOT_GENERATION_DAYS", async () => {
@@ -1885,6 +1907,153 @@ describe("API v1 - /polls", () => {
       });
 
       expect(res.status).toBe(401);
+    });
+  });
+
+  describe("Error envelope", () => {
+    const authed = { Authorization: `Bearer ${testApiKey}` };
+
+    it("should return 400 INVALID_AUTHORIZATION_HEADER as JSON for a malformed Authorization header", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "GET",
+        headers: { Authorization: "Basic not-a-bearer-token" },
+      });
+
+      await expectErrorEnvelope(res, {
+        status: 400,
+        code: "INVALID_AUTHORIZATION_HEADER",
+      });
+      expect(res.headers.get("WWW-Authenticate")).toContain("invalid_request");
+    });
+
+    it("should return 400 VALIDATION_ERROR naming the fields, without echoing the body, for an invalid JSON body", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: { ...authed, "Content-Type": "application/json" },
+        body: JSON.stringify({ dates: ["not-a-date"], secret: "do-not-echo" }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("title:");
+      expect(json.error.message).toContain("dates.0:");
+      expect(Object.keys(json.error).sort()).toEqual(["code", "message"]);
+      expect(JSON.stringify(json)).not.toContain("do-not-echo");
+      expect(json).not.toHaveProperty("success");
+      expect(json).not.toHaveProperty("data");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("should return 400 VALIDATION_ERROR as JSON for an invalid query string", async () => {
+      const res = await app.request("/api/v1/polls?limit=9999", {
+        method: "GET",
+        headers: authed,
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toMatch(/^limit: /);
+      expect(mockListPolls).not.toHaveBeenCalled();
+    });
+
+    it("should return 400 VALIDATION_ERROR as JSON for a PATCH body that fails validation", async () => {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
+        method: "PATCH",
+        headers: { ...authed, "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "archived" }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toMatch(/^status: /);
+      expect(json).not.toHaveProperty("data");
+    });
+
+    it("should return 400 VALIDATION_ERROR as JSON for a malformed JSON body", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: { ...authed, "Content-Type": "application/json" },
+        body: "{not json",
+      });
+
+      await expectErrorEnvelope(res, { status: 400, code: "VALIDATION_ERROR" });
+    });
+
+    it("should return 404 NOT_FOUND as JSON for an unknown route", async () => {
+      const res = await app.request("/api/v1/nope", {
+        method: "GET",
+        headers: authed,
+      });
+
+      await expectErrorEnvelope(res, { status: 404, code: "NOT_FOUND" });
+    });
+
+    it("should return 404 NOT_FOUND as JSON for an unsupported method on a known route", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "PUT",
+        headers: authed,
+      });
+
+      await expectErrorEnvelope(res, { status: 404, code: "NOT_FOUND" });
+    });
+
+    it("should return 500 INTERNAL_ERROR as JSON and log the error when a handler behind the rate limiter throws", async () => {
+      const errorSpy = vi.spyOn(logger, "error").mockImplementation(() => {});
+      onTestFinished(() => errorSpy.mockRestore());
+      mockGetPollWithOptions.mockRejectedValue(new TypeError("db exploded"));
+
+      const res = await app.request("/api/v1/polls/test-poll-id", {
+        method: "GET",
+        headers: authed,
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 500,
+        code: "INTERNAL_ERROR",
+      });
+      // Never leak the underlying error message to the client.
+      expect(json.error.message).not.toContain("db exploded");
+      // The request was counted by the limiter before the handler threw.
+      expect(res.headers.get("RateLimit-Limit")).not.toBeNull();
+
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy.mock.calls[0][0]).toMatchObject({
+        service: "api-v1",
+        statusCode: 500,
+        errorType: "TypeError",
+        errorMessage: "db exploded",
+        spaceId: "test-space-id",
+      });
+    });
+
+    it("should document the full error code list in the spec", async () => {
+      const res = await app.request("/api/v1/openapi");
+      const json = await res.json();
+
+      for (const code of [
+        "VALIDATION_ERROR",
+        "UNAUTHORIZED",
+        "INVALID_AUTHORIZATION_HEADER",
+        "SPACE_NOT_PRO",
+        "RATE_LIMIT_EXCEEDED",
+        "NOT_FOUND",
+        "POLL_NOT_FOUND",
+        "ORGANIZER_NOT_MEMBER",
+        "TOO_MANY_OPTIONS",
+        "DUPLICATE_DATES",
+        "NO_OPTIONS_GENERATED",
+        "TRANSITION_NOT_AVAILABLE",
+        "SERVICE_UNAVAILABLE",
+        "INTERNAL_ERROR",
+      ]) {
+        expect(json.info.description).toContain(`\`${code}\``);
+      }
     });
   });
 });

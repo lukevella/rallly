@@ -141,10 +141,15 @@ export const createPollInputSchema = z
 export const errorResponseSchema = z
   .object({
     error: z.object({
-      code: z.string().openapi({ example: "TIMEZONE_REQUIRED" }),
+      code: z.string().openapi({
+        description:
+          "Machine-readable error code. The full list is in the API description.",
+        example: "VALIDATION_ERROR",
+      }),
       message: z.string().openapi({
-        example:
-          "Timezone is required. Either provide a timezone in the request or set one in your profile.",
+        description:
+          "Human-readable explanation. For `VALIDATION_ERROR` it names each offending field, e.g. `title: Invalid input: expected string, received undefined; dates.0: Invalid ISO date`.",
+        example: "title: Invalid input: expected string, received undefined",
       }),
     }),
   })

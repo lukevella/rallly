@@ -118,6 +118,21 @@ const verifyKey = bearerAuth({
 
     return true;
   },
+  noAuthenticationHeader: {
+    message: apiError(
+      "UNAUTHORIZED",
+      "Missing API key. Send it as `Authorization: Bearer <key>`.",
+    ),
+  },
+  invalidAuthenticationHeader: {
+    message: apiError(
+      "INVALID_AUTHORIZATION_HEADER",
+      "Malformed Authorization header. Expected `Bearer <key>`.",
+    ),
+  },
+  invalidToken: {
+    message: apiError("UNAUTHORIZED", "Invalid, expired or revoked API key."),
+  },
 });
 
 // hono/bearer-auth can only turn a failed verifyToken into a 401, so the
