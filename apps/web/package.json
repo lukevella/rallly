@@ -58,7 +58,7 @@
     "@vercel/functions": "^3.3.6",
     "ai": "^6.0.87",
     "arctic": "^3.7.0",
-    "better-auth": "^1.6.0",
+    "better-auth": "1.6.30",
     "calendar-link": "^2.6.0",
     "class-variance-authority": "^0.7.1",
     "color-hash": "^2.0.2",

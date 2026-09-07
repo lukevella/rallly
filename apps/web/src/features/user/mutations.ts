@@ -95,7 +95,7 @@ export async function banUser({
     updatedAt: new Date(),
   });
 
-  await internalAdapter.deleteSessions(userId);
+  await internalAdapter.deleteUserSessions(userId);
 
   await prisma.user.update({
     where: { id: userId },
@@ -125,7 +125,7 @@ export async function unbanUser({ userId }: { userId: string }) {
 export async function hardDeleteUser({ userId }: { userId: string }) {
   const { internalAdapter } = await authLib.$context;
 
-  await internalAdapter.deleteSessions(userId);
+  await internalAdapter.deleteUserSessions(userId);
 
   // The avatar lives in object storage, outside the cascade. External URLs
   // (OAuth provider avatars) are not ours to delete.
