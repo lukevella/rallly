@@ -31,6 +31,7 @@ import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError, validationHook } from "../../middleware/api-error";
 import { spaceApiKeyAuth } from "../../middleware/api-key";
+import { toOpenApiSchema } from "../../middleware/openapi";
 import {
   RATE_LIMIT_PER_DAY,
   RATE_LIMIT_PER_MINUTE,
@@ -41,7 +42,6 @@ import {
   createPollRequestExamples,
   patchPollRequestExamples,
 } from "../examples";
-import { toOpenApiSchema } from "../openapi";
 import {
   createPollInputSchema,
   deletePollSuccessResponseSchema,
