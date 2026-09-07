@@ -3,7 +3,6 @@
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
-import { buttonVariants } from "./button-variants";
 import { cn } from "./lib/utils";
 
 function Select<Value, Multiple extends boolean | undefined = false>(
@@ -36,8 +35,9 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        buttonVariants({ variant: "default" }),
-        "shadow-none",
+        "inline-flex h-9 shrink-0 items-center gap-x-2.5 whitespace-nowrap rounded-lg bg-background/80 px-2.5 text-sm outline-none ring-1 ring-button-outline ring-inset backdrop-blur-lg transition-[background-color,color,box-shadow] hover:bg-accent disabled:pointer-events-none disabled:opacity-50 data-popup-open:bg-accent dark:bg-foreground/5 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "data-invalid:ring-destructive",
         className,
       )}
       {...props}
