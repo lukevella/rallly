@@ -10,7 +10,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
-import { MAX_POLL_OPTIONS, VOTE_TYPES } from "@/features/poll/constants";
+import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
   getPollParticipants,
   getPollResults,
@@ -787,10 +787,7 @@ app.get(
           participantCount: data.participantCount,
           options: data.options.map((option) => ({
             ...toOptionResponse(data.kind, option),
-            votes: VOTE_TYPES.map((type) => ({
-              type,
-              count: option.votes[type],
-            })),
+            votes: option.votes,
             score: option.score,
             isTopChoice: option.isTopChoice,
           })),

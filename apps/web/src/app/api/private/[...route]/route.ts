@@ -12,7 +12,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
-import { MAX_POLL_OPTIONS, VOTE_TYPES } from "@/features/poll/constants";
+import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
   getPollParticipants,
   getPollResults,
@@ -746,10 +746,8 @@ app.get(
           options: data.options.map((option) => ({
             ...option,
             startTime: option.startTime.toISOString(),
-            // The frozen shape is a sparse array of the types that received votes.
-            votes: VOTE_TYPES.filter((type) => option.votes[type] > 0).map(
-              (type) => ({ type, count: option.votes[type] }),
-            ),
+            // The frozen shape omits types that received no votes.
+            votes: option.votes.filter((vote) => vote.count > 0),
           })),
         },
       }),

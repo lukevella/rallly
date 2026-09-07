@@ -3,6 +3,7 @@ import "server-only";
 import type { PollStatus, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { getInstancePolicy } from "@/features/instance-policy/data";
+import { VOTE_TYPES } from "@/features/poll/constants";
 import { isLegacyEditToken } from "@/features/poll/utils";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type {
@@ -82,26 +83,28 @@ export async function getPollResults({
     return null;
   }
 
-  const votesByOption = new Map<string, Record<VoteType, number>>();
+  const countsByOption = new Map<string, Partial<Record<VoteType, number>>>();
 
   for (const row of voteCounts) {
-    let votes = votesByOption.get(row.optionId);
-    if (!votes) {
-      votes = { yes: 0, ifNeedBe: 0, no: 0 };
-      votesByOption.set(row.optionId, votes);
+    let counts = countsByOption.get(row.optionId);
+    if (!counts) {
+      counts = {};
+      countsByOption.set(row.optionId, counts);
     }
-    votes[row.type] = row._count;
+    counts[row.type] = row._count;
   }
 
   // Ranking: total availability (yes + ifNeedBe) is primary, yes votes break
   // ties. The formula is internal; the API documents score as opaque.
   const optionResults = poll.options.map((option) => {
-    const votes = votesByOption.get(option.id) ?? {
-      yes: 0,
-      ifNeedBe: 0,
-      no: 0,
-    };
-    const score = (votes.yes + votes.ifNeedBe) * 1000 + votes.yes;
+    const counts = countsByOption.get(option.id) ?? {};
+    // Dense: every vote type is present, in display order, zero included.
+    const votes = VOTE_TYPES.map((type) => ({
+      type,
+      count: counts[type] ?? 0,
+    }));
+    const score =
+      ((counts.yes ?? 0) + (counts.ifNeedBe ?? 0)) * 1000 + (counts.yes ?? 0);
 
     return {
       id: option.id,
