@@ -26,7 +26,6 @@
     "@casl/react": "^5.0.0",
     "@hono-rate-limiter/redis": "^0.1.4",
     "@hono/standard-validator": "^0.2.1",
-    "@hono/zod-openapi": "^1.2.0",
     "@hono/zod-validator": "^0.7.2",
     "@hookform/resolvers": "^5.2.2",
     "@marsidev/react-turnstile": "^1.5.3",
