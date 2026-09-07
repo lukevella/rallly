@@ -37,9 +37,10 @@ export default async function Page(props: {
           })}
           description={t("subheading", {
             defaultValue:
-              "Create a poll, share the link, and let everyone vote on the times that work. It's free and nobody needs an account.",
+              "Rallly is the meeting poll tool for scheduling groups. Propose a few times, share a link, and everyone votes on when they can make it.",
             ns: "home",
           })}
+          descriptionClassName="max-w-[600px]"
           announcement={
             <HeroAnnouncement
               href="/blog/introducing-email-invites"
@@ -55,8 +56,8 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="emailInvitesBlog"
-                defaults="Invite people to your poll by email and see who has responded"
+                i18nKey="emailInvitesAnnouncement"
+                defaults="Introducing email invites"
               />
             </HeroAnnouncement>
           }
