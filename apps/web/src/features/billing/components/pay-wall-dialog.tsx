@@ -41,7 +41,7 @@ import { spaceTierSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import type { PayWallPricing, PayWallTrigger } from "../client";
-import { usePayWallStore } from "../client";
+import { setCurrencyCookie, usePayWallStore } from "../client";
 import { PLAN_NAMES } from "../constants";
 
 function KeyBenefits({ children }: { children?: React.ReactNode }) {
@@ -297,6 +297,7 @@ export function PayWallDialog({
                     onValueChange={(value) => {
                       if (value) {
                         setSelectedCurrency(value);
+                        setCurrencyCookie(value);
                       }
                     }}
                   >

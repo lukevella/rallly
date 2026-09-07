@@ -1,7 +1,9 @@
 "use client";
 
 import type { PricesByCurrency } from "@rallly/billing";
+import { CURRENCY_COOKIE_NAME } from "@rallly/billing";
 import { posthog } from "@rallly/posthog/client";
+import Cookies from "js-cookie";
 import React from "react";
 import { create } from "zustand";
 import type { SpaceTier } from "@/features/space/schema";
@@ -77,3 +79,14 @@ export type PayWallPricing = {
   prices: PricesByCurrency;
   defaultCurrency: string;
 };
+
+// Same cookie the pricing page writes, so a currency picked in either place
+// is what the other opens in. Shared across subdomains via the cookie domain.
+export function setCurrencyCookie(currency: string) {
+  Cookies.set(CURRENCY_COOKIE_NAME, currency, {
+    path: "/",
+    sameSite: "lax",
+    domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
+    expires: 365,
+  });
+}
