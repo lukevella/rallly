@@ -57,7 +57,7 @@ const europeanUnion = { code: "EU", label: "European Union" };
 const providers = [
   {
     name: "Vercel",
-    href: "https://vercel.com/security",
+    href: "https://security.vercel.com/",
     purpose: "Application hosting",
     location: unitedStates,
     logo: {

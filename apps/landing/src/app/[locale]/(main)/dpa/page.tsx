@@ -396,7 +396,7 @@ export default async function DataProcessingAgreement() {
               <tr>
                 <td>
                   <a
-                    href="https://vercel.com/security"
+                    href="https://security.vercel.com/"
                     target="_blank"
                     rel="noreferrer noopener"
                   >
