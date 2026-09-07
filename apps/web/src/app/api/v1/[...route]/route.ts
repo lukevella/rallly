@@ -5,6 +5,7 @@ import { handle } from "hono/vercel";
 import {
   describeRoute,
   generateSpecs,
+  loadVendor,
   resolver,
   validator,
 } from "hono-openapi";
@@ -30,6 +31,7 @@ import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError, validationHook } from "../../middleware/api-error";
 import { spaceApiKeyAuth } from "../../middleware/api-key";
+import { toOpenApiSchema } from "../../middleware/openapi";
 import {
   RATE_LIMIT_PER_DAY,
   RATE_LIMIT_PER_MINUTE,
@@ -42,16 +44,14 @@ import {
 } from "../examples";
 import {
   createPollInputSchema,
-  createPollSuccessResponseSchema,
   deletePollSuccessResponseSchema,
   errorResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
-  getPollSuccessResponseSchema,
   listPollsQuerySchema,
   listPollsSuccessResponseSchema,
   patchPollInputSchema,
-  patchPollSuccessResponseSchema,
+  pollResponseSchema,
 } from "../schemas";
 
 type Env = {
@@ -66,6 +66,11 @@ type Env = {
 };
 
 const app = new Hono<Env>().basePath("/api/v1");
+
+// Process-wide: hono-openapi keys converters by schema vendor, and every zod
+// schema reports "zod". Schemas without native `.meta()` ids convert exactly as
+// before, so the frozen /api/private route is unaffected.
+loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
 function toPollResponseBody(poll: {
   id: string;
@@ -287,7 +292,7 @@ app.post(
         description: "Successful response",
         content: {
           "application/json": {
-            schema: resolver(createPollSuccessResponseSchema),
+            schema: resolver(pollResponseSchema),
           },
         },
       },
@@ -423,9 +428,7 @@ app.post(
 
       trackPollCreated(poll);
 
-      return c.json(
-        createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
-      );
+      return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
     }
 
     // Process slots (time-based options)
@@ -498,9 +501,7 @@ app.post(
 
     trackPollCreated(poll);
 
-    return c.json(
-      createPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
-    );
+    return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
   },
 );
 
@@ -578,7 +579,7 @@ app.get(
         description: "Successful response",
         content: {
           "application/json": {
-            schema: resolver(getPollSuccessResponseSchema),
+            schema: resolver(pollResponseSchema),
           },
         },
       },
@@ -611,7 +612,7 @@ app.get(
       );
     }
 
-    return c.json(getPollSuccessResponseSchema.parse(toPollResponseBody(poll)));
+    return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
   },
 );
 
@@ -635,7 +636,7 @@ app.patch(
         description: "Poll updated successfully",
         content: {
           "application/json": {
-            schema: resolver(patchPollSuccessResponseSchema),
+            schema: resolver(pollResponseSchema),
           },
         },
       },
@@ -688,9 +689,7 @@ app.patch(
       );
     }
 
-    return c.json(
-      patchPollSuccessResponseSchema.parse(toPollResponseBody(poll)),
-    );
+    return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
   },
 );
 

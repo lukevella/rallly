@@ -7,6 +7,7 @@ import { handle } from "hono/vercel";
 import {
   describeRoute,
   generateSpecs,
+  loadVendor,
   resolver,
   validator,
 } from "hono-openapi";
@@ -29,6 +30,7 @@ import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError } from "../../middleware/api-error";
 import { spaceApiKeyAuth } from "../../middleware/api-key";
+import { toOpenApiSchema } from "../../middleware/openapi";
 import {
   RATE_LIMIT_PER_DAY,
   RATE_LIMIT_PER_MINUTE,
@@ -65,6 +67,8 @@ type Env = {
 };
 
 const app = new Hono<Env>().basePath("/api/private");
+
+loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
 function toPollResponseBody(poll: {
   id: string;

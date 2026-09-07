@@ -935,6 +935,30 @@ describe("Private API - /polls", () => {
       expect(json.info.title).toBe("Rallly Private API");
     });
 
+    it("should resolve every schema reference", async () => {
+      const res = await app.request("/api/private/openapi");
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      const schemas = json.components.schemas;
+
+      expect(schemas.OptionResult.properties.score.description).toBeDefined();
+
+      const refs = new Set<string>();
+      const leaked: string[] = [];
+      JSON.stringify(json, (key, value) => {
+        if (key === "$ref") refs.add(value);
+        if (key === "$defs" || key === "$schema") leaked.push(key);
+        if (key === "id" && typeof value === "string") leaked.push(key);
+        return value;
+      });
+      expect(leaked).toEqual([]);
+      for (const ref of refs) {
+        expect(ref).toMatch(/^#\/components\/schemas\//);
+        expect(schemas[ref.split("/").pop() as string]).toBeDefined();
+      }
+    });
+
     it("should include create poll request examples that match the input schema", async () => {
       const res = await app.request("/api/private/openapi");
 
