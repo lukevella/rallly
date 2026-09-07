@@ -308,27 +308,29 @@ export const listPollsSuccessResponseSchema = z
   })
   .openapi("ListPollsResponse");
 
-export const voteTypeSchema = z
-  .enum(["yes", "ifNeedBe", "no"])
-  .openapi("VoteType", {
-    description:
-      "A participant's answer for an option: available (`yes`), available if needed (`ifNeedBe`) or unavailable (`no`).",
-    example: "yes",
-  });
+// Open enum: the response schema accepts any string so a vote type added
+// later never fails serialization. The built-in set is documented, not enforced.
+export const voteTypeSchema = z.string().openapi("VoteType", {
+  description:
+    "A participant's answer for an option. The built-in types are `yes` (available), `ifNeedBe` (available if needed) and `no` (unavailable). New types may be added without a version change, so treat unknown values as a vote of an unfamiliar type rather than an error.",
+  example: "yes",
+});
 
-export const voteCountsSchema = z
+export const voteCountSchema = z
   .object({
-    yes: z.int().nonnegative().openapi({ example: 3 }),
-    ifNeedBe: z.int().nonnegative().openapi({ example: 1 }),
-    no: z.int().nonnegative().openapi({ example: 1 }),
+    type: voteTypeSchema,
+    count: z.int().nonnegative().openapi({
+      description: "Number of participants who gave this answer.",
+      example: 3,
+    }),
   })
-  .openapi("VoteCounts", {
-    description:
-      "Number of votes of each type. Every key is always present; a type nobody chose is `0`.",
-  });
+  .openapi("VoteCount");
 
 const optionResultFields = {
-  votes: voteCountsSchema,
+  votes: z.array(voteCountSchema).openapi({
+    description:
+      "One entry per vote type the poll offers, in display order, always present with `count: 0` when nobody chose it.",
+  }),
   score: z.int().nonnegative().openapi({
     description:
       "Opaque ranking value: higher is better. Only comparable between options in the same response. The formula is not part of the contract and may change; do not decode it into vote counts, compare it across polls or threshold on it. Use `votes` for counts.",

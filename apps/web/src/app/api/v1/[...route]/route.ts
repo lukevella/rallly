@@ -9,7 +9,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
-import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
+import { MAX_POLL_OPTIONS, VOTE_TYPES } from "@/features/poll/constants";
 import {
   getPollParticipants,
   getPollResults,
@@ -227,6 +227,10 @@ async function buildOpenApiSpec() {
           "## Dates and times",
           "",
           "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timezone` (or the viewer's) for display. Timestamps such as `createdAt` are always ISO 8601 instants in UTC.",
+          "",
+          "## Enums",
+          "",
+          "Vote types are an open set. The built-in values are `yes`, `ifNeedBe` and `no`; new types may be added without a version change, so clients must tolerate values they do not recognise. `status` and `kind` are closed sets.",
           "",
           "## Lists",
           "",
@@ -734,7 +738,7 @@ app.get(
     description: [
       "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` for per-person availability.",
       "",
-      "`votes` counts each answer per option. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
+      "`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -784,7 +788,10 @@ app.get(
           participantCount: data.participantCount,
           options: data.options.map((option) => ({
             ...toOptionResponse(data.kind, option),
-            votes: option.votes,
+            votes: VOTE_TYPES.map((type) => ({
+              type,
+              count: option.votes[type],
+            })),
             score: option.score,
             isTopChoice: option.isTopChoice,
           })),

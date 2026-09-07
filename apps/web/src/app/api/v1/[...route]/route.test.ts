@@ -1646,16 +1646,20 @@ describe("API v1 - /polls", () => {
         id: "opt-1",
         startTime: "2025-01-15T09:00:00.000Z",
         duration: 30,
-        votes: { yes: 3, ifNeedBe: 1, no: 1 },
+        votes: [
+          { type: "yes", count: 3 },
+          { type: "ifNeedBe", count: 1 },
+          { type: "no", count: 1 },
+        ],
         score: 4003,
         isTopChoice: true,
       });
       // Every vote type is present even when nobody chose it.
-      expect(json.data.options[2].votes).toEqual({
-        yes: 0,
-        ifNeedBe: 0,
-        no: 0,
-      });
+      expect(json.data.options[2].votes).toEqual([
+        { type: "yes", count: 0 },
+        { type: "ifNeedBe", count: 0 },
+        { type: "no", count: 0 },
+      ]);
 
       expect(mockGetPollResults).toHaveBeenCalledWith({
         pollId: "test-poll-id",
@@ -1696,7 +1700,11 @@ describe("API v1 - /polls", () => {
       expect(json.data.options[0]).toEqual({
         id: "opt-1",
         date: "2025-01-15",
-        votes: { yes: 2, ifNeedBe: 0, no: 0 },
+        votes: [
+          { type: "yes", count: 2 },
+          { type: "ifNeedBe", count: 0 },
+          { type: "no", count: 0 },
+        ],
         score: 2002,
         isTopChoice: true,
       });
@@ -2006,6 +2014,30 @@ describe("API v1 - /polls", () => {
         cursor: undefined,
         limit: 50,
       });
+    });
+
+    it("should pass through a vote type the schema does not know", async () => {
+      mockGetPollParticipants.mockResolvedValue({
+        pollId: "test-poll-id",
+        participants: [
+          { ...participants[0], votes: [{ optionId: "opt-1", type: "maybe" }] },
+        ],
+        nextCursor: null,
+      });
+
+      const res = await app.request("/api/v1/polls/test-poll-id/participants", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(getPollParticipantsSuccessResponseSchema, json);
+      expect(json.data[0].votes).toEqual([
+        { optionId: "opt-1", type: "maybe" },
+      ]);
     });
 
     it("should pass the cursor and limit through and return the next cursor", async () => {
