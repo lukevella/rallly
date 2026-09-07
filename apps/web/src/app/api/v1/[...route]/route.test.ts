@@ -87,14 +87,12 @@ import {
 } from "../examples";
 import {
   createPollInputSchema,
-  createPollSuccessResponseSchema,
   deletePollSuccessResponseSchema,
   errorResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
-  getPollSuccessResponseSchema,
   listPollsSuccessResponseSchema,
-  patchPollSuccessResponseSchema,
+  pollResponseSchema,
 } from "../schemas";
 import { app } from "./route";
 
@@ -485,7 +483,7 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expectMatchesContract(createPollSuccessResponseSchema, json);
+      expectMatchesContract(pollResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
       expect(json.data.adminUrl).toBe("https://example.com/poll/test-poll-id");
       expect(json.data.inviteUrl).toBe(
@@ -633,7 +631,7 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expectMatchesContract(createPollSuccessResponseSchema, json);
+      expectMatchesContract(pollResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
 
       expect(mockCreatePoll).toHaveBeenCalledWith(
@@ -1011,6 +1009,79 @@ describe("API v1 - /polls", () => {
       );
     });
 
+    it("should emit schema descriptions, examples and named components", async () => {
+      const res = await app.request("/api/v1/openapi");
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      const schemas = json.components.schemas;
+
+      expect(Object.keys(schemas)).toEqual(
+        expect.arrayContaining([
+          "CreatePollInput",
+          "SlotsInput",
+          "SlotGenerator",
+          "Poll",
+          "PollStatus",
+          "PollResponse",
+          "OptionResult",
+          "ErrorResponse",
+        ]),
+      );
+      // Option shapes are unions keyed by the poll kind; both variants are
+      // named components and the score description states it is opaque.
+      expect(schemas.OptionResult.anyOf).toEqual([
+        { $ref: "#/components/schemas/DateOptionResult" },
+        { $ref: "#/components/schemas/TimeOptionResult" },
+      ]);
+      expect(schemas.TimeOptionResult.properties.score.description).toContain(
+        "Opaque ranking value",
+      );
+      expect(schemas.DateOptionResult.properties.date.format).toBe("date");
+      expect(schemas.Poll.properties.title.example).toBe("Team sync");
+      expect(
+        json.paths["/api/v1/polls"].post.requestBody.content["application/json"]
+          .schema,
+      ).toEqual({ $ref: "#/components/schemas/CreatePollInput" });
+      expect(schemas.SlotsInput.properties.times.items.anyOf).toContainEqual({
+        $ref: "#/components/schemas/SlotGenerator",
+      });
+
+      // Contextual .meta() clones keep pointing at the shared component.
+      const pollStatusRef = "#/components/schemas/PollStatus";
+      expect(
+        schemas.GetPollResultsResponse.properties.data.properties.status,
+      ).toMatchObject({
+        $ref: pollStatusRef,
+        description: expect.stringContaining("close automatically"),
+      });
+      expect(schemas.PatchPollInput.properties.status).toMatchObject({
+        $ref: pollStatusRef,
+        example: "closed",
+      });
+      expect(json.paths["/api/v1/polls"].get.parameters).toContainEqual(
+        expect.objectContaining({
+          name: "status",
+          schema: expect.objectContaining({ $ref: pollStatusRef }),
+        }),
+      );
+
+      // Every $ref must resolve, and zod's intermediate keys must not leak.
+      const refs = new Set<string>();
+      const leaked: string[] = [];
+      JSON.stringify(json, (key, value) => {
+        if (key === "$ref") refs.add(value);
+        if (key === "$defs" || key === "$schema") leaked.push(key);
+        if (key === "id" && typeof value === "string") leaked.push(key);
+        return value;
+      });
+      expect(leaked).toEqual([]);
+      for (const ref of refs) {
+        expect(ref).toMatch(/^#\/components\/schemas\//);
+        expect(schemas[ref.split("/").pop() as string]).toBeDefined();
+      }
+    });
+
     it("should not serve a docs page (the reference lives in the docs site)", async () => {
       const res = await app.request("/api/v1/docs");
 
@@ -1046,7 +1117,7 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expectMatchesContract(patchPollSuccessResponseSchema, json);
+      expectMatchesContract(pollResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
       expect(json.data.status).toBe("closed");
 
@@ -1256,7 +1327,7 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expectMatchesContract(getPollSuccessResponseSchema, json);
+      expectMatchesContract(pollResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
       expect(json.data.title).toBe("Team sync");
       expect(json.data.description).toBe("Weekly team meeting");
@@ -1314,7 +1385,7 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expectMatchesContract(getPollSuccessResponseSchema, json);
+      expectMatchesContract(pollResponseSchema, json);
       expect(json.data.kind).toBe("date");
       expect(json.data.options).toEqual([
         { id: "opt-1", date: "2025-01-15" },
