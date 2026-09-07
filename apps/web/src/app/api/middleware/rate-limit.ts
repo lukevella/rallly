@@ -6,7 +6,7 @@ import {
 } from "@/features/api-keys/constants";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { redis } from "@/lib/kv";
-import { apiError } from "./poll";
+import { apiError } from "./api-error";
 
 /**
  * Re-exported for the OpenAPI docs and tests. The values live in the

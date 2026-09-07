@@ -95,3 +95,21 @@ export async function listSpaceInvites({
       }) satisfies MemberInviteDTO,
   );
 }
+
+export async function getSpaceMemberByEmail({
+  spaceId,
+  email,
+}: {
+  spaceId: AuthorizedSpaceId;
+  email: string;
+}) {
+  return prisma.spaceMember.findFirst({
+    where: {
+      spaceId,
+      user: { email },
+    },
+    select: {
+      userId: true,
+    },
+  });
+}

@@ -13,7 +13,7 @@ import {
 } from "@/features/api-keys/utils";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { apiError } from "./poll";
+import { apiError } from "./api-error";
 
 const LAST_USED_AT_WRITE_INTERVAL_MS = 60_000;
 

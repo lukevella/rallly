@@ -184,7 +184,8 @@
         "src/app/api/legacy/**",
         "src/app/api/status/**",
         "src/app/api/updates/**",
-        "src/app/api/private/**"
+        "src/app/api/private/**",
+        "src/app/api/middleware/**"
       ],
       "linter": {
         "rules": {

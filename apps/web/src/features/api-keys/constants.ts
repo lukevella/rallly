@@ -20,15 +20,8 @@ export const API_RATE_LIMIT_PER_MINUTE = 60;
 export const API_RATE_LIMIT_PER_DAY = 5000;
 
 /**
- * Path segment for the current version of the public API. Keeping it here
- * means moving between versions (e.g. `private` → `v1`) only touches one
- * place, and every link stays pointed at the latest docs.
+ * Link to the API reference. Still the private route's Scalar page: v1 has
+ * no in-app docs page, its reference is generated from `/api/v1/openapi`
+ * into the docs site, and this link moves there when that ships.
  */
-const CURRENT_API_VERSION_PATH = "private";
-
-/**
- * Link to the interactive API reference for the current version. Callers
- * should use this rather than hardcoding the path so version moves don't
- * leave stale links behind.
- */
-export const getApiDocsPath = () => `/api/${CURRENT_API_VERSION_PATH}/docs`;
+export const getApiDocsPath = () => "/api/private/docs";

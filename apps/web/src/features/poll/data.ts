@@ -498,3 +498,44 @@ export async function listParticipantIdsByToken({
   });
   return participant ? [participant.id] : [];
 }
+
+export async function getPollWithOptions({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId: AuthorizedSpaceId;
+}) {
+  return prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deleted: false,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      location: true,
+      timeZone: true,
+      status: true,
+      createdAt: true,
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      options: {
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+        },
+        orderBy: {
+          startTime: "asc",
+        },
+      },
+    },
+  });
+}
