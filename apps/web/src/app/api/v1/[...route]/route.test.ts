@@ -1038,6 +1038,25 @@ describe("API v1 - /polls", () => {
         $ref: "#/components/schemas/SlotGenerator",
       });
 
+      // Contextual .meta() clones keep pointing at the shared component.
+      const pollStatusRef = "#/components/schemas/PollStatus";
+      expect(
+        schemas.GetPollResultsResponse.properties.data.properties.status,
+      ).toMatchObject({
+        $ref: pollStatusRef,
+        description: expect.stringContaining("close automatically"),
+      });
+      expect(schemas.PatchPollInput.properties.status).toMatchObject({
+        $ref: pollStatusRef,
+        example: "closed",
+      });
+      expect(json.paths["/api/v1/polls"].get.parameters).toContainEqual(
+        expect.objectContaining({
+          name: "status",
+          schema: expect.objectContaining({ $ref: pollStatusRef }),
+        }),
+      );
+
       // Every $ref must resolve, and zod's intermediate keys must not leak.
       const refs = new Set<string>();
       const leaked: string[] = [];
