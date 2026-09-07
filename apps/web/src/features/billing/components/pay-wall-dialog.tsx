@@ -265,9 +265,10 @@ export function PayWallDialog({
       onOpenChange={(open) => {
         onOpenChange(open);
         if (!open) {
+          // Plan and interval are per attempt; the currency is a persisted
+          // preference (cookie) and must survive close and reopen.
           setSelectedPlan("pro");
           setIsAnnual(true);
-          setSelectedCurrency(defaultCurrency);
         }
       }}
     >
