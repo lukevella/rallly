@@ -130,7 +130,7 @@ export default async function Page(props: {
               i18n={i18n}
               ns="home"
               i18nKey="finalCtaDescription"
-              defaults="Set up your poll in under a minute. No account, no downloads, no chasing people for replies."
+              defaults="Set up your poll in under a minute. No account, no chasing people for replies."
             />
           }
           buttonLabel={
