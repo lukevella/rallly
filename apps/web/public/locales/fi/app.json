@@ -195,6 +195,7 @@
   "createSpace": "Luo tila",
   "createSpaceDescription": "Luo uusi tila kyselyiden ja tapahtumien järjestämiseksi.",
   "cropPreview": "Rajauksen esikatselu",
+  "currency": "Valuutta",
   "currentlyUsing": "Lisenssejä käytössä {usedSeats} / {currentSeats}",
   "currentPassword": "Nykyinen salasana",
   "currentPlan": "Nykyinen sopimus",

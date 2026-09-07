@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Ankiety do ustalania terminów",
   "compareSchedulingPollsDescription": "Twórz ankiety, aby znaleźć najlepszy termin spotkania",
   "compareUnlimited": "Nieograniczone",
+  "currency": "Waluta",
   "customBranding": "Niestandardowe brandowanie",
   "customBrandingDescription": "Pokaż swoje logo i kolory marki uczestnikom",
   "duplicatePolls": "Duplikowanie ankiet",
@@ -44,7 +45,9 @@
   "pollLimitAnswer": "Nie. W żadnym planie nie ma limitu liczby ankiet, które możesz utworzyć, ani liczby osób, które mogą w nich głosować. W planie bezpłatnym ankiety są usuwane po upływie wszystkich ich terminów i po 30 dniach bez aktywności, a niektóre funkcje, takie jak własna identyfikacja wizualna i zaawansowane ustawienia ankiet, są dostępne wyłącznie w planie płatnym. Pełną listę znajdziesz w tabeli porównawczej powyżej.",
   "pricingDescription": "Rozpocznij za darmo. Logowanie nie jest wymagane.",
   "pricingFinalCtaDescription": "Stwórz pierwszą ankietę w mniej niż minutę. Uaktualnij, gdy będziesz potrzebować więcej.",
+  "pricingFinalCtaTitle": "Zacznij za darmo",
   "pricingSubtitle": "Przejdź na płatny plan, aby uzyskać dostęp do funkcji premium",
+  "pricingTitle": "Cennik",
   "recommended": "Polecany",
   "removeAttribution": "Usuń atrybucję",
   "removeAttributionBenefitDescription": "Ukryj \"Powered by Rallly\" przed uczestnikami",
@@ -54,5 +57,6 @@
   "whenPollInactive": "Kiedy ankieta staje się nieaktywna?",
   "whenPollInactiveAnswer": "Ankiety stają się nieaktywne, gdy wszystkie opcje dat znajdują się w przeszłości ORAZ nie było żadnej aktywności przez ponad 30 dni. Aktywność obejmuje nowe głosy, komentarze lub zmiany w ankiecie. Nieaktywne ankiety są automatycznie usuwane, jeśli nie masz płatnej subskrypcji.",
   "whyUpgrade": "Dlaczego warto ulepszyć?",
-  "whyUpgradeAnswer2": "Przejście do płatnego planu ma sens, jeśli często korzystasz z Rallly lub używasz go do pracy. Obecna cena subskrypcji jest specjalną ceną dla wczesnych użytkowników i wzrośnie w przyszłości. Ulepszając teraz, uzyskasz wczesny dostęp do nowych, wysokiej jakości narzędzi do planowania harmonogramów w miarę ich wydawania i zablokujesz swoją cenę subskrypcji, dzięki czemu nie wpłyną na ciebie przyszłe podwyżki cen."
+  "whyUpgradeAnswer2": "Przejście do płatnego planu ma sens, jeśli często korzystasz z Rallly lub używasz go do pracy. Obecna cena subskrypcji jest specjalną ceną dla wczesnych użytkowników i wzrośnie w przyszłości. Ulepszając teraz, uzyskasz wczesny dostęp do nowych, wysokiej jakości narzędzi do planowania harmonogramów w miarę ich wydawania i zablokujesz swoją cenę subskrypcji, dzięki czemu nie wpłyną na ciebie przyszłe podwyżki cen.",
+  "yearlySavePercent": "Oszczędź {percent}%"
 }

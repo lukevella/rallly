@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Plánovací hlasování",
   "compareSchedulingPollsDescription": "Vytvářejte ankety a najděte nejlepší termín setkání",
   "compareUnlimited": "Neomezené",
+  "currency": "Měna",
   "customBranding": "Vlastní značka",
   "customBrandingDescription": "Zobrazte své logo a barvy značky účastníkům",
   "duplicatePolls": "Kopírování hlasování",
@@ -44,7 +45,9 @@
   "pollLimitAnswer": "Ne. Počet anket, které můžete vytvořit, ani počet lidí, kteří v nich mohou hlasovat, není omezen v žádném tarifu. V bezplatném tarifu se ankety mažou poté, co uplynou všechny jejich termíny a 30 dní neproběhne žádná aktivita, a některé funkce, jako je vlastní vizuální identita a pokročilá nastavení anket, jsou dostupné pouze v placeném tarifu. Úplný přehled najdete ve srovnávací tabulce výše.",
   "pricingDescription": "Začněte zdarma. Bez nutnosti přihlášení.",
   "pricingFinalCtaDescription": "Vytvořte své první hlasování za méně než minutu. Přejděte na placený plán, až budete potřebovat více.",
+  "pricingFinalCtaTitle": "Začněte zdarma",
   "pricingSubtitle": "Pro přístup k prémiovým funkcím přejděte na placenou verzi",
+  "pricingTitle": "Ceník",
   "recommended": "Doporučeno",
   "removeAttribution": "Odebrat označení \"Powered by Rallly\"",
   "removeAttributionBenefitDescription": "Skrýt \"Powered by Rallly\" před účastníky",
@@ -54,5 +57,6 @@
   "whenPollInactive": "Kdy se anketa stane neaktivní?",
   "whenPollInactiveAnswer": "Ankety se stanou neaktivní pokud jsou všechna data v minulosti a po více než 30 dní se neuskutečnila žádná aktivita. Do aktivit spadají nová hlasování, komentáře nebo změny v anketě. Neaktivní ankety jsou automaticky odstraněny, pokud nemáte placené předplatné.",
   "whyUpgrade": "Proč bych měl upgradovat?",
-  "whyUpgradeAnswer2": "Upgrade na placený plán má smysl, pokud používáte Rallly často nebo ho používáte pro práci. Aktuální cena předplatného je akce pro \"early adopters\" a v budoucnu se zvýší. Upgradem dnes získáte přednostní přístup k novým funkcím vysoce kvalitního nástroje pro plánování a cena vašeho předplatného vám zůstane napořád. Budoucí zvýšení cen se vás nedotkne."
+  "whyUpgradeAnswer2": "Upgrade na placený plán má smysl, pokud používáte Rallly často nebo ho používáte pro práci. Aktuální cena předplatného je akce pro \"early adopters\" a v budoucnu se zvýší. Upgradem dnes získáte přednostní přístup k novým funkcím vysoce kvalitního nástroje pro plánování a cena vašeho předplatného vám zůstane napořád. Budoucí zvýšení cen se vás nedotkne.",
+  "yearlySavePercent": "Ušetřete {percent} %"
 }

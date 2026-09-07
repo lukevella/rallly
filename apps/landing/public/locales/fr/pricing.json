@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Sondages de planification",
   "compareSchedulingPollsDescription": "Créez des sondages pour trouver le meilleur moment pour vous réunir",
   "compareUnlimited": "Illimité",
+  "currency": "Devise",
   "customBranding": "Image de marque personnalisée",
   "customBrandingDescription": "Affichez votre logo et vos couleurs de marque à vos participants",
   "duplicatePolls": "Dupliquer des sondages",
@@ -44,7 +45,9 @@
   "pollLimitAnswer": "Non. Le nombre de sondages que vous pouvez créer et le nombre de personnes qui peuvent y voter ne sont limités sur aucune offre. Avec l'offre gratuite, les sondages sont supprimés une fois toutes leurs dates passées et après 30 jours sans activité, et certaines fonctionnalités comme la personnalisation de l'identité visuelle et les paramètres avancés ne sont disponibles qu'avec une offre payante. Consultez le tableau comparatif ci-dessus pour la liste complète.",
   "pricingDescription": "Commencez gratuitement. Pas de connexion requise.",
   "pricingFinalCtaDescription": "Créez votre premier sondage en moins d'une minute. Passez à un plan supérieur lorsque vous avez besoin de plus.",
+  "pricingFinalCtaTitle": "Commencez gratuitement",
   "pricingSubtitle": "Passez à une offre payante pour accéder aux fonctionnalités premium",
+  "pricingTitle": "Tarifs",
   "recommended": "Recommandé",
   "removeAttribution": "Masquer l'attribution",
   "removeAttributionBenefitDescription": "Masquer \"Powered by Rallly\" pour vos participants",
@@ -54,5 +57,6 @@
   "whenPollInactive": "Quand un sondage est-il devenu inactif ?",
   "whenPollInactiveAnswer": "Les sondages deviennent inactifs lorsque toutes les options de date sont passées ET qu'aucune activité n'a eu lieu pendant plus de 30 jours. L'activité comprend les nouveaux votes, les commentaires ou les modifications apportées au sondage. Les sondages inactifs sont automatiquement supprimés si vous n'avez pas d'abonnement payant.",
   "whyUpgrade": "Pourquoi devrais-je mettre à niveau ?",
-  "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous bénéficierez d'un accès anticipé aux nouveaux outils de planification de haute qualité dès leur sortie et vous verrouillerez votre tarif d'abonnement, de sorte que vous ne serez pas affecté par de futures augmentations de prix."
+  "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous bénéficierez d'un accès anticipé aux nouveaux outils de planification de haute qualité dès leur sortie et vous verrouillerez votre tarif d'abonnement, de sorte que vous ne serez pas affecté par de futures augmentations de prix.",
+  "yearlySavePercent": "Économisez {percent} %"
 }

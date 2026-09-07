@@ -191,6 +191,7 @@
   "createSpace": "Créer un espace",
   "createSpaceDescription": "Créez un nouvel espace pour organiser vos sondages et vos événements.",
   "cropPreview": "Aperçu du recadrage",
+  "currency": "Devise",
   "currentlyUsing": "Utilisation actuelle de {usedSeats} sièges sur {currentSeats}",
   "currentPassword": "Mot de passe actuel",
   "currentPlan": "Abonnement actuel",

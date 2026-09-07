@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Encuestas de programación",
   "compareSchedulingPollsDescription": "Crea encuestas para encontrar el mejor momento para veros",
   "compareUnlimited": "Ilimitado",
+  "currency": "Moneda",
   "customBranding": "Marca personalizada",
   "customBrandingDescription": "Muestra tu logo y los colores de tu marca a tus participantes",
   "duplicatePolls": "Duplicar encuestas",
@@ -44,7 +45,9 @@
   "pollLimitAnswer": "No. No hay límite en el número de encuestas que puedes crear ni en el número de personas que pueden votarlas, en ningún plan. En el plan gratuito, las encuestas se eliminan una vez pasadas todas sus fechas y tras 30 días sin actividad, y algunas funciones, como la personalización de la identidad visual y los ajustes avanzados, solo están disponibles en un plan de pago. Consulta la tabla comparativa de arriba para ver la lista completa.",
   "pricingDescription": "Comienza a utilizarlo gratis. No se necesita iniciar sesión.",
   "pricingFinalCtaDescription": "Crea tu primera encuesta en menos de un minuto. Actualiza cuando necesites más.",
+  "pricingFinalCtaTitle": "Empieza de manera gratuita",
   "pricingSubtitle": "Cambia a un plan de pago para acceder a funciones premium",
+  "pricingTitle": "Precios",
   "recommended": "Recomendado",
   "removeAttribution": "Ocultar la atribución",
   "removeAttributionBenefitDescription": "Oculta \"Powered by Rallly\" a tus participantes",
@@ -54,5 +57,6 @@
   "whenPollInactive": "¿Cuándo una encuesta se vuelve inactiva?",
   "whenPollInactiveAnswer": "Las encuestas se vuelven inactivas cuando todas las opciones de fecha están en el pasado Y no ha habido actividad durante más de 30 días. La actividad incluye nuevos votos, comentarios o cambios en la encuesta. Las encuestas inactivas se eliminan automáticamente si no tienes una suscripción de pago.",
   "whyUpgrade": "¿Por qué debería mejorar a un plan de pago?",
-  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso anticipado a nuevas herramientas de programación de alta calidad a medida que se publiquen y fijarás tu tarifa de suscripción para que no te veas afectado por futuros aumentos de precios."
+  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso anticipado a nuevas herramientas de programación de alta calidad a medida que se publiquen y fijarás tu tarifa de suscripción para que no te veas afectado por futuros aumentos de precios.",
+  "yearlySavePercent": "Ahorra {percent} %"
 }

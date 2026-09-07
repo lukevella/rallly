@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Ütemező szavazások",
   "compareSchedulingPollsDescription": "Hozzon létre szavazásokat a legjobb találkozási időpont megtalálásához",
   "compareUnlimited": "Korlátlan",
+  "currency": "Pénznem",
   "customBranding": "Egyedi arculat",
   "customBrandingDescription": "Mutasd meg a logódat és az arculatod színeit a résztvevőidnek",
   "duplicatePolls": "Szavazások duplikálása",
@@ -56,5 +57,6 @@
   "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
   "whenPollInactiveAnswer": "Szavazások inaktívvá válnak, ha az összes dátum lehetőség múltbéli ÉS több mint 30 napja nem volt aktivitás. Az aktivitás magában foglalja az új szavazatokat, hozzászólásokat vagy a szavazás megváltoztatását. Az inaktív szavazások automatikusan törlődnek, ha nincs fizetős előfizetésed.",
   "whyUpgrade": "Miért fizessek elő?",
-  "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések."
+  "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések.",
+  "yearlySavePercent": "{percent}% megtakarítás"
 }
