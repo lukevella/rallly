@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 
 // Mock server-only before any imports that might need it
 vi.mock("server-only", () => ({}));
@@ -2025,6 +2025,7 @@ describe("API v1 - /polls", () => {
 
     it("should return 500 INTERNAL_ERROR as JSON and log the error when a handler behind the rate limiter throws", async () => {
       const errorSpy = vi.spyOn(logger, "error").mockImplementation(() => {});
+      onTestFinished(() => errorSpy.mockRestore());
       mockGetPollWithOptions.mockRejectedValue(new TypeError("db exploded"));
 
       const res = await app.request("/api/v1/polls/test-poll-id", {
@@ -2049,7 +2050,6 @@ describe("API v1 - /polls", () => {
         errorMessage: "db exploded",
         spaceId: "test-space-id",
       });
-      errorSpy.mockRestore();
     });
 
     it("should document the details array and the full error code list in the spec", async () => {
