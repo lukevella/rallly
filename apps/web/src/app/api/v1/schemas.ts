@@ -147,26 +147,10 @@ export const errorResponseSchema = z
         example: "VALIDATION_ERROR",
       }),
       message: z.string().openapi({
-        example: "The request did not match the expected schema. See details.",
+        description:
+          "Human-readable explanation. For `VALIDATION_ERROR` it names each offending field, e.g. `title: Invalid input: expected string, received undefined; dates.0: Invalid ISO date`.",
+        example: "title: Invalid input: expected string, received undefined",
       }),
-      details: z
-        .array(
-          z.object({
-            path: z.string().openapi({
-              description:
-                "Dot-separated path to the offending field. Empty for errors on the whole body.",
-              example: "slots.duration",
-            }),
-            message: z.string().openapi({
-              example: "Invalid input: expected number, received string",
-            }),
-          }),
-        )
-        .optional()
-        .openapi({
-          description:
-            "Present on `VALIDATION_ERROR` only: one entry per issue.",
-        }),
     }),
   })
   .openapi("ErrorResponse");

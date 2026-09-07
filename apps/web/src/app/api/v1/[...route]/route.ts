@@ -204,7 +204,7 @@ async function buildOpenApiSpec() {
           "",
           "## Errors",
           "",
-          'Every failure is `application/json` with the shape `{ "error": { "code", "message" } }`. `code` is stable and safe to branch on; `message` is human-readable and may change. `VALIDATION_ERROR` responses add a `details` array of `{ path, message }`, one entry per issue.',
+          'Every failure is `application/json` with the shape `{ "error": { "code", "message" } }`. `code` is stable and safe to branch on; `message` is human-readable and may change. `VALIDATION_ERROR` messages name each offending field.',
           "",
           "| Status | Code | When |",
           "| --- | --- | --- |",

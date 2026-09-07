@@ -122,9 +122,7 @@ const expectErrorEnvelope = async (
   expectMatchesContract(errorResponseSchema, json);
   expect(json.error.code).toBe(code);
   expect(typeof json.error.message).toBe("string");
-  return json as {
-    error: { code: string; message: string; details?: unknown };
-  };
+  return json as { error: { code: string; message: string } };
 };
 
 // Pre-generated test API key fixture. The stored hash deliberately uses the
@@ -809,10 +807,8 @@ describe("API v1 - /polls", () => {
         status: 400,
         code: "VALIDATION_ERROR",
       });
-      const issue = (
-        json.error.details as { path: string; message: string }[]
-      ).find((d) => d.path.endsWith("endDate"));
-      expect(issue?.message).toContain(String(MAX_SLOT_GENERATION_DAYS));
+      expect(json.error.message).toContain("endDate");
+      expect(json.error.message).toContain(String(MAX_SLOT_GENERATION_DAYS));
     });
 
     it("should reject a slot generator range where endDate precedes startDate", async () => {
@@ -846,10 +842,7 @@ describe("API v1 - /polls", () => {
         status: 400,
         code: "VALIDATION_ERROR",
       });
-      const issue = (
-        json.error.details as { path: string; message: string }[]
-      ).find((d) => d.path.endsWith("endDate"));
-      expect(issue).toBeDefined();
+      expect(json.error.message).toContain("endDate");
     });
 
     it("should reject a range spanning exactly MAX_SLOT_GENERATION_DAYS", async () => {
@@ -1933,7 +1926,7 @@ describe("API v1 - /polls", () => {
       expect(res.headers.get("WWW-Authenticate")).toContain("invalid_request");
     });
 
-    it("should return 400 VALIDATION_ERROR with details and no echoed body for an invalid JSON body", async () => {
+    it("should return 400 VALIDATION_ERROR naming the fields, without echoing the body, for an invalid JSON body", async () => {
       const res = await app.request("/api/v1/polls", {
         method: "POST",
         headers: { ...authed, "Content-Type": "application/json" },
@@ -1944,18 +1937,9 @@ describe("API v1 - /polls", () => {
         status: 400,
         code: "VALIDATION_ERROR",
       });
-      expect(json.error.details).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ path: "title" }),
-          expect.objectContaining({ path: "dates.0" }),
-        ]),
-      );
-      for (const detail of json.error.details as unknown[]) {
-        expect(Object.keys(detail as object).sort()).toEqual([
-          "message",
-          "path",
-        ]);
-      }
+      expect(json.error.message).toContain("title:");
+      expect(json.error.message).toContain("dates.0:");
+      expect(Object.keys(json.error).sort()).toEqual(["code", "message"]);
       expect(JSON.stringify(json)).not.toContain("do-not-echo");
       expect(json).not.toHaveProperty("success");
       expect(json).not.toHaveProperty("data");
@@ -1972,9 +1956,7 @@ describe("API v1 - /polls", () => {
         status: 400,
         code: "VALIDATION_ERROR",
       });
-      expect(json.error.details).toEqual([
-        expect.objectContaining({ path: "limit" }),
-      ]);
+      expect(json.error.message).toMatch(/^limit: /);
       expect(mockListPolls).not.toHaveBeenCalled();
     });
 
@@ -1989,9 +1971,7 @@ describe("API v1 - /polls", () => {
         status: 400,
         code: "VALIDATION_ERROR",
       });
-      expect(json.error.details).toEqual([
-        expect.objectContaining({ path: "status" }),
-      ]);
+      expect(json.error.message).toMatch(/^status: /);
       expect(json).not.toHaveProperty("data");
     });
 
@@ -2052,18 +2032,9 @@ describe("API v1 - /polls", () => {
       });
     });
 
-    it("should document the details array and the full error code list in the spec", async () => {
+    it("should document the full error code list in the spec", async () => {
       const res = await app.request("/api/v1/openapi");
       const json = await res.json();
-
-      const errorSchema =
-        json.paths["/api/v1/polls"].post.responses["400"].content[
-          "application/json"
-        ].schema;
-      expect(errorSchema.properties.error.properties.details.type).toBe(
-        "array",
-      );
-      expect(errorSchema.properties.error.required).not.toContain("details");
 
       for (const code of [
         "VALIDATION_ERROR",
