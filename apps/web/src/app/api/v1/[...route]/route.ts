@@ -1,5 +1,6 @@
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { handle } from "hono/vercel";
 import {
   describeRoute,
@@ -27,7 +28,7 @@ import {
 } from "@/lib/datetime/slot-generator";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
-import { apiError } from "../../middleware/api-error";
+import { apiError, validationHook } from "../../middleware/api-error";
 import { spaceApiKeyAuth } from "../../middleware/api-key";
 import {
   RATE_LIMIT_PER_DAY,
@@ -116,6 +117,33 @@ app.use("*", async (c, next) => {
   await next();
 });
 
+app.notFound((c) =>
+  c.json(
+    apiError("NOT_FOUND", `No route matches ${c.req.method} ${c.req.path}.`),
+    404,
+  ),
+);
+
+// The wide event middleware reads `c.error`, which hono sets before calling
+// this handler, so the original error is logged there. The client only ever
+// sees a generic message.
+app.onError((error, c) => {
+  if (error instanceof HTTPException) {
+    // Bearer auth throws with a prebuilt JSON response.
+    if (error.res) {
+      return error.getResponse();
+    }
+    // hono's validator throws a bare 400 for a body it cannot parse.
+    if (error.status === 400) {
+      return c.json(apiError("VALIDATION_ERROR", error.message), 400);
+    }
+  }
+  return c.json(
+    apiError("INTERNAL_ERROR", "Something went wrong. Try again later."),
+    500,
+  );
+});
+
 const spaceNotProResponse = {
   description:
     "The space associated with the API key does not have a Pro subscription",
@@ -173,6 +201,27 @@ async function buildOpenApiSpec() {
           "Every response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
           "",
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
+          "",
+          "## Errors",
+          "",
+          'Every failure is `application/json` with the shape `{ "error": { "code", "message" } }`. `code` is stable and safe to branch on; `message` is human-readable and may change. `VALIDATION_ERROR` responses add a `details` array of `{ path, message }`, one entry per issue.',
+          "",
+          "| Status | Code | When |",
+          "| --- | --- | --- |",
+          "| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, or the body was not valid JSON |",
+          "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
+          "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
+          "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
+          "| 400 | `DUPLICATE_DATES` | `dates` contains the same date more than once |",
+          "| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |",
+          "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |",
+          "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
+          "| 404 | `NOT_FOUND` | No route matches the method and path |",
+          "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
+          "| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |",
+          "| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |",
+          "| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |",
+          "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
         ].join("\n"),
       },
       servers: [{ url: absoluteUrl() }],
@@ -255,7 +304,7 @@ app.post(
       503: serviceUnavailableResponse,
     },
   }),
-  validator("json", createPollInputSchema),
+  validator("json", createPollInputSchema, validationHook),
   async (c) => {
     const input = c.req.valid("json");
     const { spaceId, spaceOwnerId } = c.get("apiAuth");
@@ -382,7 +431,10 @@ app.post(
     // Process slots (time-based options)
     if (!input.slots) {
       return c.json(
-        apiError("INVALID_INPUT", "Either 'dates' or 'slots' must be provided"),
+        apiError(
+          "VALIDATION_ERROR",
+          "Either 'dates' or 'slots' must be provided",
+        ),
         400,
       );
     }
@@ -487,7 +539,7 @@ app.get(
       503: serviceUnavailableResponse,
     },
   }),
-  validator("query", listPollsQuerySchema),
+  validator("query", listPollsQuerySchema, validationHook),
   async (c) => {
     const { status, cursor, limit } = c.req.valid("query");
     const { spaceId } = c.get("apiAuth");
@@ -608,7 +660,7 @@ app.patch(
       },
     },
   }),
-  validator("json", patchPollInputSchema),
+  validator("json", patchPollInputSchema, validationHook),
   async (c) => {
     const { pollId } = c.req.param();
     const { status } = c.req.valid("json");

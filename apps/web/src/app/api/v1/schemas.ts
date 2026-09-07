@@ -141,11 +141,32 @@ export const createPollInputSchema = z
 export const errorResponseSchema = z
   .object({
     error: z.object({
-      code: z.string().openapi({ example: "TIMEZONE_REQUIRED" }),
-      message: z.string().openapi({
-        example:
-          "Timezone is required. Either provide a timezone in the request or set one in your profile.",
+      code: z.string().openapi({
+        description:
+          "Machine-readable error code. The full list is in the API description.",
+        example: "VALIDATION_ERROR",
       }),
+      message: z.string().openapi({
+        example: "The request did not match the expected schema. See details.",
+      }),
+      details: z
+        .array(
+          z.object({
+            path: z.string().openapi({
+              description:
+                "Dot-separated path to the offending field. Empty for errors on the whole body.",
+              example: "slots.duration",
+            }),
+            message: z.string().openapi({
+              example: "Invalid input: expected number, received string",
+            }),
+          }),
+        )
+        .optional()
+        .openapi({
+          description:
+            "Present on `VALIDATION_ERROR` only: one entry per issue.",
+        }),
     }),
   })
   .openapi("ErrorResponse");
