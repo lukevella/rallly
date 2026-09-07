@@ -66,9 +66,10 @@ const CachedDemo = async ({
         </div>
       </div>
       {/* The grid is centred in the frame, so the phone is anchored to the
-          frame's centre rather than its edge: its screen's left edge lands on
-          the boundary of the sixth option column at any lg viewport width. */}
-      <div className="hidden lg:absolute lg:-bottom-12 lg:left-[calc(50%+197px)] lg:block lg:w-[320px]">
+          frame's centre rather than its edge: its bezel starts 1px past the
+          sixth option column boundary at any lg viewport width, leaving the
+          previous column clear and hiding the next one's content. */}
+      <div className="hidden lg:absolute lg:-bottom-12 lg:left-[calc(50%+205px)] lg:block lg:w-[320px]">
         <TryItPrompt
           text={t("heroDemoTryIt", {
             ns: "home",
