@@ -13,6 +13,7 @@ import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import {
+  getParticipantEditToken,
   hasPollAdminAccess,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
@@ -20,6 +21,7 @@ import {
   attachParticipantToInvite,
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
+import { getPollInvitePath } from "@/features/poll/invite/utils";
 import { generateAccessToken } from "@/features/poll/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
@@ -202,6 +204,37 @@ export const participants = router({
       }
 
       return participants;
+    }),
+  /**
+   * The per response edit link, for a host handing edit access to someone
+   * who responded without an email or lost the confirmation email. It is
+   * the link that email carries, built from the same path, so the two can
+   * never diverge. The token is stripped from every list payload; this is
+   * the only read that returns it, and only to the poll's admins.
+   */
+  editLink: publicProcedure
+    .use(requireUserMiddleware)
+    .input(
+      z.object({
+        pollId: z.string(),
+        participantId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input: { pollId, participantId } }) => {
+      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
+      const token = await getParticipantEditToken({ pollId, participantId });
+
+      if (!token) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Participant not found",
+        });
+      }
+
+      return { editUrl: absoluteUrl(getPollInvitePath({ pollId, token })) };
     }),
   delete: publicProcedure
     .input(

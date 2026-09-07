@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -26,18 +27,21 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
+import { toast } from "@rallly/ui/sonner";
+import { LinkIcon, PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 import * as z from "zod";
 
+import { usePoll, useRole } from "@/features/poll/client";
 import {
   useDeleteParticipantMutation,
   useEditToken,
 } from "@/features/poll/components/mutations";
 import { Trans, useTranslation } from "@/i18n/client";
+import { copyTextFromPromise } from "@/lib/utils/clipboard";
 import { useFormValidation } from "@/lib/utils/form-validation";
 import { trpc } from "@/trpc/client";
 
@@ -65,6 +69,7 @@ export const ParticipantDropdown = ({
     React.useState(false);
   const [isDeleteParticipantModalVisible, setIsDeleteParticipantModalVisible] =
     React.useState(false);
+  const role = useRole();
 
   return (
     <>
@@ -96,6 +101,12 @@ export const ParticipantDropdown = ({
             <TagIcon />
             <Trans i18nKey="changeName" defaults="Change name" />
           </DropdownMenuItem>
+          {role === "admin" ? (
+            <CopyEditLinkMenuItem
+              participantId={participant.id}
+              participantName={participant.name}
+            />
+          ) : null}
           <DropdownMenuItem
             variant="destructive"
             onClick={() => setIsDeleteParticipantModalVisible(true)}
@@ -120,6 +131,55 @@ export const ParticipantDropdown = ({
         onDelete={onDelete}
       />
     </>
+  );
+};
+
+/**
+ * Hosts only: the per response edit link, for handing edit access to someone
+ * who responded without an email (or lost the confirmation email). The token
+ * never ships with the participant list, so it is fetched on click.
+ */
+const CopyEditLinkMenuItem = ({
+  participantId,
+  participantName,
+}: {
+  participantId: string;
+  participantName: string;
+}) => {
+  const poll = usePoll();
+  const { t } = useTranslation();
+  const utils = trpc.useUtils();
+
+  const copyEditLink = async () => {
+    const editUrl = utils.polls.participants.editLink
+      .fetch({ pollId: poll.id, participantId })
+      .then((result) => result.editUrl);
+    try {
+      await copyTextFromPromise(editUrl);
+      toast(
+        t("participantEditLinkCopied", {
+          defaultValue: "Edit link for {name} copied",
+          name: participantName,
+        }),
+      );
+      posthog?.capture("poll_page:participant_edit_link_copy", {
+        poll_id: poll.id,
+      });
+    } catch (error) {
+      console.error(`Unable to copy edit link: ${(error as Error).message}`);
+      toast.error(
+        t("participantEditLinkCopyFailed", {
+          defaultValue: "Couldn't copy the edit link. Try again.",
+        }),
+      );
+    }
+  };
+
+  return (
+    <DropdownMenuItem onClick={copyEditLink}>
+      <LinkIcon />
+      <Trans i18nKey="copyEditLink" defaults="Copy edit link" />
+    </DropdownMenuItem>
   );
 };
 

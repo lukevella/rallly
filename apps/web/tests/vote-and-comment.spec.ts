@@ -74,4 +74,16 @@ test.describe(() => {
       timeout: 10000,
     });
   });
+
+  // The host copies the same link the confirmation email carried, so a
+  // respondent who left no email can still be handed edit access.
+  test("host copies the participant's edit link", async () => {
+    await page.goto(`/poll/${pollId}`);
+    await page.getByTestId("participant-menu").click();
+    await page.getByRole("menuitem", { name: "Copy edit link" }).click();
+    await expect(page.getByText("Edit link for Anne copied")).toBeVisible();
+    expect(await page.evaluate("navigator.clipboard.readText()")).toBe(
+      editSubmissionUrl,
+    );
+  });
 });
