@@ -28,7 +28,7 @@ import {
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError } from "../../middleware/api-error";
-import { legacySpaceApiKeyAuth as spaceApiKeyAuth } from "../../middleware/api-key";
+import { spaceApiKeyAuth } from "../../middleware/api-key";
 import {
   RATE_LIMIT_PER_DAY,
   RATE_LIMIT_PER_MINUTE,

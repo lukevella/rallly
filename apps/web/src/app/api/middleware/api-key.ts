@@ -161,12 +161,3 @@ export const spaceApiKeyAuth = every(
   }),
   requireProSpace,
 );
-
-/**
- * The frozen `/api/private` route keeps hono's plain-text `Unauthorized` /
- * `Bad Request` bodies. Not for new routes.
- */
-export const legacySpaceApiKeyAuth = every(
-  bearerAuth({ verifyToken }),
-  requireProSpace,
-);
