@@ -64,6 +64,7 @@ export const createPoll = async ({
         location: true,
         timeZone: true,
         status: true,
+        kind: true,
         createdAt: true,
         disableComments: true,
         user: {
@@ -107,6 +108,7 @@ const pollResponseSelect = {
   location: true,
   timeZone: true,
   status: true,
+  kind: true,
   createdAt: true,
   user: {
     select: {

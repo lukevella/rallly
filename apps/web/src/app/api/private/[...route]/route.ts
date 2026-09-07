@@ -742,6 +742,10 @@ app.get(
           options: data.options.map((option) => ({
             ...option,
             startTime: option.startTime.toISOString(),
+            // The frozen shape is a sparse array of the types that received votes.
+            votes: (["yes", "ifNeedBe", "no"] as const)
+              .filter((type) => option.votes[type] > 0)
+              .map((type) => ({ type, count: option.votes[type] })),
           })),
         },
       }),

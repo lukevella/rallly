@@ -168,16 +168,47 @@ export const pollStatusSchema = z
   .enum(["open", "closed", "scheduled", "canceled"])
   .openapi("PollStatus");
 
-export const pollOptionSchema = z
+export const pollKindSchema = z.enum(["date", "time"]).openapi("PollKind", {
+  description:
+    "Whether the poll offers calendar dates (`date`) or time slots (`time`). Determines which option shape the poll uses: every option in a `date` poll has a `date`, every option in a `time` poll has a `startTime` and `duration`.",
+  example: "time",
+});
+
+export const dateOptionSchema = z
   .object({
     id: z.string().openapi({ example: "opt_abc123" }),
-    startTime: z.iso.datetime().openapi({ example: "2025-01-15T09:00:00Z" }),
-    duration: z.number().int().openapi({
-      description: "Duration in minutes. 0 indicates an all-day option.",
+    date: z.iso.date().openapi({
+      description:
+        "Calendar date in YYYY-MM-DD format. All-day options are floating dates with no time component and no timezone.",
+      example: "2025-01-15",
+    }),
+  })
+  .openapi("DateOption", {
+    description: "An all-day option. Only present in polls with `kind: date`.",
+  });
+
+export const timeOptionSchema = z
+  .object({
+    id: z.string().openapi({ example: "opt_abc123" }),
+    startTime: z.iso.datetime().openapi({
+      description: "Start of the slot as an ISO 8601 instant in UTC.",
+      example: "2025-01-15T09:00:00.000Z",
+    }),
+    duration: z.int().positive().openapi({
+      description: "Duration in minutes.",
       example: 30,
     }),
   })
-  .openapi("PollOption");
+  .openapi("TimeOption", {
+    description: "A time slot. Only present in polls with `kind: time`.",
+  });
+
+export const pollOptionSchema = z
+  .union([dateOptionSchema, timeOptionSchema])
+  .openapi("PollOption", {
+    description:
+      "A poll option. The shape follows the poll's `kind`: a `DateOption` for `date` polls, a `TimeOption` for `time` polls.",
+  });
 
 export const pollUserSchema = z
   .object({
@@ -199,6 +230,7 @@ const pollSchema = z
     location: z.string().nullable().openapi({ example: "Zoom" }),
     timezone: z.string().nullable().openapi({ example: "Europe/London" }),
     status: pollStatusSchema,
+    kind: pollKindSchema,
     createdAt: z
       .string()
       .datetime()
@@ -276,46 +308,65 @@ export const listPollsSuccessResponseSchema = z
   })
   .openapi("ListPollsResponse");
 
-export const voteCountSchema = z
+export const voteTypeSchema = z
+  .enum(["yes", "ifNeedBe", "no"])
+  .openapi("VoteType", {
+    description:
+      "A participant's answer for an option: available (`yes`), available if needed (`ifNeedBe`) or unavailable (`no`).",
+    example: "yes",
+  });
+
+export const voteCountsSchema = z
   .object({
-    type: z.string().openapi({
-      description: "The vote type (e.g., yes, ifNeedBe, no)",
-      example: "yes",
-    }),
-    count: z.int().nonnegative().openapi({
-      description: "Number of votes of this type",
-      example: 5,
-    }),
+    yes: z.int().nonnegative().openapi({ example: 3 }),
+    ifNeedBe: z.int().nonnegative().openapi({ example: 1 }),
+    no: z.int().nonnegative().openapi({ example: 1 }),
   })
-  .openapi("VoteCount");
+  .openapi("VoteCounts", {
+    description:
+      "Number of votes of each type. Every key is always present; a type nobody chose is `0`.",
+  });
+
+const optionResultFields = {
+  votes: voteCountsSchema,
+  score: z.int().nonnegative().openapi({
+    description:
+      "Opaque ranking value: higher is better. Only comparable between options in the same response. The formula is not part of the contract and may change; do not decode it into vote counts, compare it across polls or threshold on it. Use `votes` for counts.",
+    example: 5004,
+  }),
+  isTopChoice: z.boolean().openapi({
+    description:
+      "Whether this option has the highest `score` in the poll. Several options share the flag when they tie. Always `false` when nobody has voted.",
+    example: true,
+  }),
+};
+
+export const dateOptionResultSchema = dateOptionSchema
+  .extend(optionResultFields)
+  .openapi("DateOptionResult", {
+    description:
+      "Results for an all-day option. Only present in polls with `kind: date`.",
+  });
+
+export const timeOptionResultSchema = timeOptionSchema
+  .extend(optionResultFields)
+  .openapi("TimeOptionResult", {
+    description:
+      "Results for a time slot. Only present in polls with `kind: time`.",
+  });
 
 export const optionResultSchema = z
-  .object({
-    id: z.string().openapi({ example: "opt_abc123" }),
-    startTime: z.iso.datetime().openapi({ example: "2025-01-15T09:00:00Z" }),
-    duration: z.int().nonnegative().openapi({
-      description: "Duration in minutes. 0 indicates an all-day option.",
-      example: 30,
-    }),
-    votes: z.array(voteCountSchema).openapi({
-      description: "Array of vote counts by type",
-    }),
-    score: z.int().nonnegative().openapi({
-      description:
-        "Ranking score: (yes + ifNeedBe) * 1000 + yes. Total availability is primary, yes votes break ties.",
-      example: 5004,
-    }),
-    isTopChoice: z.boolean().openapi({
-      description: "Whether this option has the highest score",
-      example: true,
-    }),
-  })
-  .openapi("OptionResult");
+  .union([dateOptionResultSchema, timeOptionResultSchema])
+  .openapi("OptionResult", {
+    description:
+      "Results for one option. The shape follows the poll's `kind`: a `DateOptionResult` for `date` polls, a `TimeOptionResult` for `time` polls.",
+  });
 
 export const getPollResultsSuccessResponseSchema = z
   .object({
     data: z.object({
       pollId: z.string().openapi({ example: "p_123abc" }),
+      kind: pollKindSchema,
       status: pollStatusSchema.openapi({
         description:
           "Current poll status. Polls close automatically when all options are in the past.",
@@ -327,12 +378,20 @@ export const getPollResultsSuccessResponseSchema = z
       }),
       options: z.array(optionResultSchema),
       highScore: z.int().nonnegative().openapi({
-        description: "Highest score across all options",
-        example: 7,
+        description:
+          "The highest `score` among the options. Opaque like `score`: use it to identify the leading options, not as a measurement.",
+        example: 5004,
       }),
     }),
   })
   .openapi("GetPollResultsResponse");
+
+export const participantVoteSchema = z
+  .object({
+    optionId: z.string().openapi({ example: "opt_abc123" }),
+    type: voteTypeSchema,
+  })
+  .openapi("ParticipantVote");
 
 export const participantSchema = z
   .object({
@@ -340,14 +399,32 @@ export const participantSchema = z
     name: z.string().openapi({ example: "Jane Smith" }),
     email: z.string().nullable().openapi({ example: "jane@example.com" }),
     createdAt: z.iso.datetime().openapi({ example: "2025-01-10T12:00:00Z" }),
+    votes: z.array(participantVoteSchema).openapi({
+      description:
+        "The participant's vote for each option, keyed by `optionId`. An option missing from the list has no recorded vote from this participant.",
+    }),
   })
   .openapi("Participant");
 
+export const listParticipantsQuerySchema = z.object({
+  cursor: z.string().optional().openapi({
+    description:
+      "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page.",
+    example: "participant_abc123",
+  }),
+  limit: z.coerce.number().int().min(1).max(100).default(50).openapi({
+    description: "Number of participants to return per page (1-100).",
+    example: 50,
+  }),
+});
+
 export const getPollParticipantsSuccessResponseSchema = z
   .object({
-    data: z.object({
-      pollId: z.string().openapi({ example: "p_123abc" }),
-      participants: z.array(participantSchema),
+    data: z.array(participantSchema),
+    nextCursor: z.string().nullable().openapi({
+      description:
+        "Cursor to fetch the next page. `null` when there are no more results.",
+      example: "participant_abc123",
     }),
   })
   .openapi("GetPollParticipantsResponse");

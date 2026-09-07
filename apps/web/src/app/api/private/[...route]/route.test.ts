@@ -1503,11 +1503,7 @@ describe("Private API - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 3 },
-              { type: "ifNeedBe", count: 1 },
-              { type: "no", count: 1 },
-            ],
+            votes: { yes: 3, ifNeedBe: 1, no: 1 },
             score: 4003,
             isTopChoice: true,
           },
@@ -1515,10 +1511,7 @@ describe("Private API - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 1 },
-              { type: "no", count: 2 },
-            ],
+            votes: { yes: 1, ifNeedBe: 0, no: 2 },
             score: 1001,
             isTopChoice: false,
           },
@@ -1526,7 +1519,7 @@ describe("Private API - /polls", () => {
             id: "opt-3",
             startTime: new Date("2025-01-15T11:00:00Z"),
             duration: 30,
-            votes: [],
+            votes: { yes: 0, ifNeedBe: 0, no: 0 },
             score: 0,
             isTopChoice: false,
           },
@@ -1549,6 +1542,17 @@ describe("Private API - /polls", () => {
       expect(json.data.participantCount).toBe(5);
       expect(json.data.highScore).toBe(4003);
       expect(json.data.options).toHaveLength(3);
+      // The frozen shape is a sparse array of the types that received votes.
+      expect(json.data.options[0].votes).toEqual([
+        { type: "yes", count: 3 },
+        { type: "ifNeedBe", count: 1 },
+        { type: "no", count: 1 },
+      ]);
+      expect(json.data.options[1].votes).toEqual([
+        { type: "yes", count: 1 },
+        { type: "no", count: 2 },
+      ]);
+      expect(json.data.options[2].votes).toEqual([]);
 
       expect(mockGetPollResults).toHaveBeenCalledWith({
         pollId: "test-poll-id",
@@ -1567,7 +1571,7 @@ describe("Private API - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 1 }],
+            votes: { yes: 1, ifNeedBe: 0, no: 0 },
             score: 1001,
             isTopChoice: true,
           },
@@ -1598,7 +1602,7 @@ describe("Private API - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 2 }],
+            votes: { yes: 2, ifNeedBe: 0, no: 0 },
             score: 2002,
             isTopChoice: true,
           },
@@ -1606,7 +1610,7 @@ describe("Private API - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 2 }],
+            votes: { yes: 2, ifNeedBe: 0, no: 0 },
             score: 2002,
             isTopChoice: true,
           },
@@ -1640,7 +1644,7 @@ describe("Private API - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 4 }],
+            votes: { yes: 4, ifNeedBe: 0, no: 0 },
             score: 4004,
             isTopChoice: false,
           },
@@ -1648,10 +1652,7 @@ describe("Private API - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 3 },
-              { type: "ifNeedBe", count: 2 },
-            ],
+            votes: { yes: 3, ifNeedBe: 2, no: 0 },
             score: 5003,
             isTopChoice: true,
           },
@@ -1686,10 +1687,7 @@ describe("Private API - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 3 },
-              { type: "ifNeedBe", count: 1 },
-            ],
+            votes: { yes: 3, ifNeedBe: 1, no: 0 },
             score: 4003,
             isTopChoice: false,
           },
@@ -1697,7 +1695,7 @@ describe("Private API - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 4 }],
+            votes: { yes: 4, ifNeedBe: 0, no: 0 },
             score: 4004,
             isTopChoice: true,
           },

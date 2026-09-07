@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { PollStatus, Prisma } from "@rallly/database";
+import type { PollStatus, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { isLegacyEditToken } from "@/features/poll/utils";
@@ -50,6 +50,7 @@ export async function getPollResults({
       },
       select: {
         id: true,
+        kind: true,
         status: true,
         options: {
           select: {
@@ -81,35 +82,26 @@ export async function getPollResults({
     return null;
   }
 
-  // Build vote counts map from groupBy results
-  const votesByOption = new Map<
-    string,
-    Array<{ type: string; count: number }>
-  >();
+  const votesByOption = new Map<string, Record<VoteType, number>>();
 
   for (const row of voteCounts) {
     let votes = votesByOption.get(row.optionId);
     if (!votes) {
-      votes = [];
+      votes = { yes: 0, ifNeedBe: 0, no: 0 };
       votesByOption.set(row.optionId, votes);
     }
-    votes.push({ type: row.type, count: row._count });
+    votes[row.type] = row._count;
   }
 
-  // Helper to get count for a specific vote type
-  const getCount = (
-    votes: Array<{ type: string; count: number }>,
-    type: string,
-  ) => votes.find((v) => v.type === type)?.count ?? 0;
-
-  // Calculate scores for each option
-  // Ranking: total availability (yes + ifNeedBe) is primary, yes votes as tiebreaker
-  // Score formula: (yes + ifNeedBe) * 1000 + yes
+  // Ranking: total availability (yes + ifNeedBe) is primary, yes votes break
+  // ties. The formula is internal; the API documents score as opaque.
   const optionResults = poll.options.map((option) => {
-    const votes = votesByOption.get(option.id) ?? [];
-    const yesCount = getCount(votes, "yes");
-    const ifNeedBeCount = getCount(votes, "ifNeedBe");
-    const score = (yesCount + ifNeedBeCount) * 1000 + yesCount;
+    const votes = votesByOption.get(option.id) ?? {
+      yes: 0,
+      ifNeedBe: 0,
+      no: 0,
+    };
+    const score = (votes.yes + votes.ifNeedBe) * 1000 + votes.yes;
 
     return {
       id: option.id,
@@ -131,6 +123,7 @@ export async function getPollResults({
 
   return {
     pollId: poll.id,
+    kind: poll.kind,
     status: poll.status,
     participantCount: poll._count.participants,
     options,
@@ -138,12 +131,20 @@ export async function getPollResults({
   };
 }
 
+/**
+ * Participants in response order (oldest first) with their recorded votes.
+ * Pass `limit` to page with a cursor; omit it to return every participant.
+ */
 export async function getPollParticipants({
   pollId,
   spaceId,
+  cursor,
+  limit,
 }: {
   pollId: string;
   spaceId: AuthorizedSpaceId;
+  cursor?: string;
+  limit?: number;
 }) {
   const poll = await prisma.poll.findFirst({
     where: {
@@ -159,10 +160,16 @@ export async function getPollParticipants({
           name: true,
           email: true,
           createdAt: true,
+          votes: {
+            select: {
+              optionId: true,
+              type: true,
+            },
+          },
         },
-        orderBy: {
-          createdAt: "asc",
-        },
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        ...(limit !== undefined && { take: limit + 1 }),
+        ...(cursor && { cursor: { id: cursor }, skip: 1 }),
       },
     },
   });
@@ -171,9 +178,13 @@ export async function getPollParticipants({
     return null;
   }
 
+  const hasMore = limit !== undefined && poll.participants.length > limit;
+  const page = hasMore ? poll.participants.slice(0, limit) : poll.participants;
+
   return {
     pollId: poll.id,
-    participants: poll.participants,
+    participants: page,
+    nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
   };
 }
 
@@ -202,6 +213,7 @@ export async function listPolls({
       location: true,
       timeZone: true,
       status: true,
+      kind: true,
       createdAt: true,
       user: {
         select: {
@@ -519,6 +531,7 @@ export async function getPollWithOptions({
       location: true,
       timeZone: true,
       status: true,
+      kind: true,
       createdAt: true,
       user: {
         select: {

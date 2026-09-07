@@ -169,6 +169,7 @@ describe("API v1 - /polls", () => {
       location: null,
       timeZone: null,
       status: "open",
+      kind: "date",
       createdAt: new Date("2025-01-10T12:00:00Z"),
       user: {
         name: "Test User",
@@ -651,6 +652,7 @@ describe("API v1 - /polls", () => {
         location: null,
         timeZone: "Europe/London",
         status: "open",
+        kind: "time",
         createdAt: new Date("2025-01-10T12:00:00Z"),
         user: { name: "Test User", image: null },
         options: [
@@ -1024,6 +1026,7 @@ describe("API v1 - /polls", () => {
       location: null,
       timeZone: null,
       status: "closed",
+      kind: "date",
       createdAt: new Date("2025-01-10T12:00:00Z"),
       user: { name: "Test User", image: null },
       options: [],
@@ -1221,6 +1224,7 @@ describe("API v1 - /polls", () => {
       location: "Zoom",
       timeZone: "Europe/London",
       status: "open",
+      kind: "time",
       createdAt: new Date("2025-01-10T12:00:00Z"),
       user: {
         name: "John Doe",
@@ -1259,6 +1263,7 @@ describe("API v1 - /polls", () => {
       expect(json.data.location).toBe("Zoom");
       expect(json.data.timezone).toBe("Europe/London");
       expect(json.data.status).toBe("open");
+      expect(json.data.kind).toBe("time");
       expect(json.data.createdAt).toBe("2025-01-10T12:00:00.000Z");
       expect(json.data.user).toEqual({
         name: "John Doe",
@@ -1279,6 +1284,42 @@ describe("API v1 - /polls", () => {
         pollId: "test-poll-id",
         spaceId: "test-space-id",
       });
+    });
+
+    it("should return calendar dates instead of datetimes for date polls", async () => {
+      mockGetPollWithOptions.mockResolvedValue({
+        ...mockPoll,
+        timeZone: null,
+        kind: "date",
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T00:00:00.000Z"),
+            duration: 0,
+          },
+          {
+            id: "opt-2",
+            startTime: new Date("2025-01-16T00:00:00.000Z"),
+            duration: 0,
+          },
+        ],
+      });
+
+      const res = await app.request("/api/v1/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(getPollSuccessResponseSchema, json);
+      expect(json.data.kind).toBe("date");
+      expect(json.data.options).toEqual([
+        { id: "opt-1", date: "2025-01-15" },
+        { id: "opt-2", date: "2025-01-16" },
+      ]);
     });
 
     it("should return poll without user when user is null", async () => {
@@ -1346,6 +1387,7 @@ describe("API v1 - /polls", () => {
       location: "Zoom",
       timeZone: "Europe/London",
       status: "open",
+      kind: "time",
       createdAt: new Date("2025-01-10T12:00:00Z"),
       user: {
         name: "John Doe",
@@ -1383,6 +1425,7 @@ describe("API v1 - /polls", () => {
       expect(json.data[0].title).toBe("Team sync");
       expect(json.data[0].status).toBe("open");
       expect(json.data[0].participantCount).toBe(3);
+      expect(json.data[0].kind).toBe("time");
       expect(json.data[0].createdAt).toBe("2025-01-10T12:00:00.000Z");
       expect(json.data[0].options).toEqual([
         {
@@ -1405,6 +1448,41 @@ describe("API v1 - /polls", () => {
         cursor: undefined,
         limit: 20,
       });
+    });
+
+    it("should return calendar dates for date polls in the list", async () => {
+      mockListPolls.mockResolvedValue({
+        polls: [
+          {
+            ...mockListedPoll,
+            timeZone: null,
+            kind: "date",
+            options: [
+              {
+                id: "opt-1",
+                startTime: new Date("2025-01-15T00:00:00.000Z"),
+                duration: 0,
+              },
+            ],
+          },
+        ],
+        nextCursor: null,
+      });
+
+      const res = await app.request("/api/v1/polls", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(listPollsSuccessResponseSchema, json);
+      expect(json.data[0].kind).toBe("date");
+      expect(json.data[0].options).toEqual([
+        { id: "opt-1", date: "2025-01-15" },
+      ]);
     });
 
     it("should return an empty list when the space has no polls", async () => {
@@ -1515,6 +1593,7 @@ describe("API v1 - /polls", () => {
     it("should return aggregated vote results", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         status: "open",
         participantCount: 5,
         highScore: 4003,
@@ -1523,11 +1602,7 @@ describe("API v1 - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 3 },
-              { type: "ifNeedBe", count: 1 },
-              { type: "no", count: 1 },
-            ],
+            votes: { yes: 3, ifNeedBe: 1, no: 1 },
             score: 4003,
             isTopChoice: true,
           },
@@ -1535,10 +1610,7 @@ describe("API v1 - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 1 },
-              { type: "no", count: 2 },
-            ],
+            votes: { yes: 1, ifNeedBe: 0, no: 2 },
             score: 1001,
             isTopChoice: false,
           },
@@ -1546,7 +1618,7 @@ describe("API v1 - /polls", () => {
             id: "opt-3",
             startTime: new Date("2025-01-15T11:00:00Z"),
             duration: 30,
-            votes: [],
+            votes: { yes: 0, ifNeedBe: 0, no: 0 },
             score: 0,
             isTopChoice: false,
           },
@@ -1568,7 +1640,22 @@ describe("API v1 - /polls", () => {
       expect(json.data.status).toBe("open");
       expect(json.data.participantCount).toBe(5);
       expect(json.data.highScore).toBe(4003);
+      expect(json.data.kind).toBe("time");
       expect(json.data.options).toHaveLength(3);
+      expect(json.data.options[0]).toEqual({
+        id: "opt-1",
+        startTime: "2025-01-15T09:00:00.000Z",
+        duration: 30,
+        votes: { yes: 3, ifNeedBe: 1, no: 1 },
+        score: 4003,
+        isTopChoice: true,
+      });
+      // Every vote type is present even when nobody chose it.
+      expect(json.data.options[2].votes).toEqual({
+        yes: 0,
+        ifNeedBe: 0,
+        no: 0,
+      });
 
       expect(mockGetPollResults).toHaveBeenCalledWith({
         pollId: "test-poll-id",
@@ -1576,9 +1663,49 @@ describe("API v1 - /polls", () => {
       });
     });
 
+    it("should return calendar dates for date poll results", async () => {
+      mockGetPollResults.mockResolvedValue({
+        pollId: "test-poll-id",
+        kind: "date",
+        status: "open",
+        participantCount: 2,
+        highScore: 2002,
+        options: [
+          {
+            id: "opt-1",
+            startTime: new Date("2025-01-15T00:00:00.000Z"),
+            duration: 0,
+            votes: { yes: 2, ifNeedBe: 0, no: 0 },
+            score: 2002,
+            isTopChoice: true,
+          },
+        ],
+      });
+
+      const res = await app.request("/api/v1/polls/test-poll-id/results", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(getPollResultsSuccessResponseSchema, json);
+      expect(json.data.kind).toBe("date");
+      expect(json.data.options[0]).toEqual({
+        id: "opt-1",
+        date: "2025-01-15",
+        votes: { yes: 2, ifNeedBe: 0, no: 0 },
+        score: 2002,
+        isTopChoice: true,
+      });
+    });
+
     it("should return the poll status for closed polls", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         status: "closed",
         participantCount: 1,
         highScore: 1001,
@@ -1587,7 +1714,7 @@ describe("API v1 - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 1 }],
+            votes: { yes: 1, ifNeedBe: 0, no: 0 },
             score: 1001,
             isTopChoice: true,
           },
@@ -1610,6 +1737,7 @@ describe("API v1 - /polls", () => {
     it("should handle ties for top choice", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         status: "open",
         participantCount: 2,
         highScore: 2002,
@@ -1618,7 +1746,7 @@ describe("API v1 - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 2 }],
+            votes: { yes: 2, ifNeedBe: 0, no: 0 },
             score: 2002,
             isTopChoice: true,
           },
@@ -1626,7 +1754,7 @@ describe("API v1 - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 2 }],
+            votes: { yes: 2, ifNeedBe: 0, no: 0 },
             score: 2002,
             isTopChoice: true,
           },
@@ -1652,6 +1780,7 @@ describe("API v1 - /polls", () => {
     it("should prioritize total availability over yes votes", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         status: "open",
         participantCount: 5,
         highScore: 5003,
@@ -1660,7 +1789,7 @@ describe("API v1 - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 4 }],
+            votes: { yes: 4, ifNeedBe: 0, no: 0 },
             score: 4004,
             isTopChoice: false,
           },
@@ -1668,10 +1797,7 @@ describe("API v1 - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 3 },
-              { type: "ifNeedBe", count: 2 },
-            ],
+            votes: { yes: 3, ifNeedBe: 2, no: 0 },
             score: 5003,
             isTopChoice: true,
           },
@@ -1698,6 +1824,7 @@ describe("API v1 - /polls", () => {
     it("should use yes votes as tiebreaker when availability is equal", async () => {
       mockGetPollResults.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         status: "open",
         participantCount: 4,
         highScore: 4004,
@@ -1706,10 +1833,7 @@ describe("API v1 - /polls", () => {
             id: "opt-1",
             startTime: new Date("2025-01-15T09:00:00Z"),
             duration: 30,
-            votes: [
-              { type: "yes", count: 3 },
-              { type: "ifNeedBe", count: 1 },
-            ],
+            votes: { yes: 3, ifNeedBe: 1, no: 0 },
             score: 4003,
             isTopChoice: false,
           },
@@ -1717,7 +1841,7 @@ describe("API v1 - /polls", () => {
             id: "opt-2",
             startTime: new Date("2025-01-15T10:00:00Z"),
             duration: 30,
-            votes: [{ type: "yes", count: 4 }],
+            votes: { yes: 4, ifNeedBe: 0, no: 0 },
             score: 4004,
             isTopChoice: true,
           },
@@ -1823,24 +1947,32 @@ describe("API v1 - /polls", () => {
     });
   });
 
-  describe("Get poll participants", () => {
-    it("should return participants", async () => {
+  describe("List poll participants", () => {
+    const participants = [
+      {
+        id: "participant-1",
+        name: "Alice",
+        email: "alice@example.com",
+        createdAt: new Date("2025-01-10T10:00:00Z"),
+        votes: [
+          { optionId: "opt-1", type: "yes" },
+          { optionId: "opt-2", type: "no" },
+        ],
+      },
+      {
+        id: "participant-2",
+        name: "Bob",
+        email: null,
+        createdAt: new Date("2025-01-10T11:00:00Z"),
+        votes: [{ optionId: "opt-1", type: "ifNeedBe" }],
+      },
+    ];
+
+    it("should return participants with their votes in the list shape", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
-        participants: [
-          {
-            id: "participant-1",
-            name: "Alice",
-            email: "alice@example.com",
-            createdAt: new Date("2025-01-10T10:00:00Z"),
-          },
-          {
-            id: "participant-2",
-            name: "Bob",
-            email: null,
-            createdAt: new Date("2025-01-10T11:00:00Z"),
-          },
-        ],
+        participants,
+        nextCursor: null,
       });
 
       const res = await app.request("/api/v1/polls/test-poll-id/participants", {
@@ -1854,19 +1986,81 @@ describe("API v1 - /polls", () => {
       const json = await res.json();
       expectMatchesContract(getPollParticipantsSuccessResponseSchema, json);
 
-      expect(json.data.pollId).toBe("test-poll-id");
-      expect(json.data.participants).toHaveLength(2);
+      expect(json.data).toHaveLength(2);
+      expect(json.data[0]).toEqual({
+        id: "participant-1",
+        name: "Alice",
+        email: "alice@example.com",
+        createdAt: "2025-01-10T10:00:00.000Z",
+        votes: [
+          { optionId: "opt-1", type: "yes" },
+          { optionId: "opt-2", type: "no" },
+        ],
+      });
+      expect(json.data[1].email).toBeNull();
+      expect(json.nextCursor).toBeNull();
 
       expect(mockGetPollParticipants).toHaveBeenCalledWith({
         pollId: "test-poll-id",
         spaceId: "test-space-id",
+        cursor: undefined,
+        limit: 50,
       });
+    });
+
+    it("should pass the cursor and limit through and return the next cursor", async () => {
+      mockGetPollParticipants.mockResolvedValue({
+        pollId: "test-poll-id",
+        participants: [participants[1]],
+        nextCursor: "participant-2",
+      });
+
+      const res = await app.request(
+        "/api/v1/polls/test-poll-id/participants?cursor=participant-1&limit=1",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${testApiKey}`,
+          },
+        },
+      );
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(getPollParticipantsSuccessResponseSchema, json);
+      expect(json.data.map((p: { id: string }) => p.id)).toEqual([
+        "participant-2",
+      ]);
+      expect(json.nextCursor).toBe("participant-2");
+
+      expect(mockGetPollParticipants).toHaveBeenCalledWith({
+        pollId: "test-poll-id",
+        spaceId: "test-space-id",
+        cursor: "participant-1",
+        limit: 1,
+      });
+    });
+
+    it("should return 400 when limit is out of range", async () => {
+      const res = await app.request(
+        "/api/v1/polls/test-poll-id/participants?limit=500",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${testApiKey}`,
+          },
+        },
+      );
+
+      await expectErrorEnvelope(res, { status: 400, code: "VALIDATION_ERROR" });
+      expect(mockGetPollParticipants).not.toHaveBeenCalled();
     });
 
     it("should return empty array when no participants", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
         participants: [],
+        nextCursor: null,
       });
 
       const res = await app.request("/api/v1/polls/test-poll-id/participants", {
@@ -1879,8 +2073,8 @@ describe("API v1 - /polls", () => {
       expect(res.status).toBe(200);
       const json = await res.json();
 
-      expect(json.data.pollId).toBe("test-poll-id");
-      expect(json.data.participants).toEqual([]);
+      expect(json.data).toEqual([]);
+      expect(json.nextCursor).toBeNull();
     });
 
     it("should return 404 when poll not found", async () => {
