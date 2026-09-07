@@ -12,6 +12,7 @@
   --radius: 0.625rem;
   --primary: var(--primary-light, var(--color-indigo-600));
   --primary-foreground: var(--primary-light-foreground, var(--color-white));
+  --state-shade: black;
 
   --button-outline: rgba(0, 0, 0, 0.1);
   --menu-item-outline: rgba(0, 0, 0, 0.05);
@@ -69,6 +70,7 @@
 
   --primary: var(--primary-dark, var(--color-indigo-500));
   --primary-foreground: var(--primary-dark-foreground, var(--color-white));
+  --state-shade: white;
 
   --sidebar: var(--color-gray-900);
   --sidebar-foreground: var(--color-gray-100);
@@ -125,6 +127,21 @@
 @theme inline {
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  /*
+   * Interaction states shift the shade of the opaque brand colour (darker on
+   * light, lighter on dark) instead of fading it. Mixed at the element so
+   * nested --primary overrides (white-label, branding preview) pick them up.
+   */
+  --color-primary-hover: color-mix(
+    in oklch,
+    var(--primary),
+    var(--state-shade) 8%
+  );
+  --color-primary-active: color-mix(
+    in oklch,
+    var(--primary),
+    var(--state-shade) 14%
+  );
 
   --color-button-outline: var(--button-outline);
   --color-menu-item-outline: var(--menu-item-outline);
@@ -139,6 +156,16 @@
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-hover: color-mix(
+    in oklch,
+    var(--destructive),
+    var(--state-shade) 8%
+  );
+  --color-destructive-active: color-mix(
+    in oklch,
+    var(--destructive),
+    var(--state-shade) 14%
+  );
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
