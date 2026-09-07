@@ -1082,6 +1082,13 @@ describe("API v1 - /polls", () => {
       }
     });
 
+    it("should serve the spec without a no-store header", async () => {
+      const res = await app.request("/api/v1/openapi");
+
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Cache-Control")).toBeNull();
+    });
+
     it("should not serve a docs page (the reference lives in the docs site)", async () => {
       const res = await app.request("/api/v1/docs");
 
@@ -2067,6 +2074,31 @@ describe("API v1 - /polls", () => {
 
       const json = await limited?.json();
       expect(json.error.code).toBe("RATE_LIMIT_EXCEEDED");
+    });
+  });
+
+  describe("Caching", () => {
+    it("should mark every key-scoped response no-store", async () => {
+      mockGetPollParticipants.mockResolvedValue({
+        pollId: "test-poll-id",
+        participants: [],
+        nextCursor: null,
+      });
+      mockListPolls.mockResolvedValue({ polls: [], nextCursor: null });
+
+      const responses = await Promise.all([
+        app.request("/api/v1/polls/test-poll-id/participants", {
+          headers: { Authorization: `Bearer ${testApiKey}` },
+        }),
+        app.request("/api/v1/polls", {
+          headers: { Authorization: `Bearer ${testApiKey}` },
+        }),
+        app.request("/api/v1/polls/test-poll-id"),
+      ]);
+
+      for (const res of responses) {
+        expect(res.headers.get("Cache-Control")).toBe("no-store");
+      }
     });
   });
 

@@ -133,6 +133,17 @@ function toPollResponseBody(poll: {
 
 app.use("*", wideEvent({ service: "api-v1" }));
 
+// Every response except the public spec is scoped to an API key, so nothing
+// in between may store it.
+app.use("/polls/*", async (c, next) => {
+  await next();
+  c.res.headers.set("Cache-Control", "no-store");
+});
+app.use("/polls", async (c, next) => {
+  await next();
+  c.res.headers.set("Cache-Control", "no-store");
+});
+
 app.use("*", async (c, next) => {
   if (isMaintenanceModeEnabled()) {
     return c.json(
