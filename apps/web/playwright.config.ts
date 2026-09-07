@@ -21,7 +21,7 @@ export default defineConfig({
   use: {
     viewport: { width: 1280, height: 720 },
     baseURL,
-    permissions: ["clipboard-read", "clipboard-write"],
+    permissions: ["clipboard-read"],
     trace: "retain-on-failure",
   },
   testDir: "./tests",

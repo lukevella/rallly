@@ -32,16 +32,15 @@ import { LinkIcon, PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useMount } from "react-use";
+import { useCopyToClipboard, useMount } from "react-use";
 import * as z from "zod";
 
-import { usePoll, useRole } from "@/features/poll/client";
+import { usePoll } from "@/features/poll/client";
 import {
   useDeleteParticipantMutation,
   useEditToken,
 } from "@/features/poll/components/mutations";
 import { Trans, useTranslation } from "@/i18n/client";
-import { copyTextFromPromise } from "@/lib/utils/clipboard";
 import { useFormValidation } from "@/lib/utils/form-validation";
 import { trpc } from "@/trpc/client";
 
@@ -59,6 +58,8 @@ export const ParticipantDropdown = ({
     userId?: string;
     email?: string;
     id: string;
+    // Present only in the host's list; its presence is the gate.
+    editUrl?: string | null;
   };
   align?: "start" | "end";
   onEdit: () => void;
@@ -69,7 +70,6 @@ export const ParticipantDropdown = ({
     React.useState(false);
   const [isDeleteParticipantModalVisible, setIsDeleteParticipantModalVisible] =
     React.useState(false);
-  const role = useRole();
 
   return (
     <>
@@ -101,9 +101,9 @@ export const ParticipantDropdown = ({
             <TagIcon />
             <Trans i18nKey="changeName" defaults="Change name" />
           </DropdownMenuItem>
-          {role === "admin" ? (
+          {participant.editUrl ? (
             <CopyEditLinkMenuItem
-              participantId={participant.id}
+              editUrl={participant.editUrl}
               participantName={participant.name}
             />
           ) : null}
@@ -135,27 +135,33 @@ export const ParticipantDropdown = ({
 };
 
 /**
- * Hosts only: the per response edit link, for handing edit access to someone
- * who responded without an email (or lost the confirmation email). The token
- * never ships with the participant list, so it is fetched on click.
+ * The per response edit link, for handing edit access to someone who
+ * responded without an email (or lost the confirmation email).
  */
 const CopyEditLinkMenuItem = ({
-  participantId,
+  editUrl,
   participantName,
 }: {
-  participantId: string;
+  editUrl: string;
   participantName: string;
 }) => {
   const poll = usePoll();
   const { t } = useTranslation();
-  const utils = trpc.useUtils();
+  const [state, copyToClipboard] = useCopyToClipboard();
 
-  const copyEditLink = async () => {
-    const editUrl = utils.polls.participants.editLink
-      .fetch({ pollId: poll.id, participantId })
-      .then((result) => result.editUrl);
-    try {
-      await copyTextFromPromise(editUrl);
+  // react-use records a failed copy as `error` and a successful one as
+  // `value`; the toast only claims success in the second case.
+  React.useEffect(() => {
+    if (state.error) {
+      console.error(`Unable to copy value: ${state.error.message}`);
+      toast.error(
+        t("participantEditLinkCopyFailed", {
+          defaultValue: "Couldn't copy the edit link. Try again.",
+        }),
+      );
+      return;
+    }
+    if (state.value) {
       toast(
         t("participantEditLinkCopied", {
           defaultValue: "Edit link for {name} copied",
@@ -165,18 +171,11 @@ const CopyEditLinkMenuItem = ({
       posthog?.capture("poll_page:participant_edit_link_copy", {
         poll_id: poll.id,
       });
-    } catch (error) {
-      console.error(`Unable to copy edit link: ${(error as Error).message}`);
-      toast.error(
-        t("participantEditLinkCopyFailed", {
-          defaultValue: "Couldn't copy the edit link. Try again.",
-        }),
-      );
     }
-  };
+  }, [state, participantName, poll.id, t]);
 
   return (
-    <DropdownMenuItem onClick={copyEditLink}>
+    <DropdownMenuItem onClick={() => copyToClipboard(editUrl)}>
       <LinkIcon />
       <Trans i18nKey="copyEditLink" defaults="Copy edit link" />
     </DropdownMenuItem>

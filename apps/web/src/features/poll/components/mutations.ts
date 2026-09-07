@@ -43,7 +43,12 @@ export const useUpdateParticipantMutation = () => {
           );
 
           if (index !== -1) {
-            newParticipants[index] = participant;
+            // The mutation returns the row without the host's edit link;
+            // the token behind it is unchanged, so the link is kept.
+            newParticipants[index] = {
+              ...participant,
+              editUrl: newParticipants[index].editUrl,
+            };
           }
 
           return newParticipants;

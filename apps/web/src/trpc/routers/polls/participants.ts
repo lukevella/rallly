@@ -13,7 +13,6 @@ import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
 import {
-  getParticipantEditToken,
   hasPollAdminAccess,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
@@ -43,7 +42,8 @@ function createParticipantFullDTO(
     votes: { optionId: string; type: VoteType }[];
   },
 ) {
-  // The token is the edit credential: it never leaves the server.
+  // The token is the edit credential: the list hands it back only to the
+  // host, as a ready made edit link.
   const { votes, user, token: _token, ...rest } = participant;
   return {
     ...rest,
@@ -174,12 +174,18 @@ export const participants = router({
 
       // Response notes are visible to the host and their author only: strip
       // them from every other payload rather than hiding them in the UI.
+      // The host also gets each response's edit link, the one its
+      // confirmation email carried, to hand to a respondent who left no
+      // email. Built from the same path so the two can never diverge.
       const participants = rawParticipants.map((participant) => {
         const dto = createParticipantFullDTO(participant);
+        const editUrl = isAdmin
+          ? absoluteUrl(getPollInvitePath({ pollId, token: participant.token }))
+          : null;
         if (isAdmin || isOwn(participant)) {
-          return dto;
+          return { ...dto, editUrl };
         }
-        return { ...dto, note: null };
+        return { ...dto, note: null, editUrl };
       });
 
       // Hide participants if the poll has hideParticipants enabled
@@ -204,37 +210,6 @@ export const participants = router({
       }
 
       return participants;
-    }),
-  /**
-   * The per response edit link, for a host handing edit access to someone
-   * who responded without an email or lost the confirmation email. It is
-   * the link that email carries, built from the same path, so the two can
-   * never diverge. The token is stripped from every list payload; this is
-   * the only read that returns it, and only to the poll's admins.
-   */
-  editLink: publicProcedure
-    .use(requireUserMiddleware)
-    .input(
-      z.object({
-        pollId: z.string(),
-        participantId: z.string(),
-      }),
-    )
-    .query(async ({ ctx, input: { pollId, participantId } }) => {
-      if (!(await hasPollAdminAccess(pollId, ctx.user.id))) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
-      }
-
-      const token = await getParticipantEditToken({ pollId, participantId });
-
-      if (!token) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Participant not found",
-        });
-      }
-
-      return { editUrl: absoluteUrl(getPollInvitePath({ pollId, token })) };
     }),
   delete: publicProcedure
     .input(

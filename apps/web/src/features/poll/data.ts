@@ -462,25 +462,6 @@ export async function getParticipant({
 }
 
 /**
- * The edit token of one response, scoped to its poll. The token is the edit
- * credential and is otherwise stripped from every participant payload, so
- * callers prove poll admin access before reading it.
- */
-export async function getParticipantEditToken({
-  pollId,
-  participantId,
-}: {
-  pollId: string;
-  participantId: string;
-}) {
-  const participant = await prisma.participant.findFirst({
-    where: { id: participantId, pollId },
-    select: { token: true },
-  });
-  return participant?.token ?? null;
-}
-
-/**
  * The responses an emailed link may edit. A response token names exactly one
  * row. A legacy seal names a guest user instead, so it resolves to that
  * user's responses in the poll that carry an email, the only rows such a
