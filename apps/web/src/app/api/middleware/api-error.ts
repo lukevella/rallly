@@ -19,14 +19,9 @@ type ValidationResult =
   | { success: true }
   | { success: false; error: readonly ValidationIssue[] };
 
+// zod emits plain keys; the Standard Schema `{ key }` segment form never occurs.
 const issuePath = (issue: ValidationIssue) =>
-  (issue.path ?? [])
-    .map((segment) =>
-      typeof segment === "object" && segment !== null
-        ? String(segment.key)
-        : String(segment),
-    )
-    .join(".");
+  (issue.path ?? []).map(String).join(".");
 
 /**
  * Hook for every `validator(...)` call. The standard-validator default
