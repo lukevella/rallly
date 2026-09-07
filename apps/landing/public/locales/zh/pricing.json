@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "日程投票",
   "compareSchedulingPollsDescription": "创建投票，找到最佳会面时间",
   "compareUnlimited": "无限",
+  "currency": "货币",
   "customBranding": "自定义品牌",
   "customBrandingDescription": "向参与者展示您的徽标和品牌颜色",
   "duplicatePolls": "复制投票",
@@ -43,11 +44,10 @@
   "pollLimit": "我能创建的投票数量有限制吗？",
   "pollLimitAnswer": "没有。任何套餐都不限制您可以创建的投票数量，也不限制参与投票的人数。在免费套餐中，当投票的所有日期均已过去且连续 30 天没有任何活动时，该投票将被删除；此外，自定义品牌标识和高级投票设置等部分功能仅在付费套餐中提供。完整清单请参阅上方的对比表。",
   "pricingDescription": "无需登录即可开始免费使用。",
-  "pricingFaqDescription": "了解有关我们套餐与计费的所有信息。",
   "pricingFinalCtaDescription": "在一分钟内创建第一个投票。需要更多功能时再升级。",
-  "pricingFinalCtaTitle": "免费试用 Rallly",
+  "pricingFinalCtaTitle": "开始免费使用",
   "pricingSubtitle": "升级到付费计划以获得高级功能",
-  "pricingTitle": "开始免费使用",
+  "pricingTitle": "价格",
   "recommended": "推荐",
   "removeAttribution": "移除署名",
   "removeAttributionBenefitDescription": "向参与者隐藏 \"Powered by Rallly\"",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "当所有日期选项都已过去，且超过 30 天没有任何活动时，投票将变为不活动状态。活动包括新的投票、评论或对投票的更改。如果您没有付费订阅，不活动的投票将被自动删除。",
   "whyUpgrade": "我为什么要升级？",
   "whyUpgradeAnswer2": "如果您经常使用 Rallly 或将其用于工作，升级到付费计划是有意义的。当前的订阅费率是一种特殊的早期支持者费率，未来将会涨价。通过立即升级，您将在发布时获得新的高质量调度工具的早期访问权限，并锁定您的订阅费率，以免受到未来价格上涨的影响。",
-  "yearlyFreeMonths": "{count, plural, other {# 个月免费}}"
+  "yearlySavePercent": "节省 {percent}%"
 }

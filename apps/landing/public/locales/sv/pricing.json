@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Schemaläggning av förfrågningar",
   "compareSchedulingPollsDescription": "Skapa omröstningar för att hitta den bästa tiden att träffas",
   "compareUnlimited": "Obegränsat",
+  "currency": "Valuta",
   "customBranding": "Anpassad branding",
   "customBrandingDescription": "Visa din logotyp och varumärkesfärger för dina deltagare",
   "duplicatePolls": "Duplicera omröstningar",
@@ -43,11 +44,10 @@
   "pollLimit": "Finns det någon gräns för hur många omröstningar jag kan skapa?",
   "pollLimitAnswer": "Nej. Det finns ingen gräns för antalet omröstningar du kan skapa eller antalet personer som kan rösta i dem, i något abonnemang. I det kostnadsfria abonnemanget raderas omröstningar när alla deras datum har passerat och det inte har förekommit någon aktivitet på 30 dagar, och vissa funktioner som egen grafisk profil och avancerade inställningar är bara tillgängliga i ett betalt abonnemang. Se jämförelsetabellen ovan för hela listan.",
   "pricingDescription": "Kom igång gratis. Ingen inloggning krävs.",
-  "pricingFaqDescription": "Allt du behöver veta om våra planer och fakturering.",
   "pricingFinalCtaDescription": "Skapa din första förfrågan på under en minut. Uppgradera när du behöver mer.",
-  "pricingFinalCtaTitle": "Testa Rallly gratis",
+  "pricingFinalCtaTitle": "Kom igång kostnadsfritt",
   "pricingSubtitle": "Uppgradera till en betald plan för att få tillgång till premiumfunktioner",
-  "pricingTitle": "Kom igång kostnadsfritt",
+  "pricingTitle": "Priser",
   "recommended": "Rekommenderat",
   "removeAttribution": "Ta bort kreditering",
   "removeAttributionBenefitDescription": "Dölj \"Powered by Rallly\" för dina deltagare",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "Förfrågningar blir inaktiva när alla datumalternativ ligger i det förflutna OCH det inte har varit någon aktivitet på över 30 dagar. Aktivitet inkluderar nya röster, kommentarer eller ändringar i förfrågan. Inaktiva förfrågningar raderas automatiskt om du inte har en betald prenumeration.",
   "whyUpgrade": "Varför ska jag uppgradera?",
   "whyUpgradeAnswer2": "Att uppgradera till ett abonnemang är vettigt om du använder Rallly ofta eller använder det i arbetet. Den nuvarande abonnemangsavgiften är anpassad för tidiga användare och kommer att öka i framtiden. Genom att uppgradera nu får du tidig tillgång till nya, högkvalitativa schemaläggningsverktyg när de släpps och låser din abonnemanskostnad så att du inte påverkas av framtida prishöjningar.",
-  "yearlyFreeMonths": "{count, plural, one {# månad gratis} other {# månader gratis}}"
+  "yearlySavePercent": "Spara {percent} %"
 }

@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Umfragen zur Terminplanung",
   "compareSchedulingPollsDescription": "Erstellen Sie Umfragen, um den besten Termin für ein Treffen zu finden",
   "compareUnlimited": "Unbegrenzt",
+  "currency": "Währung",
   "customBranding": "Eigenes Branding",
   "customBrandingDescription": "Präsentiere deinen Teilnehmern dein Logo und deine Markenfarben",
   "duplicatePolls": "Umfragen duplizieren",
@@ -43,11 +44,10 @@
   "pollLimit": "Gibt es eine Begrenzung, wie viele Umfragen ich erstellen kann?",
   "pollLimitAnswer": "Nein. Weder die Zahl der Umfragen, die Sie erstellen können, noch die Zahl der Personen, die darüber abstimmen können, ist in einem Tarif begrenzt. Im kostenlosen Tarif werden Umfragen gelöscht, sobald alle ihre Termine verstrichen sind und 30 Tage lang keine Aktivität stattgefunden hat, und einige Funktionen wie individuelles Branding und erweiterte Umfrageeinstellungen sind nur in einem kostenpflichtigen Tarif verfügbar. Die vollständige Liste finden Sie in der Vergleichstabelle oben.",
   "pricingDescription": "Starte kostenlos. Keine Anmeldung erforderlich.",
-  "pricingFaqDescription": "Alles, was du über unsere Pläne und Abrechnung wissen musst.",
   "pricingFinalCtaDescription": "Erstelle deine erste Umfrage in weniger als einer Minute. Steige um, wenn du mehr brauchst.",
-  "pricingFinalCtaTitle": "Rallly kostenlos testen",
+  "pricingFinalCtaTitle": "Starte kostenlos",
   "pricingSubtitle": "Wechsle auf einen kostenpflichtigen Plan, um Zugriff auf Premiumfeatures zu erhalten",
-  "pricingTitle": "Starte kostenlos",
+  "pricingTitle": "Preise",
   "recommended": "Empfohlen",
   "removeAttribution": "\"Powered by Rallly\"-Hinweis entfernen",
   "removeAttributionBenefitDescription": "\"Powered by Rallly\" vor deinen Teilnehmern ausblenden",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen in der Vergangenheit liegen UND seit mehr als 30 Tagen keine Aktivität stattgefunden hat. Aktivität umfasst neue Stimmen, Kommentare oder Änderungen an der Umfrage. Inaktive Umfragen werden automatisch gelöscht, wenn du kein bezahltes Abonnement hast.",
   "whyUpgrade": "Warum sollte ich upgraden?",
   "whyUpgradeAnswer2": "Ein Upgrade auf einen kostenpflichtigen Plan lohnt sich, wenn du Rallly häufig nutzt oder beruflich einsetzt. Der aktuelle Preis ist ein spezieller Frühbucher-Tarif, der in Zukunft steigen wird. Wenn du jetzt ein Upgrade machst, erhältst du frühzeitigen Zugang zu neuen, hochwertigen Planungstools und sicherst dir den aktuellen Preis – zukünftige Preiserhöhungen betreffen dich dann nicht.",
-  "yearlyFreeMonths": "{count, plural, one {# Monat kostenlos} other {# Monate kostenlos}}"
+  "yearlySavePercent": "Spare {percent} %"
 }

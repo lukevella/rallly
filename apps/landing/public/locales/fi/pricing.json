@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Aikataulukyselyt",
   "compareSchedulingPollsDescription": "Luo kyselyitä löytääksesi parhaan tapaamisajan",
   "compareUnlimited": "Rajoittamaton",
+  "currency": "Valuutta",
   "customBranding": "Oma brändäys",
   "customBrandingDescription": "Näytä osallistujillesi logosi ja brändivärit",
   "duplicatePolls": "Kyselyjen kopiointi",
@@ -43,11 +44,10 @@
   "pollLimit": "Onko luotavien kyselyiden määrää rajoitettu?",
   "pollLimitAnswer": "Ei. Missään tilauksessa ei ole rajoitettu luotavien kyselyiden määrää eikä niissä äänestävien henkilöiden määrää. Ilmaisessa tilauksessa kyselyt poistetaan, kun kaikki niiden päivämäärät ovat menneet ja toimintaa ei ole ollut 30 päivään, ja jotkin ominaisuudet, kuten oma ilme ja kyselyiden lisäasetukset, ovat käytettävissä vain maksullisessa tilauksessa. Täydellinen luettelo löytyy yllä olevasta vertailutaulukosta.",
   "pricingDescription": "Aloita ilmaiseksi. Kirjautumista ei tarvita.",
-  "pricingFaqDescription": "Kaikki tietoa suunnitelmista ja laskutuksesta.",
   "pricingFinalCtaDescription": "Luo ensimmäinen kyselysi alle minuutissa. Päivitä, kun tarvitset lisää.",
-  "pricingFinalCtaTitle": "Kokeile Ralllya ilmaiseksi",
+  "pricingFinalCtaTitle": "Aloita ilmaiseksi",
   "pricingSubtitle": "Vaihda maksulliseen sopimukseen saadaksesi lisäominaisuuksia käyttöösi",
-  "pricingTitle": "Aloita ilmaiseksi",
+  "pricingTitle": "Hinnasto",
   "recommended": "Suositeltu",
   "removeAttribution": "Poista tekijämerkintä",
   "removeAttributionBenefitDescription": "Piilota \"Powered by Rallly\" osallistujiltasi",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "Äänestykset muuttuvat ei-aktiivisiksi, kun kaikki päivämäärävaihtoehdot ovat menneet ja kyselyssä ei ole ollut toimintaa yli 30 päivään. Toiminnalla tarkoitetaan uusia ääniä, kommentteja tai muutoksia kyselyyn. Ei-aktiiviset kyselyt poistetaan automaattisesti, jos sinulla ei ole maksullista tilausta.",
   "whyUpgrade": "Miksi minun kannattaa vaihtaa maksulliseen sopimukseen?",
   "whyUpgradeAnswer2": "Maksulliseen sopimukseen vaihtaminen on järkevää, jos käytät Ralllyä usein tai työn yhteydessä. Tällä hetkellä tilausmaksu on erityinen varhaisille tilaajille ja se nousee tulevaisuudessa. Kun vaihdat sopimuksesi nyt, saat varhaisen pääsyn uusiin, laadukkaisiin aikataulutyökaluihin heti kun ne julkaistaan ja lukitset tilausmaksusi, jolloin tulevat hinnankorotukset eivät kosketa sinua.",
-  "yearlyFreeMonths": "{count, plural, one {# kuukausi ilmaiseksi} other {# kuukautta ilmaiseksi}}"
+  "yearlySavePercent": "Säästä {percent} %"
 }

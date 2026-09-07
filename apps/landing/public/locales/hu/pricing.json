@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Ütemező szavazások",
   "compareSchedulingPollsDescription": "Hozzon létre szavazásokat a legjobb találkozási időpont megtalálásához",
   "compareUnlimited": "Korlátlan",
+  "currency": "Pénznem",
   "customBranding": "Egyedi arculat",
   "customBrandingDescription": "Mutasd meg a logódat és az arculatod színeit a résztvevőidnek",
   "duplicatePolls": "Szavazások duplikálása",
@@ -43,11 +44,10 @@
   "pollLimit": "Van korlát arra, hogy hány szavazást hozhatok létre?",
   "pollLimitAnswer": "Nincs. Egyik csomagban sincs korlátozva a létrehozható szavazások száma, sem az, hogy hányan szavazhatnak rájuk. Az ingyenes csomagban a szavazások törlődnek, miután minden időpontjuk elmúlt, és 30 napig nem volt rajtuk aktivitás; egyes funkciók pedig, például az egyedi arculat és a haladó szavazási beállítások, csak a fizetős csomagban érhetők el. A teljes listát a fenti összehasonlító táblázatban találja.",
   "pricingDescription": "Vágj bele ingyen. Bejelentkezés nem szükséges.",
-  "pricingFaqDescription": "Minden, amit tudnod kell a csomagjainkról és számlázásról.",
   "pricingFinalCtaDescription": "Hozd létre az első szavazásod egy pillanat alatt. Bővíts csomagot, amikor szükséged van rá.",
-  "pricingFinalCtaTitle": "Próbáld ki ingyen a Rallly-t",
+  "pricingFinalCtaTitle": "Kezdj hozzá ingyen",
   "pricingSubtitle": "Fizess elő, hogy hozzáférhess a prémium funkciókhoz",
-  "pricingTitle": "Kezdj hozzá ingyen",
+  "pricingTitle": "Árazás",
   "recommended": "Ajánlott",
   "removeAttribution": "Készítő megjelölés törlése",
   "removeAttributionBenefitDescription": "Rejtsd el a \"Működteti a Rallly\" szöveget a résztvevőid elől",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "Szavazások inaktívvá válnak, ha az összes dátum lehetőség múltbéli ÉS több mint 30 napja nem volt aktivitás. Az aktivitás magában foglalja az új szavazatokat, hozzászólásokat vagy a szavazás megváltoztatását. Az inaktív szavazások automatikusan törlődnek, ha nincs fizetős előfizetésed.",
   "whyUpgrade": "Miért fizessek elő?",
   "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések.",
-  "yearlyFreeMonths": "{count, plural, one {# ingyen hónap} other {# ingyen hónap}}"
+  "yearlySavePercent": "{percent}% megtakarítás"
 }

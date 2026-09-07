@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Planlægningsafstemninger ",
   "compareSchedulingPollsDescription": "Opret afstemninger for at finde det bedste tidspunkt at mødes på",
   "compareUnlimited": "Ubegrænset ",
+  "currency": "Valuta",
   "customBranding": "Brugerdefineret branding ",
   "customBrandingDescription": "Vis dit logo og dine brandfarver for dine deltagere ",
   "duplicatePolls": "Dupliker afstemninger",
@@ -43,11 +44,10 @@
   "pollLimit": "Er der en grænse for, hvor mange afstemninger jeg kan oprette?",
   "pollLimitAnswer": "Nej. Der er ingen grænse for antallet af afstemninger, du kan oprette, eller antallet af personer, der kan stemme i dem, på nogen abonnementer. På det gratis abonnement slettes afstemninger, når alle deres datoer er passeret, og der ikke har været aktivitet i 30 dage, og nogle funktioner som tilpasset branding og avancerede indstillinger er kun tilgængelige på et betalt abonnement. Se sammenligningstabellen ovenfor for den fulde liste.",
   "pricingDescription": "Kom i gang gratis. Kræver ikke login.",
-  "pricingFaqDescription": "Alt du skal vide om vores planer og fakturering. ",
   "pricingFinalCtaDescription": "Opret din første afstemning på under et minut. Opgrader, når du har brug for mere. ",
-  "pricingFinalCtaTitle": "Prøv Rallly gratis ",
+  "pricingFinalCtaTitle": "Kom i gang gratis",
   "pricingSubtitle": "Opgrader til et abonnement for at få adgang til premium-funktioner",
-  "pricingTitle": "Kom i gang gratis",
+  "pricingTitle": "Priser",
   "recommended": "Anbefalet ",
   "removeAttribution": "Fjern kreditering",
   "removeAttributionBenefitDescription": "Skjul \"Powered by Rallly\" for dine deltagere ",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "Afstemninger bliver inaktive, når alle dato-muligheder er i fortiden, OG der har ikke været aktivitet i over 30 dage. Aktiviteten omfatter nye stemmer, kommentarer eller ændringer i afstemningen. Inaktive afstemninger slettes automatisk, hvis du ikke har et betalt abonnement.",
   "whyUpgrade": "Hvorfor opgradere?",
   "whyUpgradeAnswer2": "Opgradering til et betalt abonnement giver mening, hvis du bruger Rallly ofte eller bruger det til arbejde. Den nuværende abonnementssats er en særlig pris og vil stige i fremtiden. Ved at opgradere nu får du tidlig adgang til nye planlægningsværktøjer af høj kvalitet, efterhånden som de bliver frigivet, og låser din abonnementspris fast, så du ikke bliver påvirket af fremtidige prisstigninger.",
-  "yearlyFreeMonths": "{count, plural, one {# måned gratis} other {# måneder gratis}}"
+  "yearlySavePercent": "Spar {percent} %"
 }

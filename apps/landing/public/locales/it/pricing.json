@@ -18,6 +18,7 @@
   "compareSchedulingPolls": "Pianificazione dei sondaggi",
   "compareSchedulingPollsDescription": "Crea sondaggi per trovare il momento migliore per incontrarvi",
   "compareUnlimited": "Illimitato",
+  "currency": "Valuta",
   "customBranding": "Marchio personalizzato",
   "customBrandingDescription": "Mostra il tuo logo e i colori del tuo marchio ai tuoi partecipanti",
   "duplicatePolls": "Duplica sondaggi",
@@ -43,11 +44,10 @@
   "pollLimit": "C'è un limite al numero di sondaggi che posso creare?",
   "pollLimitAnswer": "No. Non c'è alcun limite al numero di sondaggi che puoi creare né al numero di persone che possono votarli, in nessun piano. Con il piano gratuito i sondaggi vengono eliminati una volta trascorse tutte le loro date e dopo 30 giorni senza attività, e alcune funzionalità come la personalizzazione del marchio e le impostazioni avanzate sono disponibili solo con un piano a pagamento. Per l'elenco completo consulta la tabella comparativa qui sopra.",
   "pricingDescription": "Inizia gratuitamente. Nessun login richiesto.",
-  "pricingFaqDescription": "Tutto quello che devi sapere sui nostri piani e sulla fatturazione.",
   "pricingFinalCtaDescription": "Crea il tuo primo sondaggio in meno di un minuto. Passa a un piano superiore quando ti serve di più.",
-  "pricingFinalCtaTitle": "Prova Rallly gratis",
+  "pricingFinalCtaTitle": "Inizia gratis",
   "pricingSubtitle": "Passa a un piano a pagamento per accedere alle funzionalità premium",
-  "pricingTitle": "Inizia gratis",
+  "pricingTitle": "Prezzi",
   "recommended": "Consigliato",
   "removeAttribution": "Rimuovi attribuzione",
   "removeAttributionBenefitDescription": "Nascondi \"Powered by Rallly\" ai tuoi partecipanti",
@@ -58,5 +58,5 @@
   "whenPollInactiveAnswer": "I sondaggi diventano inattivi quando tutte le opzioni di data sono nel passato e non ci sono state attività per oltre 30 giorni. Per attività si intendono nuovi voti, commenti o modifiche al sondaggio. I sondaggi inattivi vengono eliminati automaticamente se non hai un abbonamento a pagamento.",
   "whyUpgrade": "Perché dovrei aggiornare?",
   "whyUpgradeAnswer2": "L'aggiornamento a un piano a pagamento ha senso se si utilizza Rallly spesso o per lavoro. Il piano di abbonamento attuale è un piano speciale per i primi utilizzatori e aumenterà in futuro. Aggiornando il piano ora, otterrai accesso anticipato a nuovi strumenti di programmazione di alta qualità appena verranno rilasciati, e bloccherai il prezzo del piano di abbonamento in modo che non subisca eventuali aumenti futuri.",
-  "yearlyFreeMonths": "{count, plural, one {# mese gratis} other {# mesi gratis}}"
+  "yearlySavePercent": "Risparmia il {percent}%"
 }
