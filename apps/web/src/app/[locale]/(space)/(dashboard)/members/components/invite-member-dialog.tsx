@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -213,7 +214,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
                   <Input
                     {...field}
                     placeholder={t("emailPlaceholder")}
-                    data-1p-ignore
+                    {...passwordManagerIgnoreProps}
                   />
                 </FormControl>
                 <FormMessage />

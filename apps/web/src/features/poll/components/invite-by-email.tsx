@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   InputGroup,
@@ -247,6 +248,7 @@ export function InviteByEmail() {
                 type="email"
                 inputMode="email"
                 autoComplete="off"
+                {...passwordManagerIgnoreProps}
                 placeholder="jessie.smith@example.com"
                 disabled={!isOpen}
                 aria-invalid={form.formState.errors.email ? true : undefined}

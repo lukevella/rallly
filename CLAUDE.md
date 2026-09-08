@@ -159,6 +159,9 @@ Always use gitmoji prefixes in commit messages. Follow the gitmoji convention (h
 - **Headings and dialog titles are not exempt.** Title Case has no single agreed rule (Chicago, AP and APA disagree), so it cannot be applied consistently; it degrades screen reader pronunciation and removes word-shape cues used by readers with dyslexia and low vision; and the same string often serves as both a button label and a dialog title, so a position-based rule would force two strings for one concept.
 - **Changing `defaults` alone is not enough.** `pnpm i18n:scan` will not overwrite an existing key's value — the UI keeps rendering the old copy. Run `pnpm --filter @rallly/web i18n:sync` (`--sync-primary`; there is no root script) to push changed English values through. Never run `--sync-all`; it clears other locales' translations.
 
+### Password Managers
+An input that collects something other than the user's own credentials or contact details (someone else's email, a confirmation phrase, a display name) spreads `passwordManagerIgnoreProps` from `@rallly/ui`. `autocomplete="off"` is ignored by every manager; the constant carries each vendor's own opt-out attribute. Never write `data-1p-ignore` or its siblings inline.
+
 ### Permission-Gated UI
 Choose the presentation by **why the user lacks the capability**, never ad hoc per surface:
 - **Role or ownership** (another member could act; the user has no self-serve path) → **hide** the control, nav item, or tile — including inline controls and destructive menu items (per-row: omit inapplicable items; omit the menu when empty). If a whole page exists for the capability, show a read-only view of the current values (general settings pattern) or a denied state naming who can act (billing settings pattern). Deep links get the denied state, never a silent 404.

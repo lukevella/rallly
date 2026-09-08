@@ -1,5 +1,6 @@
 "use client";
 
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -108,7 +109,7 @@ function LeaveSpaceDialog({
                   <FormControl>
                     <Input
                       autoComplete="off"
-                      data-1p-ignore
+                      {...passwordManagerIgnoreProps}
                       placeholder={spaceName}
                       {...field}
                     />

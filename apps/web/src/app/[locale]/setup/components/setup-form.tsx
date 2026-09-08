@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ButtonGroup, ButtonGroupItem } from "@rallly/ui/button-group";
 import {
@@ -196,7 +197,7 @@ export function SetupForm({
                 <Input
                   {...field}
                   autoComplete="name"
-                  data-1p-ignore
+                  {...passwordManagerIgnoreProps}
                   placeholder={t("namePlaceholder", {
                     defaultValue: "Jessie Smith",
                   })}
@@ -313,7 +314,7 @@ export function SetupForm({
                   <FormControl>
                     <Input
                       {...field}
-                      data-1p-ignore
+                      {...passwordManagerIgnoreProps}
                       autoFocus={true}
                       placeholder={t("organizationNamePlaceholder", {
                         defaultValue: "e.g. Acme Corp",

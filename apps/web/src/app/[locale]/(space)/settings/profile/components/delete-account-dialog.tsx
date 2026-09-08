@@ -1,4 +1,5 @@
 "use client";
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -190,7 +191,7 @@ function InstantDeleteAccountDialog({
                   <FormItem>
                     <Input
                       autoComplete="off"
-                      data-1p-ignore
+                      {...passwordManagerIgnoreProps}
                       placeholder={user.email}
                       {...field}
                     />
