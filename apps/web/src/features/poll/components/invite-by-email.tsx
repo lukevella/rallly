@@ -11,6 +11,7 @@ import { toast } from "@rallly/ui/sonner";
 import { MailIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { AnimatedHeight } from "@/components/animated-height";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -278,7 +279,7 @@ export function InviteByEmail() {
             </p>
           ) : null}
 
-          <div className="mt-3">
+          <AnimatedHeight className="mt-3">
             {invitesQuery.isPending ? (
               <div className="mt-2">
                 <InviteeListPreview />
@@ -325,7 +326,7 @@ export function InviteByEmail() {
                 </ul>
               </>
             )}
-          </div>
+          </AnimatedHeight>
         </>
       )}
 
