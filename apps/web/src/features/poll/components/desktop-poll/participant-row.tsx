@@ -29,6 +29,7 @@ export interface ParticipantRowProps {
     name: string;
     userId?: string;
     email?: string;
+    editUrl?: string | null;
     note?: string | null;
     createdAt: Date;
     image?: string | null;

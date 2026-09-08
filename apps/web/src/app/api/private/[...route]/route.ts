@@ -746,6 +746,8 @@ app.get(
           options: data.options.map((option) => ({
             ...option,
             startTime: option.startTime.toISOString(),
+            // The frozen shape omits types that received no votes.
+            votes: option.votes.filter((vote) => vote.count > 0),
           })),
         },
       }),

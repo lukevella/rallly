@@ -12,7 +12,12 @@ test.describe(() => {
   let pollId: string;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+    // A context made here does not inherit the config's permissions, and
+    // the copy tests read the clipboard back.
+    const context = await browser.newContext({
+      permissions: ["clipboard-read"],
+    });
+    page = await context.newPage();
 
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
@@ -73,5 +78,17 @@ test.describe(() => {
     await expect(newPage.getByTestId("participant-menu")).toBeVisible({
       timeout: 10000,
     });
+  });
+
+  // The host copies the same link the confirmation email carried, so a
+  // respondent who left no email can still be handed edit access.
+  test("host copies the participant's edit link", async () => {
+    await page.goto(`/poll/${pollId}`);
+    await page.getByTestId("participant-menu").click();
+    await page.getByRole("menuitem", { name: "Copy edit link" }).click();
+    await expect(page.getByText("Edit link for Anne copied")).toBeVisible();
+    expect(await page.evaluate("navigator.clipboard.readText()")).toBe(
+      editSubmissionUrl,
+    );
   });
 });

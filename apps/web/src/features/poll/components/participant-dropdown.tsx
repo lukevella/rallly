@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -26,13 +27,15 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { PencilIcon, TagIcon, TrashIcon } from "lucide-react";
+import { toast } from "@rallly/ui/sonner";
+import { LinkIcon, PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useMount } from "react-use";
+import { useCopyToClipboard, useMount } from "react-use";
 import * as z from "zod";
 
+import { usePoll } from "@/features/poll/client";
 import {
   useDeleteParticipantMutation,
   useEditToken,
@@ -55,6 +58,8 @@ export const ParticipantDropdown = ({
     userId?: string;
     email?: string;
     id: string;
+    // Present only in the host's list; its presence is the gate.
+    editUrl?: string | null;
   };
   align?: "start" | "end";
   onEdit: () => void;
@@ -96,6 +101,12 @@ export const ParticipantDropdown = ({
             <TagIcon />
             <Trans i18nKey="changeName" defaults="Change name" />
           </DropdownMenuItem>
+          {participant.editUrl ? (
+            <CopyEditLinkMenuItem
+              editUrl={participant.editUrl}
+              participantName={participant.name}
+            />
+          ) : null}
           <DropdownMenuItem
             variant="destructive"
             onClick={() => setIsDeleteParticipantModalVisible(true)}
@@ -120,6 +131,54 @@ export const ParticipantDropdown = ({
         onDelete={onDelete}
       />
     </>
+  );
+};
+
+/**
+ * The per response edit link, for handing edit access to someone who
+ * responded without an email (or lost the confirmation email).
+ */
+const CopyEditLinkMenuItem = ({
+  editUrl,
+  participantName,
+}: {
+  editUrl: string;
+  participantName: string;
+}) => {
+  const poll = usePoll();
+  const { t } = useTranslation();
+  const [state, copyToClipboard] = useCopyToClipboard();
+
+  // react-use records a failed copy as `error` and a successful one as
+  // `value`; the toast only claims success in the second case.
+  React.useEffect(() => {
+    if (state.error) {
+      console.error(`Unable to copy value: ${state.error.message}`);
+      toast.error(
+        t("participantEditLinkCopyFailed", {
+          defaultValue: "Couldn't copy the edit link. Try again.",
+        }),
+      );
+      return;
+    }
+    if (state.value) {
+      toast(
+        t("participantEditLinkCopied", {
+          defaultValue: "Edit link for {name} copied",
+          name: participantName,
+        }),
+      );
+      posthog?.capture("poll_page:participant_edit_link_copy", {
+        poll_id: poll.id,
+      });
+    }
+  }, [state, participantName, poll.id, t]);
+
+  return (
+    <DropdownMenuItem onClick={() => copyToClipboard(editUrl)}>
+      <LinkIcon />
+      <Trans i18nKey="copyEditLink" defaults="Copy edit link" />
+    </DropdownMenuItem>
   );
 };
 
