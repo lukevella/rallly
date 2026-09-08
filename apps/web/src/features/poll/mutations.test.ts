@@ -177,9 +177,16 @@ describe("closePoll", () => {
     expect(mockUpdate).not.toHaveBeenCalled();
   });
 
+  const openPoll = { id: "p1", status: "open", _count: { participants: 2 } };
+  const closedPoll = {
+    id: "p1",
+    status: "closed",
+    _count: { participants: 2 },
+  };
+
   it("closes an open poll with closedReason manual", async () => {
-    mockFindFirst.mockResolvedValue({ id: "p1", status: "open" });
-    mockUpdate.mockResolvedValue({ id: "p1", status: "closed" });
+    mockFindFirst.mockResolvedValue(openPoll);
+    mockUpdate.mockResolvedValue(closedPoll);
 
     const result = await closePoll({ pollId: "p1", spaceId });
 
@@ -189,23 +196,22 @@ describe("closePoll", () => {
         data: { status: "closed", closedReason: "manual" },
       }),
     );
-    expect(result).toEqual({ id: "p1", status: "closed" });
+    expect(result).toEqual({ id: "p1", status: "closed", participantCount: 2 });
   });
 
   it("is idempotent and does not update an already-closed poll", async () => {
-    const closed = { id: "p1", status: "closed" };
-    mockFindFirst.mockResolvedValue(closed);
+    mockFindFirst.mockResolvedValue(closedPoll);
 
     const result = await closePoll({ pollId: "p1", spaceId });
 
     expect(mockUpdate).not.toHaveBeenCalled();
     expect(mockActivityCreateMany).not.toHaveBeenCalled();
-    expect(result).toBe(closed);
+    expect(result).toEqual({ id: "p1", status: "closed", participantCount: 2 });
   });
 
   it("records a poll_closed activity alongside the close", async () => {
-    mockFindFirst.mockResolvedValue({ id: "p1", status: "open" });
-    mockUpdate.mockResolvedValue({ id: "p1", status: "closed" });
+    mockFindFirst.mockResolvedValue(openPoll);
+    mockUpdate.mockResolvedValue(closedPoll);
 
     await closePoll({ pollId: "p1", spaceId, userId: "u1" });
 

@@ -1045,6 +1045,71 @@ describe("API v1 - /polls", () => {
       expect(mockCreatePoll).not.toHaveBeenCalled();
     });
 
+    it.each([
+      {
+        level: "organizer",
+        body: {
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+          organizer: { email: "a@example.com", name: "Ann" },
+        },
+        message: 'organizer: Unrecognized key: "name"',
+      },
+      {
+        level: "slots",
+        body: {
+          title: "Test Poll",
+          slots: {
+            duration: 30,
+            times: ["2025-01-15T09:00:00Z"],
+            timeZone: "Europe/London",
+          },
+        },
+        message: 'slots: Unrecognized key: "timeZone"',
+      },
+      {
+        level: "slot generator",
+        body: {
+          title: "Test Poll",
+          slots: {
+            duration: 30,
+            times: [
+              {
+                startDate: "2025-01-13",
+                endDate: "2025-01-17",
+                days: ["mon"],
+                startTime: "09:00",
+                endTime: "12:00",
+                step: 60,
+              },
+            ],
+          },
+        },
+        // The generator sits in a union with the datetime string, so zod
+        // reports the failing entry rather than the offending key.
+        message: "slots.times.0: Invalid input",
+      },
+    ])("should reject unknown fields nested in the $level object", async ({
+      body,
+      message,
+    }) => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain(message);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
     it("should reject a title longer than the maximum length", async () => {
       const res = await app.request("/api/v1/polls", {
         method: "POST",

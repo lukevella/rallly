@@ -14,7 +14,7 @@ export const timeSchema = z.iso.time().meta({
 });
 
 export const slotGeneratorSchema = z
-  .object({
+  .strictObject({
     startDate: dateSchema,
     endDate: dateSchema,
     days: z.array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])),
@@ -42,7 +42,7 @@ export const slotGeneratorSchema = z
   .meta({ id: "SlotGenerator" });
 
 const slotsInputSchema = z
-  .object({
+  .strictObject({
     duration: z.number().int().min(15).max(1440).meta({
       description: "Duration in minutes for each time slot",
       example: 30,
@@ -114,7 +114,7 @@ export const createPollInputSchema = z
       example: false,
     }),
     organizer: z
-      .object({
+      .strictObject({
         email: z.email().meta({
           description: "Email address of the organizer",
           example: "organizer@example.com",
