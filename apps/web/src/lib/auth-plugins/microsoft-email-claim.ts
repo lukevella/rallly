@@ -24,12 +24,11 @@ export function readMicrosoftEmailClaim(profile: {
   if (!Array.isArray(primary) && !Array.isArray(secondary)) {
     return "absent";
   }
-  const email = profile.email?.toLowerCase();
+  // Exact match, the same comparison better-auth makes when it derives
+  // emailVerified from these claims, so the two readings never disagree.
+  const email = profile.email;
   const verified =
-    !!email &&
-    [...(primary ?? []), ...(secondary ?? [])].some(
-      (candidate) => candidate.toLowerCase() === email,
-    );
+    !!email && [...(primary ?? []), ...(secondary ?? [])].includes(email);
   return verified ? "verified" : "unverified";
 }
 

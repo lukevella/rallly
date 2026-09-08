@@ -14,10 +14,19 @@ describe("readMicrosoftEmailClaim", () => {
   it("is verified when the address is in the primary list", () => {
     expect(
       readMicrosoftEmailClaim({
-        email: "A@Example.com",
+        email: "a@example.com",
         verified_primary_email: ["a@example.com"],
       }),
     ).toBe("verified");
+  });
+
+  it("matches exactly, as better-auth does when it sets emailVerified", () => {
+    expect(
+      readMicrosoftEmailClaim({
+        email: "A@Example.com",
+        verified_primary_email: ["a@example.com"],
+      }),
+    ).toBe("unverified");
   });
 
   it("is verified when the address is only in the secondary list", () => {

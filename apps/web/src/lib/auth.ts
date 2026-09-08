@@ -536,12 +536,14 @@ export const authLib = betterAuth({
           ) {
             return;
           }
+          // better-auth derives emailVerified from the same claims, so an
+          // unverified user here means the claim was absent, declined to
+          // vouch, or never recorded for this sign-in (fail closed).
           const claim = takeMicrosoftEmailClaim(user.email);
-          if (claim === "absent" && !isMultiTenantMicrosoft) {
-            return;
-          }
           if (claim === "absent") {
-            warnMicrosoftClaimMissing();
+            if (isMultiTenantMicrosoft) {
+              warnMicrosoftClaimMissing();
+            }
             return;
           }
           throw new APIError("FORBIDDEN", {
