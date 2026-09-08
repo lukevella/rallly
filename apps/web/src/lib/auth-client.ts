@@ -9,6 +9,7 @@ import {
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import type { Auth } from "@/lib/auth";
+import { clearBrowserQueryCache } from "@/lib/query-client";
 
 export const authClient = createAuthClient({
   baseURL: absoluteUrl("/api/better-auth"),
@@ -21,25 +22,8 @@ export const authClient = createAuthClient({
   ],
 });
 
-const signOutListeners = new Set<() => void>();
-
-/**
- * Runs after the session is revoked. The tRPC provider uses this to drop
- * its query cache: the client outlives a sign-out, and cached responses
- * carry data the next person at this browser must not see (host-only
- * notes, un-hidden participants, response edit links).
- */
-export function onSignOut(listener: () => void) {
-  signOutListeners.add(listener);
-  return () => {
-    signOutListeners.delete(listener);
-  };
-}
-
 export async function signOut() {
   await authClient.signOut();
   posthog?.reset();
-  for (const listener of signOutListeners) {
-    listener();
-  }
+  clearBrowserQueryCache();
 }
