@@ -3,12 +3,13 @@
 import { cacheLife } from "next/cache";
 import { LegalPageLayout } from "@/components/legal-page-layout";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 
 export default async function CookiePolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Cookie policy" lastUpdated="2026-09-03">
+      <LegalPageLayout title="Cookie policy" lastUpdated="2026-09-08">
         <p>
           This Policy explains how we use cookies and other similar technologies
           on our website, and your options to control them.
@@ -44,11 +45,15 @@ export default async function CookiePolicy() {
         <p>
           We use PostHog for product analytics. PostHog does not set cookies and
           does not store anything on your device. Users who are signed in are
-          recognised through their account. Visitors who are not signed in are
-          counted using a hash derived from IP address and browser that changes
-          every day and cannot be used to identify anyone. The data collected
-          includes pages visited, events triggered, and device type. It is
-          stored on PostHog&apos;s servers in the EU and is not used for
+          recognised through their account: their analytics profile is keyed to
+          their account and carries the name and email address on it, so it is
+          identified data rather than anonymous data. Our{" "}
+          <LinkBase href="/privacy-policy">privacy policy</LinkBase> explains
+          why we keep it and when it is erased. Visitors who are not signed in
+          are counted using a hash derived from IP address and browser that
+          changes every day and cannot be used to identify anyone. The data
+          collected includes pages visited, events triggered, and device type.
+          It is stored on PostHog&apos;s servers in the EU and is not used for
           advertising or shared with third parties.
         </p>
 

@@ -25,7 +25,11 @@ import { cache } from "react";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
 import { linkAnonymousUser } from "@/features/auth/mutations";
-import { isEmailBlocked, isTemporaryEmail } from "@/features/auth/utils";
+import {
+  emailDomain,
+  isEmailBlocked,
+  isTemporaryEmail,
+} from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
 import type { UserDTO } from "@/features/user/schema";
 import { jobTitleFieldSchema } from "@/features/user/schema";
@@ -433,14 +437,17 @@ export const authLib = betterAuth({
           }
 
           if (path === "/email-otp/request-email-change") {
-            // Email changes are only available to registered users.
+            // Email changes are only available to registered users. Event
+            // properties are immutable and outlive the person, so only the
+            // domain relationship is recorded here; the address itself lives
+            // on the person profile, which erasure removes.
             track(
               { id: session.user.id, isGuest: false },
               {
                 event: "account_email_change_request",
                 properties: {
-                  fromEmail: session.user.email,
-                  toEmail: newEmail,
+                  domain_changed:
+                    emailDomain(session.user.email) !== emailDomain(newEmail),
                 },
               },
             );
