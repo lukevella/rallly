@@ -81,7 +81,7 @@ const conditionalPlugins: BetterAuthPlugin[] = [
           // Every caller of the OTP send endpoint (combined login/signup
           // page, event RSVP verification) renders the Turnstile widget and
           // sends the token via the x-captcha-response header.
-          endpoints: ["/sign-up/email", "/email-otp/send-verification-otp"],
+          endpoints: ["/email-otp/send-verification-otp"],
         }),
       ]
     : []),
@@ -129,12 +129,11 @@ export const authLib = betterAuth({
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
-    onExistingUserSignUp: async ({ user }, request) => {
-      await authLib.api.sendVerificationOTP({
-        body: { email: user.email, type: "email-verification" },
-        request,
-      });
-    },
+    // Accounts are only ever created through a verified OTP, and a password
+    // can only be set from a signed-in session. Leaving the sign-up endpoint
+    // open would let anyone reserve an address with a password before its
+    // owner first logs in, which the OTP login would then inherit.
+    disableSignUp: true,
     sendResetPassword: async ({ user, url }) => {
       const locale =
         "locale" in user ? (user.locale as string) : await getLocale();
@@ -292,10 +291,6 @@ export const authLib = betterAuth({
     enabled: env.RATE_LIMIT_ENABLED !== "false",
     storage: redis ? "secondary-storage" : "memory",
     customRules: {
-      "/sign-up/email": {
-        window: 60 * 60, // 1 hour
-        max: 50,
-      },
       "/email-otp/send-verification-otp": {
         window: 60 * 60, // 1 hour
         max: 100,
@@ -322,7 +317,6 @@ export const authLib = betterAuth({
     before: createAuthMiddleware(async (ctx) => {
       if (
         ctx.path.startsWith("/sign-in") ||
-        ctx.path.startsWith("/sign-up") ||
         ctx.path.startsWith("/email-otp")
       ) {
         // The email change endpoints submit the address as `newEmail`
