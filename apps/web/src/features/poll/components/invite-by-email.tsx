@@ -15,6 +15,7 @@ import { AnimatedHeight } from "@/components/animated-height";
 import {
   EmptyState,
   EmptyStateDescription,
+  EmptyStateFooter,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
@@ -290,6 +291,30 @@ export function InviteByEmail() {
                 >
                   <Spinner />
                 </output>
+              </div>
+            ) : invitesQuery.isError ? (
+              <div className="relative mt-2">
+                <InviteeListPreview />
+                <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
+                  <EmptyStateIcon>
+                    <MailIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans
+                      i18nKey="shareDialogInvitesLoadFailed"
+                      defaults="Couldn't load invites"
+                    />
+                  </EmptyStateTitle>
+                  <EmptyStateFooter className="mt-3">
+                    <Button
+                      size="sm"
+                      onClick={() => invitesQuery.refetch()}
+                      disabled={invitesQuery.isFetching}
+                    >
+                      <Trans i18nKey="tryAgain" defaults="Try again" />
+                    </Button>
+                  </EmptyStateFooter>
+                </EmptyState>
               </div>
             ) : rows.length === 0 ? (
               <div className="relative mt-2">
