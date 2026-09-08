@@ -12,7 +12,12 @@ test.describe(() => {
   let pollId: string;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+    // A context made here does not inherit the config's permissions, and
+    // the copy tests read the clipboard back.
+    const context = await browser.newContext({
+      permissions: ["clipboard-read"],
+    });
+    page = await context.newPage();
 
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();

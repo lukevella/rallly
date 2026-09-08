@@ -8,10 +8,10 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import superjson from "superjson";
 import { useTranslation } from "@/i18n/client";
-import { signOut } from "@/lib/auth-client";
+import { onSignOut, signOut } from "@/lib/auth-client";
 import { trpc } from "../client";
 import type { AppRouter } from "../routers";
 
@@ -161,6 +161,10 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
       ],
     }),
   );
+  // Sign-out refreshes the router but keeps this provider mounted, so the
+  // previous user's responses would otherwise stay readable from the cache.
+  useEffect(() => onSignOut(() => queryClient.clear()), [queryClient]);
+
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
