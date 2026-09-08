@@ -20,6 +20,7 @@ import {
   attachParticipantToInvite,
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
+import { getPollInvitePath } from "@/features/poll/invite/utils";
 import { generateAccessToken } from "@/features/poll/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
@@ -41,7 +42,8 @@ function createParticipantFullDTO(
     votes: { optionId: string; type: VoteType }[];
   },
 ) {
-  // The token is the edit credential: it never leaves the server.
+  // The token is the edit credential: the list hands it back only to the
+  // host, as a ready made edit link.
   const { votes, user, token: _token, ...rest } = participant;
   return {
     ...rest,
@@ -172,12 +174,18 @@ export const participants = router({
 
       // Response notes are visible to the host and their author only: strip
       // them from every other payload rather than hiding them in the UI.
+      // The host also gets each response's edit link, the one its
+      // confirmation email carried, to hand to a respondent who left no
+      // email. Built from the same path so the two can never diverge.
       const participants = rawParticipants.map((participant) => {
         const dto = createParticipantFullDTO(participant);
+        const editUrl = isAdmin
+          ? absoluteUrl(getPollInvitePath({ pollId, token: participant.token }))
+          : null;
         if (isAdmin || isOwn(participant)) {
-          return dto;
+          return { ...dto, editUrl };
         }
-        return { ...dto, note: null };
+        return { ...dto, note: null, editUrl };
       });
 
       // Hide participants if the poll has hideParticipants enabled

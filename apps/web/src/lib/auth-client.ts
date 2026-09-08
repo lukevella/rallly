@@ -9,6 +9,7 @@ import {
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import type { Auth } from "@/lib/auth";
+import { clearBrowserQueryCache } from "@/lib/query-client";
 
 export const authClient = createAuthClient({
   baseURL: absoluteUrl("/api/better-auth"),
@@ -24,4 +25,5 @@ export const authClient = createAuthClient({
 export async function signOut() {
   await authClient.signOut();
   posthog?.reset();
+  clearBrowserQueryCache();
 }

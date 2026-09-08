@@ -186,6 +186,7 @@ const MobilePoll: React.FunctionComponent = () => {
                   name: selectedParticipant.name,
                   userId: selectedParticipant.userId ?? undefined,
                   email: selectedParticipant.email ?? undefined,
+                  editUrl: selectedParticipant.editUrl,
                   id: selectedParticipant.id,
                 }}
                 onEdit={() => {
