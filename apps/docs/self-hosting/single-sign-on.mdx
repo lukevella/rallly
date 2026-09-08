@@ -45,16 +45,14 @@ After creating the application, set the redirect URI to:
 https://<YOUR_DOMAIN>/api/auth/callback/microsoft-entra-id
 ```
 
-If `MICROSOFT_TENANT_ID` is `common`, `organizations` or `consumers`, Rallly only creates an account when Microsoft marks the address as verified, because on a multi-tenant endpoint any tenant can assert any address. Microsoft does not include that information unless the app registration asks for it. Add the `verified_primary_email` and `verified_secondary_email` optional claims to the ID token: in the app registration open **Manifest** and set:
+If `MICROSOFT_TENANT_ID` is `common`, `organizations` or `consumers`, Rallly only creates an account when Microsoft marks the address as verified, because on a multi-tenant endpoint any tenant can assert any address. Microsoft does not include that information unless the app registration asks for it. Add the `verified_primary_email` and `verified_secondary_email` optional claims to the ID token: in the app registration open **Manifest** and add these two entries to the `optionalClaims.idToken` array, keeping any claims already there:
 
 ```json
-"optionalClaims": {
-  "idToken": [
-    { "name": "verified_primary_email", "source": null, "essential": false, "additionalProperties": [] },
-    { "name": "verified_secondary_email", "source": null, "essential": false, "additionalProperties": [] }
-  ]
-}
+{ "name": "verified_primary_email", "source": null, "essential": false, "additionalProperties": [] },
+{ "name": "verified_secondary_email", "source": null, "essential": false, "additionalProperties": [] }
 ```
+
+If `optionalClaims` is `null`, replace it with `{ "idToken": [ ...the two entries... ] }`.
 
 Existing users are not affected. Without the claims, new Microsoft sign-ins on a multi-tenant endpoint fail with "Your email address is not verified". Single-tenant registrations do not need this.
 </Accordion>

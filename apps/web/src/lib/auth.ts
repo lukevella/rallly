@@ -500,10 +500,13 @@ export const authLib = betterAuth({
         // unverified address there is the admin's call, not a cross-tenant
         // exposure, and Google always asserts email_verified.
         before: async (user, ctx) => {
+          // The redirect callback names the provider in the route; the
+          // ID-token variant of /sign-in/social names it in the body.
+          const provider = ctx?.params?.id ?? ctx?.body?.provider;
           if (
             user.isAnonymous ||
             user.emailVerified ||
-            ctx?.params?.id !== "microsoft" ||
+            provider !== "microsoft" ||
             !isMultiTenantMicrosoft
           ) {
             return;
