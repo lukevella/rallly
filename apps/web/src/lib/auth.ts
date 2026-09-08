@@ -39,6 +39,11 @@ import {
 } from "@/lib/acquisition";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
+import {
+  readMicrosoftEmailClaim,
+  rememberMicrosoftEmailClaim,
+  takeMicrosoftEmailClaim,
+} from "@/lib/auth-plugins/microsoft-email-claim";
 import { redis } from "@/lib/kv";
 import {
   LOCALE_COOKIE_NAME,
@@ -125,6 +130,17 @@ const isMultiTenantMicrosoft = [
   "organizations",
   "consumers",
 ].includes(env.MICROSOFT_TENANT_ID);
+
+let microsoftClaimWarned = false;
+function warnMicrosoftClaimMissing() {
+  if (microsoftClaimWarned) {
+    return;
+  }
+  microsoftClaimWarned = true;
+  logger.warn(
+    "Microsoft sign-in is creating accounts from unverified email addresses because the app registration does not emit the verified_primary_email claim. Add it before the next release, which will refuse these sign-ins: https://support.rallly.co/self-hosting/single-sign-on#microsoft",
+  );
+}
 
 export const authLib = betterAuth({
   appName: env.APP_NAME,
@@ -243,6 +259,15 @@ export const authLib = betterAuth({
             clientId: env.MICROSOFT_CLIENT_ID,
             clientSecret: env.MICROSOFT_CLIENT_SECRET,
             redirectURI: absoluteUrl("/api/auth/callback/microsoft-entra-id"),
+            mapProfileToUser: (profile) => {
+              if (profile.email) {
+                rememberMicrosoftEmailClaim({
+                  email: profile.email,
+                  claim: readMicrosoftEmailClaim(profile),
+                });
+              }
+              return {};
+            },
           }
         : undefined,
   },
@@ -492,13 +517,14 @@ export const authLib = betterAuth({
     user: {
       create: {
         // On a multi-tenant Microsoft endpoint any tenant admin can put any
-        // address on a user, and Microsoft only vouches for it when the app
-        // registration requests the verified_primary_email claim. Provisioning
-        // an unverified address would let the mailbox owner's later OTP login
-        // land in that account while the Microsoft link stays. Single-tenant
-        // Microsoft and OIDC are the instance's own directory, so an
-        // unverified address there is the admin's call, not a cross-tenant
-        // exposure, and Google always asserts email_verified.
+        // address on a user, so an unverified address must not become an
+        // account: the mailbox owner's later OTP login would land in it with
+        // the Microsoft link intact. Microsoft only vouches when the app
+        // registration requests the verified email claims, so their absence
+        // means an unconfigured registration rather than a refusal. That
+        // case is allowed with a warning for now and becomes a rejection in
+        // a later release. Single-tenant Microsoft is the instance's own
+        // directory; OIDC likewise; Google always asserts email_verified.
         before: async (user, ctx) => {
           // The redirect callback names the provider in the route; the
           // ID-token variant of /sign-in/social names it in the body.
@@ -506,9 +532,16 @@ export const authLib = betterAuth({
           if (
             user.isAnonymous ||
             user.emailVerified ||
-            provider !== "microsoft" ||
-            !isMultiTenantMicrosoft
+            provider !== "microsoft"
           ) {
+            return;
+          }
+          const claim = takeMicrosoftEmailClaim(user.email);
+          if (claim === "absent" && !isMultiTenantMicrosoft) {
+            return;
+          }
+          if (claim === "absent") {
+            warnMicrosoftClaimMissing();
             return;
           }
           throw new APIError("FORBIDDEN", {
