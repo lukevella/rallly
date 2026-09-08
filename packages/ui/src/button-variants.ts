@@ -10,15 +10,15 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground ring-1 ring-button-outline ring-inset hover:bg-primary-hover active:scale-[.98] active:bg-primary-active motion-reduce:active:scale-100",
+          "bg-primary text-primary-foreground ring-1 ring-button-outline ring-inset hover:bg-primary-hover not-aria-[haspopup]:active:scale-[.98] active:bg-primary-active motion-reduce:active:scale-100",
         destructive:
-          "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive-hover active:scale-[.98] active:bg-destructive-active motion-reduce:active:scale-100",
+          "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive-hover not-aria-[haspopup]:active:scale-[.98] active:bg-destructive-active motion-reduce:active:scale-100",
         default:
-          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent active:scale-[.98] data-popup-open:bg-accent motion-reduce:active:scale-100 dark:bg-foreground/5",
+          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent not-aria-[haspopup]:active:scale-[.98] data-popup-open:bg-accent motion-reduce:active:scale-100 dark:bg-foreground/5",
         ghost:
-          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent active:scale-[.98] data-popup-open:bg-accent motion-reduce:active:scale-100 [&>svg]:opacity-75",
+          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent not-aria-[haspopup]:active:scale-[.98] data-popup-open:bg-accent motion-reduce:active:scale-100 [&>svg]:opacity-75",
         actionBar:
-          "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 active:scale-[.98] data-popup-open:bg-action-bar-foreground/20 motion-reduce:active:scale-100",
+          "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 not-aria-[haspopup]:active:scale-[.98] data-popup-open:bg-action-bar-foreground/20 motion-reduce:active:scale-100",
         link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
