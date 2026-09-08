@@ -20,6 +20,7 @@ import {
 } from "@/components/empty-state";
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
+import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
@@ -281,8 +282,14 @@ export function InviteByEmail() {
 
           <AnimatedHeight className="mt-3">
             {invitesQuery.isPending ? (
-              <div className="mt-2">
+              <div className="relative mt-2">
                 <InviteeListPreview />
+                <output
+                  aria-label={t("loading", { defaultValue: "Loading..." })}
+                  className="absolute inset-0 grid place-items-center backdrop-blur-[2px]"
+                >
+                  <Spinner />
+                </output>
               </div>
             ) : rows.length === 0 ? (
               <div className="relative mt-2">
