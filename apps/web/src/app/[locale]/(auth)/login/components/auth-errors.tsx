@@ -6,8 +6,12 @@ export function AuthErrors() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const error = searchParams?.get("error");
+  if (!error) {
+    return null;
+  }
   switch (error) {
     case "OAuthAccountNotLinked":
+    case "account_not_linked":
       return (
         <p className="text-destructive text-sm">
           {t("accountNotLinkedDescription", {
@@ -17,6 +21,7 @@ export function AuthErrors() {
         </p>
       );
     case "EmailNotVerified":
+    case "email_not_verified":
       return (
         <p className="text-destructive text-sm">
           {t("authErrorsEmailNotVerified", {
@@ -52,7 +57,9 @@ export function AuthErrors() {
           })}
         </p>
       );
-    case "OAuthSignInFailed":
+    // Better-Auth appends its own code to errorCallbackURL; anything not
+    // mapped above still deserves a message rather than a silent login page.
+    default:
       return (
         <p className="text-destructive text-sm">
           {t("authErrorsOAuthSignInFailed", {
@@ -61,7 +68,5 @@ export function AuthErrors() {
           })}
         </p>
       );
-    default:
-      return null;
   }
 }

@@ -39,6 +39,11 @@ import {
 } from "@/lib/acquisition";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
+import {
+  readMicrosoftEmailClaim,
+  rememberMicrosoftEmailClaim,
+  takeMicrosoftEmailClaim,
+} from "@/lib/auth-plugins/microsoft-email-claim";
 import { redis } from "@/lib/kv";
 import {
   LOCALE_COOKIE_NAME,
@@ -119,6 +124,23 @@ const conditionalPlugins: BetterAuthPlugin[] = [
       ]
     : []),
 ];
+
+const isMultiTenantMicrosoft = [
+  "common",
+  "organizations",
+  "consumers",
+].includes(env.MICROSOFT_TENANT_ID);
+
+let microsoftClaimWarned = false;
+function warnMicrosoftClaimMissing() {
+  if (microsoftClaimWarned) {
+    return;
+  }
+  microsoftClaimWarned = true;
+  logger.warn(
+    "Microsoft sign-in is creating accounts from unverified email addresses because the app registration does not emit the verified_primary_email claim. Add it before the next release, which will refuse these sign-ins: https://support.rallly.co/self-hosting/single-sign-on#microsoft",
+  );
+}
 
 export const authLib = betterAuth({
   appName: env.APP_NAME,
@@ -236,6 +258,15 @@ export const authLib = betterAuth({
             clientId: env.MICROSOFT_CLIENT_ID,
             clientSecret: env.MICROSOFT_CLIENT_SECRET,
             redirectURI: absoluteUrl("/api/auth/callback/microsoft-entra-id"),
+            mapProfileToUser: (profile) => {
+              if (profile.email) {
+                rememberMicrosoftEmailClaim({
+                  email: profile.email,
+                  claim: readMicrosoftEmailClaim(profile),
+                });
+              }
+              return {};
+            },
           }
         : undefined,
   },
@@ -479,6 +510,41 @@ export const authLib = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        // On a multi-tenant Microsoft endpoint any tenant admin can put any
+        // address on a user, so an unverified address must not become an
+        // account: the mailbox owner's later OTP login would land in it with
+        // the Microsoft link intact. Microsoft only vouches when the app
+        // registration requests the verified email claims, so their absence
+        // means an unconfigured registration rather than a refusal. That
+        // case is allowed with a warning for now and becomes a rejection in
+        // a later release. Single-tenant Microsoft is the instance's own
+        // directory; OIDC likewise; Google always asserts email_verified.
+        before: async (user, ctx) => {
+          // The redirect callback names the provider in the route; the
+          // ID-token variant of /sign-in/social names it in the body.
+          const provider = ctx?.params?.id ?? ctx?.body?.provider;
+          if (
+            user.isAnonymous ||
+            user.emailVerified ||
+            provider !== "microsoft"
+          ) {
+            return;
+          }
+          // better-auth derives emailVerified from the same claims, so an
+          // unverified user here means the claim was absent, declined to
+          // vouch, or never recorded for this sign-in (fail closed).
+          const claim = takeMicrosoftEmailClaim(user.email);
+          if (claim === "absent") {
+            if (isMultiTenantMicrosoft) {
+              warnMicrosoftClaimMissing();
+            }
+            return;
+          }
+          throw new APIError("FORBIDDEN", {
+            code: "EMAIL_NOT_VERIFIED",
+            message: "email not verified",
+          });
+        },
         after: async (user, ctx) => {
           if (user.isAnonymous) {
             return;

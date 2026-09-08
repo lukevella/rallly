@@ -17,7 +17,7 @@ export function LoginWithOIDC({
         authClient.signIn.oauth2({
           providerId: "oidc",
           callbackURL: validateRedirectUrl(redirectTo) || "/",
-          errorCallbackURL: "/login?error=OAuthSignInFailed",
+          errorCallbackURL: "/login",
         });
       }}
       className="w-full"
