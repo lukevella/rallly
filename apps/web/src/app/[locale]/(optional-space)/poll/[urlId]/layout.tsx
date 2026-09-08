@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { PollLayout } from "@/features/poll/components/poll-layout";
-import { loadPollInvites } from "@/features/poll/invite/loaders";
 import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
 
 export default async function Layout(
@@ -30,15 +29,14 @@ export default async function Layout(
     redirect(`/invite/${params.urlId}`);
   }
 
-  const [invites] = await Promise.all([
-    loadPollInvites(params.urlId),
+  await Promise.all([
     trpc.polls.participants.list.prefetch({ pollId: params.urlId }),
     trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
 
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
-      <PollLayout invites={invites}>{children}</PollLayout>
+      <PollLayout>{children}</PollLayout>
     </HydrationBoundary>
   );
 }
