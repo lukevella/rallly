@@ -310,7 +310,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 <FormLabel>
                   {t("email")}
                   {!isEmailRequired
-                    ? ` (${t("optional", { defaultValue: "optional" })})`
+                    ? ` ${t("optional", { defaultValue: "(optional)" })}`
                     : null}
                 </FormLabel>
                 <FormControl>
