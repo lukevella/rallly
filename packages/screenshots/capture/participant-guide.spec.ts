@@ -2,6 +2,15 @@ import path from "node:path";
 import { test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// The browser context renders in this zone, so slots are built in it too:
+// the runner's own clock would shift every displayed time.
+const timeZone = "Europe/London";
 
 /**
  * The three screenshots in docs/guide/participant-guide.mdx, taken as a
@@ -17,14 +26,18 @@ const docsImage = (name: string) =>
 test.use({
   viewport: { width: 1182, height: 820 },
   deviceScaleFactor: 2,
-  timezoneId: "Europe/London",
+  timezoneId: timeZone,
 });
 
 test.beforeAll(async () => {
   await prisma.poll.delete({ where: { id: pollId } }).catch(() => {});
 
   // Next month's second week, so the calendar header reads as one month.
-  const base = dayjs().add(1, "month").startOf("month").add(7, "day");
+  const base = dayjs()
+    .tz(timeZone)
+    .add(1, "month")
+    .startOf("month")
+    .add(7, "day");
   const slot = (
     day: number,
     hour: number,
@@ -49,7 +62,7 @@ test.beforeAll(async () => {
       userId: "user-1",
       spaceId: "space-1",
       status: "open",
-      timeZone: "Europe/London",
+      timeZone,
       options: {
         create: [
           slot(0, 13, 0, 60),
