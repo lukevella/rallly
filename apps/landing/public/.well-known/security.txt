@@ -1,0 +1,10 @@
+# Security contact for rallly.co
+# Policy, scope and safe harbor: https://github.com/lukevella/rallly/blob/main/SECURITY.md
+
+Contact: https://github.com/lukevella/rallly/security/advisories/new
+Contact: mailto:support@rallly.co
+Expires: 2027-09-01T00:00:00Z
+Preferred-Languages: en
+Canonical: https://rallly.co/.well-known/security.txt
+Policy: https://github.com/lukevella/rallly/blob/main/SECURITY.md
+Acknowledgments: https://github.com/lukevella/rallly/security/advisories

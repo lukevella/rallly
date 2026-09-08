@@ -56,6 +56,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // RFC 9116 legacy location
+      {
+        source: "/security.txt",
+        destination: "/.well-known/security.txt",
+        permanent: true,
+      },
       {
         source: "/support",
         destination: "https://support.rallly.co",
