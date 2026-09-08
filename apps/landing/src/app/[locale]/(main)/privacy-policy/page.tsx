@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-01">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-08">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -44,6 +44,15 @@ export default async function PrivacyPolicy() {
           stored securely on Posthog&apos;s EU based servers and is used solely
           for the purpose of providing and improving the functionality of the
           website.
+        </p>
+
+        <p>
+          If you have an account, your analytics profile in Posthog is keyed to
+          your account and carries your name and email address. We keep the
+          email address there so that, when you contact us about a problem, we
+          can find your account&apos;s activity and work out what went wrong. It
+          is not written into individual analytics events, is not used for
+          marketing, and is erased from Posthog when you delete your account.
         </p>
 
         <h2>Optional information about your work</h2>
@@ -107,6 +116,15 @@ export default async function PrivacyPolicy() {
           choose to leave as it is. Choosing &quot;Prefer not to say&quot;, or
           leaving a field unanswered, gives no consent and stores nothing. You
           can withdraw consent at any time by asking us to erase the answer.
+        </p>
+
+        <p>
+          We keep your name and email address on your analytics profile on the
+          basis of our legitimate interest in providing support and diagnosing
+          faults: without them we cannot connect a support request to the
+          activity that caused it. You can object to this processing at any time
+          by contacting us at the address below, and we will remove those
+          details from your analytics profile.
         </p>
 
         <h2>Retention of personal data</h2>

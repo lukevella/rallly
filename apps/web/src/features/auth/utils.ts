@@ -67,11 +67,14 @@ export function isEmailBlocked(email: string) {
   return false;
 }
 
+export const emailDomain = (email: string) =>
+  email.split("@")[1]?.toLowerCase() ?? "";
+
 /**
  * Checks if an email domain is a known temporary/disposable email service
  */
 export const isTemporaryEmail = (email: string): boolean => {
-  const domain = email.split("@")[1]?.toLowerCase();
+  const domain = emailDomain(email);
   if (!domain) return false;
 
   return temporaryEmailDomains.includes(domain);
