@@ -120,6 +120,12 @@ const conditionalPlugins: BetterAuthPlugin[] = [
     : []),
 ];
 
+const isMultiTenantMicrosoft = [
+  "common",
+  "organizations",
+  "consumers",
+].includes(env.MICROSOFT_TENANT_ID);
+
 export const authLib = betterAuth({
   appName: env.APP_NAME,
   secret: env.SECRET_PASSWORD,
@@ -485,14 +491,21 @@ export const authLib = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        // Password sign-up is disabled and OTP sign-in verifies first, so an
-        // unverified non-anonymous user can only come from an OAuth provider
-        // that did not vouch for the address. Provisioning that account
-        // would let the mailbox owner's later OTP login land in it while the
-        // provider link stays. Microsoft needs the verified_primary_email
-        // optional claim on its app registration for this to pass.
-        before: async (user) => {
-          if (user.isAnonymous || user.emailVerified) {
+        // On a multi-tenant Microsoft endpoint any tenant admin can put any
+        // address on a user, and Microsoft only vouches for it when the app
+        // registration requests the verified_primary_email claim. Provisioning
+        // an unverified address would let the mailbox owner's later OTP login
+        // land in that account while the Microsoft link stays. Single-tenant
+        // Microsoft and OIDC are the instance's own directory, so an
+        // unverified address there is the admin's call, not a cross-tenant
+        // exposure, and Google always asserts email_verified.
+        before: async (user, ctx) => {
+          if (
+            user.isAnonymous ||
+            user.emailVerified ||
+            ctx?.params?.id !== "microsoft" ||
+            !isMultiTenantMicrosoft
+          ) {
             return;
           }
           throw new APIError("FORBIDDEN", {
