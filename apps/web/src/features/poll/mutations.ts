@@ -25,6 +25,52 @@ export type CreatePollParams = {
   spaceId: AuthorizedSpaceId;
 };
 
+// The shape the API routes serialize; keep it in sync with
+// `getPollWithOptions` in data.ts so create, close and get return one poll.
+const pollResponseSelect = {
+  id: true,
+  title: true,
+  description: true,
+  location: true,
+  timeZone: true,
+  status: true,
+  kind: true,
+  createdAt: true,
+  updatedAt: true,
+  requireParticipantEmail: true,
+  hideParticipants: true,
+  hideScores: true,
+  disableComments: true,
+  user: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+    },
+  },
+  options: {
+    select: {
+      id: true,
+      startTime: true,
+      duration: true,
+    },
+    orderBy: {
+      startTime: "asc",
+    },
+  },
+  _count: {
+    select: {
+      participants: true,
+    },
+  },
+} satisfies Prisma.PollSelect;
+
+const toPollResponse = <T extends { _count: { participants: number } }>({
+  _count,
+  ...poll
+}: T) => ({ ...poll, participantCount: _count.participants });
+
 export const createPoll = async ({
   userId,
   title,
@@ -57,33 +103,7 @@ export const createPoll = async ({
         kind,
         options: { createMany: { data: options } },
       },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        location: true,
-        timeZone: true,
-        status: true,
-        kind: true,
-        createdAt: true,
-        disableComments: true,
-        user: {
-          select: {
-            name: true,
-            image: true,
-          },
-        },
-        options: {
-          select: {
-            id: true,
-            startTime: true,
-            duration: true,
-          },
-          orderBy: {
-            startTime: "asc",
-          },
-        },
-      },
+      select: pollResponseSelect,
     });
 
     await recordPollActivities(tx, [
@@ -98,35 +118,8 @@ export const createPoll = async ({
     return poll;
   });
 
-  return poll;
+  return toPollResponse(poll);
 };
-
-const pollResponseSelect = {
-  id: true,
-  title: true,
-  description: true,
-  location: true,
-  timeZone: true,
-  status: true,
-  kind: true,
-  createdAt: true,
-  user: {
-    select: {
-      name: true,
-      image: true,
-    },
-  },
-  options: {
-    select: {
-      id: true,
-      startTime: true,
-      duration: true,
-    },
-    orderBy: {
-      startTime: "asc",
-    },
-  },
-} satisfies Prisma.PollSelect;
 
 /**
  * Closes a poll manually. Idempotent: closing an already-closed poll returns
@@ -161,7 +154,7 @@ export const closePoll = async ({
     }
 
     if (poll.status === "closed") {
-      return poll;
+      return toPollResponse(poll);
     }
 
     const closedPoll = await tx.poll.update({
@@ -179,7 +172,7 @@ export const closePoll = async ({
       },
     ]);
 
-    return closedPoll;
+    return toPollResponse(closedPoll);
   });
 };
 

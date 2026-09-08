@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { MAX_POLL_TITLE_LENGTH } from "@/features/poll/schema";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
@@ -78,9 +79,16 @@ const datesInputSchema = z
     example: ["2025-01-15", "2025-01-16", "2025-01-17"],
   });
 
+// Strict so a misspelt or unsupported field fails loudly instead of being
+// silently ignored.
 export const createPollInputSchema = z
-  .object({
-    title: z.string().trim().min(1).meta({ example: "Team sync" }),
+  .strictObject({
+    title: z
+      .string()
+      .trim()
+      .min(1)
+      .max(MAX_POLL_TITLE_LENGTH)
+      .meta({ example: "Team sync" }),
     description: z
       .string()
       .trim()
@@ -104,11 +112,6 @@ export const createPollInputSchema = z
       description:
         "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
       example: false,
-    }),
-    spaceId: z.string().optional().meta({
-      description:
-        "ID of the space to create the poll in. Defaults to user's most recently used space.",
-      example: "space_abc123",
     }),
     organizer: z
       .object({
@@ -153,7 +156,7 @@ export const errorResponseSchema = z
 export const deletePollSuccessResponseSchema = z
   .object({
     data: z.object({
-      id: z.string().meta({ example: "p_123abc" }),
+      id: z.string().meta({ example: "Xk3pQ9vLm2Ab" }),
       deleted: z.literal(true).meta({ example: true }),
     }),
   })
@@ -172,7 +175,7 @@ export const pollKindSchema = z.enum(["date", "time"]).meta({
 
 export const dateOptionSchema = z
   .object({
-    id: z.string().meta({ example: "opt_abc123" }),
+    id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
     date: z.iso.date().meta({
       description:
         "Calendar date in YYYY-MM-DD format. All-day options are floating dates with no time component and no timezone.",
@@ -186,7 +189,7 @@ export const dateOptionSchema = z
 
 export const timeOptionSchema = z
   .object({
-    id: z.string().meta({ example: "opt_abc123" }),
+    id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
     startTime: z.iso.datetime().meta({
       description: "Start of the slot as an ISO 8601 instant in UTC.",
       example: "2025-01-15T09:00:00.000Z",
@@ -209,19 +212,21 @@ export const pollOptionSchema = z
       "A poll option. The shape follows the poll's `kind`: a `DateOption` for `date` polls, a `TimeOption` for `time` polls.",
   });
 
-export const pollUserSchema = z
+export const pollOrganizerSchema = z
   .object({
+    id: z.string().meta({ example: "cm3f7d1qa0000t2k9c6b8h4jr" }),
     name: z.string().meta({ example: "John Doe" }),
+    email: z.email().meta({ example: "organizer@example.com" }),
     image: z
       .string()
       .nullable()
       .meta({ example: "https://example.com/avatar.jpg" }),
   })
-  .meta({ id: "PollUser" });
+  .meta({ id: "PollOrganizer" });
 
 const pollSchema = z
   .object({
-    id: z.string().meta({ example: "p_123abc" }),
+    id: z.string().meta({ example: "Xk3pQ9vLm2Ab" }),
     title: z.string().meta({ example: "Team sync" }),
     description: z.string().nullable().meta({
       example: "Pick a time that works for everyone",
@@ -230,15 +235,44 @@ const pollSchema = z
     timezone: z.string().nullable().meta({ example: "Europe/London" }),
     status: pollStatusSchema,
     kind: pollKindSchema,
-    createdAt: z.string().datetime().meta({ example: "2025-01-10T12:00:00Z" }),
-    user: pollUserSchema.nullable().meta({
-      description: "The poll organizer",
+    createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),
+    updatedAt: z.iso.datetime().meta({
+      description:
+        "When the poll was last modified. Changes when the poll's details, settings or status change.",
+      example: "2025-01-12T08:30:00.000Z",
+    }),
+    organizer: pollOrganizerSchema.nullable().meta({
+      description:
+        "The space member the poll belongs to. `null` when the organizer's account no longer exists.",
+    }),
+    requireEmail: z.boolean().meta({
+      description: "Whether participants must provide their email address",
+      example: false,
+    }),
+    hideParticipants: z.boolean().meta({
+      description:
+        "Whether participant names are hidden from other participants",
+      example: false,
+    }),
+    hideScores: z.boolean().meta({
+      description: "Whether vote counts are hidden from participants",
+      example: false,
+    }),
+    disableComments: z.boolean().meta({
+      description: "Whether the comments section is disabled",
+      example: true,
+    }),
+    participantCount: z.int().nonnegative().meta({
+      description: "Number of participants who have responded to the poll",
+      example: 3,
     }),
     options: z.array(pollOptionSchema),
-    adminUrl: z.string().meta({ example: "https://example.com/poll/p_123abc" }),
+    adminUrl: z
+      .string()
+      .meta({ example: "https://example.com/poll/Xk3pQ9vLm2Ab" }),
     inviteUrl: z
       .string()
-      .meta({ example: "https://example.com/invite/p_123abc" }),
+      .meta({ example: "https://example.com/invite/Xk3pQ9vLm2Ab" }),
   })
   .meta({ id: "Poll" });
 
@@ -249,7 +283,7 @@ export const pollResponseSchema = z
   .meta({ id: "PollResponse" });
 
 export const patchPollInputSchema = z
-  .object({
+  .strictObject({
     status: pollStatusSchema.meta({
       description:
         "The status to transition the poll to. Only `closed` is currently accepted; the other statuses are reserved for future transitions.",
@@ -266,7 +300,7 @@ export const listPollsQuerySchema = z.object({
   cursor: z.string().optional().meta({
     description:
       "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page.",
-    example: "p_123abc",
+    example: "Xk3pQ9vLm2Ab",
   }),
   limit: z.coerce.number().int().min(1).max(100).default(20).meta({
     description: "Number of polls to return per page (1-100).",
@@ -274,22 +308,13 @@ export const listPollsQuerySchema = z.object({
   }),
 });
 
-export const listPollItemSchema = pollSchema
-  .extend({
-    participantCount: z.int().nonnegative().meta({
-      description: "Number of participants who have responded to the poll",
-      example: 3,
-    }),
-  })
-  .meta({ id: "ListPollItem" });
-
 export const listPollsSuccessResponseSchema = z
   .object({
-    data: z.array(listPollItemSchema),
+    data: z.array(pollSchema),
     nextCursor: z.string().nullable().meta({
       description:
         "Cursor to fetch the next page. `null` when there are no more results.",
-      example: "p_123abc",
+      example: "Xk3pQ9vLm2Ab",
     }),
   })
   .meta({ id: "ListPollsResponse" });
@@ -357,7 +382,7 @@ export const optionResultSchema = z
 export const getPollResultsSuccessResponseSchema = z
   .object({
     data: z.object({
-      pollId: z.string().meta({ example: "p_123abc" }),
+      pollId: z.string().meta({ example: "Xk3pQ9vLm2Ab" }),
       kind: pollKindSchema,
       status: pollStatusSchema.meta({
         description:
@@ -380,17 +405,17 @@ export const getPollResultsSuccessResponseSchema = z
 
 export const participantVoteSchema = z
   .object({
-    optionId: z.string().meta({ example: "opt_abc123" }),
+    optionId: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
     type: voteTypeSchema,
   })
   .meta({ id: "ParticipantVote" });
 
 export const participantSchema = z
   .object({
-    id: z.string().meta({ example: "participant_abc123" }),
+    id: z.string().meta({ example: "cm5j2r8wb0003q9l4a1x6p0zt" }),
     name: z.string().meta({ example: "Jane Smith" }),
     email: z.string().nullable().meta({ example: "jane@example.com" }),
-    createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00Z" }),
+    createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),
     votes: z.array(participantVoteSchema).meta({
       description:
         "The participant's vote for each option, keyed by `optionId`. An option missing from the list has no recorded vote from this participant.",
@@ -402,7 +427,7 @@ export const listParticipantsQuerySchema = z.object({
   cursor: z.string().optional().meta({
     description:
       "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page.",
-    example: "participant_abc123",
+    example: "cm5j2r8wb0003q9l4a1x6p0zt",
   }),
   limit: z.coerce.number().int().min(1).max(100).default(50).meta({
     description: "Number of participants to return per page (1-100).",
@@ -416,7 +441,7 @@ export const getPollParticipantsSuccessResponseSchema = z
     nextCursor: z.string().nullable().meta({
       description:
         "Cursor to fetch the next page. `null` when there are no more results.",
-      example: "participant_abc123",
+      example: "cm5j2r8wb0003q9l4a1x6p0zt",
     }),
   })
   .meta({ id: "GetPollParticipantsResponse" });

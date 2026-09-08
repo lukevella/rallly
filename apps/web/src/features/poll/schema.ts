@@ -5,6 +5,7 @@ import * as z from "zod";
 // DESCRIPTION around 8192 chars. 8000 sits just under that and covers every
 // existing poll — including long institutional event invites — so no real
 // content is rejected.
+export const MAX_POLL_TITLE_LENGTH = 255;
 export const MAX_POLL_DESCRIPTION_LENGTH = 8000;
 
 // Comment content ships in the new-comment notification email, so it must be

@@ -218,9 +218,16 @@ export async function listPolls({
       status: true,
       kind: true,
       createdAt: true,
+      updatedAt: true,
+      requireParticipantEmail: true,
+      hideParticipants: true,
+      hideScores: true,
+      disableComments: true,
       user: {
         select: {
+          id: true,
           name: true,
+          email: true,
           image: true,
         },
       },
@@ -521,7 +528,7 @@ export async function getPollWithOptions({
   pollId: string;
   spaceId: AuthorizedSpaceId;
 }) {
-  return prisma.poll.findFirst({
+  const poll = await prisma.poll.findFirst({
     where: {
       id: pollId,
       spaceId,
@@ -536,9 +543,16 @@ export async function getPollWithOptions({
       status: true,
       kind: true,
       createdAt: true,
+      updatedAt: true,
+      requireParticipantEmail: true,
+      hideParticipants: true,
+      hideScores: true,
+      disableComments: true,
       user: {
         select: {
+          id: true,
           name: true,
+          email: true,
           image: true,
         },
       },
@@ -552,6 +566,18 @@ export async function getPollWithOptions({
           startTime: "asc",
         },
       },
+      _count: {
+        select: {
+          participants: true,
+        },
+      },
     },
   });
+
+  if (!poll) {
+    return null;
+  }
+
+  const { _count, ...rest } = poll;
+  return { ...rest, participantCount: _count.participants };
 }
