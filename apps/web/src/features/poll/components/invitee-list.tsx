@@ -82,7 +82,7 @@ function InviteeRowMenu({
   const { t } = useTranslation();
   const [state, copyToClipboard] = useCopyToClipboard();
 
-  // The success handler refreshes the route, which is what drops the row.
+  // The success handler refetches the list, which is what drops the row.
   const revoke = useSafeAction(revokePollInviteAction, {
     onSuccess: ({ data }) => {
       if (!data) return;

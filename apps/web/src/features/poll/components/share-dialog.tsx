@@ -18,11 +18,10 @@ import { usePoll } from "@/features/poll/client";
 import { InviteByEmail } from "@/features/poll/components/invite-by-email";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
-import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
 import { useFlash } from "@/lib/flash/client";
 
-export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
+export function ShareDialog() {
   const poll = usePoll();
   const dialog = useDialog();
   const isFree = useIsFree();
@@ -74,7 +73,7 @@ export function ShareDialog({ invites }: { invites: PollInviteListItem[] }) {
           </DialogHeader>
           <InviteLinkRow inviteLink={poll.inviteLink} />
           <Separator />
-          <InviteByEmail invites={invites} />
+          <InviteByEmail />
         </DialogContent>
       </Dialog>
     </>

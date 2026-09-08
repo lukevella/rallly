@@ -16,23 +16,19 @@ import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { ShareDialog } from "@/features/poll/components/share-dialog";
-import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
 
-const AdminControls = ({ invites }: { invites: PollInviteListItem[] }) => {
+const AdminControls = () => {
   return (
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <ShareDialog invites={invites} />
+      <ShareDialog />
     </div>
   );
 };
 
-const Layout = ({
-  children,
-  invites,
-}: React.PropsWithChildren<{ invites: PollInviteListItem[] }>) => {
+const Layout = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
@@ -71,7 +67,7 @@ const Layout = ({
             </Breadcrumb>
           </div>
           <div>
-            <AdminControls invites={invites} />
+            <AdminControls />
           </div>
         </div>
       </div>
@@ -82,10 +78,7 @@ const Layout = ({
   );
 };
 
-export const PollLayout = ({
-  children,
-  invites,
-}: React.PropsWithChildren<{ invites: PollInviteListItem[] }>) => {
+export const PollLayout = ({ children }: React.PropsWithChildren) => {
   const params = useParams();
 
   const urlId = params?.urlId as string;
@@ -97,7 +90,7 @@ export const PollLayout = ({
 
   return (
     <LegacyPollContextProvider>
-      <Layout invites={invites}>{children}</Layout>
+      <Layout>{children}</Layout>
     </LegacyPollContextProvider>
   );
 };

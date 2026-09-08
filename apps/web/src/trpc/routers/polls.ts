@@ -37,6 +37,7 @@ import {
   spaceProcedure,
 } from "../trpc";
 import { comments } from "./polls/comments";
+import { invites } from "./polls/invites";
 import { participants } from "./polls/participants";
 import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
@@ -53,6 +54,7 @@ const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
 export const polls = router({
   participants,
   comments,
+  invites,
   infiniteChronological: spaceProcedure
     .input(
       z.object({

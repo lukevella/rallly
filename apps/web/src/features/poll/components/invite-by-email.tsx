@@ -11,14 +11,17 @@ import { toast } from "@rallly/ui/sonner";
 import { MailIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { AnimatedHeight } from "@/components/animated-height";
 import {
   EmptyState,
   EmptyStateDescription,
+  EmptyStateFooter,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
+import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
@@ -29,10 +32,10 @@ import {
 } from "@/features/poll/components/invitee-list";
 import { sendPollInviteAction } from "@/features/poll/invite/actions";
 import { sendPollInviteSchema } from "@/features/poll/invite/schema";
-import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { trpc } from "@/trpc/client";
 
 type Row = {
   id: string;
@@ -46,17 +49,22 @@ const inviteFormSchema = sendPollInviteSchema.pick({ email: true });
 type InviteFormValues = { email: string };
 
 /**
- * `invites` is server data passed down from the route; the send action's
- * success handler refreshes the route, which is what replaces an optimistic
- * "Sending" row with the real one.
+ * The list is fetched when the dialog mounts rather than with the page: most
+ * page views never open it. The send action's success refetches it, which is
+ * what replaces an optimistic "Sending" row with the real one.
  */
-export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
+export function InviteByEmail() {
   const poll = usePoll();
   const { user } = useUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
 
   const isGuest = !user || user.isGuest;
+  const invitesQuery = trpc.polls.invites.list.useQuery(
+    { pollId: poll.id },
+    { enabled: !isGuest },
+  );
+  const invites = invitesQuery.data ?? [];
   const isOpen = poll.status === "open";
 
   const form = useForm<InviteFormValues>({
@@ -273,8 +281,42 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
             </p>
           ) : null}
 
-          <div className="mt-3">
-            {rows.length === 0 ? (
+          <AnimatedHeight className="mt-3">
+            {invitesQuery.isPending ? (
+              <div className="relative mt-2">
+                <InviteeListPreview />
+                <output
+                  aria-label={t("loading", { defaultValue: "Loading..." })}
+                  className="absolute inset-0 grid place-items-center backdrop-blur-[2px]"
+                >
+                  <Spinner />
+                </output>
+              </div>
+            ) : invitesQuery.isError ? (
+              <div className="relative mt-2">
+                <InviteeListPreview />
+                <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
+                  <EmptyStateIcon>
+                    <MailIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans
+                      i18nKey="shareDialogInvitesLoadFailed"
+                      defaults="Couldn't load invites"
+                    />
+                  </EmptyStateTitle>
+                  <EmptyStateFooter className="mt-3">
+                    <Button
+                      size="sm"
+                      onClick={() => invitesQuery.refetch()}
+                      disabled={invitesQuery.isFetching}
+                    >
+                      <Trans i18nKey="tryAgain" defaults="Try again" />
+                    </Button>
+                  </EmptyStateFooter>
+                </EmptyState>
+              </div>
+            ) : rows.length === 0 ? (
               <div className="relative mt-2">
                 <InviteeListPreview />
                 <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
@@ -316,7 +358,7 @@ export function InviteByEmail({ invites }: { invites: PollInviteListItem[] }) {
                 </ul>
               </>
             )}
-          </div>
+          </AnimatedHeight>
         </>
       )}
 
