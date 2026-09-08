@@ -8,7 +8,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
-import { useState } from "react";
+import React from "react";
 import superjson from "superjson";
 import { useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
@@ -31,7 +31,7 @@ function isAbortError(error: TRPCClientError<AppRouter>) {
 
 export function TRPCProvider(props: { children: React.ReactNode }) {
   const { t } = useTranslation();
-  const [queryClient] = useState(() => {
+  const [queryClient] = React.useState(() => {
     function handleError(error: Error) {
       if (!isTRPCClientError(error)) {
         return;
@@ -156,7 +156,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
     registerBrowserQueryClient(client);
     return client;
   });
-  const [trpcClient] = useState(() =>
+  const [trpcClient] = React.useState(() =>
     trpc.createClient({
       links: [
         httpBatchLink({
