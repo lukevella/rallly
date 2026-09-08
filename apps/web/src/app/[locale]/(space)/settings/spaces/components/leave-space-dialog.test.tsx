@@ -37,6 +37,8 @@ describe("LeaveSpaceDialog", () => {
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute("autoComplete", "off");
     expect(input).toHaveAttribute("data-1p-ignore", "true");
+    expect(input).toHaveAttribute("data-lpignore", "true");
+    expect(input).toHaveAttribute("data-form-type", "other");
   });
 
   it("renders cancel and leave space buttons", () => {

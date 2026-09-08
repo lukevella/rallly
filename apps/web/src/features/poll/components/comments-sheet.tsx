@@ -1,4 +1,5 @@
 "use client";
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -134,7 +135,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
                   <InputGroupInput
                     placeholder={t("yourName")}
                     maxLength={MAX_COMMENT_AUTHOR_NAME_LENGTH}
-                    data-1p-ignore="true"
+                    {...passwordManagerIgnoreProps}
                     aria-invalid={!!formState.errors.authorName}
                     {...field}
                   />

@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -69,7 +70,7 @@ export function CreateSpaceDialog(props: DialogProps) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      data-1p-ignore="true"
+                      {...passwordManagerIgnoreProps}
                       placeholder="e.g. Acme Corp"
                       {...field}
                     />
