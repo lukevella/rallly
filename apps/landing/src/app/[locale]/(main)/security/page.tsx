@@ -354,10 +354,31 @@ export default async function Security(props: {
           production change goes through version control, code review, automated
           tests, and staged deployment with instant rollback.
         </FaqItem>
+        <FaqItem question="Have you had security vulnerabilities?">
+          Yes, and we publish them. Every confirmed report is disclosed as a{" "}
+          <a
+            className="text-primary hover:underline"
+            href="https://github.com/lukevella/rallly/security/advisories"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            GitHub security advisory
+          </a>
+          , with a CVE where one applies, once the fix has shipped. The most
+          serious to date, a login code short enough to brute force
+          (CVE-2025-47781), was reported on 13 May 2025 and fixed on the hosted
+          service the next day. When React2Shell (CVE-2025-55182) was announced
+          in December 2025, the hosted service was patched within hours and a
+          release for self hosted installs followed the next day. A published
+          advisory means a flaw was found and fixed before it was exploited.
+          None has resulted in a data breach.
+        </FaqItem>
         <FaqItem question="What happens if there is a security incident?">
           Monitoring and alerting route directly to the engineering team. If a
           security incident affects your data, we will notify you within 72
           hours of becoming aware of it. Rallly has had no data breaches.
+          Vulnerabilities reported through our disclosure program are listed
+          above and are not the same thing.
         </FaqItem>
         <FaqItem question="Do you support single sign-on?">
           Members can sign in with their Google or Microsoft accounts today.
