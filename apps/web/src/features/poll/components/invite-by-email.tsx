@@ -247,6 +247,7 @@ export function InviteByEmail() {
                 type="email"
                 inputMode="email"
                 autoComplete="off"
+                data-1p-ignore
                 placeholder="jessie.smith@example.com"
                 disabled={!isOpen}
                 aria-invalid={form.formState.errors.email ? true : undefined}
