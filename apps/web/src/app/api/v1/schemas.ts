@@ -163,16 +163,51 @@ export const pollStatusSchema = z
   .enum(["open", "closed", "scheduled", "canceled"])
   .meta({ id: "PollStatus" });
 
-export const pollOptionSchema = z
+export const pollKindSchema = z.enum(["date", "time"]).meta({
+  id: "PollKind",
+  description:
+    "Whether the poll offers calendar dates (`date`) or time slots (`time`). Determines which option shape the poll uses: every option in a `date` poll has a `date`, every option in a `time` poll has a `startTime` and `duration`.",
+  example: "time",
+});
+
+export const dateOptionSchema = z
   .object({
     id: z.string().meta({ example: "opt_abc123" }),
-    startTime: z.iso.datetime().meta({ example: "2025-01-15T09:00:00Z" }),
-    duration: z.number().int().meta({
-      description: "Duration in minutes. 0 indicates an all-day option.",
+    date: z.iso.date().meta({
+      description:
+        "Calendar date in YYYY-MM-DD format. All-day options are floating dates with no time component and no timezone.",
+      example: "2025-01-15",
+    }),
+  })
+  .meta({
+    id: "DateOption",
+    description: "An all-day option. Only present in polls with `kind: date`.",
+  });
+
+export const timeOptionSchema = z
+  .object({
+    id: z.string().meta({ example: "opt_abc123" }),
+    startTime: z.iso.datetime().meta({
+      description: "Start of the slot as an ISO 8601 instant in UTC.",
+      example: "2025-01-15T09:00:00.000Z",
+    }),
+    duration: z.int().positive().meta({
+      description: "Duration in minutes.",
       example: 30,
     }),
   })
-  .meta({ id: "PollOption" });
+  .meta({
+    id: "TimeOption",
+    description: "A time slot. Only present in polls with `kind: time`.",
+  });
+
+export const pollOptionSchema = z
+  .union([dateOptionSchema, timeOptionSchema])
+  .meta({
+    id: "PollOption",
+    description:
+      "A poll option. The shape follows the poll's `kind`: a `DateOption` for `date` polls, a `TimeOption` for `time` polls.",
+  });
 
 export const pollUserSchema = z
   .object({
@@ -194,6 +229,7 @@ const pollSchema = z
     location: z.string().nullable().meta({ example: "Zoom" }),
     timezone: z.string().nullable().meta({ example: "Europe/London" }),
     status: pollStatusSchema,
+    kind: pollKindSchema,
     createdAt: z.string().datetime().meta({ example: "2025-01-10T12:00:00Z" }),
     user: pollUserSchema.nullable().meta({
       description: "The poll organizer",
@@ -258,46 +294,71 @@ export const listPollsSuccessResponseSchema = z
   })
   .meta({ id: "ListPollsResponse" });
 
+// Open enum: the response schema accepts any string so a vote type added
+// later never fails serialization. The built-in set is documented, not enforced.
+export const voteTypeSchema = z.string().meta({
+  id: "VoteType",
+  description:
+    "A participant's answer for an option. The built-in types are `yes` (available), `ifNeedBe` (available if needed) and `no` (unavailable). New types may be added without a version change, so treat unknown values as a vote of an unfamiliar type rather than an error.",
+  example: "yes",
+});
+
 export const voteCountSchema = z
   .object({
-    type: z.string().meta({
-      description: "The vote type (e.g., yes, ifNeedBe, no)",
-      example: "yes",
-    }),
+    type: voteTypeSchema,
     count: z.int().nonnegative().meta({
-      description: "Number of votes of this type",
-      example: 5,
+      description: "Number of participants who gave this answer.",
+      example: 3,
     }),
   })
   .meta({ id: "VoteCount" });
 
+const optionResultFields = {
+  votes: z.array(voteCountSchema).meta({
+    description:
+      "One entry per vote type the poll offers, in display order, always present with `count: 0` when nobody chose it.",
+  }),
+  score: z.int().nonnegative().meta({
+    description:
+      "Opaque ranking value: higher is better. Only comparable between options in the same response. The formula is not part of the contract and may change; do not decode it into vote counts, compare it across polls or threshold on it. Use `votes` for counts.",
+    example: 5004,
+  }),
+  isTopChoice: z.boolean().meta({
+    description:
+      "Whether this option has the highest `score` in the poll. Several options share the flag when they tie. Always `false` when nobody has voted.",
+    example: true,
+  }),
+};
+
+export const dateOptionResultSchema = dateOptionSchema
+  .extend(optionResultFields)
+  .meta({
+    id: "DateOptionResult",
+    description:
+      "Results for an all-day option. Only present in polls with `kind: date`.",
+  });
+
+export const timeOptionResultSchema = timeOptionSchema
+  .extend(optionResultFields)
+  .meta({
+    id: "TimeOptionResult",
+    description:
+      "Results for a time slot. Only present in polls with `kind: time`.",
+  });
+
 export const optionResultSchema = z
-  .object({
-    id: z.string().meta({ example: "opt_abc123" }),
-    startTime: z.iso.datetime().meta({ example: "2025-01-15T09:00:00Z" }),
-    duration: z.int().nonnegative().meta({
-      description: "Duration in minutes. 0 indicates an all-day option.",
-      example: 30,
-    }),
-    votes: z.array(voteCountSchema).meta({
-      description: "Array of vote counts by type",
-    }),
-    score: z.int().nonnegative().meta({
-      description:
-        "Ranking score: (yes + ifNeedBe) * 1000 + yes. Total availability is primary, yes votes break ties.",
-      example: 5004,
-    }),
-    isTopChoice: z.boolean().meta({
-      description: "Whether this option has the highest score",
-      example: true,
-    }),
-  })
-  .meta({ id: "OptionResult" });
+  .union([dateOptionResultSchema, timeOptionResultSchema])
+  .meta({
+    id: "OptionResult",
+    description:
+      "Results for one option. The shape follows the poll's `kind`: a `DateOptionResult` for `date` polls, a `TimeOptionResult` for `time` polls.",
+  });
 
 export const getPollResultsSuccessResponseSchema = z
   .object({
     data: z.object({
       pollId: z.string().meta({ example: "p_123abc" }),
+      kind: pollKindSchema,
       status: pollStatusSchema.meta({
         description:
           "Current poll status. Polls close automatically when all options are in the past.",
@@ -309,12 +370,20 @@ export const getPollResultsSuccessResponseSchema = z
       }),
       options: z.array(optionResultSchema),
       highScore: z.int().nonnegative().meta({
-        description: "Highest score across all options",
-        example: 7,
+        description:
+          "The highest `score` among the options. Opaque like `score`: use it to identify the leading options, not as a measurement.",
+        example: 5004,
       }),
     }),
   })
   .meta({ id: "GetPollResultsResponse" });
+
+export const participantVoteSchema = z
+  .object({
+    optionId: z.string().meta({ example: "opt_abc123" }),
+    type: voteTypeSchema,
+  })
+  .meta({ id: "ParticipantVote" });
 
 export const participantSchema = z
   .object({
@@ -322,14 +391,32 @@ export const participantSchema = z
     name: z.string().meta({ example: "Jane Smith" }),
     email: z.string().nullable().meta({ example: "jane@example.com" }),
     createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00Z" }),
+    votes: z.array(participantVoteSchema).meta({
+      description:
+        "The participant's vote for each option, keyed by `optionId`. An option missing from the list has no recorded vote from this participant.",
+    }),
   })
   .meta({ id: "Participant" });
 
+export const listParticipantsQuerySchema = z.object({
+  cursor: z.string().optional().meta({
+    description:
+      "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page.",
+    example: "participant_abc123",
+  }),
+  limit: z.coerce.number().int().min(1).max(100).default(50).meta({
+    description: "Number of participants to return per page (1-100).",
+    example: 50,
+  }),
+});
+
 export const getPollParticipantsSuccessResponseSchema = z
   .object({
-    data: z.object({
-      pollId: z.string().meta({ example: "p_123abc" }),
-      participants: z.array(participantSchema),
+    data: z.array(participantSchema),
+    nextCursor: z.string().nullable().meta({
+      description:
+        "Cursor to fetch the next page. `null` when there are no more results.",
+      example: "participant_abc123",
     }),
   })
   .meta({ id: "GetPollParticipantsResponse" });

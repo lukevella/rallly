@@ -48,6 +48,7 @@ import {
   errorResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
+  listParticipantsQuerySchema,
   listPollsQuerySchema,
   listPollsSuccessResponseSchema,
   patchPollInputSchema,
@@ -72,6 +73,27 @@ const app = new Hono<Env>().basePath("/api/v1");
 // before, so the frozen /api/private route is unaffected.
 loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
+type PollKind = "date" | "time";
+
+// All-day options are stored as UTC midnight of the calendar date, so the
+// date is the first ten characters of the ISO string.
+function toOptionResponse(
+  kind: PollKind,
+  option: { id: string; startTime: Date; duration: number },
+) {
+  if (kind === "date") {
+    return {
+      id: option.id,
+      date: option.startTime.toISOString().slice(0, 10),
+    };
+  }
+  return {
+    id: option.id,
+    startTime: option.startTime.toISOString(),
+    duration: option.duration,
+  };
+}
+
 function toPollResponseBody(poll: {
   id: string;
   title: string;
@@ -79,6 +101,7 @@ function toPollResponseBody(poll: {
   location: string | null;
   timeZone: string | null;
   status: string;
+  kind: PollKind;
   createdAt: Date;
   user: { name: string; image: string | null } | null;
   options: { id: string; startTime: Date; duration: number }[];
@@ -91,6 +114,7 @@ function toPollResponseBody(poll: {
       location: poll.location,
       timezone: poll.timeZone,
       status: poll.status,
+      kind: poll.kind,
       createdAt: poll.createdAt.toISOString(),
       user: poll.user
         ? {
@@ -98,11 +122,9 @@ function toPollResponseBody(poll: {
             image: poll.user.image,
           }
         : null,
-      options: poll.options.map((option) => ({
-        id: option.id,
-        startTime: option.startTime.toISOString(),
-        duration: option.duration,
-      })),
+      options: poll.options.map((option) =>
+        toOptionResponse(poll.kind, option),
+      ),
       adminUrl: absoluteUrl(`/poll/${poll.id}`),
       inviteUrl: shortUrl(`/invite/${poll.id}`),
     },
@@ -110,6 +132,17 @@ function toPollResponseBody(poll: {
 }
 
 app.use("*", wideEvent({ service: "api-v1" }));
+
+// Every response except the public spec is scoped to an API key, so nothing
+// in between may store it.
+app.use("/polls/*", async (c, next) => {
+  await next();
+  c.res.headers.set("Cache-Control", "no-store");
+});
+app.use("/polls", async (c, next) => {
+  await next();
+  c.res.headers.set("Cache-Control", "no-store");
+});
 
 app.use("*", async (c, next) => {
   if (isMaintenanceModeEnabled()) {
@@ -206,6 +239,18 @@ async function buildOpenApiSpec() {
           "Every response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
           "",
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
+          "",
+          "## Dates and times",
+          "",
+          "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timezone` (or the viewer's) for display. Timestamps such as `createdAt` are always ISO 8601 instants in UTC.",
+          "",
+          "## Enums",
+          "",
+          "Vote types are an open set. The built-in values are `yes`, `ifNeedBe` and `no`; new types may be added without a version change, so clients must tolerate values they do not recognise. `status` and `kind` are closed sets.",
+          "",
+          "## Lists",
+          "",
+          "Every list endpoint returns the items in `data` and a `nextCursor` beside it. Pass `nextCursor` as the `cursor` query parameter to fetch the next page; it is `null` on the last page.",
           "",
           "## Errors",
           "",
@@ -700,8 +745,11 @@ app.get(
   describeRoute({
     tags: ["Polls"],
     summary: "Get poll results",
-    description:
-      "Retrieves aggregated voting results for a poll. Returns vote counts per option without individual participant data.",
+    description: [
+      "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` for per-person availability.",
+      "",
+      "`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
+    ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
@@ -744,11 +792,17 @@ app.get(
     return c.json(
       getPollResultsSuccessResponseSchema.parse({
         data: {
-          ...data,
+          pollId: data.pollId,
+          kind: data.kind,
+          status: data.status,
+          participantCount: data.participantCount,
           options: data.options.map((option) => ({
-            ...option,
-            startTime: option.startTime.toISOString(),
+            ...toOptionResponse(data.kind, option),
+            votes: option.votes,
+            score: option.score,
+            isTopChoice: option.isTopChoice,
           })),
+          highScore: data.highScore,
         },
       }),
     );
@@ -761,9 +815,12 @@ app.get(
   rateLimit,
   describeRoute({
     tags: ["Polls"],
-    summary: "Get poll participants",
-    description:
-      "Retrieves all participants and their votes for a poll. The poll must belong to the space associated with the API key.",
+    summary: "List poll participants",
+    description: [
+      "Lists the participants of a poll with their votes, oldest response first. The poll must belong to the space associated with the API key.",
+      "",
+      "Each participant's `votes` pairs an `optionId` from the poll with the answer they gave, so this is the endpoint for per-person availability. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+    ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
@@ -771,6 +828,14 @@ app.get(
         content: {
           "application/json": {
             schema: resolver(getPollParticipantsSuccessResponseSchema),
+          },
+        },
+      },
+      400: {
+        description: "Invalid query parameters",
+        content: {
+          "application/json": {
+            schema: resolver(errorResponseSchema),
           },
         },
       },
@@ -787,11 +852,13 @@ app.get(
       },
     },
   }),
+  validator("query", listParticipantsQuerySchema, validationHook),
   async (c) => {
     const { pollId } = c.req.param();
+    const { cursor, limit } = c.req.valid("query");
     const { spaceId } = c.get("apiAuth");
 
-    const data = await getPollParticipants({ pollId, spaceId });
+    const data = await getPollParticipants({ pollId, spaceId, cursor, limit });
 
     if (!data) {
       return c.json(
@@ -805,13 +872,14 @@ app.get(
 
     return c.json(
       getPollParticipantsSuccessResponseSchema.parse({
-        data: {
-          pollId: data.pollId,
-          participants: data.participants.map((participant) => ({
-            ...participant,
-            createdAt: participant.createdAt.toISOString(),
-          })),
-        },
+        data: data.participants.map((participant) => ({
+          id: participant.id,
+          name: participant.name,
+          email: participant.email,
+          createdAt: participant.createdAt.toISOString(),
+          votes: participant.votes,
+        })),
+        nextCursor: data.nextCursor,
       }),
     );
   },
