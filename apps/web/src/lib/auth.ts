@@ -485,6 +485,21 @@ export const authLib = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        // Password sign-up is disabled and OTP sign-in verifies first, so an
+        // unverified non-anonymous user can only come from an OAuth provider
+        // that did not vouch for the address. Provisioning that account
+        // would let the mailbox owner's later OTP login land in it while the
+        // provider link stays. Microsoft needs the verified_primary_email
+        // optional claim on its app registration for this to pass.
+        before: async (user) => {
+          if (user.isAnonymous || user.emailVerified) {
+            return;
+          }
+          throw new APIError("FORBIDDEN", {
+            code: "EMAIL_NOT_VERIFIED",
+            message: "email not verified",
+          });
+        },
         after: async (user, ctx) => {
           if (user.isAnonymous) {
             return;

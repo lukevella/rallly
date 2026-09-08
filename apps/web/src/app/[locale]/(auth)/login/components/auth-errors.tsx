@@ -8,6 +8,7 @@ export function AuthErrors() {
   const error = searchParams?.get("error");
   switch (error) {
     case "OAuthAccountNotLinked":
+    case "account_not_linked":
       return (
         <p className="text-destructive text-sm">
           {t("accountNotLinkedDescription", {
@@ -17,6 +18,7 @@ export function AuthErrors() {
         </p>
       );
     case "EmailNotVerified":
+    case "email_not_verified":
       return (
         <p className="text-destructive text-sm">
           {t("authErrorsEmailNotVerified", {

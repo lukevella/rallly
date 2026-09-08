@@ -39,6 +39,7 @@ export function SSOProvider({
         authClient.signIn.social({
           provider: providerId,
           callbackURL: validateRedirectUrl(redirectTo) || "/",
+          errorCallbackURL: "/login",
         });
       }}
     >
