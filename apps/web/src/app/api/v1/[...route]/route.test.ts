@@ -77,6 +77,7 @@ vi.mock("@/lib/posthog", () => ({
 import { logger } from "@rallly/logger";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import { MAX_POLL_TITLE_LENGTH } from "@/features/poll/schema";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { redis } from "@/lib/kv";
 import type { FakeRedis } from "../../middleware/fake-redis";
@@ -169,8 +170,16 @@ describe("API v1 - /polls", () => {
       status: "open",
       kind: "date",
       createdAt: new Date("2025-01-10T12:00:00Z"),
+      updatedAt: new Date("2025-01-10T12:00:00Z"),
+      requireParticipantEmail: false,
+      hideParticipants: false,
+      hideScores: false,
+      disableComments: true,
+      participantCount: 0,
       user: {
+        id: "test-user-id",
         name: "Test User",
+        email: "test@example.com",
         image: null,
       },
       options: [],
@@ -317,7 +326,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
     });
   });
 
@@ -424,7 +433,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       await flushAfterCallbacks();
 
       expect(prisma.spaceApiKey.update).toHaveBeenCalledWith({
@@ -457,7 +466,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       await flushAfterCallbacks();
 
       expect(prisma.spaceApiKey.update).toHaveBeenCalledWith({
@@ -481,7 +490,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       const json = await res.json();
       expectMatchesContract(pollResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
@@ -511,6 +520,76 @@ describe("API v1 - /polls", () => {
       );
     });
 
+    it("should respond 201 with the settings, organizer and participantCount round-tripped", async () => {
+      mockCreatePoll.mockResolvedValueOnce({
+        id: "test-poll-id",
+        title: "Team offsite",
+        description: null,
+        location: null,
+        timeZone: null,
+        status: "open",
+        kind: "date",
+        createdAt: new Date("2025-01-10T12:00:00Z"),
+        updatedAt: new Date("2025-01-10T12:00:00Z"),
+        requireParticipantEmail: true,
+        hideParticipants: true,
+        hideScores: true,
+        disableComments: false,
+        participantCount: 0,
+        user: {
+          id: "test-user-id",
+          name: "Test User",
+          email: "test@example.com",
+          image: null,
+        },
+        options: [],
+      });
+
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team offsite",
+          dates: ["2025-01-15"],
+          requireEmail: true,
+          hideParticipants: true,
+          hideScores: true,
+          disableComments: false,
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      const json = await res.json();
+      expectMatchesContract(pollResponseSchema, json);
+      expect(json.data).toMatchObject({
+        requireEmail: true,
+        hideParticipants: true,
+        hideScores: true,
+        disableComments: false,
+        participantCount: 0,
+        updatedAt: "2025-01-10T12:00:00.000Z",
+        organizer: {
+          id: "test-user-id",
+          name: "Test User",
+          email: "test@example.com",
+          image: null,
+        },
+      });
+      expect(json).not.toHaveProperty("data.user");
+
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          requireParticipantEmail: true,
+          hideParticipants: true,
+          hideScores: true,
+          disableComments: false,
+        }),
+      );
+    });
+
     it("should track poll creation with source api and kind date", async () => {
       const res = await app.request("/api/v1/polls", {
         method: "POST",
@@ -524,7 +603,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(mockTrack).toHaveBeenCalledWith(
         { id: "test-user-id", isGuest: false },
         expect.objectContaining({
@@ -559,7 +638,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(mockCreatePoll).toHaveBeenCalledWith(
         expect.objectContaining({
           title: "Team offsite",
@@ -629,7 +708,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       const json = await res.json();
       expectMatchesContract(pollResponseSchema, json);
       expect(json.data.id).toBe("test-poll-id");
@@ -652,7 +731,18 @@ describe("API v1 - /polls", () => {
         status: "open",
         kind: "time",
         createdAt: new Date("2025-01-10T12:00:00Z"),
-        user: { name: "Test User", image: null },
+        updatedAt: new Date("2025-01-10T12:00:00Z"),
+        requireParticipantEmail: false,
+        hideParticipants: false,
+        hideScores: false,
+        disableComments: true,
+        participantCount: 0,
+        user: {
+          id: "test-user-id",
+          name: "Test User",
+          email: "test@example.com",
+          image: null,
+        },
         options: [
           {
             id: "opt-1",
@@ -678,7 +768,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(mockTrack).toHaveBeenCalledWith(
         { id: "test-user-id", isGuest: false },
         expect.objectContaining({
@@ -712,7 +802,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(mockCreatePoll).toHaveBeenCalledWith(
         expect.objectContaining({
           timeZone: undefined,
@@ -765,7 +855,7 @@ describe("API v1 - /polls", () => {
         }),
       });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(mockCreatePoll).toHaveBeenCalled();
     });
 
@@ -933,6 +1023,130 @@ describe("API v1 - /polls", () => {
       expect(res.status).toBe(400);
     });
 
+    it("should reject unknown fields such as spaceId instead of ignoring them", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+          spaceId: "some-other-space",
+        }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("spaceId");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      {
+        level: "organizer",
+        body: {
+          title: "Test Poll",
+          dates: ["2025-01-15"],
+          organizer: { email: "a@example.com", name: "Ann" },
+        },
+        message: 'organizer: Unrecognized key: "name"',
+      },
+      {
+        level: "slots",
+        body: {
+          title: "Test Poll",
+          slots: {
+            duration: 30,
+            times: ["2025-01-15T09:00:00Z"],
+            timeZone: "Europe/London",
+          },
+        },
+        message: 'slots: Unrecognized key: "timeZone"',
+      },
+      {
+        level: "slot generator",
+        body: {
+          title: "Test Poll",
+          slots: {
+            duration: 30,
+            times: [
+              {
+                startDate: "2025-01-13",
+                endDate: "2025-01-17",
+                days: ["mon"],
+                startTime: "09:00",
+                endTime: "12:00",
+                step: 60,
+              },
+            ],
+          },
+        },
+        // The generator sits in a union with the datetime string, so zod
+        // reports the failing entry rather than the offending key.
+        message: "slots.times.0: Invalid input",
+      },
+    ])("should reject unknown fields nested in the $level object", async ({
+      body,
+      message,
+    }) => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain(message);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("should reject a title longer than the maximum length", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "x".repeat(MAX_POLL_TITLE_LENGTH + 1),
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toMatch(/^title: /);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("should accept a title at the maximum length", async () => {
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "x".repeat(MAX_POLL_TITLE_LENGTH),
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+    });
+
     it("should return error when dates array is empty", async () => {
       const res = await app.request("/api/v1/polls", {
         method: "POST",
@@ -1082,6 +1296,66 @@ describe("API v1 - /polls", () => {
       }
     });
 
+    it("should document 201 for create, strict inputs and realistic ID examples", async () => {
+      const res = await app.request("/api/v1/openapi");
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      const schemas = json.components.schemas;
+      const createResponses = json.paths["/api/v1/polls"].post.responses;
+
+      expect(createResponses["201"]).toBeDefined();
+      expect(createResponses["200"]).toBeUndefined();
+
+      expect(schemas.CreatePollInput.additionalProperties).toBe(false);
+      expect(schemas.CreatePollInput.properties.spaceId).toBeUndefined();
+      expect(schemas.CreatePollInput.properties.title.maxLength).toBe(
+        MAX_POLL_TITLE_LENGTH,
+      );
+      expect(schemas.PatchPollInput.additionalProperties).toBe(false);
+
+      // Input and output use the same setting names and organizer field.
+      for (const key of [
+        "requireEmail",
+        "hideParticipants",
+        "hideScores",
+        "disableComments",
+      ]) {
+        expect(schemas.CreatePollInput.properties[key]).toBeDefined();
+        expect(schemas.Poll.properties[key]).toBeDefined();
+      }
+      expect(schemas.Poll.properties.user).toBeUndefined();
+      expect(schemas.Poll.properties.organizer).toMatchObject({
+        anyOf: expect.arrayContaining([
+          { $ref: "#/components/schemas/PollOrganizer" },
+        ]),
+      });
+      expect(schemas.PollOrganizer.properties.email).toBeDefined();
+      expect(schemas.Poll.properties.participantCount).toBeDefined();
+      expect(schemas.Poll.properties.updatedAt.format).toBe("date-time");
+      expect(schemas.ListPollItem).toBeUndefined();
+      expect(schemas.ListPollsResponse.properties.data.items).toEqual({
+        $ref: "#/components/schemas/Poll",
+      });
+
+      // Real IDs carry no prefix: polls are 12-char nanoids, everything else a cuid.
+      const nanoidExample = /^[0-9A-Za-z]{12}$/;
+      const cuidExample = /^c[a-z0-9]{24}$/;
+      expect(schemas.Poll.properties.id.example).toMatch(nanoidExample);
+      expect(
+        schemas.DeletePollResponse.properties.data.properties.id.example,
+      ).toMatch(nanoidExample);
+      expect(schemas.TimeOption.properties.id.example).toMatch(cuidExample);
+      expect(schemas.DateOption.properties.id.example).toMatch(cuidExample);
+      expect(schemas.Participant.properties.id.example).toMatch(cuidExample);
+      expect(schemas.ParticipantVote.properties.optionId.example).toMatch(
+        cuidExample,
+      );
+      expect(JSON.stringify(json)).not.toMatch(
+        /p_123abc|opt_abc123|participant_abc123|space_abc123/,
+      );
+    });
+
     it("should serve the spec without a no-store header", async () => {
       const res = await app.request("/api/v1/openapi");
 
@@ -1106,7 +1380,18 @@ describe("API v1 - /polls", () => {
       status: "closed",
       kind: "date",
       createdAt: new Date("2025-01-10T12:00:00Z"),
-      user: { name: "Test User", image: null },
+      updatedAt: new Date("2025-01-10T12:00:00Z"),
+      requireParticipantEmail: false,
+      hideParticipants: false,
+      hideScores: false,
+      disableComments: true,
+      participantCount: 4,
+      user: {
+        id: "test-user-id",
+        name: "Test User",
+        email: "test@example.com",
+        image: null,
+      },
       options: [],
     };
 
@@ -1186,6 +1471,24 @@ describe("API v1 - /polls", () => {
       expect(res.status).toBe(422);
       const json = await res.json();
       expect(json.error.code).toBe("TRANSITION_NOT_AVAILABLE");
+      expect(mockClosePoll).not.toHaveBeenCalled();
+    });
+
+    it("should reject unknown fields in the patch body", async () => {
+      const res = await app.request("/api/v1/polls/test-poll-id", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "closed", title: "Renamed" }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("title");
       expect(mockClosePoll).not.toHaveBeenCalled();
     });
 
@@ -1304,8 +1607,16 @@ describe("API v1 - /polls", () => {
       status: "open",
       kind: "time",
       createdAt: new Date("2025-01-10T12:00:00Z"),
+      updatedAt: new Date("2025-01-12T08:30:00Z"),
+      requireParticipantEmail: true,
+      hideParticipants: false,
+      hideScores: true,
+      disableComments: false,
+      participantCount: 5,
       user: {
+        id: "user-1",
         name: "John Doe",
+        email: "john@example.com",
         image: "https://example.com/avatar.jpg",
       },
       options: [
@@ -1343,10 +1654,19 @@ describe("API v1 - /polls", () => {
       expect(json.data.status).toBe("open");
       expect(json.data.kind).toBe("time");
       expect(json.data.createdAt).toBe("2025-01-10T12:00:00.000Z");
-      expect(json.data.user).toEqual({
+      expect(json.data.updatedAt).toBe("2025-01-12T08:30:00.000Z");
+      expect(json.data.organizer).toEqual({
+        id: "user-1",
         name: "John Doe",
+        email: "john@example.com",
         image: "https://example.com/avatar.jpg",
       });
+      expect(json).not.toHaveProperty("data.user");
+      expect(json.data.participantCount).toBe(5);
+      expect(json.data.requireEmail).toBe(true);
+      expect(json.data.hideParticipants).toBe(false);
+      expect(json.data.hideScores).toBe(true);
+      expect(json.data.disableComments).toBe(false);
       expect(json.data.options).toHaveLength(2);
       expect(json.data.options[0]).toEqual({
         id: "opt-1",
@@ -1400,7 +1720,7 @@ describe("API v1 - /polls", () => {
       ]);
     });
 
-    it("should return poll without user when user is null", async () => {
+    it("should return a null organizer when the organizer account is gone", async () => {
       mockGetPollWithOptions.mockResolvedValue({
         ...mockPoll,
         user: null,
@@ -1415,7 +1735,7 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(200);
       const json = await res.json();
-      expect(json.data.user).toBeNull();
+      expect(json.data.organizer).toBeNull();
     });
 
     it("should return 404 when poll not found", async () => {
@@ -1467,8 +1787,15 @@ describe("API v1 - /polls", () => {
       status: "open",
       kind: "time",
       createdAt: new Date("2025-01-10T12:00:00Z"),
+      updatedAt: new Date("2025-01-10T12:00:00Z"),
+      requireParticipantEmail: false,
+      hideParticipants: false,
+      hideScores: false,
+      disableComments: true,
       user: {
+        id: "user-1",
         name: "John Doe",
+        email: "john@example.com",
         image: null,
       },
       options: [
@@ -1503,6 +1830,8 @@ describe("API v1 - /polls", () => {
       expect(json.data[0].title).toBe("Team sync");
       expect(json.data[0].status).toBe("open");
       expect(json.data[0].participantCount).toBe(3);
+      expect(json.data[0].updatedAt).toBe("2025-01-10T12:00:00.000Z");
+      expect(json.data[0].organizer.email).toBe("john@example.com");
       expect(json.data[0].kind).toBe("time");
       expect(json.data[0].createdAt).toBe("2025-01-10T12:00:00.000Z");
       expect(json.data[0].options).toEqual([

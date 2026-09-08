@@ -103,7 +103,18 @@ function toPollResponseBody(poll: {
   status: string;
   kind: PollKind;
   createdAt: Date;
-  user: { name: string; image: string | null } | null;
+  updatedAt: Date;
+  requireParticipantEmail: boolean;
+  hideParticipants: boolean;
+  hideScores: boolean;
+  disableComments: boolean;
+  participantCount: number;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image: string | null;
+  } | null;
   options: { id: string; startTime: Date; duration: number }[];
 }) {
   return {
@@ -116,12 +127,20 @@ function toPollResponseBody(poll: {
       status: poll.status,
       kind: poll.kind,
       createdAt: poll.createdAt.toISOString(),
-      user: poll.user
+      updatedAt: poll.updatedAt.toISOString(),
+      organizer: poll.user
         ? {
+            id: poll.user.id,
             name: poll.user.name,
+            email: poll.user.email,
             image: poll.user.image,
           }
         : null,
+      requireEmail: poll.requireParticipantEmail,
+      hideParticipants: poll.hideParticipants,
+      hideScores: poll.hideScores,
+      disableComments: poll.disableComments,
+      participantCount: poll.participantCount,
       options: poll.options.map((option) =>
         toOptionResponse(poll.kind, option),
       ),
@@ -242,7 +261,11 @@ async function buildOpenApiSpec() {
           "",
           "## Dates and times",
           "",
-          "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timezone` (or the viewer's) for display. Timestamps such as `createdAt` are always ISO 8601 instants in UTC.",
+          "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timezone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.",
+          "",
+          "## Request bodies",
+          "",
+          "Request bodies are validated strictly: a field that is not part of the documented schema is rejected with `VALIDATION_ERROR` rather than ignored, so a misspelt setting never silently falls back to its default.",
           "",
           "## Enums",
           "",
@@ -258,7 +281,7 @@ async function buildOpenApiSpec() {
           "",
           "| Status | Code | When |",
           "| --- | --- | --- |",
-          "| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, or the body was not valid JSON |",
+          "| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, contained an unknown field, or the body was not valid JSON |",
           "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
           "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
           "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
@@ -330,11 +353,13 @@ app.post(
       "- `slots` — time-based options that share a fixed `duration` in minutes. Each entry in `slots.times` is either an ISO datetime for an explicit slot, or a slot generator that expands into recurring slots within a time window across a date range. Generated slots start every `interval` minutes (defaults to `duration`) and must fit entirely between `startTime` and `endTime`.",
       "",
       "`dates` and `slots` are mutually exclusive, and a poll can have at most 100 options. See the request examples for common scenarios.",
+      "",
+      "Responds with `201 Created` and the full poll, including the settings and organizer exactly as `GET /polls/:pollId` returns them.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
-      200: {
-        description: "Successful response",
+      201: {
+        description: "Poll created",
         content: {
           "application/json": {
             schema: resolver(pollResponseSchema),
@@ -473,7 +498,7 @@ app.post(
 
       trackPollCreated(poll);
 
-      return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
+      return c.json(pollResponseSchema.parse(toPollResponseBody(poll)), 201);
     }
 
     // Process slots (time-based options)
@@ -546,7 +571,7 @@ app.post(
 
     trackPollCreated(poll);
 
-    return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
+    return c.json(pollResponseSchema.parse(toPollResponseBody(poll)), 201);
   },
 );
 
@@ -599,10 +624,7 @@ app.get(
 
     return c.json(
       listPollsSuccessResponseSchema.parse({
-        data: polls.map((poll) => ({
-          ...toPollResponseBody(poll).data,
-          participantCount: poll.participantCount,
-        })),
+        data: polls.map((poll) => toPollResponseBody(poll).data),
         nextCursor,
       }),
     );
@@ -617,7 +639,7 @@ app.get(
     tags: ["Polls"],
     summary: "Get a poll",
     description:
-      "Retrieves poll metadata by ID. The poll must belong to the space associated with the API key.",
+      "Retrieves a poll by ID with its options, settings, organizer and `participantCount`. The poll must belong to the space associated with the API key. Compare `updatedAt` between reads to notice changes.",
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
