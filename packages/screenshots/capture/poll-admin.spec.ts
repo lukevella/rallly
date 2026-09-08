@@ -2,9 +2,17 @@ import { test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { deleteAllMessages, loginWithEmail } from "@rallly/test-helpers";
 import dayjs from "dayjs";
+import { customAlphabet } from "nanoid";
 import { screenshotPath } from "./helpers";
 
 const pollId = "screenshot-poll";
+
+// Mirrors generateAccessToken in apps/web/src/features/poll/utils.ts, which
+// this package cannot import. Participant.token has no DB default.
+const generateAccessToken = customAlphabet(
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+  32,
+);
 
 test.beforeAll(async () => {
   await deleteAllMessages();
@@ -61,9 +69,21 @@ test.beforeAll(async () => {
       },
       participants: {
         create: [
-          { name: "Sarah Johnson", email: "sarah@example.com" },
-          { name: "Michael Chen", email: "michael@example.com" },
-          { name: "Emily Rodriguez", email: "emily@example.com" },
+          {
+            name: "Sarah Johnson",
+            email: "sarah@example.com",
+            token: generateAccessToken(),
+          },
+          {
+            name: "Michael Chen",
+            email: "michael@example.com",
+            token: generateAccessToken(),
+          },
+          {
+            name: "Emily Rodriguez",
+            email: "emily@example.com",
+            token: generateAccessToken(),
+          },
         ],
       },
     },
