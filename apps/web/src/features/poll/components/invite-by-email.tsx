@@ -47,13 +47,11 @@ type InviteFormValues = { email: string };
 
 /**
  * The list is fetched when the dialog mounts rather than with the page: most
- * page views never open it. The send action's success handler invalidates
- * the query, which is what replaces an optimistic "Sending" row with the
- * real one.
+ * page views never open it. The send action's success refetches it, which is
+ * what replaces an optimistic "Sending" row with the real one.
  */
 export function InviteByEmail() {
   const poll = usePoll();
-  const utils = trpc.useUtils();
   const { user } = useUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
@@ -130,7 +128,6 @@ export function InviteByEmail() {
         return;
       }
       if (data.ok) {
-        await utils.polls.invites.list.invalidate({ pollId: poll.id });
         announce(
           t("shareDialogInviteSent", {
             defaultValue: "Invite sent to {email}",

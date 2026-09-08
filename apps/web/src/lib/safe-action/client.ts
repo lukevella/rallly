@@ -1,5 +1,6 @@
 "use client";
 import { toast } from "@rallly/ui/sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useTranslation } from "@/i18n/client";
@@ -8,10 +9,14 @@ import type { AppErrorCode } from "@/lib/errors/app-error";
 export const useSafeAction: typeof useAction = (action, options) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const queryClient = useQueryClient();
   return useAction(action, {
     ...options,
     onSuccess: (args) => {
       router.refresh();
+      // Same blanket invalidation the tRPC mutation override does, so a
+      // client query never shows stale data after a write.
+      void queryClient.invalidateQueries();
       options?.onSuccess?.(args);
     },
     onError: (args) => {

@@ -24,7 +24,6 @@ import { revokePollInviteAction } from "@/features/poll/invite/actions";
 import type { PollInviteStatus } from "@/features/poll/invite/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 
 export type InviteeRowStatus = PollInviteStatus | "sending";
 
@@ -83,14 +82,11 @@ function InviteeRowMenu({
   const { t } = useTranslation();
   const [state, copyToClipboard] = useCopyToClipboard();
 
-  const utils = trpc.useUtils();
-
-  // Invalidating the list is what drops the row.
+  // The success handler refetches the list, which is what drops the row.
   const revoke = useSafeAction(revokePollInviteAction, {
-    onSuccess: async ({ data }) => {
+    onSuccess: ({ data }) => {
       if (!data) return;
       if (data.ok) {
-        await utils.polls.invites.list.invalidate();
         toast(
           t("shareDialogInviteRemoved", {
             defaultValue: "Invite for {email} removed",
