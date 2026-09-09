@@ -98,6 +98,30 @@ export const comments = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const targetPoll = await prisma.poll.findUnique({
+        where: {
+          id: input.pollId,
+        },
+        select: {
+          disableComments: true,
+          deleted: true,
+        },
+      });
+
+      // A deleted poll never accepts new comments.
+      if (!targetPoll || targetPoll.deleted) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
+      // The comment UI is hidden when the host turns comments off, but the
+      // setting is only real if the mutation enforces it too.
+      if (targetPoll.disableComments) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Comments are disabled for this poll",
+        });
+      }
+
       let authorName = input.authorName;
 
       if (!ctx.user.isGuest) {
