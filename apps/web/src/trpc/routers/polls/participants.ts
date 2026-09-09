@@ -309,6 +309,29 @@ export const participants = router({
         ctx,
         input: { pollId, votes, name, email, note, timeZone, token },
       }) => {
+        const poll = await prisma.poll.findUnique({
+          where: { id: pollId },
+          select: { status: true, deleted: true },
+        });
+
+        // A deleted poll never accepts responses.
+        if (!poll || poll.deleted) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Poll not found",
+          });
+        }
+
+        // The voting window is the organizer's control, so it has to hold
+        // here and not only in the client, which hides the form via
+        // `canAddNewParticipant`.
+        if (poll.status !== "open") {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "This poll is no longer accepting responses",
+          });
+        }
+
         const participantCount = await prisma.participant.count({
           where: {
             pollId,

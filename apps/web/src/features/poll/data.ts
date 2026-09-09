@@ -479,7 +479,12 @@ export async function getParticipant({
 }) {
   return prisma.participant.findFirst({
     where: { id: participantId },
-    select: { id: true, pollId: true, userId: true },
+    select: {
+      id: true,
+      pollId: true,
+      userId: true,
+      poll: { select: { status: true, deleted: true } },
+    },
   });
 }
 
