@@ -13,6 +13,11 @@ type Actor = { id: string; isGuest: boolean };
  * owns the response or administers its poll. Admin access is bound to the
  * session only, so a link never unlocks other people's responses.
  *
+ * A poll that is no longer open accepts no edits from anyone, admins
+ * included — the same rule `canEditParticipant` applies in the client. The
+ * lifecycle check comes first: whether the voting window has closed does not
+ * depend on who is asking.
+ *
  * The returned actor is for attribution (activity log, analytics): the
  * session when there is one, otherwise the user the response was created
  * under, who was a guest at the time.
@@ -32,6 +37,20 @@ export async function authorizeParticipantEdit({
     throw new TRPCError({
       code: "NOT_FOUND",
       message: "Participant not found",
+    });
+  }
+
+  if (participant.poll.deleted) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Participant not found",
+    });
+  }
+
+  if (participant.poll.status !== "open") {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "This poll is no longer accepting changes",
     });
   }
 
