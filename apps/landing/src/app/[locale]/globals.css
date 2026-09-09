@@ -82,3 +82,36 @@ h2 {
     @apply font-medium;
   }
 }
+
+/*
+ * FAQ accordion. `interpolate-size` is what makes height:auto animatable;
+ * without it the rules below are inert and <details> toggles instantly.
+ */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-item::details-content {
+    overflow: hidden;
+    block-size: 0;
+    opacity: 0;
+    transition:
+      block-size 200ms var(--ease-out-expo),
+      opacity 200ms var(--ease-out-expo),
+      content-visibility 200ms allow-discrete;
+    /* content-visibility is discrete; without this the content is hidden
+       for the whole closing transition and only the box animates. */
+  }
+
+  .faq-item[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition-property: opacity, content-visibility;
+  }
+}
