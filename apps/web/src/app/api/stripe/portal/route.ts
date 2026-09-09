@@ -3,7 +3,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { createStripePortalSession } from "@/features/billing/mutations";
+import { subscriptionCheckoutMetadataSchema } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
+import { getSession } from "@/lib/auth";
 
 /**
  * Checkout return endpoint. Stripe redirects the browser here after payment
@@ -18,10 +20,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing session_id" }, { status: 400 });
   }
 
+  const userSession = await getSession();
+
+  if (!userSession?.user || userSession.user.isGuest) {
+    return NextResponse.redirect(
+      new URL("/login", request.nextUrl.origin).toString(),
+    );
+  }
+
   let customerId: string;
 
   try {
     const session = await getStripe().checkout.sessions.retrieve(sessionId);
+
+    const metadata = subscriptionCheckoutMetadataSchema.safeParse(
+      session.metadata,
+    );
+
+    if (!metadata.success || metadata.data.userId !== userSession.user.id) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
     if (typeof session.customer !== "string") {
       Sentry.captureException(new Error("Invalid customer ID in session"));
       return NextResponse.json(
