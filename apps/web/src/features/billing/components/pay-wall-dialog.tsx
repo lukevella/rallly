@@ -129,7 +129,7 @@ const proBenefitsList = [
     description: (
       <Trans
         i18nKey="emailInvitesDescription"
-        defaults="Invite people by email and see who has responded"
+        defaults="Track who opened and responded with personal invite links"
       />
     ),
   },
