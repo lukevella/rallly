@@ -1180,7 +1180,7 @@ export const polls = router({
                 content: event.value,
               },
               props: {
-                pollUrl: absoluteUrl(`/invite/${poll.id}`),
+                pollUrl: shortUrl(`/invite/${poll.id}`),
                 title: poll.title,
                 hostName: poll.user?.name ?? "",
                 date,

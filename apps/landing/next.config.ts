@@ -84,6 +84,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/e/:path*",
+        destination: createAppUrl("/e/:path*"),
+        permanent: true,
+      },
+      {
         source: "/admin/:path*",
         destination: createAppUrl("/admin/:path*"),
         permanent: true,

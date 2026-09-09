@@ -3,7 +3,7 @@ import "server-only";
 import { Prisma, prisma } from "@rallly/database";
 import { sendPollInviteEmail } from "@rallly/emails/templates/poll-invite";
 import { createLogger } from "@rallly/logger";
-import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { recordPollActivities } from "@/features/poll/activity/mutations";
@@ -182,7 +182,7 @@ export async function sendPollInvite({
       props: {
         hostName: sender.name,
         pollTitle: poll.title,
-        inviteUrl: absoluteUrl(getPollInvitePath({ pollId, token })),
+        inviteUrl: shortUrl(getPollInvitePath({ pollId, token })),
       },
     });
   } catch (error) {
