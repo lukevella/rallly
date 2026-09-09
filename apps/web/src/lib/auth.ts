@@ -351,16 +351,14 @@ export const authLib = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      // Registration policy at the API. Mirrors the OTP plugin's own
-      // disableSignUp behaviour so an unknown address cannot be told apart
-      // from a known one: the send endpoint answers success without sending,
-      // the verify endpoint answers with the invalid-code error.
-      const isOtpSignUp =
-        (ctx.path === "/email-otp/send-verification-otp" &&
-          ctx.body?.type === "sign-in") ||
-        ctx.path === "/sign-in/email-otp";
+      // With registration off, a "sign-in" code for an unknown address
+      // would be refused at account creation anyway (user.create.before);
+      // answering here means the stranger never receives a code. Mirrors
+      // the plugin's own disableSignUp behaviour, success without sending,
+      // so an unknown address cannot be told apart from a known one.
       if (
-        isOtpSignUp &&
+        ctx.path === "/email-otp/send-verification-otp" &&
+        ctx.body?.type === "sign-in" &&
         typeof ctx.body?.email === "string" &&
         !(await isRegistrationOpen())
       ) {
@@ -369,12 +367,6 @@ export const authLib = betterAuth({
           select: { id: true },
         });
         if (!user) {
-          if (ctx.path === "/sign-in/email-otp") {
-            throw new APIError("BAD_REQUEST", {
-              code: "INVALID_OTP",
-              message: "Invalid OTP",
-            });
-          }
           return ctx.json({ success: true });
         }
       }
@@ -555,14 +547,24 @@ export const authLib = betterAuth({
         // a later release. Single-tenant Microsoft is the instance's own
         // directory; OIDC likewise; Google always asserts email_verified.
         before: async (user, ctx) => {
+          if (user.isAnonymous) {
+            return;
+          }
+          // Registration policy: every path that mints an account (OTP
+          // sign-in, social and OIDC callbacks, the ID-token variant of
+          // /sign-in/social) converges here, so this is where "registration
+          // is off" is enforced. The OTP send endpoint also refuses earlier
+          // so strangers get no code, but that is convenience, not the gate.
+          if (!(await isRegistrationOpen())) {
+            throw new APIError("FORBIDDEN", {
+              code: "REGISTRATION_DISABLED",
+              message: "signup disabled",
+            });
+          }
           // The redirect callback names the provider in the route; the
           // ID-token variant of /sign-in/social names it in the body.
           const provider = ctx?.params?.id ?? ctx?.body?.provider;
-          if (
-            user.isAnonymous ||
-            user.emailVerified ||
-            provider !== "microsoft"
-          ) {
+          if (user.emailVerified || provider !== "microsoft") {
             return;
           }
           // better-auth derives emailVerified from the same claims, so an

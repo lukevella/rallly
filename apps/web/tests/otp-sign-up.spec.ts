@@ -65,6 +65,37 @@ test.describe.serial(() => {
     expect(user).toBeNull();
   });
 
+  test("a code issued before registration closed cannot create an account", async ({
+    request,
+  }) => {
+    await prisma.instanceSettings.update({
+      where: { id: 1 },
+      data: { disableUserRegistration: false },
+    });
+    const send = await request.post(
+      "/api/better-auth/email-otp/send-verification-otp",
+      { data: { email: unknownEmail, type: "sign-in" } },
+    );
+    expect(send.status()).toBe(200);
+    const otp = await getCode(unknownEmail);
+
+    await prisma.instanceSettings.update({
+      where: { id: 1 },
+      data: { disableUserRegistration: true },
+    });
+    // The send gate is out of the picture: the code is real. Only the
+    // user.create hook stands between this call and a new account.
+    const verify = await request.post("/api/better-auth/sign-in/email-otp", {
+      data: { email: unknownEmail, otp },
+    });
+    expect(verify.status(), await verify.text()).toBe(403);
+
+    const user = await prisma.user.findUnique({
+      where: { email: unknownEmail },
+    });
+    expect(user).toBeNull();
+  });
+
   test("an existing user still signs in with a code", async ({ request }) => {
     await createUserInDb({
       email: existingEmail,
