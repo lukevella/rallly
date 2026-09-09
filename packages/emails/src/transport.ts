@@ -1,26 +1,15 @@
-import * as aws from "@aws-sdk/client-ses";
+import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { logger } from "@rallly/logger";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
-import type { Logger as NodemailerLogger } from "nodemailer/lib/shared";
 
 type EmailProvider = "ses" | "smtp";
 
-// Adapts pino to nodemailer's bunyan-style logger interface. Pino exposes
-// `level` as a property while nodemailer's type expects a method (it never
-// calls it).
-function createSmtpDebugLogger(): NodemailerLogger {
-  const smtpLogger = logger.child({ name: "smtp" }, { level: "trace" });
-  return {
-    level: () => {},
-    trace: smtpLogger.trace.bind(smtpLogger),
-    debug: smtpLogger.debug.bind(smtpLogger),
-    info: smtpLogger.info.bind(smtpLogger),
-    warn: smtpLogger.warn.bind(smtpLogger),
-    error: smtpLogger.error.bind(smtpLogger),
-    fatal: smtpLogger.fatal.bind(smtpLogger),
-  };
+// Pino's (obj, msg) call signature matches nodemailer's bunyan-style logger,
+// so the child can be handed over as is.
+function createSmtpDebugLogger() {
+  return logger.child({ name: "smtp" }, { level: "trace" });
 }
 
 export type SupportedEmailProviders = EmailProvider;
@@ -30,14 +19,13 @@ let cachedTransport: Transporter | undefined;
 export function createTransportForProvider(provider: EmailProvider) {
   switch (provider) {
     case "ses": {
-      const ses = new aws.SES({
+      const sesClient = new SESv2Client({
         region: process.env["AWS" + "_REGION"] as string,
         credentialDefaultProvider: defaultProvider,
       });
 
       return createTransport({
-        SES: { ses, aws },
-        sendingRate: 10,
+        SES: { sesClient, SendEmailCommand },
       });
     }
     case "smtp": {
