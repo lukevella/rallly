@@ -760,15 +760,6 @@ export const polls = router({
               end: true,
               allDay: true,
               status: true,
-              invites: {
-                select: {
-                  id: true,
-                  inviteeName: true,
-                  inviteeEmail: true,
-                  inviteeTimeZone: true,
-                  status: true,
-                },
-              },
             },
           },
         },
@@ -801,16 +792,6 @@ export const polls = router({
                   dayjs(res.scheduledEvent.start),
                   "minute",
                 ),
-            attendees: res.scheduledEvent.invites
-              .map((invite) => ({
-                name: invite.inviteeName,
-                email: invite.inviteeEmail,
-                status: invite.status,
-              }))
-              .filter(
-                (invite) =>
-                  invite.status === "accepted" || invite.status === "tentative",
-              ),
             status: res.scheduledEvent.status,
           }
         : null;
@@ -821,8 +802,12 @@ export const polls = router({
         ? isSpaceBrandingActive({ ...res.space, spaceBrandingAllowed })
         : false;
 
+      // `event` above is the shape clients read; the raw row would be a
+      // second copy of the same booking in a public payload.
+      const { scheduledEvent: _scheduledEvent, ...pollFields } = res;
+
       return {
-        ...res,
+        ...pollFields,
         space: res.space
           ? {
               ...res.space,
