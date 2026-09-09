@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "E-postadressen din er ikke bekreftet. Vennligst bekreft e-postadressen din før du logger inn.",
   "authErrorsOAuthSignInFailed": "Det oppsto en feil under pålogging. Prøv igjen eller kontakt systemadministratoren.",
   "authErrorsUserBanned": "Denne kontoen er blitt utestengt. Kontakt kundestøtte hvis du tror dette er feil.",
-  "authErrorsUserNotFound": "Fant ingen konto tilknyttet denne e-postadressen. Sjekk e-postadressen eller registrer en ny konto.",
   "back": "Tilbake",
   "backToHome": "Tilbake til startsiden",
   "banned": "Utestengt",
