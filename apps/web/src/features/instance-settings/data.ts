@@ -73,3 +73,18 @@ export async function getRegistrationEnabled() {
 
   return !instanceSettings.disableUserRegistration;
 }
+
+// Uncached twin of getRegistrationEnabled for the auth hooks in lib/auth.ts:
+// an authorization decision must see the control panel toggle the moment it
+// is written, not whenever the page cache revalidates.
+export async function isRegistrationOpen() {
+  if (!isFeatureEnabled("registration")) {
+    return false;
+  }
+  const instanceSettings = await prisma.instanceSettings.findUnique({
+    where: { id: 1 },
+    select: { disableUserRegistration: true },
+  });
+
+  return !instanceSettings?.disableUserRegistration;
+}

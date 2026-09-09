@@ -31,6 +31,7 @@ import {
   isTemporaryEmail,
 } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
+import { isRegistrationOpen } from "@/features/instance-settings/data";
 import type { UserDTO } from "@/features/user/schema";
 import { jobTitleFieldSchema } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
@@ -199,10 +200,10 @@ export const authLib = betterAuth({
       storeInDatabase: true,
     }),
     emailOTP({
-      // Sign-up via OTP is allowed so that registering for an event can either
-      // log a guest into their existing account or create one for a new email.
-      // The login page is unaffected: it sends "email-verification" OTPs and
-      // verifies with verifyEmail, neither of which is gated by this flag.
+      // The "sign-in" OTP type creates an account for an unknown address; the
+      // login page offers it only while registration is on. The control panel
+      // toggle changes at runtime, so the before hook below applies it per
+      // request rather than this boot-time flag.
       disableSignUp: false,
       expiresIn: 15 * 60,
       resendStrategy: "reuse",
@@ -350,6 +351,33 @@ export const authLib = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      // Registration policy at the API. Mirrors the OTP plugin's own
+      // disableSignUp behaviour so an unknown address cannot be told apart
+      // from a known one: the send endpoint answers success without sending,
+      // the verify endpoint answers with the invalid-code error.
+      const isOtpSignUp =
+        (ctx.path === "/email-otp/send-verification-otp" &&
+          ctx.body?.type === "sign-in") ||
+        ctx.path === "/sign-in/email-otp";
+      if (
+        isOtpSignUp &&
+        typeof ctx.body?.email === "string" &&
+        !(await isRegistrationOpen())
+      ) {
+        const user = await prisma.user.findUnique({
+          where: { email: ctx.body.email.toLowerCase() },
+          select: { id: true },
+        });
+        if (!user) {
+          if (ctx.path === "/sign-in/email-otp") {
+            throw new APIError("BAD_REQUEST", {
+              code: "INVALID_OTP",
+              message: "Invalid OTP",
+            });
+          }
+          return ctx.json({ success: true });
+        }
+      }
       if (
         ctx.path.startsWith("/sign-in") ||
         ctx.path.startsWith("/email-otp")
