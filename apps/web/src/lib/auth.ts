@@ -31,6 +31,7 @@ import {
   isTemporaryEmail,
 } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
+import { isRegistrationOpen } from "@/features/instance-settings/data";
 import type { UserDTO } from "@/features/user/schema";
 import { jobTitleFieldSchema } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
@@ -199,10 +200,10 @@ export const authLib = betterAuth({
       storeInDatabase: true,
     }),
     emailOTP({
-      // Sign-up via OTP is allowed so that registering for an event can either
-      // log a guest into their existing account or create one for a new email.
-      // The login page is unaffected: it sends "email-verification" OTPs and
-      // verifies with verifyEmail, neither of which is gated by this flag.
+      // The "sign-in" OTP type creates an account for an unknown address; the
+      // login page offers it only while registration is on. The control panel
+      // toggle changes at runtime, so the registration setting is enforced in
+      // the user.create hook rather than by this boot-time flag.
       disableSignUp: false,
       expiresIn: 15 * 60,
       resendStrategy: "reuse",
@@ -527,14 +528,24 @@ export const authLib = betterAuth({
         // a later release. Single-tenant Microsoft is the instance's own
         // directory; OIDC likewise; Google always asserts email_verified.
         before: async (user, ctx) => {
+          if (user.isAnonymous) {
+            return;
+          }
+          // Registration policy: every path that mints an account (OTP
+          // sign-in, social and OIDC callbacks, the ID-token variant of
+          // /sign-in/social) converges here, so this is where "registration
+          // is off" is enforced. Same shape better-auth documents for
+          // SIGNUP_DISABLED.
+          if (!(await isRegistrationOpen())) {
+            throw new APIError("BAD_REQUEST", {
+              code: "SIGNUP_DISABLED",
+              message: "Signup is disabled",
+            });
+          }
           // The redirect callback names the provider in the route; the
           // ID-token variant of /sign-in/social names it in the body.
           const provider = ctx?.params?.id ?? ctx?.body?.provider;
-          if (
-            user.isAnonymous ||
-            user.emailVerified ||
-            provider !== "microsoft"
-          ) {
+          if (user.emailVerified || provider !== "microsoft") {
             return;
           }
           // better-auth derives emailVerified from the same claims, so an
