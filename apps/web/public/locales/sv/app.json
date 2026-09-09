@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "Din e-postadress är inte verifierad. Verifiera din e-post innan du loggar in.",
   "authErrorsOAuthSignInFailed": "Ett fel uppstod vid inloggning. Försök igen eller kontakta systemadministratören.",
   "authErrorsUserBanned": "Detta konto har blivit avstängt. Kontakta support om du tror att det är ett misstag.",
-  "authErrorsUserNotFound": "Inget konto hittades för denna e-postadress. Kontrollera e-postadressen eller registrera ett nytt konto.",
   "back": "Tillbaka",
   "backToHome": "Tillbaka till startsidan",
   "banned": "Bannad",
