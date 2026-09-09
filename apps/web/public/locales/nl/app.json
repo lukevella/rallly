@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "Je e-mailadres is niet geverifieerd. Bevestig je e-mailadres voordat je inlogt.",
   "authErrorsOAuthSignInFailed": "Er is een fout opgetreden tijdens het aanmelden. Probeer het opnieuw of neem contact op met de systeembeheerder.",
   "authErrorsUserBanned": "Dit account is geblokkeerd. Neem contact op met support als je denkt dat dit een fout is.",
-  "authErrorsUserNotFound": "Geen account gevonden met dit e-mailadres. Controleer het e-mailadres of registreer een nieuw account.",
   "back": "Terug",
   "backToHome": "Terug naar start",
   "banned": "Geblokkeerd",
