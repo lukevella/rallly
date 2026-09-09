@@ -1,5 +1,5 @@
 import { PlusIcon } from "lucide-react";
-import type * as React from "react";
+import * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import {
   SectionContent,
@@ -12,16 +12,22 @@ import { getTranslation } from "@/i18n/server";
 
 export function FaqItem({
   question,
+  name,
   children,
 }: {
   question: React.ReactNode;
+  /**
+   * Shared across a group so the browser keeps only one item open. Injected by
+   * `Faq`; the exclusive behaviour is lost if an item is rendered outside one.
+   */
+  name?: string;
   children: React.ReactNode;
 }) {
   return (
-    <details className="group">
+    <details className="faq-item group" name={name}>
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-base text-gray-800 [&::-webkit-details-marker]:hidden">
         {question}
-        <PlusIcon className="size-4 shrink-0 text-gray-400 transition-transform group-open:rotate-45" />
+        <PlusIcon className="size-4 shrink-0 text-gray-400 transition-transform duration-200 ease-out-expo group-open:rotate-45 motion-reduce:transition-none" />
       </summary>
       <p className="max-w-prose pb-5 text-gray-500 text-sm leading-relaxed sm:text-base">
         {children}
@@ -30,8 +36,23 @@ export function FaqItem({
   );
 }
 
-export function Faq({ children }: { children: React.ReactNode }) {
-  return <div className="divide-y">{children}</div>;
+export function Faq({
+  name = "faq",
+  children,
+}: {
+  /** Only needs setting if a page renders more than one FAQ group. */
+  name?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="divide-y">
+      {React.Children.map(children, (child) =>
+        React.isValidElement<{ name?: string }>(child)
+          ? React.cloneElement(child, { name })
+          : child,
+      )}
+    </div>
+  );
 }
 
 export async function FaqSection({
