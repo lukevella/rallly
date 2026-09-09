@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "Il tuo indirizzo email non è verificato. Verifica il tuo indirizzo email prima di accedere.",
   "authErrorsOAuthSignInFailed": "Si è verificato un errore durante l'accesso. Riprova o contatta l'amministratore di sistema.",
   "authErrorsUserBanned": "Questo account è stato bannato. Contatta l'assistenza se ritieni che si tratti di un errore.",
-  "authErrorsUserNotFound": "Nessun account trovato con questo indirizzo email. Controlla l'email o registrati per un nuovo account.",
   "back": "Indietro",
   "backToHome": "Torna alla home",
   "banned": "Bannato",
