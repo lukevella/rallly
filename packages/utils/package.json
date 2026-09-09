@@ -15,6 +15,6 @@
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^24.1.0",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.11"
   }
 }
