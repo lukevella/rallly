@@ -202,8 +202,8 @@ export const authLib = betterAuth({
     emailOTP({
       // The "sign-in" OTP type creates an account for an unknown address; the
       // login page offers it only while registration is on. The control panel
-      // toggle changes at runtime, so the before hook below applies it per
-      // request rather than this boot-time flag.
+      // toggle changes at runtime, so the registration setting is enforced in
+      // the user.create hook rather than by this boot-time flag.
       disableSignUp: false,
       expiresIn: 15 * 60,
       resendStrategy: "reuse",
@@ -351,25 +351,6 @@ export const authLib = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      // With registration off, a "sign-in" code for an unknown address
-      // would be refused at account creation anyway (user.create.before);
-      // answering here means the stranger never receives a code. Mirrors
-      // the plugin's own disableSignUp behaviour, success without sending,
-      // so an unknown address cannot be told apart from a known one.
-      if (
-        ctx.path === "/email-otp/send-verification-otp" &&
-        ctx.body?.type === "sign-in" &&
-        typeof ctx.body?.email === "string" &&
-        !(await isRegistrationOpen())
-      ) {
-        const user = await prisma.user.findUnique({
-          where: { email: ctx.body.email.toLowerCase() },
-          select: { id: true },
-        });
-        if (!user) {
-          return ctx.json({ success: true });
-        }
-      }
       if (
         ctx.path.startsWith("/sign-in") ||
         ctx.path.startsWith("/email-otp")
@@ -553,12 +534,12 @@ export const authLib = betterAuth({
           // Registration policy: every path that mints an account (OTP
           // sign-in, social and OIDC callbacks, the ID-token variant of
           // /sign-in/social) converges here, so this is where "registration
-          // is off" is enforced. The OTP send endpoint also refuses earlier
-          // so strangers get no code, but that is convenience, not the gate.
+          // is off" is enforced. Same shape better-auth documents for
+          // SIGNUP_DISABLED.
           if (!(await isRegistrationOpen())) {
-            throw new APIError("FORBIDDEN", {
-              code: "REGISTRATION_DISABLED",
-              message: "signup disabled",
+            throw new APIError("BAD_REQUEST", {
+              code: "SIGNUP_DISABLED",
+              message: "Signup is disabled",
             });
           }
           // The redirect callback names the provider in the route; the
