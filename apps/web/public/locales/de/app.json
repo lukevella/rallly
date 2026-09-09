@@ -77,7 +77,6 @@
   "authErrorsEmailNotVerified": "Deine E-Mail-Adresse ist nicht verifiziert. Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest.",
   "authErrorsOAuthSignInFailed": "Beim Anmelden ist ein Fehler aufgetreten. Bitte versuche es erneut oder kontaktiere den Systemadministrator.",
   "authErrorsUserBanned": "Dieser Account wurde gesperrt. Bitte kontaktiere den Support, falls du glaubst, dass dies ein Fehler ist.",
-  "authErrorsUserNotFound": "Kein Konto mit dieser E-Mail-Adresse gefunden. Bitte überprüfe die Adresse oder registriere ein neues Konto.",
   "back": "Zurück",
   "backToHome": "Zur Startseite",
   "banned": "Gesperrt",
