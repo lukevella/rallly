@@ -64,10 +64,13 @@ export const VoteSelector = React.forwardRef<
         buttonVariants({
           size: "icon-sm",
         }),
-        // The default variant's backdrop-blur makes this button a containing
-        // block, which would trap the after:inset-0 overlay callers use to
-        // extend the tap target to the whole cell/row.
-        "backdrop-blur-none",
+        // The default variant's backdrop-blur and press-scale each make this
+        // button a containing block, which would trap the after:inset-0 overlay
+        // callers use to extend the tap target to the whole cell/row. The scale
+        // applies only while pressed, so it collapses the overlay between
+        // pointerdown and pointerup: the release lands on the parent and the
+        // click never reaches this button.
+        "backdrop-blur-none not-aria-[haspopup]:active:scale-none",
         className,
       )}
       onClick={() => {
