@@ -653,8 +653,11 @@ export const authLib = betterAuth({
     expiresIn: SESSION_TTL_SECONDS,
     updateAge: 60 * 60 * 24, // 1 day
     cookieCache: {
+      // Every miss is a Redis read of the session. Bans revoke the Redis keys
+      // immediately, but a signed cookie stays valid until it expires, so this
+      // is also the window a banned user keeps cached-read access.
       enabled: true,
-      maxAge: 5 * 60, // 5 minutes
+      maxAge: 15 * 60, // 15 minutes
     },
   },
   advanced: env.NEXT_PUBLIC_COOKIE_DOMAIN
