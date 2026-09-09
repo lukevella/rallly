@@ -79,7 +79,6 @@
   "authErrorsEmailNotVerified": "Sähköpostiosoitettasi ei ole vahvistettu. Vahvista sähköpostiosoitteesi ennen kirjautumista.",
   "authErrorsOAuthSignInFailed": "Kirjautumisen aikana tapahtui virhe. Yritä uudelleen tai ota yhteyttä järjestelmänvalvojaan.",
   "authErrorsUserBanned": "Tämä tili on estetty. Ota yhteyttä tukeen, jos uskot tämän olevan virhe.",
-  "authErrorsUserNotFound": "Sähköpostiosoitteella ei löytynyt tiliä. Tarkista sähköpostiosoite tai luo uusi tili.",
   "back": "Takaisin",
   "backToHome": "Takaisin etusivulle",
   "banned": "Estetty",
