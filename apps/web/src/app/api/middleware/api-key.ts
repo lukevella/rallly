@@ -17,7 +17,18 @@ import { apiError } from "./api-error";
 
 const LAST_USED_AT_WRITE_INTERVAL_MS = 60_000;
 
-const verifyKey = bearerAuth({
+type ApiKeyAuthEnv = {
+  Variables: {
+    apiAuth: {
+      spaceId: AuthorizedSpaceId;
+      spaceOwnerId: string;
+      spaceTier: SpaceTier;
+      apiKeyId: string;
+    };
+  };
+};
+
+const verifyKey = bearerAuth<ApiKeyAuthEnv>({
   verifyToken: async (rawKey, c) => {
     const prefix = extractApiKeyPrefix(rawKey);
     const prefixBuffer = Buffer.from(prefix);
@@ -137,9 +148,7 @@ const verifyKey = bearerAuth({
 
 // hono/bearer-auth can only turn a failed verifyToken into a 401, so the
 // tier check runs as a follow-up middleware to respond with a 403 instead.
-const requireProSpace = createMiddleware<{
-  Variables: { apiAuth: { spaceTier: SpaceTier } };
-}>(async (c, next) => {
+const requireProSpace = createMiddleware<ApiKeyAuthEnv>(async (c, next) => {
   if (c.get("apiAuth").spaceTier !== "pro") {
     return c.json(
       apiError(
