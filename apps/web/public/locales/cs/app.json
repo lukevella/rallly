@@ -79,7 +79,6 @@
   "authErrorsEmailNotVerified": "Vaše emailová adresa není ověřená. Ověřte ji prosím před přihlášením.",
   "authErrorsOAuthSignInFailed": "Došlo k chybě při přihlašování. Zkuste to prosím znovu nebo kontaktujte správce systému.",
   "authErrorsUserBanned": "Tento účet byl zabanován. Pokud se domníváte, že se jedná o chybu, kontaktujte podporu.",
-  "authErrorsUserNotFound": "Nebyl nalezen žádný účet s touto e-mailovou adresou. Prosím zkontrolujte e-mail nebo si zaregistrujte nový účet.",
   "back": "Zpět",
   "backToHome": "Zpět na hlavní stránku",
   "banned": "Zablokován",
