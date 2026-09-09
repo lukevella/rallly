@@ -10,7 +10,6 @@ export function AuthErrors() {
     return null;
   }
   switch (error) {
-    case "OAuthAccountNotLinked":
     case "account_not_linked":
       return (
         <p className="text-destructive text-sm">
@@ -20,40 +19,12 @@ export function AuthErrors() {
           })}
         </p>
       );
-    case "EmailNotVerified":
     case "email_not_verified":
       return (
         <p className="text-destructive text-sm">
           {t("authErrorsEmailNotVerified", {
             defaultValue:
               "Your email address is not verified. Please verify your email before logging in.",
-          })}
-        </p>
-      );
-    case "Banned":
-      return (
-        <p className="text-destructive text-sm">
-          {t("authErrorsUserBanned", {
-            defaultValue:
-              "This account has been banned. Please contact support if you believe this is an error.",
-          })}
-        </p>
-      );
-    case "EmailBlocked":
-      return (
-        <p className="text-destructive text-sm">
-          {t("authErrorsEmailBlocked", {
-            defaultValue:
-              "This email address is not allowed. Please use a different email or contact support.",
-          })}
-        </p>
-      );
-    case "UserNotFound":
-      return (
-        <p className="text-destructive text-sm">
-          {t("authErrorsUserNotFound", {
-            defaultValue:
-              "No account found with this email address. Please check the email or register for a new account.",
           })}
         </p>
       );
