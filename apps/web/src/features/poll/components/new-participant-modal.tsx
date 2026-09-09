@@ -316,6 +316,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 <FormControl>
                   <Input
                     className="w-full"
+                    {...passwordManagerIgnoreProps}
                     disabled={formState.isSubmitting}
                     placeholder={t("emailPlaceholder")}
                     {...field}
