@@ -667,7 +667,7 @@ export default async function Page(props: {
                       t={t}
                       ns="pricing"
                       i18nKey="emailInvitesDescription"
-                      defaults="Invite people by email and see who has responded"
+                      defaults="Track who opened and responded with personal invite links"
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
