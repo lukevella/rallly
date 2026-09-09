@@ -21,7 +21,6 @@ export type GetPollApiResponse = {
     id: string;
     start: Date;
     duration: number;
-    attendees: Array<{ name: string; email: string; status: string }>;
     status: string;
   } | null;
 };
