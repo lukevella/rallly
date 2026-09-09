@@ -1,4 +1,4 @@
-import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 import { hasPollAdminAccess } from "@/features/poll/data";
@@ -24,7 +24,7 @@ export const invites = router({
         id: invite.id,
         email: invite.email,
         status: derivePollInviteStatus(invite),
-        inviteUrl: absoluteUrl(
+        inviteUrl: shortUrl(
           getPollInvitePath({ pollId: input.pollId, token: invite.token }),
         ),
       }));

@@ -204,6 +204,12 @@ export const env = createEnv({
      */
     NEXT_PUBLIC_CDN_BASE_URL: z.url().optional(),
     /**
+     * Base URL for links handed to participants (poll invites, event pages).
+     * Lets those links live on a marketing domain that redirects to this
+     * instance. Defaults to `NEXT_PUBLIC_BASE_URL`.
+     */
+    NEXT_PUBLIC_SHORT_BASE_URL: z.url().optional(),
+    /**
      * Domain to attach to server-set cookies (auth session, locale).
      * Set to a parent domain prefixed with a leading dot (e.g. `.rallly.co`)
      * to make these cookies readable across subdomains. When unset, cookies
@@ -287,6 +293,7 @@ export const env = createEnv({
     API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_CDN_BASE_URL: process.env.NEXT_PUBLIC_CDN_BASE_URL,
+    NEXT_PUBLIC_SHORT_BASE_URL: process.env.NEXT_PUBLIC_SHORT_BASE_URL,
     // Empty string means unset: the process env can override an .env file
     // value but never remove it, so this is the only way a dev server on
     // plain localhost can neutralize a configured cookie domain.
