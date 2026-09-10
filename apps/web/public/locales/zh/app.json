@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "你的电子邮件尚未验证。请在登录前验证您的电子邮件。",
   "authErrorsOAuthSignInFailed": "登录时发生错误。请重试或联系系统管理员。",
   "authErrorsUserBanned": "此账户已被封禁。如您有异议，请联系支持。",
-  "authErrorsUserNotFound": "未找到与此电子邮件地址关联的账户。请检查电子邮件或注册新账户。",
   "back": "返回",
   "backToHome": "返回主页",
   "banned": "已封禁",

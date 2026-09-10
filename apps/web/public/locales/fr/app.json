@@ -77,7 +77,6 @@
   "authErrorsEmailNotVerified": "Votre adresse e-mail n'est pas validée. Veuillez la valider avant de vous connecter.",
   "authErrorsOAuthSignInFailed": "Une erreur s'est produite lors de la connexion. Veuillez réessayer ou contacter l'administrateur système.",
   "authErrorsUserBanned": "Ce compte a été banni. Veuillez contacter l'assistance si vous pensez qu'il s'agit d'une erreur.",
-  "authErrorsUserNotFound": "Aucun compte n'a été trouvé avec cette adresse e-mail. Veuillez vérifier l'e-mail ou créer un nouveau compte.",
   "back": "Retour",
   "backToHome": "Retour à la page d'accueil",
   "banned": "Banni",

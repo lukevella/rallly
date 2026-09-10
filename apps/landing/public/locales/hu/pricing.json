@@ -24,7 +24,7 @@
   "duplicatePolls": "Szavazások duplikálása",
   "duplicatePollsDescription": "Hozz létre új szavazást egy meglévő alapján",
   "emailInvites": "E-mailes meghívók",
-  "emailInvitesDescription": "Hívja meg e-mailben a résztvevőket, és nézze meg, ki válaszolt",
+  "emailInvitesDescription": "Kövesd nyomon, ki nyitotta meg és jelzett vissza a személyes meghívó linkkel",
   "faq": "Gyakran ismételt kérdések",
   "featureNameExtendedPollLifetime": "Meghosszabbított szavazási idő",
   "finalizeDate": "Dátum véglegesítése",

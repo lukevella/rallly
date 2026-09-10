@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "O seu email não foi verificado. Por favor, verifique seu email antes de realizar o login.",
   "authErrorsOAuthSignInFailed": "Ocorreu um erro ao fazer login. Por favor, tente novamente ou entre em contato com o administrador do sistema.",
   "authErrorsUserBanned": "Sua conta foi banida. Por favor, entre em contato com o suporte se você pensa que isto é um erro.",
-  "authErrorsUserNotFound": "Nenhuma conta encontrada vinculada a este endereço de email. Por favor, verifique seu email ou registre uma nova conta.",
   "back": "Voltar",
   "backToHome": "Voltar à página inicial",
   "banned": "Banido",

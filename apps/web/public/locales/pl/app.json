@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "Twój adres e-mail nie jest zweryfikowany. Proszę zweryfikować swój adres e-mail przed zalogowaniem.",
   "authErrorsOAuthSignInFailed": "Wystąpił błąd podczas logowania. Spróbuj ponownie lub skontaktuj się z administratorem systemu.",
   "authErrorsUserBanned": "To konto zostało zablokowane. Jeśli uważasz, że jest to błąd, skontaktuj się z pomocą techniczną.",
-  "authErrorsUserNotFound": "Nie znaleziono konta o podanym adresie e-mail. Sprawdź adres e-mail lub zarejestruj nowe konto.",
   "back": "Powrót",
   "backToHome": "Powrót do strony głównej",
   "banned": "Zbanowany",

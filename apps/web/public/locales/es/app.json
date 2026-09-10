@@ -76,7 +76,6 @@
   "authErrorsEmailNotVerified": "Tu dirección de correo electrónico no está verificada. Por favor, verifica tu correo electrónico antes de iniciar sesión.",
   "authErrorsOAuthSignInFailed": "Se produjo un error al iniciar sesión. Por favor, inténtalo de nuevo o contacta al administrador del sistema.",
   "authErrorsUserBanned": "Esta cuenta ha sido baneada. Por favor, ponte en contacto con soporte si crees que esto es un error.",
-  "authErrorsUserNotFound": "No se encontró ninguna cuenta con esta dirección de correo electrónico. Por favor, verifica el correo electrónico o regístrate para una nueva cuenta.",
   "back": "Volver",
   "backToHome": "Volver al inicio",
   "banned": "Bloqueado",
