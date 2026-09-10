@@ -1,4 +1,4 @@
-import type { Participant, VoteType } from "@rallly/database";
+import type { Participant, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendNewParticipantEmail } from "@rallly/emails/templates/new-participant";
 import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/new-participant-confirmation";
@@ -107,6 +107,37 @@ async function sendNewResponseNotificationEmail({
     );
   }
 }
+
+/**
+ * Rejects new tentative votes when the poll no longer allows them, locking the
+ * poll row for the rest of the transaction.
+ *
+ * The check runs inside the writing transaction and takes a lock the
+ * organizer's disable transition also takes. Under READ COMMITTED a plain read
+ * would let a vote that passed an earlier check land after the organizer had
+ * already counted zero tentative votes, stranding one on a poll that no longer
+ * accepts them.
+ */
+const assertTentativeVotesAllowed = async (
+  tx: Prisma.TransactionClient,
+  pollId: string,
+  votes: { type: VoteType }[],
+) => {
+  if (!votes.some((vote) => vote.type === "ifNeedBe")) {
+    return;
+  }
+
+  const [poll] = await tx.$queryRaw<{ allow_tentative_votes: boolean }[]>`
+    SELECT allow_tentative_votes FROM polls WHERE id = ${pollId} FOR UPDATE
+  `;
+
+  if (!poll?.allow_tentative_votes) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "This poll does not accept tentative votes",
+    });
+  }
+};
 
 export const participants = router({
   list: publicProcedure
@@ -314,7 +345,6 @@ export const participants = router({
           select: {
             status: true,
             deleted: true,
-            allowTentativeVotes: true,
           },
         });
 
@@ -333,19 +363,6 @@ export const participants = router({
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "This poll is no longer accepting responses",
-          });
-        }
-
-        // The organizer can turn the tentative option off, so the client
-        // stops offering it. Enforce it here too: existing tentative votes
-        // are kept, but no new one is accepted.
-        if (
-          !poll.allowTentativeVotes &&
-          votes.some((v) => v.type === "ifNeedBe")
-        ) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "This poll does not accept tentative votes",
           });
         }
 
@@ -383,6 +400,8 @@ export const participants = router({
 
         const { participant, editToken, viaInvite } = await prisma.$transaction(
           async (tx) => {
+            await assertTentativeVotesAllowed(tx, pollId, validVotes);
+
             // A response answering an emailed invite takes the invite's
             // token, so the link the invitee already holds names it.
             const invite = token
@@ -594,21 +613,9 @@ export const participants = router({
 
       const pollId = existingParticipant.pollId;
 
-      if (votes.some((v) => v.type === "ifNeedBe")) {
-        const poll = await prisma.poll.findUnique({
-          where: { id: pollId },
-          select: { allowTentativeVotes: true },
-        });
-
-        if (!poll?.allowTentativeVotes) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "This poll does not accept tentative votes",
-          });
-        }
-      }
-
       const participant = await prisma.$transaction(async (tx) => {
+        await assertTentativeVotesAllowed(tx, pollId, votes);
+
         // Delete existing votes
         await tx.vote.deleteMany({
           where: {

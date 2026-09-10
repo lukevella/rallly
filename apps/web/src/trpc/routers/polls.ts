@@ -419,10 +419,14 @@ export const polls = router({
         // longer re-save that response, since the vote type is then rejected.
         // Locked only in that direction and only when such votes exist, so a
         // poll whose responses are all yes/no can still be switched, and an
-        // organizer who turned it off can always turn it back on. Inside the
-        // same transaction as `prior` so a vote landing concurrently cannot
-        // slip past the check.
+        // organizer who turned it off can always turn it back on.
         if (input.allowTentativeVotes === false && prior.allowTentativeVotes) {
+          // Take the same row lock the vote writes take, so a tentative vote
+          // committing concurrently either lands before this count sees it or
+          // waits and then fails its own check. Without the lock, READ
+          // COMMITTED lets one slip in between the count and the update.
+          await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
+
           const tentativeVoteCount = await tx.vote.count({
             where: { pollId, type: "ifNeedBe" },
           });
