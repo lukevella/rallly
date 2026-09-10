@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Rallly",
   "colors": {
-    "primary": "#4f39f6",
-    "light": "#615fff",
-    "dark": "#4f39f6"
+    "primary": "#4f46e5",
+    "light": "#847eed",
+    "dark": "#4f46e5"
   },
   "favicon": "/favicon.png",
   "navigation": {

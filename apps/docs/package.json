@@ -4,14 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "mint dev",
-    "build": "mint build"
+    "validate": "mint validate"
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*"
   },
   "dependencies": {
-    "mint": "^4.2.326",
-    "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "mint": "^4.2.884"
   }
 }
