@@ -311,7 +311,11 @@ export const participants = router({
       }) => {
         const poll = await prisma.poll.findUnique({
           where: { id: pollId },
-          select: { status: true, deleted: true },
+          select: {
+            status: true,
+            deleted: true,
+            allowTentativeVotes: true,
+          },
         });
 
         // A deleted poll never accepts responses.
@@ -329,6 +333,19 @@ export const participants = router({
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "This poll is no longer accepting responses",
+          });
+        }
+
+        // The organizer can turn the tentative option off, so the client
+        // stops offering it. Enforce it here too: existing tentative votes
+        // are kept, but no new one is accepted.
+        if (
+          !poll.allowTentativeVotes &&
+          votes.some((v) => v.type === "ifNeedBe")
+        ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "This poll does not accept tentative votes",
           });
         }
 
@@ -409,6 +426,7 @@ export const participants = router({
                   select: {
                     id: true,
                     title: true,
+                    allowTentativeVotes: true,
                     space: {
                       select: {
                         id: true,
@@ -478,6 +496,14 @@ export const participants = router({
           }),
         );
 
+        const voteCounts = validVotes.reduce(
+          (acc, { type }) => {
+            acc[type] += 1;
+            return acc;
+          },
+          { yes: 0, ifNeedBe: 0, no: 0 },
+        );
+
         track(ctx.user, {
           event: "poll_response_submit",
           properties: {
@@ -492,6 +518,12 @@ export const participants = router({
             has_note: !!participant.note,
             note_length: participant.note?.length,
             total_responses: totalResponses,
+            // Whether the tentative option is offered at all, so the counts
+            // below can be read against the polls that actually had it.
+            allow_tentative_votes: participant.poll.allowTentativeVotes,
+            yes_count: voteCounts.yes,
+            if_need_be_count: voteCounts.ifNeedBe,
+            no_count: voteCounts.no,
           },
           groups: {
             poll: pollId,
@@ -561,6 +593,20 @@ export const participants = router({
         });
 
       const pollId = existingParticipant.pollId;
+
+      if (votes.some((v) => v.type === "ifNeedBe")) {
+        const poll = await prisma.poll.findUnique({
+          where: { id: pollId },
+          select: { allowTentativeVotes: true },
+        });
+
+        if (!poll?.allowTentativeVotes) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "This poll does not accept tentative votes",
+          });
+        }
+      }
 
       const participant = await prisma.$transaction(async (tx) => {
         // Delete existing votes

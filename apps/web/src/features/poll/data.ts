@@ -223,6 +223,7 @@ export async function listPolls({
       hideParticipants: true,
       hideScores: true,
       disableComments: true,
+      allowTentativeVotes: true,
       user: {
         select: {
           id: true,
@@ -553,6 +554,7 @@ export async function getPollWithOptions({
       hideParticipants: true,
       hideScores: true,
       disableComments: true,
+      allowTentativeVotes: true,
       user: {
         select: {
           id: true,

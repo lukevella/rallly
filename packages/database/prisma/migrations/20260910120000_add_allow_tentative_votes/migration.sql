@@ -1,0 +1,11 @@
+-- Lets an organizer run a plain yes/no poll by turning off the tentative
+-- "if need be" vote.
+--
+-- Stored as a positive flag rather than `disable_tentative_votes` so that a
+-- later expansion of the vote types adds a column instead of inverting a
+-- negative one.
+--
+-- Defaults to true so every existing poll keeps all three vote states. Turning
+-- it off is forward-only: existing tentative votes are kept and stay visible,
+-- the flag only stops new ones being cast.
+ALTER TABLE "polls" ADD COLUMN "allow_tentative_votes" BOOLEAN NOT NULL DEFAULT true;

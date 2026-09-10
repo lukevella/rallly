@@ -10,9 +10,18 @@ import {
   FieldLabel,
 } from "@rallly/ui/field";
 import { FormField } from "@rallly/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@rallly/ui/select";
 import { Switch } from "@rallly/ui/switch";
+import { VoteIcon } from "@rallly/ui/vote-icon";
 import {
   BarChart2Icon,
+  ListChecksIcon,
   MailIcon,
   MessageCircleIcon,
   VenetianMaskIcon,
@@ -22,9 +31,46 @@ import { SettingIcon } from "@/components/setting-icon";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
+import type { VoteType } from "@/features/poll/constants";
 import { Trans } from "@/i18n/client";
 
-export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
+/**
+ * Each answer as its icon plus its name, so the choice shows exactly what a
+ * participant will see. The icons separate the answers, so no punctuation is
+ * needed between them. The base VoteIcon is used rather than the app wrapper
+ * because that one always sets a <title>, which screen readers would announce
+ * on top of the name beside it ("Yes Yes, If need be If need be").
+ */
+function VoteOptionLabel({ types }: { types: VoteType[] }) {
+  const labels: Record<VoteType, React.ReactNode> = {
+    yes: <Trans i18nKey="yes" defaults="Yes" />,
+    ifNeedBe: <Trans i18nKey="ifNeedBe" defaults="If need be" />,
+    no: <Trans i18nKey="no" defaults="No" />,
+  };
+
+  return (
+    <span className="flex items-center gap-x-2.5">
+      {types.map((type) => (
+        <span key={type} className="flex items-center gap-x-1">
+          <VoteIcon type={type} />
+          {labels[type]}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+export const PollSettingsForm = ({
+  children,
+  hasTentativeVotes = false,
+}: React.PropsWithChildren<{
+  /**
+   * True when responses already use the tentative vote. Those votes stay
+   * valid, so the answer set is locked to keep them re-saveable; the same
+   * rule is enforced in the modify mutation.
+   */
+  hasTentativeVotes?: boolean;
+}>) => {
   const form = useFormContext<PollSettingsFormData>();
   const isFree = useIsFree();
 
@@ -183,6 +229,88 @@ export const PollSettingsForm = ({ children }: React.PropsWithChildren) => {
                     });
                   }}
                 />
+              </Field>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="allowTentativeVotes"
+            render={({ field }) => (
+              // Responsive rather than horizontal: the select is far wider
+              // than a switch, so below the field group's @md breakpoint it
+              // stacks under the label instead of crushing it to one word
+              // per line.
+              <Field
+                orientation="responsive"
+                className="@md/field-group:gap-2 gap-4"
+              >
+                <SettingIcon>
+                  <ListChecksIcon />
+                </SettingIcon>
+                <FieldContent>
+                  <FieldLabel htmlFor="vote-options">
+                    <Trans
+                      i18nKey="voteOptionsSettingTitle"
+                      defaults="Vote options"
+                    />
+                  </FieldLabel>
+                  <FieldDescription>
+                    {hasTentativeVotes ? (
+                      <Trans
+                        i18nKey="voteOptionsLockedDescription"
+                        defaults={
+                          'Locked: participants have already answered "if need be".'
+                        }
+                      />
+                    ) : (
+                      <Trans
+                        i18nKey="voteOptionsSettingDescription"
+                        defaults="The answers participants can give for each option."
+                      />
+                    )}
+                  </FieldDescription>
+                </FieldContent>
+                {/* A choice between two answer sets rather than a toggle: the
+                    setting removes an answer rather than enabling a feature, so
+                    a switch would have to ship pre-enabled to keep existing
+                    polls unchanged, unlike every other switch in this card. */}
+                {/* The wrapper takes the responsive orientation's `*:w-full`
+                    so the select inside sizes to its content rather than
+                    stretching across the row when stacked. */}
+                <div>
+                  <Select
+                    items={{
+                      yesIfNeedBeNo: (
+                        <VoteOptionLabel types={["yes", "ifNeedBe", "no"]} />
+                      ),
+                      yesNo: <VoteOptionLabel types={["yes", "no"]} />,
+                    }}
+                    disabled={hasTentativeVotes}
+                    value={field.value ? "yesIfNeedBeNo" : "yesNo"}
+                    onValueChange={(value) => {
+                      if (!value) {
+                        return;
+                      }
+                      const allowTentativeVotes = value === "yesIfNeedBeNo";
+                      field.onChange(allowTentativeVotes);
+                      posthog?.capture("poll_settings:vote_options_change", {
+                        allow_tentative_votes: allowTentativeVotes,
+                      });
+                    }}
+                  >
+                    <SelectTrigger id="vote-options">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yesIfNeedBeNo">
+                        <VoteOptionLabel types={["yes", "ifNeedBe", "no"]} />
+                      </SelectItem>
+                      <SelectItem value="yesNo">
+                        <VoteOptionLabel types={["yes", "no"]} />
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </Field>
             )}
           />

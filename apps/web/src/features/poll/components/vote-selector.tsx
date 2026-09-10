@@ -2,6 +2,7 @@ import type { VoteType } from "@rallly/database";
 import { buttonVariants, cn } from "@rallly/ui";
 import * as React from "react";
 
+import { getVoteTypes } from "@/features/poll/constants";
 import { useTranslation } from "@/i18n/client";
 
 import VoteIcon from "./vote-icon";
@@ -18,23 +19,39 @@ export interface VoteSelectorProps {
   onFocus?: React.FocusEventHandler<HTMLButtonElement>;
   onBlur?: React.FocusEventHandler<HTMLButtonElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+  /**
+   * When false the tentative vote is dropped from the cycle, so clicking
+   * alternates yes → no.
+   */
+  allowTentativeVotes?: boolean;
   className?: string;
 }
 
-const orderedVoteTypes: VoteType[] = ["yes", "ifNeedBe", "no"];
-
-export const toggleVote = (value?: VoteType) => {
+export const toggleVote = (value?: VoteType, allowTentativeVotes = true) => {
+  const orderedVoteTypes = getVoteTypes(allowTentativeVotes);
   if (!value) return orderedVoteTypes[0];
-  return orderedVoteTypes[
-    (orderedVoteTypes.indexOf(value) + 1) % orderedVoteTypes.length
-  ];
+  const index = orderedVoteTypes.indexOf(value);
+  // A vote cast before the tentative option was turned off is not in the
+  // cycle; advancing from it starts over rather than landing on -1 + 1 = 0
+  // by coincidence.
+  if (index === -1) return orderedVoteTypes[0];
+  return orderedVoteTypes[(index + 1) % orderedVoteTypes.length];
 };
 
 export const VoteSelector = React.forwardRef<
   HTMLButtonElement,
   VoteSelectorProps
 >(function VoteSelector(
-  { value, optionLabel, onChange, onFocus, onBlur, onKeyDown, className },
+  {
+    value,
+    optionLabel,
+    onChange,
+    onFocus,
+    onBlur,
+    onKeyDown,
+    allowTentativeVotes = true,
+    className,
+  },
   ref,
 ) {
   const { t } = useTranslation();
@@ -74,7 +91,7 @@ export const VoteSelector = React.forwardRef<
         className,
       )}
       onClick={() => {
-        onChange?.(value ? toggleVote(value) : orderedVoteTypes[0]);
+        onChange?.(toggleVote(value, allowTentativeVotes));
       }}
       ref={ref}
     >

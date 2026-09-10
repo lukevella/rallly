@@ -34,6 +34,8 @@ export interface PollOptionProps {
   selectedParticipantId?: string;
   optionId: string;
   optionLabel: string;
+  /** When false the segmented control offers yes and no only. */
+  allowTentativeVotes?: boolean;
 }
 
 const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
@@ -88,6 +90,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   optionLabel,
   yesScore,
   ifNeedBeScore,
+  allowTentativeVotes = true,
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
@@ -98,7 +101,10 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
     <div
       className={cn(
         "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
-        editable && "grid-cols-[0rem_1fr_3.5rem_8.875rem]",
+        editable &&
+          (allowTentativeVotes
+            ? "grid-cols-[0rem_1fr_3.5rem_8.875rem]"
+            : "grid-cols-[0rem_1fr_3.5rem_6.125rem]"),
         showVote && "grid-cols-[1.875rem_1fr_3.5rem_0rem]",
         !editable && !showVote && "grid-cols-[0rem_1fr_3.5rem_0rem]",
       )}
@@ -114,11 +120,18 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       <IfScoresVisible>
         <Button
           {...dialog.triggerProps}
-          aria-label={`${t("optionVoteBreakdown", {
-            defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-            yesScore,
-            ifNeedBeScore,
-          })}. ${t("showParticipantVotes", {
+          aria-label={`${
+            allowTentativeVotes
+              ? t("optionVoteBreakdown", {
+                  defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
+                  yesScore,
+                  ifNeedBeScore,
+                })
+              : t("optionVoteBreakdownYesOnly", {
+                  defaultValue: "{yesScore} yes",
+                  yesScore,
+                })
+          }. ${t("showParticipantVotes", {
             defaultValue: "Show participant votes",
           })}`}
           variant="ghost"
@@ -150,6 +163,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             value={vote}
             onChange={onChange}
             optionLabel={optionLabel}
+            allowTentativeVotes={allowTentativeVotes}
           />
         </m.div>
       ) : null}

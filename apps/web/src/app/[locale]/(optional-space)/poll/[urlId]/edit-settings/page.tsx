@@ -9,10 +9,19 @@ import { useForm } from "react-hook-form";
 import { usePoll } from "@/features/poll/client";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
+import { useParticipants } from "@/features/poll/components/participants-provider";
 import { Trans } from "@/i18n/client";
 
 const Page = () => {
   const poll = usePoll();
+  const { participants } = useParticipants();
+
+  // The answer set is locked once a response uses the tentative vote, so those
+  // votes stay re-saveable by their owner. Derived from the participants the
+  // layout already loads rather than a dedicated count query.
+  const hasTentativeVotes = participants.some((participant) =>
+    participant.votes.some((vote) => vote.type === "ifNeedBe"),
+  );
 
   const router = useRouter();
 
@@ -29,6 +38,7 @@ const Page = () => {
       hideParticipants: poll.hideParticipants,
       hideScores: poll.hideScores,
       enableComments: !poll.disableComments,
+      allowTentativeVotes: poll.allowTentativeVotes,
       requireParticipantEmail: poll.requireParticipantEmail,
     },
   });
@@ -47,7 +57,7 @@ const Page = () => {
           }
         })}
       >
-        <PollSettingsForm>
+        <PollSettingsForm hasTentativeVotes={hasTentativeVotes}>
           <CardFooter className="justify-between">
             <Link href={pollLink} className={buttonVariants()}>
               <Trans i18nKey="cancel" />

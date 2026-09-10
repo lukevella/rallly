@@ -108,10 +108,12 @@ export function EventCard() {
             icon={<VoteIcon type="yes" />}
             label={<Trans i18nKey="yes" defaults="Yes" />}
           />
-          <IconDescription
-            icon={<VoteIcon type="ifNeedBe" />}
-            label={<Trans i18nKey="ifNeedBe" defaults="If need be" />}
-          />
+          {poll.allowTentativeVotes ? (
+            <IconDescription
+              icon={<VoteIcon type="ifNeedBe" />}
+              label={<Trans i18nKey="ifNeedBe" defaults="If need be" />}
+            />
+          ) : null}
           <IconDescription
             icon={<VoteIcon type="no" />}
             label={<Trans i18nKey="no" defaults="No" />}

@@ -105,6 +105,11 @@ export const createPollInputSchema = z
         "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
       example: false,
     }),
+    allowTentativeVotes: z.boolean().optional().meta({
+      description:
+        'Allow participants to answer "if need be" as well as yes and no. Defaults to true.',
+      example: true,
+    }),
     spaceId: z.string().optional().meta({
       description:
         "ID of the space to create the poll in. Defaults to user's most recently used space.",

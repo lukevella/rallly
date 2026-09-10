@@ -50,6 +50,11 @@ model Poll {
   hideScores              Boolean           @default(false) @map("hide_scores")
   disableComments         Boolean           @default(true) @map("disable_comments")
   requireParticipantEmail Boolean           @default(false) @map("require_participant_email")
+  /// Whether participants may cast the tentative "if need be" vote. Positive
+  /// flag so a future vote-type expansion adds columns rather than inverting a
+  /// negative. Turning it off only blocks new tentative votes; existing ones
+  /// are kept and stay visible.
+  allowTentativeVotes     Boolean           @default(true) @map("allow_tentative_votes")
   muted                   Boolean           @default(false)
 
   user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
