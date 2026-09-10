@@ -287,7 +287,6 @@
   "emailChangeVerifyError": "Varmistus epäonnistui. Yritä uudelleen.",
   "emailDoesNotMatch": "Sähköpostiosoitteet eivät täsmää.",
   "emailInvites": "Sähköpostikutsut",
-  "emailInvitesDescription": "Kutsu ihmisiä sähköpostitse ja katso, kuka on vastannut",
   "emailMismatch": "Sähköpostiosoite ei vastaa tilin sähköpostia",
   "emailPlaceholder": "maija.meikalainen@example.com",
   "enabled": "Käytössä",
