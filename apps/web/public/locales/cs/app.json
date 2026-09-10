@@ -287,7 +287,6 @@
   "emailChangeVerifyError": "Ověření se nezdařilo. Zkuste to prosím znovu.",
   "emailDoesNotMatch": "E-mailová adresa nesedí.",
   "emailInvites": "E-mailové pozvánky",
-  "emailInvitesDescription": "Pozvěte lidi e-mailem a sledujte, kdo odpověděl",
   "emailMismatch": "Zadaný e-mail neodpovídá e-mailu účtu",
   "emailPlaceholder": "karel.novak@example.com",
   "enabled": "Povoleno",
