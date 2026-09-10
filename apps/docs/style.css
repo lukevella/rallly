@@ -38,3 +38,17 @@
 .dark #content-area h4 {
   color: rgb(255 255 255);
 }
+
+/* The app derives its dark-mode primary at runtime: adjustColorForContrast()
+   lightens DEFAULT_PRIMARY_COLOR (#4f46e5) against the dark background until it
+   clears a 5:1 contrast ratio, yielding #847eed (see features/branding/utils.ts).
+   Mintlify has no equivalent step, so pin both dark-mode primaries to that value. */
+.dark {
+  --primary-light: 132 126 237;
+  --primary-dark: 132 126 237;
+}
+
+/* Mintlify's top-bar CTA hardcodes bg-primary-dark rather than reading --primary. */
+.dark .bg-primary-dark {
+  background-color: rgb(132 126 237);
+}
