@@ -287,7 +287,6 @@
   "emailChangeVerifyError": "A hitelesítés nem sikerült. Kérlek, próbáld újra!",
   "emailDoesNotMatch": "Az email cím nem egyezik.",
   "emailInvites": "Emailes meghívók",
-  "emailInvitesDescription": "Hívd meg emailben a résztvevőket a szavazásra, és nézd meg, ki válaszolt",
   "emailMismatch": "A megadott email nem egyezik a fiók email címével",
   "emailPlaceholder": "kovacs.anna@pelda.hu",
   "enabled": "Engedélyezve",
