@@ -24,7 +24,7 @@
   "duplicatePolls": "Duplicate polls",
   "duplicatePollsDescription": "Create a new poll based on an existing one",
   "emailInvites": "Email invites",
-  "emailInvitesDescription": "Invite people by email and see who has responded",
+  "emailInvitesDescription": "Track who opened and responded with personal invite links",
   "faq": "Frequently asked questions",
   "featureNameExtendedPollLifetime": "Extended poll lifetime",
   "finalizeDate": "Finalize date",
