@@ -101,6 +101,15 @@ describe("PollSettingsForm vote options lock", () => {
     ).toBeDisabled();
   });
 
+  it("stays editable on a yes/no poll that still holds tentative votes", () => {
+    // Only turning the option off is locked. A poll already set to yes/no has
+    // nothing left to strand, so switching it back on must stay available.
+    render(<TestForm allowTentativeVotes={false} hasTentativeVotes={true} />);
+    expect(
+      screen.getByRole("combobox", { name: /vote options/i }),
+    ).not.toBeDisabled();
+  });
+
   it("says why it is locked", () => {
     render(<TestForm hasTentativeVotes={true} />);
     expect(screen.getByText(/locked/i)).toBeInTheDocument();
