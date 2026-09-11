@@ -1,0 +1,53 @@
+---
+title: "Rate limits"
+description: "Per space request limits and how to back off."
+---
+
+All endpoints share two limits per space:
+
+| Window | Limit |
+| --- | --- |
+| Per minute | 60 requests |
+| Per day | 5,000 requests |
+
+Both are fixed windows that open with the first request and reset when they expire. Limits apply to the space, not the key, so creating more keys does not increase throughput.
+
+## Headers
+
+Every response to an authenticated request carries the standard `RateLimit-*` headers:
+
+| Header | Meaning |
+| --- | --- |
+| `RateLimit-Policy` | Both limits and their window lengths |
+| `RateLimit-Limit` | The limit closest to being exhausted |
+| `RateLimit-Remaining` | Requests left in that window |
+| `RateLimit-Reset` | Seconds until that window resets |
+
+Responses sent before the limiter runs, such as `401`, `403` and the maintenance `503`, do not include them.
+
+## Exceeding a limit
+
+When either limit is exhausted the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body and a `Retry-After` header with the number of seconds to wait.
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 23
+RateLimit-Limit: 60
+RateLimit-Remaining: 0
+RateLimit-Reset: 23
+```
+
+```json
+{
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Rate limit exceeded. Retry after the time indicated in the Retry-After header."
+  }
+}
+```
+
+Wait for `Retry-After` before retrying. Do not retry on a fixed interval: a client that ignores the header spends its next window on requests that fail.
+
+## Store outages
+
+If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body and a `Retry-After` header.

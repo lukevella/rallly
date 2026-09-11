@@ -1,0 +1,33 @@
+---
+title: "Introduction"
+description: "Create and manage scheduling polls from your own systems."
+---
+
+The Rallly API lets you create polls, read their options, results and participants, and close or delete them from your own tools. Every request is scoped to one space: the API key identifies the space, and every poll you create or read belongs to it.
+
+## Availability
+
+The API is available for spaces on a Pro plan of the cloud hosted version, at `https://api.rallly.co`. It is not available on self-hosted instances.
+
+## Getting a key
+
+Only the space owner can create API keys, from **Settings → API keys**. See [Authentication](/api-reference/authentication) for the header format and how keys are handled.
+
+## Base URL
+
+```text
+https://api.rallly.co/v1
+```
+
+`v1` is stable. Additive changes such as new endpoints or new optional fields may land at any time; breaking changes only arrive under a new version prefix. The [changelog](/api-reference/changelog) records both.
+
+## Conventions
+
+- Requests and responses are JSON. Send `Content-Type: application/json` with a body.
+- List endpoints return the items in `data` and a `nextCursor` beside it. Pass `nextCursor` as the `cursor` query parameter for the next page; it is `null` on the last page.
+- Timestamps are ISO 8601 instants in UTC. A `date` poll's options carry a floating `YYYY-MM-DD` date with no timezone; a `time` poll's options carry a `startTime` instant and a `duration` in minutes.
+- Request bodies are validated strictly. A field that is not in the schema is rejected rather than ignored, so a misspelt setting never silently falls back to its default.
+
+## Machine readable spec
+
+The OpenAPI document that generates this reference is served at `https://api.rallly.co/v1/openapi`.

@@ -11,6 +11,7 @@
     "type-check": "tsc --pretty --noEmit",
     "i18n:scan": "i18next-cli extract",
     "i18n:sync": "i18next-cli extract --sync-primary",
+    "openapi:generate": "tsx --conditions react-server scripts/generate-openapi.ts",
     "test:integration": "playwright test",
     "test:unit": "vitest run",
     "test:codegen": "playwright codegen http://localhost:3000",
@@ -127,6 +128,8 @@
     "dotenv": "^17.2.4",
     "i18next-cli": "^1.58.1",
     "jsdom": "^26.1.0",
+    "server-only": "^0.0.1",
+    "tsx": "^4.6.2",
     "vitest": "^4.1.11"
   }
 }
