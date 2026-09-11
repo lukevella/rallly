@@ -9,6 +9,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { FormItem, FormLabel } from "@rallly/ui/form";
 import { PlusIcon } from "lucide-react";
+import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Link } from "@/components/link";
 import { ConferencingProviderIcon } from "@/features/conferencing/components/conferencing-provider-icon";
@@ -27,59 +28,81 @@ type ConferencingFormValues = {
   conferencingProvider?: ConferencingProvider | "";
 };
 
-// Picks the provider that will host the meeting. The link itself is created
-// when the organizer finalizes the poll, so an unlinked account is caught here
-// rather than at that later step.
-export function ConferencingField({
+// The "add" affordance, kept apart from the field so the form can line it
+// up with its sibling add buttons. Renders nothing once a provider is set.
+export function AddConferencingButton({
   available,
-  connected,
-}: ConferencingOptions) {
+}: Pick<ConferencingOptions, "available">) {
   const form = useFormContext<ConferencingFormValues>();
+  const value = form.watch("conferencingProvider");
+
+  if (value) {
+    return null;
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={<Button type="button" className="rounded-full" />}
+      >
+        <PlusIcon data-icon="inline-start" />
+        <Trans i18nKey="addConferencing" defaults="Add conferencing" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        {available.map((provider) => (
+          <DropdownMenuItem
+            key={provider}
+            onClick={() => {
+              form.setValue("conferencingProvider", provider, {
+                shouldDirty: true,
+              });
+            }}
+          >
+            <ConferencingProviderIcon provider={provider} size={16} />
+            {conferencingProviderLabels[provider]}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+// Shows the chosen provider. The link itself is created when the organizer
+// finalizes the poll, so an unlinked account is caught here rather than at
+// that later step.
+export function ConferencingField({
+  connected,
+}: Pick<ConferencingOptions, "connected">) {
+  const form = useFormContext<ConferencingFormValues>();
+  // `trigger` is stable; the context object itself is not (FormProvider
+  // rebuilds it every render), so depending on `form` here would loop.
+  const { trigger } = form;
+  const value = form.watch("conferencingProvider");
+
+  // Validate as soon as a provider is set — by the add button or by a draft
+  // restored from storage — instead of waiting for the submit attempt. Runs
+  // after mount so the Controller's rule is registered.
+  React.useEffect(() => {
+    if (value) {
+      void trigger("conferencingProvider");
+    }
+  }, [value, trigger]);
+
+  if (!value) {
+    return null;
+  }
 
   return (
     <Controller
       control={form.control}
       name="conferencingProvider"
       rules={{
-        validate: (value) =>
-          !value || connected.includes(value) ? true : "not_connected",
+        validate: (provider) =>
+          !provider || connected.includes(provider) ? true : "not_connected",
       }}
       render={({ field, fieldState }) => {
-        if (!field.value) {
-          return (
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={<Button type="button" className="rounded-full" />}
-                >
-                  <PlusIcon data-icon="inline-start" />
-                  <Trans
-                    i18nKey="addConferencing"
-                    defaults="Add conferencing"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  {available.map((provider) => (
-                    <DropdownMenuItem
-                      key={provider}
-                      onClick={() => {
-                        field.onChange(provider);
-                        // Surface the missing connection right away instead of
-                        // waiting for the submit attempt.
-                        void form.trigger("conferencingProvider");
-                      }}
-                    >
-                      <ConferencingProviderIcon provider={provider} size={16} />
-                      {conferencingProviderLabels[provider]}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          );
-        }
-
-        const label = conferencingProviderLabels[field.value];
+        const provider = field.value as ConferencingProvider;
+        const label = conferencingProviderLabels[provider];
 
         return (
           <FormItem>
@@ -101,7 +124,7 @@ export function ConferencingField({
               </Button>
             </div>
             <div className="flex h-9 items-center gap-x-2 rounded-md border bg-input-background px-3 text-sm">
-              <ConferencingProviderIcon provider={field.value} size={16} />
+              <ConferencingProviderIcon provider={provider} size={16} />
               <span>{label}</span>
             </div>
             {fieldState.error ? (

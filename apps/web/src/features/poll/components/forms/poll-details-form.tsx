@@ -5,7 +5,10 @@ import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
-import { ConferencingField } from "@/features/conferencing/components/conferencing-field";
+import {
+  AddConferencingButton,
+  ConferencingField,
+} from "@/features/conferencing/components/conferencing-field";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
@@ -25,6 +28,16 @@ export const PollDetailsForm = ({
 
   const { requiredString } = useFormValidation();
   const { register } = form;
+
+  // Reveal the editor whenever the field holds content — this covers values
+  // restored asynchronously (persisted drafts, the edit form) that aren't yet
+  // present on first render — or once the user opens it via the button. Remove
+  // clears the value and resets `opened`, so it collapses again.
+  const [descriptionOpened, setDescriptionOpened] = React.useState(false);
+  const hasDescription = !!form.watch("description")?.trim();
+  const descriptionExpanded = descriptionOpened || hasDescription;
+  const canAddConferencing =
+    !!conferencing && !form.watch("conferencingProvider");
 
   return (
     <div className="grid gap-4 py-1">
@@ -68,38 +81,41 @@ export const PollDetailsForm = ({
           {...register("location")}
         />
       </FormItem>
-      {conferencing ? <ConferencingField {...conferencing} /> : null}
-      <DescriptionField />
+      {conferencing ? (
+        <ConferencingField connected={conferencing.connected} />
+      ) : null}
+      {descriptionExpanded ? (
+        <DescriptionField
+          onRemove={() => {
+            form.setValue("description", "");
+            setDescriptionOpened(false);
+          }}
+        />
+      ) : null}
+      {canAddConferencing || !descriptionExpanded ? (
+        <div className="flex flex-wrap gap-2">
+          {canAddConferencing ? (
+            <AddConferencingButton available={conferencing.available} />
+          ) : null}
+          {!descriptionExpanded ? (
+            <Button
+              type="button"
+              className="rounded-full"
+              onClick={() => setDescriptionOpened(true)}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addDescription" defaults="Add description" />
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 };
 
-const DescriptionField = () => {
+const DescriptionField = ({ onRemove }: { onRemove: () => void }) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
-
-  // Reveal the editor whenever the field holds content — this covers values
-  // restored asynchronously (persisted drafts, the edit form) that aren't yet
-  // present on first render — or once the user opens it via the button. Remove
-  // clears the value and resets `opened`, so it collapses again.
-  const [opened, setOpened] = React.useState(false);
-  const hasContent = !!form.watch("description")?.trim();
-  const expanded = opened || hasContent;
-
-  if (!expanded) {
-    return (
-      <div>
-        <Button
-          type="button"
-          className="rounded-full"
-          onClick={() => setOpened(true)}
-        >
-          <PlusIcon data-icon="inline-start" />
-          <Trans i18nKey="addDescription" defaults="Add description" />
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <FormItem>
@@ -112,10 +128,7 @@ const DescriptionField = () => {
           variant="link"
           size="sm"
           className="h-auto p-0 text-muted-foreground hover:text-foreground"
-          onClick={() => {
-            form.setValue("description", "");
-            setOpened(false);
-          }}
+          onClick={onRemove}
         >
           <Trans i18nKey="remove" defaults="Remove" />
         </Button>
