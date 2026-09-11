@@ -37,12 +37,6 @@ export class NewPollPage {
       await expect(locationField).toBeVisible({ timeout: 2000 });
     }).toPass();
     await locationField.fill("Online");
-    await page
-      .getByRole("button", { name: "Add directions or a link" })
-      .click();
-    await page
-      .getByLabel("Additional information", { exact: true })
-      .fill("Ring the bell at the side door");
 
     // The description is a rich text editor revealed on demand, so open it, then
     // type into its contenteditable (fill() doesn't work on contenteditable).

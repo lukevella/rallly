@@ -181,7 +181,6 @@ export const CreatePoll = ({
       title: "",
       description: "",
       location: "",
-      locationDetails: "",
       conferencingProvider: "",
       conferencingUrl: "",
       conferencingLabel: "",
@@ -245,7 +244,6 @@ export const CreatePoll = ({
             const res = await makePoll.mutateAsync({
               title: title,
               location: formData?.location?.trim(),
-              locationDetails: formData?.locationDetails?.trim() || undefined,
               conferencing: toPollConferencing(formData),
               description: formData?.description?.trim(),
               // Attach a time zone (times convert per viewer) unless the organizer

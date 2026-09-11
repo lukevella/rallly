@@ -96,14 +96,7 @@ export function EventCard() {
           {poll.location ? (
             <EventMetaItem>
               <MapPinIcon />
-              <span className="min-w-0">
-                <TruncatedLinkify>{poll.location}</TruncatedLinkify>
-                {poll.locationDetails ? (
-                  <span className="block whitespace-pre-line text-muted-foreground">
-                    <TruncatedLinkify>{poll.locationDetails}</TruncatedLinkify>
-                  </span>
-                ) : null}
-              </span>
+              <TruncatedLinkify>{poll.location}</TruncatedLinkify>
             </EventMetaItem>
           ) : null}
         </EventMetaList>

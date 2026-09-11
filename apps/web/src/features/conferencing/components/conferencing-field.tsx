@@ -8,7 +8,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { FormItem, FormLabel } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { LinkIcon } from "lucide-react";
+import { VideoIcon } from "lucide-react";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Link } from "@/components/link";
@@ -68,8 +68,8 @@ export function ConferencingProviderMenuItems({
           });
         }}
       >
-        <LinkIcon />
-        <Trans i18nKey="customLink" defaults="Custom link" />
+        <VideoIcon />
+        <Trans i18nKey="customVideoCall" defaults="Custom" />
       </DropdownMenuItem>
     </DropdownMenuGroup>
   );

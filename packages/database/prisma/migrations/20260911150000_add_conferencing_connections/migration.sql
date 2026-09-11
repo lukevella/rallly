@@ -1,11 +1,9 @@
 -- Conferencing integrations: a connection per linked Zoom / Google Meet
 -- account, and what the organizer asked for on a poll (a provider to mint a
--- link with at finalize, or a link they pasted). Location details carry
--- directions or a map link alongside the address.
+-- link with at finalize, or a link they pasted).
 
 -- AlterTable
-ALTER TABLE "polls" ADD COLUMN "conferencing" JSONB,
-ADD COLUMN "location_details" TEXT;
+ALTER TABLE "polls" ADD COLUMN "conferencing" JSONB;
 
 -- CreateTable
 CREATE TABLE "conferencing_connections" (

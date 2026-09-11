@@ -153,7 +153,6 @@ export const polls = router({
         title: z.string().trim().min(1),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        locationDetails: z.string().trim().max(500).optional(),
         conferencing: pollConferencingSchema.optional(),
         description: z
           .string()
@@ -196,7 +195,6 @@ export const polls = router({
           Title: input.title,
           Description: input.description || "",
           Location: input.location || "",
-          LocationDetails: input.locationDetails || "",
           Conferencing:
             input.conferencing?.provider === "custom"
               ? input.conferencing.label
@@ -244,9 +242,6 @@ export const polls = router({
           });
         }
       }
-      const locationDetails = input.location
-        ? input.locationDetails || undefined
-        : undefined;
 
       // Date-only (all-day) options are floating: they are stored at UTC
       // midnight so they never shift across timezones. A falsy poll.timeZone
@@ -282,7 +277,6 @@ export const polls = router({
             title,
             timeZone,
             location,
-            locationDetails,
             conferencing,
             description,
             userId: ctx.user.id,
@@ -475,7 +469,6 @@ export const polls = router({
           select: {
             title: true,
             location: true,
-            locationDetails: true,
             description: true,
             timeZone: true,
             hideParticipants: true,
@@ -681,7 +674,6 @@ export const polls = router({
           kind: true,
           createdAt: true,
           location: true,
-          locationDetails: true,
           description: true,
           disableComments: true,
           allowTentativeVotes: true,
@@ -843,7 +835,6 @@ export const polls = router({
           timeZone: true,
           title: true,
           location: true,
-          locationDetails: true,
           description: true,
           createdAt: true,
           status: true,
@@ -986,7 +977,6 @@ export const polls = router({
           timeZone: true,
           title: true,
           location: true,
-          locationDetails: true,
           conferencing: true,
           description: true,
           spaceId: true,
@@ -1175,13 +1165,7 @@ export const polls = router({
             title: poll.title,
             description: poll.description,
             location: poll.location
-              ? {
-                  provider: "custom",
-                  address: poll.location,
-                  ...(poll.locationDetails && {
-                    details: poll.locationDetails,
-                  }),
-                }
+              ? { provider: "custom", address: poll.location }
               : undefined,
             conferencing: conferencing ?? undefined,
             timeZone: eventTimes.timeZone,
@@ -1510,7 +1494,6 @@ export const polls = router({
         },
         select: {
           location: true,
-          locationDetails: true,
           description: true,
           timeZone: true,
           hideParticipants: true,

@@ -10,10 +10,7 @@ import { getSpaceBranding } from "@/emails/branding";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
-import {
-  formatLocationText,
-  getLocationDetails,
-} from "@/features/location/utils";
+import { formatLocationText } from "@/features/location/utils";
 import {
   getEventAcceptedCount,
   getPublicScheduledEvent,
@@ -105,10 +102,6 @@ async function sendRsvpConfirmation({
   const descriptionParts: string[] = [];
   if (event.description) {
     descriptionParts.push(event.description);
-  }
-  const locationDetails = location ? getLocationDetails(location) : undefined;
-  if (locationDetails) {
-    descriptionParts.push(locationDetails);
   }
   if (conferencingUri) {
     descriptionParts.push(conferencingUri);

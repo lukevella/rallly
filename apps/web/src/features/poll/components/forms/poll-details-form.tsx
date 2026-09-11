@@ -9,7 +9,6 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { Textarea } from "@rallly/ui/textarea";
 import { BuildingIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -45,10 +44,6 @@ export const PollDetailsForm = ({
   const [locationOpened, setLocationOpened] = React.useState(false);
   const hasLocation = !!form.watch("location")?.trim();
   const locationExpanded = locationOpened || hasLocation;
-
-  const [detailsOpened, setDetailsOpened] = React.useState(false);
-  const hasDetails = !!form.watch("locationDetails")?.trim();
-  const detailsExpanded = detailsOpened || hasDetails;
 
   const [descriptionOpened, setDescriptionOpened] = React.useState(false);
   const hasDescription = !!form.watch("description")?.trim();
@@ -92,9 +87,7 @@ export const PollDetailsForm = ({
               className="h-auto p-0 text-muted-foreground hover:text-foreground"
               onClick={() => {
                 form.setValue("location", "");
-                form.setValue("locationDetails", "");
                 setLocationOpened(false);
-                setDetailsOpened(false);
               }}
             >
               <Trans i18nKey="remove" defaults="Remove" />
@@ -107,55 +100,6 @@ export const PollDetailsForm = ({
             placeholder={t("locationPlaceholder")}
             {...register("location")}
           />
-          {detailsExpanded ? (
-            <>
-              <div className="flex items-center justify-between">
-                <FormLabel htmlFor="location-details">
-                  <Trans
-                    i18nKey="locationDetails"
-                    defaults="Additional information"
-                  />
-                </FormLabel>
-                <Button
-                  type="button"
-                  variant="link"
-                  size="sm"
-                  className="h-auto p-0 text-muted-foreground hover:text-foreground"
-                  onClick={() => {
-                    form.setValue("locationDetails", "");
-                    setDetailsOpened(false);
-                  }}
-                >
-                  <Trans i18nKey="remove" defaults="Remove" />
-                </Button>
-              </div>
-              <Textarea
-                id="location-details"
-                rows={2}
-                maxLength={500}
-                placeholder={t("locationDetailsPlaceholder", {
-                  defaultValue: "Directions, parking, or a map link",
-                })}
-                {...register("locationDetails")}
-              />
-            </>
-          ) : (
-            <div>
-              <Button
-                type="button"
-                variant="link"
-                size="sm"
-                className="h-auto p-0 text-muted-foreground hover:text-foreground"
-                onClick={() => setDetailsOpened(true)}
-              >
-                <PlusIcon data-icon="inline-start" />
-                <Trans
-                  i18nKey="addLocationDetails"
-                  defaults="Add directions or a link"
-                />
-              </Button>
-            </div>
-          )}
         </FormItem>
       ) : null}
       {conferencing ? (

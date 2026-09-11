@@ -120,12 +120,12 @@ test.describe
       expect(poll.location).toBe("Online");
     });
 
-    test("a pasted link needs no account and is stored with the address details", async () => {
+    test("a pasted link needs no account", async () => {
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
       await page.getByRole("button", { name: "Add location" }).click();
-      await page.getByRole("menuitem", { name: "Custom link" }).click();
+      await page.getByRole("menuitem", { name: "Custom" }).click();
       await page.getByLabel("Video call").fill("https://meet.jit.si/rallly");
       await page.getByLabel("Label").fill("Jitsi");
 
@@ -134,14 +134,13 @@ test.describe
 
       const poll = await prisma.poll.findFirstOrThrow({
         where: { title: `Link poll ${runId}` },
-        select: { conferencing: true, locationDetails: true },
+        select: { conferencing: true },
       });
       expect(poll.conferencing).toEqual({
         provider: "custom",
         uri: "https://meet.jit.si/rallly",
         label: "Jitsi",
       });
-      expect(poll.locationDetails).toBe("Ring the bell at the side door");
     });
 
     test("a pasted link must be a link", async () => {
@@ -149,7 +148,7 @@ test.describe
       await newPollPage.goto();
 
       await page.getByRole("button", { name: "Add location" }).click();
-      await page.getByRole("menuitem", { name: "Custom link" }).click();
+      await page.getByRole("menuitem", { name: "Custom" }).click();
       await page.getByLabel("Video call").fill("not a link");
       await page.getByLabel(/title|event/i).fill("Invalid link");
       await page.getByRole("button", { name: /^create poll$/i }).click();
