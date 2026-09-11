@@ -3,6 +3,7 @@ import "server-only";
 import type { PollStatus, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { shortUrl } from "@rallly/utils/absolute-url";
+import { parsePollConferencing } from "@/features/conferencing/data";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { VOTE_TYPES } from "@/features/poll/constants";
 import type {
@@ -701,6 +702,7 @@ export async function getPollDetails({
       timeZone: true,
       title: true,
       location: true,
+      conferencing: true,
       description: true,
       createdAt: true,
       status: true,
@@ -757,11 +759,13 @@ export async function getPollDetails({
     deleted: _deleted,
     user,
     space,
+    conferencing,
     ...pollFields
   } = poll;
 
   return {
     ...pollFields,
+    conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
     space: space
       ? {

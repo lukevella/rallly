@@ -835,6 +835,7 @@ export const polls = router({
           timeZone: true,
           title: true,
           location: true,
+          conferencing: true,
           description: true,
           createdAt: true,
           status: true,

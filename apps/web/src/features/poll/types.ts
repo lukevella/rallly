@@ -1,3 +1,4 @@
+import type { PollConferencing } from "@/features/conferencing/schema";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import type { SpaceTier } from "@/features/space/schema";
@@ -8,6 +9,7 @@ export type PollDetails = {
   id: string;
   title: string;
   location: string | null;
+  conferencing: PollConferencing | null;
   description: string | null;
   createdAt: Date;
   status: PollStatus;
