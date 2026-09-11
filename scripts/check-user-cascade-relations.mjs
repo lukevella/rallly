@@ -48,6 +48,10 @@ const IGNORED_RELATIONS = new Map([
     "notificationPreferences",
     "Per-user settings, meaningless once the account is gone.",
   ],
+  [
+    "nonprofitApplications",
+    "Audit record of a space's automated nonprofit review. Only a space owner can apply, and guests cannot own a space (the purge already retains anyone with `spaces`), so a guest never has one.",
+  ],
 ]);
 
 /**

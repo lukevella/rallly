@@ -10,6 +10,7 @@ export interface FeatureFlagConfig {
   pollAdmin: boolean;
   quickCreate: boolean;
   inProcessRateLimit: boolean;
+  nonprofitDiscount: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;
