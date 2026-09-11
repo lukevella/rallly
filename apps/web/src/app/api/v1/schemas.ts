@@ -5,25 +5,24 @@ import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
 export const dateSchema = z.iso.date().meta({
   description: "Date in YYYY-MM-DD format",
-  example: "2025-12-23",
+  example: "2027-03-01",
 });
 
-export const timeSchema = z.iso.time().meta({
+export const timeSchema = z.iso.time({ precision: -1 }).meta({
   description: "Time in HH:mm (24-hour) format",
   example: "09:30",
-  format: "time",
 });
 
 export const slotGeneratorSchema = z
   .strictObject({
     startDate: dateSchema.meta({
       description: "First day of the range to generate slots on, inclusive.",
-      example: "2026-08-03",
+      example: "2027-03-01",
     }),
     endDate: dateSchema.meta({
       description:
         "Last day of the range, inclusive. The range must span fewer than 366 days.",
-      example: "2026-08-07",
+      example: "2027-03-05",
     }),
     days: z
       .array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]))
@@ -35,7 +34,7 @@ export const slotGeneratorSchema = z
       }),
     startTime: timeSchema.meta({
       description:
-        "Earliest slot start on each day, as a wall clock time in `timezone`.",
+        "Earliest slot start on each day, as a wall clock time in `timeZone`.",
       example: "09:00",
     }),
     endTime: timeSchema.meta({
@@ -72,8 +71,8 @@ export const slotGeneratorSchema = z
 
 const explicitTimeSchema = z.iso.datetime({ local: true, offset: true }).meta({
   description:
-    "ISO datetime start time. Strings without an offset are interpreted as wall-clock in `timezone` (e.g. `2025-01-15T09:00:00` with `timezone: Europe/London` means 09:00 in London). Strings with an offset or `Z` are treated as absolute instants.",
-  example: "2025-01-15T09:00:00",
+    "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
+  example: "2027-03-01T09:00:00",
 });
 
 const dateOptionsSchema = z
@@ -85,7 +84,7 @@ const dateOptionsSchema = z
       .meta({
         description:
           "Calendar days to offer. Each becomes one all-day option. A day may appear once.",
-        example: ["2025-01-15", "2025-01-16", "2025-01-17"],
+        example: ["2027-03-01", "2027-03-02", "2027-03-03"],
       }),
   })
   .meta({
@@ -102,9 +101,9 @@ const timeOptionsSchema = z
       description: "Length of every slot in minutes",
       example: 30,
     }),
-    timezone: timezoneSchema.optional().meta({
+    timeZone: timezoneSchema.optional().meta({
       description:
-        "IANA timezone the times are written in. Datetime strings without an offset are interpreted in this timezone. If omitted, offset-less datetimes are treated as floating times (no timezone conversion) and the poll has no timezone set.",
+        "IANA time zone the times are written in. Datetime strings without an offset are interpreted in this zone. If omitted, offset-less datetimes are floating times (no conversion) and the poll has no time zone.",
       example: "Europe/London",
     }),
     times: z.array(explicitTimeSchema).min(1).optional().meta({
@@ -293,7 +292,7 @@ const pollSchema = z
       example: "Pick a time that works for everyone",
     }),
     location: z.string().nullable().meta({ example: "Zoom" }),
-    timezone: z.string().nullable().meta({ example: "Europe/London" }),
+    timeZone: z.string().nullable().meta({ example: "Europe/London" }),
     status: pollStatusSchema,
     kind: pollKindSchema,
     createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),

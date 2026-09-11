@@ -760,7 +760,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Europe/London",
+            timeZone: "Europe/London",
             times: ["2025-01-15T09:00:00Z", "2025-01-15T10:00:00Z"],
           },
         }),
@@ -822,7 +822,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Europe/London",
+            timeZone: "Europe/London",
             times: ["2025-01-15T09:00:00Z"],
           },
         }),
@@ -883,7 +883,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Invalid/Timezone",
+            timeZone: "Invalid/Timezone",
             times: ["2025-01-15T09:00:00Z"],
           },
         }),
@@ -904,7 +904,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Europe/London",
+            timeZone: "Europe/London",
             generators: [
               {
                 startDate: "2025-01-20",
@@ -938,7 +938,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Europe/London",
+            timeZone: "Europe/London",
             generators: [
               {
                 startDate: "2025-01-01",
@@ -977,7 +977,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Europe/London",
+            timeZone: "Europe/London",
             generators: [
               {
                 startDate: "2025-06-01",
@@ -1018,7 +1018,7 @@ describe("API v1 - /polls", () => {
           options: {
             kind: "time",
             duration: 30,
-            timezone: "Europe/London",
+            timeZone: "Europe/London",
             generators: [
               {
                 startDate: toIsoDate(start),
@@ -1128,10 +1128,10 @@ describe("API v1 - /polls", () => {
             kind: "time",
             duration: 30,
             times: ["2025-01-15T09:00:00Z"],
-            timeZone: "Europe/London",
+            timezone: "Europe/London",
           },
         },
-        message: 'options: Unrecognized key: "timeZone"',
+        message: 'options: Unrecognized key: "timezone"',
       },
       {
         level: "slot generator",
@@ -1248,13 +1248,23 @@ describe("API v1 - /polls", () => {
       const res = await POST(
         new Request("https://example.com/api/v1/polls", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title: "x" }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${testApiKey}`,
+          },
+          body: JSON.stringify({
+            title: "Forwarded through the prefix handler",
+            options: { kind: "date", dates: ["2027-03-01"] },
+          }),
         }),
       );
 
-      // Reaches the route: bearer auth answers, not the 404 fallback.
-      expect(res.status).toBe(401);
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: "Forwarded through the prefix handler",
+        }),
+      );
     });
   });
 
@@ -1753,7 +1763,7 @@ describe("API v1 - /polls", () => {
       expect(json.data.title).toBe("Team sync");
       expect(json.data.description).toBe("Weekly team meeting");
       expect(json.data.location).toBe("Zoom");
-      expect(json.data.timezone).toBe("Europe/London");
+      expect(json.data.timeZone).toBe("Europe/London");
       expect(json.data.status).toBe("open");
       expect(json.data.kind).toBe("time");
       expect(json.data.createdAt).toBe("2025-01-10T12:00:00.000Z");

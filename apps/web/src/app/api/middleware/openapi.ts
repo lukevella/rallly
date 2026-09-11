@@ -11,9 +11,23 @@ type OpenApiSchema = Awaited<ReturnType<ToOpenApiSchema>>;
 const DEFS_PREFIX = "#/$defs/";
 const COMPONENTS_PREFIX = "#/components/schemas/";
 
-// Rewrites `$defs` refs to `components.schemas`, and drops the regex zod
-// emits beside every `format` (its ISO date pattern is 200 characters and
-// says nothing the format does not): readers and generators use the format.
+// Formats whose syntax JSON Schema itself defines. Zod emits a regex beside
+// each of these (its ISO date pattern is 200 characters) that says nothing
+// the format does not, so it is dropped for readability. Any other pattern
+// is a real constraint and stays.
+const FORMATS_WITH_DEFINED_SYNTAX = new Set([
+  "date",
+  "date-time",
+  "time",
+  "duration",
+  "email",
+  "uri",
+  "uuid",
+  "ipv4",
+  "ipv6",
+]);
+
+// Rewrites `$defs` refs to `components.schemas` and drops redundant patterns.
 function rewriteRefs(node: unknown): unknown {
   if (Array.isArray(node)) {
     return node.map(rewriteRefs);
@@ -21,10 +35,13 @@ function rewriteRefs(node: unknown): unknown {
   if (!node || typeof node !== "object") {
     return node;
   }
-  const hasFormat = "format" in node && typeof node.format === "string";
+  const redundantPattern =
+    "format" in node &&
+    typeof node.format === "string" &&
+    FORMATS_WITH_DEFINED_SYNTAX.has(node.format);
   return Object.fromEntries(
     Object.entries(node)
-      .filter(([key]) => !(hasFormat && key === "pattern"))
+      .filter(([key]) => !(redundantPattern && key === "pattern"))
       .map(([key, value]) => [
         key,
         key === "$ref" && typeof value === "string"
