@@ -23,7 +23,7 @@ export class NewPollPage {
     // "Add location" is a menu when the organizer can add a video call and a
     // plain button otherwise; either way the address field appears after.
     await page.getByRole("button", { name: "Add location" }).click();
-    const addressItem = page.getByRole("menuitem", { name: "Address" });
+    const addressItem = page.getByRole("menuitem", { name: "In-person" });
     const locationField = page.getByLabel("Location");
     await addressItem.or(locationField).first().waitFor();
     if (await addressItem.isVisible()) {

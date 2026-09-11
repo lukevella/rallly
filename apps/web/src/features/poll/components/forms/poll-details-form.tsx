@@ -125,7 +125,7 @@ export const PollDetailsForm = ({
                 {canAddAddress ? (
                   <DropdownMenuItem onClick={() => setLocationOpened(true)}>
                     <MapPinIcon />
-                    <Trans i18nKey="address" defaults="Address" />
+                    <Trans i18nKey="inPerson" defaults="In-person" />
                   </DropdownMenuItem>
                 ) : null}
                 <ConferencingProviderMenuItems
