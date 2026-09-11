@@ -61,7 +61,7 @@ export function ConferencingConnectionList({
         <EmptyStateDescription>
           <Trans
             i18nKey="noConferencingAccountsDescription"
-            defaults="Connect Zoom or Google Meet and we'll add a meeting link to your events for you."
+            defaults="Connect an account and we'll add a meeting link to your events for you."
           />
         </EmptyStateDescription>
       </EmptyState>
