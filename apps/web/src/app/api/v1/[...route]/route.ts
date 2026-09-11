@@ -1,7 +1,6 @@
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { handle } from "hono/vercel";
 import {
   describeRoute,
   generateSpecs,
@@ -66,7 +65,10 @@ type Env = {
   };
 };
 
-const app = new Hono<Env>().basePath("/api/v1");
+// The public URL has no `/api` prefix (https://api.rallly.co/v1/...), which
+// is also what a standalone API deployment would serve, so Hono mounts at
+// `/v1`. See `handler` below for how the app host's `/api/v1` reaches it.
+const app = new Hono<Env>().basePath("/v1");
 
 // Process-wide: hono-openapi keys converters by schema vendor, and every zod
 // schema reports "zod". Schemas without native `.meta()` ids convert exactly as
@@ -203,6 +205,22 @@ app.onError((error, c) => {
   );
 });
 
+const unauthorizedResponse = {
+  description:
+    "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+  headers: {
+    "WWW-Authenticate": {
+      description: "The bearer challenge, per RFC 6750.",
+      schema: { type: "string" as const },
+    },
+  },
+  content: {
+    "application/json": {
+      schema: resolver(errorResponseSchema),
+    },
+  },
+};
+
 const spaceNotProResponse = {
   description:
     "The space associated with the API key does not have a Pro subscription",
@@ -299,7 +317,10 @@ async function buildOpenApiSpec() {
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
         ].join("\n"),
       },
-      servers: [{ url: absoluteUrl() }],
+      // The public host serves `/v1/...` directly; without one the API is
+      // reachable under the app's `/api` prefix. Read from process.env like
+      // lib/maintenance.ts: `@/env` validates eagerly on import.
+      servers: [{ url: process.env.API_BASE_URL ?? absoluteUrl("/api") }],
       components: {
         securitySchemes: {
           bearerAuth: {
@@ -314,7 +335,7 @@ async function buildOpenApiSpec() {
   // hono-openapi's validator middleware owns the request body schema and
   // overwrites any content set via describeRoute, so named examples have to
   // be attached to the generated spec instead.
-  const createPollRequestBody = spec.paths["/api/v1/polls"]?.post?.requestBody;
+  const createPollRequestBody = spec.paths["/v1/polls"]?.post?.requestBody;
   if (createPollRequestBody && "content" in createPollRequestBody) {
     const media = createPollRequestBody.content?.["application/json"];
     if (media) {
@@ -323,7 +344,7 @@ async function buildOpenApiSpec() {
   }
 
   const patchPollRequestBody =
-    spec.paths["/api/v1/polls/{pollId}"]?.patch?.requestBody;
+    spec.paths["/v1/polls/{pollId}"]?.patch?.requestBody;
   if (patchPollRequestBody && "content" in patchPollRequestBody) {
     const media = patchPollRequestBody.content?.["application/json"];
     if (media) {
@@ -352,9 +373,11 @@ app.post(
       "Creates a new poll. Provide the poll options in one of two ways:",
       "",
       "- `dates` — a list of calendar dates. Each date becomes an all-day option (date poll).",
-      "- `slots` — time-based options that share a fixed `duration` in minutes. Each entry in `slots.times` is either an ISO datetime for an explicit slot, or a slot generator that expands into recurring slots within a time window across a date range. Generated slots start every `interval` minutes (defaults to `duration`) and must fit entirely between `startTime` and `endTime`.",
+      "- `slots` — time-based options that share a fixed `duration` in minutes. Each entry in `slots.times` is either an ISO datetime for a single explicit slot, or a slot generator object that expands into recurring slots.",
       "",
-      "`dates` and `slots` are mutually exclusive, and a poll can have at most 100 options. See the request examples for common scenarios.",
+      'A slot generator takes a date range (`startDate`, `endDate`), the `days` of the week to include, and a daily window (`startTime`, `endTime`). On each matching day it produces a slot every `interval` minutes (defaults to `duration`) from `startTime`, keeping only slots that end by `endTime`. Times are wall clock times in `slots.timezone`. For example, `duration: 30`, `startTime: "09:00"`, `endTime: "12:00"` and `interval: 60` gives slots at 09:00, 10:00 and 11:00 on every listed day.',
+      "",
+      "`dates` and `slots` are mutually exclusive, and a poll can have at most 100 options after generation. See the request examples for common scenarios.",
       "",
       "Responds with `201 Created` and the full poll, including the settings and organizer exactly as `GET /polls/:pollId` returns them.",
     ].join("\n"),
@@ -376,6 +399,7 @@ app.post(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -610,6 +634,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -655,6 +680,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -712,6 +738,7 @@ app.patch(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -787,6 +814,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -866,6 +894,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -931,6 +960,7 @@ app.delete(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -973,7 +1003,31 @@ app.delete(
 
 export { app };
 
-export const GET = handle(app);
-export const POST = handle(app);
-export const PATCH = handle(app);
-export const DELETE = handle(app);
+const APP_PREFIX = "/api";
+
+// Requests reach this file two ways: on the public host as `/v1/...` (the
+// next.config rewrite keeps the original URL, so that is what arrives here)
+// and on the app host as `/api/v1/...`. Both must hit the same Hono routes,
+// so the app prefix is stripped before dispatch. The forwarded request is
+// built field by field: `new Request(url, request)` drops the method under
+// vitest.
+async function handler(request: Request) {
+  const url = new URL(request.url);
+  if (!url.pathname.startsWith(`${APP_PREFIX}/v1`)) {
+    return app.fetch(request);
+  }
+  url.pathname = url.pathname.slice(APP_PREFIX.length);
+  return app.fetch(
+    new Request(url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+      duplex: "half",
+    } as RequestInit),
+  );
+}
+
+export const GET = handler;
+export const POST = handler;
+export const PATCH = handler;
+export const DELETE = handler;

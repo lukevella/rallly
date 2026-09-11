@@ -139,7 +139,12 @@ export const createPollInputSchema = z
   .refine((data) => !(data.dates && data.slots), {
     message: "Cannot provide both 'dates' and 'slots'",
   })
-  .meta({ id: "CreatePollInput" });
+  // The two refinements above do not survive JSON Schema conversion, so the
+  // "exactly one of dates or slots" rule is restated as a oneOf.
+  .meta({
+    id: "CreatePollInput",
+    oneOf: [{ required: ["dates"] }, { required: ["slots"] }],
+  });
 
 export const errorResponseSchema = z
   .object({

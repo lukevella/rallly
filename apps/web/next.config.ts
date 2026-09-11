@@ -50,14 +50,18 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // The public API host (https://api.rallly.co) serves the versioned API
+  // without the app's `/api` prefix. Only `/v1` is exposed there: the rest of
+  // `/api` stays app-host only, so a standalone API project can take over the
+  // host later without inheriting them.
   async rewrites() {
     if (!process.env.API_BASE_URL) return [];
     const host = new URL(process.env.API_BASE_URL).host;
     return [
       {
-        source: "/:path*",
+        source: "/v1/:path*",
         has: [{ type: "host", value: host }],
-        destination: "/api/:path*",
+        destination: "/api/v1/:path*",
       },
     ];
   },
