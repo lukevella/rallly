@@ -13,6 +13,7 @@ export type GetPollApiResponse = {
     banned: boolean;
   } | null;
   timeZone: string | null;
+  allowTentativeVotes: boolean;
   canManage: boolean;
   status: PollStatus;
   createdAt: Date;

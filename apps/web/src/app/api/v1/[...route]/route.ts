@@ -108,6 +108,7 @@ function toPollResponseBody(poll: {
   hideParticipants: boolean;
   hideScores: boolean;
   disableComments: boolean;
+  allowTentativeVotes: boolean;
   participantCount: number;
   user: {
     id: string;
@@ -140,6 +141,7 @@ function toPollResponseBody(poll: {
       hideParticipants: poll.hideParticipants,
       hideScores: poll.hideScores,
       disableComments: poll.disableComments,
+      allowTentativeVotes: poll.allowTentativeVotes,
       participantCount: poll.participantCount,
       options: poll.options.map((option) =>
         toOptionResponse(poll.kind, option),
@@ -442,6 +444,7 @@ app.post(
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
             disableComments: poll.disableComments,
+            allowTentativeVotes: poll.allowTentativeVotes,
             isGuest: false,
           },
           groups: {
@@ -492,6 +495,7 @@ app.post(
         hideParticipants: input.hideParticipants,
         hideScores: input.hideScores,
         disableComments: input.disableComments,
+        allowTentativeVotes: input.allowTentativeVotes,
         options,
         spaceId,
       });
@@ -565,6 +569,7 @@ app.post(
       hideParticipants: input.hideParticipants,
       hideScores: input.hideScores,
       disableComments: input.disableComments,
+      allowTentativeVotes: input.allowTentativeVotes,
       options,
       spaceId,
     });

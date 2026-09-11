@@ -1,4 +1,4 @@
-import type { Participant, VoteType } from "@rallly/database";
+import type { Participant, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendNewParticipantEmail } from "@rallly/emails/templates/new-participant";
 import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/new-participant-confirmation";
@@ -107,6 +107,37 @@ async function sendNewResponseNotificationEmail({
     );
   }
 }
+
+/**
+ * Rejects new tentative votes when the poll no longer allows them, locking the
+ * poll row for the rest of the transaction.
+ *
+ * The check runs inside the writing transaction and takes a lock the
+ * organizer's disable transition also takes. Under READ COMMITTED a plain read
+ * would let a vote that passed an earlier check land after the organizer had
+ * already counted zero tentative votes, stranding one on a poll that no longer
+ * accepts them.
+ */
+const assertTentativeVotesAllowed = async (
+  tx: Prisma.TransactionClient,
+  pollId: string,
+  votes: { type: VoteType }[],
+) => {
+  if (!votes.some((vote) => vote.type === "ifNeedBe")) {
+    return;
+  }
+
+  const [poll] = await tx.$queryRaw<{ allow_tentative_votes: boolean }[]>`
+    SELECT allow_tentative_votes FROM polls WHERE id = ${pollId} FOR UPDATE
+  `;
+
+  if (!poll?.allow_tentative_votes) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "This poll does not accept tentative votes",
+    });
+  }
+};
 
 export const participants = router({
   list: publicProcedure
@@ -311,7 +342,10 @@ export const participants = router({
       }) => {
         const poll = await prisma.poll.findUnique({
           where: { id: pollId },
-          select: { status: true, deleted: true },
+          select: {
+            status: true,
+            deleted: true,
+          },
         });
 
         // A deleted poll never accepts responses.
@@ -366,6 +400,8 @@ export const participants = router({
 
         const { participant, editToken, viaInvite } = await prisma.$transaction(
           async (tx) => {
+            await assertTentativeVotesAllowed(tx, pollId, validVotes);
+
             // A response answering an emailed invite takes the invite's
             // token, so the link the invitee already holds names it.
             const invite = token
@@ -409,6 +445,7 @@ export const participants = router({
                   select: {
                     id: true,
                     title: true,
+                    allowTentativeVotes: true,
                     space: {
                       select: {
                         id: true,
@@ -478,6 +515,14 @@ export const participants = router({
           }),
         );
 
+        const voteCounts = validVotes.reduce(
+          (acc, { type }) => {
+            acc[type] += 1;
+            return acc;
+          },
+          { yes: 0, ifNeedBe: 0, no: 0 },
+        );
+
         track(ctx.user, {
           event: "poll_response_submit",
           properties: {
@@ -492,6 +537,12 @@ export const participants = router({
             has_note: !!participant.note,
             note_length: participant.note?.length,
             total_responses: totalResponses,
+            // Whether the tentative option is offered at all, so the counts
+            // below can be read against the polls that actually had it.
+            allow_tentative_votes: participant.poll.allowTentativeVotes,
+            yes_count: voteCounts.yes,
+            if_need_be_count: voteCounts.ifNeedBe,
+            no_count: voteCounts.no,
           },
           groups: {
             poll: pollId,
@@ -563,6 +614,8 @@ export const participants = router({
       const pollId = existingParticipant.pollId;
 
       const participant = await prisma.$transaction(async (tx) => {
+        await assertTentativeVotesAllowed(tx, pollId, votes);
+
         // Delete existing votes
         await tx.vote.deleteMany({
           where: {

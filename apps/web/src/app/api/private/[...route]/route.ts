@@ -336,6 +336,7 @@ app.post(
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
             disableComments: poll.disableComments,
+            allowTentativeVotes: poll.allowTentativeVotes,
             isGuest: false,
           },
           groups: {
@@ -386,6 +387,7 @@ app.post(
         hideParticipants: input.hideParticipants,
         hideScores: input.hideScores,
         disableComments: input.disableComments,
+        allowTentativeVotes: input.allowTentativeVotes,
         options,
         spaceId,
       });
@@ -458,6 +460,7 @@ app.post(
       hideParticipants: input.hideParticipants,
       hideScores: input.hideScores,
       disableComments: input.disableComments,
+      allowTentativeVotes: input.allowTentativeVotes,
       options,
       spaceId,
     });

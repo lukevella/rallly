@@ -21,6 +21,7 @@ export type CreatePollParams = {
   hideParticipants?: boolean;
   hideScores?: boolean;
   disableComments?: boolean;
+  allowTentativeVotes?: boolean;
   options: PollOption[];
   spaceId: AuthorizedSpaceId;
 };
@@ -41,6 +42,7 @@ const pollResponseSelect = {
   hideParticipants: true,
   hideScores: true,
   disableComments: true,
+  allowTentativeVotes: true,
   user: {
     select: {
       id: true,
@@ -81,6 +83,7 @@ export const createPoll = async ({
   hideParticipants,
   hideScores,
   disableComments,
+  allowTentativeVotes,
   options,
   spaceId,
 }: CreatePollParams) => {
@@ -98,6 +101,7 @@ export const createPoll = async ({
         hideParticipants,
         hideScores,
         disableComments,
+        allowTentativeVotes,
         userId,
         spaceId,
         kind,

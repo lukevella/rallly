@@ -21,7 +21,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
   selectedParticipantId,
 }) => {
   const { control } = useVotingForm();
-  const { getScore, getVote, optionIds } = usePoll();
+  const { getScore, getVote, optionIds, poll } = usePoll();
   const { participants: allParticipants } = useParticipants();
   const selectedParticipant = selectedParticipantId
     ? allParticipants.find(
@@ -63,6 +63,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                     return (
                       <TimeSlotOption
                         onChange={handleChange}
+                        allowTentativeVotes={poll.allowTentativeVotes}
                         optionId={option.optionId}
                         optionLabel={getOptionDateTimeLabel(option)}
                         yesScore={score.yes}
@@ -79,6 +80,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                     return (
                       <DateOption
                         onChange={handleChange}
+                        allowTentativeVotes={poll.allowTentativeVotes}
                         optionId={option.optionId}
                         optionLabel={getOptionDateTimeLabel(option)}
                         yesScore={score.yes}

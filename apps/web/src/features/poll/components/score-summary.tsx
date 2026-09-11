@@ -12,12 +12,17 @@ export interface PopularityScoreProps {
   ifNeedBeScore?: number;
   highlight?: boolean;
   highScore: number;
+  /**
+   * When false the amber tentative marker is dropped. Tentative votes cast
+   * before the poll turned the option off still count toward the total.
+   */
+  showTentative?: boolean;
 }
 
 export const ConnectedScoreSummary: React.FunctionComponent<{
   optionId: string;
 }> = ({ optionId }) => {
-  const { getScore, highScore } = usePoll();
+  const { getScore, highScore, poll } = usePoll();
   const { yes, ifNeedBe } = getScore(optionId);
   const score = yes + ifNeedBe;
   const highlight = score === highScore && score > 1;
@@ -28,6 +33,7 @@ export const ConnectedScoreSummary: React.FunctionComponent<{
         ifNeedBeScore={ifNeedBe}
         highScore={highScore}
         highlight={highlight}
+        showTentative={poll.allowTentativeVotes}
       />
     </IfScoresVisible>
   );
@@ -65,6 +71,7 @@ const ScoreSummary: React.FunctionComponent<PopularityScoreProps> = React.memo(
     ifNeedBeScore = 0,
     highlight,
     highScore,
+    showTentative = true,
   }) {
     const score = yesScore + ifNeedBeScore;
 
@@ -82,7 +89,7 @@ const ScoreSummary: React.FunctionComponent<PopularityScoreProps> = React.memo(
       >
         <User2Icon className="size-4 opacity-75" />
         <AnimatedNumber score={score} />
-        {highlight ? (
+        {highlight && showTentative ? (
           ifNeedBeScore > 0 ? (
             <span className="inline-block size-1.5 rounded-full bg-amber-400" />
           ) : null

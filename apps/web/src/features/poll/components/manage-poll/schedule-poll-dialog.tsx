@@ -198,6 +198,7 @@ export const SchedulePollForm = ({
                               <VoteSummaryProgressBar
                                 {...scoreByOptionId[option.id]}
                                 total={participants.length}
+                                showTentative={poll.allowTentativeVotes}
                               />
                             </div>
                           </div>

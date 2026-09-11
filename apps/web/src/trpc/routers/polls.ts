@@ -107,6 +107,7 @@ export const polls = router({
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         disableComments: z.boolean().optional(),
+        allowTentativeVotes: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
         options: z
           .object({
@@ -212,6 +213,7 @@ export const polls = router({
             },
             hideParticipants: input.hideParticipants,
             disableComments: input.disableComments,
+            allowTentativeVotes: input.allowTentativeVotes,
             hideScores: input.hideScores,
             requireParticipantEmail: input.requireParticipantEmail,
             spaceId,
@@ -286,6 +288,7 @@ export const polls = router({
           hasDescription: !!description,
           timezone: input.timeZone,
           disableComments: poll.disableComments,
+          allowTentativeVotes: poll.allowTentativeVotes,
           hideParticipants: poll.hideParticipants,
           hideScores: poll.hideScores,
           requireParticipantEmail: poll.requireParticipantEmail,
@@ -316,6 +319,7 @@ export const polls = router({
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
+        allowTentativeVotes: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
       }),
@@ -401,12 +405,39 @@ export const polls = router({
             hideParticipants: true,
             hideScores: true,
             disableComments: true,
+            allowTentativeVotes: true,
             requireParticipantEmail: true,
           },
         });
 
         if (!prior) {
           throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
+        // Turning the tentative option off would strand votes already cast as
+        // "if need be": they stay valid and visible, but their owner could no
+        // longer re-save that response, since the vote type is then rejected.
+        // Locked only in that direction and only when such votes exist, so a
+        // poll whose responses are all yes/no can still be switched, and an
+        // organizer who turned it off can always turn it back on.
+        if (input.allowTentativeVotes === false && prior.allowTentativeVotes) {
+          // Take the same row lock the vote writes take, so a tentative vote
+          // committing concurrently either lands before this count sees it or
+          // waits and then fails its own check. Without the lock, READ
+          // COMMITTED lets one slip in between the count and the update.
+          await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
+
+          const tentativeVoteCount = await tx.vote.count({
+            where: { pollId, type: "ifNeedBe" },
+          });
+
+          if (tentativeVoteCount > 0) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message:
+                "Tentative votes cannot be turned off once participants have used them",
+            });
+          }
         }
 
         // Reopen an auto-closed poll when new future dates are added. Manually
@@ -485,6 +516,7 @@ export const polls = router({
             hideScores: input.hideScores,
             hideParticipants: input.hideParticipants,
             disableComments: input.disableComments,
+            allowTentativeVotes: input.allowTentativeVotes,
             requireParticipantEmail: input.requireParticipantEmail,
             kind,
           },
@@ -512,6 +544,8 @@ export const polls = router({
             input.hideParticipants !== prior.hideParticipants) ||
           (input.disableComments !== undefined &&
             input.disableComments !== prior.disableComments) ||
+          (input.allowTentativeVotes !== undefined &&
+            input.allowTentativeVotes !== prior.allowTentativeVotes) ||
           (input.hideScores !== undefined &&
             input.hideScores !== prior.hideScores) ||
           (input.requireParticipantEmail !== undefined &&
@@ -572,6 +606,7 @@ export const polls = router({
           location: true,
           description: true,
           disableComments: true,
+          allowTentativeVotes: true,
           requireParticipantEmail: true,
           hideParticipants: true,
           hideScores: true,
@@ -622,6 +657,7 @@ export const polls = router({
         input.timeZone !== undefined ||
         input.hideParticipants !== undefined ||
         input.disableComments !== undefined ||
+        input.allowTentativeVotes !== undefined ||
         input.hideScores !== undefined ||
         input.requireParticipantEmail !== undefined;
 
@@ -657,6 +693,7 @@ export const polls = router({
           event: "poll_update_settings",
           properties: {
             disable_comments: !!updatedPoll.disableComments,
+            allow_tentative_votes: !!updatedPoll.allowTentativeVotes,
             hide_participants: !!updatedPoll.hideParticipants,
             hide_scores: !!updatedPoll.hideScores,
             require_participant_email: !!updatedPoll.requireParticipantEmail,
@@ -719,6 +756,7 @@ export const polls = router({
           closedReason: true,
           hideParticipants: true,
           disableComments: true,
+          allowTentativeVotes: true,
           hideScores: true,
           requireParticipantEmail: true,
           options: {
@@ -1356,6 +1394,7 @@ export const polls = router({
           hideScores: true,
           requireParticipantEmail: true,
           disableComments: true,
+          allowTentativeVotes: true,
           spaceId: true,
           kind: true,
           options: {
@@ -1388,6 +1427,7 @@ export const polls = router({
             hideParticipants: poll.hideParticipants,
             hideScores: poll.hideScores,
             disableComments: poll.disableComments,
+            allowTentativeVotes: poll.allowTentativeVotes,
             kind: poll.kind,
             options: {
               create: poll.options,

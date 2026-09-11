@@ -34,7 +34,7 @@ const ParticipantRowForm = ({
 }: ParticipantRowFormProps) => {
   const { t } = useTranslation();
 
-  const { optionIds } = usePoll();
+  const { optionIds, poll } = usePoll();
   const { options } = useOptions();
   const form = useVotingForm();
 
@@ -133,6 +133,7 @@ const ParticipantRowForm = ({
                       option ? getOptionDateTimeLabel(option) : undefined
                     }
                     value={field.value?.type}
+                    allowTentativeVotes={poll.allowTentativeVotes}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
                     }}

@@ -158,6 +158,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
       hideScores: false,
       hideParticipants: false,
       enableComments: false,
+      allowTentativeVotes: true,
       duration: 60,
       lockTimeZone: false,
       allDay: false,
@@ -224,6 +225,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
               hideParticipants: formData?.hideParticipants,
               disableComments: !formData?.enableComments,
               hideScores: formData?.hideScores,
+              allowTentativeVotes: formData?.allowTentativeVotes,
               requireParticipantEmail: formData?.requireParticipantEmail,
               options: required(formData?.options).map((option) => ({
                 startDate: option.type === "date" ? option.date : option.start,

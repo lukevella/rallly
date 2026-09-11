@@ -113,6 +113,11 @@ export const createPollInputSchema = z
         "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
       example: false,
     }),
+    allowTentativeVotes: z.boolean().optional().meta({
+      description:
+        'Allow participants to answer "if need be" as well as yes and no. Defaults to true.',
+      example: true,
+    }),
     organizer: z
       .strictObject({
         email: z.email().meta({
@@ -260,6 +265,11 @@ const pollSchema = z
     }),
     disableComments: z.boolean().meta({
       description: "Whether the comments section is disabled",
+      example: true,
+    }),
+    allowTentativeVotes: z.boolean().meta({
+      description:
+        'Whether participants may cast the tentative "if need be" vote',
       example: true,
     }),
     participantCount: z.int().nonnegative().meta({

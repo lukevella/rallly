@@ -175,6 +175,7 @@ describe("API v1 - /polls", () => {
       hideParticipants: false,
       hideScores: false,
       disableComments: true,
+      allowTentativeVotes: true,
       participantCount: 0,
       user: {
         id: "test-user-id",
@@ -535,6 +536,7 @@ describe("API v1 - /polls", () => {
         hideParticipants: true,
         hideScores: true,
         disableComments: false,
+        allowTentativeVotes: true,
         participantCount: 0,
         user: {
           id: "test-user-id",
@@ -569,6 +571,7 @@ describe("API v1 - /polls", () => {
         hideParticipants: true,
         hideScores: true,
         disableComments: false,
+        allowTentativeVotes: true,
         participantCount: 0,
         updatedAt: "2025-01-10T12:00:00.000Z",
         organizer: {
@@ -587,6 +590,54 @@ describe("API v1 - /polls", () => {
           hideScores: true,
           disableComments: false,
         }),
+      );
+    });
+
+    it("should create a yes/no poll when tentative votes are turned off", async () => {
+      mockCreatePoll.mockResolvedValueOnce({
+        id: "test-poll-id",
+        title: "Team offsite",
+        description: null,
+        location: null,
+        timeZone: null,
+        status: "open",
+        kind: "date",
+        createdAt: new Date("2025-01-10T12:00:00Z"),
+        updatedAt: new Date("2025-01-10T12:00:00Z"),
+        requireParticipantEmail: false,
+        hideParticipants: false,
+        hideScores: false,
+        disableComments: true,
+        allowTentativeVotes: false,
+        participantCount: 0,
+        user: {
+          id: "test-user-id",
+          name: "Test User",
+          email: "test@example.com",
+          image: null,
+        },
+        options: [],
+      });
+
+      const res = await app.request("/api/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team offsite",
+          dates: ["2025-01-15"],
+          allowTentativeVotes: false,
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      const json = await res.json();
+      expectMatchesContract(pollResponseSchema, json);
+      expect(json.data.allowTentativeVotes).toBe(false);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({ allowTentativeVotes: false }),
       );
     });
 
@@ -736,6 +787,7 @@ describe("API v1 - /polls", () => {
         hideParticipants: false,
         hideScores: false,
         disableComments: true,
+        allowTentativeVotes: true,
         participantCount: 0,
         user: {
           id: "test-user-id",
@@ -1320,6 +1372,7 @@ describe("API v1 - /polls", () => {
         "hideParticipants",
         "hideScores",
         "disableComments",
+        "allowTentativeVotes",
       ]) {
         expect(schemas.CreatePollInput.properties[key]).toBeDefined();
         expect(schemas.Poll.properties[key]).toBeDefined();
@@ -1385,6 +1438,7 @@ describe("API v1 - /polls", () => {
       hideParticipants: false,
       hideScores: false,
       disableComments: true,
+      allowTentativeVotes: true,
       participantCount: 4,
       user: {
         id: "test-user-id",
@@ -1612,6 +1666,7 @@ describe("API v1 - /polls", () => {
       hideParticipants: false,
       hideScores: true,
       disableComments: false,
+      allowTentativeVotes: true,
       participantCount: 5,
       user: {
         id: "user-1",
@@ -1792,6 +1847,7 @@ describe("API v1 - /polls", () => {
       hideParticipants: false,
       hideScores: false,
       disableComments: true,
+      allowTentativeVotes: true,
       user: {
         id: "user-1",
         name: "John Doe",
