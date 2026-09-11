@@ -76,7 +76,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
           toast.error(
             t("actionErrorConferencingNotConnected", {
               defaultValue:
-                "Your video call account is not connected. Connect it in Settings → Conferencing and try again.",
+                "Your video call account is not connected. Connect it in Conferencing settings and try again.",
             }),
           );
           break;
@@ -84,7 +84,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
           toast.error(
             t("actionErrorConferencingFailed", {
               defaultValue:
-                "We couldn't create the meeting link. Check your account in Settings → Conferencing and try again.",
+                "We couldn't create the meeting link. Check your account in Conferencing settings and try again.",
             }),
           );
           break;

@@ -82,7 +82,7 @@ test.describe
       const error = page.locator("#create-poll").getByRole("alert");
       await expect(error).toContainText("Connect your Zoom account");
       await expect(
-        error.getByRole("link", { name: "Settings → Conferencing" }),
+        error.getByRole("link", { name: "Conferencing settings" }),
       ).toHaveAttribute("href", "/settings/conferencing");
 
       await page.getByRole("button", { name: "Remove" }).click();

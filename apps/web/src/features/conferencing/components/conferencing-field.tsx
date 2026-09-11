@@ -131,7 +131,7 @@ export function ConferencingField({
               <p className="text-destructive text-sm" role="alert">
                 <Trans
                   i18nKey="conferencingNotConnected"
-                  defaults="Connect your {provider} account to add {provider} meetings to your polls. You can do this in <a>Settings → Conferencing</a>."
+                  defaults="Connect your {provider} account to add {provider} meetings to your polls. You can do this in <a>Conferencing settings</a>."
                   values={{ provider: label }}
                   components={{
                     a: (
