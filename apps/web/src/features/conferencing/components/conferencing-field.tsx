@@ -2,13 +2,11 @@
 
 import { Button } from "@rallly/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from "@rallly/ui/dropdown-menu";
 import { FormItem, FormLabel } from "@rallly/ui/form";
-import { PlusIcon } from "lucide-react";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Link } from "@/components/link";
@@ -28,9 +26,9 @@ type ConferencingFormValues = {
   conferencingProvider?: ConferencingProvider | "";
 };
 
-// The "add" affordance, kept apart from the field so the form can line it
-// up with its sibling add buttons. Renders nothing once a provider is set.
-export function AddConferencingButton({
+// Menu entries for the shared "Add location" menu. Renders nothing once a
+// provider is set: an event carries one meeting link.
+export function ConferencingProviderMenuItems({
   available,
 }: Pick<ConferencingOptions, "available">) {
   const form = useFormContext<ConferencingFormValues>();
@@ -41,29 +39,24 @@ export function AddConferencingButton({
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={<Button type="button" className="rounded-full" />}
-      >
-        <PlusIcon data-icon="inline-start" />
-        <Trans i18nKey="addConferencing" defaults="Add conferencing" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        {available.map((provider) => (
-          <DropdownMenuItem
-            key={provider}
-            onClick={() => {
-              form.setValue("conferencingProvider", provider, {
-                shouldDirty: true,
-              });
-            }}
-          >
-            <ConferencingProviderIcon provider={provider} size={16} />
-            {conferencingProviderLabels[provider]}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>
+        <Trans i18nKey="videoCall" defaults="Video call" />
+      </DropdownMenuLabel>
+      {available.map((provider) => (
+        <DropdownMenuItem
+          key={provider}
+          onClick={() => {
+            form.setValue("conferencingProvider", provider, {
+              shouldDirty: true,
+            });
+          }}
+        >
+          <ConferencingProviderIcon provider={provider} size={16} />
+          {conferencingProviderLabels[provider]}
+        </DropdownMenuItem>
+      ))}
+    </DropdownMenuGroup>
   );
 }
 

@@ -76,7 +76,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add conferencing" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Zoom" }).click();
 
       const error = page.locator("#create-poll").getByRole("alert");
@@ -86,9 +86,9 @@ test.describe
       ).toHaveAttribute("href", "/settings/conferencing");
 
       await page.getByRole("button", { name: "Remove" }).click();
-      await expect(
-        page.getByRole("button", { name: "Add conferencing" }),
-      ).toBeVisible();
+      await page.getByRole("button", { name: "Add location" }).click();
+      await expect(page.getByRole("menuitem", { name: "Zoom" })).toBeVisible();
+      await page.keyboard.press("Escape");
     });
 
     test("settings page lists a connected account", async () => {
@@ -103,7 +103,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add conferencing" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Zoom" }).click();
       await expect(page.locator("#create-poll").getByRole("alert")).toHaveCount(
         0,

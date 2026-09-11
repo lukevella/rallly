@@ -1,13 +1,19 @@
 import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { PlusIcon } from "lucide-react";
+import { MapPinIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
 import {
-  AddConferencingButton,
   ConferencingField,
+  ConferencingProviderMenuItems,
 } from "@/features/conferencing/components/conferencing-field";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -17,7 +23,7 @@ import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
 // `conferencing` is absent when the instance offers no provider or the
-// organizer is a guest, and the field stays hidden.
+// organizer is a guest; "Add location" then opens the address field directly.
 export const PollDetailsForm = ({
   conferencing,
 }: {
@@ -29,15 +35,20 @@ export const PollDetailsForm = ({
   const { requiredString } = useFormValidation();
   const { register } = form;
 
-  // Reveal the editor whenever the field holds content — this covers values
-  // restored asynchronously (persisted drafts, the edit form) that aren't yet
-  // present on first render — or once the user opens it via the button. Remove
-  // clears the value and resets `opened`, so it collapses again.
+  // Optional fields reveal themselves whenever they hold content — covering
+  // values restored asynchronously (persisted drafts, the edit form) — or once
+  // the user opens them. Remove clears the value and resets `opened`, so the
+  // field collapses again.
+  const [locationOpened, setLocationOpened] = React.useState(false);
+  const hasLocation = !!form.watch("location")?.trim();
+  const locationExpanded = locationOpened || hasLocation;
+
   const [descriptionOpened, setDescriptionOpened] = React.useState(false);
   const hasDescription = !!form.watch("description")?.trim();
   const descriptionExpanded = descriptionOpened || hasDescription;
-  const canAddConferencing =
-    !!conferencing && !form.watch("conferencingProvider");
+
+  const canAddAddress = !locationExpanded;
+  const canAddVideoCall = !!conferencing && !form.watch("conferencingProvider");
 
   return (
     <div className="grid gap-4 py-1">
@@ -63,24 +74,32 @@ export const PollDetailsForm = ({
           </FormItem>
         )}
       />
-
-      <FormItem>
-        <div>
-          <FormLabel className="inline-block" htmlFor="location">
-            {t("location")}
-          </FormLabel>
-          <span className="ml-1 text-muted-foreground text-sm">
-            <Trans i18nKey="optionalLabel" defaults="(Optional)" />
-          </span>
-        </div>
-        <Input
-          type="text"
-          id="location"
-          className="w-full"
-          placeholder={t("locationPlaceholder")}
-          {...register("location")}
-        />
-      </FormItem>
+      {locationExpanded ? (
+        <FormItem>
+          <div className="flex items-center justify-between">
+            <FormLabel htmlFor="location">{t("location")}</FormLabel>
+            <Button
+              type="button"
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                form.setValue("location", "");
+                setLocationOpened(false);
+              }}
+            >
+              <Trans i18nKey="remove" defaults="Remove" />
+            </Button>
+          </div>
+          <Input
+            type="text"
+            id="location"
+            className="w-full"
+            placeholder={t("locationPlaceholder")}
+            {...register("location")}
+          />
+        </FormItem>
+      ) : null}
       {conferencing ? (
         <ConferencingField connected={conferencing.connected} />
       ) : null}
@@ -92,10 +111,37 @@ export const PollDetailsForm = ({
           }}
         />
       ) : null}
-      {canAddConferencing || !descriptionExpanded ? (
+      {canAddAddress || canAddVideoCall || !descriptionExpanded ? (
         <div className="flex flex-wrap gap-2">
-          {canAddConferencing ? (
-            <AddConferencingButton available={conferencing.available} />
+          {canAddVideoCall ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={<Button type="button" className="rounded-full" />}
+              >
+                <PlusIcon data-icon="inline-start" />
+                <Trans i18nKey="addLocation" defaults="Add location" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {canAddAddress ? (
+                  <DropdownMenuItem onClick={() => setLocationOpened(true)}>
+                    <MapPinIcon />
+                    <Trans i18nKey="address" defaults="Address" />
+                  </DropdownMenuItem>
+                ) : null}
+                <ConferencingProviderMenuItems
+                  available={conferencing.available}
+                />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : canAddAddress ? (
+            <Button
+              type="button"
+              className="rounded-full"
+              onClick={() => setLocationOpened(true)}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addLocation" defaults="Add location" />
+            </Button>
           ) : null}
           {!descriptionExpanded ? (
             <Button

@@ -19,7 +19,17 @@ export class NewPollPage {
     const page = this.page;
 
     await page.getByLabel(/title|event/i).fill(name);
-    await page.getByLabel("Location").fill("Online");
+
+    // "Add location" is a menu when the organizer can add a video call and a
+    // plain button otherwise; either way the address field appears after.
+    await page.getByRole("button", { name: "Add location" }).click();
+    const addressItem = page.getByRole("menuitem", { name: "Address" });
+    const locationField = page.getByLabel("Location");
+    await addressItem.or(locationField).first().waitFor();
+    if (await addressItem.isVisible()) {
+      await addressItem.click();
+    }
+    await locationField.fill("Online");
 
     // The description is a rich text editor revealed on demand, so open it, then
     // type into its contenteditable (fill() doesn't work on contenteditable).
