@@ -18,6 +18,7 @@ import React from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { Link } from "@/components/link";
+import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
@@ -126,7 +127,13 @@ const CreatePollActions = ({
   );
 };
 
-export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
+export const CreatePoll = ({
+  nav,
+  conferencing,
+}: {
+  nav?: React.ReactNode;
+  conferencing?: ConferencingOptions | null;
+}) => {
   const { t } = useTranslation();
   const router = useRouter();
   const { user, createGuestIfNeeded } = useUser();
@@ -153,6 +160,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
       title: "",
       description: "",
       location: "",
+      conferencingProvider: "",
       view: "month",
       options: [],
       hideScores: false,
@@ -213,6 +221,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
             const res = await makePoll.mutateAsync({
               title: title,
               location: formData?.location?.trim(),
+              conferencingProvider: formData?.conferencingProvider || undefined,
               description: formData?.description?.trim(),
               // Attach a time zone (times convert per viewer) unless the organizer
               // locked it to a single wall-clock time or the poll is all-day.
@@ -275,7 +284,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <PollDetailsForm />
+                <PollDetailsForm conferencing={conferencing} />
               </CardContent>
             </Card>
 

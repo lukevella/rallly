@@ -22,6 +22,7 @@ import {
   ShapesIcon,
   UserIcon,
   UsersIcon,
+  VideoIcon,
   WebhookIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -69,6 +70,7 @@ export function AccountSidebarMenu() {
   ];
 
   const isCalendarsEnabled = useFeatureFlag("calendars");
+  const isConferencingEnabled = useFeatureFlag("conferencing");
 
   if (isCalendarsEnabled) {
     menuItems.push({
@@ -76,6 +78,15 @@ export function AccountSidebarMenu() {
       label: t("calendars", { defaultValue: "Calendars" }),
       icon: <CalendarIcon />,
       href: "/settings/calendars",
+    });
+  }
+
+  if (isConferencingEnabled) {
+    menuItems.push({
+      id: "conferencing",
+      label: t("conferencing", { defaultValue: "Conferencing" }),
+      icon: <VideoIcon />,
+      href: "/settings/conferencing",
     });
   }
 

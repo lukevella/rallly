@@ -220,6 +220,7 @@ export async function deleteOrphanedAnonymousUsers() {
     subscriptions: { none: {} },
     paymentMethods: { none: {} },
     calendarConnections: { none: {} },
+    conferencingConnections: { none: {} },
     credentials: { none: {} },
   } satisfies Prisma.UserWhereInput;
 

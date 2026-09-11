@@ -2,6 +2,7 @@ import "server-only";
 import { env } from "@/env";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { isCalendarsEnabled } from "@/features/calendars/constants";
+import { isConferencingEnabled } from "@/features/conferencing/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
@@ -26,6 +27,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // on every path that mints an account, social callbacks included.
   registration: isRegistrationEnabled,
   calendars: isCalendarsEnabled,
+  conferencing: isConferencingEnabled,
   eventTypes: isEventTypesEnabled,
   // The new poll admin at /polls/[pollId] is dev-only until it reaches
   // feature parity with the legacy admin and cuts over.

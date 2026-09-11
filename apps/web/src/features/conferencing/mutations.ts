@@ -1,0 +1,68 @@
+import "server-only";
+
+import { prisma } from "@rallly/database";
+import type { UserInfo } from "@/lib/oauth/types";
+
+export const createConferencingConnection = async ({
+  userId,
+  provider,
+  providerAccountId,
+  integrationId,
+  credentialId,
+  displayName,
+  userInfo,
+}: {
+  userId: string;
+  provider: string;
+  providerAccountId: string;
+  integrationId: string;
+  credentialId: string;
+  displayName: string;
+  userInfo: UserInfo;
+}) => {
+  return await prisma.conferencingConnection.upsert({
+    where: {
+      user_provider_account_unique: {
+        userId,
+        provider,
+        providerAccountId,
+      },
+    },
+    create: {
+      userId,
+      provider,
+      integrationId,
+      credentialId,
+      providerAccountId,
+      email: userInfo.email,
+      displayName,
+    },
+    update: {
+      credentialId,
+      email: userInfo.email,
+    },
+  });
+};
+
+// Only the connection goes; the credential row may still back a calendar
+// connection on the same Google account.
+export const disconnectConferencingConnection = async ({
+  userId,
+  id,
+}: {
+  userId: string;
+  id: string;
+}) => {
+  const connection = await prisma.conferencingConnection.findFirst({
+    where: { id, userId },
+    select: { id: true },
+  });
+
+  if (!connection) {
+    return { ok: false as const, reason: "not_found" as const };
+  }
+
+  await prisma.conferencingConnection.delete({ where: { id } });
+
+  return { ok: true as const };
+};

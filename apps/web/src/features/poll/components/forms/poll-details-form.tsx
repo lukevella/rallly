@@ -4,6 +4,8 @@ import { Input } from "@rallly/ui/input";
 import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
+import { ConferencingField } from "@/features/conferencing/components/conferencing-field";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
@@ -11,7 +13,13 @@ import { useFormValidation } from "@/lib/utils/form-validation";
 import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
-export const PollDetailsForm = () => {
+// `conferencing` is absent when the instance offers no provider or the
+// organizer is a guest, and the field stays hidden.
+export const PollDetailsForm = ({
+  conferencing,
+}: {
+  conferencing?: ConferencingOptions | null;
+}) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
@@ -60,6 +68,7 @@ export const PollDetailsForm = () => {
           {...register("location")}
         />
       </FormItem>
+      {conferencing ? <ConferencingField {...conferencing} /> : null}
       <DescriptionField />
     </div>
   );

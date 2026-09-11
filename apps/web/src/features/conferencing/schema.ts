@@ -1,5 +1,14 @@
 import * as z from "zod";
 
+// Providers Rallly can mint links for. Distinct from the stored-link union
+// below, which also covers links pasted by hand (custom) and phone dial-ins.
+export const conferencingProviderSchema = z.enum(["zoom", "meet"]);
+export type ConferencingProvider = z.infer<typeof conferencingProviderSchema>;
+
+export const disconnectConferencingConnectionSchema = z.object({
+  id: z.string(),
+});
+
 const webConferencingSchema = z.object({
   provider: z.enum(["zoom", "meet", "teams"]),
   uri: z.url(),

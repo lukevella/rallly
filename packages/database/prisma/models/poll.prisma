@@ -37,6 +37,9 @@ model Poll {
   title                   String
   description             String?
   location                String?
+  /// Conferencing provider the organizer asked for ("zoom" | "meet"). The
+  /// meeting link itself is minted at finalize onto the scheduled event.
+  conferencingProvider    String?           @map("conferencing_provider")
   userId                  String?           @map("user_id")
   timeZone                String?           @map("time_zone")
   status                  PollStatus        @default(open)
