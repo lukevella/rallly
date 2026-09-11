@@ -13,7 +13,11 @@ import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { SessionRefresher } from "@/components/session-refresher";
 import { BrandStyle } from "@/features/branding/components/brand-style";
-import { formatLocationText } from "@/features/location/utils";
+import {
+  formatLocationText,
+  getLocationDetails,
+} from "@/features/location/utils";
+import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import {
   EventCalendarCard,
   EventDate,
@@ -198,6 +202,13 @@ export default async function EventPage({
                       <EventDetailTitle>
                         {formatLocationText(event.location)}
                       </EventDetailTitle>
+                      {getLocationDetails(event.location) ? (
+                        <EventDetailDescription className="whitespace-pre-line">
+                          <TruncatedLinkify>
+                            {getLocationDetails(event.location)}
+                          </TruncatedLinkify>
+                        </EventDetailDescription>
+                      ) : null}
                     </EventDetailContent>
                   </EventDetail>
                 ) : null}

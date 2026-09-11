@@ -31,6 +31,27 @@ import { setFlash } from "@/lib/flash/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
 
+const toPollConferencing = (
+  data: Pick<
+    NewEventData,
+    "conferencingProvider" | "conferencingUrl" | "conferencingLabel"
+  >,
+) => {
+  switch (data.conferencingProvider) {
+    case "zoom":
+    case "meet":
+      return { provider: data.conferencingProvider };
+    case "custom":
+      return {
+        provider: "custom" as const,
+        uri: data.conferencingUrl?.trim() ?? "",
+        label: data.conferencingLabel?.trim() || "Video call",
+      };
+    default:
+      return undefined;
+  }
+};
+
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
     throw new Error("Required value is missing");
@@ -160,7 +181,10 @@ export const CreatePoll = ({
       title: "",
       description: "",
       location: "",
+      locationDetails: "",
       conferencingProvider: "",
+      conferencingUrl: "",
+      conferencingLabel: "",
       view: "month",
       options: [],
       hideScores: false,
@@ -221,7 +245,8 @@ export const CreatePoll = ({
             const res = await makePoll.mutateAsync({
               title: title,
               location: formData?.location?.trim(),
-              conferencingProvider: formData?.conferencingProvider || undefined,
+              locationDetails: formData?.locationDetails?.trim() || undefined,
+              conferencing: toPollConferencing(formData),
               description: formData?.description?.trim(),
               // Attach a time zone (times convert per viewer) unless the organizer
               // locked it to a single wall-clock time or the poll is all-day.

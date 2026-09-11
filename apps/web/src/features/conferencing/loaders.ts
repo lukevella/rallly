@@ -14,14 +14,14 @@ export const loadConferencingConnections = cache(async () => {
 });
 
 // What the poll form needs: the providers this instance offers and the ones
-// the organizer has already linked. Guests have nothing to link.
+// the organizer has already linked. Guests have nothing to link; a pasted
+// link needs no provider, so the options always exist.
 export const loadConferencingOptions = cache(
   async ({ userId }: { userId: string | null }) => {
     const available = getAvailableConferencingProviders();
-    if (available.length === 0 || !userId) {
-      return null;
-    }
-    const connected = await getConnectedConferencingProviders(userId);
+    const connected = userId
+      ? await getConnectedConferencingProviders(userId)
+      : [];
     return { available, connected };
   },
 );

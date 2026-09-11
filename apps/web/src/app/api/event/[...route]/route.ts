@@ -6,7 +6,10 @@ import { handle } from "hono/vercel";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
-import { formatLocationText } from "@/features/location/utils";
+import {
+  formatLocationText,
+  getLocationDetails,
+} from "@/features/location/utils";
 import { getScheduledEventCalendarData } from "@/features/scheduled-event/data";
 import { createRatelimit } from "@/lib/rate-limit";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -42,6 +45,10 @@ function buildCalendarFields(event: ScheduledEventRow) {
   const descriptionParts: string[] = [];
   if (event.description) {
     descriptionParts.push(event.description);
+  }
+  const locationDetails = location ? getLocationDetails(location) : undefined;
+  if (locationDetails) {
+    descriptionParts.push(locationDetails);
   }
   if (conferencingUri) {
     descriptionParts.push(conferencingUri);

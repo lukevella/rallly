@@ -2,12 +2,15 @@ import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { MapPinIcon, PlusIcon } from "lucide-react";
+import { Textarea } from "@rallly/ui/textarea";
+import { BuildingIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
@@ -22,8 +25,8 @@ import { useFormValidation } from "@/lib/utils/form-validation";
 import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
-// `conferencing` is absent when the instance offers no provider or the
-// organizer is a guest; "Add location" then opens the address field directly.
+// `conferencing` is absent on forms that don't support video calls (the edit
+// form); "Add location" then opens the address field directly.
 export const PollDetailsForm = ({
   conferencing,
 }: {
@@ -42,6 +45,10 @@ export const PollDetailsForm = ({
   const [locationOpened, setLocationOpened] = React.useState(false);
   const hasLocation = !!form.watch("location")?.trim();
   const locationExpanded = locationOpened || hasLocation;
+
+  const [detailsOpened, setDetailsOpened] = React.useState(false);
+  const hasDetails = !!form.watch("locationDetails")?.trim();
+  const detailsExpanded = detailsOpened || hasDetails;
 
   const [descriptionOpened, setDescriptionOpened] = React.useState(false);
   const hasDescription = !!form.watch("description")?.trim();
@@ -85,7 +92,9 @@ export const PollDetailsForm = ({
               className="h-auto p-0 text-muted-foreground hover:text-foreground"
               onClick={() => {
                 form.setValue("location", "");
+                form.setValue("locationDetails", "");
                 setLocationOpened(false);
+                setDetailsOpened(false);
               }}
             >
               <Trans i18nKey="remove" defaults="Remove" />
@@ -98,6 +107,55 @@ export const PollDetailsForm = ({
             placeholder={t("locationPlaceholder")}
             {...register("location")}
           />
+          {detailsExpanded ? (
+            <>
+              <div className="flex items-center justify-between">
+                <FormLabel htmlFor="location-details">
+                  <Trans
+                    i18nKey="locationDetails"
+                    defaults="Additional information"
+                  />
+                </FormLabel>
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="h-auto p-0 text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    form.setValue("locationDetails", "");
+                    setDetailsOpened(false);
+                  }}
+                >
+                  <Trans i18nKey="remove" defaults="Remove" />
+                </Button>
+              </div>
+              <Textarea
+                id="location-details"
+                rows={2}
+                maxLength={500}
+                placeholder={t("locationDetailsPlaceholder", {
+                  defaultValue: "Directions, parking, or a map link",
+                })}
+                {...register("locationDetails")}
+              />
+            </>
+          ) : (
+            <div>
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-muted-foreground hover:text-foreground"
+                onClick={() => setDetailsOpened(true)}
+              >
+                <PlusIcon data-icon="inline-start" />
+                <Trans
+                  i18nKey="addLocationDetails"
+                  defaults="Add directions or a link"
+                />
+              </Button>
+            </div>
+          )}
         </FormItem>
       ) : null}
       {conferencing ? (
@@ -123,10 +181,15 @@ export const PollDetailsForm = ({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 {canAddAddress ? (
-                  <DropdownMenuItem onClick={() => setLocationOpened(true)}>
-                    <MapPinIcon />
-                    <Trans i18nKey="inPerson" defaults="In-person" />
-                  </DropdownMenuItem>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>
+                      <Trans i18nKey="inPerson" defaults="In-person" />
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => setLocationOpened(true)}>
+                      <BuildingIcon />
+                      <Trans i18nKey="address" defaults="Address" />
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
                 ) : null}
                 <ConferencingProviderMenuItems
                   available={conferencing.available}

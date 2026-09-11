@@ -3,8 +3,16 @@ import "server-only";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
-import type { Conferencing, ConferencingProvider } from "./schema";
-import { conferencingProviderSchema, conferencingSchema } from "./schema";
+import type {
+  Conferencing,
+  ConferencingProvider,
+  PollConferencing,
+} from "./schema";
+import {
+  conferencingProviderSchema,
+  conferencingSchema,
+  pollConferencingSchema,
+} from "./schema";
 import { conferencingProviderIntegrations } from "./utils";
 
 const logger = createLogger("conferencing/data");
@@ -21,6 +29,24 @@ export function parseConferencing(
     logger.warn(
       { scheduledEventId: context?.scheduledEventId, value: raw },
       "Failed to parse conferencing",
+    );
+    return null;
+  }
+  return parsed.data;
+}
+
+export function parsePollConferencing(
+  raw: Prisma.JsonValue | null,
+  context?: { pollId?: string },
+): PollConferencing | null {
+  if (raw === null) {
+    return null;
+  }
+  const parsed = pollConferencingSchema.safeParse(raw);
+  if (!parsed.success) {
+    logger.warn(
+      { pollId: context?.pollId, value: raw },
+      "Failed to parse poll conferencing",
     );
     return null;
   }

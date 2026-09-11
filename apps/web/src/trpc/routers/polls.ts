@@ -9,8 +9,12 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { recordPollActivities } from "@/features/activity/mutations";
-import { getConnectedConferencingProviders } from "@/features/conferencing/data";
-import { conferencingProviderSchema } from "@/features/conferencing/schema";
+import {
+  getConnectedConferencingProviders,
+  parsePollConferencing,
+} from "@/features/conferencing/data";
+import type { PollConferencing } from "@/features/conferencing/schema";
+import { pollConferencingSchema } from "@/features/conferencing/schema";
 import { createConferencingMeeting } from "@/features/conferencing/service";
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { getInstancePolicy } from "@/features/instance-policy/data";
@@ -57,27 +61,31 @@ const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
 
 async function mintConferencing({
   userId,
-  provider,
+  conferencing,
   title,
   start,
   end,
   timeZone,
 }: {
   userId: string;
-  provider: string | null;
+  conferencing: PollConferencing | null;
   title: string;
   start: Date;
   end: Date;
   timeZone: string | null | undefined;
 }) {
-  const parsed = conferencingProviderSchema.safeParse(provider);
-  if (!parsed.success) {
+  if (!conferencing) {
     return null;
+  }
+
+  // A pasted link is already the stored shape; nothing to mint.
+  if (conferencing.provider === "custom") {
+    return conferencing;
   }
 
   const result = await createConferencingMeeting({
     userId,
-    provider: parsed.data,
+    provider: conferencing.provider,
     title,
     start,
     end,
@@ -88,7 +96,7 @@ async function mintConferencing({
     return result.conferencing;
   }
 
-  const label = conferencingProviderLabels[parsed.data];
+  const label = conferencingProviderLabels[conferencing.provider];
   const code =
     result.reason === "not_connected"
       ? "CONFERENCING_NOT_CONNECTED"
@@ -145,7 +153,8 @@ export const polls = router({
         title: z.string().trim().min(1),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
-        conferencingProvider: conferencingProviderSchema.optional(),
+        locationDetails: z.string().trim().max(500).optional(),
+        conferencing: pollConferencingSchema.optional(),
         description: z
           .string()
           .trim()
@@ -187,6 +196,11 @@ export const polls = router({
           Title: input.title,
           Description: input.description || "",
           Location: input.location || "",
+          LocationDetails: input.locationDetails || "",
+          Conferencing:
+            input.conferencing?.provider === "custom"
+              ? input.conferencing.label
+              : "",
         },
       });
 
@@ -216,19 +230,23 @@ export const polls = router({
 
       // The form blocks this client-side; the check here covers a stale form
       // after the account was disconnected in another tab. Guests can never
-      // hold a connection, so they fail the same way.
-      const conferencingProvider = input.conferencingProvider;
-      if (conferencingProvider) {
+      // hold a connection, so they fail the same way. A pasted link needs
+      // no account.
+      const conferencing = input.conferencing;
+      if (conferencing && conferencing.provider !== "custom") {
         const connected = ctx.user.isGuest
           ? []
           : await getConnectedConferencingProviders(ctx.user.id);
-        if (!connected.includes(conferencingProvider)) {
+        if (!connected.includes(conferencing.provider)) {
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
             message: "Conferencing provider is not connected",
           });
         }
       }
+      const locationDetails = input.location
+        ? input.locationDetails || undefined
+        : undefined;
 
       // Date-only (all-day) options are floating: they are stored at UTC
       // midnight so they never shift across timezones. A falsy poll.timeZone
@@ -264,7 +282,8 @@ export const polls = router({
             title,
             timeZone,
             location,
-            conferencingProvider,
+            locationDetails,
+            conferencing,
             description,
             userId: ctx.user.id,
             kind,
@@ -456,6 +475,7 @@ export const polls = router({
           select: {
             title: true,
             location: true,
+            locationDetails: true,
             description: true,
             timeZone: true,
             hideParticipants: true,
@@ -661,6 +681,7 @@ export const polls = router({
           kind: true,
           createdAt: true,
           location: true,
+          locationDetails: true,
           description: true,
           disableComments: true,
           allowTentativeVotes: true,
@@ -822,6 +843,7 @@ export const polls = router({
           timeZone: true,
           title: true,
           location: true,
+          locationDetails: true,
           description: true,
           createdAt: true,
           status: true,
@@ -964,7 +986,8 @@ export const polls = router({
           timeZone: true,
           title: true,
           location: true,
-          conferencingProvider: true,
+          locationDetails: true,
+          conferencing: true,
           description: true,
           spaceId: true,
           hideParticipants: true,
@@ -1068,7 +1091,9 @@ export const polls = router({
       // try again, instead of an event going out without a link.
       const conferencing = await mintConferencing({
         userId: ctx.user.id,
-        provider: poll.conferencingProvider,
+        conferencing: parsePollConferencing(poll.conferencing, {
+          pollId: poll.id,
+        }),
         title: poll.title,
         start: eventTimes.start,
         end: eventTimes.end,
@@ -1150,7 +1175,13 @@ export const polls = router({
             title: poll.title,
             description: poll.description,
             location: poll.location
-              ? { provider: "custom", address: poll.location }
+              ? {
+                  provider: "custom",
+                  address: poll.location,
+                  ...(poll.locationDetails && {
+                    details: poll.locationDetails,
+                  }),
+                }
               : undefined,
             conferencing: conferencing ?? undefined,
             timeZone: eventTimes.timeZone,
@@ -1479,6 +1510,7 @@ export const polls = router({
         },
         select: {
           location: true,
+          locationDetails: true,
           description: true,
           timeZone: true,
           hideParticipants: true,

@@ -8,7 +8,10 @@ import { getInstanceBranding } from "@/emails/branding";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
-import { formatLocationText } from "@/features/location/utils";
+import {
+  formatLocationText,
+  getLocationDetails,
+} from "@/features/location/utils";
 import { getEventsChronological } from "@/features/scheduled-event/data";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -122,6 +125,12 @@ export const events = router({
       const cancelDescriptionParts: string[] = [];
       if (updatedEvent.description) {
         cancelDescriptionParts.push(updatedEvent.description);
+      }
+      const cancelLocationDetails = cancelLocation
+        ? getLocationDetails(cancelLocation)
+        : undefined;
+      if (cancelLocationDetails) {
+        cancelDescriptionParts.push(cancelLocationDetails);
       }
       if (cancelConferencingUri) {
         cancelDescriptionParts.push(cancelConferencingUri);
