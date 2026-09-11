@@ -57,3 +57,33 @@ model PaymentMethod {
 
   @@map("payment_methods")
 }
+
+enum NonprofitApplicationStatus {
+  approved
+  rejected
+  // The verifier could not reach a verdict (model error, unreadable upload).
+  failed
+
+  @@map("nonprofit_application_status")
+}
+
+model NonprofitApplication {
+  id               String                     @id @default(uuid())
+  spaceId          String                     @map("space_id")
+  userId           String                     @map("user_id")
+  organizationName String                     @map("organization_name")
+  website          String
+  emailDomain      String                     @map("email_domain")
+  status           NonprofitApplicationStatus
+  // Verifier's explanation; shown to the applicant on rejection.
+  reason           String?
+  // Model that produced the verdict, kept for auditing the automated review.
+  model            String?
+  createdAt        DateTime                   @default(now()) @map("created_at")
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([spaceId, createdAt])
+  @@map("nonprofit_applications")
+}

@@ -1,17 +1,17 @@
 model Space {
-  id              String     @id @default(uuid())
-  name            String
-  image           String?
-  ownerId         String     @map("owner_id")
-  tier            SpaceTier  @default(hobby)
-  spaceType       SpaceType? @map("space_type")
+  id                         String     @id @default(uuid())
+  name                       String
+  image                      String?
+  ownerId                    String     @map("owner_id")
+  tier                       SpaceTier  @default(hobby)
+  spaceType                  SpaceType? @map("space_type")
   // Self-declared sector, optional. Stored as a string rather than an enum
   // because the taxonomy is expected to change; validation lives in
   // features/space/schema.ts.
-  industry        String?
-  primaryColor    String?   @map("primary_color")
-  showBranding    Boolean   @default(false) @map("show_branding")
-  hideAttribution Boolean   @default(false) @map("hide_attribution")
+  industry                   String?
+  primaryColor               String?    @map("primary_color")
+  showBranding               Boolean    @default(false) @map("show_branding")
+  hideAttribution            Boolean    @default(false) @map("hide_attribution")
   // The Team collaboration setting (Settings -> Collaboration).
   // Whether members share everything they create (everyone sees
   // everything) or work independently (everyone, admins included, only
@@ -20,9 +20,12 @@ model Space {
   // kept existing multi-member spaces shared to preserve their behavior.
   // When the org layer lands, shared
   // spaces map to teams and unshared spaces to organizations.
-  shared          Boolean   @default(false)
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  shared                     Boolean    @default(false)
+  // Set once the space's nonprofit application is approved; the coupon is
+  // applied at checkout and to the active subscription from this.
+  nonprofitDiscountGrantedAt DateTime?  @map("nonprofit_discount_granted_at")
+  createdAt                  DateTime   @default(now()) @map("created_at")
+  updatedAt                  DateTime   @updatedAt @map("updated_at")
 
   owner           User             @relation("UserSpaces", fields: [ownerId], references: [id], onDelete: Cascade)
   polls           Poll[]
@@ -36,6 +39,8 @@ model Space {
   memberInvites SpaceMemberInvite[]
 
   apiKeys SpaceApiKey[]
+
+  nonprofitApplications NonprofitApplication[]
 
   @@index([ownerId])
   @@map("spaces")

@@ -32,4 +32,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // limit and Redis is not required. Cloud runs many short-lived instances,
   // where a per-process counter is no limit at all, so it must use KV.
   inProcessRateLimit: isSelfHosted,
+  // The discount is a Stripe coupon, so it needs billing; applying needs
+  // storage for the verification documents the reviewer reads.
+  nonprofitDiscount: isBillingEnabled && isStorageEnabled,
 };
