@@ -265,7 +265,6 @@ export const polls = router({
         properties: {
           name: poll.title,
           status: poll.status,
-          is_guest: ctx.user.isGuest,
           created_at: poll.createdAt,
           comment_count: 0,
           option_count: poll.options.length,
