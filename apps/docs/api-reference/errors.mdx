@@ -1,0 +1,42 @@
+---
+title: "Errors"
+description: "The error envelope and every code the API returns."
+---
+
+Every failure is `application/json` with the same shape:
+
+```json
+{
+  "error": {
+    "code": "POLL_NOT_FOUND",
+    "message": "Poll not found or does not belong to this space."
+  }
+}
+```
+
+`code` is stable and safe to branch on. `message` is for humans and may change without notice. `VALIDATION_ERROR` messages name each offending field, separated by semicolons.
+
+## Codes
+
+| Status | Code | When |
+| --- | --- | --- |
+| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, contained an unknown field, or the body was not valid JSON |
+| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |
+| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |
+| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |
+| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |
+| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |
+| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |
+| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |
+| 404 | `NOT_FOUND` | No route matches the method and path |
+| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |
+| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |
+| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted; see [Rate limits](/api-reference/rate-limits) |
+| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |
+| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |
+
+## Handling errors
+
+- Treat `4xx` responses other than `429` as bugs in the request. Retrying without changing it returns the same error.
+- Retry `429` and `503` after the `Retry-After` header.
+- Retry `500` with backoff. If it persists, contact support with the time of the request.

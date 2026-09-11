@@ -52,3 +52,17 @@
 .dark .bg-primary-dark {
   background-color: rgb(132 126 237);
 }
+
+/* Fenced code inside an OpenAPI operation description is rendered as shiki's
+   raw dual-theme <pre> straight into the prose, carrying the light theme's
+   inline background and colours. Mintlify's own code block wrapper applies
+   the dark tokens on MDX pages but nothing does here, so apply the standard
+   shiki dual-theme rule. The dark background is the same #0B0C0E Mintlify's
+   wrapper uses. */
+.dark #content-area .prose pre.shiki,
+.dark #content-area .prose pre.shiki span {
+  /* biome-ignore lint/complexity/noImportantStyles: the light colours are inline styles on the elements */
+  background-color: var(--shiki-dark-bg) !important;
+  /* biome-ignore lint/complexity/noImportantStyles: same */
+  color: var(--shiki-dark) !important;
+}

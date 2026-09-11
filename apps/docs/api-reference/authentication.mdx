@@ -1,0 +1,35 @@
+---
+title: "Authentication"
+description: "Authenticate every request with a space API key."
+---
+
+Every endpoint requires a bearer token. Pass the API key in the `Authorization` header:
+
+```http
+Authorization: Bearer sk_xxxxxx_xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+```bash
+curl https://api.rallly.co/v1/polls \
+  -H "Authorization: Bearer $RALLLY_API_KEY"
+```
+
+## Creating a key
+
+1. Open **Settings → API keys** in the space you want to access. Only the space owner sees this page.
+2. Choose **Create API key** and give it a name that identifies the integration.
+3. Copy the key. It is shown once and cannot be retrieved later; if you lose it, revoke it and create a new one.
+
+Keys start with `sk_`. Store them as you would any secret: in an environment variable or a secrets manager, never in client-side code or a repository.
+
+## Scope
+
+A key belongs to one space and grants access to that space's polls only. It does not carry a user identity: polls created through the API are attributed to the organizer you name in the request, who must be a member of the space.
+
+## Revoking a key
+
+Revoke a key from the same settings page. Requests with a revoked, expired or unknown key fail with `401` and the `UNAUTHORIZED` error code.
+
+## Plan requirement
+
+The space behind the key must be on a Pro plan. A key for a space without an active subscription is accepted but every request fails with `403` and the `SPACE_NOT_PRO` error code until the space upgrades.
