@@ -5,44 +5,45 @@ type CreatePollInput = z.input<typeof createPollInputSchema>;
 type PatchPollInput = z.input<typeof patchPollInputSchema>;
 
 export const createPollRequestExamples = {
-  datePoll: {
+  "Date poll": {
     summary: "Date poll (all-day options)",
     description:
-      "Use `dates` to let participants pick between calendar days. Each date becomes an all-day option.",
+      "Let participants pick between calendar days. Each date becomes an all-day option.",
     value: {
       title: "Team offsite",
       description: "Which days work for a two day offsite?",
-      dates: ["2026-08-03", "2026-08-04", "2026-08-05"],
-    } satisfies CreatePollInput,
-  },
-  timePoll: {
-    summary: "Time poll (explicit times)",
-    description:
-      "Use `slots` with ISO datetime strings to offer specific time slots. Datetimes without an offset are interpreted as wall-clock in the poll's `timezone` — the example below offers 09:00 and 14:00 in London. Append `Z` or an offset to specify an absolute instant instead.",
-    value: {
-      title: "Project kickoff",
-      location: "Zoom",
-      slots: {
-        duration: 60,
-        timezone: "Europe/London",
-        times: [
-          "2026-08-03T09:00:00",
-          "2026-08-03T14:00:00",
-          "2026-08-04T09:00:00",
-        ],
+      options: {
+        kind: "date",
+        dates: ["2026-08-03", "2026-08-04", "2026-08-05"],
       },
     } satisfies CreatePollInput,
   },
-  slotGenerator: {
+  "Time poll with explicit times": {
+    summary: "Time poll (explicit times)",
+    description:
+      "Offer specific time slots. Datetimes without an offset are interpreted as wall-clock in `timezone` — this example offers 09:00 and 14:00 in London. Append `Z` or an offset to specify an absolute instant instead.",
+    value: {
+      title: "Project kickoff",
+      location: "Zoom",
+      options: {
+        kind: "time",
+        duration: 60,
+        timezone: "Europe/London",
+        times: ["2026-08-03T09:00:00", "2026-08-03T14:00:00"],
+      },
+    } satisfies CreatePollInput,
+  },
+  "Time poll with a slot generator": {
     summary: "Time poll (slot generator)",
     description:
-      "Use a slot generator to expand recurring slots across a date range. This example generates 30 minute slots at 09:00, 10:00 and 11:00 (New York time) every weekday between 3-7 August.",
+      "Expand recurring slots across a date range. This example generates 30 minute slots at 09:00, 10:00 and 11:00 (New York time) every weekday between 3-7 August.",
     value: {
       title: "Interview availability",
-      slots: {
+      options: {
+        kind: "time",
         duration: 30,
         timezone: "America/New_York",
-        times: [
+        generators: [
           {
             startDate: "2026-08-03",
             endDate: "2026-08-07",
@@ -55,17 +56,18 @@ export const createPollRequestExamples = {
       },
     } satisfies CreatePollInput,
   },
-  mixedTimes: {
+  "Time poll mixing times and a generator": {
     summary: "Time poll (explicit times + generator)",
     description:
-      "`slots.times` can mix ISO datetime strings and slot generators. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
+      "`times` and `generators` combine. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
     value: {
       title: "Product workshop",
-      slots: {
+      options: {
+        kind: "time",
         duration: 90,
         timezone: "Europe/Berlin",
-        times: [
-          "2026-08-01T10:00:00",
+        times: ["2026-08-01T10:00:00"],
+        generators: [
           {
             startDate: "2026-08-03",
             endDate: "2026-08-05",
@@ -80,7 +82,7 @@ export const createPollRequestExamples = {
 };
 
 export const patchPollRequestExamples = {
-  close: {
+  "Close the poll": {
     summary: "Close a poll",
     description:
       "Set `status` to `closed` once you have picked a date or no longer need the poll. Closing is idempotent and makes the results final.",

@@ -11,6 +11,9 @@ type OpenApiSchema = Awaited<ReturnType<ToOpenApiSchema>>;
 const DEFS_PREFIX = "#/$defs/";
 const COMPONENTS_PREFIX = "#/components/schemas/";
 
+// Rewrites `$defs` refs to `components.schemas`, and drops the regex zod
+// emits beside every `format` (its ISO date pattern is 200 characters and
+// says nothing the format does not): readers and generators use the format.
 function rewriteRefs(node: unknown): unknown {
   if (Array.isArray(node)) {
     return node.map(rewriteRefs);
@@ -18,13 +21,16 @@ function rewriteRefs(node: unknown): unknown {
   if (!node || typeof node !== "object") {
     return node;
   }
+  const hasFormat = "format" in node && typeof node.format === "string";
   return Object.fromEntries(
-    Object.entries(node).map(([key, value]) => [
-      key,
-      key === "$ref" && typeof value === "string"
-        ? value.replace(DEFS_PREFIX, COMPONENTS_PREFIX)
-        : rewriteRefs(value),
-    ]),
+    Object.entries(node)
+      .filter(([key]) => !(hasFormat && key === "pattern"))
+      .map(([key, value]) => [
+        key,
+        key === "$ref" && typeof value === "string"
+          ? value.replace(DEFS_PREFIX, COMPONENTS_PREFIX)
+          : rewriteRefs(value),
+      ]),
   );
 }
 

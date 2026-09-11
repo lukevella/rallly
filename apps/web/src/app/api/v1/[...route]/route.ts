@@ -305,7 +305,7 @@ async function buildOpenApiSpec() {
           "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
           "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
           "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
-          "| 400 | `DUPLICATE_DATES` | `dates` contains the same date more than once |",
+          "| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |",
           "| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |",
           "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |",
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
@@ -370,16 +370,78 @@ app.post(
     tags: ["Polls"],
     summary: "Create a poll",
     description: [
-      "Creates a new poll. Provide the poll options in one of two ways:",
+      "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. `options.kind` chooses what participants vote on: whole days or time slots. A poll has at most 100 options.",
       "",
-      "- `dates` — a list of calendar dates. Each date becomes an all-day option (date poll).",
-      "- `slots` — time-based options that share a fixed `duration` in minutes. Each entry in `slots.times` is either an ISO datetime for a single explicit slot, or a slot generator object that expands into recurring slots.",
+      "## Date poll",
       "",
-      'A slot generator takes a date range (`startDate`, `endDate`), the `days` of the week to include, and a daily window (`startTime`, `endTime`). On each matching day it produces a slot every `interval` minutes (defaults to `duration`) from `startTime`, keeping only slots that end by `endTime`. Times are wall clock times in `slots.timezone`. For example, `duration: 30`, `startTime: "09:00"`, `endTime: "12:00"` and `interval: 60` gives slots at 09:00, 10:00 and 11:00 on every listed day.',
+      'Pass `kind: "date"` and `dates`, a list of `YYYY-MM-DD` values. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. A repeated date fails with `DUPLICATE_DATES`.',
       "",
-      "`dates` and `slots` are mutually exclusive, and a poll can have at most 100 options after generation. See the request examples for common scenarios.",
+      "```json",
+      "{",
+      '  "title": "Team offsite",',
+      '  "options": {',
+      '    "kind": "date",',
+      '    "dates": ["2026-08-03", "2026-08-04", "2026-08-05"]',
+      "  }",
+      "}",
+      "```",
       "",
-      "Responds with `201 Created` and the full poll, including the settings and organizer exactly as `GET /polls/:pollId` returns them.",
+      "## Time poll",
+      "",
+      'Pass `kind: "time"` with a `duration` in minutes that every slot shares, a `timezone` (an IANA zone the times are written in), and the slots themselves as `times`, `generators` or both.',
+      "",
+      "### Explicit times",
+      "",
+      "Each ISO datetime string in `times` becomes one slot starting at that moment. A time with no offset, like `2026-08-03T09:00:00`, is read as wall clock time in `timezone`; a time with an offset or `Z` is an absolute instant.",
+      "",
+      "```json",
+      "{",
+      '  "title": "Kickoff",',
+      '  "options": {',
+      '    "kind": "time",',
+      '    "duration": 60,',
+      '    "timezone": "Europe/London",',
+      '    "times": ["2026-08-03T09:00:00", "2026-08-04T14:00:00"]',
+      "  }",
+      "}",
+      "```",
+      "",
+      "### Slot generators",
+      "",
+      "Each object in `generators` expands into recurring slots from a schedule, so availability across days or weeks does not have to be listed slot by slot.",
+      "",
+      "```json",
+      "{",
+      '  "title": "Interview availability",',
+      '  "options": {',
+      '    "kind": "time",',
+      '    "duration": 30,',
+      '    "timezone": "America/New_York",',
+      '    "generators": [',
+      "      {",
+      '        "startDate": "2026-08-03",',
+      '        "endDate": "2026-08-07",',
+      '        "days": ["mon", "tue", "wed", "thu", "fri"],',
+      '        "startTime": "09:00",',
+      '        "endTime": "12:00",',
+      '        "interval": 60',
+      "      }",
+      "    ]",
+      "  }",
+      "}",
+      "```",
+      "",
+      "This produces 30 minute slots at 09:00, 10:00 and 11:00 New York time on each weekday from 3 to 7 August, fifteen options in all. Drop `interval` and the window fills with back to back slots at 09:00, 09:30, 10:00, 10:30, 11:00 and 11:30.",
+      "",
+      "| Field | Meaning |",
+      "| --- | --- |",
+      "| `startDate`, `endDate` | The date range, inclusive. Fewer than 366 days. |",
+      "| `days` | Days of the week to include: `mon` to `sun`. Other days in the range are skipped. |",
+      "| `startTime` | Earliest slot start on each day, `HH:mm` in `timezone`. |",
+      "| `endTime` | End of the daily window. A slot is only generated if it ends by this time. |",
+      "| `interval` | Minutes between slot starts. Optional; defaults to `duration`, which gives back to back slots. |",
+      "",
+      "Generators are expanded when the poll is created and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`; a generator whose window fits no slot produces nothing, and if nothing in `times` or `generators` yields a slot the request fails with `NO_OPTIONS_GENERATED`.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -481,21 +543,23 @@ app.post(
       after(() => flushPostHog());
     };
 
-    // Process dates (all-day options)
-    if (input.dates) {
-      if (input.dates.length > MAX_POLL_OPTIONS) {
+    const optionsInput = input.options;
+
+    if (optionsInput.kind === "date") {
+      const { dates } = optionsInput;
+      if (dates.length > MAX_POLL_OPTIONS) {
         return c.json(
           apiError(
             "TOO_MANY_OPTIONS",
-            `Too many options (${input.dates.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
+            `Too many options (${dates.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
           ),
           400,
         );
       }
 
-      const uniqueDates = [...new Set(input.dates)];
-      if (uniqueDates.length < input.dates.length) {
-        const duplicateCount = input.dates.length - uniqueDates.length;
+      const uniqueDates = [...new Set(dates)];
+      if (uniqueDates.length < dates.length) {
+        const duplicateCount = dates.length - uniqueDates.length;
         return c.json(
           apiError(
             "DUPLICATE_DATES",
@@ -529,37 +593,25 @@ app.post(
       return c.json(pollResponseSchema.parse(toPollResponseBody(poll)), 201);
     }
 
-    // Process slots (time-based options)
-    if (!input.slots) {
-      return c.json(
-        apiError(
-          "VALIDATION_ERROR",
-          "Either 'dates' or 'slots' must be provided",
-        ),
-        400,
-      );
-    }
+    const timeZone = optionsInput.timezone;
+    const duration = optionsInput.duration;
 
-    const slots = input.slots;
-    const timeZone = slots.timezone;
-
-    const duration = slots.duration;
-    const times = Array.isArray(slots.times) ? slots.times : [slots.times];
-
-    const timeSlots = times.flatMap((time) => {
-      if (typeof time === "string") {
-        return parseStartTime(time, timeZone, duration);
-      }
-      const slotGenerator: SlotGeneratorInput = {
-        startDate: time.startDate,
-        endDate: time.endDate,
-        daysOfWeek: time.days,
-        fromTime: time.startTime,
-        toTime: time.endTime,
-        interval: time.interval,
-      };
-      return generateTimeSlots(slotGenerator, timeZone, duration);
-    });
+    const timeSlots = [
+      ...(optionsInput.times ?? []).map((time) =>
+        parseStartTime(time, timeZone, duration),
+      ),
+      ...(optionsInput.generators ?? []).flatMap((generator) => {
+        const slotGenerator: SlotGeneratorInput = {
+          startDate: generator.startDate,
+          endDate: generator.endDate,
+          daysOfWeek: generator.days,
+          fromTime: generator.startTime,
+          toTime: generator.endTime,
+          interval: generator.interval,
+        };
+        return generateTimeSlots(slotGenerator, timeZone, duration);
+      }),
+    ];
 
     const options = dedupeTimeSlots(timeSlots);
 
