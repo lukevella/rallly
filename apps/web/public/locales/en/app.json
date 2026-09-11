@@ -173,7 +173,7 @@
   "conferencingConnectFailed": "We couldn't connect that account. Please try again.",
   "conferencingDescription": "Connect the tools you use for video calls so we can add meeting links to your events.",
   "conferencingDisconnected": "Account disconnected",
-  "conferencingNotConnected": "Connect your {provider} account to add {provider} meetings to your polls. You can do this in <a>Conferencing settings</a>.",
+  "conferencingNotConnected": "{provider} is not connected. Visit the <a>Conferencing settings</a> page to connect your account.",
   "configuredByEnvironmentVariable": "This setting has been configured by environment variable.",
   "confirm": "Confirm",
   "confirmSpaceName": "Please type the space name to confirm:",

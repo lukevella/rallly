@@ -80,7 +80,7 @@ test.describe
       await page.getByRole("menuitem", { name: "Zoom" }).click();
 
       const error = page.locator("#create-poll").getByRole("alert");
-      await expect(error).toContainText("Connect your Zoom account");
+      await expect(error).toContainText("Zoom is not connected");
       await expect(
         error.getByRole("link", { name: "Conferencing settings" }),
       ).toHaveAttribute("href", "/settings/conferencing");
