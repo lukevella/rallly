@@ -32,6 +32,9 @@ test("scrubs addresses out of SMTP replies", () => {
   expect(
     scrubAddresses('Rejected "support team"@example.com and a@b.test'),
   ).toBe("Rejected [redacted] and [redacted]");
+  expect(scrubAddresses('Rejected "a\\"b"@example.com')).toBe(
+    "Rejected [redacted]",
+  );
   expect(scrubAddresses("connect ECONNREFUSED 127.0.0.1:1")).toBe(
     "connect ECONNREFUSED 127.0.0.1:1",
   );
