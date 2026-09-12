@@ -52,6 +52,16 @@ type DispatchOptions = {
   errorLabel: string;
 };
 
+/**
+ * The part of the address after the last `@`, with any display-name wrapper
+ * stripped. Enough to tell a misconfigured provider from a single bad mailbox
+ * without putting the address itself in the log sink.
+ */
+export function recipientDomain(to: string) {
+  const match = to.match(/@([^>\s]+)/);
+  return match?.[1]?.toLowerCase();
+}
+
 function buildHeaders(
   listUnsubscribeUrl?: string,
 ): Record<string, string> | undefined {
@@ -92,8 +102,14 @@ async function dispatch(options: DispatchOptions) {
     // Operational (SMTP/transport) failures are logged, not thrown — sending is
     // fire-and-forget. Render/template (code) errors are NOT caught here, so they
     // propagate to the caller's error reporting (Sentry via onRequestError).
+    // Only the domain is logged: the log sink has its own retention and sits
+    // outside the data map, so the address itself must never land there.
     logger.error(
-      { error: e, recipient: options.to, subject: options.subject },
+      {
+        error: e,
+        recipientDomain: recipientDomain(options.to),
+        subject: options.subject,
+      },
       `Failed to send email: ${options.errorLabel}`,
     );
   }

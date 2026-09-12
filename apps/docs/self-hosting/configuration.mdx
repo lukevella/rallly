@@ -75,9 +75,9 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
 </ParamField>
 
 <ParamField path="SMTP_DEBUG" default="false">
-  Set to `true` to log the full SMTP conversation. Useful for troubleshooting email delivery issues.
+  Set to `true` to log the full SMTP conversation. For development and local troubleshooting only.
 
-  <Warning>Debug output includes the authentication exchange, where credentials are only base64 encoded. Enable this only while troubleshooting and redact your logs before sharing them.</Warning>
+  <Warning>Debug output includes the authentication exchange, where credentials are only base64 encoded, and every recipient address in the `RCPT TO` envelope. Do not enable it on an instance that sends mail to real users: the addresses land in your log storage and inherit its retention. If you must use it against a live server, do so briefly, then delete the affected logs and redact anything you share.</Warning>
 
   <Note>Available from v4.12.0 and later.</Note>
 </ParamField>
