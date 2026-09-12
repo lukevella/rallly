@@ -11,6 +11,7 @@ export interface FeatureFlagConfig {
   quickCreate: boolean;
   inProcessRateLimit: boolean;
   nonprofitDiscount: boolean;
+  api: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;

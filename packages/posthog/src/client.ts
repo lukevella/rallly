@@ -2,8 +2,6 @@
 import posthog from "posthog-js";
 import type React from "react";
 
-export { useFeatureFlagEnabled } from "posthog-js/react";
-
 import { getPostHogInitOptions } from "./client-config";
 import {
   isAbortError,
