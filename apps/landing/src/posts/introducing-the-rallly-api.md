@@ -7,6 +7,8 @@ excerpt: Create polls, read results and close them from your own tools. The API 
 
 Rallly has had a small API behind a flag for a while. A handful of people have been using it to create polls from their own systems, and their feedback has shaped what ships today. It is now open to every Pro space on Rallly Cloud.
 
+![A terminal sending a request on the left, an arrow to a poll with three date options on the right, and results flowing back](/static/images/rallly-api/api-to-poll.svg)
+
 ## What it does
 
 The API covers the full life of a poll:
