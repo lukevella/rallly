@@ -202,17 +202,38 @@ function setRateLimitHeaders(c: Context, info: RateLimitInfo) {
   c.header("RateLimit-Reset", resetSeconds(binding).toString());
 }
 
+const STORE_ERROR_REPORT_INTERVAL_MS = 60 * 1000;
+const lastStoreErrorReportAt = new Map<RateLimitFailure["reason"], number>();
+
+/**
+ * During an outage every API request takes this path, so report at most one
+ * event per reason per minute per process. The alert only needs the first;
+ * the wide event keeps the per-request detail.
+ */
+function reportStoreError(
+  failure: RateLimitFailure,
+  { spaceId, cause }: { spaceId: string; cause?: unknown },
+) {
+  const now = Date.now();
+  const lastReportAt = lastStoreErrorReportAt.get(failure.reason);
+  if (lastReportAt && now - lastReportAt < STORE_ERROR_REPORT_INTERVAL_MS) {
+    return;
+  }
+  lastStoreErrorReportAt.set(failure.reason, now);
+  Sentry.captureException(new RateLimitStoreError(failure.reason, { cause }), {
+    tags: { rateLimiterError: failure.reason },
+    fingerprint: ["rate-limit-store", failure.reason],
+    extra: { spaceId },
+  });
+}
+
 function serviceUnavailable(
   c: Context,
   failure: RateLimitFailure,
   { spaceId, cause }: { spaceId: string; cause?: unknown },
 ) {
   c.set("rateLimitFailure", failure);
-  Sentry.captureException(new RateLimitStoreError(failure.reason, { cause }), {
-    tags: { rateLimiterError: failure.reason },
-    fingerprint: ["rate-limit-store", failure.reason],
-    extra: { spaceId },
-  });
+  reportStoreError(failure, { spaceId, cause });
   return c.json(
     apiError(
       "SERVICE_UNAVAILABLE",
