@@ -19,8 +19,8 @@ import {
   SettingsIcon,
   UserPlusIcon,
 } from "lucide-react";
-import Link from "next/link";
 import React from "react";
+import { Link } from "@/components/link";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";

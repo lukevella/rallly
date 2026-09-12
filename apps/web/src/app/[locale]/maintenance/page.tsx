@@ -1,7 +1,6 @@
 import { buttonVariants } from "@rallly/ui";
-import Link from "next/link";
-
 import { ErrorPage } from "@/components/error-page";
+import { Link } from "@/components/link";
 import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { getTranslation } from "@/i18n/server";
 

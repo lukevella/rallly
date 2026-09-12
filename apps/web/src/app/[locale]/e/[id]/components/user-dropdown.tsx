@@ -11,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";

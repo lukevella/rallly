@@ -24,11 +24,11 @@ import { MaxCharLength } from "@rallly/ui/max-char-length";
 import { Textarea } from "@rallly/ui/textarea";
 import { TRPCClientError } from "@trpc/client";
 import { CircleCheckIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
+import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import {
   useAddParticipantMutation,

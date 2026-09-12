@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import Linkify from "linkify-react";
-import Link from "next/link";
 import type * as React from "react";
+import { Link } from "@/components/link";
 
 export const truncateLink = (href: string, text: string, key: number) => {
   const textWithoutProtocol = text.replace(/^https?:\/\//i, "");

@@ -15,8 +15,8 @@ import {
   SidebarTrigger,
 } from "@rallly/ui/sidebar";
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
-import Link from "next/link";
 import type React from "react";
+import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 import {
@@ -34,7 +34,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem className="flex items-center gap-3">
-                  <Link
+                  <HoverPrefetchLink
                     href="/"
                     className={buttonVariants({
                       variant: "ghost",
@@ -45,7 +45,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
                     <span className="sr-only">
                       <Trans i18nKey="back" defaults="Back" />
                     </span>
-                  </Link>
+                  </HoverPrefetchLink>
                   <span className="font-medium text-sm">
                     <Trans i18nKey="settings" defaults="Settings" />
                   </span>

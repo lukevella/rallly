@@ -19,9 +19,9 @@ import {
   TableIcon,
   TrashIcon,
 } from "lucide-react";
-import Link from "next/link";
 import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
+import { Link } from "@/components/link";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";

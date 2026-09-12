@@ -1,7 +1,6 @@
 import { buttonVariants } from "@rallly/ui";
 import { CrownIcon, LockIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   EmptyState,
@@ -11,6 +10,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
+import { Link } from "@/components/link";
 import { isInitialAdmin } from "@/features/instance-settings/utils";
 import { getCurrentUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";

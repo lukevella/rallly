@@ -1,7 +1,7 @@
 import { buttonVariants } from "@rallly/ui";
 import { CheckIcon, PlusIcon, ZapIcon } from "lucide-react";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { Link } from "@/components/link";
 
 import { PollPageIcon } from "@/components/page-icons";
 import { getGuestPolls } from "@/features/quick-create/data";

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Link } from "@/components/link";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 export function LinkWithRedirectTo({

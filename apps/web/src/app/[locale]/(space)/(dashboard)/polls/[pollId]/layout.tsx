@@ -1,9 +1,9 @@
 import { buttonVariants } from "@rallly/ui";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { Link } from "@/components/link";
 import {
   PageContainer,
   PageContent,

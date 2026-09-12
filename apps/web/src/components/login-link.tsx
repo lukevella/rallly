@@ -1,7 +1,7 @@
-import type { LinkProps } from "next/link";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import type { LinkProps } from "@/components/link";
+import { Link } from "@/components/link";
 
 export const LoginLink = React.forwardRef<
   HTMLAnchorElement,
