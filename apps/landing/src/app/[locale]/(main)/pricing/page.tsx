@@ -761,7 +761,7 @@ export default async function Page(props: {
                       components={{
                         a: <a className={faqLinkClassName} href={apiDocsUrl} />,
                       }}
-                      defaults="Create polls and read results from your own systems, 60 requests per minute per space. <a>Read the API docs</a>"
+                      defaults="Create polls and read results from your own systems. <a>Read the API docs</a>"
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
