@@ -52,14 +52,50 @@ type DispatchOptions = {
   errorLabel: string;
 };
 
+const ADDRESS_PATTERN = /[^\s<>,;:"]+@[^\s<>,;:"]+/g;
+
 /**
- * The part of the address after the last `@`, with any display-name wrapper
- * stripped. Enough to tell a misconfigured provider from a single bad mailbox
- * without putting the address itself in the log sink.
+ * Domains of every address in a nodemailer `to` string (comma or semicolon
+ * separated, display-name wrappers allowed), deduplicated and lowercased.
+ * Enough to tell a misconfigured provider from a single bad mailbox without
+ * putting an address in the log sink.
  */
-export function recipientDomain(to: string) {
-  const match = to.match(/@([^>\s]+)/);
-  return match?.[1]?.toLowerCase();
+export function recipientDomains(to: string) {
+  const domains = new Set<string>();
+  for (const address of to.match(ADDRESS_PATTERN) ?? []) {
+    domains.add(address.slice(address.lastIndexOf("@") + 1).toLowerCase());
+  }
+  return [...domains];
+}
+
+/** Replaces anything address-shaped so SMTP replies can be logged verbatim. */
+export function scrubAddresses(text: string) {
+  return text.replace(ADDRESS_PATTERN, "[redacted]");
+}
+
+/**
+ * Nodemailer rejections carry the recipient in `message`, `response`,
+ * `rejected` and `rejectedErrors`, so the raw error must not be logged.
+ * Keeps the fields an operator needs to diagnose a transport failure.
+ */
+function describeTransportError(e: unknown) {
+  if (!(e instanceof Error)) {
+    return { errorMessage: scrubAddresses(String(e)) };
+  }
+  const { code, command, responseCode, response } = e as Error & {
+    code?: string;
+    command?: string;
+    responseCode?: number;
+    response?: string;
+  };
+  return {
+    errorName: e.name,
+    errorMessage: scrubAddresses(e.message),
+    errorCode: code,
+    errorCommand: command,
+    errorResponseCode: responseCode,
+    errorResponse: response ? scrubAddresses(response) : undefined,
+  };
 }
 
 function buildHeaders(
@@ -106,8 +142,8 @@ async function dispatch(options: DispatchOptions) {
     // outside the data map, so the address itself must never land there.
     logger.error(
       {
-        error: e,
-        recipientDomain: recipientDomain(options.to),
+        ...describeTransportError(e),
+        recipientDomains: recipientDomains(options.to),
         subject: options.subject,
       },
       `Failed to send email: ${options.errorLabel}`,
