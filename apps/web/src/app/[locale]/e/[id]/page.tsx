@@ -99,9 +99,9 @@ export default async function EventPage({
       ? branding.primaryColor
       : null;
 
-  const session = await getSession();
-  const { t } = await getTranslation();
-  const [locale, deviceDateTimeConfig] = await Promise.all([
+  const [session, { t }, locale, deviceDateTimeConfig] = await Promise.all([
+    getSession(),
+    getTranslation(),
     getLocale(),
     getDeviceDateTimeConfig(),
   ]);

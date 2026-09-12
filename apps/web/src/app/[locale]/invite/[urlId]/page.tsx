@@ -49,14 +49,15 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
 
-  await getPollMetadata(params.urlId);
-
-  const trpc = await createPublicSSRHelper();
+  const [, trpc, searchParams] = await Promise.all([
+    getPollMetadata(params.urlId),
+    createPublicSSRHelper(),
+    props.searchParams,
+  ]);
 
   // `invite` is the param older invite emails carry; both name the same
   // token and the client reads them the same way. A repeated param arrives
   // as an array; only a single value is a token.
-  const searchParams = await props.searchParams;
   const token = [searchParams.token, searchParams.invite].find(
     (value): value is string => typeof value === "string",
   );
