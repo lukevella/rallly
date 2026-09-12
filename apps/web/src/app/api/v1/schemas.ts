@@ -5,24 +5,47 @@ import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
 export const dateSchema = z.iso.date().meta({
   description: "Date in YYYY-MM-DD format",
-  example: "2025-12-23",
+  example: "2027-03-01",
 });
 
-export const timeSchema = z.iso.time().meta({
+export const timeSchema = z.iso.time({ precision: -1 }).meta({
   description: "Time in HH:mm (24-hour) format",
   example: "09:30",
 });
 
 export const slotGeneratorSchema = z
   .strictObject({
-    startDate: dateSchema,
-    endDate: dateSchema,
-    days: z.array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])),
-    startTime: timeSchema,
-    endTime: timeSchema,
+    startDate: dateSchema.meta({
+      description: "First day of the range to generate slots on, inclusive.",
+      example: "2027-03-01",
+    }),
+    endDate: dateSchema.meta({
+      description:
+        "Last day of the range, inclusive. The range must span fewer than 366 days.",
+      example: "2027-03-05",
+    }),
+    days: z
+      .array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]))
+      .min(1)
+      .meta({
+        description:
+          "Days of the week to generate slots on. Days in the range that are not listed are skipped.",
+        example: ["mon", "tue", "wed", "thu", "fri"],
+      }),
+    startTime: timeSchema.meta({
+      description:
+        "Earliest slot start on each day, as a wall clock time in `timeZone`.",
+      example: "09:00",
+    }),
+    endTime: timeSchema.meta({
+      description:
+        "End of the daily window. A slot is only generated if it ends at or before this time.",
+      example: "17:00",
+    }),
     interval: z.number().int().min(15).max(1440).optional().meta({
-      description: "Interval in minutes between slots. Defaults to duration.",
-      example: 30,
+      description:
+        "Minutes between consecutive slot starts. Defaults to `duration`, which produces back to back slots.",
+      example: 60,
     }),
   })
   // Reject over-long ranges up front rather than silently truncating at the
@@ -39,44 +62,70 @@ export const slotGeneratorSchema = z
       path: ["endDate"],
     },
   )
-  .meta({ id: "SlotGenerator" });
+  .meta({
+    id: "SlotGenerator",
+    title: "Slot generator",
+    description:
+      "Expands into one slot of `duration` minutes every `interval` minutes between `startTime` and `endTime`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `endTime` are not generated.",
+  });
 
-const slotsInputSchema = z
+const explicitTimeSchema = z.iso.datetime({ local: true, offset: true }).meta({
+  description:
+    "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
+  example: "2027-03-01T09:00:00",
+});
+
+const dateOptionsSchema = z
   .strictObject({
-    duration: z.number().int().min(15).max(1440).meta({
-      description: "Duration in minutes for each time slot",
-      example: 30,
-    }),
-    timezone: timezoneSchema.optional().meta({
-      description:
-        "IANA timezone. Datetime strings without an offset are interpreted in this timezone. If omitted, offset-less datetimes are treated as floating times (no timezone conversion) and the poll has no timezone set.",
-      example: "Europe/London",
-    }),
-    times: z
-      .array(
-        z.union([
-          z.iso.datetime({ local: true, offset: true }).meta({
-            description:
-              "ISO datetime start time. Strings without an offset are interpreted as wall-clock in `timezone` (e.g. `2025-01-15T09:00:00` with `timezone: Europe/London` means 09:00 in London). Strings with an offset or `Z` are treated as absolute instants.",
-            example: "2025-01-15T09:00:00",
-          }),
-          slotGeneratorSchema,
-        ]),
-      )
+    kind: z.literal("date"),
+    dates: z
+      .array(z.iso.date())
       .min(1)
       .meta({
         description:
-          "Times to include. An array of ISO datetime strings and/or slot generators.",
+          "Calendar days to offer. Each becomes one all-day option. A day may appear once.",
+        example: ["2027-03-01", "2027-03-02", "2027-03-03"],
       }),
   })
-  .meta({ id: "SlotsInput" });
-
-const datesInputSchema = z
-  .array(z.iso.date())
-  .min(1)
   .meta({
-    description: "Array of ISO dates for all-day options",
-    example: ["2025-01-15", "2025-01-16", "2025-01-17"],
+    id: "DateOptions",
+    title: "Date poll",
+    description:
+      "Whole days. Dates are floating calendar days with no timezone, so never convert them through one.",
+  });
+
+const timeOptionsSchema = z
+  .strictObject({
+    kind: z.literal("time"),
+    duration: z.number().int().min(15).max(1440).meta({
+      description: "Length of every slot in minutes",
+      example: 30,
+    }),
+    timeZone: timezoneSchema.optional().meta({
+      description:
+        "IANA time zone the times are written in. Datetime strings without an offset are interpreted in this zone. If omitted, offset-less datetimes are floating times (no conversion) and the poll has no time zone.",
+      example: "Europe/London",
+    }),
+    times: z.array(explicitTimeSchema).min(1).optional().meta({
+      description: "Explicit slots, one per start time.",
+    }),
+    generators: z.array(slotGeneratorSchema).min(1).optional().meta({
+      description:
+        "Slot generators. Each expands into recurring slots from a schedule.",
+    }),
+  })
+  .refine((data) => data.times || data.generators, {
+    message: "Provide 'times', 'generators' or both",
+    path: ["times"],
+  })
+  // The refinement above does not survive JSON Schema conversion. Stating it
+  // as an anyOf would make Mintlify render two identical "Time poll" variants,
+  // so the description carries it instead.
+  .meta({
+    id: "TimeOptions",
+    title: "Time poll",
+    description:
+      "Time slots that share one duration. Provide `times`, `generators` or both. Duplicate slots are removed.",
   });
 
 // Strict so a misspelt or unsupported field fails loudly instead of being
@@ -130,14 +179,21 @@ export const createPollInputSchema = z
         description:
           "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
       }),
-    dates: datesInputSchema.optional(),
-    slots: slotsInputSchema.optional(),
-  })
-  .refine((data) => data.dates || data.slots, {
-    message: "Either 'dates' or 'slots' must be provided",
-  })
-  .refine((data) => !(data.dates && data.slots), {
-    message: "Cannot provide both 'dates' and 'slots'",
+    options: z
+      .discriminatedUnion("kind", [dateOptionsSchema, timeOptionsSchema], {
+        error: 'kind must be "date" or "time"',
+      })
+      .meta({
+        description:
+          "What participants vote on: whole days (`kind: date`) or time slots (`kind: time`).",
+        discriminator: {
+          propertyName: "kind",
+          mapping: {
+            date: "#/components/schemas/DateOptions",
+            time: "#/components/schemas/TimeOptions",
+          },
+        },
+      }),
   })
   .meta({ id: "CreatePollInput" });
 
@@ -222,10 +278,9 @@ export const pollOrganizerSchema = z
     id: z.string().meta({ example: "cm3f7d1qa0000t2k9c6b8h4jr" }),
     name: z.string().meta({ example: "John Doe" }),
     email: z.email().meta({ example: "organizer@example.com" }),
-    image: z
-      .string()
-      .nullable()
-      .meta({ example: "https://example.com/avatar.jpg" }),
+    image: z.string().nullable().meta({
+      example: "https://cdn.rallly.co/avatars/cm3f7d1qa0000t2k9c6b8h4jr.jpg",
+    }),
   })
   .meta({ id: "PollOrganizer" });
 
@@ -237,7 +292,7 @@ const pollSchema = z
       example: "Pick a time that works for everyone",
     }),
     location: z.string().nullable().meta({ example: "Zoom" }),
-    timezone: z.string().nullable().meta({ example: "Europe/London" }),
+    timeZone: z.string().nullable().meta({ example: "Europe/London" }),
     status: pollStatusSchema,
     kind: pollKindSchema,
     createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),
@@ -279,10 +334,10 @@ const pollSchema = z
     options: z.array(pollOptionSchema),
     adminUrl: z
       .string()
-      .meta({ example: "https://example.com/poll/Xk3pQ9vLm2Ab" }),
+      .meta({ example: "https://app.rallly.co/poll/Xk3pQ9vLm2Ab" }),
     inviteUrl: z
       .string()
-      .meta({ example: "https://example.com/invite/Xk3pQ9vLm2Ab" }),
+      .meta({ example: "https://rallly.co/invite/Xk3pQ9vLm2Ab" }),
   })
   .meta({ id: "Poll" });
 

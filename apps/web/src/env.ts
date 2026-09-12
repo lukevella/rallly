@@ -174,9 +174,12 @@ export const env = createEnv({
     TURNSTILE_SECRET_KEY: z.string().optional(),
     /**
      * Base URL of the Rallly cloud API (e.g. https://api.rallly.co).
-     * Set by the self-hosted Docker image so the instance can phone home for
-     * update checks. Unset elsewhere — the features that depend on it no-op
-     * when it's missing.
+     * On the cloud deployment it names the host that serves `/v1` without
+     * the app's `/api` prefix (see the rewrite in next.config.ts) and is
+     * the `servers` entry of the OpenAPI document. The self-hosted Docker
+     * image sets it so the instance can phone home for update checks.
+     * Unset elsewhere — the features that depend on it no-op when it's
+     * missing.
      */
     API_BASE_URL: z.url().optional(),
   },

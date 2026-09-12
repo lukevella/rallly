@@ -1,7 +1,6 @@
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { handle } from "hono/vercel";
 import {
   describeRoute,
   generateSpecs,
@@ -66,7 +65,10 @@ type Env = {
   };
 };
 
-const app = new Hono<Env>().basePath("/api/v1");
+// The public URL has no `/api` prefix (https://api.rallly.co/v1/...), which
+// is also what a standalone API deployment would serve, so Hono mounts at
+// `/v1`. See `handler` below for how the app host's `/api/v1` reaches it.
+const app = new Hono<Env>().basePath("/v1");
 
 // Process-wide: hono-openapi keys converters by schema vendor, and every zod
 // schema reports "zod". Schemas without native `.meta()` ids convert exactly as
@@ -124,7 +126,7 @@ function toPollResponseBody(poll: {
       title: poll.title,
       description: poll.description,
       location: poll.location,
-      timezone: poll.timeZone,
+      timeZone: poll.timeZone,
       status: poll.status,
       kind: poll.kind,
       createdAt: poll.createdAt.toISOString(),
@@ -203,6 +205,22 @@ app.onError((error, c) => {
   );
 });
 
+const unauthorizedResponse = {
+  description:
+    "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+  headers: {
+    "WWW-Authenticate": {
+      description: "The bearer challenge, per RFC 6750.",
+      schema: { type: "string" as const },
+    },
+  },
+  content: {
+    "application/json": {
+      schema: resolver(errorResponseSchema),
+    },
+  },
+};
+
 const spaceNotProResponse = {
   description:
     "The space associated with the API key does not have a Pro subscription",
@@ -263,7 +281,7 @@ async function buildOpenApiSpec() {
           "",
           "## Dates and times",
           "",
-          "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timezone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.",
+          "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timeZone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.",
           "",
           "## Request bodies",
           "",
@@ -287,7 +305,7 @@ async function buildOpenApiSpec() {
           "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
           "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
           "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
-          "| 400 | `DUPLICATE_DATES` | `dates` contains the same date more than once |",
+          "| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |",
           "| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |",
           "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |",
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
@@ -299,7 +317,10 @@ async function buildOpenApiSpec() {
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
         ].join("\n"),
       },
-      servers: [{ url: absoluteUrl() }],
+      // The public host serves `/v1/...` directly; without one the API is
+      // reachable under the app's `/api` prefix. Read from process.env like
+      // lib/maintenance.ts: `@/env` validates eagerly on import.
+      servers: [{ url: process.env.API_BASE_URL ?? absoluteUrl("/api") }],
       components: {
         securitySchemes: {
           bearerAuth: {
@@ -314,7 +335,7 @@ async function buildOpenApiSpec() {
   // hono-openapi's validator middleware owns the request body schema and
   // overwrites any content set via describeRoute, so named examples have to
   // be attached to the generated spec instead.
-  const createPollRequestBody = spec.paths["/api/v1/polls"]?.post?.requestBody;
+  const createPollRequestBody = spec.paths["/v1/polls"]?.post?.requestBody;
   if (createPollRequestBody && "content" in createPollRequestBody) {
     const media = createPollRequestBody.content?.["application/json"];
     if (media) {
@@ -323,7 +344,7 @@ async function buildOpenApiSpec() {
   }
 
   const patchPollRequestBody =
-    spec.paths["/api/v1/polls/{pollId}"]?.patch?.requestBody;
+    spec.paths["/v1/polls/{pollId}"]?.patch?.requestBody;
   if (patchPollRequestBody && "content" in patchPollRequestBody) {
     const media = patchPollRequestBody.content?.["application/json"];
     if (media) {
@@ -349,14 +370,78 @@ app.post(
     tags: ["Polls"],
     summary: "Create a poll",
     description: [
-      "Creates a new poll. Provide the poll options in one of two ways:",
+      "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. `options.kind` chooses what participants vote on: whole days or time slots. A poll has at most 100 options.",
       "",
-      "- `dates` — a list of calendar dates. Each date becomes an all-day option (date poll).",
-      "- `slots` — time-based options that share a fixed `duration` in minutes. Each entry in `slots.times` is either an ISO datetime for an explicit slot, or a slot generator that expands into recurring slots within a time window across a date range. Generated slots start every `interval` minutes (defaults to `duration`) and must fit entirely between `startTime` and `endTime`.",
+      "## Date poll",
       "",
-      "`dates` and `slots` are mutually exclusive, and a poll can have at most 100 options. See the request examples for common scenarios.",
+      'Pass `kind: "date"` and `dates`, a list of `YYYY-MM-DD` values. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. A repeated date fails with `DUPLICATE_DATES`.',
       "",
-      "Responds with `201 Created` and the full poll, including the settings and organizer exactly as `GET /polls/:pollId` returns them.",
+      "```json",
+      "{",
+      '  "title": "Team offsite",',
+      '  "options": {',
+      '    "kind": "date",',
+      '    "dates": ["2027-03-01", "2027-03-02", "2027-03-03"]',
+      "  }",
+      "}",
+      "```",
+      "",
+      "## Time poll",
+      "",
+      'Pass `kind: "time"` with a `duration` in minutes that every slot shares, the slots themselves as `times`, `generators` or both, and optionally a `timeZone` (an IANA zone the times are written in).',
+      "",
+      "### Explicit times",
+      "",
+      "Each ISO datetime string in `times` becomes one slot starting at that moment. A time with no offset, like `2027-03-01T09:00:00`, is wall clock time in `timeZone` when that is set and a floating time with no conversion otherwise; a time with an offset or `Z` is an absolute instant.",
+      "",
+      "```json",
+      "{",
+      '  "title": "Kickoff",',
+      '  "options": {',
+      '    "kind": "time",',
+      '    "duration": 60,',
+      '    "timeZone": "Europe/London",',
+      '    "times": ["2027-03-01T09:00:00", "2027-03-02T14:00:00"]',
+      "  }",
+      "}",
+      "```",
+      "",
+      "### Slot generators",
+      "",
+      "Each object in `generators` expands into recurring slots from a schedule, so availability across days or weeks does not have to be listed slot by slot.",
+      "",
+      "```json",
+      "{",
+      '  "title": "Interview availability",',
+      '  "options": {',
+      '    "kind": "time",',
+      '    "duration": 30,',
+      '    "timeZone": "America/New_York",',
+      '    "generators": [',
+      "      {",
+      '        "startDate": "2027-03-01",',
+      '        "endDate": "2027-03-05",',
+      '        "days": ["mon", "tue", "wed", "thu", "fri"],',
+      '        "startTime": "09:00",',
+      '        "endTime": "12:00",',
+      '        "interval": 60',
+      "      }",
+      "    ]",
+      "  }",
+      "}",
+      "```",
+      "",
+      "This produces 30 minute slots at 09:00, 10:00 and 11:00 New York time on each weekday from 1 to 5 March, fifteen options in all. Drop `interval` and the window fills with back to back slots at 09:00, 09:30, 10:00, 10:30, 11:00 and 11:30.",
+      "",
+      "| Field | Meaning |",
+      "| --- | --- |",
+      "| `startDate`, `endDate` | The date range, inclusive. Fewer than 366 days. |",
+      "| `days` | Days of the week to include: `mon` to `sun`. Other days in the range are skipped. |",
+      "| `startTime` | Earliest slot start on each day, `HH:mm` in `timeZone`. |",
+      "| `endTime` | End of the daily window. A slot is only generated if it ends by this time. |",
+      "| `interval` | Minutes between slot starts. Optional; defaults to `duration`, which gives back to back slots. |",
+      "",
+      "Generators are expanded when the poll is created and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`; a generator whose window fits no slot produces nothing, and if nothing in `times` or `generators` yields a slot the request fails with `NO_OPTIONS_GENERATED`.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -376,6 +461,7 @@ app.post(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -423,7 +509,7 @@ app.post(
           option_count: poll.options.length,
           has_location: !!poll.location,
           has_description: !!poll.description,
-          timezone: poll.timeZone,
+          timeZone: poll.timeZone,
           muted: false,
         },
       });
@@ -439,7 +525,7 @@ app.post(
             optionCount: poll.options.length,
             hasLocation: !!poll.location,
             hasDescription: !!poll.description,
-            timezone: poll.timeZone,
+            timeZone: poll.timeZone,
             requireParticipantEmail: input.requireEmail,
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
@@ -457,21 +543,23 @@ app.post(
       after(() => flushPostHog());
     };
 
-    // Process dates (all-day options)
-    if (input.dates) {
-      if (input.dates.length > MAX_POLL_OPTIONS) {
+    const optionsInput = input.options;
+
+    if (optionsInput.kind === "date") {
+      const { dates } = optionsInput;
+      if (dates.length > MAX_POLL_OPTIONS) {
         return c.json(
           apiError(
             "TOO_MANY_OPTIONS",
-            `Too many options (${input.dates.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
+            `Too many options (${dates.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
           ),
           400,
         );
       }
 
-      const uniqueDates = [...new Set(input.dates)];
-      if (uniqueDates.length < input.dates.length) {
-        const duplicateCount = input.dates.length - uniqueDates.length;
+      const uniqueDates = [...new Set(dates)];
+      if (uniqueDates.length < dates.length) {
+        const duplicateCount = dates.length - uniqueDates.length;
         return c.json(
           apiError(
             "DUPLICATE_DATES",
@@ -505,37 +593,25 @@ app.post(
       return c.json(pollResponseSchema.parse(toPollResponseBody(poll)), 201);
     }
 
-    // Process slots (time-based options)
-    if (!input.slots) {
-      return c.json(
-        apiError(
-          "VALIDATION_ERROR",
-          "Either 'dates' or 'slots' must be provided",
-        ),
-        400,
-      );
-    }
+    const timeZone = optionsInput.timeZone;
+    const duration = optionsInput.duration;
 
-    const slots = input.slots;
-    const timeZone = slots.timezone;
-
-    const duration = slots.duration;
-    const times = Array.isArray(slots.times) ? slots.times : [slots.times];
-
-    const timeSlots = times.flatMap((time) => {
-      if (typeof time === "string") {
-        return parseStartTime(time, timeZone, duration);
-      }
-      const slotGenerator: SlotGeneratorInput = {
-        startDate: time.startDate,
-        endDate: time.endDate,
-        daysOfWeek: time.days,
-        fromTime: time.startTime,
-        toTime: time.endTime,
-        interval: time.interval,
-      };
-      return generateTimeSlots(slotGenerator, timeZone, duration);
-    });
+    const timeSlots = [
+      ...(optionsInput.times ?? []).map((time) =>
+        parseStartTime(time, timeZone, duration),
+      ),
+      ...(optionsInput.generators ?? []).flatMap((generator) => {
+        const slotGenerator: SlotGeneratorInput = {
+          startDate: generator.startDate,
+          endDate: generator.endDate,
+          daysOfWeek: generator.days,
+          fromTime: generator.startTime,
+          toTime: generator.endTime,
+          interval: generator.interval,
+        };
+        return generateTimeSlots(slotGenerator, timeZone, duration);
+      }),
+    ];
 
     const options = dedupeTimeSlots(timeSlots);
 
@@ -610,6 +686,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -655,6 +732,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -712,6 +790,7 @@ app.patch(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -787,6 +866,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -866,6 +946,7 @@ app.get(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -931,6 +1012,7 @@ app.delete(
           },
         },
       },
+      401: unauthorizedResponse,
       403: spaceNotProResponse,
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
@@ -973,7 +1055,31 @@ app.delete(
 
 export { app };
 
-export const GET = handle(app);
-export const POST = handle(app);
-export const PATCH = handle(app);
-export const DELETE = handle(app);
+const APP_PREFIX = "/api";
+
+// Requests reach this file two ways: on the public host as `/v1/...` (the
+// next.config rewrite keeps the original URL, so that is what arrives here)
+// and on the app host as `/api/v1/...`. Both must hit the same Hono routes,
+// so the app prefix is stripped before dispatch. The forwarded request is
+// built field by field: `new Request(url, request)` drops the method under
+// vitest.
+async function handler(request: Request) {
+  const url = new URL(request.url);
+  if (!url.pathname.startsWith(`${APP_PREFIX}/v1`)) {
+    return app.fetch(request);
+  }
+  url.pathname = url.pathname.slice(APP_PREFIX.length);
+  return app.fetch(
+    new Request(url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+      duplex: "half",
+    } as RequestInit),
+  );
+}
+
+export const GET = handler;
+export const POST = handler;
+export const PATCH = handler;
+export const DELETE = handler;
