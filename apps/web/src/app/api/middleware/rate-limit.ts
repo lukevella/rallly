@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import {
@@ -35,6 +36,26 @@ export type RateLimitFailure = {
   reason: "store_unavailable" | "store_error";
   message: string;
 };
+
+/**
+ * The fail-closed 503 is returned, not thrown, so nothing upstream reports it.
+ * A fixed message per reason keeps Sentry grouping to one issue per cause;
+ * the store's own message travels as `cause` and on the wide event.
+ */
+export class RateLimitStoreError extends Error {
+  readonly reason: RateLimitFailure["reason"];
+
+  constructor(reason: RateLimitFailure["reason"], options?: ErrorOptions) {
+    super(
+      reason === "store_unavailable"
+        ? "Rate limit store is not configured"
+        : "Rate limit store request failed",
+      options,
+    );
+    this.name = "RateLimitStoreError";
+    this.reason = reason;
+  }
+}
 
 type RateLimitEnv = {
   Variables: {
@@ -181,8 +202,17 @@ function setRateLimitHeaders(c: Context, info: RateLimitInfo) {
   c.header("RateLimit-Reset", resetSeconds(binding).toString());
 }
 
-function serviceUnavailable(c: Context, failure: RateLimitFailure) {
+function serviceUnavailable(
+  c: Context,
+  failure: RateLimitFailure,
+  { spaceId, cause }: { spaceId: string; cause?: unknown },
+) {
   c.set("rateLimitFailure", failure);
+  Sentry.captureException(new RateLimitStoreError(failure.reason, { cause }), {
+    tags: { rateLimiterError: failure.reason },
+    fingerprint: ["rate-limit-store", failure.reason],
+    extra: { spaceId },
+  });
   return c.json(
     apiError(
       "SERVICE_UNAVAILABLE",
@@ -207,21 +237,30 @@ function serviceUnavailable(c: Context, failure: RateLimitFailure) {
  * the wide event via `rateLimitFailure`.
  */
 export const rateLimit = createMiddleware<RateLimitEnv>(async (c, next) => {
+  const { spaceId } = c.get("apiAuth");
   if (!store) {
-    return serviceUnavailable(c, {
-      reason: "store_unavailable",
-      message: "Rate limit store is not configured",
-    });
+    return serviceUnavailable(
+      c,
+      {
+        reason: "store_unavailable",
+        message: "Rate limit store is not configured",
+      },
+      { spaceId },
+    );
   }
 
   let result: Counters;
   try {
-    result = await store.increment(c.get("apiAuth").spaceId);
+    result = await store.increment(spaceId);
   } catch (error) {
-    return serviceUnavailable(c, {
-      reason: "store_error",
-      message: error instanceof Error ? error.message : String(error),
-    });
+    return serviceUnavailable(
+      c,
+      {
+        reason: "store_error",
+        message: error instanceof Error ? error.message : String(error),
+      },
+      { spaceId, cause: error },
+    );
   }
 
   const [minuteHits, minuteTtl, dayHits, dayTtl] = result;
