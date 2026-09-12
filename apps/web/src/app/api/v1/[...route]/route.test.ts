@@ -196,7 +196,8 @@ describe("API v1 - /polls", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -215,7 +216,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -235,7 +237,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -255,7 +258,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -280,7 +284,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -306,7 +311,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -323,7 +329,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -430,7 +437,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -463,7 +471,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -487,10 +496,12 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team offsite",
-          options: {
-            kind: "date",
-            dates: ["2025-01-15", "2025-01-16", "2025-01-17"],
-          },
+          kind: "date",
+          options: [
+            { date: "2025-01-15" },
+            { date: "2025-01-16" },
+            { date: "2025-01-17" },
+          ],
         }),
       });
 
@@ -558,7 +569,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team offsite",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
           requireEmail: true,
           hideParticipants: true,
           hideScores: true,
@@ -630,7 +642,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team offsite",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
           allowTentativeVotes: false,
         }),
       });
@@ -653,7 +666,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team offsite",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -688,7 +702,8 @@ describe("API v1 - /polls", () => {
         body: JSON.stringify({
           title: "Team offsite",
           location: "Conference Room A",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -715,7 +730,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates },
+          kind: "date",
+          options: dates.map((date) => ({ date })),
         }),
       });
 
@@ -724,7 +740,7 @@ describe("API v1 - /polls", () => {
       expect(json.error.code).toBe("TOO_MANY_OPTIONS");
     });
 
-    it("should return error when duplicate dates are provided", async () => {
+    it("should remove duplicate dates instead of rejecting them", async () => {
       const res = await app.request("/v1/polls", {
         method: "POST",
         headers: {
@@ -733,17 +749,26 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: {
-            kind: "date",
-            dates: ["2025-01-15", "2025-01-16", "2025-01-15", "2025-01-17"],
-          },
+          kind: "date",
+          options: [
+            { date: "2025-01-15" },
+            { date: "2025-01-16" },
+            { date: "2025-01-15" },
+            { date: "2025-01-17" },
+          ],
         }),
       });
 
-      expect(res.status).toBe(400);
-      const json = await res.json();
-      expect(json.error.code).toBe("DUPLICATE_DATES");
-      expect(json.error.message).toContain("Duplicate dates found");
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: [
+            { startTime: new Date("2025-01-15T00:00:00.000Z"), duration: 0 },
+            { startTime: new Date("2025-01-16T00:00:00.000Z"), duration: 0 },
+            { startTime: new Date("2025-01-17T00:00:00.000Z"), duration: 0 },
+          ],
+        }),
+      );
     });
   });
 
@@ -757,12 +782,13 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team sync",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Europe/London",
-            times: ["2025-01-15T09:00:00Z", "2025-01-15T10:00:00Z"],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          options: [
+            { startTime: "2025-01-15T09:00:00Z" },
+            { startTime: "2025-01-15T10:00:00Z" },
+          ],
         }),
       });
 
@@ -819,12 +845,10 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team sync",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Europe/London",
-            times: ["2025-01-15T09:00:00Z"],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          options: [{ startTime: "2025-01-15T09:00:00Z" }],
         }),
       });
 
@@ -855,11 +879,9 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team sync",
-          options: {
-            kind: "time",
-            duration: 30,
-            times: ["2025-01-15T09:00:00Z"],
-          },
+          kind: "time",
+          duration: 30,
+          options: [{ startTime: "2025-01-15T09:00:00Z" }],
         }),
       });
 
@@ -880,12 +902,10 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Team sync",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Invalid/Timezone",
-            times: ["2025-01-15T09:00:00Z"],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Invalid/Timezone",
+          options: [{ startTime: "2025-01-15T09:00:00Z" }],
         }),
       });
 
@@ -901,20 +921,18 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Weekly standup",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Europe/London",
-            generators: [
-              {
-                startDate: "2025-01-20",
-                endDate: "2025-01-22",
-                days: ["mon", "tue", "wed"],
-                startTime: "09:00",
-                endTime: "10:00",
-              },
-            ],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          generators: [
+            {
+              startDate: "2025-01-20",
+              endDate: "2025-01-22",
+              days: ["mon", "tue", "wed"],
+              from: "09:00",
+              to: "10:00",
+            },
+          ],
         }),
       });
 
@@ -935,20 +953,18 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Way too long",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Europe/London",
-            generators: [
-              {
-                startDate: "2025-01-01",
-                endDate: "2026-06-01",
-                days: ["sun"],
-                startTime: "09:00",
-                endTime: "09:30",
-              },
-            ],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          generators: [
+            {
+              startDate: "2025-01-01",
+              endDate: "2026-06-01",
+              days: ["sun"],
+              from: "09:00",
+              to: "09:30",
+            },
+          ],
         }),
       });
 
@@ -974,20 +990,18 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Reversed range",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Europe/London",
-            generators: [
-              {
-                startDate: "2025-06-01",
-                endDate: "2025-01-01",
-                days: ["mon"],
-                startTime: "09:00",
-                endTime: "10:00",
-              },
-            ],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          generators: [
+            {
+              startDate: "2025-06-01",
+              endDate: "2025-01-01",
+              days: ["mon"],
+              from: "09:00",
+              to: "10:00",
+            },
+          ],
         }),
       });
 
@@ -1015,24 +1029,267 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Boundary range",
-          options: {
-            kind: "time",
-            duration: 30,
-            timeZone: "Europe/London",
-            generators: [
-              {
-                startDate: toIsoDate(start),
-                endDate: toIsoDate(end),
-                days: ["sun"],
-                startTime: "09:00",
-                endTime: "09:30",
-              },
-            ],
-          },
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          generators: [
+            {
+              startDate: toIsoDate(start),
+              endDate: toIsoDate(end),
+              days: ["sun"],
+              from: "09:00",
+              to: "09:30",
+            },
+          ],
         }),
       });
 
       expect(res.status).toBe(400);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+    it("should let a slot override the poll duration", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          kind: "time",
+          duration: 30,
+          options: [
+            { startTime: "2025-01-15T09:00:00Z" },
+            { startTime: "2025-01-15T10:00:00Z", duration: 45 },
+          ],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: [
+            { startTime: new Date("2025-01-15T09:00:00Z"), duration: 30 },
+            { startTime: new Date("2025-01-15T10:00:00Z"), duration: 45 },
+          ],
+        }),
+      );
+    });
+
+    it("should accept slots that each carry a duration when the poll has no default", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          kind: "time",
+          options: [{ startTime: "2025-01-15T09:00:00Z", duration: 45 }],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: [
+            { startTime: new Date("2025-01-15T09:00:00Z"), duration: 45 },
+          ],
+        }),
+      );
+    });
+
+    it("should name the slot that has no duration when the poll has no default", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          kind: "time",
+          options: [
+            { startTime: "2025-01-15T09:00:00Z", duration: 45 },
+            { startTime: "2025-01-15T10:00:00Z" },
+          ],
+        }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("options.1.duration");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("should require a poll duration when generators are used", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Weekly standup",
+          kind: "time",
+          generators: [
+            {
+              startDate: "2025-01-20",
+              endDate: "2025-01-22",
+              from: "09:00",
+              to: "10:00",
+            },
+          ],
+        }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("duration");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("should require options or generators on a time poll", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          kind: "time",
+          duration: 30,
+        }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("options");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("should default a generator to every day of the week", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Any day",
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          generators: [
+            {
+              // Saturday to Sunday
+              startDate: "2025-01-18",
+              endDate: "2025-01-19",
+              from: "09:00",
+              to: "09:30",
+            },
+          ],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: [
+            { startTime: new Date("2025-01-18T09:00:00Z"), duration: 30 },
+            { startTime: new Date("2025-01-19T09:00:00Z"), duration: 30 },
+          ],
+        }),
+      );
+    });
+
+    it("should append generated slots to explicit ones and drop duplicates", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Mixed",
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          options: [{ startTime: "2025-01-20T09:00:00" }],
+          generators: [
+            {
+              startDate: "2025-01-20",
+              endDate: "2025-01-20",
+              days: ["mon"],
+              from: "09:00",
+              to: "10:00",
+            },
+          ],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: [
+            { startTime: new Date("2025-01-20T09:00:00Z"), duration: 30 },
+            { startTime: new Date("2025-01-20T09:30:00Z"), duration: 30 },
+          ],
+        }),
+      );
+    });
+
+    it.each([
+      {
+        reason: "the window ends before it starts",
+        generator: { from: "12:00", to: "09:00" },
+        path: "generators.0.to",
+      },
+      {
+        reason: "the window is shorter than the duration",
+        generator: { from: "09:00", to: "09:15" },
+        path: "generators.0.to",
+      },
+      {
+        reason: "the range contains none of the listed days",
+        // 2025-01-20 to 2025-01-22 is Monday to Wednesday
+        generator: { from: "09:00", to: "10:00", days: ["sat", "sun"] },
+        path: "generators.0.days",
+      },
+    ])("should reject a generator at validation when $reason", async ({
+      generator,
+      path,
+    }) => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Bad generator",
+          kind: "time",
+          duration: 30,
+          timeZone: "Europe/London",
+          generators: [
+            { startDate: "2025-01-20", endDate: "2025-01-22", ...generator },
+          ],
+        }),
+      });
+
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain(path);
       expect(mockCreatePoll).not.toHaveBeenCalled();
     });
   });
@@ -1062,15 +1319,19 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: {
-            kind: "date",
-            options: { kind: "date", dates: ["2025-01-15"] },
-            times: ["2025-01-15T09:00:00Z"],
-          },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+          timeZone: "Europe/London",
+          duration: 30,
         }),
       });
 
-      expect(res.status).toBe(400);
+      const json = await expectErrorEnvelope(res, {
+        status: 400,
+        code: "VALIDATION_ERROR",
+      });
+      expect(json.error.message).toContain("timeZone");
+      expect(json.error.message).toContain("duration");
     });
 
     it("should return error when title is missing", async () => {
@@ -1081,7 +1342,8 @@ describe("API v1 - /polls", () => {
           Authorization: `Bearer ${testApiKey}`,
         },
         body: JSON.stringify({
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -1097,7 +1359,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
           spaceId: "some-other-space",
         }),
       });
@@ -1115,44 +1378,41 @@ describe("API v1 - /polls", () => {
         level: "organizer",
         body: {
           title: "Test Poll",
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
           organizer: { email: "a@example.com", name: "Ann" },
         },
         message: 'organizer: Unrecognized key: "name"',
       },
       {
-        level: "options",
+        level: "time poll",
         body: {
           title: "Test Poll",
-          options: {
-            kind: "time",
-            duration: 30,
-            times: ["2025-01-15T09:00:00Z"],
-            timezone: "Europe/London",
-          },
+          kind: "time",
+          duration: 30,
+          options: [{ startTime: "2025-01-15T09:00:00Z" }],
+          timezone: "Europe/London",
         },
-        message: 'options: Unrecognized key: "timezone"',
+        message: 'Unrecognized key: "timezone"',
       },
       {
         level: "slot generator",
         body: {
           title: "Test Poll",
-          options: {
-            kind: "time",
-            duration: 30,
-            generators: [
-              {
-                startDate: "2025-01-13",
-                endDate: "2025-01-17",
-                days: ["mon"],
-                startTime: "09:00",
-                endTime: "12:00",
-                step: 60,
-              },
-            ],
-          },
+          kind: "time",
+          duration: 30,
+          generators: [
+            {
+              startDate: "2025-01-13",
+              endDate: "2025-01-17",
+              days: ["mon"],
+              from: "09:00",
+              to: "12:00",
+              step: 60,
+            },
+          ],
         },
-        message: 'options.generators.0: Unrecognized key: "step"',
+        message: 'generators.0: Unrecognized key: "step"',
       },
     ])("should reject unknown fields nested in the $level object", async ({
       body,
@@ -1184,7 +1444,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "x".repeat(MAX_POLL_TITLE_LENGTH + 1),
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -1205,7 +1466,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "x".repeat(MAX_POLL_TITLE_LENGTH),
-          options: { kind: "date", dates: ["2025-01-15"] },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
         }),
       });
 
@@ -1221,7 +1483,8 @@ describe("API v1 - /polls", () => {
         },
         body: JSON.stringify({
           title: "Test Poll",
-          options: { kind: "date", dates: [] },
+          kind: "date",
+          options: [],
         }),
       });
 
@@ -1254,7 +1517,8 @@ describe("API v1 - /polls", () => {
           },
           body: JSON.stringify({
             title: "Forwarded through the prefix handler",
-            options: { kind: "date", dates: ["2027-03-01"] },
+            kind: "date",
+            options: [{ date: "2027-03-01" }],
           }),
         }),
       );
@@ -1335,8 +1599,10 @@ describe("API v1 - /polls", () => {
       expect(Object.keys(schemas)).toEqual(
         expect.arrayContaining([
           "CreatePollInput",
-          "DateOptions",
-          "TimeOptions",
+          "CreateDatePollInput",
+          "CreateTimePollInput",
+          "DateOptionInput",
+          "TimeOptionInput",
           "SlotGenerator",
           "Poll",
           "PollStatus",
@@ -1360,16 +1626,33 @@ describe("API v1 - /polls", () => {
         json.paths["/v1/polls"].post.requestBody.content["application/json"]
           .schema,
       ).toEqual({ $ref: "#/components/schemas/CreatePollInput" });
-      expect(schemas.CreatePollInput.properties.options).toMatchObject({
+      // The request body is a union keyed by kind, and each variant's
+      // options mirror the response option shapes.
+      expect(schemas.CreatePollInput).toMatchObject({
         oneOf: [
-          { $ref: "#/components/schemas/DateOptions" },
-          { $ref: "#/components/schemas/TimeOptions" },
+          { $ref: "#/components/schemas/CreateDatePollInput" },
+          { $ref: "#/components/schemas/CreateTimePollInput" },
         ],
         discriminator: { propertyName: "kind" },
       });
-      expect(schemas.TimeOptions.properties.generators.items).toEqual({
+      expect(schemas.CreateDatePollInput.properties.options.items).toEqual({
+        $ref: "#/components/schemas/DateOptionInput",
+      });
+      expect(schemas.CreateTimePollInput.properties.options.items).toEqual({
+        $ref: "#/components/schemas/TimeOptionInput",
+      });
+      expect(schemas.CreateTimePollInput.properties.generators.items).toEqual({
         $ref: "#/components/schemas/SlotGenerator",
       });
+      expect(schemas.SlotGenerator.properties.days.default).toEqual([
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun",
+      ]);
 
       // Contextual .meta() clones keep pointing at the shared component.
       const pollStatusRef = "#/components/schemas/PollStatus";
@@ -1417,24 +1700,27 @@ describe("API v1 - /polls", () => {
       expect(createResponses["201"]).toBeDefined();
       expect(createResponses["200"]).toBeUndefined();
 
-      expect(schemas.CreatePollInput.additionalProperties).toBe(false);
-      expect(schemas.CreatePollInput.properties.spaceId).toBeUndefined();
-      expect(schemas.CreatePollInput.properties.title.maxLength).toBe(
-        MAX_POLL_TITLE_LENGTH,
-      );
-      expect(schemas.PatchPollInput.additionalProperties).toBe(false);
-
-      // Input and output use the same setting names and organizer field.
-      for (const key of [
-        "requireEmail",
-        "hideParticipants",
-        "hideScores",
-        "disableComments",
-        "allowTentativeVotes",
+      for (const variant of [
+        schemas.CreateDatePollInput,
+        schemas.CreateTimePollInput,
       ]) {
-        expect(schemas.CreatePollInput.properties[key]).toBeDefined();
-        expect(schemas.Poll.properties[key]).toBeDefined();
+        expect(variant.additionalProperties).toBe(false);
+        expect(variant.properties.spaceId).toBeUndefined();
+        expect(variant.properties.title.maxLength).toBe(MAX_POLL_TITLE_LENGTH);
+
+        // Input and output use the same setting names and organizer field.
+        for (const key of [
+          "requireEmail",
+          "hideParticipants",
+          "hideScores",
+          "disableComments",
+          "allowTentativeVotes",
+        ]) {
+          expect(variant.properties[key]).toBeDefined();
+          expect(schemas.Poll.properties[key]).toBeDefined();
+        }
       }
+      expect(schemas.PatchPollInput.additionalProperties).toBe(false);
       expect(schemas.Poll.properties.user).toBeUndefined();
       expect(schemas.Poll.properties.organizer).toMatchObject({
         anyOf: expect.arrayContaining([
@@ -2741,7 +3027,8 @@ describe("API v1 - /polls", () => {
         method: "POST",
         headers: { ...authed, "Content-Type": "application/json" },
         body: JSON.stringify({
-          options: { kind: "date", dates: ["not-a-date"] },
+          kind: "date",
+          options: [{ date: "not-a-date" }],
           secret: "do-not-echo",
         }),
       });
@@ -2751,7 +3038,7 @@ describe("API v1 - /polls", () => {
         code: "VALIDATION_ERROR",
       });
       expect(json.error.message).toContain("title:");
-      expect(json.error.message).toContain("options.dates.0:");
+      expect(json.error.message).toContain("options.0.date:");
       expect(Object.keys(json.error).sort()).toEqual(["code", "message"]);
       expect(JSON.stringify(json)).not.toContain("do-not-echo");
       expect(json).not.toHaveProperty("success");
@@ -2859,8 +3146,6 @@ describe("API v1 - /polls", () => {
         "POLL_NOT_FOUND",
         "ORGANIZER_NOT_MEMBER",
         "TOO_MANY_OPTIONS",
-        "DUPLICATE_DATES",
-        "NO_OPTIONS_GENERATED",
         "TRANSITION_NOT_AVAILABLE",
         "SERVICE_UNAVAILABLE",
         "INTERNAL_ERROR",
