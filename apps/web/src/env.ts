@@ -93,6 +93,12 @@ export const env = createEnv({
      */
     MODERATION_ENABLED: z.enum(["true", "false"]).default("false"),
     /**
+     * Model that judges nonprofit discount applications. A bare id
+     * (`gpt-5.6-terra`) goes to OpenAI directly; `provider/model` goes
+     * through the Vercel AI Gateway.
+     */
+    NONPROFIT_VERIFIER_MODEL: z.string().optional(),
+    /**
      * Comma-separated list of domains that trigger an automatic user ban
      */
     BANNED_DOMAINS: z.string().optional(),
@@ -272,6 +278,7 @@ export const env = createEnv({
     NOREPLY_EMAIL_NAME: process.env.NOREPLY_EMAIL_NAME,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MODERATION_ENABLED: process.env.MODERATION_ENABLED,
+    NONPROFIT_VERIFIER_MODEL: process.env.NONPROFIT_VERIFIER_MODEL,
     BANNED_DOMAINS: process.env.BANNED_DOMAINS,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
