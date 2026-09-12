@@ -8,9 +8,9 @@ import {
   BreadcrumbSeparator,
 } from "@rallly/ui/breadcrumb";
 import { BarChart2Icon } from "lucide-react";
-import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import type React from "react";
+import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";

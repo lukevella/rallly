@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { PageIcon } from "@/components/page-icons";
 import {
   SettingsPage,

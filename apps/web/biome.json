@@ -17,7 +17,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -50,7 +51,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -87,7 +89,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -124,12 +127,13 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
                     "group": ["@/features/**/data"],
-                    "message": "Pages, layouts and route components read through feature loaders (features/<domain>/loaders.ts), never data.ts directly — the loader owns the session gate that proves scope. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                    "message": "Pages, layouts and route components read through feature loaders (features/<domain>/loaders.ts), never data.ts directly \u2014 the loader owns the session gate that proves scope. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
                   },
                   {
                     "group": ["@/utils", "@/utils/**"],
@@ -161,7 +165,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -199,7 +204,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -232,7 +238,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -268,7 +275,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -314,7 +322,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -371,7 +380,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -403,7 +413,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -445,7 +456,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -483,7 +495,8 @@
                   "@/lib/posthog": {
                     "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
                     "importNames": ["posthog"]
-                  }
+                  },
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 }
               }
             }
@@ -505,7 +518,8 @@
               "options": {
                 "paths": {
                   "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
-                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json)."
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "next/link": "Import { Link } from \"@/components/link\" instead: it defaults prefetch to false so viewport prefetches do not bill a server render per visible link. Sidebar nav uses HoverPrefetchLink."
                 },
                 "patterns": [
                   {
@@ -558,6 +572,46 @@
               "options": {
                 "match": "(?:data|loaders|mutations|actions|schema|types|ability|constants|utils|service)[.]ts|client[.]tsx|.+[.]test[.]tsx?",
                 "filenameCases": ["kebab-case"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/components/link.tsx",
+        "src/components/hover-prefetch-link.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@/lib/dayjs": "Use the formatters in `@/lib/datetime` for display. dayjs is only allowed in files on the migration allowlist (see overrides in biome.json).",
+                  "@rallly/database": "Database access is confined to the DAL: only features/**/data.ts and features/**/mutations.ts may import @rallly/database. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json).",
+                  "@/lib/posthog": {
+                    "message": "User-attributed analytics events must go through track() from @/lib/posthog so guest person-profile handling cannot be forgotten at capture sites. The raw client is reserved for non-capture APIs (feature flags, identity merge) in allowlisted files (see overrides in apps/web/biome.json).",
+                    "importNames": ["posthog"]
+                  }
+                },
+                "patterns": [
+                  {
+                    "group": ["@/features/**"],
+                    "message": "components/ is domain-agnostic UI and must not depend on features/. Move domain components into features/<domain>/components/. Existing violations are on the migration allowlist (see overrides in apps/web/biome.json)."
+                  },
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "Only files inside app/ may import from app/. Routes are thin adapters; shared code belongs in features/, components/, or lib/."
+                  },
+                  {
+                    "group": ["@/utils", "@/utils/**"],
+                    "message": "src/utils is dissolved. Generic helpers live in @/lib/utils, infrastructure in @/lib, domain code in the owning feature."
+                  }
+                ]
               }
             }
           }

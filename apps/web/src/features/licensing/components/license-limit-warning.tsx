@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { Link } from "@/components/link";
 import { DEFAULT_SEAT_LIMIT } from "@/features/licensing/constants";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { getUserCount } from "@/features/user/data";

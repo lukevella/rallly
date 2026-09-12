@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRightIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import {
   API_RATE_LIMIT_PER_DAY,
   API_RATE_LIMIT_PER_MINUTE,

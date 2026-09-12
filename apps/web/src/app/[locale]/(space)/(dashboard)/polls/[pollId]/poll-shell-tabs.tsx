@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Link } from "@/components/link";
 import { Trans } from "@/i18n/client";
 
 export function PollShellTabs() {

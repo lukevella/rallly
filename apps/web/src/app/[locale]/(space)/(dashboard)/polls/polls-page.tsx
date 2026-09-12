@@ -2,7 +2,6 @@
 
 import { buttonVariants } from "@rallly/ui";
 import { CircleStopIcon, InboxIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   EmptyState,
@@ -11,6 +10,7 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { Link } from "@/components/link";
 import { MemberSelector } from "@/components/member-selector";
 import {
   PageContainer,

@@ -12,7 +12,7 @@ import {
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { SettingsIcon } from "lucide-react";
-import Link from "next/link";
+import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -62,7 +62,9 @@ export default async function Layout({
                 </IfFeatureEnabled>
                 <ControlPanelMenuItem />
                 <SidebarMenuItem>
-                  <SidebarMenuButton render={<Link href="/settings/profile" />}>
+                  <SidebarMenuButton
+                    render={<HoverPrefetchLink href="/settings/profile" />}
+                  >
                     <SettingsIcon />
                     <Trans i18nKey="settings" defaults="Settings" />
                   </SidebarMenuButton>

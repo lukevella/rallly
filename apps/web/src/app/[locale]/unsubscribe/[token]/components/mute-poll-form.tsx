@@ -3,8 +3,8 @@
 import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { BellOffIcon } from "lucide-react";
-import Link from "next/link";
 import React from "react";
+import { Link } from "@/components/link";
 import { unsubscribeWithTokenAction } from "@/features/notifications/actions";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";

@@ -11,13 +11,12 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
+import { Link } from "@/components/link";
 import { Turnstile } from "@/components/turnstile";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";

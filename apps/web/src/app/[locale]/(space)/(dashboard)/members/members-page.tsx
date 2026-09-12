@@ -7,7 +7,7 @@ import {
 } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
 import { InfoIcon, SparklesIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PageHeaderActions } from "@/components/page-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";

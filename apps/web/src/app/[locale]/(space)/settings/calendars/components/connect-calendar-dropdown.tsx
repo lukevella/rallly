@@ -32,6 +32,7 @@ export function ConnectCalendarDropdown() {
             width={16}
             height={16}
             alt="Google Calendar"
+            unoptimized
           />
           <Trans i18nKey="connectGoogleCalendar" defaults="Google Calendar" />
         </DropdownMenuItem>
@@ -45,6 +46,7 @@ export function ConnectCalendarDropdown() {
             width={16}
             height={16}
             alt="Microsoft Calendar"
+            unoptimized
           />
           <Trans
             i18nKey="connectMicrosoftCalendar"

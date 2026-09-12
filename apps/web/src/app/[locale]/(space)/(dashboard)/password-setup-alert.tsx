@@ -11,8 +11,8 @@ import { KeyRoundIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useLocalStorage } from "react-use";
+import { Link } from "@/components/link";
 import { Trans } from "@/i18n/client";
 
 export const PasswordSetupAlert = dynamic(

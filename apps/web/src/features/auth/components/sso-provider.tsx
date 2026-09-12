@@ -8,11 +8,27 @@ import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 function SSOImage({ provider }: { provider: string }) {
   if (provider === "google") {
-    return <Image src="/static/google.svg" width={16} alt="" height={16} />;
+    return (
+      <Image
+        src="/static/google.svg"
+        width={16}
+        alt=""
+        height={16}
+        unoptimized
+      />
+    );
   }
 
   if (provider === "microsoft-entra-id" || provider === "microsoft") {
-    return <Image src="/static/microsoft.svg" width={16} alt="" height={16} />;
+    return (
+      <Image
+        src="/static/microsoft.svg"
+        width={16}
+        alt=""
+        height={16}
+        unoptimized
+      />
+    );
   }
 
   if (provider === "oidc") {

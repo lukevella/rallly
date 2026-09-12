@@ -1,7 +1,7 @@
 import { buttonVariants } from "@rallly/ui";
 import { ZapIcon } from "lucide-react";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { Link } from "@/components/link";
 
 import { getTranslation } from "@/i18n/server";
 

@@ -16,29 +16,30 @@ export default async function JoinPage({
   params: Promise<{ inviteId: string }>;
 }) {
   const { inviteId } = await params;
-  const user = await requireUser();
-
-  const invite = await prisma.spaceMemberInvite.findUnique({
-    where: {
-      id: inviteId,
-    },
-    select: {
-      spaceId: true,
-      email: true,
-      role: true,
-      invitedBy: {
-        select: {
-          name: true,
+  const [user, invite] = await Promise.all([
+    requireUser(),
+    prisma.spaceMemberInvite.findUnique({
+      where: {
+        id: inviteId,
+      },
+      select: {
+        spaceId: true,
+        email: true,
+        role: true,
+        invitedBy: {
+          select: {
+            name: true,
+          },
+        },
+        space: {
+          select: {
+            name: true,
+            image: true,
+          },
         },
       },
-      space: {
-        select: {
-          name: true,
-          image: true,
-        },
-      },
-    },
-  });
+    }),
+  ]);
 
   if (!invite) {
     notFound();
@@ -114,20 +115,22 @@ export async function generateMetadata({
   params: Promise<{ inviteId: string }>;
 }) {
   const { inviteId } = await params;
-  const { t } = await getTranslation();
-  const invite = await prisma.spaceMemberInvite.findUnique({
-    where: {
-      id: inviteId,
-    },
-    select: {
-      spaceId: true,
-      space: {
-        select: {
-          name: true,
+  const [{ t }, invite] = await Promise.all([
+    getTranslation(),
+    prisma.spaceMemberInvite.findUnique({
+      where: {
+        id: inviteId,
+      },
+      select: {
+        spaceId: true,
+        space: {
+          select: {
+            name: true,
+          },
         },
       },
-    },
-  });
+    }),
+  ]);
 
   if (!invite) {
     notFound();

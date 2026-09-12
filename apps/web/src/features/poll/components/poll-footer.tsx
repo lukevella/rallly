@@ -1,7 +1,7 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import Link from "next/link";
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
+import { Link } from "@/components/link";
 import { useBranding } from "@/features/branding/client";
 import { usePoll } from "@/features/poll/client";
 import { Trans } from "@/i18n/client";

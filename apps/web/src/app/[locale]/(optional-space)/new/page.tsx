@@ -8,8 +8,8 @@ import {
 } from "@rallly/ui/breadcrumb";
 import { BarChart2Icon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Link } from "@/components/link";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { CreatePoll } from "@/features/poll/components/create-poll";

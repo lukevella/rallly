@@ -12,8 +12,10 @@ export default async function UnsubscribePage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const { t, i18n } = await getTranslation();
-  const target = await loadUnsubscribeTarget(token);
+  const [{ t, i18n }, target] = await Promise.all([
+    getTranslation(),
+    loadUnsubscribeTarget(token),
+  ]);
 
   return (
     <div className="flex min-h-dvh flex-col items-center gap-12 py-12">

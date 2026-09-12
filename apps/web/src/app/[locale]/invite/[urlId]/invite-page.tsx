@@ -2,7 +2,7 @@
 import { buttonVariants, cn } from "@rallly/ui";
 import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
 import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import { CommentsSheet } from "@/features/poll/components/comments-sheet";
 import { EventCard } from "@/features/poll/components/event-card";
