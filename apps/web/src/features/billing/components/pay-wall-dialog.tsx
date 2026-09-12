@@ -30,6 +30,7 @@ import {
   MailPlusIcon,
   PaletteIcon,
   SparklesIcon,
+  TerminalIcon,
   TimerResetIcon,
   UserPlusIcon,
 } from "lucide-react";
@@ -182,14 +183,32 @@ const proBenefitsList = [
       />
     ),
   },
+  {
+    key: "apiAccess",
+    icon: <TerminalIcon />,
+    title: <Trans i18nKey="apiAccess" defaults="API access" />,
+    description: (
+      <Trans
+        i18nKey="apiAccessBenefitDescription"
+        defaults="Create polls and read results from your own systems"
+      />
+    ),
+  },
 ];
+
+const leadingBenefitByTrigger: Partial<Record<PayWallTrigger["from"], string>> =
+  {
+    "invite-dialog": "emailInvites",
+    "api-keys": "apiAccess",
+  };
 
 // The benefit that triggered the pay wall leads the list.
 function getProBenefits(from: PayWallTrigger["from"] | undefined) {
-  if (from !== "invite-dialog") return proBenefitsList;
+  const leading = from ? leadingBenefitByTrigger[from] : undefined;
+  if (!leading) return proBenefitsList;
   return [
-    ...proBenefitsList.filter((benefit) => benefit.key === "emailInvites"),
-    ...proBenefitsList.filter((benefit) => benefit.key !== "emailInvites"),
+    ...proBenefitsList.filter((benefit) => benefit.key === leading),
+    ...proBenefitsList.filter((benefit) => benefit.key !== leading),
   ];
 }
 

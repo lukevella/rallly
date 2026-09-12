@@ -50,6 +50,8 @@
   "alreadyLoggedInDescription": "Continue to your dashboard or sign out to use a different account.",
   "alreadyLoggedInTitle": "You're already signed in",
   "alreadyMember": "This person is already a member of this space",
+  "apiAccess": "API access",
+  "apiAccessBenefitDescription": "Create polls and read results from your own systems",
   "apiAccessUpgradeDescription": "Create API keys to manage your polls programmatically. Included with Pro, with a shared limit of {count} requests per minute across your space.",
   "apiAccessUpgradeTitle": "Upgrade for API access",
   "apiDailyLimitLabel": "Daily limit",

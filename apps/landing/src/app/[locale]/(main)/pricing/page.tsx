@@ -13,6 +13,7 @@ import {
   MailPlusIcon,
   PaletteIcon,
   Settings2Icon,
+  TerminalIcon,
   TimerResetIcon,
   UserPlusIcon,
 } from "lucide-react";
@@ -74,6 +75,8 @@ import {
 
 const faqLinkClassName =
   "text-gray-800 underline underline-offset-2 hover:text-gray-600";
+
+const apiDocsUrl = "https://support.rallly.co/api-reference/introduction";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
@@ -381,6 +384,16 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="teamCollaboration"
                       defaults="Team collaboration"
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
+                <PlanBenefit icon={<TerminalIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="apiAccess"
+                      defaults="API access"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
@@ -720,6 +733,35 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="teamCollaborationDescription"
                       defaults="Invite your team to manage polls together"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="apiAccess"
+                      defaults="API access"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="apiAccessDescription"
+                      components={{
+                        a: <a className={faqLinkClassName} href={apiDocsUrl} />,
+                      }}
+                      defaults="Create polls and read results from your own systems, 60 requests per minute per space. <a>Read the API docs</a>"
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
