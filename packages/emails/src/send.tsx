@@ -52,7 +52,9 @@ type DispatchOptions = {
   errorLabel: string;
 };
 
-const ADDRESS_PATTERN = /[^\s<>,;:"]+@[^\s<>,;:"]+/g;
+// Local part is either a quoted string (RFC 5321 §4.1.2) or a run of
+// unquoted characters.
+const ADDRESS_PATTERN = /(?:"[^"]*"|[^\s<>,;:"]+)@[^\s<>,;:"]+/g;
 
 /**
  * Domains of every address in a nodemailer `to` string (comma or semicolon
