@@ -51,9 +51,10 @@ export function createTransportForProvider(provider: EmailProvider) {
       const rejectUnauthorized =
         process.env.SMTP_REJECT_UNAUTHORIZED !== "false";
 
-      // Logs the full SMTP conversation including the auth exchange, where
-      // credentials are only base64 encoded. Never enable outside of
-      // troubleshooting.
+      // Logs the full SMTP conversation: the auth exchange (credentials only
+      // base64 encoded) and every RCPT TO envelope, which pino's redact list
+      // cannot scrub because nodemailer puts them in the message string.
+      // Development only; never enable on an instance handling real mail.
       const debug = process.env.SMTP_DEBUG === "true";
 
       // Warn about security change if no explicit setting
