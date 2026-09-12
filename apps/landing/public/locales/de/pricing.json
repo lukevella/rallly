@@ -24,6 +24,7 @@
   "duplicatePolls": "Umfragen duplizieren",
   "duplicatePollsDescription": "Erstelle eine neue Umfrage auf Basis einer bestehenden",
   "emailInvites": "E-Mail-Einladungen",
+  "emailInvitesDescription": "Verfolge, wer über einen persönlichen Einladungslink beigetreten ist und geantwortet hat",
   "faq": "Häufig gestellte Fragen",
   "featureNameExtendedPollLifetime": "Verlängerte Umfragedauer",
   "finalizeDate": "Datum festlegen",
