@@ -26,6 +26,11 @@ jobs:
       - name: Check types
         run: pnpm type-check
 
+      # The API reference in apps/docs is generated from the v1 route. A
+      # stale committed spec means an endpoint changed without its docs.
+      - name: Check the committed OpenAPI spec matches the code
+        run: pnpm check:openapi
+
   sherif:
     name: Sherif
     runs-on: ubuntu-latest

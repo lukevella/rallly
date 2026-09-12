@@ -1,4 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
-  "extends": "//"
+  "extends": "//",
+  "files": {
+    "includes": ["**", "!!api-reference/openapi.json"]
+  }
 }

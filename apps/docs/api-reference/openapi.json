@@ -1,0 +1,1822 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Rallly API",
+    "description": "## Versioning\n\n`v1` is stable. Additive changes (new endpoints, new optional fields) may land on this path at any time; breaking changes only arrive under a new version prefix.\n\n## Rate limits\n\nAll endpoints share two limits per space: **60 requests per minute** and **5000 requests per day**. Both are fixed windows that open with the first request and reset when they expire. Both limits are per space, not per API key, so creating additional keys does not increase throughput.\n\nEvery response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.\n\nIf the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.\n\n## Dates and times\n\nEvery poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timeZone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.\n\n## Request bodies\n\nRequest bodies are validated strictly: a field that is not part of the documented schema is rejected with `VALIDATION_ERROR` rather than ignored, so a misspelt setting never silently falls back to its default.\n\n## Enums\n\nVote types are an open set. The built-in values are `yes`, `ifNeedBe` and `no`; new types may be added without a version change, so clients must tolerate values they do not recognise. `status` and `kind` are closed sets.\n\n## Lists\n\nEvery list endpoint returns the items in `data` and a `nextCursor` beside it. Pass `nextCursor` as the `cursor` query parameter to fetch the next page; it is `null` on the last page.\n\n## Errors\n\nEvery failure is `application/json` with the shape `{ \"error\": { \"code\", \"message\" } }`. `code` is stable and safe to branch on; `message` is human-readable and may change. `VALIDATION_ERROR` messages name each offending field.\n\n| Status | Code | When |\n| --- | --- | --- |\n| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, contained an unknown field, or the body was not valid JSON |\n| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |\n| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |\n| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |\n| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |\n| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |\n| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |\n| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |\n| 404 | `NOT_FOUND` | No route matches the method and path |\n| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |\n| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |\n| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |\n| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |\n| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.rallly.co"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Poll": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "Xk3pQ9vLm2Ab"
+          },
+          "title": {
+            "type": "string",
+            "example": "Team sync"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "Pick a time that works for everyone"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "Zoom"
+          },
+          "timeZone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "Europe/London"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PollStatus"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PollKind"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-01-10T12:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the poll was last modified. Changes when the poll's details, settings or status change.",
+            "example": "2025-01-12T08:30:00.000Z"
+          },
+          "organizer": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PollOrganizer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The space member the poll belongs to. `null` when the organizer's account no longer exists."
+          },
+          "requireEmail": {
+            "type": "boolean",
+            "description": "Whether participants must provide their email address",
+            "example": false
+          },
+          "hideParticipants": {
+            "type": "boolean",
+            "description": "Whether participant names are hidden from other participants",
+            "example": false
+          },
+          "hideScores": {
+            "type": "boolean",
+            "description": "Whether vote counts are hidden from participants",
+            "example": false
+          },
+          "disableComments": {
+            "type": "boolean",
+            "description": "Whether the comments section is disabled",
+            "example": true
+          },
+          "allowTentativeVotes": {
+            "type": "boolean",
+            "description": "Whether participants may cast the tentative \"if need be\" vote",
+            "example": true
+          },
+          "participantCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Number of participants who have responded to the poll",
+            "example": 3
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PollOption"
+            }
+          },
+          "adminUrl": {
+            "type": "string",
+            "example": "https://app.rallly.co/poll/Xk3pQ9vLm2Ab"
+          },
+          "inviteUrl": {
+            "type": "string",
+            "example": "https://rallly.co/invite/Xk3pQ9vLm2Ab"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "location",
+          "timeZone",
+          "status",
+          "kind",
+          "createdAt",
+          "updatedAt",
+          "organizer",
+          "requireEmail",
+          "hideParticipants",
+          "hideScores",
+          "disableComments",
+          "allowTentativeVotes",
+          "participantCount",
+          "options",
+          "adminUrl",
+          "inviteUrl"
+        ]
+      },
+      "PollStatus": {
+        "type": "string",
+        "enum": [
+          "open",
+          "closed",
+          "scheduled",
+          "canceled"
+        ]
+      },
+      "PollKind": {
+        "type": "string",
+        "enum": [
+          "date",
+          "time"
+        ],
+        "description": "Whether the poll offers calendar dates (`date`) or time slots (`time`). Determines which option shape the poll uses: every option in a `date` poll has a `date`, every option in a `time` poll has a `startTime` and `duration`.",
+        "example": "time"
+      },
+      "PollOrganizer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm3f7d1qa0000t2k9c6b8h4jr"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "organizer@example.com"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "https://cdn.rallly.co/avatars/cm3f7d1qa0000t2k9c6b8h4jr.jpg"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "image"
+        ]
+      },
+      "PollOption": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/DateOption"
+          },
+          {
+            "$ref": "#/components/schemas/TimeOption"
+          }
+        ],
+        "description": "A poll option. The shape follows the poll's `kind`: a `DateOption` for `date` polls, a `TimeOption` for `time` polls."
+      },
+      "DateOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm5h8x2k40000q9l4f7e2d3an"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Calendar date in YYYY-MM-DD format. All-day options are floating dates with no time component and no timezone.",
+            "example": "2025-01-15"
+          }
+        },
+        "required": [
+          "id",
+          "date"
+        ],
+        "description": "An all-day option. Only present in polls with `kind: date`."
+      },
+      "TimeOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm5h8x2k40000q9l4f7e2d3an"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the slot as an ISO 8601 instant in UTC.",
+            "example": "2025-01-15T09:00:00.000Z"
+          },
+          "duration": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Duration in minutes.",
+            "example": 30
+          }
+        },
+        "required": [
+          "id",
+          "startTime",
+          "duration"
+        ],
+        "description": "A time slot. Only present in polls with `kind: time`."
+      },
+      "PollResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Poll"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Machine-readable error code. The full list is in the API description.",
+                "example": "VALIDATION_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable explanation. For `VALIDATION_ERROR` it names each offending field, e.g. `title: Invalid input: expected string, received undefined; dates.0: Invalid ISO date`.",
+                "example": "title: Invalid input: expected string, received undefined"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "DateOptions": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "date"
+          },
+          "dates": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Calendar days to offer. Each becomes one all-day option. A day may appear once.",
+            "example": [
+              "2027-03-01",
+              "2027-03-02",
+              "2027-03-03"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "dates"
+        ],
+        "additionalProperties": false,
+        "title": "Date poll",
+        "description": "Whole days. Dates are floating calendar days with no timezone, so never convert them through one."
+      },
+      "TimeOptions": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "time"
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 1440,
+            "description": "Length of every slot in minutes",
+            "example": 30
+          },
+          "timeZone": {
+            "description": "IANA time zone the times are written in. Datetime strings without an offset are interpreted in this zone. If omitted, offset-less datetimes are floating times (no conversion) and the poll has no time zone.",
+            "example": "Europe/London",
+            "type": "string"
+          },
+          "times": {
+            "description": "Explicit slots, one per start time.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
+              "example": "2027-03-01T09:00:00"
+            }
+          },
+          "generators": {
+            "description": "Slot generators. Each expands into recurring slots from a schedule.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SlotGenerator"
+            }
+          }
+        },
+        "required": [
+          "kind",
+          "duration"
+        ],
+        "additionalProperties": false,
+        "title": "Time poll",
+        "description": "Time slots that share one duration. Provide `times`, `generators` or both. Duplicate slots are removed."
+      },
+      "SlotGenerator": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "First day of the range to generate slots on, inclusive.",
+            "example": "2027-03-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Last day of the range, inclusive. The range must span fewer than 366 days.",
+            "example": "2027-03-05"
+          },
+          "days": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "mon",
+                "tue",
+                "wed",
+                "thu",
+                "fri",
+                "sat",
+                "sun"
+              ]
+            },
+            "description": "Days of the week to generate slots on. Days in the range that are not listed are skipped.",
+            "example": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri"
+            ]
+          },
+          "startTime": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+            "description": "Earliest slot start on each day, as a wall clock time in `timeZone`.",
+            "example": "09:00"
+          },
+          "endTime": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+            "description": "End of the daily window. A slot is only generated if it ends at or before this time.",
+            "example": "17:00"
+          },
+          "interval": {
+            "description": "Minutes between consecutive slot starts. Defaults to `duration`, which produces back to back slots.",
+            "example": 60,
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 1440
+          }
+        },
+        "required": [
+          "startDate",
+          "endDate",
+          "days",
+          "startTime",
+          "endTime"
+        ],
+        "additionalProperties": false,
+        "title": "Slot generator",
+        "description": "Expands into one slot of `duration` minutes every `interval` minutes between `startTime` and `endTime`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `endTime` are not generated."
+      },
+      "CreatePollInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "example": "Team sync"
+          },
+          "description": {
+            "example": "Pick a time that works for everyone",
+            "type": "string",
+            "maxLength": 1000
+          },
+          "location": {
+            "example": "Zoom",
+            "type": "string",
+            "maxLength": 255
+          },
+          "requireEmail": {
+            "description": "Require participants to provide their email address",
+            "example": true,
+            "type": "boolean"
+          },
+          "hideParticipants": {
+            "description": "Hide participant names from other participants",
+            "example": false,
+            "type": "boolean"
+          },
+          "hideScores": {
+            "description": "Hide vote counts from participants",
+            "example": false,
+            "type": "boolean"
+          },
+          "disableComments": {
+            "description": "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
+            "example": false,
+            "type": "boolean"
+          },
+          "allowTentativeVotes": {
+            "description": "Allow participants to answer \"if need be\" as well as yes and no. Defaults to true.",
+            "example": true,
+            "type": "boolean"
+          },
+          "organizer": {
+            "description": "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Email address of the organizer",
+                "example": "organizer@example.com"
+              }
+            },
+            "required": [
+              "email"
+            ],
+            "additionalProperties": false
+          },
+          "options": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DateOptions"
+              },
+              {
+                "$ref": "#/components/schemas/TimeOptions"
+              }
+            ],
+            "description": "What participants vote on: whole days (`kind: date`) or time slots (`kind: time`).",
+            "discriminator": {
+              "propertyName": "kind",
+              "mapping": {
+                "date": "#/components/schemas/DateOptions",
+                "time": "#/components/schemas/TimeOptions"
+              }
+            }
+          }
+        },
+        "required": [
+          "title",
+          "options"
+        ],
+        "additionalProperties": false
+      },
+      "ListPollsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Poll"
+            }
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cursor to fetch the next page. `null` when there are no more results.",
+            "example": "Xk3pQ9vLm2Ab"
+          }
+        },
+        "required": [
+          "data",
+          "nextCursor"
+        ]
+      },
+      "PatchPollInput": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The status to transition the poll to. Only `closed` is currently accepted; the other statuses are reserved for future transitions.",
+            "example": "closed",
+            "$ref": "#/components/schemas/PollStatus"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "OptionResult": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/DateOptionResult"
+          },
+          {
+            "$ref": "#/components/schemas/TimeOptionResult"
+          }
+        ],
+        "description": "Results for one option. The shape follows the poll's `kind`: a `DateOptionResult` for `date` polls, a `TimeOptionResult` for `time` polls."
+      },
+      "DateOptionResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm5h8x2k40000q9l4f7e2d3an"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Calendar date in YYYY-MM-DD format. All-day options are floating dates with no time component and no timezone.",
+            "example": "2025-01-15"
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteCount"
+            },
+            "description": "One entry per vote type the poll offers, in display order, always present with `count: 0` when nobody chose it."
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Opaque ranking value: higher is better. Only comparable between options in the same response. The formula is not part of the contract and may change; do not decode it into vote counts, compare it across polls or threshold on it. Use `votes` for counts.",
+            "example": 5004
+          },
+          "isTopChoice": {
+            "type": "boolean",
+            "description": "Whether this option has the highest `score` in the poll. Several options share the flag when they tie. Always `false` when nobody has voted.",
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "votes",
+          "score",
+          "isTopChoice"
+        ],
+        "description": "Results for an all-day option. Only present in polls with `kind: date`."
+      },
+      "VoteCount": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/VoteType"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Number of participants who gave this answer.",
+            "example": 3
+          }
+        },
+        "required": [
+          "type",
+          "count"
+        ]
+      },
+      "VoteType": {
+        "type": "string",
+        "description": "A participant's answer for an option. The built-in types are `yes` (available), `ifNeedBe` (available if needed) and `no` (unavailable). New types may be added without a version change, so treat unknown values as a vote of an unfamiliar type rather than an error.",
+        "example": "yes"
+      },
+      "TimeOptionResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm5h8x2k40000q9l4f7e2d3an"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the slot as an ISO 8601 instant in UTC.",
+            "example": "2025-01-15T09:00:00.000Z"
+          },
+          "duration": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Duration in minutes.",
+            "example": 30
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteCount"
+            },
+            "description": "One entry per vote type the poll offers, in display order, always present with `count: 0` when nobody chose it."
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Opaque ranking value: higher is better. Only comparable between options in the same response. The formula is not part of the contract and may change; do not decode it into vote counts, compare it across polls or threshold on it. Use `votes` for counts.",
+            "example": 5004
+          },
+          "isTopChoice": {
+            "type": "boolean",
+            "description": "Whether this option has the highest `score` in the poll. Several options share the flag when they tie. Always `false` when nobody has voted.",
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "startTime",
+          "duration",
+          "votes",
+          "score",
+          "isTopChoice"
+        ],
+        "description": "Results for a time slot. Only present in polls with `kind: time`."
+      },
+      "GetPollResultsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "pollId": {
+                "type": "string",
+                "example": "Xk3pQ9vLm2Ab"
+              },
+              "kind": {
+                "$ref": "#/components/schemas/PollKind"
+              },
+              "status": {
+                "description": "Current poll status. Polls close automatically when all options are in the past.",
+                "example": "open",
+                "$ref": "#/components/schemas/PollStatus"
+              },
+              "participantCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Total number of participants",
+                "example": 8
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/OptionResult"
+                }
+              },
+              "highScore": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "The highest `score` among the options. Opaque like `score`: use it to identify the leading options, not as a measurement.",
+                "example": 5004
+              }
+            },
+            "required": [
+              "pollId",
+              "kind",
+              "status",
+              "participantCount",
+              "options",
+              "highScore"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "Participant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm5j2r8wb0003q9l4a1x6p0zt"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "jane@example.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-01-10T12:00:00.000Z"
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantVote"
+            },
+            "description": "The participant's vote for each option, keyed by `optionId`. An option missing from the list has no recorded vote from this participant."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "createdAt",
+          "votes"
+        ]
+      },
+      "ParticipantVote": {
+        "type": "object",
+        "properties": {
+          "optionId": {
+            "type": "string",
+            "example": "cm5h8x2k40000q9l4f7e2d3an"
+          },
+          "type": {
+            "$ref": "#/components/schemas/VoteType"
+          }
+        },
+        "required": [
+          "optionId",
+          "type"
+        ]
+      },
+      "GetPollParticipantsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Participant"
+            }
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cursor to fetch the next page. `null` when there are no more results.",
+            "example": "cm5j2r8wb0003q9l4a1x6p0zt"
+          }
+        },
+        "required": [
+          "data",
+          "nextCursor"
+        ]
+      },
+      "DeletePollResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "Xk3pQ9vLm2Ab"
+              },
+              "deleted": {
+                "type": "boolean",
+                "const": true,
+                "example": true
+              }
+            },
+            "required": [
+              "id",
+              "deleted"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/v1/polls": {
+      "post": {
+        "operationId": "postV1Polls",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "Create a poll",
+        "description": "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. `options.kind` chooses what participants vote on: whole days or time slots. A poll has at most 100 options.\n\n## Date poll\n\nPass `kind: \"date\"` and `dates`, a list of `YYYY-MM-DD` values. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. A repeated date fails with `DUPLICATE_DATES`.\n\n```json\n{\n  \"title\": \"Team offsite\",\n  \"options\": {\n    \"kind\": \"date\",\n    \"dates\": [\"2027-03-01\", \"2027-03-02\", \"2027-03-03\"]\n  }\n}\n```\n\n## Time poll\n\nPass `kind: \"time\"` with a `duration` in minutes that every slot shares, the slots themselves as `times`, `generators` or both, and optionally a `timeZone` (an IANA zone the times are written in).\n\n### Explicit times\n\nEach ISO datetime string in `times` becomes one slot starting at that moment. A time with no offset, like `2027-03-01T09:00:00`, is wall clock time in `timeZone` when that is set and a floating time with no conversion otherwise; a time with an offset or `Z` is an absolute instant.\n\n```json\n{\n  \"title\": \"Kickoff\",\n  \"options\": {\n    \"kind\": \"time\",\n    \"duration\": 60,\n    \"timeZone\": \"Europe/London\",\n    \"times\": [\"2027-03-01T09:00:00\", \"2027-03-02T14:00:00\"]\n  }\n}\n```\n\n### Slot generators\n\nEach object in `generators` expands into recurring slots from a schedule, so availability across days or weeks does not have to be listed slot by slot.\n\n```json\n{\n  \"title\": \"Interview availability\",\n  \"options\": {\n    \"kind\": \"time\",\n    \"duration\": 30,\n    \"timeZone\": \"America/New_York\",\n    \"generators\": [\n      {\n        \"startDate\": \"2027-03-01\",\n        \"endDate\": \"2027-03-05\",\n        \"days\": [\"mon\", \"tue\", \"wed\", \"thu\", \"fri\"],\n        \"startTime\": \"09:00\",\n        \"endTime\": \"12:00\",\n        \"interval\": 60\n      }\n    ]\n  }\n}\n```\n\nThis produces 30 minute slots at 09:00, 10:00 and 11:00 New York time on each weekday from 1 to 5 March, fifteen options in all. Drop `interval` and the window fills with back to back slots at 09:00, 09:30, 10:00, 10:30, 11:00 and 11:30.\n\n| Field | Meaning |\n| --- | --- |\n| `startDate`, `endDate` | The date range, inclusive. Fewer than 366 days. |\n| `days` | Days of the week to include: `mon` to `sun`. Other days in the range are skipped. |\n| `startTime` | Earliest slot start on each day, `HH:mm` in `timeZone`. |\n| `endTime` | End of the daily window. A slot is only generated if it ends by this time. |\n| `interval` | Minutes between slot starts. Optional; defaults to `duration`, which gives back to back slots. |\n\nGenerators are expanded when the poll is created and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`; a generator whose window fits no slot produces nothing, and if nothing in `times` or `generators` yields a slot the request fails with `NO_OPTIONS_GENERATED`.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Poll created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PollResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or no valid options generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePollInput"
+              },
+              "examples": {
+                "Date poll": {
+                  "summary": "Date poll (all-day options)",
+                  "description": "Let participants pick between calendar days. Each date becomes an all-day option.",
+                  "value": {
+                    "title": "Team offsite",
+                    "description": "Which days work for a two day offsite?",
+                    "options": {
+                      "kind": "date",
+                      "dates": [
+                        "2027-03-01",
+                        "2027-03-02",
+                        "2027-03-03"
+                      ]
+                    }
+                  }
+                },
+                "Time poll with explicit times": {
+                  "summary": "Time poll (explicit times)",
+                  "description": "Offer specific time slots. Datetimes without an offset are interpreted as wall-clock in `timeZone` — this example offers 09:00 and 14:00 in London. Append `Z` or an offset to specify an absolute instant instead.",
+                  "value": {
+                    "title": "Project kickoff",
+                    "location": "Zoom",
+                    "options": {
+                      "kind": "time",
+                      "duration": 60,
+                      "timeZone": "Europe/London",
+                      "times": [
+                        "2027-03-01T09:00:00",
+                        "2027-03-01T14:00:00"
+                      ]
+                    }
+                  }
+                },
+                "Time poll with a slot generator": {
+                  "summary": "Time poll (slot generator)",
+                  "description": "Expand recurring slots across a date range. This example generates 30 minute slots at 09:00, 10:00 and 11:00 (New York time) every weekday from 1 to 5 March.",
+                  "value": {
+                    "title": "Interview availability",
+                    "options": {
+                      "kind": "time",
+                      "duration": 30,
+                      "timeZone": "America/New_York",
+                      "generators": [
+                        {
+                          "startDate": "2027-03-01",
+                          "endDate": "2027-03-05",
+                          "days": [
+                            "mon",
+                            "tue",
+                            "wed",
+                            "thu",
+                            "fri"
+                          ],
+                          "startTime": "09:00",
+                          "endTime": "12:00",
+                          "interval": 60
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Time poll mixing times and a generator": {
+                  "summary": "Time poll (explicit times + generator)",
+                  "description": "`times` and `generators` combine. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
+                  "value": {
+                    "title": "Product workshop",
+                    "options": {
+                      "kind": "time",
+                      "duration": 90,
+                      "timeZone": "Europe/Berlin",
+                      "times": [
+                        "2027-03-06T10:00:00"
+                      ],
+                      "generators": [
+                        {
+                          "startDate": "2027-03-08",
+                          "endDate": "2027-03-10",
+                          "days": [
+                            "mon",
+                            "wed"
+                          ],
+                          "startTime": "14:00",
+                          "endTime": "17:00"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getV1Polls",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "List polls",
+        "description": "Lists the polls in the space associated with the API key, sorted by creation date (newest first).\n\nUse the `status` query parameter to only return polls in a given state — for example `status=open` to sweep polls that are still collecting responses. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPollsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "example": "open",
+              "$ref": "#/components/schemas/PollStatus"
+            },
+            "description": "Filter polls by status. Omit to include all statuses."
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "example": "Xk3pQ9vLm2Ab",
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "example": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Number of polls to return per page (1-100)."
+          }
+        ]
+      }
+    },
+    "/v1/polls/{pollId}": {
+      "get": {
+        "operationId": "getV1PollsByPollId",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "Get a poll",
+        "description": "Retrieves a poll by ID with its options, settings, organizer and `participantCount`. The poll must belong to the space associated with the API key. Compare `updatedAt` between reads to notice changes.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PollResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Poll not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "pollId",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "patchV1PollsByPollId",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "Update a poll",
+        "description": "Updates a poll's status. Currently the only supported transition is closing a poll by sending `{ \"status\": \"closed\" }`.\n\nClose a poll once you have picked a date or the poll is no longer needed. Closing is non-destructive — the poll and its responses are preserved — but the results become final and participants can no longer vote. Consumers polling `GET /polls/:pollId/results` should remove closed polls from their queues.\n\nClosing is idempotent: closing an already-closed poll returns a `200` with the poll unchanged. The other statuses (`open`, `scheduled`, `canceled`) are not available via the API and return `422`.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Poll updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PollResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Poll not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The requested status transition is not available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchPollInput"
+              },
+              "examples": {
+                "Close the poll": {
+                  "summary": "Close a poll",
+                  "description": "Set `status` to `closed` once you have picked a date or no longer need the poll. Closing is idempotent and makes the results final.",
+                  "value": {
+                    "status": "closed"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "pollId",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteV1PollsByPollId",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "Delete a poll",
+        "description": "Deletes a poll by ID. The poll must belong to the space associated with the API key.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Poll deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePollResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Poll not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "pollId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v1/polls/{pollId}/results": {
+      "get": {
+        "operationId": "getV1PollsByPollIdResults",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "Get poll results",
+        "description": "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` for per-person availability.\n\n`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPollResultsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Poll not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "pollId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v1/polls/{pollId}/participants": {
+      "get": {
+        "operationId": "getV1PollsByPollIdParticipants",
+        "tags": [
+          "Polls"
+        ],
+        "summary": "List poll participants",
+        "description": "Lists the participants of a poll with their votes, oldest response first. The poll must belong to the space associated with the API key.\n\nEach participant's `votes` pairs an `optionId` from the poll with the answer they gave, so this is the endpoint for per-person availability. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPollParticipantsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "The bearer challenge, per RFC 6750.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The space associated with the API key does not have a Pro subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Poll not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. Includes a `Retry-After` header indicating how many seconds to wait before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "example": "cm5j2r8wb0003q9l4a1x6p0zt",
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 50,
+              "example": 50,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Number of participants to return per page (1-100)."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "pollId",
+            "required": true
+          }
+        ]
+      }
+    }
+  }
+}
