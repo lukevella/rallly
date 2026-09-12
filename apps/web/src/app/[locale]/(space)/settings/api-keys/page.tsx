@@ -30,7 +30,7 @@ export default async function ApiKeysSettingsPage() {
   const enabled = await isApiAccessEnabled(user, space);
 
   // "Needs to upgrade" (hobby tier) gets its own screen; every other reason
-  // access is blocked (feature flag off, not the owner) is a 404.
+  // access is blocked (self-hosted, not the owner) is a 404.
   if (!enabled && space.tier !== "hobby") {
     notFound();
   }

@@ -35,4 +35,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // The discount is a Stripe coupon, so it needs billing; applying needs
   // storage for the verification documents the reviewer reads.
   nonprofitDiscount: isBillingEnabled && isStorageEnabled,
+  // The API launches cloud first; self-hosted gets it once the release
+  // channel carries the API host and its docs.
+  api: !isSelfHosted,
 };

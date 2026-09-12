@@ -3,8 +3,7 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import type { SpaceTier } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { isSelfHosted } from "@/lib/constants";
-import { posthog } from "@/lib/posthog";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
 export function getSpaceApiKeys({ spaceId }: { spaceId: AuthorizedSpaceId }) {
   return prisma.spaceApiKey.findMany({
@@ -27,12 +26,10 @@ export function getSpaceApiKeys({ spaceId }: { spaceId: AuthorizedSpaceId }) {
 }
 
 /**
- * Determines if a user has access to API features (API keys, developer tools)
- * @param user - The user to check access for
- * @param space - The space to check access for
- * @returns True if the user can access API features
+ * API access is a Pro capability of cloud hosted spaces, managed by the
+ * space owner.
  */
-export async function isApiAccessEnabled(
+export function isApiAccessEnabled(
   user: {
     id: string;
   },
@@ -40,27 +37,14 @@ export async function isApiAccessEnabled(
     tier: SpaceTier;
     ownerId: string;
   },
-): Promise<boolean> {
-  // Block self-hosted deployments
-  if (isSelfHosted) {
+) {
+  if (!isFeatureEnabled("api")) {
     return false;
   }
 
-  // Require pro tier
   if (space.tier !== "pro") {
     return false;
   }
 
-  // Require space owner
-  if (space.ownerId !== user.id) {
-    return false;
-  }
-
-  // Check PostHog feature flag
-  const isFeatureFlagEnabled = await posthog()?.isFeatureEnabled(
-    "developer-tools",
-    user.id,
-  );
-
-  return isFeatureFlagEnabled ?? false;
+  return space.ownerId === user.id;
 }

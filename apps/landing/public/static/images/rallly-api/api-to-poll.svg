@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <!-- Textless wireframe in the how-it-works style: bars stand in for code
+       and copy. Left screen is a terminal sending a request, right screen is
+       the poll it creates, with results flowing back. The hero accent gradient
+       marks the request line, the outbound arrow and the leading option. -->
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#615fff"/>
+      <stop offset="1" stop-color="#8e51ff"/>
+    </linearGradient>
+    <!-- A horizontal stroke has no bounding box height, so the arrow needs
+         the gradient in user space. -->
+    <linearGradient id="accent-line" gradientUnits="userSpaceOnUse" x1="366" y1="0" x2="430" y2="0">
+      <stop offset="0" stop-color="#615fff"/>
+      <stop offset="1" stop-color="#8e51ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="#f4f4f5"/>
+
+  <!-- Terminal: the request -->
+  <rect x="44.5" y="45.5" width="306" height="359" rx="12" fill="#ffffff" stroke="#e4e4e7"/>
+  <g fill="#e4e4e7">
+    <circle cx="66" cy="67" r="5"/>
+    <circle cx="82" cy="67" r="5"/>
+    <circle cx="98" cy="67" r="5"/>
+  </g>
+  <line x1="64" y1="88.5" x2="331" y2="88.5" stroke="#e4e4e7" stroke-opacity="0.6"/>
+
+  <g>
+    <rect x="64" y="108" width="36" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="108" y="108" width="128" height="8" rx="4" fill="#e4e4e7"/>
+
+    <rect x="84" y="130" width="24" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="116" y="130" width="120" height="8" rx="4" fill="url(#accent)"/>
+
+    <rect x="84" y="152" width="24" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="116" y="152" width="72" height="8" rx="4" fill="#e4e4e7"/>
+
+    <rect x="84" y="174" width="24" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="116" y="174" width="12" height="8" rx="4" fill="#e4e4e7"/>
+
+    <rect x="104" y="196" width="40" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="152" y="196" width="88" height="8" rx="4" fill="#e4e4e7"/>
+
+    <rect x="104" y="218" width="52" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="164" y="218" width="12" height="8" rx="4" fill="#e4e4e7"/>
+
+    <rect x="124" y="240" width="32" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="164" y="240" width="48" height="8" rx="4" fill="#e4e4e7"/>
+
+    <rect x="124" y="262" width="36" height="8" rx="4" fill="#d4d4d8"/>
+    <rect x="168" y="262" width="60" height="8" rx="4" fill="#e4e4e7"/>
+    <rect x="236" y="262" width="60" height="8" rx="4" fill="#e4e4e7"/>
+  </g>
+
+  <!-- Response block -->
+  <rect x="64.5" y="296.5" width="266" height="88" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+  <rect x="80" y="312" width="28" height="6" rx="3" fill="#d4d4d8"/>
+  <rect x="116" y="312" width="64" height="6" rx="3" fill="#e4e4e7"/>
+  <rect x="80" y="330" width="44" height="6" rx="3" fill="#d4d4d8"/>
+  <rect x="132" y="330" width="96" height="6" rx="3" fill="#e4e4e7"/>
+  <rect x="80" y="348" width="36" height="6" rx="3" fill="#d4d4d8"/>
+  <rect x="124" y="348" width="120" height="6" rx="3" fill="#e4e4e7"/>
+  <rect x="80" y="366" width="52" height="6" rx="3" fill="#d4d4d8"/>
+  <rect x="140" y="366" width="72" height="6" rx="3" fill="#e4e4e7"/>
+
+  <!-- Request out, results back -->
+  <g fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M366 160 H430" stroke="url(#accent-line)"/>
+    <path d="M422 152 L430 160 L422 168" stroke="#8e51ff"/>
+    <path d="M434 290 H370" stroke="#d4d4d8"/>
+    <path d="M378 282 L370 290 L378 298" stroke="#d4d4d8"/>
+  </g>
+
+  <!-- Poll: what participants see -->
+  <rect x="449.5" y="45.5" width="306" height="359" rx="12" fill="#ffffff" stroke="#e4e4e7"/>
+  <rect x="469" y="67" width="140" height="10" rx="5" fill="#d4d4d8"/>
+  <rect x="469" y="87" width="88" height="6" rx="3" fill="#e4e4e7"/>
+  <g stroke="#ffffff" stroke-width="3" fill="#d4d4d8">
+    <circle cx="696" cy="78" r="11"/>
+    <circle cx="712" cy="78" r="11"/>
+    <circle cx="728" cy="78" r="11"/>
+  </g>
+  <line x1="469" y1="107.5" x2="736" y2="107.5" stroke="#e4e4e7" stroke-opacity="0.6"/>
+
+  <!-- Leading option -->
+  <g>
+    <rect x="469.5" y="121.5" width="266" height="76" rx="8" fill="#fafafa" stroke="url(#accent)"/>
+    <rect x="481.5" y="135.5" width="44" height="48" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="491" y="146" width="25" height="5" rx="2.5" fill="#e4e4e7"/>
+    <rect x="490" y="158" width="27" height="12" rx="3" fill="#d4d4d8"/>
+    <rect x="538" y="139" width="84" height="6" rx="3" fill="#d4d4d8"/>
+    <g stroke="#fafafa" stroke-width="3" fill="url(#accent)">
+      <circle cx="546" cy="170" r="8"/>
+      <circle cx="562" cy="170" r="8"/>
+      <circle cx="578" cy="170" r="8"/>
+      <circle cx="594" cy="170" r="8"/>
+    </g>
+    <rect x="644" y="156" width="80" height="8" rx="4" fill="#e4e4e7"/>
+    <rect x="644" y="156" width="80" height="8" rx="4" fill="url(#accent)"/>
+  </g>
+  <g>
+    <rect x="469.5" y="209.5" width="266" height="76" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+    <rect x="481.5" y="223.5" width="44" height="48" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="491" y="234" width="25" height="5" rx="2.5" fill="#e4e4e7"/>
+    <rect x="490" y="246" width="27" height="12" rx="3" fill="#d4d4d8"/>
+    <rect x="538" y="227" width="84" height="6" rx="3" fill="#d4d4d8"/>
+    <g stroke="#fafafa" stroke-width="3" fill="#d4d4d8">
+      <circle cx="546" cy="258" r="8"/>
+      <circle cx="562" cy="258" r="8"/>
+    </g>
+    <rect x="644" y="244" width="80" height="8" rx="4" fill="#e4e4e7"/>
+    <rect x="644" y="244" width="40" height="8" rx="4" fill="#d4d4d8"/>
+  </g>
+  <g>
+    <rect x="469.5" y="297.5" width="266" height="76" rx="8" fill="#fafafa" stroke="#e4e4e7"/>
+    <rect x="481.5" y="311.5" width="44" height="48" rx="6" fill="#ffffff" stroke="#e4e4e7"/>
+    <rect x="491" y="322" width="25" height="5" rx="2.5" fill="#e4e4e7"/>
+    <rect x="490" y="334" width="27" height="12" rx="3" fill="#d4d4d8"/>
+    <rect x="538" y="315" width="84" height="6" rx="3" fill="#d4d4d8"/>
+    <g stroke="#fafafa" stroke-width="3" fill="#d4d4d8">
+      <circle cx="546" cy="346" r="8"/>
+    </g>
+    <rect x="644" y="332" width="80" height="8" rx="4" fill="#e4e4e7"/>
+    <rect x="644" y="332" width="20" height="8" rx="4" fill="#d4d4d8"/>
+  </g>
+</svg>
