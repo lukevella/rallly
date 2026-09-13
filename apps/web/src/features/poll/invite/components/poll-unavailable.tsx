@@ -10,6 +10,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
+import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { getTranslation } from "@/i18n/server";
 
 export type PollUnavailableReason = "deleted" | "removed";
@@ -27,7 +28,12 @@ export async function PollUnavailable({
 
   if (reason === "deleted") {
     return (
-      <main id="main-content" tabIndex={-1} className="flex h-dvh flex-col p-4">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex min-h-dvh flex-col p-4 pt-10"
+      >
+        <DefaultLogo className="mx-auto" />
         <EmptyState className="flex-1">
           <EmptyStateIcon>
             <TrashIcon />
@@ -67,7 +73,12 @@ export async function PollUnavailable({
   }
 
   return (
-    <main id="main-content" tabIndex={-1} className="flex h-dvh flex-col p-4">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="flex min-h-dvh flex-col p-4 pt-10"
+    >
+      <DefaultLogo className="mx-auto" />
       <EmptyState className="flex-1">
         <EmptyStateIcon>
           <ShieldAlertIcon />
