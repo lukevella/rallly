@@ -62,15 +62,17 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
 
-  const [{ unavailable }, trpc, searchParams] = await Promise.all([
+  const [{ unavailable }, searchParams] = await Promise.all([
     getPollMetadata(params.urlId),
-    createPublicSSRHelper(),
     props.searchParams,
   ]);
 
   if (unavailable) {
     return <PollUnavailable reason={unavailable} />;
   }
+
+  // The SSR helper reads the session; an unavailable poll never needs it.
+  const trpc = await createPublicSSRHelper();
 
   // `invite` is the param older invite emails carry; both name the same
   // token and the client reads them the same way. A repeated param arrives

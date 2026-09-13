@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-import { createTestPoll, createUserInDb } from "./test-utils";
+import { createTestPoll, createUserInDb, loginWithEmail } from "./test-utils";
 
 // A poll whose creator was banned is usually a scam lure. The person who
 // clicks the link is the intended victim, so the page they land on has to
@@ -35,6 +35,15 @@ test.describe("unavailable poll invite page", () => {
 
     await page.goto(`/invite/${poll.id}`);
     await expect(main.getByText(scamTitle).first()).toBeVisible();
+
+    const optionsBeforeBan = await page.request.get(
+      `/api/trpc/polls.get?input=${encodeURIComponent(
+        JSON.stringify({ json: { urlId: poll.id } }),
+      )}`,
+    );
+    const optionId = (await optionsBeforeBan.json()).result.data.json.options[0]
+      .id;
+    expect(optionId).toBeTruthy();
 
     await prisma.user.update({
       where: { id: user.id },
@@ -71,6 +80,34 @@ test.describe("unavailable poll invite page", () => {
       )}`,
     );
     expect(comments.status()).toBe(404);
+
+    // Writes are refused too, so a signed-in caller who kept the poll's
+    // option ids from before the ban cannot keep adding responses or
+    // comments to it.
+    const voter = await createUserInDb({
+      email: `unavailable-voter-${randomUUID()}@example.com`,
+      name: "Voter",
+    });
+    await loginWithEmail(page, { email: voter.email });
+    const addParticipant = await page.request.post(
+      "/api/trpc/polls.participants.add",
+      {
+        data: {
+          json: {
+            pollId: poll.id,
+            name: "Victim",
+            votes: [{ optionId: optionId, type: "yes" }],
+          },
+        },
+      },
+    );
+    expect(addParticipant.status()).toBe(404);
+    const addComment = await page.request.post("/api/trpc/polls.comments.add", {
+      data: {
+        json: { pollId: poll.id, authorName: "Victim", content: "Hello" },
+      },
+    });
+    expect(addComment.status()).toBe(404);
   });
 
   test("a deleted poll shows the deleted page without the scam warning", async ({

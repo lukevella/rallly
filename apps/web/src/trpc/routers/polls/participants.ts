@@ -347,11 +347,13 @@ export const participants = router({
           select: {
             status: true,
             deleted: true,
+            user: { select: { banned: true } },
           },
         });
 
-        // A deleted poll never accepts responses.
-        if (!poll || poll.deleted) {
+        // A deleted poll, or one whose creator was banned, never accepts
+        // responses.
+        if (!poll || poll.deleted || poll.user?.banned) {
           throw new TRPCError({
             code: "NOT_FOUND",
             message: "Poll not found",
