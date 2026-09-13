@@ -41,6 +41,12 @@ export function createTransportForProvider(provider: EmailProvider) {
         );
       }
 
+      if (process.env.SMTP_DEBUG === "true") {
+        console.warn(
+          "⚠️  SMTP_DEBUG is no longer supported and can be removed. Send failures are logged with the SMTP server's response.",
+        );
+      }
+
       const rejectUnauthorized =
         process.env.SMTP_REJECT_UNAUTHORIZED !== "false";
 
