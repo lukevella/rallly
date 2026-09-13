@@ -1,16 +1,9 @@
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
-import { logger } from "@rallly/logger";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
 
 type EmailProvider = "ses" | "smtp";
-
-// Pino's (obj, msg) call signature matches nodemailer's bunyan-style logger,
-// so the child can be handed over as is.
-function createSmtpDebugLogger() {
-  return logger.child({ name: "smtp" }, { level: "trace" });
-}
 
 export type SupportedEmailProviders = EmailProvider;
 
@@ -51,12 +44,6 @@ export function createTransportForProvider(provider: EmailProvider) {
       const rejectUnauthorized =
         process.env.SMTP_REJECT_UNAUTHORIZED !== "false";
 
-      // Logs the full SMTP conversation: the auth exchange (credentials only
-      // base64 encoded) and every RCPT TO envelope, which pino's redact list
-      // cannot scrub because nodemailer puts them in the message string.
-      // Development only; never enable on an instance handling real mail.
-      const debug = process.env.SMTP_DEBUG === "true";
-
       // Warn about security change if no explicit setting
       if (
         process.env.SMTP_REJECT_UNAUTHORIZED === undefined &&
@@ -81,8 +68,6 @@ export function createTransportForProvider(provider: EmailProvider) {
           rejectUnauthorized,
           servername: process.env.SMTP_TLS_SERVERNAME,
         },
-        debug,
-        logger: debug ? createSmtpDebugLogger() : undefined,
       });
     }
   }

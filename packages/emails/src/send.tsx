@@ -80,6 +80,28 @@ export function scrubAddresses(text: string) {
  * `rejected` and `rejectedErrors`, so the raw error must not be logged.
  * Keeps the fields an operator needs to diagnose a transport failure.
  */
+/**
+ * Nodemailer's send result. Only the SMTP transport fills `accepted`,
+ * `rejected` and `response`; SES returns its own shape.
+ */
+function describeSendResult(info: unknown) {
+  if (typeof info !== "object" || info === null) {
+    return {};
+  }
+  const { messageId, accepted, rejected, response } = info as {
+    messageId?: string;
+    accepted?: unknown[];
+    rejected?: unknown[];
+    response?: string;
+  };
+  return {
+    messageId,
+    acceptedCount: Array.isArray(accepted) ? accepted.length : undefined,
+    rejectedCount: Array.isArray(rejected) ? rejected.length : undefined,
+    response: response ? scrubAddresses(response) : undefined,
+  };
+}
+
 function describeTransportError(e: unknown) {
   if (!(e instanceof Error)) {
     return { errorMessage: scrubAddresses(String(e)) };
@@ -125,7 +147,7 @@ async function dispatch(options: DispatchOptions) {
   }
 
   try {
-    await getTransport().sendMail({
+    const info = await getTransport().sendMail({
       from: resolveFrom(options.from),
       to: options.to,
       replyTo: options.replyTo,
@@ -136,6 +158,16 @@ async function dispatch(options: DispatchOptions) {
       icalEvent: options.icalEvent,
       headers: buildHeaders(options.listUnsubscribeUrl),
     });
+    // Proves the hand-off to the server, so "sent but never arrived" can be
+    // separated from "never sent" without an SMTP transcript.
+    logger.info(
+      {
+        ...describeSendResult(info),
+        recipientDomains: recipientDomains(options.to),
+        subject: options.subject,
+      },
+      `Sent email: ${options.errorLabel}`,
+    );
   } catch (e) {
     // Operational (SMTP/transport) failures are logged, not thrown — sending is
     // fire-and-forget. Render/template (code) errors are NOT caught here, so they
