@@ -17,6 +17,23 @@ Sentry.init({
   // Don't send personal identifiable information (PII) to Sentry.
   sendDefaultPii: false,
 
+  // Ship the 4xx/5xx wide events as structured logs so rate limiter usage
+  // (`rateLimiterDailyConsumedPoints`, 429s per `spaceId`) is queryable and
+  // alertable for 30 days. Info-level events are every request; they stay in
+  // Vercel to keep the log quota for the ones worth searching.
+  enableLogs: true,
+  integrations: [
+    Sentry.pinoIntegration({ log: { levels: ["warn", "error", "fatal"] } }),
+  ],
+  beforeSendLog(log) {
+    // `sendDefaultPii` does not cover custom log attributes.
+    if (log.attributes) {
+      const { ip, ...attributes } = log.attributes;
+      return { ...log, attributes };
+    }
+    return log;
+  },
+
   // Uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: process.env.NODE_ENV === 'development',
 });
