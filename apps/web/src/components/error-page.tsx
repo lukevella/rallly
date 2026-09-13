@@ -10,6 +10,7 @@ export function ErrorPage({
   description,
   children,
   actions,
+  footer,
 }: {
   logo: React.ReactNode;
   label: React.ReactNode;
@@ -17,13 +18,14 @@ export function ErrorPage({
   description: React.ReactNode;
   children: React.ReactNode;
   actions: React.ReactNode;
+  footer?: React.ReactNode;
 }) {
   return (
-    <div className="page-bg-gray-100">
+    <div className="page-bg-gray-100 flex min-h-dvh flex-col">
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 sm:pb-24 lg:px-8"
+        className="mx-auto w-full max-w-7xl flex-1 px-6 pt-10 pb-16 sm:pb-24 lg:px-8"
       >
         <header className="flex justify-center">{logo}</header>
         <div className="mx-auto mt-16 max-w-2xl text-center">
@@ -42,6 +44,11 @@ export function ErrorPage({
           </div>
         </div>
       </main>
+      {footer ? (
+        <footer className="mx-auto w-full max-w-7xl px-6 pb-10 lg:px-8">
+          {footer}
+        </footer>
+      ) : null}
     </div>
   );
 }
