@@ -69,8 +69,6 @@ export const proxy = async (req: NextRequest) => {
 
   setRefCookie(req, res);
 
-  res.headers.set("x-locale", locale);
-
   setPathname(req, res);
 
   return res;
