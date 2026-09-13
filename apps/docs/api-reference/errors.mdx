@@ -24,8 +24,6 @@ Every failure is `application/json` with the same shape:
 | 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |
 | 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |
 | 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |
-| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |
-| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |
 | 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |
 | 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |
 | 404 | `NOT_FOUND` | No route matches the method and path |

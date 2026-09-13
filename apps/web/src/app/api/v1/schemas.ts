@@ -13,6 +13,38 @@ export const timeSchema = z.iso.time({ precision: -1 }).meta({
   example: "09:30",
 });
 
+const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+type Weekday = (typeof WEEKDAYS)[number];
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+const daySpan = (startDate: string, endDate: string) =>
+  (Date.parse(endDate) - Date.parse(startDate)) / DAY_MS;
+
+// A calendar date has the same weekday in every zone, so no zone is needed.
+const rangeIncludesWeekday = (
+  startDate: string,
+  endDate: string,
+  days: ReadonlyArray<Weekday>,
+) => {
+  const wanted = new Set(days.map((day) => WEEKDAYS.indexOf(day)));
+  const start = Date.parse(startDate);
+  const span = daySpan(startDate, endDate);
+  for (let offset = 0; offset <= Math.min(span, 6); offset++) {
+    // getUTCDay: 0 = Sunday; WEEKDAYS starts on Monday.
+    const weekday = (new Date(start + offset * DAY_MS).getUTCDay() + 6) % 7;
+    if (wanted.has(weekday)) return true;
+  }
+  return false;
+};
+
+const minutesOfDay = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+};
+
+const durationSchema = z.number().int().min(15).max(1440);
+
 export const slotGeneratorSchema = z
   .strictObject({
     startDate: dateSchema.meta({
@@ -25,24 +57,25 @@ export const slotGeneratorSchema = z
       example: "2027-03-05",
     }),
     days: z
-      .array(z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]))
+      .array(z.enum(WEEKDAYS))
       .min(1)
+      .default([...WEEKDAYS])
       .meta({
         description:
-          "Days of the week to generate slots on. Days in the range that are not listed are skipped.",
+          "Days of the week to generate slots on. Days in the range that are not listed are skipped. Defaults to every day.",
         example: ["mon", "tue", "wed", "thu", "fri"],
       }),
-    startTime: timeSchema.meta({
+    from: timeSchema.meta({
       description:
         "Earliest slot start on each day, as a wall clock time in `timeZone`.",
       example: "09:00",
     }),
-    endTime: timeSchema.meta({
+    to: timeSchema.meta({
       description:
-        "End of the daily window. A slot is only generated if it ends at or before this time.",
+        "End of the daily window, as a wall clock time in `timeZone`. A slot is only generated if it ends at or before this time.",
       example: "17:00",
     }),
-    interval: z.number().int().min(15).max(1440).optional().meta({
+    interval: durationSchema.optional().meta({
       description:
         "Minutes between consecutive slot starts. Defaults to `duration`, which produces back to back slots.",
       example: 60,
@@ -52,150 +85,235 @@ export const slotGeneratorSchema = z
   // generator's MAX_SLOT_GENERATION_DAYS cap.
   .refine(
     (data) => {
-      const start = Date.parse(data.startDate);
-      const end = Date.parse(data.endDate);
-      const spanDays = (end - start) / (1000 * 60 * 60 * 24);
-      return spanDays >= 0 && spanDays < MAX_SLOT_GENERATION_DAYS;
+      const span = daySpan(data.startDate, data.endDate);
+      return span >= 0 && span < MAX_SLOT_GENERATION_DAYS;
     },
     {
       message: `The date range must span fewer than ${MAX_SLOT_GENERATION_DAYS} days, with endDate on or after startDate.`,
       path: ["endDate"],
     },
   )
+  .refine((data) => minutesOfDay(data.to) > minutesOfDay(data.from), {
+    message: "Must be later than `from`. Windows cannot cross midnight.",
+    path: ["to"],
+  })
+  .refine(
+    (data) =>
+      daySpan(data.startDate, data.endDate) < 0 ||
+      rangeIncludesWeekday(data.startDate, data.endDate, data.days),
+    {
+      message: "None of the listed days fall between startDate and endDate.",
+      path: ["days"],
+    },
+  )
   .meta({
     id: "SlotGenerator",
     title: "Slot generator",
     description:
-      "Expands into one slot of `duration` minutes every `interval` minutes between `startTime` and `endTime`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `endTime` are not generated.",
+      "Expands into one slot of `duration` minutes every `interval` minutes between `from` and `to`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `to` are not generated.",
   });
 
-const explicitTimeSchema = z.iso.datetime({ local: true, offset: true }).meta({
-  description:
-    "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
-  example: "2027-03-01T09:00:00",
-});
-
-const dateOptionsSchema = z
+const dateOptionInputSchema = z
   .strictObject({
-    kind: z.literal("date"),
-    dates: z
-      .array(z.iso.date())
-      .min(1)
-      .meta({
-        description:
-          "Calendar days to offer. Each becomes one all-day option. A day may appear once.",
-        example: ["2027-03-01", "2027-03-02", "2027-03-03"],
-      }),
+    date: dateSchema.meta({
+      description: "Calendar day to offer, as a floating `YYYY-MM-DD` date.",
+      example: "2027-03-01",
+    }),
   })
   .meta({
-    id: "DateOptions",
-    title: "Date poll",
-    description:
-      "Whole days. Dates are floating calendar days with no timezone, so never convert them through one.",
+    id: "DateOptionInput",
+    title: "Date option",
+    description: "One all-day option. The same shape `DateOption` returns.",
   });
 
-const timeOptionsSchema = z
+const timeOptionInputSchema = z
   .strictObject({
-    kind: z.literal("time"),
-    duration: z.number().int().min(15).max(1440).meta({
-      description: "Length of every slot in minutes",
+    startTime: z.iso.datetime({ local: true, offset: true }).meta({
+      description:
+        "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
+      example: "2027-03-01T09:00:00",
+    }),
+    duration: durationSchema.optional().meta({
+      description:
+        "Length of this slot in minutes. Defaults to the poll's `duration`.",
       example: 30,
     }),
+  })
+  .meta({
+    id: "TimeOptionInput",
+    title: "Time option",
+    description: "One time slot. The same shape `TimeOption` returns.",
+  });
+
+const pollSettingsFields = {
+  title: z
+    .string()
+    .trim()
+    .min(1)
+    .max(MAX_POLL_TITLE_LENGTH)
+    .meta({ example: "Team sync" }),
+  description: z
+    .string()
+    .trim()
+    .max(1000)
+    .optional()
+    .meta({ example: "Pick a time that works for everyone" }),
+  location: z.string().trim().max(255).optional().meta({ example: "Zoom" }),
+  requireEmail: z.boolean().optional().meta({
+    description: "Require participants to provide their email address",
+    example: true,
+  }),
+  hideParticipants: z.boolean().optional().meta({
+    description: "Hide participant names from other participants",
+    example: false,
+  }),
+  hideScores: z.boolean().optional().meta({
+    description: "Hide vote counts from participants",
+    example: false,
+  }),
+  disableComments: z.boolean().optional().meta({
+    description:
+      "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
+    example: false,
+  }),
+  allowTentativeVotes: z.boolean().optional().meta({
+    description:
+      'Allow participants to answer "if need be" as well as yes and no. Defaults to true.',
+    example: true,
+  }),
+  organizer: z
+    .strictObject({
+      email: z.email().meta({
+        description: "Email address of the organizer",
+        example: "organizer@example.com",
+      }),
+    })
+    .optional()
+    .meta({
+      description:
+        "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
+    }),
+};
+
+// Strict so a misspelt or unsupported field fails loudly instead of being
+// silently ignored.
+const createDatePollInputSchema = z
+  .strictObject({
+    title: pollSettingsFields.title,
+    kind: z.literal("date").meta({
+      description: "Participants vote on whole days.",
+    }),
+    description: pollSettingsFields.description,
+    location: pollSettingsFields.location,
+    requireEmail: pollSettingsFields.requireEmail,
+    hideParticipants: pollSettingsFields.hideParticipants,
+    hideScores: pollSettingsFields.hideScores,
+    disableComments: pollSettingsFields.disableComments,
+    allowTentativeVotes: pollSettingsFields.allowTentativeVotes,
+    organizer: pollSettingsFields.organizer,
+    options: z.array(dateOptionInputSchema).min(1).meta({
+      description:
+        "Calendar days to offer. Dates are floating calendar days with no timezone, so never convert them through one. Duplicates are removed.",
+    }),
+  })
+  .meta({ id: "CreateDatePollInput", title: "Date poll" });
+
+const createTimePollInputSchema = z
+  .strictObject({
+    title: pollSettingsFields.title,
+    kind: z.literal("time").meta({
+      description: "Participants vote on time slots.",
+    }),
+    description: pollSettingsFields.description,
+    location: pollSettingsFields.location,
+    requireEmail: pollSettingsFields.requireEmail,
+    hideParticipants: pollSettingsFields.hideParticipants,
+    hideScores: pollSettingsFields.hideScores,
+    disableComments: pollSettingsFields.disableComments,
+    allowTentativeVotes: pollSettingsFields.allowTentativeVotes,
+    organizer: pollSettingsFields.organizer,
     timeZone: timezoneSchema.optional().meta({
       description:
         "IANA time zone the times are written in. Datetime strings without an offset are interpreted in this zone. If omitted, offset-less datetimes are floating times (no conversion) and the poll has no time zone.",
       example: "Europe/London",
     }),
-    times: z.array(explicitTimeSchema).min(1).optional().meta({
-      description: "Explicit slots, one per start time.",
+    duration: durationSchema.optional().meta({
+      description:
+        "Default slot length in minutes. Required when `generators` is set or an option omits its own `duration`.",
+      example: 30,
+    }),
+    options: z.array(timeOptionInputSchema).min(1).optional().meta({
+      description:
+        "Explicit slots. Provide `options`, `generators` or both. Duplicates are removed.",
     }),
     generators: z.array(slotGeneratorSchema).min(1).optional().meta({
       description:
-        "Slot generators. Each expands into recurring slots from a schedule.",
+        "Slot generators. Each expands into recurring slots from a schedule and the result is appended to `options`.",
     }),
   })
-  .refine((data) => data.times || data.generators, {
-    message: "Provide 'times', 'generators' or both",
-    path: ["times"],
+  // These rules do not survive JSON Schema conversion; the field
+  // descriptions state them instead.
+  .superRefine((data, ctx) => {
+    if (!data.options && !data.generators) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["options"],
+        message: "Provide `options`, `generators` or both.",
+      });
+    }
+    if (data.duration === undefined) {
+      data.options?.forEach((option, index) => {
+        if (option.duration === undefined) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["options", index, "duration"],
+            message: "Required when the poll has no default `duration`.",
+          });
+        }
+      });
+      if (data.generators) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["duration"],
+          message: "Required when `generators` is set.",
+        });
+      }
+      return;
+    }
+    const { duration } = data;
+    data.generators?.forEach((generator, index) => {
+      const window = minutesOfDay(generator.to) - minutesOfDay(generator.from);
+      if (window > 0 && window < duration) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["generators", index, "to"],
+          message: `The window from ${generator.from} to ${generator.to} is shorter than the ${duration} minute duration.`,
+        });
+      }
+    });
   })
-  // The refinement above does not survive JSON Schema conversion. Stating it
-  // as an anyOf would make Mintlify render two identical "Time poll" variants,
-  // so the description carries it instead.
-  .meta({
-    id: "TimeOptions",
-    title: "Time poll",
-    description:
-      "Time slots that share one duration. Provide `times`, `generators` or both. Duplicate slots are removed.",
-  });
+  .meta({ id: "CreateTimePollInput", title: "Time poll" });
 
-// Strict so a misspelt or unsupported field fails loudly instead of being
-// silently ignored.
 export const createPollInputSchema = z
-  .strictObject({
-    title: z
-      .string()
-      .trim()
-      .min(1)
-      .max(MAX_POLL_TITLE_LENGTH)
-      .meta({ example: "Team sync" }),
-    description: z
-      .string()
-      .trim()
-      .max(1000)
-      .optional()
-      .meta({ example: "Pick a time that works for everyone" }),
-    location: z.string().trim().max(255).optional().meta({ example: "Zoom" }),
-    requireEmail: z.boolean().optional().meta({
-      description: "Require participants to provide their email address",
-      example: true,
-    }),
-    hideParticipants: z.boolean().optional().meta({
-      description: "Hide participant names from other participants",
-      example: false,
-    }),
-    hideScores: z.boolean().optional().meta({
-      description: "Hide vote counts from participants",
-      example: false,
-    }),
-    disableComments: z.boolean().optional().meta({
-      description:
-        "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
-      example: false,
-    }),
-    allowTentativeVotes: z.boolean().optional().meta({
-      description:
-        'Allow participants to answer "if need be" as well as yes and no. Defaults to true.',
-      example: true,
-    }),
-    organizer: z
-      .strictObject({
-        email: z.email().meta({
-          description: "Email address of the organizer",
-          example: "organizer@example.com",
-        }),
-      })
-      .optional()
-      .meta({
-        description:
-          "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
-      }),
-    options: z
-      .discriminatedUnion("kind", [dateOptionsSchema, timeOptionsSchema], {
-        error: 'kind must be "date" or "time"',
-      })
-      .meta({
-        description:
-          "What participants vote on: whole days (`kind: date`) or time slots (`kind: time`).",
-        discriminator: {
-          propertyName: "kind",
-          mapping: {
-            date: "#/components/schemas/DateOptions",
-            time: "#/components/schemas/TimeOptions",
-          },
-        },
-      }),
-  })
-  .meta({ id: "CreatePollInput" });
+  .discriminatedUnion(
+    "kind",
+    [createDatePollInputSchema, createTimePollInputSchema],
+    {
+      error: 'kind must be "date" or "time"',
+    },
+  )
+  .meta({
+    id: "CreatePollInput",
+    description:
+      "`kind` chooses what participants vote on: whole days (`date`) or time slots (`time`). The request mirrors the poll the API returns: the same settings, and `options` in the same shape as the response.",
+    discriminator: {
+      propertyName: "kind",
+      mapping: {
+        date: "#/components/schemas/CreateDatePollInput",
+        time: "#/components/schemas/CreateTimePollInput",
+      },
+    },
+  });
 
 export const errorResponseSchema = z
   .object({

@@ -305,8 +305,6 @@ async function buildOpenApiSpec() {
           "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
           "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
           "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
-          "| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |",
-          "| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |",
           "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |",
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
           "| 404 | `NOT_FOUND` | No route matches the method and path |",
@@ -370,64 +368,61 @@ app.post(
     tags: ["Polls"],
     summary: "Create a poll",
     description: [
-      "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. `options.kind` chooses what participants vote on: whole days or time slots. A poll has at most 100 options.",
+      "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. The request mirrors the response: `kind` chooses what participants vote on, and `options` takes the same shape the poll returns, so a poll can be recreated from the body of a `GET`. A poll has at most 100 options.",
       "",
       "## Date poll",
       "",
-      'Pass `kind: "date"` and `dates`, a list of `YYYY-MM-DD` values. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. A repeated date fails with `DUPLICATE_DATES`.',
+      'Pass `kind: "date"` and `options`, one `{ "date": "YYYY-MM-DD" }` per day. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. Duplicate dates are removed.',
       "",
       "```json",
       "{",
       '  "title": "Team offsite",',
-      '  "options": {',
-      '    "kind": "date",',
-      '    "dates": ["2027-03-01", "2027-03-02", "2027-03-03"]',
-      "  }",
+      '  "kind": "date",',
+      '  "options": [{ "date": "2027-03-01" }, { "date": "2027-03-02" }, { "date": "2027-03-03" }]',
       "}",
       "```",
       "",
       "## Time poll",
       "",
-      'Pass `kind: "time"` with a `duration` in minutes that every slot shares, the slots themselves as `times`, `generators` or both, and optionally a `timeZone` (an IANA zone the times are written in).',
+      'Pass `kind: "time"`, optionally a `timeZone` (an IANA zone the times are written in) and a default `duration` in minutes, and the slots as `options`, `generators` or both.',
       "",
-      "### Explicit times",
+      "### Explicit slots",
       "",
-      "Each ISO datetime string in `times` becomes one slot starting at that moment. A time with no offset, like `2027-03-01T09:00:00`, is wall clock time in `timeZone` when that is set and a floating time with no conversion otherwise; a time with an offset or `Z` is an absolute instant.",
+      "Each entry in `options` is one slot: a `startTime` and an optional `duration` that overrides the poll default. A `startTime` with no offset, like `2027-03-01T09:00:00`, is wall clock time in `timeZone` when that is set and a floating time with no conversion otherwise; one with an offset or `Z` is an absolute instant.",
       "",
       "```json",
       "{",
       '  "title": "Kickoff",',
-      '  "options": {',
-      '    "kind": "time",',
-      '    "duration": 60,',
-      '    "timeZone": "Europe/London",',
-      '    "times": ["2027-03-01T09:00:00", "2027-03-02T14:00:00"]',
-      "  }",
+      '  "kind": "time",',
+      '  "timeZone": "Europe/London",',
+      '  "duration": 60,',
+      '  "options": [',
+      '    { "startTime": "2027-03-01T09:00:00" },',
+      '    { "startTime": "2027-03-02T14:00:00", "duration": 90 }',
+      "  ]",
       "}",
       "```",
       "",
       "### Slot generators",
       "",
-      "Each object in `generators` expands into recurring slots from a schedule, so availability across days or weeks does not have to be listed slot by slot.",
+      "Each object in `generators` expands into recurring slots of `duration` minutes from a schedule, so availability across days or weeks does not have to be listed slot by slot. `duration` is required when `generators` is set.",
       "",
       "```json",
       "{",
       '  "title": "Interview availability",',
-      '  "options": {',
-      '    "kind": "time",',
-      '    "duration": 30,',
-      '    "timeZone": "America/New_York",',
-      '    "generators": [',
-      "      {",
-      '        "startDate": "2027-03-01",',
-      '        "endDate": "2027-03-05",',
-      '        "days": ["mon", "tue", "wed", "thu", "fri"],',
-      '        "startTime": "09:00",',
-      '        "endTime": "12:00",',
-      '        "interval": 60',
-      "      }",
-      "    ]",
-      "  }",
+      '  "kind": "time",',
+      '  "timeZone": "America/New_York",',
+      '  "duration": 30,',
+      '  "generators": [',
+      "    {",
+      '      "startDate": "2027-03-01",',
+      '      "endDate": "2027-03-05",',
+      '      "days": ["mon", "tue", "wed", "thu", "fri"],',
+      '      "from": "09:00",',
+      '      "to": "12:00",',
+      '      "interval": 60',
+      "    }",
+      "  ]",
       "}",
       "```",
       "",
@@ -436,12 +431,12 @@ app.post(
       "| Field | Meaning |",
       "| --- | --- |",
       "| `startDate`, `endDate` | The date range, inclusive. Fewer than 366 days. |",
-      "| `days` | Days of the week to include: `mon` to `sun`. Other days in the range are skipped. |",
-      "| `startTime` | Earliest slot start on each day, `HH:mm` in `timeZone`. |",
-      "| `endTime` | End of the daily window. A slot is only generated if it ends by this time. |",
+      "| `days` | Days of the week to include: `mon` to `sun`. Optional; defaults to every day. |",
+      "| `from` | Earliest slot start on each day, `HH:mm` in `timeZone`. |",
+      "| `to` | End of the daily window, `HH:mm` in `timeZone`. A slot is only generated if it ends by this time. Must be later than `from`. |",
       "| `interval` | Minutes between slot starts. Optional; defaults to `duration`, which gives back to back slots. |",
       "",
-      "Generators are expanded when the poll is created and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`; a generator whose window fits no slot produces nothing, and if nothing in `times` or `generators` yields a slot the request fails with `NO_OPTIONS_GENERATED`.",
+      "A generator that cannot produce a slot is rejected with `VALIDATION_ERROR` naming the field: `to` not later than `from`, a window shorter than `duration`, or a range that contains none of the listed days. Generators are expanded when the poll is created, the result is appended to `options`, and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -454,7 +449,7 @@ app.post(
         },
       },
       400: {
-        description: "Invalid input or no valid options generated",
+        description: "Invalid input",
         content: {
           "application/json": {
             schema: resolver(errorResponseSchema),
@@ -543,10 +538,8 @@ app.post(
       after(() => flushPostHog());
     };
 
-    const optionsInput = input.options;
-
-    if (optionsInput.kind === "date") {
-      const { dates } = optionsInput;
+    if (input.kind === "date") {
+      const dates = [...new Set(input.options.map((option) => option.date))];
       if (dates.length > MAX_POLL_OPTIONS) {
         return c.json(
           apiError(
@@ -557,19 +550,7 @@ app.post(
         );
       }
 
-      const uniqueDates = [...new Set(dates)];
-      if (uniqueDates.length < dates.length) {
-        const duplicateCount = dates.length - uniqueDates.length;
-        return c.json(
-          apiError(
-            "DUPLICATE_DATES",
-            `Duplicate dates found. Please remove ${duplicateCount} duplicate date${duplicateCount > 1 ? "s" : ""}.`,
-          ),
-          400,
-        );
-      }
-
-      const options = uniqueDates.map((date) => ({
+      const options = dates.map((date) => ({
         startTime: new Date(`${date}T00:00:00.000Z`),
         duration: 0,
       }));
@@ -593,33 +574,42 @@ app.post(
       return c.json(pollResponseSchema.parse(toPollResponseBody(poll)), 201);
     }
 
-    const timeZone = optionsInput.timeZone;
-    const duration = optionsInput.duration;
+    const { timeZone } = input;
+    // The schema guarantees a duration wherever it is read: every option
+    // without its own carries the poll default, and generators require it.
+    const defaultDuration = input.duration ?? 0;
 
     const timeSlots = [
-      ...(optionsInput.times ?? []).map((time) =>
-        parseStartTime(time, timeZone, duration),
+      ...(input.options ?? []).map((option) =>
+        parseStartTime(
+          option.startTime,
+          timeZone,
+          option.duration ?? defaultDuration,
+        ),
       ),
-      ...(optionsInput.generators ?? []).flatMap((generator) => {
+      ...(input.generators ?? []).flatMap((generator) => {
         const slotGenerator: SlotGeneratorInput = {
           startDate: generator.startDate,
           endDate: generator.endDate,
           daysOfWeek: generator.days,
-          fromTime: generator.startTime,
-          toTime: generator.endTime,
+          fromTime: generator.from,
+          toTime: generator.to,
           interval: generator.interval,
         };
-        return generateTimeSlots(slotGenerator, timeZone, duration);
+        return generateTimeSlots(slotGenerator, timeZone, defaultDuration);
       }),
     ];
 
     const options = dedupeTimeSlots(timeSlots);
 
+    // Unreachable for inputs the schema accepts; guards the poll against an
+    // expansion edge case (a window that vanishes on a DST change) rather
+    // than creating it empty.
     if (!options.length) {
       return c.json(
         apiError(
-          "NO_OPTIONS_GENERATED",
-          "No valid options were generated. Check that your slot generators produce valid time slots.",
+          "VALIDATION_ERROR",
+          "generators: no slot fits the daily window on any listed day.",
         ),
         400,
       );

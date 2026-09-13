@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Rallly API",
-    "description": "## Versioning\n\n`v1` is stable. Additive changes (new endpoints, new optional fields) may land on this path at any time; breaking changes only arrive under a new version prefix.\n\n## Rate limits\n\nAll endpoints share two limits per space: **60 requests per minute** and **5000 requests per day**. Both are fixed windows that open with the first request and reset when they expire. Both limits are per space, not per API key, so creating additional keys does not increase throughput.\n\nEvery response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.\n\nIf the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.\n\n## Dates and times\n\nEvery poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timeZone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.\n\n## Request bodies\n\nRequest bodies are validated strictly: a field that is not part of the documented schema is rejected with `VALIDATION_ERROR` rather than ignored, so a misspelt setting never silently falls back to its default.\n\n## Enums\n\nVote types are an open set. The built-in values are `yes`, `ifNeedBe` and `no`; new types may be added without a version change, so clients must tolerate values they do not recognise. `status` and `kind` are closed sets.\n\n## Lists\n\nEvery list endpoint returns the items in `data` and a `nextCursor` beside it. Pass `nextCursor` as the `cursor` query parameter to fetch the next page; it is `null` on the last page.\n\n## Errors\n\nEvery failure is `application/json` with the shape `{ \"error\": { \"code\", \"message\" } }`. `code` is stable and safe to branch on; `message` is human-readable and may change. `VALIDATION_ERROR` messages name each offending field.\n\n| Status | Code | When |\n| --- | --- | --- |\n| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, contained an unknown field, or the body was not valid JSON |\n| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |\n| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |\n| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |\n| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |\n| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |\n| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |\n| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |\n| 404 | `NOT_FOUND` | No route matches the method and path |\n| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |\n| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |\n| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |\n| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |\n| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
+    "description": "## Versioning\n\n`v1` is stable. Additive changes (new endpoints, new optional fields) may land on this path at any time; breaking changes only arrive under a new version prefix.\n\n## Rate limits\n\nAll endpoints share two limits per space: **60 requests per minute** and **5000 requests per day**. Both are fixed windows that open with the first request and reset when they expire. Both limits are per space, not per API key, so creating additional keys does not increase throughput.\n\nEvery response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.\n\nIf the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.\n\n## Dates and times\n\nEvery poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timeZone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.\n\n## Request bodies\n\nRequest bodies are validated strictly: a field that is not part of the documented schema is rejected with `VALIDATION_ERROR` rather than ignored, so a misspelt setting never silently falls back to its default.\n\n## Enums\n\nVote types are an open set. The built-in values are `yes`, `ifNeedBe` and `no`; new types may be added without a version change, so clients must tolerate values they do not recognise. `status` and `kind` are closed sets.\n\n## Lists\n\nEvery list endpoint returns the items in `data` and a `nextCursor` beside it. Pass `nextCursor` as the `cursor` query parameter to fetch the next page; it is `null` on the last page.\n\n## Errors\n\nEvery failure is `application/json` with the shape `{ \"error\": { \"code\", \"message\" } }`. `code` is stable and safe to branch on; `message` is human-readable and may change. `VALIDATION_ERROR` messages name each offending field.\n\n| Status | Code | When |\n| --- | --- | --- |\n| 400 | `VALIDATION_ERROR` | The body or query string did not match the schema, contained an unknown field, or the body was not valid JSON |\n| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |\n| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |\n| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |\n| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |\n| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |\n| 404 | `NOT_FOUND` | No route matches the method and path |\n| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |\n| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |\n| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |\n| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |\n| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
     "version": "1.0.0"
   },
   "servers": [
@@ -309,154 +309,7 @@
           "error"
         ]
       },
-      "DateOptions": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "const": "date"
-          },
-          "dates": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "date"
-            },
-            "description": "Calendar days to offer. Each becomes one all-day option. A day may appear once.",
-            "example": [
-              "2027-03-01",
-              "2027-03-02",
-              "2027-03-03"
-            ]
-          }
-        },
-        "required": [
-          "kind",
-          "dates"
-        ],
-        "additionalProperties": false,
-        "title": "Date poll",
-        "description": "Whole days. Dates are floating calendar days with no timezone, so never convert them through one."
-      },
-      "TimeOptions": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "const": "time"
-          },
-          "duration": {
-            "type": "integer",
-            "minimum": 15,
-            "maximum": 1440,
-            "description": "Length of every slot in minutes",
-            "example": 30
-          },
-          "timeZone": {
-            "description": "IANA time zone the times are written in. Datetime strings without an offset are interpreted in this zone. If omitted, offset-less datetimes are floating times (no conversion) and the poll has no time zone.",
-            "example": "Europe/London",
-            "type": "string"
-          },
-          "times": {
-            "description": "Explicit slots, one per start time.",
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "date-time",
-              "description": "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
-              "example": "2027-03-01T09:00:00"
-            }
-          },
-          "generators": {
-            "description": "Slot generators. Each expands into recurring slots from a schedule.",
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SlotGenerator"
-            }
-          }
-        },
-        "required": [
-          "kind",
-          "duration"
-        ],
-        "additionalProperties": false,
-        "title": "Time poll",
-        "description": "Time slots that share one duration. Provide `times`, `generators` or both. Duplicate slots are removed."
-      },
-      "SlotGenerator": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "format": "date",
-            "description": "First day of the range to generate slots on, inclusive.",
-            "example": "2027-03-01"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date",
-            "description": "Last day of the range, inclusive. The range must span fewer than 366 days.",
-            "example": "2027-03-05"
-          },
-          "days": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "mon",
-                "tue",
-                "wed",
-                "thu",
-                "fri",
-                "sat",
-                "sun"
-              ]
-            },
-            "description": "Days of the week to generate slots on. Days in the range that are not listed are skipped.",
-            "example": [
-              "mon",
-              "tue",
-              "wed",
-              "thu",
-              "fri"
-            ]
-          },
-          "startTime": {
-            "type": "string",
-            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
-            "description": "Earliest slot start on each day, as a wall clock time in `timeZone`.",
-            "example": "09:00"
-          },
-          "endTime": {
-            "type": "string",
-            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
-            "description": "End of the daily window. A slot is only generated if it ends at or before this time.",
-            "example": "17:00"
-          },
-          "interval": {
-            "description": "Minutes between consecutive slot starts. Defaults to `duration`, which produces back to back slots.",
-            "example": 60,
-            "type": "integer",
-            "minimum": 15,
-            "maximum": 1440
-          }
-        },
-        "required": [
-          "startDate",
-          "endDate",
-          "days",
-          "startTime",
-          "endTime"
-        ],
-        "additionalProperties": false,
-        "title": "Slot generator",
-        "description": "Expands into one slot of `duration` minutes every `interval` minutes between `startTime` and `endTime`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `endTime` are not generated."
-      },
-      "CreatePollInput": {
+      "CreateDatePollInput": {
         "type": "object",
         "properties": {
           "title": {
@@ -464,6 +317,11 @@
             "minLength": 1,
             "maxLength": 255,
             "example": "Team sync"
+          },
+          "kind": {
+            "type": "string",
+            "const": "date",
+            "description": "Participants vote on whole days."
           },
           "description": {
             "example": "Pick a time that works for everyone",
@@ -517,29 +375,259 @@
             "additionalProperties": false
           },
           "options": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/DateOptions"
-              },
-              {
-                "$ref": "#/components/schemas/TimeOptions"
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateOptionInput"
+            },
+            "description": "Calendar days to offer. Dates are floating calendar days with no timezone, so never convert them through one. Duplicates are removed."
+          }
+        },
+        "required": [
+          "title",
+          "kind",
+          "options"
+        ],
+        "additionalProperties": false,
+        "title": "Date poll"
+      },
+      "DateOptionInput": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Calendar day to offer, as a floating `YYYY-MM-DD` date.",
+            "example": "2027-03-01"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "additionalProperties": false,
+        "title": "Date option",
+        "description": "One all-day option. The same shape `DateOption` returns."
+      },
+      "CreateTimePollInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "example": "Team sync"
+          },
+          "kind": {
+            "type": "string",
+            "const": "time",
+            "description": "Participants vote on time slots."
+          },
+          "description": {
+            "example": "Pick a time that works for everyone",
+            "type": "string",
+            "maxLength": 1000
+          },
+          "location": {
+            "example": "Zoom",
+            "type": "string",
+            "maxLength": 255
+          },
+          "requireEmail": {
+            "description": "Require participants to provide their email address",
+            "example": true,
+            "type": "boolean"
+          },
+          "hideParticipants": {
+            "description": "Hide participant names from other participants",
+            "example": false,
+            "type": "boolean"
+          },
+          "hideScores": {
+            "description": "Hide vote counts from participants",
+            "example": false,
+            "type": "boolean"
+          },
+          "disableComments": {
+            "description": "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
+            "example": false,
+            "type": "boolean"
+          },
+          "allowTentativeVotes": {
+            "description": "Allow participants to answer \"if need be\" as well as yes and no. Defaults to true.",
+            "example": true,
+            "type": "boolean"
+          },
+          "organizer": {
+            "description": "Organizer of the poll. Defaults to the space owner if not provided. The organizer must be a member of the space.",
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Email address of the organizer",
+                "example": "organizer@example.com"
               }
+            },
+            "required": [
+              "email"
             ],
-            "description": "What participants vote on: whole days (`kind: date`) or time slots (`kind: time`).",
-            "discriminator": {
-              "propertyName": "kind",
-              "mapping": {
-                "date": "#/components/schemas/DateOptions",
-                "time": "#/components/schemas/TimeOptions"
-              }
+            "additionalProperties": false
+          },
+          "timeZone": {
+            "description": "IANA time zone the times are written in. Datetime strings without an offset are interpreted in this zone. If omitted, offset-less datetimes are floating times (no conversion) and the poll has no time zone.",
+            "example": "Europe/London",
+            "type": "string"
+          },
+          "duration": {
+            "description": "Default slot length in minutes. Required when `generators` is set or an option omits its own `duration`.",
+            "example": 30,
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 1440
+          },
+          "options": {
+            "description": "Explicit slots. Provide `options`, `generators` or both. Duplicates are removed.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeOptionInput"
+            }
+          },
+          "generators": {
+            "description": "Slot generators. Each expands into recurring slots from a schedule and the result is appended to `options`.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SlotGenerator"
             }
           }
         },
         "required": [
           "title",
-          "options"
+          "kind"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "title": "Time poll"
+      },
+      "TimeOptionInput": {
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
+            "example": "2027-03-01T09:00:00"
+          },
+          "duration": {
+            "description": "Length of this slot in minutes. Defaults to the poll's `duration`.",
+            "example": 30,
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 1440
+          }
+        },
+        "required": [
+          "startTime"
+        ],
+        "additionalProperties": false,
+        "title": "Time option",
+        "description": "One time slot. The same shape `TimeOption` returns."
+      },
+      "SlotGenerator": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "First day of the range to generate slots on, inclusive.",
+            "example": "2027-03-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Last day of the range, inclusive. The range must span fewer than 366 days.",
+            "example": "2027-03-05"
+          },
+          "days": {
+            "default": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri",
+              "sat",
+              "sun"
+            ],
+            "description": "Days of the week to generate slots on. Days in the range that are not listed are skipped. Defaults to every day.",
+            "example": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri"
+            ],
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "mon",
+                "tue",
+                "wed",
+                "thu",
+                "fri",
+                "sat",
+                "sun"
+              ]
+            }
+          },
+          "from": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+            "description": "Earliest slot start on each day, as a wall clock time in `timeZone`.",
+            "example": "09:00"
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+            "description": "End of the daily window, as a wall clock time in `timeZone`. A slot is only generated if it ends at or before this time.",
+            "example": "17:00"
+          },
+          "interval": {
+            "description": "Minutes between consecutive slot starts. Defaults to `duration`, which produces back to back slots.",
+            "example": 60,
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 1440
+          }
+        },
+        "required": [
+          "startDate",
+          "endDate",
+          "from",
+          "to"
+        ],
+        "additionalProperties": false,
+        "title": "Slot generator",
+        "description": "Expands into one slot of `duration` minutes every `interval` minutes between `from` and `to`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `to` are not generated."
+      },
+      "CreatePollInput": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CreateDatePollInput"
+          },
+          {
+            "$ref": "#/components/schemas/CreateTimePollInput"
+          }
+        ],
+        "description": "`kind` chooses what participants vote on: whole days (`date`) or time slots (`time`). The request mirrors the poll the API returns: the same settings, and `options` in the same shape as the response.",
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "date": "#/components/schemas/CreateDatePollInput",
+            "time": "#/components/schemas/CreateTimePollInput"
+          }
+        }
       },
       "ListPollsResponse": {
         "type": "object",
@@ -884,7 +972,7 @@
           "Polls"
         ],
         "summary": "Create a poll",
-        "description": "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. `options.kind` chooses what participants vote on: whole days or time slots. A poll has at most 100 options.\n\n## Date poll\n\nPass `kind: \"date\"` and `dates`, a list of `YYYY-MM-DD` values. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. A repeated date fails with `DUPLICATE_DATES`.\n\n```json\n{\n  \"title\": \"Team offsite\",\n  \"options\": {\n    \"kind\": \"date\",\n    \"dates\": [\"2027-03-01\", \"2027-03-02\", \"2027-03-03\"]\n  }\n}\n```\n\n## Time poll\n\nPass `kind: \"time\"` with a `duration` in minutes that every slot shares, the slots themselves as `times`, `generators` or both, and optionally a `timeZone` (an IANA zone the times are written in).\n\n### Explicit times\n\nEach ISO datetime string in `times` becomes one slot starting at that moment. A time with no offset, like `2027-03-01T09:00:00`, is wall clock time in `timeZone` when that is set and a floating time with no conversion otherwise; a time with an offset or `Z` is an absolute instant.\n\n```json\n{\n  \"title\": \"Kickoff\",\n  \"options\": {\n    \"kind\": \"time\",\n    \"duration\": 60,\n    \"timeZone\": \"Europe/London\",\n    \"times\": [\"2027-03-01T09:00:00\", \"2027-03-02T14:00:00\"]\n  }\n}\n```\n\n### Slot generators\n\nEach object in `generators` expands into recurring slots from a schedule, so availability across days or weeks does not have to be listed slot by slot.\n\n```json\n{\n  \"title\": \"Interview availability\",\n  \"options\": {\n    \"kind\": \"time\",\n    \"duration\": 30,\n    \"timeZone\": \"America/New_York\",\n    \"generators\": [\n      {\n        \"startDate\": \"2027-03-01\",\n        \"endDate\": \"2027-03-05\",\n        \"days\": [\"mon\", \"tue\", \"wed\", \"thu\", \"fri\"],\n        \"startTime\": \"09:00\",\n        \"endTime\": \"12:00\",\n        \"interval\": 60\n      }\n    ]\n  }\n}\n```\n\nThis produces 30 minute slots at 09:00, 10:00 and 11:00 New York time on each weekday from 1 to 5 March, fifteen options in all. Drop `interval` and the window fills with back to back slots at 09:00, 09:30, 10:00, 10:30, 11:00 and 11:30.\n\n| Field | Meaning |\n| --- | --- |\n| `startDate`, `endDate` | The date range, inclusive. Fewer than 366 days. |\n| `days` | Days of the week to include: `mon` to `sun`. Other days in the range are skipped. |\n| `startTime` | Earliest slot start on each day, `HH:mm` in `timeZone`. |\n| `endTime` | End of the daily window. A slot is only generated if it ends by this time. |\n| `interval` | Minutes between slot starts. Optional; defaults to `duration`, which gives back to back slots. |\n\nGenerators are expanded when the poll is created and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`; a generator whose window fits no slot produces nothing, and if nothing in `times` or `generators` yields a slot the request fails with `NO_OPTIONS_GENERATED`.",
+        "description": "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. The request mirrors the response: `kind` chooses what participants vote on, and `options` takes the same shape the poll returns, so a poll can be recreated from the body of a `GET`. A poll has at most 100 options.\n\n## Date poll\n\nPass `kind: \"date\"` and `options`, one `{ \"date\": \"YYYY-MM-DD\" }` per day. Each becomes one all-day option. Dates are floating calendar days with no timezone, so never convert them through one. Duplicate dates are removed.\n\n```json\n{\n  \"title\": \"Team offsite\",\n  \"kind\": \"date\",\n  \"options\": [{ \"date\": \"2027-03-01\" }, { \"date\": \"2027-03-02\" }, { \"date\": \"2027-03-03\" }]\n}\n```\n\n## Time poll\n\nPass `kind: \"time\"`, optionally a `timeZone` (an IANA zone the times are written in) and a default `duration` in minutes, and the slots as `options`, `generators` or both.\n\n### Explicit slots\n\nEach entry in `options` is one slot: a `startTime` and an optional `duration` that overrides the poll default. A `startTime` with no offset, like `2027-03-01T09:00:00`, is wall clock time in `timeZone` when that is set and a floating time with no conversion otherwise; one with an offset or `Z` is an absolute instant.\n\n```json\n{\n  \"title\": \"Kickoff\",\n  \"kind\": \"time\",\n  \"timeZone\": \"Europe/London\",\n  \"duration\": 60,\n  \"options\": [\n    { \"startTime\": \"2027-03-01T09:00:00\" },\n    { \"startTime\": \"2027-03-02T14:00:00\", \"duration\": 90 }\n  ]\n}\n```\n\n### Slot generators\n\nEach object in `generators` expands into recurring slots of `duration` minutes from a schedule, so availability across days or weeks does not have to be listed slot by slot. `duration` is required when `generators` is set.\n\n```json\n{\n  \"title\": \"Interview availability\",\n  \"kind\": \"time\",\n  \"timeZone\": \"America/New_York\",\n  \"duration\": 30,\n  \"generators\": [\n    {\n      \"startDate\": \"2027-03-01\",\n      \"endDate\": \"2027-03-05\",\n      \"days\": [\"mon\", \"tue\", \"wed\", \"thu\", \"fri\"],\n      \"from\": \"09:00\",\n      \"to\": \"12:00\",\n      \"interval\": 60\n    }\n  ]\n}\n```\n\nThis produces 30 minute slots at 09:00, 10:00 and 11:00 New York time on each weekday from 1 to 5 March, fifteen options in all. Drop `interval` and the window fills with back to back slots at 09:00, 09:30, 10:00, 10:30, 11:00 and 11:30.\n\n| Field | Meaning |\n| --- | --- |\n| `startDate`, `endDate` | The date range, inclusive. Fewer than 366 days. |\n| `days` | Days of the week to include: `mon` to `sun`. Optional; defaults to every day. |\n| `from` | Earliest slot start on each day, `HH:mm` in `timeZone`. |\n| `to` | End of the daily window, `HH:mm` in `timeZone`. A slot is only generated if it ends by this time. Must be later than `from`. |\n| `interval` | Minutes between slot starts. Optional; defaults to `duration`, which gives back to back slots. |\n\nA generator that cannot produce a slot is rejected with `VALIDATION_ERROR` naming the field: `to` not later than `from`, a window shorter than `duration`, or a range that contains none of the listed days. Generators are expanded when the poll is created, the result is appended to `options`, and duplicate slots are removed. A request that would exceed 100 options fails with `TOO_MANY_OPTIONS`.",
         "security": [
           {
             "bearerAuth": []
@@ -902,7 +990,7 @@
             }
           },
           "400": {
-            "description": "Invalid input or no valid options generated",
+            "description": "Invalid input",
             "content": {
               "application/json": {
                 "schema": {
@@ -985,35 +1073,42 @@
               "examples": {
                 "Date poll": {
                   "summary": "Date poll (all-day options)",
-                  "description": "Let participants pick between calendar days. Each date becomes an all-day option.",
+                  "description": "Let participants pick between calendar days. Each option is one all-day date.",
                   "value": {
                     "title": "Team offsite",
+                    "kind": "date",
                     "description": "Which days work for a two day offsite?",
-                    "options": {
-                      "kind": "date",
-                      "dates": [
-                        "2027-03-01",
-                        "2027-03-02",
-                        "2027-03-03"
-                      ]
-                    }
+                    "options": [
+                      {
+                        "date": "2027-03-01"
+                      },
+                      {
+                        "date": "2027-03-02"
+                      },
+                      {
+                        "date": "2027-03-03"
+                      }
+                    ]
                   }
                 },
-                "Time poll with explicit times": {
-                  "summary": "Time poll (explicit times)",
-                  "description": "Offer specific time slots. Datetimes without an offset are interpreted as wall-clock in `timeZone` — this example offers 09:00 and 14:00 in London. Append `Z` or an offset to specify an absolute instant instead.",
+                "Time poll with explicit slots": {
+                  "summary": "Time poll (explicit slots)",
+                  "description": "Offer specific time slots. Datetimes without an offset are wall clock times in `timeZone`; this example offers 09:00 and 14:00 in London. Append `Z` or an offset for an absolute instant instead. A slot may override the poll's `duration`.",
                   "value": {
                     "title": "Project kickoff",
+                    "kind": "time",
                     "location": "Zoom",
-                    "options": {
-                      "kind": "time",
-                      "duration": 60,
-                      "timeZone": "Europe/London",
-                      "times": [
-                        "2027-03-01T09:00:00",
-                        "2027-03-01T14:00:00"
-                      ]
-                    }
+                    "timeZone": "Europe/London",
+                    "duration": 60,
+                    "options": [
+                      {
+                        "startTime": "2027-03-01T09:00:00"
+                      },
+                      {
+                        "startTime": "2027-03-01T14:00:00",
+                        "duration": 90
+                      }
+                    ]
                   }
                 },
                 "Time poll with a slot generator": {
@@ -1021,54 +1116,52 @@
                   "description": "Expand recurring slots across a date range. This example generates 30 minute slots at 09:00, 10:00 and 11:00 (New York time) every weekday from 1 to 5 March.",
                   "value": {
                     "title": "Interview availability",
-                    "options": {
-                      "kind": "time",
-                      "duration": 30,
-                      "timeZone": "America/New_York",
-                      "generators": [
-                        {
-                          "startDate": "2027-03-01",
-                          "endDate": "2027-03-05",
-                          "days": [
-                            "mon",
-                            "tue",
-                            "wed",
-                            "thu",
-                            "fri"
-                          ],
-                          "startTime": "09:00",
-                          "endTime": "12:00",
-                          "interval": 60
-                        }
-                      ]
-                    }
+                    "kind": "time",
+                    "timeZone": "America/New_York",
+                    "duration": 30,
+                    "generators": [
+                      {
+                        "startDate": "2027-03-01",
+                        "endDate": "2027-03-05",
+                        "days": [
+                          "mon",
+                          "tue",
+                          "wed",
+                          "thu",
+                          "fri"
+                        ],
+                        "from": "09:00",
+                        "to": "12:00",
+                        "interval": 60
+                      }
+                    ]
                   }
                 },
-                "Time poll mixing times and a generator": {
-                  "summary": "Time poll (explicit times + generator)",
-                  "description": "`times` and `generators` combine. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
+                "Time poll mixing slots and a generator": {
+                  "summary": "Time poll (explicit slots + generator)",
+                  "description": "`options` and `generators` combine. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
                   "value": {
                     "title": "Product workshop",
-                    "options": {
-                      "kind": "time",
-                      "duration": 90,
-                      "timeZone": "Europe/Berlin",
-                      "times": [
-                        "2027-03-06T10:00:00"
-                      ],
-                      "generators": [
-                        {
-                          "startDate": "2027-03-08",
-                          "endDate": "2027-03-10",
-                          "days": [
-                            "mon",
-                            "wed"
-                          ],
-                          "startTime": "14:00",
-                          "endTime": "17:00"
-                        }
-                      ]
-                    }
+                    "kind": "time",
+                    "timeZone": "Europe/Berlin",
+                    "duration": 90,
+                    "options": [
+                      {
+                        "startTime": "2027-03-06T10:00:00"
+                      }
+                    ],
+                    "generators": [
+                      {
+                        "startDate": "2027-03-08",
+                        "endDate": "2027-03-10",
+                        "days": [
+                          "mon",
+                          "wed"
+                        ],
+                        "from": "14:00",
+                        "to": "17:00"
+                      }
+                    ]
                   }
                 }
               }
