@@ -73,6 +73,14 @@ export async function getUserDeletionDetails(userId: string) {
   };
 }
 
+export const getUserLocaleByEmail = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: { email: email.toLowerCase() },
+    select: { locale: true },
+  });
+  return user?.locale ?? null;
+};
+
 export const isEmailTaken = async (email: string) => {
   const user = await prisma.user.findUnique({
     where: { email: email.toLowerCase() },

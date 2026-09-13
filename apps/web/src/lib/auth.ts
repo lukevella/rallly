@@ -32,6 +32,7 @@ import {
 } from "@/features/auth/utils";
 import { getStripe } from "@/features/billing/service";
 import { isRegistrationOpen } from "@/features/instance-settings/data";
+import { getUserLocaleByEmail } from "@/features/user/data";
 import type { UserDTO } from "@/features/user/schema";
 import { jobTitleFieldSchema } from "@/features/user/schema";
 import { getTranslation } from "@/i18n/server";
@@ -147,7 +148,7 @@ export const authLib = betterAuth({
     disableSignUp: true,
     sendResetPassword: async ({ user, url }) => {
       const locale =
-        "locale" in user ? (user.locale as string) : await getLocale();
+        (await getUserLocaleByEmail(user.email)) ?? (await getLocale());
 
       await sendResetPasswordEmail({
         to: user.email,
@@ -196,7 +197,10 @@ export const authLib = betterAuth({
         enabled: true,
       },
       async sendVerificationOTP({ email, otp, type }) {
-        const locale = await getLocale(); // TODO: Get locale from email
+        // The recipient may not be the requester, so an account's saved
+        // language wins over the device that asked for the code.
+        const locale =
+          (await getUserLocaleByEmail(email)) ?? (await getLocale());
         const branding = await getInstanceBranding();
         switch (type) {
           // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.

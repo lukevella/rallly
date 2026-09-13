@@ -8,18 +8,17 @@ import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 // misconfigured server var. Shape is still validated in `@/env`.
 const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
 
+// The proxy runs on the edge with a NextRequest, where next/headers is
+// unavailable; everywhere else uses getLocale() from @/i18n/server/get-locale.
 export function getLocaleFromRequest(req: NextRequest) {
-  const localeCookie = req.cookies.get(LOCALE_COOKIE_NAME);
-  if (localeCookie && supportedLngs.includes(localeCookie.value)) {
-    return localeCookie.value;
+  const cookieLocale = req.cookies.get(LOCALE_COOKIE_NAME)?.value;
+  if (cookieLocale && supportedLngs.includes(cookieLocale)) {
+    return cookieLocale;
   }
 
   const acceptLanguageHeader = req.headers.get("accept-language");
-
   if (acceptLanguageHeader) {
-    return getPreferredLocaleFromHeaders({
-      acceptLanguageHeader,
-    });
+    return getPreferredLocaleFromHeaders({ acceptLanguageHeader });
   }
 
   return defaultLocale;
