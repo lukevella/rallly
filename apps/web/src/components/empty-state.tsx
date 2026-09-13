@@ -38,7 +38,7 @@ export function EmptyStateTitle({
   as?: "p" | "h1" | "h2";
   children: React.ReactNode;
 }) {
-  return <Component className="font-semibold text-base">{children}</Component>;
+  return <Component className="font-medium text-base">{children}</Component>;
 }
 
 export function EmptyStateDescription({
