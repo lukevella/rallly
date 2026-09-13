@@ -45,7 +45,7 @@ After creating the application, set the redirect URI to:
 https://<YOUR_DOMAIN>/api/auth/callback/microsoft-entra-id
 ```
 
-On a multi-tenant endpoint (`MICROSOFT_TENANT_ID` set to `common`, `organizations` or `consumers`) any tenant can assert any email address, so Rallly needs Microsoft to confirm the address before it creates an account from it. Microsoft does not include that information unless the app registration asks for it. While the claims are missing, Rallly still creates the account and logs a warning at sign-in; a later release will refuse these sign-ins. Add the `verified_primary_email` and `verified_secondary_email` optional claims to the ID token: in the app registration open **Manifest** and add these two entries to the `optionalClaims.idToken` array, keeping any claims already there:
+On a multi-tenant endpoint (`MICROSOFT_TENANT_ID` set to `common`, `organizations` or `consumers`) any tenant can assert any email address, so Rallly needs Microsoft to confirm the address before it creates an account from it. Microsoft does not include that information unless the app registration asks for it, so a multi-tenant registration must emit the verified email claims: without them every new Microsoft sign-in fails with "Your email address is not verified". Add the `verified_primary_email` and `verified_secondary_email` optional claims to the ID token: in the app registration open **Manifest** and add these two entries to the `optionalClaims.idToken` array, keeping any claims already there:
 
 ```json
 { "name": "verified_primary_email", "source": null, "essential": false, "additionalProperties": [] },
