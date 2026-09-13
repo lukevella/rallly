@@ -1,20 +1,23 @@
 import { buttonVariants } from "@rallly/ui";
 import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { ShieldAlertIcon } from "lucide-react";
+import { ShieldAlertIcon, TrashIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { ErrorPage } from "@/components/error-page";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateFooter,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { Link } from "@/components/link";
-import { env } from "@/env";
-import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { getTranslation } from "@/i18n/server";
 
 export type PollUnavailableReason = "deleted" | "removed";
 
 // Shown in place of the invite page when the poll exists but must not be
 // served. "removed" means the creator was banned, which is usually a scam:
-// the viewer is the intended victim, so the copy warns them and offers a
-// way to report the link. It never names the poll, its creator, or a reason
-// more specific than the terms of use.
+// the viewer is the intended victim, so the copy warns them. It never names
+// the poll, its creator, or a reason more specific than the terms of use.
 export async function PollUnavailable({
   reason,
 }: {
@@ -24,60 +27,70 @@ export async function PollUnavailable({
 
   if (reason === "deleted") {
     return (
-      <ErrorPage
-        logo={<DefaultLogo />}
-        label={t("pollUnavailableLabel", { defaultValue: "Poll unavailable" })}
-        title={t("pollDeletedTitle", {
-          defaultValue: "This poll has been deleted",
-        })}
-        description={t("pollDeletedDescription", {
-          defaultValue: "The person who created this poll has deleted it.",
-        })}
-        actions={
-          <Link
-            href="/"
-            className={buttonVariants({ size: "lg", variant: "primary" })}
-          >
+      <main id="main-content" tabIndex={-1} className="flex h-dvh flex-col p-4">
+        <EmptyState className="flex-1">
+          <EmptyStateIcon>
+            <TrashIcon />
+          </EmptyStateIcon>
+          <EmptyStateTitle as="h1">
             <Trans
               t={t}
               i18n={i18n}
               ns="app"
-              i18nKey="errorBackToHome"
-              defaults="Back to home"
+              i18nKey="pollDeletedTitle"
+              defaults="This poll has been deleted"
             />
-          </Link>
-        }
-      />
+          </EmptyStateTitle>
+          <EmptyStateDescription>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="app"
+              i18nKey="pollDeletedDescription"
+              defaults="The person who created this poll has deleted it."
+            />
+          </EmptyStateDescription>
+          <EmptyStateFooter>
+            <Link href="/" className={buttonVariants()}>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="app"
+                i18nKey="errorBackToHome"
+                defaults="Back to home"
+              />
+            </Link>
+          </EmptyStateFooter>
+        </EmptyState>
+      </main>
     );
   }
 
   return (
-    <ErrorPage
-      logo={<DefaultLogo />}
-      label={t("pollUnavailableLabel", { defaultValue: "Poll unavailable" })}
-      title={t("pollRemovedTitle", {
-        defaultValue: "This poll has been removed",
-      })}
-      description={t("pollRemovedDescription", {
-        defaultValue:
-          "It violated our terms of use and is no longer available.",
-      })}
-      actions={
-        <a
-          href={`mailto:${env.SUPPORT_EMAIL}`}
-          className={buttonVariants({ size: "lg", variant: "primary" })}
-        >
+    <main id="main-content" tabIndex={-1} className="flex h-dvh flex-col p-4">
+      <EmptyState className="flex-1">
+        <EmptyStateIcon>
+          <ShieldAlertIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle as="h1">
           <Trans
             t={t}
             i18n={i18n}
             ns="app"
-            i18nKey="pollRemovedReportLink"
-            defaults="Report this link"
+            i18nKey="pollRemovedTitle"
+            defaults="This poll has been removed"
           />
-        </a>
-      }
-      notice={
-        <Alert variant="warning" className="p-4">
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            t={t}
+            i18n={i18n}
+            ns="app"
+            i18nKey="pollRemovedDescription"
+            defaults="It violated our terms of use and is no longer available."
+          />
+        </EmptyStateDescription>
+        <Alert variant="warning" className="mt-6 max-w-md">
           <ShieldAlertIcon />
           <AlertTitle>
             <Trans
@@ -98,7 +111,7 @@ export async function PollUnavailable({
             />
           </AlertDescription>
         </Alert>
-      }
-    />
+      </EmptyState>
+    </main>
   );
 }

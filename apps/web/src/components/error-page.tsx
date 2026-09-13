@@ -8,7 +8,6 @@ export function ErrorPage({
   label,
   title,
   description,
-  notice,
   children,
   actions,
 }: {
@@ -16,8 +15,7 @@ export function ErrorPage({
   label: React.ReactNode;
   title: React.ReactNode;
   description: React.ReactNode;
-  notice?: React.ReactNode;
-  children?: React.ReactNode;
+  children: React.ReactNode;
   actions: React.ReactNode;
 }) {
   return (
@@ -38,8 +36,7 @@ export function ErrorPage({
           </p>
         </div>
         <div className="mx-auto mt-16 flow-root max-w-lg">
-          {notice}
-          {children ? <ul className="grid">{children}</ul> : null}
+          <ul className="grid">{children}</ul>
           <div className="mt-16 flex items-center justify-center gap-x-4">
             {actions}
           </div>
