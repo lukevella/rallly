@@ -7,10 +7,8 @@ import { GithubIcon, HomeIcon, LifeBuoyIcon, PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ErrorPage, ErrorPageLinkItem } from "@/components/error-page";
-import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { Link } from "@/components/link";
 import { DefaultLogo } from "@/features/branding/components/default-logo";
-import { useInstanceFooterLinks } from "@/features/instance-settings/client";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
@@ -25,9 +23,6 @@ export default function LocaleErrorBoundary({
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = React.useState(false);
   const isInvalidSession = error.digest === INVALID_SESSION;
-  const footerLinks = useInstanceFooterLinks();
-  const footer =
-    footerLinks.length > 0 ? <InstanceFooterLinks links={footerLinks} /> : null;
 
   React.useEffect(() => {
     if (!isInvalidSession) {
@@ -68,7 +63,6 @@ export default function LocaleErrorBoundary({
             <Trans i18nKey="signOut" defaults="Sign out" />
           </Button>
         }
-        footer={footer}
       >
         {null}
       </ErrorPage>
@@ -96,7 +90,6 @@ export default function LocaleErrorBoundary({
           </Link>
         </>
       }
-      footer={footer}
     >
       <ErrorPageLinkItem
         href="/"
