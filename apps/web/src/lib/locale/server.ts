@@ -8,13 +8,16 @@ import { LOCALE_COOKIE_NAME } from "@/lib/locale/constants";
 // misconfigured server var. Shape is still validated in `@/env`.
 const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
 
-export function getLocaleFromRequest(req: NextRequest) {
-  const localeCookie = req.cookies.get(LOCALE_COOKIE_NAME);
-  if (localeCookie && supportedLngs.includes(localeCookie.value)) {
-    return localeCookie.value;
+export function resolveLocale({
+  cookieLocale,
+  acceptLanguageHeader,
+}: {
+  cookieLocale: string | undefined;
+  acceptLanguageHeader: string | null;
+}) {
+  if (cookieLocale && supportedLngs.includes(cookieLocale)) {
+    return cookieLocale;
   }
-
-  const acceptLanguageHeader = req.headers.get("accept-language");
 
   if (acceptLanguageHeader) {
     return getPreferredLocaleFromHeaders({
@@ -23,6 +26,13 @@ export function getLocaleFromRequest(req: NextRequest) {
   }
 
   return defaultLocale;
+}
+
+export function getLocaleFromRequest(req: NextRequest) {
+  return resolveLocale({
+    cookieLocale: req.cookies.get(LOCALE_COOKIE_NAME)?.value,
+    acceptLanguageHeader: req.headers.get("accept-language"),
+  });
 }
 
 export function setLocaleCookie(

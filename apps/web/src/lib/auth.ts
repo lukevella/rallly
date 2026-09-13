@@ -147,7 +147,7 @@ export const authLib = betterAuth({
     disableSignUp: true,
     sendResetPassword: async ({ user, url }) => {
       const locale =
-        "locale" in user ? (user.locale as string) : await getLocale();
+        (user as { locale?: string | null }).locale ?? (await getLocale());
 
       await sendResetPasswordEmail({
         to: user.email,
@@ -195,8 +195,14 @@ export const authLib = betterAuth({
       changeEmail: {
         enabled: true,
       },
-      async sendVerificationOTP({ email, otp, type }) {
-        const locale = await getLocale(); // TODO: Get locale from email
+      async sendVerificationOTP({ email, otp, type }, ctx) {
+        // An existing account's saved language wins over the device that
+        // requested the code; unknown addresses fall back to the request.
+        const existing =
+          await ctx?.context.internalAdapter.findUserByEmail(email);
+        const locale =
+          (existing?.user as { locale?: string | null } | undefined)?.locale ??
+          (await getLocale());
         const branding = await getInstanceBranding();
         switch (type) {
           // We're not actually using the sign-in type anymore since we just we have `autoSignInAfterVerification` enabled.
