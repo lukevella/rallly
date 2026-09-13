@@ -28,13 +28,9 @@ export async function PollUnavailable({
 
   if (reason === "deleted") {
     return (
-      <main
-        id="main-content"
-        tabIndex={-1}
-        className="flex min-h-dvh flex-col p-4 pt-10"
-      >
+      <main id="main-content" tabIndex={-1} className="p-4 pt-10">
         <DefaultLogo className="mx-auto" />
-        <EmptyState className="flex-1">
+        <EmptyState className="py-12">
           <EmptyStateIcon>
             <TrashIcon />
           </EmptyStateIcon>
@@ -73,13 +69,9 @@ export async function PollUnavailable({
   }
 
   return (
-    <main
-      id="main-content"
-      tabIndex={-1}
-      className="flex min-h-dvh flex-col p-4 pt-10"
-    >
+    <main id="main-content" tabIndex={-1} className="p-4 pt-10">
       <DefaultLogo className="mx-auto" />
-      <EmptyState className="flex-1">
+      <EmptyState className="py-12">
         <EmptyStateIcon>
           <ShieldAlertIcon />
         </EmptyStateIcon>
