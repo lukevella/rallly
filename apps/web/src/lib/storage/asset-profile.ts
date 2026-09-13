@@ -34,6 +34,7 @@ export const extensionByMimeType: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/svg+xml": "svg",
+  "application/pdf": "pdf",
 };
 
 export interface ParsedAssetKey {
