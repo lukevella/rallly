@@ -806,8 +806,10 @@ export const polls = router({
       });
 
       // A deleted poll is treated as if it never existed, for everyone
-      // including its owner and space managers.
-      if (!res || res.deleted) {
+      // including its owner and space managers. A banned creator's poll is
+      // hidden the same way: it is usually a scam lure and the page gate is
+      // not the only way to reach this read.
+      if (!res || res.deleted || res.user?.banned) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Poll not found",
