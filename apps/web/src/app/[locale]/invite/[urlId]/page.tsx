@@ -68,7 +68,8 @@ export default async function Page(props: {
   ]);
 
   if (unavailable) {
-    return <PollUnavailable reason={unavailable} />;
+    const footerLinks = await loadFooterLinks();
+    return <PollUnavailable reason={unavailable} footerLinks={footerLinks} />;
   }
 
   // The SSR helper reads the session; an unavailable poll never needs it.
