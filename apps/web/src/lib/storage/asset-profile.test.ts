@@ -53,6 +53,19 @@ describe("parseAssetKey", () => {
     ).toBe("logo-dark");
   });
 
+  it("maps a pdf extension back to its mime type", () => {
+    const documentProfile = {
+      id: "document",
+      keyPrefix: "documents",
+      accept: ["application/pdf", "image/png"],
+      maxSize: 1,
+    } as const satisfies AssetProfile;
+    expect(
+      parseAssetKey("documents/space1-1723800000000.pdf", [documentProfile])
+        ?.mimeType,
+    ).toBe("application/pdf");
+  });
+
   it("rejects keys whose prefix matches no profile", () => {
     expect(parseAssetKey("polls/abc-1723800000000.jpg", profiles)).toBeNull();
     expect(parseAssetKey("abc-1723800000000.jpg", profiles)).toBeNull();
