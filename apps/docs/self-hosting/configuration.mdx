@@ -74,12 +74,8 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
   <Note>Available from v4.8.0 and later.</Note>
 </ParamField>
 
-<ParamField path="SMTP_DEBUG" default="false">
-  Set to `true` to log the full SMTP conversation. Useful for troubleshooting email delivery issues.
-
-  <Warning>Debug output includes the authentication exchange, where credentials are only base64 encoded. Enable this only while troubleshooting and redact your logs before sharing them.</Warning>
-
-  <Note>Available from v4.12.0 and later.</Note>
+<ParamField path="SMTP_DEBUG" deprecated>
+  No longer supported since v4.16.0 and can be removed from your configuration. Send failures are now logged with the SMTP server's response (`errorResponse`, `errorResponseCode`, `errorCommand`), which covers the cases this option was used for. For connection level diagnosis, run `openssl s_client -starttls smtp -connect <host>:<port>` for STARTTLS (`SMTP_SECURE=false`), or `openssl s_client -connect <host>:<port>` for implicit TLS (`SMTP_SECURE=true`, usually port 465).
 </ParamField>
 
 ## Auth

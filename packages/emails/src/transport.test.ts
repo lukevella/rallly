@@ -6,10 +6,6 @@ vi.mock("nodemailer", () => ({
   createTransport: (options: unknown) => createTransport(options),
 }));
 
-vi.mock("@rallly/logger", () => ({
-  logger: { child: () => ({}) },
-}));
-
 const { createTransportForProvider } = await import("./transport");
 
 const SMTP_ENV_VARS = [
@@ -18,7 +14,6 @@ const SMTP_ENV_VARS = [
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_SECURE",
-  "SMTP_DEBUG",
 ];
 
 const savedEnv: Record<string, string | undefined> = {};

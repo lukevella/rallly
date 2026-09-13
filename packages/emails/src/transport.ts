@@ -1,16 +1,9 @@
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
-import { logger } from "@rallly/logger";
 import type { Transporter } from "nodemailer";
 import { createTransport } from "nodemailer";
 
 type EmailProvider = "ses" | "smtp";
-
-// Pino's (obj, msg) call signature matches nodemailer's bunyan-style logger,
-// so the child can be handed over as is.
-function createSmtpDebugLogger() {
-  return logger.child({ name: "smtp" }, { level: "trace" });
-}
 
 export type SupportedEmailProviders = EmailProvider;
 
@@ -48,13 +41,14 @@ export function createTransportForProvider(provider: EmailProvider) {
         );
       }
 
+      if (process.env.SMTP_DEBUG === "true") {
+        console.warn(
+          "⚠️  SMTP_DEBUG is no longer supported and can be removed. Send failures are logged with the SMTP server's response.",
+        );
+      }
+
       const rejectUnauthorized =
         process.env.SMTP_REJECT_UNAUTHORIZED !== "false";
-
-      // Logs the full SMTP conversation including the auth exchange, where
-      // credentials are only base64 encoded. Never enable outside of
-      // troubleshooting.
-      const debug = process.env.SMTP_DEBUG === "true";
 
       // Warn about security change if no explicit setting
       if (
@@ -80,8 +74,6 @@ export function createTransportForProvider(provider: EmailProvider) {
           rejectUnauthorized,
           servername: process.env.SMTP_TLS_SERVERNAME,
         },
-        debug,
-        logger: debug ? createSmtpDebugLogger() : undefined,
       });
     }
   }

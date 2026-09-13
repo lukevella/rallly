@@ -52,6 +52,76 @@ type DispatchOptions = {
   errorLabel: string;
 };
 
+// Local part is either a quoted string with backslash escapes (RFC 5321
+// §4.1.2) or a run of unquoted characters.
+const ADDRESS_PATTERN = /(?:"(?:\\.|[^"\\])*"|[^\s<>,;:"]+)@[^\s<>,;:"]+/g;
+
+/**
+ * Domains of every address in a nodemailer `to` string (comma or semicolon
+ * separated, display-name wrappers allowed), deduplicated and lowercased.
+ * Enough to tell a misconfigured provider from a single bad mailbox without
+ * putting an address in the log sink.
+ */
+export function recipientDomains(to: string) {
+  const domains = new Set<string>();
+  for (const address of to.match(ADDRESS_PATTERN) ?? []) {
+    domains.add(address.slice(address.lastIndexOf("@") + 1).toLowerCase());
+  }
+  return [...domains];
+}
+
+/** Replaces anything address-shaped so SMTP replies can be logged verbatim. */
+export function scrubAddresses(text: string) {
+  return text.replace(ADDRESS_PATTERN, "[redacted]");
+}
+
+/**
+ * Nodemailer rejections carry the recipient in `message`, `response`,
+ * `rejected` and `rejectedErrors`, so the raw error must not be logged.
+ * Keeps the fields an operator needs to diagnose a transport failure.
+ */
+/**
+ * Nodemailer's send result. Only the SMTP transport fills `accepted`,
+ * `rejected` and `response`; SES returns its own shape.
+ */
+function describeSendResult(info: unknown) {
+  if (typeof info !== "object" || info === null) {
+    return {};
+  }
+  const { messageId, accepted, rejected, response } = info as {
+    messageId?: string;
+    accepted?: unknown[];
+    rejected?: unknown[];
+    response?: string;
+  };
+  return {
+    messageId,
+    acceptedCount: Array.isArray(accepted) ? accepted.length : undefined,
+    rejectedCount: Array.isArray(rejected) ? rejected.length : undefined,
+    response: response ? scrubAddresses(response) : undefined,
+  };
+}
+
+function describeTransportError(e: unknown) {
+  if (!(e instanceof Error)) {
+    return { errorMessage: scrubAddresses(String(e)) };
+  }
+  const { code, command, responseCode, response } = e as Error & {
+    code?: string;
+    command?: string;
+    responseCode?: number;
+    response?: string;
+  };
+  return {
+    errorName: e.name,
+    errorMessage: scrubAddresses(e.message),
+    errorCode: code,
+    errorCommand: command,
+    errorResponseCode: responseCode,
+    errorResponse: response ? scrubAddresses(response) : undefined,
+  };
+}
+
 function buildHeaders(
   listUnsubscribeUrl?: string,
 ): Record<string, string> | undefined {
@@ -77,7 +147,7 @@ async function dispatch(options: DispatchOptions) {
   }
 
   try {
-    await getTransport().sendMail({
+    const info = await getTransport().sendMail({
       from: resolveFrom(options.from),
       to: options.to,
       replyTo: options.replyTo,
@@ -88,12 +158,28 @@ async function dispatch(options: DispatchOptions) {
       icalEvent: options.icalEvent,
       headers: buildHeaders(options.listUnsubscribeUrl),
     });
+    // Proves the hand-off to the server, so "sent but never arrived" can be
+    // separated from "never sent" without an SMTP transcript.
+    logger.info(
+      {
+        ...describeSendResult(info),
+        recipientDomains: recipientDomains(options.to),
+        subject: options.subject,
+      },
+      `Sent email: ${options.errorLabel}`,
+    );
   } catch (e) {
     // Operational (SMTP/transport) failures are logged, not thrown — sending is
     // fire-and-forget. Render/template (code) errors are NOT caught here, so they
     // propagate to the caller's error reporting (Sentry via onRequestError).
+    // Only the domain is logged: the log sink has its own retention and sits
+    // outside the data map, so the address itself must never land there.
     logger.error(
-      { error: e, recipient: options.to, subject: options.subject },
+      {
+        ...describeTransportError(e),
+        recipientDomains: recipientDomains(options.to),
+        subject: options.subject,
+      },
       `Failed to send email: ${options.errorLabel}`,
     );
   }

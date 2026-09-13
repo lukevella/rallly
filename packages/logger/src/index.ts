@@ -10,9 +10,14 @@ const stream = isDevelopment
     })
   : undefined;
 
+// Defence in depth: call sites are not supposed to log addresses at all, but
+// a stray field must not reach the sink with the sink's retention.
+const redact = ["email", "recipient", "to"].flatMap((key) => [key, `*.${key}`]);
+
 export const logger = pino(
   {
     level,
+    redact,
   },
   stream,
 );
