@@ -29,9 +29,11 @@ function PollUnavailableShell({
         <DefaultLogo className="mx-auto" />
         <EmptyState className="py-12">{children}</EmptyState>
       </main>
-      <footer className="flex justify-center p-4 pb-10">
-        <InstanceFooterLinks links={footerLinks} />
-      </footer>
+      {footerLinks.length > 0 ? (
+        <footer className="flex justify-center p-4 pb-10">
+          <InstanceFooterLinks links={footerLinks} />
+        </footer>
+      ) : null}
     </div>
   );
 }

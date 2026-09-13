@@ -32,7 +32,11 @@ export default async function NotFoundPage() {
           {t("errorBackToHome", { defaultValue: "Back to home" })}
         </Link>
       }
-      footer={<InstanceFooterLinks links={footerLinks} />}
+      footer={
+        footerLinks.length > 0 ? (
+          <InstanceFooterLinks links={footerLinks} />
+        ) : null
+      }
     >
       <ErrorPageLinkItem
         href="/"

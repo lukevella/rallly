@@ -26,7 +26,8 @@ export default function LocaleErrorBoundary({
   const [isSigningOut, setIsSigningOut] = React.useState(false);
   const isInvalidSession = error.digest === INVALID_SESSION;
   const footerLinks = useInstanceFooterLinks();
-  const footer = <InstanceFooterLinks links={footerLinks} />;
+  const footer =
+    footerLinks.length > 0 ? <InstanceFooterLinks links={footerLinks} /> : null;
 
   React.useEffect(() => {
     if (!isInvalidSession) {
