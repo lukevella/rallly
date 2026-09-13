@@ -9,3 +9,11 @@ export const signNonprofitDocumentUploadSchema = z.object({
     .positive()
     .max(nonprofitDocumentAssetProfile.maxSize),
 });
+
+export const nonprofitVerdictSchema = z.object({
+  verdict: z.enum(["approved", "rejected"]),
+  reason: z.string(),
+  organizationNameInDocuments: z.string().nullable(),
+});
+
+export type NonprofitVerdict = z.infer<typeof nonprofitVerdictSchema>;
