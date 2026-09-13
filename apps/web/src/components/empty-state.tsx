@@ -31,8 +31,14 @@ export function EmptyStateIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function EmptyStateTitle({ children }: { children: React.ReactNode }) {
-  return <p className="font-semibold text-base">{children}</p>;
+export function EmptyStateTitle({
+  as: Component = "p",
+  children,
+}: {
+  as?: "p" | "h1" | "h2";
+  children: React.ReactNode;
+}) {
+  return <Component className="font-medium text-base">{children}</Component>;
 }
 
 export function EmptyStateDescription({

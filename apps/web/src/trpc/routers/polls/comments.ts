@@ -41,11 +41,13 @@ export const comments = router({
           userId: true,
           hideParticipants: true,
           deleted: true,
+          user: { select: { banned: true } },
         },
       });
 
-      // A deleted poll never exposes its comments.
-      if (!poll || poll.deleted) {
+      // A deleted poll, or one whose creator was banned, never exposes its
+      // comments.
+      if (!poll || poll.deleted || poll.user?.banned) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
@@ -105,11 +107,13 @@ export const comments = router({
         select: {
           disableComments: true,
           deleted: true,
+          user: { select: { banned: true } },
         },
       });
 
-      // A deleted poll never accepts new comments.
-      if (!targetPoll || targetPoll.deleted) {
+      // A deleted poll, or one whose creator was banned, never accepts new
+      // comments.
+      if (!targetPoll || targetPoll.deleted || targetPoll.user?.banned) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 

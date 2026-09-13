@@ -8,6 +8,8 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PermissionProvider } from "@/features/poll/client";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
+import type { PollUnavailableReason } from "@/features/poll/invite/components/poll-unavailable";
+import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import { loadParticipantIdsByToken } from "@/features/poll/loaders";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -34,10 +36,21 @@ const getPollMetadata = cache(async (urlId: string) => {
     },
   });
 
-  if (!poll || poll.deleted || poll.user?.banned) {
+  if (!poll) {
     notFound();
   }
-  return poll;
+
+  // A poll that exists but must not be served gets its own page instead of
+  // a 404: the viewer of a banned creator's poll is usually a scam target
+  // and needs to be told so, and a deleted poll's viewer deserves better
+  // than "page not found".
+  const unavailable: PollUnavailableReason | null = poll.deleted
+    ? "deleted"
+    : poll.user?.banned
+      ? "removed"
+      : null;
+
+  return { poll, unavailable };
 });
 
 export default async function Page(props: {
@@ -49,11 +62,17 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
 
-  const [, trpc, searchParams] = await Promise.all([
+  const [{ unavailable }, searchParams] = await Promise.all([
     getPollMetadata(params.urlId),
-    createPublicSSRHelper(),
     props.searchParams,
   ]);
+
+  if (unavailable) {
+    return <PollUnavailable reason={unavailable} />;
+  }
+
+  // The SSR helper reads the session; an unavailable poll never needs it.
+  const trpc = await createPublicSSRHelper();
 
   // `invite` is the param older invite emails carry; both name the same
   // token and the client reads them the same way. A repeated param arrives
@@ -112,7 +131,14 @@ export async function generateMetadata(props: {
 
   const { urlId } = params;
 
-  const poll = await getPollMetadata(urlId);
+  const { poll, unavailable } = await getPollMetadata(urlId);
+
+  if (unavailable) {
+    return {
+      title: "Poll unavailable",
+      robots: { index: false, follow: false },
+    };
+  }
 
   const { title, id, user } = poll;
 
