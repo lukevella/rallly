@@ -49,7 +49,7 @@ export async function PollUnavailable({
               i18n={i18n}
               ns="app"
               i18nKey="pollDeletedDescription"
-              defaults="The person who created this poll has deleted it."
+              defaults="It may have been deleted by its creator or removed after a period of inactivity."
             />
           </EmptyStateDescription>
           <EmptyStateFooter>

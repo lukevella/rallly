@@ -641,7 +641,7 @@
   "pollClosed": "Poll closed",
   "pollClosedDescription": "No more responses are being accepted.",
   "pollDeleted": "Poll deleted",
-  "pollDeletedDescription": "The person who created this poll has deleted it.",
+  "pollDeletedDescription": "It may have been deleted by its creator or removed after a period of inactivity.",
   "pollDeletedTitle": "This poll has been deleted",
   "pollDeleteError": "Failed to delete poll",
   "pollNotificationsDescription": "Get notified by email when there is activity on your polls",
