@@ -1,17 +1,20 @@
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { captureOne, deleteAllMessages } from "@rallly/test-helpers";
+import { createUserInDb } from "./test-utils";
 
 const unknownEmail = "otp-locale-unknown@example.com";
+const existingEmail = "otp-locale-existing@example.com";
 
 const germanSubject = "Bitte bestätige Deine E-Mail-Adresse";
 
 // The OTP endpoint lives under /api, which the locale proxy skips, so the
-// email language has to be resolved from the request itself.
+// email language is resolved from the account when there is one, otherwise
+// from the request itself.
 test.describe.serial(() => {
   test.beforeAll(async () => {
     await prisma.user.deleteMany({
-      where: { email: unknownEmail },
+      where: { email: { in: [unknownEmail, existingEmail] } },
     });
     await prisma.verification.deleteMany({
       where: { identifier: { endsWith: "@example.com" } },
@@ -24,7 +27,7 @@ test.describe.serial(() => {
 
   test.afterAll(async () => {
     await prisma.user.deleteMany({
-      where: { email: unknownEmail },
+      where: { email: { in: [unknownEmail, existingEmail] } },
     });
     await prisma.verification.deleteMany({
       where: { identifier: { endsWith: "@example.com" } },
@@ -60,6 +63,31 @@ test.describe.serial(() => {
     expect(send.status()).toBe(200);
 
     const { email } = await captureOne(unknownEmail);
+    expect(email.Subject).toBe(germanSubject);
+  });
+
+  test("login code follows the account language over the device", async ({
+    request,
+  }) => {
+    const user = await createUserInDb({
+      email: existingEmail,
+      name: "Existing User",
+    });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { locale: "de" },
+    });
+
+    const send = await request.post(
+      "/api/better-auth/email-otp/send-verification-otp",
+      {
+        data: { email: existingEmail, type: "sign-in" },
+        headers: { cookie: "rallly_locale=en", "accept-language": "en" },
+      },
+    );
+    expect(send.status()).toBe(200);
+
+    const { email } = await captureOne(existingEmail);
     expect(email.Subject).toBe(germanSubject);
   });
 });
