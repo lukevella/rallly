@@ -28,7 +28,17 @@ type ResolvedAddress = { address: string; family: number };
 async function resolvePublicAddress(
   hostname: string,
 ): Promise<ResolvedAddress | null> {
-  const addresses = await lookup(hostname, { all: true, verbatim: true });
+  // dns.lookup has no abort signal; the race gives it the fetch deadline
+  // and the caller's catch turns a timeout into null.
+  const addresses = await Promise.race([
+    lookup(hostname, { all: true, verbatim: true }),
+    new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error("DNS lookup timed out")),
+        FETCH_TIMEOUT_MS,
+      ).unref(),
+    ),
+  ]);
   if (addresses.length === 0) return null;
   if (!addresses.every(({ address }) => isPublicAddress(address))) return null;
   return addresses[0];
