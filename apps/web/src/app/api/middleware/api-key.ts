@@ -56,6 +56,11 @@ const verifyKey = bearerAuth<ApiKeyAuthEnv>({
           select: {
             ownerId: true,
             tier: true,
+            owner: {
+              select: {
+                banned: true,
+              },
+            },
           },
         },
       },
@@ -76,7 +81,9 @@ const verifyKey = bearerAuth<ApiKeyAuthEnv>({
       ) {
         // Verify the full key hash
         const isValid = await verifyApiKey(rawKey, candidate.hashedKey);
-        if (isValid) {
+        // A banned owner's keys stay in the table but must not authenticate:
+        // the ban is the only thing standing between a scammer and the API.
+        if (isValid && !candidate.space.owner.banned) {
           apiKeyId = candidate.id;
           spaceId = candidate.spaceId;
           spaceOwnerId = candidate.space.ownerId;

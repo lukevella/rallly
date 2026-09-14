@@ -6,7 +6,14 @@ import { createLogger } from "@rallly/logger";
 import { generateText } from "ai";
 import { after } from "next/server";
 import { env } from "@/env";
+import { cancelUserSubscriptions } from "@/features/billing/mutations";
 import { banUser } from "@/features/user/mutations";
+import { createRatelimit } from "@/lib/rate-limit";
+import {
+  MODERATION_AI_CALLS_PER_DAY,
+  MODERATION_STRIKE_WINDOW,
+  MODERATION_STRIKES_BEFORE_BAN,
+} from "./constants";
 import type { ModerationResult, ModerationVerdict } from "./types";
 import { containsSuspiciousPatterns } from "./utils";
 
@@ -93,11 +100,85 @@ const safeResult: ModerationResult = {
   reason: "",
 };
 
+// One point per flagged verdict. The limiter is a counter here, not a gate:
+// the request that spends the last point is the one that bans.
+const strikes = createRatelimit(
+  MODERATION_STRIKES_BEFORE_BAN,
+  MODERATION_STRIKE_WINDOW,
+);
+
+const aiBudget = createRatelimit(MODERATION_AI_CALLS_PER_DAY, "24 h");
+
+// True when this user may spend another model call today. A store failure
+// allows the call: the budget is a cost cap, not a security boundary.
+async function withinAiBudget(userId: string) {
+  try {
+    const budget = await aiBudget?.limit(`moderation-ai:${userId}`);
+    return budget?.success ?? true;
+  } catch (error) {
+    logger.error({ error, userId }, "Could not read moderation AI budget");
+    return true;
+  }
+}
+
+// A banned scammer's next move is a chargeback, which costs more than the
+// subscription, so the ban and the cancellation are one step. A Stripe
+// failure is logged and never undoes the ban. Shared with the control
+// panel's manual ban, which is the same decision made by a person.
+export async function banUserForAbuse({
+  userId,
+  reason,
+}: {
+  userId: string;
+  reason: string;
+}) {
+  await banUser({ userId, reason });
+  try {
+    await cancelUserSubscriptions({ userId });
+  } catch (error) {
+    logger.error(
+      { error, userId },
+      "User banned but their subscriptions could not be cancelled",
+    );
+  }
+}
+
+async function recordStrike(userId: string) {
+  let strike: Awaited<ReturnType<NonNullable<typeof strikes>["limit"]>> | null;
+  try {
+    strike = (await strikes?.limit(`moderation:${userId}`)) ?? null;
+  } catch (error) {
+    // The store is a counter here, not a gate: losing a strike is better
+    // than losing the support email that follows.
+    logger.error({ error, userId }, "Could not record moderation strike");
+    strike = null;
+  }
+  if (!strike) {
+    return { count: null, banned: false };
+  }
+  const count = strike.success
+    ? MODERATION_STRIKES_BEFORE_BAN - strike.remainingPoints
+    : MODERATION_STRIKES_BEFORE_BAN;
+  const banned = count >= MODERATION_STRIKES_BEFORE_BAN;
+  if (banned) {
+    logger.warn({ userId, count }, "Moderation strike limit reached, banning");
+    await banUserForAbuse({
+      userId,
+      reason: `Automatic ban: ${count} pieces of content flagged by moderation within ${MODERATION_STRIKE_WINDOW}`,
+    });
+  }
+  return { count, banned };
+}
+
 /**
  * Moderates content to detect spam, inappropriate content, or abuse
  * Uses a two-layer approach:
  * 1. Pattern-based detection for common spam patterns
  * 2. AI-based moderation for more sophisticated content analysis
+ *
+ * A flagged verdict always blocks. Paid users are not exempt: the two most
+ * recent abuse cases were Pro subscriptions, and no flag in the last 90
+ * days was a false positive. Repeated flags ban the user (see recordStrike).
  *
  * @returns Moderation result with verdict and explanation
  */
@@ -105,12 +186,10 @@ export async function moderateContent({
   userId,
   userEmail,
   content,
-  trusted = false,
 }: {
   userId: string;
-  userEmail: string;
+  userEmail?: string;
   content: Record<string, string>;
-  trusted?: boolean;
 }): Promise<ModerationResult> {
   // Skip moderation if the feature is disabled in environment
   if (env.MODERATION_ENABLED !== "true") {
@@ -134,7 +213,7 @@ export async function moderateContent({
   if (containsBannedDomain(textToModerate)) {
     logger.warn({ userId }, "Banned domain detected, banning user");
     after(() =>
-      banUser({
+      banUserForAbuse({
         userId,
         reason: "Automatic ban: banned domain detected in content",
       }),
@@ -150,6 +229,20 @@ export async function moderateContent({
 
   // If suspicious patterns are found, perform AI moderation
   if (hasSuspiciousPatterns) {
+    // Fail closed for suspicious content only: clean content never reaches
+    // this branch, so an exhausted budget blocks nothing a legitimate user
+    // writes at that volume.
+    if (!(await withinAiBudget(userId))) {
+      logger.warn(
+        { userId },
+        "Moderation AI budget exhausted, flagging without a model call",
+      );
+      return {
+        verdict: "flagged",
+        reason: `More than ${MODERATION_AI_CALLS_PER_DAY} pieces of suspicious content in 24 hours`,
+      };
+    }
+
     logger.info("Suspicious patterns detected, performing AI moderation check");
     try {
       const result = await moderateContentWithAI(textToModerate);
@@ -159,29 +252,25 @@ export async function moderateContent({
           { userId, verdict: result.verdict, reason: result.reason },
           `Content ${result.verdict} by AI moderation`,
         );
-        after(() =>
-          sendRawEmail({
+        after(async () => {
+          const strike = await recordStrike(userId);
+          await sendRawEmail({
             to: env.SUPPORT_EMAIL,
-            subject: `Content ${result.verdict} by moderation`,
+            subject: strike.banned
+              ? "User banned after repeated flagged content"
+              : `Content ${result.verdict} by moderation`,
             text: [
               `User ID: ${userId}`,
-              `User Email: ${userEmail}`,
-              `Trusted: ${trusted ? "Yes" : "No"}`,
+              `User Email: ${userEmail ?? "unknown"}`,
+              `Strike: ${strike.count ?? "not counted"} of ${MODERATION_STRIKES_BEFORE_BAN}`,
+              `Banned: ${strike.banned ? "Yes" : "No"}`,
               `Verdict: ${result.verdict}`,
               `Reason: ${result.reason}`,
               "--------------------------------",
               textToModerate,
             ].join("\n\n"),
-          }),
-        );
-
-        if (trusted) {
-          logger.info(
-            { userId },
-            "Content flagged but user is trusted, allowing through",
-          );
-          return safeResult;
-        }
+          });
+        });
       }
 
       return result;

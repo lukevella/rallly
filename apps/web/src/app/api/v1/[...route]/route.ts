@@ -9,6 +9,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
+import { moderateContent } from "@/features/moderation/mutations";
 import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
   getPollParticipants,
@@ -207,7 +208,7 @@ app.onError((error, c) => {
 
 const unauthorizedResponse = {
   description:
-    "The API key is missing, invalid, expired or revoked. Includes a `WWW-Authenticate` header.",
+    "The API key is missing, invalid, expired or revoked, or its owner is banned. Includes a `WWW-Authenticate` header.",
   headers: {
     "WWW-Authenticate": {
       description: "The bearer challenge, per RFC 6750.",
@@ -305,9 +306,10 @@ async function buildOpenApiSpec() {
           "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
           "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
           "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
+          "| 400 | `INAPPROPRIATE_CONTENT` | The title, description or location was flagged by content moderation |",
           "| 400 | `DUPLICATE_DATES` | `options.dates` contains the same date more than once |",
           "| 400 | `NO_OPTIONS_GENERATED` | No slot generator produced a valid time slot |",
-          "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked |",
+          "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked, or its owner is banned |",
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
           "| 404 | `NOT_FOUND` | No route matches the method and path |",
           "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
@@ -492,6 +494,27 @@ app.post(
       }
 
       organizerUserId = spaceMember.userId;
+    }
+
+    // Same gate as the app. The strike goes to the key holder, who is the
+    // paying account, whichever member the poll is organized by.
+    const moderation = await moderateContent({
+      userId: spaceOwnerId,
+      content: {
+        Title: input.title,
+        Description: input.description ?? "",
+        Location: input.location ?? "",
+      },
+    });
+
+    if (moderation.verdict === "flagged") {
+      return c.json(
+        apiError(
+          "INAPPROPRIATE_CONTENT",
+          "This content was flagged by moderation and cannot be published.",
+        ),
+        400,
+      );
     }
 
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {

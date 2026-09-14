@@ -33,6 +33,15 @@ const getPollMetadata = cache(async (urlId: string) => {
           banned: true,
         },
       },
+      space: {
+        select: {
+          owner: {
+            select: {
+              banned: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -43,10 +52,12 @@ const getPollMetadata = cache(async (urlId: string) => {
   // A poll that exists but must not be served gets its own page instead of
   // a 404: the viewer of a banned creator's poll is usually a scam target
   // and needs to be told so, and a deleted poll's viewer deserves better
-  // than "page not found".
+  // than "page not found". The space owner counts as a creator too: an API
+  // key holder can organize polls under any member, and banning the payer
+  // must take every link in the space down with it.
   const unavailable: PollUnavailableReason | null = poll.deleted
     ? "deleted"
-    : poll.user?.banned
+    : poll.user?.banned || poll.space?.owner.banned
       ? "removed"
       : null;
 

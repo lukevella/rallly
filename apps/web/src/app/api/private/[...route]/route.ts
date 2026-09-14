@@ -12,6 +12,7 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
+import { moderateContent } from "@/features/moderation/mutations";
 import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
   getPollParticipants,
@@ -298,6 +299,27 @@ app.post(
       }
 
       organizerUserId = spaceMember.user.id;
+    }
+
+    // Same gate as the app. The strike goes to the key holder, who is the
+    // paying account, whichever member the poll is organized by.
+    const moderation = await moderateContent({
+      userId: spaceOwnerId,
+      content: {
+        Title: input.title,
+        Description: input.description ?? "",
+        Location: input.location ?? "",
+      },
+    });
+
+    if (moderation.verdict === "flagged") {
+      return c.json(
+        apiError(
+          "INAPPROPRIATE_CONTENT",
+          "This content was flagged by moderation and cannot be published.",
+        ),
+        400,
+      );
     }
 
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
