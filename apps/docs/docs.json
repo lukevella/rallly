@@ -93,7 +93,6 @@
               "POST /v1/polls",
               "GET /v1/polls",
               "GET /v1/polls/{pollId}",
-              "PATCH /v1/polls/{pollId}",
               "DELETE /v1/polls/{pollId}",
               "GET /v1/polls/{pollId}/results",
               "GET /v1/polls/{pollId}/participants"

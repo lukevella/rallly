@@ -5,7 +5,6 @@ vi.mock("server-only", () => ({}));
 
 const mockDeletePoll = vi.fn();
 const mockCreatePoll = vi.fn();
-const mockClosePoll = vi.fn();
 const mockGetPollResults = vi.fn();
 const mockGetPollParticipants = vi.fn();
 const mockListPolls = vi.fn();
@@ -21,7 +20,6 @@ vi.mock("@/features/moderation/mutations", () => ({
 vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
   createPoll: (...args: unknown[]) => mockCreatePoll(...args),
-  closePoll: (...args: unknown[]) => mockClosePoll(...args),
 }));
 
 vi.mock("@/features/poll/data", () => ({
@@ -87,10 +85,7 @@ import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { redis } from "@/lib/kv";
 import type { FakeRedis } from "../../middleware/fake-redis";
 import { RATE_LIMIT_PER_MINUTE } from "../../middleware/rate-limit";
-import {
-  createPollRequestExamples,
-  patchPollRequestExamples,
-} from "../examples";
+import { createPollRequestExamples } from "../examples";
 import {
   createPollInputSchema,
   deletePollSuccessResponseSchema,
@@ -1628,25 +1623,6 @@ describe("API v1 - /polls", () => {
       }
     });
 
-    it("should document the close poll transition on PATCH /polls/{pollId}", async () => {
-      const res = await app.request("/v1/openapi");
-
-      expect(res.status).toBe(200);
-      const json = await res.json();
-      const operation = json.paths["/v1/polls/{pollId}"].patch;
-
-      expect(operation.summary).toBeDefined();
-      expect(operation.description).toContain("closed");
-      expect(Object.keys(operation.responses)).toEqual(
-        expect.arrayContaining(["200", "403", "404", "422", "429"]),
-      );
-
-      const media = operation.requestBody.content["application/json"];
-      expect(Object.keys(media.examples)).toEqual(
-        Object.keys(patchPollRequestExamples),
-      );
-    });
-
     it("should emit schema descriptions, examples and named components", async () => {
       const res = await app.request("/v1/openapi");
 
@@ -1720,10 +1696,6 @@ describe("API v1 - /polls", () => {
         $ref: pollStatusRef,
         description: expect.stringContaining("close automatically"),
       });
-      expect(schemas.PatchPollInput.properties.status).toMatchObject({
-        $ref: pollStatusRef,
-        example: "closed",
-      });
       expect(json.paths["/v1/polls"].get.parameters).toContainEqual(
         expect.objectContaining({
           name: "status",
@@ -1778,7 +1750,6 @@ describe("API v1 - /polls", () => {
           expect(schemas.Poll.properties[key]).toBeDefined();
         }
       }
-      expect(schemas.PatchPollInput.additionalProperties).toBe(false);
       expect(schemas.Poll.properties.user).toBeUndefined();
       expect(schemas.Poll.properties.organizer).toMatchObject({
         anyOf: expect.arrayContaining([
@@ -1819,157 +1790,6 @@ describe("API v1 - /polls", () => {
       const res = await app.request("/v1/docs");
 
       expect(res.status).toBe(404);
-    });
-  });
-
-  describe("Patch poll (close)", () => {
-    const closedPoll = {
-      id: "test-poll-id",
-      title: "Test Poll",
-      description: null,
-      location: null,
-      timeZone: null,
-      status: "closed",
-      kind: "date",
-      createdAt: new Date("2025-01-10T12:00:00Z"),
-      updatedAt: new Date("2025-01-10T12:00:00Z"),
-      requireParticipantEmail: false,
-      hideParticipants: false,
-      hideScores: false,
-      disableComments: true,
-      allowTentativeVotes: true,
-      participantCount: 4,
-      user: {
-        id: "test-user-id",
-        name: "Test User",
-        email: "test@example.com",
-        image: null,
-      },
-      options: [],
-    };
-
-    it("should close an open poll", async () => {
-      mockClosePoll.mockResolvedValue(closedPoll);
-
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "closed" }),
-      });
-
-      expect(res.status).toBe(200);
-      const json = await res.json();
-      expectMatchesContract(pollResponseSchema, json);
-      expect(json.data.id).toBe("test-poll-id");
-      expect(json.data.status).toBe("closed");
-
-      expect(mockClosePoll).toHaveBeenCalledWith({
-        pollId: "test-poll-id",
-        spaceId: "test-space-id",
-      });
-    });
-
-    it("should be idempotent when the poll is already closed", async () => {
-      mockClosePoll.mockResolvedValue(closedPoll);
-
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "closed" }),
-      });
-
-      expect(res.status).toBe(200);
-      const json = await res.json();
-      expect(json.data.status).toBe("closed");
-    });
-
-    it("should return 404 when the poll is not found", async () => {
-      mockClosePoll.mockResolvedValue(null);
-
-      const res = await app.request("/v1/polls/nonexistent-poll", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "closed" }),
-      });
-
-      expect(res.status).toBe(404);
-      const json = await res.json();
-      expect(json.error.code).toBe("POLL_NOT_FOUND");
-      expect(mockClosePoll).toHaveBeenCalled();
-    });
-
-    it.each([
-      "open",
-      "scheduled",
-      "canceled",
-    ])("should return 422 when transitioning to %s", async (status) => {
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
-
-      expect(res.status).toBe(422);
-      const json = await res.json();
-      expect(json.error.code).toBe("TRANSITION_NOT_AVAILABLE");
-      expect(mockClosePoll).not.toHaveBeenCalled();
-    });
-
-    it("should reject unknown fields in the patch body", async () => {
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "closed", title: "Renamed" }),
-      });
-
-      const json = await expectErrorEnvelope(res, {
-        status: 400,
-        code: "VALIDATION_ERROR",
-      });
-      expect(json.error.message).toContain("title");
-      expect(mockClosePoll).not.toHaveBeenCalled();
-    });
-
-    it("should return 400 for an unknown status value", async () => {
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "archived" }),
-      });
-
-      expect(res.status).toBe(400);
-      expect(mockClosePoll).not.toHaveBeenCalled();
-    });
-
-    it("should return 401 without authorization", async () => {
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "closed" }),
-      });
-
-      expect(res.status).toBe(401);
-      expect(mockClosePoll).not.toHaveBeenCalled();
     });
   });
 
@@ -3058,21 +2878,6 @@ describe("API v1 - /polls", () => {
       expect(mockListPolls).not.toHaveBeenCalled();
     });
 
-    it("should return 400 VALIDATION_ERROR as JSON for a PATCH body that fails validation", async () => {
-      const res = await app.request("/v1/polls/test-poll-id", {
-        method: "PATCH",
-        headers: { ...authed, "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "archived" }),
-      });
-
-      const json = await expectErrorEnvelope(res, {
-        status: 400,
-        code: "VALIDATION_ERROR",
-      });
-      expect(json.error.message).toMatch(/^status: /);
-      expect(json).not.toHaveProperty("data");
-    });
-
     it("should return 400 VALIDATION_ERROR as JSON for a malformed JSON body", async () => {
       const res = await app.request("/v1/polls", {
         method: "POST",
@@ -3144,7 +2949,6 @@ describe("API v1 - /polls", () => {
         "POLL_NOT_FOUND",
         "ORGANIZER_NOT_MEMBER",
         "TOO_MANY_OPTIONS",
-        "TRANSITION_NOT_AVAILABLE",
         "SERVICE_UNAVAILABLE",
         "INTERNAL_ERROR",
       ]) {

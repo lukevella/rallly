@@ -465,16 +465,6 @@ export const pollResponseSchema = z
   })
   .meta({ id: "PollResponse" });
 
-export const patchPollInputSchema = z
-  .strictObject({
-    status: pollStatusSchema.meta({
-      description:
-        "The status to transition the poll to. Only `closed` is currently accepted; the other statuses are reserved for future transitions.",
-      example: "closed",
-    }),
-  })
-  .meta({ id: "PatchPollInput" });
-
 export const listPollsQuerySchema = z.object({
   status: pollStatusSchema.optional().meta({
     description: "Filter polls by status. Omit to include all statuses.",

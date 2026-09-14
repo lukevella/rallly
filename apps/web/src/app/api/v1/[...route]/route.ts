@@ -17,7 +17,7 @@ import {
   getPollWithOptions,
   listPolls,
 } from "@/features/poll/data";
-import { closePoll, createPoll, deletePoll } from "@/features/poll/mutations";
+import { createPoll, deletePoll } from "@/features/poll/mutations";
 import { getSpaceMemberByEmail } from "@/features/space/member/data";
 import type { SpaceTier } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/features/space/types";
@@ -38,10 +38,7 @@ import {
   rateLimit,
 } from "../../middleware/rate-limit";
 import { wideEvent } from "../../middleware/wide-event";
-import {
-  createPollRequestExamples,
-  patchPollRequestExamples,
-} from "../examples";
+import { createPollRequestExamples } from "../examples";
 import {
   createPollInputSchema,
   deletePollSuccessResponseSchema,
@@ -50,7 +47,6 @@ import {
   getPollResultsSuccessResponseSchema,
   listPollsQuerySchema,
   listPollsSuccessResponseSchema,
-  patchPollInputSchema,
   pollResponseSchema,
 } from "../schemas";
 
@@ -310,7 +306,6 @@ async function buildOpenApiSpec() {
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
           "| 404 | `NOT_FOUND` | No route matches the method and path |",
           "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
-          "| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |",
           "| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |",
           "| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |",
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
@@ -339,15 +334,6 @@ async function buildOpenApiSpec() {
     const media = createPollRequestBody.content?.["application/json"];
     if (media) {
       media.examples = createPollRequestExamples;
-    }
-  }
-
-  const patchPollRequestBody =
-    spec.paths["/v1/polls/{pollId}"]?.patch?.requestBody;
-  if (patchPollRequestBody && "content" in patchPollRequestBody) {
-    const media = patchPollRequestBody.content?.["application/json"];
-    if (media) {
-      media.examples = patchPollRequestExamples;
     }
   }
 
@@ -764,84 +750,6 @@ app.get(
     const { spaceId } = c.get("apiAuth");
 
     const poll = await getPollWithOptions({ pollId, spaceId });
-
-    if (!poll) {
-      return c.json(
-        apiError(
-          "POLL_NOT_FOUND",
-          "Poll not found or does not belong to this space.",
-        ),
-        404,
-      );
-    }
-
-    return c.json(pollResponseSchema.parse(toPollResponseBody(poll)));
-  },
-);
-
-app.patch(
-  "/polls/:pollId",
-  spaceApiKeyAuth,
-  rateLimit,
-  describeRoute({
-    tags: ["Polls"],
-    summary: "Update a poll",
-    description: [
-      'Updates a poll\'s status. Currently the only supported transition is closing a poll by sending `{ "status": "closed" }`.',
-      "",
-      "Close a poll once you have picked a date or the poll is no longer needed. Closing is non-destructive — the poll and its responses are preserved — but the results become final and participants can no longer vote. Consumers polling `GET /polls/:pollId/results` should remove closed polls from their queues.",
-      "",
-      "Closing is idempotent: closing an already-closed poll returns a `200` with the poll unchanged. The other statuses (`open`, `scheduled`, `canceled`) are not available via the API and return `422`.",
-    ].join("\n"),
-    security: [{ bearerAuth: [] }],
-    responses: {
-      200: {
-        description: "Poll updated successfully",
-        content: {
-          "application/json": {
-            schema: resolver(pollResponseSchema),
-          },
-        },
-      },
-      401: unauthorizedResponse,
-      403: spaceNotProResponse,
-      429: rateLimitExceededResponse,
-      503: serviceUnavailableResponse,
-      404: {
-        description: "Poll not found",
-        content: {
-          "application/json": {
-            schema: resolver(errorResponseSchema),
-          },
-        },
-      },
-      422: {
-        description: "The requested status transition is not available",
-        content: {
-          "application/json": {
-            schema: resolver(errorResponseSchema),
-          },
-        },
-      },
-    },
-  }),
-  validator("json", patchPollInputSchema, validationHook),
-  async (c) => {
-    const { pollId } = c.req.param();
-    const { status } = c.req.valid("json");
-    const { spaceId } = c.get("apiAuth");
-
-    if (status !== "closed") {
-      return c.json(
-        apiError(
-          "TRANSITION_NOT_AVAILABLE",
-          `Transitioning a poll to "${status}" is not available via the API. Only "closed" is supported.`,
-        ),
-        422,
-      );
-    }
-
-    const poll = await closePoll({ pollId, spaceId });
 
     if (!poll) {
       return c.json(

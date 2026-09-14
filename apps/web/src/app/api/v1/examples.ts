@@ -1,8 +1,7 @@
 import type * as z from "zod";
-import type { createPollInputSchema, patchPollInputSchema } from "./schemas";
+import type { createPollInputSchema } from "./schemas";
 
 type CreatePollInput = z.input<typeof createPollInputSchema>;
-type PatchPollInput = z.input<typeof patchPollInputSchema>;
 
 export const createPollRequestExamples = {
   "Date poll": {
@@ -77,16 +76,5 @@ export const createPollRequestExamples = {
         },
       ],
     } satisfies CreatePollInput,
-  },
-};
-
-export const patchPollRequestExamples = {
-  "Close the poll": {
-    summary: "Close a poll",
-    description:
-      "Set `status` to `closed` once you have picked a date or no longer need the poll. Closing is idempotent and makes the results final.",
-    value: {
-      status: "closed",
-    } satisfies PatchPollInput,
   },
 };
