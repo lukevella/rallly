@@ -12,7 +12,7 @@ export default async function DataProcessingAgreement() {
     <Section>
       <LegalPageLayout
         title="Data processing agreement"
-        lastUpdated="2026-08-29"
+        lastUpdated="2026-09-14"
       >
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
@@ -454,6 +454,23 @@ export default async function DataProcessingAgreement() {
                   EU-US DPF + UK Extension, certified under Amazon.com, Inc.
                   (SCCs fallback)
                 </td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="https://openai.com/policies/business-terms/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    OpenAI
+                  </a>
+                </td>
+                <td>
+                  Automated content moderation (poll title, description and
+                  location only, when flagged by pattern matching)
+                </td>
+                <td>United States</td>
+                <td>EU-US DPF + UK Extension (SCCs fallback)</td>
               </tr>
               <tr>
                 <td>
