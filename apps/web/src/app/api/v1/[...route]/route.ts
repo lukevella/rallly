@@ -48,7 +48,6 @@ import {
   errorResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
-  listParticipantsQuerySchema,
   listPollsQuerySchema,
   listPollsSuccessResponseSchema,
   patchPollInputSchema,
@@ -294,7 +293,7 @@ async function buildOpenApiSpec() {
           "",
           "## Lists",
           "",
-          "Every list endpoint returns the items in `data` and a `nextCursor` beside it. Pass `nextCursor` as the `cursor` query parameter to fetch the next page; it is `null` on the last page.",
+          "List endpoints return the items in `data`. `GET /polls` is paginated: it returns a `nextCursor` beside `data`; pass it as the `cursor` query parameter to fetch the next page, and it is `null` on the last page. `GET /polls/:pollId/participants` returns every participant in one response.",
           "",
           "## Errors",
           "",
@@ -938,9 +937,9 @@ app.get(
     tags: ["Polls"],
     summary: "List poll participants",
     description: [
-      "Lists the participants of a poll, oldest response first. The poll must belong to the space associated with the API key.",
+      "Lists every participant of a poll in one response, oldest response first. The poll must belong to the space associated with the API key.",
       "",
-      "Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page. Per-option answers are not included; use the results endpoint for aggregate availability.",
+      "Per-option answers are not included; use the results endpoint for aggregate availability.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -949,14 +948,6 @@ app.get(
         content: {
           "application/json": {
             schema: resolver(getPollParticipantsSuccessResponseSchema),
-          },
-        },
-      },
-      400: {
-        description: "Invalid query parameters",
-        content: {
-          "application/json": {
-            schema: resolver(errorResponseSchema),
           },
         },
       },
@@ -974,13 +965,11 @@ app.get(
       },
     },
   }),
-  validator("query", listParticipantsQuerySchema, validationHook),
   async (c) => {
     const { pollId } = c.req.param();
-    const { cursor, limit } = c.req.valid("query");
     const { spaceId } = c.get("apiAuth");
 
-    const data = await getPollParticipants({ pollId, spaceId, cursor, limit });
+    const data = await getPollParticipants({ pollId, spaceId });
 
     if (!data) {
       return c.json(
@@ -1000,7 +989,6 @@ app.get(
           email: participant.email,
           createdAt: participant.createdAt.toISOString(),
         })),
-        nextCursor: data.nextCursor,
       }),
     );
   },

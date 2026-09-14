@@ -595,25 +595,8 @@ export const participantSchema = z
   })
   .meta({ id: "Participant" });
 
-export const listParticipantsQuerySchema = z.object({
-  cursor: z.string().optional().meta({
-    description:
-      "Cursor for pagination. Pass the `nextCursor` value from the previous response to fetch the next page.",
-    example: "cm5j2r8wb0003q9l4a1x6p0zt",
-  }),
-  limit: z.coerce.number().int().min(1).max(100).default(50).meta({
-    description: "Number of participants to return per page (1-100).",
-    example: 50,
-  }),
-});
-
 export const getPollParticipantsSuccessResponseSchema = z
   .object({
     data: z.array(participantSchema),
-    nextCursor: z.string().nullable().meta({
-      description:
-        "Cursor to fetch the next page. `null` when there are no more results.",
-      example: "cm5j2r8wb0003q9l4a1x6p0zt",
-    }),
   })
   .meta({ id: "GetPollParticipantsResponse" });
