@@ -876,37 +876,13 @@
             "type": "string",
             "format": "date-time",
             "example": "2025-01-10T12:00:00.000Z"
-          },
-          "votes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ParticipantVote"
-            },
-            "description": "The participant's vote for each option, keyed by `optionId`. An option missing from the list has no recorded vote from this participant."
           }
         },
         "required": [
           "id",
           "name",
           "email",
-          "createdAt",
-          "votes"
-        ]
-      },
-      "ParticipantVote": {
-        "type": "object",
-        "properties": {
-          "optionId": {
-            "type": "string",
-            "example": "cm5h8x2k40000q9l4f7e2d3an"
-          },
-          "type": {
-            "$ref": "#/components/schemas/VoteType"
-          }
-        },
-        "required": [
-          "optionId",
-          "type"
+          "createdAt"
         ]
       },
       "GetPollParticipantsResponse": {
@@ -1665,7 +1641,7 @@
           "Polls"
         ],
         "summary": "Get poll results",
-        "description": "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` for per-person availability.\n\n`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
+        "description": "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` to list who responded.\n\n`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
         "security": [
           {
             "bearerAuth": []
@@ -1776,7 +1752,7 @@
           "Polls"
         ],
         "summary": "List poll participants",
-        "description": "Lists the participants of a poll with their votes, oldest response first. The poll must belong to the space associated with the API key.\n\nEach participant's `votes` pairs an `optionId` from the poll with the answer they gave, so this is the endpoint for per-person availability. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+        "description": "Lists the participants of a poll, oldest response first. The poll must belong to the space associated with the API key.\n\nResults are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page. Per-option answers are not included; use the results endpoint for aggregate availability.",
         "security": [
           {
             "bearerAuth": []
