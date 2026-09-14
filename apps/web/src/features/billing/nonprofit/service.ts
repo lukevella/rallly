@@ -1,5 +1,6 @@
 import "server-only";
 
+import { lookup } from "node:dns/promises";
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { env } from "@/env";
@@ -7,6 +8,7 @@ import { NONPROFIT_VERIFIER_DEFAULT_MODEL } from "@/features/billing/nonprofit/c
 import type { NonprofitVerdict } from "@/features/billing/nonprofit/schema";
 import { nonprofitVerdictSchema } from "@/features/billing/nonprofit/schema";
 import { htmlToText } from "@/features/billing/nonprofit/utils";
+import { isPublicAddress } from "@/lib/public-address";
 
 const FETCH_TIMEOUT_MS = 5_000;
 const FETCH_MAX_REDIRECTS = 3;
@@ -33,6 +35,19 @@ async function readCapped(response: Response) {
 }
 
 /**
+ * The hostname is applicant supplied, so it must not resolve to anything
+ * inside our network. Resolved once per hop before the fetch; the fetch
+ * resolves again, so a rebinding between the two is the residual gap.
+ */
+async function resolvesToPublicAddress(hostname: string) {
+  const addresses = await lookup(hostname, { all: true, verbatim: true });
+  return (
+    addresses.length > 0 &&
+    addresses.every(({ address }) => isPublicAddress(address))
+  );
+}
+
+/**
  * Homepage text for the model. Follows at most three redirects that stay on
  * the same host and https, caps the download, and returns null on anything
  * that is not a 200 HTML page. A missing site is not fatal to the
@@ -44,6 +59,8 @@ export async function fetchWebsiteText(url: string) {
     let current = origin;
 
     for (let hop = 0; hop <= FETCH_MAX_REDIRECTS; hop++) {
+      if (!(await resolvesToPublicAddress(current.hostname))) return null;
+
       const response = await fetch(current, {
         redirect: "manual",
         cache: "no-store",

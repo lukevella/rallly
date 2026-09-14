@@ -180,6 +180,10 @@ export async function applyForNonprofitDiscount({
   website: string;
   documentKeys: readonly string[];
 }): Promise<ApplyForNonprofitDiscountResult> {
+  // Registered before any early return or throw: the documents never
+  // outlive the request, whatever happens to the application.
+  after(() => deleteNonprofitDocuments(documentKeys));
+
   const space = await prisma.space.findUnique({
     where: { id: spaceId },
     select: {
@@ -204,6 +208,9 @@ export async function applyForNonprofitDiscount({
   const websiteOrigin = normalizeWebsite(website);
   const websiteHost = websiteOrigin ? new URL(websiteOrigin).hostname : null;
 
+  // Writes the row and fires the side effects. With `grant`, the grant is
+  // claimed conditionally so two concurrent approvals cannot both record
+  // one; the loser returns false and skips the side effects.
   const record = async (decision: Decision, { grant = false } = {}) => {
     const application = {
       spaceId,
@@ -217,13 +224,16 @@ export async function applyForNonprofitDiscount({
     };
 
     if (grant) {
-      await prisma.$transaction([
-        prisma.space.update({
-          where: { id: spaceId },
+      const claimed = await prisma.$transaction(async (tx) => {
+        const { count } = await tx.space.updateMany({
+          where: { id: spaceId, nonprofitDiscountGrantedAt: null },
           data: { nonprofitDiscountGrantedAt: new Date() },
-        }),
-        prisma.nonprofitApplication.create({ data: application }),
-      ]);
+        });
+        if (count === 0) return false;
+        await tx.nonprofitApplication.create({ data: application });
+        return true;
+      });
+      if (!claimed) return false;
     } else {
       await prisma.nonprofitApplication.create({ data: application });
     }
@@ -267,6 +277,7 @@ export async function applyForNonprofitDiscount({
         "Failed to send nonprofit application notification",
       );
     }
+    return true;
   };
 
   let model: string | null = null;
@@ -313,7 +324,7 @@ export async function applyForNonprofitDiscount({
       }
     }
 
-    await record(
+    const recorded = await record(
       {
         status: verdict.verdict,
         reasonCode:
@@ -326,6 +337,7 @@ export async function applyForNonprofitDiscount({
       },
       { grant: verdict.verdict === "approved" },
     );
+    if (!recorded) return { outcome: "already_granted" };
 
     return { outcome: verdict.verdict, reason: verdict.reason };
   } catch (error) {
@@ -349,7 +361,5 @@ export async function applyForNonprofitDiscount({
       message: "Nonprofit verification failed",
       cause: error,
     });
-  } finally {
-    after(() => deleteNonprofitDocuments(documentKeys));
   }
 }
