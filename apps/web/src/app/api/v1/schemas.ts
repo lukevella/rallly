@@ -586,23 +586,12 @@ export const getPollResultsSuccessResponseSchema = z
   })
   .meta({ id: "GetPollResultsResponse" });
 
-export const participantVoteSchema = z
-  .object({
-    optionId: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-    type: voteTypeSchema,
-  })
-  .meta({ id: "ParticipantVote" });
-
 export const participantSchema = z
   .object({
     id: z.string().meta({ example: "cm5j2r8wb0003q9l4a1x6p0zt" }),
     name: z.string().meta({ example: "Jane Smith" }),
     email: z.string().nullable().meta({ example: "jane@example.com" }),
     createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),
-    votes: z.array(participantVoteSchema).meta({
-      description:
-        "The participant's vote for each option, keyed by `optionId`. An option missing from the list has no recorded vote from this participant.",
-    }),
   })
   .meta({ id: "Participant" });
 
