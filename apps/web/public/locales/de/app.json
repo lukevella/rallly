@@ -50,6 +50,8 @@
   "alreadyLoggedInDescription": "Weiter zu deinem Dashboard oder abmelden, um ein anderes Konto zu verwenden.",
   "alreadyLoggedInTitle": "Du bist bereits angemeldet",
   "alreadyMember": "Diese Person ist bereits Mitglied dieser Gruppe",
+  "apiAccess": "API-Zugriff",
+  "apiAccessBenefitDescription": "Erstelle Umfragen und erfasse Ergebnisse in deinen eigenen Systemen",
   "apiAccessUpgradeDescription": "Erstelle API-Schlüssel, um deine Umfragen programmgesteuert zu verwalten. Enthalten in Pro, mit einem gemeinsamen Limit von {count} Anfragen pro Minute für deine gesamte Gruppe.",
   "apiAccessUpgradeTitle": "Upgrade für API-Zugriff",
   "apiDailyLimitLabel": "Tägliches Limit",
