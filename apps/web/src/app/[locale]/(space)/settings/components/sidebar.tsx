@@ -1,6 +1,6 @@
 "use client";
 
-import { posthog, useFeatureFlagEnabled } from "@rallly/posthog/client";
+import { posthog } from "@rallly/posthog/client";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -26,6 +26,7 @@ import {
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
+import { ProBadge } from "@/features/billing/components/pro-badge";
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -188,9 +189,11 @@ export function DeveloperSidebarMenu() {
   const user = useAuthedUser();
   const isSpaceOwner = space.ownerId === user.id;
   const pathname = usePathname();
-  const isDeveloperToolsEnabled = useFeatureFlagEnabled("developer-tools");
+  const isApiEnabled = useFeatureFlag("api");
 
-  if (!isSpaceOwner || !isDeveloperToolsEnabled) {
+  // Owner only: a member has no self-serve path to API keys. A free space
+  // sees the entry with a Pro badge; the page itself offers the upgrade.
+  if (!isSpaceOwner || !isApiEnabled) {
     return null;
   }
 
@@ -213,6 +216,7 @@ export function DeveloperSidebarMenu() {
             >
               <KeyIcon />
               <Trans i18nKey="apiKeys" defaults="API keys" />
+              {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
