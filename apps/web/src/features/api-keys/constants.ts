@@ -20,8 +20,8 @@ export const API_RATE_LIMIT_PER_MINUTE = 60;
 export const API_RATE_LIMIT_PER_DAY = 5000;
 
 /**
- * Link to the API reference. Still the private route's Scalar page: v1 has
- * no in-app docs page, its reference is generated from `/api/v1/openapi`
- * into the docs site, and this link moves there when that ships.
+ * The API reference lives in the docs site, generated from `/api/v1/openapi`
+ * by `scripts/generate-openapi.ts`. v1 has no in-app docs page.
  */
-export const getApiDocsPath = () => "/api/private/docs";
+export const getApiDocsPath = () =>
+  "https://support.rallly.co/api-reference/introduction";

@@ -74,6 +74,34 @@
         ]
       },
       {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/rate-limits",
+              "api-reference/errors",
+              "api-reference/changelog"
+            ]
+          },
+          {
+            "group": "Polls",
+            "openapi": "/api-reference/openapi.json",
+            "pages": [
+              "POST /v1/polls",
+              "GET /v1/polls",
+              "GET /v1/polls/{pollId}",
+              "PATCH /v1/polls/{pollId}",
+              "DELETE /v1/polls/{pollId}",
+              "GET /v1/polls/{pollId}/results",
+              "GET /v1/polls/{pollId}/participants"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Contribute",
         "groups": [
           {

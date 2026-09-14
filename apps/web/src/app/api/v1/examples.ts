@@ -8,29 +8,32 @@ export const createPollRequestExamples = {
   "Date poll": {
     summary: "Date poll (all-day options)",
     description:
-      "Let participants pick between calendar days. Each date becomes an all-day option.",
+      "Let participants pick between calendar days. Each option is one all-day date.",
     value: {
       title: "Team offsite",
+      kind: "date",
       description: "Which days work for a two day offsite?",
-      options: {
-        kind: "date",
-        dates: ["2027-03-01", "2027-03-02", "2027-03-03"],
-      },
+      options: [
+        { date: "2027-03-01" },
+        { date: "2027-03-02" },
+        { date: "2027-03-03" },
+      ],
     } satisfies CreatePollInput,
   },
-  "Time poll with explicit times": {
-    summary: "Time poll (explicit times)",
+  "Time poll with explicit slots": {
+    summary: "Time poll (explicit slots)",
     description:
-      "Offer specific time slots. Datetimes without an offset are interpreted as wall-clock in `timeZone` — this example offers 09:00 and 14:00 in London. Append `Z` or an offset to specify an absolute instant instead.",
+      "Offer specific time slots. Datetimes without an offset are wall clock times in `timeZone`; this example offers 09:00 and 14:00 in London. Append `Z` or an offset for an absolute instant instead. A slot may override the poll's `duration`.",
     value: {
       title: "Project kickoff",
+      kind: "time",
       location: "Zoom",
-      options: {
-        kind: "time",
-        duration: 60,
-        timeZone: "Europe/London",
-        times: ["2027-03-01T09:00:00", "2027-03-01T14:00:00"],
-      },
+      timeZone: "Europe/London",
+      duration: 60,
+      options: [
+        { startTime: "2027-03-01T09:00:00" },
+        { startTime: "2027-03-01T14:00:00", duration: 90 },
+      ],
     } satisfies CreatePollInput,
   },
   "Time poll with a slot generator": {
@@ -39,44 +42,40 @@ export const createPollRequestExamples = {
       "Expand recurring slots across a date range. This example generates 30 minute slots at 09:00, 10:00 and 11:00 (New York time) every weekday from 1 to 5 March.",
     value: {
       title: "Interview availability",
-      options: {
-        kind: "time",
-        duration: 30,
-        timeZone: "America/New_York",
-        generators: [
-          {
-            startDate: "2027-03-01",
-            endDate: "2027-03-05",
-            days: ["mon", "tue", "wed", "thu", "fri"],
-            startTime: "09:00",
-            endTime: "12:00",
-            interval: 60,
-          },
-        ],
-      },
+      kind: "time",
+      timeZone: "America/New_York",
+      duration: 30,
+      generators: [
+        {
+          startDate: "2027-03-01",
+          endDate: "2027-03-05",
+          days: ["mon", "tue", "wed", "thu", "fri"],
+          from: "09:00",
+          to: "12:00",
+          interval: 60,
+        },
+      ],
     } satisfies CreatePollInput,
   },
-  "Time poll mixing times and a generator": {
-    summary: "Time poll (explicit times + generator)",
+  "Time poll mixing slots and a generator": {
+    summary: "Time poll (explicit slots + generator)",
     description:
-      "`times` and `generators` combine. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
+      "`options` and `generators` combine. When `interval` is omitted it defaults to `duration`, so this generator produces back to back 90 minute slots at 14:00 and 15:30 on Monday and Wednesday.",
     value: {
       title: "Product workshop",
-      options: {
-        kind: "time",
-        duration: 90,
-        timeZone: "Europe/Berlin",
-        times: ["2027-03-06T10:00:00"],
-        generators: [
-          {
-            startDate: "2027-03-08",
-            endDate: "2027-03-10",
-            days: ["mon", "wed"],
-            startTime: "14:00",
-            endTime: "17:00",
-          },
-        ],
-      },
+      kind: "time",
+      timeZone: "Europe/Berlin",
+      duration: 90,
+      options: [{ startTime: "2027-03-06T10:00:00" }],
+      generators: [
+        {
+          startDate: "2027-03-08",
+          endDate: "2027-03-10",
+          days: ["mon", "wed"],
+          from: "14:00",
+          to: "17:00",
+        },
+      ],
     } satisfies CreatePollInput,
   },
 };
