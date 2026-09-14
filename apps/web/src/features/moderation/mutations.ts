@@ -10,6 +10,7 @@ import { cancelUserSubscriptions } from "@/features/billing/mutations";
 import { banUser } from "@/features/user/mutations";
 import { createRatelimit } from "@/lib/rate-limit";
 import {
+  MODERATION_AI_CALLS_PER_DAY,
   MODERATION_STRIKE_WINDOW,
   MODERATION_STRIKES_BEFORE_BAN,
 } from "./constants";
@@ -105,6 +106,20 @@ const strikes = createRatelimit(
   MODERATION_STRIKES_BEFORE_BAN,
   MODERATION_STRIKE_WINDOW,
 );
+
+const aiBudget = createRatelimit(MODERATION_AI_CALLS_PER_DAY, "24 h");
+
+// True when this user may spend another model call today. A store failure
+// allows the call: the budget is a cost cap, not a security boundary.
+async function withinAiBudget(userId: string) {
+  try {
+    const budget = await aiBudget?.limit(`moderation-ai:${userId}`);
+    return budget?.success ?? true;
+  } catch (error) {
+    logger.error({ error, userId }, "Could not read moderation AI budget");
+    return true;
+  }
+}
 
 // A banned scammer's next move is a chargeback, which costs more than the
 // subscription, so the ban and the cancellation are one step. A Stripe
@@ -213,6 +228,20 @@ export async function moderateContent({
 
   // If suspicious patterns are found, perform AI moderation
   if (hasSuspiciousPatterns) {
+    // Fail closed for suspicious content only: clean content never reaches
+    // this branch, so an exhausted budget blocks nothing a legitimate user
+    // writes at that volume.
+    if (!(await withinAiBudget(userId))) {
+      logger.warn(
+        { userId },
+        "Moderation AI budget exhausted, flagging without a model call",
+      );
+      return {
+        verdict: "flagged",
+        reason: `More than ${MODERATION_AI_CALLS_PER_DAY} pieces of suspicious content in 24 hours`,
+      };
+    }
+
     logger.info("Suspicious patterns detected, performing AI moderation check");
     try {
       const result = await moderateContentWithAI(textToModerate);
