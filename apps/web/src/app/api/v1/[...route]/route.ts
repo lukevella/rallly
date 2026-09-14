@@ -947,9 +947,9 @@ app.get(
     tags: ["Polls"],
     summary: "List poll participants",
     description: [
-      "Lists the participants of a poll with their votes, oldest response first. The poll must belong to the space associated with the API key.",
+      "Lists the participants of a poll, oldest response first. The poll must belong to the space associated with the API key.",
       "",
-      "Each participant's `votes` pairs an `optionId` from the poll with the answer they gave, so this is the endpoint for per-person availability. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+      "Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page. Per-option answers are not included; use the results endpoint for aggregate availability.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -1008,7 +1008,6 @@ app.get(
           name: participant.name,
           email: participant.email,
           createdAt: participant.createdAt.toISOString(),
-          votes: participant.votes,
         })),
         nextCursor: data.nextCursor,
       }),

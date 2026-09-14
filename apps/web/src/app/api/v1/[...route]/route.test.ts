@@ -1514,9 +1514,6 @@ describe("API v1 - /polls", () => {
       expect(schemas.TimeOption.properties.id.example).toMatch(cuidExample);
       expect(schemas.DateOption.properties.id.example).toMatch(cuidExample);
       expect(schemas.Participant.properties.id.example).toMatch(cuidExample);
-      expect(schemas.ParticipantVote.properties.optionId.example).toMatch(
-        cuidExample,
-      );
       expect(JSON.stringify(json)).not.toMatch(
         /p_123abc|opt_abc123|participant_abc123|space_abc123/,
       );
@@ -2604,21 +2601,16 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: new Date("2025-01-10T10:00:00Z"),
-        votes: [
-          { optionId: "opt-1", type: "yes" },
-          { optionId: "opt-2", type: "no" },
-        ],
       },
       {
         id: "participant-2",
         name: "Bob",
         email: null,
         createdAt: new Date("2025-01-10T11:00:00Z"),
-        votes: [{ optionId: "opt-1", type: "ifNeedBe" }],
       },
     ];
 
-    it("should return participants with their votes in the list shape", async () => {
+    it("should return participants in the list shape", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
         participants,
@@ -2642,10 +2634,6 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: "2025-01-10T10:00:00.000Z",
-        votes: [
-          { optionId: "opt-1", type: "yes" },
-          { optionId: "opt-2", type: "no" },
-        ],
       });
       expect(json.data[1].email).toBeNull();
       expect(json.nextCursor).toBeNull();
@@ -2656,30 +2644,6 @@ describe("API v1 - /polls", () => {
         cursor: undefined,
         limit: 50,
       });
-    });
-
-    it("should pass through a vote type the schema does not know", async () => {
-      mockGetPollParticipants.mockResolvedValue({
-        pollId: "test-poll-id",
-        participants: [
-          { ...participants[0], votes: [{ optionId: "opt-1", type: "maybe" }] },
-        ],
-        nextCursor: null,
-      });
-
-      const res = await app.request("/v1/polls/test-poll-id/participants", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${testApiKey}`,
-        },
-      });
-
-      expect(res.status).toBe(200);
-      const json = await res.json();
-      expectMatchesContract(getPollParticipantsSuccessResponseSchema, json);
-      expect(json.data[0].votes).toEqual([
-        { optionId: "opt-1", type: "maybe" },
-      ]);
     });
 
     it("should pass the cursor and limit through and return the next cursor", async () => {

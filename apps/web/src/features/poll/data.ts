@@ -163,12 +163,6 @@ export async function getPollParticipants({
           name: true,
           email: true,
           createdAt: true,
-          votes: {
-            select: {
-              optionId: true,
-              type: true,
-            },
-          },
         },
         orderBy: [{ createdAt: "asc" }, { id: "asc" }],
         ...(limit !== undefined && { take: limit + 1 }),
