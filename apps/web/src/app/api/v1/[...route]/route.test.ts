@@ -735,6 +735,7 @@ describe("API v1 - /polls", () => {
           properties: expect.objectContaining({
             kind: "date",
             source: "api",
+            apiVersion: "v1",
           }),
           groups: { poll: "test-poll-id", space: "test-space-id" },
         }),
@@ -916,6 +917,7 @@ describe("API v1 - /polls", () => {
           properties: expect.objectContaining({
             kind: "time",
             source: "api",
+            apiVersion: "v1",
           }),
         }),
       );

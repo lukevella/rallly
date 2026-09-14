@@ -539,6 +539,7 @@ describe("Private API - /polls", () => {
           properties: expect.objectContaining({
             kind: "date",
             source: "api",
+            apiVersion: "private",
           }),
           groups: { poll: "test-poll-id", space: "test-space-id" },
         }),
@@ -692,6 +693,7 @@ describe("Private API - /polls", () => {
           properties: expect.objectContaining({
             kind: "time",
             source: "api",
+            apiVersion: "private",
           }),
         }),
       );
