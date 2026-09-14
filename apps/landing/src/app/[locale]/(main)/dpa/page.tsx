@@ -470,7 +470,7 @@ export default async function DataProcessingAgreement() {
                   location only, when flagged by pattern matching)
                 </td>
                 <td>United States</td>
-                <td>EU-US DPF + UK Extension (SCCs fallback)</td>
+                <td>SCCs + UK Addendum (OpenAI Data Processing Addendum)</td>
               </tr>
               <tr>
                 <td>
@@ -517,6 +517,13 @@ export default async function DataProcessingAgreement() {
             </tbody>
           </table>
         </div>
+        <p>
+          OpenAI was added to this annex on 14 September 2026. Automated content
+          moderation has sent flagged poll content to OpenAI since it launched
+          on 3 March 2025, so this entry is a disclosure of existing processing
+          rather than the advance notice described in Section 6.3. The objection
+          right in Section 6.4 applies from the date this entry was added.
+        </p>
         <p>
           Stripe, PostHog, and Sentry primarily support processing for which we
           act as a controller (billing, product analytics, and error monitoring)
