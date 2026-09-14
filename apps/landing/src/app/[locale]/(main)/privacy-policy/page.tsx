@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-08">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-14">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -98,6 +98,25 @@ export default async function PrivacyPolicy() {
           update or erase it.
         </p>
 
+        <h2>Content moderation</h2>
+
+        <p>
+          To protect other people from fraud and scams, we scan the title,
+          description and location of every poll for patterns associated with
+          abuse. Content that matches a pattern is sent to OpenAI for automated
+          classification. We send only the content itself, not your name, email
+          address or any other account data, although the content may contain
+          personal data if you typed it there. OpenAI does not use content sent
+          through its API to train its models and retains it for up to 30 days
+          for abuse monitoring.
+        </p>
+
+        <p>
+          Content that the automated check flags may be reviewed by our staff,
+          together with the account that submitted it, before we decide whether
+          to remove it or suspend the account.
+        </p>
+
         <h2>Legal basis for processing</h2>
 
         <p>
@@ -125,6 +144,12 @@ export default async function PrivacyPolicy() {
           activity that caused it. You can object to this processing at any time
           by contacting us at the address below, and we will remove those
           details from your analytics profile.
+        </p>
+
+        <p>
+          We scan and classify poll content on the basis of our legitimate
+          interest in preventing the service from being used for fraud, scams
+          and other abuse against the people who receive poll invitations.
         </p>
 
         <h2>Retention of personal data</h2>
@@ -163,6 +188,10 @@ export default async function PrivacyPolicy() {
           <li>
             Stripe — payment processing, billing contact data only (United
             States)
+          </li>
+          <li>
+            OpenAI — automated content moderation of flagged poll content
+            (United States)
           </li>
           <li>PostHog — product analytics (European Union)</li>
           <li>Sentry — error monitoring (United States)</li>
