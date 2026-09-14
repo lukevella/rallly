@@ -35,6 +35,10 @@ import { ContactSupportLink } from "./components/contact-support-link";
 import { HobbyPlanCard } from "./components/hobby-plan-card";
 import { ProPlanCard } from "./components/pro-plan-card";
 
+// The nonprofit application action runs from this segment: a 45s model cap
+// plus the site fetch and document reads outruns the default function limit.
+export const maxDuration = 60;
+
 export default async function BillingSettingsPage({
   searchParams,
 }: {

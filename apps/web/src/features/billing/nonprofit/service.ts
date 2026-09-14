@@ -94,6 +94,10 @@ Reject when any criterion fails or when you are not sure. Reject screenshots or 
 
 Write "reason" for the applicant: one or two plain sentences saying what was accepted or what was missing, without naming these criteria by number. Set "organizationNameInDocuments" to the organization name exactly as it appears in the documents, or null if no document names an organization.`;
 
+export function getNonprofitVerifierModelId() {
+  return env.NONPROFIT_VERIFIER_MODEL || NONPROFIT_VERIFIER_DEFAULT_MODEL;
+}
+
 function resolveModel(modelId: string) {
   // `provider/model` is a Vercel AI Gateway id, handled by the ai package's
   // default provider. A bare id goes to OpenAI directly.
@@ -118,8 +122,7 @@ export async function verifyNonprofit({
   siteText: string | null;
   documents: { mediaType: string; data: Uint8Array }[];
 }): Promise<{ verdict: NonprofitVerdict; modelId: string }> {
-  const modelId =
-    env.NONPROFIT_VERIFIER_MODEL || NONPROFIT_VERIFIER_DEFAULT_MODEL;
+  const modelId = getNonprofitVerifierModelId();
 
   const result = await generateObject({
     model: resolveModel(modelId),

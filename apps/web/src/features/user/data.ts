@@ -18,6 +18,7 @@ export const createUserDTO = (user: User): UserDTO => ({
   customerId: user.customerId ?? undefined,
   isGuest: user.isAnonymous,
   deletedAt: user.deletedAt ?? undefined,
+  emailVerified: user.emailVerified ?? false,
 });
 
 export const getUser = async (userId: string) => {

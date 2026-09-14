@@ -10,6 +10,7 @@ import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { getStripe } from "@/features/billing/service";
+import { isStripeResourceMissingError } from "@/features/billing/utils";
 
 export async function createStripePortalSession({
   customerId,
@@ -156,15 +157,6 @@ export async function createStripeSubscriptionUpdateConfirmation({
   });
 
   return portalSession.url;
-}
-
-function isStripeResourceMissingError(error: unknown) {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    (error as { code?: unknown }).code === "resource_missing"
-  );
 }
 
 // Scheduling an account deletion must guarantee no further charges without
