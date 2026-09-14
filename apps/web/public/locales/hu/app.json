@@ -50,6 +50,7 @@
   "alreadyLoggedInDescription": "Lépj tovább a vezérlőpultra vagy jelentkezz ki, hogy másik fiókkal tudd használni.",
   "alreadyLoggedInTitle": "Már be vagy jelentkezve",
   "alreadyMember": "Ez a személy már tagja ennek a munkaterületnek",
+  "apiAccess": "API hozzáférés",
   "apiAccessUpgradeDescription": "Hozz létre egy API kulcsot a szavazásaid programozott kezeléséhez. A Pro csomag tartalmazza, a munkaterületen belüli {count} kérés per perc korlátozással.",
   "apiAccessUpgradeTitle": "Bővíts az API hozzáféréshez",
   "apiDailyLimitLabel": "Napi limit",
