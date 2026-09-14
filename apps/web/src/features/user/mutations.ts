@@ -78,7 +78,9 @@ export async function updateUserRole({
 // session expires. The admin plugin's banUser endpoint is deliberately not
 // used: it authorizes against the caller's session snapshot rather than the
 // database, and the moderation auto-ban runs without an admin session at all.
-// Authorization is the caller's responsibility.
+// Authorization is the caller's responsibility. Callers that ban for abuse
+// also cancel the user's subscriptions; billing cannot be imported here
+// without a feature cycle.
 
 export async function banUser({
   userId,

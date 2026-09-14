@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import * as z from "zod";
 import { avatarAssetProfile } from "@/features/user/constants";
 import { isEmailTaken } from "@/features/user/data";
-import { banUser, unbanUser, updateUserRole } from "@/features/user/mutations";
+import { unbanUser, updateUserRole } from "@/features/user/mutations";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
@@ -196,45 +196,6 @@ export const changeRoleAction = adminActionClient
     }
 
     await updateUserRole({ userId: targetUser.id, role });
-  });
-
-export const banUserAction = adminActionClient
-  .metadata({ actionName: "ban_user" })
-  .inputSchema(
-    z.object({
-      userId: z.string(),
-      reason: z.string().trim().max(500).optional(),
-    }),
-  )
-  .action(async ({ ctx, parsedInput }) => {
-    const { userId, reason } = parsedInput;
-
-    const targetUser = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!targetUser) {
-      throw new AppError({
-        code: "NOT_FOUND",
-        message: `User ${userId} not found`,
-      });
-    }
-
-    if (targetUser.banned) {
-      throw new AppError({
-        code: "FORBIDDEN",
-        message: "User is already banned",
-      });
-    }
-
-    if (ctx.ability.cannot("update", subject("User", targetUser), "banned")) {
-      throw new AppError({
-        code: "UNAUTHORIZED",
-        message: "Current user is not authorized to ban this user",
-      });
-    }
-
-    await banUser({ userId, reason: reason || undefined });
   });
 
 export const unbanUserAction = adminActionClient

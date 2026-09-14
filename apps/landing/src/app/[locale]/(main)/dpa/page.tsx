@@ -12,7 +12,7 @@ export default async function DataProcessingAgreement() {
     <Section>
       <LegalPageLayout
         title="Data processing agreement"
-        lastUpdated="2026-08-29"
+        lastUpdated="2026-09-14"
       >
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
@@ -458,6 +458,23 @@ export default async function DataProcessingAgreement() {
               <tr>
                 <td>
                   <a
+                    href="https://openai.com/policies/business-terms/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    OpenAI
+                  </a>
+                </td>
+                <td>
+                  Automated content moderation (poll title, description and
+                  location only, when flagged by pattern matching)
+                </td>
+                <td>United States</td>
+                <td>SCCs + UK Addendum (OpenAI Data Processing Addendum)</td>
+              </tr>
+              <tr>
+                <td>
+                  <a
                     href="https://stripe.com/docs/security"
                     target="_blank"
                     rel="noreferrer noopener"
@@ -500,6 +517,13 @@ export default async function DataProcessingAgreement() {
             </tbody>
           </table>
         </div>
+        <p>
+          OpenAI was added to this annex on 14 September 2026. Automated content
+          moderation has sent flagged poll content to OpenAI since it launched
+          on 3 March 2025, so this entry is a disclosure of existing processing
+          rather than the advance notice described in Section 6.3. The objection
+          right in Section 6.4 applies from the date this entry was added.
+        </p>
         <p>
           Stripe, PostHog, and Sentry primarily support processing for which we
           act as a controller (billing, product analytics, and error monitoring)

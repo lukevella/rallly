@@ -1,4 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import Module from "node:module";
 import path from "node:path";
 
 // The committed spec is the production reference: the `servers` entry must
@@ -10,6 +11,21 @@ process.env.NEXT_PUBLIC_SHORT_BASE_URL = "https://rallly.co";
 process.env.SKIP_ENV_VALIDATION = "1";
 // The wide event middleware logs the spec request; keep stdout to the result.
 process.env.LOG_LEVEL = "silent";
+
+// `server-only` throws outside a React server bundle. Resolve it to an empty
+// module here rather than running under the `react-server` condition, which
+// also swaps React for a build without createContext and breaks anything in
+// the route's import chain that touches next/navigation.
+const moduleWithResolver = Module as unknown as {
+  _resolveFilename: (request: string, ...rest: unknown[]) => string;
+};
+const resolveFilename = moduleWithResolver._resolveFilename;
+moduleWithResolver._resolveFilename = function (request, ...rest) {
+  if (request === "server-only") {
+    return path.resolve(__dirname, "../src/test/empty-module.ts");
+  }
+  return resolveFilename.call(this, request, ...rest);
+};
 
 const outputPath = path.resolve(
   __dirname,
