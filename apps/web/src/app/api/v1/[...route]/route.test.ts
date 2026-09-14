@@ -2683,7 +2683,6 @@ describe("API v1 - /polls", () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
         participants: [],
-        nextCursor: null,
       });
       mockListPolls.mockResolvedValue({ polls: [], nextCursor: null });
 
@@ -2723,7 +2722,6 @@ describe("API v1 - /polls", () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
         participants,
-        nextCursor: null,
       });
 
       const res = await app.request("/v1/polls/test-poll-id/participants", {
@@ -2745,21 +2743,18 @@ describe("API v1 - /polls", () => {
         createdAt: "2025-01-10T10:00:00.000Z",
       });
       expect(json.data[1].email).toBeNull();
-      expect(json.nextCursor).toBeNull();
+      expect(json).not.toHaveProperty("nextCursor");
 
       expect(mockGetPollParticipants).toHaveBeenCalledWith({
         pollId: "test-poll-id",
         spaceId: "test-space-id",
-        cursor: undefined,
-        limit: 50,
       });
     });
 
-    it("should pass the cursor and limit through and return the next cursor", async () => {
+    it("should return every participant and ignore pagination query parameters", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
-        participants: [participants[1]],
-        nextCursor: "participant-2",
+        participants,
       });
 
       const res = await app.request(
@@ -2776,38 +2771,20 @@ describe("API v1 - /polls", () => {
       const json = await res.json();
       expectMatchesContract(getPollParticipantsSuccessResponseSchema, json);
       expect(json.data.map((p: { id: string }) => p.id)).toEqual([
+        "participant-1",
         "participant-2",
       ]);
-      expect(json.nextCursor).toBe("participant-2");
 
       expect(mockGetPollParticipants).toHaveBeenCalledWith({
         pollId: "test-poll-id",
         spaceId: "test-space-id",
-        cursor: "participant-1",
-        limit: 1,
       });
-    });
-
-    it("should return 400 when limit is out of range", async () => {
-      const res = await app.request(
-        "/v1/polls/test-poll-id/participants?limit=500",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${testApiKey}`,
-          },
-        },
-      );
-
-      await expectErrorEnvelope(res, { status: 400, code: "VALIDATION_ERROR" });
-      expect(mockGetPollParticipants).not.toHaveBeenCalled();
     });
 
     it("should return empty array when no participants", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
         participants: [],
-        nextCursor: null,
       });
 
       const res = await app.request("/v1/polls/test-poll-id/participants", {
@@ -2821,7 +2798,6 @@ describe("API v1 - /polls", () => {
       const json = await res.json();
 
       expect(json.data).toEqual([]);
-      expect(json.nextCursor).toBeNull();
     });
 
     it("should return 404 when poll not found", async () => {
