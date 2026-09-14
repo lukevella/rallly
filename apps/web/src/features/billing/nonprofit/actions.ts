@@ -1,9 +1,13 @@
 "use server";
 
 import * as Sentry from "@sentry/nextjs";
+import { after } from "next/server";
 import { createMiddleware } from "next-safe-action";
 import { nonprofitDocumentAssetProfile } from "@/features/billing/nonprofit/constants";
-import { applyForNonprofitDiscount } from "@/features/billing/nonprofit/mutations";
+import {
+  applyForNonprofitDiscount,
+  deleteNonprofitDocuments,
+} from "@/features/billing/nonprofit/mutations";
 import {
   applyForNonprofitDiscountSchema,
   signNonprofitDocumentUploadSchema,
@@ -86,18 +90,29 @@ export const applyForNonprofitDiscountAction = authActionClient
       outcome: NonprofitApplicationStatus;
       reason: string | null;
     }> => {
+      // Keys are proven before anything else can fail, so a gate that stops
+      // the application here still deletes what the applicant uploaded. The
+      // mutation deletes on its own paths; nothing reaches it from here.
+      const documentKeys: string[] = [];
+      for (const key of parsedInput.documentKeys) {
+        try {
+          assertAssetKey(key, {
+            profile: nonprofitDocumentAssetProfile,
+            entityId: ctx.space.id,
+          });
+        } catch (error) {
+          after(() => deleteNonprofitDocuments(documentKeys));
+          throw error;
+        }
+        documentKeys.push(key);
+      }
+
       // ctx.user is the database row, so this is not the session snapshot.
       if (!ctx.user.emailVerified) {
+        after(() => deleteNonprofitDocuments(documentKeys));
         throw new AppError({
           code: "FORBIDDEN",
           message: "Verify your email address before applying",
-        });
-      }
-
-      for (const key of parsedInput.documentKeys) {
-        assertAssetKey(key, {
-          profile: nonprofitDocumentAssetProfile,
-          entityId: ctx.space.id,
         });
       }
 
@@ -108,7 +123,7 @@ export const applyForNonprofitDiscountAction = authActionClient
           userEmail: ctx.user.email,
           organizationName: parsedInput.organizationName,
           website: parsedInput.website,
-          documentKeys: parsedInput.documentKeys,
+          documentKeys,
         });
 
         if (result.outcome === "already_granted") {
