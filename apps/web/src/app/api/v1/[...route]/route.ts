@@ -875,7 +875,7 @@ app.get(
     tags: ["Polls"],
     summary: "Get poll results",
     description: [
-      "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` for per-person availability.",
+      "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` to list who responded.",
       "",
       "`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
     ].join("\n"),
