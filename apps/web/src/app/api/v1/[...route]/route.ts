@@ -876,7 +876,7 @@ app.get(
     tags: ["Polls"],
     summary: "Get poll results",
     description: [
-      "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` for per-person availability.",
+      "Retrieves aggregated voting results for a poll: vote counts per option without individual participant data. Use `GET /polls/:pollId/participants` to list who responded.",
       "",
       "`votes` lists every vote type the poll offers with its count, zero included. `score` is an opaque ranking value: sort by it to order options from best to worst, and use `isTopChoice` or `highScore` to find the leading options. Its formula is not part of the contract, so do not decode it, compare it across polls or threshold on it.",
     ].join("\n"),
@@ -948,9 +948,9 @@ app.get(
     tags: ["Polls"],
     summary: "List poll participants",
     description: [
-      "Lists the participants of a poll with their votes, oldest response first. The poll must belong to the space associated with the API key.",
+      "Lists the participants of a poll, oldest response first. The poll must belong to the space associated with the API key.",
       "",
-      "Each participant's `votes` pairs an `optionId` from the poll with the answer they gave, so this is the endpoint for per-person availability. Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page.",
+      "Results are paginated with a cursor: pass the `nextCursor` value from the previous response to fetch the next page. Per-option answers are not included; use the results endpoint for aggregate availability.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -1009,7 +1009,6 @@ app.get(
           name: participant.name,
           email: participant.email,
           createdAt: participant.createdAt.toISOString(),
-          votes: participant.votes,
         })),
         nextCursor: data.nextCursor,
       }),
