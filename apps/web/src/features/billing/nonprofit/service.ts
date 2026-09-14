@@ -1,6 +1,7 @@
 import "server-only";
 
 import { lookup } from "node:dns/promises";
+import { request as httpsRequest } from "node:https";
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { env } from "@/env";
@@ -16,35 +17,83 @@ const FETCH_MAX_BYTES = 200 * 1024;
 
 const VERIFY_TIMEOUT_MS = 45_000;
 
-async function readCapped(response: Response) {
-  const reader = response.body?.getReader();
-  if (!reader) return "";
-
-  const chunks: Uint8Array[] = [];
-  let received = 0;
-  while (received < FETCH_MAX_BYTES) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(value);
-    received += value.byteLength;
-  }
-  await reader.cancel().catch(() => {});
-
-  const buffer = Buffer.concat(chunks).subarray(0, FETCH_MAX_BYTES);
-  return new TextDecoder("utf-8", { fatal: false }).decode(buffer);
-}
+type ResolvedAddress = { address: string; family: number };
 
 /**
  * The hostname is applicant supplied, so it must not resolve to anything
- * inside our network. Resolved once per hop before the fetch; the fetch
- * resolves again, so a rebinding between the two is the residual gap.
+ * inside our network. The address returned here is the one the connection
+ * is pinned to, so a DNS answer that changes between the check and the
+ * connect cannot redirect the request.
  */
-async function resolvesToPublicAddress(hostname: string) {
+async function resolvePublicAddress(
+  hostname: string,
+): Promise<ResolvedAddress | null> {
   const addresses = await lookup(hostname, { all: true, verbatim: true });
-  return (
-    addresses.length > 0 &&
-    addresses.every(({ address }) => isPublicAddress(address))
-  );
+  if (addresses.length === 0) return null;
+  if (!addresses.every(({ address }) => isPublicAddress(address))) return null;
+  return addresses[0];
+}
+
+type CappedResponse = {
+  status: number;
+  location: string | null;
+  contentType: string;
+  body: string;
+};
+
+/**
+ * One GET pinned to `pinned` for the socket while TLS and the Host header
+ * keep the hostname. Reads at most FETCH_MAX_BYTES of the body.
+ */
+function getPinned(url: URL, pinned: ResolvedAddress) {
+  return new Promise<CappedResponse>((resolve, reject) => {
+    const request = httpsRequest(
+      url,
+      {
+        method: "GET",
+        timeout: FETCH_TIMEOUT_MS,
+        headers: {
+          accept: "text/html",
+          "user-agent": "Rallly nonprofit verifier (+https://rallly.co)",
+        },
+        // net calls this with `all` when it wants every address; either way
+        // it only ever gets the one we checked.
+        lookup: (_hostname, options, callback) => {
+          if (options.all) {
+            callback(null, [pinned]);
+          } else {
+            callback(null, pinned.address, pinned.family);
+          }
+        },
+      },
+      (response) => {
+        const chunks: Buffer[] = [];
+        let received = 0;
+        const finish = () => {
+          const buffer = Buffer.concat(chunks).subarray(0, FETCH_MAX_BYTES);
+          resolve({
+            status: response.statusCode ?? 0,
+            location: response.headers.location ?? null,
+            contentType: response.headers["content-type"] ?? "",
+            body: new TextDecoder("utf-8", { fatal: false }).decode(buffer),
+          });
+        };
+        response.on("data", (chunk: Buffer) => {
+          chunks.push(chunk);
+          received += chunk.byteLength;
+          if (received >= FETCH_MAX_BYTES) {
+            response.destroy();
+            finish();
+          }
+        });
+        response.on("end", finish);
+        response.on("error", reject);
+      },
+    );
+    request.on("timeout", () => request.destroy(new Error("Fetch timed out")));
+    request.on("error", reject);
+    request.end();
+  });
 }
 
 /**
@@ -59,23 +108,14 @@ export async function fetchWebsiteText(url: string) {
     let current = origin;
 
     for (let hop = 0; hop <= FETCH_MAX_REDIRECTS; hop++) {
-      if (!(await resolvesToPublicAddress(current.hostname))) return null;
+      const pinned = await resolvePublicAddress(current.hostname);
+      if (!pinned) return null;
 
-      const response = await fetch(current, {
-        redirect: "manual",
-        cache: "no-store",
-        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-        headers: {
-          accept: "text/html",
-          "user-agent": "Rallly nonprofit verifier (+https://rallly.co)",
-        },
-      });
+      const response = await getPinned(current, pinned);
 
       if (response.status >= 300 && response.status < 400) {
-        const location = response.headers.get("location");
-        await response.body?.cancel().catch(() => {});
-        if (!location) return null;
-        const next = new URL(location, current);
+        if (!response.location) return null;
+        const next = new URL(response.location, current);
         if (next.protocol !== "https:" || next.hostname !== origin.hostname) {
           return null;
         }
@@ -83,12 +123,10 @@ export async function fetchWebsiteText(url: string) {
         continue;
       }
 
-      if (!response.ok) return null;
+      if (response.status !== 200) return null;
+      if (!response.contentType.includes("text/html")) return null;
 
-      const contentType = response.headers.get("content-type") ?? "";
-      if (!contentType.includes("text/html")) return null;
-
-      const text = htmlToText(await readCapped(response));
+      const text = htmlToText(response.body);
       return text || null;
     }
 
