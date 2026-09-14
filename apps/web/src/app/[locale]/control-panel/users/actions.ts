@@ -5,8 +5,9 @@ import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
 } from "@/features/billing/mutations";
+import { banUserForAbuse } from "@/features/moderation/mutations";
 import { getUser, getUserDeletionDetails } from "@/features/user/data";
-import { banUser, hardDeleteUser } from "@/features/user/mutations";
+import { hardDeleteUser } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors/app-error";
 import { deletePostHogPerson } from "@/lib/posthog";
 import { adminActionClient } from "@/lib/safe-action/server";
@@ -56,7 +57,8 @@ export const deleteUserAction = adminActionClient
     };
   });
 
-// Route-private for the same reason: a ban cancels the user's subscriptions.
+// Route-private for the same reason: a ban cancels the user's subscriptions,
+// through the moderation feature's ban step.
 export const banUserAction = adminActionClient
   .metadata({ actionName: "ban_user" })
   .inputSchema(
@@ -91,9 +93,8 @@ export const banUserAction = adminActionClient
       });
     }
 
-    await banUser({ userId, reason: reason || undefined });
-
-    // Same reasoning as the moderation auto ban: a banned scammer's next
-    // move is a chargeback, so the subscription goes with the account.
-    await cancelUserSubscriptions({ userId });
+    await banUserForAbuse({
+      userId,
+      reason: reason || "Banned from the control panel",
+    });
   });

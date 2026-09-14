@@ -78,6 +78,7 @@ vi.mock("@/lib/posthog", () => ({
 import { prisma } from "@rallly/database";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import { moderateContent } from "@/features/moderation/mutations";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { redis } from "@/lib/kv";
 import type { FakeRedis } from "../../middleware/fake-redis";
@@ -450,6 +451,30 @@ describe("Private API - /polls", () => {
   });
 
   describe("Create poll with dates", () => {
+    it("rejects a flagged poll with INAPPROPRIATE_CONTENT", async () => {
+      vi.mocked(moderateContent).mockResolvedValueOnce({
+        verdict: "flagged",
+        reason: "phishing",
+      });
+
+      const res = await app.request("/api/private/polls", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Verify your account",
+          dates: ["2025-01-15"],
+        }),
+      });
+
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.error.code).toBe("INAPPROPRIATE_CONTENT");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
     it("should create a poll with date options", async () => {
       const res = await app.request("/api/private/polls", {
         method: "POST",

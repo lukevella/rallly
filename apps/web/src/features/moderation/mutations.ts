@@ -123,8 +123,9 @@ async function withinAiBudget(userId: string) {
 
 // A banned scammer's next move is a chargeback, which costs more than the
 // subscription, so the ban and the cancellation are one step. A Stripe
-// failure is logged and never undoes the ban.
-async function banForAbuse({
+// failure is logged and never undoes the ban. Shared with the control
+// panel's manual ban, which is the same decision made by a person.
+export async function banUserForAbuse({
   userId,
   reason,
 }: {
@@ -161,7 +162,7 @@ async function recordStrike(userId: string) {
   const banned = count >= MODERATION_STRIKES_BEFORE_BAN;
   if (banned) {
     logger.warn({ userId, count }, "Moderation strike limit reached, banning");
-    await banForAbuse({
+    await banUserForAbuse({
       userId,
       reason: `Automatic ban: ${count} pieces of content flagged by moderation within ${MODERATION_STRIKE_WINDOW}`,
     });
@@ -212,7 +213,7 @@ export async function moderateContent({
   if (containsBannedDomain(textToModerate)) {
     logger.warn({ userId }, "Banned domain detected, banning user");
     after(() =>
-      banForAbuse({
+      banUserForAbuse({
         userId,
         reason: "Automatic ban: banned domain detected in content",
       }),
