@@ -12,6 +12,10 @@ const mockListPolls = vi.fn();
 const mockTrack = vi.fn();
 const mockIdentifyGroup = vi.fn();
 
+vi.mock("@/features/moderation/mutations", () => ({
+  moderateContent: vi.fn().mockResolvedValue({ verdict: "safe", reason: "" }),
+}));
+
 vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
   createPoll: (...args: unknown[]) => mockCreatePoll(...args),
@@ -124,6 +128,7 @@ const mockApiKey = {
   space: {
     ownerId: "test-user-id",
     tier: "pro",
+    owner: { banned: false },
   },
 };
 

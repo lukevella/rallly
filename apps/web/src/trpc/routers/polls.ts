@@ -132,8 +132,6 @@ export const polls = router({
         });
       }
 
-      const isPro = activeSpace?.tier === "pro";
-
       const moderation = await moderateContent({
         userId: ctx.user.id,
         userEmail: ctx.user.email,
@@ -142,7 +140,6 @@ export const polls = router({
           Description: input.description || "",
           Location: input.location || "",
         },
-        trusted: isPro,
       });
 
       if (moderation.verdict !== "safe") {
@@ -335,11 +332,6 @@ export const polls = router({
         });
       }
 
-      const activeSpace = ctx.user.isGuest
-        ? null
-        : await getActiveSpaceForUser(ctx.user.id);
-      const isPro = activeSpace?.tier === "pro";
-
       const moderation = await moderateContent({
         userId: ctx.user.id,
         userEmail: ctx.user.email,
@@ -348,7 +340,6 @@ export const polls = router({
           Description: input.description || "",
           Location: input.location || "",
         },
-        trusted: isPro,
       });
 
       if (moderation.verdict !== "safe") {

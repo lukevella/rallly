@@ -1,11 +1,12 @@
 "use server";
+import { subject } from "@casl/ability";
 import * as z from "zod";
 import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
 } from "@/features/billing/mutations";
-import { getUserDeletionDetails } from "@/features/user/data";
-import { hardDeleteUser } from "@/features/user/mutations";
+import { getUser, getUserDeletionDetails } from "@/features/user/data";
+import { banUser, hardDeleteUser } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors/app-error";
 import { deletePostHogPerson } from "@/lib/posthog";
 import { adminActionClient } from "@/lib/safe-action/server";
@@ -53,4 +54,46 @@ export const deleteUserAction = adminActionClient
     return {
       success: true,
     };
+  });
+
+// Route-private for the same reason: a ban cancels the user's subscriptions.
+export const banUserAction = adminActionClient
+  .metadata({ actionName: "ban_user" })
+  .inputSchema(
+    z.object({
+      userId: z.string(),
+      reason: z.string().trim().max(500).optional(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const { userId, reason } = parsedInput;
+
+    const targetUser = await getUser(userId);
+
+    if (!targetUser) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: `User ${userId} not found`,
+      });
+    }
+
+    if (targetUser.banned) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "User is already banned",
+      });
+    }
+
+    if (ctx.ability.cannot("update", subject("User", targetUser), "banned")) {
+      throw new AppError({
+        code: "UNAUTHORIZED",
+        message: "Current user is not authorized to ban this user",
+      });
+    }
+
+    await banUser({ userId, reason: reason || undefined });
+
+    // Same reasoning as the moderation auto ban: a banned scammer's next
+    // move is a chargeback, so the subscription goes with the account.
+    await cancelUserSubscriptions({ userId });
   });

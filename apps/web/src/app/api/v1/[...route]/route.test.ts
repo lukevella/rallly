@@ -14,6 +14,10 @@ const mockGetSpaceMemberByEmail = vi.fn();
 const mockTrack = vi.fn();
 const mockIdentifyGroup = vi.fn();
 
+vi.mock("@/features/moderation/mutations", () => ({
+  moderateContent: vi.fn().mockResolvedValue({ verdict: "safe", reason: "" }),
+}));
+
 vi.mock("@/features/poll/mutations", () => ({
   deletePoll: (...args: unknown[]) => mockDeletePoll(...args),
   createPoll: (...args: unknown[]) => mockCreatePoll(...args),
@@ -77,6 +81,7 @@ vi.mock("@/lib/posthog", () => ({
 import { logger } from "@rallly/logger";
 import { after } from "next/server";
 import { hashApiKey, verifyApiKey } from "@/features/api-keys/utils";
+import { moderateContent } from "@/features/moderation/mutations";
 import { MAX_POLL_TITLE_LENGTH } from "@/features/poll/schema";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { redis } from "@/lib/kv";
@@ -143,6 +148,7 @@ const mockApiKey = {
   space: {
     ownerId: "test-user-id",
     tier: "pro",
+    owner: { banned: false },
   },
 };
 
@@ -328,6 +334,55 @@ describe("API v1 - /polls", () => {
       });
 
       expect(res.status).toBe(201);
+    });
+  });
+
+  describe("content moderation", () => {
+    it("rejects a flagged poll with INAPPROPRIATE_CONTENT", async () => {
+      vi.mocked(moderateContent).mockResolvedValueOnce({
+        verdict: "flagged",
+        reason: "phishing",
+      });
+
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Verify your account",
+          options: { kind: "date", dates: ["2025-01-15"] },
+        }),
+      });
+
+      await expectErrorEnvelope(res, {
+        status: 400,
+        code: "INAPPROPRIATE_CONTENT",
+      });
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("banned owner", () => {
+    it("rejects a valid key when the space owner is banned", async () => {
+      vi.mocked(prisma.spaceApiKey.findMany).mockResolvedValue([
+        {
+          ...mockApiKey,
+          hashedKey: hashApiKey(testApiKey),
+          space: { ...mockApiKey.space, owner: { banned: true } },
+        },
+      ]);
+
+      const res = await app.request("/v1/polls/test-poll-id", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+        },
+      });
+
+      await expectErrorEnvelope(res, { status: 401, code: "UNAUTHORIZED" });
+      expect(after).not.toHaveBeenCalled();
     });
   });
 

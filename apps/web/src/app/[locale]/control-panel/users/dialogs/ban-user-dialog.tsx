@@ -21,9 +21,9 @@ import {
 import { Textarea } from "@rallly/ui/textarea";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { banUserAction } from "@/features/user/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { banUserAction } from "../actions";
 
 const useSchema = () => {
   const { t } = useTranslation();
