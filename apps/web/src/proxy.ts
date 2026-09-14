@@ -74,6 +74,10 @@ export const proxy = async (req: NextRequest) => {
   return res;
 };
 
+// `/v1` is the public API on the API host: next.config rewrites it to
+// `/api/v1`, and that rewrite only runs when this proxy does not claim the
+// request first. Without the exclusion the locale rewrite sends it to the
+// not-found route.
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|static|.*\\.).*)"],
+  matcher: ["/((?!api|v1|_next/static|_next/image|static|.*\\.).*)"],
 };

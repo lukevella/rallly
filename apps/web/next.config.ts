@@ -56,7 +56,8 @@ const nextConfig: NextConfig = {
   // host later without inheriting them.
   async rewrites() {
     if (!process.env.API_BASE_URL) return [];
-    const host = new URL(process.env.API_BASE_URL).host;
+    // Next compares the request host without its port, so use hostname.
+    const host = new URL(process.env.API_BASE_URL).hostname;
     return [
       {
         source: "/v1/:path*",
