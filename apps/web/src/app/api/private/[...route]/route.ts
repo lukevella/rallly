@@ -350,6 +350,7 @@ app.post(
             title: poll.title,
             kind,
             source: "api",
+            apiVersion: "private",
             optionCount: poll.options.length,
             hasLocation: !!poll.location,
             hasDescription: !!poll.description,

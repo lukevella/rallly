@@ -545,6 +545,7 @@ app.post(
             title: poll.title,
             kind,
             source: "api",
+            apiVersion: "v1",
             optionCount: poll.options.length,
             hasLocation: !!poll.location,
             hasDescription: !!poll.description,
