@@ -29,7 +29,6 @@ Every failure is `application/json` with the same shape:
 | 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |
 | 404 | `NOT_FOUND` | No route matches the method and path |
 | 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |
-| 422 | `TRANSITION_NOT_AVAILABLE` | The requested status change is not supported |
 | 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted; see [Rate limits](/api-reference/rate-limits) |
 | 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |
 | 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |
