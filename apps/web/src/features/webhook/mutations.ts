@@ -9,7 +9,6 @@ import {
   DELIVERY_CONCURRENCY,
   FAN_OUT_BATCH_SIZE,
   FAN_OUT_LAG_MS,
-  FAN_OUT_MAX_PAGES,
   FAN_OUT_OVERLAP_MS,
   IN_FLIGHT_TIMEOUT_MS,
   MAX_CONSECUTIVE_FAILURES,
@@ -34,8 +33,10 @@ import {
  * unique constraint makes re-reading harmless, so every run re-reads an
  * overlap window behind the cursor and the cursor only advances to the lag
  * boundary once a webhook's backlog is drained. Within a run, pages follow a
- * `(createdAt, id)` keyset: the persisted cursor is a timestamp, and a page
- * boundary inside a run of equal timestamps must not restart the page.
+ * `(createdAt, id)` keyset until the backlog is drained: the persisted cursor
+ * is a timestamp, so a run that stopped early would restart at the overlap
+ * and never get past a window larger than what it reads. Each page commits
+ * with its cursor, so a crash resumes from the last page, not the start.
  * Returns the number of deliveries created.
  */
 export async function fanOutWebhookEvents({ now }: { now: Date }) {
@@ -51,7 +52,7 @@ export async function fanOutWebhookEvents({ now }: { now: Date }) {
       createdAt: new Date(webhook.cursor.getTime() - FAN_OUT_OVERLAP_MS),
     };
 
-    for (let page = 0; page < FAN_OUT_MAX_PAGES; page++) {
+    for (;;) {
       const activities = await listWebhookActivities({
         spaceId: webhook.spaceId,
         after,

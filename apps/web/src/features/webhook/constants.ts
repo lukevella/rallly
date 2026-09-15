@@ -32,9 +32,6 @@ export const FAN_OUT_OVERLAP_MS = 5 * 60_000;
 
 export const FAN_OUT_BATCH_SIZE = 500;
 
-/** Pages one run drains per webhook before leaving the rest to the next. */
-export const FAN_OUT_MAX_PAGES = 20;
-
 export const DELIVERY_CLAIM_BATCH_SIZE = 100;
 
 export const DELIVERY_CONCURRENCY = 10;

@@ -3,8 +3,9 @@ import "server-only";
 import type { LookupAddress, LookupOptions } from "node:dns";
 import { lookup } from "node:dns";
 import { isIP } from "node:net";
-import { Agent, getGlobalDispatcher } from "undici";
-import { isOutboundProxyConfigured } from "@/lib/outbound-proxy";
+import type { Dispatcher } from "undici";
+import { getGlobalDispatcher } from "undici";
+import { createOutboundDispatcher } from "@/lib/outbound-proxy";
 import { DELIVERY_TIMEOUT_MS } from "./constants";
 import { isPrivateAddress, signWebhookBody } from "./utils";
 
@@ -65,19 +66,22 @@ export function guardedLookup(
   });
 }
 
-let guardedAgent: Agent | null = null;
+let guardedDispatcher: Dispatcher | null = null;
 
 /**
- * Direct connections pin the guarded lookup. Behind an outbound proxy the
- * proxy resolves the hostname and makes the connection, so pinning is not
- * possible there; the proxy operator controls what it can reach.
+ * Direct connections pin the guarded lookup, including hosts that NO_PROXY
+ * exempts from a configured proxy. Proxied connections are made by the proxy,
+ * which resolves the hostname itself, so pinning is not possible there; the
+ * proxy operator controls what it can reach.
  */
 function getDispatcher() {
-  if (allowsPrivateTargets() || isOutboundProxyConfigured()) {
+  if (allowsPrivateTargets()) {
     return getGlobalDispatcher();
   }
-  guardedAgent ??= new Agent({ connect: { lookup: guardedLookup } });
-  return guardedAgent;
+  guardedDispatcher ??= createOutboundDispatcher({
+    connect: { lookup: guardedLookup },
+  });
+  return guardedDispatcher;
 }
 
 /**
