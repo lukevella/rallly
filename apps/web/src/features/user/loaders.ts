@@ -32,6 +32,28 @@ export const getCurrentUser = cache(async () => {
 });
 
 /**
+ * The session's user, guest or member, fetched from the database. For
+ * writes a guest may perform (responding to a poll, commenting). Returns
+ * null when there is no session; throws InvalidSessionError when the
+ * session references a user that no longer exists or is banned.
+ */
+export const getCurrentActor = cache(async () => {
+  const session = await getSession();
+
+  if (!session?.user) {
+    return null;
+  }
+
+  const user = await getUser(session.user.id);
+
+  if (!user || user.banned) {
+    throw new InvalidSessionError();
+  }
+
+  return user;
+});
+
+/**
  * Gate for server pages that require a logged-in (non-guest) user.
  * Trusts the session cookie cache (no database read). Redirects to /login
  * when unauthenticated, fails the render on an unreadable session so a

@@ -6,7 +6,7 @@ import { after } from "next/server";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
-import { getCurrentUser } from "@/features/user/loaders";
+import { getCurrentActor, getCurrentUser } from "@/features/user/loaders";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
@@ -130,6 +130,38 @@ export const authActionClient = actionClient.use(async ({ next }) => {
     ctx: { user, ability },
   });
 });
+
+/**
+ * For writes on public pages: the session user may be a guest, and there
+ * may be none at all when the credential is a token from an emailed link.
+ */
+export const optionalUserActionClient = actionClient.use(async ({ next }) => {
+  const user = await getCurrentActor();
+
+  return next({
+    ctx: { user },
+  });
+});
+
+/**
+ * For writes a guest may perform. The client creates the guest session
+ * first (createGuestIfNeeded), so a missing user is a stale page, not an
+ * anonymous visitor.
+ */
+export const anyUserActionClient = optionalUserActionClient.use(
+  async ({ ctx, next }) => {
+    if (!ctx.user) {
+      throw new AppError({
+        code: "UNAUTHORIZED",
+        message: "You are not authenticated.",
+      });
+    }
+
+    return next({
+      ctx: { user: ctx.user },
+    });
+  },
+);
 
 export const adminActionClient = authActionClient.use(async ({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
