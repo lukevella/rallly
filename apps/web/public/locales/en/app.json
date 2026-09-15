@@ -153,6 +153,7 @@
   "comments": "Comments",
   "commentsComposerPlaceholder": "Write a comment…",
   "commentsComposerVisibility": "Visible to everyone",
+  "commentsDisabledError": "Comments are turned off for this poll.",
   "commentsSettingDescription": "Allow participants to post public comments on the poll.",
   "commentsSettingTitle": "Comments",
   "commentsSheetDescription": "View and add comments on this poll",
