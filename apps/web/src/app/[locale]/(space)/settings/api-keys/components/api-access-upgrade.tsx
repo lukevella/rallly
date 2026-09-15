@@ -1,7 +1,8 @@
 "use client";
 
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { TerminalIcon } from "lucide-react";
+import { ArrowUpRightIcon, TerminalIcon } from "lucide-react";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -9,7 +10,11 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { API_RATE_LIMIT_PER_MINUTE } from "@/features/api-keys/constants";
+import { Link } from "@/components/link";
+import {
+  API_RATE_LIMIT_PER_MINUTE,
+  getApiDocsPath,
+} from "@/features/api-keys/constants";
 import { showPayWall } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
 
@@ -32,7 +37,7 @@ export function ApiAccessUpgrade() {
           values={{ count: API_RATE_LIMIT_PER_MINUTE }}
         />
       </EmptyStateDescription>
-      <EmptyStateFooter>
+      <EmptyStateFooter className="flex flex-wrap justify-center gap-2">
         <Button
           variant="primary"
           onClick={() => {
@@ -41,6 +46,15 @@ export function ApiAccessUpgrade() {
         >
           <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
         </Button>
+        <Link
+          href={getApiDocsPath()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={buttonVariants()}
+        >
+          <Trans i18nKey="apiReference" defaults="API reference" />
+          <ArrowUpRightIcon className="size-4" />
+        </Link>
       </EmptyStateFooter>
     </EmptyState>
   );
