@@ -189,21 +189,13 @@ function ApplicationForm({
             defaults="Apply for the nonprofit discount"
           />
         </h1>
-        <div className="space-y-2 text-pretty text-muted-foreground text-sm leading-relaxed">
-          <p>
-            <Trans
-              i18nKey="nonprofitApplyOffer"
-              defaults="Registered nonprofits get {percent}% off Rallly Pro."
-              values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
-            />
-          </p>
-          <p>
-            <Trans
-              i18nKey="nonprofitApplyRequirements"
-              defaults="Upload proof of nonprofit registration. Verification is automatic and takes up to a minute."
-            />
-          </p>
-        </div>
+        <p className="text-pretty text-muted-foreground text-sm leading-relaxed">
+          <Trans
+            i18nKey="nonprofitApplyOffer"
+            defaults="Registered nonprofits get {percent}% off Rallly Pro."
+            values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
+          />
+        </p>
       </header>
       {rejectionReason ? (
         <Alert variant="error">
