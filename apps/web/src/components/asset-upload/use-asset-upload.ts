@@ -37,6 +37,11 @@ function assertActionOk(result: ActionResult<unknown> | undefined) {
  * reports the error — success is only signalled after the persist action
  * confirmed the key was stored.
  *
+ * `persistUpload` is optional for slots whose keys are persisted later by a
+ * different action (the nonprofit application collects up to three keys and
+ * submits them together); `onSuccess` receives the key so the caller can
+ * hold it until then.
+ *
  * Files must already be validated against the profile (the upload control
  * does this before cropping).
  */
@@ -48,12 +53,15 @@ export function useAssetUpload<TAccept extends string>({
     fileType: TAccept;
     fileSize: number;
   }) => Promise<ActionResult<{ url: string; key: string }> | undefined>;
-  persistUpload: (key: string) => Promise<ActionResult<unknown> | undefined>;
+  persistUpload?: (key: string) => Promise<ActionResult<unknown> | undefined>;
 }) {
   const { t } = useTranslation();
   const [isUploading, startUploading] = React.useTransition();
 
-  const upload = (file: File, options?: { onSuccess?: () => void }) => {
+  const upload = (
+    file: File,
+    options?: { onSuccess?: (key: string) => void },
+  ) => {
     startUploading(async () => {
       try {
         const signResult = await signUpload({
@@ -71,9 +79,11 @@ export function useAssetUpload<TAccept extends string>({
 
         await uploadAsset({ url: signedUpload.url, file });
 
-        assertActionOk(await persistUpload(signedUpload.key));
+        if (persistUpload) {
+          assertActionOk(await persistUpload(signedUpload.key));
+        }
 
-        options?.onSuccess?.();
+        options?.onSuccess?.(signedUpload.key);
       } catch (error) {
         if (!(error instanceof ActionFailedError)) {
           toast.error(
