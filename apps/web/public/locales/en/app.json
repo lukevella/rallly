@@ -66,6 +66,7 @@
   "apiKeysSettingsDescription": "Create and manage API keys for programmatic access to your space.",
   "apiRateLimitLabel": "Rate limit",
   "apiRateLimitValue": "{count} requests / minute",
+  "apiReference": "API reference",
   "apiViewDocs": "View API docs",
   "applyToAllDates": "Apply to all dates",
   "appName": "App name",
