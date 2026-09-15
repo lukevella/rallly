@@ -2,7 +2,7 @@
   "advancedPollSettings": "Erweiterte Umfrageeinstellungen",
   "advancedPollSettingsDescription": "E-Mail-Adressen der Teilnehmer verlangen, Teilnehmernamen ausblenden und Stimmen ausblenden",
   "apiAccess": "API-Zugriff",
-  "apiAccessDescription": "Erstelle Umfragen und erfasse Ergebnisse in deinen eigenen Systemen. <a>Sieh dir die API-Dokumentation an</a>",
+  "apiAccessDescription": "Erstelle Umfragen und rufe Ergebnisse aus deinen eigenen Systemen heraus ab. <a>Sieh dir die API-Dokumentation an</a>",
   "basicPolls": "Einfache Umfragen",
   "cancelSubscription": "Wie kann ich mein Abo kündigen?",
   "cancelSubscriptionAnswer": "Du kannst dein Abonnement jederzeit kündigen, indem du zu deinen <a>Abrechnungseinstellungen</a> gehst. Nach der Kündigung hast du weiterhin Zugriff auf deinen kostenpflichtigen Plan bis zum Ende deines Abrechnungszeitraums. Danach wirst du auf einen kostenlosen Plan zurückgestuft.",
