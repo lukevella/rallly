@@ -626,7 +626,6 @@
   "pollStatusClosed": "Закрыто",
   "pollStatusOpen": "Активен",
   "pollStatusScheduled": "Запланировано",
-  "poweredByRallly": "Работает с помощью <a>{name}</a>",
   "preferences": "Настройки",
   "preferencesDescription": "Управляйте настройками",
   "preview": "Предпросмотр",
