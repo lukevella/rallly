@@ -217,7 +217,6 @@ export const listSpacesForUser = cache(async (userId: string) => {
           showBranding: true,
           hideAttribution: true,
           shared: true,
-          industry: true,
           _count: { select: { members: true } },
           subscriptions: {
             where: { active: true },

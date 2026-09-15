@@ -22,7 +22,6 @@ export const updateSpaceSchema = z.object({
     .regex(/^#[0-9a-fA-F]{6}$/, "Invalid hex color")
     .nullable()
     .optional(),
-  industry: industrySchema.nullable().optional(),
 });
 
 export const updateSpaceShowBrandingSchema = z.object({

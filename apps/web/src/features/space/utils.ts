@@ -6,7 +6,6 @@ import { resolveSpaceTier } from "@/features/billing/utils";
 import type { InstancePolicy } from "@/features/instance-policy/types";
 import type { Industry } from "@/features/space/constants";
 import {
-  industries,
   industryDomainRules,
   industryKeywordRules,
 } from "@/features/space/constants";
@@ -52,7 +51,6 @@ export function createSpaceDTO({
     shared: boolean;
     memberCount: number;
     seatCount: number;
-    industry?: string | null;
   };
   policy: Pick<InstancePolicy, "spacesAlwaysShared">;
 }): SpaceDTO {
@@ -72,14 +70,7 @@ export function createSpaceDTO({
     primaryColor: space.primaryColor ?? undefined,
     showBranding: space.showBranding,
     hideAttribution: space.hideAttribution,
-    // The column is free text so a retired taxonomy value reads as unset
-    // rather than crashing the picker.
-    industry: isIndustry(space.industry) ? space.industry : null,
   };
-}
-
-function isIndustry(value: string | null | undefined): value is Industry {
-  return (industries as ReadonlyArray<string>).includes(value ?? "");
 }
 
 /**
