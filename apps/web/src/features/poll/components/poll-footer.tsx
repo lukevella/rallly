@@ -30,7 +30,7 @@ export function PollFooter({
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 py-6 text-center text-muted-foreground text-sm">
+    <div className="flex flex-col items-center gap-4 py-3 text-center text-muted-foreground text-sm">
       <InstanceFooterLinks links={footerLinks} />
       {isAttributionHidden ? null : (
         <Link
