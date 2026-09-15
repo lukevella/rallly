@@ -9,8 +9,6 @@ import type {
 import { useUser } from "@/features/user/client";
 import { useTranslation } from "@/i18n/client";
 
-type PollRole = "admin" | "participant";
-
 type PollContextValue = {
   poll: PollDetails;
   participants: PollParticipant[];
@@ -20,7 +18,8 @@ type PollContextValue = {
    * from the same token the actions check.
    */
   linkedParticipantIds: string[];
-  role: PollRole;
+  /** Which surface the page is: the host's admin page or the invite page. */
+  viewerRole: "admin" | "participant";
 };
 
 const PollContext = React.createContext<PollContextValue | null>(null);
@@ -37,12 +36,15 @@ export function PollProvider({
   participants,
   comments,
   linkedParticipantIds = [],
-  role,
+  viewerRole,
   children,
-}: PollContextValue & { children: React.ReactNode }) {
+}: Omit<PollContextValue, "linkedParticipantIds"> & {
+  linkedParticipantIds?: string[];
+  children: React.ReactNode;
+}) {
   const value = React.useMemo(
-    () => ({ poll, participants, comments, linkedParticipantIds, role }),
-    [poll, participants, comments, linkedParticipantIds, role],
+    () => ({ poll, participants, comments, linkedParticipantIds, viewerRole }),
+    [poll, participants, comments, linkedParticipantIds, viewerRole],
   );
 
   return <PollContext.Provider value={value}>{children}</PollContext.Provider>;
@@ -50,7 +52,7 @@ export function PollProvider({
 
 export const usePoll = () => useRequiredContext(PollContext).poll;
 
-export const useRole = () => useRequiredContext(PollContext).role;
+export const useRole = () => useRequiredContext(PollContext).viewerRole;
 
 export const useComments = () => useRequiredContext(PollContext).comments;
 
@@ -78,7 +80,7 @@ export const useParticipants = () => {
 };
 
 export const usePermissions = () => {
-  const { poll, participants, linkedParticipantIds, role } =
+  const { poll, participants, linkedParticipantIds, viewerRole } =
     useRequiredContext(PollContext);
   const { user } = useUser();
 
@@ -89,7 +91,7 @@ export const usePermissions = () => {
         return false;
       }
 
-      if (role === "admin") {
+      if (viewerRole === "admin") {
         return true;
       }
 

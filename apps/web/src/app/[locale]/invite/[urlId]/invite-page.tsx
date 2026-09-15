@@ -1,6 +1,8 @@
 "use client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
+import { Card, CardHeader } from "@rallly/ui/card";
+import { Skeleton } from "@rallly/ui/skeleton";
 import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
 import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
@@ -14,6 +16,7 @@ import {
 } from "@/features/poll/components/voting-form";
 import { useUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 
 const FloatingComments = () => {
   const votingForm = useVotingForm();
@@ -66,6 +69,47 @@ const GoToApp = () => {
   );
 };
 
+function VotingInterfaceSkeleton() {
+  return (
+    <Card aria-busy="true">
+      <CardHeader className="flex items-center gap-x-2.5 border-b">
+        <Skeleton className="h-5 w-28" />
+        <Skeleton className="h-5 w-8 rounded-full" />
+      </CardHeader>
+      <div className="divide-y">
+        {[0, 1, 2].map((row) => (
+          <div key={row} className="flex h-12 items-center gap-x-3 px-4">
+            <Skeleton className="size-6 rounded-full" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+/**
+ * The voting grid depends on two things the server cannot know: the
+ * viewer's zone and Intl output for the option dates, and the viewport
+ * breakpoint that picks the desktop or mobile layout. It mounts after
+ * hydration behind a placeholder of the same shape, while the rest of the
+ * page arrives server-rendered.
+ */
+function VotingInterface() {
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return <VotingInterfaceSkeleton />;
+  }
+
+  return (
+    <VotingForm>
+      <ResponsiveResults />
+      <FloatingComments />
+    </VotingForm>
+  );
+}
+
 export function InvitePage({
   footerLinks,
 }: {
@@ -80,10 +124,7 @@ export function InvitePage({
       >
         <GoToApp />
         <EventCard />
-        <VotingForm>
-          <ResponsiveResults />
-          <FloatingComments />
-        </VotingForm>
+        <VotingInterface />
         <PollFooter footerLinks={footerLinks} />
         <div className="h-24 lg:hidden" />
       </main>

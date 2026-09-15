@@ -2,7 +2,6 @@ import "server-only";
 
 import { Prisma, prisma } from "@rallly/database";
 import { env } from "@/env";
-import { setPollMuted } from "@/features/poll/mutations";
 
 import { defaultNotificationPreferences } from "./constants";
 import type { ActivityEventType } from "./schema";
@@ -71,12 +70,22 @@ export async function unsubscribeWithToken({ token }: { token: string }) {
 
   switch (target.kind) {
     case "poll": {
-      const result = await setPollMuted({
-        pollId: target.pollId,
-        userId: target.userId,
-        muted: true,
+      // The same row write as the poll feature's setPollMuted, kept here so
+      // notifications never imports poll: poll depends on this feature for
+      // recipients and tokens, and features must not import each other in
+      // both directions.
+      const { count } = await prisma.poll.updateMany({
+        where: {
+          id: target.pollId,
+          userId: target.userId,
+          deletedAt: null,
+        },
+        data: { muted: true },
       });
-      return result.ok ? { ok: true as const, target } : result;
+      if (count === 0) {
+        return { ok: false as const, reason: "notFound" as const };
+      }
+      return { ok: true as const, target };
     }
   }
 }
