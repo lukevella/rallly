@@ -163,20 +163,28 @@ function ApplicationForm({
 
   return (
     <div className="space-y-8">
-      <header>
-        <h1 className="font-bold text-2xl">
+      <header className="space-y-3">
+        <h1 className="font-medium text-xl leading-tight tracking-tight">
           <Trans
             i18nKey="nonprofitApplyTitle"
             defaults="Apply for the nonprofit discount"
           />
         </h1>
-        <p className="mt-1 text-pretty text-muted-foreground">
-          <Trans
-            i18nKey="nonprofitApplyDescription"
-            defaults="Registered nonprofits get {percent}% off Rallly Pro for {spaceName}. Your email must be on your organization's own domain and you must upload proof of nonprofit registration. Verification is automatic and takes up to a minute."
-            values={{ spaceName, percent: NONPROFIT_DISCOUNT_PERCENT }}
-          />
-        </p>
+        <div className="space-y-2 text-pretty text-muted-foreground text-sm leading-relaxed">
+          <p>
+            <Trans
+              i18nKey="nonprofitApplyOffer"
+              defaults="Registered nonprofits get {percent}% off Rallly Pro for {spaceName}."
+              values={{ spaceName, percent: NONPROFIT_DISCOUNT_PERCENT }}
+            />
+          </p>
+          <p>
+            <Trans
+              i18nKey="nonprofitApplyRequirements"
+              defaults="Your email must be on your organization's own domain and you must upload proof of nonprofit registration. Verification is automatic and takes up to a minute."
+            />
+          </p>
+        </div>
       </header>
       {rejectionReason ? (
         <Alert variant="error">
