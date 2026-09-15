@@ -612,7 +612,6 @@
   "pollStatusClosed": "Cerrado",
   "pollStatusOpen": "Activa",
   "pollStatusScheduled": "Programado",
-  "poweredByRallly": "Con tecnología de <a>{name}</a>",
   "preferences": "Preferencias",
   "preferencesDescription": "Gestiona tus preferencias",
   "preview": "Vista previa",
