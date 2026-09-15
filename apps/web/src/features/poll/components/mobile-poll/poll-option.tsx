@@ -14,11 +14,9 @@ import * as m from "motion/react-m";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import {
-  filterParticipantsByVote,
-  useParticipants,
-} from "@/features/poll/components/participants-provider";
+import { useParticipants } from "@/features/poll/client";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
+import { filterParticipantsByVote } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";

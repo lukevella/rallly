@@ -43,12 +43,20 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { usePoll, useRole } from "@/features/poll/client";
+import {
+  useComments,
+  useParticipants,
+  usePoll,
+  useRole,
+} from "@/features/poll/client";
+import {
+  useAddComment,
+  useDeleteComment,
+} from "@/features/poll/components/mutations";
 import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
-import { useParticipants } from "@/features/poll/components/participants-provider";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import {
   MAX_COMMENT_AUTHOR_NAME_LENGTH,
@@ -58,7 +66,6 @@ import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
 import { requiredString } from "@/lib/utils/form-validation";
-import { trpc } from "@/trpc/client";
 
 interface CommentForm {
   authorName: string;
@@ -94,20 +101,29 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
 
   const contentLength = watch("content").length;
 
-  const queryClient = trpc.useUtils();
-
-  const addComment = trpc.polls.comments.add.useMutation({
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const addComment = useAddComment();
   return (
     <form
       className="w-full"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
         await createGuestIfNeeded();
-        await addComment.mutateAsync({ authorName, content, pollId });
-        await queryClient.polls.comments.list.invalidate({ pollId });
+        const result = await addComment.execute({
+          authorName,
+          content,
+          pollId,
+        });
+        if (!result.ok) {
+          toast.error(
+            result.reason === "tooManyRequests"
+              ? t("actionErrorTooManyRequests", {
+                  defaultValue: "You are making too many requests",
+                })
+              : t("actionErrorInternalServerError", {
+                  defaultValue: "An internal server error occurred",
+                }),
+          );
+          return;
+        }
         reset({ authorName, content: "" });
         onSubmitted();
       })}
@@ -201,33 +217,9 @@ function CommentsSheetInner({ className }: { className?: string }) {
 
   const pollId = poll.id;
 
-  const { data: comments } = trpc.polls.comments.list.useQuery({ pollId });
+  const comments = useComments();
 
-  const queryClient = trpc.useUtils();
-
-  const deleteComment = trpc.polls.comments.delete.useMutation({
-    onMutate: ({ commentId }) => {
-      const previousComments = queryClient.polls.comments.list.getData({
-        pollId,
-      });
-      queryClient.polls.comments.list.setData(
-        { pollId },
-        (existingComments = []) => {
-          return existingComments.filter(({ id }) => id !== commentId);
-        },
-      );
-      return { previousComments };
-    },
-    onError: (_error, _variables, context) => {
-      queryClient.polls.comments.list.setData(
-        { pollId },
-        context?.previousComments,
-      );
-    },
-    onSettled: () => {
-      queryClient.polls.comments.list.invalidate({ pollId });
-    },
-  });
+  const deleteComment = useDeleteComment();
 
   const session = useUser();
 
@@ -235,16 +227,14 @@ function CommentsSheetInner({ className }: { className?: string }) {
 
   const [hasCommented, setHasCommented] = React.useState(false);
 
-  const count = comments?.length ?? 0;
+  const count = comments.length;
 
   const sortedComments = React.useMemo(
     () =>
-      comments
-        ? [...comments].sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-          )
-        : [],
+      [...comments].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
     [comments],
   );
 
@@ -338,10 +328,19 @@ function CommentsSheetInner({ className }: { className?: string }) {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem
                                   variant="destructive"
-                                  onClick={() => {
-                                    deleteComment.mutate({
+                                  disabled={deleteComment.isPending}
+                                  onClick={async () => {
+                                    const result = await deleteComment.execute({
                                       commentId: comment.id,
                                     });
+                                    if (!result.ok) {
+                                      toast.error(
+                                        t("actionErrorInternalServerError", {
+                                          defaultValue:
+                                            "An internal server error occurred",
+                                        }),
+                                      );
+                                    }
                                   }}
                                 >
                                   <TrashIcon />

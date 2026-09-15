@@ -1,7 +1,7 @@
 import type { VoteType } from "@rallly/database";
 import type * as React from "react";
 import { Controller } from "react-hook-form";
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useParticipants } from "@/features/poll/client";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";

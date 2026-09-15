@@ -16,9 +16,9 @@ import {
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
 import { ParticipantNote } from "@/features/poll/components/participant-note";
 import { usePoll } from "@/features/poll/components/poll-context";
+import type { Vote } from "@/features/poll/types";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import type { Vote } from "@/trpc/client/types";
 
 import VoteIcon from "../vote-icon";
 import ParticipantRowForm from "./participant-row-form";

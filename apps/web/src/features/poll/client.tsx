@@ -1,55 +1,87 @@
 "use client";
-import { useParams, usePathname } from "next/navigation";
 import React from "react";
-
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useRequiredContext } from "@/components/use-required-context";
+import type {
+  PollComment,
+  PollDetails,
+  PollParticipant,
+} from "@/features/poll/types";
 import { useUser } from "@/features/user/client";
-import { trpc } from "@/trpc/client";
+import { useTranslation } from "@/i18n/client";
 
-export const usePoll = () => {
-  const params = useParams<{ urlId: string }>();
-  const [poll] = trpc.polls.get.useSuspenseQuery({
-    urlId: params?.urlId as string,
-  });
+type PollRole = "admin" | "participant";
 
-  return poll;
+type PollContextValue = {
+  poll: PollDetails;
+  participants: PollParticipant[];
+  comments: PollComment[];
+  /**
+   * Responses the emailed link in the URL may edit, resolved on the server
+   * from the same token the actions check.
+   */
+  linkedParticipantIds: string[];
+  role: PollRole;
 };
 
-export const useRole = () => {
-  const pathname = usePathname();
-  return pathname?.includes("/poll") ? "admin" : "participant";
-};
+const PollContext = React.createContext<PollContextValue | null>(null);
+
+PollContext.displayName = "PollProvider";
 
 /**
- * Responses the emailed link in the URL may edit, resolved on the server
- * from the same token the tRPC routes check.
+ * Serves the poll a page loaded on the server. Writes go through server
+ * actions followed by router.refresh(), which re-renders the page with new
+ * props; nothing here is patched on the client.
  */
-const PermissionsContext = React.createContext<{
-  linkedParticipantIds: string[];
-}>({
-  linkedParticipantIds: [],
-});
-
-export const PermissionProvider = ({
+export function PollProvider({
+  poll,
+  participants,
+  comments,
+  linkedParticipantIds = [],
+  role,
   children,
-  linkedParticipantIds,
-}: {
-  children: React.ReactNode;
-  linkedParticipantIds: string[];
-}) => {
-  return (
-    <PermissionsContext.Provider value={{ linkedParticipantIds }}>
-      {children}
-    </PermissionsContext.Provider>
+}: PollContextValue & { children: React.ReactNode }) {
+  const value = React.useMemo(
+    () => ({ poll, participants, comments, linkedParticipantIds, role }),
+    [poll, participants, comments, linkedParticipantIds, role],
   );
+
+  return <PollContext.Provider value={value}>{children}</PollContext.Provider>;
+}
+
+export const usePoll = () => useRequiredContext(PollContext).poll;
+
+export const useRole = () => useRequiredContext(PollContext).role;
+
+export const useComments = () => useRequiredContext(PollContext).comments;
+
+export const useParticipants = () => {
+  const { t } = useTranslation();
+  const { participants: rawParticipants } = useRequiredContext(PollContext);
+
+  const participants = React.useMemo(() => {
+    return rawParticipants.map((participant, index) => {
+      if (!participant.hidden) {
+        return participant;
+      }
+
+      return {
+        ...participant,
+        name: t("hiddenParticipantName", {
+          defaultValue: "Participant #{number}",
+          number: rawParticipants.length - index,
+        }),
+      };
+    });
+  }, [rawParticipants, t]);
+
+  return { participants };
 };
 
 export const usePermissions = () => {
-  const poll = usePoll();
-  const context = React.useContext(PermissionsContext);
+  const { poll, participants, linkedParticipantIds, role } =
+    useRequiredContext(PollContext);
   const { user } = useUser();
-  const role = useRole();
-  const { participants } = useParticipants();
+
   return {
     canAddNewParticipant: poll.status === "open",
     canEditParticipant: (participantId: string) => {
@@ -71,7 +103,7 @@ export const usePermissions = () => {
 
       return (
         (!!user && participant.userId === user.id) ||
-        context.linkedParticipantIds.includes(participantId)
+        linkedParticipantIds.includes(participantId)
       );
     },
   };

@@ -9,25 +9,18 @@ import { usePoll } from "@/features/poll/client";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { trpc } from "@/trpc/client";
 
 export function NotificationToggle() {
   const poll = usePoll();
   const { user, ownsObject } = useUser();
   const { t } = useTranslation();
-  const queryClient = trpc.useUtils();
+  // useSafeAction refreshes the router on success, which is what flips
+  // `poll.muted` in the layout's server props.
   const setPollMuted = useSafeAction(setPollMutedAction, {
     onSuccess: ({ data, input }) => {
       if (!data?.ok) {
         return;
       }
-      queryClient.polls.get.setData({ urlId: input.pollId }, (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          muted: input.muted,
-        };
-      });
       if (input.muted) {
         toast(
           t("notificationToggleMutedToast", {

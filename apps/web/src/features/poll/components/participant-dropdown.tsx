@@ -37,12 +37,12 @@ import * as z from "zod";
 
 import { usePoll } from "@/features/poll/client";
 import {
-  useDeleteParticipantMutation,
+  useDeleteParticipant,
   useEditToken,
+  useRenameParticipant,
 } from "@/features/poll/components/mutations";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
-import { trpc } from "@/trpc/client";
 
 export const ParticipantDropdown = ({
   participant,
@@ -195,7 +195,8 @@ const DeleteParticipantModal = ({
   participantName: string;
   onDelete?: () => void;
 }) => {
-  const deleteParticipant = useDeleteParticipantMutation();
+  const { t } = useTranslation();
+  const deleteParticipant = useDeleteParticipant();
   const token = useEditToken();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -227,10 +228,18 @@ const DeleteParticipantModal = ({
             loading={deleteParticipant.isPending}
             variant="destructive"
             onClick={async () => {
-              deleteParticipant.mutate({
+              const result = await deleteParticipant.execute({
                 participantId,
                 token,
               });
+              if (!result.ok) {
+                toast.error(
+                  t("actionErrorInternalServerError", {
+                    defaultValue: "An internal server error occurred",
+                  }),
+                );
+                return;
+              }
               onDelete?.();
               onOpenChange(false);
             }}
@@ -258,7 +267,7 @@ const ChangeNameModal = (props: {
   onOpenChange: (open: boolean) => void;
 }) => {
   const token = useEditToken();
-  const changeName = trpc.polls.participants.rename.useMutation();
+  const renameParticipant = useRenameParticipant();
   const form = useForm({
     defaultValues: {
       name: props.oldName,
@@ -279,16 +288,26 @@ const ChangeNameModal = (props: {
   const handler = React.useCallback<SubmitHandler<ChangeNameForm>>(
     async ({ name }) => {
       if (formState.isDirty) {
-        // change name
-        await changeName.mutateAsync({
+        const result = await renameParticipant.execute({
           participantId,
-          newName: name,
+          name,
           token,
         });
+        if (!result.ok) {
+          form.setError("name", { message: result.reason });
+          return;
+        }
       }
       onOpenChange(false);
     },
-    [changeName, formState.isDirty, participantId, token, onOpenChange],
+    [
+      renameParticipant,
+      formState.isDirty,
+      participantId,
+      token,
+      onOpenChange,
+      form,
+    ],
   );
 
   const { requiredString } = useFormValidation();

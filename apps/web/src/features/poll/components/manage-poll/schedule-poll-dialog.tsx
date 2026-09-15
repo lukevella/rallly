@@ -19,12 +19,12 @@ import {
   FormLabel,
 } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { DateIconInner } from "@/components/date-icon";
-import { usePoll } from "@/features/poll/client";
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useParticipants, usePoll } from "@/features/poll/client";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
 import {
@@ -218,7 +218,10 @@ export const SchedulePollForm = ({
 
 export function SchedulePollDialog(props: DialogProps) {
   const poll = usePoll();
-  const scheduleEvent = trpc.polls.book.useMutation();
+  const router = useRouter();
+  const scheduleEvent = trpc.polls.book.useMutation({
+    onSuccess: () => router.refresh(),
+  });
   return (
     <Dialog {...props}>
       <DialogContent size="2xl">

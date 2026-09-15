@@ -25,8 +25,11 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { ScrollContainer } from "@/components/scroll-container";
-import { usePermissions, usePoll } from "@/features/poll/client";
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import {
+  useParticipants,
+  usePermissions,
+  usePoll,
+} from "@/features/poll/client";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";

@@ -19,6 +19,7 @@ import {
   TableIcon,
   TrashIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
 import { Link } from "@/components/link";
@@ -33,48 +34,21 @@ import { useCsvExporter } from "./manage-poll/use-csv-exporter";
 
 function OpenCloseToggle() {
   const poll = usePoll();
-  const queryClient = trpc.useUtils();
+  const router = useRouter();
+  // The poll is served from the layout's server props; the refresh is
+  // what makes the new status show.
   const openPoll = trpc.polls.reopen.useMutation({
-    onSuccess: (_data, vars) => {
-      queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          status: "open",
-        };
-      });
-    },
+    onSuccess: () => router.refresh(),
   });
   const closePoll = trpc.polls.close.useMutation({
-    onSuccess: (_data, vars) => {
-      queryClient.polls.get.setData({ urlId: vars.pollId }, (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          status: "closed",
-        };
-      });
-    },
+    onSuccess: () => router.refresh(),
   });
 
   if (poll.status === "closed") {
     return (
       <DropdownMenuItem
         onClick={() => {
-          openPoll.mutate(
-            { pollId: poll.id },
-            {
-              onSuccess: () => {
-                queryClient.polls.get.setData({ urlId: poll.id }, (oldData) => {
-                  if (!oldData) return oldData;
-                  return {
-                    ...oldData,
-                    status: "open",
-                  };
-                });
-              },
-            },
-          );
+          openPoll.mutate({ pollId: poll.id });
         }}
       >
         <PlayIcon />
@@ -85,20 +59,7 @@ function OpenCloseToggle() {
     return (
       <DropdownMenuItem
         onClick={() => {
-          closePoll.mutate(
-            { pollId: poll.id },
-            {
-              onSuccess: () => {
-                queryClient.polls.get.setData({ urlId: poll.id }, (oldData) => {
-                  if (!oldData) return oldData;
-                  return {
-                    ...oldData,
-                    status: "closed",
-                  };
-                });
-              },
-            },
-          );
+          closePoll.mutate({ pollId: poll.id });
         }}
       >
         <CircleStopIcon />
