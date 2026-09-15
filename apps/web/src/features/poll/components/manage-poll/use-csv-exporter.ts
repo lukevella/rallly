@@ -1,4 +1,4 @@
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useParticipants } from "@/features/poll/client";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useTranslation } from "@/i18n/client";
 import { dayjs } from "@/lib/dayjs";

@@ -6,10 +6,9 @@ import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Link } from "@/components/link";
-import { usePoll } from "@/features/poll/client";
+import { useParticipants, usePoll } from "@/features/poll/client";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
-import { useParticipants } from "@/features/poll/components/participants-provider";
 import { Trans } from "@/i18n/client";
 
 const Page = () => {

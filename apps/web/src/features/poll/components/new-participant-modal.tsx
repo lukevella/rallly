@@ -22,7 +22,6 @@ import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MaxCharLength } from "@rallly/ui/max-char-length";
 import { Textarea } from "@rallly/ui/textarea";
-import { TRPCClientError } from "@trpc/client";
 import { CircleCheckIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -31,7 +30,7 @@ import { IfCloudHosted } from "@/components/environment";
 import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import {
-  useAddParticipantMutation,
+  useAddParticipant,
   useEditToken,
 } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
@@ -149,34 +148,34 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const { setError, formState, handleSubmit, watch } = form;
 
-  const getSubmitErrorMessage = (error: unknown) => {
-    if (error instanceof TRPCClientError && error.data) {
-      if (error.data.appError === "POLL_FULL") {
+  const getSubmitErrorMessage = (reason: string) => {
+    switch (reason) {
+      case "full":
+      case "closed":
+      case "notFound":
         return t("newParticipantFormErrorPollFull", {
           defaultValue: "This poll is no longer accepting responses.",
         });
-      }
-      switch (error.data.code) {
-        case "TOO_MANY_REQUESTS":
-          return t("newParticipantFormErrorTooManyRequests", {
-            defaultValue:
-              "You have made too many attempts. Please wait a while and try again.",
-          });
-        case "UNAUTHORIZED":
-          return t("newParticipantFormErrorUnauthorized", {
-            defaultValue:
-              "We couldn't verify your session. Please refresh the page and try again.",
-          });
-      }
+      case "tooManyRequests":
+        return t("newParticipantFormErrorTooManyRequests", {
+          defaultValue:
+            "You have made too many attempts. Please wait a while and try again.",
+        });
+      case "unauthorized":
+        return t("newParticipantFormErrorUnauthorized", {
+          defaultValue:
+            "We couldn't verify your session. Please refresh the page and try again.",
+        });
+      default:
+        return t("newParticipantFormSubmitError", {
+          defaultValue:
+            "Your response could not be saved. Please check your connection and try again.",
+        });
     }
-    return t("newParticipantFormSubmitError", {
-      defaultValue:
-        "Your response could not be saved. Please check your connection and try again.",
-    });
   };
   const noteLength = watch("note")?.length ?? 0;
   const [showNote, setShowNote] = React.useState(false);
-  const addParticipant = useAddParticipantMutation();
+  const addParticipant = useAddParticipant();
   // An emailed invite link carries the invite token; the response takes it
   // over so the host sees who responded and the same link edits it later.
   const token = useEditToken();
@@ -264,21 +263,23 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         <form
           id="new-participant-form"
           onSubmit={handleSubmit(async (data) => {
-            try {
-              await createGuestIfNeeded();
-              const newParticipant = await addParticipant.mutateAsync({
-                name: data.name,
-                votes: props.votes,
-                email: data.email,
-                note: data.note,
-                pollId: poll.id,
-                timeZone,
-                token,
+            await createGuestIfNeeded();
+            const result = await addParticipant.execute({
+              name: data.name,
+              votes: props.votes,
+              email: data.email,
+              note: data.note,
+              pollId: poll.id,
+              timeZone,
+              token,
+            });
+            if (!result.ok) {
+              setError("root", {
+                message: getSubmitErrorMessage(result.reason),
               });
-              props.onSubmit?.(newParticipant);
-            } catch (error) {
-              setError("root", { message: getSubmitErrorMessage(error) });
+              return;
             }
+            props.onSubmit?.(result.participant);
           })}
           className="space-y-4"
         >

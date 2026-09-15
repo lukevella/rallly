@@ -1,16 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent } from "@rallly/ui/dialog";
+import { toast } from "@rallly/ui/sonner";
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import * as z from "zod";
-import { usePermissions, usePoll, useRole } from "@/features/poll/client";
+import {
+  useParticipants,
+  usePermissions,
+  usePoll,
+  useRole,
+} from "@/features/poll/client";
 import {
   normalizeVotes,
   useEditToken,
-  useUpdateParticipantMutation,
+  useUpdateParticipantVotes,
 } from "@/features/poll/components/mutations";
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useTranslation } from "@/i18n/client";
 
 const formSchema = z.object({
   mode: z.enum(["new", "edit", "view"]),
@@ -71,8 +77,9 @@ export const useVotingForm = () => {
 };
 
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
-  const { id: pollId, options } = usePoll();
-  const updateParticipant = useUpdateParticipantMutation();
+  const { options } = usePoll();
+  const { t } = useTranslation();
+  const updateParticipantVotes = useUpdateParticipantVotes();
   const token = useEditToken();
   const { participants } = useParticipants();
 
@@ -110,14 +117,25 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         id="voting-form"
         onSubmit={form.handleSubmit(async (data) => {
           if (data.participantId) {
-            // update participant
-
-            await updateParticipant.mutateAsync({
+            const result = await updateParticipantVotes.execute({
               participantId: data.participantId,
-              pollId,
               votes: normalizeVotes(optionIds, data.votes),
               token,
             });
+
+            if (!result.ok) {
+              // Stay in edit mode so the selection is not lost.
+              toast.error(
+                result.reason === "closed"
+                  ? t("pollClosedDescription", {
+                      defaultValue: "No more responses are being accepted.",
+                    })
+                  : t("actionErrorInternalServerError", {
+                      defaultValue: "An internal server error occurred",
+                    }),
+              );
+              return;
+            }
 
             form.reset({
               mode: "view",

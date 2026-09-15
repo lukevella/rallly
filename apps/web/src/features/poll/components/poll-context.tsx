@@ -1,7 +1,9 @@
+"use client";
 import type { TimeFormat, VoteType } from "@rallly/database";
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
-import { useParticipants } from "@/features/poll/components/participants-provider";
+import { useParticipants } from "@/features/poll/client";
+import type { PollDetails } from "@/features/poll/types";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
   formatDateParts,
@@ -12,10 +14,9 @@ import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/lib/utils/date-time-utils";
-import type { GetPollApiResponse } from "@/trpc/client/types";
 
 type PollContextValue = {
-  poll: GetPollApiResponse;
+  poll: PollDetails;
   highScore: number;
   optionIds: string[];
   getScore: (optionId: string) => {
@@ -37,7 +38,7 @@ export const usePoll = () => {
 };
 
 export const PollContextProvider: React.FunctionComponent<{
-  poll: GetPollApiResponse;
+  poll: PollDetails;
   children?: React.ReactNode;
 }> = ({ poll, children }) => {
   const { participants } = useParticipants();

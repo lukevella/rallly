@@ -1,7 +1,18 @@
 import { toast } from "@rallly/ui/sonner";
-import { useSearchParams } from "next/navigation";
-import { usePoll } from "@/features/poll/components/poll-context";
+import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
+import {
+  addCommentAction,
+  deleteCommentAction,
+} from "@/features/poll/comment/actions";
+import {
+  addParticipantAction,
+  deleteParticipantAction,
+  renameParticipantAction,
+  updateParticipantVotesAction,
+} from "@/features/poll/participant/actions";
 import { useTranslation } from "@/i18n/client";
+import type { AppErrorCode } from "@/lib/errors/app-error";
 import { trpc } from "@/trpc/client";
 import type { ParticipantForm } from "./types";
 
@@ -24,58 +35,76 @@ export const useEditToken = () => {
   return searchParams.get("token") ?? searchParams.get("invite") ?? undefined;
 };
 
-export const useAddParticipantMutation = () => {
-  return trpc.polls.participants.add.useMutation();
+type ActionFailure = "tooManyRequests" | "unauthorized" | "unknown";
+
+function toFailureReason(serverError: string | undefined): ActionFailure {
+  switch (serverError as AppErrorCode | undefined) {
+    case "TOO_MANY_REQUESTS":
+      return "tooManyRequests";
+    case "UNAUTHORIZED":
+      return "unauthorized";
+    default:
+      return "unknown";
+  }
+}
+
+type ActionResult<T> = {
+  data?: T;
+  serverError?: string;
+  validationErrors?: unknown;
 };
 
-export const useUpdateParticipantMutation = () => {
-  const queryClient = trpc.useUtils();
-  const token = useEditToken();
-  return trpc.polls.participants.update.useMutation({
-    onSuccess: (participant) => {
-      queryClient.polls.participants.list.setData(
-        { pollId: participant.pollId, token },
-        (existingParticipants = []) => {
-          const newParticipants = [...existingParticipants];
+/**
+ * Runs an action. A successful write revalidates the poll pages inside the
+ * mutation, so the action response carries the re-rendered page and the
+ * provider holds fresh props by the time this resolves. Expected failures
+ * come back as values from the action; transport and auth failures are
+ * folded into the same shape so callers branch once.
+ */
+function useServerAction<TInput, TData extends { ok: boolean }>(
+  action: (input: TInput) => Promise<ActionResult<TData>>,
+) {
+  const [isPending, setIsPending] = React.useState(false);
 
-          const index = newParticipants.findIndex(
-            ({ id }) => id === participant.id,
-          );
-
-          if (index !== -1) {
-            // The mutation returns the row without the host's edit link;
-            // the token behind it is unchanged, so the link is kept.
-            newParticipants[index] = {
-              ...participant,
-              editUrl: newParticipants[index].editUrl,
-            };
-          }
-
-          return newParticipants;
-        },
-      );
+  const execute = React.useCallback(
+    async (
+      input: TInput,
+    ): Promise<TData | { ok: false; reason: ActionFailure }> => {
+      setIsPending(true);
+      try {
+        const result = await action(input);
+        if (!result.data) {
+          return { ok: false, reason: toFailureReason(result.serverError) };
+        }
+        return result.data;
+      } finally {
+        setIsPending(false);
+      }
     },
-  });
-};
+    [action],
+  );
 
-export const useDeleteParticipantMutation = () => {
-  const queryClient = trpc.useUtils();
-  const { poll } = usePoll();
-  const token = useEditToken();
-  return trpc.polls.participants.delete.useMutation({
-    onMutate: ({ participantId }) => {
-      queryClient.polls.participants.list.setData(
-        { pollId: poll.id, token },
-        (existingParticipants = []) => {
-          return existingParticipants.filter(({ id }) => id !== participantId);
-        },
-      );
-    },
-  });
-};
+  return { execute, isPending };
+}
+
+export const useAddParticipant = () => useServerAction(addParticipantAction);
+
+export const useUpdateParticipantVotes = () =>
+  useServerAction(updateParticipantVotesAction);
+
+export const useRenameParticipant = () =>
+  useServerAction(renameParticipantAction);
+
+export const useDeleteParticipant = () =>
+  useServerAction(deleteParticipantAction);
+
+export const useAddComment = () => useServerAction(addCommentAction);
+
+export const useDeleteComment = () => useServerAction(deleteCommentAction);
 
 export const useUpdatePollMutation = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   return trpc.polls.modify.useMutation({
     onSuccess: (data) => {
       if (!data.ok) {
@@ -93,7 +122,11 @@ export const useUpdatePollMutation = () => {
             },
           },
         );
+        return;
       }
+      // The poll is served from the layout's server props; the edit pages
+      // navigate back to it, so the refresh has to precede that navigation.
+      router.refresh();
     },
   });
 };

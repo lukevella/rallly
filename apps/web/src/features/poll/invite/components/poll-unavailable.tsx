@@ -12,9 +12,8 @@ import {
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { Link } from "@/components/link";
 import { DefaultLogo } from "@/features/branding/components/default-logo";
+import type { PollUnavailableReason } from "@/features/poll/types";
 import { getTranslation } from "@/i18n/server";
-
-export type PollUnavailableReason = "deleted" | "removed";
 
 function PollUnavailableShell({
   footerLinks,

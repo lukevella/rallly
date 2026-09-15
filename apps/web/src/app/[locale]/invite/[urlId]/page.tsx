@@ -1,164 +1,130 @@
-import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
+import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
-import { PermissionProvider } from "@/features/poll/client";
+import { PollProvider } from "@/features/poll/client";
+import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
+import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
+import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
-import type { PollUnavailableReason } from "@/features/poll/invite/components/poll-unavailable";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
-import { loadParticipantIdsByToken } from "@/features/poll/loaders";
+import { loadInvitePoll, loadPollAvailability } from "@/features/poll/loaders";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
-import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
-import { createPublicSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { InvitePageLoader } from "./invite-page-loader";
-import Providers from "./providers";
+import { InvitePage, InvitePageLoading } from "./invite-page";
 
-const getPollMetadata = cache(async (urlId: string) => {
-  const poll = await prisma.poll.findUnique({
-    where: { id: urlId },
-    select: {
-      id: true,
-      title: true,
-      deleted: true,
-      user: {
-        select: {
-          name: true,
-          banned: true,
-        },
-      },
-      space: {
-        select: {
-          owner: {
-            select: {
-              banned: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (!poll) {
-    notFound();
-  }
-
-  // A poll that exists but must not be served gets its own page instead of
-  // a 404: the viewer of a banned creator's poll is usually a scam target
-  // and needs to be told so, and a deleted poll's viewer deserves better
-  // than "page not found". The space owner counts as a creator too: an API
-  // key holder can organize polls under any member, and banning the payer
-  // must take every link in the space down with it.
-  const unavailable: PollUnavailableReason | null = poll.deleted
-    ? "deleted"
-    : poll.user?.banned || poll.space?.owner.banned
-      ? "removed"
-      : null;
-
-  return { poll, unavailable };
-});
-
-export default async function Page(props: {
+type PageProps = {
   params: Promise<{ urlId: string }>;
   searchParams: Promise<{
     token?: string | string[];
     invite?: string | string[];
   }>;
-}) {
-  const params = await props.params;
+};
 
-  const [{ unavailable }, searchParams] = await Promise.all([
-    getPollMetadata(params.urlId),
-    props.searchParams,
-  ]);
+async function InvitePageContent({ params, searchParams }: PageProps) {
+  const { urlId } = await params;
 
-  if (unavailable) {
-    const footerLinks = await loadFooterLinks();
-    return <PollUnavailable reason={unavailable} footerLinks={footerLinks} />;
+  const [availability, { token: tokenParam, invite: inviteParam }] =
+    await Promise.all([loadPollAvailability(urlId), searchParams]);
+
+  if (!availability) {
+    notFound();
   }
 
-  // The SSR helper reads the session; an unavailable poll never needs it.
-  const trpc = await createPublicSSRHelper();
+  if (availability.unavailable) {
+    const footerLinks = await loadFooterLinks();
+    return (
+      <PollUnavailable
+        reason={availability.unavailable}
+        footerLinks={footerLinks}
+      />
+    );
+  }
 
   // `invite` is the param older invite emails carry; both name the same
   // token and the client reads them the same way. A repeated param arrives
   // as an array; only a single value is a token.
-  const token = [searchParams.token, searchParams.invite].find(
+  const token = [tokenParam, inviteParam].find(
     (value): value is string => typeof value === "string",
   );
 
   const [
+    { poll, participants, comments, linkedParticipantIds, user },
     locale,
-    session,
     deviceDateTimeConfig,
     footerLinks,
-    linkedParticipantIds,
   ] = await Promise.all([
+    loadInvitePoll({ pollId: urlId, token }),
     getLocale(),
-    getSession(),
     getDeviceDateTimeConfig(),
     loadFooterLinks(),
-    token ? loadParticipantIdsByToken(params.urlId, token) : [],
-    trpc.polls.get.prefetch({ urlId: params.urlId }),
-    trpc.polls.participants.list.prefetch({ pollId: params.urlId, token }),
-    trpc.polls.comments.list.prefetch({ pollId: params.urlId }),
   ]);
 
   return (
-    <HydrationBoundary state={dehydrate(trpc.queryClient)}>
+    <>
       <SessionRefresher />
-      {token ? (
-        <InviteOpenRecorder pollId={params.urlId} token={token} />
-      ) : null}
-      <UserProvider user={session?.user ?? null}>
+      {token ? <InviteOpenRecorder pollId={urlId} token={token} /> : null}
+      <UserProvider user={user}>
         <DeviceDateTimeProvider
           locale={locale}
           timeZone={deviceDateTimeConfig.timeZone}
           timeFormat={deviceDateTimeConfig.timeFormat}
         >
-          <Providers>
-            <PermissionProvider linkedParticipantIds={linkedParticipantIds}>
-              <InvitePageLoader footerLinks={footerLinks} />
-            </PermissionProvider>
-          </Providers>
+          <PollProvider
+            poll={poll}
+            participants={participants}
+            comments={comments}
+            linkedParticipantIds={linkedParticipantIds}
+            viewerRole="participant"
+          >
+            <LegacyPollContextProvider>
+              <VisibilityProvider>
+                <PollBrandingFromContext />
+                <InvitePage footerLinks={footerLinks} />
+              </VisibilityProvider>
+            </LegacyPollContextProvider>
+          </PollProvider>
         </DeviceDateTimeProvider>
       </UserProvider>
-    </HydrationBoundary>
+    </>
+  );
+}
+
+export default function Page(props: PageProps) {
+  return (
+    <Suspense fallback={<InvitePageLoading />}>
+      <InvitePageContent {...props} />
+    </Suspense>
   );
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{
-    urlId: string;
-    locale: string;
-  }>;
+  params: Promise<{ urlId: string; locale: string }>;
 }): Promise<Metadata> {
-  const params = await props.params;
+  const { urlId } = await props.params;
 
-  const { urlId } = params;
+  const availability = await loadPollAvailability(urlId);
 
-  const { poll, unavailable } = await getPollMetadata(urlId);
+  if (!availability) {
+    notFound();
+  }
 
-  if (unavailable) {
+  if (availability.unavailable) {
     return {
       title: "Poll unavailable",
       robots: { index: false, follow: false },
     };
   }
 
-  const { title, id, user } = poll;
-
-  const author = user?.name || "Guest";
+  const { title, id, authorName } = availability;
 
   const ogImageUrl = absoluteUrl("/api/og-image-poll", {
     title,
-    author,
+    author: authorName,
   });
 
   return {
@@ -166,7 +132,7 @@ export async function generateMetadata(props: {
     metadataBase: new URL(absoluteUrl()),
     openGraph: {
       title,
-      description: `By ${author}`,
+      description: `By ${authorName}`,
       url: `/invite/${id}`,
       images: [
         {
