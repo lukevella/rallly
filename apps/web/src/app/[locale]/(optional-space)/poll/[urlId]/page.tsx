@@ -15,9 +15,7 @@ async function AdminPageWithFooterLinks() {
   // The attribution action updates the active space, and only its admins
   // may; the page checks the poll belongs to that space before showing it.
   const manageableSpace =
-    activeSpace?.role === "admin"
-      ? { id: activeSpace.id, name: activeSpace.name }
-      : null;
+    activeSpace?.role === "admin" ? { id: activeSpace.id } : null;
 
   return (
     <AdminPageLoader

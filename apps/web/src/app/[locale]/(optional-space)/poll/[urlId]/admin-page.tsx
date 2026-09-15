@@ -14,7 +14,7 @@ export function AdminPage({
   manageableSpace,
 }: {
   footerLinks: { label: string; href: string }[];
-  manageableSpace: { id: string; name: string } | null;
+  manageableSpace: { id: string } | null;
 }) {
   const poll = usePoll();
   const { spaceAttributionConfigurable } = useInstancePolicy();
@@ -38,10 +38,7 @@ export function AdminPage({
         footerLinks={footerLinks}
         attributionAction={
           canRemoveAttribution ? (
-            <RemoveAttributionPopover
-              spaceName={manageableSpace.name}
-              pollId={poll.id}
-            />
+            <RemoveAttributionPopover pollId={poll.id} />
           ) : undefined
         }
       />

@@ -3,18 +3,9 @@
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
-import { Field, FieldContent, FieldLabel } from "@rallly/ui/field";
-import {
-  Popover,
-  PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
-  PopoverTrigger,
-} from "@rallly/ui/popover";
-import { Switch } from "@rallly/ui/switch";
+import { Field, FieldDescription, FieldLabel } from "@rallly/ui/field";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { XIcon } from "lucide-react";
-import { Link } from "@/components/link";
 import { useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { useHideAttributionToggle } from "@/features/space/client";
@@ -26,17 +17,12 @@ import { Trans, useTranslation } from "@/i18n/client";
  * at where it lives; the switch is a convenience for Pro admins and the
  * upgrade button routes free admins to the pay wall.
  */
-export function RemoveAttributionPopover({
-  spaceName,
-  pollId,
-}: {
-  spaceName: string;
-  pollId: string;
-}) {
+export function RemoveAttributionPopover({ pollId }: { pollId: string }) {
   const isFree = useIsFree();
   const { t } = useTranslation();
+  // Dismissed before opening the pay wall so the dialog doesn't stack on it
   const popover = useDialog();
-  const { hideAttribution, isExecuting, toggle } = useHideAttributionToggle({
+  const { isExecuting, toggle } = useHideAttributionToggle({
     // The badge is only rendered while attribution is shown
     hideAttribution: false,
     payWallTrigger: {
@@ -68,25 +54,26 @@ export function RemoveAttributionPopover({
         <XIcon className="size-3" />
       </PopoverTrigger>
       <PopoverContent align="center" side="top" sideOffset={8}>
-        <PopoverHeader>
-          <PopoverTitle>
-            <Trans i18nKey="removeAttribution" defaults="Remove attribution" />
-            {isFree ? <ProBadge className="ml-2" /> : null}
-          </PopoverTitle>
-          <PopoverDescription>
+        <Field>
+          <FieldLabel>
             <Trans
-              i18nKey="removeAttributionPopoverDescription"
-              defaults="Hides this badge on every poll and email in {spaceName}."
-              values={{ spaceName }}
+              i18nKey="removeAttributionSettingTitle"
+              defaults="Remove attribution"
             />
-          </PopoverDescription>
-        </PopoverHeader>
+            {isFree ? <ProBadge /> : null}
+          </FieldLabel>
+          <FieldDescription>
+            <Trans
+              i18nKey="removeAttributionSettingDescription"
+              defaults='Hide "Powered by Rallly" on invite pages and participant emails.'
+            />
+          </FieldDescription>
+        </Field>
         {isFree ? (
           <Button
             variant="primary"
             className="w-full"
             onClick={() => {
-              // Hand off to the pay wall rather than stacking on top of it
               popover.dismiss();
               toggle(true);
             }}
@@ -94,34 +81,15 @@ export function RemoveAttributionPopover({
             <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
           </Button>
         ) : (
-          <Field orientation="horizontal">
-            <FieldContent>
-              <FieldLabel htmlFor="poll-footer-hide-attribution">
-                <Trans i18nKey="hideAttribution" defaults="Hide attribution" />
-              </FieldLabel>
-            </FieldContent>
-            <Switch
-              id="poll-footer-hide-attribution"
-              checked={hideAttribution}
-              onCheckedChange={toggle}
-              disabled={isExecuting}
-            />
-          </Field>
+          <Button
+            variant="primary"
+            className="w-full"
+            disabled={isExecuting}
+            onClick={() => toggle(true)}
+          >
+            <Trans i18nKey="remove" defaults="Remove" />
+          </Button>
         )}
-        <p className="text-muted-foreground text-xs">
-          <Trans
-            i18nKey="removeAttributionPopoverSettingsHint"
-            defaults="You can change this anytime in <a>General settings</a>."
-            components={{
-              a: (
-                <Link
-                  href="/settings/general"
-                  className="text-foreground underline underline-offset-4"
-                />
-              ),
-            }}
-          />
-        </p>
       </PopoverContent>
     </Popover>
   );

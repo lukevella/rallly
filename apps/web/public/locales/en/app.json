@@ -688,8 +688,6 @@
   "remove": "Remove",
   "removeAttribution": "Remove attribution",
   "removeAttributionBenefitDescription": "Hide \"Powered by Rallly\" from your participants",
-  "removeAttributionPopoverDescription": "Hides this badge on every poll and email in {spaceName}.",
-  "removeAttributionPopoverSettingsHint": "You can change this anytime in <a>General settings</a>.",
   "removeAttributionSettingDescription": "Hide \"Powered by Rallly\" on invite pages and participant emails.",
   "removeAttributionSettingTitle": "Remove attribution",
   "removeImage": "Remove",

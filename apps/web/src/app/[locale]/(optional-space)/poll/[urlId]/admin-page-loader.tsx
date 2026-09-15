@@ -12,7 +12,7 @@ export function AdminPageLoader({
   manageableSpace,
 }: {
   footerLinks: { label: string; href: string }[];
-  manageableSpace: { id: string; name: string } | null;
+  manageableSpace: { id: string } | null;
 }) {
   return (
     <>
