@@ -92,4 +92,27 @@ test.describe("space branding on the invite page", () => {
     await readPrimaryVar(page);
     await expect(page.getByText("Powered by")).toBeVisible();
   });
+
+  test("the footer credit stays inside the page's own scroll container", async ({
+    page,
+  }) => {
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "hobby", hideAttribution: false },
+    });
+
+    // Short enough that the footer lands below the fold of the page's
+    // scroller, where a badly anchored descendant would extend the document
+    // instead and give the page a second scrollbar.
+    await page.setViewportSize({ width: 1280, height: 400 });
+    await readPrimaryVar(page);
+    await expect(page.getByText("Powered by")).toBeAttached();
+
+    const documentOverflow = await page.evaluate(
+      () =>
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight,
+    );
+    expect(documentOverflow).toBe(0);
+  });
 });
