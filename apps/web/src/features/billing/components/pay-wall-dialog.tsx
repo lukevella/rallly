@@ -200,6 +200,7 @@ const leadingBenefitByTrigger: Partial<Record<PayWallTrigger["from"], string>> =
   {
     "invite-dialog": "emailInvites",
     "api-keys": "apiAccess",
+    "poll-footer": "removeAttribution",
   };
 
 // The benefit that triggered the pay wall leads the list.
