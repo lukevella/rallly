@@ -36,7 +36,6 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
 import { RemoveAttributionSetting } from "./remove-attribution-setting";
-import { SpaceSettingsForm } from "./space-settings-form";
 
 export function CustomBrandingSection({
   disabled = false,
@@ -116,13 +115,12 @@ export function CustomBrandingSection({
         <PageSectionDescription>
           <Trans
             i18nKey="brandingCardDescription"
-            defaults="How your space appears to you and the people you invite"
+            defaults="How this space looks to members and participants"
           />
         </PageSectionDescription>
       </PageSectionHeader>
       <PageSectionContent>
         <FieldGroup variant="divided">
-          <SpaceSettingsForm space={space} disabled={disabled} />
           {!spaceBrandingAllowed ? (
             // The divided field group pads its children directly, which would
             // land inside the alert's border — the wrapper takes it instead

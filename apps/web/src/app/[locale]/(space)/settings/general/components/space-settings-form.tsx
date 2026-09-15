@@ -74,7 +74,7 @@ export function SpaceSettingsForm({
           <FieldDescription>
             <Trans
               i18nKey="spaceLogoSettingHint"
-              defaults="Your space's logo."
+              defaults="The logo shown for this space."
             />
           </FieldDescription>
         </FieldContent>

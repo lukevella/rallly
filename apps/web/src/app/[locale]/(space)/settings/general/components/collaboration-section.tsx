@@ -91,7 +91,7 @@ export function CollaborationSection({
         <PageSectionDescription>
           <Trans
             i18nKey="collaborationDescription"
-            defaults="How members work in this space"
+            defaults="How members work together in this space"
           />
         </PageSectionDescription>
       </PageSectionHeader>
