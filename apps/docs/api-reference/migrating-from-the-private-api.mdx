@@ -168,7 +168,7 @@ Every endpoint that returns a poll (`POST /polls`, `GET /polls`, `GET /polls/{po
 
 **Status code.** v1 responds `201 Created` instead of `200 OK`. A client that checks for exactly `200` will treat every successful create as a failure.
 
-**Request.** The private API chose the poll type from whether you sent `dates` or `slots`. v1 takes an explicit `kind` and puts every option under `options`. Each request option is the response option without its `id`: `{ date }` for a date poll, `{ startTime, duration? }` for a time poll. The body is strict, so the other response fields (`id`, `status`, `createdAt`, `organizer` and so on) must not be sent.
+**Request.** The private API chose the poll type from whether you sent `dates` or `slots`. v1 takes an explicit `kind` and puts every option under `options`. Each request option is the response option without its `id`: `{ date }` for a date poll, `{ startTime, duration? }` for a time poll. The body is strict, so the other response fields (`id`, `status`, `createdAt`, `participantCount` and so on) must not be sent.
 
 Date polls:
 
