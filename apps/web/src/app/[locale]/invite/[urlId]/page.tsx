@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
-import { Spinner } from "@/components/spinner";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PollProvider } from "@/features/poll/client";
 import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
@@ -16,7 +15,7 @@ import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
-import { InvitePage } from "./invite-page";
+import { InvitePage, InvitePageLoading } from "./invite-page";
 
 type PageProps = {
   params: Promise<{ urlId: string }>;
@@ -97,13 +96,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
 
 export default function Page(props: PageProps) {
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-screen items-center justify-center">
-          <Spinner />
-        </div>
-      }
-    >
+    <Suspense fallback={<InvitePageLoading />}>
       <InvitePageContent {...props} />
     </Suspense>
   );

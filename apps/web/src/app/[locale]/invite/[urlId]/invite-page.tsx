@@ -1,11 +1,9 @@
 "use client";
 import { buttonVariants, cn } from "@rallly/ui";
 import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
-import { Card, CardHeader } from "@rallly/ui/card";
-import { Skeleton } from "@rallly/ui/skeleton";
 import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
-import { AnimatedHeight } from "@/components/animated-height";
 import { Link } from "@/components/link";
+import { Spinner } from "@/components/spinner";
 import { usePoll } from "@/features/poll/client";
 import { CommentsSheet } from "@/features/poll/components/comments-sheet";
 import { EventCard } from "@/features/poll/components/event-card";
@@ -70,55 +68,27 @@ const GoToApp = () => {
   );
 };
 
-function VotingInterfaceSkeleton() {
-  return (
-    <Card aria-busy="true">
-      <CardHeader className="flex items-center gap-x-2.5 border-b">
-        <Skeleton className="h-5 w-28" />
-        <Skeleton className="h-5 w-8 rounded-full" />
-      </CardHeader>
-      <div className="divide-y">
-        {[0, 1, 2].map((row) => (
-          <div key={row} className="flex h-12 items-center gap-x-3 px-4">
-            <Skeleton className="size-6 rounded-full" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-}
-
 /**
  * The voting grid depends on two things the server cannot know: the
  * viewer's zone and Intl output for the option dates, and the viewport
- * breakpoint that picks the desktop or mobile layout. It mounts after
- * hydration behind a placeholder of the same shape, while the rest of the
- * page arrives server-rendered. The swap eases between the two heights so
- * the rows below slide rather than jump.
+ * breakpoint that picks the desktop or mobile layout. Rather than render the
+ * rest of the page around a placeholder and let the grid shift it, the
+ * whole page waits for hydration behind the same spinner the route streams
+ * while its data loads, so there is one loader from first byte to
+ * interactive. The page's server props are already in the tree by then, so
+ * nothing else is fetched.
  */
-function VotingInterface() {
-  const hydrated = useHydrated();
-
-  return (
-    <AnimatedHeight>
-      {hydrated ? (
-        <VotingForm>
-          <ResponsiveResults />
-          <FloatingComments />
-        </VotingForm>
-      ) : (
-        <VotingInterfaceSkeleton />
-      )}
-    </AnimatedHeight>
-  );
-}
-
 export function InvitePage({
   footerLinks,
 }: {
   footerLinks: { label: string; href: string }[];
 }) {
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return <InvitePageLoading />;
+  }
+
   return (
     <div className="page-bg-gray-100 h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
       <main
@@ -128,10 +98,21 @@ export function InvitePage({
       >
         <GoToApp />
         <EventCard />
-        <VotingInterface />
+        <VotingForm>
+          <ResponsiveResults />
+          <FloatingComments />
+        </VotingForm>
         <PollFooter footerLinks={footerLinks} />
         <div className="h-24 lg:hidden" />
       </main>
+    </div>
+  );
+}
+
+export function InvitePageLoading() {
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <Spinner />
     </div>
   );
 }
