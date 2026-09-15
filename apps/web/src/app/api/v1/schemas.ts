@@ -3,6 +3,16 @@ import { MAX_POLL_TITLE_LENGTH } from "@/features/poll/schema";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { timezoneSchema } from "@/lib/utils/timezone-schema";
 
+// Webhook event payloads are documented alongside the API, but the feature
+// owns them: the dispatcher builds exactly these shapes.
+export {
+  pollClosedEventSchema,
+  pollReopenedEventSchema,
+  pollScheduledEventSchema,
+  webhookEventSchema,
+  webhookEventTypeSchema,
+} from "@/features/webhook/schema";
+
 export const dateSchema = z.iso.date().meta({
   description: "Date in YYYY-MM-DD format",
   example: "2027-03-01",
