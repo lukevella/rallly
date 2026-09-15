@@ -1,6 +1,8 @@
 {
   "advancedPollSettings": "Speciális szavazásbeállítások",
   "advancedPollSettingsDescription": "Kérj e-mail-címet a résztvevőktől, rejtsd el a résztvevők nevét és a szavazatokat",
+  "apiAccess": "API hozzáférés",
+  "apiAccessDescription": "Hozz létre szavazásokat és tekintsd meg az eredményt a saját rendszeredből. <a>Olvasd el az API dokumentációt</a>",
   "basicPolls": "Szavazások",
   "cancelSubscription": "Hogyan mondhatom le az előfizetésemet?",
   "cancelSubscriptionAnswer": "Bármikor lemondhatod az előfizetésed, ha megnyitod a <a>számlázási beállítások</a>at. Amennyiben lemondod az előfizetésed, úgy továbbra is elérhető lesz a fizetős csomagod a számlázási időszak végéig. Azt követően lefokozódsz ingyenes csomagra.",
