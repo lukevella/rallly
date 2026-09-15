@@ -34,7 +34,7 @@ export function PollFooter({
       <InstanceFooterLinks links={footerLinks} />
       {isAttributionHidden ? null : (
         <Link
-          className="inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background px-4 font-normal text-foreground text-xs shadow-xs transition-[background-color,transform] ease-out hover:bg-muted active:scale-[.98] motion-reduce:active:scale-100 dark:bg-muted dark:hover:bg-muted-border"
+          className="inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background px-4 font-normal text-foreground text-xs shadow-xs transition-[background-color,transform] ease-out hover:bg-gray-50 active:scale-[.98] motion-reduce:active:scale-100 dark:bg-muted dark:hover:bg-[color-mix(in_oklab,var(--color-gray-800),var(--color-gray-700)_50%)]"
           href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
           onClick={() => {
             posthog?.capture("poll_footer:powered_by_link_click", {
