@@ -73,6 +73,12 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
 
+  // The SSR helper reads the session, which can be a database round trip
+  // when the cookie cache is stale or absent. It is started alongside the
+  // poll lookup so it overlaps rather than adding its full latency to the
+  // critical path; an unavailable poll simply never awaits it.
+  const trpcPromise = createPublicSSRHelper();
+
   const [{ unavailable }, searchParams] = await Promise.all([
     getPollMetadata(params.urlId),
     props.searchParams,
@@ -83,8 +89,7 @@ export default async function Page(props: {
     return <PollUnavailable reason={unavailable} footerLinks={footerLinks} />;
   }
 
-  // The SSR helper reads the session; an unavailable poll never needs it.
-  const trpc = await createPublicSSRHelper();
+  const trpc = await trpcPromise;
 
   // `invite` is the param older invite emails carry; both name the same
   // token and the client reads them the same way. A repeated param arrives
