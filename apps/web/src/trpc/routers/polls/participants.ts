@@ -21,6 +21,7 @@ import {
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import { responseNoteInput } from "@/features/poll/participant/schema";
 import { generateAccessToken } from "@/features/poll/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
@@ -30,7 +31,6 @@ import {
   requireUserMiddleware,
   router,
 } from "../../trpc";
-import { responseNoteInput } from "./schema";
 import { authorizeParticipantEdit } from "./utils";
 
 const logger = createLogger("participants");
