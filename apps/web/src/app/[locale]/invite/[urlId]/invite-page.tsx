@@ -4,6 +4,7 @@ import { Alert, AlertAction, AlertDescription } from "@rallly/ui/alert";
 import { Card, CardHeader } from "@rallly/ui/card";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { ArrowUpRightIcon, CrownIcon } from "lucide-react";
+import { AnimatedHeight } from "@/components/animated-height";
 import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import { CommentsSheet } from "@/features/poll/components/comments-sheet";
@@ -93,20 +94,23 @@ function VotingInterfaceSkeleton() {
  * viewer's zone and Intl output for the option dates, and the viewport
  * breakpoint that picks the desktop or mobile layout. It mounts after
  * hydration behind a placeholder of the same shape, while the rest of the
- * page arrives server-rendered.
+ * page arrives server-rendered. The swap eases between the two heights so
+ * the rows below slide rather than jump.
  */
 function VotingInterface() {
   const hydrated = useHydrated();
 
-  if (!hydrated) {
-    return <VotingInterfaceSkeleton />;
-  }
-
   return (
-    <VotingForm>
-      <ResponsiveResults />
-      <FloatingComments />
-    </VotingForm>
+    <AnimatedHeight>
+      {hydrated ? (
+        <VotingForm>
+          <ResponsiveResults />
+          <FloatingComments />
+        </VotingForm>
+      ) : (
+        <VotingInterfaceSkeleton />
+      )}
+    </AnimatedHeight>
   );
 }
 
