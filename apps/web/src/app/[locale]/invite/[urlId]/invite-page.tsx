@@ -90,7 +90,7 @@ export function InvitePage({
   }
 
   return (
-    <div className="page-bg-gray-100 h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
+    <div className="page-bg-gray-100 relative h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
       <main
         id="main-content"
         tabIndex={-1}
