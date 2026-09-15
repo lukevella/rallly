@@ -644,7 +644,6 @@
   "pollStatusClosed": "Suljettu",
   "pollStatusOpen": "Käynnissä",
   "pollStatusScheduled": "Ajastettu",
-  "poweredByRallly": "Palvelun tarjoaa <a>{name}</a>",
   "preferences": "Asetukset",
   "preferencesDescription": "Hallinnoi asetuksiasi",
   "preview": "Esikatselu",
