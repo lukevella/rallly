@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { SetupFooter } from "@/app/[locale]/setup/components/setup-footer";
 import { SetupForm } from "@/app/[locale]/setup/components/setup-form";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Logo } from "@/features/branding/components/logo";
 import { getOwnedSpace } from "@/features/space/data";
+import { SignedInFooter } from "@/features/user/components/signed-in-footer";
 import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -71,7 +71,7 @@ export default async function SetupPage(props: {
         </article>
       </main>
       <footer className="flex justify-center p-16">
-        <SetupFooter email={user.email} />
+        <SignedInFooter email={user.email} />
       </footer>
     </div>
   );

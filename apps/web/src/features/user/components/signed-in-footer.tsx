@@ -5,7 +5,7 @@ import React from "react";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 
-export function SetupFooter({ email }: { email: string }) {
+export function SignedInFooter({ email }: { email: string }) {
   const [isSigningOut, setIsSigningOut] = React.useState(false);
 
   return (
