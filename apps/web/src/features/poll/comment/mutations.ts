@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { revalidatePollPages } from "@/features/poll/mutations";
 import { MAX_COMMENT_AUTHOR_NAME_LENGTH } from "@/features/poll/schema";
 
 export type AddCommentResult =
@@ -77,9 +78,12 @@ export async function addComment({
     },
   });
 
+  revalidatePollPages();
+
   return { ok: true, comment };
 }
 
 export async function deleteComment({ commentId }: { commentId: string }) {
   await prisma.comment.delete({ where: { id: commentId } });
+  revalidatePollPages();
 }

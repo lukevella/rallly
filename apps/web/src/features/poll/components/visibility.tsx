@@ -1,3 +1,4 @@
+"use client";
 /**
  * Manage what the user can and cannot see on the page
  */

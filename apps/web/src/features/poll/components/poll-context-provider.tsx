@@ -1,3 +1,4 @@
+"use client";
 import ModalProvider from "@/components/modal/modal-provider";
 import { usePoll } from "@/features/poll/client";
 import {

@@ -1,3 +1,4 @@
+"use client";
 import type { TimeFormat, VoteType } from "@rallly/database";
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";

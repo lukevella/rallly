@@ -2,97 +2,144 @@ import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { NewPollPage } from "./new-poll-page";
+import type { PollPage } from "./poll-page";
 
 // The client hides the voting controls once a poll leaves "open"
 // (`canAddNewParticipant` / `canEditParticipant`). These tests pin the
 // server-side rule behind that: a page opened while the poll was open goes
 // stale when the organizer closes it, and every write it can still send has
-// to be refused by the action rather than merely hidden by the next render.
+// to be refused by the action. The database is the witness; the page may or
+// may not have re-rendered by the time the refusal lands, so nothing here
+// depends on what it shows afterwards.
 
-const closedMessage = "No more responses are being accepted.";
+test.describe
+  .serial("writes to a closed poll", () => {
+    let page: Page;
+    let pollPage: PollPage;
+    let pollId: string;
+    let participantId: string;
 
-async function getPollId(page: Page) {
-  const pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
-  expect(pollId).toBeTruthy();
-  return pollId as string;
-}
+    const closePoll = () =>
+      prisma.poll.update({
+        where: { id: pollId },
+        data: { status: "closed", closedReason: "manual" },
+      });
 
-test.describe("writes to a closed poll", () => {
-  test("the actions refuse every write once the poll is closed", async ({
-    page,
-  }) => {
-    const newPollPage = new NewPollPage(page);
-    await newPollPage.goto();
-    const pollPage = await newPollPage.create({ name: "Closed Poll Meetup" });
-    await pollPage.closeShareDialog();
-    const pollId = await getPollId(page);
+    // Each test starts from an open poll and a freshly loaded page, so the
+    // controls it needs are on screen before the poll is closed behind it.
+    const reopenPoll = async () => {
+      await prisma.poll.update({
+        where: { id: pollId },
+        data: { status: "open", closedReason: null },
+      });
+      await page.goto(`/poll/${pollId}`);
+      await expect(page.getByTestId("participant-row")).toBeVisible();
+    };
 
-    // A response added while the poll is still open, so the edit paths below
-    // have a real target that only the poll's status disqualifies.
-    await pollPage.addParticipant("Anne");
-    const row = page.getByTestId("participant-row").filter({ hasText: "Anne" });
-    await expect(row).toBeVisible();
+    const row = () => page.getByTestId("participant-row").first();
 
-    // Closed behind the page's back: its controls stay on screen.
-    await prisma.poll.update({
-      where: { id: pollId },
-      data: { status: "closed", closedReason: "manual" },
+    test.beforeAll(async ({ browser }) => {
+      page = await (await browser.newContext()).newPage();
+      const newPollPage = new NewPollPage(page);
+      await newPollPage.goto();
+      pollPage = await newPollPage.create({ name: "Closed Poll Meetup" });
+      await pollPage.closeShareDialog();
+      pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1] as string;
+      expect(pollId).toBeTruthy();
+
+      // A response added while the poll is open, so the edit paths below have
+      // a real target that only the poll's status disqualifies.
+      await pollPage.addParticipant("Anne");
+      const participant = await prisma.participant.findFirstOrThrow({
+        where: { pollId },
+      });
+      participantId = participant.id;
     });
 
-    await row.getByTestId("participant-menu").click();
-    await page.getByRole("menuitem", { name: "Change name" }).click();
-    const renameDialog = page.getByRole("dialog", { name: "Change name" });
-    await renameDialog.getByLabel("Name").fill("Renamed");
-    await renameDialog.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByText(closedMessage).first()).toBeVisible();
-    await expect(renameDialog).toBeVisible();
-    await renameDialog.getByRole("button", { name: "Cancel" }).click();
+    test("a rename is refused", async () => {
+      await reopenPoll();
+      await row().getByTestId("participant-menu").click();
+      await page.getByRole("menuitem", { name: "Change name" }).click();
+      const dialog = page.getByRole("dialog", { name: "Change name" });
+      await dialog.getByLabel("Name").fill("Renamed");
 
-    await row.getByTestId("participant-menu").click();
-    await page.getByRole("menuitem", { name: "Delete" }).click();
-    const deleteDialog = page.getByRole("dialog", { name: "Delete Anne?" });
-    await deleteDialog.getByRole("button", { name: "Delete" }).click();
-    await expect(deleteDialog).toBeVisible();
-    await deleteDialog.getByRole("button", { name: "Cancel" }).click();
+      await closePoll();
+      await dialog.getByRole("button", { name: "Save" }).click();
 
-    await row.getByTestId("participant-menu").click();
-    await page.getByRole("menuitem", { name: "Edit votes" }).click();
-    await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText(closedMessage).first()).toBeVisible();
-    await page.getByRole("button", { name: "Cancel", exact: true }).click();
-
-    await page.getByTestId("add-participant-button").click();
-    await page.locator("data-testid=vote-selector >> nth=0").click();
-    await page.click("button >> text='Continue'");
-    await page.type('[placeholder="Jessie Smith"]', "Late");
-    await page.click("text='Save availability'");
-    await expect(
-      page.getByText("This poll is no longer accepting responses."),
-    ).toBeVisible();
-
-    // Nothing above reached the database.
-    const participants = await prisma.participant.findMany({
-      where: { pollId },
-      select: { name: true, votes: { select: { type: true } } },
+      await expect(
+        page.getByText("No more responses are being accepted.").first(),
+      ).toBeVisible();
+      await expect
+        .poll(async () => {
+          const participant = await prisma.participant.findUniqueOrThrow({
+            where: { id: participantId },
+          });
+          return participant.name;
+        })
+        .toBe("Anne");
     });
-    expect(participants).toHaveLength(1);
-    expect(participants[0].name).toBe("Anne");
+
+    test("a vote change is refused", async () => {
+      await reopenPoll();
+      const before = await prisma.vote.findMany({
+        where: { participantId },
+        orderBy: { optionId: "asc" },
+      });
+      await row().getByTestId("participant-menu").click();
+      await page.getByRole("menuitem", { name: "Edit votes" }).click();
+
+      await closePoll();
+      await page.getByRole("button", { name: "Save", exact: true }).click();
+
+      await expect(
+        page.getByText("No more responses are being accepted.").first(),
+      ).toBeVisible();
+      const after = await prisma.vote.findMany({
+        where: { participantId },
+        orderBy: { optionId: "asc" },
+      });
+      expect(after).toEqual(before);
+    });
+
+    test("a delete is refused", async () => {
+      await reopenPoll();
+      await row().getByTestId("participant-menu").click();
+      await page.getByRole("menuitem", { name: "Delete" }).click();
+      const dialog = page.getByRole("dialog", { name: "Delete Anne?" });
+
+      await closePoll();
+      await dialog.getByRole("button", { name: "Delete" }).click();
+
+      await expect(
+        page.getByText("No more responses are being accepted.").first(),
+      ).toBeVisible();
+      expect(
+        await prisma.participant.count({ where: { id: participantId } }),
+      ).toBe(1);
+    });
+
+    test("a new response is refused", async () => {
+      await reopenPoll();
+      await page.getByTestId("add-participant-button").click();
+      await page.locator("data-testid=vote-selector >> nth=0").click();
+      await page.click("button >> text='Continue'");
+      await page.type('[placeholder="Jessie Smith"]', "Late");
+
+      await closePoll();
+      await page.click("text='Save availability'");
+
+      await expect(
+        page.getByText("This poll is no longer accepting responses."),
+      ).toBeVisible();
+      expect(await prisma.participant.count({ where: { pollId } })).toBe(1);
+    });
+
+    test("a response is still accepted while the poll is open", async () => {
+      await reopenPoll();
+      await pollPage.addParticipant("Ben");
+      await expect(
+        page.getByTestId("participant-row").filter({ hasText: "Ben" }),
+      ).toBeVisible();
+      expect(await prisma.participant.count({ where: { pollId } })).toBe(2);
+    });
   });
-
-  test("the actions still accept a response while the poll is open", async ({
-    page,
-  }) => {
-    const newPollPage = new NewPollPage(page);
-    await newPollPage.goto();
-    const pollPage = await newPollPage.create({ name: "Open Poll Meetup" });
-    await pollPage.closeShareDialog();
-    const pollId = await getPollId(page);
-
-    await pollPage.addParticipant("Anne");
-    await expect(
-      page.getByTestId("participant-row").filter({ hasText: "Anne" }),
-    ).toBeVisible();
-
-    expect(await prisma.participant.count({ where: { pollId } })).toBe(1);
-  });
-});

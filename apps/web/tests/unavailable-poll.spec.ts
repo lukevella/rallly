@@ -41,7 +41,9 @@ test.describe("unavailable poll invite page", () => {
     await loginWithEmail(page, { email: voter.email });
 
     // A response started while the poll was still served, so the ban lands
-    // between the page and its submit.
+    // between the page and its submit. The database is the witness: the
+    // page may have re-rendered into the removed page by the time the
+    // refusal lands.
     await page.goto(`/invite/${poll.id}`);
     await expect(main.getByText(scamTitle).first()).toBeVisible();
     await page.locator("data-testid=vote-selector >> nth=0").click();
@@ -54,12 +56,10 @@ test.describe("unavailable poll invite page", () => {
     });
 
     await page.click("text='Save availability'");
-    await expect(
-      page.getByText("This poll is no longer accepting responses."),
-    ).toBeVisible();
-    expect(await prisma.participant.count({ where: { pollId: poll.id } })).toBe(
-      0,
-    );
+    await expect(page.getByText("Your response has been saved")).toHaveCount(0);
+    await expect
+      .poll(() => prisma.participant.count({ where: { pollId: poll.id } }))
+      .toBe(0);
 
     await page.goto(`/invite/${poll.id}`);
     await expect(

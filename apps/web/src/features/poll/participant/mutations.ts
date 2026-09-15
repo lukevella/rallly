@@ -8,6 +8,7 @@ import {
   attachParticipantToInvite,
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
+import { revalidatePollPages } from "@/features/poll/mutations";
 import { generateAccessToken } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 
@@ -222,6 +223,8 @@ export async function addParticipant({
       };
     });
 
+    revalidatePollPages();
+
     return {
       ok: true,
       ...result,
@@ -296,6 +299,8 @@ export async function updateParticipantVotes({
     throw error;
   }
 
+  revalidatePollPages();
+
   return { ok: true };
 }
 
@@ -327,6 +332,8 @@ export async function renameParticipant({
       },
     ]);
   });
+
+  revalidatePollPages();
 }
 
 export async function deleteParticipant({
@@ -379,4 +386,6 @@ export async function deleteParticipant({
       },
     ]);
   });
+
+  revalidatePollPages();
 }

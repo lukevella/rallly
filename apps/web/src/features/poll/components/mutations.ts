@@ -35,41 +35,6 @@ export const useEditToken = () => {
   return searchParams.get("token") ?? searchParams.get("invite") ?? undefined;
 };
 
-/**
- * Re-renders the page's server components and resolves once the new props
- * have landed, so a caller can hold its pending state until the list it
- * just changed shows the change. router.refresh() alone returns before
- * the round trip; the transition it runs in is what tracks completion.
- */
-function useRefresh() {
-  const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
-  const resolvers = React.useRef<(() => void)[]>([]);
-
-  React.useEffect(() => {
-    if (!isPending) {
-      const pending = resolvers.current;
-      resolvers.current = [];
-      for (const resolve of pending) {
-        resolve();
-      }
-    }
-  }, [isPending]);
-
-  const refresh = React.useCallback(
-    () =>
-      new Promise<void>((resolve) => {
-        resolvers.current.push(resolve);
-        startTransition(() => {
-          router.refresh();
-        });
-      }),
-    [router],
-  );
-
-  return { refresh, isPending };
-}
-
 type ActionFailure = "tooManyRequests" | "unauthorized" | "unknown";
 
 function toFailureReason(serverError: string | undefined): ActionFailure {
@@ -90,38 +55,36 @@ type ActionResult<T> = {
 };
 
 /**
- * Runs an action, then refreshes and waits for the new page props. Expected
- * failures come back as values from the action; transport and auth
- * failures are folded into the same shape so callers branch once.
+ * Runs an action. A successful write revalidates the poll pages inside the
+ * mutation, so the action response carries the re-rendered page and the
+ * provider holds fresh props by the time this resolves. Expected failures
+ * come back as values from the action; transport and auth failures are
+ * folded into the same shape so callers branch once.
  */
 function useServerAction<TInput, TData extends { ok: boolean }>(
   action: (input: TInput) => Promise<ActionResult<TData>>,
 ) {
-  const { refresh, isPending: isRefreshing } = useRefresh();
-  const [isExecuting, setIsExecuting] = React.useState(false);
+  const [isPending, setIsPending] = React.useState(false);
 
   const execute = React.useCallback(
     async (
       input: TInput,
     ): Promise<TData | { ok: false; reason: ActionFailure }> => {
-      setIsExecuting(true);
+      setIsPending(true);
       try {
         const result = await action(input);
         if (!result.data) {
           return { ok: false, reason: toFailureReason(result.serverError) };
         }
-        if (result.data.ok) {
-          await refresh();
-        }
         return result.data;
       } finally {
-        setIsExecuting(false);
+        setIsPending(false);
       }
     },
-    [action, refresh],
+    [action],
   );
 
-  return { execute, isPending: isExecuting || isRefreshing };
+  return { execute, isPending };
 }
 
 export const useAddParticipant = () => useServerAction(addParticipantAction);
