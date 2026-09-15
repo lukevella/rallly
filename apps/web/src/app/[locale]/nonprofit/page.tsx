@@ -44,7 +44,7 @@ export default async function NonprofitPage() {
       >
         <article className="m-auto w-full max-w-md">
           <NonprofitApplicationPage
-            spaceName={space.name}
+            email={user.email}
             isOwner={ability.can("manage", "Billing")}
             isPro={space.tier === "pro"}
             isGranted={status.grantedAt !== null}

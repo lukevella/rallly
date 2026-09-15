@@ -15,9 +15,11 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   CheckCircleIcon,
   CircleAlertIcon,
+  InfoIcon,
   ShieldXIcon,
   TriangleAlertIcon,
 } from "lucide-react";
@@ -40,12 +42,16 @@ import {
   NONPROFIT_DISCOUNT_PERCENT,
 } from "@/features/billing/nonprofit/constants";
 import type { NonprofitApplicationStatus } from "@/features/billing/nonprofit/types";
-import { normalizeWebsite } from "@/features/billing/nonprofit/utils";
+import {
+  domainsMatch,
+  normalizeWebsite,
+} from "@/features/billing/nonprofit/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
-function useApplicationFormSchema() {
+function useApplicationFormSchema(email: string) {
   const { t } = useTranslation();
+  const emailDomain = email.slice(email.lastIndexOf("@") + 1);
   return React.useMemo(
     () =>
       z.object({
@@ -66,7 +72,24 @@ function useApplicationFormSchema() {
             message: t("nonprofitWebsiteInvalid", {
               defaultValue: "Enter your organization's https website",
             }),
-          }),
+          })
+          // Same rule the server applies first; surfacing it here saves a
+          // round trip that would end in a rejection.
+          .refine(
+            (value) => {
+              const website = normalizeWebsite(value);
+              return (
+                website === null ||
+                domainsMatch(emailDomain, new URL(website).hostname)
+              );
+            },
+            {
+              message: t("nonprofitWebsiteDomainMismatch", {
+                defaultValue:
+                  "Your email must be on your organization's own domain",
+              }),
+            },
+          ),
         documentKeys: z
           .array(z.string())
           .min(1, {
@@ -81,17 +104,11 @@ function useApplicationFormSchema() {
           }),
         }),
       }),
-    [t],
+    [t, emailDomain],
   );
 }
 
-function GrantedState({
-  spaceName,
-  isPro,
-}: {
-  spaceName: string;
-  isPro: boolean;
-}) {
+function GrantedState({ isPro }: { isPro: boolean }) {
   return (
     <EmptyState className="py-0">
       <EmptyStateIcon>
@@ -100,20 +117,21 @@ function GrantedState({
       <EmptyStateTitle as="h1">
         <Trans
           i18nKey="nonprofitGrantedTitle"
-          defaults="{spaceName} has the {percent}% nonprofit discount"
-          values={{ spaceName, percent: NONPROFIT_DISCOUNT_PERCENT }}
+          defaults="Nonprofit discount granted"
         />
       </EmptyStateTitle>
       <EmptyStateDescription>
         {isPro ? (
           <Trans
             i18nKey="nonprofitGrantedPro"
-            defaults="It is applied to your next invoice."
+            defaults="{percent}% off is applied to your next invoice."
+            values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
           />
         ) : (
           <Trans
             i18nKey="nonprofitGrantedHobby"
-            defaults="It is applied automatically when you upgrade."
+            defaults="{percent}% off Rallly Pro is applied automatically when you upgrade."
+            values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
           />
         )}
       </EmptyStateDescription>
@@ -127,18 +145,19 @@ function GrantedState({
 }
 
 function ApplicationForm({
-  spaceName,
+  email,
   rejectionReason,
   onResult,
 }: {
-  spaceName: string;
+  email: string;
   rejectionReason: string | null;
   onResult: (result: {
     outcome: NonprofitApplicationStatus;
     reason: string | null;
   }) => void;
 }) {
-  const schema = useApplicationFormSchema();
+  const { t } = useTranslation();
+  const schema = useApplicationFormSchema(email);
   const apply = useSafeAction(applyForNonprofitDiscountAction);
   const [documents, setDocuments] = React.useState<NonprofitDocument[]>([]);
 
@@ -174,14 +193,14 @@ function ApplicationForm({
           <p>
             <Trans
               i18nKey="nonprofitApplyOffer"
-              defaults="Registered nonprofits get {percent}% off Rallly Pro for {spaceName}."
-              values={{ spaceName, percent: NONPROFIT_DISCOUNT_PERCENT }}
+              defaults="Registered nonprofits get {percent}% off Rallly Pro."
+              values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
             />
           </p>
           <p>
             <Trans
               i18nKey="nonprofitApplyRequirements"
-              defaults="Your email must be on your organization's own domain and you must upload proof of nonprofit registration. Verification is automatic and takes up to a minute."
+              defaults="Upload proof of nonprofit registration. Verification is automatic and takes up to a minute."
             />
           </p>
         </div>
@@ -264,16 +283,39 @@ function ApplicationForm({
             name="documentKeys"
             render={() => (
               <FormItem>
-                <FormLabel>
-                  <Trans
-                    i18nKey="nonprofitDocuments"
-                    defaults="Proof of nonprofit registration"
-                  />
-                </FormLabel>
+                <div className="flex items-center gap-1.5">
+                  <FormLabel>
+                    <Trans
+                      i18nKey="nonprofitDocuments"
+                      defaults="Proof of nonprofit registration"
+                    />
+                  </FormLabel>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <button
+                          type="button"
+                          className="rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                          aria-label={t("nonprofitDocumentExamplesLabel", {
+                            defaultValue: "Examples of accepted documents",
+                          })}
+                        />
+                      }
+                    >
+                      <InfoIcon className="size-4" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <Trans
+                        i18nKey="nonprofitDocumentExamples"
+                        defaults="For example an IRS determination letter, a charity commission registration certificate, or an extract from your national nonprofit register."
+                      />
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 <FormDescription>
                   <Trans
                     i18nKey="nonprofitDocumentsDescription"
-                    defaults="Up to {count} files, PDF, JPEG or PNG. Documents are deleted once verified."
+                    defaults="Up to {count} files, PDF, JPEG or PNG."
                     values={{ count: MAX_DOCUMENTS }}
                   />
                 </FormDescription>
@@ -345,13 +387,14 @@ function ApplicationForm({
 }
 
 export function NonprofitApplicationPage({
-  spaceName,
+  email,
   isOwner,
   isPro,
   isGranted,
   rejectionReason,
 }: {
-  spaceName: string;
+  /** The applicant's email; the website must be on the same domain. */
+  email: string;
   isOwner: boolean;
   isPro: boolean;
   isGranted: boolean;
@@ -383,8 +426,7 @@ export function NonprofitApplicationPage({
         <EmptyStateDescription>
           <Trans
             i18nKey="nonprofitOwnerOnly"
-            defaults="Only the owner of {spaceName} can apply for the nonprofit discount."
-            values={{ spaceName }}
+            defaults="Only the space owner can apply for the nonprofit discount."
           />
         </EmptyStateDescription>
       </EmptyState>
@@ -392,7 +434,7 @@ export function NonprofitApplicationPage({
   }
 
   if (result?.outcome === "approved" || (!result && isGranted)) {
-    return <GrantedState spaceName={spaceName} isPro={isPro} />;
+    return <GrantedState isPro={isPro} />;
   }
 
   if (result?.outcome === "rejected") {
@@ -447,7 +489,7 @@ export function NonprofitApplicationPage({
   return (
     <ApplicationForm
       key={attempt}
-      spaceName={spaceName}
+      email={email}
       rejectionReason={rejectionReason}
       onResult={setResult}
     />
