@@ -115,7 +115,7 @@ export function CustomBrandingSection({
         <PageSectionDescription>
           <Trans
             i18nKey="brandingCardDescription"
-            defaults="How your space appears to you and the people you invite"
+            defaults="How this space looks to members and participants"
           />
         </PageSectionDescription>
       </PageSectionHeader>

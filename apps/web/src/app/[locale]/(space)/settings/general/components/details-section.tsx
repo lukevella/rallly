@@ -53,7 +53,7 @@ export function DetailsSection({ disabled = false }: { disabled?: boolean }) {
         <PageSectionDescription>
           <Trans
             i18nKey="spaceDetailsCardDescription"
-            defaults="What this space is called and what it does"
+            defaults="Basic information about this space"
           />
         </PageSectionDescription>
       </PageSectionHeader>
@@ -71,7 +71,7 @@ export function DetailsSection({ disabled = false }: { disabled?: boolean }) {
               <FieldDescription>
                 <Trans
                   i18nKey="spaceIndustrySettingHint"
-                  defaults="The sector your space works in."
+                  defaults="The sector this space works in."
                 />
               </FieldDescription>
             </FieldContent>

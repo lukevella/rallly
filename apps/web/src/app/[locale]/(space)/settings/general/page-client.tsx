@@ -85,7 +85,7 @@ export function GeneralSettingsPageClient() {
                 <PageSectionDescription>
                   <Trans
                     i18nKey="spaceDangerZoneDescription"
-                    defaults="These actions cannot be undone"
+                    defaults="Actions that cannot be undone"
                   />
                 </PageSectionDescription>
               </PageSectionHeader>
