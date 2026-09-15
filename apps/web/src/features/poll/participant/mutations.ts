@@ -60,6 +60,26 @@ async function lockOpenPoll(
   }
 }
 
+/**
+ * The response may have been deleted between the action's authorization and
+ * this transaction. Every participant write takes the poll row lock first,
+ * so a read under it is current for the rest of the transaction.
+ */
+async function assertParticipantInPoll(
+  tx: Prisma.TransactionClient,
+  participantId: string,
+  pollId: string,
+) {
+  const participant = await tx.participant.findFirst({
+    where: { id: participantId, pollId },
+    select: { id: true },
+  });
+
+  if (!participant) {
+    throw new WriteRefusedError("notFound");
+  }
+}
+
 async function listValidOptionIds(
   tx: Prisma.TransactionClient,
   pollId: string,
@@ -264,6 +284,7 @@ export async function updateParticipantVotes({
   try {
     await prisma.$transaction(async (tx) => {
       await lockOpenPoll(tx, pollId, votes);
+      await assertParticipantInPoll(tx, participantId, pollId);
 
       await tx.vote.deleteMany({ where: { participantId } });
 
@@ -323,6 +344,7 @@ export async function renameParticipant({
   try {
     await prisma.$transaction(async (tx) => {
       await lockOpenPoll(tx, pollId, []);
+      await assertParticipantInPoll(tx, participantId, pollId);
 
       await tx.participant.update({
         where: { id: participantId },
@@ -364,8 +386,8 @@ export async function deleteParticipant({
 
       // Snapshot before the delete: the activity payload is the historical
       // record of the removed response, so it carries the name and votes.
-      const snapshot = await tx.participant.findUniqueOrThrow({
-        where: { id: participantId },
+      const snapshot = await tx.participant.findFirst({
+        where: { id: participantId, pollId },
         select: {
           name: true,
           votes: {
@@ -377,6 +399,10 @@ export async function deleteParticipant({
           },
         },
       });
+
+      if (!snapshot) {
+        throw new WriteRefusedError("notFound");
+      }
 
       // Hard delete: votes cascade, the invite's SetNull FK reverts it to
       // pending, and the response frees the token it took from that invite
