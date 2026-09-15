@@ -2,14 +2,24 @@ import "server-only";
 
 import type { PollStatus, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { VOTE_TYPES } from "@/features/poll/constants";
+import type {
+  PollComment,
+  PollDetails,
+  PollUnavailableReason,
+} from "@/features/poll/types";
 import { isLegacyEditToken } from "@/features/poll/utils";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type {
   AuthorizedSpaceId,
   SpaceContentScope,
 } from "@/features/space/types";
+import {
+  isSpaceAttributionHidden,
+  isSpaceBrandingActive,
+} from "@/features/space/utils";
 import { decryptToken } from "@/lib/session";
 
 export async function getPoll({
@@ -570,4 +580,196 @@ export async function getPollWithOptions({
 
   const { _count, ...rest } = poll;
   return { ...rest, participantCount: _count.participants };
+}
+
+/**
+ * Whether a poll can be served at all, and why not. A poll that exists but
+ * must not be shown gets its own page instead of a 404: the viewer of a
+ * banned creator's poll is usually a scam target and needs to be told so,
+ * and a deleted poll's viewer deserves better than "page not found". The
+ * space owner counts as a creator too: an API key holder can organize polls
+ * under any member, and banning the payer must take every link in the
+ * space down with it.
+ */
+export async function getPollAvailability({ pollId }: { pollId: string }) {
+  const poll = await prisma.poll.findUnique({
+    where: { id: pollId },
+    select: {
+      id: true,
+      title: true,
+      deleted: true,
+      user: { select: { name: true, banned: true } },
+      space: { select: { owner: { select: { banned: true } } } },
+    },
+  });
+
+  if (!poll) {
+    return null;
+  }
+
+  const unavailable: PollUnavailableReason | null = poll.deleted
+    ? "deleted"
+    : poll.user?.banned || poll.space?.owner.banned
+      ? "removed"
+      : null;
+
+  return {
+    id: poll.id,
+    title: poll.title,
+    authorName: poll.user?.name || "Guest",
+    unavailable,
+  };
+}
+
+/**
+ * The poll as both the invite page and the admin page show it. Null for a
+ * missing poll, a deleted one, or a banned creator's: all three are treated
+ * as if the poll never existed, for everyone including its owner.
+ */
+export async function getPollDetails({
+  pollId,
+}: {
+  pollId: string;
+}): Promise<PollDetails | null> {
+  const poll = await prisma.poll.findUnique({
+    where: { id: pollId },
+    select: {
+      id: true,
+      timeZone: true,
+      title: true,
+      location: true,
+      description: true,
+      createdAt: true,
+      status: true,
+      closedReason: true,
+      hideParticipants: true,
+      disableComments: true,
+      allowTentativeVotes: true,
+      hideScores: true,
+      requireParticipantEmail: true,
+      muted: true,
+      userId: true,
+      spaceId: true,
+      deleted: true,
+      options: {
+        select: { id: true, startTime: true, duration: true },
+        orderBy: { startTime: "asc" },
+      },
+      user: { select: { id: true, name: true, image: true, banned: true } },
+      space: {
+        select: {
+          name: true,
+          image: true,
+          tier: true,
+          showBranding: true,
+          hideAttribution: true,
+          primaryColor: true,
+        },
+      },
+      scheduledEvent: {
+        select: {
+          id: true,
+          start: true,
+          end: true,
+          allDay: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  if (!poll || poll.deleted || poll.user?.banned) {
+    return null;
+  }
+
+  const { spaceBrandingAllowed, spaceAttributionConfigurable } =
+    await getInstancePolicy();
+  const brandingActive = poll.space
+    ? isSpaceBrandingActive({ ...poll.space, spaceBrandingAllowed })
+    : false;
+
+  const {
+    scheduledEvent,
+    deleted: _deleted,
+    user,
+    space,
+    ...pollFields
+  } = poll;
+
+  return {
+    ...pollFields,
+    user: user ? { id: user.id, name: user.name, image: user.image } : null,
+    space: space
+      ? {
+          ...space,
+          showBranding: brandingActive,
+          primaryColor: brandingActive ? space.primaryColor : null,
+          hideAttribution: isSpaceAttributionHidden({
+            ...space,
+            spaceAttributionConfigurable,
+          }),
+        }
+      : null,
+    event: scheduledEvent
+      ? {
+          id: scheduledEvent.id,
+          start: scheduledEvent.start,
+          duration: scheduledEvent.allDay
+            ? 0
+            : Math.round(
+                (scheduledEvent.end.getTime() -
+                  scheduledEvent.start.getTime()) /
+                  60_000,
+              ),
+          status: scheduledEvent.status,
+        }
+      : null,
+    inviteLink: shortUrl(`/invite/${poll.id}`),
+  };
+}
+
+/**
+ * Every response with its votes and edit token. Callers scope the output to
+ * the viewer before it leaves the server: the token is the edit credential
+ * and notes are for the host and their author only.
+ */
+export async function listPollParticipants({ pollId }: { pollId: string }) {
+  const participants = await prisma.participant.findMany({
+    where: { pollId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      userId: true,
+      note: true,
+      token: true,
+      createdAt: true,
+      votes: { select: { optionId: true, type: true } },
+      user: { select: { image: true } },
+    },
+    orderBy: [{ createdAt: "desc" }, { name: "desc" }],
+  });
+
+  return participants.map(({ user, ...participant }) => ({
+    ...participant,
+    image: user?.image ?? null,
+  }));
+}
+
+export async function listPollComments({
+  pollId,
+}: {
+  pollId: string;
+}): Promise<PollComment[]> {
+  return prisma.comment.findMany({
+    where: { pollId },
+    select: {
+      id: true,
+      content: true,
+      authorName: true,
+      userId: true,
+      createdAt: true,
+    },
+    orderBy: [{ createdAt: "asc" }],
+  });
 }

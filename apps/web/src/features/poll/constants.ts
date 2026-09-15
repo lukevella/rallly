@@ -1,5 +1,7 @@
 export const MAX_POLL_OPTIONS = 100;
 
+export const MAX_PARTICIPANTS = 1000;
+
 // Display order of the built-in vote types.
 export const VOTE_TYPES = ["yes", "ifNeedBe", "no"] as const;
 
