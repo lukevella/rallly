@@ -1,7 +1,10 @@
 import "server-only";
 
-import { lookup } from "node:dns/promises";
+import type { LookupAddress, LookupOptions } from "node:dns";
+import { lookup } from "node:dns";
 import { isIP } from "node:net";
+import { Agent, getGlobalDispatcher } from "undici";
+import { isOutboundProxyConfigured } from "@/lib/outbound-proxy";
 import { DELIVERY_TIMEOUT_MS } from "./constants";
 import { isPrivateAddress, signWebhookBody } from "./utils";
 
@@ -17,13 +20,71 @@ function allowsPrivateTargets() {
   return process.env.WEBHOOK_ALLOW_PRIVATE_URLS === "true";
 }
 
+export class PrivateAddressError extends Error {
+  constructor() {
+    super("Webhook host resolves to a private address");
+    this.name = "PrivateAddressError";
+  }
+}
+
 /**
- * Resolves the host up front so a public hostname that points at a private
- * address (DNS rebinding, a misconfigured record) is refused before any
- * connection is made. The connection itself goes through global fetch, so
- * it honors the outbound proxy set up at boot (lib/outbound-proxy.ts).
+ * A `net.connect` lookup that refuses private addresses. Installed on the
+ * connection itself so the address that passes the check is the address the
+ * socket connects to: a separate pre-check would leave a window for DNS
+ * rebinding between the check and the connect.
  */
-async function getTargetRejection(url: URL) {
+export function guardedLookup(
+  hostname: string,
+  options: LookupOptions,
+  callback: (
+    err: NodeJS.ErrnoException | null,
+    address: string | LookupAddress[],
+    family?: number,
+  ) => void,
+) {
+  lookup(hostname, { ...options, all: true }, (err, addresses) => {
+    if (err) {
+      return callback(err, []);
+    }
+    if (addresses.some((entry) => isPrivateAddress(entry.address))) {
+      return callback(new PrivateAddressError(), []);
+    }
+    if (options.all) {
+      return callback(null, addresses);
+    }
+    const [first] = addresses;
+    if (!first) {
+      return callback(
+        Object.assign(new Error(`getaddrinfo ENOTFOUND ${hostname}`), {
+          code: "ENOTFOUND",
+        }),
+        [],
+      );
+    }
+    callback(null, first.address, first.family);
+  });
+}
+
+let guardedAgent: Agent | null = null;
+
+/**
+ * Direct connections pin the guarded lookup. Behind an outbound proxy the
+ * proxy resolves the hostname and makes the connection, so pinning is not
+ * possible there; the proxy operator controls what it can reach.
+ */
+function getDispatcher() {
+  if (allowsPrivateTargets() || isOutboundProxyConfigured()) {
+    return getGlobalDispatcher();
+  }
+  guardedAgent ??= new Agent({ connect: { lookup: guardedLookup } });
+  return guardedAgent;
+}
+
+/**
+ * Cheap rejections before any connection is made. IP literals never go
+ * through a lookup, so they are the one case that must be judged here.
+ */
+function getTargetRejection(url: URL) {
   if (allowsPrivateTargets()) {
     return null;
   }
@@ -31,14 +92,8 @@ async function getTargetRejection(url: URL) {
     return "Webhook URL must use https";
   }
   const hostname = url.hostname.replace(/^\[|\]$/g, "");
-  const addresses = isIP(hostname)
-    ? [hostname]
-    : (await lookup(hostname, { all: true })).map((entry) => entry.address);
-  if (addresses.length === 0) {
-    return "Webhook host did not resolve";
-  }
-  if (addresses.some((address) => isPrivateAddress(address))) {
-    return "Webhook host resolves to a private address";
+  if (isIP(hostname) && isPrivateAddress(hostname)) {
+    return "Webhook host is a private address";
   }
   return null;
 }
@@ -69,12 +124,12 @@ export async function sendWebhook({
     return { ok: false, status: null, error: "Invalid webhook URL" };
   }
 
-  try {
-    const rejection = await getTargetRejection(target);
-    if (rejection) {
-      return { ok: false, status: null, error: rejection };
-    }
+  const rejection = getTargetRejection(target);
+  if (rejection) {
+    return { ok: false, status: null, error: rejection };
+  }
 
+  try {
     const timestamp = Math.floor(Date.now() / 1000);
     const signature = await signWebhookBody({ secret, body, timestamp });
     const response = await fetch(target, {
@@ -89,9 +144,12 @@ export async function sendWebhook({
       body,
       redirect: "manual",
       signal: AbortSignal.timeout(DELIVERY_TIMEOUT_MS),
+      // Node extension, absent from the DOM RequestInit type.
+      ...({ dispatcher: getDispatcher() } as object),
     });
-    // Drain so the socket is released; the body itself is irrelevant.
-    await response.arrayBuffer().catch(() => undefined);
+    // The body is irrelevant and untrusted: release the socket without
+    // buffering it.
+    await response.body?.cancel().catch(() => undefined);
 
     if (response.ok) {
       return { ok: true, status: response.status };

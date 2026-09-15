@@ -15,11 +15,20 @@ export const MAX_DELIVERY_ATTEMPTS = RETRY_DELAYS_MS.length + 1;
 
 /**
  * Fan-out reads activities up to now minus this lag. cuid ids are not
- * monotonic, so the cursor is `createdAt`, and a row inserted inside a
- * transaction that commits after the cursor passed its timestamp would
- * otherwise be skipped forever. Ten seconds covers any transaction we run.
+ * monotonic, so the cursor is `createdAt`, which is the start of the
+ * transaction that wrote the row, not its commit. The lag keeps the common
+ * case from ever seeing an uncommitted row.
  */
 export const FAN_OUT_LAG_MS = 10_000;
+
+/**
+ * Each run re-reads this much history behind the cursor. A transaction that
+ * held its row open longer than the lag commits with a `createdAt` the
+ * cursor already passed; the overlap picks it up on a later run and the
+ * unique (webhook, activity) key drops the rows already fanned out. Far
+ * longer than any transaction timeout we configure (30s).
+ */
+export const FAN_OUT_OVERLAP_MS = 5 * 60_000;
 
 export const FAN_OUT_BATCH_SIZE = 500;
 

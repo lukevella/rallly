@@ -9,6 +9,7 @@ import {
   DELIVERY_CONCURRENCY,
   FAN_OUT_BATCH_SIZE,
   FAN_OUT_LAG_MS,
+  FAN_OUT_OVERLAP_MS,
   IN_FLIGHT_TIMEOUT_MS,
   MAX_CONSECUTIVE_FAILURES,
   MAX_DELIVERY_ATTEMPTS,
@@ -29,9 +30,10 @@ import {
 
 /**
  * Turns new activity into delivery rows, one per (webhook, activity). The
- * unique constraint makes re-reading harmless, so the cursor can be
- * conservative: it only advances to the lag boundary once a webhook's
- * backlog is drained. Returns the number of deliveries created.
+ * unique constraint makes re-reading harmless, so every run re-reads an
+ * overlap window behind the cursor and the cursor only advances to the lag
+ * boundary once a webhook's backlog is drained. Returns the number of
+ * deliveries created.
  */
 export async function fanOutWebhookEvents({ now }: { now: Date }) {
   const until = new Date(now.getTime() - FAN_OUT_LAG_MS);
@@ -44,7 +46,7 @@ export async function fanOutWebhookEvents({ now }: { now: Date }) {
 
     const activities = await listWebhookActivities({
       spaceId: webhook.spaceId,
-      after: webhook.cursor,
+      after: new Date(webhook.cursor.getTime() - FAN_OUT_OVERLAP_MS),
       until,
       limit: FAN_OUT_BATCH_SIZE,
     });
@@ -71,12 +73,10 @@ export async function fanOutWebhookEvents({ now }: { now: Date }) {
     });
 
     const last = activities.at(-1);
-    // A full batch may have split a run of equal timestamps; step back one
-    // millisecond so the rest is re-read next run and deduplicated.
+    // A full batch stops short of the boundary; the overlap re-reads any
+    // equal-timestamp siblings the batch split.
     const cursor =
-      activities.length === FAN_OUT_BATCH_SIZE && last
-        ? new Date(last.createdAt.getTime() - 1)
-        : until;
+      activities.length === FAN_OUT_BATCH_SIZE && last ? last.createdAt : until;
 
     const [result] = await prisma.$transaction([
       prisma.webhookDelivery.createMany({
@@ -138,6 +138,9 @@ export async function claimDueDeliveries({
         id,
         status: { in: ["pending", "failed"] },
         nextAttemptAt: { lte: now },
+        // Re-checked here, not only when listing candidates: another run
+        // may have disabled the endpoint in between.
+        webhook: { enabled: true },
       },
       data: { status: "in_flight", attempts: { increment: 1 } },
     });
@@ -241,6 +244,35 @@ export async function recordDeliveryResult({
   });
 }
 
+/**
+ * Every failure mode ends in a result: a delivery is already in flight by
+ * now, and a throw here would leave it stranded until stale reclamation.
+ */
+async function attemptDelivery(delivery: {
+  id: string;
+  eventType: string;
+  payload: Prisma.JsonValue;
+  webhook: { url: string; secret: string };
+}): Promise<WebhookSendResult> {
+  let secret: string;
+  try {
+    secret = decrypt(delivery.webhook.secret, env.SECRET_PASSWORD);
+  } catch {
+    return {
+      ok: false,
+      status: null,
+      error: "Could not decrypt the endpoint secret",
+    };
+  }
+  return sendWebhook({
+    url: delivery.webhook.url,
+    secret,
+    deliveryId: delivery.id,
+    eventType: delivery.eventType as WebhookEventType,
+    body: JSON.stringify(delivery.payload),
+  });
+}
+
 export type DeliverWebhooksSummary = {
   reclaimed: number;
   fannedOut: number;
@@ -283,13 +315,7 @@ export async function deliverWebhooks({
   for (let i = 0; i < deliveries.length; i += DELIVERY_CONCURRENCY) {
     const outcomes = await Promise.all(
       deliveries.slice(i, i + DELIVERY_CONCURRENCY).map(async (delivery) => {
-        const result = await sendWebhook({
-          url: delivery.webhook.url,
-          secret: decrypt(delivery.webhook.secret, env.SECRET_PASSWORD),
-          deliveryId: delivery.id,
-          eventType: delivery.eventType as WebhookEventType,
-          body: JSON.stringify(delivery.payload),
-        });
+        const result = await attemptDelivery(delivery);
         return recordDeliveryResult({
           deliveryId: delivery.id,
           webhookId: delivery.webhook.id,

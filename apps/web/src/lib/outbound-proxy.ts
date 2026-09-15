@@ -24,6 +24,11 @@ function sanitize(value: string) {
   }
 }
 
+/** Whether outbound fetches are routed through a proxy from the environment. */
+export function isOutboundProxyConfigured() {
+  return PROXY_ENV_VARS.some((name) => process.env[name]);
+}
+
 /**
  * Loopback traffic is never proxied, regardless of NO_PROXY: a CONNECT to
  * "localhost" through a remote proxy reaches the proxy's loopback, never this

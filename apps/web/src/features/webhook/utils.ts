@@ -163,7 +163,12 @@ function parseIPv4(address: string) {
   return octets.every((octet) => octet <= 255) ? octets : null;
 }
 
-function isPrivateIPv4([a, b]: number[]) {
+/**
+ * Every IPv4 range the IANA special-purpose registry marks as not globally
+ * reachable, so a webhook can never be pointed at anything a deployment's
+ * network might route internally.
+ */
+function isPrivateIPv4([a = 0, b = 0, c = 0]: number[]) {
   return (
     a === 0 || // "this" network, includes 0.0.0.0
     a === 10 ||
@@ -171,7 +176,12 @@ function isPrivateIPv4([a, b]: number[]) {
     (a === 100 && b >= 64 && b <= 127) || // carrier-grade NAT
     (a === 169 && b === 254) ||
     (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 0 && c === 0) || // IETF protocol assignments
+    (a === 192 && b === 0 && c === 2) || // TEST-NET-1
     (a === 192 && b === 168) ||
+    (a === 198 && (b === 18 || b === 19)) || // benchmarking
+    (a === 198 && b === 51 && c === 100) || // TEST-NET-2
+    (a === 203 && b === 0 && c === 113) || // TEST-NET-3
     a >= 224 // multicast and reserved, includes broadcast
   );
 }

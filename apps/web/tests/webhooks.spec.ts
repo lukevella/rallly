@@ -277,6 +277,23 @@ test.describe("Webhook delivery", () => {
     });
   });
 
+  test("picks up an activity that committed behind the cursor", async ({
+    request,
+  }) => {
+    // Cursor is 120s back; a row whose transaction started earlier but
+    // committed late is inside the overlap window and must still fan out.
+    await createWebhook();
+    const late = await createActivity({
+      type: "poll_closed",
+      payload: { reason: "auto" },
+      createdAt: secondsAgo(200),
+    });
+
+    const summary = await runCron(request);
+    expect(summary.fannedOut).toBe(1);
+    expect(JSON.parse(receiver.requests[0]?.body ?? "{}").id).toBe(late.id);
+  });
+
   test("leaves activities inside the fan-out lag for the next run", async ({
     request,
   }) => {
