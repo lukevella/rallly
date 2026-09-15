@@ -3,6 +3,7 @@ import { posthog } from "@rallly/posthog/client";
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { Link } from "@/components/link";
 import { useBranding } from "@/features/branding/client";
+import { DEFAULT_APP_NAME } from "@/features/branding/constants";
 import { usePoll } from "@/features/poll/client";
 import { Trans } from "@/i18n/client";
 
@@ -29,36 +30,32 @@ export function PollFooter({
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 py-6 text-center text-muted-foreground text-sm">
+    <div className="flex flex-col items-center gap-4 py-6 text-center text-muted-foreground text-sm">
       <InstanceFooterLinks links={footerLinks} />
       {isAttributionHidden ? null : (
-        <div>
-          <Trans
-            defaults="Powered by <a>{name}</a>"
-            i18nKey="poweredByRallly"
-            values={{ name: "rallly.co" }}
-            components={{
-              a: (
-                <Link
-                  prefetch={false}
-                  className="hover:underline"
-                  href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
-                  onClick={() => {
-                    posthog?.capture("poll_footer:powered_by_link_click", {
-                      pollId: poll.id,
-                      spaceId: poll.spaceId,
-                      tier: poll.space?.tier,
-                      $groups: {
-                        poll: poll.id,
-                        ...(poll.spaceId ? { space: poll.spaceId } : {}),
-                      },
-                    });
-                  }}
-                />
-              ),
-            }}
+        <Link
+          className="inline-flex h-9 items-center gap-2 rounded-full border border-border bg-muted px-4 font-medium text-foreground text-sm shadow-xs transition-[background-color,transform] ease-out hover:bg-muted-border active:scale-[.98] motion-reduce:active:scale-100"
+          href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
+          onClick={() => {
+            posthog?.capture("poll_footer:powered_by_link_click", {
+              pollId: poll.id,
+              spaceId: poll.spaceId,
+              tier: poll.space?.tier,
+              $groups: {
+                poll: poll.id,
+                ...(poll.spaceId ? { space: poll.spaceId } : {}),
+              },
+            });
+          }}
+        >
+          <Trans i18nKey="poweredBy" defaults="Powered by" />
+          {/* The wordmark is masked so it inherits the pill's text color in both themes */}
+          <span
+            aria-hidden="true"
+            className="h-3.5 w-[75px] bg-foreground [mask:url(/static/logo.svg)_no-repeat_center/contain]"
           />
-        </div>
+          <span className="sr-only"> {DEFAULT_APP_NAME}</span>
+        </Link>
       )}
     </div>
   );
