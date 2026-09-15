@@ -610,7 +610,6 @@
   "pollStatusClosed": "已关闭",
   "pollStatusOpen": "启用中",
   "pollStatusScheduled": "已安排",
-  "poweredByRallly": "由 <a>{name}</a> 提供支持",
   "preferences": "偏好设置",
   "preferencesDescription": "管理您的偏好设置",
   "preview": "预览",
