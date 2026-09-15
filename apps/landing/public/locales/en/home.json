@@ -1,4 +1,6 @@
 {
+  "apiAnnouncement": "Introducing the Rallly API",
+  "apiBlogBadge": "New",
   "assistantsDescription": "Whether you support one executive or a whole department, find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
   "assistantsFaqBranding": "Can polls carry our company branding?",
   "assistantsFaqBrandingAnswer": "With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to a board or a client looks like it came from your organization. Everything else is free to use.",
@@ -52,8 +54,6 @@
   "doodleComparisonSelfHosting": "Self-hostable",
   "doodleComparisonTimeZones": "Automatic time zone conversion",
   "doodleComparisonTitle": "How Rallly compares to Doodle",
-  "emailInvitesAnnouncement": "Introducing email invites",
-  "emailInvitesBlogBadge": "New",
   "ericJobTitle": "Executive Assistant at MIT",
   "ericQuote": "“If your scheduling workflow lives in emails, I strongly encourage you to try and let Rallly simplify your scheduling tasks for a more organized and less stressful workday.”",
   "faqAfterVoting": "What happens after everyone votes?",
