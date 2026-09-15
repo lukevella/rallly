@@ -22,9 +22,9 @@ export function PollFooter({
   attributionAction,
 }: {
   footerLinks?: { label: string; href: string }[];
-  // Control rendered inside the badge on the admin page (the invite page
-  // passes nothing). Nested interactives are invalid inside the link, so
-  // the pill becomes a wrapper holding the link and the control.
+  // Control anchored to the badge on the admin page (the invite page passes
+  // nothing). Nested interactives are invalid inside the link, so it sits
+  // in a relative wrapper and positions itself over the pill's corner.
   attributionAction?: React.ReactNode;
 }) {
   const { hideAttribution } = useBranding();
@@ -40,8 +40,8 @@ export function PollFooter({
     <div className="flex flex-col items-center gap-4 py-3 text-center text-muted-foreground text-sm">
       <InstanceFooterLinks links={footerLinks} />
       {isAttributionHidden ? null : attributionAction ? (
-        <span className={cn(pillClassName, "gap-1.5 pr-2")}>
-          <PoweredByLink className="inline-flex h-full items-center gap-2" />
+        <span className="relative inline-flex">
+          <PoweredByLink className={pillClassName} />
           {attributionAction}
         </span>
       ) : (

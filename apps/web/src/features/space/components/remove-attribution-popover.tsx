@@ -53,7 +53,7 @@ export function RemoveAttributionPopover({
           <Button
             variant="ghost"
             size="icon-xs"
-            className="size-5 rounded-full text-muted-foreground hover:text-foreground"
+            className="absolute -top-2 -right-2 size-5 rounded-full border border-border bg-background text-muted-foreground shadow-xs hover:bg-gray-50 hover:text-foreground dark:bg-muted"
             aria-label={t("removeAttribution", {
               defaultValue: "Remove attribution",
             })}
