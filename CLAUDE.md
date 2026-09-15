@@ -277,7 +277,8 @@ Reads filtered or grouped by the viewer's present ("upcoming", "past", agenda gr
 - Crowdin integration for translation management
 - Use `pnpm i18n:scan` to extract new translation keys
 - **IMPORTANT**: When TypeScript errors occur for missing i18n keys, run `pnpm i18n:scan` instead of manually adding keys. This command automatically scans the codebase for `Trans` components and generates the necessary translation entries.
-- **IMPORTANT**: Never manually add translations to `.json` files. This is handled by tooling.
+- **English locale files are generated, and their diffs are expected in feature PRs.** `pnpm i18n:scan` writes new keys into `apps/web/public/locales/en/*.json`, `apps/landing/public/locales/en/*.json` and `packages/emails/locales/en/*.json`; a PR that adds a `Trans` or `t()` call ships the matching English entry. Never hand-type an entry into those files — run the scan so the key and default cannot drift from the source.
+- **Non-English locale files belong to Crowdin.** Never edit them in a feature PR; translations arrive through the "🌐 New Crowdin updates" PRs.
 - **Pluralization**: Always use ICU message format for plurals. Example: `{count, plural, =0 {No items} one {1 item} other {# items}}` instead of separate singular/plural translation keys.
 - i18n keys are in camelCase and should describe the message (e.g. `"lastUpdated": "Last updated"`)
 - If an i18n key is not intended to be reused, prefix it with the component name in camelCase
