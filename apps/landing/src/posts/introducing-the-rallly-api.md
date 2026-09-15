@@ -1,6 +1,6 @@
 ---
 title: Introducing the Rallly API
-date: "2026-09-12"
+date: "2026-09-15"
 category: Product
 excerpt: Create polls, read results and close them from your own tools. The API is available now for Pro spaces on Rallly Cloud.
 ---
