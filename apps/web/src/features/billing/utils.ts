@@ -9,3 +9,16 @@ import type { SpaceTier } from "@/features/space/schema";
 export function resolveSpaceTier(storedTier: SpaceTier): SpaceTier {
   return isBillingEnabled ? storedTier : "pro";
 }
+
+export function isStripeErrorCode(error: unknown, code: string) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === code
+  );
+}
+
+export function isStripeResourceMissingError(error: unknown) {
+  return isStripeErrorCode(error, "resource_missing");
+}
