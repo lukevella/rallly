@@ -1,3 +1,4 @@
+import type { Industry } from "@/features/space/constants";
 import type { MemberRole } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/lib/tenant-scope";
 
@@ -20,4 +21,5 @@ export type SpaceDTO = {
   primaryColor?: string;
   showBranding: boolean;
   hideAttribution: boolean;
+  industry: Industry | null;
 };

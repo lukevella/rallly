@@ -65,16 +65,19 @@ export async function updateSpace({
   spaceId,
   name,
   primaryColor,
+  industry,
 }: {
   spaceId: string;
   name?: string;
   primaryColor?: string | null;
+  industry?: string | null;
 }) {
   await prisma.space.update({
     where: { id: spaceId },
     data: {
       ...(name !== undefined && { name }),
       ...(primaryColor !== undefined && { primaryColor }),
+      ...(industry !== undefined && { industry }),
     },
   });
 }

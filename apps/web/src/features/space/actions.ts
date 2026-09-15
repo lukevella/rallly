@@ -206,14 +206,18 @@ export const updateSpaceAction = authActionClient
       spaceId: space.id,
       name: parsedInput.name,
       primaryColor: parsedInput.primaryColor,
+      industry: parsedInput.industry,
     });
 
-    if (parsedInput.name) {
+    if (parsedInput.name !== undefined || parsedInput.industry !== undefined) {
       identifyGroup({
         groupType: "space",
         groupKey: space.id,
         properties: {
-          name: parsedInput.name,
+          ...(parsedInput.name !== undefined && { name: parsedInput.name }),
+          ...(parsedInput.industry !== undefined && {
+            industry: parsedInput.industry,
+          }),
         },
       });
     }

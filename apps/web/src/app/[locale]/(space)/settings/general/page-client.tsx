@@ -33,6 +33,7 @@ import { Trans } from "@/i18n/client";
 import { CollaborationSection } from "./components/collaboration-section";
 import { CustomBrandingSection } from "./components/custom-branding-section";
 import { DeleteSpaceButton } from "./components/delete-space-button";
+import { DetailsSection } from "./components/details-section";
 import { LeaveSpaceButton } from "./components/leave-space-button";
 
 export function GeneralSettingsPageClient() {
@@ -70,6 +71,7 @@ export function GeneralSettingsPageClient() {
               </AlertDescription>
             </Alert>
           ) : null}
+          <DetailsSection disabled={!isAdmin} />
           <CustomBrandingSection disabled={!isAdmin} />
           {!spacesAlwaysShared ? (
             <CollaborationSection disabled={!isAdmin} />

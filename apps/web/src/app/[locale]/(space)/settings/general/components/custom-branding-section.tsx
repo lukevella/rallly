@@ -36,7 +36,6 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
 import { RemoveAttributionSetting } from "./remove-attribution-setting";
-import { SpaceSettingsForm } from "./space-settings-form";
 
 export function CustomBrandingSection({
   disabled = false,
@@ -122,7 +121,6 @@ export function CustomBrandingSection({
       </PageSectionHeader>
       <PageSectionContent>
         <FieldGroup variant="divided">
-          <SpaceSettingsForm space={space} disabled={disabled} />
           {!spaceBrandingAllowed ? (
             // The divided field group pads its children directly, which would
             // land inside the alert's border — the wrapper takes it instead

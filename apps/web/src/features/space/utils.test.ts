@@ -271,4 +271,20 @@ describe("createSpaceDTO", () => {
       createSpaceDTO({ space, policy: { spacesAlwaysShared: true } }).shared,
     ).toBe(true);
   });
+
+  it("passes a known industry through and drops anything else", () => {
+    const policy = { spacesAlwaysShared: false };
+    expect(
+      createSpaceDTO({ space: { ...space, industry: "non_profit" }, policy })
+        .industry,
+    ).toBe("non_profit");
+    expect(
+      createSpaceDTO({ space: { ...space, industry: "retired_value" }, policy })
+        .industry,
+    ).toBeNull();
+    expect(
+      createSpaceDTO({ space: { ...space, industry: null }, policy }).industry,
+    ).toBeNull();
+    expect(createSpaceDTO({ space, policy }).industry).toBeNull();
+  });
 });
