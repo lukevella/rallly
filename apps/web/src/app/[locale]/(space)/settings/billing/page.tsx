@@ -1,5 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from "@rallly/ui/alert";
-import { CheckCircleIcon, ShieldXIcon } from "lucide-react";
+import { ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -24,6 +23,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
+import { BillingFlashAlert } from "@/features/billing/components/billing-flash-alert";
 import { getSpaceSubscription } from "@/features/billing/data";
 import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -35,11 +35,7 @@ import { ContactSupportLink } from "./components/contact-support-link";
 import { HobbyPlanCard } from "./components/hobby-plan-card";
 import { ProPlanCard } from "./components/pro-plan-card";
 
-export default async function BillingSettingsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ seats_updated?: string }>;
-}) {
+export default async function BillingSettingsPage() {
   if (!isFeatureEnabled("billing")) {
     notFound();
   }
@@ -72,12 +68,10 @@ export default async function BillingSettingsPage({
     );
   }
 
-  const [subscription, seatUsage, { seats_updated: didUpdateSeats }] =
-    await Promise.all([
-      getSpaceSubscription(space.id),
-      getSeatUsage(),
-      searchParams,
-    ]);
+  const [subscription, seatUsage] = await Promise.all([
+    getSpaceSubscription(space.id),
+    getSeatUsage(),
+  ]);
 
   return (
     <SettingsPage>
@@ -123,23 +117,7 @@ export default async function BillingSettingsPage({
               ) : (
                 <HobbyPlanCard />
               )}
-              {didUpdateSeats !== undefined ? (
-                <Alert variant="success">
-                  <CheckCircleIcon />
-                  <AlertTitle>
-                    <Trans
-                      i18nKey="seatsUpdatedAlertTitle"
-                      defaults="Seats updated"
-                    />
-                  </AlertTitle>
-                  <AlertDescription>
-                    <Trans
-                      i18nKey="seatsUpdatedAlertDescription"
-                      defaults="Your seat allocation has been successfully updated. The changes will be reflected in your next billing cycle."
-                    />
-                  </AlertDescription>
-                </Alert>
-              ) : null}
+              <BillingFlashAlert />
             </PageSectionContent>
           </PageSection>
           <PageSectionDivider />
