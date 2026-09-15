@@ -15,7 +15,7 @@ Your API keys, poll IDs, invite links and rate limits carry over unchanged. What
 | Authentication | `Authorization: Bearer <key>` | Unchanged |
 | Rate limits | 60 per minute, 5,000 per day, per space | Unchanged |
 | Create poll status | `200 OK` | `201 Created` |
-| Poll shape | `dates` or `slots` in the request, `options` in the response | `kind` plus `options` on both sides, so a `GET` body can be sent back to `POST` |
+| Poll shape | `dates` or `slots` in the request, `options` in the response | `kind` plus `options` on both sides; each request option is the response option without its `id` |
 | Time zone field | `timezone` (response), `slots.timezone` (request) | `timeZone` at the top level of both |
 | Date options | `startTime` at UTC midnight with `duration: 0` | `date` as `YYYY-MM-DD` |
 | Organizer | `user: { name, image }` | `organizer: { id, name, email, image }` |
@@ -32,7 +32,7 @@ Your API keys, poll IDs, invite links and rate limits carry over unchanged. What
 
 ### Base URL
 
-Replace the host and prefix. Paths under it are the same.
+Replace the host and prefix. The poll paths under it are the same, with two exceptions: `PATCH /polls/{pollId}` is removed, and `/docs` has no v1 equivalent. Both are covered below.
 
 ```text
 https://app.rallly.co/api/private/polls   →   https://api.rallly.co/v1/polls
@@ -168,7 +168,7 @@ Every endpoint that returns a poll (`POST /polls`, `GET /polls`, `GET /polls/{po
 
 **Status code.** v1 responds `201 Created` instead of `200 OK`. A client that checks for exactly `200` will treat every successful create as a failure.
 
-**Request.** The private API chose the poll type from whether you sent `dates` or `slots`. v1 takes an explicit `kind` and puts every option under `options`, in the same shape the response returns.
+**Request.** The private API chose the poll type from whether you sent `dates` or `slots`. v1 takes an explicit `kind` and puts every option under `options`. Each request option is the response option without its `id`: `{ date }` for a date poll, `{ startTime, duration? }` for a time poll. The body is strict, so the other response fields (`id`, `status`, `createdAt`, `organizer` and so on) must not be sent.
 
 Date polls:
 
