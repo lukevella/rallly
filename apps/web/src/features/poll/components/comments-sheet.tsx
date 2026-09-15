@@ -102,6 +102,25 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
   const contentLength = watch("content").length;
 
   const addComment = useAddComment();
+
+  const getCommentErrorMessage = (reason: string) => {
+    switch (reason) {
+      case "disabled":
+      case "notFound":
+        return t("commentsDisabledError", {
+          defaultValue: "Comments are turned off for this poll.",
+        });
+      case "tooManyRequests":
+        return t("actionErrorTooManyRequests", {
+          defaultValue: "You are making too many requests",
+        });
+      default:
+        return t("actionErrorInternalServerError", {
+          defaultValue: "An internal server error occurred",
+        });
+    }
+  };
+
   return (
     <form
       className="w-full"
@@ -113,15 +132,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
           pollId,
         });
         if (!result.ok) {
-          toast.error(
-            result.reason === "tooManyRequests"
-              ? t("actionErrorTooManyRequests", {
-                  defaultValue: "You are making too many requests",
-                })
-              : t("actionErrorInternalServerError", {
-                  defaultValue: "An internal server error occurred",
-                }),
-          );
+          toast.error(getCommentErrorMessage(result.reason));
           return;
         }
         reset({ authorName, content: "" });

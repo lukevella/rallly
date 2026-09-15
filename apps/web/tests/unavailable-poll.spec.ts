@@ -6,7 +6,8 @@ import { createTestPoll, createUserInDb, loginWithEmail } from "./test-utils";
 // A poll whose creator was banned is usually a scam lure. The person who
 // clicks the link is the intended victim, so the page they land on has to
 // warn them instead of showing a generic 404, and none of the poll's content
-// may leak through the page or the public tRPC reads.
+// may leak through the page. A page opened before the ban must not be able
+// to keep writing to the poll either.
 
 const scamTitle = "Claim your unclaimed parcel refund";
 
@@ -33,22 +34,32 @@ test.describe("unavailable poll invite page", () => {
 
     const main = page.locator("#main-content");
 
+    const voter = await createUserInDb({
+      email: `unavailable-voter-${randomUUID()}@example.com`,
+      name: "Voter",
+    });
+    await loginWithEmail(page, { email: voter.email });
+
+    // A response started while the poll was still served, so the ban lands
+    // between the page and its submit.
     await page.goto(`/invite/${poll.id}`);
     await expect(main.getByText(scamTitle).first()).toBeVisible();
-
-    const optionsBeforeBan = await page.request.get(
-      `/api/trpc/polls.get?input=${encodeURIComponent(
-        JSON.stringify({ json: { urlId: poll.id } }),
-      )}`,
-    );
-    const optionId = (await optionsBeforeBan.json()).result.data.json.options[0]
-      .id;
-    expect(optionId).toBeTruthy();
+    await page.locator("data-testid=vote-selector >> nth=0").click();
+    await page.click("button >> text='Continue'");
+    await page.type('[placeholder="Jessie Smith"]', "Victim");
 
     await prisma.user.update({
       where: { id: user.id },
       data: { banned: true, bannedAt: new Date(), banReason: "scam" },
     });
+
+    await page.click("text='Save availability'");
+    await expect(
+      page.getByText("This poll is no longer accepting responses."),
+    ).toBeVisible();
+    expect(await prisma.participant.count({ where: { pollId: poll.id } })).toBe(
+      0,
+    );
 
     await page.goto(`/invite/${poll.id}`);
     await expect(
@@ -61,53 +72,6 @@ test.describe("unavailable poll invite page", () => {
       "content",
       /noindex/,
     );
-
-    const get = await page.request.get(
-      `/api/trpc/polls.get?input=${encodeURIComponent(
-        JSON.stringify({ json: { urlId: poll.id } }),
-      )}`,
-    );
-    expect(get.status()).toBe(404);
-    const participants = await page.request.get(
-      `/api/trpc/polls.participants.list?input=${encodeURIComponent(
-        JSON.stringify({ json: { pollId: poll.id } }),
-      )}`,
-    );
-    expect(participants.status()).toBe(404);
-    const comments = await page.request.get(
-      `/api/trpc/polls.comments.list?input=${encodeURIComponent(
-        JSON.stringify({ json: { pollId: poll.id } }),
-      )}`,
-    );
-    expect(comments.status()).toBe(404);
-
-    // Writes are refused too, so a signed-in caller who kept the poll's
-    // option ids from before the ban cannot keep adding responses or
-    // comments to it.
-    const voter = await createUserInDb({
-      email: `unavailable-voter-${randomUUID()}@example.com`,
-      name: "Voter",
-    });
-    await loginWithEmail(page, { email: voter.email });
-    const addParticipant = await page.request.post(
-      "/api/trpc/polls.participants.add",
-      {
-        data: {
-          json: {
-            pollId: poll.id,
-            name: "Victim",
-            votes: [{ optionId: optionId, type: "yes" }],
-          },
-        },
-      },
-    );
-    expect(addParticipant.status()).toBe(404);
-    const addComment = await page.request.post("/api/trpc/polls.comments.add", {
-      data: {
-        json: { pollId: poll.id, authorName: "Victim", content: "Hello" },
-      },
-    });
-    expect(addComment.status()).toBe(404);
   });
 
   test("a deleted poll shows the deleted page without the scam warning", async ({

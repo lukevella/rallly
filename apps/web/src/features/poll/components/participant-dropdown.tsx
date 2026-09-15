@@ -234,9 +234,13 @@ const DeleteParticipantModal = ({
               });
               if (!result.ok) {
                 toast.error(
-                  t("actionErrorInternalServerError", {
-                    defaultValue: "An internal server error occurred",
-                  }),
+                  result.reason === "closed"
+                    ? t("pollClosedDescription", {
+                        defaultValue: "No more responses are being accepted.",
+                      })
+                    : t("actionErrorInternalServerError", {
+                        defaultValue: "An internal server error occurred",
+                      }),
                 );
                 return;
               }
@@ -266,6 +270,7 @@ const ChangeNameModal = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const token = useEditToken();
   const renameParticipant = useRenameParticipant();
   const form = useForm({
@@ -294,7 +299,15 @@ const ChangeNameModal = (props: {
           token,
         });
         if (!result.ok) {
-          form.setError("name", { message: result.reason });
+          toast.error(
+            result.reason === "closed"
+              ? t("pollClosedDescription", {
+                  defaultValue: "No more responses are being accepted.",
+                })
+              : t("actionErrorInternalServerError", {
+                  defaultValue: "An internal server error occurred",
+                }),
+          );
           return;
         }
       }
@@ -306,13 +319,12 @@ const ChangeNameModal = (props: {
       participantId,
       token,
       onOpenChange,
-      form,
+      t,
     ],
   );
 
   const { requiredString } = useFormValidation();
   const formName = `change-name-${props.participantId}`;
-  const { t } = useTranslation();
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent>
