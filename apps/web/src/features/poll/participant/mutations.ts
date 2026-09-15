@@ -12,33 +12,51 @@ import { revalidatePollPages } from "@/features/poll/mutations";
 import { generateAccessToken } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 
-class TentativeVotesNotAllowedError extends Error {}
+type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
+
+class WriteRefusedError extends Error {
+  constructor(public readonly reason: WriteRefusal) {
+    super(reason);
+  }
+}
 
 /**
- * Rejects new tentative votes when the poll no longer allows them, locking the
- * poll row for the rest of the transaction.
- *
- * The check runs inside the writing transaction and takes a lock the
- * organizer's disable transition also takes. Under READ COMMITTED a plain read
- * would let a vote that passed an earlier check land after the organizer had
- * already counted zero tentative votes, stranding one on a poll that no longer
- * accepts them.
+ * Locks the poll row for the rest of the transaction and proves the poll
+ * still accepts writes. The organizer's close, delete and settings
+ * transitions update the same row, so under READ COMMITTED a check made
+ * before the transaction could pass while one of them commits in between.
+ * Bans live on the user rows and are checked by the caller before the
+ * transaction: their writers do not take this lock, and a response that
+ * lands during a ban is removed with the poll anyway.
  */
-async function assertTentativeVotesAllowed(
+async function lockOpenPoll(
   tx: Prisma.TransactionClient,
   pollId: string,
   votes: { type: VoteType }[],
 ) {
-  if (!votes.some((vote) => vote.type === "ifNeedBe")) {
-    return;
-  }
-
-  const [poll] = await tx.$queryRaw<{ allow_tentative_votes: boolean }[]>`
-    SELECT allow_tentative_votes FROM polls WHERE id = ${pollId} FOR UPDATE
+  const [poll] = await tx.$queryRaw<
+    { status: string; deleted: boolean; allow_tentative_votes: boolean }[]
+  >`
+    SELECT status, deleted, allow_tentative_votes
+    FROM polls WHERE id = ${pollId} FOR UPDATE
   `;
 
-  if (!poll?.allow_tentative_votes) {
-    throw new TentativeVotesNotAllowedError();
+  if (!poll || poll.deleted) {
+    throw new WriteRefusedError("notFound");
+  }
+
+  // The voting window is the organizer's control, so it has to hold here
+  // and not only in the client, which hides the form via
+  // `canAddNewParticipant` and `canEditParticipant`.
+  if (poll.status !== "open") {
+    throw new WriteRefusedError("closed");
+  }
+
+  if (
+    !poll.allow_tentative_votes &&
+    votes.some((vote) => vote.type === "ifNeedBe")
+  ) {
+    throw new WriteRefusedError("tentativeVotesNotAllowed");
   }
 }
 
@@ -51,6 +69,13 @@ async function listValidOptionIds(
     select: { id: true },
   });
   return new Set(options.map((option) => option.id));
+}
+
+function refusal(error: unknown) {
+  if (error instanceof WriteRefusedError) {
+    return { ok: false as const, reason: error.reason };
+  }
+  throw error;
 }
 
 export type AddParticipantResult =
@@ -79,10 +104,7 @@ export type AddParticipantResult =
       viaInvite: boolean;
       totalResponses: number;
     }
-  | {
-      ok: false;
-      reason: "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
-    };
+  | { ok: false; reason: WriteRefusal };
 
 export async function addParticipant({
   pollId,
@@ -108,32 +130,14 @@ export async function addParticipant({
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
     select: {
-      status: true,
-      deleted: true,
       user: { select: { banned: true } },
       space: { select: { owner: { select: { banned: true } } } },
     },
   });
 
-  // A deleted poll, or one whose creator or space owner was banned, never
-  // accepts responses.
-  if (!poll || poll.deleted || poll.user?.banned || poll.space?.owner.banned) {
+  // A poll whose creator or space owner was banned never accepts responses.
+  if (!poll || poll.user?.banned || poll.space?.owner.banned) {
     return { ok: false, reason: "notFound" };
-  }
-
-  // The voting window is the organizer's control, so it has to hold here
-  // and not only in the client, which hides the form via
-  // `canAddNewParticipant`.
-  if (poll.status !== "open") {
-    return { ok: false, reason: "closed" };
-  }
-
-  const participantCount = await prisma.participant.count({
-    where: { pollId },
-  });
-
-  if (participantCount >= MAX_PARTICIPANTS) {
-    return { ok: false, reason: "full" };
   }
 
   try {
@@ -143,7 +147,16 @@ export async function addParticipant({
         validOptionIds.has(optionId),
       );
 
-      await assertTentativeVotesAllowed(tx, pollId, validVotes);
+      await lockOpenPoll(tx, pollId, validVotes);
+
+      // Counted under the lock so two responses cannot both pass at the cap.
+      const participantCount = await tx.participant.count({
+        where: { pollId },
+      });
+
+      if (participantCount >= MAX_PARTICIPANTS) {
+        throw new WriteRefusedError("full");
+      }
 
       // A response answering an emailed invite takes the invite's token, so
       // the link the invitee already holds names it.
@@ -221,27 +234,21 @@ export async function addParticipant({
         poll,
         editToken,
         viaInvite: invite !== null,
+        totalResponses: participantCount + 1,
       };
     });
 
     revalidatePollPages();
 
-    return {
-      ok: true,
-      ...result,
-      totalResponses: participantCount + 1,
-    };
+    return { ok: true, ...result };
   } catch (error) {
-    if (error instanceof TentativeVotesNotAllowedError) {
-      return { ok: false, reason: "tentativeVotesNotAllowed" };
-    }
-    throw error;
+    return refusal(error);
   }
 }
 
-export type UpdateParticipantVotesResult =
+export type EditParticipantResult =
   | { ok: true }
-  | { ok: false; reason: "tentativeVotesNotAllowed" };
+  | { ok: false; reason: WriteRefusal };
 
 export async function updateParticipantVotes({
   participantId,
@@ -253,10 +260,10 @@ export async function updateParticipantVotes({
   pollId: string;
   actorUserId: string | undefined;
   votes: { optionId: string; type: VoteType }[];
-}): Promise<UpdateParticipantVotesResult> {
+}): Promise<EditParticipantResult> {
   try {
     await prisma.$transaction(async (tx) => {
-      await assertTentativeVotesAllowed(tx, pollId, votes);
+      await lockOpenPoll(tx, pollId, votes);
 
       await tx.vote.deleteMany({ where: { participantId } });
 
@@ -294,10 +301,7 @@ export async function updateParticipantVotes({
       ]);
     });
   } catch (error) {
-    if (error instanceof TentativeVotesNotAllowedError) {
-      return { ok: false, reason: "tentativeVotesNotAllowed" };
-    }
-    throw error;
+    return refusal(error);
   }
 
   revalidatePollPages();
@@ -315,26 +319,34 @@ export async function renameParticipant({
   pollId: string;
   actorUserId: string | undefined;
   name: string;
-}) {
-  await prisma.$transaction(async (tx) => {
-    await tx.participant.update({
-      where: { id: participantId },
-      data: { name },
-      select: null,
-    });
+}): Promise<EditParticipantResult> {
+  try {
+    await prisma.$transaction(async (tx) => {
+      await lockOpenPoll(tx, pollId, []);
 
-    await recordPollActivities(tx, [
-      {
-        pollId,
-        type: "response_updated",
-        userId: actorUserId,
-        participantId,
-        payload: { name },
-      },
-    ]);
-  });
+      await tx.participant.update({
+        where: { id: participantId },
+        data: { name },
+        select: null,
+      });
+
+      await recordPollActivities(tx, [
+        {
+          pollId,
+          type: "response_updated",
+          userId: actorUserId,
+          participantId,
+          payload: { name },
+        },
+      ]);
+    });
+  } catch (error) {
+    return refusal(error);
+  }
 
   revalidatePollPages();
+
+  return { ok: true };
 }
 
 export async function deleteParticipant({
@@ -345,48 +357,56 @@ export async function deleteParticipant({
   participantId: string;
   pollId: string;
   actorUserId: string | undefined;
-}) {
-  await prisma.$transaction(async (tx) => {
-    // Snapshot before the delete: the activity payload is the historical
-    // record of the removed response, so it carries the name and votes.
-    const snapshot = await tx.participant.findUniqueOrThrow({
-      where: { id: participantId },
-      select: {
-        name: true,
-        votes: {
-          select: {
-            optionId: true,
-            type: true,
-            option: { select: { startTime: true, duration: true } },
+}): Promise<EditParticipantResult> {
+  try {
+    await prisma.$transaction(async (tx) => {
+      await lockOpenPoll(tx, pollId, []);
+
+      // Snapshot before the delete: the activity payload is the historical
+      // record of the removed response, so it carries the name and votes.
+      const snapshot = await tx.participant.findUniqueOrThrow({
+        where: { id: participantId },
+        select: {
+          name: true,
+          votes: {
+            select: {
+              optionId: true,
+              type: true,
+              option: { select: { startTime: true, duration: true } },
+            },
           },
         },
-      },
-    });
+      });
 
-    // Hard delete: votes cascade, the invite's SetNull FK reverts it to
-    // pending, and the response frees the token it took from that invite
-    // so the next response through the same link can take it again. The
-    // activity row above is the historical record.
-    await tx.participant.delete({ where: { id: participantId } });
+      // Hard delete: votes cascade, the invite's SetNull FK reverts it to
+      // pending, and the response frees the token it took from that invite
+      // so the next response through the same link can take it again. The
+      // activity row above is the historical record.
+      await tx.participant.delete({ where: { id: participantId } });
 
-    await recordPollActivities(tx, [
-      {
-        pollId,
-        type: "response_deleted",
-        userId: actorUserId,
-        participantId,
-        payload: {
-          name: snapshot.name,
-          votes: snapshot.votes.map((vote) => ({
-            optionId: vote.optionId,
-            start: vote.option.startTime.toISOString(),
-            duration: vote.option.duration,
-            type: vote.type,
-          })),
+      await recordPollActivities(tx, [
+        {
+          pollId,
+          type: "response_deleted",
+          userId: actorUserId,
+          participantId,
+          payload: {
+            name: snapshot.name,
+            votes: snapshot.votes.map((vote) => ({
+              optionId: vote.optionId,
+              start: vote.option.startTime.toISOString(),
+              duration: vote.option.duration,
+              type: vote.type,
+            })),
+          },
         },
-      },
-    ]);
-  });
+      ]);
+    });
+  } catch (error) {
+    return refusal(error);
+  }
 
   revalidatePollPages();
+
+  return { ok: true };
 }

@@ -4,6 +4,14 @@ import { prisma } from "@rallly/database";
 import { revalidatePollPages } from "@/features/poll/mutations";
 import { MAX_COMMENT_AUTHOR_NAME_LENGTH } from "@/features/poll/schema";
 
+type CommentRefusal = "notFound" | "disabled";
+
+class CommentRefusedError extends Error {
+  constructor(public readonly reason: CommentRefusal) {
+    super(reason);
+  }
+}
+
 export type AddCommentResult =
   | {
       ok: true;
@@ -14,7 +22,7 @@ export type AddCommentResult =
         poll: { id: string; title: string };
       };
     }
-  | { ok: false; reason: "notFound" | "disabled" };
+  | { ok: false; reason: CommentRefusal };
 
 export async function addComment({
   pollId,
@@ -32,23 +40,15 @@ export async function addComment({
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
     select: {
-      disableComments: true,
-      deleted: true,
       user: { select: { banned: true } },
       space: { select: { owner: { select: { banned: true } } } },
     },
   });
 
-  // A deleted poll, or one whose creator or space owner was banned, never
-  // accepts new comments.
-  if (!poll || poll.deleted || poll.user?.banned || poll.space?.owner.banned) {
+  // A poll whose creator or space owner was banned never accepts comments.
+  // Bans live on the user rows, so they are checked outside the lock below.
+  if (!poll || poll.user?.banned || poll.space?.owner.banned) {
     return { ok: false, reason: "notFound" };
-  }
-
-  // The comment UI is hidden when the host turns comments off, but the
-  // setting is only real if the mutation enforces it too.
-  if (poll.disableComments) {
-    return { ok: false, reason: "disabled" };
   }
 
   let name = authorName;
@@ -64,24 +64,53 @@ export async function addComment({
     name = user.name.trim().slice(0, MAX_COMMENT_AUTHOR_NAME_LENGTH);
   }
 
-  const comment = await prisma.comment.create({
-    data: {
-      content,
-      pollId,
-      authorName: name,
-      userId,
-    },
-    select: {
-      id: true,
-      content: true,
-      authorName: true,
-      poll: { select: { id: true, title: true } },
-    },
-  });
+  try {
+    const comment = await prisma.$transaction(async (tx) => {
+      // Locked so the host's delete or comments-off transition, which
+      // updates the same row, cannot commit between this check and the
+      // insert.
+      const [lockedPoll] = await tx.$queryRaw<
+        { deleted: boolean; disable_comments: boolean }[]
+      >`
+        SELECT deleted, disable_comments
+        FROM polls WHERE id = ${pollId} FOR UPDATE
+      `;
 
-  revalidatePollPages();
+      if (!lockedPoll || lockedPoll.deleted) {
+        throw new CommentRefusedError("notFound");
+      }
 
-  return { ok: true, comment };
+      // The comment UI is hidden when the host turns comments off, but the
+      // setting is only real if the mutation enforces it too.
+      if (lockedPoll.disable_comments) {
+        throw new CommentRefusedError("disabled");
+      }
+
+      return tx.comment.create({
+        data: {
+          content,
+          pollId,
+          authorName: name,
+          userId,
+        },
+        select: {
+          id: true,
+          content: true,
+          authorName: true,
+          poll: { select: { id: true, title: true } },
+        },
+      });
+    });
+
+    revalidatePollPages();
+
+    return { ok: true, comment };
+  } catch (error) {
+    if (error instanceof CommentRefusedError) {
+      return { ok: false, reason: error.reason };
+    }
+    throw error;
+  }
 }
 
 export async function deleteComment({ commentId }: { commentId: string }) {

@@ -301,14 +301,12 @@ export const renameParticipantAction = optionalUserActionClient
 
     const { participant, actor } = authorization;
 
-    await renameParticipant({
+    return renameParticipant({
       participantId,
       pollId: participant.pollId,
       actorUserId: actor?.id,
       name,
     });
-
-    return { ok: true as const };
   });
 
 export const deleteParticipantAction = optionalUserActionClient
@@ -329,13 +327,13 @@ export const deleteParticipantAction = optionalUserActionClient
 
     const { participant, actor } = authorization;
 
-    await deleteParticipant({
+    const result = await deleteParticipant({
       participantId,
       pollId: participant.pollId,
       actorUserId: actor?.id,
     });
 
-    if (actor) {
+    if (result.ok && actor) {
       track(actor, {
         event: "poll_response_delete",
         properties: { participant_id: participant.id },
@@ -343,5 +341,5 @@ export const deleteParticipantAction = optionalUserActionClient
       });
     }
 
-    return { ok: true as const };
+    return result;
   });
