@@ -67,7 +67,7 @@ pnpm test:integration     # Run integration tests (Playwright)
 # Code Quality
 pnpm check                # Run Biome linter/formatter
 pnpm check:fix            # Auto-fix linting issues
-pnpm lint                 # Run Oxlint with @shadcn/lint (design system rules, configured in .oxlintrc.json)
+pnpm lint                 # Run Oxlint; hosts the @shadcn/lint plugin (no rules enabled yet, add them in .oxlintrc.json)
 pnpm type-check           # Run TypeScript type checking
 pnpm check:structure      # Enforce the feature file vocabulary and no feature cycles
 pnpm check:cascades       # Fail on User cascade relations the deletion code does not account for
