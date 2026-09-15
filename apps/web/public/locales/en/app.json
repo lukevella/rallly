@@ -657,7 +657,7 @@
   "pollStatusClosed": "Closed",
   "pollStatusOpen": "Open",
   "pollStatusScheduled": "Scheduled",
-  "poweredByRallly": "Powered by <a>{name}</a>",
+  "poweredBy": "Powered by",
   "preferences": "Preferences",
   "preferencesDescription": "Manage your preferences",
   "preview": "Preview",
