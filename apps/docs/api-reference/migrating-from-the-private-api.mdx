@@ -1,0 +1,440 @@
+---
+title: "Migrating from the private API"
+description: "Move an integration from /api/private to /v1, endpoint by endpoint."
+---
+
+`/v1` replaces the unversioned private API at `https://app.rallly.co/api/private`. The private API is frozen: it still answers, but it receives no new fields or endpoints, and everything new lands on `/v1` only.
+
+Your API keys, poll IDs, invite links and rate limits carry over unchanged. What changes is the base URL, the request and response shapes, and how errors look.
+
+## Summary of changes
+
+| Area | Private API | v1 |
+| --- | --- | --- |
+| Base URL | `https://app.rallly.co/api/private` | `https://api.rallly.co/v1` |
+| Authentication | `Authorization: Bearer <key>` | Unchanged |
+| Rate limits | 60 per minute, 5,000 per day, per space | Unchanged |
+| Create poll status | `200 OK` | `201 Created` |
+| Poll shape | `dates` or `slots` in the request, `options` in the response | `kind` plus `options` on both sides, so a `GET` body can be sent back to `POST` |
+| Time zone field | `timezone` (response), `slots.timezone` (request) | `timeZone` at the top level of both |
+| Date options | `startTime` at UTC midnight with `duration: 0` | `date` as `YYYY-MM-DD` |
+| Organizer | `user: { name, image }` | `organizer: { id, name, email, image }` |
+| Poll settings in responses | Not returned | `requireEmail`, `hideParticipants`, `hideScores`, `disableComments`, `allowTentativeVotes` |
+| `participantCount` | List items only | Every poll response |
+| `updatedAt` | Not returned | Every poll response |
+| Unknown request fields | Ignored | Rejected with `VALIDATION_ERROR` |
+| Validation errors | Validator output with the request body echoed back | `{ "error": { "code", "message" } }` |
+| Unknown routes and crashes | Plain text | The same JSON envelope |
+| Update poll (`PATCH`) | Closes a poll | Removed, no replacement |
+| Interactive docs page | `/api/private/docs` | This site; the spec stays at `/v1/openapi` |
+
+## Global changes
+
+### Base URL
+
+Replace the host and prefix. Paths under it are the same.
+
+```text
+https://app.rallly.co/api/private/polls   →   https://api.rallly.co/v1/polls
+```
+
+### Error envelope
+
+Every v1 failure is JSON with the same shape, including cases the private API answered in plain text or with the validator's raw output. Branch on `error.code`; `error.message` is for humans.
+
+<CodeGroup>
+
+```json Private API (schema validation)
+{
+  "success": false,
+  "error": [
+    {
+      "expected": "string",
+      "code": "invalid_type",
+      "path": ["title"],
+      "message": "Invalid input: expected string, received undefined"
+    }
+  ],
+  "data": { "dates": ["2027-03-01"] }
+}
+```
+
+```json v1
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "title: Invalid input: expected string, received undefined"
+  }
+}
+```
+
+</CodeGroup>
+
+| Private API | v1 | Note |
+| --- | --- | --- |
+| `400` validator output, no code | `400 VALIDATION_ERROR` | One field per sentence in `message`, separated by semicolons |
+| `400 INVALID_INPUT` | `400 VALIDATION_ERROR` | `kind` is required, so the "neither dates nor slots" case is a schema error |
+| `400 DUPLICATE_DATES` | Not an error | Duplicate dates are removed |
+| `400 NO_OPTIONS_GENERATED` | `400 VALIDATION_ERROR` | The message names `generators` |
+| `422 TRANSITION_NOT_AVAILABLE` | Removed | The update endpoint is gone |
+| `404 Not Found` plain text | `404 NOT_FOUND` | Unknown route or method |
+| `400 Malformed JSON in request body` plain text | `400 VALIDATION_ERROR` | |
+| `500 Internal Server Error` plain text | `500 INTERNAL_ERROR` | |
+
+`UNAUTHORIZED`, `INVALID_AUTHORIZATION_HEADER`, `SPACE_NOT_PRO`, `ORGANIZER_NOT_MEMBER`, `TOO_MANY_OPTIONS`, `INAPPROPRIATE_CONTENT`, `POLL_NOT_FOUND`, `RATE_LIMIT_EXCEEDED` and `SERVICE_UNAVAILABLE` keep their status codes and meanings. See [Errors](/api-reference/errors) for the full list.
+
+### Strict request bodies
+
+The private API silently dropped fields it did not know, including `spaceId`, which it accepted but never used. v1 rejects any field outside the documented schema with `VALIDATION_ERROR`. Remove `spaceId` and any other extra fields before switching.
+
+### The poll resource
+
+Every endpoint that returns a poll (`POST /polls`, `GET /polls`, `GET /polls/{pollId}`) returns the same v1 shape. Compared with the private API:
+
+- `timezone` is renamed `timeZone`.
+- `user` is replaced by `organizer`, which adds `id` and `email`.
+- `kind` is added: `date` or `time`. It tells you which option shape to expect.
+- `updatedAt` is added. Compare it between reads to notice changes.
+- The five poll settings are returned as booleans.
+- `participantCount` is on every poll, not only list items.
+- Options in a `date` poll carry `date` instead of `startTime` and `duration: 0`. Options in a `time` poll are unchanged.
+
+<CodeGroup>
+
+```json Private API
+{
+  "data": {
+    "id": "Xk3pQ9vLm2Ab",
+    "title": "Team offsite",
+    "description": null,
+    "location": null,
+    "timezone": null,
+    "status": "open",
+    "createdAt": "2026-09-10T12:00:00.000Z",
+    "user": { "name": "Jessie Smith", "image": null },
+    "options": [
+      {
+        "id": "cm5h8x2k40000q9l4f7e2d3an",
+        "startTime": "2027-03-01T00:00:00.000Z",
+        "duration": 0
+      }
+    ],
+    "adminUrl": "https://app.rallly.co/poll/Xk3pQ9vLm2Ab",
+    "inviteUrl": "https://rallly.co/invite/Xk3pQ9vLm2Ab"
+  }
+}
+```
+
+```json v1
+{
+  "data": {
+    "id": "Xk3pQ9vLm2Ab",
+    "title": "Team offsite",
+    "description": null,
+    "location": null,
+    "timeZone": null,
+    "status": "open",
+    "kind": "date",
+    "createdAt": "2026-09-10T12:00:00.000Z",
+    "updatedAt": "2026-09-10T12:00:00.000Z",
+    "organizer": {
+      "id": "cm3f7d1qa0000t2k9c6b8h4jr",
+      "name": "Jessie Smith",
+      "email": "jessie@example.com",
+      "image": null
+    },
+    "requireEmail": false,
+    "hideParticipants": false,
+    "hideScores": false,
+    "disableComments": true,
+    "allowTentativeVotes": true,
+    "participantCount": 0,
+    "options": [
+      { "id": "cm5h8x2k40000q9l4f7e2d3an", "date": "2027-03-01" }
+    ],
+    "adminUrl": "https://app.rallly.co/poll/Xk3pQ9vLm2Ab",
+    "inviteUrl": "https://rallly.co/invite/Xk3pQ9vLm2Ab"
+  }
+}
+```
+
+</CodeGroup>
+
+## Endpoints
+
+### Create a poll
+
+`POST /api/private/polls` → `POST /v1/polls`
+
+**Status code.** v1 responds `201 Created` instead of `200 OK`. A client that checks for exactly `200` will treat every successful create as a failure.
+
+**Request.** The private API chose the poll type from whether you sent `dates` or `slots`. v1 takes an explicit `kind` and puts every option under `options`, in the same shape the response returns.
+
+Date polls:
+
+<CodeGroup>
+
+```json Private API
+{
+  "title": "Team offsite",
+  "dates": ["2027-03-01", "2027-03-02", "2027-03-03"]
+}
+```
+
+```json v1
+{
+  "title": "Team offsite",
+  "kind": "date",
+  "options": [
+    { "date": "2027-03-01" },
+    { "date": "2027-03-02" },
+    { "date": "2027-03-03" }
+  ]
+}
+```
+
+</CodeGroup>
+
+Time polls: the `slots` wrapper is gone. `duration` and `timeZone` move to the top level, explicit times become `options` objects, and slot generators move to their own `generators` array.
+
+<CodeGroup>
+
+```json Private API
+{
+  "title": "Project kickoff",
+  "location": "Zoom",
+  "slots": {
+    "duration": 60,
+    "timezone": "Europe/London",
+    "times": [
+      "2027-03-01T09:00:00",
+      {
+        "startDate": "2027-03-08",
+        "endDate": "2027-03-12",
+        "days": ["mon", "wed"],
+        "startTime": "14:00",
+        "endTime": "17:00",
+        "interval": 90
+      }
+    ]
+  }
+}
+```
+
+```json v1
+{
+  "title": "Project kickoff",
+  "kind": "time",
+  "location": "Zoom",
+  "timeZone": "Europe/London",
+  "duration": 60,
+  "options": [{ "startTime": "2027-03-01T09:00:00" }],
+  "generators": [
+    {
+      "startDate": "2027-03-08",
+      "endDate": "2027-03-12",
+      "days": ["mon", "wed"],
+      "from": "14:00",
+      "to": "17:00",
+      "interval": 90
+    }
+  ]
+}
+```
+
+</CodeGroup>
+
+Field by field:
+
+| Private API | v1 | Note |
+| --- | --- | --- |
+| `dates: [...]` | `kind: "date"`, `options: [{ date }]` | Duplicates are removed instead of rejected |
+| `slots.duration` | `duration` | Optional in v1 when every option carries its own `duration`; required when `generators` is set |
+| `slots.timezone` | `timeZone` | |
+| `slots.times` (string entry) | `options: [{ startTime, duration? }]` | Each slot may override the poll `duration`, which the private API could not do |
+| `slots.times` (generator entry) | `generators: [...]` | |
+| generator `startTime` | generator `from` | |
+| generator `endTime` | generator `to` | |
+| generator `days` | generator `days` | Optional in v1; defaults to every day |
+| `spaceId` | Removed | Was ignored; now rejected |
+| `title` | `title` | Capped at 255 characters |
+
+Everything else (`description`, `location`, `requireEmail`, `hideParticipants`, `hideScores`, `disableComments`, `allowTentativeVotes`, `organizer`) is unchanged. The interpretation of a `startTime` without an offset is also unchanged: wall clock time in `timeZone` when set, floating otherwise.
+
+**Generator validation.** The private API expanded a generator and only then failed with `NO_OPTIONS_GENERATED` if nothing came out. v1 rejects an impossible generator up front with `VALIDATION_ERROR` naming the field: `to` not later than `from`, a daily window shorter than `duration`, or a date range containing none of the listed days. Times in a generator are `HH:mm`; the private API also accepted seconds.
+
+**Response.** The full poll, in the [v1 shape](#the-poll-resource).
+
+### List polls
+
+`GET /api/private/polls` → `GET /v1/polls`
+
+**Request.** Unchanged. `status`, `cursor` and `limit` work the same way, and `nextCursor` is still returned beside `data`.
+
+**Response.** Each item is the full [v1 poll](#the-poll-resource). The private API's list items already carried `participantCount`; the rest of the new fields are additions, and the renames (`timezone`, `user`, date options) apply here too.
+
+### Get a poll
+
+`GET /api/private/polls/{pollId}` → `GET /v1/polls/{pollId}`
+
+**Request.** Unchanged.
+
+**Response.** The [v1 poll](#the-poll-resource). Note that `participantCount` is now included, so a client that called both `GET /polls/{pollId}` and `GET /polls/{pollId}/results` just to count participants can drop the second call.
+
+### Update a poll
+
+`PATCH /api/private/polls/{pollId}` → **removed**
+
+<Warning>
+There is no v1 endpoint that changes a poll's status. Its only supported use was closing a poll with `{ "status": "closed" }`.
+</Warning>
+
+Polls close on their own once every option is in the past. To close a poll earlier, or to reopen one, use the app. If your integration polled results and stopped once the poll was closed, keep reading `status` from `GET /polls/{pollId}/results`; that part is unchanged.
+
+### Get poll results
+
+`GET /api/private/polls/{pollId}/results` → `GET /v1/polls/{pollId}/results`
+
+**Request.** Unchanged.
+
+**Response.** Three changes:
+
+- `kind` is added at the top level.
+- Options in a `date` poll carry `date` instead of `startTime` and `duration: 0`, matching the poll resource.
+- `votes` is dense. The private API omitted any vote type with zero votes, so an option nobody voted on had `votes: []`. v1 lists every vote type the poll offers, in display order, with `count: 0` where nobody chose it. A client that summed `votes` or looked a type up by `type` keeps working; a client that treated an empty array as "no votes" must check the counts instead.
+
+<CodeGroup>
+
+```json Private API
+{
+  "data": {
+    "pollId": "Xk3pQ9vLm2Ab",
+    "status": "open",
+    "participantCount": 2,
+    "options": [
+      {
+        "id": "cm5h8x2k40000q9l4f7e2d3an",
+        "startTime": "2027-03-01T00:00:00.000Z",
+        "duration": 0,
+        "votes": [{ "type": "yes", "count": 2 }],
+        "score": 2002,
+        "isTopChoice": true
+      },
+      {
+        "id": "cm5h8x2k40001q9l4b8f3e4bo",
+        "startTime": "2027-03-02T00:00:00.000Z",
+        "duration": 0,
+        "votes": [],
+        "score": 0,
+        "isTopChoice": false
+      }
+    ],
+    "highScore": 2002
+  }
+}
+```
+
+```json v1
+{
+  "data": {
+    "pollId": "Xk3pQ9vLm2Ab",
+    "kind": "date",
+    "status": "open",
+    "participantCount": 2,
+    "options": [
+      {
+        "id": "cm5h8x2k40000q9l4f7e2d3an",
+        "date": "2027-03-01",
+        "votes": [
+          { "type": "yes", "count": 2 },
+          { "type": "ifNeedBe", "count": 0 },
+          { "type": "no", "count": 0 }
+        ],
+        "score": 2002,
+        "isTopChoice": true
+      },
+      {
+        "id": "cm5h8x2k40001q9l4b8f3e4bo",
+        "date": "2027-03-02",
+        "votes": [
+          { "type": "yes", "count": 0 },
+          { "type": "ifNeedBe", "count": 0 },
+          { "type": "no", "count": 0 }
+        ],
+        "score": 0,
+        "isTopChoice": false
+      }
+    ],
+    "highScore": 2002
+  }
+}
+```
+
+</CodeGroup>
+
+`score`, `isTopChoice` and `highScore` are computed the same way today, but v1 documents `score` as opaque: sort by it and use `isTopChoice` or `highScore` to find the leaders, but do not decode it into vote counts or compare it across polls. Vote types are an open set in v1, so tolerate a `type` you do not recognise.
+
+### Get poll participants
+
+`GET /api/private/polls/{pollId}/participants` → `GET /v1/polls/{pollId}/participants`
+
+**Request.** Unchanged.
+
+**Response.** `data` is the array itself. The private API wrapped it in an object with `pollId`; v1 drops the wrapper, since you already know the poll ID from the URL. The participant fields (`id`, `name`, `email`, `createdAt`) and the ordering (oldest response first) are unchanged.
+
+<CodeGroup>
+
+```json Private API
+{
+  "data": {
+    "pollId": "Xk3pQ9vLm2Ab",
+    "participants": [
+      {
+        "id": "cm5j2r8wb0003q9l4a1x6p0zt",
+        "name": "Jessie Smith",
+        "email": "jessie@example.com",
+        "createdAt": "2026-09-11T08:30:00.000Z"
+      }
+    ]
+  }
+}
+```
+
+```json v1
+{
+  "data": [
+    {
+      "id": "cm5j2r8wb0003q9l4a1x6p0zt",
+      "name": "Jessie Smith",
+      "email": "jessie@example.com",
+      "createdAt": "2026-09-11T08:30:00.000Z"
+    }
+  ]
+}
+```
+
+</CodeGroup>
+
+### Delete a poll
+
+`DELETE /api/private/polls/{pollId}` → `DELETE /v1/polls/{pollId}`
+
+Unchanged. Responds `200` with `{ "data": { "id", "deleted": true } }`, or `404 POLL_NOT_FOUND`.
+
+### OpenAPI document and docs page
+
+`GET /api/private/openapi` → `GET /v1/openapi`
+
+The spec moves with the API. The Scalar page at `/api/private/docs` has no v1 equivalent; this site is the reference. Both spec endpoints are public and need no key.
+
+## Checklist
+
+1. Change the base URL to `https://api.rallly.co/v1`.
+2. Accept `201` from `POST /polls`.
+3. Rewrite create requests: add `kind`, replace `dates` and `slots` with `options` and `generators`, rename `timezone` to `timeZone` and the generator's `startTime` and `endTime` to `from` and `to`, and remove `spaceId` and any other undocumented fields.
+4. Read `timeZone` instead of `timezone`, and `organizer` instead of `user`, in every poll response.
+5. Branch on `kind` when reading options: `date` for date polls, `startTime` and `duration` for time polls.
+6. In results, stop treating an empty `votes` array as "no votes"; read the counts.
+7. Read participants from `data` directly.
+8. Parse every error as `{ "error": { "code", "message" } }` and drop any handling of the private API's validator output, `DUPLICATE_DATES`, `NO_OPTIONS_GENERATED` and `TRANSITION_NOT_AVAILABLE`.
+9. Remove any call to `PATCH /polls/{pollId}`.
