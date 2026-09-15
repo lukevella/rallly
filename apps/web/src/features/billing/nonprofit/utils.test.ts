@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { NONPROFIT_SITE_TEXT_MAX_CHARS } from "./constants";
 import {
+  buildCheckoutDiscountParams,
   domainsMatch,
   htmlToText,
   isFreemailDomain,
@@ -91,5 +92,21 @@ describe("htmlToText", () => {
   it("caps the output", () => {
     const html = `<p>${"a".repeat(NONPROFIT_SITE_TEXT_MAX_CHARS * 2)}</p>`;
     expect(htmlToText(html)).toHaveLength(NONPROFIT_SITE_TEXT_MAX_CHARS);
+  });
+});
+
+describe("buildCheckoutDiscountParams", () => {
+  it("attaches the coupon and drops promotion codes for an entitled space", () => {
+    expect(buildCheckoutDiscountParams("nonprofit-20")).toEqual({
+      session: { discounts: [{ coupon: "nonprofit-20" }] },
+      recovery: { allow_promotion_codes: false },
+    });
+  });
+
+  it("keeps promotion codes and no discount otherwise", () => {
+    const params = buildCheckoutDiscountParams(null);
+    expect(params.session).toEqual({ allow_promotion_codes: true });
+    expect(params.session).not.toHaveProperty("discounts");
+    expect(params.recovery).toEqual({ allow_promotion_codes: true });
   });
 });

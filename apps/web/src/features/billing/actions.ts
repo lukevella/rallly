@@ -5,6 +5,9 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 import { createStripePortalSession } from "@/features/billing/mutations";
+import { getNonprofitStatus } from "@/features/billing/nonprofit/data";
+import { ensureNonprofitCoupon } from "@/features/billing/nonprofit/mutations";
+import { buildCheckoutDiscountParams } from "@/features/billing/nonprofit/utils";
 import type {
   CustomerMetadata,
   SubscriptionCheckoutMetadata,
@@ -97,7 +100,13 @@ export const upgradeToProAction = authActionClient
       customerId = customer.id;
     }
 
-    const proPricingData = await getProPricing({ stripe });
+    const [proPricingData, nonprofit] = await Promise.all([
+      getProPricing({ stripe }),
+      getNonprofitStatus(space.id),
+    ]);
+    const discount = buildCheckoutDiscountParams(
+      nonprofit.grantedAt ? await ensureNonprofitCoupon() : null,
+    );
 
     const checkoutSession = await stripe.checkout.sessions.create({
       success_url: absoluteUrl(
@@ -118,7 +127,7 @@ export const upgradeToProAction = authActionClient
         currency && currency in proPricingData.currencies
           ? currency
           : undefined,
-      allow_promotion_codes: true,
+      ...discount.session,
       billing_address_collection: "auto",
       tax_id_collection: {
         enabled: true,
@@ -149,7 +158,7 @@ export const upgradeToProAction = authActionClient
       after_expiration: {
         recovery: {
           enabled: true,
-          allow_promotion_codes: true,
+          ...discount.recovery,
         },
       },
     });
@@ -166,6 +175,7 @@ export const upgradeToProAction = authActionClient
       properties: {
         interval: period === "yearly" ? "year" : "month",
         currency,
+        nonprofit_discount: Boolean(nonprofit.grantedAt),
       },
       groups: {
         space: space.id,
