@@ -9,6 +9,7 @@ import {
   DELIVERY_CONCURRENCY,
   FAN_OUT_BATCH_SIZE,
   FAN_OUT_LAG_MS,
+  FAN_OUT_MAX_PAGES,
   FAN_OUT_OVERLAP_MS,
   IN_FLIGHT_TIMEOUT_MS,
   MAX_CONSECUTIVE_FAILURES,
@@ -32,8 +33,10 @@ import {
  * Turns new activity into delivery rows, one per (webhook, activity). The
  * unique constraint makes re-reading harmless, so every run re-reads an
  * overlap window behind the cursor and the cursor only advances to the lag
- * boundary once a webhook's backlog is drained. Returns the number of
- * deliveries created.
+ * boundary once a webhook's backlog is drained. Within a run, pages follow a
+ * `(createdAt, id)` keyset: the persisted cursor is a timestamp, and a page
+ * boundary inside a run of equal timestamps must not restart the page.
+ * Returns the number of deliveries created.
  */
 export async function fanOutWebhookEvents({ now }: { now: Date }) {
   const until = new Date(now.getTime() - FAN_OUT_LAG_MS);
@@ -44,51 +47,62 @@ export async function fanOutWebhookEvents({ now }: { now: Date }) {
       continue;
     }
 
-    const activities = await listWebhookActivities({
-      spaceId: webhook.spaceId,
-      after: new Date(webhook.cursor.getTime() - FAN_OUT_OVERLAP_MS),
-      until,
-      limit: FAN_OUT_BATCH_SIZE,
-    });
+    let after: { createdAt: Date; id?: string } = {
+      createdAt: new Date(webhook.cursor.getTime() - FAN_OUT_OVERLAP_MS),
+    };
 
-    const deliveries = activities.flatMap((activity) => {
-      const eventType = toWebhookEventType(activity.type);
-      if (!eventType || !webhook.events.includes(eventType)) {
-        return [];
+    for (let page = 0; page < FAN_OUT_MAX_PAGES; page++) {
+      const activities = await listWebhookActivities({
+        spaceId: webhook.spaceId,
+        after,
+        until,
+        limit: FAN_OUT_BATCH_SIZE,
+      });
+
+      const deliveries = activities.flatMap((activity) => {
+        const eventType = toWebhookEventType(activity.type);
+        if (!eventType || !webhook.events.includes(eventType)) {
+          return [];
+        }
+        const payload = buildWebhookPayload({ activity, poll: activity.poll });
+        return payload
+          ? [
+              {
+                webhookId: webhook.id,
+                activityId: activity.id,
+                eventType,
+                payload: payload as unknown as Prisma.InputJsonObject,
+                // The run's own clock, not the database default: the claim
+                // that follows in the same run compares against this instant.
+                nextAttemptAt: now,
+              },
+            ]
+          : [];
+      });
+
+      const last = activities.at(-1);
+      const drained = activities.length < FAN_OUT_BATCH_SIZE || !last;
+      // A partial page means the boundary was reached; a full one stops at
+      // its last row, and the overlap covers anything that lands behind it.
+      const cursor = drained ? until : last.createdAt;
+
+      const [result] = await prisma.$transaction([
+        prisma.webhookDelivery.createMany({
+          data: deliveries,
+          skipDuplicates: true,
+        }),
+        prisma.spaceWebhook.update({
+          where: { id: webhook.id },
+          data: { cursor },
+        }),
+      ]);
+      created += result.count;
+
+      if (drained) {
+        break;
       }
-      const payload = buildWebhookPayload({ activity, poll: activity.poll });
-      return payload
-        ? [
-            {
-              webhookId: webhook.id,
-              activityId: activity.id,
-              eventType,
-              payload: payload as unknown as Prisma.InputJsonObject,
-              // The run's own clock, not the database default: the claim
-              // that follows in the same run compares against this instant.
-              nextAttemptAt: now,
-            },
-          ]
-        : [];
-    });
-
-    const last = activities.at(-1);
-    // A full batch stops short of the boundary; the overlap re-reads any
-    // equal-timestamp siblings the batch split.
-    const cursor =
-      activities.length === FAN_OUT_BATCH_SIZE && last ? last.createdAt : until;
-
-    const [result] = await prisma.$transaction([
-      prisma.webhookDelivery.createMany({
-        data: deliveries,
-        skipDuplicates: true,
-      }),
-      prisma.spaceWebhook.update({
-        where: { id: webhook.id },
-        data: { cursor },
-      }),
-    ]);
-    created += result.count;
+      after = { createdAt: last.createdAt, id: last.id };
+    }
   }
 
   return created;

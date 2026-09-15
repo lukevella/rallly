@@ -18,9 +18,10 @@ export async function listEnabledWebhooks() {
 }
 
 /**
- * Status transition activities in a space's polls created after `after` and
- * up to `until`, oldest first. Deleted polls are excluded: their links no
- * longer resolve and the poll is on its way out.
+ * Status transition activities in a space's polls after the `(createdAt, id)`
+ * keyset and up to `until`, oldest first. Keyset rather than offset so a run
+ * of equal timestamps larger than one page still advances. Deleted polls are
+ * excluded: their links no longer resolve and the poll is on its way out.
  */
 export async function listWebhookActivities({
   spaceId,
@@ -29,14 +30,20 @@ export async function listWebhookActivities({
   limit,
 }: {
   spaceId: string;
-  after: Date;
+  after: { createdAt: Date; id?: string };
   until: Date;
   limit: number;
 }) {
   return prisma.pollActivity.findMany({
     where: {
       type: { in: WEBHOOK_ACTIVITY_TYPES },
-      createdAt: { gt: after, lte: until },
+      createdAt: { lte: until },
+      OR: after.id
+        ? [
+            { createdAt: { gt: after.createdAt } },
+            { createdAt: after.createdAt, id: { gt: after.id } },
+          ]
+        : [{ createdAt: { gt: after.createdAt } }],
       poll: { spaceId, deleted: false },
     },
     select: {

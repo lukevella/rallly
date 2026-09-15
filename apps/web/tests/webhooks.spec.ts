@@ -294,6 +294,39 @@ test.describe("Webhook delivery", () => {
     expect(JSON.parse(receiver.requests[0]?.body ?? "{}").id).toBe(late.id);
   });
 
+  test("advances through a backlog larger than one page at a single timestamp", async ({
+    request,
+  }) => {
+    // autoClosePolls records every closed poll in one transaction, so they
+    // share a createdAt; a page boundary inside that run must not stick.
+    const webhook = await createWebhook();
+    const createdAt = secondsAgo(60);
+    await prisma.pollActivity.createMany({
+      data: Array.from({ length: 501 }, () => ({
+        pollId,
+        type: "poll_closed",
+        payload: { reason: "auto" },
+        createdAt,
+      })),
+    });
+
+    const summary = await runCron(request);
+    expect(summary.fannedOut).toBe(501);
+    expect(
+      await prisma.webhookDelivery.count({ where: { webhookId: webhook.id } }),
+    ).toBe(501);
+    expect(
+      (
+        await prisma.spaceWebhook.findUniqueOrThrow({
+          where: { id: webhook.id },
+        })
+      ).cursor.getTime(),
+    ).toBeGreaterThan(createdAt.getTime());
+
+    const again = await runCron(request);
+    expect(again.fannedOut).toBe(0);
+  });
+
   test("leaves activities inside the fan-out lag for the next run", async ({
     request,
   }) => {
