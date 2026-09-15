@@ -113,12 +113,17 @@ export const getActiveSpaceContentScope = cache(
  * The active space for the signed-in user, or null when there is none: the
  * visitor is unauthenticated, a guest, or has no effective membership. For
  * routes that admit guests, where getActiveSpace's redirects would be wrong.
+ * Bans still throw, as in getActiveSpace.
  */
 export const loadOptionalActiveSpace = cache(async () => {
   const state = await getSessionState();
 
   if (state.status !== "authenticated" || state.session.user.isGuest) {
     return null;
+  }
+
+  if (state.session.user.banned) {
+    throw new InvalidSessionError();
   }
 
   return getActiveSpaceForUser(state.session.user.id);
