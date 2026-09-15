@@ -56,10 +56,17 @@ test.describe("unavailable poll invite page", () => {
     });
 
     await page.click("text='Save availability'");
+    // Either the form reports the refusal, or the page has already
+    // re-rendered into the removed page; both mean the action has settled.
+    await expect(
+      page
+        .getByText("This poll is no longer accepting responses.")
+        .or(main.getByRole("heading", { name: "This poll has been removed" })),
+    ).toBeVisible();
     await expect(page.getByText("Your response has been saved")).toHaveCount(0);
-    await expect
-      .poll(() => prisma.participant.count({ where: { pollId: poll.id } }))
-      .toBe(0);
+    expect(await prisma.participant.count({ where: { pollId: poll.id } })).toBe(
+      0,
+    );
 
     await page.goto(`/invite/${poll.id}`);
     await expect(

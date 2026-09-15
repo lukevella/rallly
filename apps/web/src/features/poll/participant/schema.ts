@@ -26,7 +26,8 @@ export const addParticipantSchema = z.object({
     .string()
     .trim()
     .optional()
-    .transform((value) => value || undefined),
+    .transform((value) => value || undefined)
+    .pipe(z.email().optional()),
   note: responseNoteInput,
   timeZone: z.string().optional(),
   // The token from an emailed invite link; the response takes it over.

@@ -624,7 +624,8 @@ export async function getPollAvailability({ pollId }: { pollId: string }) {
 /**
  * The poll as both the invite page and the admin page show it. Null for a
  * missing poll, a deleted one, or a banned creator's: all three are treated
- * as if the poll never existed, for everyone including its owner.
+ * as if the poll never existed, for everyone including its owner. The space
+ * owner counts as a creator, as in getPollAvailability.
  */
 export async function getPollDetails({
   pollId,
@@ -664,6 +665,7 @@ export async function getPollDetails({
           showBranding: true,
           hideAttribution: true,
           primaryColor: true,
+          owner: { select: { banned: true } },
         },
       },
       scheduledEvent: {
@@ -678,7 +680,7 @@ export async function getPollDetails({
     },
   });
 
-  if (!poll || poll.deleted || poll.user?.banned) {
+  if (!poll || poll.deleted || poll.user?.banned || poll.space?.owner.banned) {
     return null;
   }
 
@@ -701,7 +703,9 @@ export async function getPollDetails({
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
     space: space
       ? {
-          ...space,
+          name: space.name,
+          image: space.image,
+          tier: space.tier,
           showBranding: brandingActive,
           primaryColor: brandingActive ? space.primaryColor : null,
           hideAttribution: isSpaceAttributionHidden({

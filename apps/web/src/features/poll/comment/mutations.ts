@@ -35,12 +35,13 @@ export async function addComment({
       disableComments: true,
       deleted: true,
       user: { select: { banned: true } },
+      space: { select: { owner: { select: { banned: true } } } },
     },
   });
 
-  // A deleted poll, or one whose creator was banned, never accepts new
-  // comments.
-  if (!poll || poll.deleted || poll.user?.banned) {
+  // A deleted poll, or one whose creator or space owner was banned, never
+  // accepts new comments.
+  if (!poll || poll.deleted || poll.user?.banned || poll.space?.owner.banned) {
     return { ok: false, reason: "notFound" };
   }
 
