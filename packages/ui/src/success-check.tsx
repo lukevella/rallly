@@ -36,7 +36,7 @@ function SuccessCheckIcon({ className }: { className?: string }) {
     <span
       data-slot="success-check-icon"
       className={cn(
-        "flex size-24 items-center justify-center rounded-full bg-green-500 text-white shadow-green-500/30 shadow-lg",
+        "flex size-12 items-center justify-center rounded-full bg-green-500 text-white shadow-green-500/30 shadow-md",
         className,
       )}
     >
@@ -44,10 +44,10 @@ function SuccessCheckIcon({ className }: { className?: string }) {
         viewBox="0 0 48 48"
         fill="none"
         stroke="currentColor"
-        strokeWidth="5"
+        strokeWidth="4.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-11"
+        className="size-6"
       >
         <title>Success</title>
         <path d="M14 25l7 7 13-15" pathLength={20} />
