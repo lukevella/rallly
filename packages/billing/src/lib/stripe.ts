@@ -17,6 +17,21 @@ export type PriceAmounts = {
 
 export type PricesByCurrency = Record<string, PriceAmounts>;
 
+export const PRO_LOOKUP_KEYS = {
+  monthly: "pro-monthly",
+  yearly: "pro-yearly",
+  earlySupporterMonthly: "pro-monthly-early-supporter",
+  earlySupporterYearly: "pro-yearly-early-supporter",
+} as const;
+
+export type ProPrice = {
+  id: string;
+  amount: number;
+  currency: string;
+  /** Unit amount per currency in minor units: base currency plus currency_options. */
+  amounts: Record<string, number>;
+};
+
 function unitAmountsByCurrency(price: Stripe.Price) {
   const amounts: Record<string, number> = {};
   if (price.unit_amount !== null) {
@@ -32,48 +47,61 @@ function unitAmountsByCurrency(price: Stripe.Price) {
   return amounts;
 }
 
-export function mapProPrices(prices: Stripe.Price[]) {
-  const monthly = prices.find((price) => price.lookup_key === "pro-monthly");
-  const yearly = prices.find((price) => price.lookup_key === "pro-yearly");
+function toProPrice(price: Stripe.Price | undefined): ProPrice | undefined {
+  if (!price || price.unit_amount === null) {
+    return undefined;
+  }
+  return {
+    id: price.id,
+    amount: price.unit_amount,
+    currency: price.currency,
+    amounts: unitAmountsByCurrency(price),
+  };
+}
 
-  if (
-    !monthly ||
-    !yearly ||
-    monthly.unit_amount === null ||
-    yearly.unit_amount === null
-  ) {
+export function mapProPrices(prices: Stripe.Price[]) {
+  const byKey = (key: string) =>
+    prices.find((price) => price.lookup_key === key);
+
+  const monthly = toProPrice(byKey(PRO_LOOKUP_KEYS.monthly));
+  const yearly = toProPrice(byKey(PRO_LOOKUP_KEYS.yearly));
+
+  if (!monthly || !yearly) {
     throw new Error("Price not found");
   }
 
-  const monthlyAmounts = unitAmountsByCurrency(monthly);
-  const yearlyAmounts = unitAmountsByCurrency(yearly);
   const currencies: PricesByCurrency = {};
   for (const currency of displayedCurrencies) {
-    const monthlyAmount = monthlyAmounts[currency];
-    const yearlyAmount = yearlyAmounts[currency];
+    const monthlyAmount = monthly.amounts[currency];
+    const yearlyAmount = yearly.amounts[currency];
     if (monthlyAmount !== undefined && yearlyAmount !== undefined) {
       currencies[currency] = { monthly: monthlyAmount, yearly: yearlyAmount };
     }
   }
 
+  // Both or neither: a subscriber must be able to move between the two
+  // early supporter intervals, so a half finished rollout exposes nothing.
+  const earlySupporterMonthly = toProPrice(
+    byKey(PRO_LOOKUP_KEYS.earlySupporterMonthly),
+  );
+  const earlySupporterYearly = toProPrice(
+    byKey(PRO_LOOKUP_KEYS.earlySupporterYearly),
+  );
+
   return {
-    monthly: {
-      id: monthly.id,
-      amount: monthly.unit_amount,
-      currency: monthly.currency,
-    },
-    yearly: {
-      id: yearly.id,
-      amount: yearly.unit_amount,
-      currency: yearly.currency,
-    },
+    monthly,
+    yearly,
     currencies,
+    earlySupporter:
+      earlySupporterMonthly && earlySupporterYearly
+        ? { monthly: earlySupporterMonthly, yearly: earlySupporterYearly }
+        : undefined,
   };
 }
 
 export async function getProPricing({ stripe }: { stripe: Stripe }) {
   const prices = await stripe.prices.list({
-    lookup_keys: ["pro-monthly", "pro-yearly"],
+    lookup_keys: Object.values(PRO_LOOKUP_KEYS),
     expand: ["data.currency_options"],
   });
 

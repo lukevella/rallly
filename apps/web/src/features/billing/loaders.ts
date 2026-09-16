@@ -18,11 +18,12 @@ export const loadPayWallPricing = cache(async () => {
     return null;
   }
   try {
-    const [prices, cookieStore, headersList] = await Promise.all([
+    const [pricing, cookieStore, headersList] = await Promise.all([
       getProPrices(),
       cookies(),
       headers(),
     ]);
+    const prices = pricing.currencies;
     const available = Object.keys(prices);
     if (available.length === 0) {
       return null;

@@ -44,8 +44,10 @@ export async function getSpaceSubscription(spaceId: string) {
 
 // Prices change on the order of years; an hour is a compromise between
 // picking up a repricing without a deploy and not calling Stripe per render.
+// Bump the "-vN" suffix whenever the cached shape changes, so a warm cache
+// never deserialises a value in the old shape.
 export const getProPrices = unstable_cache(
-  async () => (await getProPricing({ stripe: getStripe() })).currencies,
-  ["pro-prices"],
+  async () => getProPricing({ stripe: getStripe() }),
+  ["pro-prices-v2"],
   { revalidate: 60 * 60 },
 );

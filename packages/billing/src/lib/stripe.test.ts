@@ -40,6 +40,7 @@ describe("mapProPrices", () => {
       id: "price_pro-monthly",
       amount: 700,
       currency: "usd",
+      amounts: { usd: 700 },
     });
     expect(result.yearly.amount).toBe(5600);
   });
@@ -65,5 +66,54 @@ describe("mapProPrices", () => {
     expect(() => mapProPrices([price("pro-monthly", 700)])).toThrow(
       "Price not found",
     );
+  });
+
+  it("carries every currency amount on each price", () => {
+    const result = mapProPrices([
+      price("pro-monthly", 700, { eur: 650 }),
+      price("pro-yearly", 5600, { eur: 5200 }),
+    ]);
+    expect(result.monthly.amounts).toEqual({ usd: 700, eur: 650 });
+    expect(result.yearly.amounts).toEqual({ usd: 5600, eur: 5200 });
+  });
+
+  it("leaves earlySupporter undefined when the early supporter keys are absent", () => {
+    const result = mapProPrices([
+      price("pro-monthly", 1000),
+      price("pro-yearly", 8400),
+    ]);
+    expect(result.earlySupporter).toBeUndefined();
+  });
+
+  it("maps the early supporter prices when both keys are present", () => {
+    const result = mapProPrices([
+      price("pro-monthly", 1000),
+      price("pro-yearly", 8400),
+      price("pro-monthly-early-supporter", 700, { eur: 650 }),
+      price("pro-yearly-early-supporter", 5600),
+    ]);
+    expect(result.earlySupporter).toEqual({
+      monthly: {
+        id: "price_pro-monthly-early-supporter",
+        amount: 700,
+        currency: "usd",
+        amounts: { usd: 700, eur: 650 },
+      },
+      yearly: {
+        id: "price_pro-yearly-early-supporter",
+        amount: 5600,
+        currency: "usd",
+        amounts: { usd: 5600 },
+      },
+    });
+  });
+
+  it("ignores a lone early supporter key so a half finished rollout never exposes one interval", () => {
+    const result = mapProPrices([
+      price("pro-monthly", 1000),
+      price("pro-yearly", 8400),
+      price("pro-monthly-early-supporter", 700),
+    ]);
+    expect(result.earlySupporter).toBeUndefined();
   });
 });
