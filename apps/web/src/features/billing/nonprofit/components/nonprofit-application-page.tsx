@@ -19,7 +19,6 @@ import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
-  CheckCircleIcon,
   CircleAlertIcon,
   InfoIcon,
   ShieldXIcon,
@@ -130,9 +129,7 @@ function GrantedState({
           <SuccessCheckIcon />
         </SuccessCheck>
       ) : (
-        <EmptyStateIcon>
-          <CheckCircleIcon />
-        </EmptyStateIcon>
+        <SuccessCheckIcon className="mb-4" />
       )}
       <EmptyStateTitle as="h1">
         <Trans
