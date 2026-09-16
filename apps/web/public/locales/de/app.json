@@ -151,6 +151,7 @@
   "comments": "Kommentare",
   "commentsComposerPlaceholder": "Kommentar schreiben…",
   "commentsComposerVisibility": "Für alle sichtbar",
+  "commentsDisabledError": "Kommentare sind für diese Umfrage deaktiviert.",
   "commentsSettingDescription": "Erlaube Teilnehmern, öffentliche Kommentare zur Umfrage zu hinterlassen.",
   "commentsSettingTitle": "Kommentare",
   "commentsSheetDescription": "Kommentare zu dieser Umfrage ansehen und hinzufügen",
