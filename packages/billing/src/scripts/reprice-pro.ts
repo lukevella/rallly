@@ -7,10 +7,15 @@ import { createStripeClient, PRO_LOOKUP_KEYS } from "../lib/stripe";
  * subscriptions keep their price object, so they become early supporters by
  * the app's "not a current price" rule the moment the keys move.
  *
+ * Each interval is reconciled independently from whatever state Stripe is in,
+ * so a run that stops partway can be repeated until both intervals report
+ * done. The new price carries `metadata.replaces = <old price id>` so a
+ * half moved interval can still be finished.
+ *
  * DRY RUN by default. Pass --apply to write.
  *
  * Usage:
- *   pnpm --filter @rallly/billing reprice-pro -- --monthly usd=1000,eur=900,gbp=800 --yearly usd=8400,eur=7600,gbp=6700
+ *   pnpm --filter @rallly/billing reprice-pro -- --monthly usd=1000,eur=900,gbp=800 --yearly usd=7200,eur=6500,gbp=5800
  *   pnpm --filter @rallly/billing reprice-pro -- --monthly ... --yearly ... --apply
  */
 
@@ -22,6 +27,17 @@ if (!secretKey) {
 
 const stripe = createStripeClient({ secretKey });
 
+const REPLACES_METADATA_KEY = "replaces";
+
+type Interval = "month" | "year";
+
+type IntervalSpec = {
+  interval: Interval;
+  currentKey: string;
+  earlySupporterKey: string;
+  amounts: Record<string, number>;
+};
+
 function parseAmounts(flag: string) {
   const args = process.argv.slice(2);
   const index = args.indexOf(flag);
@@ -31,12 +47,23 @@ function parseAmounts(flag: string) {
   }
   const amounts: Record<string, number> = {};
   for (const pair of raw.split(",")) {
-    const [currency, amount] = pair.split("=");
-    const value = Number.parseInt(amount ?? "", 10);
-    if (!currency || Number.isNaN(value) || value <= 0) {
+    const parts = pair.split("=");
+    const currency = parts[0]?.trim().toLowerCase();
+    const amount = parts[1]?.trim();
+    const value = Number(amount);
+    if (
+      parts.length !== 2 ||
+      !currency ||
+      !/^[a-z]{3}$/.test(currency) ||
+      !amount ||
+      !/^\d+$/.test(amount) ||
+      !Number.isSafeInteger(value) ||
+      value <= 0 ||
+      Object.hasOwn(amounts, currency)
+    ) {
       throw new Error(`Invalid amount in ${flag}: ${pair}`);
     }
-    amounts[currency.toLowerCase()] = value;
+    amounts[currency] = value;
   }
   if (!amounts.usd) {
     throw new Error(`${flag} must include usd`);
@@ -52,6 +79,24 @@ async function findByLookupKey(lookupKey: string) {
   return prices.data[0];
 }
 
+// The replacement price created earlier for `oldPrice`, located by metadata
+// rather than lookup key because a crash between "create" and "re-key" leaves
+// it without one.
+async function findReplacementFor(oldPrice: Stripe.Price, interval: Interval) {
+  const prices = stripe.prices.list({
+    product: oldPrice.product as string,
+    active: true,
+    recurring: { interval },
+    limit: 100,
+  });
+  for await (const price of prices) {
+    if (price.metadata?.[REPLACES_METADATA_KEY] === oldPrice.id) {
+      return price;
+    }
+  }
+  return undefined;
+}
+
 function describe(price: Stripe.Price) {
   const options = Object.entries(price.currency_options ?? {})
     .map(([currency, option]) => `${currency}=${option.unit_amount}`)
@@ -59,10 +104,121 @@ function describe(price: Stripe.Price) {
   return `${price.id} (${price.currency}=${price.unit_amount}${options ? `, ${options}` : ""})`;
 }
 
+function toCreateParams(
+  oldPrice: Stripe.Price,
+  spec: IntervalSpec,
+): Stripe.PriceCreateParams {
+  const { usd, ...others } = spec.amounts;
+  return {
+    product: oldPrice.product as string,
+    currency: "usd",
+    unit_amount: usd,
+    recurring: { interval: spec.interval },
+    metadata: { [REPLACES_METADATA_KEY]: oldPrice.id },
+    currency_options: Object.fromEntries(
+      Object.entries(others).map(([currency, amount]) => [
+        currency,
+        { unit_amount: amount },
+      ]),
+    ),
+  };
+}
+
+/**
+ * Brings one interval to the finished state: the new price holds the current
+ * key, the old price holds the early supporter key. Steps, each of which can
+ * be the point a previous run stopped at:
+ *
+ *   1. create the new price (no lookup key yet; idempotent on the old price id)
+ *   2. move the old price onto the early supporter key
+ *   3. move the new price onto the current key
+ */
+async function reconcileInterval(spec: IntervalSpec, apply: boolean) {
+  const label = spec.interval === "month" ? "monthly" : "yearly";
+  const [current, earlySupporter] = await Promise.all([
+    findByLookupKey(spec.currentKey),
+    findByLookupKey(spec.earlySupporterKey),
+  ]);
+
+  if (current && earlySupporter) {
+    console.info(
+      `✅ ${label}: done. ${spec.currentKey}=${current.id} ${spec.earlySupporterKey}=${earlySupporter.id}`,
+    );
+    return;
+  }
+
+  if (!current && !earlySupporter) {
+    throw new Error(`${label}: neither lookup key exists; nothing to move`);
+  }
+
+  if (earlySupporter && !current) {
+    // Stopped between steps 2 and 3.
+    const replacement = await findReplacementFor(earlySupporter, spec.interval);
+    if (!replacement) {
+      throw new Error(
+        `${label}: ${spec.earlySupporterKey} is set on ${earlySupporter.id} but no replacement price carries metadata.${REPLACES_METADATA_KEY}=${earlySupporter.id}`,
+      );
+    }
+    console.info(
+      `↻ ${label}: resuming. Assign ${spec.currentKey} to ${describe(replacement)}`,
+    );
+    if (apply) {
+      await stripe.prices.update(replacement.id, {
+        lookup_key: spec.currentKey,
+      });
+      console.info(`✅ ${label}: done.`);
+    }
+    return;
+  }
+
+  // current && !earlySupporter: not started, or stopped between steps 1 and 2.
+  const oldPrice = current as Stripe.Price;
+  if (oldPrice.metadata?.[REPLACES_METADATA_KEY]) {
+    throw new Error(
+      `${label}: ${spec.currentKey} is already on a replacement price (${oldPrice.id}) but ${spec.earlySupporterKey} is missing; fix the keys in Stripe by hand`,
+    );
+  }
+
+  console.info(`Current ${label}: ${describe(oldPrice)}`);
+  console.info(`New ${label}: ${JSON.stringify(spec.amounts)}`);
+
+  if (!apply) {
+    return;
+  }
+
+  // Idempotent on the old price id, so a re-run after a crash between steps 1
+  // and 2 gets the same price back instead of a second one.
+  const replacement = await stripe.prices.create(
+    toCreateParams(oldPrice, spec),
+    { idempotencyKey: `reprice-pro-${label}-${oldPrice.id}` },
+  );
+  await stripe.prices.update(oldPrice.id, {
+    lookup_key: spec.earlySupporterKey,
+  });
+  await stripe.prices.update(replacement.id, {
+    lookup_key: spec.currentKey,
+  });
+  console.info(
+    `✅ ${label}: done. ${spec.currentKey}=${replacement.id} ${spec.earlySupporterKey}=${oldPrice.id}`,
+  );
+}
+
 (async function repricePro() {
   const apply = process.argv.slice(2).includes("--apply");
-  const monthlyAmounts = parseAmounts("--monthly");
-  const yearlyAmounts = parseAmounts("--yearly");
+  const specs: IntervalSpec[] = [
+    {
+      interval: "month",
+      currentKey: PRO_LOOKUP_KEYS.monthly,
+      earlySupporterKey: PRO_LOOKUP_KEYS.earlySupporterMonthly,
+      amounts: parseAmounts("--monthly"),
+    },
+    {
+      interval: "year",
+      currentKey: PRO_LOOKUP_KEYS.yearly,
+      earlySupporterKey: PRO_LOOKUP_KEYS.earlySupporterYearly,
+      amounts: parseAmounts("--yearly"),
+    },
+  ];
 
   console.info(
     apply
@@ -70,96 +226,13 @@ function describe(price: Stripe.Price) {
       : "🔍 DRY RUN — nothing will change. Pass --apply to write.",
   );
 
-  const [monthly, yearly, existingEsMonthly, existingEsYearly] =
-    await Promise.all([
-      findByLookupKey(PRO_LOOKUP_KEYS.monthly),
-      findByLookupKey(PRO_LOOKUP_KEYS.yearly),
-      findByLookupKey(PRO_LOOKUP_KEYS.earlySupporterMonthly),
-      findByLookupKey(PRO_LOOKUP_KEYS.earlySupporterYearly),
-    ]);
-
-  if (existingEsMonthly || existingEsYearly) {
-    console.info(
-      "✅ Early supporter prices already exist; nothing to do.",
-      existingEsMonthly?.id,
-      existingEsYearly?.id,
-    );
-    return;
+  for (const spec of specs) {
+    await reconcileInterval(spec, apply);
   }
 
-  if (!monthly || !yearly) {
-    throw new Error("Current pro-monthly / pro-yearly prices not found");
-  }
-
-  if (monthly.product !== yearly.product) {
-    throw new Error("Monthly and yearly prices are on different products");
-  }
-
-  const productId = monthly.product as string;
-
-  console.info(`Current monthly: ${describe(monthly)}`);
-  console.info(`Current yearly:  ${describe(yearly)}`);
-  console.info(`New monthly: ${JSON.stringify(monthlyAmounts)}`);
-  console.info(`New yearly:  ${JSON.stringify(yearlyAmounts)}`);
-
-  if (!apply) {
-    console.info("\n🔍 Dry run complete. Re-run with --apply to write.");
-    return;
-  }
-
-  const toCreateParams = (
-    lookupKey: string,
-    interval: "month" | "year",
-    amounts: Record<string, number>,
-  ): Stripe.PriceCreateParams => {
-    const { usd, ...others } = amounts;
-    return {
-      product: productId,
-      currency: "usd",
-      unit_amount: usd,
-      recurring: { interval },
-      lookup_key: lookupKey,
-      transfer_lookup_key: true,
-      currency_options: Object.fromEntries(
-        Object.entries(others).map(([currency, amount]) => [
-          currency,
-          { unit_amount: amount },
-        ]),
-      ),
-    };
-  };
-
-  // Create-then-rekey, one interval at a time (monthly fully done before
-  // yearly starts): if this crashes partway through, at most one early
-  // supporter key is left dangling, and the "already exists, exit" guard
-  // above stops a re-run from creating a duplicate new price for the
-  // interval that already finished.
-  const newMonthly = await stripe.prices.create(
-    toCreateParams(PRO_LOOKUP_KEYS.monthly, "month", monthlyAmounts),
-    { idempotencyKey: `reprice-pro-monthly-${monthly.id}` },
-  );
-
-  // transfer_lookup_key cleared the key on the old price; give it the early
-  // supporter key so the app can offer it to legacy subscribers.
-  await stripe.prices.update(monthly.id, {
-    lookup_key: PRO_LOOKUP_KEYS.earlySupporterMonthly,
-  });
-
-  const newYearly = await stripe.prices.create(
-    toCreateParams(PRO_LOOKUP_KEYS.yearly, "year", yearlyAmounts),
-    { idempotencyKey: `reprice-pro-yearly-${yearly.id}` },
-  );
-
-  await stripe.prices.update(yearly.id, {
-    lookup_key: PRO_LOOKUP_KEYS.earlySupporterYearly,
-  });
-
-  console.info("\n📊 Done.");
-  console.info(`${PRO_LOOKUP_KEYS.monthly}: ${newMonthly.id}`);
-  console.info(`${PRO_LOOKUP_KEYS.yearly}: ${newYearly.id}`);
-  console.info(`${PRO_LOOKUP_KEYS.earlySupporterMonthly}: ${monthly.id}`);
-  console.info(`${PRO_LOOKUP_KEYS.earlySupporterYearly}: ${yearly.id}`);
   console.info(
-    "\nThe app caches prices for one hour. Redeploy or wait before verifying.",
+    apply
+      ? "\nThe app caches prices for one hour. Redeploy or wait before verifying."
+      : "\n🔍 Dry run complete. Re-run with --apply to write.",
   );
 })();
