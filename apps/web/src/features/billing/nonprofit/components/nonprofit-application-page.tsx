@@ -132,22 +132,19 @@ function GrantedState({
         <SuccessCheckIcon className="mb-4" />
       )}
       <EmptyStateTitle as="h1">
-        <Trans
-          i18nKey="nonprofitGrantedTitle"
-          defaults="Nonprofit discount granted"
-        />
+        <Trans i18nKey="nonprofitGrantedTitle" defaults="Discount granted" />
       </EmptyStateTitle>
       <EmptyStateDescription>
         {isPro ? (
           <Trans
             i18nKey="nonprofitGrantedPro"
-            defaults="{percent}% off is applied to your next invoice."
+            defaults="Your Pro subscription is now {percent}% off, starting with your next invoice."
             values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
           />
         ) : (
           <Trans
             i18nKey="nonprofitGrantedHobby"
-            defaults="{percent}% off Rallly Pro is applied automatically when you upgrade."
+            defaults="You get {percent}% off Rallly Pro when you upgrade."
             values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
           />
         )}
