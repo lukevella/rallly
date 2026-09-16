@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": ["@shadcn/lint"],
+  "categories": {
+    "correctness": "off"
+  },
+  "settings": {
+    "shadcn": {
+      "ui": "@rallly/ui"
+    }
+  },
+  "ignorePatterns": [
+    "**/.next/**",
+    "**/dist/**",
+    "**/out/**",
+    "**/coverage/**",
+    "**/playwright-report/**",
+    "**/test-results/**",
+    "**/public/**",
+    "**/.claude/**"
+  ]
+}
