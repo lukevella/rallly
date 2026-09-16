@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { FileTextIcon, ImageIcon, PlusIcon, XIcon } from "lucide-react";
@@ -24,8 +25,10 @@ export function NonprofitDocumentPicker({
   onAdd,
   onRemove,
   disabled = false,
+  className,
   ...controlProps
 }: {
+  className?: string;
   documents: File[];
   onAdd: (documents: File[]) => void;
   onRemove: (index: number) => void;
@@ -79,7 +82,7 @@ export function NonprofitDocumentPicker({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn("flex flex-col gap-2", className)}>
       {documents.length > 0 ? (
         <ul className="flex flex-col gap-2">
           {documents.map((document, index) => (

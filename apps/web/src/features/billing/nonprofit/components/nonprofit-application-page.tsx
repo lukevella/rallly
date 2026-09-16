@@ -376,6 +376,7 @@ function ApplicationForm({
                 </FormDescription>
                 <FormControl>
                   <NonprofitDocumentPicker
+                    className="mt-1"
                     documents={documents}
                     disabled={isPending}
                     onAdd={(files) => setDocuments([...documents, ...files])}
