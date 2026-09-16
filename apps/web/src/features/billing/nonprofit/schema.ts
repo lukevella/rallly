@@ -22,6 +22,10 @@ export const nonprofitVerdictSchema = z.object({
 
 export type NonprofitVerdict = z.infer<typeof nonprofitVerdictSchema>;
 
+export const discardNonprofitDocumentsSchema = z.object({
+  documentKeys: z.array(z.string().min(1)).min(1).max(MAX_DOCUMENTS),
+});
+
 export const applyForNonprofitDiscountSchema = z.object({
   organizationName: z.string().trim().min(1).max(200),
   website: z

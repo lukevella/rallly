@@ -10,6 +10,7 @@ import {
 } from "@/features/billing/nonprofit/mutations";
 import {
   applyForNonprofitDiscountSchema,
+  discardNonprofitDocumentsSchema,
   signNonprofitDocumentUploadSchema,
 } from "@/features/billing/nonprofit/schema";
 import type { NonprofitApplicationStatus } from "@/features/billing/nonprofit/types";
@@ -71,6 +72,25 @@ export const signNonprofitDocumentUploadAction = authActionClient
       fileType: parsedInput.fileType,
       fileSize: parsedInput.fileSize,
     });
+  });
+
+/**
+ * Deletes documents the form uploaded but will not submit: a later sign or
+ * PUT in the same submit failed. Keys must belong to the actor's space.
+ */
+export const discardNonprofitDocumentsAction = authActionClient
+  .metadata({ actionName: "discard_nonprofit_documents" })
+  .use(createRateLimitMiddleware(10, "1 h"))
+  .use(billingManageMiddleware)
+  .inputSchema(discardNonprofitDocumentsSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    for (const key of parsedInput.documentKeys) {
+      assertAssetKey(key, {
+        profile: nonprofitDocumentAssetProfile,
+        entityId: ctx.space.id,
+      });
+    }
+    await deleteNonprofitDocuments(parsedInput.documentKeys);
   });
 
 /**

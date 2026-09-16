@@ -37,6 +37,7 @@ import {
 import { Link } from "@/components/link";
 import {
   applyForNonprofitDiscountAction,
+  discardNonprofitDocumentsAction,
   signNonprofitDocumentUploadAction,
 } from "@/features/billing/nonprofit/actions";
 import { NonprofitDocumentPicker } from "@/features/billing/nonprofit/components/nonprofit-document-picker";
@@ -164,6 +165,7 @@ function ApplicationForm({
   const { t } = useTranslation();
   const schema = useApplicationFormSchema(email);
   const signUpload = useSafeAction(signNonprofitDocumentUploadAction);
+  const discardDocuments = useSafeAction(discardNonprofitDocumentsAction);
   const apply = useSafeAction(applyForNonprofitDiscountAction);
   const [isUploading, setIsUploading] = React.useState(false);
 
@@ -186,9 +188,16 @@ function ApplicationForm({
 
   // Documents are uploaded here rather than when picked so nothing reaches
   // storage unless the application that deletes it follows in the same
-  // submit. A failed sign is toasted by useSafeAction; a failed PUT here.
+  // submit. A failure part way discards what was already uploaded. A failed
+  // sign is toasted by useSafeAction; a failed PUT here.
   const uploadDocuments = async (files: File[]) => {
     const keys: string[] = [];
+    const abort = () => {
+      if (keys.length > 0) {
+        discardDocuments.execute({ documentKeys: keys });
+      }
+      return null;
+    };
     for (const file of files) {
       const signed = await signUpload.executeAsync({
         fileType:
@@ -196,7 +205,7 @@ function ApplicationForm({
         fileSize: file.size,
       });
       if (!signed?.data) {
-        return null;
+        return abort();
       }
       try {
         await uploadAsset({ url: signed.data.url, file });
@@ -204,7 +213,7 @@ function ApplicationForm({
         toast.error(
           t("assetUploadError", { defaultValue: "Failed to upload" }),
         );
-        return null;
+        return abort();
       }
       keys.push(signed.data.key);
     }
