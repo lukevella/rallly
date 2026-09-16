@@ -215,6 +215,36 @@
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 
   --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animate-switch-thumb-on: switch-thumb-on 350ms
+    cubic-bezier(0.34, 1.35, 0.64, 1) both;
+  --animate-switch-thumb-off: switch-thumb-off 350ms
+    cubic-bezier(0.34, 1.35, 0.64, 1) both;
+
+  @keyframes switch-thumb-on {
+    0% {
+      translate: 0 0;
+    }
+    55% {
+      translate: calc(var(--switch-travel) + 1px) 0;
+    }
+    80%,
+    100% {
+      translate: var(--switch-travel) 0;
+    }
+  }
+
+  @keyframes switch-thumb-off {
+    0% {
+      translate: var(--switch-travel) 0;
+    }
+    55% {
+      translate: -1px 0;
+    }
+    80%,
+    100% {
+      translate: 0 0;
+    }
+  }
 
   @keyframes caret-blink {
     0%,
