@@ -1,13 +1,37 @@
 /**
- * Identity markers for the seat-update billing portal configuration. Shared
- * between the seat-update flow (apps/web/src/features/billing/portal.ts), which
- * creates and reuses the configuration, and the cleanup script
- * (scripts/cleanup-portal-configurations.ts), which deactivates stale ones.
+ * Identity markers for the code defined billing portal configurations. Shared
+ * between the app (which creates and reuses them) and the cleanup script
+ * (which deactivates stale ones; Stripe has no DELETE for configurations).
  *
- * Bump SEAT_UPDATE_PORTAL_VERSION whenever the configuration shape changes: a new
- * configuration is created on next use and the cleanup script retires the
- * previous-version ones.
+ * "flows" configurations are keyed by the pair of prices they allow, so a
+ * price change creates a fresh configuration on next use instead of relying
+ * on someone bumping a version. "account" is static; bump its version when
+ * its feature set changes.
  */
-export const SEAT_UPDATE_PORTAL_HEADLINE = "Update your seat allocation";
-export const SEAT_UPDATE_PORTAL_PURPOSE = "seat_update";
-export const SEAT_UPDATE_PORTAL_VERSION = "1";
+export const PORTAL_CONFIG_PURPOSE = {
+  flows: "flows",
+  account: "account",
+} as const;
+
+export const ACCOUNT_PORTAL_CONFIG_VERSION = "1";
+
+export function portalConfigPriceKey(priceIds: string[]) {
+  return [...new Set(priceIds)].sort().join(",");
+}
+
+/**
+ * A flows config is still live if it covers every id of at least one live
+ * price pair (the current pair, or the early supporter pair) — it may also
+ * carry extra ids (legacy tail-price subscribers folded in), which must not
+ * make it look stale.
+ */
+export function portalConfigCoversPair({
+  key,
+  pairIds,
+}: {
+  key: string;
+  pairIds: string[];
+}) {
+  const keyIds = new Set(key.split(",").filter(Boolean));
+  return pairIds.every((id) => keyIds.has(id));
+}
