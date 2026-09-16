@@ -125,15 +125,15 @@ function GrantedState({
 }) {
   return (
     <EmptyState className="py-0">
-      <EmptyStateIcon>
-        {animate ? (
-          <SuccessCheck state="in">
-            <SuccessCheckIcon />
-          </SuccessCheck>
-        ) : (
+      {animate ? (
+        <SuccessCheck state="in" className="mb-4">
+          <SuccessCheckIcon className="size-12 text-primary" />
+        </SuccessCheck>
+      ) : (
+        <EmptyStateIcon>
           <CheckCircleIcon />
-        )}
-      </EmptyStateIcon>
+        </EmptyStateIcon>
+      )}
       <EmptyStateTitle as="h1">
         <Trans
           i18nKey="nonprofitGrantedTitle"
