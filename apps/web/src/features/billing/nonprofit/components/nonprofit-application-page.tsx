@@ -126,8 +126,8 @@ function GrantedState({
   return (
     <EmptyState className="py-0">
       {animate ? (
-        <SuccessCheck state="in" className="mb-4">
-          <SuccessCheckIcon className="size-12 text-primary" />
+        <SuccessCheck state="in" className="mb-6">
+          <SuccessCheckIcon />
         </SuccessCheck>
       ) : (
         <EmptyStateIcon>

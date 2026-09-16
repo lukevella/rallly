@@ -30,22 +30,29 @@ function SuccessCheck({
   );
 }
 
-/** A circled check whose tick draws in under SuccessCheck. */
+/** A filled green disc with a white tick that draws in under SuccessCheck. */
 function SuccessCheckIcon({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
+    <span
+      data-slot="success-check-icon"
+      className={cn(
+        "flex size-24 items-center justify-center rounded-full bg-green-500 text-white shadow-green-500/30 shadow-lg",
+        className,
+      )}
     >
-      <title>Success</title>
-      <circle cx="12" cy="12" r="10" />
-      <path d="m9 12 2 2 4-4" pathLength={20} />
-    </svg>
+      <svg
+        viewBox="0 0 48 48"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-11"
+      >
+        <title>Success</title>
+        <path d="M14 25l7 7 13-15" pathLength={20} />
+      </svg>
+    </span>
   );
 }
 
