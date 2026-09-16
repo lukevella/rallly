@@ -175,14 +175,19 @@ export async function prepareCustomerForCheckout({
 }) {
   const stripe = getStripe();
 
-  const [customer, openSessions] = await Promise.all([
+  // The installed SDK has no status filter on this list; sessions expire
+  // after 30 minutes so the newest page is all that can still be open.
+  const [customer, sessions] = await Promise.all([
     stripe.customers.retrieve(customerId),
-    stripe.checkout.sessions.list({ customer: customerId, status: "open" }),
+    stripe.checkout.sessions.list({ customer: customerId, limit: 100 }),
   ]);
 
   await Promise.all(
-    openSessions.data
-      .filter((session) => session.mode === "subscription")
+    sessions.data
+      .filter(
+        (session) =>
+          session.status === "open" && session.mode === "subscription",
+      )
       .map((session) => stripe.checkout.sessions.expire(session.id)),
   );
 
