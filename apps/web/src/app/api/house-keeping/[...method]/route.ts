@@ -17,6 +17,7 @@ import {
   deleteOrphanedAnonymousUsers,
   hardDeleteUser,
 } from "@/features/user/mutations";
+import { deliverWebhooks } from "@/features/webhook/mutations";
 import {
   deletePostHogPerson,
   flushPostHog,
@@ -202,6 +203,21 @@ app.get("/delete-orphaned-anonymous-users", async (c) => {
       },
     },
   });
+});
+
+app.get("/deliver-webhooks", async (c) => {
+  const summary = await deliverWebhooks();
+
+  // Runs every minute and most runs find nothing; log only when there was
+  // work so the signal isn't buried in 1,440 no-op lines a day.
+  if (summary.fannedOut > 0 || summary.attempted > 0 || summary.reclaimed > 0) {
+    logger.info(
+      { task: "deliver-webhooks", ...summary },
+      "Dispatched webhook deliveries",
+    );
+  }
+
+  return c.json({ success: true, summary });
 });
 
 export const GET = handle(app);

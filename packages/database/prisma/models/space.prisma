@@ -42,6 +42,8 @@ model Space {
 
   nonprofitApplications NonprofitApplication[]
 
+  webhooks SpaceWebhook[]
+
   @@index([ownerId])
   @@map("spaces")
 }
@@ -118,4 +120,67 @@ model SpaceApiKey {
   @@index([expiresAt], name: "space_api_key_expires_idx")
   @@index([revokedAt], name: "space_api_key_revoked_idx")
   @@map("space_api_keys")
+}
+
+model SpaceWebhook {
+  id      String   @id @default(cuid())
+  spaceId String   @map("space_id")
+  url     String
+  /// AES-256-GCM under SECRET_PASSWORD (see @rallly/utils/encryption); the plaintext is shown once at creation
+  secret  String
+  /// Subscribed event names (`poll.closed`, ...); validated by the feature schema, not a DB enum, so the vocabulary grows without migrations
+  events  String[]
+  enabled Boolean  @default(true)
+  /// Fan-out position in the poll activity log: activities created after this instant are still to be delivered. Starts at creation so a new endpoint never replays history
+  cursor  DateTime @default(now())
+
+  lastDeliveredAt     DateTime? @map("last_delivered_at")
+  lastFailedAt        DateTime? @map("last_failed_at")
+  /// Exhausted deliveries in a row; reset by any success. The dispatcher disables the endpoint once it reaches its cap
+  consecutiveFailures Int       @default(0) @map("consecutive_failures")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  space      Space             @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  deliveries WebhookDelivery[]
+
+  @@index([spaceId])
+  @@map("space_webhooks")
+}
+
+enum WebhookDeliveryStatus {
+  pending
+  in_flight
+  succeeded
+  failed
+  exhausted
+
+  @@map("webhook_delivery_status")
+}
+
+model WebhookDelivery {
+  id         String @id @default(cuid())
+  webhookId  String @map("webhook_id")
+  /// Soft reference to the PollActivity row this delivery was fanned out from; with webhookId it makes fan-out idempotent
+  activityId String @map("activity_id")
+  eventType  String @map("event_type")
+  /// Frozen at fan-out: retries resend exactly what the first attempt sent
+  payload    Json
+
+  status        WebhookDeliveryStatus @default(pending)
+  attempts      Int                   @default(0)
+  nextAttemptAt DateTime              @default(now()) @map("next_attempt_at")
+
+  lastResponseStatus Int?    @map("last_response_status")
+  lastError          String? @map("last_error")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  webhook SpaceWebhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@unique([webhookId, activityId])
+  @@index([status, nextAttemptAt])
+  @@map("webhook_deliveries")
 }

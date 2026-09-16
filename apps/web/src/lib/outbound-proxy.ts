@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createLogger } from "@rallly/logger";
-import { EnvHttpProxyAgent, setGlobalDispatcher } from "undici";
+import { Agent, EnvHttpProxyAgent, setGlobalDispatcher } from "undici";
 
 const logger = createLogger("outbound-proxy");
 
@@ -22,6 +22,11 @@ function sanitize(value: string) {
   } catch {
     return "<invalid URL>";
   }
+}
+
+/** Whether outbound fetches are routed through a proxy from the environment. */
+export function isOutboundProxyConfigured() {
+  return PROXY_ENV_VARS.some((name) => process.env[name]);
 }
 
 /**
@@ -53,22 +58,36 @@ export function setupOutboundProxy() {
     return;
   }
 
-  const noProxy = [
-    process.env.no_proxy ?? process.env.NO_PROXY,
-    LOOPBACK_NO_PROXY,
-  ]
-    .filter(Boolean)
-    .join(",");
-
-  setGlobalDispatcher(new EnvHttpProxyAgent({ noProxy }));
+  const dispatcher = createOutboundDispatcher();
+  setGlobalDispatcher(dispatcher);
 
   logger.info(
     {
       proxies: Object.fromEntries(
         configured.map((name) => [name, sanitize(process.env[name] as string)]),
       ),
-      noProxy,
+      noProxy: getNoProxy(),
     },
     "Outbound proxy enabled: fetch will route through the configured proxy",
   );
+}
+
+function getNoProxy() {
+  return [process.env.no_proxy ?? process.env.NO_PROXY, LOOPBACK_NO_PROXY]
+    .filter(Boolean)
+    .join(",");
+}
+
+/**
+ * A dispatcher that follows the proxy environment the same way the global
+ * one does, so a caller that needs its own connection options (a pinned DNS
+ * lookup, say) keeps the proxy routing. `connect` options apply to direct
+ * connections only: proxied ones are made by the proxy, and hosts exempted
+ * by NO_PROXY come back through the direct path.
+ */
+export function createOutboundDispatcher(options: Agent.Options = {}) {
+  if (isOutboundProxyConfigured()) {
+    return new EnvHttpProxyAgent({ ...options, noProxy: getNoProxy() });
+  }
+  return new Agent(options);
 }
