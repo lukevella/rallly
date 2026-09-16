@@ -1,4 +1,6 @@
 {
+  "apiAnnouncement": "Bemutatkozik a Rallly API",
+  "apiBlogBadge": "Újdonság",
   "assistantsDescription": "Akár egyetlen vezetőt, akár egy egész osztályt támogat, egyetlen emlékeztető e-mail nélkül találhat olyan időpontot, amely egy tucat zsúfolt naptárba is belefér. Ossza meg az egyetlen linket, kövesse a beérkező válaszokat, és rögzítse azt az idősávot, amely mindenkinek megfelel. Ingyenes, és a meghívottaknak nincs szükségük fiókra.",
   "assistantsFaqBranding": "Viselhetik a szavazások a cégünk arculatát?",
   "assistantsFaqBrandingAnswer": "A <0>Rallly Pro</0> csomaggal saját logót és színeket adhat hozzá, valamint eltávolíthatja a Rallly megjelölését, így az igazgatóságnak vagy egy ügyfélnek küldött szavazás úgy hat, mintha az Ön szervezetétől érkezne. Minden más ingyenesen használható.",
