@@ -160,42 +160,6 @@ export async function createStripeSubscriptionUpdateConfirmation({
   return portalSession.url;
 }
 
-/**
- * Stripe refuses a subscription checkout in a currency other than the one the
- * customer is already bound to, and counts an open subscription checkout
- * session as binding. So before a returning customer starts checkout, expire
- * their open sessions (the new one supersedes them) and report the currency
- * the customer is locked to, if any, so the caller can use it instead of the
- * pay wall's choice.
- */
-export async function prepareCustomerForCheckout({
-  customerId,
-}: {
-  customerId: string;
-}) {
-  const stripe = getStripe();
-
-  // The installed SDK has no status filter on this list; sessions expire
-  // after 30 minutes so the newest page is all that can still be open.
-  const [customer, sessions] = await Promise.all([
-    stripe.customers.retrieve(customerId),
-    stripe.checkout.sessions.list({ customer: customerId, limit: 100 }),
-  ]);
-
-  await Promise.all(
-    sessions.data
-      .filter(
-        (session) =>
-          session.status === "open" && session.mode === "subscription",
-      )
-      .map((session) => stripe.checkout.sessions.expire(session.id)),
-  );
-
-  return {
-    lockedCurrency: customer.deleted ? null : (customer.currency ?? null),
-  };
-}
-
 // Scheduling an account deletion must guarantee no further charges without
 // destroying anything: cancel_at_period_end stops the renewal while keeping
 // the paid-for time, and is reversible if the deletion is cancelled.
