@@ -4,7 +4,10 @@ import { displayedCurrencies, getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { createStripePortalSession } from "@/features/billing/mutations";
+import {
+  createStripePortalSession,
+  prepareCustomerForCheckout,
+} from "@/features/billing/mutations";
 import { getNonprofitStatus } from "@/features/billing/nonprofit/data";
 import { ensureNonprofitCoupon } from "@/features/billing/nonprofit/mutations";
 import { buildCheckoutDiscountParams } from "@/features/billing/nonprofit/utils";
@@ -82,8 +85,11 @@ export const upgradeToProAction = authActionClient
     const stripe = getStripe();
 
     let customerId = ctx.user.customerId;
+    let lockedCurrency: string | null = null;
 
-    if (!customerId) {
+    if (customerId) {
+      ({ lockedCurrency } = await prepareCustomerForCheckout({ customerId }));
+    } else {
       const customer = await stripe.customers.create(
         {
           email: ctx.user.email,
@@ -119,14 +125,17 @@ export const upgradeToProAction = authActionClient
         address: "auto",
       },
       mode: "subscription",
-      // The currency the user saw on the pay wall; without it Stripe picks
-      // one from the IP and the two can disagree. A currency the price no
-      // longer carries (stale pay wall cache) is dropped rather than failing
-      // the session, so Stripe localizes as it would without the hint.
+      // A returning customer is bound to the currency of their past billing;
+      // any other choice is rejected by Stripe, so theirs wins. Otherwise the
+      // currency the user saw on the pay wall; without it Stripe picks one
+      // from the IP and the two can disagree. A currency the price no longer
+      // carries (stale pay wall cache) is dropped rather than failing the
+      // session, so Stripe localizes as it would without the hint.
       currency:
-        currency && currency in proPricingData.currencies
+        lockedCurrency ??
+        (currency && currency in proPricingData.currencies
           ? currency
-          : undefined,
+          : undefined),
       ...discount.session,
       billing_address_collection: "auto",
       tax_id_collection: {
