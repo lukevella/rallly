@@ -49,9 +49,19 @@ async function findConfigurationByMetadata(
 
 async function createFlowsConfiguration({ priceIds }: { priceIds: string[] }) {
   const stripe = getStripe();
-  // All prices share one product.
-  const firstPrice = await stripe.prices.retrieve(priceIds[0]);
   const priceKey = portalConfigPriceKey(priceIds);
+
+  // Stripe validates that every price listed under a product belongs to it,
+  // so group by product rather than assume the set shares one.
+  const pricesByProduct = new Map<string, string[]>();
+  for (const priceId of new Set(priceIds)) {
+    const price = await stripe.prices.retrieve(priceId);
+    const productId = price.product as string;
+    pricesByProduct.set(productId, [
+      ...(pricesByProduct.get(productId) ?? []),
+      priceId,
+    ]);
+  }
 
   return stripe.billingPortal.configurations.create(
     {
@@ -65,12 +75,10 @@ async function createFlowsConfiguration({ priceIds }: { priceIds: string[] }) {
           // Invoice prorations immediately so seat additions are charged right
           // away rather than deferred onto the next renewal invoice.
           proration_behavior: "always_invoice",
-          products: [
-            {
-              product: firstPrice.product as string,
-              prices: [...new Set(priceIds)],
-            },
-          ],
+          products: [...pricesByProduct.entries()].map(([product, prices]) => ({
+            product,
+            prices,
+          })),
         },
         // Cancellation is in-app so the retention moment is ours.
         subscription_cancel: { enabled: false },
