@@ -9,6 +9,7 @@ import {
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { isBillingEnabled } from "@/features/billing/constants";
+import type { BillingReturnFlow } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
 import { isStripeResourceMissingError } from "@/features/billing/utils";
 
@@ -113,6 +114,10 @@ function getSeatUpdatePortalConfigurationId(): Promise<string> {
   return configurationIdPromise;
 }
 
+export function billingReturnUrl(flow: BillingReturnFlow) {
+  return absoluteUrl("/api/stripe/return", { flow });
+}
+
 /**
  * Creates a billing portal session deep-linked to the seat-update confirmation
  * screen for a specific quantity change, reusing the shared configuration.
@@ -147,11 +152,7 @@ export async function createStripeSubscriptionUpdateConfirmation({
       },
       after_completion: {
         type: "redirect",
-        redirect: {
-          return_url: absoluteUrl("/settings/billing", {
-            seats_updated: "true",
-          }),
-        },
+        redirect: { return_url: billingReturnUrl("seats") },
       },
     },
   });

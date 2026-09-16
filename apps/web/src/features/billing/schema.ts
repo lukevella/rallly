@@ -35,3 +35,10 @@ export const subscriptionMetadataSchema = z.object({
 });
 
 export type SubscriptionMetadata = z.infer<typeof subscriptionMetadataSchema>;
+
+export const billingReturnFlowSchema = z.enum([
+  "seats",
+  "interval",
+  "payment_method",
+]);
+export type BillingReturnFlow = z.infer<typeof billingReturnFlowSchema>;
