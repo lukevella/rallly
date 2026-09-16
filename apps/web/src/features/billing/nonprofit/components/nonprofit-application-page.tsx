@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   CheckCircleIcon,
@@ -34,9 +35,12 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
-import { applyForNonprofitDiscountAction } from "@/features/billing/nonprofit/actions";
-import type { NonprofitDocument } from "@/features/billing/nonprofit/components/nonprofit-document-upload";
-import { NonprofitDocumentUpload } from "@/features/billing/nonprofit/components/nonprofit-document-upload";
+import {
+  applyForNonprofitDiscountAction,
+  signNonprofitDocumentUploadAction,
+} from "@/features/billing/nonprofit/actions";
+import { NonprofitDocumentPicker } from "@/features/billing/nonprofit/components/nonprofit-document-picker";
+import type { nonprofitDocumentAssetProfile } from "@/features/billing/nonprofit/constants";
 import {
   MAX_DOCUMENTS,
   NONPROFIT_DISCOUNT_PERCENT,
@@ -48,6 +52,7 @@ import {
 } from "@/features/billing/nonprofit/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { uploadAsset } from "@/lib/storage/upload-client";
 
 function useApplicationFormSchema(email: string) {
   const { t } = useTranslation();
@@ -90,8 +95,8 @@ function useApplicationFormSchema(email: string) {
               }),
             },
           ),
-        documentKeys: z
-          .array(z.string())
+        documents: z
+          .array(z.instanceof(File))
           .min(1, {
             message: t("nonprofitDocumentsRequired", {
               defaultValue: "Upload at least one document",
@@ -158,27 +163,55 @@ function ApplicationForm({
 }) {
   const { t } = useTranslation();
   const schema = useApplicationFormSchema(email);
+  const signUpload = useSafeAction(signNonprofitDocumentUploadAction);
   const apply = useSafeAction(applyForNonprofitDiscountAction);
-  const [documents, setDocuments] = React.useState<NonprofitDocument[]>([]);
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       organizationName: "",
       website: "https://",
-      documentKeys: [] as string[],
+      documents: [] as File[],
       attestation: false,
     },
   });
 
-  const setDocumentKeys = (next: NonprofitDocument[]) => {
-    setDocuments(next);
-    form.setValue(
-      "documentKeys",
-      next.map((document) => document.key),
-      { shouldValidate: form.formState.isSubmitted },
-    );
+  const documents = form.watch("documents");
+  const setDocuments = (next: File[]) => {
+    form.setValue("documents", next, {
+      shouldValidate: form.formState.isSubmitted,
+    });
   };
+
+  // Documents are uploaded here rather than when picked so nothing reaches
+  // storage unless the application that deletes it follows in the same
+  // submit. A failed sign is toasted by useSafeAction; a failed PUT here.
+  const uploadDocuments = async (files: File[]) => {
+    const keys: string[] = [];
+    for (const file of files) {
+      const signed = await signUpload.executeAsync({
+        fileType:
+          file.type as (typeof nonprofitDocumentAssetProfile.accept)[number],
+        fileSize: file.size,
+      });
+      if (!signed?.data) {
+        return null;
+      }
+      try {
+        await uploadAsset({ url: signed.data.url, file });
+      } catch {
+        toast.error(
+          t("assetUploadError", { defaultValue: "Failed to upload" }),
+        );
+        return null;
+      }
+      keys.push(signed.data.key);
+    }
+    return keys;
+  };
+
+  const isPending = isUploading || apply.isPending;
 
   return (
     <div className="space-y-8">
@@ -214,7 +247,14 @@ function ApplicationForm({
           className="space-y-6"
           noValidate
           onSubmit={form.handleSubmit(
-            async ({ organizationName, website, documentKeys }) => {
+            async ({ organizationName, website, documents }) => {
+              setIsUploading(true);
+              const documentKeys = await uploadDocuments(documents).finally(
+                () => setIsUploading(false),
+              );
+              if (!documentKeys) {
+                return;
+              }
               const result = await apply.executeAsync({
                 organizationName,
                 website,
@@ -242,7 +282,7 @@ function ApplicationForm({
                     {...field}
                     {...passwordManagerIgnoreProps}
                     autoComplete="organization"
-                    disabled={apply.isPending}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -263,7 +303,7 @@ function ApplicationForm({
                     type="url"
                     inputMode="url"
                     autoComplete="url"
-                    disabled={apply.isPending}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -272,7 +312,7 @@ function ApplicationForm({
           />
           <FormField
             control={form.control}
-            name="documentKeys"
+            name="documents"
             render={() => (
               <FormItem>
                 <div className="flex items-center gap-1.5">
@@ -312,16 +352,12 @@ function ApplicationForm({
                   />
                 </FormDescription>
                 <FormControl>
-                  <NonprofitDocumentUpload
+                  <NonprofitDocumentPicker
                     documents={documents}
-                    disabled={apply.isPending}
-                    onAdd={(document) =>
-                      setDocumentKeys([...documents, document])
-                    }
-                    onRemove={(key) =>
-                      setDocumentKeys(
-                        documents.filter((document) => document.key !== key),
-                      )
+                    disabled={isPending}
+                    onAdd={(files) => setDocuments([...documents, ...files])}
+                    onRemove={(index) =>
+                      setDocuments(documents.filter((_, i) => i !== index))
                     }
                   />
                 </FormControl>
@@ -340,7 +376,7 @@ function ApplicationForm({
                       checked={field.value}
                       onCheckedChange={field.onChange}
                       onBlur={field.onBlur}
-                      disabled={apply.isPending}
+                      disabled={isPending}
                       className="mt-0.5"
                     />
                   </FormControl>
@@ -359,9 +395,14 @@ function ApplicationForm({
             type="submit"
             variant="primary"
             className="w-full"
-            loading={apply.isPending}
+            loading={isPending}
           >
-            {apply.isPending ? (
+            {isUploading ? (
+              <Trans
+                i18nKey="nonprofitUploading"
+                defaults="Uploading documents"
+              />
+            ) : apply.isPending ? (
               <Trans
                 i18nKey="nonprofitVerifying"
                 defaults="Verifying, this takes up to a minute"

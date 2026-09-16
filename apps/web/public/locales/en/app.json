@@ -590,6 +590,7 @@
   "nonprofitOrganizationNameRequired": "Enter your organization's name",
   "nonprofitOwnerOnly": "Only the space owner can apply for the nonprofit discount.",
   "nonprofitRejectedTitle": "Your application was not approved",
+  "nonprofitUploading": "Uploading documents",
   "nonprofitVerifying": "Verifying, this takes up to a minute",
   "nonprofitWebsite": "Website",
   "nonprofitWebsiteDomainMismatch": "Your email must be on your organization's own domain",

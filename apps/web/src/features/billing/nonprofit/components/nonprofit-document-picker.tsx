@@ -4,52 +4,37 @@ import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { FileTextIcon, ImageIcon, PlusIcon, XIcon } from "lucide-react";
 import React from "react";
-import { useAssetUpload } from "@/components/asset-upload/use-asset-upload";
-import { signNonprofitDocumentUploadAction } from "@/features/billing/nonprofit/actions";
 import {
   MAX_DOCUMENTS,
   nonprofitDocumentAssetProfile,
 } from "@/features/billing/nonprofit/constants";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { validateAssetFile } from "@/lib/storage/asset-profile";
-
-export type NonprofitDocument = {
-  key: string;
-  name: string;
-  type: string;
-};
 
 const MAX_SIZE_MB = Math.round(
   nonprofitDocumentAssetProfile.maxSize / (1024 * 1024),
 );
 
 /**
- * Uploads start on selection so the keys are ready when the form submits;
- * the apply action deletes every key it receives once the decision is made.
+ * A picker only: the files are held in the form and uploaded when it is
+ * submitted, so nothing reaches storage unless an application consumes it.
  */
-export function NonprofitDocumentUpload({
+export function NonprofitDocumentPicker({
   documents,
   onAdd,
   onRemove,
   disabled = false,
   ...controlProps
 }: {
-  documents: NonprofitDocument[];
-  onAdd: (document: NonprofitDocument) => void;
-  onRemove: (key: string) => void;
+  documents: File[];
+  onAdd: (documents: File[]) => void;
+  onRemove: (index: number) => void;
   disabled?: boolean;
 } & Pick<
   React.ComponentProps<"button">,
   "id" | "aria-describedby" | "aria-invalid"
 >) {
   const { t } = useTranslation();
-  const signUpload = useSafeAction(signNonprofitDocumentUploadAction);
-  const { upload, isUploading } = useAssetUpload<
-    (typeof nonprofitDocumentAssetProfile.accept)[number]
-  >({
-    signUpload: (input) => signUpload.executeAsync(input),
-  });
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const remaining = MAX_DOCUMENTS - documents.length;
@@ -67,6 +52,7 @@ export function NonprofitDocumentUpload({
       );
     }
 
+    const accepted: File[] = [];
     for (const file of files.slice(0, remaining)) {
       const validation = validateAssetFile(file, nonprofitDocumentAssetProfile);
       if (!validation.success) {
@@ -84,10 +70,11 @@ export function NonprofitDocumentUpload({
         );
         continue;
       }
+      accepted.push(file);
+    }
 
-      upload(file, {
-        onSuccess: (key) => onAdd({ key, name: file.name, type: file.type }),
-      });
+    if (accepted.length > 0) {
+      onAdd(accepted);
     }
   };
 
@@ -95,9 +82,9 @@ export function NonprofitDocumentUpload({
     <div className="flex flex-col gap-2">
       {documents.length > 0 ? (
         <ul className="flex flex-col gap-2">
-          {documents.map((document) => (
+          {documents.map((document, index) => (
             <li
-              key={document.key}
+              key={`${document.name}-${document.lastModified}-${document.size}`}
               className="flex h-9 items-center gap-2 rounded-lg border border-input bg-background/80 pr-1 pl-2.5 text-sm dark:bg-foreground/5"
             >
               {document.type === "application/pdf" ? (
@@ -115,7 +102,7 @@ export function NonprofitDocumentUpload({
                   defaultValue: "Remove {name}",
                   name: document.name,
                 })}
-                onClick={() => onRemove(document.key)}
+                onClick={() => onRemove(index)}
               >
                 <XIcon />
               </Button>
@@ -136,8 +123,6 @@ export function NonprofitDocumentUpload({
           <Button
             {...controlProps}
             type="button"
-            variant="default"
-            loading={isUploading}
             disabled={disabled}
             onClick={() => fileInputRef.current?.click()}
           >
