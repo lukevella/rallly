@@ -119,14 +119,9 @@ export const upgradeToProAction = authActionClient
         address: "auto",
       },
       mode: "subscription",
-      // The currency the user saw on the pay wall; without it Stripe picks
-      // one from the IP and the two can disagree. A currency the price no
-      // longer carries (stale pay wall cache) is dropped rather than failing
-      // the session, so Stripe localizes as it would without the hint.
-      currency:
-        currency && currency in proPricingData.currencies
-          ? currency
-          : undefined,
+      // No currency hint: the pay wall price is indicative. Stripe picks the
+      // currency from the customer's billing history or their location, and
+      // rejects any hint that disagrees with a customer's existing currency.
       ...discount.session,
       billing_address_collection: "auto",
       tax_id_collection: {
