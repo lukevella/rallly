@@ -16,6 +16,7 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
+import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   CheckCircleIcon,
@@ -114,11 +115,24 @@ function useApplicationFormSchema(email: string) {
   );
 }
 
-function GrantedState({ isPro }: { isPro: boolean }) {
+function GrantedState({
+  isPro,
+  animate,
+}: {
+  isPro: boolean;
+  /** Play the check in: the approval just happened on this page. */
+  animate: boolean;
+}) {
   return (
     <EmptyState className="py-0">
       <EmptyStateIcon>
-        <CheckCircleIcon />
+        {animate ? (
+          <SuccessCheck state="in">
+            <SuccessCheckIcon />
+          </SuccessCheck>
+        ) : (
+          <CheckCircleIcon />
+        )}
       </EmptyStateIcon>
       <EmptyStateTitle as="h1">
         <Trans
@@ -476,7 +490,9 @@ export function NonprofitApplicationPage({
   }
 
   if (result?.outcome === "approved" || (!result && isGranted)) {
-    return <GrantedState isPro={isPro} />;
+    return (
+      <GrantedState isPro={isPro} animate={result?.outcome === "approved"} />
+    );
   }
 
   if (result?.outcome === "rejected") {
