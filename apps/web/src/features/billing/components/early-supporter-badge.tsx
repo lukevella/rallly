@@ -15,12 +15,7 @@ export function EarlySupporterBadge({
   return (
     <Tooltip>
       <TooltipTrigger
-        render={
-          <Badge
-            tabIndex={0}
-            className="gap-1 bg-pink-400/10 text-pink-600 dark:bg-pink-500/10 dark:text-pink-400"
-          />
-        }
+        render={<Badge tabIndex={0} variant="pink" className="gap-1" />}
       >
         <BirdIcon className="size-3" />
         <Trans i18nKey="earlySupporter" defaults="Early supporter" />
