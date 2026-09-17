@@ -706,7 +706,6 @@
   "searchUsers": "Cerca utenti...",
   "seatCount": "{count, plural, one {# posto} other {# posti}}",
   "seatsAvailable": "{count, plural, =0 {Nessun posto disponibile} one {# posto disponibile} other {# posti disponibili}}",
-  "seatsUpdatedAlertDescription": "La tua assegnazione del posto è stata aggiornata con successo. Le modifiche saranno riflesse nel tuo prossimo ciclo di fatturazione.",
   "seatsUpdatedAlertTitle": "Posti aggiornati",
   "security": "Sicurezza",
   "securityAuthentication": "Autenticazione",
