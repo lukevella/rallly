@@ -45,13 +45,15 @@ export function VotePage({
             the sidebar stays put and the list column scrolls on its own. */}
         <Card className="flex min-h-0 flex-1 flex-col lg:h-[44rem] lg:flex-initial">
           <RandomGradientBar />
-          <div className="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
+          <div className="min-h-0 flex-1 overflow-y-auto [scroll-padding-block:4rem_5rem] lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
             <aside className="border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventDetails stackResponseOptions />
             </aside>
             {/* VotingForm renders its (empty) form element beside its
                 children, so the grid cell wraps it rather than the reverse. */}
-            <section className="flex min-w-0 flex-col lg:min-h-0 lg:overflow-y-auto lg:border-l">
+            {/* Scroll padding keeps a keyboard-focused row clear of the sticky
+                header and footer in whichever container scrolls. */}
+            <section className="flex min-w-0 flex-col [scroll-padding-block:4rem_5rem] lg:min-h-0 lg:overflow-y-auto lg:border-l">
               <VotingForm>
                 <PollOutcome>
                   <VotingInterface />

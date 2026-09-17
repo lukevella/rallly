@@ -1,6 +1,13 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getGroupedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import * as React from "react";
 import { usePoll as usePollDetails } from "@/features/poll/client";
 import { usePoll as usePollScores } from "@/features/poll/components/poll-context";
@@ -81,58 +88,70 @@ function VoteLabel({ type }: { type?: VoteType }) {
 
 type PollOption = { id: string; startTime: Date; duration: number };
 
-function VotingOptionRow({
-  option,
-  label,
-  optionLabel,
-  editable,
-  vote,
-  onChange,
-}: {
-  option: PollOption;
-  label: React.ReactNode;
-  /** Full date (and time) as text, for the vote control and dialog. */
-  optionLabel: string;
-  editable: boolean;
-  vote?: VoteType;
-  onChange: (vote: VoteType) => void;
-}) {
-  const poll = usePollDetails();
-
-  return (
-    // Scroll margins keep a keyboard-focused row clear of the sticky bars.
-    <li
-      data-testid="poll-option"
-      className="flex scroll-mt-16 scroll-mb-20 items-center gap-4 px-4 py-2"
-    >
-      <span className="flex-1 whitespace-nowrap text-sm">{label}</span>
-      <VoteBreakdownButton optionId={option.id} optionLabel={optionLabel} />
-      {editable ? (
-        <VoteSegmentedControl
-          value={vote}
-          onChange={onChange}
-          optionLabel={optionLabel}
-          allowTentativeVotes={poll.allowTentativeVotes}
-        />
-      ) : vote !== undefined ? (
-        <VoteLabel type={vote} />
-      ) : null}
-    </li>
-  );
-}
-
 const endOf = (option: PollOption) =>
   new Date(option.startTime.getTime() + option.duration * 60_000);
 
-export function VotingOptions() {
+/**
+ * The vote control while a response is being composed, or the recorded
+ * vote once saved. Reads the form itself so the column definitions stay
+ * stable across renders (TanStack rebuilds the table when they change).
+ */
+function VoteCell({
+  option,
+  optionLabel,
+}: {
+  option: PollOption;
+  optionLabel: string;
+}) {
   const poll = usePollDetails();
   const { getVote, optionIds } = usePollScores();
-  const { formatDateTime, formatDateTimeRange } = useDateTime();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
   const votes = votingForm.watch("votes");
   const participantId = votingForm.watch("participantId");
   const editable = mode !== "view";
+  const index = optionIds.indexOf(option.id);
+  const vote = editable
+    ? votes[index]?.type
+    : participantId
+      ? getVote(participantId, option.id)
+      : undefined;
+
+  if (editable) {
+    return (
+      <VoteSegmentedControl
+        value={vote}
+        onChange={(newVote) => {
+          const next = [...votes];
+          next[index] = { optionId: option.id, type: newVote };
+          votingForm.setValue("votes", next, { shouldDirty: true });
+        }}
+        optionLabel={optionLabel}
+        allowTentativeVotes={poll.allowTentativeVotes}
+      />
+    );
+  }
+  return vote !== undefined ? <VoteLabel type={vote} /> : null;
+}
+
+const columnHelper = createColumnHelper<PollOption>();
+
+// Stable references: TanStack recomputes the grouped model whenever these
+// change identity.
+const tableState = {
+  grouping: ["group"],
+  columnVisibility: { group: false },
+};
+
+/**
+ * The options as a table grouped by day (time polls) or month (date polls).
+ * TanStack Table owns the grouping; each group renders as its own body with
+ * a row group heading so assistive tech announces the day or month once.
+ */
+export function VotingOptions() {
+  const poll = usePollDetails();
+  const { formatDateTime, formatDateTimeRange } = useDateTime();
+  const { t } = useTranslation();
   const headingId = React.useId();
 
   const isTimeSlot = (poll.options[0]?.duration ?? 0) > 0;
@@ -140,94 +159,162 @@ export function VotingOptions() {
   // back in UTC; a zoned time poll is read in the viewer's zone.
   const readZone = isTimeSlot && poll.timeZone ? undefined : "UTC";
 
-  // Rows group by day (time polls) or month (date polls) in the viewer's
-  // zone, so the key is the formatted heading.
-  const groups = new Map<string, PollOption[]>();
-  for (const option of poll.options) {
-    const key = formatDateTime(
-      option.startTime,
-      isTimeSlot ? "dateFull" : "monthYear",
-      { timeZone: readZone },
-    );
-    groups.set(key, [...(groups.get(key) ?? []), option]);
-  }
+  const columns = React.useMemo(
+    () => [
+      // Grouping key: the formatted day or month in the viewer's zone. The
+      // column is hidden; its cell renders the group heading.
+      columnHelper.accessor(
+        (option) =>
+          formatDateTime(
+            option.startTime,
+            isTimeSlot ? "dateFull" : "monthYear",
+            { timeZone: readZone },
+          ),
+        {
+          id: "group",
+          cell: ({ row }) =>
+            isTimeSlot ? (
+              <EventDate
+                value={row.original.startTime}
+                allDay={false}
+                timeZone={poll.timeZone}
+                preset="dateFull"
+              />
+            ) : (
+              <CalendarDate value={row.original.startTime} preset="monthYear" />
+            ),
+        },
+      ),
+      columnHelper.display({
+        id: "option",
+        header: () =>
+          isTimeSlot ? (
+            <Trans i18nKey="time" defaults="Time" />
+          ) : (
+            <Trans i18nKey="date" defaults="Date" />
+          ),
+        cell: ({ row }) =>
+          isTimeSlot ? (
+            <EventTimeRange
+              start={row.original.startTime}
+              end={endOf(row.original)}
+              allDay={false}
+              timeZone={poll.timeZone}
+            />
+          ) : (
+            <CalendarDate value={row.original.startTime} preset="weekdayDay" />
+          ),
+      }),
+      columnHelper.display({
+        id: "votes",
+        header: () => <Trans i18nKey="votes" defaults="Votes" />,
+        cell: ({ row }) => (
+          <VoteBreakdownButton
+            optionId={row.original.id}
+            optionLabel={row.getValue<string>("group")}
+          />
+        ),
+      }),
+      columnHelper.display({
+        id: "vote",
+        header: () => <Trans i18nKey="yourVote" defaults="Your vote" />,
+        cell: ({ row }) => {
+          const option = row.original;
+          // Full date and time as text, for the vote control's name.
+          const optionLabel = isTimeSlot
+            ? `${row.getValue<string>("group")}, ${formatDateTimeRange(
+                option.startTime,
+                endOf(option),
+                "time",
+                { timeZone: readZone },
+              )}`
+            : formatDateTime(option.startTime, "dateFull", {
+                timeZone: "UTC",
+              });
+          return <VoteCell option={option} optionLabel={optionLabel} />;
+        },
+      }),
+    ],
+    [formatDateTime, formatDateTimeRange, isTimeSlot, poll.timeZone, readZone],
+  );
+
+  const table = useReactTable({
+    data: poll.options,
+    columns,
+    getRowId: (option) => option.id,
+    state: tableState,
+    getCoreRowModel: getCoreRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
+  });
+
+  const visibleColumnCount = table.getVisibleLeafColumns().length;
 
   return (
-    <div className="flex-1">
-      {Array.from(groups, ([key, groupOptions], groupIndex) => {
+    <table className="w-full flex-1 text-sm">
+      <caption className="sr-only">
+        {t("pollOptions", { defaultValue: "Poll options" })}
+      </caption>
+      <thead className="sr-only">
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id} scope="col">
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext(),
+                )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      {/* Top-level rows of the grouped model are the groups; their subRows
+          are the options. */}
+      {table.getGroupedRowModel().rows.map((groupRow, groupIndex) => {
         const id = `${headingId}-${groupIndex}`;
-        const first = groupOptions[0];
+        const groupCell = groupRow
+          .getAllCells()
+          .find((cell) => cell.column.id === "group");
         return (
-          <section key={key} aria-labelledby={id}>
-            <h3
-              id={id}
-              className="border-b bg-muted/50 px-4 py-2 font-medium text-sm"
-            >
-              {isTimeSlot ? (
-                <EventDate
-                  value={first.startTime}
-                  allDay={false}
-                  timeZone={poll.timeZone}
-                  preset="dateFull"
-                />
-              ) : (
-                <CalendarDate value={first.startTime} preset="monthYear" />
-              )}
-            </h3>
-            <ul className="divide-y">
-              {groupOptions.map((option) => {
-                const index = optionIds.indexOf(option.id);
-                const vote = editable
-                  ? votes[index]?.type
-                  : participantId
-                    ? getVote(participantId, option.id)
-                    : undefined;
-                const optionLabel = isTimeSlot
-                  ? `${key}, ${formatDateTimeRange(
-                      option.startTime,
-                      endOf(option),
-                      "time",
-                      { timeZone: readZone },
-                    )}`
-                  : formatDateTime(option.startTime, "dateFull", {
-                      timeZone: "UTC",
-                    });
-                return (
-                  <VotingOptionRow
-                    key={option.id}
-                    option={option}
-                    label={
-                      isTimeSlot ? (
-                        <EventTimeRange
-                          start={option.startTime}
-                          end={endOf(option)}
-                          allDay={false}
-                          timeZone={poll.timeZone}
-                        />
-                      ) : (
-                        <CalendarDate
-                          value={option.startTime}
-                          preset="weekdayDay"
-                        />
-                      )
+          <tbody key={groupRow.id} aria-labelledby={id}>
+            <tr>
+              <th
+                id={id}
+                scope="rowgroup"
+                colSpan={visibleColumnCount}
+                className="border-y bg-muted/50 px-4 py-2 text-left font-medium"
+              >
+                {groupCell
+                  ? flexRender(
+                      groupCell.column.columnDef.cell,
+                      groupCell.getContext(),
+                    )
+                  : null}
+              </th>
+            </tr>
+            {groupRow.subRows.map((row) => (
+              <tr
+                key={row.id}
+                data-testid="poll-option"
+                className="border-b last:border-b-0"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className={
+                      cell.column.id === "option"
+                        ? "w-full whitespace-nowrap px-4 py-2"
+                        : "px-2 py-2 text-right last:pr-4"
                     }
-                    optionLabel={optionLabel}
-                    editable={editable}
-                    vote={vote}
-                    onChange={(newVote) => {
-                      const next = [...votes];
-                      next[index] = { optionId: option.id, type: newVote };
-                      votingForm.setValue("votes", next, {
-                        shouldDirty: true,
-                      });
-                    }}
-                  />
-                );
-              })}
-            </ul>
-          </section>
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
         );
       })}
-    </div>
+    </table>
   );
 }
