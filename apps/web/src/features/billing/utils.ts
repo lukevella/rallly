@@ -67,8 +67,12 @@ export function formatMinorUnitAmount({
   currency: string;
   locale: string;
 }) {
-  return new Intl.NumberFormat(locale, {
+  const formatter = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currency.toUpperCase(),
-  }).format(amount / 100);
+  });
+  // Stripe amounts are in the currency's minor unit, which Intl knows: two
+  // fraction digits for most currencies, none for JPY and friends.
+  const minorUnitDigits = formatter.resolvedOptions().maximumFractionDigits;
+  return formatter.format(amount / 10 ** minorUnitDigits);
 }

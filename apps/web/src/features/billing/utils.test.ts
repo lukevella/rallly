@@ -108,4 +108,10 @@ describe("formatMinorUnitAmount", () => {
       formatMinorUnitAmount({ amount: 5600, currency: "usd", locale: "en" }),
     ).toBe("$56.00");
   });
+
+  it("does not scale zero decimal currencies", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
+    ).toBe("¥5,600");
+  });
 });
