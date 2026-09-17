@@ -706,7 +706,6 @@
   "searchUsers": "Gebruikers zoeken...",
   "seatCount": "{count, plural, one {# plaats} other {# plaatsen}}",
   "seatsAvailable": "{count, plural, =0 {Geen plaatsen beschikbaar} one {# plaats beschikbaar} other {# plaatsen beschikbaar}}",
-  "seatsUpdatedAlertDescription": "Je plaatsentoewijzing is succesvol bijgewerkt. De wijzigingen worden in je volgende facturatieperiode doorgevoerd.",
   "seatsUpdatedAlertTitle": "Plaatsen bijgewerkt",
   "security": "Beveiliging",
   "securityAuthentication": "Authenticatie",
