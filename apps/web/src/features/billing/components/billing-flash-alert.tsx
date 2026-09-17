@@ -18,17 +18,9 @@ export function BillingFlashAlert() {
     <Alert variant="success">
       <CheckCircleIcon />
       {flow.data === "seats" ? (
-        <>
-          <AlertTitle>
-            <Trans i18nKey="seatsUpdatedAlertTitle" defaults="Seats updated" />
-          </AlertTitle>
-          <AlertDescription>
-            <Trans
-              i18nKey="seatsUpdatedAlertDescription"
-              defaults="Your seat allocation has been successfully updated. The changes will be reflected in your next billing cycle."
-            />
-          </AlertDescription>
-        </>
+        <AlertTitle>
+          <Trans i18nKey="seatsUpdatedAlertTitle" defaults="Seats updated" />
+        </AlertTitle>
       ) : flow.data === "interval" ? (
         <>
           <AlertTitle>
