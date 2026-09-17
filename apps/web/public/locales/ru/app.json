@@ -744,7 +744,6 @@
   "searchUsers": "Поиск пользователей...",
   "seatCount": "{count, plural, one {# место} few {# места} many {# мест} other {# мест}}",
   "seatsAvailable": "{count, plural, =0 {Нет свободных мест} one {Доступно # место} few {Доступно # места} many {Доступно # мест} other {Доступно # места}}",
-  "seatsUpdatedAlertDescription": "Количество мест успешно обновлено. Изменения вступят в силу в следующем платёжном цикле.",
   "seatsUpdatedAlertTitle": "Места обновлены",
   "security": "Безопасность",
   "securityAuthentication": "Аутентификация",
