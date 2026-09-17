@@ -101,7 +101,7 @@ function describe(price: Stripe.Price) {
   const options = Object.entries(price.currency_options ?? {})
     .map(([currency, option]) => `${currency}=${option.unit_amount}`)
     .join(",");
-  return `${price.id} (${price.currency}=${price.unit_amount}${options ? `, ${options}` : ""})`;
+  return `${price.id} (${price.currency}=${price.unit_amount}${options ? `, ${options}` : ""}, tax ${price.tax_behavior ?? "unspecified"})`;
 }
 
 function toCreateParams(
@@ -114,6 +114,11 @@ function toCreateParams(
     currency: "usd",
     unit_amount: usd,
     recurring: { interval: spec.interval },
+    // Automatic tax reads this per price; inheriting it keeps VAT inclusive
+    // or exclusive exactly as on the price being replaced.
+    ...(oldPrice.tax_behavior && oldPrice.tax_behavior !== "unspecified"
+      ? { tax_behavior: oldPrice.tax_behavior }
+      : {}),
     metadata: { [REPLACES_METADATA_KEY]: oldPrice.id },
     currency_options: Object.fromEntries(
       Object.entries(others).map(([currency, amount]) => [
