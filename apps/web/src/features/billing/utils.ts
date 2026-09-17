@@ -73,6 +73,7 @@ export function formatMinorUnitAmount({
   });
   // Stripe amounts are in the currency's minor unit, which Intl knows: two
   // fraction digits for most currencies, none for JPY and friends.
-  const minorUnitDigits = formatter.resolvedOptions().maximumFractionDigits;
+  const minorUnitDigits =
+    formatter.resolvedOptions().maximumFractionDigits ?? 2;
   return formatter.format(amount / 10 ** minorUnitDigits);
 }
