@@ -3,6 +3,7 @@ import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import * as React from "react";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { VoteBreakdownDialog } from "@/features/poll/components/vote-breakdown-dialog";
 import VoteIcon from "@/features/poll/components/vote-icon";
@@ -24,27 +25,28 @@ function VoteBreakdownButton({
   const { getScore, poll } = usePoll();
   const { yes, ifNeedBe } = getScore(optionId);
   const dialog = useDialog();
+  const breakdown = poll.allowTentativeVotes
+    ? t("optionVoteBreakdown", {
+        defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
+        yesScore: yes,
+        ifNeedBeScore: ifNeedBe,
+      })
+    : t("optionVoteBreakdownYesOnly", {
+        defaultValue: "{yesScore} yes",
+        yesScore: yes,
+      });
 
   return (
     <IfScoresVisible>
-      <Button {...dialog.triggerProps} variant="ghost" size="sm">
-        {poll.allowTentativeVotes
-          ? t("optionVoteBreakdown", {
-              defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-              yesScore: yes,
-              ifNeedBeScore: ifNeedBe,
-            })
-          : t("optionVoteBreakdownYesOnly", {
-              defaultValue: "{yesScore} yes",
-              yesScore: yes,
-            })}
-        <span className="sr-only">
-          {". "}
-          <Trans
-            i18nKey="showParticipantVotes"
-            defaults="Show participant votes"
-          />
-        </span>
+      <Button
+        {...dialog.triggerProps}
+        variant="ghost"
+        size="sm"
+        aria-label={`${breakdown}. ${t("showParticipantVotes", {
+          defaultValue: "Show participant votes",
+        })}`}
+      >
+        <ConnectedScoreSummary optionId={optionId} />
       </Button>
       <VoteBreakdownDialog
         {...dialog.dialogProps}
@@ -87,36 +89,30 @@ function VotingOptionRow({
   const optionLabel = getOptionDateTimeLabel(option);
 
   return (
-    // Below sm the breakdown button drops under the label and the vote
-    // control spans both lines. Scroll margins keep a keyboard-focused row
-    // clear of the sticky bars.
+    // Scroll margins keep a keyboard-focused row clear of the sticky bars.
     <li
       data-testid="poll-option"
-      className="grid scroll-mt-16 scroll-mb-20 grid-cols-[1fr_auto] items-center gap-x-4 px-4 py-2 sm:grid-cols-[1fr_auto_auto]"
+      className="flex scroll-mt-16 scroll-mb-20 items-center gap-4 px-4 py-2"
     >
-      <span className="whitespace-nowrap text-sm">
+      <span className="flex-1 whitespace-nowrap text-sm">
         {option.type === "timeSlot"
           ? `${option.startTime} – ${option.endTime}`
           : `${option.dow} ${option.day}`}
       </span>
-      <div className="col-start-1 row-start-2 justify-self-start sm:col-start-auto sm:row-start-auto sm:justify-self-auto">
-        <VoteBreakdownButton
-          optionId={option.optionId}
+      <VoteBreakdownButton
+        optionId={option.optionId}
+        optionLabel={optionLabel}
+      />
+      {editable ? (
+        <VoteSegmentedControl
+          value={vote}
+          onChange={onChange}
           optionLabel={optionLabel}
+          allowTentativeVotes={poll.allowTentativeVotes}
         />
-      </div>
-      <div className="col-start-2 row-span-2 row-start-1 sm:col-start-auto sm:row-span-1 sm:row-start-auto">
-        {editable ? (
-          <VoteSegmentedControl
-            value={vote}
-            onChange={onChange}
-            optionLabel={optionLabel}
-            allowTentativeVotes={poll.allowTentativeVotes}
-          />
-        ) : vote !== undefined ? (
-          <VoteLabel type={vote} />
-        ) : null}
-      </div>
+      ) : vote !== undefined ? (
+        <VoteLabel type={vote} />
+      ) : null}
     </li>
   );
 }
