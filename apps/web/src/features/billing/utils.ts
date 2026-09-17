@@ -57,3 +57,18 @@ export function resolvePriceSet({
   }
   return { monthly: pricing.monthly, yearly: pricing.yearly };
 }
+
+export function formatMinorUnitAmount({
+  amount,
+  currency,
+  locale,
+}: {
+  amount: number;
+  currency: string;
+  locale: string;
+}) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency.toUpperCase(),
+  }).format(amount / 100);
+}

@@ -35,6 +35,8 @@ const baseProps = {
   status: "active" as const,
   cancelAtPeriodEnd: false,
   periodEnd: new Date("2026-01-01T00:00:00Z"),
+  earlySupporter: false,
+  listPrice: null,
 };
 
 describe("ProPlanCard", () => {
@@ -69,5 +71,34 @@ describe("ProPlanCard", () => {
     expect(screen.getByText("$12.00")).toBeInTheDocument();
     expect(screen.getByText("$16.00")).toHaveClass("line-through");
     expect(screen.getByText(/discount applied/)).toBeInTheDocument();
+  });
+
+  it("labels early supporters and says the rate is kept", () => {
+    render(<ProPlanCard {...baseProps} earlySupporter listPrice={null} />);
+
+    expect(screen.getByText("Early supporter")).toBeInTheDocument();
+    expect(
+      screen.getByText(/keep this rate for as long as your subscription/),
+    ).toBeInTheDocument();
+    expect(document.querySelector(".line-through")).toBeNull();
+  });
+
+  it("shows nothing about early supporters on a current price", () => {
+    render(<ProPlanCard {...baseProps} />);
+
+    expect(screen.queryByText("Early supporter")).not.toBeInTheDocument();
+  });
+
+  it("tells an early supporter who cancelled what the rate ends with", () => {
+    render(
+      <ProPlanCard
+        {...baseProps}
+        earlySupporter
+        cancelAtPeriodEnd
+        listPrice={{ monthly: 1000, yearly: 8400 }}
+      />,
+    );
+
+    expect(screen.getByText(/early supporter rate ends/)).toBeInTheDocument();
   });
 });

@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isEarlySupporter, resolvePriceSet } from "./utils";
+import {
+  formatMinorUnitAmount,
+  isEarlySupporter,
+  resolvePriceSet,
+} from "./utils";
 
 // isBillingEnabled is a module constant read from the environment, so each
 // branch needs a fresh module registry to observe the stubbed value.
@@ -95,5 +99,13 @@ describe("resolvePriceSet", () => {
         pricing: { ...pricing, earlySupporter: undefined },
       }),
     ).toEqual({ monthly: pricing.monthly, yearly: pricing.yearly });
+  });
+});
+
+describe("formatMinorUnitAmount", () => {
+  it("formats minor units as a localized currency string", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 5600, currency: "usd", locale: "en" }),
+    ).toBe("$56.00");
   });
 });
