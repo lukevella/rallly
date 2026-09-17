@@ -4,6 +4,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { usePermissions, usePoll } from "@/features/poll/client";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
+import VoteIcon from "@/features/poll/components/vote-icon";
 import {
   DeclineButton,
   SubmitResponseButton,
@@ -20,6 +21,10 @@ function Bar({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Vote icons with counts. The icons are decorative; the live region reads
+ * the same counts as a sentence.
+ */
 function SelectionCount({
   yesCount,
   ifNeedBeCount,
@@ -30,17 +35,29 @@ function SelectionCount({
   const poll = usePoll();
   const { t } = useTranslation();
   return (
-    <p aria-live="polite" className="text-muted-foreground text-sm">
-      {poll.allowTentativeVotes
-        ? t("optionVoteBreakdown", {
-            defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-            yesScore: yesCount,
-            ifNeedBeScore: ifNeedBeCount,
-          })
-        : t("optionVoteBreakdownYesOnly", {
-            defaultValue: "{yesScore} yes",
-            yesScore: yesCount,
-          })}
+    <p aria-live="polite" className="flex items-center gap-4 text-sm">
+      <span className="sr-only">
+        {poll.allowTentativeVotes
+          ? t("optionVoteBreakdown", {
+              defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
+              yesScore: yesCount,
+              ifNeedBeScore: ifNeedBeCount,
+            })
+          : t("optionVoteBreakdownYesOnly", {
+              defaultValue: "{yesScore} yes",
+              yesScore: yesCount,
+            })}
+      </span>
+      <span aria-hidden="true" className="inline-flex items-center gap-1.5">
+        <VoteIcon type="yes" />
+        <span className="tabular-nums">{yesCount}</span>
+      </span>
+      {poll.allowTentativeVotes ? (
+        <span aria-hidden="true" className="inline-flex items-center gap-1.5">
+          <VoteIcon type="ifNeedBe" />
+          <span className="tabular-nums">{ifNeedBeCount}</span>
+        </span>
+      ) : null}
     </p>
   );
 }
