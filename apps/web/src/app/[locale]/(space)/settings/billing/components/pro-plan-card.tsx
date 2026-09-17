@@ -5,11 +5,13 @@ import { Button } from "@rallly/ui/button";
 import { DialogTrigger } from "@rallly/ui/dialog";
 import { ArmchairIcon, CreditCardIcon, DotIcon } from "lucide-react";
 import { openCustomerPortalAction } from "@/features/billing/actions";
+import { EarlySupporterBadge } from "@/features/billing/components/early-supporter-badge";
 import { SubscriptionStatusBadge } from "@/features/billing/components/subscription-status-badge";
 import type {
   BillingInterval,
   SubscriptionStatus,
 } from "@/features/billing/schema";
+import { formatMinorUnitAmount } from "@/features/billing/utils";
 import {
   SpaceTierIcon,
   SpaceTierLabel,
@@ -42,6 +44,8 @@ export function ProPlanCard({
   status,
   cancelAtPeriodEnd,
   periodEnd,
+  earlySupporter,
+  listPrice,
   className,
 }: {
   amount: number;
@@ -54,6 +58,8 @@ export function ProPlanCard({
   status: SubscriptionStatus;
   cancelAtPeriodEnd: boolean;
   periodEnd: Date;
+  earlySupporter: boolean;
+  listPrice: { monthly?: number; yearly?: number } | null;
   className?: string;
 }) {
   const { locale } = useDateTimeConfig();
@@ -61,10 +67,7 @@ export function ProPlanCard({
   const openCustomerPortal = useSafeAction(openCustomerPortalAction);
 
   const formatCurrency = (minorUnitAmount: number) =>
-    new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: currency.toUpperCase(),
-    }).format(minorUnitAmount / 100);
+    formatMinorUnitAmount({ amount: minorUnitAmount, currency, locale });
 
   // amount is the per-seat unit amount in the currency's minor unit. Coupons
   // and promotion codes are applied by Stripe at the invoice level, so we apply
@@ -86,6 +89,8 @@ export function ProPlanCard({
 
   const date = formatDateTime(periodEnd, "date");
   const endsAtPeriodEnd = status === "canceled" || cancelAtPeriodEnd;
+  const listPriceForInterval =
+    listPrice?.[interval === "month" ? "monthly" : "yearly"];
 
   return (
     <PlanCard className={className}>
@@ -99,6 +104,32 @@ export function ProPlanCard({
               <SpaceTierLabel tier="pro" />
             </PlanCardTitle>
             <SubscriptionStatusBadge status={status} />
+            {earlySupporter ? (
+              <EarlySupporterBadge>
+                {endsAtPeriodEnd ? (
+                  listPriceForInterval !== undefined ? (
+                    <Trans
+                      i18nKey="earlySupporterRateEnds"
+                      defaults="Your early supporter rate ends with your subscription. New subscriptions are {price} per {interval, select, month {month} other {year}}."
+                      values={{
+                        price: formatCurrency(listPriceForInterval),
+                        interval,
+                      }}
+                    />
+                  ) : (
+                    <Trans
+                      i18nKey="earlySupporterRateEndsNoPrice"
+                      defaults="Your early supporter rate ends with your subscription."
+                    />
+                  )
+                ) : (
+                  <Trans
+                    i18nKey="earlySupporterRateKept"
+                    defaults="You keep this rate for as long as your subscription stays active."
+                  />
+                )}
+              </EarlySupporterBadge>
+            ) : null}
           </div>
           <PlanCardDescription className="flex items-center">
             <Trans

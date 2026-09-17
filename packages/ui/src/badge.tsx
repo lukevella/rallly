@@ -16,6 +16,7 @@ const badgeVariants = cva(
         outline: "text-foreground",
         green:
           "bg-green-400/10 text-green-600 dark:bg-green-500/10 dark:text-green-500",
+        pink: "bg-pink-400/10 text-pink-600 dark:bg-pink-500/10 dark:text-pink-400",
         secondary: "bg-primary/10 text-primary",
         pill: "rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200",
       },
