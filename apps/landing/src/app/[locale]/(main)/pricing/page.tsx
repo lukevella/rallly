@@ -835,8 +835,8 @@ export default async function Page(props: {
             <Trans
               t={t}
               ns="pricing"
-              i18nKey="whyUpgradeAnswer2"
-              defaults="Upgrading to a paid plan makes sense if you use Rallly often or use it for work. The current subscription rate is a special early adopter rate and will increase in the future. By upgrading now, you will get early access to new, high-quality scheduling tools as they are released and lock in your subscription rate so you won't be affected by future price increases."
+              i18nKey="whyUpgradeAnswer3"
+              defaults="Upgrading makes sense if you use Rallly often or use it for work. Your rate is locked for as long as your subscription stays active: subscribers who joined before the price change in September 2026 still pay the rate they signed up at."
             />
           </FaqItem>
           <FaqItem
