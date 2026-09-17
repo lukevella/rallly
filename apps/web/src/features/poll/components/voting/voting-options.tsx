@@ -250,71 +250,77 @@ export function VotingOptions() {
   const visibleColumnCount = table.getVisibleLeafColumns().length;
 
   return (
-    <table className="w-full flex-1 text-sm">
-      <caption className="sr-only">
-        {t("pollOptions", { defaultValue: "Poll options" })}
-      </caption>
-      <thead className="sr-only">
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id} scope="col">
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext(),
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      {/* Top-level rows of the grouped model are the groups; their subRows
-          are the options. */}
-      {table.getGroupedRowModel().rows.map((groupRow, groupIndex) => {
-        const id = `${headingId}-${groupIndex}`;
-        const groupCell = groupRow
-          .getAllCells()
-          .find((cell) => cell.column.id === "group");
-        return (
-          <tbody key={groupRow.id} aria-labelledby={id}>
-            <tr>
-              <th
-                id={id}
-                scope="rowgroup"
-                colSpan={visibleColumnCount}
-                className="border-y bg-muted/50 px-4 py-2 text-left font-medium"
-              >
-                {groupCell
-                  ? flexRender(
-                      groupCell.column.columnDef.cell,
-                      groupCell.getContext(),
-                    )
-                  : null}
-              </th>
+    // A flex-1 table would spread spare height across its rows.
+    <div className="flex-1">
+      <table className="w-full text-sm">
+        <caption className="sr-only">
+          {t("pollOptions", { defaultValue: "Poll options" })}
+        </caption>
+        <thead className="sr-only">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id} scope="col">
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </th>
+              ))}
             </tr>
-            {groupRow.subRows.map((row) => (
-              <tr
-                key={row.id}
-                data-testid="poll-option"
-                className="border-b last:border-b-0"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className={
-                      cell.column.id === "option"
-                        ? "w-full whitespace-nowrap px-4 py-2"
-                        : "px-2 py-2 text-right last:pr-4"
-                    }
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+          ))}
+        </thead>
+        {/* Top-level rows of the grouped model are the groups; their subRows
+          are the options. */}
+        {table.getGroupedRowModel().rows.map((groupRow, groupIndex) => {
+          const id = `${headingId}-${groupIndex}`;
+          const groupCell = groupRow
+            .getAllCells()
+            .find((cell) => cell.column.id === "group");
+          return (
+            <tbody key={groupRow.id} aria-labelledby={id}>
+              <tr>
+                <th
+                  id={id}
+                  scope="rowgroup"
+                  colSpan={visibleColumnCount}
+                  className="border-y bg-muted/50 px-4 py-2 text-left font-medium"
+                >
+                  {groupCell
+                    ? flexRender(
+                        groupCell.column.columnDef.cell,
+                        groupCell.getContext(),
+                      )
+                    : null}
+                </th>
               </tr>
-            ))}
-          </tbody>
-        );
-      })}
-    </table>
+              {groupRow.subRows.map((row) => (
+                <tr
+                  key={row.id}
+                  data-testid="poll-option"
+                  className="border-b last:border-b-0"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className={
+                        cell.column.id === "option"
+                          ? "w-full whitespace-nowrap px-4 py-2"
+                          : "px-2 py-2 text-right last:pr-4"
+                      }
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          );
+        })}
+      </table>
+    </div>
   );
 }
