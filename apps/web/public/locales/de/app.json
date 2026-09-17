@@ -757,7 +757,6 @@
   "searchUsers": "Benutzer suchen...",
   "seatCount": "{count, plural, one {# Platz} other {# Plätze}}",
   "seatsAvailable": "{count, plural, =0 {Keine Plätze verfügbar} one {# Platz verfügbar} other {# Plätze verfügbar}}",
-  "seatsUpdatedAlertDescription": "Deine Benutzerplätze wurden erfolgreich aktualisiert. Die Änderungen werden in deinem nächsten Abrechnungszyklus angezeigt.",
   "seatsUpdatedAlertTitle": "Benutzerplätze aktualisiert",
   "security": "Sicherheit",
   "securityAuthentication": "Authentifizierung",
