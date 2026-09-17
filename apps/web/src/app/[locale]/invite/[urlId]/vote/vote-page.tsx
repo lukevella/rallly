@@ -5,8 +5,8 @@ import { Spinner } from "@/components/spinner";
 import { EventDetails } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { PollOutcome } from "@/features/poll/components/poll-outcome";
+import { VotingInterface } from "@/features/poll/components/voting/voting-interface";
 import { VotingForm } from "@/features/poll/components/voting-form";
-import { VotingList } from "@/features/poll/components/voting-list";
 import { CreatorBanner } from "@/features/poll/invite/components/creator-banner";
 import { FloatingComments } from "@/features/poll/invite/components/floating-comments";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
@@ -51,10 +51,10 @@ export function VotePage({
             </aside>
             {/* VotingForm renders its (empty) form element beside its
                 children, so the grid cell wraps it rather than the reverse. */}
-            <section className="min-w-0 lg:min-h-0 lg:overflow-y-auto lg:border-l">
+            <section className="flex min-w-0 flex-col lg:min-h-0 lg:overflow-y-auto lg:border-l">
               <VotingForm>
                 <PollOutcome>
-                  <VotingList />
+                  <VotingInterface />
                 </PollOutcome>
                 <FloatingComments liftAtAllWidths />
               </VotingForm>

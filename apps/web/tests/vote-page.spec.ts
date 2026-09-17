@@ -50,20 +50,37 @@ test.describe("vote page", () => {
     );
     expect(overflow).toBe(0);
 
+    // The selection count follows the votes
+    const bar = main.locator("footer");
+    await expect(bar.getByText("0 yes, 0 if need be")).toBeVisible();
     await page
       .getByTestId("vote-selector")
       .first()
       .getByRole("radio", { name: "Yes" })
       .click();
+    await expect(bar.getByText("1 yes, 0 if need be")).toBeVisible();
+
     await page.getByRole("button", { name: "Continue" }).click();
     await page.getByPlaceholder("Jessie Smith").fill("Test user");
     await page.getByRole("button", { name: "Save availability" }).click();
     await expect(page.getByText("Your response has been saved")).toBeVisible();
     await page.getByRole("button", { name: "Back to poll" }).click();
 
-    await expect(main.getByTestId("participant-selector")).toContainText(
-      "Test user",
-    );
+    // Saved: the footer names the response and offers Edit; the controls
+    // give way to the recorded votes
+    await expect(bar.getByText("Test user")).toBeVisible();
+    await expect(main.getByRole("button", { name: "Edit" })).toBeVisible();
+    await expect(page.getByTestId("vote-selector")).toHaveCount(0);
+
+    // The breakdown dialog lists who voted
+    await main
+      .getByRole("button", { name: /Show participant votes/ })
+      .first()
+      .click();
+    const breakdown = page.getByRole("dialog", { name: "Participants" });
+    await expect(breakdown.getByText("Test user")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(breakdown).toBeHidden();
   });
 
   test("mobile stacks the event above the list", async ({ browser }) => {

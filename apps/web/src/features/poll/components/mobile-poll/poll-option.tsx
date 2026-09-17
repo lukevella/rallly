@@ -12,11 +12,8 @@ import {
 } from "@rallly/ui/dialog";
 import * as m from "motion/react-m";
 import type * as React from "react";
-
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { useParticipants } from "@/features/poll/client";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
-import { filterParticipantsByVote } from "@/features/poll/utils";
+import { PollOptionVoteSummary } from "@/features/poll/components/vote-breakdown-dialog";
 import { Trans, useTranslation } from "@/i18n/client";
 import { ConnectedScoreSummary } from "../score-summary";
 import VoteIcon from "../vote-icon";
@@ -35,48 +32,6 @@ export interface PollOptionProps {
   /** When false the segmented control offers yes and no only. */
   allowTentativeVotes?: boolean;
 }
-
-const PollOptionVoteSummary: React.FunctionComponent<{ optionId: string }> = ({
-  optionId,
-}) => {
-  const { t } = useTranslation();
-  const { participants } = useParticipants();
-  const participantsWithVotes = (["yes", "ifNeedBe", "no"] as const).flatMap(
-    (voteType) =>
-      filterParticipantsByVote(participants, optionId, voteType).map(
-        (participant) => ({ participant, voteType }),
-      ),
-  );
-
-  if (participantsWithVotes.length === 0) {
-    return (
-      <p className="rounded-lg bg-muted p-2 text-center text-muted-foreground text-sm">
-        {t("noVotes", {
-          defaultValue: "No one has voted for this option",
-        })}
-      </p>
-    );
-  }
-
-  return (
-    <ul className="max-h-[min(20rem,40dvh)] space-y-2.5 overflow-y-auto">
-      {participantsWithVotes.map(({ participant, voteType }) => (
-        <li key={participant.id} className="flex items-center gap-x-2.5">
-          <OptimizedAvatarImage
-            size="sm"
-            name={participant.name}
-            src={participant.image ?? undefined}
-            className="shrink-0"
-          />
-          <div className="min-w-0 flex-1 truncate text-sm">
-            {participant.name}
-          </div>
-          <VoteIcon type={voteType} className="shrink-0" />
-        </li>
-      ))}
-    </ul>
-  );
-};
 
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
   children,
