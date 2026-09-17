@@ -761,7 +761,6 @@
   "searchUsers": "Felhasználók keresése...",
   "seatCount": "{count, plural, one {# hely} other {# hely}}",
   "seatsAvailable": "{count, plural, =0 {Nincs elérhető ülőhely} one {# ülőhely elérhető} other {# ülőhely elérhető}}",
-  "seatsUpdatedAlertDescription": "A helyek elosztásának frissítése sikeresen megtörtént. A változtatások a következő számlázási ciklusodban fognak megjelenni.",
   "seatsUpdatedAlertTitle": "Helyek frissítve",
   "security": "Biztonság",
   "securityAuthentication": "Hitelesítés",
