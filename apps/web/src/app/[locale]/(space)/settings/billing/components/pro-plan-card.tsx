@@ -104,7 +104,32 @@ export function ProPlanCard({
               <SpaceTierLabel tier="pro" />
             </PlanCardTitle>
             <SubscriptionStatusBadge status={status} />
-            {earlySupporter ? <EarlySupporterBadge /> : null}
+            {earlySupporter ? (
+              <EarlySupporterBadge>
+                {endsAtPeriodEnd ? (
+                  listPriceForInterval !== undefined ? (
+                    <Trans
+                      i18nKey="earlySupporterRateEnds"
+                      defaults="Your early supporter rate ends with your subscription. New subscriptions are {price} per {interval, select, month {month} other {year}}."
+                      values={{
+                        price: formatCurrency(listPriceForInterval),
+                        interval,
+                      }}
+                    />
+                  ) : (
+                    <Trans
+                      i18nKey="earlySupporterRateEndsNoPrice"
+                      defaults="Your early supporter rate ends with your subscription."
+                    />
+                  )
+                ) : (
+                  <Trans
+                    i18nKey="earlySupporterRateKept"
+                    defaults="You keep this rate for as long as your subscription stays active."
+                  />
+                )}
+              </EarlySupporterBadge>
+            ) : null}
           </div>
           <PlanCardDescription className="flex items-center">
             <Trans
@@ -127,32 +152,6 @@ export function ProPlanCard({
               />
             )}
           </PlanCardDescription>
-          {earlySupporter ? (
-            <PlanCardDescription className="mt-1 whitespace-normal">
-              {endsAtPeriodEnd ? (
-                listPriceForInterval !== undefined ? (
-                  <Trans
-                    i18nKey="earlySupporterRateEnds"
-                    defaults="Your early supporter rate ends with your subscription. New subscriptions are {price} per {interval, select, month {month} other {year}}."
-                    values={{
-                      price: formatCurrency(listPriceForInterval),
-                      interval,
-                    }}
-                  />
-                ) : (
-                  <Trans
-                    i18nKey="earlySupporterRateEndsNoPrice"
-                    defaults="Your early supporter rate ends with your subscription."
-                  />
-                )
-              ) : (
-                <Trans
-                  i18nKey="earlySupporterRateKept"
-                  defaults="You keep this rate for as long as your subscription stays active."
-                />
-              )}
-            </PlanCardDescription>
-          ) : null}
         </PlanCardContent>
         <PlanCardPrice>
           <PlanCardPriceValue className="flex items-center @sm:justify-end gap-x-1.5">

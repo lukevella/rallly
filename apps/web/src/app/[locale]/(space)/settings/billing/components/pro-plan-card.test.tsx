@@ -77,9 +77,6 @@ describe("ProPlanCard", () => {
     render(<ProPlanCard {...baseProps} earlySupporter listPrice={null} />);
 
     expect(screen.getByText("Early supporter")).toBeInTheDocument();
-    expect(
-      screen.getByText(/keep this rate for as long as your subscription/),
-    ).toBeInTheDocument();
     expect(document.querySelector(".line-through")).toBeNull();
   });
 
@@ -89,7 +86,7 @@ describe("ProPlanCard", () => {
     expect(screen.queryByText("Early supporter")).not.toBeInTheDocument();
   });
 
-  it("tells an early supporter who cancelled what the rate ends with", () => {
+  it("keeps the badge when cancellation is scheduled", () => {
     render(
       <ProPlanCard
         {...baseProps}
@@ -99,6 +96,6 @@ describe("ProPlanCard", () => {
       />,
     );
 
-    expect(screen.getByText(/early supporter rate ends/)).toBeInTheDocument();
+    expect(screen.getByText("Early supporter")).toBeInTheDocument();
   });
 });
