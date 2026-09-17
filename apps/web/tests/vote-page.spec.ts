@@ -42,6 +42,14 @@ test.describe("vote page", () => {
     // The grid never renders on this page
     await expect(page.getByTestId("add-participant-button")).toHaveCount(0);
 
+    // The page itself never scrolls; only the list column does
+    const overflow = await page.evaluate(
+      () =>
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight,
+    );
+    expect(overflow).toBe(0);
+
     await page
       .getByTestId("vote-selector")
       .first()

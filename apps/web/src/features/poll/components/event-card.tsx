@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@rallly/ui";
 import { Card, CardContent } from "@rallly/ui/card";
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
@@ -18,12 +19,16 @@ import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 
 function IconDescriptionList({
+  className,
   children,
   ...props
 }: React.HTMLAttributes<HTMLDListElement>) {
   return (
     <dl
-      className="flex flex-wrap items-center gap-4 text-muted-foreground text-sm"
+      className={cn(
+        "flex flex-wrap items-center gap-4 text-muted-foreground text-sm",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -51,7 +56,12 @@ function IconDescription({
  * location and the response legend. `EventCard` frames it as a standalone
  * card; the vote page places it in the sidebar of the merged card.
  */
-export function EventDetails() {
+export function EventDetails({
+  stackResponseOptions = false,
+}: {
+  /** Lay the response legend out as a column, for a narrow sidebar. */
+  stackResponseOptions?: boolean;
+}) {
   const poll = usePoll();
   const branding = useBranding();
   const { spaceBrandingAllowed } = useInstancePolicy();
@@ -111,7 +121,12 @@ export function EventDetails() {
       <h2 className="mt-4 mb-1.5 font-medium text-sm">
         <Trans i18nKey="responseOptions" defaults="Response options" />
       </h2>
-      <IconDescriptionList aria-label="Response options">
+      <IconDescriptionList
+        aria-label="Response options"
+        className={
+          stackResponseOptions ? "flex-col items-start gap-2" : undefined
+        }
+      >
         <IconDescription
           icon={<VoteIcon type="yes" />}
           label={<Trans i18nKey="yes" defaults="Yes" />}

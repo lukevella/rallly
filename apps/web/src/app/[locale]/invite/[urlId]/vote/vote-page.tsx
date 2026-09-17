@@ -12,9 +12,10 @@ import { FloatingComments } from "@/features/poll/invite/components/floating-com
 import { useHydrated } from "@/lib/datetime/use-hydrated";
 
 /**
- * Participant view as one card: the event details sit in a sidebar beside
- * the voting list on large screens and stack above it below that. The list
- * renders Intl output for the option dates in the viewer's zone, which the
+ * Participant view as one card centered on a page that never scrolls: the
+ * event details sit in a sidebar beside the voting list on large screens
+ * and stack above it below that, and the card's body is the scroll area.
+ * The list renders Intl output for the option dates in the viewer's zone, which the
  * server cannot know, so the page waits for hydration behind the same
  * spinner the route streams while its data loads.
  */
@@ -30,27 +31,27 @@ export function VotePage({
   }
 
   return (
-    <div className="page-bg-gray-100 relative h-dvh overflow-auto p-3 lg:p-6 dark:bg-gray-900">
+    <div className="page-bg-gray-100 flex h-dvh flex-col items-center justify-center gap-3 overflow-hidden p-3 lg:p-6 dark:bg-gray-900">
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-4xl space-y-3"
+        className="flex min-h-0 w-full max-w-4xl flex-1 flex-col gap-3 lg:flex-initial"
       >
         <CreatorBanner />
-        {/* Sticky sidebar and the list's sticky footer both need the card
-            to stay out of their way as a scroll ancestor. */}
-        <Card className="overflow-visible">
+        {/* The page never scrolls: the card takes the viewport on small
+            screens and a fixed height on large ones (shrinking, footer
+            included, when the viewport is shorter), and only its body
+            scrolls. Below lg the details and list scroll together; at lg
+            the sidebar stays put and the list column scrolls on its own. */}
+        <Card className="flex min-h-0 flex-1 flex-col lg:h-[44rem] lg:flex-initial">
           <RandomGradientBar />
-          <div className="lg:grid lg:grid-cols-[20rem_1fr]">
-            {/* The divider belongs to the list column: the sidebar is
-                self-start so it can stick, which leaves it shorter than the
-                row whenever the list is taller. */}
-            <aside className="border-b p-4 lg:sticky lg:top-0 lg:self-start lg:border-b-0">
-              <EventDetails />
+          <div className="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
+            <aside className="border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
+              <EventDetails stackResponseOptions />
             </aside>
             {/* VotingForm renders its (empty) form element beside its
                 children, so the grid cell wraps it rather than the reverse. */}
-            <section className="min-w-0 lg:border-l">
+            <section className="min-w-0 lg:min-h-0 lg:overflow-y-auto lg:border-l">
               <VotingForm>
                 <PollOutcome>
                   <VotingList />
@@ -60,9 +61,10 @@ export function VotePage({
             </section>
           </div>
         </Card>
-        <PollFooter footerLinks={footerLinks} />
-        <div className="h-24 lg:hidden" />
       </main>
+      <div className="shrink-0">
+        <PollFooter footerLinks={footerLinks} />
+      </div>
     </div>
   );
 }
