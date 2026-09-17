@@ -19,6 +19,14 @@ const ctx = (locale: string, timeFormat?: TimeFormat, timeZone = "UTC") => ({
 });
 
 describe("formatDateTime", () => {
+  it("formats a weekday and day for a row inside a month group", () => {
+    // The locale decides the order ("26 Fri" in en, "Fri 26" in en-GB).
+    const out = formatDateTime(at(9), { preset: "weekdayDay", ...ctx("en") });
+    expect(out).toContain("Fri");
+    expect(out).toContain("26");
+    expect(out).not.toContain("Jun");
+  });
+
   it("formats 24-hour time", () => {
     expect(
       formatDateTime(at(13), { preset: "time", ...ctx("en", "hours24") }),

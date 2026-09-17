@@ -2,7 +2,8 @@
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import * as React from "react";
-import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { usePoll as usePollDetails } from "@/features/poll/client";
+import { usePoll as usePollScores } from "@/features/poll/components/poll-context";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { VoteBreakdownDialog } from "@/features/poll/components/vote-breakdown-dialog";
@@ -10,9 +11,13 @@ import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import type { VoteType } from "@/features/poll/constants";
+import {
+  EventDate,
+  EventTimeRange,
+} from "@/features/scheduled-event/components/event-date-time";
 import { Trans, useTranslation } from "@/i18n/client";
-import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
-import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
+import { CalendarDate } from "@/lib/datetime/calendar-date";
+import { useDateTime } from "@/lib/datetime/client";
 
 function VoteBreakdownButton({
   optionId,
@@ -22,7 +27,7 @@ function VoteBreakdownButton({
   optionLabel: string;
 }) {
   const { t } = useTranslation();
-  const { getScore, poll } = usePoll();
+  const { getScore, poll } = usePollScores();
   const { yes, ifNeedBe } = getScore(optionId);
   const dialog = useDialog();
   const breakdown = poll.allowTentativeVotes
@@ -74,19 +79,25 @@ function VoteLabel({ type }: { type?: VoteType }) {
   );
 }
 
+type PollOption = { id: string; startTime: Date; duration: number };
+
 function VotingOptionRow({
   option,
+  label,
+  optionLabel,
   editable,
   vote,
   onChange,
 }: {
-  option: ParsedDateTimeOpton;
+  option: PollOption;
+  label: React.ReactNode;
+  /** Full date (and time) as text, for the vote control and dialog. */
+  optionLabel: string;
   editable: boolean;
   vote?: VoteType;
   onChange: (vote: VoteType) => void;
 }) {
-  const { poll } = usePoll();
-  const optionLabel = getOptionDateTimeLabel(option);
+  const poll = usePollDetails();
 
   return (
     // Scroll margins keep a keyboard-focused row clear of the sticky bars.
@@ -94,15 +105,8 @@ function VotingOptionRow({
       data-testid="poll-option"
       className="flex scroll-mt-16 scroll-mb-20 items-center gap-4 px-4 py-2"
     >
-      <span className="flex-1 whitespace-nowrap text-sm">
-        {option.type === "timeSlot"
-          ? `${option.startTime} – ${option.endTime}`
-          : `${option.dow} ${option.day}`}
-      </span>
-      <VoteBreakdownButton
-        optionId={option.optionId}
-        optionLabel={optionLabel}
-      />
+      <span className="flex-1 whitespace-nowrap text-sm">{label}</span>
+      <VoteBreakdownButton optionId={option.id} optionLabel={optionLabel} />
       {editable ? (
         <VoteSegmentedControl
           value={vote}
@@ -117,9 +121,13 @@ function VotingOptionRow({
   );
 }
 
+const endOf = (option: PollOption) =>
+  new Date(option.startTime.getTime() + option.duration * 60_000);
+
 export function VotingOptions() {
-  const { options, pollType } = useOptions();
-  const { getVote, optionIds } = usePoll();
+  const poll = usePollDetails();
+  const { getVote, optionIds } = usePollScores();
+  const { formatDateTime, formatDateTimeRange } = useDateTime();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
   const votes = votingForm.watch("votes");
@@ -127,48 +135,91 @@ export function VotingOptions() {
   const editable = mode !== "view";
   const headingId = React.useId();
 
-  const groups = new Map<string, ParsedDateTimeOpton[]>();
-  for (const option of options as ParsedDateTimeOpton[]) {
-    const heading =
-      pollType === "timeSlot"
-        ? `${option.dow} ${option.day} ${option.month} ${option.year}`
-        : `${option.month} ${option.year}`;
-    groups.set(heading, [...(groups.get(heading) ?? []), option]);
+  const isTimeSlot = (poll.options[0]?.duration ?? 0) > 0;
+  // All-day dates and floating times are stored as UTC wall time and read
+  // back in UTC; a zoned time poll is read in the viewer's zone.
+  const readZone = isTimeSlot && poll.timeZone ? undefined : "UTC";
+
+  // Rows group by day (time polls) or month (date polls) in the viewer's
+  // zone, so the key is the formatted heading.
+  const groups = new Map<string, PollOption[]>();
+  for (const option of poll.options) {
+    const key = formatDateTime(
+      option.startTime,
+      isTimeSlot ? "dateFull" : "monthYear",
+      { timeZone: readZone },
+    );
+    groups.set(key, [...(groups.get(key) ?? []), option]);
   }
 
   return (
     <div className="flex-1">
-      {Array.from(groups, ([heading, groupOptions], groupIndex) => {
+      {Array.from(groups, ([key, groupOptions], groupIndex) => {
         const id = `${headingId}-${groupIndex}`;
+        const first = groupOptions[0];
         return (
-          <section key={heading} aria-labelledby={id}>
+          <section key={key} aria-labelledby={id}>
             <h3
               id={id}
               className="border-b bg-muted/50 px-4 py-2 font-medium text-sm"
             >
-              {heading}
+              {isTimeSlot ? (
+                <EventDate
+                  value={first.startTime}
+                  allDay={false}
+                  timeZone={poll.timeZone}
+                  preset="dateFull"
+                />
+              ) : (
+                <CalendarDate value={first.startTime} preset="monthYear" />
+              )}
             </h3>
             <ul className="divide-y">
               {groupOptions.map((option) => {
-                const index = optionIds.indexOf(option.optionId);
+                const index = optionIds.indexOf(option.id);
                 const vote = editable
                   ? votes[index]?.type
                   : participantId
-                    ? getVote(participantId, option.optionId)
+                    ? getVote(participantId, option.id)
                     : undefined;
+                const optionLabel = isTimeSlot
+                  ? `${key}, ${formatDateTimeRange(
+                      option.startTime,
+                      endOf(option),
+                      "time",
+                      { timeZone: readZone },
+                    )}`
+                  : formatDateTime(option.startTime, "dateFull", {
+                      timeZone: "UTC",
+                    });
                 return (
                   <VotingOptionRow
-                    key={option.optionId}
+                    key={option.id}
                     option={option}
+                    label={
+                      isTimeSlot ? (
+                        <EventTimeRange
+                          start={option.startTime}
+                          end={endOf(option)}
+                          allDay={false}
+                          timeZone={poll.timeZone}
+                        />
+                      ) : (
+                        <CalendarDate
+                          value={option.startTime}
+                          preset="weekdayDay"
+                        />
+                      )
+                    }
+                    optionLabel={optionLabel}
                     editable={editable}
                     vote={vote}
                     onChange={(newVote) => {
                       const next = [...votes];
-                      next[index] = {
-                        optionId: option.optionId,
-                        type: newVote,
-                      };
-                      votingForm.setValue("votes", next, { shouldDirty: true });
+                      next[index] = { optionId: option.id, type: newVote };
+                      votingForm.setValue("votes", next, {
+                        shouldDirty: true,
+                      });
                     }}
                   />
                 );
