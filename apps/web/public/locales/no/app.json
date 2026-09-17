@@ -706,7 +706,6 @@
   "searchUsers": "Søk etter brukere ...",
   "seatCount": "{count, plural, one {# plass} other {# plasser}}",
   "seatsAvailable": "{count, plural, =0 {Ingen ledige plasser} one {# ledig plass} other {# ledige plasser}}",
-  "seatsUpdatedAlertDescription": "Tildelingen av plasser er oppdatert. Endringene vil gjelde fra neste faktureringsperiode.",
   "seatsUpdatedAlertTitle": "Plasser oppdatert",
   "security": "Sikkerhet",
   "securityAuthentication": "Autentisering",
