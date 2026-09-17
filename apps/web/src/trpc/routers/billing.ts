@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 
-import { getSpaceSubscription } from "@/features/billing/data";
+import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
 import { createStripeSubscriptionUpdateConfirmation } from "@/features/billing/mutations";
+import { isEarlySupporter, resolvePriceSet } from "@/features/billing/utils";
 import { getSpaceSeatCount } from "@/features/space/data";
 import { router, spaceOwnerProcedure } from "../trpc";
 
@@ -46,12 +47,27 @@ export const billing = router({
         });
       }
 
+      const pricing = await getProPrices();
+      const priceSet = resolvePriceSet({
+        earlySupporter: isEarlySupporter({
+          priceId: subscription.priceId,
+          pricing,
+        }),
+        pricing,
+      });
+
       const portalSessionUrl = await createStripeSubscriptionUpdateConfirmation(
         {
           customerId: ctx.user.customerId,
-          newSeatCount,
           subscriptionId: subscription.id,
           subscriptionItemId: subscription.subscriptionItemId,
+          priceIds: [
+            priceSet.monthly.id,
+            priceSet.yearly.id,
+            subscription.priceId,
+          ],
+          item: { quantity: newSeatCount },
+          returnFlow: "seats",
         },
       );
 

@@ -1,10 +1,9 @@
 import "server-only";
 
-import { getProPricing } from "@rallly/billing";
 import {
-  SEAT_UPDATE_PORTAL_HEADLINE,
-  SEAT_UPDATE_PORTAL_PURPOSE,
-  SEAT_UPDATE_PORTAL_VERSION,
+  ACCOUNT_PORTAL_CONFIG_VERSION,
+  PORTAL_CONFIG_PURPOSE,
+  portalConfigPriceKey,
 } from "@rallly/billing/lib/portal";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
@@ -27,91 +26,160 @@ export async function createStripePortalSession({
   return portalSession.url;
 }
 
-async function createSeatUpdateBillingConfig() {
-  const stripe = getStripe();
-  const pricing = await getProPricing({ stripe });
-
-  // Both monthly and yearly prices share the same product.
-  const monthlyPrice = await stripe.prices.retrieve(pricing.monthly.id);
-  const productId = monthlyPrice.product as string;
-
-  return stripe.billingPortal.configurations.create(
-    {
-      business_profile: {
-        headline: SEAT_UPDATE_PORTAL_HEADLINE,
-      },
-      features: {
-        subscription_update: {
-          enabled: true,
-          default_allowed_updates: ["price", "quantity"],
-          // Invoice prorations immediately so seat additions are charged right away
-          // rather than deferred onto the next renewal invoice.
-          proration_behavior: "always_invoice",
-          products: [
-            {
-              product: productId,
-              prices: [pricing.monthly.id, pricing.yearly.id],
-            },
-          ],
-        },
-        subscription_cancel: {
-          enabled: false,
-        },
-        payment_method_update: {
-          enabled: true,
-        },
-        invoice_history: {
-          enabled: true,
-        },
-      },
-      metadata: {
-        purpose: SEAT_UPDATE_PORTAL_PURPOSE,
-        version: SEAT_UPDATE_PORTAL_VERSION,
-      },
-    },
-    {
-      // Collapse concurrent first-time creation across processes (e.g. right
-      // after a deploy) into a single config. Without this, two cold instances
-      // can each create a same-version config — and the cleanup script skips the
-      // current version, so the duplicates would linger active forever.
-      idempotencyKey: `seat-update-portal-config-v${SEAT_UPDATE_PORTAL_VERSION}`,
-    },
-  );
-}
-
-async function resolveConfigurationId(): Promise<string> {
+async function findConfigurationByMetadata(
+  match: Record<string, string>,
+): Promise<string | undefined> {
   // Auto-paginate so a match isn't missed when many stale configs still exist
-  // (pre-cleanup). The current-version config is the newest, so this returns on
-  // the first page in practice.
+  // (pre-cleanup). The live configs are the newest, so this returns on the
+  // first page in practice.
   const configs = getStripe().billingPortal.configurations.list({
     active: true,
     limit: 100,
   });
   for await (const config of configs) {
+    const metadata = config.metadata ?? {};
     if (
-      config.metadata?.purpose === SEAT_UPDATE_PORTAL_PURPOSE &&
-      config.metadata?.version === SEAT_UPDATE_PORTAL_VERSION
+      Object.entries(match).every(([key, value]) => metadata[key] === value)
     ) {
       return config.id;
     }
   }
-
-  const created = await createSeatUpdateBillingConfig();
-  return created.id;
+  return undefined;
 }
 
-// Memoised per server process. Dedupes concurrent callers and survives across
-// warm invocations; resets on failure so the next call retries.
-let configurationIdPromise: Promise<string> | undefined;
+async function createFlowsConfiguration({ priceIds }: { priceIds: string[] }) {
+  const stripe = getStripe();
+  const priceKey = portalConfigPriceKey(priceIds);
 
-function getSeatUpdatePortalConfigurationId(): Promise<string> {
-  if (!configurationIdPromise) {
-    configurationIdPromise = resolveConfigurationId().catch((error) => {
-      configurationIdPromise = undefined;
+  // Stripe validates that every price listed under a product belongs to it,
+  // so group by product rather than assume the set shares one.
+  const pricesByProduct = new Map<string, string[]>();
+  for (const priceId of new Set(priceIds)) {
+    const price = await stripe.prices.retrieve(priceId);
+    const productId = price.product as string;
+    pricesByProduct.set(productId, [
+      ...(pricesByProduct.get(productId) ?? []),
+      priceId,
+    ]);
+  }
+
+  return stripe.billingPortal.configurations.create(
+    {
+      business_profile: {
+        headline: "Update your subscription",
+      },
+      features: {
+        subscription_update: {
+          enabled: true,
+          default_allowed_updates: ["price", "quantity"],
+          // Invoice prorations immediately so seat additions are charged right
+          // away rather than deferred onto the next renewal invoice.
+          proration_behavior: "always_invoice",
+          products: [...pricesByProduct.entries()].map(([product, prices]) => ({
+            product,
+            prices,
+          })),
+        },
+        // Cancellation is in-app so the retention moment is ours.
+        subscription_cancel: { enabled: false },
+        payment_method_update: { enabled: true },
+        invoice_history: { enabled: true },
+      },
+      metadata: {
+        purpose: PORTAL_CONFIG_PURPOSE.flows,
+        prices: priceKey,
+      },
+    },
+    {
+      // Collapse concurrent first-time creation across processes into a
+      // single config; the cleanup script would otherwise leave duplicates
+      // active forever.
+      idempotencyKey: `portal-config-flows-${priceKey}`,
+    },
+  );
+}
+
+async function createAccountConfiguration() {
+  return getStripe().billingPortal.configurations.create(
+    {
+      business_profile: {
+        headline: "Manage your billing details",
+      },
+      features: {
+        customer_update: {
+          enabled: true,
+          allowed_updates: ["name", "address", "tax_id"],
+        },
+        payment_method_update: { enabled: true },
+        invoice_history: { enabled: true },
+        // Stripe's create type requires these even when disabled.
+        subscription_update: {
+          enabled: false,
+          default_allowed_updates: null,
+          products: null,
+        },
+        subscription_cancel: { enabled: false },
+      },
+      metadata: {
+        purpose: PORTAL_CONFIG_PURPOSE.account,
+        version: ACCOUNT_PORTAL_CONFIG_VERSION,
+      },
+    },
+    {
+      idempotencyKey: `portal-config-account-v${ACCOUNT_PORTAL_CONFIG_VERSION}`,
+    },
+  );
+}
+
+// Memoised per server process and per identity. Dedupes concurrent callers
+// and survives across warm invocations; resets on failure so the next call
+// retries.
+const configurationIdPromises = new Map<string, Promise<string>>();
+
+function memoiseConfigurationId(key: string, resolve: () => Promise<string>) {
+  let promise = configurationIdPromises.get(key);
+  if (!promise) {
+    promise = resolve().catch((error) => {
+      configurationIdPromises.delete(key);
       throw error;
     });
+    configurationIdPromises.set(key, promise);
   }
-  return configurationIdPromise;
+  return promise;
+}
+
+export function getFlowsPortalConfigurationId({
+  priceIds,
+}: {
+  priceIds: string[];
+}) {
+  const priceKey = portalConfigPriceKey(priceIds);
+  return memoiseConfigurationId(`flows:${priceKey}`, async () => {
+    const existing = await findConfigurationByMetadata({
+      purpose: PORTAL_CONFIG_PURPOSE.flows,
+      prices: priceKey,
+    });
+    if (existing) {
+      return existing;
+    }
+    return (await createFlowsConfiguration({ priceIds })).id;
+  });
+}
+
+export function getAccountPortalConfigurationId() {
+  return memoiseConfigurationId(
+    `account:${ACCOUNT_PORTAL_CONFIG_VERSION}`,
+    async () => {
+      const existing = await findConfigurationByMetadata({
+        purpose: PORTAL_CONFIG_PURPOSE.account,
+        version: ACCOUNT_PORTAL_CONFIG_VERSION,
+      });
+      if (existing) {
+        return existing;
+      }
+      return (await createAccountConfiguration()).id;
+    },
+  );
 }
 
 export function billingReturnUrl(flow: BillingReturnFlow) {
@@ -119,21 +187,31 @@ export function billingReturnUrl(flow: BillingReturnFlow) {
 }
 
 /**
- * Creates a billing portal session deep-linked to the seat-update confirmation
- * screen for a specific quantity change, reusing the shared configuration.
+ * Creates a billing portal session deep-linked to the confirmation screen for
+ * a specific change to the subscription's single item: a new quantity, a new
+ * price, or both. The configuration only lists the subscriber's own price
+ * set, so an early supporter can never be moved onto a current price here.
+ * The subscriber's own current price is always included even when it's
+ * neither the current nor early supporter price (a legacy tail price):
+ * Stripe's subscription_update_confirm requires the item's current price to
+ * be in the configuration's product price list, or the flow fails outright.
  */
 export async function createStripeSubscriptionUpdateConfirmation({
   customerId,
   subscriptionId,
   subscriptionItemId,
-  newSeatCount,
+  priceIds,
+  item,
+  returnFlow,
 }: {
   customerId: string;
   subscriptionId: string;
   subscriptionItemId: string;
-  newSeatCount: number;
+  priceIds: string[];
+  item: { quantity?: number; price?: string };
+  returnFlow: BillingReturnFlow;
 }) {
-  const configurationId = await getSeatUpdatePortalConfigurationId();
+  const configurationId = await getFlowsPortalConfigurationId({ priceIds });
 
   const portalSession = await getStripe().billingPortal.sessions.create({
     customer: customerId,
@@ -143,16 +221,11 @@ export async function createStripeSubscriptionUpdateConfirmation({
       type: "subscription_update_confirm",
       subscription_update_confirm: {
         subscription: subscriptionId,
-        items: [
-          {
-            id: subscriptionItemId,
-            quantity: newSeatCount,
-          },
-        ],
+        items: [{ id: subscriptionItemId, ...item }],
       },
       after_completion: {
         type: "redirect",
-        redirect: { return_url: billingReturnUrl("seats") },
+        redirect: { return_url: billingReturnUrl(returnFlow) },
       },
     },
   });

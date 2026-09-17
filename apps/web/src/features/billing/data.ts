@@ -27,6 +27,8 @@ export async function getSpaceSubscription(spaceId: string) {
 
   return {
     id: subscription.id,
+    priceId: subscription.priceId,
+    userId: subscription.userId,
     tier: (subscription.active ? "pro" : "hobby") as SpaceTier,
     quantity: subscription.quantity,
     subscriptionItemId: subscription.subscriptionItemId,

@@ -1,8 +1,9 @@
 import {
-  SEAT_UPDATE_PORTAL_HEADLINE,
-  SEAT_UPDATE_PORTAL_VERSION,
+  ACCOUNT_PORTAL_CONFIG_VERSION,
+  PORTAL_CONFIG_PURPOSE,
+  portalConfigCoversPair,
 } from "../lib/portal";
-import { createStripeClient } from "../lib/stripe";
+import { createStripeClient, getProPricing } from "../lib/stripe";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 
@@ -13,15 +14,17 @@ if (!secretKey) {
 const stripe = createStripeClient({ secretKey });
 
 /**
- * Before the seat-update flow reused a single billing portal configuration, it
- * created a new one on every session, so the Stripe account accumulated throwaway
- * config objects. Stripe has no API to DELETE a portal configuration — the only
- * cleanup available is to deactivate it (`active: false`).
+ * Portal configurations are created on demand and identified by metadata:
+ * "flows" configurations carry the sorted pair of price ids they allow,
+ * "account" carries a version. Stripe has no API to DELETE a portal
+ * configuration — the only cleanup available is to deactivate it
+ * (`active: false`).
  *
- * This deactivates the stale seat-update configurations: those carrying our
- * headline but NOT the current version (i.e. old unversioned ones, or any
- * previous version after a version bump). The current-version configuration the
- * app is actively using is left untouched, as is the default configuration.
+ * This deactivates our stale configurations: "flows" configs whose price
+ * pair is no longer a live price set (current or early supporter), "account"
+ * configs whose version isn't current, and any leftover pre-2026-09
+ * "seat_update" configs. The live configurations the app is actively using
+ * are left untouched, as is the default configuration.
  *
  * A 24h age guard additionally skips very recently created configs, eliminating
  * any race with an in-flight portal session.
@@ -46,6 +49,36 @@ const MIN_AGE_MS = 24 * 60 * 60 * 1000;
       : "🔍 DRY RUN — nothing will change. Pass --apply to deactivate.",
   );
 
+  const pricing = await getProPricing({ stripe });
+  const livePairs = [[pricing.monthly.id, pricing.yearly.id]];
+  if (pricing.earlySupporter) {
+    livePairs.push([
+      pricing.earlySupporter.monthly.id,
+      pricing.earlySupporter.yearly.id,
+    ]);
+  }
+
+  const isLive = (metadata: Record<string, string>) => {
+    if (metadata.purpose === PORTAL_CONFIG_PURPOSE.flows) {
+      const key = metadata.prices ?? "";
+      // A flows config may also carry a subscriber's own legacy tail price
+      // alongside a live pair, so "live" means it covers at least one pair.
+      return livePairs.some((pairIds) =>
+        portalConfigCoversPair({ key, pairIds }),
+      );
+    }
+    if (metadata.purpose === PORTAL_CONFIG_PURPOSE.account) {
+      return metadata.version === ACCOUNT_PORTAL_CONFIG_VERSION;
+    }
+    return false;
+  };
+
+  // "seat_update" is the pre-2026-09 purpose; every config carrying it is stale.
+  const ours = (metadata: Record<string, string>) =>
+    metadata.purpose === PORTAL_CONFIG_PURPOSE.flows ||
+    metadata.purpose === PORTAL_CONFIG_PURPOSE.account ||
+    metadata.purpose === "seat_update";
+
   const stale: { id: string; created: Date }[] = [];
   let scanned = 0;
   let skippedRecent = 0;
@@ -55,14 +88,10 @@ const MIN_AGE_MS = 24 * 60 * 60 * 1000;
     limit: 100,
   })) {
     scanned++;
-
-    if (config.business_profile?.headline !== SEAT_UPDATE_PORTAL_HEADLINE) {
-      continue; // not one of ours
-    }
+    const metadata = config.metadata ?? {};
+    if (!ours(metadata)) continue; // not one of ours
     if (config.is_default) continue; // never touch the default
-    if (config.metadata?.version === SEAT_UPDATE_PORTAL_VERSION) {
-      continue; // current version — the live config, leave it
-    }
+    if (isLive(metadata)) continue;
     if (config.created * 1000 > cutoff) {
       skippedRecent++;
       continue; // created within the age guard window
@@ -72,7 +101,7 @@ const MIN_AGE_MS = 24 * 60 * 60 * 1000;
   }
 
   console.info(
-    `\nScanned ${scanned} active configuration(s); ${stale.length} stale seat-update config(s) to deactivate` +
+    `\nScanned ${scanned} active configuration(s); ${stale.length} stale config(s) to deactivate` +
       (skippedRecent ? ` (${skippedRecent} skipped by 24h age guard).` : "."),
   );
 
