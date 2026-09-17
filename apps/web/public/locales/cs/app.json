@@ -738,7 +738,6 @@
   "searchUsers": "Hledat uživatele...",
   "seatCount": "{count, plural, one {# místo} few {# místa} many {# míst} other {# místa}}",
   "seatsAvailable": "{count, plural, =0 {Žádná volná místa} one {# volné místo} few {# volná místa} many {# volných míst} other {# volných míst}}",
-  "seatsUpdatedAlertDescription": "Přidělený počet míst byl úspěšně aktualizován. Změny se projeví v dalším fakturačním cyklu.",
   "seatsUpdatedAlertTitle": "Počet míst aktualizován",
   "security": "Zabezpečení",
   "securityAuthentication": "Ověření",
