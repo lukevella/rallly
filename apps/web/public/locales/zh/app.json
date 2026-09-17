@@ -704,7 +704,6 @@
   "searchUsers": "搜索用户…",
   "seatCount": "{count, plural, other {# 个席位}}",
   "seatsAvailable": "{count, plural, =0 {无可用席位} other {# 个可用席位}}",
-  "seatsUpdatedAlertDescription": "您的席位分配已成功更新。更改将在下一个计费周期生效。",
   "seatsUpdatedAlertTitle": "席位已更新",
   "security": "安全",
   "securityAuthentication": "身份验证",
