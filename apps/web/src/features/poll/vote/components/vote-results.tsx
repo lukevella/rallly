@@ -387,18 +387,27 @@ export function VoteResults({
               key={groupRow.id}
               role="rowgroup"
               aria-labelledby={id}
-              className="grid grid-cols-[auto_1fr]"
+              // One grid for the year and its rows: the year is a track of
+              // the same grid the rows subgrid onto, so it shares their
+              // left edge and the columns line up down the whole group.
+              // A gutter track for the year, then the row tracks. The year
+              // is set in the gutter but its text starts where the rows'
+              // first column does, so the two read as one column.
+              className="grid grid-cols-[6rem_auto_1fr_auto_auto]"
             >
               <div
                 id={id}
                 role="rowheader"
-                // Sticks to the top of the scroll area while any of its
-                // rows is in view, then the next year pushes it out.
-                className="sticky top-0 self-start py-2 pr-4 pl-4 font-medium text-muted-foreground"
+                // Sticks while any of its rows is in view, then the next
+                // year pushes it out.
+                // The row's own border-b sits above its py-2, so the year
+                // needs a little more top padding to share the first row's
+                // baseline.
+                className="sticky top-0 self-start pt-4 pb-2 pl-4 font-medium text-muted-foreground tabular-nums"
               >
                 {heading}
               </div>
-              <div className="grid grid-cols-[auto_1fr_auto_auto]">{rows}</div>
+              <div className="col-span-4 grid grid-cols-subgrid">{rows}</div>
             </div>
           );
         })}

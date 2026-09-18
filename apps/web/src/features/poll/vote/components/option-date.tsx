@@ -29,17 +29,17 @@ export function OptionDate({ value }: { value: DateInput }) {
   return (
     <time
       dateTime={toISODate(value)}
-      className="grid grid-cols-subgrid items-baseline gap-x-2 [grid-column:span_2]"
+      className="grid grid-cols-subgrid items-baseline gap-x-6 [grid-column:span_2]"
     >
       {weekdayFirst ? (
         <>
-          <span>{weekday}</span>
-          <span className="text-muted-foreground">{date}</span>
+          <span className="text-muted-foreground">{weekday}</span>
+          <span>{date}</span>
         </>
       ) : (
         <>
-          <span className="text-muted-foreground">{date}</span>
-          <span>{weekday}</span>
+          <span>{date}</span>
+          <span className="text-muted-foreground">{weekday}</span>
         </>
       )}
     </time>
