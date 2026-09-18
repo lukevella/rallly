@@ -66,10 +66,12 @@ test.describe("vote page", () => {
     await expect(page.getByText("Your response has been saved")).toBeVisible();
     await page.getByRole("button", { name: "Back to poll" }).click();
 
-    // Saved: the footer names the response and offers Edit; the controls
-    // give way to the recorded votes
-    await expect(bar.getByText("Test user")).toBeVisible();
-    await expect(main.getByRole("button", { name: "Edit" })).toBeVisible();
+    // Saved: the header names the response and offers Edit, the footer
+    // goes away, and the controls give way to the recorded votes
+    const header = main.locator("header");
+    await expect(header.getByText("Test user")).toBeVisible();
+    await expect(header.getByRole("button", { name: "Edit" })).toBeVisible();
+    await expect(bar).toHaveCount(0);
     await expect(page.getByTestId("vote-selector")).toHaveCount(0);
 
     // The breakdown dialog lists who voted

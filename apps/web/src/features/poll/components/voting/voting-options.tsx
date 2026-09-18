@@ -287,7 +287,9 @@ export function VotingOptions() {
                   id={id}
                   scope="rowgroup"
                   colSpan={visibleColumnCount}
-                  className="border-y bg-muted/50 px-4 py-2 text-left font-medium"
+                  // Pinned just below the interface header (h-14) while its
+                  // rows scroll; solid background so rows do not show through.
+                  className="sticky top-14 z-[5] border-y bg-muted px-4 py-2 text-left font-medium"
                 >
                   {groupCell
                     ? flexRender(

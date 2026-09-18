@@ -1,9 +1,6 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { MoreHorizontalIcon } from "lucide-react";
 import { usePermissions, usePoll } from "@/features/poll/client";
-import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
-import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import {
   DeclineButton,
@@ -25,7 +22,7 @@ function Bar({ children }: { children: React.ReactNode }) {
  * Vote icons with counts. The icons are decorative; the live region reads
  * the same counts as a sentence.
  */
-function SelectionCount({
+export function SelectionCount({
   yesCount,
   ifNeedBeCount,
 }: {
@@ -65,91 +62,34 @@ function SelectionCount({
 /**
  * Footer of the voting interface. While a response is being composed it
  * shows the live selection count with Decline and Continue (or Cancel and
- * Save for an existing response). Once saved it names the response with
- * Edit and the participant menu.
+ * Save for an existing response).
  */
 export function VotingBar() {
-  const { t } = useTranslation();
   const votingForm = useVotingForm();
   const mode = votingForm.watch("mode");
   const participantId = votingForm.watch("participantId");
   const { yesCount, ifNeedBeCount } = useSelectionCount();
-  const { canAddNewParticipant, canEditParticipant } = usePermissions();
-  const participants = useVisibleParticipants();
+  const { canAddNewParticipant } = usePermissions();
 
   if (mode === "view") {
-    const participant = participants.find((p) => p.id === participantId);
-
-    if (participant) {
-      const yes = participant.votes.filter((v) => v.type === "yes").length;
-      const ifNeedBe = participant.votes.filter(
-        (v) => v.type === "ifNeedBe",
-      ).length;
-      const canEdit = canEditParticipant(participant.id);
-      return (
-        <Bar>
-          <div className="min-w-0 text-sm">
-            <p className="truncate font-medium">{participant.name}</p>
-            <SelectionCount yesCount={yes} ifNeedBeCount={ifNeedBe} />
-          </div>
-          {canEdit ? (
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => {
-                  votingForm.setEditingParticipantId(participant.id);
-                }}
-              >
-                <Trans i18nKey="edit" defaults="Edit" />
-              </Button>
-              <ParticipantDropdown
-                align="end"
-                participant={{
-                  id: participant.id,
-                  name: participant.name,
-                  userId: participant.userId ?? undefined,
-                  email: participant.email ?? undefined,
-                  editUrl: participant.editUrl,
-                }}
-                onEdit={() => {
-                  votingForm.setEditingParticipantId(participant.id);
-                }}
-                onDelete={() => {
-                  votingForm.cancel();
-                }}
-              >
-                <Button
-                  aria-label={t("moreOptions", {
-                    defaultValue: "More options",
-                  })}
-                  variant="ghost"
-                  size="icon"
-                >
-                  <MoreHorizontalIcon />
-                </Button>
-              </ParticipantDropdown>
-            </div>
-          ) : null}
-        </Bar>
-      );
+    // A saved response is summarized in the header; the footer only offers
+    // a new response when the viewer has none.
+    if (participantId || !canAddNewParticipant) {
+      return null;
     }
-
-    if (canAddNewParticipant) {
-      return (
-        <Bar>
-          <span />
-          <Button
-            variant="primary"
-            onClick={() => {
-              votingForm.newParticipant();
-            }}
-          >
-            <Trans i18nKey="newResponse" defaults="New response" />
-          </Button>
-        </Bar>
-      );
-    }
-
-    return null;
+    return (
+      <Bar>
+        <span />
+        <Button
+          variant="primary"
+          onClick={() => {
+            votingForm.newParticipant();
+          }}
+        >
+          <Trans i18nKey="newResponse" defaults="New response" />
+        </Button>
+      </Bar>
+    );
   }
 
   return (
