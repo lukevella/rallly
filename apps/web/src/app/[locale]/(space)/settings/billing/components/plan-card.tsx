@@ -38,7 +38,7 @@ export function PlanCardHeader({
   return (
     <div
       className={cn(
-        "flex @sm:flex-row flex-col @sm:items-center justify-between gap-4 p-4",
+        "flex @sm:flex-row flex-col @sm:items-center gap-4 p-4",
         className,
       )}
       {...props}
@@ -83,7 +83,10 @@ export function PlanCardActions({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex shrink-0 flex-wrap items-center gap-2", className)}
+      className={cn(
+        "@sm:ml-auto flex shrink-0 flex-wrap items-center gap-2",
+        className,
+      )}
       {...props}
     />
   );
@@ -99,7 +102,7 @@ export function PlanCardFooter({
         // Inset rule rather than a full width border, so the footer reads as
         // part of the card rather than a separate band. mt-auto pins it to the
         // bottom when paired cards have unequal content heights.
-        "mx-4 mt-auto flex @sm:flex-row flex-col @sm:items-center justify-between gap-2 border-card-border border-t pt-3 pb-4 text-muted-foreground text-sm",
+        "mx-4 mt-auto flex @sm:flex-row flex-col @sm:items-center gap-2 border-card-border border-t pt-3 pb-4 text-muted-foreground text-sm @sm:[&>*:last-child]:ml-auto",
         className,
       )}
       {...props}

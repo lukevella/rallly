@@ -42,8 +42,9 @@ export function BillingDetailsCard({ className }: { className?: string }) {
           </PlanCardDescription>
         </PlanCardContent>
       </PlanCardHeader>
-      <PlanCardFooter className="flex-row items-center justify-end">
+      <PlanCardFooter className="flex-row items-center">
         <Button
+          className="ml-auto"
           loading={openBillingDetails.isExecuting}
           onClick={() => openBillingDetails.execute()}
         >
