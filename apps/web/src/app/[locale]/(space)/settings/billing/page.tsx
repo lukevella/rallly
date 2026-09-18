@@ -8,15 +8,6 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import {
-  PageSection,
-  PageSectionContent,
-  PageSectionDescription,
-  PageSectionDivider,
-  PageSectionGroup,
-  PageSectionHeader,
-  PageSectionTitle,
-} from "@/components/page-layout";
-import {
   SettingsPage,
   SettingsPageContent,
   SettingsPageDescription,
@@ -34,10 +25,11 @@ import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { ContactSupportLink } from "./components/contact-support-link";
+import { BillingDetailsCard } from "./components/billing-details-card";
 import { HobbyPlanCard } from "./components/hobby-plan-card";
 import { PaymentMethodsCard } from "./components/payment-methods-card";
 import { ProPlanCard } from "./components/pro-plan-card";
+import { SupportCard } from "./components/support-card";
 
 export default async function BillingSettingsPage() {
   if (!isFeatureEnabled("billing")) {
@@ -92,60 +84,36 @@ export default async function BillingSettingsPage() {
         </SettingsPageDescription>
       </SettingsPageHeader>
       <SettingsPageContent>
-        <PageSectionGroup>
-          <PageSection>
-            <PageSectionContent>
-              {overview?.subscription.active ? (
-                <ProPlanCard
-                  amount={overview.subscription.amount}
-                  discountPercentOff={overview.subscription.discountPercentOff}
-                  discountAmountOff={overview.subscription.discountAmountOff}
-                  currency={overview.subscription.currency}
-                  interval={overview.subscription.interval}
-                  seats={overview.subscription.quantity}
-                  usedSeats={seatUsage.used}
-                  status={overview.subscription.status}
-                  cancelAtPeriodEnd={overview.subscription.cancelAtPeriodEnd}
-                  periodEnd={overview.subscription.periodEnd}
-                  earlySupporter={overview.earlySupporter}
-                  listPrice={overview.listPrice}
-                  switchToYearly={overview.switchToYearly}
-                  canResume={overview.canResume}
-                />
-              ) : (
-                <HobbyPlanCard />
-              )}
-              <BillingFlashAlert />
-            </PageSectionContent>
-          </PageSection>
+        <div className="space-y-4">
           {overview?.subscription.active ? (
-            <>
-              <PageSectionDivider />
-              <PageSection>
-                <PageSectionContent>
-                  <PaymentMethodsCard paymentMethods={paymentMethods} />
-                </PageSectionContent>
-              </PageSection>
-            </>
+            <ProPlanCard
+              amount={overview.subscription.amount}
+              discountPercentOff={overview.subscription.discountPercentOff}
+              discountAmountOff={overview.subscription.discountAmountOff}
+              currency={overview.subscription.currency}
+              interval={overview.subscription.interval}
+              seats={overview.subscription.quantity}
+              usedSeats={seatUsage.used}
+              status={overview.subscription.status}
+              cancelAtPeriodEnd={overview.subscription.cancelAtPeriodEnd}
+              periodEnd={overview.subscription.periodEnd}
+              earlySupporter={overview.earlySupporter}
+              listPrice={overview.listPrice}
+              switchToYearly={overview.switchToYearly}
+              canResume={overview.canResume}
+            />
+          ) : (
+            <HobbyPlanCard />
+          )}
+          <BillingFlashAlert />
+          {overview?.subscription.active ? (
+            <div className="grid gap-4 lg:grid-cols-2">
+              <PaymentMethodsCard paymentMethods={paymentMethods} />
+              <BillingDetailsCard />
+            </div>
           ) : null}
-          <PageSectionDivider />
-          <PageSection>
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="support" defaults="Support" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="supportDescription"
-                  defaults="Need help with anything?"
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
-            <PageSectionContent>
-              <ContactSupportLink />
-            </PageSectionContent>
-          </PageSection>
-        </PageSectionGroup>
+          <SupportCard />
+        </div>
       </SettingsPageContent>
     </SettingsPage>
   );

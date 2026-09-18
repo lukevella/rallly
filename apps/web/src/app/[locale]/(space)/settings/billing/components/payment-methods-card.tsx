@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { ArrowUpRightIcon, CreditCardIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import { openBillingDetailsAction } from "@/features/billing/actions";
 import type { PaymentMethodCard } from "@/features/billing/schema";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
+import { CardBrandMark } from "./card-brand-mark";
 import {
   PlanCard,
   PlanCardActions,
@@ -15,7 +16,6 @@ import {
   PlanCardHeading,
   PlanCardHeadingDescription,
   PlanCardHeadingTitle,
-  PlanCardTitle,
 } from "./plan-card";
 
 // Stripe's brand ids are lowercase and unpunctuated; only the display form
@@ -58,38 +58,38 @@ export function PaymentMethodsCard({
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardHeader>
+      <PlanCardHeader className="@sm:flex-col @sm:items-start">
         <PlanCardContent>
           {primary?.card ? (
-            <>
-              <PlanCardTitle className="text-base">
-                <CreditCardIcon className="size-4 text-muted-foreground" />
-                {brandNames[primary.card.brand] ?? primary.card.brand}
-                <span className="font-normal text-muted-foreground">
-                  •••• {primary.card.last4}
-                </span>
-              </PlanCardTitle>
-              <PlanCardDescription>
-                <Trans
-                  i18nKey="paymentMethodExpires"
-                  defaults="Expires {month}/{year}"
-                  values={{
-                    month: String(primary.card.exp_month).padStart(2, "0"),
-                    year: String(primary.card.exp_year).slice(-2),
-                  }}
-                />
-                {paymentMethods.length > 1 ? (
-                  <>
-                    {" · "}
-                    <Trans
-                      i18nKey="paymentMethodOthers"
-                      defaults="{count, plural, one {# other saved} other {# others saved}}"
-                      values={{ count: paymentMethods.length - 1 }}
-                    />
-                  </>
-                ) : null}
-              </PlanCardDescription>
-            </>
+            <div className="flex items-center gap-3">
+              <CardBrandMark brand={primary.card.brand} />
+              <div className="min-w-0">
+                <p className="text-sm">
+                  {brandNames[primary.card.brand] ?? primary.card.brand} ••••{" "}
+                  {primary.card.last4}
+                </p>
+                <PlanCardDescription>
+                  <Trans
+                    i18nKey="paymentMethodExpires"
+                    defaults="Expires {month}/{year}"
+                    values={{
+                      month: String(primary.card.exp_month).padStart(2, "0"),
+                      year: String(primary.card.exp_year),
+                    }}
+                  />
+                  {paymentMethods.length > 1 ? (
+                    <>
+                      {" · "}
+                      <Trans
+                        i18nKey="paymentMethodOthers"
+                        defaults="{count, plural, one {# other saved} other {# others saved}}"
+                        values={{ count: paymentMethods.length - 1 }}
+                      />
+                    </>
+                  ) : null}
+                </PlanCardDescription>
+              </div>
+            </div>
           ) : (
             <PlanCardDescription>
               <Trans
