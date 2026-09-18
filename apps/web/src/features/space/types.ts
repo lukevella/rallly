@@ -20,4 +20,7 @@ export type SpaceDTO = {
   primaryColor?: string;
   showBranding: boolean;
   hideAttribution: boolean;
+  // A renewal payment has failed and Stripe is retrying. The space keeps Pro
+  // throughout, so this drives a warning, never an access decision.
+  subscriptionPastDue: boolean;
 };
