@@ -57,4 +57,8 @@ export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL
     ? new URL(process.env.NEXT_PUBLIC_BASE_URL)
     : undefined,
+  openGraph: {
+    type: "website",
+    siteName: "Rallly",
+  },
 };
