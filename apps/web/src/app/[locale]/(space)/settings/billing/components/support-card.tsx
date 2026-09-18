@@ -6,8 +6,6 @@ import { SendIcon } from "lucide-react";
 import { Trans } from "@/i18n/client";
 import {
   PlanCard,
-  PlanCardDescription,
-  PlanCardFooter,
   PlanCardHeading,
   PlanCardHeadingDescription,
   PlanCardHeadingTitle,
@@ -27,8 +25,18 @@ export function SupportCard({ className }: { className?: string }) {
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardFooter>
-        <PlanCardDescription>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 pt-3 pb-4">
+        <a
+          href="mailto:support@rallly.co"
+          className={buttonVariants()}
+          onClick={() => {
+            posthog?.capture("space_billing:support_button_click");
+          }}
+        >
+          <SendIcon className="text-muted-foreground" />
+          <Trans i18nKey="contactSupport" defaults="Contact support" />
+        </a>
+        <p className="ml-auto text-muted-foreground text-sm">
           <Trans
             i18nKey="contactSupportEmail"
             defaults="Or email us at <0>support@rallly.co</0>"
@@ -40,18 +48,8 @@ export function SupportCard({ className }: { className?: string }) {
               />,
             ]}
           />
-        </PlanCardDescription>
-        <a
-          href="mailto:support@rallly.co"
-          className={buttonVariants()}
-          onClick={() => {
-            posthog?.capture("space_billing:support_button_click");
-          }}
-        >
-          <SendIcon className="text-muted-foreground" />
-          <Trans i18nKey="contactSupport" defaults="Contact support" />
-        </a>
-      </PlanCardFooter>
+        </p>
+      </div>
     </PlanCard>
   );
 }
