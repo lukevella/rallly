@@ -24,7 +24,7 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { BillingFlashAlert } from "@/features/billing/components/billing-flash-alert";
-import { getSpaceSubscription } from "@/features/billing/data";
+import { loadSubscriptionOverview } from "@/features/billing/loaders";
 import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { requireUser } from "@/features/user/loaders";
@@ -68,8 +68,8 @@ export default async function BillingSettingsPage() {
     );
   }
 
-  const [subscription, seatUsage] = await Promise.all([
-    getSpaceSubscription(space.id),
+  const [overview, seatUsage] = await Promise.all([
+    loadSubscriptionOverview(),
     getSeatUsage(),
   ]);
 
@@ -101,18 +101,20 @@ export default async function BillingSettingsPage() {
               </PageSectionDescription>
             </PageSectionHeader>
             <PageSectionContent>
-              {subscription?.active ? (
+              {overview?.subscription.active ? (
                 <ProPlanCard
-                  amount={subscription.amount}
-                  discountPercentOff={subscription.discountPercentOff}
-                  discountAmountOff={subscription.discountAmountOff}
-                  currency={subscription.currency}
-                  interval={subscription.interval}
-                  seats={subscription.quantity}
+                  amount={overview.subscription.amount}
+                  discountPercentOff={overview.subscription.discountPercentOff}
+                  discountAmountOff={overview.subscription.discountAmountOff}
+                  currency={overview.subscription.currency}
+                  interval={overview.subscription.interval}
+                  seats={overview.subscription.quantity}
                   usedSeats={seatUsage.used}
-                  status={subscription.status}
-                  cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
-                  periodEnd={subscription.periodEnd}
+                  status={overview.subscription.status}
+                  cancelAtPeriodEnd={overview.subscription.cancelAtPeriodEnd}
+                  periodEnd={overview.subscription.periodEnd}
+                  earlySupporter={overview.earlySupporter}
+                  listPrice={overview.listPrice}
                 />
               ) : (
                 <HobbyPlanCard />

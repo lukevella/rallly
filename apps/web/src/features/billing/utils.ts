@@ -57,3 +57,23 @@ export function resolvePriceSet({
   }
   return { monthly: pricing.monthly, yearly: pricing.yearly };
 }
+
+export function formatMinorUnitAmount({
+  amount,
+  currency,
+  locale,
+}: {
+  amount: number;
+  currency: string;
+  locale: string;
+}) {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency.toUpperCase(),
+  });
+  // Stripe amounts are in the currency's minor unit, which Intl knows: two
+  // fraction digits for most currencies, none for JPY and friends.
+  const minorUnitDigits =
+    formatter.resolvedOptions().maximumFractionDigits ?? 2;
+  return formatter.format(amount / 10 ** minorUnitDigits);
+}
