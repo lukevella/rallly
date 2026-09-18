@@ -38,7 +38,7 @@ export function PlanCardHeader({
   return (
     <div
       className={cn(
-        "flex @sm:flex-row flex-col @sm:items-center gap-4 p-4",
+        "flex @sm:flex-row flex-col @sm:flex-wrap @sm:items-center gap-4 p-4",
         className,
       )}
       {...props}
@@ -50,7 +50,14 @@ export function PlanCardContent({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  return <div className={cn("min-w-0 space-y-1", className)} {...props} />;
+  return (
+    // basis-56 rather than auto so the row wraps once the text is squeezed to
+    // that width, instead of letting the actions push past the card edge.
+    <div
+      className={cn("min-w-0 grow @sm:basis-56 space-y-1", className)}
+      {...props}
+    />
+  );
 }
 
 export function PlanCardTitle({
@@ -83,10 +90,7 @@ export function PlanCardActions({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "@sm:ml-auto flex shrink-0 flex-wrap items-center gap-2",
-        className,
-      )}
+      className={cn("@sm:ml-auto flex flex-wrap items-center gap-2", className)}
       {...props}
     />
   );
