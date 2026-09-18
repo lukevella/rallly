@@ -74,7 +74,7 @@ describe("ProPlanCard", () => {
       screen.getByRole("button", { name: /cancel plan/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /invoices & billing details/i }),
+      screen.getByRole("button", { name: /invoices/i }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /resume plan/i }),
@@ -125,7 +125,7 @@ describe("ProPlanCard", () => {
     ).not.toBeInTheDocument();
     // Invoices stay reachable after cancellation is scheduled.
     expect(
-      screen.getByRole("button", { name: /invoices & billing details/i }),
+      screen.getByRole("button", { name: /invoices/i }),
     ).toBeInTheDocument();
   });
 

@@ -4,7 +4,7 @@ import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
-import { TriangleAlertIcon } from "lucide-react";
+import { ArrowUpRightIcon, TriangleAlertIcon } from "lucide-react";
 import {
   openBillingDetailsAction,
   openCancelPlanAction,
@@ -284,10 +284,8 @@ export function ProPlanCard({
             loading={openBillingDetails.isExecuting}
             onClick={() => openBillingDetails.execute()}
           >
-            <Trans
-              i18nKey="billingDetailsAndInvoices"
-              defaults="Invoices & billing details"
-            />
+            <Trans i18nKey="invoices" defaults="Invoices" />
+            <ArrowUpRightIcon className="text-muted-foreground" />
           </Button>
           {endsAtPeriodEnd ? null : (
             <Button
