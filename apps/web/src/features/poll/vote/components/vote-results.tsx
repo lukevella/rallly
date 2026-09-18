@@ -13,6 +13,7 @@ import * as React from "react";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import type { VoteType } from "@/features/poll/constants";
+import { OptionDate } from "@/features/poll/vote/components/option-date";
 import { useVoteForm } from "@/features/poll/vote/components/vote-form";
 import type { VotePageView, VoteResult } from "@/features/poll/vote/types";
 import {
@@ -215,10 +216,7 @@ export function VoteResults({
               timeZone={poll.timeZone}
             />
           ) : (
-            <CalendarDate
-              value={row.original.startTime}
-              preset="weekdayMonthDay"
-            />
+            <OptionDate value={row.original.startTime} />
           ),
       }),
       columnHelper.display({
@@ -284,7 +282,10 @@ export function VoteResults({
   return (
     // The scroll area. Scroll padding keeps a focused row clear of the
     // pinned group heading.
-    <div className="scrollbar-thin dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
+    // `relative` makes this the containing block for the sticky group
+    // headings; without it they propagate their height to the root element
+    // and the whole page gains a scrollbar.
+    <div className="scrollbar-thin dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-thumb-gray-300 scrollbar-track-transparent relative min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
       <div
         role="table"
         aria-label={t("pollOptions", { defaultValue: "Poll options" })}
@@ -336,7 +337,13 @@ export function VoteResults({
                   key={row.id}
                   role="row"
                   data-testid="poll-option"
-                  className="grid grid-cols-[1fr_auto_auto] items-center gap-x-4 border-b px-4 py-2"
+                  className={
+                    isTimeSlot
+                      ? "grid grid-cols-[1fr_auto_auto] items-center gap-x-4 border-b px-4 py-2"
+                      : // Two columns for the date so weekdays line up down
+                        // the list; the option cell spans them via subgrid.
+                        "grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-4 border-b px-4 py-2"
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <div
@@ -344,7 +351,9 @@ export function VoteResults({
                       role="cell"
                       className={
                         cell.column.id === "option"
-                          ? "whitespace-nowrap"
+                          ? isTimeSlot
+                            ? "whitespace-nowrap"
+                            : "grid grid-cols-subgrid whitespace-nowrap [grid-column:span_2]"
                           : "justify-self-end"
                       }
                     >

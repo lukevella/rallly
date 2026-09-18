@@ -5,6 +5,7 @@ import {
   formatDateTime,
   formatDateTimeRange,
   formatRelativeTime,
+  formatWeekdayAndDate,
 } from "@/lib/datetime/format";
 import type { TimeFormat } from "@/lib/datetime/types";
 
@@ -253,5 +254,37 @@ describe("provinces that stopped changing clocks", () => {
 
   it("leaves times before the cutoff unchanged", () => {
     expect(time("2026-07-01T16:00:00Z", "America/Edmonton")).toBe("10:00");
+    });
+  });
+});
+
+describe("formatWeekdayAndDate", () => {
+  const at = new Date(Date.UTC(2027, 4, 4));
+
+  it("splits the weekday from the date", () => {
+    expect(formatWeekdayAndDate(at, { locale: "en", timeZone: "UTC" })).toEqual(
+      { weekday: "Tuesday", date: "May 4", weekdayFirst: true },
+    );
+  });
+
+  it("keeps the locale's order when the weekday comes last", () => {
+    // Hungarian and Chinese write the date before the weekday.
+    expect(formatWeekdayAndDate(at, { locale: "hu", timeZone: "UTC" })).toEqual(
+      { weekday: "kedd", date: "május 4", weekdayFirst: false },
+    );
+    const zh = formatWeekdayAndDate(at, { locale: "zh", timeZone: "UTC" });
+    expect(zh.weekdayFirst).toBe(false);
+    expect(zh.weekday).toBe("星期二");
+  });
+
+  it("leaves no separator on either part", () => {
+    for (const locale of ["en", "de", "fr", "hu", "zh", "ru"]) {
+      const { weekday, date } = formatWeekdayAndDate(at, {
+        locale,
+        timeZone: "UTC",
+      });
+      expect(weekday).not.toMatch(/^[\s,.]|[\s,.]$/);
+      expect(date).not.toMatch(/^[\s,.]|[\s,.]$/);
+    }
   });
 });

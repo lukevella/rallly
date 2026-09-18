@@ -207,6 +207,54 @@ export function formatDateParts(
   return parts;
 }
 
+const splitFormatters = new Map<string, Intl.DateTimeFormat>();
+
+export type WeekdayAndDate = {
+  weekday: string;
+  /** The month and day, in the locale's own order. */
+  date: string;
+  /** Whether the locale writes the weekday before the date (hu and zh do not). */
+  weekdayFirst: boolean;
+};
+
+/**
+ * A full date split into its weekday and the rest, so a list can put
+ * weekdays in their own column. The order is taken from the locale rather
+ * than assumed: Hungarian and Chinese write the weekday last.
+ */
+export function formatWeekdayAndDate(
+  value: DateInput,
+  options: { locale: string; timeZone?: string },
+): WeekdayAndDate {
+  const key = `${options.locale}|${options.timeZone ?? ""}`;
+  let f = splitFormatters.get(key);
+  if (!f) {
+    f = new Intl.DateTimeFormat(options.locale, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      // An empty string is an invalid IANA zone and throws; treat it as "unset".
+      timeZone: options.timeZone || undefined,
+    });
+    splitFormatters.set(key, f);
+  }
+
+  const parts = f.formatToParts(toDate(value));
+  const weekdayIndex = parts.findIndex((part) => part.type === "weekday");
+  const weekday = parts[weekdayIndex]?.value ?? "";
+  const weekdayFirst = weekdayIndex === 0;
+
+  // Everything but the weekday, with the literal that joined them dropped
+  // so neither column carries a stray comma or space.
+  const rest = parts
+    .filter((_, index) => index !== weekdayIndex)
+    .map((part) => part.value)
+    .join("")
+    .replace(/^[\s,.、]+|[\s,.、]+$/g, "");
+
+  return { weekday, date: rest, weekdayFirst };
+}
+
 type DurationFormatCtor = new (
   locale: string | undefined,
   options: { style: "narrow" },
