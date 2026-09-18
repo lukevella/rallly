@@ -341,7 +341,7 @@ export function VoteResults({
                 // top padding to share the first row's baseline.
                 // The rows are a fixed height with centred content, so the
                 // heading is padded to sit on the first row's baseline.
-                className="self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:bg-transparent sm:pt-[1.375rem] sm:pr-4 sm:pl-4 lg:sticky lg:top-0"
+                className="sticky top-14 z-10 self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:pt-[1.375rem] sm:pr-4 sm:pl-4 lg:top-0"
               >
                 {heading}
               </div>

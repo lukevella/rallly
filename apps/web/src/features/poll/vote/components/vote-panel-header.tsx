@@ -48,7 +48,10 @@ export function VotePanelHeader({
 
   if (response && mode === "view") {
     return (
-      <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
+      <header // Below lg the page scrolls, so the header pins to the viewport; from
+        // lg up the panel's own layout places it.
+        className="sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b bg-card px-4 py-2 lg:static lg:bg-transparent"
+      >
         <div className="flex min-w-0 items-center gap-2">
           <OptimizedAvatarImage
             size="sm"
@@ -127,7 +130,10 @@ export function VotePanelHeader({
   }
 
   return (
-    <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
+    <header // Below lg the page scrolls, so the header pins to the viewport; from
+      // lg up the panel's own layout places it.
+      className="sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b bg-card px-4 py-2 lg:static lg:bg-transparent"
+    >
       <h2 className="font-medium text-sm">
         {isTimeSlot ? (
           <Trans

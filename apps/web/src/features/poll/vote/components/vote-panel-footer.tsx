@@ -39,11 +39,14 @@ function SelectionCount({
               yesScore: yesCount,
             })}
       </span>
-      <span aria-hidden="true" className="inline-flex items-center gap-1.5">
-        <VoteIcon type="yes" />
-        <span className="tabular-nums">{yesCount}</span>
-      </span>
-      {allowTentativeVotes ? (
+      {/* A zero says nothing the empty footer does not already say. */}
+      {yesCount > 0 ? (
+        <span aria-hidden="true" className="inline-flex items-center gap-1.5">
+          <VoteIcon type="yes" />
+          <span className="tabular-nums">{yesCount}</span>
+        </span>
+      ) : null}
+      {allowTentativeVotes && ifNeedBeCount > 0 ? (
         <span aria-hidden="true" className="inline-flex items-center gap-1.5">
           <VoteIcon type="ifNeedBe" />
           <span className="tabular-nums">{ifNeedBeCount}</span>
