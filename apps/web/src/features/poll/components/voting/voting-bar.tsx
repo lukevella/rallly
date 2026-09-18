@@ -98,7 +98,6 @@ export function VotingBar() {
       <div className="flex items-center gap-2">
         {mode === "edit" ? (
           <Button
-            size="lg"
             onClick={() => {
               votingForm.setValue("mode", "view");
             }}
@@ -106,9 +105,9 @@ export function VotingBar() {
             <Trans i18nKey="cancel" defaults="Cancel" />
           </Button>
         ) : (
-          <DeclineButton />
+          <DeclineButton size="default" />
         )}
-        <SubmitResponseButton />
+        <SubmitResponseButton size="default" />
       </div>
     </Bar>
   );
