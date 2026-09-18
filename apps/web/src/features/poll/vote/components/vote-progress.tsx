@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@rallly/ui";
 import type { VoteResult } from "@/features/poll/vote/types";
 import { useTranslation } from "@/i18n/client";
 
@@ -39,7 +38,7 @@ export function VoteProgress({
       });
 
   return (
-    <span className="flex items-center gap-2">
+    <span className="flex items-center">
       <span
         aria-hidden="true"
         className="flex h-1.5 w-16 overflow-hidden rounded-sm bg-muted"
@@ -55,14 +54,8 @@ export function VoteProgress({
           />
         ) : null}
       </span>
-      <span
-        className={cn(
-          "tabular-nums",
-          score.yes + score.ifNeedBe === 0 && "text-muted-foreground",
-        )}
-      >
-        {score.yes + score.ifNeedBe}
-      </span>
+      {/* The bar carries no number, so the counts are the only thing a
+          screen reader gets. */}
       <span className="sr-only">{label}</span>
     </span>
   );
