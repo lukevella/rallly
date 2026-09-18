@@ -53,7 +53,7 @@ export function PaymentAndBillingCard({
         <PlanCardHeadingDescription>
           <Trans
             i18nKey="paymentAndBillingDescription"
-            defaults="The card your subscription is charged to, and the name, address and tax ID on your invoices."
+            defaults="How you pay and what appears on your invoices."
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>

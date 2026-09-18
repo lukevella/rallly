@@ -670,7 +670,7 @@
   "pastEventsEmptyStateDescription": "Past events will show up here.",
   "pastEventsEmptyStateTitle": "No past events",
   "paymentAndBilling": "Payment and billing",
-  "paymentAndBillingDescription": "The card your subscription is charged to, and the name, address and tax ID on your invoices.",
+  "paymentAndBillingDescription": "How you pay and what appears on your invoices.",
   "paymentMethodExpires": "Expires {month}/{year}",
   "paymentMethodNone": "No saved payment method.",
   "paymentMethodOthers": "{count, plural, one {# other saved} other {# others saved}}",
