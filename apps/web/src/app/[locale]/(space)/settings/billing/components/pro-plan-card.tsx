@@ -4,6 +4,7 @@ import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
+import { TriangleAlertIcon } from "lucide-react";
 import {
   openCancelPlanAction,
   openPaymentMethodUpdateAction,
@@ -20,7 +21,6 @@ import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { ChangePlanDialog } from "./change-plan-dialog";
 import { ManageSeatsDialog } from "./manage-seats-dialog";
 import {
   PlanCard,
@@ -31,6 +31,7 @@ import {
   PlanCardHeader,
   PlanCardTitle,
 } from "./plan-card";
+import { SwitchToYearlyDialog } from "./switch-to-yearly-dialog";
 
 export function ProPlanCard({
   amount,
@@ -45,7 +46,7 @@ export function ProPlanCard({
   periodEnd,
   earlySupporter,
   listPrice,
-  changePlan,
+  switchToYearly,
   canResume,
   className,
 }: {
@@ -63,19 +64,15 @@ export function ProPlanCard({
   earlySupporter: boolean;
   /** Current list prices per seat in this currency, for the early supporter copy. */
   listPrice: { monthly?: number; yearly?: number } | null;
-  /** The other interval the subscriber may switch to; null when unavailable. */
-  changePlan: {
-    interval: BillingInterval;
-    amount: number;
-    listAmount?: number;
-  } | null;
+  /** Set for monthly subscribers who can switch to yearly; null otherwise. */
+  switchToYearly: { monthlyAmount: number; yearlyAmount: number } | null;
   canResume: boolean;
   className?: string;
 }) {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
   const { formatDateTime } = useDateTime();
-  const changePlanDialog = useDialog();
+  const switchToYearlyDialog = useDialog();
   const openCancelPlan = useSafeAction(openCancelPlanAction);
   const openPaymentMethodUpdate = useSafeAction(openPaymentMethodUpdateAction);
   const resumePlan = useSafeAction(resumePlanAction, {
@@ -181,7 +178,6 @@ export function ProPlanCard({
           {endsAtPeriodEnd ? (
             canResume ? (
               <Button
-                variant="primary"
                 loading={resumePlan.isExecuting}
                 onClick={() => resumePlan.execute()}
               >
@@ -192,33 +188,21 @@ export function ProPlanCard({
             <>
               {needsPayment ? (
                 <Button
-                  variant="primary"
                   loading={openPaymentMethodUpdate.isExecuting}
                   onClick={() => openPaymentMethodUpdate.execute()}
                 >
+                  <TriangleAlertIcon className="text-amber-500" />
                   <Trans
                     i18nKey="updatePaymentMethod"
                     defaults="Update payment method"
                   />
                 </Button>
               ) : null}
-              {changePlan && !needsPayment ? (
-                <ChangePlanDialog
-                  {...changePlanDialog.dialogProps}
-                  interval={changePlan.interval}
-                  price={formatCurrency(changePlan.amount * seats)}
-                  perMonth={
-                    changePlan.interval === "year"
-                      ? formatCurrency(
-                          Math.round((changePlan.amount * seats) / 12),
-                        )
-                      : undefined
-                  }
-                  listPrice={
-                    changePlan.listAmount !== undefined
-                      ? formatCurrency(changePlan.listAmount * seats)
-                      : undefined
-                  }
+              {switchToYearly && !needsPayment ? (
+                <SwitchToYearlyDialog
+                  {...switchToYearlyDialog.dialogProps}
+                  monthlyAmount={switchToYearly.monthlyAmount}
+                  yearlyAmount={switchToYearly.yearlyAmount}
                 >
                   <DialogTrigger
                     render={
@@ -231,7 +215,7 @@ export function ProPlanCard({
                   >
                     <Trans i18nKey="changePlan" defaults="Change plan" />
                   </DialogTrigger>
-                </ChangePlanDialog>
+                </SwitchToYearlyDialog>
               ) : null}
               <ManageSeatsDialog usedSeats={usedSeats} currentSeats={seats}>
                 <DialogTrigger
@@ -276,9 +260,9 @@ export function ProPlanCard({
         </span>
         {endsAtPeriodEnd ? null : (
           <Button
-            variant="link"
+            variant="ghost"
             size="sm"
-            className="h-auto p-0 text-muted-foreground"
+            className="text-muted-foreground"
             loading={openCancelPlan.isExecuting}
             onClick={() => openCancelPlan.execute()}
           >

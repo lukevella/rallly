@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@rallly/ui/badge";
+import { DotIcon } from "lucide-react";
 import type { SubscriptionStatus } from "@/features/billing/schema";
 import { Trans } from "@/i18n/client";
 
@@ -12,7 +13,8 @@ export function SubscriptionStatusBadge({
   switch (status) {
     case "active":
       return (
-        <Badge variant="green">
+        <Badge variant="green" className="gap-0.5">
+          <DotIcon className="-mx-1 size-4" />
           <Trans i18nKey="subscriptionStatusActive" defaults="Active" />
         </Badge>
       );
@@ -30,7 +32,7 @@ export function SubscriptionStatusBadge({
       );
     case "past_due":
       return (
-        <Badge variant="destructive">
+        <Badge variant="amber">
           <Trans i18nKey="subscriptionStatusPastDue" defaults="Past due" />
         </Badge>
       );

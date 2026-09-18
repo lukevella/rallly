@@ -34,8 +34,8 @@ vi.mock("./manage-seats-dialog", () => ({
   ),
 }));
 
-vi.mock("./change-plan-dialog", () => ({
-  ChangePlanDialog: ({ children }: { children: React.ReactNode }) => (
+vi.mock("./switch-to-yearly-dialog", () => ({
+  SwitchToYearlyDialog: ({ children }: { children: React.ReactNode }) => (
     <Dialog>{children}</Dialog>
   ),
 }));
@@ -51,7 +51,7 @@ const baseProps = {
   periodEnd: new Date("2026-01-01T00:00:00Z"),
   earlySupporter: false,
   listPrice: null,
-  changePlan: { interval: "year" as const, amount: 7200 },
+  switchToYearly: { monthlyAmount: 1000, yearlyAmount: 7200 },
   canResume: false,
 };
 
@@ -77,17 +77,20 @@ describe("ProPlanCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("shows the per month equivalent for yearly billing", () => {
+  it("shows the per month equivalent for yearly billing and no plan switch", () => {
     render(
       <ProPlanCard
         {...baseProps}
         interval="year"
         amount={7200}
-        changePlan={{ interval: "month", amount: 1000 }}
+        switchToYearly={null}
       />,
     );
 
     expect(screen.getByText("$6")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /change plan/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("multiplies by seats and applies a percentage discount", () => {
@@ -103,7 +106,7 @@ describe("ProPlanCard", () => {
         {...baseProps}
         cancelAtPeriodEnd
         canResume
-        changePlan={null}
+        switchToYearly={null}
       />,
     );
 
@@ -124,7 +127,7 @@ describe("ProPlanCard", () => {
         {...baseProps}
         cancelAtPeriodEnd
         canResume={false}
-        changePlan={null}
+        switchToYearly={null}
       />,
     );
 

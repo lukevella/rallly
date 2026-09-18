@@ -93,6 +93,15 @@ export const loadSubscriptionOverview = cache(async () => {
       ? pricing?.monthly.amounts[currency]
       : pricing?.yearly.amounts[currency];
 
+  // Yearly is the upgrade, so only monthly subscribers are offered a switch.
+  // Downgrading would need a subscription schedule to let the paid year run
+  // out; until anyone asks for it, yearly subscribers go through support.
+  // The yearly price comes from the subscriber's own price set, so an early
+  // supporter switches onto the early supporter yearly, never onto list.
+  const yearlyAmount = pricing
+    ? resolvePriceSet({ earlySupporter, pricing }).yearly.amounts[currency]
+    : undefined;
+
   return {
     subscription,
     earlySupporter,
@@ -102,6 +111,13 @@ export const loadSubscriptionOverview = cache(async () => {
           yearly: pricing.yearly.amounts[currency],
         }
       : null,
+    switchToYearly:
+      subscription.active &&
+      !subscription.cancelAtPeriodEnd &&
+      subscription.interval === "month" &&
+      yearlyAmount !== undefined
+        ? { monthlyAmount: subscription.amount, yearlyAmount }
+        : null,
     changePlan:
       subscription.active &&
       !subscription.cancelAtPeriodEnd &&
