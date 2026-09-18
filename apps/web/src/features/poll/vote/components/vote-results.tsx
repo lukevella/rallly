@@ -285,10 +285,10 @@ export function VoteResults({
               data-testid="poll-option"
               className={
                 isTimeSlot
-                  ? "col-span-3 grid h-13 grid-cols-subgrid items-center gap-x-4 border-b pr-4"
+                  ? "col-span-3 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b pr-4"
                   : // The date spans two of the group's columns, so the
                     // weekday and the month/day each line up down the list.
-                    "col-span-4 grid h-13 grid-cols-subgrid items-center gap-x-4 border-b pr-4"
+                    "col-span-4 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b pr-4"
               }
             >
               {row.getVisibleCells().map((cell) => (
@@ -333,7 +333,7 @@ export function VoteResults({
                 // top padding to share the first row's baseline.
                 // The rows are a fixed height with centred content, so the
                 // heading is padded to sit on the first row's baseline.
-                className="sticky top-0 self-start py-4 pr-4 pl-4 text-muted-foreground tabular-nums"
+                className="sticky top-0 self-start pt-[1.375rem] pr-4 pb-2 pl-4 text-muted-foreground tabular-nums"
               >
                 {heading}
               </div>
