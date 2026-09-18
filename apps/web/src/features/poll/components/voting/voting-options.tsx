@@ -69,19 +69,22 @@ function VoteBreakdownButton({
   );
 }
 
+/** A recorded vote: icon only, with the vote type for screen readers. */
 function VoteLabel({ type }: { type?: VoteType }) {
   return (
-    <span className="inline-flex items-center gap-2 text-sm">
+    <span className="inline-flex items-center justify-center">
       <VoteIcon type={type} />
-      {type === "yes" ? (
-        <Trans i18nKey="yes" defaults="Yes" />
-      ) : type === "ifNeedBe" ? (
-        <Trans i18nKey="ifNeedBe" defaults="If need be" />
-      ) : type === "no" ? (
-        <Trans i18nKey="no" defaults="No" />
-      ) : (
-        <Trans i18nKey="pending" defaults="Pending" />
-      )}
+      <span className="sr-only">
+        {type === "yes" ? (
+          <Trans i18nKey="yes" defaults="Yes" />
+        ) : type === "ifNeedBe" ? (
+          <Trans i18nKey="ifNeedBe" defaults="If need be" />
+        ) : type === "no" ? (
+          <Trans i18nKey="no" defaults="No" />
+        ) : (
+          <Trans i18nKey="pending" defaults="Pending" />
+        )}
+      </span>
     </span>
   );
 }
