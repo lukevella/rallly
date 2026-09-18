@@ -6,14 +6,13 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { loadInstanceBranding } from "@/features/branding/loaders";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
-import { PollProvider } from "@/features/poll/client";
-import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
-import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
-import { loadInvitePoll, loadPollAvailability } from "@/features/poll/loaders";
-import { UserProvider } from "@/features/user/client";
+import { loadPollAvailability } from "@/features/poll/loaders";
+import { PollBranding } from "@/features/poll/vote/components/poll-branding";
+import { loadVotePage } from "@/features/poll/vote/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
+import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 import { VotePage, VotePageLoading } from "./vote-page";
@@ -28,7 +27,7 @@ type PageProps = {
 
 /**
  * Preview of the merged participant layout at `/invite/[urlId]/vote`. It
- * serves the same data as the invite page and will replace it once the
+ * serves the same poll as the invite page and will replace it once the
  * layout is adopted, so it is kept out of search indexes meanwhile.
  */
 async function VotePageContent({ params, searchParams }: PageProps) {
@@ -59,14 +58,16 @@ async function VotePageContent({ params, searchParams }: PageProps) {
   );
 
   const [
-    { poll, participants, comments, linkedParticipantIds, user },
+    view,
+    session,
     locale,
     deviceDateTimeConfig,
     footerLinks,
     instancePolicy,
     instanceBranding,
   ] = await Promise.all([
-    loadInvitePoll({ pollId: urlId, token }),
+    loadVotePage({ pollId: urlId, token }),
+    getSession(),
     getLocale(),
     getDeviceDateTimeConfig(),
     loadFooterLinks(),
@@ -74,35 +75,37 @@ async function VotePageContent({ params, searchParams }: PageProps) {
     loadInstanceBranding(),
   ]);
 
+  const { poll } = view;
+  const spaceBranding =
+    poll.space?.showBranding && instancePolicy.spaceBrandingAllowed
+      ? poll.space
+      : null;
+
   return (
     <>
       <SessionRefresher />
       {token ? <InviteOpenRecorder pollId={urlId} token={token} /> : null}
-      <UserProvider user={user}>
-        <DeviceDateTimeProvider
-          locale={locale}
-          timeZone={deviceDateTimeConfig.timeZone}
-          timeFormat={deviceDateTimeConfig.timeFormat}
-        >
-          <PollProvider
-            poll={poll}
-            participants={participants}
-            comments={comments}
-            linkedParticipantIds={linkedParticipantIds}
-            viewerRole="participant"
-          >
-            <VisibilityProvider>
-              <PollBrandingFromContext />
-              <VotePage
-                poll={poll}
-                footerLinks={footerLinks}
-                spaceBrandingAllowed={instancePolicy.spaceBrandingAllowed}
-                instanceBranding={instanceBranding}
-              />
-            </VisibilityProvider>
-          </PollProvider>
-        </DeviceDateTimeProvider>
-      </UserProvider>
+      <DeviceDateTimeProvider
+        locale={locale}
+        timeZone={deviceDateTimeConfig.timeZone}
+        timeFormat={deviceDateTimeConfig.timeFormat}
+      >
+        <PollBranding primaryColor={spaceBranding?.primaryColor ?? null} />
+        <VotePage
+          view={view}
+          footerLinks={footerLinks}
+          spaceId={poll.spaceId}
+          hideAttribution={
+            instanceBranding.hideAttribution ||
+            (poll.space?.hideAttribution ?? false)
+          }
+          isCreator={!!session?.user && session.user.id === poll.userId}
+          requireParticipantEmail={poll.requireParticipantEmail}
+          user={session?.user ?? null}
+          spaceBrandingAllowed={instancePolicy.spaceBrandingAllowed}
+          instanceBranding={instanceBranding}
+        />
+      </DeviceDateTimeProvider>
     </>
   );
 }

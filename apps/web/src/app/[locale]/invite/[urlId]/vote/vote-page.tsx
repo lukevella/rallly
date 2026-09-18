@@ -1,29 +1,38 @@
 import { Card } from "@rallly/ui/card";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Spinner } from "@/components/spinner";
-import { PollFooter } from "@/features/poll/components/poll-footer";
-import { CreatorBanner } from "@/features/poll/invite/components/creator-banner";
 import { EventSidebar } from "@/features/poll/invite/components/event-sidebar";
-import { VotingPanel } from "@/features/poll/invite/components/voting-panel";
-import type { PollDetails } from "@/features/poll/types";
+import { CreatorBanner } from "@/features/poll/vote/components/creator-banner";
+import { VotePageFooter } from "@/features/poll/vote/components/vote-page-footer";
+import { VotePanel } from "@/features/poll/vote/components/vote-panel";
+import type { VotePageView } from "@/features/poll/vote/types";
+import type { UserDTO } from "@/features/user/schema";
 
 /**
  * Participant view as one card centered on a page that never scrolls: the
  * event details sit in a sidebar beside the voting panel on large screens
  * and stack above it below that.
  *
- * Everything but the panel renders on the server. The panel shows option
- * dates in the viewer's zone, which the server cannot know, so it waits for
- * hydration rather than committing to a time the browser would correct.
+ * Everything but the panel renders on the server.
  */
 export function VotePage({
-  poll,
+  view,
   footerLinks,
+  spaceId,
+  hideAttribution,
+  isCreator,
+  requireParticipantEmail,
+  user,
   spaceBrandingAllowed,
   instanceBranding,
 }: {
-  poll: PollDetails;
+  view: VotePageView;
   footerLinks: { label: string; href: string }[];
+  spaceId: string | null;
+  hideAttribution: boolean;
+  isCreator: boolean;
+  requireParticipantEmail: boolean;
+  user: UserDTO | null;
   spaceBrandingAllowed: boolean;
   instanceBranding: { appName: string; logoIcon?: string };
 }) {
@@ -34,30 +43,38 @@ export function VotePage({
         tabIndex={-1}
         className="flex min-h-0 w-full max-w-4xl flex-1 flex-col gap-3 lg:flex-initial"
       >
-        <CreatorBanner />
+        {isCreator ? <CreatorBanner pollId={view.poll.id} /> : null}
         {/* The page never scrolls: the card takes the viewport on small
             screens and a fixed height on large ones (shrinking, footer
             included, when the viewport is shorter). The voting panel is a
-            flex column whose options table is the only scroll area; its
-            header and footer are pushed into place by the layout. */}
+            flex column whose results table is the only scroll area. */}
         <Card className="flex min-h-0 flex-1 flex-col lg:h-[44rem] lg:flex-initial">
           <RandomGradientBar />
           <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventSidebar
-                poll={poll}
+                poll={view.poll}
                 spaceBrandingAllowed={spaceBrandingAllowed}
                 instanceBranding={instanceBranding}
               />
             </aside>
             <section className="flex min-h-0 flex-1 flex-col lg:border-l">
-              <VotingPanel />
+              <VotePanel
+                {...view}
+                requireParticipantEmail={requireParticipantEmail}
+                user={user}
+              />
             </section>
           </div>
         </Card>
       </main>
       <div className="shrink-0">
-        <PollFooter footerLinks={footerLinks} />
+        <VotePageFooter
+          pollId={view.poll.id}
+          spaceId={spaceId}
+          hideAttribution={hideAttribution}
+          footerLinks={footerLinks}
+        />
       </div>
     </div>
   );

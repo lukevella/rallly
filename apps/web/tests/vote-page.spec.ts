@@ -85,15 +85,11 @@ test.describe("vote page", () => {
     await page.keyboard.press("Escape");
     await expect(page.getByTestId("vote-selector")).toHaveCount(0);
 
-    // The breakdown dialog lists who voted
-    await main
-      .getByRole("button", { name: /Show participant votes/ })
-      .first()
-      .click();
-    const breakdown = page.getByRole("dialog", { name: "Participants" });
-    await expect(breakdown.getByText("Test user")).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(breakdown).toBeHidden();
+    // The saved yes shows as a vote icon, and the tally counts it without
+    // naming who voted
+    const votedRow = main.getByTestId("poll-option").first();
+    await expect(votedRow).toContainText("Yes");
+    await expect(votedRow).toContainText("yes");
   });
 
   test("mobile stacks the event above the list", async ({ browser }) => {
