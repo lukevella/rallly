@@ -89,17 +89,6 @@ export default async function BillingSettingsPage() {
       <SettingsPageContent>
         <PageSectionGroup>
           <PageSection>
-            <PageSectionHeader>
-              <PageSectionTitle>
-                <Trans i18nKey="billingPlanTitle" defaults="Plan" />
-              </PageSectionTitle>
-              <PageSectionDescription>
-                <Trans
-                  i18nKey="billingSubscriptionDescription"
-                  defaults="Manage your current subscription plan."
-                />
-              </PageSectionDescription>
-            </PageSectionHeader>
             <PageSectionContent>
               {overview?.subscription.active ? (
                 <ProPlanCard

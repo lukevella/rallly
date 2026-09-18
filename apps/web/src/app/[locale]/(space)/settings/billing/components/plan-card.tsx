@@ -6,6 +6,34 @@ export function PlanCard({ className, ...props }: React.ComponentProps<"div">) {
   return <Card className={cn("@container", className)} {...props} />;
 }
 
+export function PlanCardHeading({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn("space-y-0.5 border-card-border border-b p-4", className)}
+      {...props}
+    />
+  );
+}
+
+export function PlanCardHeadingTitle({
+  className,
+  ...props
+}: React.ComponentProps<"h2">) {
+  return <h2 className={cn("font-semibold text-sm", className)} {...props} />;
+}
+
+export function PlanCardHeadingDescription({
+  className,
+  ...props
+}: React.ComponentProps<"p">) {
+  return (
+    <p className={cn("text-muted-foreground text-sm", className)} {...props} />
+  );
+}
+
 export function PlanCardHeader({
   className,
   ...props
