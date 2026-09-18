@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: ARIA table on divs so rows can be CSS grids; table elements lose their semantics under display: grid in Chrome and Safari */
+/** biome-ignore-all lint/a11y/useFocusableInteractive: row and header roles are only interactive inside role="grid", not role="table" */
 "use client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -148,8 +150,8 @@ const tableState = {
 
 /**
  * The options as a table grouped by day (time polls) or month (date polls).
- * TanStack Table owns the grouping; each group renders as its own body with
- * a row group heading so assistive tech announces the day or month once.
+ * TanStack Table owns the grouping; each group renders as its own row group
+ * with a heading so assistive tech announces the day or month once.
  */
 export function VotingOptions() {
   const poll = usePollDetails();
@@ -252,48 +254,49 @@ export function VotingOptions() {
 
   const visibleColumnCount = table.getVisibleLeafColumns().length;
 
+  // ARIA table roles on divs: rows are CSS grids, which table elements
+  // cannot be without losing their semantics in Chrome and Safari.
   return (
-    // The scroll area. A flex-1 table would spread spare height across its
-    // rows, so the wrapper scrolls instead. Scroll padding keeps a focused
-    // row clear of the pinned group heading.
+    // The scroll area. Scroll padding keeps a focused row clear of the
+    // pinned group heading.
     <div className="min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
-      {/* Separate borders so cell borders travel with the pinned heading;
-          collapsed borders are painted by the table and leave a gap. */}
-      <table className="w-full border-separate border-spacing-0 text-sm">
-        <caption className="sr-only">
-          {t("pollOptions", { defaultValue: "Poll options" })}
-        </caption>
-        <thead className="sr-only">
+      <div
+        role="table"
+        aria-label={t("pollOptions", { defaultValue: "Poll options" })}
+        aria-colcount={visibleColumnCount}
+        className="text-sm"
+      >
+        <div role="rowgroup" className="sr-only">
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <div key={headerGroup.id} role="row">
               {headerGroup.headers.map((header) => (
-                <th key={header.id} scope="col">
+                <div key={header.id} role="columnheader">
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
                   )}
-                </th>
+                </div>
               ))}
-            </tr>
+            </div>
           ))}
-        </thead>
+        </div>
         {/* Top-level rows of the grouped model are the groups; their subRows
-          are the options. */}
+            are the options. */}
         {table.getGroupedRowModel().rows.map((groupRow, groupIndex) => {
           const id = `${headingId}-${groupIndex}`;
           const groupCell = groupRow
             .getAllCells()
             .find((cell) => cell.column.id === "group");
           return (
-            <tbody key={groupRow.id} aria-labelledby={id}>
-              <tr>
-                <th
+            <div key={groupRow.id} role="rowgroup" aria-labelledby={id}>
+              <div role="row">
+                <div
                   id={id}
-                  scope="rowgroup"
-                  colSpan={visibleColumnCount}
+                  role="rowheader"
+                  aria-colspan={visibleColumnCount}
                   // Pinned at the top of the scroll area while its rows
                   // scroll; solid background so rows do not show through.
-                  className="sticky top-0 z-[5] border-b bg-muted px-4 py-2 text-left font-medium"
+                  className="sticky top-0 z-[5] border-b bg-muted px-4 py-2 font-medium"
                 >
                   {groupCell
                     ? flexRender(
@@ -301,31 +304,37 @@ export function VotingOptions() {
                         groupCell.getContext(),
                       )
                     : null}
-                </th>
-              </tr>
+                </div>
+              </div>
               {groupRow.subRows.map((row) => (
-                <tr key={row.id} data-testid="poll-option">
+                <div
+                  key={row.id}
+                  role="row"
+                  data-testid="poll-option"
+                  className="grid grid-cols-[1fr_auto_auto] items-center gap-x-4 border-b px-4 py-2"
+                >
                   {row.getVisibleCells().map((cell) => (
-                    <td
+                    <div
                       key={cell.id}
+                      role="cell"
                       className={
                         cell.column.id === "option"
-                          ? "w-full whitespace-nowrap border-b px-4 py-2"
-                          : "border-b px-2 py-2 text-right last:pr-4"
+                          ? "whitespace-nowrap"
+                          : "justify-self-end"
                       }
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
                       )}
-                    </td>
+                    </div>
                   ))}
-                </tr>
+                </div>
               ))}
-            </tbody>
+            </div>
           );
         })}
-      </table>
+      </div>
     </div>
   );
 }
