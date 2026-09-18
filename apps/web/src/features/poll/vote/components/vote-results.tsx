@@ -142,7 +142,7 @@ export function VoteResults({
                 value={row.original.startTime}
                 allDay={false}
                 timeZone={poll.timeZone}
-                preset="dateFull"
+                preset="weekdayMonthDayShort"
               />
             ) : (
               <CalendarDate value={row.original.startTime} preset="year" />
@@ -283,7 +283,7 @@ export function VoteResults({
               data-testid="poll-option"
               className={
                 isTimeSlot
-                  ? "col-span-3 grid grid-cols-subgrid items-center gap-x-4 border-b px-4 py-2"
+                  ? "col-span-3 grid grid-cols-subgrid items-center gap-x-4 border-b py-2 pr-4"
                   : // The date spans two of the group's columns, so the
                     // weekday and the month/day each line up down the list.
                     "col-span-4 grid grid-cols-subgrid items-center gap-x-4 border-b py-2 pr-4"
@@ -307,65 +307,41 @@ export function VoteResults({
             </div>
           ));
 
-          // A time poll's heading is a full date, so it spans the group as
-          // its own row. A date poll's heading is just the year, which sits
-          // in a gutter beside its rows and sticks while they scroll past.
-          if (isTimeSlot) {
-            return (
-              <div
-                key={groupRow.id}
-                role="rowgroup"
-                aria-labelledby={id}
-                // The group owns the columns so every row measures against
-                // the same tracks; rows subgrid onto them. Per-row grids
-                // would size each column separately and never line up.
-                className="grid grid-cols-[1fr_auto_auto]"
-              >
-                {/* The heading's row is what sticks: a sticky element can
-                    only travel within its containing block, and the row is
-                    no taller than the heading itself. */}
-                <div role="row" className="sticky top-0 z-10 col-span-3">
-                  <div
-                    id={id}
-                    role="rowheader"
-                    aria-colspan={visibleColumnCount}
-                    // Solid background so rows do not show through.
-                    className="border-b bg-muted px-4 py-2 font-medium"
-                  >
-                    {heading}
-                  </div>
-                </div>
-                {rows}
-              </div>
-            );
-          }
-
+          // Both poll types put their heading in a gutter beside the rows
+          // it covers: a year for date polls, the day for time polls. The
+          // group owns the column tracks and its rows subgrid onto them,
+          // so the columns line up down the whole group.
           return (
             <div
               key={groupRow.id}
               role="rowgroup"
               aria-labelledby={id}
-              // One grid for the year and its rows: the year is a track of
-              // the same grid the rows subgrid onto, so it shares their
-              // left edge and the columns line up down the whole group.
-              // A gutter track for the year, then the row tracks. The year
-              // is set in the gutter but its text starts where the rows'
-              // first column does, so the two read as one column.
-              className="grid grid-cols-[6rem_auto_1fr_auto_auto]"
+              className={
+                isTimeSlot
+                  ? "grid grid-cols-[8rem_1fr_auto_auto]"
+                  : "grid grid-cols-[6rem_auto_1fr_auto_auto]"
+              }
             >
               <div
                 id={id}
                 role="rowheader"
                 // Sticks while any of its rows is in view, then the next
-                // year pushes it out.
-                // The row's own border-b sits above its py-2, so the year
-                // needs a little more top padding to share the first row's
-                // baseline.
-                className="sticky top-0 self-start pt-4 pb-2 pl-4 font-medium text-muted-foreground tabular-nums"
+                // group's heading pushes it out. The row's own border-b
+                // sits above its py-2, so the heading needs a little more
+                // top padding to share the first row's baseline.
+                className="sticky top-0 self-start pt-4 pr-4 pb-2 pl-4 font-medium text-muted-foreground tabular-nums"
               >
                 {heading}
               </div>
-              <div className="col-span-4 grid grid-cols-subgrid">{rows}</div>
+              <div
+                className={
+                  isTimeSlot
+                    ? "col-span-3 grid grid-cols-subgrid"
+                    : "col-span-4 grid grid-cols-subgrid"
+                }
+              >
+                {rows}
+              </div>
             </div>
           );
         })}
