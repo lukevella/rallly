@@ -180,11 +180,9 @@ export function VoteResults({
     () => [
       columnHelper.accessor(
         (result) =>
-          formatDateTime(
-            result.startTime,
-            isTimeSlot ? "dateFull" : "monthYear",
-            { timeZone: readZone },
-          ),
+          formatDateTime(result.startTime, isTimeSlot ? "dateFull" : "year", {
+            timeZone: readZone,
+          }),
         {
           id: "group",
           cell: ({ row }) =>
@@ -196,7 +194,7 @@ export function VoteResults({
                 preset="dateFull"
               />
             ) : (
-              <CalendarDate value={row.original.startTime} preset="monthYear" />
+              <CalendarDate value={row.original.startTime} preset="year" />
             ),
         },
       ),
@@ -217,7 +215,10 @@ export function VoteResults({
               timeZone={poll.timeZone}
             />
           ) : (
-            <CalendarDate value={row.original.startTime} preset="weekdayDay" />
+            <CalendarDate
+              value={row.original.startTime}
+              preset="weekdayMonthDay"
+            />
           ),
       }),
       columnHelper.display({
@@ -314,13 +315,13 @@ export function VoteResults({
               {/* The heading's row is what sticks: a sticky element can
                   only travel within its containing block, and the row is
                   no taller than the heading itself. */}
-              <div role="row" className="sticky top-0 z-[5]">
+              <div role="row" className="sticky top-0 z-10">
                 <div
                   id={id}
                   role="rowheader"
                   aria-colspan={visibleColumnCount}
                   // Solid background so rows do not show through.
-                  className="border-b bg-muted px-4 py-2 font-medium"
+                  className="px-4 py-2"
                 >
                   {groupCell
                     ? flexRender(
