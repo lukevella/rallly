@@ -6,7 +6,11 @@ import {
   getPollDetails,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
-import { getOptionScores, getViewerResponse } from "@/features/poll/vote/data";
+import {
+  countParticipants,
+  getOptionScores,
+  getViewerResponse,
+} from "@/features/poll/vote/data";
 import type { VotePageView } from "@/features/poll/vote/types";
 import { getSession } from "@/lib/auth";
 
@@ -36,13 +40,14 @@ export const loadVotePage = cache(
 
     const userId = session?.user?.id;
 
-    const [response, scores] = await Promise.all([
+    const [response, scores, participantCount] = await Promise.all([
       getViewerResponse({ pollId, userId, participantIds }),
       // Scores stay hidden until the viewer has responded, so they are not
       // read at all when they cannot be shown.
       poll.hideScores && !userId && participantIds.length === 0
         ? null
         : getOptionScores({ pollId }),
+      countParticipants({ pollId }),
     ]);
 
     // hideScores reveals the tally only once the viewer has responded.
@@ -79,6 +84,7 @@ export const loadVotePage = cache(
             }
           : null,
       },
+      participantCount: scoresVisible ? participantCount : null,
       results: poll.options.map((option) => ({
         optionId: option.id,
         startTime: option.startTime,

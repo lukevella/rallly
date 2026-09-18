@@ -8,13 +8,13 @@ import {
   getGroupedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { User2Icon } from "lucide-react";
 import * as React from "react";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import type { VoteType } from "@/features/poll/constants";
 import { OptionDate } from "@/features/poll/vote/components/option-date";
 import { useVoteForm } from "@/features/poll/vote/components/vote-form";
+import { VoteProgress } from "@/features/poll/vote/components/vote-progress";
 import type { VotePageView, VoteResult } from "@/features/poll/vote/types";
 import {
   EventDate,
@@ -39,58 +39,6 @@ function VoteLabel({ type }: { type?: VoteType }) {
         ) : (
           <Trans i18nKey="pending" defaults="Pending" />
         )}
-      </span>
-    </span>
-  );
-}
-
-function Score({
-  score,
-  allowTentativeVotes,
-}: {
-  score: VoteResult["score"];
-  allowTentativeVotes: boolean;
-}) {
-  const { t } = useTranslation();
-  if (!score) {
-    return null;
-  }
-  const total = score.yes + score.ifNeedBe;
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 text-muted-foreground text-sm"
-      title={
-        allowTentativeVotes
-          ? t("optionVoteBreakdown", {
-              defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-              yesScore: score.yes,
-              ifNeedBeScore: score.ifNeedBe,
-            })
-          : t("optionVoteBreakdownYesOnly", {
-              defaultValue: "{yesScore} yes",
-              yesScore: score.yes,
-            })
-      }
-    >
-      <User2Icon className="size-4 shrink-0" aria-hidden="true" />
-      <span className="tabular-nums">{total}</span>
-      {score.ifNeedBe > 0 ? (
-        <span
-          className="size-1.5 rounded-full bg-amber-400"
-          aria-hidden="true"
-        />
-      ) : null}
-      <span className="sr-only">
-        {allowTentativeVotes
-          ? t("optionVoteBreakdown", {
-              defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-              yesScore: score.yes,
-              ifNeedBeScore: score.ifNeedBe,
-            })
-          : t("optionVoteBreakdownYesOnly", {
-              defaultValue: "{yesScore} yes",
-              yesScore: score.yes,
-            })}
       </span>
     </span>
   );
@@ -152,11 +100,13 @@ function VoteCell({
 export function VoteResults({
   poll,
   results,
+  participantCount,
   response,
   canVote,
 }: {
   poll: VotePageView["poll"];
   results: VoteResult[];
+  participantCount: number | null;
   response: VotePageView["response"];
   canVote: boolean;
 }) {
@@ -222,12 +172,19 @@ export function VoteResults({
       columnHelper.display({
         id: "votes",
         header: () => <Trans i18nKey="votes" defaults="Votes" />,
-        cell: ({ row }) => (
-          <Score
-            score={row.original.score}
-            allowTentativeVotes={poll.allowTentativeVotes}
-          />
-        ),
+        cell: ({ row }) => {
+          const score = row.original.score;
+          if (!score || participantCount === null) {
+            return null;
+          }
+          return (
+            <VoteProgress
+              score={score}
+              participantCount={participantCount}
+              allowTentativeVotes={poll.allowTentativeVotes}
+            />
+          );
+        },
       }),
       columnHelper.display({
         id: "vote",
@@ -257,6 +214,7 @@ export function VoteResults({
     ],
     [
       canVote,
+      participantCount,
       formatDateTime,
       formatDateTimeRange,
       isTimeSlot,

@@ -73,3 +73,8 @@ export async function getViewerResponse({
     votes: participant.votes,
   };
 }
+
+/** How many people have responded, for the per-option tallies. */
+export async function countParticipants({ pollId }: { pollId: string }) {
+  return prisma.participant.count({ where: { pollId } });
+}

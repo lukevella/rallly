@@ -46,6 +46,8 @@ export type VotePageView = {
     event: { id: string; start: Date; duration: number } | null;
   };
   results: VoteResult[];
+  /** Denominator for the per-option tallies; null when scores are hidden. */
+  participantCount: number | null;
   response: VoteResponse | null;
   /** False once the poll is closed or scheduled. */
   canVote: boolean;

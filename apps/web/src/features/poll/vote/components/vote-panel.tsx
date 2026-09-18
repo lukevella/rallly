@@ -18,6 +18,7 @@ import { useHydrated } from "@/lib/datetime/use-hydrated";
 export function VotePanel({
   poll,
   results,
+  participantCount,
   response,
   canVote,
   requireParticipantEmail,
@@ -53,6 +54,7 @@ export function VotePanel({
             <VoteResults
               poll={poll}
               results={results}
+              participantCount={participantCount}
               response={response}
               canVote={canVote}
             />
