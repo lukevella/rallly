@@ -1,10 +1,11 @@
 "use client";
+
 // beui.dev/components/motion/number
 
-import { cn } from "@rallly/ui";
 import { animate, motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { EASE_OUT } from "@/lib/ease";
+import { EASE_OUT } from "./ease";
+import { cn } from "./lib/utils";
 
 export interface NumberTickerProps {
   value: number;

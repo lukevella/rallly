@@ -630,7 +630,7 @@ importers:
         version: link:../tsconfig
       '@react-email/ui':
         specifier: ^6.9.3
-        version: 6.9.3(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 6.9.3(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@types/react':
         specifier: 19.2.13
         version: 19.2.13
@@ -843,6 +843,9 @@ importers:
       micromark-extension-gfm-autolink-literal:
         specifier: ^2.1.0
         version: 2.1.0
+      motion:
+        specifier: ^12.6.2
+        version: 12.33.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -17498,10 +17501,10 @@ snapshots:
     dependencies:
       react: 19.2.6
 
-  '@react-email/ui@6.9.3(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@react-email/ui@6.9.3(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       esbuild: 0.28.1
-      next: 16.3.3(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      next: 16.3.3(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     transitivePeerDependencies:
       - '@babel/core'
       - '@opentelemetry/api'
@@ -23947,7 +23950,7 @@ snapshots:
       - '@types/node'
       - babel-plugin-macros
 
-  next@16.3.3(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  next@16.3.3(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(@types/node@26.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@next/env': 16.3.3
       '@swc/helpers': 0.5.23
