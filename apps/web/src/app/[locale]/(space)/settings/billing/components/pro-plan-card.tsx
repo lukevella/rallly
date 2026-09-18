@@ -278,7 +278,6 @@ export function ProPlanCard({
         {endsAtPeriodEnd ? null : (
           <Button
             variant="ghost"
-            size="sm"
             className="text-muted-foreground"
             loading={openCancelPlan.isExecuting}
             onClick={() => openCancelPlan.execute()}
