@@ -1,5 +1,4 @@
 import { Card } from "@rallly/ui/card";
-import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Spinner } from "@/components/spinner";
 import { EventSidebar } from "@/features/poll/invite/components/event-sidebar";
 import { CreatorBanner } from "@/features/poll/vote/components/creator-banner";
@@ -55,12 +54,6 @@ export function VotePage({
             would also stop the panel footer sticking to the viewport while
             the page scrolls. There are no corners to clip at that width. */}
         <Card className="flex flex-1 flex-col max-lg:overflow-visible max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:shadow-none lg:h-176 lg:min-h-0 lg:flex-initial">
-          {/* The bar is 1px wider than the card on each side so it covers
-              the border. Below lg the card has no side borders and does not
-              clip, so it would otherwise widen the page. */}
-          <div className="max-lg:overflow-hidden">
-            <RandomGradientBar />
-          </div>
           <div className="flex flex-1 flex-col lg:grid lg:min-h-0 lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventSidebar
