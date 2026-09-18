@@ -127,9 +127,21 @@ function Digit({
 }) {
   const reduce = useReducedMotion();
   const columnRef = useRef<HTMLSpanElement>(null);
+  // Seeded with the first digit so the blur only accompanies a roll. Firing it
+  // on mount would blur the number in, which is the entrance animation the
+  // resting-value render exists to avoid.
+  const previousDigit = useRef(digit);
 
   useEffect(() => {
-    if (reduce || !blur || !columnRef.current || !Number.isFinite(digit)) {
+    const rolled = previousDigit.current !== digit;
+    previousDigit.current = digit;
+    if (
+      !rolled ||
+      reduce ||
+      !blur ||
+      !columnRef.current ||
+      !Number.isFinite(digit)
+    ) {
       return;
     }
 
