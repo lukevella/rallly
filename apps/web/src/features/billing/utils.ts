@@ -1,5 +1,9 @@
 import type { PricingData, ProPrice } from "@rallly/billing";
 import { isBillingEnabled } from "@/features/billing/constants";
+import type {
+  BillingInterval,
+  SubscriptionStatus,
+} from "@/features/billing/schema";
 import type { SpaceTier } from "@/features/space/schema";
 
 /**
@@ -82,4 +86,24 @@ export function formatMinorUnitAmount({
     minimumFractionDigits: 0,
     maximumFractionDigits: minorUnitDigits,
   }).format(amount / 10 ** minorUnitDigits);
+}
+
+/**
+ * A subscription that renews and can therefore change billing interval.
+ * `past_due` is stored as active (Stripe keeps retrying), but its next
+ * invoice is unpaid, so a plan change there would compound the problem.
+ */
+export function canChangeBillingInterval(subscription: {
+  active: boolean;
+  status: SubscriptionStatus;
+  cancelAtPeriodEnd: boolean;
+  interval: BillingInterval;
+}) {
+  return (
+    subscription.active &&
+    (subscription.status === "active" || subscription.status === "trialing") &&
+    !subscription.cancelAtPeriodEnd &&
+    // Yearly to monthly would need a schedule to let the paid year run out.
+    subscription.interval === "month"
+  );
 }

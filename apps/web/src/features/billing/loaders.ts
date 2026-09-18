@@ -7,7 +7,11 @@ import { cache } from "react";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
 import type { BillingInterval } from "@/features/billing/schema";
-import { isEarlySupporter, resolvePriceSet } from "@/features/billing/utils";
+import {
+  canChangeBillingInterval,
+  isEarlySupporter,
+  resolvePriceSet,
+} from "@/features/billing/utils";
 import { getActiveSpace } from "@/features/space/loaders";
 import { getCurrentUser } from "@/features/user/loaders";
 
@@ -112,10 +116,7 @@ export const loadSubscriptionOverview = cache(async () => {
         }
       : null,
     switchToYearly:
-      subscription.active &&
-      !subscription.cancelAtPeriodEnd &&
-      subscription.interval === "month" &&
-      yearlyAmount !== undefined
+      canChangeBillingInterval(subscription) && yearlyAmount !== undefined
         ? { monthlyAmount: subscription.amount, yearlyAmount }
         : null,
     changePlan:

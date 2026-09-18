@@ -11,7 +11,7 @@ vi.mock("@rallly/posthog/client", () => ({
 }));
 
 vi.mock("@/features/billing/actions", () => ({
-  changeBillingIntervalAction: vi.fn(),
+  switchToYearlyAction: vi.fn(),
   openCancelPlanAction: vi.fn(),
   openPaymentMethodUpdateAction: vi.fn(),
   resumePlanAction: vi.fn(),

@@ -19,9 +19,12 @@ import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/billing/schema";
-import { billingIntervalSchema } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
-import { isEarlySupporter, resolvePriceSet } from "@/features/billing/utils";
+import {
+  canChangeBillingInterval,
+  isEarlySupporter,
+  resolvePriceSet,
+} from "@/features/billing/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { AppError } from "@/lib/errors/app-error";
@@ -223,12 +226,21 @@ async function requireManagedSubscription(user: {
   return { space, subscription, customerId: user.customerId };
 }
 
-export const changeBillingIntervalAction = authActionClient
-  .metadata({ actionName: "change_billing_interval" })
-  .inputSchema(z.object({ interval: billingIntervalSchema }))
-  .action(async ({ ctx, parsedInput }) => {
+export const switchToYearlyAction = authActionClient
+  .metadata({ actionName: "switch_to_yearly" })
+  .action(async ({ ctx }) => {
     const { space, subscription, customerId } =
       await requireManagedSubscription(ctx.user);
+
+    // The card only offers monthly to yearly, but the action is callable
+    // directly, so the same rule is enforced here. Yearly to monthly would
+    // need a subscription schedule to let the paid year run out.
+    if (!canChangeBillingInterval(subscription)) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "This subscription cannot switch to yearly billing",
+      });
+    }
 
     const pricing = await getProPrices();
     const priceSet = resolvePriceSet({
@@ -238,12 +250,9 @@ export const changeBillingIntervalAction = authActionClient
       }),
       pricing,
     });
-    const target =
-      parsedInput.interval === "month" ? priceSet.monthly : priceSet.yearly;
 
     track(ctx.user, {
-      event: "space_billing:change_plan_submit",
-      properties: { from: subscription.interval, to: parsedInput.interval },
+      event: "space_billing:switch_to_yearly_submit",
       groups: { space: space.id },
     });
 
@@ -257,7 +266,7 @@ export const changeBillingIntervalAction = authActionClient
           priceSet.yearly.id,
           subscription.priceId,
         ],
-        item: { price: target.id, quantity: subscription.quantity },
+        item: { price: priceSet.yearly.id, quantity: subscription.quantity },
         returnFlow: "interval",
       }),
     );

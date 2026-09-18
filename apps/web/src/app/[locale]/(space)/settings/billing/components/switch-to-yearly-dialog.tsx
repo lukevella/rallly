@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-import { changeBillingIntervalAction } from "@/features/billing/actions";
+import { switchToYearlyAction } from "@/features/billing/actions";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
@@ -27,7 +27,7 @@ export function SwitchToYearlyDialog({
   /** Per seat yearly amount in the currency's minor unit. */
   yearlyAmount: number;
 }) {
-  const changeInterval = useSafeAction(changeBillingIntervalAction);
+  const switchToYearly = useSafeAction(switchToYearlyAction);
 
   return (
     <Dialog {...dialogProps}>
@@ -59,8 +59,8 @@ export function SwitchToYearlyDialog({
           </DialogClose>
           <Button
             variant="primary"
-            loading={changeInterval.isExecuting}
-            onClick={() => changeInterval.execute({ interval: "year" })}
+            loading={switchToYearly.isExecuting}
+            onClick={() => switchToYearly.execute()}
           >
             <Trans i18nKey="switchToYearly" defaults="Switch to yearly" />
           </Button>
