@@ -36,7 +36,7 @@ export function SupportCard({ className }: { className?: string }) {
           <SendIcon className="text-muted-foreground" />
           <Trans i18nKey="contactSupport" defaults="Contact support" />
         </a>
-        <p className="ml-auto text-muted-foreground text-sm">
+        <p className="@sm:ml-auto text-muted-foreground text-sm">
           <Trans
             i18nKey="contactSupportEmail"
             defaults="Or email us at <0>support@rallly.co</0>"
