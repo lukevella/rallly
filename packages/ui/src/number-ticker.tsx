@@ -33,7 +33,17 @@ export interface NumberTickerProps {
   announceChanges?: boolean;
 }
 
-const DIGIT_HEIGHT_EM = 1.1;
+// One em per digit cell, so each cell is exactly the glyph's em box and the
+// roll steps by whole ems.
+const DIGIT_HEIGHT_EM = 1;
+// A digit column is `overflow: hidden`, so it exports no glyph baseline of its
+// own: the browser synthesises one from its bottom margin edge, which sits a
+// half-leading below where the digits actually rest. Dropping the box by that
+// half-leading puts the synthesised baseline back on the real one, so the
+// number sits on the baseline of the text beside it. For a 1em box the
+// half-leading is (ascent + descent - 1) / 2 — 0.125em for the metrics of the
+// sans stack this ships with.
+const BASELINE_SHIFT_EM = 0.125;
 const DIGITS = Array.from({ length: 10 }, (_, n) => n);
 
 export function NumberTicker({
@@ -87,7 +97,10 @@ export function NumberTicker({
   return (
     <span
       ref={containerRef}
-      className={cn("inline-flex items-center tabular-nums", className)}
+      // Plain inline boxes, not flex: a flex container centres its items and
+      // ignores vertical-align, which would override the baseline shift the
+      // digit columns rely on.
+      className={cn("inline tabular-nums", className)}
     >
       <span
         className="sr-only"
@@ -96,7 +109,7 @@ export function NumberTicker({
       >
         {readableText}
       </span>
-      <span aria-hidden="true" className="inline-flex items-center">
+      <span aria-hidden="true" className="inline">
         {prefix ? <span>{prefix}</span> : null}
         {glyphs.map(({ char, id }, i) => {
           const isDigit = /\d/.test(char);
@@ -166,7 +179,11 @@ function Digit({
   return (
     <span
       className={cn("relative inline-block overflow-hidden", className)}
-      style={{ height: `${DIGIT_HEIGHT_EM}em`, width: "1ch" }}
+      style={{
+        height: `${DIGIT_HEIGHT_EM}em`,
+        width: "1ch",
+        verticalAlign: `-${BASELINE_SHIFT_EM}em`,
+      }}
     >
       <motion.span
         ref={columnRef}
@@ -180,7 +197,8 @@ function Digit({
         {DIGITS.map((n) => (
           <span
             key={n}
-            className="flex h-[1.1em] items-center justify-center leading-none"
+            className="block text-center leading-[1em]"
+            style={{ height: `${DIGIT_HEIGHT_EM}em` }}
           >
             {n}
           </span>

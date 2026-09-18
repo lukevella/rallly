@@ -145,7 +145,7 @@ function AnimatedNumber({
       // liveness flourish, and a label that mutates every minute would be
       // churn for assistive tech without conveying anything new.
       aria-label={display}
-      className="inline-block tabular-nums"
+      className="inline tabular-nums"
     >
       <NumberTicker
         value={target}

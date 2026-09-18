@@ -155,7 +155,7 @@ export function ManageSeatsDialog({
                 startOnView={false}
                 announceChanges
                 duration={0.4}
-                className="w-[3ch] justify-center font-semibold text-3xl"
+                className="inline-flex w-[3ch] justify-center font-semibold text-3xl"
               />
             </SeatGauge>
             <Button
