@@ -2,9 +2,15 @@
 
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
-import { DialogTrigger } from "@rallly/ui/dialog";
-import { ArmchairIcon, CreditCardIcon, DotIcon } from "lucide-react";
-import { openCustomerPortalAction } from "@/features/billing/actions";
+import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
+import { toast } from "@rallly/ui/sonner";
+import { ArrowUpRightIcon, TriangleAlertIcon } from "lucide-react";
+import {
+  openBillingDetailsAction,
+  openCancelPlanAction,
+  openPaymentMethodUpdateAction,
+  resumePlanAction,
+} from "@/features/billing/actions";
 import { EarlySupporterBadge } from "@/features/billing/components/early-supporter-badge";
 import { SubscriptionStatusBadge } from "@/features/billing/components/subscription-status-badge";
 import type {
@@ -12,26 +18,24 @@ import type {
   SubscriptionStatus,
 } from "@/features/billing/schema";
 import { formatMinorUnitAmount } from "@/features/billing/utils";
-import {
-  SpaceTierIcon,
-  SpaceTierLabel,
-} from "@/features/space/components/space-tier";
-import { Trans } from "@/i18n/client";
+import { SpaceTierLabel } from "@/features/space/components/space-tier";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { ManageSeatsDialog } from "./manage-seats-dialog";
 import {
   PlanCard,
+  PlanCardActions,
   PlanCardContent,
   PlanCardDescription,
   PlanCardFooter,
   PlanCardHeader,
-  PlanCardIcon,
-  PlanCardPrice,
-  PlanCardPriceDescription,
-  PlanCardPriceValue,
+  PlanCardHeading,
+  PlanCardHeadingDescription,
+  PlanCardHeadingTitle,
   PlanCardTitle,
 } from "./plan-card";
+import { SwitchToYearlyDialog } from "./switch-to-yearly-dialog";
 
 export function ProPlanCard({
   amount,
@@ -46,8 +50,11 @@ export function ProPlanCard({
   periodEnd,
   earlySupporter,
   listPrice,
+  switchToYearly,
+  canResume,
   className,
 }: {
+  /** Per seat unit amount in the currency's minor unit. */
   amount: number;
   discountPercentOff?: number | null;
   discountAmountOff?: number | null;
@@ -59,50 +66,67 @@ export function ProPlanCard({
   cancelAtPeriodEnd: boolean;
   periodEnd: Date;
   earlySupporter: boolean;
+  /** Current list prices per seat in this currency, for the early supporter copy. */
   listPrice: { monthly?: number; yearly?: number } | null;
+  /** Set for monthly subscribers who can switch to yearly; null otherwise. */
+  switchToYearly: { monthlyAmount: number; yearlyAmount: number } | null;
+  canResume: boolean;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
   const { formatDateTime } = useDateTime();
-  const openCustomerPortal = useSafeAction(openCustomerPortalAction);
+  const switchToYearlyDialog = useDialog();
+  const openCancelPlan = useSafeAction(openCancelPlanAction);
+  const openPaymentMethodUpdate = useSafeAction(openPaymentMethodUpdateAction);
+  const openBillingDetails = useSafeAction(openBillingDetailsAction);
+  const resumePlan = useSafeAction(resumePlanAction, {
+    onSuccess: () => {
+      toast.success(
+        t("planResumedToast", { defaultValue: "Your plan will renew" }),
+      );
+    },
+  });
 
   const formatCurrency = (minorUnitAmount: number) =>
     formatMinorUnitAmount({ amount: minorUnitAmount, currency, locale });
 
-  // amount is the per-seat unit amount in the currency's minor unit. Coupons
-  // and promotion codes are applied by Stripe at the invoice level, so we apply
-  // the stored discount here to reflect what the customer is actually charged.
+  // Coupons are applied by Stripe at the invoice level, so the stored
+  // discount is applied here to show what the customer is actually charged.
   const subtotal = amount * seats;
-  let discountedTotal = subtotal;
+  let total = subtotal;
   if (discountPercentOff) {
-    discountedTotal = Math.round(
-      discountedTotal * (1 - discountPercentOff / 100),
-    );
+    total = Math.round(total * (1 - discountPercentOff / 100));
   }
   if (discountAmountOff) {
-    discountedTotal = Math.max(0, discountedTotal - discountAmountOff);
+    total = Math.max(0, total - discountAmountOff);
   }
-  const hasDiscount = discountedTotal !== subtotal;
-
-  const price = formatCurrency(discountedTotal);
-  const originalPrice = formatCurrency(subtotal);
+  const hasDiscount = total !== subtotal;
+  const perMonth = interval === "year" ? Math.round(total / 12) : total;
 
   const date = formatDateTime(periodEnd, "date");
   const endsAtPeriodEnd = status === "canceled" || cancelAtPeriodEnd;
+  const needsPayment = status === "past_due" || status === "unpaid";
   const listPriceForInterval =
     listPrice?.[interval === "month" ? "monthly" : "yearly"];
 
   return (
     <PlanCard className={className}>
+      <PlanCardHeading>
+        <PlanCardHeadingTitle>
+          <Trans i18nKey="billingPlanTitle" defaults="Plan" />
+        </PlanCardHeadingTitle>
+        <PlanCardHeadingDescription>
+          <Trans
+            i18nKey="billingSubscriptionDescription"
+            defaults="Manage your current subscription plan."
+          />
+        </PlanCardHeadingDescription>
+      </PlanCardHeading>
       <PlanCardHeader>
-        <PlanCardIcon>
-          <SpaceTierIcon tier="pro" />
-        </PlanCardIcon>
         <PlanCardContent>
-          <div className="flex items-center gap-x-2">
-            <PlanCardTitle>
-              <SpaceTierLabel tier="pro" />
-            </PlanCardTitle>
+          <PlanCardTitle>
+            <SpaceTierLabel tier="pro" />
             <SubscriptionStatusBadge status={status} />
             {earlySupporter ? (
               <EarlySupporterBadge>
@@ -130,93 +154,149 @@ export function ProPlanCard({
                 )}
               </EarlySupporterBadge>
             ) : null}
-          </div>
-          <PlanCardDescription className="flex items-center">
-            <Trans
-              i18nKey="seatCount"
-              defaults="{count, plural, one {# seat} other {# seats}}"
-              values={{ count: seats }}
-            />
-            <DotIcon className="size-4 shrink-0 text-muted-foreground" />
-            {endsAtPeriodEnd ? (
+          </PlanCardTitle>
+          <PlanCardDescription>
+            <span className="font-medium text-foreground">
+              {formatCurrency(perMonth)}
+            </span>{" "}
+            {interval === "month" ? (
               <Trans
-                i18nKey="subscriptionCardEndsOn"
-                defaults="Ends {date}"
-                values={{ date }}
+                i18nKey="planPriceBilledMonthly"
+                defaults="per month · billed monthly"
               />
             ) : (
               <Trans
-                i18nKey="subscriptionCardRenewsOn"
-                defaults="Renews {date}"
-                values={{ date }}
+                i18nKey="planPriceBilledYearly"
+                defaults="per month · billed yearly"
               />
             )}
+            {hasDiscount ? (
+              <>
+                {" · "}
+                {discountPercentOff ? (
+                  <Trans
+                    i18nKey="subscriptionCardPercentDiscount"
+                    defaults="{percent}% discount applied"
+                    values={{ percent: discountPercentOff }}
+                  />
+                ) : (
+                  <Trans
+                    i18nKey="subscriptionCardAmountDiscount"
+                    defaults="{amount} discount applied"
+                    values={{ amount: formatCurrency(discountAmountOff ?? 0) }}
+                  />
+                )}
+              </>
+            ) : null}
           </PlanCardDescription>
         </PlanCardContent>
-        <PlanCardPrice>
-          <PlanCardPriceValue className="flex items-center @sm:justify-end gap-x-1.5">
-            {hasDiscount ? (
-              <span className="font-normal text-muted-foreground line-through">
-                {originalPrice}
-              </span>
-            ) : null}
-            <span>{price}</span>
-          </PlanCardPriceValue>
-          <PlanCardPriceDescription>
-            {interval === "month" ? (
-              <Trans i18nKey="subscriptionCardPerMonth" defaults="per month" />
-            ) : (
-              <Trans i18nKey="subscriptionCardPerYear" defaults="per year" />
-            )}
-          </PlanCardPriceDescription>
-          {hasDiscount ? (
-            <PlanCardPriceDescription className="text-green-600">
-              {discountPercentOff ? (
-                <Trans
-                  i18nKey="subscriptionCardPercentDiscount"
-                  defaults="{percent}% discount applied"
-                  values={{ percent: discountPercentOff }}
-                />
-              ) : (
-                <Trans
-                  i18nKey="subscriptionCardAmountDiscount"
-                  defaults="{amount} discount applied"
-                  values={{ amount: formatCurrency(discountAmountOff ?? 0) }}
-                />
-              )}
-            </PlanCardPriceDescription>
-          ) : null}
-        </PlanCardPrice>
+        <PlanCardActions>
+          {endsAtPeriodEnd ? (
+            canResume ? (
+              <Button
+                loading={resumePlan.isExecuting}
+                onClick={() => resumePlan.execute()}
+              >
+                <Trans i18nKey="resumePlan" defaults="Resume plan" />
+              </Button>
+            ) : null
+          ) : (
+            <>
+              {needsPayment ? (
+                <Button
+                  loading={openPaymentMethodUpdate.isExecuting}
+                  onClick={() => openPaymentMethodUpdate.execute()}
+                >
+                  <TriangleAlertIcon className="text-amber-500" />
+                  <Trans
+                    i18nKey="updatePaymentMethod"
+                    defaults="Update payment method"
+                  />
+                </Button>
+              ) : null}
+              {switchToYearly && !needsPayment ? (
+                <SwitchToYearlyDialog
+                  {...switchToYearlyDialog.dialogProps}
+                  monthlyAmount={switchToYearly.monthlyAmount}
+                  yearlyAmount={switchToYearly.yearlyAmount}
+                >
+                  <DialogTrigger
+                    render={
+                      <Button
+                        onClick={() => {
+                          posthog?.capture("space_billing:change_plan_click");
+                        }}
+                      />
+                    }
+                  >
+                    <Trans
+                      i18nKey="switchToYearly"
+                      defaults="Switch to yearly"
+                    />
+                  </DialogTrigger>
+                </SwitchToYearlyDialog>
+              ) : null}
+              <ManageSeatsDialog usedSeats={usedSeats} currentSeats={seats}>
+                <DialogTrigger
+                  render={
+                    <Button
+                      onClick={() => {
+                        posthog?.capture(
+                          "space_billing:manage_seats_button_click",
+                        );
+                      }}
+                    />
+                  }
+                >
+                  <Trans i18nKey="manageSeats" defaults="Manage seats" />
+                </DialogTrigger>
+              </ManageSeatsDialog>
+            </>
+          )}
+        </PlanCardActions>
       </PlanCardHeader>
       <PlanCardFooter>
-        <div className="flex gap-2">
-          <Button
-            loading={openCustomerPortal.isExecuting}
-            onClick={() => {
-              posthog?.capture("space_billing:billing_portal_button_click");
-              openCustomerPortal.execute({});
-            }}
-          >
-            <CreditCardIcon className="text-muted-foreground" />
+        <span>
+          {endsAtPeriodEnd ? (
             <Trans
-              i18nKey="manageSubscription"
-              defaults="Manage subscription"
+              i18nKey="planEndsOn"
+              defaults="Ends on {date}"
+              values={{ date }}
             />
+          ) : (
+            <Trans
+              i18nKey="planRenewsOn"
+              defaults="Renews on {date}"
+              values={{ date }}
+            />
+          )}
+          {" · "}
+          <Trans
+            i18nKey="seatCount"
+            defaults="{count, plural, one {# seat} other {# seats}}"
+            values={{ count: seats }}
+          />
+        </span>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            className="text-muted-foreground"
+            loading={openBillingDetails.isExecuting}
+            onClick={() => openBillingDetails.execute()}
+          >
+            <Trans i18nKey="invoices" defaults="Invoices" />
+            <ArrowUpRightIcon className="text-muted-foreground" />
           </Button>
-          <ManageSeatsDialog usedSeats={usedSeats} currentSeats={seats}>
-            <DialogTrigger
-              render={
-                <Button
-                  onClick={() => {
-                    posthog?.capture("space_billing:manage_seats_button_click");
-                  }}
-                />
-              }
+          {endsAtPeriodEnd ? null : (
+            <Button
+              variant="ghost"
+              className="text-muted-foreground"
+              loading={openCancelPlan.isExecuting}
+              onClick={() => openCancelPlan.execute()}
             >
-              <ArmchairIcon className="text-muted-foreground" />
-              <Trans i18nKey="manageSeats" defaults="Manage seats" />
-            </DialogTrigger>
-          </ManageSeatsDialog>
+              <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
+            </Button>
+          )}
         </div>
       </PlanCardFooter>
     </PlanCard>

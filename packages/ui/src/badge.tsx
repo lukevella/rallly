@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const badgeVariants = cva(
-  "group inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-lg transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "group inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-lg font-normal transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
@@ -17,6 +17,8 @@ const badgeVariants = cva(
         green:
           "bg-green-400/10 text-green-600 dark:bg-green-500/10 dark:text-green-500",
         pink: "bg-pink-400/10 text-pink-600 dark:bg-pink-500/10 dark:text-pink-400",
+        amber:
+          "bg-amber-400/10 text-amber-700 dark:bg-amber-500/10 dark:text-amber-500",
         secondary: "bg-primary/10 text-primary",
         pill: "rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200",
       },

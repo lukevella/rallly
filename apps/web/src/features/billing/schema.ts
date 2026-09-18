@@ -40,5 +40,16 @@ export const billingReturnFlowSchema = z.enum([
   "seats",
   "interval",
   "payment_method",
+  "cancel",
 ]);
 export type BillingReturnFlow = z.infer<typeof billingReturnFlowSchema>;
+
+// Stripe's `card` object as stored on PaymentMethod.data. Parsed rather than
+// cast: the row is written from whatever Stripe sent at the time.
+export const paymentMethodCardSchema = z.object({
+  brand: z.string(),
+  last4: z.string(),
+  exp_month: z.number(),
+  exp_year: z.number(),
+});
+export type PaymentMethodCard = z.infer<typeof paymentMethodCardSchema>;

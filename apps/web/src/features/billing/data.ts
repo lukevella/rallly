@@ -3,6 +3,7 @@ import "server-only";
 import { getProPricing } from "@rallly/billing";
 import { prisma } from "@rallly/database";
 import { unstable_cache } from "next/cache";
+import { paymentMethodCardSchema } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
 import type { SpaceTier } from "@/features/space/schema";
 
@@ -53,3 +54,24 @@ export const getProPrices = unstable_cache(
   ["pro-prices-v2"],
   { revalidate: 60 * 60 },
 );
+
+/**
+ * The customer's stored payment methods, written by the payment_method.*
+ * webhooks. `data` holds the type specific object Stripe sends, so a card
+ * carries brand, last4 and expiry.
+ */
+export async function getPaymentMethods(userId: string) {
+  const paymentMethods = await prisma.paymentMethod.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return paymentMethods.map((paymentMethod) => {
+    const card = paymentMethodCardSchema.safeParse(paymentMethod.data);
+    return {
+      id: paymentMethod.id,
+      type: paymentMethod.type,
+      card: card.success ? card.data : null,
+    };
+  });
+}
