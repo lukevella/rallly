@@ -39,6 +39,7 @@
     "lucide-react": "^0.479.0",
     "mdast-util-gfm-autolink-literal": "^2.0.1",
     "micromark-extension-gfm-autolink-literal": "^2.1.0",
+    "motion": "^12.6.2",
     "next-themes": "^0.4.6",
     "react": "19.2.6",
     "react-aria-components": "^1.16.0",

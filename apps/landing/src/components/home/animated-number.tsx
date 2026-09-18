@@ -1,6 +1,6 @@
 "use client";
 
-import NumberFlow from "@number-flow/react";
+import { NumberTicker } from "@rallly/ui/number-ticker";
 import { BarChart2Icon, UsersIcon } from "lucide-react";
 import * as React from "react";
 
@@ -95,8 +95,6 @@ function AnimatedNumber({
   live?: boolean;
 }) {
   const [rolledUp, setRolledUp] = React.useState(false);
-  const [shown, setShown] = React.useState(value);
-  const [animated, setAnimated] = React.useState(false);
   const ref = React.useRef<HTMLSpanElement>(null);
 
   const live = useLiveCount({
@@ -106,16 +104,15 @@ function AnimatedNumber({
     enabled: liveEnabled && rolledUp,
   });
 
+  // NumberTicker's own startOnView drives the roll-up; this watches the same
+  // threshold only to know when it has finished, so the live tick can take
+  // over. Timing from mount instead would start the clock while the badge is
+  // still below the fold and hand over before the digits had moved.
   React.useEffect(() => {
     const el = ref.current;
-    if (!el) {
+    if (!el || !liveEnabled) {
       return;
     }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setRolledUp(true);
-      return;
-    }
-    let frame: number;
     let settle: number;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -123,38 +120,24 @@ function AnimatedNumber({
           return;
         }
         observer.disconnect();
-        // Two committed renders: drop to 0 without animation, then roll up.
-        setShown(0);
-        frame = requestAnimationFrame(() => {
-          frame = requestAnimationFrame(() => {
-            setAnimated(true);
-            setShown(value);
-            settle = window.setTimeout(() => setRolledUp(true), DURATION_MS);
-          });
-        });
+        settle = window.setTimeout(() => setRolledUp(true), DURATION_MS);
       },
-      { threshold: 0.5 },
+      { threshold: 0.6 },
     );
     observer.observe(el);
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(frame);
       window.clearTimeout(settle);
     };
-  }, [value]);
+  }, [liveEnabled]);
 
-  // Once ticking, the live value drives the display; before that the roll-up
-  // owns it.
-  const target = liveEnabled && rolledUp ? live : shown;
-  // The sizer keeps the translation's own token unless ticking has pushed the
-  // number past it, so a badge that never ticks measures exactly as before and
-  // a ticking one never reflows the sentence as digits are added.
-  const sizerText =
-    live > value ? new Intl.NumberFormat(locale).format(live) : display;
+  const target = liveEnabled && rolledUp ? live : value;
+  const format = React.useCallback(
+    (n: number) => new Intl.NumberFormat(locale).format(n),
+    [locale],
+  );
 
   return (
-    // tabular-nums keeps the sizer and NumberFlow (which renders digits at a
-    // uniform width) measuring identically.
     <span
       ref={ref}
       role="img"
@@ -162,38 +145,13 @@ function AnimatedNumber({
       // liveness flourish, and a label that mutates every minute would be
       // churn for assistive tech without conveying anything new.
       aria-label={display}
-      className="relative inline-block tabular-nums"
+      className="inline-block tabular-nums"
     >
-      {/* Invisible copy of the final number holds its width for the whole
-          animation so the surrounding text doesn't shift as digits roll in.
-          Rendered as a pseudo-element rather than a text node so extractors
-          (search snippets, reader mode) don't see the number twice — the
-          readable copy is NumberFlow's own light-DOM text */}
-      <span
-        className="invisible before:content-[attr(data-value)]"
-        data-value={sizerText}
-        aria-hidden="true"
+      <NumberTicker
+        value={target}
+        format={format}
+        duration={DURATION_MS / 1000}
       />
-      {/* NumberFlow's box is taller than the text (mask padding) but
-          symmetric around the glyphs, so centering it on the sizer — also
-          symmetric — puts both baselines in the same place */}
-      <span
-        className="absolute inset-0 flex items-center justify-end"
-        aria-hidden="true"
-      >
-        <NumberFlow
-          value={target}
-          locales={locale}
-          animated={animated}
-          // Layout snaps instantly so digits spin straight vertically in
-          // place instead of sliding sideways while the width grows.
-          transformTiming={{ duration: 0 }}
-          spinTiming={{
-            duration: DURATION_MS,
-            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        />
-      </span>
     </span>
   );
 }

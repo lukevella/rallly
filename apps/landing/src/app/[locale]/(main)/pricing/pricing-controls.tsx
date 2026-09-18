@@ -1,8 +1,8 @@
 "use client";
 
-import NumberFlow from "@number-flow/react";
 import type { PricesByCurrency } from "@rallly/billing";
 import { cn } from "@rallly/ui";
+import { NumberTicker } from "@rallly/ui/number-ticker";
 import {
   Select,
   SelectContent,
@@ -194,22 +194,29 @@ export function YearlySavingsBadge({
 export function PlanPrice() {
   const { interval, currency, prices, locale } = usePricing();
   const amounts = prices[currency];
-  if (!amounts) {
-    return null;
-  }
-  const value =
-    interval === "yearly" ? amounts.yearly / 12 / 100 : amounts.monthly / 100;
-  return (
-    <NumberFlow
-      value={value}
-      locales={locale}
-      format={{
+  // NumberTicker rounds its value before formatting, so it is driven in minor
+  // units and the formatter divides — otherwise a monthly-equivalent yearly
+  // price like 8.33 would render as 8.
+  const format = React.useCallback(
+    (minorUnits: number) =>
+      new Intl.NumberFormat(locale, {
         style: "currency",
         currency: currency.toUpperCase(),
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
-      }}
-    />
+      }).format(minorUnits / 100),
+    [locale, currency],
+  );
+
+  if (!amounts) {
+    return null;
+  }
+
+  const minorUnits =
+    interval === "yearly" ? Math.round(amounts.yearly / 12) : amounts.monthly;
+
+  return (
+    <NumberTicker value={minorUnits} startOnView={false} format={format} />
   );
 }
 
