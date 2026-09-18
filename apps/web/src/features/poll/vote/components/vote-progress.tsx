@@ -41,7 +41,9 @@ export function VoteProgress({
     <span className="flex items-center">
       <span
         aria-hidden="true"
-        className="flex h-1.5 w-16 overflow-hidden rounded-sm bg-muted"
+        // The track needs to read as an empty share, so it sits a step away
+        // from the surface in both themes rather than using one muted token.
+        className="flex h-1.5 w-16 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700"
       >
         <span
           className="h-full bg-green-500"
