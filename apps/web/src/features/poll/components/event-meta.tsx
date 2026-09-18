@@ -55,7 +55,9 @@ export function EventMetaItem({
     <li
       className={cn(
         className,
-        "flex flex-wrap items-center gap-1.5 text-sm [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
+        // The icon holds its column and the text wraps beside it rather
+        // than under it, so a long location stays legible.
+        "flex items-start gap-1.5 text-sm [&>*:not(svg)]:min-w-0 [&_svg]:mt-0.5 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
       )}
     >
       {children}

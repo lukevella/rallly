@@ -61,7 +61,7 @@ export function VotePage({
           <div className="max-lg:overflow-hidden">
             <RandomGradientBar />
           </div>
-          <div className="flex flex-1 flex-col lg:grid lg:min-h-0 lg:grid-cols-[16rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
+          <div className="flex flex-1 flex-col lg:grid lg:min-h-0 lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventSidebar
                 poll={view.poll}
