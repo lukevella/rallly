@@ -20,16 +20,19 @@ export function OptionDate({ value }: { value: DateInput }) {
     return <time dateTime={toISODate(value)}> </time>;
   }
 
-  // All-day dates are stored as UTC wall time and read back in UTC.
+  // All-day dates are stored as UTC wall time and read back in UTC. The
+  // weekday is abbreviated: the date beside it carries the detail, and a
+  // full name would not fit a narrow screen.
   const { weekday, date, weekdayFirst } = formatWeekdayAndDate(value, {
     locale,
     timeZone: "UTC",
+    short: true,
   });
 
   return (
     <time
       dateTime={toISODate(value)}
-      className="grid grid-cols-subgrid items-baseline gap-x-6 [grid-column:span_2]"
+      className="flex items-baseline gap-x-3 sm:grid sm:grid-cols-subgrid sm:gap-x-6 sm:[grid-column:span_2]"
     >
       {weekdayFirst ? (
         <>

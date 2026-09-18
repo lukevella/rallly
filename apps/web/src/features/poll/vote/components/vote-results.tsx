@@ -285,10 +285,10 @@ export function VoteResults({
               data-testid="poll-option"
               className={
                 isTimeSlot
-                  ? "col-span-3 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b pr-4"
+                  ? "grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 border-b px-4 sm:col-span-3 sm:grid-cols-subgrid sm:pl-0"
                   : // The date spans two of the group's columns, so the
                     // weekday and the month/day each line up down the list.
-                    "col-span-4 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b pr-4"
+                    "grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 border-b px-4 sm:col-span-4 sm:grid-cols-subgrid sm:pl-0"
               }
             >
               {row.getVisibleCells().map((cell) => (
@@ -298,9 +298,13 @@ export function VoteResults({
                   className={
                     cell.column.id === "option"
                       ? isTimeSlot
-                        ? "whitespace-nowrap"
-                        : "grid grid-cols-subgrid whitespace-nowrap [grid-column:span_2]"
-                      : "justify-self-end"
+                        ? "truncate"
+                        : "grid truncate sm:grid-cols-subgrid sm:[grid-column:span_2]"
+                      : cell.column.id === "votes"
+                        ? // The vote control needs the width on a narrow
+                          // screen, and the bar is what can go.
+                          "hidden justify-self-end sm:block"
+                        : "justify-self-end"
                   }
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -318,10 +322,12 @@ export function VoteResults({
               key={groupRow.id}
               role="rowgroup"
               aria-labelledby={id}
+              // Below sm the heading takes a line of its own above its
+              // rows: a gutter would leave the rows too little width.
               className={
                 isTimeSlot
-                  ? "grid grid-cols-[8rem_1fr_auto_auto]"
-                  : "grid grid-cols-[6rem_auto_1fr_auto_auto]"
+                  ? "grid sm:grid-cols-[8rem_1fr_auto_auto]"
+                  : "grid sm:grid-cols-[6rem_auto_1fr_auto_auto]"
               }
             >
               <div
@@ -333,15 +339,15 @@ export function VoteResults({
                 // top padding to share the first row's baseline.
                 // The rows are a fixed height with centred content, so the
                 // heading is padded to sit on the first row's baseline.
-                className="sticky top-0 self-start pt-[1.375rem] pr-4 pb-2 pl-4 text-muted-foreground tabular-nums"
+                className="sticky top-0 self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:bg-transparent sm:pt-[1.375rem] sm:pr-4 sm:pl-4"
               >
                 {heading}
               </div>
               <div
                 className={
                   isTimeSlot
-                    ? "col-span-3 grid grid-cols-subgrid"
-                    : "col-span-4 grid grid-cols-subgrid"
+                    ? "grid sm:col-span-3 sm:grid-cols-subgrid"
+                    : "grid sm:col-span-4 sm:grid-cols-subgrid"
                 }
               >
                 {rows}
