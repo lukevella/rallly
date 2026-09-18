@@ -311,60 +311,94 @@ export function VoteResults({
           const groupCell = groupRow
             .getAllCells()
             .find((cell) => cell.column.id === "group");
-          return (
-            <div key={groupRow.id} role="rowgroup" aria-labelledby={id}>
-              {/* The heading's row is what sticks: a sticky element can
-                  only travel within its containing block, and the row is
-                  no taller than the heading itself. */}
-              <div role="row" className="sticky top-0 z-10">
+          const heading = groupCell
+            ? flexRender(
+                groupCell.column.columnDef.cell,
+                groupCell.getContext(),
+              )
+            : null;
+
+          const rows = groupRow.subRows.map((row) => (
+            <div
+              key={row.id}
+              role="row"
+              data-testid="poll-option"
+              className={
+                isTimeSlot
+                  ? "col-span-3 grid grid-cols-subgrid items-center gap-x-4 border-b px-4 py-2"
+                  : // The date spans two of the group's columns, so the
+                    // weekday and the month/day each line up down the list.
+                    "col-span-4 grid grid-cols-subgrid items-center gap-x-4 border-b py-2 pr-4"
+              }
+            >
+              {row.getVisibleCells().map((cell) => (
                 <div
-                  id={id}
-                  role="rowheader"
-                  aria-colspan={visibleColumnCount}
-                  // Solid background so rows do not show through.
-                  className="px-4 py-2"
-                >
-                  {groupCell
-                    ? flexRender(
-                        groupCell.column.columnDef.cell,
-                        groupCell.getContext(),
-                      )
-                    : null}
-                </div>
-              </div>
-              {groupRow.subRows.map((row) => (
-                <div
-                  key={row.id}
-                  role="row"
-                  data-testid="poll-option"
+                  key={cell.id}
+                  role="cell"
                   className={
-                    isTimeSlot
-                      ? "grid grid-cols-[1fr_auto_auto] items-center gap-x-4 border-b px-4 py-2"
-                      : // Two columns for the date so weekdays line up down
-                        // the list; the option cell spans them via subgrid.
-                        "grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-4 border-b px-4 py-2"
+                    cell.column.id === "option"
+                      ? isTimeSlot
+                        ? "whitespace-nowrap"
+                        : "grid grid-cols-subgrid whitespace-nowrap [grid-column:span_2]"
+                      : "justify-self-end"
                   }
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <div
-                      key={cell.id}
-                      role="cell"
-                      className={
-                        cell.column.id === "option"
-                          ? isTimeSlot
-                            ? "whitespace-nowrap"
-                            : "grid grid-cols-subgrid whitespace-nowrap [grid-column:span_2]"
-                          : "justify-self-end"
-                      }
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </div>
-                  ))}
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </div>
               ))}
+            </div>
+          ));
+
+          // A time poll's heading is a full date, so it spans the group as
+          // its own row. A date poll's heading is just the year, which sits
+          // in a gutter beside its rows and sticks while they scroll past.
+          if (isTimeSlot) {
+            return (
+              <div
+                key={groupRow.id}
+                role="rowgroup"
+                aria-labelledby={id}
+                // The group owns the columns so every row measures against
+                // the same tracks; rows subgrid onto them. Per-row grids
+                // would size each column separately and never line up.
+                className="grid grid-cols-[1fr_auto_auto]"
+              >
+                {/* The heading's row is what sticks: a sticky element can
+                    only travel within its containing block, and the row is
+                    no taller than the heading itself. */}
+                <div role="row" className="sticky top-0 z-10 col-span-3">
+                  <div
+                    id={id}
+                    role="rowheader"
+                    aria-colspan={visibleColumnCount}
+                    // Solid background so rows do not show through.
+                    className="border-b bg-muted px-4 py-2 font-medium"
+                  >
+                    {heading}
+                  </div>
+                </div>
+                {rows}
+              </div>
+            );
+          }
+
+          return (
+            <div
+              key={groupRow.id}
+              role="rowgroup"
+              aria-labelledby={id}
+              className="grid grid-cols-[auto_1fr]"
+            >
+              <div
+                id={id}
+                role="rowheader"
+                // Sticks to the top of the scroll area while any of its
+                // rows is in view, then the next year pushes it out.
+                className="sticky top-0 self-start py-2 pr-4 pl-4 font-medium text-muted-foreground"
+              >
+                {heading}
+              </div>
+              <div className="grid grid-cols-[auto_1fr_auto_auto]">{rows}</div>
             </div>
           );
         })}
