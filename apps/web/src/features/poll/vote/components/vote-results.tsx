@@ -287,10 +287,10 @@ export function VoteResults({
               data-testid="poll-option"
               className={
                 isTimeSlot
-                  ? "grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 border-b px-4 sm:col-span-3 sm:grid-cols-subgrid sm:pl-0"
+                  ? "col-span-2 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b px-4 sm:col-span-3 sm:pl-0"
                   : // The date spans two of the group's columns, so the
                     // weekday and the month/day each line up down the list.
-                    "grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 border-b px-4 sm:col-span-4 sm:grid-cols-subgrid sm:pl-0"
+                    "col-span-3 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b px-4 sm:col-span-4 sm:pl-0"
               }
             >
               {row.getVisibleCells().map((cell) => (
@@ -301,7 +301,7 @@ export function VoteResults({
                     cell.column.id === "option"
                       ? isTimeSlot
                         ? "truncate"
-                        : "grid truncate sm:grid-cols-subgrid sm:[grid-column:span_2]"
+                        : "grid grid-cols-subgrid truncate [grid-column:span_2]"
                       : cell.column.id === "votes"
                         ? // The vote control needs the width on a narrow
                           // screen, and the bar is what can go.
@@ -348,8 +348,8 @@ export function VoteResults({
               <div
                 className={
                   isTimeSlot
-                    ? "grid sm:col-span-3 sm:grid-cols-subgrid"
-                    : "grid sm:col-span-4 sm:grid-cols-subgrid"
+                    ? "grid grid-cols-[minmax(0,1fr)_auto] sm:col-span-3 sm:grid-cols-subgrid"
+                    : "grid grid-cols-[auto_minmax(0,1fr)_auto] sm:col-span-4 sm:grid-cols-subgrid"
                 }
               >
                 {rows}

@@ -32,7 +32,7 @@ export function OptionDate({ value }: { value: DateInput }) {
   return (
     <time
       dateTime={toISODate(value)}
-      className="flex items-baseline gap-x-3 sm:grid sm:grid-cols-subgrid sm:gap-x-6 sm:[grid-column:span_2]"
+      className="grid grid-cols-subgrid items-baseline gap-x-3 [grid-column:span_2] sm:gap-x-6"
     >
       {weekdayFirst ? (
         <>
