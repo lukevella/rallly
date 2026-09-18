@@ -24,7 +24,10 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { BillingFlashAlert } from "@/features/billing/components/billing-flash-alert";
-import { loadSubscriptionOverview } from "@/features/billing/loaders";
+import {
+  loadPaymentMethods,
+  loadSubscriptionOverview,
+} from "@/features/billing/loaders";
 import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { requireUser } from "@/features/user/loaders";
@@ -33,6 +36,7 @@ import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { ContactSupportLink } from "./components/contact-support-link";
 import { HobbyPlanCard } from "./components/hobby-plan-card";
+import { PaymentMethodsCard } from "./components/payment-methods-card";
 import { ProPlanCard } from "./components/pro-plan-card";
 
 export default async function BillingSettingsPage() {
@@ -68,9 +72,10 @@ export default async function BillingSettingsPage() {
     );
   }
 
-  const [overview, seatUsage] = await Promise.all([
+  const [overview, seatUsage, paymentMethods] = await Promise.all([
     loadSubscriptionOverview(),
     getSeatUsage(),
+    loadPaymentMethods(),
   ]);
 
   return (
@@ -113,6 +118,16 @@ export default async function BillingSettingsPage() {
               <BillingFlashAlert />
             </PageSectionContent>
           </PageSection>
+          {overview?.subscription.active ? (
+            <>
+              <PageSectionDivider />
+              <PageSection>
+                <PageSectionContent>
+                  <PaymentMethodsCard paymentMethods={paymentMethods} />
+                </PageSectionContent>
+              </PageSection>
+            </>
+          ) : null}
           <PageSectionDivider />
           <PageSection>
             <PageSectionHeader>

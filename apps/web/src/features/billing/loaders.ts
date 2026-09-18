@@ -5,7 +5,11 @@ import { CURRENCY_COOKIE_NAME, getCountryCurrency } from "@rallly/billing";
 import { cookies, headers } from "next/headers";
 import { cache } from "react";
 import { isBillingEnabled } from "@/features/billing/constants";
-import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
+import {
+  getPaymentMethods,
+  getProPrices,
+  getSpaceSubscription,
+} from "@/features/billing/data";
 import type { BillingInterval } from "@/features/billing/schema";
 import {
   canChangeBillingInterval,
@@ -137,4 +141,19 @@ export const loadSubscriptionOverview = cache(async () => {
     // the only way to restore renewals.
     canResume: subscription.cancelAtPeriodEnd && !user?.deletedAt,
   };
+});
+
+/**
+ * The signed in user's saved payment methods, written by the payment_method.*
+ * webhooks. Keyed by user rather than customer id, which can be absent on
+ * rows written before the customer.created webhook landed.
+ */
+export const loadPaymentMethods = cache(async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return [];
+  }
+
+  return getPaymentMethods(user.id);
 });
