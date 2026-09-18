@@ -5,6 +5,7 @@ import { Spinner } from "@/components/spinner";
 import { EventDetails } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { PollOutcome } from "@/features/poll/components/poll-outcome";
+import { VoteOptions } from "@/features/poll/components/vote-options";
 import { VotingInterface } from "@/features/poll/components/voting/voting-interface";
 import { VotingForm } from "@/features/poll/components/voting-form";
 import { CreatorBanner } from "@/features/poll/invite/components/creator-banner";
@@ -47,7 +48,10 @@ export function VotePage({
           <RandomGradientBar />
           <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
-              <EventDetails stackResponseOptions />
+              <EventDetails />
+              <div className="mt-4">
+                <VoteOptions />
+              </div>
             </aside>
             {/* VotingForm renders its (empty) form element beside its
                 children, so the grid cell wraps it rather than the reverse. */}

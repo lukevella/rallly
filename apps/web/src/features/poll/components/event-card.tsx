@@ -25,10 +25,7 @@ function IconDescriptionList({
 }: React.HTMLAttributes<HTMLDListElement>) {
   return (
     <dl
-      className={cn(
-        "flex flex-wrap items-center gap-4 text-muted-foreground text-sm",
-        className,
-      )}
+      className={cn("flex flex-wrap items-center gap-4 text-xs", className)}
       {...props}
     >
       {children}
@@ -52,16 +49,11 @@ function IconDescription({
 }
 
 /**
- * The event's identity: branding chip, title, description, organizer,
- * location and the response legend. `EventCard` frames it as a standalone
- * card; the vote page places it in the sidebar of the merged card.
+ * The event's identity: branding chip, title, description, organizer and
+ * location. `EventCard` frames it as a standalone card with the response
+ * legend; the vote page places it in the sidebar of the merged card.
  */
-export function EventDetails({
-  stackResponseOptions = false,
-}: {
-  /** Lay the response legend out as a column, for a narrow sidebar. */
-  stackResponseOptions?: boolean;
-}) {
+export function EventDetails() {
   const poll = usePoll();
   const branding = useBranding();
   const { spaceBrandingAllowed } = useInstancePolicy();
@@ -88,10 +80,8 @@ export function EventDetails({
           </p>
         </div>
       ) : null}
-      <div>
-        <EventMetaTitle>{poll.title}</EventMetaTitle>
-        <EventMetaDescription className="mt-2" content={poll.description} />
-      </div>
+      <EventMetaTitle>{poll.title}</EventMetaTitle>
+      <EventMetaDescription className="mt-4" content={poll.description} />
       <EventMetaList className="mt-4">
         {poll.user ? (
           <EventMetaItem>
@@ -118,40 +108,36 @@ export function EventDetails({
           </EventMetaItem>
         ) : null}
       </EventMetaList>
-      <h2 className="mt-4 mb-1.5 font-medium text-sm">
-        <Trans i18nKey="responseOptions" defaults="Response options" />
-      </h2>
-      <IconDescriptionList
-        aria-label="Response options"
-        className={
-          stackResponseOptions ? "flex-col items-start gap-2" : undefined
-        }
-      >
-        <IconDescription
-          icon={<VoteIcon type="yes" />}
-          label={<Trans i18nKey="yes" defaults="Yes" />}
-        />
-        {poll.allowTentativeVotes ? (
-          <IconDescription
-            icon={<VoteIcon type="ifNeedBe" />}
-            label={<Trans i18nKey="ifNeedBe" defaults="If need be" />}
-          />
-        ) : null}
-        <IconDescription
-          icon={<VoteIcon type="no" />}
-          label={<Trans i18nKey="no" defaults="No" />}
-        />
-      </IconDescriptionList>
     </>
   );
 }
 
 export function EventCard() {
+  const poll = usePoll();
   return (
     <Card>
       <RandomGradientBar />
       <CardContent>
         <EventDetails />
+        <h2 className="mt-4 mb-1.5 text-muted-foreground text-xs">
+          <Trans i18nKey="responseOptions" defaults="Response options" />
+        </h2>
+        <IconDescriptionList aria-label="Response options">
+          <IconDescription
+            icon={<VoteIcon type="yes" />}
+            label={<Trans i18nKey="yes" defaults="Yes" />}
+          />
+          {poll.allowTentativeVotes ? (
+            <IconDescription
+              icon={<VoteIcon type="ifNeedBe" />}
+              label={<Trans i18nKey="ifNeedBe" defaults="If need be" />}
+            />
+          ) : null}
+          <IconDescription
+            icon={<VoteIcon type="no" />}
+            label={<Trans i18nKey="no" defaults="No" />}
+          />
+        </IconDescriptionList>
       </CardContent>
     </Card>
   );
