@@ -40,5 +40,6 @@ export const billingReturnFlowSchema = z.enum([
   "seats",
   "interval",
   "payment_method",
+  "cancel",
 ]);
 export type BillingReturnFlow = z.infer<typeof billingReturnFlowSchema>;

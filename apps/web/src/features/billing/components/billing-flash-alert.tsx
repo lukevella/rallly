@@ -22,17 +22,21 @@ export function BillingFlashAlert() {
           <Trans i18nKey="seatsUpdatedAlertTitle" defaults="Seats updated" />
         </AlertTitle>
       ) : flow.data === "interval" ? (
+        <AlertTitle>
+          <Trans i18nKey="planChangedAlertTitle" defaults="Plan changed" />
+        </AlertTitle>
+      ) : flow.data === "cancel" ? (
         <>
           <AlertTitle>
             <Trans
-              i18nKey="billingIntervalUpdatedAlertTitle"
-              defaults="Switched to yearly billing"
+              i18nKey="planCancelScheduledAlertTitle"
+              defaults="Cancellation scheduled"
             />
           </AlertTitle>
           <AlertDescription>
             <Trans
-              i18nKey="billingIntervalUpdatedAlertDescription"
-              defaults="Your subscription now renews once a year."
+              i18nKey="planCancelScheduledAlertDescription"
+              defaults="Your plan stays active until the end of the current billing period. You can resume it any time before then."
             />
           </AlertDescription>
         </>

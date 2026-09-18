@@ -4,7 +4,13 @@ import { displayedCurrencies, getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { createStripePortalSession } from "@/features/billing/mutations";
+import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
+import {
+  createPaymentMethodUpdateSession,
+  createStripeCancelSession,
+  createStripeSubscriptionUpdateConfirmation,
+  resumeSubscriptionRenewal,
+} from "@/features/billing/mutations";
 import { getNonprofitStatus } from "@/features/billing/nonprofit/data";
 import { ensureNonprofitCoupon } from "@/features/billing/nonprofit/mutations";
 import { buildCheckoutDiscountParams } from "@/features/billing/nonprofit/utils";
@@ -13,8 +19,11 @@ import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/billing/schema";
+import { billingIntervalSchema } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
+import { isEarlySupporter, resolvePriceSet } from "@/features/billing/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { defineAbilityForMember } from "@/features/space/member/ability";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -64,17 +73,8 @@ export const upgradeToProAction = authActionClient
     }
 
     if (space.tier === "pro") {
-      // User already has an active subscription. Take them to customer portal
-      if (!ctx.user.customerId) {
-        throw new AppError({
-          code: "NOT_FOUND",
-          message: "No customer ID found",
-        });
-      }
-
-      redirect(
-        await createStripePortalSession({ customerId: ctx.user.customerId }),
-      );
+      // Already subscribed; the billing page has every plan action.
+      redirect("/settings/billing");
     }
 
     const { period, currency, returnPath } = parsedInput;
@@ -180,25 +180,141 @@ export const upgradeToProAction = authActionClient
     redirect(checkoutSession.url);
   });
 
-export const openCustomerPortalAction = authActionClient
-  .metadata({ actionName: "open_customer_portal" })
-  .inputSchema(
-    z.object({
-      returnPath: returnPathSchema.optional(),
-    }),
-  )
+/**
+ * The active space's subscription, proven manageable by the caller: the
+ * caller must hold `manage Billing` on the space (owner) and the subscription
+ * must belong to that space. Every subscription changing action starts here.
+ */
+async function requireManagedSubscription(user: {
+  id: string;
+  customerId?: string;
+}) {
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (!space) {
+    throw new AppError({ code: "NOT_FOUND", message: "Space not found" });
+  }
+
+  const ability = defineAbilityForMember({
+    user: { id: user.id },
+    space: { id: space.id, ownerId: space.ownerId, role: space.role },
+  });
+
+  if (ability.cannot("manage", "Billing")) {
+    throw new AppError({
+      code: "FORBIDDEN",
+      message: "Only the space owner can manage billing",
+    });
+  }
+
+  const subscription = await getSpaceSubscription(space.id);
+
+  if (!subscription?.active) {
+    throw new AppError({
+      code: "NOT_FOUND",
+      message: "No active subscription for this space",
+    });
+  }
+
+  if (!user.customerId) {
+    throw new AppError({ code: "NOT_FOUND", message: "No customer ID found" });
+  }
+
+  return { space, subscription, customerId: user.customerId };
+}
+
+export const changeBillingIntervalAction = authActionClient
+  .metadata({ actionName: "change_billing_interval" })
+  .inputSchema(z.object({ interval: billingIntervalSchema }))
   .action(async ({ ctx, parsedInput }) => {
-    if (!ctx.user.customerId) {
+    const { space, subscription, customerId } =
+      await requireManagedSubscription(ctx.user);
+
+    const pricing = await getProPrices();
+    const priceSet = resolvePriceSet({
+      earlySupporter: isEarlySupporter({
+        priceId: subscription.priceId,
+        pricing,
+      }),
+      pricing,
+    });
+    const target =
+      parsedInput.interval === "month" ? priceSet.monthly : priceSet.yearly;
+
+    track(ctx.user, {
+      event: "space_billing:change_plan_submit",
+      properties: { from: subscription.interval, to: parsedInput.interval },
+      groups: { space: space.id },
+    });
+
+    redirect(
+      await createStripeSubscriptionUpdateConfirmation({
+        customerId,
+        subscriptionId: subscription.id,
+        subscriptionItemId: subscription.subscriptionItemId,
+        priceIds: [
+          priceSet.monthly.id,
+          priceSet.yearly.id,
+          subscription.priceId,
+        ],
+        item: { price: target.id, quantity: subscription.quantity },
+        returnFlow: "interval",
+      }),
+    );
+  });
+
+export const openCancelPlanAction = authActionClient
+  .metadata({ actionName: "open_cancel_plan" })
+  .action(async ({ ctx }) => {
+    const { space, subscription, customerId } =
+      await requireManagedSubscription(ctx.user);
+
+    track(ctx.user, {
+      event: "space_billing:cancel_plan_click",
+      properties: { interval: subscription.interval },
+      groups: { space: space.id },
+    });
+
+    redirect(
+      await createStripeCancelSession({
+        customerId,
+        subscriptionId: subscription.id,
+      }),
+    );
+  });
+
+export const resumePlanAction = authActionClient
+  .metadata({ actionName: "resume_plan" })
+  .action(async ({ ctx }) => {
+    // Resuming inside the deletion recovery window would fight the reaper;
+    // cancelling the deletion is the path that restores renewals.
+    if (ctx.user.deletedAt) {
       throw new AppError({
-        code: "NOT_FOUND",
-        message: "No customer ID found",
+        code: "FORBIDDEN",
+        message: "Cancel the account deletion to resume the subscription",
       });
     }
 
-    redirect(
-      await createStripePortalSession({
-        customerId: ctx.user.customerId,
-        returnPath: parsedInput.returnPath,
-      }),
-    );
+    const { space, subscription } = await requireManagedSubscription(ctx.user);
+
+    await resumeSubscriptionRenewal({ subscriptionId: subscription.id });
+
+    track(ctx.user, {
+      event: "space_billing:resume_plan_click",
+      properties: { interval: subscription.interval },
+      groups: { space: space.id },
+    });
+  });
+
+export const openPaymentMethodUpdateAction = authActionClient
+  .metadata({ actionName: "open_payment_method_update" })
+  .action(async ({ ctx }) => {
+    const { space, customerId } = await requireManagedSubscription(ctx.user);
+
+    track(ctx.user, {
+      event: "space_billing:payment_method_click",
+      groups: { space: space.id },
+    });
+
+    redirect(await createPaymentMethodUpdateSession({ customerId }));
   });

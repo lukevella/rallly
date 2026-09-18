@@ -106,7 +106,13 @@ describe("formatMinorUnitAmount", () => {
   it("formats minor units as a localized currency string", () => {
     expect(
       formatMinorUnitAmount({ amount: 5600, currency: "usd", locale: "en" }),
-    ).toBe("$56.00");
+    ).toBe("$56");
+  });
+
+  it("keeps cents when the amount needs them", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 467, currency: "usd", locale: "en" }),
+    ).toBe("$4.67");
   });
 
   it("does not scale zero decimal currencies", () => {

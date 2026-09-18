@@ -6,7 +6,8 @@ import { cookies, headers } from "next/headers";
 import { cache } from "react";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
-import { isEarlySupporter } from "@/features/billing/utils";
+import type { BillingInterval } from "@/features/billing/schema";
+import { isEarlySupporter, resolvePriceSet } from "@/features/billing/utils";
 import { getActiveSpace } from "@/features/space/loaders";
 import { getCurrentUser } from "@/features/user/loaders";
 
@@ -77,6 +78,21 @@ export const loadSubscriptionOverview = cache(async () => {
   });
   const currency = subscription.currency;
 
+  // The other interval from the subscriber's own price set, so an early
+  // supporter switches between the early supporter prices, never onto list.
+  const priceSet = pricing
+    ? resolvePriceSet({ earlySupporter, pricing })
+    : null;
+  const otherInterval: BillingInterval =
+    subscription.interval === "month" ? "year" : "month";
+  const otherPrice =
+    otherInterval === "month" ? priceSet?.monthly : priceSet?.yearly;
+  const otherAmount = otherPrice?.amounts[currency];
+  const otherListAmount =
+    otherInterval === "month"
+      ? pricing?.monthly.amounts[currency]
+      : pricing?.yearly.amounts[currency];
+
   return {
     subscription,
     earlySupporter,
@@ -86,6 +102,19 @@ export const loadSubscriptionOverview = cache(async () => {
           yearly: pricing.yearly.amounts[currency],
         }
       : null,
+    changePlan:
+      subscription.active &&
+      !subscription.cancelAtPeriodEnd &&
+      otherAmount !== undefined
+        ? {
+            interval: otherInterval,
+            amount: otherAmount,
+            listAmount:
+              earlySupporter && otherListAmount !== otherAmount
+                ? otherListAmount
+                : undefined,
+          }
+        : null,
     // The deletion recovery window reaps the space regardless of renewal;
     // resuming there would fight the reaper, so cancelling the deletion is
     // the only way to restore renewals.

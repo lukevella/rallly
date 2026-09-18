@@ -1,16 +1,20 @@
+import { Dialog } from "@rallly/ui/dialog";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@/test/test-utils";
 
 import { ProPlanCard } from "./pro-plan-card";
 
 // The card pulls in server actions and client-only hooks that aren't relevant
-// to the price rendering under test, so stub them out.
+// to the rendering under test, so stub them out.
 vi.mock("@rallly/posthog/client", () => ({
   posthog: { capture: vi.fn() },
 }));
 
 vi.mock("@/features/billing/actions", () => ({
-  openCustomerPortalAction: vi.fn(),
+  changeBillingIntervalAction: vi.fn(),
+  openCancelPlanAction: vi.fn(),
+  openPaymentMethodUpdateAction: vi.fn(),
+  resumePlanAction: vi.fn(),
 }));
 
 vi.mock("@/lib/safe-action/client", () => ({
@@ -22,79 +26,126 @@ vi.mock("@/lib/datetime/client", () => ({
   useDateTime: () => ({ formatDateTime: () => "Jan 1, 2026" }),
 }));
 
+// The dialogs own a Dialog root around their trigger; stand-ins keep the root
+// so the real DialogTrigger inside the card still mounts.
 vi.mock("./manage-seats-dialog", () => ({
-  ManageSeatsDialog: () => null,
+  ManageSeatsDialog: ({ children }: { children: React.ReactNode }) => (
+    <Dialog>{children}</Dialog>
+  ),
+}));
+
+vi.mock("./change-plan-dialog", () => ({
+  ChangePlanDialog: ({ children }: { children: React.ReactNode }) => (
+    <Dialog>{children}</Dialog>
+  ),
 }));
 
 const baseProps = {
-  amount: 800,
+  amount: 1000,
   currency: "usd",
   interval: "month" as const,
-  seats: 2,
+  seats: 1,
   usedSeats: 1,
   status: "active" as const,
   cancelAtPeriodEnd: false,
   periodEnd: new Date("2026-01-01T00:00:00Z"),
   earlySupporter: false,
   listPrice: null,
+  changePlan: { interval: "year" as const, amount: 7200 },
+  canResume: false,
 };
 
+// ICU interpolation isn't wired up in this render harness, so copy with
+// placeholders renders its raw template. Assertions target formatted numbers
+// rendered outside Trans, button names, and leading words.
 describe("ProPlanCard", () => {
-  // Note: ICU interpolation isn't wired up in this render harness, so the
-  // discount note renders its raw template rather than an interpolated string.
-  // The price figures come from Intl.NumberFormat, so those are asserted exactly.
-
-  it("shows the full price when there is no discount", () => {
+  it("shows the monthly total and the renewing actions", () => {
     render(<ProPlanCard {...baseProps} />);
 
-    // amount (800) * seats (2) / 100 = $16.00, not struck through
-    const price = screen.getByText("$16.00");
-    expect(price).toBeInTheDocument();
-    expect(price).not.toHaveClass("line-through");
-    expect(screen.queryByText(/discount applied/)).not.toBeInTheDocument();
+    expect(screen.getByText("$10")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /change plan/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /manage seats/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /cancel plan/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /resume plan/i }),
+    ).not.toBeInTheDocument();
   });
 
-  it("applies a percentage discount and shows the original price struck through", () => {
-    render(<ProPlanCard {...baseProps} discountPercentOff={50} />);
-
-    // Discounted total is shown as the headline price (16.00 - 50% = 8.00)
-    expect(screen.getByText("$8.00")).toBeInTheDocument();
-    // Original price is shown struck through
-    expect(screen.getByText("$16.00")).toHaveClass("line-through");
-    expect(screen.getByText(/discount applied/)).toBeInTheDocument();
-  });
-
-  it("applies a fixed-amount discount", () => {
-    render(<ProPlanCard {...baseProps} discountAmountOff={400} />);
-
-    // 1600 - 400 = 1200 -> $12.00
-    expect(screen.getByText("$12.00")).toBeInTheDocument();
-    expect(screen.getByText("$16.00")).toHaveClass("line-through");
-    expect(screen.getByText(/discount applied/)).toBeInTheDocument();
-  });
-
-  it("labels early supporters and says the rate is kept", () => {
-    render(<ProPlanCard {...baseProps} earlySupporter listPrice={null} />);
-
-    expect(screen.getByText("Early supporter")).toBeInTheDocument();
-    expect(document.querySelector(".line-through")).toBeNull();
-  });
-
-  it("shows nothing about early supporters on a current price", () => {
-    render(<ProPlanCard {...baseProps} />);
-
-    expect(screen.queryByText("Early supporter")).not.toBeInTheDocument();
-  });
-
-  it("keeps the badge when cancellation is scheduled", () => {
+  it("shows the per month equivalent for yearly billing", () => {
     render(
       <ProPlanCard
         {...baseProps}
-        earlySupporter
-        cancelAtPeriodEnd
-        listPrice={{ monthly: 1000, yearly: 8400 }}
+        interval="year"
+        amount={7200}
+        changePlan={{ interval: "month", amount: 1000 }}
       />,
     );
+
+    expect(screen.getByText("$6")).toBeInTheDocument();
+  });
+
+  it("multiplies by seats and applies a percentage discount", () => {
+    render(<ProPlanCard {...baseProps} seats={2} discountPercentOff={30} />);
+
+    // 1000 × 2 = 2000, minus 30% = 1400 → $14
+    expect(screen.getByText("$14")).toBeInTheDocument();
+  });
+
+  it("offers only resume once cancellation is scheduled", () => {
+    render(
+      <ProPlanCard
+        {...baseProps}
+        cancelAtPeriodEnd
+        canResume
+        changePlan={null}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: /resume plan/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /change plan/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /cancel plan/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("hides resume while the account is scheduled for deletion", () => {
+    render(
+      <ProPlanCard
+        {...baseProps}
+        cancelAtPeriodEnd
+        canResume={false}
+        changePlan={null}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("button", { name: /resume plan/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("asks for a payment method when past due", () => {
+    render(<ProPlanCard {...baseProps} status="past_due" />);
+
+    expect(
+      screen.getByRole("button", { name: /update payment method/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /change plan/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("labels early supporters", () => {
+    render(<ProPlanCard {...baseProps} earlySupporter />);
 
     expect(screen.getByText("Early supporter")).toBeInTheDocument();
   });

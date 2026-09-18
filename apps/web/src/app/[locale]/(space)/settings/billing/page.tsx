@@ -115,6 +115,8 @@ export default async function BillingSettingsPage() {
                   periodEnd={overview.subscription.periodEnd}
                   earlySupporter={overview.earlySupporter}
                   listPrice={overview.listPrice}
+                  changePlan={overview.changePlan}
+                  canResume={overview.canResume}
                 />
               ) : (
                 <HobbyPlanCard />

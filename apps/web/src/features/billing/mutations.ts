@@ -233,6 +233,69 @@ export async function createStripeSubscriptionUpdateConfirmation({
   return portalSession.url;
 }
 
+/**
+ * Stripe's cancellation screen (reasons, period end confirmation) as a deep
+ * link. Uses the account's default portal configuration, the one that has
+ * cancellation enabled; the code defined configurations disable it.
+ */
+export async function createStripeCancelSession({
+  customerId,
+  subscriptionId,
+}: {
+  customerId: string;
+  subscriptionId: string;
+}) {
+  const session = await getStripe().billingPortal.sessions.create({
+    customer: customerId,
+    return_url: absoluteUrl("/settings/billing"),
+    flow_data: {
+      type: "subscription_cancel",
+      subscription_cancel: { subscription: subscriptionId },
+      after_completion: {
+        type: "redirect",
+        redirect: { return_url: billingReturnUrl("cancel") },
+      },
+    },
+  });
+  return session.url;
+}
+
+export async function createPaymentMethodUpdateSession({
+  customerId,
+}: {
+  customerId: string;
+}) {
+  const session = await getStripe().billingPortal.sessions.create({
+    customer: customerId,
+    return_url: absoluteUrl("/settings/billing"),
+    flow_data: {
+      type: "payment_method_update",
+      after_completion: {
+        type: "redirect",
+        redirect: { return_url: billingReturnUrl("payment_method") },
+      },
+    },
+  });
+  return session.url;
+}
+
+// Stripe is the source of truth and the webhook writes the same value, but
+// the page re-renders as soon as the action returns, so the row is updated
+// here too rather than showing "Ends" for a few seconds after resuming.
+export async function resumeSubscriptionRenewal({
+  subscriptionId,
+}: {
+  subscriptionId: string;
+}) {
+  await getStripe().subscriptions.update(subscriptionId, {
+    cancel_at_period_end: false,
+  });
+  await prisma.subscription.update({
+    where: { id: subscriptionId },
+    data: { cancelAtPeriodEnd: false },
+  });
+}
+
 // Scheduling an account deletion must guarantee no further charges without
 // destroying anything: cancel_at_period_end stops the renewal while keeping
 // the paid-for time, and is reversible if the deletion is cancelled.
