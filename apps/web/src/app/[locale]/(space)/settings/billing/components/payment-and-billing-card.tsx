@@ -8,9 +8,9 @@ import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import {
   PlanCard,
+  PlanCardActions,
   PlanCardContent,
   PlanCardDescription,
-  PlanCardFooter,
   PlanCardHeader,
   PlanCardHeading,
   PlanCardHeadingDescription,
@@ -30,7 +30,7 @@ const brandNames: Record<string, string> = {
   visa: "Visa",
 };
 
-export function PaymentMethodsCard({
+export function PaymentAndBillingCard({
   paymentMethods,
   className,
 }: {
@@ -48,12 +48,12 @@ export function PaymentMethodsCard({
     <PlanCard className={className}>
       <PlanCardHeading>
         <PlanCardHeadingTitle>
-          <Trans i18nKey="paymentMethods" defaults="Payment method" />
+          <Trans i18nKey="paymentAndBilling" defaults="Payment and billing" />
         </PlanCardHeadingTitle>
         <PlanCardHeadingDescription>
           <Trans
-            i18nKey="paymentMethodsDescription"
-            defaults="The card your subscription is charged to."
+            i18nKey="paymentAndBillingDescription"
+            defaults="How you pay and what appears on your invoices."
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
@@ -100,20 +100,16 @@ export function PaymentMethodsCard({
             </PlanCardDescription>
           )}
         </PlanCardContent>
+        <PlanCardActions>
+          <Button
+            loading={openBillingDetails.isExecuting}
+            onClick={() => openBillingDetails.execute()}
+          >
+            <Trans i18nKey="manageBilling" defaults="Manage billing" />
+            <ArrowUpRightIcon className="text-muted-foreground" />
+          </Button>
+        </PlanCardActions>
       </PlanCardHeader>
-      <PlanCardFooter className="flex-row items-center">
-        <Button
-          className="ml-auto"
-          loading={openBillingDetails.isExecuting}
-          onClick={() => openBillingDetails.execute()}
-        >
-          <Trans
-            i18nKey="managePaymentMethods"
-            defaults="Manage payment methods"
-          />
-          <ArrowUpRightIcon className="text-muted-foreground" />
-        </Button>
-      </PlanCardFooter>
     </PlanCard>
   );
 }

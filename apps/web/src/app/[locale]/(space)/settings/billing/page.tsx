@@ -25,9 +25,8 @@ import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { BillingDetailsCard } from "./components/billing-details-card";
 import { HobbyPlanCard } from "./components/hobby-plan-card";
-import { PaymentMethodsCard } from "./components/payment-methods-card";
+import { PaymentAndBillingCard } from "./components/payment-and-billing-card";
 import { ProPlanCard } from "./components/pro-plan-card";
 import { SupportCard } from "./components/support-card";
 
@@ -107,10 +106,7 @@ export default async function BillingSettingsPage() {
           )}
           <BillingFlashAlert />
           {overview?.subscription.active ? (
-            <div className="grid gap-4 lg:grid-cols-2">
-              <PaymentMethodsCard paymentMethods={paymentMethods} />
-              <BillingDetailsCard />
-            </div>
+            <PaymentAndBillingCard paymentMethods={paymentMethods} />
           ) : null}
           <SupportCard />
         </div>

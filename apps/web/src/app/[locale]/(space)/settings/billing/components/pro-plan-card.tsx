@@ -30,9 +30,6 @@ import {
   PlanCardDescription,
   PlanCardFooter,
   PlanCardHeader,
-  PlanCardHeading,
-  PlanCardHeadingDescription,
-  PlanCardHeadingTitle,
   PlanCardTitle,
 } from "./plan-card";
 import { SwitchToYearlyDialog } from "./switch-to-yearly-dialog";
@@ -112,17 +109,6 @@ export function ProPlanCard({
 
   return (
     <PlanCard className={className}>
-      <PlanCardHeading>
-        <PlanCardHeadingTitle>
-          <Trans i18nKey="billingPlanTitle" defaults="Plan" />
-        </PlanCardHeadingTitle>
-        <PlanCardHeadingDescription>
-          <Trans
-            i18nKey="billingSubscriptionDescription"
-            defaults="Manage your current subscription plan."
-          />
-        </PlanCardHeadingDescription>
-      </PlanCardHeading>
       <PlanCardHeader>
         <PlanCardContent>
           <PlanCardTitle>
