@@ -8,6 +8,7 @@ import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import {
   PlanCard,
+  PlanCardActions,
   PlanCardContent,
   PlanCardDescription,
   PlanCardHeader,
@@ -29,7 +30,7 @@ const brandNames: Record<string, string> = {
   visa: "Visa",
 };
 
-export function PaymentMethodsCard({
+export function PaymentAndBillingCard({
   paymentMethods,
   className,
 }: {
@@ -47,16 +48,16 @@ export function PaymentMethodsCard({
     <PlanCard className={className}>
       <PlanCardHeading>
         <PlanCardHeadingTitle>
-          <Trans i18nKey="paymentMethods" defaults="Payment method" />
+          <Trans i18nKey="paymentAndBilling" defaults="Payment and billing" />
         </PlanCardHeadingTitle>
         <PlanCardHeadingDescription>
           <Trans
-            i18nKey="paymentMethodsDescription"
-            defaults="The card your subscription is charged to."
+            i18nKey="paymentAndBillingDescription"
+            defaults="The card your subscription is charged to, and the name, address and tax ID on your invoices."
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardHeader className="pb-0">
+      <PlanCardHeader>
         <PlanCardContent>
           {primary?.card ? (
             <div className="flex items-center gap-3">
@@ -99,19 +100,16 @@ export function PaymentMethodsCard({
             </PlanCardDescription>
           )}
         </PlanCardContent>
+        <PlanCardActions>
+          <Button
+            loading={openBillingDetails.isExecuting}
+            onClick={() => openBillingDetails.execute()}
+          >
+            <Trans i18nKey="manageBilling" defaults="Manage billing" />
+            <ArrowUpRightIcon className="text-muted-foreground" />
+          </Button>
+        </PlanCardActions>
       </PlanCardHeader>
-      <div className="mt-auto flex flex-wrap items-center gap-2 px-4 pt-3 pb-4">
-        <Button
-          loading={openBillingDetails.isExecuting}
-          onClick={() => openBillingDetails.execute()}
-        >
-          <Trans
-            i18nKey="managePaymentMethods"
-            defaults="Manage payment methods"
-          />
-          <ArrowUpRightIcon className="text-muted-foreground" />
-        </Button>
-      </div>
     </PlanCard>
   );
 }
