@@ -63,6 +63,15 @@ export function NumberTicker({
   const containerRef = useRef<HTMLSpanElement>(null);
   const inView = useInView(containerRef, { once: true, amount: 0.6 });
   const [armed, setArmed] = useState(!startOnView);
+  // The roll starts from zero, so the zeroed state must never be what the
+  // server renders: it would ship the markup as "000" and only become the real
+  // number once hydration arms the reveal, which reads as a bug on a slow
+  // connection and leaves the wrong figure in a screenshot or a scrape. The
+  // server and the first client render therefore both show the true digits,
+  // keeping hydration in agreement; the reveal is armed after mount, so it
+  // still plays for a ticker that is below the fold.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (startOnView && inView) setArmed(true);
@@ -124,7 +133,7 @@ export function NumberTicker({
           return (
             <Digit
               key={id}
-              digit={armed ? digit : 0}
+              digit={armed || !mounted ? digit : 0}
               delay={entered ? 0 : i * stagger}
               duration={duration}
               blur={blur}
@@ -187,7 +196,10 @@ function Digit({
     >
       <motion.span
         ref={columnRef}
-        initial={{ y: 0 }}
+        // Start where the digit rests rather than at zero, so the server
+        // renders the real number: `initial` is what SSR paints, and a
+        // hardcoded 0 shipped the markup as "000" until hydration.
+        initial={{ y: `-${digit * DIGIT_HEIGHT_EM}em` }}
         animate={{ y: `-${digit * DIGIT_HEIGHT_EM}em` }}
         transition={
           reduce ? { duration: 0 } : { duration, delay, ease: EASE_OUT }
