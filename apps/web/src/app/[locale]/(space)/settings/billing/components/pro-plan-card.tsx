@@ -6,6 +6,7 @@ import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 import { TriangleAlertIcon } from "lucide-react";
 import {
+  openBillingDetailsAction,
   openCancelPlanAction,
   openPaymentMethodUpdateAction,
   resumePlanAction,
@@ -78,6 +79,7 @@ export function ProPlanCard({
   const switchToYearlyDialog = useDialog();
   const openCancelPlan = useSafeAction(openCancelPlanAction);
   const openPaymentMethodUpdate = useSafeAction(openPaymentMethodUpdateAction);
+  const openBillingDetails = useSafeAction(openBillingDetailsAction);
   const resumePlan = useSafeAction(resumePlanAction, {
     onSuccess: () => {
       toast.success(
@@ -275,16 +277,29 @@ export function ProPlanCard({
             values={{ count: seats }}
           />
         </span>
-        {endsAtPeriodEnd ? null : (
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             className="text-muted-foreground"
-            loading={openCancelPlan.isExecuting}
-            onClick={() => openCancelPlan.execute()}
+            loading={openBillingDetails.isExecuting}
+            onClick={() => openBillingDetails.execute()}
           >
-            <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
+            <Trans
+              i18nKey="billingDetailsAndInvoices"
+              defaults="Invoices & billing details"
+            />
           </Button>
-        )}
+          {endsAtPeriodEnd ? null : (
+            <Button
+              variant="ghost"
+              className="text-muted-foreground"
+              loading={openCancelPlan.isExecuting}
+              onClick={() => openCancelPlan.execute()}
+            >
+              <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
+            </Button>
+          )}
+        </div>
       </PlanCardFooter>
     </PlanCard>
   );

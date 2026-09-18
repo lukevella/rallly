@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import * as z from "zod";
 import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
 import {
+  createAccountPortalSession,
   createPaymentMethodUpdateSession,
   createStripeCancelSession,
   createStripeSubscriptionUpdateConfirmation,
@@ -313,6 +314,19 @@ export const resumePlanAction = authActionClient
       properties: { interval: subscription.interval },
       groups: { space: space.id },
     });
+  });
+
+export const openBillingDetailsAction = authActionClient
+  .metadata({ actionName: "open_billing_details" })
+  .action(async ({ ctx }) => {
+    const { space, customerId } = await requireManagedSubscription(ctx.user);
+
+    track(ctx.user, {
+      event: "space_billing:billing_details_click",
+      groups: { space: space.id },
+    });
+
+    redirect(await createAccountPortalSession({ customerId }));
   });
 
 export const openPaymentMethodUpdateAction = authActionClient

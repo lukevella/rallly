@@ -260,6 +260,24 @@ export async function createStripeCancelSession({
   return session.url;
 }
 
+/**
+ * The account portal: invoices, payment methods, billing address and tax id.
+ * Its configuration disables every subscription control, so the plan can only
+ * be changed from our own card.
+ */
+export async function createAccountPortalSession({
+  customerId,
+}: {
+  customerId: string;
+}) {
+  const session = await getStripe().billingPortal.sessions.create({
+    customer: customerId,
+    configuration: await getAccountPortalConfigurationId(),
+    return_url: absoluteUrl("/settings/billing"),
+  });
+  return session.url;
+}
+
 export async function createPaymentMethodUpdateSession({
   customerId,
 }: {
@@ -267,6 +285,7 @@ export async function createPaymentMethodUpdateSession({
 }) {
   const session = await getStripe().billingPortal.sessions.create({
     customer: customerId,
+    configuration: await getAccountPortalConfigurationId(),
     return_url: absoluteUrl("/settings/billing"),
     flow_data: {
       type: "payment_method_update",

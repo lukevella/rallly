@@ -12,6 +12,7 @@ vi.mock("@rallly/posthog/client", () => ({
 
 vi.mock("@/features/billing/actions", () => ({
   switchToYearlyAction: vi.fn(),
+  openBillingDetailsAction: vi.fn(),
   openCancelPlanAction: vi.fn(),
   openPaymentMethodUpdateAction: vi.fn(),
   resumePlanAction: vi.fn(),
@@ -73,6 +74,9 @@ describe("ProPlanCard", () => {
       screen.getByRole("button", { name: /cancel plan/i }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("button", { name: /invoices & billing details/i }),
+    ).toBeInTheDocument();
+    expect(
       screen.queryByRole("button", { name: /resume plan/i }),
     ).not.toBeInTheDocument();
   });
@@ -119,6 +123,10 @@ describe("ProPlanCard", () => {
     expect(
       screen.queryByRole("button", { name: /cancel plan/i }),
     ).not.toBeInTheDocument();
+    // Invoices stay reachable after cancellation is scheduled.
+    expect(
+      screen.getByRole("button", { name: /invoices & billing details/i }),
+    ).toBeInTheDocument();
   });
 
   it("hides resume while the account is scheduled for deletion", () => {
