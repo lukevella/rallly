@@ -64,7 +64,7 @@ function SeatGauge({
         />
         <circle
           className={cn(
-            "transition-[stroke-dashoffset,color] duration-300 ease-out",
+            "transition-[stroke-dashoffset,color] duration-300 ease-out motion-reduce:transition-none",
             overAllocated ? "text-destructive" : "text-primary",
           )}
           cx={GAUGE_SIZE / 2}
@@ -153,6 +153,7 @@ export function ManageSeatsDialog({
               <NumberTicker
                 value={newSeatCount}
                 startOnView={false}
+                announceChanges
                 duration={0.4}
                 className="w-[3ch] justify-center font-semibold text-3xl"
               />

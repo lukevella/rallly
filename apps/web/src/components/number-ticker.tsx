@@ -24,6 +24,12 @@ export interface NumberTickerProps {
   digitClassName?: string;
   /** Custom formatter, e.g. for group separators. */
   format?: (value: number) => string;
+  /**
+   * Announce each new value politely. Off by default: a ticker that counts up
+   * as decoration would otherwise interrupt a screen reader on every frame.
+   * Turn it on where the number is the thing the user is changing.
+   */
+  announceChanges?: boolean;
 }
 
 const DIGIT_HEIGHT_EM = 1.1;
@@ -41,6 +47,7 @@ export function NumberTicker({
   className,
   digitClassName,
   format,
+  announceChanges = false,
 }: NumberTickerProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
   const inView = useInView(containerRef, { once: true, amount: 0.6 });
@@ -81,7 +88,13 @@ export function NumberTicker({
       ref={containerRef}
       className={cn("inline-flex items-center tabular-nums", className)}
     >
-      <span className="sr-only">{readableText}</span>
+      <span
+        className="sr-only"
+        aria-live={announceChanges ? "polite" : undefined}
+        aria-atomic={announceChanges ? "true" : undefined}
+      >
+        {readableText}
+      </span>
       <span aria-hidden="true" className="inline-flex items-center">
         {prefix ? <span>{prefix}</span> : null}
         {glyphs.map(({ char, id }, i) => {
