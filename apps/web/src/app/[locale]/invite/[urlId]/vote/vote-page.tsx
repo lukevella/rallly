@@ -1,36 +1,32 @@
-"use client";
 import { Card } from "@rallly/ui/card";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { Spinner } from "@/components/spinner";
-import { EventDetails } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
-import { PollOutcome } from "@/features/poll/components/poll-outcome";
-import { VoteOptions } from "@/features/poll/components/vote-options";
-import { VotingInterface } from "@/features/poll/components/voting/voting-interface";
-import { VotingForm } from "@/features/poll/components/voting-form";
 import { CreatorBanner } from "@/features/poll/invite/components/creator-banner";
-import { FloatingComments } from "@/features/poll/invite/components/floating-comments";
-import { useHydrated } from "@/lib/datetime/use-hydrated";
+import { EventSidebar } from "@/features/poll/invite/components/event-sidebar";
+import { VotingPanel } from "@/features/poll/invite/components/voting-panel";
+import type { PollDetails } from "@/features/poll/types";
 
 /**
  * Participant view as one card centered on a page that never scrolls: the
- * event details sit in a sidebar beside the voting list on large screens
- * and stack above it below that, and the card's body is the scroll area.
- * The list renders Intl output for the option dates in the viewer's zone, which the
- * server cannot know, so the page waits for hydration behind the same
- * spinner the route streams while its data loads.
+ * event details sit in a sidebar beside the voting panel on large screens
+ * and stack above it below that.
+ *
+ * Everything but the panel renders on the server. The panel shows option
+ * dates in the viewer's zone, which the server cannot know, so it waits for
+ * hydration rather than committing to a time the browser would correct.
  */
 export function VotePage({
+  poll,
   footerLinks,
+  spaceBrandingAllowed,
+  instanceBranding,
 }: {
+  poll: PollDetails;
   footerLinks: { label: string; href: string }[];
+  spaceBrandingAllowed: boolean;
+  instanceBranding: { appName: string; logoIcon?: string };
 }) {
-  const hydrated = useHydrated();
-
-  if (!hydrated) {
-    return <VotePageLoading />;
-  }
-
   return (
     <div className="page-bg-gray-100 flex h-dvh flex-col items-center justify-center gap-3 overflow-hidden p-3 lg:p-6 dark:bg-gray-900">
       <main
@@ -48,20 +44,14 @@ export function VotePage({
           <RandomGradientBar />
           <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
-              <EventDetails />
-              <div className="mt-4">
-                <VoteOptions />
-              </div>
+              <EventSidebar
+                poll={poll}
+                spaceBrandingAllowed={spaceBrandingAllowed}
+                instanceBranding={instanceBranding}
+              />
             </aside>
-            {/* VotingForm renders its (empty) form element beside its
-                children, so the grid cell wraps it rather than the reverse. */}
             <section className="flex min-h-0 flex-1 flex-col lg:border-l">
-              <VotingForm>
-                <PollOutcome>
-                  <VotingInterface />
-                </PollOutcome>
-                <FloatingComments liftAtAllWidths />
-              </VotingForm>
+              <VotingPanel />
             </section>
           </div>
         </Card>

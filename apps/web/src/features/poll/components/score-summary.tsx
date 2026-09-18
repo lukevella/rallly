@@ -1,10 +1,11 @@
+"use client";
 import { cn } from "@rallly/ui";
 import { User2Icon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import * as React from "react";
 import { usePrevious } from "react-use";
-import { usePoll } from "@/features/poll/components/poll-context";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 
 export interface PopularityScoreProps {
@@ -22,7 +23,7 @@ export interface PopularityScoreProps {
 export const ConnectedScoreSummary: React.FunctionComponent<{
   optionId: string;
 }> = ({ optionId }) => {
-  const { getScore, highScore, poll } = usePoll();
+  const { getScore, highScore, poll } = usePollScores();
   const { yes, ifNeedBe } = getScore(optionId);
   const score = yes + ifNeedBe;
   const highlight = score === highScore && score > 1;

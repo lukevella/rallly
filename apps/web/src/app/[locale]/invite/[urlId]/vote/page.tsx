@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
+import { loadInstanceBranding } from "@/features/branding/loaders";
+import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PollProvider } from "@/features/poll/client";
 import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
-import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
@@ -62,11 +63,15 @@ async function VotePageContent({ params, searchParams }: PageProps) {
     locale,
     deviceDateTimeConfig,
     footerLinks,
+    instancePolicy,
+    instanceBranding,
   ] = await Promise.all([
     loadInvitePoll({ pollId: urlId, token }),
     getLocale(),
     getDeviceDateTimeConfig(),
     loadFooterLinks(),
+    loadInstancePolicy(),
+    loadInstanceBranding(),
   ]);
 
   return (
@@ -86,12 +91,15 @@ async function VotePageContent({ params, searchParams }: PageProps) {
             linkedParticipantIds={linkedParticipantIds}
             viewerRole="participant"
           >
-            <LegacyPollContextProvider>
-              <VisibilityProvider>
-                <PollBrandingFromContext />
-                <VotePage footerLinks={footerLinks} />
-              </VisibilityProvider>
-            </LegacyPollContextProvider>
+            <VisibilityProvider>
+              <PollBrandingFromContext />
+              <VotePage
+                poll={poll}
+                footerLinks={footerLinks}
+                spaceBrandingAllowed={instancePolicy.spaceBrandingAllowed}
+                instanceBranding={instanceBranding}
+              />
+            </VisibilityProvider>
           </PollProvider>
         </DeviceDateTimeProvider>
       </UserProvider>

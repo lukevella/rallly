@@ -5,8 +5,11 @@ import { env } from "@/env";
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { loadInstanceLicense } from "@/features/licensing/data";
 import { DEFAULT_PRIMARY_COLOR } from "./constants";
-import { getCustomBrandingConfig } from "./data";
+import { getCustomBrandingConfig, getInstanceBrandingConfig } from "./data";
 import { getPrimaryColorVars } from "./utils";
+
+/** The instance's effective branding, for pages that render its identity. */
+export const loadInstanceBranding = cache(() => getInstanceBrandingConfig());
 
 /**
  * Raw branding values for the control panel branding page. Editable fields

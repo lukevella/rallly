@@ -12,8 +12,8 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 import { usePoll as usePollDetails } from "@/features/poll/client";
-import { usePoll as usePollScores } from "@/features/poll/components/poll-context";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { VoteBreakdownDialog } from "@/features/poll/components/vote-breakdown-dialog";
 import VoteIcon from "@/features/poll/components/vote-icon";
@@ -36,7 +36,8 @@ function VoteBreakdownButton({
   optionLabel: string;
 }) {
   const { t } = useTranslation();
-  const { getScore, poll } = usePollScores();
+  const { getScore } = usePollScores();
+  const poll = usePollDetails();
   const { yes, ifNeedBe } = getScore(optionId);
   const dialog = useDialog();
   const breakdown = poll.allowTentativeVotes
@@ -259,7 +260,7 @@ export function VotingOptions() {
   return (
     // The scroll area. Scroll padding keeps a focused row clear of the
     // pinned group heading.
-    <div className="min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
+    <div className="scrollbar-thin dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
       <div
         role="table"
         aria-label={t("pollOptions", { defaultValue: "Poll options" })}
