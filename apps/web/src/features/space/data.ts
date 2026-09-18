@@ -221,6 +221,7 @@ export const listSpacesForUser = cache(async (userId: string) => {
           subscriptions: {
             where: { active: true },
             select: { quantity: true },
+            orderBy: { createdAt: "desc" },
             take: 1,
           },
         },
@@ -256,6 +257,10 @@ export const getActiveSpaceForUser = cache(async (userId: string) => {
           subscriptions: {
             where: { active: true },
             select: { quantity: true, status: true },
+            // Newest first, matching getSpaceSubscription: nothing stops a
+            // space having two active rows, and an unordered take(1) could
+            // otherwise disagree with the billing page about which one counts.
+            orderBy: { createdAt: "desc" },
             take: 1,
           },
         },
