@@ -17,6 +17,7 @@ import {
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import type React from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
+import { PastDueAlert } from "@/features/billing/components/past-due-alert";
 import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
 import {
@@ -79,6 +80,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset id="main-content" tabIndex={-1}>
+        <PastDueAlert />
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
             <div className="flex items-center gap-4">

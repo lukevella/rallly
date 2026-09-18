@@ -221,6 +221,7 @@ export const listSpacesForUser = cache(async (userId: string) => {
           subscriptions: {
             where: { active: true },
             select: { quantity: true },
+            orderBy: { createdAt: "desc" },
             take: 1,
           },
         },
@@ -255,7 +256,11 @@ export const getActiveSpaceForUser = cache(async (userId: string) => {
           _count: { select: { members: true } },
           subscriptions: {
             where: { active: true },
-            select: { quantity: true },
+            select: { quantity: true, status: true },
+            // Newest first, matching getSpaceSubscription: nothing stops a
+            // space having two active rows, and an unordered take(1) could
+            // otherwise disagree with the billing page about which one counts.
+            orderBy: { createdAt: "desc" },
             take: 1,
           },
         },
@@ -273,6 +278,8 @@ export const getActiveSpaceForUser = cache(async (userId: string) => {
       role: spaceMember.role,
       memberCount: spaceMember.space._count.members,
       seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
+      subscriptionPastDue:
+        spaceMember.space.subscriptions[0]?.status === "past_due",
     },
     policy: await getInstancePolicy(),
   });

@@ -17,7 +17,9 @@ import {
   resolvePriceSet,
 } from "@/features/billing/utils";
 import { getActiveSpace } from "@/features/space/loaders";
-import { getCurrentUser } from "@/features/user/loaders";
+import { defineAbilityForMember } from "@/features/space/member/ability";
+import { getCurrentUser, requireUser } from "@/features/user/loaders";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
 /**
  * Prices for the pay wall plus the currency to show first: the currency the
@@ -156,4 +158,29 @@ export const loadPaymentMethods = cache(async () => {
   }
 
   return getPaymentMethods(user.id);
+});
+
+/**
+ * Whether to warn the active space about a failed payment. Gated on the same
+ * ability as the billing page so the warning never links a member to a page
+ * they get denied on. Reads the flag off the space DTO, which the session
+ * gate already fetched, so the warning costs no extra query on any page.
+ */
+export const loadIsSubscriptionPastDue = cache(async () => {
+  if (!isFeatureEnabled("billing")) {
+    return false;
+  }
+
+  const [user, space] = await Promise.all([requireUser(), getActiveSpace()]);
+
+  if (!space.subscriptionPastDue) {
+    return false;
+  }
+
+  const ability = defineAbilityForMember({
+    user: { id: user.id },
+    space: { id: space.id, ownerId: space.ownerId, role: space.role },
+  });
+
+  return ability.can("manage", "Billing");
 });

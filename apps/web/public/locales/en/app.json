@@ -671,6 +671,8 @@
   "passwordStrengthWeak": "Weak",
   "passwordTooWeak": "Password is too weak. Please use a stronger password.",
   "past": "Past",
+  "pastDueAlertDescription": "We couldn't charge your card. Your space stays on Pro while we retry, but will drop to Hobby if the payment isn't updated. <a>Go to billing</a>",
+  "pastDueAlertTitle": "Payment failed",
   "pastEventsEmptyStateDescription": "Past events will show up here.",
   "pastEventsEmptyStateTitle": "No past events",
   "paymentMethodExpires": "Expires {month}/{year}",
