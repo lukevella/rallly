@@ -73,9 +73,11 @@ describe("ProPlanCard", () => {
     expect(
       screen.getByRole("button", { name: /cancel plan/i }),
     ).toBeInTheDocument();
+    // Invoices live in the payment and billing card, which opens the same
+    // portal, so the footer does not repeat the link.
     expect(
-      screen.getByRole("button", { name: /invoices/i }),
-    ).toBeInTheDocument();
+      screen.queryByRole("button", { name: /invoices/i }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /resume plan/i }),
     ).not.toBeInTheDocument();
@@ -123,10 +125,6 @@ describe("ProPlanCard", () => {
     expect(
       screen.queryByRole("button", { name: /cancel plan/i }),
     ).not.toBeInTheDocument();
-    // Invoices stay reachable after cancellation is scheduled.
-    expect(
-      screen.getByRole("button", { name: /invoices/i }),
-    ).toBeInTheDocument();
   });
 
   it("hides resume while the account is scheduled for deletion", () => {

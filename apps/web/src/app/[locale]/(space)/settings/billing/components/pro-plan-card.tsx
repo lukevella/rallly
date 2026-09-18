@@ -4,9 +4,8 @@ import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
-import { ArrowUpRightIcon, TriangleAlertIcon } from "lucide-react";
+import { TriangleAlertIcon } from "lucide-react";
 import {
-  openBillingDetailsAction,
   openCancelPlanAction,
   openPaymentMethodUpdateAction,
   resumePlanAction,
@@ -76,7 +75,6 @@ export function ProPlanCard({
   const switchToYearlyDialog = useDialog();
   const openCancelPlan = useSafeAction(openCancelPlanAction);
   const openPaymentMethodUpdate = useSafeAction(openPaymentMethodUpdateAction);
-  const openBillingDetails = useSafeAction(openBillingDetailsAction);
   const resumePlan = useSafeAction(resumePlanAction, {
     onSuccess: () => {
       toast.success(
@@ -263,27 +261,16 @@ export function ProPlanCard({
             values={{ count: seats }}
           />
         </span>
-        <div className="flex items-center gap-1">
+        {endsAtPeriodEnd ? null : (
           <Button
             variant="ghost"
             className="text-muted-foreground"
-            loading={openBillingDetails.isExecuting}
-            onClick={() => openBillingDetails.execute()}
+            loading={openCancelPlan.isExecuting}
+            onClick={() => openCancelPlan.execute()}
           >
-            <Trans i18nKey="invoices" defaults="Invoices" />
-            <ArrowUpRightIcon className="text-muted-foreground" />
+            <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
           </Button>
-          {endsAtPeriodEnd ? null : (
-            <Button
-              variant="ghost"
-              className="text-muted-foreground"
-              loading={openCancelPlan.isExecuting}
-              onClick={() => openCancelPlan.execute()}
-            >
-              <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
-            </Button>
-          )}
-        </div>
+        )}
       </PlanCardFooter>
     </PlanCard>
   );
