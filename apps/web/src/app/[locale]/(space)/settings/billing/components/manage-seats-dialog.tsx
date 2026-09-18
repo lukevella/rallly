@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -11,109 +12,73 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
-
-import { Input } from "@rallly/ui/input";
-import { Label } from "@rallly/ui/label";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { useCallback, useState } from "react";
-import { Trans, useTranslation } from "@/i18n/client";
+import * as React from "react";
+import { NumberTicker } from "@/components/number-ticker";
+import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-interface ManageSeatsButtonProps {
-  currentSeats: number;
+const MAX_SEATS = 999;
+
+const GAUGE_SIZE = 88;
+const GAUGE_STROKE = 6;
+const GAUGE_RADIUS = (GAUGE_SIZE - GAUGE_STROKE) / 2;
+const GAUGE_CIRCUMFERENCE = 2 * Math.PI * GAUGE_RADIUS;
+
+/**
+ * Ring around the seat count showing how much of the new total is already
+ * taken. Over-allocation (fewer seats than members) fills the ring and turns
+ * destructive, so the error message is not the only signal.
+ */
+function SeatGauge({
+  usedSeats,
+  totalSeats,
+  children,
+}: {
   usedSeats: number;
-}
-
-interface SeatCountSelectorProps {
-  value: number;
-  onChange: (value: number) => void;
-  currentSeats: number;
-  minSeats: number;
-}
-
-function SeatCountSelector({
-  value,
-  onChange,
-  currentSeats,
-  minSeats,
-}: SeatCountSelectorProps) {
-  const { t } = useTranslation();
-  const handleIncrement = useCallback(() => {
-    onChange(value + 1);
-  }, [value, onChange]);
-
-  const handleDecrement = useCallback(() => {
-    if (value > minSeats) {
-      onChange(value - 1);
-    }
-  }, [value, minSeats, onChange]);
-
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = e.target.value;
-
-      // Allow empty input for better UX while typing
-      if (inputValue === "") {
-        return;
-      }
-
-      const numValue = Number.parseInt(inputValue, 10);
-
-      // Only update if it's a valid positive integer
-      if (!Number.isNaN(numValue) && numValue >= minSeats && numValue <= 999) {
-        onChange(numValue);
-      }
-    },
-    [minSeats, onChange],
-  );
-
-  const handleInputBlur = useCallback(() => {
-    // If the input is empty or invalid on blur, reset to current value
-    if (value < minSeats || Number.isNaN(value)) {
-      onChange(currentSeats);
-    }
-  }, [value, minSeats, currentSeats, onChange]);
-
-  const canDecrement = value > minSeats;
-  const canIncrement = value < 999; // Reasonable upper limit
+  totalSeats: number;
+  children: React.ReactNode;
+}) {
+  const ratio = totalSeats > 0 ? Math.min(usedSeats / totalSeats, 1) : 1;
+  const overAllocated = usedSeats > totalSeats;
 
   return (
-    <div>
-      <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          variant="default"
-          onClick={handleDecrement}
-          disabled={!canDecrement}
-        >
-          <MinusIcon data-icon="inline-start" />
-          <span className="sr-only">
-            <Trans i18nKey="decreaseSeats" defaults="Decrease seats" />
-          </span>
-        </Button>
-
-        <Input
-          type="number"
-          aria-label={t("numberOfSeats", { defaultValue: "Number of seats" })}
-          value={value}
-          onChange={handleInputChange}
-          onBlur={handleInputBlur}
-          min={minSeats}
-          max={999}
-          className="w-20 text-center"
+    <div
+      className="relative flex shrink-0 items-center justify-center"
+      style={{ width: GAUGE_SIZE, height: GAUGE_SIZE }}
+    >
+      <svg
+        className="absolute inset-0 -rotate-90"
+        width={GAUGE_SIZE}
+        height={GAUGE_SIZE}
+        aria-hidden="true"
+      >
+        <circle
+          className="text-border"
+          cx={GAUGE_SIZE / 2}
+          cy={GAUGE_SIZE / 2}
+          r={GAUGE_RADIUS}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={GAUGE_STROKE}
         />
-
-        <Button
-          type="button"
-          onClick={handleIncrement}
-          disabled={!canIncrement}
-        >
-          <PlusIcon data-icon="inline-start" />
-          <span className="sr-only">
-            <Trans i18nKey="increaseSeats" defaults="Increase seats" />
-          </span>
-        </Button>
-      </div>
+        <circle
+          className={cn(
+            "transition-[stroke-dashoffset,color] duration-300 ease-out",
+            overAllocated ? "text-destructive" : "text-primary",
+          )}
+          cx={GAUGE_SIZE / 2}
+          cy={GAUGE_SIZE / 2}
+          r={GAUGE_RADIUS}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={GAUGE_STROKE}
+          strokeLinecap="round"
+          strokeDasharray={GAUGE_CIRCUMFERENCE}
+          strokeDashoffset={GAUGE_CIRCUMFERENCE * (1 - ratio)}
+        />
+      </svg>
+      {children}
     </div>
   );
 }
@@ -124,15 +89,32 @@ export function ManageSeatsDialog({
   children,
   currentSeats,
   usedSeats,
-}: DialogProps & ManageSeatsButtonProps) {
-  const [newSeatCount, setNewSeatCount] = useState(currentSeats);
+}: DialogProps & { currentSeats: number; usedSeats: number }) {
+  const [newSeatCount, setNewSeatCount] = React.useState(currentSeats);
+  // The stepper is allowed below usedSeats so the reason surfaces as a
+  // message; a silently clamped button leaves the user guessing.
+  const [showUsedSeatsError, setShowUsedSeatsError] = React.useState(false);
+
   const seatDelta = newSeatCount - currentSeats;
-  const isRemoving = seatDelta < 0;
-  const isAdding = seatDelta > 0;
-  const canRemoveSeats = newSeatCount >= usedSeats;
+  const belowUsedSeats = newSeatCount < usedSeats;
   const hasChanges = seatDelta !== 0;
 
   const updateSeats = trpc.billing.updateSeats.useMutation();
+
+  const handleDecrement = () => {
+    if (newSeatCount <= 1) {
+      return;
+    }
+    const next = newSeatCount - 1;
+    setNewSeatCount(next);
+    setShowUsedSeatsError(next < usedSeats);
+  };
+
+  const handleIncrement = () => {
+    const next = Math.min(newSeatCount + 1, MAX_SEATS);
+    setNewSeatCount(next);
+    setShowUsedSeatsError(next < usedSeats);
+  };
 
   const handleUpdate = async () => {
     const { url } = await updateSeats.mutateAsync({ seatDelta });
@@ -142,7 +124,7 @@ export function ManageSeatsDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {children}
-      <DialogContent size="md">
+      <DialogContent size="sm" className="sm:max-w-xs">
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="manageSeats" defaults="Manage seats" />
@@ -154,44 +136,75 @@ export function ManageSeatsDialog({
             />
           </DialogDescription>
         </DialogHeader>
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <Label className="mb-2">
-              <Trans i18nKey="totalSeats" defaults="Total seats" />
-            </Label>
-
-            <p className="mt-1 text-muted-foreground text-sm">
+        <div className="flex flex-col items-center gap-3 py-2">
+          <div className="flex items-center gap-6">
+            <Button
+              size="icon-lg"
+              className="rounded-full"
+              onClick={handleDecrement}
+              disabled={newSeatCount <= 1}
+            >
+              <MinusIcon />
+              <span className="sr-only">
+                <Trans i18nKey="decreaseSeats" defaults="Decrease seats" />
+              </span>
+            </Button>
+            <SeatGauge usedSeats={usedSeats} totalSeats={newSeatCount}>
+              <NumberTicker
+                value={newSeatCount}
+                startOnView={false}
+                duration={0.4}
+                className="w-[3ch] justify-center font-semibold text-3xl"
+              />
+            </SeatGauge>
+            <Button
+              size="icon-lg"
+              className="rounded-full"
+              onClick={handleIncrement}
+              disabled={newSeatCount >= MAX_SEATS}
+            >
+              <PlusIcon />
+              <span className="sr-only">
+                <Trans i18nKey="increaseSeats" defaults="Increase seats" />
+              </span>
+            </Button>
+          </div>
+          {showUsedSeatsError ? null : (
+            <p className="text-center text-muted-foreground text-sm">
               <Trans
-                i18nKey="currentlyUsing"
-                defaults="Currently using {usedSeats} of {currentSeats} seats"
-                values={{ usedSeats, currentSeats }}
+                i18nKey="seatsUnusedCount"
+                defaults="{used} of {total} seats used"
+                values={{ used: usedSeats, total: newSeatCount }}
               />
             </p>
-          </div>
-          <SeatCountSelector
-            value={newSeatCount}
-            onChange={setNewSeatCount}
-            currentSeats={currentSeats}
-            minSeats={usedSeats}
-          />
+          )}
+          {showUsedSeatsError ? (
+            <p role="alert" className="text-center text-destructive text-sm">
+              <Trans
+                i18nKey="seatsBelowUsedError"
+                defaults="You can only remove unused seats. Remove members first."
+              />
+            </p>
+          ) : null}
         </div>
-        <DialogFooter>
-          <DialogClose render={<Button />}>
+        <DialogFooter className="flex-col-reverse gap-2 sm:flex-col-reverse">
+          <DialogClose render={<Button className="w-full" />}>
             <Trans i18nKey="cancel" defaults="Cancel" />
           </DialogClose>
           <Button
+            className="w-full"
             variant="primary"
             onClick={handleUpdate}
-            disabled={!canRemoveSeats || !hasChanges}
+            disabled={belowUsedSeats || !hasChanges}
             loading={updateSeats.isPending}
           >
-            {isAdding ? (
+            {seatDelta > 0 ? (
               <Trans
                 i18nKey="addSeats"
                 defaults="{count, plural, one {Add # seat} other {Add # seats}}"
                 values={{ count: seatDelta }}
               />
-            ) : isRemoving ? (
+            ) : seatDelta < 0 ? (
               <Trans
                 i18nKey="removeSeats"
                 defaults="{count, plural, one {Remove # seat} other {Remove # seats}}"
