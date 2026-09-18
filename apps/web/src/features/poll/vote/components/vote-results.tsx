@@ -329,7 +329,7 @@ export function VoteResults({
                 // group's heading pushes it out. The row's own border-b
                 // sits above its py-2, so the heading needs a little more
                 // top padding to share the first row's baseline.
-                className="sticky top-0 self-start pt-4 pr-4 pb-2 pl-4 font-medium text-muted-foreground tabular-nums"
+                className="sticky top-0 self-start pt-4 pr-4 pb-2 pl-4 text-muted-foreground tabular-nums"
               >
                 {heading}
               </div>

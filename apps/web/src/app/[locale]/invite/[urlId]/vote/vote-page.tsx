@@ -48,9 +48,9 @@ export function VotePage({
             screens and a fixed height on large ones (shrinking, footer
             included, when the viewport is shorter). The voting panel is a
             flex column whose results table is the only scroll area. */}
-        <Card className="flex min-h-0 flex-1 flex-col lg:h-[44rem] lg:flex-initial">
+        <Card className="flex min-h-0 flex-1 flex-col lg:h-176 lg:flex-initial">
           <RandomGradientBar />
-          <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
+          <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[16rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventSidebar
                 poll={view.poll}

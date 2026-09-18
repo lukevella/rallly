@@ -58,13 +58,23 @@ export function VoteForm({
   const [isNewParticipantOpen, setIsNewParticipantOpen] = React.useState(false);
 
   const optionIds = results.map((result) => result.optionId);
+  const mode = canVote && !response ? "new" : "view";
   const form = useForm<VoteFormValues>({
-    defaultValues: {
-      mode: canVote && !response ? "new" : "view",
-      votes: emptyVotes(results),
-    },
+    defaultValues: { mode, votes: emptyVotes(results) },
     resolver: zodResolver(schema),
   });
+
+  // The page re-renders from the loader after every write, so the form
+  // follows the response appearing or disappearing: deleting one puts the
+  // viewer straight back into composing a new response.
+  const responseId = response?.participantId ?? null;
+  const lastResponseId = React.useRef(responseId);
+  React.useEffect(() => {
+    if (lastResponseId.current !== responseId) {
+      lastResponseId.current = responseId;
+      form.reset({ mode, votes: emptyVotes(results) });
+    }
+  }, [responseId, mode, results, form]);
 
   return (
     <FormProvider {...form}>
