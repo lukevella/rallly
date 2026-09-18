@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { MoreHorizontalIcon, TagIcon } from "lucide-react";
+import { MoreHorizontalIcon, TagIcon, TrashIcon } from "lucide-react";
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePermissions, usePoll } from "@/features/poll/client";
@@ -22,7 +22,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 /**
  * Header of the voting interface. While composing a response it carries
  * the prompt; once a response is saved it names the participant with their
- * avatar, an overflow menu for renaming, and Edit and Delete. Display
+ * avatar, an overflow menu for renaming and deleting, and Edit. Display
  * settings sit on the right for zoned time polls.
  */
 export function VotingHeader() {
@@ -82,6 +82,16 @@ export function VotingHeader() {
                     <TagIcon />
                     <Trans i18nKey="changeName" defaults="Change name" />
                   </DropdownMenuItem>
+                  {/* Removing the response entirely is rarer than changing
+                      it to a no, so it sits in the menu rather than beside
+                      Edit. */}
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => deleteDialog.trigger()}
+                  >
+                    <TrashIcon />
+                    <Trans i18nKey="delete" defaults="Delete" />
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <Button
@@ -90,11 +100,6 @@ export function VotingHeader() {
                 }}
               >
                 <Trans i18nKey="edit" defaults="Edit" />
-              </Button>
-              {/* Plain rather than destructive: it sits in the header for
-                  the whole session and its dialog already confirms. */}
-              <Button onClick={() => deleteDialog.trigger()}>
-                <Trans i18nKey="delete" defaults="Delete" />
               </Button>
               <ChangeNameModal
                 {...changeNameDialog.dialogProps}

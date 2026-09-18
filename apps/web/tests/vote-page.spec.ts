@@ -71,13 +71,17 @@ test.describe("vote page", () => {
     const header = main.locator("header");
     await expect(header.getByText("Test user")).toBeVisible();
     await expect(header.getByRole("button", { name: "Edit" })).toBeVisible();
-    await expect(header.getByRole("button", { name: "Delete" })).toBeVisible();
     await expect(bar).toHaveCount(0);
 
-    // Renaming lives in the overflow menu
+    // Renaming and deleting live in the overflow menu, so changing a
+    // response to a no is the prominent path
+    await expect(header.getByRole("button", { name: "Delete" })).toHaveCount(0);
     await header.getByTestId("participant-menu").click();
     const menu = page.getByRole("menu");
-    await expect(menu.getByRole("menuitem")).toHaveText(["Change name"]);
+    await expect(menu.getByRole("menuitem")).toHaveText([
+      "Change name",
+      "Delete",
+    ]);
     await page.keyboard.press("Escape");
     await expect(page.getByTestId("vote-selector")).toHaveCount(0);
 
