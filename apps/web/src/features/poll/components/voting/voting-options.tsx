@@ -257,7 +257,9 @@ export function VotingOptions() {
     // rows, so the wrapper scrolls instead. Scroll padding keeps a focused
     // row clear of the pinned group heading.
     <div className="min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
-      <table className="w-full text-sm">
+      {/* Separate borders so cell borders travel with the pinned heading;
+          collapsed borders are painted by the table and leave a gap. */}
+      <table className="w-full border-separate border-spacing-0 text-sm">
         <caption className="sr-only">
           {t("pollOptions", { defaultValue: "Poll options" })}
         </caption>
@@ -291,7 +293,7 @@ export function VotingOptions() {
                   colSpan={visibleColumnCount}
                   // Pinned at the top of the scroll area while its rows
                   // scroll; solid background so rows do not show through.
-                  className="sticky top-0 z-[5] border-y bg-muted px-4 py-2 text-left font-medium"
+                  className="sticky top-0 z-[5] border-b bg-muted px-4 py-2 text-left font-medium"
                 >
                   {groupCell
                     ? flexRender(
@@ -302,18 +304,14 @@ export function VotingOptions() {
                 </th>
               </tr>
               {groupRow.subRows.map((row) => (
-                <tr
-                  key={row.id}
-                  data-testid="poll-option"
-                  className="border-b last:border-b-0"
-                >
+                <tr key={row.id} data-testid="poll-option">
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
                       className={
                         cell.column.id === "option"
-                          ? "w-full whitespace-nowrap px-4 py-2"
-                          : "px-2 py-2 text-right last:pr-4"
+                          ? "w-full whitespace-nowrap border-b px-4 py-2"
+                          : "border-b px-2 py-2 text-right last:pr-4"
                       }
                     >
                       {flexRender(
