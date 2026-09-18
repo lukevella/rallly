@@ -89,8 +89,11 @@ export function PlanCardActions({
   ...props
 }: React.ComponentProps<"div">) {
   return (
+    // No ml-auto: the content's grow already pushes the actions right while
+    // they share its row, and once they wrap onto their own row there is
+    // nothing to push against, so they stay left aligned.
     <div
-      className={cn("@sm:ml-auto flex flex-wrap items-center gap-2", className)}
+      className={cn("flex flex-wrap items-center gap-2", className)}
       {...props}
     />
   );
