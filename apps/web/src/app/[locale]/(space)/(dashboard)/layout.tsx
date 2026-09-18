@@ -13,6 +13,7 @@ import {
 } from "@rallly/ui/sidebar";
 import { SettingsIcon } from "lucide-react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
+import { PastDueAlert } from "@/features/billing/components/past-due-alert";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -78,6 +79,7 @@ export default async function Layout({
       </Sidebar>
       <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
         <LicenseLimitWarning />
+        <PastDueAlert />
         <div className="flex flex-1 flex-col">
           <div className="flex flex-1 flex-col">{children}</div>
         </div>

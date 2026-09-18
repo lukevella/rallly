@@ -51,6 +51,7 @@ export function createSpaceDTO({
     shared: boolean;
     memberCount: number;
     seatCount: number;
+    subscriptionPastDue?: boolean;
   };
   policy: Pick<InstancePolicy, "spacesAlwaysShared">;
 }): SpaceDTO {
@@ -70,6 +71,7 @@ export function createSpaceDTO({
     primaryColor: space.primaryColor ?? undefined,
     showBranding: space.showBranding,
     hideAttribution: space.hideAttribution,
+    subscriptionPastDue: space.subscriptionPastDue ?? false,
   };
 }
 
