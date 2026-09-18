@@ -206,7 +206,7 @@ export function PlanPrice() {
       format={{
         style: "currency",
         currency: currency.toUpperCase(),
-        minimumFractionDigits: 2,
+        minimumFractionDigits: 0,
         maximumFractionDigits: 2,
       }}
     />
