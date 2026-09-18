@@ -3,7 +3,9 @@ import { Card } from "@rallly/ui/card";
 import type * as React from "react";
 
 export function PlanCard({ className, ...props }: React.ComponentProps<"div">) {
-  return <Card className={cn("@container", className)} {...props} />;
+  return (
+    <Card className={cn("@container flex flex-col", className)} {...props} />
+  );
 }
 
 export function PlanCardHeading({
@@ -95,8 +97,9 @@ export function PlanCardFooter({
     <div
       className={cn(
         // Inset rule rather than a full width border, so the footer reads as
-        // part of the card rather than a separate band.
-        "mx-4 flex @sm:flex-row flex-col @sm:items-center justify-between gap-2 border-card-border border-t pt-3 pb-4 text-muted-foreground text-sm",
+        // part of the card rather than a separate band. mt-auto pins it to the
+        // bottom when paired cards have unequal content heights.
+        "mx-4 mt-auto flex @sm:flex-row flex-col @sm:items-center justify-between gap-2 border-card-border border-t pt-3 pb-4 text-muted-foreground text-sm",
         className,
       )}
       {...props}

@@ -1,17 +1,16 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon, CreditCardIcon } from "lucide-react";
 import { openBillingDetailsAction } from "@/features/billing/actions";
 import type { PaymentMethodCard } from "@/features/billing/schema";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
-import { CardBrandMark } from "./card-brand-mark";
 import {
   PlanCard,
-  PlanCardActions,
   PlanCardContent,
   PlanCardDescription,
+  PlanCardFooter,
   PlanCardHeader,
   PlanCardHeading,
   PlanCardHeadingDescription,
@@ -58,11 +57,13 @@ export function PaymentMethodsCard({
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardHeader className="@sm:flex-col @sm:items-start">
+      <PlanCardHeader>
         <PlanCardContent>
           {primary?.card ? (
             <div className="flex items-center gap-3">
-              <CardBrandMark brand={primary.card.brand} />
+              <span className="flex h-9 w-12 shrink-0 items-center justify-center rounded-md border border-card-border bg-card">
+                <CreditCardIcon className="size-4 text-muted-foreground" />
+              </span>
               <div className="min-w-0">
                 <p className="text-sm">
                   {brandNames[primary.card.brand] ?? primary.card.brand} ••••{" "}
@@ -99,19 +100,19 @@ export function PaymentMethodsCard({
             </PlanCardDescription>
           )}
         </PlanCardContent>
-        <PlanCardActions>
-          <Button
-            loading={openBillingDetails.isExecuting}
-            onClick={() => openBillingDetails.execute()}
-          >
-            <Trans
-              i18nKey="managePaymentMethods"
-              defaults="Manage payment methods"
-            />
-            <ArrowUpRightIcon className="text-muted-foreground" />
-          </Button>
-        </PlanCardActions>
       </PlanCardHeader>
+      <PlanCardFooter className="flex-row items-center justify-end">
+        <Button
+          loading={openBillingDetails.isExecuting}
+          onClick={() => openBillingDetails.execute()}
+        >
+          <Trans
+            i18nKey="managePaymentMethods"
+            defaults="Manage payment methods"
+          />
+          <ArrowUpRightIcon className="text-muted-foreground" />
+        </Button>
+      </PlanCardFooter>
     </PlanCard>
   );
 }

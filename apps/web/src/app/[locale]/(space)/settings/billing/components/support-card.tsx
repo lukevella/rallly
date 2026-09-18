@@ -6,10 +6,8 @@ import { SendIcon } from "lucide-react";
 import { Trans } from "@/i18n/client";
 import {
   PlanCard,
-  PlanCardActions,
-  PlanCardContent,
   PlanCardDescription,
-  PlanCardHeader,
+  PlanCardFooter,
   PlanCardHeading,
   PlanCardHeadingDescription,
   PlanCardHeadingTitle,
@@ -29,35 +27,31 @@ export function SupportCard({ className }: { className?: string }) {
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardHeader>
-        <PlanCardContent>
-          <PlanCardDescription>
-            <Trans
-              i18nKey="contactSupportEmail"
-              defaults="Or email us at <0>support@rallly.co</0>"
-              components={[
-                <a
-                  key="email"
-                  href="mailto:support@rallly.co"
-                  className="select-all font-medium text-foreground"
-                />,
-              ]}
-            />
-          </PlanCardDescription>
-        </PlanCardContent>
-        <PlanCardActions>
-          <a
-            href="mailto:support@rallly.co"
-            className={buttonVariants()}
-            onClick={() => {
-              posthog?.capture("space_billing:support_button_click");
-            }}
-          >
-            <SendIcon className="text-muted-foreground" />
-            <Trans i18nKey="contactSupport" defaults="Contact support" />
-          </a>
-        </PlanCardActions>
-      </PlanCardHeader>
+      <PlanCardFooter>
+        <PlanCardDescription>
+          <Trans
+            i18nKey="contactSupportEmail"
+            defaults="Or email us at <0>support@rallly.co</0>"
+            components={[
+              <a
+                key="email"
+                href="mailto:support@rallly.co"
+                className="select-all font-medium text-foreground"
+              />,
+            ]}
+          />
+        </PlanCardDescription>
+        <a
+          href="mailto:support@rallly.co"
+          className={buttonVariants()}
+          onClick={() => {
+            posthog?.capture("space_billing:support_button_click");
+          }}
+        >
+          <SendIcon className="text-muted-foreground" />
+          <Trans i18nKey="contactSupport" defaults="Contact support" />
+        </a>
+      </PlanCardFooter>
     </PlanCard>
   );
 }
