@@ -10,12 +10,7 @@ export function PlanCardHeading({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn("space-y-0.5 border-card-border border-b p-4", className)}
-      {...props}
-    />
-  );
+  return <div className={cn("space-y-0.5 px-4 pt-4", className)} {...props} />;
 }
 
 export function PlanCardHeadingTitle({
@@ -99,7 +94,9 @@ export function PlanCardFooter({
   return (
     <div
       className={cn(
-        "flex @sm:flex-row flex-col @sm:items-center justify-between gap-2 border-card-border border-t px-4 py-3 text-muted-foreground text-sm",
+        // Inset rule rather than a full width border, so the footer reads as
+        // part of the card rather than a separate band.
+        "mx-4 flex @sm:flex-row flex-col @sm:items-center justify-between gap-2 border-card-border border-t pt-3 pb-4 text-muted-foreground text-sm",
         className,
       )}
       {...props}
