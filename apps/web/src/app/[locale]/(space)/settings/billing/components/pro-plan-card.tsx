@@ -213,7 +213,10 @@ export function ProPlanCard({
                       />
                     }
                   >
-                    <Trans i18nKey="changePlan" defaults="Change plan" />
+                    <Trans
+                      i18nKey="switchToYearly"
+                      defaults="Switch to yearly"
+                    />
                   </DialogTrigger>
                 </SwitchToYearlyDialog>
               ) : null}

@@ -64,7 +64,7 @@ describe("ProPlanCard", () => {
 
     expect(screen.getByText("$10")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /change plan/i }),
+      screen.getByRole("button", { name: /switch to yearly/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /manage seats/i }),
@@ -89,7 +89,7 @@ describe("ProPlanCard", () => {
 
     expect(screen.getByText("$6")).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /change plan/i }),
+      screen.queryByRole("button", { name: /switch to yearly/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -114,7 +114,7 @@ describe("ProPlanCard", () => {
       screen.getByRole("button", { name: /resume plan/i }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /change plan/i }),
+      screen.queryByRole("button", { name: /switch to yearly/i }),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /cancel plan/i }),
@@ -143,7 +143,7 @@ describe("ProPlanCard", () => {
       screen.getByRole("button", { name: /update payment method/i }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /change plan/i }),
+      screen.queryByRole("button", { name: /switch to yearly/i }),
     ).not.toBeInTheDocument();
   });
 

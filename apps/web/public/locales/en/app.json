@@ -133,7 +133,6 @@
   "changePasswordDescription": "Update your password to keep your account secure",
   "changePasswordError": "Something went wrong. Please try again.",
   "changePasswordSettingHint": "Update your password to keep your account secure.",
-  "changePlan": "Change plan",
   "changeRole": "Change role",
   "charactersRemaining": "{count, plural, one {# character remaining} other {# characters remaining}}",
   "checkForConflicts": "Toggle which calendars to check for conflicts",
