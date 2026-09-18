@@ -10,7 +10,6 @@ import {
   PlanCard,
   PlanCardContent,
   PlanCardDescription,
-  PlanCardFooter,
   PlanCardHeader,
   PlanCardHeading,
   PlanCardHeadingDescription,
@@ -57,7 +56,7 @@ export function PaymentMethodsCard({
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardHeader>
+      <PlanCardHeader className="pb-0">
         <PlanCardContent>
           {primary?.card ? (
             <div className="flex items-center gap-3">
@@ -101,9 +100,8 @@ export function PaymentMethodsCard({
           )}
         </PlanCardContent>
       </PlanCardHeader>
-      <PlanCardFooter className="flex-row items-center">
+      <div className="mt-auto flex flex-wrap items-center gap-2 px-4 pt-3 pb-4">
         <Button
-          className="ml-auto"
           loading={openBillingDetails.isExecuting}
           onClick={() => openBillingDetails.execute()}
         >
@@ -113,7 +111,7 @@ export function PaymentMethodsCard({
           />
           <ArrowUpRightIcon className="text-muted-foreground" />
         </Button>
-      </PlanCardFooter>
+      </div>
     </PlanCard>
   );
 }

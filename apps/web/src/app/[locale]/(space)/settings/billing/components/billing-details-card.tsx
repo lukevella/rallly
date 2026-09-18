@@ -9,7 +9,6 @@ import {
   PlanCard,
   PlanCardContent,
   PlanCardDescription,
-  PlanCardFooter,
   PlanCardHeader,
   PlanCardHeading,
   PlanCardHeadingDescription,
@@ -32,7 +31,7 @@ export function BillingDetailsCard({ className }: { className?: string }) {
           />
         </PlanCardHeadingDescription>
       </PlanCardHeading>
-      <PlanCardHeader>
+      <PlanCardHeader className="pb-0">
         <PlanCardContent>
           <PlanCardDescription>
             <Trans
@@ -42,16 +41,15 @@ export function BillingDetailsCard({ className }: { className?: string }) {
           </PlanCardDescription>
         </PlanCardContent>
       </PlanCardHeader>
-      <PlanCardFooter className="flex-row items-center">
+      <div className="mt-auto flex flex-wrap items-center gap-2 px-4 pt-3 pb-4">
         <Button
-          className="ml-auto"
           loading={openBillingDetails.isExecuting}
           onClick={() => openBillingDetails.execute()}
         >
           <Trans i18nKey="editBillingDetails" defaults="Edit billing details" />
           <ArrowUpRightIcon className="text-muted-foreground" />
         </Button>
-      </PlanCardFooter>
+      </div>
     </PlanCard>
   );
 }

@@ -10,26 +10,12 @@ import {
   PlanCardContent,
   PlanCardDescription,
   PlanCardHeader,
-  PlanCardHeading,
-  PlanCardHeadingDescription,
-  PlanCardHeadingTitle,
   PlanCardTitle,
 } from "./plan-card";
 
 export function HobbyPlanCard({ className }: { className?: string }) {
   return (
     <PlanCard className={className}>
-      <PlanCardHeading>
-        <PlanCardHeadingTitle>
-          <Trans i18nKey="billingPlanTitle" defaults="Plan" />
-        </PlanCardHeadingTitle>
-        <PlanCardHeadingDescription>
-          <Trans
-            i18nKey="billingSubscriptionDescription"
-            defaults="Manage your current subscription plan."
-          />
-        </PlanCardHeadingDescription>
-      </PlanCardHeading>
       <PlanCardHeader>
         <PlanCardContent>
           <PlanCardTitle>
