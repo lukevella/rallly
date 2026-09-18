@@ -152,10 +152,9 @@ export function ManageSeatsDialog({
             <SeatGauge usedSeats={usedSeats} totalSeats={newSeatCount}>
               <NumberTicker
                 value={newSeatCount}
-                startOnView={false}
                 announceChanges
                 duration={0.4}
-                className="w-[3ch] justify-center font-semibold text-3xl"
+                className="inline-flex w-[3ch] justify-center font-semibold text-3xl"
               />
             </SeatGauge>
             <Button

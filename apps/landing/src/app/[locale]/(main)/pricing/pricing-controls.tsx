@@ -215,9 +215,7 @@ export function PlanPrice() {
   const minorUnits =
     interval === "yearly" ? Math.round(amounts.yearly / 12) : amounts.monthly;
 
-  return (
-    <NumberTicker value={minorUnits} startOnView={false} format={format} />
-  );
+  return <NumberTicker value={minorUnits} format={format} />;
 }
 
 export function BillingIntervalValue({

@@ -2,8 +2,8 @@
 
 // beui.dev/components/motion/number
 
-import { animate, motion, useInView, useReducedMotion } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { animate, motion, useReducedMotion } from "motion/react";
+import { useEffect, useMemo, useRef } from "react";
 import { EASE_OUT } from "./ease";
 import { cn } from "./lib/utils";
 
@@ -13,10 +13,6 @@ export interface NumberTickerProps {
   pad?: number;
   /** Per-digit roll duration in seconds. */
   duration?: number;
-  /** Stagger between digits. */
-  stagger?: number;
-  /** Render only after the element enters the viewport. */
-  startOnView?: boolean;
   prefix?: string;
   suffix?: string;
   /** Add a small blur during digit rolls. */
@@ -33,15 +29,23 @@ export interface NumberTickerProps {
   announceChanges?: boolean;
 }
 
-const DIGIT_HEIGHT_EM = 1.1;
+// One em per digit cell, so each cell is exactly the glyph's em box and the
+// roll steps by whole ems.
+const DIGIT_HEIGHT_EM = 1;
+// A digit column is `overflow: hidden`, so it exports no glyph baseline of its
+// own: the browser synthesises one from its bottom margin edge, which sits a
+// half-leading below where the digits actually rest. Dropping the box by that
+// half-leading puts the synthesised baseline back on the real one, so the
+// number sits on the baseline of the text beside it. For a 1em box the
+// half-leading is (ascent + descent - 1) / 2 — 0.125em for the metrics of the
+// sans stack this ships with.
+const BASELINE_SHIFT_EM = 0.125;
 const DIGITS = Array.from({ length: 10 }, (_, n) => n);
 
 export function NumberTicker({
   value,
   pad,
   duration = 0.9,
-  stagger = 0.04,
-  startOnView = true,
   prefix,
   suffix,
   blur = false,
@@ -51,12 +55,6 @@ export function NumberTicker({
   announceChanges = false,
 }: NumberTickerProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const inView = useInView(containerRef, { once: true, amount: 0.6 });
-  const [armed, setArmed] = useState(!startOnView);
-
-  useEffect(() => {
-    if (startOnView && inView) setArmed(true);
-  }, [startOnView, inView]);
 
   const text = useMemo(() => {
     const rounded = Math.round(value);
@@ -73,21 +71,13 @@ export function NumberTicker({
   }, [text]);
   const readableText = `${prefix ?? ""}${text}${suffix ?? ""}`;
 
-  // Stagger is an entrance flourish. Once the reveal has played, value
-  // changes roll every digit immediately — a per-digit delay on live updates
-  // reads as lag.
-  const [entered, setEntered] = useState(false);
-  useEffect(() => {
-    if (!armed || entered) return;
-    const total = (duration + glyphs.length * stagger) * 1000;
-    const t = window.setTimeout(() => setEntered(true), total);
-    return () => window.clearTimeout(t);
-  }, [armed, entered, duration, stagger, glyphs.length]);
-
   return (
     <span
       ref={containerRef}
-      className={cn("inline-flex items-center tabular-nums", className)}
+      // Plain inline boxes, not flex: a flex container centres its items and
+      // ignores vertical-align, which would override the baseline shift the
+      // digit columns rely on.
+      className={cn("inline tabular-nums", className)}
     >
       <span
         className="sr-only"
@@ -96,9 +86,9 @@ export function NumberTicker({
       >
         {readableText}
       </span>
-      <span aria-hidden="true" className="inline-flex items-center">
+      <span aria-hidden="true" className="inline">
         {prefix ? <span>{prefix}</span> : null}
-        {glyphs.map(({ char, id }, i) => {
+        {glyphs.map(({ char, id }) => {
           const isDigit = /\d/.test(char);
           if (!isDigit) {
             return (
@@ -111,8 +101,7 @@ export function NumberTicker({
           return (
             <Digit
               key={id}
-              digit={armed ? digit : 0}
-              delay={entered ? 0 : i * stagger}
+              digit={digit}
               duration={duration}
               blur={blur}
               className={digitClassName}
@@ -127,22 +116,32 @@ export function NumberTicker({
 
 function Digit({
   digit,
-  delay,
   duration,
   blur,
   className,
 }: {
   digit: number;
-  delay: number;
   duration: number;
   blur: boolean;
   className?: string;
 }) {
   const reduce = useReducedMotion();
   const columnRef = useRef<HTMLSpanElement>(null);
+  // Seeded with the first digit so the blur only accompanies a roll. Firing it
+  // on mount would blur the number in, which is the entrance animation the
+  // resting-value render exists to avoid.
+  const previousDigit = useRef(digit);
 
   useEffect(() => {
-    if (reduce || !blur || !columnRef.current || !Number.isFinite(digit)) {
+    const rolled = previousDigit.current !== digit;
+    previousDigit.current = digit;
+    if (
+      !rolled ||
+      reduce ||
+      !blur ||
+      !columnRef.current ||
+      !Number.isFinite(digit)
+    ) {
       return;
     }
 
@@ -152,7 +151,6 @@ function Digit({
       { filter: ["blur(10px)", "blur(0px)"] },
       {
         duration: Math.min(duration * 0.75, 0.32),
-        delay,
         ease: EASE_OUT,
       },
     );
@@ -161,26 +159,33 @@ function Digit({
       controls.stop();
       node.style.filter = "blur(0px)";
     };
-  }, [blur, delay, digit, duration, reduce]);
+  }, [blur, digit, duration, reduce]);
 
   return (
     <span
       className={cn("relative inline-block overflow-hidden", className)}
-      style={{ height: `${DIGIT_HEIGHT_EM}em`, width: "1ch" }}
+      style={{
+        height: `${DIGIT_HEIGHT_EM}em`,
+        width: "1ch",
+        verticalAlign: `-${BASELINE_SHIFT_EM}em`,
+      }}
     >
       <motion.span
         ref={columnRef}
-        initial={{ y: 0 }}
+        // Render at the resting position instead of animating in: the number
+        // is the content, so it should be correct on first paint (server
+        // rendering included) rather than counting up to itself. Later value
+        // changes still roll, which is the whole point of the component.
+        initial={false}
         animate={{ y: `-${digit * DIGIT_HEIGHT_EM}em` }}
-        transition={
-          reduce ? { duration: 0 } : { duration, delay, ease: EASE_OUT }
-        }
+        transition={reduce ? { duration: 0 } : { duration, ease: EASE_OUT }}
         className="absolute inset-x-0 top-0 flex flex-col items-center will-change-[transform,filter]"
       >
         {DIGITS.map((n) => (
           <span
             key={n}
-            className="flex h-[1.1em] items-center justify-center leading-none"
+            className="block text-center leading-[1em]"
+            style={{ height: `${DIGIT_HEIGHT_EM}em` }}
           >
             {n}
           </span>
