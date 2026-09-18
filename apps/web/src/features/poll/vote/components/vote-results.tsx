@@ -27,7 +27,9 @@ import { useDateTime } from "@/lib/datetime/client";
 /** A recorded vote: icon only, with the vote type for screen readers. */
 function VoteLabel({ type }: { type?: VoteType }) {
   return (
-    <span className="inline-flex items-center justify-center">
+    // flex rather than inline-flex: an inline box sits on the text
+    // baseline, which leaves the icon a few pixels above the row's centre.
+    <span className="flex items-center justify-center">
       <VoteIcon type={type} />
       <span className="sr-only">
         {type === "yes" ? (
