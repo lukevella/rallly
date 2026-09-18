@@ -253,8 +253,10 @@ export function VotingOptions() {
   const visibleColumnCount = table.getVisibleLeafColumns().length;
 
   return (
-    // A flex-1 table would spread spare height across its rows.
-    <div className="flex-1">
+    // The scroll area. A flex-1 table would spread spare height across its
+    // rows, so the wrapper scrolls instead. Scroll padding keeps a focused
+    // row clear of the pinned group heading.
+    <div className="min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
       <table className="w-full text-sm">
         <caption className="sr-only">
           {t("pollOptions", { defaultValue: "Poll options" })}
@@ -287,9 +289,9 @@ export function VotingOptions() {
                   id={id}
                   scope="rowgroup"
                   colSpan={visibleColumnCount}
-                  // Pinned just below the interface header (h-14) while its
-                  // rows scroll; solid background so rows do not show through.
-                  className="sticky top-14 z-[5] border-y bg-muted px-4 py-2 text-left font-medium"
+                  // Pinned at the top of the scroll area while its rows
+                  // scroll; solid background so rows do not show through.
+                  className="sticky top-0 z-[5] border-y bg-muted px-4 py-2 text-left font-medium"
                 >
                   {groupCell
                     ? flexRender(

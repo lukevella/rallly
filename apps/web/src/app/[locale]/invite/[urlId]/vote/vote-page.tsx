@@ -40,20 +40,18 @@ export function VotePage({
         <CreatorBanner />
         {/* The page never scrolls: the card takes the viewport on small
             screens and a fixed height on large ones (shrinking, footer
-            included, when the viewport is shorter), and only its body
-            scrolls. Below lg the details and list scroll together; at lg
-            the sidebar stays put and the list column scrolls on its own. */}
+            included, when the viewport is shorter). The voting panel is a
+            flex column whose options table is the only scroll area; its
+            header and footer are pushed into place by the layout. */}
         <Card className="flex min-h-0 flex-1 flex-col lg:h-[44rem] lg:flex-initial">
           <RandomGradientBar />
-          <div className="min-h-0 flex-1 overflow-y-auto [scroll-padding-block:7rem_5rem] lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)] lg:overflow-hidden">
-            <aside className="border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
+          <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[20rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
+            <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventDetails stackResponseOptions />
             </aside>
             {/* VotingForm renders its (empty) form element beside its
                 children, so the grid cell wraps it rather than the reverse. */}
-            {/* Scroll padding keeps a keyboard-focused row clear of the sticky
-                header, group heading and footer in whichever container scrolls. */}
-            <section className="flex min-w-0 flex-col [scroll-padding-block:7rem_5rem] lg:min-h-0 lg:overflow-y-auto lg:border-l">
+            <section className="flex min-h-0 flex-1 flex-col lg:border-l">
               <VotingForm>
                 <PollOutcome>
                   <VotingInterface />

@@ -10,7 +10,7 @@ import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
- * Sticky header of the voting interface. While composing a response it
+ * Header of the voting interface. While composing a response it
  * carries the prompt; once a response is saved it names the response with
  * its counts, Edit and the participant menu. Display settings sit on the
  * right for zoned time polls.
@@ -39,7 +39,7 @@ export function VotingHeader() {
       (v) => v.type === "ifNeedBe",
     ).length;
     return (
-      <header className="sticky top-0 z-10 flex min-h-14 items-center justify-between gap-4 border-b bg-card px-4 py-2">
+      <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
         <div className="min-w-0">
           <h2 className="truncate font-medium text-sm">{participant.name}</h2>
           <SelectionCount yesCount={yes} ifNeedBeCount={ifNeedBe} />
@@ -89,7 +89,7 @@ export function VotingHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-10 flex min-h-14 items-center justify-between gap-4 border-b bg-card px-4 py-2">
+    <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
       <h2 className="font-medium text-sm">
         {isTimeSlot ? (
           <Trans
