@@ -311,14 +311,16 @@ export function VoteResults({
             .find((cell) => cell.column.id === "group");
           return (
             <div key={groupRow.id} role="rowgroup" aria-labelledby={id}>
-              <div role="row">
+              {/* The heading's row is what sticks: a sticky element can
+                  only travel within its containing block, and the row is
+                  no taller than the heading itself. */}
+              <div role="row" className="sticky top-0 z-[5]">
                 <div
                   id={id}
                   role="rowheader"
                   aria-colspan={visibleColumnCount}
-                  // Pinned at the top of the scroll area while its rows
-                  // scroll; solid background so rows do not show through.
-                  className="sticky top-0 z-[5] border-b bg-muted px-4 py-2 font-medium"
+                  // Solid background so rows do not show through.
+                  className="border-b bg-muted px-4 py-2 font-medium"
                 >
                   {groupCell
                     ? flexRender(
