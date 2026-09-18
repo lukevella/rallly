@@ -245,7 +245,9 @@ export function VoteResults({
     // `relative` makes this the containing block for the sticky group
     // headings; without it they propagate their height to the root element
     // and the whole page gains a scrollbar.
-    <div className="scrollbar-thin dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500 scrollbar-thumb-gray-300 scrollbar-track-transparent relative min-h-0 flex-1 overflow-y-auto [scroll-padding-top:3rem]">
+    // Only the results scroll, and only from lg: below that the page scrolls,
+    // so the list grows to its natural height and the phone scrolls as one.
+    <div className="lg:scrollbar-thin dark:lg:scrollbar-thumb-gray-600 dark:lg:scrollbar-track-gray-800 hover:lg:scrollbar-thumb-gray-400 dark:hover:lg:scrollbar-thumb-gray-500 lg:scrollbar-thumb-gray-300 lg:scrollbar-track-transparent relative flex-1 lg:min-h-0 lg:overflow-y-auto lg:[scroll-padding-top:3rem]">
       <div
         role="table"
         aria-label={t("pollOptions", { defaultValue: "Poll options" })}
@@ -339,7 +341,7 @@ export function VoteResults({
                 // top padding to share the first row's baseline.
                 // The rows are a fixed height with centred content, so the
                 // heading is padded to sit on the first row's baseline.
-                className="sticky top-0 self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:bg-transparent sm:pt-[1.375rem] sm:pr-4 sm:pl-4"
+                className="self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:bg-transparent sm:pt-[1.375rem] sm:pr-4 sm:pl-4 lg:sticky lg:top-0"
               >
                 {heading}
               </div>

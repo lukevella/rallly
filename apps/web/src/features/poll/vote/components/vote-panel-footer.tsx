@@ -98,7 +98,9 @@ export function VotePanelFooter({
   };
 
   return (
-    <footer className="flex min-h-16 shrink-0 items-center justify-between gap-4 border-t px-4 py-3">
+    // Below lg the page scrolls, so the footer pins to the viewport rather
+    // than scrolling away from the options it acts on.
+    <footer className="sticky bottom-0 z-10 flex min-h-16 shrink-0 items-center justify-between gap-4 border-t bg-card px-4 py-3 lg:static lg:bg-transparent">
       <SelectionCount
         yesCount={yesCount}
         ifNeedBeCount={ifNeedBeCount}

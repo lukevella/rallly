@@ -37,20 +37,26 @@ export function VotePage({
   instanceBranding: { appName: string; logoIcon?: string };
 }) {
   return (
-    <div className="page-bg-gray-100 flex h-dvh flex-col items-center justify-center gap-3 overflow-hidden p-3 lg:p-6 dark:bg-gray-900">
+    // Below lg the page itself scrolls and the card gives up its frame,
+    // so a phone spends every pixel on the options. From lg up the card is
+    // a fixed size centred in a page that never scrolls.
+    <div className="page-bg-gray-100 flex min-h-dvh flex-col lg:h-dvh lg:min-h-0 lg:items-center lg:justify-center lg:gap-3 lg:overflow-hidden lg:p-6 dark:bg-gray-900">
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex min-h-0 w-full max-w-4xl flex-1 flex-col gap-3 lg:flex-initial"
+        className="flex w-full flex-1 flex-col lg:min-h-0 lg:max-w-4xl lg:flex-initial lg:gap-3"
       >
-        {isCreator ? <CreatorBanner pollId={view.poll.id} /> : null}
-        {/* The page never scrolls: the card takes the viewport on small
-            screens and a fixed height on large ones (shrinking, footer
-            included, when the viewport is shorter). The voting panel is a
-            flex column whose results table is the only scroll area. */}
-        <Card className="flex min-h-0 flex-1 flex-col lg:h-176 lg:flex-initial">
+        {isCreator ? (
+          <div className="p-3 pb-0 lg:p-0">
+            <CreatorBanner pollId={view.poll.id} />
+          </div>
+        ) : null}
+        {/* max-lg:overflow-visible: the card clips its rounded corners, which
+            would also stop the panel footer sticking to the viewport while
+            the page scrolls. There are no corners to clip at that width. */}
+        <Card className="flex flex-1 flex-col max-lg:overflow-visible max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:shadow-none lg:h-176 lg:min-h-0 lg:flex-initial">
           <RandomGradientBar />
-          <div className="flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[16rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
+          <div className="flex flex-1 flex-col lg:grid lg:min-h-0 lg:grid-cols-[16rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
             <aside className="shrink-0 border-b p-4 lg:min-h-0 lg:overflow-y-auto lg:border-b-0">
               <EventSidebar
                 poll={view.poll}
@@ -58,7 +64,7 @@ export function VotePage({
                 instanceBranding={instanceBranding}
               />
             </aside>
-            <section className="flex min-h-0 flex-1 flex-col lg:border-l">
+            <section className="flex flex-1 flex-col lg:min-h-0 lg:border-l">
               <VotePanel
                 {...view}
                 requireParticipantEmail={requireParticipantEmail}
