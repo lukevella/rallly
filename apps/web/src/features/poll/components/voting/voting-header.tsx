@@ -1,19 +1,29 @@
 "use client";
 import { Button } from "@rallly/ui/button";
-import { MoreHorizontalIcon } from "lucide-react";
+import { useDialog } from "@rallly/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
+import { MoreHorizontalIcon, TagIcon } from "lucide-react";
 import { TimesShownIn } from "@/components/clock";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePermissions, usePoll } from "@/features/poll/client";
-import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
+import {
+  ChangeNameModal,
+  DeleteParticipantModal,
+} from "@/features/poll/components/participant-dropdown";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
-import { SelectionCount } from "@/features/poll/components/voting/voting-bar";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
- * Header of the voting interface. While composing a response it
- * carries the prompt; once a response is saved it names the response with
- * its counts, Edit and the participant menu. Display settings sit on the
- * right for zoned time polls.
+ * Header of the voting interface. While composing a response it carries
+ * the prompt; once a response is saved it names the participant with their
+ * avatar, an overflow menu for renaming, and Edit and Delete. Display
+ * settings sit on the right for zoned time polls.
  */
 export function VotingHeader() {
   const { t } = useTranslation();
@@ -23,6 +33,8 @@ export function VotingHeader() {
   const participantId = votingForm.watch("participantId");
   const { canEditParticipant } = usePermissions();
   const participants = useVisibleParticipants();
+  const changeNameDialog = useDialog();
+  const deleteDialog = useDialog();
   const isTimeSlot = (poll.options[0]?.duration ?? 0) > 0;
   // Floating-time polls have no zone to switch, and dates have no time
   // format, so the control only appears on zoned time polls.
@@ -34,20 +46,44 @@ export function VotingHeader() {
       : undefined;
 
   if (participant) {
-    const yes = participant.votes.filter((v) => v.type === "yes").length;
-    const ifNeedBe = participant.votes.filter(
-      (v) => v.type === "ifNeedBe",
-    ).length;
+    const canEdit = canEditParticipant(participant.id);
     return (
       <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
-        <div className="min-w-0">
-          <h2 className="truncate font-medium text-sm">{participant.name}</h2>
-          <SelectionCount yesCount={yes} ifNeedBeCount={ifNeedBe} />
+        <div className="flex min-w-0 items-center gap-2">
+          <OptimizedAvatarImage
+            size="sm"
+            name={participant.name}
+            src={participant.image ?? undefined}
+            className="shrink-0"
+          />
+          <p className="truncate font-medium text-sm">{participant.name}</p>
         </div>
         <div className="flex items-center gap-2">
           {displaySettings}
-          {canEditParticipant(participant.id) ? (
+          {canEdit ? (
             <>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger
+                  data-testid="participant-menu"
+                  render={
+                    <Button
+                      aria-label={t("moreOptions", {
+                        defaultValue: "More options",
+                      })}
+                      variant="ghost"
+                      size="icon"
+                    >
+                      <MoreHorizontalIcon />
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => changeNameDialog.trigger()}>
+                    <TagIcon />
+                    <Trans i18nKey="changeName" defaults="Change name" />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
                 onClick={() => {
                   votingForm.setEditingParticipantId(participant.id);
@@ -55,32 +91,24 @@ export function VotingHeader() {
               >
                 <Trans i18nKey="edit" defaults="Edit" />
               </Button>
-              <ParticipantDropdown
-                align="end"
-                participant={{
-                  id: participant.id,
-                  name: participant.name,
-                  userId: participant.userId ?? undefined,
-                  email: participant.email ?? undefined,
-                  editUrl: participant.editUrl,
-                }}
-                onEdit={() => {
-                  votingForm.setEditingParticipantId(participant.id);
-                }}
+              {/* Plain rather than destructive: it sits in the header for
+                  the whole session and its dialog already confirms. */}
+              <Button onClick={() => deleteDialog.trigger()}>
+                <Trans i18nKey="delete" defaults="Delete" />
+              </Button>
+              <ChangeNameModal
+                {...changeNameDialog.dialogProps}
+                oldName={participant.name}
+                participantId={participant.id}
+              />
+              <DeleteParticipantModal
+                {...deleteDialog.dialogProps}
+                participantId={participant.id}
+                participantName={participant.name}
                 onDelete={() => {
                   votingForm.cancel();
                 }}
-              >
-                <Button
-                  aria-label={t("moreOptions", {
-                    defaultValue: "More options",
-                  })}
-                  variant="ghost"
-                  size="icon"
-                >
-                  <MoreHorizontalIcon />
-                </Button>
-              </ParticipantDropdown>
+              />
             </>
           ) : null}
         </div>

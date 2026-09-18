@@ -22,7 +22,7 @@ function Bar({ children }: { children: React.ReactNode }) {
  * Vote icons with counts. The icons are decorative; the live region reads
  * the same counts as a sentence.
  */
-export function SelectionCount({
+function SelectionCount({
   yesCount,
   ifNeedBeCount,
 }: {

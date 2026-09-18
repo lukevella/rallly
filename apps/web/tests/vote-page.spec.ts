@@ -71,7 +71,14 @@ test.describe("vote page", () => {
     const header = main.locator("header");
     await expect(header.getByText("Test user")).toBeVisible();
     await expect(header.getByRole("button", { name: "Edit" })).toBeVisible();
+    await expect(header.getByRole("button", { name: "Delete" })).toBeVisible();
     await expect(bar).toHaveCount(0);
+
+    // Renaming lives in the overflow menu
+    await header.getByTestId("participant-menu").click();
+    const menu = page.getByRole("menu");
+    await expect(menu.getByRole("menuitem")).toHaveText(["Change name"]);
+    await page.keyboard.press("Escape");
     await expect(page.getByTestId("vote-selector")).toHaveCount(0);
 
     // The breakdown dialog lists who voted
