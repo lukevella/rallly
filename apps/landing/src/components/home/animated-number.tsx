@@ -94,44 +94,9 @@ function AnimatedNumber({
   locale: string;
   live?: boolean;
 }) {
-  const [rolledUp, setRolledUp] = React.useState(false);
-  const ref = React.useRef<HTMLSpanElement>(null);
+  const live = useLiveCount({ baseValue: value, enabled: liveEnabled });
 
-  const live = useLiveCount({
-    baseValue: value,
-    // Ticking starts only once the roll-up has landed, so the two animations
-    // never fight over the same digits.
-    enabled: liveEnabled && rolledUp,
-  });
-
-  // NumberTicker's own startOnView drives the roll-up; this watches the same
-  // threshold only to know when it has finished, so the live tick can take
-  // over. Timing from mount instead would start the clock while the badge is
-  // still below the fold and hand over before the digits had moved.
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || !liveEnabled) {
-      return;
-    }
-    let settle: number;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-        observer.disconnect();
-        settle = window.setTimeout(() => setRolledUp(true), DURATION_MS);
-      },
-      { threshold: 0.6 },
-    );
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(settle);
-    };
-  }, [liveEnabled]);
-
-  const target = liveEnabled && rolledUp ? live : value;
+  const target = liveEnabled ? live : value;
   const format = React.useCallback(
     (n: number) => new Intl.NumberFormat(locale).format(n),
     [locale],
@@ -139,7 +104,6 @@ function AnimatedNumber({
 
   return (
     <span
-      ref={ref}
       role="img"
       // Stays on the value the sentence was written around: the ticking is a
       // liveness flourish, and a label that mutates every minute would be
