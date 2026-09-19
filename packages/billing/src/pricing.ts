@@ -1,10 +1,10 @@
 export const pricingData = {
   monthly: {
-    amount: 700,
+    amount: 1000,
     currency: "usd",
   },
   yearly: {
-    amount: 5600,
+    amount: 7200,
     currency: "usd",
   },
 };
