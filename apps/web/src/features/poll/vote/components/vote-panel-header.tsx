@@ -10,6 +10,7 @@ import {
 import { MoreHorizontalIcon, TagIcon, TrashIcon } from "lucide-react";
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
   ChangeNameModal,
   DeleteParticipantModal,
@@ -42,9 +43,14 @@ export function VotePanelHeader({
   const deleteDialog = useDialog();
 
   const isTimeSlot = (results[0]?.duration ?? 0) > 0;
-  // Floating-time polls have no zone to switch, and dates have no time
-  // format, so the control only appears on zoned time polls.
-  const displaySettings = isTimeSlot && poll.timeZone ? <TimesShownIn /> : null;
+  const displaySettings = (
+    <>
+      {/* Floating-time polls have no zone to switch, and dates have no time
+          format, so the clock only appears on zoned time polls. */}
+      {isTimeSlot && poll.timeZone ? <TimesShownIn /> : null}
+      <ThemeSwitcher />
+    </>
+  );
 
   if (response && mode === "view") {
     return (
