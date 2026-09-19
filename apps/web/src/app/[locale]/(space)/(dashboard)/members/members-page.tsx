@@ -13,7 +13,7 @@ import { PageHeaderActions } from "@/components/page-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { SpaceRole } from "@/features/space/components/space-role";
-import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
+import { getActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import {
   loadPendingInvites,
@@ -45,7 +45,7 @@ export async function MembersPageActions() {
   }
 
   const [seatUsage, memberAbility] = await Promise.all([
-    getSeatUsage(),
+    loadSeatUsage(),
     getMemberAbility(),
   ]);
   const availableSeats = Math.max(seatUsage.total - seatUsage.used, 0);
@@ -71,7 +71,7 @@ export async function MembersPageContent() {
   const [space, members, seatUsage, memberAbility] = await Promise.all([
     getActiveSpace(),
     loadSpaceMembers(),
-    getSeatUsage(),
+    loadSeatUsage(),
     getMemberAbility(),
   ]);
 

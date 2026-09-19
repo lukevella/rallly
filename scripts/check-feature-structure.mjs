@@ -9,6 +9,12 @@
  * A useFilenamingConvention override in apps/web/biome.json mirrors this rule
  * at warn severity for in-editor feedback (JS/TS files only) — keep the two
  * in sync when the vocabulary changes.
+ *
+ * It also enforces the loader export-name convention: every value exported
+ * from a `loaders.ts` file is named with a `load*` prefix, except the session
+ * gates, whose `getCurrent*`, `getActive*`, and `require*` names encode whether
+ * the gate returns null or redirects. Keep this list in sync with the loader
+ * placement rule in CLAUDE.md.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -37,7 +43,24 @@ const TEST_FILE_PATTERN = /\.test\.tsx?$/;
 
 const UNRESTRICTED_DIRS = new Set(["components", "assets"]);
 
+// A loader export is named with a `load*` prefix, or one of the session-gate
+// prefixes that encode null-vs-redirect behavior in the name.
+const LOADER_NAME_PATTERN = /^(load|getCurrent|getActive|require)[A-Z]/;
+const EXPORT_PATTERN =
+  /^export\s+(?:const|(?:async\s+)?function)\s+([A-Za-z0-9_]+)/gm;
+
 const offenders = [];
+const loaderNameOffenders = [];
+
+function checkLoaderExports(absolutePath, relativePath) {
+  const source = fs.readFileSync(absolutePath, "utf8");
+  for (const match of source.matchAll(EXPORT_PATTERN)) {
+    const name = match[1];
+    if (!LOADER_NAME_PATTERN.test(name)) {
+      loaderNameOffenders.push(`${relativePath} → ${name}`);
+    }
+  }
+}
 
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -59,6 +82,8 @@ function walk(dir) {
       !TEST_FILE_PATTERN.test(entry.name)
     ) {
       offenders.push(relativePath);
+    } else if (entry.name === "loaders.ts") {
+      checkLoaderExports(absolutePath, relativePath);
     }
   }
 }
@@ -90,6 +115,20 @@ if (offenders.length > 0) {
   console.error(
     "Move the file into components/, rename it to a vocabulary file, or extract it out of features/.",
   );
+  process.exit(1);
+}
+
+if (loaderNameOffenders.length > 0) {
+  console.error(
+    `Found ${loaderNameOffenders.length} loader export(s) in apps/web/src/features/ that don't match the loader naming convention:\n`,
+  );
+  for (const offender of loaderNameOffenders.sort()) {
+    console.error(`  apps/web/src/features/${offender}`);
+  }
+  console.error(
+    "\nLoader exports must be named with a `load*` prefix, or one of the session-gate prefixes `getCurrent*`, `getActive*`, `require*`.",
+  );
+  console.error("Rename the export to follow the convention.");
   process.exit(1);
 }
 

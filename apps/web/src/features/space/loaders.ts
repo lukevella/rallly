@@ -154,7 +154,7 @@ export const loadUpcomingEventCount = cache(async () => {
  * Seat usage for the signed-in user's active space. Session scoped —
  * server component/page use only, per getActiveSpace.
  */
-export const getSeatUsage = cache(async () => {
+export const loadSeatUsage = cache(async () => {
   const space = await getActiveSpace();
 
   const [total, used] = await Promise.all([

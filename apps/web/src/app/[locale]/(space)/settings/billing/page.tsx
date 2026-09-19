@@ -19,7 +19,7 @@ import {
   loadPaymentMethods,
   loadSubscriptionOverview,
 } from "@/features/billing/loaders";
-import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
+import { getActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { requireUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
@@ -65,7 +65,7 @@ export default async function BillingSettingsPage() {
 
   const [overview, seatUsage, paymentMethods] = await Promise.all([
     loadSubscriptionOverview(),
-    getSeatUsage(),
+    loadSeatUsage(),
     loadPaymentMethods(),
   ]);
 
