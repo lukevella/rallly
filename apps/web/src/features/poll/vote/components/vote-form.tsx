@@ -58,7 +58,7 @@ export function VoteForm({
   const [isNewParticipantOpen, setIsNewParticipantOpen] = React.useState(false);
 
   const optionIds = results.map((result) => result.optionId);
-  const mode = canVote && !response ? "new" : "view";
+  const mode: VoteFormValues["mode"] = canVote && !response ? "new" : "view";
   const form = useForm<VoteFormValues>({
     defaultValues: { mode, votes: emptyVotes(results) },
     resolver: zodResolver(schema),
@@ -66,15 +66,26 @@ export function VoteForm({
 
   // The page re-renders from the loader after every write, so the form
   // follows the response appearing or disappearing: deleting one puts the
-  // viewer straight back into composing a new response.
+  // viewer straight back into composing a new response. Only the response
+  // identity is a dependency; `results` and `mode` are recomputed on every
+  // server render and would fire this on any refresh.
   const responseId = response?.participantId ?? null;
   const lastResponseId = React.useRef(responseId);
+  const latest = React.useRef<{
+    mode: VoteFormValues["mode"];
+    results: VotePageView["results"];
+  }>({ mode, results });
+  latest.current = { mode, results };
   React.useEffect(() => {
-    if (lastResponseId.current !== responseId) {
-      lastResponseId.current = responseId;
-      form.reset({ mode, votes: emptyVotes(results) });
+    if (lastResponseId.current === responseId) {
+      return;
     }
-  }, [responseId, mode, results, form]);
+    lastResponseId.current = responseId;
+    form.reset({
+      mode: latest.current.mode,
+      votes: emptyVotes(latest.current.results),
+    });
+  }, [responseId, form]);
 
   return (
     <FormProvider {...form}>
