@@ -297,6 +297,13 @@
   @apply text-primary rounded-md font-medium outline-hidden hover:underline focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1;
 }
 
+/* Link variant for colored or component-owned surfaces. It inherits the
+ * surface text color instead of the space's brand color. The brand color is
+ * customer-chosen, so the surface cannot predict it and it can fail contrast. */
+@utility text-link-inherit {
+  @apply rounded-md font-medium text-current outline-hidden hover:underline focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-1;
+}
+
 @layer utilities {
   :root {
     --spacing: 0.25rem;

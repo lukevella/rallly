@@ -38,7 +38,7 @@ export async function LicenseLimitWarning() {
               prefetch={false}
               href="https://support.rallly.co/self-hosting/licensing"
               target="_blank"
-              className="text-link"
+              className="text-link-inherit"
               rel="noopener noreferrer"
             />
           ),

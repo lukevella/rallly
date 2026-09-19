@@ -52,7 +52,7 @@ export function MarkdownDescription({
   return (
     <div
       className={cn(
-        "space-y-2 text-pretty text-foreground text-sm leading-relaxed [&_a]:text-link [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5",
+        "space-y-2 text-pretty text-foreground text-sm leading-relaxed [&_a]:text-link-inherit [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5",
         className,
       )}
     >
