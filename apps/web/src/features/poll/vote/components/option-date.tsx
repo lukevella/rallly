@@ -1,15 +1,11 @@
 "use client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import { formatWeekdayAndDate } from "@/lib/datetime/format";
+import { formatDateTime } from "@/lib/datetime/format";
 import type { DateInput } from "@/lib/datetime/types";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
 import { toISODate } from "@/lib/datetime/utils";
 
-/**
- * A date option's label with the weekday in its own column, so weekdays
- * line up down the list. The locale decides which column comes first:
- * Hungarian and Chinese write the weekday after the date.
- */
+/** A date option's label: the full date, in the locale's own order. */
 export function OptionDate({ value }: { value: DateInput }) {
   const hydrated = useHydrated();
   const { locale } = useDateTimeConfig();
@@ -20,33 +16,14 @@ export function OptionDate({ value }: { value: DateInput }) {
     return <time dateTime={toISODate(value)}> </time>;
   }
 
-  // All-day dates are stored as UTC wall time and read back in UTC. The
-  // weekday is abbreviated: the date beside it carries the detail, and a
-  // full name would not fit a narrow screen.
-  const { weekday, date, weekdayFirst } = formatWeekdayAndDate(value, {
-    locale,
-    timeZone: "UTC",
-    short: true,
-    // Nothing groups these rows, so each carries its own year.
-    year: true,
-  });
-
   return (
-    <time
-      dateTime={toISODate(value)}
-      className="grid grid-cols-subgrid items-baseline gap-x-3 [grid-column:span_2] sm:gap-x-6"
-    >
-      {weekdayFirst ? (
-        <>
-          <span className="text-muted-foreground">{weekday}</span>
-          <span>{date}</span>
-        </>
-      ) : (
-        <>
-          <span>{date}</span>
-          <span className="text-muted-foreground">{weekday}</span>
-        </>
-      )}
+    <time dateTime={toISODate(value)} className="truncate">
+      {/* All-day dates are stored as UTC wall time and read back in UTC. */}
+      {formatDateTime(value, {
+        preset: "dateFull",
+        locale,
+        timeZone: "UTC",
+      })}
     </time>
   );
 }

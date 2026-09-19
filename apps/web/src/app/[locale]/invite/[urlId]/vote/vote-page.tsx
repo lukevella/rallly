@@ -43,7 +43,7 @@ export function VotePage({
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex w-full flex-1 flex-col lg:min-h-0 lg:max-w-4xl lg:flex-initial lg:gap-3"
+        className="flex w-full flex-1 flex-col lg:min-h-0 lg:max-w-5xl lg:flex-initial lg:gap-3"
       >
         {isCreator ? (
           <div className="p-3 pb-0 lg:p-0">

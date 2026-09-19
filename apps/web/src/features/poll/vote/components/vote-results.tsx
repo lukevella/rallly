@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: ARIA table on divs so rows can be CSS grids; table elements lose their semantics under display: grid in Chrome and Safari */
 /** biome-ignore-all lint/a11y/useFocusableInteractive: row and header roles are only interactive inside role="grid", not role="table" */
 "use client";
+import { cn } from "@rallly/ui";
 import {
   createColumnHelper,
   flexRender,
@@ -21,7 +22,6 @@ import {
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
 import { Trans, useTranslation } from "@/i18n/client";
-import { CalendarDate } from "@/lib/datetime/calendar-date";
 import { useDateTime } from "@/lib/datetime/client";
 
 /** A recorded vote: icon only, with the vote type for screen readers. */
@@ -96,8 +96,8 @@ function VoteCell({
 }
 
 /**
- * The options as a table grouped by day (time polls) or month (date polls),
- * with the viewer's vote control on each row.
+ * The options as a table, grouped by day for time polls and flat for date
+ * polls, with the viewer's vote control on each row.
  */
 export function VoteResults({
   poll,
@@ -131,24 +131,26 @@ export function VoteResults({
 
   const columns = React.useMemo(
     () => [
+      // A time poll groups by day and shows that day in a gutter. A date
+      // poll's rows each carry their own full date, so they all share one
+      // group and the list renders flat.
       columnHelper.accessor(
         (result) =>
-          formatDateTime(result.startTime, isTimeSlot ? "dateFull" : "year", {
-            timeZone: readZone,
-          }),
+          isTimeSlot
+            ? formatDateTime(result.startTime, "dateFull", {
+                timeZone: readZone,
+              })
+            : "",
         {
           id: "group",
-          cell: ({ row }) =>
-            isTimeSlot ? (
-              <EventDate
-                value={row.original.startTime}
-                allDay={false}
-                timeZone={poll.timeZone}
-                preset="weekdayMonthDayShort"
-              />
-            ) : (
-              <CalendarDate value={row.original.startTime} preset="year" />
-            ),
+          cell: ({ row }) => (
+            <EventDate
+              value={row.original.startTime}
+              allDay={false}
+              timeZone={poll.timeZone}
+              preset="weekdayMonthDayShort"
+            />
+          ),
         },
       ),
       columnHelper.display({
@@ -270,28 +272,17 @@ export function VoteResults({
         </div>
         {table.getGroupedRowModel().rows.map((groupRow, groupIndex) => {
           const id = `${headingId}-${groupIndex}`;
-          const groupCell = groupRow
-            .getAllCells()
-            .find((cell) => cell.column.id === "group");
-          const heading = groupCell
-            ? flexRender(
-                groupCell.column.columnDef.cell,
-                groupCell.getContext(),
-              )
-            : null;
-
           const rows = groupRow.subRows.map((row) => (
             <div
               key={row.id}
               role="row"
               data-testid="poll-option"
-              className={
-                isTimeSlot
-                  ? "col-span-2 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b px-4 sm:col-span-3 sm:pl-0"
-                  : // The date spans two of the group's columns, so the
-                    // weekday and the month/day each line up down the list.
-                    "col-span-3 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b px-4 sm:col-span-4 sm:pl-0"
-              }
+              className={cn(
+                "col-span-2 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b px-4 sm:col-span-3",
+                // From sm a time poll's day gutter supplies the left
+                // padding, so the row would otherwise double it.
+                isTimeSlot && "sm:pl-0",
+              )}
             >
               {row.getVisibleCells().map((cell) => (
                 <div
@@ -299,9 +290,7 @@ export function VoteResults({
                   role="cell"
                   className={
                     cell.column.id === "option"
-                      ? isTimeSlot
-                        ? "truncate"
-                        : "grid grid-cols-subgrid truncate [grid-column:span_2]"
+                      ? "truncate"
                       : cell.column.id === "votes"
                         ? // The vote control needs the width on a narrow
                           // screen, and the bar is what can go.
@@ -323,12 +312,22 @@ export function VoteResults({
               <div
                 key={groupRow.id}
                 role="rowgroup"
-                className="grid grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_auto_1fr_auto_auto]"
+                className="grid grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[1fr_auto_auto]"
               >
                 {rows}
               </div>
             );
           }
+
+          const groupCell = groupRow
+            .getAllCells()
+            .find((cell) => cell.column.id === "group");
+          const heading = groupCell
+            ? flexRender(
+                groupCell.column.columnDef.cell,
+                groupCell.getContext(),
+              )
+            : null;
 
           return (
             <div
