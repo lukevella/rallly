@@ -315,10 +315,21 @@ export function VoteResults({
             </div>
           ));
 
-          // Both poll types put their heading in a gutter beside the rows
-          // it covers: a year for date polls, the day for time polls. The
-          // group owns the column tracks and its rows subgrid onto them,
-          // so the columns line up down the whole group.
+          // A time poll's rows share a day, so the day sits in a gutter
+          // beside them. A date poll's rows each carry their own full
+          // date, so there is nothing to group and the list runs flat.
+          if (!isTimeSlot) {
+            return (
+              <div
+                key={groupRow.id}
+                role="rowgroup"
+                className="grid grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_auto_1fr_auto_auto]"
+              >
+                {rows}
+              </div>
+            );
+          }
+
           return (
             <div
               key={groupRow.id}
@@ -326,32 +337,20 @@ export function VoteResults({
               aria-labelledby={id}
               // Below sm the heading takes a line of its own above its
               // rows: a gutter would leave the rows too little width.
-              className={
-                isTimeSlot
-                  ? "grid sm:grid-cols-[8rem_1fr_auto_auto]"
-                  : "grid sm:grid-cols-[6rem_auto_1fr_auto_auto]"
-              }
+              className="grid sm:grid-cols-[8rem_1fr_auto_auto]"
             >
               <div
                 id={id}
                 role="rowheader"
                 // Sticks while any of its rows is in view, then the next
-                // group's heading pushes it out. The row's own border-b
-                // sits above its py-2, so the heading needs a little more
-                // top padding to share the first row's baseline.
-                // The rows are a fixed height with centred content, so the
-                // heading is padded to sit on the first row's baseline.
+                // group's heading pushes it out. The rows are a fixed
+                // height with centred content, so the heading is padded to
+                // sit on the first row's baseline.
                 className="sticky top-14 z-10 self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:pt-[1.375rem] sm:pr-4 sm:pl-4 lg:top-0"
               >
                 {heading}
               </div>
-              <div
-                className={
-                  isTimeSlot
-                    ? "grid grid-cols-[minmax(0,1fr)_auto] sm:col-span-3 sm:grid-cols-subgrid"
-                    : "grid grid-cols-[auto_minmax(0,1fr)_auto] sm:col-span-4 sm:grid-cols-subgrid"
-                }
-              >
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] sm:col-span-3 sm:grid-cols-subgrid">
                 {rows}
               </div>
             </div>

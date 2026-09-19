@@ -227,15 +227,22 @@ export type WeekdayAndDate = {
  */
 export function formatWeekdayAndDate(
   value: DateInput,
-  options: { locale: string; timeZone?: string; short?: boolean },
+  options: {
+    locale: string;
+    timeZone?: string;
+    short?: boolean;
+    /** Include the year, for a row that stands on its own. */
+    year?: boolean;
+  },
 ): WeekdayAndDate {
-  const key = `${options.locale}|${options.timeZone ?? ""}|${options.short ? "s" : "l"}`;
+  const key = `${options.locale}|${options.timeZone ?? ""}|${options.short ? "s" : "l"}|${options.year ? "y" : ""}`;
   let f = splitFormatters.get(key);
   if (!f) {
     f = new Intl.DateTimeFormat(options.locale, {
       weekday: options.short ? "short" : "long",
       month: "long",
       day: "numeric",
+      ...(options.year ? { year: "numeric" as const } : {}),
       // An empty string is an invalid IANA zone and throws; treat it as "unset".
       timeZone: options.timeZone || undefined,
     });

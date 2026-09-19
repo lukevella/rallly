@@ -27,6 +27,8 @@ export function OptionDate({ value }: { value: DateInput }) {
     locale,
     timeZone: "UTC",
     short: true,
+    // Nothing groups these rows, so each carries its own year.
+    year: true,
   });
 
   return (
