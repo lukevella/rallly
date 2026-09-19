@@ -30,8 +30,15 @@ type VoteFormValues = z.infer<typeof schema>;
 
 export const useVoteForm = () => useFormContext<VoteFormValues>();
 
+/**
+ * A new response starts as a no on every option, which is what an
+ * untouched form submits anyway; showing it makes that explicit.
+ */
 const emptyVotes = (results: VotePageView["results"]) =>
-  results.map((result) => ({ optionId: result.optionId }));
+  results.map((result) => ({
+    optionId: result.optionId,
+    type: "no" as const,
+  }));
 
 /**
  * Owns the response being composed. Writes go through a server action and
