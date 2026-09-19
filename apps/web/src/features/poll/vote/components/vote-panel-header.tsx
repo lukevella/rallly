@@ -16,7 +16,8 @@ import {
   DeleteParticipantModal,
 } from "@/features/poll/components/participant-dropdown";
 import { useVoteForm } from "@/features/poll/vote/components/vote-form";
-import type { VotePageView } from "@/features/poll/vote/types";
+import { VoteViewSwitcher } from "@/features/poll/vote/components/vote-view-switcher";
+import type { VotePageView, VoteViewId } from "@/features/poll/vote/types";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
@@ -30,11 +31,18 @@ export function VotePanelHeader({
   results,
   response,
   canVote,
+  views,
+  view,
+  onViewChange,
 }: {
   poll: VotePageView["poll"];
   results: VotePageView["results"];
   response: VotePageView["response"];
   canVote: boolean;
+  /** The views this poll offers; the switcher is hidden below two. */
+  views: VoteViewId[];
+  view: VoteViewId;
+  onViewChange: (view: VoteViewId) => void;
 }) {
   const { t } = useTranslation();
   const form = useVoteForm();
@@ -45,6 +53,9 @@ export function VotePanelHeader({
   const isTimeSlot = (results[0]?.duration ?? 0) > 0;
   const displaySettings = (
     <>
+      {views.length > 1 ? (
+        <VoteViewSwitcher value={view} onChange={onViewChange} />
+      ) : null}
       {/* Floating-time polls have no zone to switch, and dates have no time
           format, so the clock only appears on zoned time polls. */}
       {isTimeSlot && poll.timeZone ? <TimesShownIn /> : null}
@@ -55,8 +66,9 @@ export function VotePanelHeader({
   if (response && mode === "view") {
     return (
       <header // Below lg the page scrolls, so the header pins to the viewport; from
-        // lg up the panel's own layout places it.
-        className="sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b bg-card px-4 py-2 lg:static lg:bg-transparent"
+        // lg up the panel's own layout places it. Below sm the name and the
+        // controls take a line each rather than squeezing onto one.
+        className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 border-b bg-card px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
       >
         <div className="flex min-w-0 items-center gap-2">
           <OptimizedAvatarImage
@@ -67,7 +79,7 @@ export function VotePanelHeader({
           />
           <p className="truncate font-medium text-sm">{response.name}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2">
           {displaySettings}
           {canVote ? (
             <>
@@ -137,8 +149,9 @@ export function VotePanelHeader({
 
   return (
     <header // Below lg the page scrolls, so the header pins to the viewport; from
-      // lg up the panel's own layout places it.
-      className="sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b bg-card px-4 py-2 lg:static lg:bg-transparent"
+      // lg up the panel's own layout places it. Below sm the prompt and the
+      // controls take a line each: side by side, the prompt wraps to three.
+      className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 border-b bg-card px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
     >
       <h2 className="font-medium text-sm">
         {isTimeSlot ? (
@@ -153,7 +166,12 @@ export function VotePanelHeader({
           />
         )}
       </h2>
-      {displaySettings}
+      <div
+        data-testid="display-settings"
+        className="flex shrink-0 items-center justify-end gap-2"
+      >
+        {displaySettings}
+      </div>
     </header>
   );
 }

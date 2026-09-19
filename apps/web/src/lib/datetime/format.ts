@@ -11,7 +11,8 @@ export type DatePreset =
   | "monthDay"
   | "weekdayDay"
   | "weekdayMonthDayShort"
-  | "year";
+  | "year"
+  | "day";
 
 export type DateTimePreset = DatePreset | "time" | "datetime";
 
@@ -103,6 +104,8 @@ function presetOptions(
       return { weekday: "short", month: "short", day: "numeric" };
     case "year":
       return { year: "numeric" };
+    case "day":
+      return { day: "numeric" };
     case "monthDay":
       return { month: "long", day: "numeric" };
     case "weekdayDay":

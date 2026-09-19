@@ -52,3 +52,19 @@ export type VotePageView = {
   /** False once the poll is closed or scheduled. */
   canVote: boolean;
 };
+
+/**
+ * What every voting view receives. The votes being composed are not in
+ * here: views read and write them through the form context, so switching
+ * view keeps the selection.
+ */
+export type VoteViewProps = {
+  poll: VotePageView["poll"];
+  results: VoteResult[];
+  participantCount: number | null;
+  response: VoteResponse | null;
+  canVote: boolean;
+};
+
+/** Which voting view is on screen. */
+export type VoteViewId = "list" | "calendar";

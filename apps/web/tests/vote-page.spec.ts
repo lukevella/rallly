@@ -92,7 +92,9 @@ test.describe("vote page", () => {
     await expect(votedRow).toContainText("yes");
   });
 
-  test("mobile stacks the event above the list", async ({ browser }) => {
+  test("mobile stacks the header, the event and the list", async ({
+    browser,
+  }) => {
     const context = await browser.newContext({
       viewport: { width: 375, height: 667 },
     });
@@ -108,6 +110,70 @@ test.describe("vote page", () => {
     const optionBox = await box(main.getByTestId("poll-option").first());
     expect(optionBox.y).toBeGreaterThan(sidebarBox.y + sidebarBox.height - 1);
 
+    // The prompt and the display controls take a line each, rather than
+    // sitting side by side and squeezing the prompt to three lines
+    const header = main.locator("header");
+    const promptBox = await box(header.getByRole("heading", { level: 2 }));
+    const controlsBox = await box(header.getByTestId("display-settings"));
+    expect(controlsBox.y).toBeGreaterThan(promptBox.y + promptBox.height - 1);
+
     await context.close();
+  });
+});
+
+test.describe("vote page calendar view", () => {
+  let voteUrl: string;
+
+  test.beforeAll(async ({ browser }) => {
+    const page = await browser.newPage();
+    const newPollPage = new NewPollPage(page);
+    await newPollPage.goto();
+    const pollPage = await newPollPage.create({
+      name: "Vote Page Dates",
+      allDay: true,
+    });
+    const inviteUrl = await pollPage.copyInviteLink();
+    voteUrl = `${inviteUrl.replace(/\?.*$/, "")}/vote`;
+    await page.close();
+  });
+
+  test("keeps the selection when switching views", async ({ page }) => {
+    await page.goto(voteUrl);
+    const main = page.locator("#main-content");
+    const footer = main.locator("footer");
+
+    // A new response starts as a no on every date
+    await expect(footer.getByText("0 yes, 0 if need be")).toBeVisible();
+
+    // Vote in the list, then switch to the calendar
+    await main
+      .getByTestId("vote-selector")
+      .first()
+      .getByRole("radio", { name: "Yes" })
+      .click();
+    await expect(footer.getByText("1 yes, 0 if need be")).toBeVisible();
+
+    await main.getByRole("radio", { name: "Calendar" }).click();
+    await expect(main.getByRole("grid")).toBeVisible();
+
+    // The vote survives the switch, and the day carries its own icon.
+    // Only the poll's own days show one, so this skips the inert days.
+    await expect(footer.getByText("1 yes, 0 if need be")).toBeVisible();
+    const days = main
+      .getByRole("gridcell")
+      .getByRole("button")
+      .filter({ has: page.getByRole("img") });
+    await expect(days.first().getByRole("img", { name: "Yes" })).toBeVisible();
+
+    // Clicking a day advances it through the vote types
+    const next = days.nth(1);
+    await next.click();
+    await expect(footer.getByText("2 yes, 0 if need be")).toBeVisible();
+    await next.click();
+    await expect(footer.getByText("1 yes, 1 if need be")).toBeVisible();
+
+    // And back in the list, the calendar's votes are there
+    await main.getByRole("radio", { name: "List" }).click();
+    await expect(footer.getByText("1 yes, 1 if need be")).toBeVisible();
   });
 });

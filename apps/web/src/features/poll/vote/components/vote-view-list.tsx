@@ -14,9 +14,9 @@ import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import type { VoteType } from "@/features/poll/constants";
 import { OptionDate } from "@/features/poll/vote/components/option-date";
-import { useVoteForm } from "@/features/poll/vote/components/vote-form";
-import { VoteProgress } from "@/features/poll/vote/components/vote-progress";
-import type { VotePageView, VoteResult } from "@/features/poll/vote/types";
+import { useVote } from "@/features/poll/vote/components/vote-form";
+import { VoteScore } from "@/features/poll/vote/components/vote-score";
+import type { VoteResult, VoteViewProps } from "@/features/poll/vote/types";
 import {
   EventDate,
   EventTimeRange,
@@ -62,33 +62,25 @@ const endOf = (result: VoteResult) =>
 function VoteCell({
   optionId,
   optionLabel,
-  index,
   allowTentativeVotes,
   savedVote,
   canVote,
 }: {
   optionId: string;
   optionLabel: string;
-  index: number;
   allowTentativeVotes: boolean;
   savedVote?: VoteType;
   canVote: boolean;
 }) {
-  const form = useVoteForm();
-  const mode = form.watch("mode");
-  const votes = form.watch("votes");
+  const { value, setVote, isEditing } = useVote(optionId);
 
-  if (!canVote || mode === "view") {
+  if (!canVote || !isEditing) {
     return savedVote !== undefined ? <VoteLabel type={savedVote} /> : null;
   }
   return (
     <VoteSegmentedControl
-      value={votes[index]?.type}
-      onChange={(newVote) => {
-        const next = [...votes];
-        next[index] = { optionId, type: newVote };
-        form.setValue("votes", next, { shouldDirty: true });
-      }}
+      value={value}
+      onChange={setVote}
       optionLabel={optionLabel}
       allowTentativeVotes={allowTentativeVotes}
     />
@@ -99,19 +91,13 @@ function VoteCell({
  * The options as a table, grouped by day for time polls and flat for date
  * polls, with the viewer's vote control on each row.
  */
-export function VoteResults({
+export function VoteViewList({
   poll,
   results,
   participantCount,
   response,
   canVote,
-}: {
-  poll: VotePageView["poll"];
-  results: VoteResult[];
-  participantCount: number | null;
-  response: VotePageView["response"];
-  canVote: boolean;
-}) {
+}: VoteViewProps) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
   const { t } = useTranslation();
   const headingId = React.useId();
@@ -176,19 +162,16 @@ export function VoteResults({
       columnHelper.display({
         id: "votes",
         header: () => <Trans i18nKey="votes" defaults="Votes" />,
-        cell: ({ row }) => {
-          const score = row.original.score;
-          if (!score || participantCount === null) {
-            return null;
-          }
-          return (
-            <VoteProgress
-              score={score}
-              participantCount={participantCount}
-              allowTentativeVotes={poll.allowTentativeVotes}
-            />
-          );
-        },
+        cell: ({ row }) => (
+          <VoteScore
+            optionId={row.original.optionId}
+            score={row.original.score}
+            savedVote={savedVotes.get(row.original.optionId)}
+            participantCount={participantCount}
+            hasSavedResponse={response !== null}
+            allowTentativeVotes={poll.allowTentativeVotes}
+          />
+        ),
       }),
       columnHelper.display({
         id: "vote",
@@ -207,7 +190,6 @@ export function VoteResults({
             <VoteCell
               optionId={result.optionId}
               optionLabel={optionLabel}
-              index={results.findIndex((r) => r.optionId === result.optionId)}
               allowTentativeVotes={poll.allowTentativeVotes}
               savedVote={savedVotes.get(result.optionId)}
               canVote={canVote}
@@ -225,7 +207,7 @@ export function VoteResults({
       poll.allowTentativeVotes,
       poll.timeZone,
       readZone,
-      results,
+      response,
       savedVotes,
     ],
   );

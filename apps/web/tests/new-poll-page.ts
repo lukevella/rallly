@@ -12,9 +12,12 @@ export class NewPollPage {
   async create({
     name,
     enableComments,
+    allDay,
   }: {
     name: string;
     enableComments?: boolean;
+    /** Creates a date poll rather than the default time poll. */
+    allDay?: boolean;
   }): Promise<PollPage> {
     const page = this.page;
 
@@ -60,6 +63,10 @@ export class NewPollPage {
     await page.getByText("7", { exact: true }).first().click();
     await page.getByText("10", { exact: true }).first().click();
     await page.getByText("15", { exact: true }).first().click();
+
+    if (allDay) {
+      await page.getByTestId("all-day-option").click();
+    }
 
     if (enableComments) {
       // Comments are off by default; opt in to the legacy comments setting

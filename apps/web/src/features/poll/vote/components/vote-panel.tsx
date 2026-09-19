@@ -1,10 +1,12 @@
 "use client";
+import * as React from "react";
 import { VoteForm } from "@/features/poll/vote/components/vote-form";
 import { VoteOutcome } from "@/features/poll/vote/components/vote-outcome";
 import { VotePanelFooter } from "@/features/poll/vote/components/vote-panel-footer";
 import { VotePanelHeader } from "@/features/poll/vote/components/vote-panel-header";
-import { VoteResults } from "@/features/poll/vote/components/vote-results";
-import type { VotePageView } from "@/features/poll/vote/types";
+import { VoteViewCalendar } from "@/features/poll/vote/components/vote-view-calendar";
+import { VoteViewList } from "@/features/poll/vote/components/vote-view-list";
+import type { VotePageView, VoteViewId } from "@/features/poll/vote/types";
 import { UserProvider } from "@/features/user/client";
 import type { UserDTO } from "@/features/user/schema";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
@@ -29,10 +31,20 @@ export function VotePanel({
   user: UserDTO | null;
 }) {
   const hydrated = useHydrated();
+  const [view, setView] = React.useState<VoteViewId>("list");
 
   if (!hydrated) {
     return null;
   }
+
+  // A calendar cell is a day, so only all-day polls can offer one; a time
+  // poll would have several options on one cell.
+  const isTimeSlot = (results[0]?.duration ?? 0) > 0;
+  const views: VoteViewId[] = isTimeSlot ? ["list"] : ["list", "calendar"];
+  const activeView = views.includes(view) ? view : "list";
+
+  // Every view takes these, so switching is a swap with nothing rewired.
+  const viewProps = { poll, results, participantCount, response, canVote };
 
   return (
     <UserProvider user={user}>
@@ -50,14 +62,15 @@ export function VotePanel({
               results={results}
               response={response}
               canVote={canVote}
+              views={views}
+              view={activeView}
+              onViewChange={setView}
             />
-            <VoteResults
-              poll={poll}
-              results={results}
-              participantCount={participantCount}
-              response={response}
-              canVote={canVote}
-            />
+            {activeView === "calendar" ? (
+              <VoteViewCalendar {...viewProps} />
+            ) : (
+              <VoteViewList {...viewProps} />
+            )}
             <VotePanelFooter
               poll={poll}
               results={results}
