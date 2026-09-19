@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "portless landing.rallly cross-env TAILWIND_MODE=watch next dev --turbopack",
+    "dev": "portless run --name landing.rallly sh -c 'NEXT_PUBLIC_BASE_URL=$PORTLESS_URL DEV_DOMAIN=${PORTLESS_URL#https://} TAILWIND_MODE=watch pnpm exec next dev --turbopack'",
     "build": "next build",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",

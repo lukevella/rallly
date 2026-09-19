@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "domain=${DEV_DOMAIN:-web.rallly.test}; env ${DEV_DOMAIN:+NEXT_PUBLIC_BASE_URL=https://$DEV_DOMAIN} portless ${domain%.test} next dev",
+    "dev": "portless run --name web.rallly sh -c 'NEXT_PUBLIC_BASE_URL=$PORTLESS_URL DEV_DOMAIN=${PORTLESS_URL#https://} pnpm exec next dev'",
     "build": "next build",
     "build:test": "NODE_ENV=test next build",
     "analyze": "cross-env ANALYZE=true next build",

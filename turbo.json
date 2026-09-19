@@ -40,7 +40,7 @@
       "dependsOn": ["^db:generate"],
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["DEV_DOMAIN"]
+      "passThroughEnv": ["DEV_DOMAIN", "PORTLESS_URL"]
     },
     "start": {
       "cache": false,
