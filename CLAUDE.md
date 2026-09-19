@@ -79,7 +79,7 @@ pnpm --filter @rallly/web i18n:sync   # Push changed English defaults into app.j
 pnpm sherif               # Check package dependencies
 pnpm screenshots          # Capture marketing screenshots (packages/screenshots)
 pnpm release              # Cut a release (scripts/create-release.sh)
-pnpm proxy:start          # Start the portless .test proxy
+pnpm proxy:start          # Start the portless .localhost proxy (auto-starts with dev scripts)
 ```
 
 ## Architecture
