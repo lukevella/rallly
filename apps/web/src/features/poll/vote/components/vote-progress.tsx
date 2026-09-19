@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@rallly/ui";
 import type { VoteResult } from "@/features/poll/vote/types";
 import { useTranslation } from "@/i18n/client";
 
@@ -11,10 +12,13 @@ export function VoteProgress({
   score,
   participantCount,
   allowTentativeVotes,
+  className,
 }: {
   score: NonNullable<VoteResult["score"]>;
   participantCount: number;
   allowTentativeVotes: boolean;
+  /** Sizes the track; a calendar cell gives it the full cell width. */
+  className?: string;
 }) {
   const { t } = useTranslation();
   const total = Math.max(participantCount, score.yes + score.ifNeedBe);
@@ -43,7 +47,10 @@ export function VoteProgress({
         aria-hidden="true"
         // The track needs to read as an empty share, so it sits a step away
         // from the surface in both themes rather than using one muted token.
-        className="flex h-1.5 w-16 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700"
+        className={cn(
+          "flex h-1.5 w-16 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700",
+          className,
+        )}
       >
         <span
           className="h-full bg-green-500"
