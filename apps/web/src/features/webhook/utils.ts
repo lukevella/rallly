@@ -1,7 +1,39 @@
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { pollActivitySchema } from "@/features/poll/activity/schema";
-import { RETRY_DELAYS_MS } from "./constants";
+import { RETRY_DELAYS_MS, WEBHOOK_VERSION } from "./constants";
 import type { WebhookEvent, WebhookEventType } from "./schema";
+
+/**
+ * The resource half of an event name (`poll` in `poll.closed`). Event names
+ * are `<resource>.<transition>` by construction, so the grouping the picker
+ * renders falls out of the name and a new resource needs no second list.
+ */
+export type WebhookEventResource =
+  WebhookEventType extends `${infer R}.${string}` ? R : never;
+
+export function getWebhookEventResource(eventType: WebhookEventType) {
+  return eventType.split(".")[0] as WebhookEventResource;
+}
+
+/**
+ * Event types bucketed by resource, each bucket keeping the order of the
+ * source list so the picker is stable.
+ */
+export function groupWebhookEventTypes(
+  eventTypes: readonly WebhookEventType[],
+) {
+  const groups = new Map<WebhookEventResource, WebhookEventType[]>();
+  for (const eventType of eventTypes) {
+    const resource = getWebhookEventResource(eventType);
+    const group = groups.get(resource);
+    if (group) {
+      group.push(eventType);
+    } else {
+      groups.set(resource, [eventType]);
+    }
+  }
+  return [...groups];
+}
 
 /**
  * Stripe-style signature: `t=<unix seconds>,v1=<hex hmac-sha256>` over
@@ -108,6 +140,7 @@ export function buildWebhookPayload({
 
   const event = parsed.data;
   const base = {
+    version: WEBHOOK_VERSION,
     id: activity.id,
     createdAt: activity.createdAt.toISOString(),
   };

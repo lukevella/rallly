@@ -113,12 +113,21 @@ export async function sendWebhook({
   secret,
   deliveryId,
   eventType,
+  version,
   body,
 }: {
   url: string;
   secret: string;
   deliveryId: string;
   eventType: string;
+  /**
+   * The version the body was built against, read from the stored payload
+   * rather than the current constant: payloads are frozen at fan-out, so a
+   * delivery retried after a version change must keep advertising the
+   * contract its body actually follows. Absent on deliveries fanned out
+   * before the version existed, which are sent without the header.
+   */
+  version: string | null;
   body: string;
 }): Promise<WebhookSendResult> {
   let target: URL;
@@ -142,6 +151,7 @@ export async function sendWebhook({
         "Content-Type": "application/json",
         "User-Agent": "Rallly-Webhooks/1.0",
         "X-Rallly-Event": eventType,
+        ...(version ? { "X-Rallly-Webhook-Version": version } : {}),
         "X-Rallly-Delivery": deliveryId,
         "X-Rallly-Signature": signature,
       },
