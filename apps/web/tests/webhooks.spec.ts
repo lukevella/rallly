@@ -452,6 +452,30 @@ test.describe("Webhook delivery", () => {
     expect(updated.enabled).toBe(false);
   });
 
+  test("keeps a retry's header on the version its frozen body carries", async ({
+    request,
+  }) => {
+    // The body is frozen at fan-out, so a delivery written before the
+    // version existed must not be advertised as the current one.
+    const webhook = await createWebhook();
+    await prisma.webhookDelivery.create({
+      data: {
+        webhookId: webhook.id,
+        activityId: `webhook-delivery-legacy-${Date.now()}`,
+        eventType: "poll.closed",
+        payload: { id: "legacy", type: "poll.closed" },
+        nextAttemptAt: secondsAgo(1),
+      },
+    });
+
+    await runCron(request);
+
+    expect(receiver.requests).toHaveLength(1);
+    expect(
+      receiver.requests[0]?.headers["x-rallly-webhook-version"],
+    ).toBeUndefined();
+  });
+
   test("a success resets the consecutive failure count", async ({
     request,
   }) => {

@@ -284,11 +284,22 @@ async function attemptDelivery(delivery: {
       error: "Could not decrypt the endpoint secret",
     };
   }
+  // From the stored payload, not the current constant: the body is frozen at
+  // fan-out, so the header has to describe the shape actually being sent.
+  const version =
+    delivery.payload &&
+    typeof delivery.payload === "object" &&
+    !Array.isArray(delivery.payload) &&
+    typeof delivery.payload.version === "string"
+      ? delivery.payload.version
+      : null;
+
   return sendWebhook({
     url: delivery.webhook.url,
     secret,
     deliveryId: delivery.id,
     eventType: delivery.eventType as WebhookEventType,
+    version,
     body: JSON.stringify(delivery.payload),
   });
 }

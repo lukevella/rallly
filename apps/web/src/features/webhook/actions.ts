@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/features/user/loaders";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
-import { isWebhooksEnabled } from "./data";
+import { getWebhookAccess } from "./data";
 import { createWebhook, deleteWebhook, setWebhookEnabled } from "./mutations";
 import {
   createWebhookInputSchema,
@@ -34,7 +34,7 @@ async function requireWebhookAccess() {
     });
   }
 
-  if (!isWebhooksEnabled(user, space)) {
+  if (getWebhookAccess(user, space) !== "allowed") {
     throw new AppError({
       code: "FORBIDDEN",
       message: "Webhooks are not enabled for this user or space",

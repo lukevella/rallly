@@ -13,26 +13,27 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getActiveSpace } from "@/features/space/loaders";
 import { CreateWebhookButton } from "@/features/webhook/components/create-webhook-button";
 import { WebhooksList } from "@/features/webhook/components/webhooks-list";
 import { WebhooksUpgrade } from "@/features/webhook/components/webhooks-upgrade";
 import {
   loadSpaceWebhooks,
-  loadWebhooksEnabled,
+  loadWebhookAccess,
 } from "@/features/webhook/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 
 export default async function WebhooksSettingsPage() {
-  const space = await getActiveSpace();
-  const enabled = await loadWebhooksEnabled();
+  const access = await loadWebhookAccess();
 
-  // "Needs to upgrade" (hobby tier) gets its own screen; every other reason
-  // access is blocked (self-hosted, not the owner) is a 404.
-  if (!enabled && space.tier !== "hobby") {
+  // Only a space that could fix this by paying gets the upgrade screen;
+  // every other denial (self-hosted, not the owner) is a 404, since a pay
+  // wall would offer something buying Pro would not deliver.
+  if (access === "denied") {
     notFound();
   }
+
+  const enabled = access === "allowed";
 
   return (
     <SettingsPage>

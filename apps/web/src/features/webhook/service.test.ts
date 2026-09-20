@@ -70,6 +70,7 @@ describe("sendWebhook", () => {
       secret: "whsec_test",
       deliveryId: "d_1",
       eventType: "poll.closed",
+      version: "2026-09-20",
       body: "{}",
     });
 

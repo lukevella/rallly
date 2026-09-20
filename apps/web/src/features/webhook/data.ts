@@ -6,23 +6,28 @@ import type { AuthorizedSpaceId } from "@/features/space/types";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { WEBHOOK_ACTIVITY_TYPES } from "./utils";
 
+export type WebhookAccess = "allowed" | "needs_upgrade" | "denied";
+
 /**
  * Webhooks ride on the same capability as the rest of the developer surface:
  * a Pro capability of cloud hosted spaces, managed by the space owner.
+ *
+ * The three outcomes are distinguished because they need different
+ * presentations: only a space whose *sole* missing condition is the tier can
+ * fix this by paying, so only that case earns the upgrade screen. An
+ * instance without the capability, or a member who could never manage
+ * endpoints, must not be shown a pay wall for something buying Pro would not
+ * give them.
  */
-export function isWebhooksEnabled(
+export function getWebhookAccess(
   user: { id: string },
   space: { tier: SpaceTier; ownerId: string },
-) {
-  if (!isFeatureEnabled("api")) {
-    return false;
+): WebhookAccess {
+  if (!isFeatureEnabled("api") || space.ownerId !== user.id) {
+    return "denied";
   }
 
-  if (space.tier !== "pro") {
-    return false;
-  }
-
-  return space.ownerId === user.id;
+  return space.tier === "pro" ? "allowed" : "needs_upgrade";
 }
 
 /**
