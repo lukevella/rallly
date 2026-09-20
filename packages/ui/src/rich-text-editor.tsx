@@ -110,7 +110,7 @@ export function RichTextEditor({
         "aria-labelledby": ariaLabelledBy ?? "",
         class: cn(
           "min-h-24 w-full px-2.5 py-2 text-sm outline-none",
-          "[&_a]:text-link [&_a]:underline",
+          "[&_a]:text-link-inherit [&_a]:underline",
           "[&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5",
           "[&_p]:leading-relaxed",
           "[&_.is-editor-empty:first-child]:before:pointer-events-none [&_.is-editor-empty:first-child]:before:float-left [&_.is-editor-empty:first-child]:before:h-0 [&_.is-editor-empty:first-child]:before:text-muted-foreground [&_.is-editor-empty:first-child]:before:content-[attr(data-placeholder)]",
