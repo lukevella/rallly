@@ -191,6 +191,7 @@ export function DeveloperSidebarMenu() {
   const isSpaceOwner = space.ownerId === user.id;
   const pathname = usePathname();
   const isApiEnabled = useFeatureFlag("api");
+  const isWebhooksEnabled = useFeatureFlag("webhooks");
 
   // Owner only: a member has no self-serve path to the developer surface. A
   // free space sees the entries with a Pro badge; each page offers the
@@ -221,21 +222,23 @@ export function DeveloperSidebarMenu() {
               {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={
-                <HoverPrefetchLink
-                  href="/settings/webhooks"
-                  className="flex items-center gap-x-2"
-                />
-              }
-              isActive={pathname.startsWith("/settings/webhooks")}
-            >
-              <WebhookIcon />
-              <Trans i18nKey="webhooks" defaults="Webhooks" />
-              {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {isWebhooksEnabled ? (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                render={
+                  <HoverPrefetchLink
+                    href="/settings/webhooks"
+                    className="flex items-center gap-x-2"
+                  />
+                }
+                isActive={pathname.startsWith("/settings/webhooks")}
+              >
+                <WebhookIcon />
+                <Trans i18nKey="webhooks" defaults="Webhooks" />
+                {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ) : null}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

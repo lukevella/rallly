@@ -1,3 +1,13 @@
+import { isSelfHosted } from "@/lib/constants";
+
+/**
+ * Webhooks ride on the API capability (cloud only) but stay behind their own
+ * switch until the docs page that defines the payload contract is published.
+ * Off by default, so production is dark until the switch is flipped.
+ */
+export const isWebhooksEnabled =
+  !isSelfHosted && process.env.WEBHOOKS_ENABLED === "true";
+
 /**
  * Retry schedule indexed by the number of attempts already made: after the
  * first failure wait 1 minute, after the second 5 minutes, and so on. A

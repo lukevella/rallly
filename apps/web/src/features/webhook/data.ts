@@ -23,7 +23,7 @@ export function getWebhookAccess(
   user: { id: string },
   space: { tier: SpaceTier; ownerId: string },
 ): WebhookAccess {
-  if (!isFeatureEnabled("api") || space.ownerId !== user.id) {
+  if (!isFeatureEnabled("webhooks") || space.ownerId !== user.id) {
     return "denied";
   }
 

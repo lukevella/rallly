@@ -12,6 +12,7 @@ export interface FeatureFlagConfig {
   inProcessRateLimit: boolean;
   nonprofitDiscount: boolean;
   api: boolean;
+  webhooks: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;
