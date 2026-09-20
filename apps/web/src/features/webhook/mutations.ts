@@ -1,9 +1,13 @@
 import "server-only";
 
+import { randomBytes } from "node:crypto";
+import { subject } from "@casl/ability";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { decrypt } from "@rallly/utils/encryption";
+import { decrypt, encrypt } from "@rallly/utils/encryption";
 import { env } from "@/env";
+import { AppError } from "@/lib/errors/app-error";
+import { defineAbilityForWebhooks } from "./ability";
 import {
   DELIVERY_CLAIM_BATCH_SIZE,
   DELIVERY_CONCURRENCY,
@@ -20,6 +24,7 @@ import {
   listWebhookActivities,
 } from "./data";
 import type { WebhookEventType } from "./schema";
+import { MAX_WEBHOOKS_PER_SPACE } from "./schema";
 import type { WebhookSendResult } from "./service";
 import { sendWebhook } from "./service";
 import {
@@ -349,4 +354,116 @@ export async function deliverWebhooks({
   }
 
   return summary;
+}
+
+/**
+ * Endpoint management for the settings page. Scope is proven by the caller's
+ * action gate: the spaceId passed here is the actor's own space, and CASL
+ * re-checks the target row against it before any write.
+ */
+
+/**
+ * Signing secret shown once at creation. 32 random bytes, prefixed so it is
+ * recognisable in a receiver's config, and stored encrypted — the dispatcher
+ * needs the plaintext to sign with, so this cannot be a one-way hash.
+ */
+function generateWebhookSecret() {
+  return `whsec_${randomBytes(32).toString("base64url")}`;
+}
+
+export async function createWebhook({
+  spaceId,
+  url,
+  events,
+}: {
+  spaceId: string;
+  url: string;
+  events: WebhookEventType[];
+}) {
+  const count = await prisma.spaceWebhook.count({ where: { spaceId } });
+
+  // Expected outcome the caller handles specifically, so it's part of the
+  // return value; thrown errors are reserved for the global error handler.
+  if (count >= MAX_WEBHOOKS_PER_SPACE) {
+    return { ok: false, reason: "max_webhooks_exceeded" } as const;
+  }
+
+  const secret = generateWebhookSecret();
+
+  const webhook = await prisma.spaceWebhook.create({
+    data: {
+      spaceId,
+      url,
+      events,
+      secret: encrypt(secret, env.SECRET_PASSWORD),
+    },
+    select: { id: true },
+  });
+
+  return { ok: true, webhookId: webhook.id, secret } as const;
+}
+
+async function authorizeWebhook({
+  spaceId,
+  webhookId,
+  action,
+}: {
+  spaceId: string;
+  webhookId: string;
+  action: "update" | "delete";
+}) {
+  const webhook = await prisma.spaceWebhook.findUnique({
+    where: { id: webhookId },
+    select: { spaceId: true },
+  });
+
+  if (!webhook) {
+    throw new AppError({ code: "NOT_FOUND", message: "Webhook not found" });
+  }
+
+  const ability = defineAbilityForWebhooks({ spaceId });
+
+  if (ability.cannot(action, subject("Webhook", webhook))) {
+    throw new AppError({
+      code: "FORBIDDEN",
+      message: "You do not have permission to manage this webhook",
+    });
+  }
+}
+
+/**
+ * Re-enabling clears the failure count and moves the cursor to now: an
+ * endpoint is usually disabled after a long outage, and replaying everything
+ * that happened while it was dark is not what the owner asked for.
+ */
+export async function setWebhookEnabled({
+  spaceId,
+  webhookId,
+  enabled,
+}: {
+  spaceId: string;
+  webhookId: string;
+  enabled: boolean;
+}) {
+  await authorizeWebhook({ spaceId, webhookId, action: "update" });
+
+  await prisma.spaceWebhook.update({
+    where: { id: webhookId },
+    data: enabled
+      ? { enabled: true, consecutiveFailures: 0, cursor: new Date() }
+      : { enabled: false },
+  });
+}
+
+export async function deleteWebhook({
+  spaceId,
+  webhookId,
+}: {
+  spaceId: string;
+  webhookId: string;
+}) {
+  await authorizeWebhook({ spaceId, webhookId, action: "delete" });
+
+  // Deliveries cascade with the endpoint.
+  await prisma.spaceWebhook.delete({ where: { id: webhookId } });
 }

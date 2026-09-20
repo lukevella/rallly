@@ -6,7 +6,7 @@ import { isIP } from "node:net";
 import type { Dispatcher } from "undici";
 import { getGlobalDispatcher } from "undici";
 import { createOutboundDispatcher } from "@/lib/outbound-proxy";
-import { DELIVERY_TIMEOUT_MS } from "./constants";
+import { DELIVERY_TIMEOUT_MS, WEBHOOK_VERSION } from "./constants";
 import { isPrivateAddress, signWebhookBody } from "./utils";
 
 export type WebhookSendResult =
@@ -142,6 +142,7 @@ export async function sendWebhook({
         "Content-Type": "application/json",
         "User-Agent": "Rallly-Webhooks/1.0",
         "X-Rallly-Event": eventType,
+        "X-Rallly-Webhook-Version": WEBHOOK_VERSION,
         "X-Rallly-Delivery": deliveryId,
         "X-Rallly-Signature": signature,
       },

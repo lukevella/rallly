@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { pollClosedReasonSchema } from "@/features/poll/schema";
+import { WEBHOOK_VERSION } from "./constants";
 import { getWebhookUrlRejection } from "./utils";
 
 export const webhookEventTypeSchema = z
@@ -35,6 +36,11 @@ const webhookPollSchema = (status: "open" | "closed" | "scheduled") =>
     .meta({ id: `WebhookPoll${status[0]?.toUpperCase()}${status.slice(1)}` });
 
 const envelope = {
+  version: z.string().meta({
+    description:
+      "The payload contract this event was built against. Also sent as the `X-Rallly-Webhook-Version` header.",
+    example: WEBHOOK_VERSION,
+  }),
   id: z.string().meta({
     description:
       "Stable event id. Retries of the same event carry the same id, so receivers can deduplicate on it.",
@@ -113,8 +119,14 @@ const rejectionMessages = {
   private_host: "Webhook URLs must point at a public host",
 } as const;
 
+/**
+ * The scheme is judged by the refinement below, not by `z.url`'s own
+ * `protocol` option: a failing built-in check adds its generic "Invalid URL"
+ * issue ahead of the specific one, and a form resolver shows only the first.
+ * One source of verdicts means the field always names the actual problem.
+ */
 export const webhookUrlSchema = z
-  .url({ protocol: /^https$/ })
+  .url()
   .max(2048)
   .superRefine((value, ctx) => {
     const rejection = URL.canParse(value)
@@ -124,6 +136,11 @@ export const webhookUrlSchema = z
       ctx.addIssue({ code: "custom", message: rejectionMessages[rejection] });
     }
   });
+
+// Cap on endpoints per space. Not a security control — the dispatcher fans
+// out to every enabled endpoint, so this bounds the work one space can add
+// to a run, and keeps the list readable.
+export const MAX_WEBHOOKS_PER_SPACE = 5;
 
 export const createWebhookInputSchema = z.object({
   url: webhookUrlSchema,
@@ -140,3 +157,12 @@ export const updateWebhookInputSchema = z.object({
 });
 
 export type UpdateWebhookInput = z.infer<typeof updateWebhookInputSchema>;
+
+export const setWebhookEnabledSchema = z.object({
+  webhookId: z.string(),
+  enabled: z.boolean(),
+});
+
+export const deleteWebhookSchema = z.object({
+  webhookId: z.string(),
+});

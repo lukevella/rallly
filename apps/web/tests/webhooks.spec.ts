@@ -6,6 +6,7 @@ import type { APIRequestContext } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { encrypt } from "@rallly/utils/encryption";
+import { WEBHOOK_VERSION } from "@/features/webhook/constants";
 import { createUserInDb } from "./test-utils";
 
 /**
@@ -178,11 +179,13 @@ test.describe("Webhook delivery", () => {
     const [received] = receiver.requests;
     expect(received?.headers["x-rallly-event"]).toBe("poll.closed");
     expect(received?.headers["content-type"]).toBe("application/json");
+    expect(received?.headers["x-rallly-webhook-version"]).toBe(WEBHOOK_VERSION);
     const signature = received?.headers["x-rallly-signature"] as string;
     expect(verifySignature(signature, received?.body ?? "")).toBe(true);
 
     const body = JSON.parse(received?.body ?? "{}");
     expect(body).toMatchObject({
+      version: WEBHOOK_VERSION,
       id: activity.id,
       type: "poll.closed",
       createdAt: activity.createdAt.toISOString(),

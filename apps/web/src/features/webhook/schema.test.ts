@@ -27,4 +27,20 @@ describe("webhookUrlSchema", () => {
   ])("rejects %s", (_label, url) => {
     expect(webhookUrlSchema.safeParse(url).success).toBe(false);
   });
+
+  // A form resolver surfaces only the first issue, so the first issue has to
+  // be the one that names the actual problem.
+  it.each([
+    ["http://example.com/hook", "Webhook URLs must use https"],
+    ["https://localhost/hook", "Webhook URLs must point at a public host"],
+    ["https://127.0.0.1/hook", "Webhook URLs must point at a public host"],
+    [
+      "https://user:pass@example.com/hook",
+      "Webhook URLs must not contain credentials",
+    ],
+  ])("reports %s as %s", (url, message) => {
+    const result = webhookUrlSchema.safeParse(url);
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.message).toBe(message);
+  });
 });

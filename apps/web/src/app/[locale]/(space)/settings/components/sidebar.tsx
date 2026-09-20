@@ -22,6 +22,7 @@ import {
   ShapesIcon,
   UserIcon,
   UsersIcon,
+  WebhookIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type React from "react";
@@ -191,8 +192,9 @@ export function DeveloperSidebarMenu() {
   const pathname = usePathname();
   const isApiEnabled = useFeatureFlag("api");
 
-  // Owner only: a member has no self-serve path to API keys. A free space
-  // sees the entry with a Pro badge; the page itself offers the upgrade.
+  // Owner only: a member has no self-serve path to the developer surface. A
+  // free space sees the entries with a Pro badge; each page offers the
+  // upgrade.
   if (!isSpaceOwner || !isApiEnabled) {
     return null;
   }
@@ -216,6 +218,21 @@ export function DeveloperSidebarMenu() {
             >
               <KeyIcon />
               <Trans i18nKey="apiKeys" defaults="API keys" />
+              {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={
+                <HoverPrefetchLink
+                  href="/settings/webhooks"
+                  className="flex items-center gap-x-2"
+                />
+              }
+              isActive={pathname.startsWith("/settings/webhooks")}
+            >
+              <WebhookIcon />
+              <Trans i18nKey="webhooks" defaults="Webhooks" />
               {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
             </SidebarMenuButton>
           </SidebarMenuItem>

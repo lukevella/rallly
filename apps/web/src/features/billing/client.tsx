@@ -40,6 +40,7 @@ export type PayWallTrigger = {
     | "manage-poll"
     | "custom-branding"
     | "api-keys"
+    | "webhooks"
     | "space-members"
     | "space-collaboration"
     | "billing-settings"
