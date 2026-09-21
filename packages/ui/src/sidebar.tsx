@@ -597,12 +597,12 @@ function SidebarMenuAction({
       {
         "data-sidebar": "menu-action",
         className: cn(
-          "absolute top-1.5 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
+          "absolute top-2 right-1 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
           // Increases the hit area of the button on mobile.
           "after:absolute after:-inset-2 md:after:hidden",
           "peer-data-[size=sm]/menu-button:top-1",
-          "peer-data-[size=default]/menu-button:top-1.5",
-          "peer-data-[size=lg]/menu-button:top-2.5",
+          "peer-data-[size=default]/menu-button:top-2",
+          "peer-data-[size=lg]/menu-button:top-3.5",
           "group-data-[collapsible=icon]:hidden",
           showOnHover &&
             "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-popup-open:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
@@ -625,8 +625,8 @@ const SidebarMenuBadge = React.forwardRef<
       "pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 font-medium text-sidebar-foreground text-xs tabular-nums",
       "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground",
       "peer-data-[size=sm]/menu-button:top-1",
-      "peer-data-[size=default]/menu-button:top-1.5",
-      "peer-data-[size=lg]/menu-button:top-2.5",
+      "peer-data-[size=default]/menu-button:top-2",
+      "peer-data-[size=lg]/menu-button:top-3.5",
       "group-data-[collapsible=icon]:hidden",
       className,
     )}
