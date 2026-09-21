@@ -998,7 +998,7 @@
   "webhooksDescription": "Send events to your own server",
   "webhookSecretSecurityWarning": "Store this secret securely. Use it to verify that deliveries came from Rallly.",
   "webhooksSettingsDescription": "Send events to your own server with signed, retried deliveries.",
-  "webhooksUpgradeDescription": "Get notified on your own server when a poll is closed, reopened or scheduled. Included with Pro.",
+  "webhooksUpgradeDescription": "Send events to your own server as things change in your space. Included with Pro.",
   "webhooksUpgradeTitle": "Upgrade for webhooks",
   "webhookUrl": "URL",
   "weekView": "Week view",
