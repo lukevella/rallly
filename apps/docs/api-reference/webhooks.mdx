@@ -1,0 +1,40 @@
+---
+title: "Overview"
+sidebarTitle: "Overview"
+description: "Get an HTTPS request when a poll or a response changes."
+---
+
+Webhooks tell your own systems about poll and participant changes as they happen, so an integration never has to poll the API for results. Each endpoint you register receives a signed `POST` for every event it subscribes to.
+
+## Availability
+
+Webhooks are available to spaces on a Pro plan of the cloud hosted version. Only the space owner can manage endpoints, from **Settings → Webhooks**. They are not available on self-hosted instances.
+
+## Adding an endpoint
+
+1. Open **Settings → Webhooks** and choose **Add webhook**.
+2. Enter the URL. It must be `https`, on a public host, with no credentials in it.
+3. Pick the events to receive. Every event is selected by default; you can change the selection later.
+4. Copy the signing secret. It is shown once. If you lose it, delete the endpoint and add it again.
+
+A space can have up to five endpoints. A new endpoint starts receiving events from the moment it is created; history is never replayed.
+
+## What an event carries
+
+An event says what happened and to which poll or participant. It references both by id and carries only the facts that belong to the event itself: the reason a poll closed, the time it was scheduled for. It does not carry the poll's title, options or settings, or the participant's details. Fetch the API when you need them; the fetch returns the current state, where a snapshot in the event would already be stale by the time a retry lands.
+
+See [Events](/api-reference/webhooks/events) for the list and the shape of each payload.
+
+## Delivery
+
+Every delivery is a `POST` with a JSON body. Respond with any `2xx` status within 10 seconds; the response body is ignored. Redirects are not followed and count as failures.
+
+Delivery is at least once. A delivery that fails is retried with backoff after 1 minute, 5 minutes, 30 minutes, 2 hours and 12 hours; after the sixth failure it is exhausted and not retried. Failed deliveries never block later ones, so a burst of events can arrive out of order: sort on `createdAt` if order matters, and deduplicate on `id`, which retries of one event share.
+
+An endpoint that exhausts twenty deliveries in a row is disabled. Re-enable it from the settings page once the receiver is fixed; events that happened while it was disabled are not delivered.
+
+Every request is signed. Verify the signature before acting on a body; [Security](/api-reference/webhooks/security) shows how.
+
+## Versioning
+
+The payload contract is dated. `version` in the body and the `X-Rallly-Webhook-Version` header carry the version a delivery was built against; today that is `2026-09-20`. Additive changes, such as new fields, new events or new modifiers, keep the version, so ignore fields you do not recognise. A change that could break a receiver arrives under a new date, and existing endpoints keep the version they were created with until you upgrade them.

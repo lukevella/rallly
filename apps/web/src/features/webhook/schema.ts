@@ -105,7 +105,11 @@ export const pollCreatedEventSchema = z
     type: z.literal("poll.created"),
     data: z.object({ poll: webhookPollRefSchema }),
   })
-  .meta({ id: "PollCreatedEvent" });
+  .meta({
+    id: "PollCreatedEvent",
+    description:
+      "A poll was created in the space, from the app or the API. It starts open.",
+  });
 
 export const pollUpdatedEventSchema = z
   .object({
@@ -131,7 +135,11 @@ export const pollClosedEventSchema = z
       }),
     }),
   })
-  .meta({ id: "PollClosedEvent" });
+  .meta({
+    id: "PollClosedEvent",
+    description:
+      "The poll stopped accepting responses, either because the organizer closed it or because every option had passed. Reopening arrives as `poll.reopened`; scheduling arrives as `poll.scheduled`, not as a close.",
+  });
 
 export const pollReopenedEventSchema = z
   .object({
@@ -139,7 +147,10 @@ export const pollReopenedEventSchema = z
     type: z.literal("poll.reopened"),
     data: z.object({ poll: webhookPollRefSchema }),
   })
-  .meta({ id: "PollReopenedEvent" });
+  .meta({
+    id: "PollReopenedEvent",
+    description: "A closed poll accepts responses again.",
+  });
 
 export const pollScheduledEventSchema = z
   .object({
@@ -152,7 +163,11 @@ export const pollScheduledEventSchema = z
       }),
     }),
   })
-  .meta({ id: "PollScheduledEvent" });
+  .meta({
+    id: "PollScheduledEvent",
+    description:
+      "The organizer picked a time. The poll stops accepting responses and `data.event` is the span that was chosen.",
+  });
 
 export const pollDeletedEventSchema = z
   .object({
@@ -177,7 +192,10 @@ export const pollParticipantCreatedEventSchema = z
     type: z.literal("poll.participant.created"),
     data: participantEventData,
   })
-  .meta({ id: "PollParticipantCreatedEvent" });
+  .meta({
+    id: "PollParticipantCreatedEvent",
+    description: "Someone responded to the poll.",
+  });
 
 export const pollParticipantUpdatedEventSchema = z
   .object({
@@ -196,7 +214,11 @@ export const pollParticipantDeletedEventSchema = z
     type: z.literal("poll.participant.deleted"),
     data: participantEventData,
   })
-  .meta({ id: "PollParticipantDeletedEvent" });
+  .meta({
+    id: "PollParticipantDeletedEvent",
+    description:
+      "A response was removed, by the participant or the organizer. `data.participant` is the response as it stood when it was removed.",
+  });
 
 export const webhookEventSchema = z
   .discriminatedUnion("type", [

@@ -98,6 +98,14 @@
               "GET /v1/polls/{pollId}/results",
               "GET /v1/polls/{pollId}/participants"
             ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks",
+              "api-reference/webhooks/events",
+              "api-reference/webhooks/security"
+            ]
           }
         ]
       },

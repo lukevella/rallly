@@ -1,0 +1,103 @@
+---
+title: "Events"
+description: "Every event, the envelope they share, and what each one carries."
+---
+
+Payloads are deliberately thin. An event says what happened and to which poll or participant; it does not describe them. Fetch the API for the current state when you need it, and treat the event as the signal to do so.
+
+## The envelope
+
+Every body has the same outer shape:
+
+```json
+{
+  "version": "2026-09-20",
+  "id": "cm5h8x2k40000q9l4f7e2d3an",
+  "type": "poll.closed",
+  "createdAt": "2025-01-12T08:30:00.000Z",
+  "data": {
+    "poll": { "id": "Xk3pQ9vLm2Ab" },
+    "reason": "manual"
+  }
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `version` | The payload contract the body was built against |
+| `id` | The event's stable id. Retries carry the same `id`; deduplicate on it |
+| `type` | The event, also sent as the `X-Rallly-Event` header |
+| `createdAt` | When the change happened, not when the request was sent |
+| `data` | The event's payload, below |
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Content-Type` | `application/json` |
+| `X-Rallly-Event` | The event type, the same as `type` in the body |
+| `X-Rallly-Delivery` | Unique per delivery attempt |
+| `X-Rallly-Webhook-Version` | The payload version, the same as `version` in the body |
+| `X-Rallly-Signature` | `t=<unix seconds>,v1=<hex HMAC-SHA256>`, see [Security](/api-reference/webhooks/security) |
+| `User-Agent` | `Rallly-Webhooks/1.0` |
+
+## Poll events
+
+Every poll event carries `data.poll`, a reference:
+
+```json
+{ "poll": { "id": "Xk3pQ9vLm2Ab" } }
+```
+
+Fetch `GET /polls/{pollId}` for the title, options, settings and current status.
+
+| Event | When | Also in `data` |
+| --- | --- | --- |
+| `poll.created` | A poll was created, from the app or the API | |
+| `poll.updated` | The poll's details, options or settings changed. The event says that something changed, not what | |
+| `poll.closed` | The poll stopped accepting responses | `reason`: `manual` when the organizer closed it, `auto` when every option had passed |
+| `poll.reopened` | A closed poll accepts responses again | |
+| `poll.scheduled` | The organizer picked a time. The poll stops accepting responses | `event`: the span that was chosen, below |
+| `poll.deleted` | The poll was deleted. `GET /polls/{pollId}` returns `404` from now on, so anything you need about it must already be stored | |
+
+One event per transition. A poll that is closed, reopened and closed again produces three events, each describing the transition it records.
+
+### The scheduled event
+
+`poll.scheduled` carries the span of time the organizer chose:
+
+```json
+{
+  "poll": { "id": "Xk3pQ9vLm2Ab" },
+  "event": {
+    "start": "2025-01-15T09:00:00.000Z",
+    "end": "2025-01-15T09:30:00.000Z",
+    "allDay": false
+  }
+}
+```
+
+`start` is inclusive and `end` is exclusive, both ISO 8601 instants in UTC. When `allDay` is true the span is a whole calendar day with no timezone, given as midnight to midnight UTC: read the date from `start` and ignore the time of day.
+
+## Participant events
+
+Every participant event carries the poll and the participant, both as references:
+
+```json
+{
+  "poll": { "id": "Xk3pQ9vLm2Ab" },
+  "participant": { "id": "cm5h8x2k40000q9l4f7e2d3an" }
+}
+```
+
+Fetch `GET /polls/{pollId}/participants` for the participant's details.
+
+| Event | When |
+| --- | --- |
+| `poll.participant.created` | Someone responded to the poll |
+| `poll.participant.updated` | A participant changed their response or their name |
+| `poll.participant.deleted` | A response was removed, by the participant or the organizer. The participant is no longer listed |
+
+## Adding events
+
+New events may be added without a version change. Ignore types you do not recognise rather than failing on them.
