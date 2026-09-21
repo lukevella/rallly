@@ -83,22 +83,44 @@ async function fetchReleaseChannels(): Promise<ReleaseChannels | null> {
 // degrades to no severity rather than failing the update check.
 async function fetchSecurityAdvisories(): Promise<SecurityAdvisory[] | null> {
   try {
-    const res = await fetch(
-      `${GITHUB_ADVISORIES_URL}?state=published&per_page=${RELEASES_PER_PAGE}`,
-      {
+    const signal = AbortSignal.timeout(2500);
+    const advisories: unknown[] = [];
+    // Cursor pagination: the next page is only known from the Link header
+    let url: string | null =
+      `${GITHUB_ADVISORIES_URL}?state=published&per_page=${RELEASES_PER_PAGE}`;
+
+    for (let page = 1; url && page <= MAX_RELEASE_PAGES; page++) {
+      const res = await fetch(url, {
         headers: {
           Accept: "application/vnd.github+json",
           "User-Agent": "Rallly",
         },
-        signal: AbortSignal.timeout(2500),
-      },
-    );
-    if (!res.ok) return null;
-    return buildSecurityAdvisories(await res.json());
+        signal,
+      });
+      if (!res.ok) return null;
+
+      const batch = await res.json();
+      if (!Array.isArray(batch)) return null;
+
+      advisories.push(...batch);
+      url = getNextLink(res.headers.get("link"));
+      if (url && page === MAX_RELEASE_PAGES) {
+        logger.warn(
+          { pages: MAX_RELEASE_PAGES },
+          "Advisory list truncated at the pagination bound",
+        );
+      }
+    }
+
+    return buildSecurityAdvisories(advisories);
   } catch (error) {
     logger.warn({ error }, "Failed to fetch security advisories from GitHub");
     return null;
   }
+}
+
+function getNextLink(header: string | null) {
+  return header?.match(/<([^>]+)>;\s*rel="next"/)?.[1] ?? null;
 }
 
 async function getSecurityAdvisories(): Promise<SecurityAdvisory[]> {
