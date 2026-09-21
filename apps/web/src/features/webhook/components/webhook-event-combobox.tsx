@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@rallly/ui/button";
 import {
   Combobox,
   ComboboxCollection,
@@ -11,15 +10,13 @@ import {
   ComboboxItem,
   ComboboxLabel,
   ComboboxList,
-  ComboboxTrigger,
-  ComboboxValue,
+  useComboboxAnchor,
 } from "@rallly/ui/combobox";
 import { Trans, useTranslation } from "@/i18n/client";
 import type { WebhookEventType } from "../schema";
 import { WEBHOOK_EVENT_TYPES } from "../schema";
 import { groupWebhookEventTypes } from "../utils";
 import { WebhookEventGroupLabel } from "./webhook-event-group-label";
-import { WebhookEventLabel } from "./webhook-event-label";
 
 const groupedEventTypes = groupWebhookEventTypes(WEBHOOK_EVENT_TYPES).map(
   ([resource, items]) => ({ value: resource, items }),
@@ -40,6 +37,7 @@ export function WebhookEventCombobox({
   "aria-invalid"?: boolean;
 }) {
   const { t } = useTranslation();
+  const anchorRef = useComboboxAnchor();
 
   return (
     <Combobox
@@ -48,34 +46,20 @@ export function WebhookEventCombobox({
       value={value}
       onValueChange={onValueChange}
     >
-      <ComboboxTrigger
-        id={id}
-        onBlur={onBlur}
-        {...ariaProps}
-        render={
-          <Button
-            className="w-full justify-between font-normal aria-invalid:ring-destructive"
-            type="button"
-          />
-        }
-      >
-        <ComboboxValue>
-          {(selected: WebhookEventType[]) => (
-            <Trans
-              i18nKey="webhookEventCount"
-              defaults="{count, plural, one {# event} other {# events}}"
-              values={{ count: selected.length }}
-            />
-          )}
-        </ComboboxValue>
-      </ComboboxTrigger>
-      <ComboboxContent>
+      <div ref={anchorRef}>
+        {/* The selection lives in the popup, so the input's only resting
+            text is the selected count; typing replaces it with a query. */}
         <ComboboxInput
-          showTrigger={false}
-          placeholder={t("webhookEventComboboxSearchPlaceholder", {
-            defaultValue: "Search events…",
+          id={id}
+          onBlur={onBlur}
+          placeholder={t("webhookEventCount", {
+            defaultValue: "{count, plural, one {# event} other {# events}}",
+            count: value.length,
           })}
+          {...ariaProps}
         />
+      </div>
+      <ComboboxContent anchor={anchorRef.current}>
         <ComboboxEmpty>
           <Trans
             i18nKey="webhookEventComboboxEmpty"
@@ -93,16 +77,9 @@ export function WebhookEventCombobox({
                   <ComboboxItem
                     key={eventType}
                     value={eventType}
-                    className="items-start"
+                    className="font-mono"
                   >
-                    <span className="min-w-0">
-                      <span className="block font-medium font-mono leading-none">
-                        {eventType}
-                      </span>
-                      <span className="mt-1 block text-muted-foreground text-xs leading-snug">
-                        <WebhookEventLabel eventType={eventType} />
-                      </span>
-                    </span>
+                    {eventType}
                   </ComboboxItem>
                 )}
               </ComboboxCollection>
