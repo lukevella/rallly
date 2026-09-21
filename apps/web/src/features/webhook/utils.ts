@@ -1,7 +1,11 @@
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { pollActivitySchema } from "@/features/poll/activity/schema";
 import { RETRY_DELAYS_MS, WEBHOOK_VERSION } from "./constants";
-import type { WebhookEvent, WebhookEventType } from "./schema";
+import type {
+  WebhookEvent,
+  WebhookEventType,
+  WebhookPollStatus,
+} from "./schema";
 
 /**
  * The resource half of an event name (`poll` in `poll.closed`). Event names
@@ -78,10 +82,23 @@ export function getRetryDelayMs(attempts: number) {
   return RETRY_DELAYS_MS[attempts - 1] ?? null;
 }
 
+/**
+ * Activity type to public event name. The activity log is internal and its
+ * `type` column carries history, so the mapping is the seam: an activity is
+ * never renamed to match its event, and the event name is the contract.
+ * Participant events take three segments so the picker, which groups on the
+ * first, files them under the poll.
+ */
 const ACTIVITY_EVENTS: Record<string, WebhookEventType> = {
+  poll_created: "poll.created",
+  poll_updated: "poll.updated",
   poll_closed: "poll.closed",
   poll_reopened: "poll.reopened",
   poll_scheduled: "poll.scheduled",
+  poll_deleted: "poll.deleted",
+  response_created: "poll.participant.created",
+  response_updated: "poll.participant.updated",
+  response_deleted: "poll.participant.deleted",
 };
 
 export const WEBHOOK_ACTIVITY_TYPES = Object.keys(ACTIVITY_EVENTS);
@@ -103,11 +120,12 @@ function toOptionPayload(
 }
 
 /**
- * Builds the event envelope for an activity row. The poll's status comes from
- * the transition the activity records, never from the live poll: by the time
- * a delivery is retried the poll may have moved on, and each transition is
- * its own event. Returns null for activities that are not webhook events or
- * whose payload this version can't interpret.
+ * Builds the event envelope for an activity row. For a status transition the
+ * poll's status comes from the transition the activity records, never from
+ * the live poll: by the time a delivery is retried the poll may have moved
+ * on, and each transition is its own event. Other events carry the poll's
+ * status as read at fan-out. Returns null for activities that are not
+ * webhook events or whose payload this version can't interpret.
  */
 export function buildWebhookPayload({
   activity,
@@ -116,6 +134,7 @@ export function buildWebhookPayload({
   activity: {
     id: string;
     type: string;
+    participantId: string | null;
     optionId: string | null;
     payload: unknown;
     createdAt: Date;
@@ -123,13 +142,17 @@ export function buildWebhookPayload({
   poll: {
     id: string;
     title: string;
+    status: WebhookPollStatus;
     kind: "date" | "time";
     timeZone: string | null;
   };
 }): WebhookEvent | null {
+  // Every subject ref the vocabulary can require is passed: a missing one
+  // fails the parse and the event is dropped without a trace.
   const parsed = pollActivitySchema.safeParse({
     type: activity.type,
     userId: null,
+    participantId: activity.participantId ?? undefined,
     optionId: activity.optionId ?? undefined,
     payload: activity.payload,
   });
@@ -144,7 +167,7 @@ export function buildWebhookPayload({
     id: activity.id,
     createdAt: activity.createdAt.toISOString(),
   };
-  const pollPayload = (status: "open" | "closed" | "scheduled") => ({
+  const pollPayload = <S extends WebhookPollStatus>(status: S) => ({
     id: poll.id,
     title: poll.title,
     status,
@@ -153,8 +176,71 @@ export function buildWebhookPayload({
     adminUrl: absoluteUrl(`/poll/${poll.id}`),
     inviteUrl: shortUrl(`/invite/${poll.id}`),
   });
+  const participantPayload = (
+    participantId: string,
+    snapshot: {
+      name: string;
+      email?: string | null;
+      votes: {
+        optionId: string;
+        start: string;
+        duration: number;
+        type: "yes" | "no" | "ifNeedBe";
+      }[];
+    },
+  ) => ({
+    id: participantId,
+    name: snapshot.name,
+    email: snapshot.email ?? null,
+    votes: snapshot.votes,
+  });
 
   switch (event.type) {
+    case "poll_created":
+      return {
+        ...base,
+        type: "poll.created",
+        data: { poll: pollPayload("open") },
+      };
+    case "poll_updated":
+      return {
+        ...base,
+        type: "poll.updated",
+        data: { poll: pollPayload(poll.status) },
+      };
+    case "poll_deleted":
+      return {
+        ...base,
+        type: "poll.deleted",
+        data: { poll: pollPayload(poll.status) },
+      };
+    case "response_created":
+      return {
+        ...base,
+        type: "poll.participant.created",
+        data: {
+          poll: pollPayload(poll.status),
+          participant: participantPayload(event.participantId, event.payload),
+        },
+      };
+    case "response_updated":
+      return {
+        ...base,
+        type: "poll.participant.updated",
+        data: {
+          poll: pollPayload(poll.status),
+          participant: participantPayload(event.participantId, event.payload),
+        },
+      };
+    case "response_deleted":
+      return {
+        ...base,
+        type: "poll.participant.deleted",
+        data: {
+          poll: pollPayload(poll.status),
+          participant: participantPayload(event.participantId, event.payload),
+        },
+      };
     case "poll_closed":
       return {
         ...base,

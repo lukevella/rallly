@@ -7,8 +7,14 @@ import { timezoneSchema } from "@/lib/utils/timezone-schema";
 // owns them: the dispatcher builds exactly these shapes.
 export {
   pollClosedEventSchema,
+  pollCreatedEventSchema,
+  pollDeletedEventSchema,
+  pollParticipantCreatedEventSchema,
+  pollParticipantDeletedEventSchema,
+  pollParticipantUpdatedEventSchema,
   pollReopenedEventSchema,
   pollScheduledEventSchema,
+  pollUpdatedEventSchema,
   webhookEventSchema,
   webhookEventTypeSchema,
 } from "@/features/webhook/schema";

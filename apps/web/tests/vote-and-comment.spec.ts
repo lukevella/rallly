@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { prisma } from "@rallly/database";
 import { captureOne } from "@rallly/test-helpers";
 import { load } from "cheerio";
 import { NewPollPage } from "./new-poll-page";
@@ -62,6 +63,33 @@ test.describe(() => {
     await expect(page.locator("text='Anne'")).toBeVisible();
 
     expect(email.Subject).toBe("Thanks for responding to Monthly Meetup");
+
+    // The activity log is what webhooks are built from, so the response
+    // event has to carry the whole snapshot, not just the name.
+    const activity = await prisma.pollActivity.findFirstOrThrow({
+      where: { pollId, type: "response_created" },
+    });
+    expect(activity.participantId).not.toBeNull();
+    const payload = activity.payload as {
+      votes: {
+        optionId: string;
+        start: string;
+        duration: number;
+        type: string;
+      }[];
+    };
+    expect(payload).toMatchObject({ name: "Anne", email: "test@example.com" });
+    expect(payload.votes.map((vote) => vote.type)).toEqual([
+      "yes",
+      "no",
+      "yes",
+      "no",
+    ]);
+    for (const vote of payload.votes) {
+      expect(vote.optionId).toBeTruthy();
+      expect(vote.start).toMatch(/T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+      expect(vote.duration).toBeGreaterThan(0);
+    }
 
     const $ = load(email.HTML);
     const href = $("#editSubmissionUrl").attr("href");

@@ -39,6 +39,18 @@ describe("pollActivitySchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("reads a response row written before email and votes were snapshotted", () => {
+    const result = pollActivitySchema.safeParse({
+      type: "response_created",
+      userId: "u1",
+      participantId: "part1",
+      payload: { name: "Jessie Smith" },
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data?.payload).toEqual({ name: "Jessie Smith", votes: [] });
+  });
+
   it("requires the vote snapshot on response_deleted", () => {
     const result = pollActivitySchema.safeParse({
       type: "response_deleted",

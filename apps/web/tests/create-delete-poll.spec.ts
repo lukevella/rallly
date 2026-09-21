@@ -1,10 +1,12 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { prisma } from "@rallly/database";
 import { deleteAllMessages } from "@rallly/test-helpers";
 import { NewPollPage } from "./new-poll-page";
 
 test.describe.serial(() => {
   let page: Page;
+  let pollId: string;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -20,6 +22,8 @@ test.describe.serial(() => {
     await expect(
       page.getByRole("heading", { name: "Monthly Meetup" }),
     ).toBeVisible();
+    pollId = page.url().match(/\/poll\/([a-zA-Z0-9]+)/)?.[1] ?? "";
+    expect(pollId).not.toBe("");
   });
 
   // delete the poll we just created
@@ -38,5 +42,13 @@ test.describe.serial(() => {
     await expect(page).toHaveURL("/login?redirectTo=%2Fpolls", {
       timeout: 15_000,
     });
+
+    // The soft delete records the transition the poll's webhooks are built
+    // from.
+    expect(
+      await prisma.pollActivity.count({
+        where: { pollId, type: "poll_deleted" },
+      }),
+    ).toBe(1);
   });
 });

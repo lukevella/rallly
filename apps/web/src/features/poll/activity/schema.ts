@@ -33,6 +33,17 @@ const inviteePayloadSchema = z.object({
   email: z.string(),
 });
 
+/**
+ * Snapshot of a response as it stood after the event. Email and votes were
+ * added after the first rows were written, so a row from before then parses
+ * with no email and no votes rather than being dropped from the feed.
+ */
+const responseSnapshotSchema = z.object({
+  name: z.string(),
+  email: z.string().nullish(),
+  votes: z.array(voteSnapshotSchema).default([]),
+});
+
 export const pollActivitySchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("poll_created"),
@@ -51,6 +62,11 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("poll_reopened"),
+    ...actor,
+    payload: z.object({}),
+  }),
+  z.object({
+    type: z.literal("poll_deleted"),
     ...actor,
     payload: z.object({}),
   }),
@@ -93,13 +109,13 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
     type: z.literal("response_created"),
     ...actor,
     participantId: z.string(),
-    payload: z.object({ name: z.string() }),
+    payload: responseSnapshotSchema,
   }),
   z.object({
     type: z.literal("response_updated"),
     ...actor,
     participantId: z.string(),
-    payload: z.object({ name: z.string() }),
+    payload: responseSnapshotSchema,
   }),
   z.object({
     type: z.literal("response_deleted"),
@@ -107,6 +123,7 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
     participantId: z.string(),
     payload: z.object({
       name: z.string(),
+      email: z.string().nullish(),
       votes: z.array(voteSnapshotSchema),
     }),
   }),

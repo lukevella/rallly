@@ -80,16 +80,38 @@ async function assertParticipantInPoll(
   }
 }
 
-async function listValidOptionIds(
-  tx: Prisma.TransactionClient,
-  pollId: string,
-) {
+async function listOptions(tx: Prisma.TransactionClient, pollId: string) {
   const options = await tx.option.findMany({
     where: { pollId },
-    select: { id: true },
+    select: { id: true, startTime: true, duration: true },
   });
-  return new Set(options.map((option) => option.id));
+  return new Map(options.map(({ id, ...option }) => [id, option]));
 }
+
+type VoteWithOption = {
+  optionId: string;
+  type: VoteType;
+  option: { startTime: Date; duration: number };
+};
+
+/**
+ * Votes joined to their options, for the activity snapshot: the log carries
+ * the option's time so the event still reads after the option is removed.
+ */
+function toVoteSnapshots(votes: VoteWithOption[]) {
+  return votes.map(({ optionId, type, option }) => ({
+    optionId,
+    start: option.startTime.toISOString(),
+    duration: option.duration,
+    type,
+  }));
+}
+
+const voteWithOptionSelect = {
+  optionId: true,
+  type: true,
+  option: { select: { startTime: true, duration: true } },
+} as const;
 
 function refusal(error: unknown) {
   if (error instanceof WriteRefusedError) {
@@ -162,10 +184,11 @@ export async function addParticipant({
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-      const validOptionIds = await listValidOptionIds(tx, pollId);
-      const validVotes = votes.filter(({ optionId }) =>
-        validOptionIds.has(optionId),
-      );
+      const options = await listOptions(tx, pollId);
+      const validVotes = votes.flatMap(({ optionId, type }) => {
+        const option = options.get(optionId);
+        return option ? [{ optionId, type, option }] : [];
+      });
 
       await lockOpenPoll(tx, pollId, validVotes);
 
@@ -236,7 +259,11 @@ export async function addParticipant({
           type: "response_created",
           userId,
           participantId: participant.id,
-          payload: { name: participant.name },
+          payload: {
+            name: participant.name,
+            email: participant.email,
+            votes: toVoteSnapshots(validVotes),
+          },
         },
       ]);
 
@@ -288,10 +315,11 @@ export async function updateParticipantVotes({
 
       await tx.vote.deleteMany({ where: { participantId } });
 
-      const validOptionIds = await listValidOptionIds(tx, pollId);
-      const validVotes = votes.filter(({ optionId }) =>
-        validOptionIds.has(optionId),
-      );
+      const options = await listOptions(tx, pollId);
+      const validVotes = votes.flatMap(({ optionId, type }) => {
+        const option = options.get(optionId);
+        return option ? [{ optionId, type, option }] : [];
+      });
 
       await tx.vote.createMany({
         data: validVotes.map(({ optionId, type }) => ({
@@ -308,7 +336,7 @@ export async function updateParticipantVotes({
       const participant = await tx.participant.update({
         where: { id: participantId },
         data: { updatedAt: new Date() },
-        select: { name: true },
+        select: { name: true, email: true },
       });
 
       await recordPollActivities(tx, [
@@ -317,7 +345,11 @@ export async function updateParticipantVotes({
           type: "response_updated",
           userId: actorUserId,
           participantId,
-          payload: { name: participant.name },
+          payload: {
+            name: participant.name,
+            email: participant.email,
+            votes: toVoteSnapshots(validVotes),
+          },
         },
       ]);
     });
@@ -346,10 +378,10 @@ export async function renameParticipant({
       await lockOpenPoll(tx, pollId, []);
       await assertParticipantInPoll(tx, participantId, pollId);
 
-      await tx.participant.update({
+      const participant = await tx.participant.update({
         where: { id: participantId },
         data: { name },
-        select: null,
+        select: { email: true, votes: { select: voteWithOptionSelect } },
       });
 
       await recordPollActivities(tx, [
@@ -358,7 +390,11 @@ export async function renameParticipant({
           type: "response_updated",
           userId: actorUserId,
           participantId,
-          payload: { name },
+          payload: {
+            name,
+            email: participant.email,
+            votes: toVoteSnapshots(participant.votes),
+          },
         },
       ]);
     });
@@ -390,13 +426,8 @@ export async function deleteParticipant({
         where: { id: participantId, pollId },
         select: {
           name: true,
-          votes: {
-            select: {
-              optionId: true,
-              type: true,
-              option: { select: { startTime: true, duration: true } },
-            },
-          },
+          email: true,
+          votes: { select: voteWithOptionSelect },
         },
       });
 
@@ -418,12 +449,8 @@ export async function deleteParticipant({
           participantId,
           payload: {
             name: snapshot.name,
-            votes: snapshot.votes.map((vote) => ({
-              optionId: vote.optionId,
-              start: vote.option.startTime.toISOString(),
-              duration: vote.option.duration,
-              type: vote.type,
-            })),
+            email: snapshot.email,
+            votes: toVoteSnapshots(snapshot.votes),
           },
         },
       ]);
