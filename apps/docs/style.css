@@ -66,3 +66,11 @@
   /* biome-ignore lint/complexity/noImportantStyles: same */
   color: var(--shiki-dark) !important;
 }
+
+/* An identifier in a table cell (an event name, a header, an error code) is
+   one token: wrapping it mid-word reads as two names. Let the column grow
+   and the prose column take the wrapping instead. */
+#content-area table td code,
+#content-area table th code {
+  white-space: nowrap;
+}
