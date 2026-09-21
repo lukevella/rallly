@@ -3,8 +3,8 @@ import {
   getMajorVersion,
   isOutdated,
 } from "@/features/instance-settings/utils";
-import type { SecurityAdvisory } from "./security-advisories";
-import { isVulnerable } from "./security-advisories";
+import type { AdvisorySummary, SecurityAdvisory } from "./security-advisories";
+import { isVulnerable, summarizeAdvisory } from "./security-advisories";
 
 const releaseSchema = z.object({
   tag_name: z.string().min(1),
@@ -32,10 +32,12 @@ export type UpdatesPayload = {
   url: string | null;
   publishedAt: string | null;
   security: boolean;
+  advisories: AdvisorySummary[];
   newMajor?: {
     version: string;
     migrationGuideUrl: string;
     security: boolean;
+    advisories: AdvisorySummary[];
   };
 };
 
@@ -96,6 +98,7 @@ export function buildUpdatesPayload({
       url: latestRelease.url,
       publishedAt: latestRelease.publishedAt,
       security: false,
+      advisories: [],
     };
   }
 
@@ -113,22 +116,24 @@ export function buildUpdatesPayload({
   const fixedInLatest = (advisory: SecurityAdvisory) =>
     !isVulnerable(latestRelease.version, advisory);
 
-  const security = open.some(fixedInChannel);
-  const newMajorSecurity = open.some(
-    (advisory) => !fixedInChannel(advisory) && fixedInLatest(advisory),
-  );
+  const channelAdvisories = open.filter(fixedInChannel).map(summarizeAdvisory);
+  const newMajorAdvisories = open
+    .filter((advisory) => !fixedInChannel(advisory) && fixedInLatest(advisory))
+    .map(summarizeAdvisory);
 
   return {
     latest: ownChannel?.version ?? null,
     url: ownChannel?.url ?? null,
     publishedAt: ownChannel?.publishedAt ?? null,
-    security,
+    security: channelAdvisories.length > 0,
+    advisories: channelAdvisories,
     ...(channels.latestMajor > requestedMajor
       ? {
           newMajor: {
             version: latestRelease.version,
             migrationGuideUrl: getMigrationGuideUrl(channels.latestMajor),
-            security: newMajorSecurity,
+            security: newMajorAdvisories.length > 0,
+            advisories: newMajorAdvisories,
           },
         }
       : {}),

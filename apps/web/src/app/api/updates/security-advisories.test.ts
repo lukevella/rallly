@@ -90,6 +90,13 @@ describe("buildSecurityAdvisories", () => {
     expect(advisories[1]?.ranges).toHaveLength(1);
   });
 
+  it("drops an unknown severity to null", () => {
+    const [adv] = buildSecurityAdvisories([
+      advisory(["< 4.12.0"], { severity: "moderate" }),
+    ]);
+    expect(adv?.severity).toBeNull();
+  });
+
   it("returns nothing for a non-array", () => {
     expect(buildSecurityAdvisories({ message: "rate limited" })).toEqual([]);
   });

@@ -18,6 +18,7 @@ function advisories(...ranges: string[]) {
     ranges.map((range, i) => ({
       ghsa_id: `GHSA-${i}`,
       html_url: `https://github.com/lukevella/rallly/security/advisories/GHSA-${i}`,
+      severity: "high",
       vulnerabilities: [{ vulnerable_version_range: range }],
     })),
   );
@@ -103,6 +104,13 @@ describe("buildUpdatesPayload", () => {
     const result = payload("4.12.0", "< 4.13.1");
     expect(result.latest).toBe("v4.15.1");
     expect(result.security).toBe(true);
+    expect(result.advisories).toEqual([
+      {
+        ghsaId: "GHSA-0",
+        url: "https://github.com/lukevella/rallly/security/advisories/GHSA-0",
+        severity: "high",
+      },
+    ]);
   });
 
   it("does not flag security when the caller is outside every range", () => {
@@ -126,13 +134,18 @@ describe("buildUpdatesPayload", () => {
       version: "v4.15.1",
       migrationGuideUrl: "https://support.rallly.co/self-hosting/migrate-to-v4",
       security: false,
+      advisories: [],
     });
   });
 
   it("flags the new-major notice when only the newer major is outside the range", () => {
     const result = payload("3.9.0", "< 4.13.1");
     expect(result.security).toBe(false);
+    expect(result.advisories).toEqual([]);
     expect(result.newMajor?.security).toBe(true);
+    expect(result.newMajor?.advisories.map((a) => a.ghsaId)).toEqual([
+      "GHSA-0",
+    ]);
   });
 
   it("flags the new-major notice when the caller's major has no channel at all", () => {

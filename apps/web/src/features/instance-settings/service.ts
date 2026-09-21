@@ -8,16 +8,26 @@ import { getMajorVersion, isOutdated } from "./utils";
 
 const logger = createLogger("update-check");
 
+const advisorySchema = z.object({
+  ghsaId: z.string(),
+  url: z.string(),
+  severity: z.enum(["low", "medium", "high", "critical"]).nullish(),
+});
+
+export type UpdateAdvisory = z.infer<typeof advisorySchema>;
+
 const updateStatusSchema = z.object({
   latest: z.string().nullish(),
   url: z.string().nullish(),
   publishedAt: z.string().nullish(),
   security: z.boolean().nullish(),
+  advisories: z.array(advisorySchema).nullish(),
   newMajor: z
     .object({
       version: z.string(),
       migrationGuideUrl: z.string(),
       security: z.boolean().nullish(),
+      advisories: z.array(advisorySchema).nullish(),
     })
     .nullish(),
 });
@@ -58,6 +68,7 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
       url: releaseUrl,
       publishedAt,
       security,
+      advisories,
       newMajor,
     } = parsed.data;
 
@@ -79,6 +90,7 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
             // Only meaningful alongside a pullable update; never let the
             // flag alone raise an alarm
             security: security === true,
+            advisories: security === true ? (advisories ?? []) : [],
           }
         : { status: "up-to-date" as const };
 
@@ -95,6 +107,8 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
               major: newMajorVersion,
               migrationGuideUrl: newMajor.migrationGuideUrl,
               security: newMajor.security === true,
+              advisories:
+                newMajor.security === true ? (newMajor.advisories ?? []) : [],
             }
           : null,
     };

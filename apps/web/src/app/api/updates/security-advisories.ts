@@ -1,6 +1,10 @@
 import * as z from "zod";
 import { isOutdated } from "@/features/instance-settings/utils";
 
+export const severitySchema = z.enum(["low", "medium", "high", "critical"]);
+
+export type Severity = z.infer<typeof severitySchema>;
+
 const advisorySchema = z.object({
   ghsa_id: z.string().min(1),
   html_url: z.string().min(1),
@@ -19,9 +23,22 @@ type Comparator = {
 export type SecurityAdvisory = {
   ghsaId: string;
   url: string;
-  severity: string | null;
+  severity: Severity | null;
   ranges: Comparator[][];
 };
+
+export type AdvisorySummary = Pick<
+  SecurityAdvisory,
+  "ghsaId" | "url" | "severity"
+>;
+
+export function summarizeAdvisory({
+  ghsaId,
+  url,
+  severity,
+}: SecurityAdvisory): AdvisorySummary {
+  return { ghsaId, url, severity };
+}
 
 const COMPARATOR_REGEX = /^(<=|>=|<|>|=)?\s*v?(\d+(?:\.\d+){0,2})$/;
 
@@ -97,7 +114,8 @@ export function buildSecurityAdvisories(input: unknown): SecurityAdvisory[] {
     advisories.push({
       ghsaId: ghsa_id,
       url: html_url,
-      severity: severity ?? null,
+      // Unknown labels degrade to null rather than dropping the advisory
+      severity: severitySchema.safeParse(severity).data ?? null,
       ranges,
     });
   }
