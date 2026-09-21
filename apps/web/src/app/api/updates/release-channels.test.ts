@@ -3,6 +3,7 @@ import {
   buildReleaseChannels,
   buildUpdatesPayload,
   isSecurityRelease,
+  parseAffectedMajors,
 } from "./release-channels";
 
 function release(tag: string, overrides: Record<string, unknown> = {}) {
@@ -17,9 +18,15 @@ function release(tag: string, overrides: Record<string, unknown> = {}) {
   };
 }
 
-function securityRelease(tag: string, publishedAt = "2026-01-01T00:00:00Z") {
+function securityRelease(
+  tag: string,
+  publishedAt = "2026-01-01T00:00:00Z",
+  affected?: string,
+) {
   return release(tag, {
-    body: "## 🔒 Security release\n\nUpgrade promptly.",
+    body: `## 🔒 Security release\n\n${
+      affected ? `Affected versions: ${affected}\n\n` : ""
+    }Upgrade promptly.`,
     published_at: publishedAt,
   });
 }
@@ -97,6 +104,21 @@ describe("isSecurityRelease", () => {
   });
 });
 
+describe("parseAffectedMajors", () => {
+  it("reads majors from an affected versions line in any common spelling", () => {
+    expect(parseAffectedMajors("Affected versions: 4.x, 5.x")).toEqual([4, 5]);
+    expect(parseAffectedMajors("affected version: v4 and v5")).toEqual([4, 5]);
+    expect(parseAffectedMajors("Affected versions: 4.13.0 to 5.1.0")).toEqual([
+      4, 5,
+    ]);
+  });
+
+  it("returns nothing without the line", () => {
+    expect(parseAffectedMajors("## Security release\n\nFixes 4.x")).toEqual([]);
+    expect(parseAffectedMajors(null)).toEqual([]);
+  });
+});
+
 describe("buildReleaseChannels security releases", () => {
   it("collects stable security releases across majors", () => {
     const channels = buildReleaseChannels([
@@ -110,6 +132,18 @@ describe("buildReleaseChannels security releases", () => {
     expect(channels?.securityReleases.map((r) => r.version)).toEqual([
       "v4.13.1",
       "v5.0.1",
+    ]);
+  });
+
+  it("always counts a release's own major as affected", () => {
+    const channels = buildReleaseChannels([
+      securityRelease("v5.0.1"),
+      securityRelease("v6.0.1", "2026-01-01T00:00:00Z", "4.x, 5.x"),
+    ]);
+
+    expect(channels?.securityReleases.map((r) => r.affectedMajors)).toEqual([
+      [5],
+      [6, 4, 5],
     ]);
   });
 });
@@ -142,33 +176,47 @@ describe("buildUpdatesPayload", () => {
     expect(payload.newMajor).toBeUndefined();
   });
 
-  it("flags the new-major notice when the caller's major shipped nothing after the fix", () => {
+  it("does not flag the new-major notice for a security release scoped to the newer major", () => {
     const payload = buildUpdatesPayload(channels, "3.9.0");
     expect(payload.latest).toBe("v3.9.0");
     expect(payload.security).toBe(false);
     expect(payload.newMajor).toEqual({
       version: "v4.15.1",
       migrationGuideUrl: "https://support.rallly.co/self-hosting/migrate-to-v4",
-      security: true,
+      security: false,
     });
   });
 
-  it("does not flag the new-major notice when the caller's major shipped after the fix", () => {
+  it("flags the new-major notice when the release lists the caller's major as affected", () => {
+    const affected = buildReleaseChannels([
+      release("v3.9.0", { published_at: "2025-06-01T00:00:00Z" }),
+      securityRelease("v4.13.1", "2026-08-25T00:00:00Z", "3.x, 4.x"),
+    ]);
+    if (!affected) throw new Error("fixture failed to build");
+
+    const payload = buildUpdatesPayload(affected, "3.9.0");
+    expect(payload.newMajor?.security).toBe(true);
+    expect(buildUpdatesPayload(affected, "2.0.0").newMajor?.security).toBe(
+      false,
+    );
+  });
+
+  it("hands over to the within-channel flag once the caller's major ships its own security release", () => {
     const backported = buildReleaseChannels([
       release("v3.9.0", { published_at: "2025-06-01T00:00:00Z" }),
-      securityRelease("v4.13.1", "2026-08-25T00:00:00Z"),
-      release("v3.9.1", { published_at: "2026-08-26T00:00:00Z" }),
+      securityRelease("v4.13.1", "2026-08-25T00:00:00Z", "3.x, 4.x"),
+      securityRelease("v3.9.1", "2026-08-26T00:00:00Z"),
     ]);
     if (!backported) throw new Error("fixture failed to build");
 
-    const payload = buildUpdatesPayload(backported, "3.9.0");
-    expect(payload.latest).toBe("v3.9.1");
-    expect(payload.newMajor?.security).toBe(false);
-  });
-
-  it("flags the new-major notice when the caller's major has no channel at all", () => {
-    const payload = buildUpdatesPayload(channels, "2.0.0");
-    expect(payload.latest).toBeNull();
-    expect(payload.newMajor?.security).toBe(true);
+    expect(buildUpdatesPayload(backported, "3.9.0")).toMatchObject({
+      latest: "v3.9.1",
+      security: true,
+      newMajor: { security: false },
+    });
+    expect(buildUpdatesPayload(backported, "3.9.1")).toMatchObject({
+      security: false,
+      newMajor: { security: false },
+    });
   });
 });

@@ -21,16 +21,25 @@ const STABLE_TAG_REGEX = /^v?\d+\.\d+\.\d+$/;
 // published.
 const SECURITY_HEADING_REGEX = /^#{1,6}[^\S\n]*.*\bsecurity release\b/im;
 
+// A security release reaches operators on older majors only when its notes
+// say so ("Affected versions: 4.x, 5.x"). Without the line it flags its own
+// major alone, so a fix for a bug introduced in v5 never alarms v4.
+const AFFECTED_VERSIONS_REGEX = /^affected versions?:[^\S\n]*(.+)$/im;
+
 export type ReleaseInfo = {
   version: string;
   url: string;
   publishedAt: string;
 };
 
+export type SecurityRelease = ReleaseInfo & {
+  affectedMajors: number[];
+};
+
 export type ReleaseChannels = {
   latestByMajor: Record<number, ReleaseInfo>;
   latestMajor: number;
-  securityReleases: ReleaseInfo[];
+  securityReleases: SecurityRelease[];
 };
 
 export type UpdatesPayload = {
@@ -55,11 +64,21 @@ export function isSecurityRelease(body: string | null | undefined) {
   return !!body && SECURITY_HEADING_REGEX.test(body);
 }
 
+export function parseAffectedMajors(body: string | null | undefined) {
+  const line = body?.match(AFFECTED_VERSIONS_REGEX)?.[1];
+  if (!line) return [];
+  return [
+    ...new Set(
+      [...line.matchAll(/\bv?(\d+)(?:\.\S*)?/g)].map((m) => Number(m[1])),
+    ),
+  ];
+}
+
 export function buildReleaseChannels(input: unknown): ReleaseChannels | null {
   if (!Array.isArray(input)) return null;
 
   const latestByMajor: Record<number, ReleaseInfo> = {};
-  const securityReleases: ReleaseInfo[] = [];
+  const securityReleases: SecurityRelease[] = [];
 
   for (const item of input) {
     const parsed = releaseSchema.safeParse(item);
@@ -85,7 +104,10 @@ export function buildReleaseChannels(input: unknown): ReleaseChannels | null {
     }
 
     if (isSecurityRelease(body)) {
-      securityReleases.push(info);
+      securityReleases.push({
+        ...info,
+        affectedMajors: [...new Set([major, ...parseAffectedMajors(body)])],
+      });
     }
   }
 
@@ -123,14 +145,18 @@ export function buildUpdatesPayload(
       isOutdated(requestedVersion, release.version),
   );
 
-  // A security release in a newer major matters when the caller's own major
-  // has shipped nothing since — the fix was never backported. A later
-  // release in the caller's channel is taken to carry the fix or to mean
-  // the channel was unaffected.
+  // A security release in a newer major matters only when its notes list the
+  // caller's major as affected and the caller's channel has had no security
+  // release since — once a backport ships, the within-channel flag takes over.
   const newMajorSecurity = channels.securityReleases.some((release) => {
     const major = getMajorVersion(release.version);
     if (major === null || major <= requestedMajor) return false;
-    return !ownChannel || release.publishedAt > ownChannel.publishedAt;
+    if (!release.affectedMajors.includes(requestedMajor)) return false;
+    return !channels.securityReleases.some(
+      (other) =>
+        getMajorVersion(other.version) === requestedMajor &&
+        other.publishedAt >= release.publishedAt,
+    );
   });
 
   return {
