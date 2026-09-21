@@ -8,6 +8,19 @@ Corporate networks often restrict outbound traffic in two ways: all egress must 
 
 If your server can reach the internet directly and your network does not intercept TLS, none of this applies and you can skip this page.
 
+## Hosts to allow
+
+Rallly makes outbound requests to these hosts, all over HTTPS on port 443. If your firewall filters by destination, allow them.
+
+| Host | Purpose | When blocked |
+|:-----|:--------|:-------------|
+| `licensing.rallly.co` | License activation and refresh | Activation fails with an error in the Control Panel |
+| `api.rallly.co` | Hourly update check: sends the running version and an anonymous instance identifier, receives the latest release and any security advisories affecting your version | Fails silently. The version tile shows no status and you are not told about security updates, so watch the [releases page](https://github.com/lukevella/rallly/releases) instead |
+
+Pulling images with `./rallly.sh update` reaches Docker Hub (`registry-1.docker.io` and `auth.docker.io`), which is governed by Docker's own proxy settings rather than the variables below.
+
+Anything you configure yourself, such as your SMTP server, an identity provider, or external object storage, needs to be reachable too.
+
 ## Routing traffic through a proxy
 
 Rallly honours the standard `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables for outbound requests. Set them in `.env`:
@@ -95,5 +108,5 @@ Watch the logs while triggering the failing request (for example, a license acti
 |:--------------|:------|:----|
 | `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, `SELF_SIGNED_CERT_IN_CHAIN`, or `unable to get local issuer certificate` | TLS is intercepted and re-signed by an untrusted CA | Set [`CA_CERT_FILE`](#trusting-a-custom-root-ca) |
 | `ENOTFOUND` | DNS resolution for the host is blocked | Allow DNS for the host, or route through a proxy that resolves it |
-| `ETIMEDOUT` or `ECONNREFUSED` | No direct route to the host | Configure the [proxy variables](#routing-traffic-through-a-proxy) (v4.12.3+), or request a firewall exception for `licensing.rallly.co` on port 443 |
+| `ETIMEDOUT` or `ECONNREFUSED` | No direct route to the host | Configure the [proxy variables](#routing-traffic-through-a-proxy) (v4.12.3+), or request a firewall exception for the [hosts above](#hosts-to-allow) on port 443 |
 | `EAI_AGAIN` with no connection attempts | Proxy-only network with no external DNS, on a version before v4.12.3 that ignores proxy variables | [Update](/self-hosting/management#updating) to v4.12.3 or later, then configure the proxy variables |
