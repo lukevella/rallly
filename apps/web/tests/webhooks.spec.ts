@@ -206,15 +206,7 @@ test.describe("Webhook delivery", () => {
       id: activity.id,
       type: "poll.closed",
       createdAt: activity.createdAt.toISOString(),
-      data: {
-        poll: {
-          id: pollId,
-          title: "Webhook poll",
-          status: "closed",
-          timeZone: "Europe/London",
-        },
-        reason: "manual",
-      },
+      data: { poll: { id: pollId }, reason: "manual" },
     });
 
     const delivery = await prisma.webhookDelivery.findUniqueOrThrow({
@@ -286,7 +278,7 @@ test.describe("Webhook delivery", () => {
     expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
       type: "poll.scheduled",
       data: {
-        poll: { status: "scheduled" },
+        poll: { id: pollId },
         event: {
           start: "2026-10-01T09:00:00.000Z",
           end: "2026-10-01T09:30:00.000Z",
@@ -312,16 +304,12 @@ test.describe("Webhook delivery", () => {
     );
     expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
       type: "poll.created",
-      data: { poll: { id: pollId, title: "Webhook poll", status: "open" } },
+      data: { poll: { id: pollId } },
     });
   });
 
-  test("delivers an updated poll with its live status", async ({ request }) => {
+  test("delivers an updated poll as a bare reference", async ({ request }) => {
     await createWebhook();
-    await prisma.poll.update({
-      where: { id: pollId },
-      data: { status: "closed" },
-    });
     await createActivity({
       type: "poll_updated",
       payload: {},
@@ -333,7 +321,7 @@ test.describe("Webhook delivery", () => {
     expect(receiver.requests).toHaveLength(1);
     expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
       type: "poll.updated",
-      data: { poll: { id: pollId, status: "closed" } },
+      data: { poll: { id: pollId } },
     });
   });
 
@@ -357,7 +345,7 @@ test.describe("Webhook delivery", () => {
     expect(receiver.requests).toHaveLength(1);
     expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
       type: "poll.deleted",
-      data: { poll: { id: pollId, title: "Webhook poll" } },
+      data: { poll: { id: pollId } },
     });
   });
 
@@ -385,7 +373,7 @@ test.describe("Webhook delivery", () => {
       expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
         type: eventType,
         data: {
-          poll: { id: pollId, title: "Webhook poll", status: "open" },
+          poll: { id: pollId },
           participant: {
             id: "webhook-delivery-participant",
             name: responseSnapshot.name,

@@ -74,13 +74,7 @@ describe("toWebhookEventType", () => {
 });
 
 describe("buildWebhookPayload", () => {
-  const poll = {
-    id: "Xk3pQ9vLm2Ab",
-    title: "Team sync",
-    status: "open" as const,
-    kind: "time" as const,
-    timeZone: "Europe/London",
-  };
+  const poll = { id: "Xk3pQ9vLm2Ab", kind: "time" as const };
   const createdAt = new Date("2026-09-15T10:00:00.000Z");
   const vote = {
     optionId: "opt_1",
@@ -95,7 +89,7 @@ describe("buildWebhookPayload", () => {
     modifiers: [],
   };
 
-  it("derives the status from the event, not the live poll", () => {
+  it("references the poll by id and carries the event's own facts", () => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_1",
@@ -108,25 +102,16 @@ describe("buildWebhookPayload", () => {
       poll,
     });
 
-    expect(payload).toMatchObject({
+    expect(payload).toEqual({
+      version: expect.any(String),
       id: "act_1",
       type: "poll.closed",
       createdAt: "2026-09-15T10:00:00.000Z",
-      data: {
-        poll: {
-          id: "Xk3pQ9vLm2Ab",
-          title: "Team sync",
-          status: "closed",
-          timeZone: "Europe/London",
-        },
-        reason: "manual",
-      },
+      data: { poll: { id: "Xk3pQ9vLm2Ab" }, reason: "manual" },
     });
-    expect(payload?.data.poll.adminUrl).toMatch(/\/poll\/Xk3pQ9vLm2Ab$/);
-    expect(payload?.data.poll.inviteUrl).toMatch(/\/invite\/Xk3pQ9vLm2Ab$/);
   });
 
-  it("marks a reopened poll as open", () => {
+  it("builds a reopened poll", () => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_2",
@@ -140,7 +125,7 @@ describe("buildWebhookPayload", () => {
     });
 
     expect(payload?.type).toBe("poll.reopened");
-    expect(payload?.data.poll.status).toBe("open");
+    expect(payload?.data).toEqual({ poll: { id: "Xk3pQ9vLm2Ab" } });
   });
 
   it("carries the scheduled slot for a time poll", () => {
@@ -159,7 +144,7 @@ describe("buildWebhookPayload", () => {
     expect(payload).toMatchObject({
       type: "poll.scheduled",
       data: {
-        poll: { status: "scheduled" },
+        poll: { id: "Xk3pQ9vLm2Ab" },
         event: {
           start: "2026-10-01T09:00:00.000Z",
           end: "2026-10-01T09:30:00.000Z",
@@ -191,43 +176,25 @@ describe("buildWebhookPayload", () => {
     });
   });
 
-  it("marks a created poll as open whatever the live status", () => {
-    const payload = buildWebhookPayload({
-      activity: {
-        id: "act_7",
-        type: "poll_created",
-        participantId: null,
-        optionId: null,
-        payload: { title: "Team sync" },
-        createdAt,
-      },
-      poll: { ...poll, status: "closed" },
-    });
-
-    expect(payload?.type).toBe("poll.created");
-    expect(payload?.data.poll.status).toBe("open");
-  });
-
   it.each([
-    "poll_updated",
-    "poll_deleted",
-  ] as const)("carries the live status on %s", (type) => {
+    ["poll_created", "poll.created", { title: "Team sync" }],
+    ["poll_updated", "poll.updated", {}],
+    ["poll_deleted", "poll.deleted", {}],
+  ] as const)("builds %s as a bare reference to the poll", (type, eventType, activityPayload) => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_8",
         type,
         participantId: null,
         optionId: null,
-        payload: {},
+        payload: activityPayload,
         createdAt,
       },
-      poll: { ...poll, status: "scheduled" },
+      poll,
     });
 
-    expect(payload?.type).toBe(type.replace("_", "."));
-    expect(payload?.data).toEqual({
-      poll: expect.objectContaining({ id: poll.id, status: "scheduled" }),
-    });
+    expect(payload?.type).toBe(eventType);
+    expect(payload?.data).toEqual({ poll: { id: poll.id } });
   });
 
   it.each([
@@ -253,7 +220,7 @@ describe("buildWebhookPayload", () => {
       createdAt: "2026-09-15T10:00:00.000Z",
       type: eventType,
       data: {
-        poll: expect.objectContaining({ id: poll.id, status: "open" }),
+        poll: { id: poll.id },
         participant: {
           id: "part_1",
           name: "Jessie",

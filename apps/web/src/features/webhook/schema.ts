@@ -25,57 +25,22 @@ export type WebhookEventType = z.infer<typeof webhookEventTypeSchema>;
 
 export const WEBHOOK_EVENT_TYPES = webhookEventTypeSchema.options;
 
-export const webhookPollStatusSchema = z
-  .enum(["open", "closed", "scheduled", "canceled"])
-  .meta({ id: "WebhookPollStatus" });
-
-export type WebhookPollStatus = z.infer<typeof webhookPollStatusSchema>;
-
-const webhookPollFields = {
-  id: z.string().meta({ example: "Xk3pQ9vLm2Ab" }),
-  title: z.string().meta({ example: "Team sync" }),
-  timeZone: z.string().nullable().meta({ example: "Europe/London" }),
-  adminUrl: z
-    .string()
-    .meta({ example: "https://app.rallly.co/poll/Xk3pQ9vLm2Ab" }),
-  inviteUrl: z
-    .string()
-    .meta({ example: "https://rallly.co/invite/Xk3pQ9vLm2Ab" }),
-};
-
 /**
- * The poll as a status transition left it. Each variant is built once: a
- * registered `id` is global, so two schemas claiming the same one would
- * collide when the OpenAPI document is generated.
+ * Events reference the poll, they do not describe it: every other poll
+ * field is either derivable, or mutable and stale by the time a retry lands,
+ * and `GET /polls/{pollId}` returns the current truth in one call. The
+ * participant is carried in full for the opposite reason: nothing in the
+ * API returns a participant's availability.
  */
-const webhookPollAtSchema = (status: "open" | "closed" | "scheduled") =>
-  z
-    .object({
-      ...webhookPollFields,
-      status: z.literal(status).meta({
-        description:
-          "The status the transition moved the poll to. Reflects this event, not the poll's current state: a later transition arrives as its own event.",
-      }),
-    })
-    .meta({ id: `WebhookPoll${status[0]?.toUpperCase()}${status.slice(1)}` });
-
-const webhookPollOpenSchema = webhookPollAtSchema("open");
-const webhookPollClosedSchema = webhookPollAtSchema("closed");
-const webhookPollScheduledSchema = webhookPollAtSchema("scheduled");
-
-/**
- * The poll for events that are not status transitions. The status is the
- * poll's own at the time the event was built, so it can be any value.
- */
-const webhookPollSchema = z
+export const webhookPollRefSchema = z
   .object({
-    ...webhookPollFields,
-    status: webhookPollStatusSchema.meta({
+    id: z.string().meta({
       description:
-        "The poll's status when the event was built. This event is not a status transition; those arrive as their own events.",
+        "The poll's id. Fetch `GET /polls/{pollId}` for its title, options, settings and current status.",
+      example: "Xk3pQ9vLm2Ab",
     }),
   })
-  .meta({ id: "WebhookPoll" });
+  .meta({ id: "WebhookPollRef" });
 
 /**
  * One shape for every span of time a webhook describes, whether a scheduled
@@ -158,7 +123,7 @@ export const pollCreatedEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.created"),
-    data: z.object({ poll: webhookPollOpenSchema }),
+    data: z.object({ poll: webhookPollRefSchema }),
   })
   .meta({ id: "PollCreatedEvent" });
 
@@ -166,12 +131,12 @@ export const pollUpdatedEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.updated"),
-    data: z.object({ poll: webhookPollSchema }),
+    data: z.object({ poll: webhookPollRefSchema }),
   })
   .meta({
     id: "PollUpdatedEvent",
     description:
-      "The poll's details, options or settings changed. The event carries the poll as it stands, not what changed: fetch the poll to see its current state.",
+      "The poll's details, options or settings changed. The event says that something changed, not what: fetch the poll for its current state.",
   });
 
 export const pollClosedEventSchema = z
@@ -179,7 +144,7 @@ export const pollClosedEventSchema = z
     ...envelope,
     type: z.literal("poll.closed"),
     data: z.object({
-      poll: webhookPollClosedSchema,
+      poll: webhookPollRefSchema,
       reason: pollClosedReasonSchema.meta({
         description:
           "`manual` when the organizer closed the poll, `auto` when it closed because every option had passed.",
@@ -192,7 +157,7 @@ export const pollReopenedEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.reopened"),
-    data: z.object({ poll: webhookPollOpenSchema }),
+    data: z.object({ poll: webhookPollRefSchema }),
   })
   .meta({ id: "PollReopenedEvent" });
 
@@ -201,7 +166,7 @@ export const pollScheduledEventSchema = z
     ...envelope,
     type: z.literal("poll.scheduled"),
     data: z.object({
-      poll: webhookPollScheduledSchema,
+      poll: webhookPollRefSchema,
       event: webhookScheduledEventSchema.meta({
         description: "The calendar event the poll was scheduled as.",
       }),
@@ -213,16 +178,16 @@ export const pollDeletedEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.deleted"),
-    data: z.object({ poll: webhookPollSchema }),
+    data: z.object({ poll: webhookPollRefSchema }),
   })
   .meta({
     id: "PollDeletedEvent",
     description:
-      "The poll was deleted. Its `adminUrl` and `inviteUrl` no longer resolve; they are kept so every event carries the same poll shape.",
+      "The poll was deleted. `GET /polls/{pollId}` returns 404 from now on, so anything you need about it must already be stored.",
   });
 
 const participantEventData = z.object({
-  poll: webhookPollSchema,
+  poll: webhookPollRefSchema,
   participant: webhookParticipantSchema,
 });
 

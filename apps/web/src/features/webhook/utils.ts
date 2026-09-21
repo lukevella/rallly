@@ -1,11 +1,6 @@
-import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { pollActivitySchema } from "@/features/poll/activity/schema";
 import { RETRY_DELAYS_MS, WEBHOOK_VERSION } from "./constants";
-import type {
-  WebhookEvent,
-  WebhookEventType,
-  WebhookPollStatus,
-} from "./schema";
+import type { WebhookEvent, WebhookEventType } from "./schema";
 
 /**
  * The resource half of an event name (`poll` in `poll.closed`). Event names
@@ -146,12 +141,11 @@ function toAvailability(
 }
 
 /**
- * Builds the event envelope for an activity row. For a status transition the
- * poll's status comes from the transition the activity records, never from
- * the live poll: by the time a delivery is retried the poll may have moved
- * on, and each transition is its own event. Other events carry the poll's
- * status as read at fan-out. Returns null for activities that are not
- * webhook events or whose payload this version can't interpret.
+ * Builds the event envelope for an activity row. The poll is referenced by
+ * id only; everything else comes from the activity's own snapshot, so a
+ * retried delivery says what happened, not what the poll looks like now.
+ * Returns null for activities that are not webhook events or whose payload
+ * this version can't interpret.
  */
 export function buildWebhookPayload({
   activity,
@@ -167,10 +161,7 @@ export function buildWebhookPayload({
   };
   poll: {
     id: string;
-    title: string;
-    status: WebhookPollStatus;
     kind: "date" | "time";
-    timeZone: string | null;
   };
 }): WebhookEvent | null {
   // Every subject ref the vocabulary can require is passed: a missing one
@@ -193,14 +184,7 @@ export function buildWebhookPayload({
     id: activity.id,
     createdAt: activity.createdAt.toISOString(),
   };
-  const pollPayload = <S extends WebhookPollStatus>(status: S) => ({
-    id: poll.id,
-    title: poll.title,
-    status,
-    timeZone: poll.timeZone,
-    adminUrl: absoluteUrl(`/poll/${poll.id}`),
-    inviteUrl: shortUrl(`/invite/${poll.id}`),
-  });
+  const pollRef = { id: poll.id };
   const participantPayload = (
     participantId: string,
     snapshot: {
@@ -229,26 +213,26 @@ export function buildWebhookPayload({
       return {
         ...base,
         type: "poll.created",
-        data: { poll: pollPayload("open") },
+        data: { poll: pollRef },
       };
     case "poll_updated":
       return {
         ...base,
         type: "poll.updated",
-        data: { poll: pollPayload(poll.status) },
+        data: { poll: pollRef },
       };
     case "poll_deleted":
       return {
         ...base,
         type: "poll.deleted",
-        data: { poll: pollPayload(poll.status) },
+        data: { poll: pollRef },
       };
     case "response_created":
       return {
         ...base,
         type: "poll.participant.created",
         data: {
-          poll: pollPayload(poll.status),
+          poll: pollRef,
           participant: participantPayload(event.participantId, event.payload),
         },
       };
@@ -257,7 +241,7 @@ export function buildWebhookPayload({
         ...base,
         type: "poll.participant.updated",
         data: {
-          poll: pollPayload(poll.status),
+          poll: pollRef,
           participant: participantPayload(event.participantId, event.payload),
         },
       };
@@ -266,7 +250,7 @@ export function buildWebhookPayload({
         ...base,
         type: "poll.participant.deleted",
         data: {
-          poll: pollPayload(poll.status),
+          poll: pollRef,
           participant: participantPayload(event.participantId, event.payload),
         },
       };
@@ -274,20 +258,20 @@ export function buildWebhookPayload({
       return {
         ...base,
         type: "poll.closed",
-        data: { poll: pollPayload("closed"), reason: event.payload.reason },
+        data: { poll: pollRef, reason: event.payload.reason },
       };
     case "poll_reopened":
       return {
         ...base,
         type: "poll.reopened",
-        data: { poll: pollPayload("open") },
+        data: { poll: pollRef },
       };
     case "poll_scheduled":
       return {
         ...base,
         type: "poll.scheduled",
         data: {
-          poll: pollPayload("scheduled"),
+          poll: pollRef,
           event: toTimeRange(poll.kind, event.payload),
         },
       };
