@@ -991,6 +991,8 @@
   "voteSummaryIfNeedBe": "{count} if need be",
   "voteSummaryNotAvailable": "You're not available",
   "webhookDocs": "Webhook docs",
+  "webhookEventComboboxEmpty": "No events found",
+  "webhookEventComboboxSearchPlaceholder": "Search events…",
   "webhookEventCount": "{count, plural, one {# event} other {# events}}",
   "webhookEventPollClosed": "A poll stopped accepting responses",
   "webhookEventPollReopened": "A closed poll started accepting responses again",

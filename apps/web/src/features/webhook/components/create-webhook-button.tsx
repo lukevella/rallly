@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
-import { Checkbox } from "@rallly/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -32,9 +31,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { createWebhookAction } from "../actions";
 import { createWebhookInputSchema, WEBHOOK_EVENT_TYPES } from "../schema";
-import { groupWebhookEventTypes } from "../utils";
-import { WebhookEventGroupLabel } from "./webhook-event-group-label";
-import { WebhookEventLabel } from "./webhook-event-label";
+import { WebhookEventCombobox } from "./webhook-event-combobox";
 
 export function CreateWebhookButton() {
   const { t } = useTranslation();
@@ -197,71 +194,17 @@ export function CreateWebhookButton() {
                       control={form.control}
                       name="events"
                       render={({ field }) => (
-                        // gap-1 is sized for a label over a single input; a
-                        // label over a grouped list needs more air.
-                        <FormItem className="gap-2">
+                        <FormItem>
                           <FormLabel>
                             <Trans i18nKey="events" defaults="Events" />
                           </FormLabel>
-                          {/* Three spacing levels, largest to smallest:
-                              between groups, between rows in a group, and
-                              between an event and its description. */}
-                          <div className="space-y-5">
-                            {groupWebhookEventTypes(WEBHOOK_EVENT_TYPES).map(
-                              ([resource, eventTypes]) => (
-                                <div key={resource}>
-                                  <div className="mb-2 font-medium text-sm">
-                                    <WebhookEventGroupLabel
-                                      resource={resource}
-                                    />
-                                  </div>
-                                  <div className="space-y-3">
-                                    {eventTypes.map((eventType) => {
-                                      const checkboxId = `webhook-event-${eventType}`;
-                                      return (
-                                        <div
-                                          key={eventType}
-                                          className="flex items-start gap-2.5"
-                                        >
-                                          <Checkbox
-                                            id={checkboxId}
-                                            className="mt-0.5"
-                                            checked={field.value.includes(
-                                              eventType,
-                                            )}
-                                            onCheckedChange={(checked) => {
-                                              field.onChange(
-                                                checked
-                                                  ? [...field.value, eventType]
-                                                  : field.value.filter(
-                                                      (value) =>
-                                                        value !== eventType,
-                                                    ),
-                                              );
-                                            }}
-                                            onBlur={field.onBlur}
-                                          />
-                                          <label
-                                            htmlFor={checkboxId}
-                                            className="cursor-pointer"
-                                          >
-                                            <span className="block font-medium font-mono text-sm leading-none">
-                                              {eventType}
-                                            </span>
-                                            <span className="mt-1 block text-muted-foreground text-xs leading-snug">
-                                              <WebhookEventLabel
-                                                eventType={eventType}
-                                              />
-                                            </span>
-                                          </label>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              ),
-                            )}
-                          </div>
+                          <FormControl>
+                            <WebhookEventCombobox
+                              value={field.value}
+                              onValueChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
