@@ -5,7 +5,7 @@ import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { loadPayWallPricing } from "@/features/billing/loaders";
 import { SpaceProvider } from "@/features/space/client";
-import { getActiveSpace } from "@/features/space/loaders";
+import { loadActiveSpace } from "@/features/space/loaders";
 import { UserProvider } from "@/features/user/client";
 import { TimeZoneMismatchDialog } from "@/features/user/components/timezone-mismatch-dialog";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -14,12 +14,12 @@ import { DateTimeProvider } from "@/lib/datetime/client";
 
 // The session gate awaits below this boundary so the document shell can
 // flush before the session store responds; without it, every hard load of
-// a space route streams nothing until getActiveSpace resolves.
+// a space route streams nothing until loadActiveSpace resolves.
 async function SpaceGate({ children }: { children: React.ReactNode }) {
   const [locale, session, space, payWallPricing] = await Promise.all([
     getLocale(),
     getSession(),
-    getActiveSpace(),
+    loadActiveSpace(),
     loadPayWallPricing(),
   ]);
 

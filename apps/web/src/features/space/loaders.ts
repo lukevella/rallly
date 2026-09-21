@@ -12,7 +12,7 @@ import {
 } from "@/features/space/data";
 import type { SpaceContentScope } from "@/features/space/types";
 import { createSpaceContentScope } from "@/features/space/utils";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { getSessionState } from "@/lib/auth";
 import { getDeviceTimeZone } from "@/lib/datetime/server";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
@@ -29,7 +29,7 @@ import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
  * shares one gate and one query. Server component/page use only — the
  * redirects make it unsuitable for route handlers and tRPC procedures.
  */
-export const getActiveSpace = cache(async () => {
+export const loadActiveSpace = cache(async () => {
   const state = await getSessionState();
 
   // An unreadable session (store unreachable, transient failure) is not
@@ -99,12 +99,12 @@ export const getActiveSpace = cache(async () => {
 
 /**
  * The visibility scope space-scoped content reads must apply for the
- * signed-in user in their active space. Same gating as getActiveSpace;
+ * signed-in user in their active space. Same gating as loadActiveSpace;
  * server component/page use only.
  */
-export const getActiveSpaceContentScope = cache(
+export const loadActiveSpaceContentScope = cache(
   async (): Promise<SpaceContentScope> => {
-    const [space, user] = await Promise.all([getActiveSpace(), requireUser()]);
+    const [space, user] = await Promise.all([loadActiveSpace(), loadUser()]);
     return createSpaceContentScope({ space, userId: user.id });
   },
 );
@@ -112,8 +112,8 @@ export const getActiveSpaceContentScope = cache(
 /**
  * The active space for the signed-in user, or null when there is none: the
  * visitor is unauthenticated, a guest, or has no effective membership. For
- * routes that admit guests, where getActiveSpace's redirects would be wrong.
- * Bans still throw, as in getActiveSpace.
+ * routes that admit guests, where loadActiveSpace's redirects would be wrong.
+ * Bans still throw, as in loadActiveSpace.
  */
 export const loadOptionalActiveSpace = cache(async () => {
   const state = await getSessionState();
@@ -137,8 +137,8 @@ export const loadOptionalActiveSpace = cache(async () => {
  */
 export const loadUpcomingEventCount = cache(async () => {
   const [user, scope, deviceTimeZone] = await Promise.all([
-    requireUser(),
-    getActiveSpaceContentScope(),
+    loadUser(),
+    loadActiveSpaceContentScope(),
     getDeviceTimeZone(),
   ]);
 
@@ -152,10 +152,10 @@ export const loadUpcomingEventCount = cache(async () => {
 
 /**
  * Seat usage for the signed-in user's active space. Session scoped —
- * server component/page use only, per getActiveSpace.
+ * server component/page use only, per loadActiveSpace.
  */
-export const getSeatUsage = cache(async () => {
-  const space = await getActiveSpace();
+export const loadSeatUsage = cache(async () => {
+  const space = await loadActiveSpace();
 
   const [total, used] = await Promise.all([
     getTotalSeatsForSpace(space.id),

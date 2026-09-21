@@ -19,9 +19,9 @@ import {
   loadPaymentMethods,
   loadSubscriptionOverview,
 } from "@/features/billing/loaders";
-import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
+import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -35,9 +35,9 @@ export default async function BillingSettingsPage() {
     notFound();
   }
 
-  const user = await requireUser();
+  const user = await loadUser();
 
-  const space = await getActiveSpace();
+  const space = await loadActiveSpace();
 
   const ability = defineAbilityForMember({
     user: { id: user.id },
@@ -65,7 +65,7 @@ export default async function BillingSettingsPage() {
 
   const [overview, seatUsage, paymentMethods] = await Promise.all([
     loadSubscriptionOverview(),
-    getSeatUsage(),
+    loadSeatUsage(),
     loadPaymentMethods(),
   ]);
 

@@ -18,16 +18,16 @@ import {
   filterCommentsForViewer,
   maskParticipantsForViewer,
 } from "@/features/poll/utils";
-import { getActiveSpaceContentScope } from "@/features/space/loaders";
+import { loadActiveSpaceContentScope } from "@/features/space/loaders";
 import { getSession } from "@/lib/auth";
 
 export const loadPollStatusCounts = cache(async () => {
-  const scope = await getActiveSpaceContentScope();
+  const scope = await loadActiveSpaceContentScope();
   return getPollStatusCounts({ scope });
 });
 
 export const loadPoll = cache(async (pollId: string) => {
-  const scope = await getActiveSpaceContentScope();
+  const scope = await loadActiveSpaceContentScope();
   const poll = await getPoll({ pollId, scope });
 
   if (!poll) {

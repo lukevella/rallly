@@ -1,7 +1,7 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { cache } from "react";
 import superjson from "superjson";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { getSession } from "@/lib/auth";
 import type { TRPCContext } from "../context";
 import { appRouter } from "../routers";
@@ -31,7 +31,7 @@ export const createPublicSSRHelper = cache(async () => {
  * Redirects to /login if the user is not authenticated or is a guest.
  */
 export const createPrivateSSRHelper = cache(async () => {
-  const user = await requireUser();
+  const user = await loadUser();
 
   return createServerSideHelpers({
     router: appRouter,

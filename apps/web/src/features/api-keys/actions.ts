@@ -7,7 +7,7 @@ import {
   revokeApiKeySchema,
 } from "@/features/api-keys/schema";
 import { getActiveSpaceForUser } from "@/features/space/data";
-import { getCurrentUser } from "@/features/user/loaders";
+import { loadOptionalUser } from "@/features/user/loaders";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -15,7 +15,7 @@ import { authActionClient } from "@/lib/safe-action/server";
 // The UI never offers these actions to users without API access, so a
 // failed gate is unexpected here — throw for the global error handler.
 async function requireApiAccess() {
-  const user = await getCurrentUser();
+  const user = await loadOptionalUser();
 
   if (!user) {
     throw new AppError({

@@ -2,13 +2,13 @@ import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { BarChart2Icon, CalendarIcon, InfoIcon } from "lucide-react";
 import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 
 // Streamed into the delete account dialog behind Suspense so opening the
 // settings page never waits on the counts.
 export async function AccountDeletionSummary() {
-  const user = await requireUser();
+  const user = await loadUser();
   const { activePollCount, upcomingEventCount, hasActiveSubscription } =
     await getAccountDeletionSummary({
       userId: user.id,

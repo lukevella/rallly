@@ -20,7 +20,7 @@ import {
 } from "@/components/settings-layout";
 import { StackedList } from "@/components/stacked-list";
 import { defineAbilityFor } from "@/features/user/ability";
-import { requireAdmin } from "@/features/user/loaders";
+import { loadAdmin } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { UserRow } from "./user-row";
@@ -38,7 +38,7 @@ async function loadData({
   q?: string;
   role?: "admin" | "user";
 }) {
-  const user = await requireAdmin();
+  const user = await loadAdmin();
 
   const where: Prisma.UserWhereInput = {
     isAnonymous: false,

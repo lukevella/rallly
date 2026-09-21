@@ -12,7 +12,7 @@ import {
 import { IfCloudHosted, IfSelfHosted } from "@/components/environment";
 import { Link } from "@/components/link";
 import { isInitialAdmin } from "@/features/instance-settings/utils";
-import { getCurrentUser } from "@/features/user/loaders";
+import { loadOptionalUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
@@ -23,7 +23,7 @@ import { SignedInAs } from "./signed-in-as";
 export default async function AdminSetupPage() {
   // Read the role from the database — the session cookie cache can hold
   // a stale role.
-  const user = await getCurrentUser();
+  const user = await loadOptionalUser();
 
   if (!user) {
     redirect(

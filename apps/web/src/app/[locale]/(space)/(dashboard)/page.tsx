@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { loadPollStatusCounts } from "@/features/poll/loaders";
 import {
-  getActiveSpace,
+  loadActiveSpace,
   loadUpcomingEventCount,
 } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { loadUserHasNoAccounts, requireUser } from "@/features/user/loaders";
+import { loadUser, loadUserHasNoAccounts } from "@/features/user/loaders";
 import { getTranslation } from "@/i18n/server";
 import { DashboardHome } from "./dashboard-home";
 
 export default async function Page() {
   const [user, space, pollStatusCounts, upcomingEventCount, hasNoAccounts] =
     await Promise.all([
-      requireUser(),
-      getActiveSpace(),
+      loadUser(),
+      loadActiveSpace(),
       loadPollStatusCounts(),
       loadUpcomingEventCount(),
       loadUserHasNoAccounts(),

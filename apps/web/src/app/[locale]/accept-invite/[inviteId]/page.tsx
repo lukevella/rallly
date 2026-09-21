@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Logo } from "@/features/branding/components/logo";
 import { SpaceIcon } from "@/features/space/components/space-icon";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { AcceptInviteButton } from "./components/accept-invite-button";
@@ -17,7 +17,7 @@ export default async function JoinPage({
 }) {
   const { inviteId } = await params;
   const [user, invite] = await Promise.all([
-    requireUser(),
+    loadUser(),
     prisma.spaceMemberInvite.findUnique({
       where: {
         id: inviteId,

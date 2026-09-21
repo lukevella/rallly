@@ -8,7 +8,7 @@ import { resolveSpaceTier } from "@/features/billing/utils";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { UserProvider } from "@/features/user/client";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
@@ -19,7 +19,7 @@ import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
 async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
   // Guests may only enter when quick create is enabled.
   if (!isQuickCreateEnabled) {
-    await requireUser();
+    await loadUser();
   }
 
   const [locale, deviceDateTimeConfig, session, payWallPricing] =
