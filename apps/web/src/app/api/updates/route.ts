@@ -8,20 +8,27 @@ import { isSelfHosted } from "@/lib/constants";
 import { createRatelimit } from "@/lib/rate-limit";
 import type { ReleaseChannels } from "./release-channels";
 import { buildReleaseChannels, buildUpdatesPayload } from "./release-channels";
+import type { SecurityAdvisory } from "./security-advisories";
+import { buildSecurityAdvisories } from "./security-advisories";
 
 const logger = createLogger("api/updates");
 
 const GITHUB_RELEASES_URL =
   "https://api.github.com/repos/lukevella/rallly/releases";
+const GITHUB_ADVISORIES_URL =
+  "https://api.github.com/repos/lukevella/rallly/security-advisories";
 const RELEASES_PER_PAGE = 100;
 // Sequential unauthenticated requests count against a 60/hour IP budget, so
 // pagination is bounded; older majors beyond this window report no update.
 const MAX_RELEASE_PAGES = 3;
 
 const releaseChannelsCache = createCache<ReleaseChannels>({
-  // Bumped whenever the cached shape changes so a warm cache from the
-  // previous deploy cannot be read as the new shape
-  namespace: "updates:release-channels:v2",
+  namespace: "updates:release-channels",
+  ttl: "1 h",
+});
+
+const advisoriesCache = createCache<SecurityAdvisory[]>({
+  namespace: "updates:advisories",
   ttl: "1 h",
 });
 
@@ -73,6 +80,38 @@ async function fetchReleaseChannels(): Promise<ReleaseChannels | null> {
   }
 }
 
+// Advisories are the severity source: a repository advisory's vulnerable
+// version range decides which callers get the security flag. A failed fetch
+// degrades to no severity rather than failing the update check.
+async function fetchSecurityAdvisories(): Promise<SecurityAdvisory[] | null> {
+  try {
+    const res = await fetch(
+      `${GITHUB_ADVISORIES_URL}?state=published&per_page=${RELEASES_PER_PAGE}`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "User-Agent": "Rallly",
+        },
+        signal: AbortSignal.timeout(2500),
+      },
+    );
+    if (!res.ok) return null;
+    return buildSecurityAdvisories(await res.json());
+  } catch (error) {
+    logger.warn({ error }, "Failed to fetch security advisories from GitHub");
+    return null;
+  }
+}
+
+async function getSecurityAdvisories(): Promise<SecurityAdvisory[]> {
+  const cached = await advisoriesCache.get("advisories");
+  if (cached) return cached;
+
+  const fresh = await fetchSecurityAdvisories();
+  if (fresh) await advisoriesCache.set("advisories", fresh);
+  return fresh ?? [];
+}
+
 async function getReleaseChannels(): Promise<ReleaseChannels | null> {
   const cached = await releaseChannelsCache.get("channels");
   if (cached) return cached;
@@ -96,7 +135,10 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const channels = await getReleaseChannels();
+  const [channels, advisories] = await Promise.all([
+    getReleaseChannels(),
+    getSecurityAdvisories(),
+  ]);
 
   if (!channels) {
     return NextResponse.json(
@@ -138,9 +180,10 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json(
-    buildUpdatesPayload(
+    buildUpdatesPayload({
       channels,
-      parsedVersion.success ? parsedVersion.data : null,
-    ),
+      advisories,
+      requestedVersion: parsedVersion.success ? parsedVersion.data : null,
+    }),
   );
 }
