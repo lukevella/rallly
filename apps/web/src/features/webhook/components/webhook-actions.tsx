@@ -39,7 +39,7 @@ export function WebhookActions({
   const setEnabled = useSafeAction(setWebhookEnabledAction);
   const deleteWebhook = useSafeAction(deleteWebhookAction, {
     onSuccess: () => {
-      toast.success(t("endpointDeleted", { defaultValue: "Endpoint deleted" }));
+      toast.success(t("webhookDeleted", { defaultValue: "Webhook deleted" }));
     },
     onSettled: () => {
       deleteDialog.dismiss();
@@ -84,11 +84,11 @@ export function WebhookActions({
         <DialogContent size="sm">
           <DialogHeader>
             <DialogTitle>
-              <Trans i18nKey="deleteEndpoint" defaults="Delete endpoint" />
+              <Trans i18nKey="deleteWebhook" defaults="Delete webhook" />
             </DialogTitle>
             <DialogDescription>
               <Trans
-                i18nKey="deleteEndpointConfirmation"
+                i18nKey="deleteWebhookConfirmation"
                 defaults="Are you sure you want to delete {url}? Rallly will stop sending events to it immediately."
                 values={{ url: webhookUrl }}
               />

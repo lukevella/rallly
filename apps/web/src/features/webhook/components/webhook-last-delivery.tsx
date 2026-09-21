@@ -5,7 +5,7 @@ import { Trans } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 
 /**
- * Outcome of the endpoint's last attempted delivery. An icon and its own
+ * Outcome of the webhook's last attempted delivery. An icon and its own
  * words carry the state; the color only reinforces it.
  */
 export function WebhookLastDelivery({
