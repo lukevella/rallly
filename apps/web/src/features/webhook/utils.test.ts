@@ -76,18 +76,6 @@ describe("toWebhookEventType", () => {
 describe("buildWebhookPayload", () => {
   const poll = { id: "Xk3pQ9vLm2Ab", kind: "time" as const };
   const createdAt = new Date("2026-09-15T10:00:00.000Z");
-  const vote = {
-    optionId: "opt_1",
-    start: "2026-10-01T09:00:00.000Z",
-    duration: 30,
-    type: "yes" as const,
-  };
-  const availability = {
-    start: "2026-10-01T09:00:00.000Z",
-    end: "2026-10-01T09:30:00.000Z",
-    allDay: false,
-    modifiers: [],
-  };
 
   it("references the poll by id and carries the event's own facts", () => {
     const payload = buildWebhookPayload({
@@ -208,7 +196,8 @@ describe("buildWebhookPayload", () => {
         type,
         participantId: "part_1",
         optionId: null,
-        payload: { name: "Jessie", email: "jessie@example.com", votes: [vote] },
+        // response_deleted requires the vote snapshot; the others ignore it
+        payload: { name: "Jessie", votes: [] },
         createdAt,
       },
       poll,
@@ -219,85 +208,7 @@ describe("buildWebhookPayload", () => {
       id: "act_9",
       createdAt: "2026-09-15T10:00:00.000Z",
       type: eventType,
-      data: {
-        poll: { id: poll.id },
-        participant: {
-          id: "part_1",
-          name: "Jessie",
-          email: "jessie@example.com",
-          availability: [availability],
-        },
-      },
-    });
-  });
-
-  it("turns votes into availability: no is absent, ifNeedBe is a modifier, all-day spans the day", () => {
-    const payload = buildWebhookPayload({
-      activity: {
-        id: "act_12",
-        type: "response_created",
-        participantId: "part_1",
-        optionId: null,
-        payload: {
-          name: "Jessie",
-          votes: [
-            {
-              ...vote,
-              optionId: "opt_3",
-              start: "2026-10-03T00:00:00.000Z",
-              duration: 0,
-              type: "no",
-            },
-            {
-              ...vote,
-              optionId: "opt_2",
-              start: "2026-10-02T00:00:00.000Z",
-              duration: 0,
-              type: "ifNeedBe",
-            },
-            { ...vote, start: "2026-10-01T00:00:00.000Z", duration: 0 },
-          ],
-        },
-        createdAt,
-      },
-      poll: { ...poll, kind: "date" },
-    });
-
-    expect(payload?.data).toMatchObject({
-      participant: {
-        availability: [
-          {
-            start: "2026-10-01T00:00:00.000Z",
-            end: "2026-10-02T00:00:00.000Z",
-            allDay: true,
-            modifiers: [],
-          },
-          {
-            start: "2026-10-02T00:00:00.000Z",
-            end: "2026-10-03T00:00:00.000Z",
-            allDay: true,
-            modifiers: ["ifNeedBe"],
-          },
-        ],
-      },
-    });
-  });
-
-  it("sends null for a participant without an email", () => {
-    const payload = buildWebhookPayload({
-      activity: {
-        id: "act_10",
-        type: "response_created",
-        participantId: "part_1",
-        optionId: null,
-        payload: { name: "Jessie", votes: [] },
-        createdAt,
-      },
-      poll,
-    });
-
-    expect(payload?.data).toMatchObject({
-      participant: { email: null, availability: [] },
+      data: { poll: { id: poll.id }, participant: { id: "part_1" } },
     });
   });
 
@@ -309,7 +220,7 @@ describe("buildWebhookPayload", () => {
           type: "response_created",
           participantId: null,
           optionId: null,
-          payload: { name: "Jessie", votes: [] },
+          payload: { name: "Jessie" },
           createdAt,
         },
         poll,

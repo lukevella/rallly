@@ -115,19 +115,6 @@ test.describe("Webhook delivery", () => {
     });
   }
 
-  const responseSnapshot = {
-    name: "Jessie",
-    email: "jessie@example.com",
-    votes: [
-      {
-        optionId: "webhook-delivery-option",
-        start: "2026-10-01T09:00:00.000Z",
-        duration: 30,
-        type: "yes",
-      },
-    ],
-  };
-
   test.beforeAll(async () => {
     await receiver.start();
     await prisma.user.deleteMany({
@@ -354,14 +341,14 @@ test.describe("Webhook delivery", () => {
     ["response_updated", "poll.participant.updated"],
     ["response_deleted", "poll.participant.deleted"],
   ] as const) {
-    test(`delivers ${eventType} with the participant snapshot`, async ({
+    test(`delivers ${eventType} as a reference to the participant`, async ({
       request,
     }) => {
       await createWebhook();
       await createActivity({
         type: activityType,
         participantId: "webhook-delivery-participant",
-        payload: responseSnapshot,
+        payload: { name: "Jessie", votes: [] },
         createdAt: secondsAgo(30),
       });
 
@@ -374,19 +361,7 @@ test.describe("Webhook delivery", () => {
         type: eventType,
         data: {
           poll: { id: pollId },
-          participant: {
-            id: "webhook-delivery-participant",
-            name: responseSnapshot.name,
-            email: responseSnapshot.email,
-            availability: [
-              {
-                start: "2026-10-01T09:00:00.000Z",
-                end: "2026-10-01T09:30:00.000Z",
-                allDay: false,
-                modifiers: [],
-              },
-            ],
-          },
+          participant: { id: "webhook-delivery-participant" },
         },
       });
     });

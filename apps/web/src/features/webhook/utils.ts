@@ -122,25 +122,6 @@ function toTimeRange(
 }
 
 /**
- * A vote as a range of availability. A "no" is not a range; "ifNeedBe" is
- * a modifier on an available range.
- */
-function toAvailability(
-  kind: "date" | "time",
-  vote: { start: string; duration: number; type: "yes" | "no" | "ifNeedBe" },
-) {
-  if (vote.type === "no") {
-    return [];
-  }
-  return [
-    {
-      ...toTimeRange(kind, vote),
-      modifiers: vote.type === "ifNeedBe" ? ["ifNeedBe"] : [],
-    },
-  ];
-}
-
-/**
  * Builds the event envelope for an activity row. The poll is referenced by
  * id only; everything else comes from the activity's own snapshot, so a
  * retried delivery says what happened, not what the poll looks like now.
@@ -185,28 +166,7 @@ export function buildWebhookPayload({
     createdAt: activity.createdAt.toISOString(),
   };
   const pollRef = { id: poll.id };
-  const participantPayload = (
-    participantId: string,
-    snapshot: {
-      name: string;
-      email?: string | null;
-      votes: {
-        optionId: string;
-        start: string;
-        duration: number;
-        type: "yes" | "no" | "ifNeedBe";
-      }[];
-    },
-  ) => ({
-    id: participantId,
-    name: snapshot.name,
-    email: snapshot.email ?? null,
-    // Start order, so the list reads as a timeline whatever order the votes
-    // were stored in.
-    availability: [...snapshot.votes]
-      .sort((a, b) => a.start.localeCompare(b.start))
-      .flatMap((vote) => toAvailability(poll.kind, vote)),
-  });
+  const participantRef = (participantId: string) => ({ id: participantId });
 
   switch (event.type) {
     case "poll_created":
@@ -233,7 +193,7 @@ export function buildWebhookPayload({
         type: "poll.participant.created",
         data: {
           poll: pollRef,
-          participant: participantPayload(event.participantId, event.payload),
+          participant: participantRef(event.participantId),
         },
       };
     case "response_updated":
@@ -242,7 +202,7 @@ export function buildWebhookPayload({
         type: "poll.participant.updated",
         data: {
           poll: pollRef,
-          participant: participantPayload(event.participantId, event.payload),
+          participant: participantRef(event.participantId),
         },
       };
     case "response_deleted":
@@ -251,7 +211,7 @@ export function buildWebhookPayload({
         type: "poll.participant.deleted",
         data: {
           poll: pollRef,
-          participant: participantPayload(event.participantId, event.payload),
+          participant: participantRef(event.participantId),
         },
       };
     case "poll_closed":

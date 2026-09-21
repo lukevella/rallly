@@ -43,10 +43,9 @@ export const webhookPollRefSchema = z
   .meta({ id: "WebhookPollRef" });
 
 /**
- * One shape for every span of time a webhook describes, whether a scheduled
- * event or a range of availability, so a receiver parses time once. There
- * is no option id and no poll `kind`: the span is the fact, and `allDay`
- * says all a receiver needs about its kind.
+ * The span of time a poll was scheduled as. There is no option id and no
+ * poll `kind`: the span is the fact, and `allDay` says all a receiver needs
+ * about its kind.
  */
 const timeRangeFields = {
   start: z.iso.datetime().meta({
@@ -70,37 +69,18 @@ export const webhookScheduledEventSchema = z
   .meta({ id: "WebhookScheduledEvent" });
 
 /**
- * A participant's response as availability: the ranges they can make, each
- * with open-ended modifiers. Absence means unavailable, as in a free/busy
- * listing, so a consumer that does not know a modifier still reads the
- * range correctly as available.
+ * Events reference the participant the same way they reference the poll:
+ * by id. Fetch `GET /polls/{pollId}/participants` for the rest.
  */
-export const webhookAvailabilitySchema = z
+export const webhookParticipantRefSchema = z
   .object({
-    ...timeRangeFields,
-    modifiers: z.array(z.string()).meta({
+    id: z.string().meta({
       description:
-        "Qualifiers on the availability. `ifNeedBe` means the participant can make it but would rather not. New modifiers may be added without a version change; an unknown one still leaves the range available.",
-      example: ["ifNeedBe"],
+        "The participant's id. Fetch `GET /polls/{pollId}/participants` for their details. After `poll.participant.deleted` the participant is no longer listed.",
+      example: "cm5h8x2k40000q9l4f7e2d3an",
     }),
   })
-  .meta({ id: "WebhookAvailability" });
-
-export const webhookParticipantSchema = z
-  .object({
-    id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-    name: z.string().meta({ example: "Jessie Smith" }),
-    email: z.string().nullable().meta({
-      description:
-        "Null when the participant did not leave one. Polls can require it with `requireParticipantEmail`.",
-      example: "jessie@example.com",
-    }),
-    availability: z.array(webhookAvailabilitySchema).meta({
-      description:
-        "When the participant is available, one range per option they can make, in start order. Options they cannot make, or did not answer, are absent. Adjacent ranges are not merged. On `poll.participant.deleted` this is the availability that was removed.",
-    }),
-  })
-  .meta({ id: "WebhookParticipant" });
+  .meta({ id: "WebhookParticipantRef" });
 
 const envelope = {
   version: z.string().meta({
@@ -188,7 +168,7 @@ export const pollDeletedEventSchema = z
 
 const participantEventData = z.object({
   poll: webhookPollRefSchema,
-  participant: webhookParticipantSchema,
+  participant: webhookParticipantRefSchema,
 });
 
 export const pollParticipantCreatedEventSchema = z
@@ -207,7 +187,7 @@ export const pollParticipantUpdatedEventSchema = z
   })
   .meta({
     id: "PollParticipantUpdatedEvent",
-    description: "The participant changed their votes or their name.",
+    description: "The participant changed their response or their name.",
   });
 
 export const pollParticipantDeletedEventSchema = z
