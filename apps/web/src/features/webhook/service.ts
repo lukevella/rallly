@@ -153,6 +153,28 @@ function toRequestError(error: unknown) {
   });
 }
 
+/**
+ * Memoized at module level, not in the layer: the layer is provided per
+ * dispatcher run, and the connection pool should outlive a run.
+ */
+let guardedDispatcher: Dispatcher | null = null;
+
+/**
+ * Direct connections pin the guarded lookup, including hosts that NO_PROXY
+ * exempts from a configured proxy. Proxied connections are made by the proxy,
+ * which resolves the hostname itself, so pinning is not possible there; the
+ * proxy operator controls what it can reach.
+ */
+function getDispatcher(allowPrivateTargets: boolean) {
+  if (allowPrivateTargets) {
+    return getGlobalDispatcher();
+  }
+  guardedDispatcher ??= createOutboundDispatcher({
+    connect: { lookup: guardedLookup },
+  });
+  return guardedDispatcher;
+}
+
 const timeoutError = new WebhookSendError({
   reason: "timeout",
   status: null,
@@ -188,24 +210,6 @@ export class WebhookSender extends Context.Service<
   }
 >()("rallly/webhook/WebhookSender") {
   static readonly layer = Layer.sync(WebhookSender, () => {
-    let guardedDispatcher: Dispatcher | null = null;
-
-    /**
-     * Direct connections pin the guarded lookup, including hosts that
-     * NO_PROXY exempts from a configured proxy. Proxied connections are made
-     * by the proxy, which resolves the hostname itself, so pinning is not
-     * possible there; the proxy operator controls what it can reach.
-     */
-    function getDispatcher(allowPrivateTargets: boolean) {
-      if (allowPrivateTargets) {
-        return getGlobalDispatcher();
-      }
-      guardedDispatcher ??= createOutboundDispatcher({
-        connect: { lookup: guardedLookup },
-      });
-      return guardedDispatcher;
-    }
-
     const send = Effect.fn("WebhookSender.send")(function* ({
       url,
       secret,
