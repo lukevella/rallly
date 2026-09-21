@@ -34,7 +34,6 @@ export type WebhookPollStatus = z.infer<typeof webhookPollStatusSchema>;
 const webhookPollFields = {
   id: z.string().meta({ example: "Xk3pQ9vLm2Ab" }),
   title: z.string().meta({ example: "Team sync" }),
-  kind: z.enum(["date", "time"]).meta({ example: "time" }),
   timeZone: z.string().nullable().meta({ example: "Europe/London" }),
   adminUrl: z
     .string()
@@ -81,8 +80,8 @@ const webhookPollSchema = z
 /**
  * One shape for every span of time a webhook describes, whether a scheduled
  * event or a range of availability, so a receiver parses time once. There
- * is no option id or `kind`: the span is the fact, and the poll's kind is
- * in the same event for anyone who needs it.
+ * is no option id and no poll `kind`: the span is the fact, and `allDay`
+ * says all a receiver needs about its kind.
  */
 const timeRangeFields = {
   start: z.iso.datetime().meta({ example: "2025-01-15T09:00:00.000Z" }),

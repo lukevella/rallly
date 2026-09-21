@@ -211,7 +211,6 @@ test.describe("Webhook delivery", () => {
           id: pollId,
           title: "Webhook poll",
           status: "closed",
-          kind: "time",
           timeZone: "Europe/London",
         },
         reason: "manual",

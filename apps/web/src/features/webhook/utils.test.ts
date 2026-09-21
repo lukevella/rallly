@@ -117,7 +117,6 @@ describe("buildWebhookPayload", () => {
           id: "Xk3pQ9vLm2Ab",
           title: "Team sync",
           status: "closed",
-          kind: "time",
           timeZone: "Europe/London",
         },
         reason: "manual",

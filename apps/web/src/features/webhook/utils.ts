@@ -197,7 +197,6 @@ export function buildWebhookPayload({
     id: poll.id,
     title: poll.title,
     status,
-    kind: poll.kind,
     timeZone: poll.timeZone,
     adminUrl: absoluteUrl(`/poll/${poll.id}`),
     inviteUrl: shortUrl(`/invite/${poll.id}`),
