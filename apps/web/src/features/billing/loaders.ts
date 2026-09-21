@@ -16,9 +16,9 @@ import {
   isEarlySupporter,
   resolvePriceSet,
 } from "@/features/billing/utils";
-import { getActiveSpace } from "@/features/space/loaders";
+import { loadActiveSpace } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { getCurrentUser, requireUser } from "@/features/user/loaders";
+import { loadOptionalUser, loadUser } from "@/features/user/loaders";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
 /**
@@ -68,7 +68,10 @@ export const loadPayWallPricing = cache(async () => {
  * than failing the page.
  */
 export const loadSubscriptionOverview = cache(async () => {
-  const [user, space] = await Promise.all([getCurrentUser(), getActiveSpace()]);
+  const [user, space] = await Promise.all([
+    loadOptionalUser(),
+    loadActiveSpace(),
+  ]);
   const subscription = await getSpaceSubscription(space.id);
 
   if (!subscription) {
@@ -151,7 +154,7 @@ export const loadSubscriptionOverview = cache(async () => {
  * rows written before the customer.created webhook landed.
  */
 export const loadPaymentMethods = cache(async () => {
-  const user = await getCurrentUser();
+  const user = await loadOptionalUser();
 
   if (!user) {
     return [];
@@ -171,7 +174,7 @@ export const loadIsSubscriptionPastDue = cache(async () => {
     return false;
   }
 
-  const [user, space] = await Promise.all([requireUser(), getActiveSpace()]);
+  const [user, space] = await Promise.all([loadUser(), loadActiveSpace()]);
 
   if (!space.subscriptionPastDue) {
     return false;

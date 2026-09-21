@@ -17,12 +17,12 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 
 export default async function Page() {
-  const user = await requireUser();
+  const user = await loadUser();
 
   return (
     <SettingsPage>

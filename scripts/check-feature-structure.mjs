@@ -6,6 +6,10 @@
  * contain the allowed file names below, co-located tests, and the directories
  * `components/` and `assets/` (whose contents are unrestricted).
  *
+ * Every export from a `loaders.ts` is named with a `load*` prefix. Loaders
+ * that redirect or throw take the bare prefix; loaders that return null for
+ * a missing actor are `loadOptional*`.
+ *
  * A useFilenamingConvention override in apps/web/biome.json mirrors this rule
  * at warn severity for in-editor feedback (JS/TS files only) — keep the two
  * in sync when the vocabulary changes.
@@ -37,7 +41,21 @@ const TEST_FILE_PATTERN = /\.test\.tsx?$/;
 
 const UNRESTRICTED_DIRS = new Set(["components", "assets"]);
 
+const LOADER_EXPORT_PATTERN =
+  /^export\s+(?:const|let|function|async\s+function)\s+([A-Za-z0-9_$]+)/gm;
+
 const offenders = [];
+const loaderNameOffenders = [];
+
+function checkLoaderExports(absolutePath, relativePath) {
+  const source = fs.readFileSync(absolutePath, "utf8");
+  for (const match of source.matchAll(LOADER_EXPORT_PATTERN)) {
+    const name = match[1];
+    if (!name.startsWith("load")) {
+      loaderNameOffenders.push(`${relativePath}: ${name}`);
+    }
+  }
+}
 
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -59,6 +77,8 @@ function walk(dir) {
       !TEST_FILE_PATTERN.test(entry.name)
     ) {
       offenders.push(relativePath);
+    } else if (entry.name === "loaders.ts") {
+      checkLoaderExports(absolutePath, relativePath);
     }
   }
 }
@@ -89,6 +109,19 @@ if (offenders.length > 0) {
   );
   console.error(
     "Move the file into components/, rename it to a vocabulary file, or extract it out of features/.",
+  );
+  process.exit(1);
+}
+
+if (loaderNameOffenders.length > 0) {
+  console.error(
+    `Found ${loaderNameOffenders.length} loader export(s) without the load* prefix:\n`,
+  );
+  for (const offender of loaderNameOffenders.sort()) {
+    console.error(`  apps/web/src/features/${offender}`);
+  }
+  console.error(
+    "\nEvery export from a loaders.ts is named load*. Loaders that redirect or throw take the bare prefix; loaders that return null for a missing actor are loadOptional*.",
   );
   process.exit(1);
 }

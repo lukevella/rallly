@@ -6,7 +6,7 @@ import { after } from "next/server";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
-import { getCurrentActor, getCurrentUser } from "@/features/user/loaders";
+import { loadOptionalActor, loadOptionalUser } from "@/features/user/loaders";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
@@ -115,7 +115,7 @@ export const actionClient = createSafeActionClient({
   });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  const user = await getCurrentUser();
+  const user = await loadOptionalUser();
 
   if (!user) {
     throw new AppError({
@@ -136,7 +136,7 @@ export const authActionClient = actionClient.use(async ({ next }) => {
  * may be none at all when the credential is a token from an emailed link.
  */
 export const optionalUserActionClient = actionClient.use(async ({ next }) => {
-  const user = await getCurrentActor();
+  const user = await loadOptionalActor();
 
   return next({
     ctx: { user },

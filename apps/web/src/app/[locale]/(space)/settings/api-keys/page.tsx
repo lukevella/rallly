@@ -14,8 +14,8 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getSpaceApiKeys, isApiAccessEnabled } from "@/features/api-keys/data";
-import { getActiveSpace } from "@/features/space/loaders";
-import { requireUser } from "@/features/user/loaders";
+import { loadActiveSpace } from "@/features/space/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { ApiAccessUpgrade } from "./components/api-access-upgrade";
@@ -24,9 +24,9 @@ import { ApiUsageLimits } from "./components/api-usage-limits";
 import { CreateApiKeyButton } from "./components/create-api-key-button";
 
 export default async function ApiKeysSettingsPage() {
-  const user = await requireUser();
+  const user = await loadUser();
 
-  const space = await getActiveSpace();
+  const space = await loadActiveSpace();
   const enabled = await isApiAccessEnabled(user, space);
 
   // "Needs to upgrade" (hobby tier) gets its own screen; every other reason
@@ -61,7 +61,7 @@ export default async function ApiKeysSettingsPage() {
 }
 
 async function ApiKeysContent() {
-  const space = await getActiveSpace();
+  const space = await loadActiveSpace();
   const apiKeys = await getSpaceApiKeys({ spaceId: space.id });
 
   return (

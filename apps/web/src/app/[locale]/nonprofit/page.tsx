@@ -4,10 +4,10 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { NonprofitApplicationPage } from "@/features/billing/nonprofit/components/nonprofit-application-page";
 import { loadNonprofitStatus } from "@/features/billing/nonprofit/loaders";
 import { Logo } from "@/features/branding/components/logo";
-import { getActiveSpace } from "@/features/space/loaders";
+import { loadActiveSpace } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import { SignedInFooter } from "@/features/user/components/signed-in-footer";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
@@ -20,10 +20,10 @@ export default async function NonprofitPage() {
     notFound();
   }
 
-  // requireUser sends a cold visitor to /login and back here; getActiveSpace
+  // loadUser sends a cold visitor to /login and back here; loadActiveSpace
   // sends an account that has not finished onboarding through /setup first.
-  const user = await requireUser();
-  const space = await getActiveSpace();
+  const user = await loadUser();
+  const space = await loadActiveSpace();
   const status = await loadNonprofitStatus();
 
   const ability = defineAbilityForMember({

@@ -27,7 +27,7 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { getUserHasPassword } from "@/features/user/data";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -35,7 +35,7 @@ import { ChangePasswordDialog } from "./components/change-password-dialog";
 import { SetupPasswordDialog } from "./components/setup-password-dialog";
 
 export default async function SecurityPage() {
-  const user = await requireUser();
+  const user = await loadUser();
 
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
   const hasPassword = isEmailLoginEnabled

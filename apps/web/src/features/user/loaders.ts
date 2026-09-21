@@ -15,7 +15,7 @@ import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
  * how to respond (redirect, 401, etc.). Throws InvalidSessionError when
  * the session references a user that no longer exists or is banned.
  */
-export const getCurrentUser = cache(async () => {
+export const loadOptionalUser = cache(async () => {
   const session = await getSession();
 
   if (!session?.user || session.user.isGuest) {
@@ -37,7 +37,7 @@ export const getCurrentUser = cache(async () => {
  * null when there is no session; throws InvalidSessionError when the
  * session references a user that no longer exists or is banned.
  */
-export const getCurrentActor = cache(async () => {
+export const loadOptionalActor = cache(async () => {
   const session = await getSession();
 
   if (!session?.user) {
@@ -58,10 +58,10 @@ export const getCurrentActor = cache(async () => {
  * Trusts the session cookie cache (no database read). Redirects to /login
  * when unauthenticated, fails the render on an unreadable session so a
  * transient session-store failure can't feed a / ↔ /login redirect loop.
- * Use getCurrentUser where the user is optional or must be read from the
+ * Use loadOptionalUser where the user is optional or must be read from the
  * database (mutation gates, stale-role-sensitive pages).
  */
-export const requireUser = cache(async (): Promise<UserDTO> => {
+export const loadUser = cache(async (): Promise<UserDTO> => {
   const state = await getSessionState();
 
   if (state.status === "error") {
@@ -92,8 +92,8 @@ export const requireUser = cache(async (): Promise<UserDTO> => {
  * everyone else — that page either offers the initial admin promotion
  * or explains that administrator access is missing.
  */
-export const requireAdmin = cache(async () => {
-  const user = await getCurrentUser();
+export const loadAdmin = cache(async () => {
+  const user = await loadOptionalUser();
 
   if (!user) {
     const pathname = await getPathname();
@@ -114,6 +114,6 @@ export const requireAdmin = cache(async () => {
  * link) — OTP-only accounts that should be nudged to set up a password.
  */
 export const loadUserHasNoAccounts = cache(async () => {
-  const user = await requireUser();
+  const user = await loadUser();
   return getUserHasNoAccounts(user.id);
 });

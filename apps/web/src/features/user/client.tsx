@@ -42,7 +42,7 @@ export function UserProvider({
 
 /**
  * For components rendered on routes gated by a logged-in (non-guest) user
- * (e.g. behind requireUser). Throws instead of returning null so consumers
+ * (e.g. behind loadUser). Throws instead of returning null so consumers
  * don't need to handle the unauthenticated case.
  */
 export function useAuthedUser() {

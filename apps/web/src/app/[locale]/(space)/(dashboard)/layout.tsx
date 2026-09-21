@@ -19,7 +19,7 @@ import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { listSpacesForUser } from "@/features/space/data";
 import { NavUser } from "@/features/user/components/nav-user";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { ControlPanelMenuItem } from "./components/control-panel-menu-item";
@@ -33,7 +33,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireUser();
+  const user = await loadUser();
   const spaces = await listSpacesForUser(user.id);
 
   return (

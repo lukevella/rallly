@@ -18,7 +18,7 @@ import {
   SettingsPageHeader,
   SettingsPageTitle,
 } from "@/components/settings-layout";
-import { getCurrentUser } from "@/features/user/loaders";
+import { loadOptionalUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getPathname } from "@/lib/pathname";
@@ -37,7 +37,7 @@ import { ProfileSettings } from "./components/profile-settings";
 export default async function Page() {
   // Read from the database — the pending deletion notice depends on
   // deletedAt, which the session snapshot doesn't carry.
-  const user = await getCurrentUser();
+  const user = await loadOptionalUser();
 
   if (!user) {
     redirect(

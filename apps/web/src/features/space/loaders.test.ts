@@ -53,15 +53,15 @@ const authenticatedAs = (user: Record<string, unknown>) => {
   });
 };
 
-// getActiveSpace is React-cached, so each case needs a fresh module registry
+// loadActiveSpace is React-cached, so each case needs a fresh module registry
 // or the first call's result leaks into the next test.
 const loadGate = async () => {
   vi.resetModules();
   const mod = await import("./loaders");
-  return mod.getActiveSpace;
+  return mod.loadActiveSpace;
 };
 
-describe("getActiveSpace", () => {
+describe("loadActiveSpace", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

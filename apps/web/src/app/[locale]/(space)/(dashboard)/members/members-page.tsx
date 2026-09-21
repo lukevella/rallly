@@ -13,13 +13,13 @@ import { PageHeaderActions } from "@/components/page-layout";
 import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { SpaceRole } from "@/features/space/components/space-role";
-import { getActiveSpace, getSeatUsage } from "@/features/space/loaders";
+import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import {
   loadPendingInvites,
   loadSpaceMembers,
 } from "@/features/space/member/loaders";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -29,7 +29,7 @@ import { PendingInvites } from "./components/pending-invites";
 import { UpgradeToProButton } from "./components/upgrade-to-pro-button";
 
 async function getMemberAbility() {
-  const [user, space] = await Promise.all([requireUser(), getActiveSpace()]);
+  const [user, space] = await Promise.all([loadUser(), loadActiveSpace()]);
 
   return defineAbilityForMember({
     user: { id: user.id },
@@ -38,14 +38,14 @@ async function getMemberAbility() {
 }
 
 export async function MembersPageActions() {
-  const space = await getActiveSpace();
+  const space = await loadActiveSpace();
 
   if (defineAbilityForSpace(space).cannot("invite", "Member")) {
     return null;
   }
 
   const [seatUsage, memberAbility] = await Promise.all([
-    getSeatUsage(),
+    loadSeatUsage(),
     getMemberAbility(),
   ]);
   const availableSeats = Math.max(seatUsage.total - seatUsage.used, 0);
@@ -69,9 +69,9 @@ export async function MembersPageActions() {
 
 export async function MembersPageContent() {
   const [space, members, seatUsage, memberAbility] = await Promise.all([
-    getActiveSpace(),
+    loadActiveSpace(),
     loadSpaceMembers(),
-    getSeatUsage(),
+    loadSeatUsage(),
     getMemberAbility(),
   ]);
 

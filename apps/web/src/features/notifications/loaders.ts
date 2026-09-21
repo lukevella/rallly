@@ -7,10 +7,10 @@ import {
   getPollMuteTarget,
 } from "@/features/notifications/data";
 import { parseUnsubscribeToken } from "@/features/notifications/utils";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 
 export const loadNotificationPreferences = cache(async () => {
-  const user = await requireUser();
+  const user = await loadUser();
   return getNotificationPreferences(user.id);
 });
 

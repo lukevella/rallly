@@ -10,13 +10,13 @@ import {
   SettingsPageTitle,
 } from "@/components/settings-layout";
 import { listSpacesForUser } from "@/features/space/data";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { SpacesList } from "./components/spaces-list";
 
 export default async function Page() {
-  const user = await requireUser();
+  const user = await loadUser();
   const spaces = await listSpacesForUser(user.id);
 
   return (

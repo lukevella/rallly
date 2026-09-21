@@ -5,7 +5,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Logo } from "@/features/branding/components/logo";
 import { getOwnedSpace } from "@/features/space/data";
 import { SignedInFooter } from "@/features/user/components/signed-in-footer";
-import { requireUser } from "@/features/user/loaders";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
@@ -14,7 +14,7 @@ import { validateRedirectUrl } from "@/lib/utils/redirect";
 export default async function SetupPage(props: {
   searchParams?: Promise<{ redirectTo?: string }>;
 }) {
-  const user = await requireUser();
+  const user = await loadUser();
   const searchParams = await props.searchParams;
 
   // Whether onboarding is done is "does a space exist", not "is one
