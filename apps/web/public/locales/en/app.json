@@ -28,7 +28,6 @@
   "addComment": "Add comment",
   "addDescription": "Add description",
   "addEndpoint": "Add endpoint",
-  "addEndpointDescription": "Send a signed request to your server whenever one of these events happens",
   "addLicenseKey": "Add license key",
   "addParticipant": "Add participant",
   "address": "Address",

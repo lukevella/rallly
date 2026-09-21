@@ -139,12 +139,6 @@ export function CreateWebhookButton() {
                 <DialogTitle>
                   <Trans i18nKey="addEndpoint" defaults="Add endpoint" />
                 </DialogTitle>
-                <DialogDescription>
-                  <Trans
-                    i18nKey="addEndpointDescription"
-                    defaults="Send a signed request to your server whenever one of these events happens"
-                  />
-                </DialogDescription>
               </DialogHeader>
               <Form {...form}>
                 <form
