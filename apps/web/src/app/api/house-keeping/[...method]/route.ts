@@ -1,4 +1,5 @@
 import { createLogger } from "@rallly/logger";
+import { Effect } from "effect";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
@@ -18,6 +19,8 @@ import {
   hardDeleteUser,
 } from "@/features/user/mutations";
 import { deliverWebhooks } from "@/features/webhook/mutations";
+import { WebhookSender } from "@/features/webhook/service";
+import { runtime } from "@/lib/effect/runtime";
 import {
   deletePostHogPerson,
   flushPostHog,
@@ -206,7 +209,13 @@ app.get("/delete-orphaned-anonymous-users", async (c) => {
 });
 
 app.get("/deliver-webhooks", async (c) => {
-  const summary = await deliverWebhooks();
+  // A DatabaseError rejects here and Hono answers 500, as an uncaught throw
+  // did before.
+  const summary = await runtime.runPromise(
+    deliverWebhooks({ now: new Date() }).pipe(
+      Effect.provide(WebhookSender.layer),
+    ),
+  );
 
   // Runs every minute and most runs find nothing; log only when there was
   // work so the signal isn't buried in 1,440 no-op lines a day.

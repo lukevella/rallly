@@ -65,6 +65,7 @@
     "color-hash": "^2.0.2",
     "cookie": "^0.7.0",
     "dayjs": "^1.11.13",
+    "effect": "4.0.0-rc.116",
     "es-toolkit": "^1.39.9",
     "googleapis": "^169.0.0",
     "hono": "^4.13.5",
