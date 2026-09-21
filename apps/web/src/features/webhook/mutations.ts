@@ -5,7 +5,7 @@ import { subject } from "@casl/ability";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
-import { Clock, Effect, Schema } from "effect";
+import { Clock, Data, Effect } from "effect";
 import { env } from "@/env";
 import type { DatabaseError } from "@/lib/effect/db";
 import { fromPrisma } from "@/lib/effect/db";
@@ -298,10 +298,7 @@ export const recordDeliveryResult = Effect.fn("webhook.recordDeliveryResult")(
   },
 );
 
-class DecryptError extends Schema.TaggedError<DecryptError>()(
-  "DecryptError",
-  {},
-) {}
+class DecryptError extends Data.TaggedError("DecryptError") {}
 
 /**
  * Every failure mode ends in a `DeliveryAttempt`: a delivery is already in

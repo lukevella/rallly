@@ -3,7 +3,7 @@ import "server-only";
 import type { LookupAddress, LookupOptions } from "node:dns";
 import { lookup } from "node:dns";
 import { isIP } from "node:net";
-import { Clock, Context, Effect, Layer, Schema } from "effect";
+import { Clock, Context, Data, Effect, Layer } from "effect";
 import type { Dispatcher } from "undici";
 import { getGlobalDispatcher } from "undici";
 import { createOutboundDispatcher } from "@/lib/outbound-proxy";
@@ -14,21 +14,17 @@ import { isPrivateAddress, signWebhookBody } from "./utils";
  * Why one delivery attempt did not get a 2xx. `message` is what the
  * delivery row stores in `lastError`.
  */
-export class WebhookSendError extends Schema.TaggedError<WebhookSendError>()(
-  "WebhookSendError",
-  {
-    reason: Schema.Literals([
-      "invalid_url",
-      "insecure_target",
-      "private_address",
-      "timeout",
-      "http_status",
-      "network",
-    ]),
-    status: Schema.NullOr(Schema.Number),
-    message: Schema.String,
-  },
-) {}
+export class WebhookSendError extends Data.TaggedError("WebhookSendError")<{
+  reason:
+    | "invalid_url"
+    | "insecure_target"
+    | "private_address"
+    | "timeout"
+    | "http_status"
+    | "network";
+  status: number | null;
+  message: string;
+}> {}
 
 /**
  * Local development and the integration suite point endpoints at loopback,
