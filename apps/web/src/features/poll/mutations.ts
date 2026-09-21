@@ -215,23 +215,15 @@ export const deletePoll = async (
   spaceId: AuthorizedSpaceId,
 ) => {
   return prisma.$transaction(async (tx) => {
-    const poll = await tx.poll.findFirst({
-      where: {
-        id: pollId,
-        spaceId,
-        deletedAt: null,
-      },
-      select: { id: true },
-    });
-
-    if (!poll) {
-      return null;
-    }
-
-    await tx.poll.update({
-      where: { id: pollId },
+    // Conditional so two concurrent deletes record one transition, not two.
+    const { count } = await tx.poll.updateMany({
+      where: { id: pollId, spaceId, deletedAt: null },
       data: { deleted: true, deletedAt: new Date() },
     });
+
+    if (count === 0) {
+      return null;
+    }
 
     // API keys are space credentials, not a person, so the actor is unknown.
     await recordPollActivities(tx, [
