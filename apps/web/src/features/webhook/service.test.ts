@@ -1,5 +1,12 @@
+import { Effect } from "effect";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { guardedLookup, PrivateAddressError, sendWebhook } from "./service";
+import {
+  AllowPrivateTargets,
+  guardedLookup,
+  PrivateAddressError,
+  WebhookSendError,
+  WebhookSender,
+} from "./service";
 
 function lookupResult(hostname: string, all: boolean) {
   return new Promise<{ err: Error | null; address: unknown }>((resolve) => {
@@ -31,21 +38,17 @@ describe("guardedLookup", () => {
   });
 });
 
-describe("sendWebhook", () => {
+describe("WebhookSender", () => {
   const PROXY_VARS = ["HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"];
   let originalEnv: Record<string, string | undefined>;
 
   beforeEach(() => {
     originalEnv = Object.fromEntries(
-      [...PROXY_VARS, "WEBHOOK_ALLOW_PRIVATE_URLS"].map((name) => [
-        name,
-        process.env[name],
-      ]),
+      PROXY_VARS.map((name) => [name, process.env[name]]),
     );
     for (const name of PROXY_VARS) {
       delete process.env[name];
     }
-    delete process.env.WEBHOOK_ALLOW_PRIVATE_URLS;
   });
 
   afterEach(() => {
@@ -58,6 +61,53 @@ describe("sendWebhook", () => {
     }
   });
 
+  function sendFailure(url: string) {
+    return Effect.runPromise(
+      WebhookSender.use((sender) =>
+        sender.send({
+          url,
+          secret: "whsec_test",
+          deliveryId: "d_1",
+          eventType: "poll.closed",
+          version: "2026-09-20",
+          body: "{}",
+        }),
+      ).pipe(
+        Effect.flip,
+        Effect.provide(WebhookSender.layer),
+        Effect.provideService(AllowPrivateTargets, false),
+      ),
+    );
+  }
+
+  it("refuses a malformed URL", async () => {
+    const error = await sendFailure("not a url");
+    expect(error).toBeInstanceOf(WebhookSendError);
+    expect(error).toMatchObject({
+      reason: "invalid_url",
+      status: null,
+      message: "Invalid webhook URL",
+    });
+  });
+
+  it("refuses a plain http target", async () => {
+    const error = await sendFailure("http://example.com/hook");
+    expect(error).toMatchObject({
+      reason: "insecure_target",
+      status: null,
+      message: "Webhook URL must use https",
+    });
+  });
+
+  it("refuses a private IP literal before connecting", async () => {
+    const error = await sendFailure("https://10.0.0.1/hook");
+    expect(error).toMatchObject({
+      reason: "private_address",
+      status: null,
+      message: "Webhook host is a private address",
+    });
+  });
+
   // Loopback is always exempt from the proxy, so with a proxy configured
   // this request takes the direct path — the one that must carry the
   // guarded lookup. Resolution fails before any socket opens, so the test
@@ -65,19 +115,11 @@ describe("sendWebhook", () => {
   it("refuses a hostname that resolves to a private address on the direct path behind a proxy", async () => {
     process.env.HTTPS_PROXY = "http://proxy.invalid:3128";
 
-    const result = await sendWebhook({
-      url: "https://localhost/hook",
-      secret: "whsec_test",
-      deliveryId: "d_1",
-      eventType: "poll.closed",
-      version: "2026-09-20",
-      body: "{}",
-    });
-
-    expect(result).toEqual({
-      ok: false,
+    const error = await sendFailure("https://localhost/hook");
+    expect(error).toMatchObject({
+      reason: "private_address",
       status: null,
-      error: "Webhook host resolves to a private address",
+      message: "Webhook host resolves to a private address",
     });
   });
 });
