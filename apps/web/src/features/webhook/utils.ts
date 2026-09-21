@@ -111,8 +111,24 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
 
 /**
- * A vote as a range of availability. A "no" is not a range; an all-day
- * option spans its UTC day; "ifNeedBe" is a modifier on an available range.
+ * An option snapshot as a span of time. All-day options are stored as UTC
+ * midnight with a zero duration, so they span their UTC day.
+ */
+function toTimeRange(
+  kind: "date" | "time",
+  option: { start: string; duration: number },
+) {
+  const start = new Date(option.start);
+  const allDay = kind === "date";
+  const end = new Date(
+    start.getTime() + (allDay ? DAY_MS : option.duration * MINUTE_MS),
+  );
+  return { start: start.toISOString(), end: end.toISOString(), allDay };
+}
+
+/**
+ * A vote as a range of availability. A "no" is not a range; "ifNeedBe" is
+ * a modifier on an available range.
  */
 function toAvailability(
   kind: "date" | "time",
@@ -121,31 +137,12 @@ function toAvailability(
   if (vote.type === "no") {
     return [];
   }
-  const start = new Date(vote.start);
-  const allDay = kind === "date";
-  const end = new Date(
-    start.getTime() + (allDay ? DAY_MS : vote.duration * MINUTE_MS),
-  );
   return [
     {
-      start: start.toISOString(),
-      end: end.toISOString(),
-      allDay,
+      ...toTimeRange(kind, vote),
       modifiers: vote.type === "ifNeedBe" ? ["ifNeedBe"] : [],
     },
   ];
-}
-
-// All-day options are stored as UTC midnight of the calendar date, so the
-// date is the first ten characters of the ISO string.
-function toOptionPayload(
-  kind: "date" | "time",
-  option: { id: string; start: string; duration: number },
-) {
-  if (kind === "date") {
-    return { id: option.id, date: option.start.slice(0, 10) };
-  }
-  return { id: option.id, startTime: option.start, duration: option.duration };
 }
 
 /**
@@ -292,11 +289,7 @@ export function buildWebhookPayload({
         type: "poll.scheduled",
         data: {
           poll: pollPayload("scheduled"),
-          option: toOptionPayload(poll.kind, {
-            id: event.optionId,
-            start: event.payload.start,
-            duration: event.payload.duration,
-          }),
+          event: toTimeRange(poll.kind, event.payload),
         },
       };
     default:

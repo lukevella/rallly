@@ -270,7 +270,7 @@ test.describe("Webhook delivery", () => {
     ).toBe(0);
   });
 
-  test("carries the scheduled option for a scheduled poll", async ({
+  test("carries the calendar event for a scheduled poll", async ({
     request,
   }) => {
     await createWebhook();
@@ -288,10 +288,10 @@ test.describe("Webhook delivery", () => {
       type: "poll.scheduled",
       data: {
         poll: { status: "scheduled" },
-        option: {
-          id: "webhook-delivery-option",
-          startTime: "2026-10-01T09:00:00.000Z",
-          duration: 30,
+        event: {
+          start: "2026-10-01T09:00:00.000Z",
+          end: "2026-10-01T09:30:00.000Z",
+          allDay: false,
         },
       },
     });

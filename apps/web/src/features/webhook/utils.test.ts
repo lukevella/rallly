@@ -161,16 +161,16 @@ describe("buildWebhookPayload", () => {
       type: "poll.scheduled",
       data: {
         poll: { status: "scheduled" },
-        option: {
-          id: "opt_1",
-          startTime: "2026-10-01T09:00:00.000Z",
-          duration: 30,
+        event: {
+          start: "2026-10-01T09:00:00.000Z",
+          end: "2026-10-01T09:30:00.000Z",
+          allDay: false,
         },
       },
     });
   });
 
-  it("carries the scheduled date for a date poll", () => {
+  it("spans the whole day for a scheduled date poll", () => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_4",
@@ -184,7 +184,11 @@ describe("buildWebhookPayload", () => {
     });
 
     expect(payload?.data).toMatchObject({
-      option: { id: "opt_2", date: "2026-10-01" },
+      event: {
+        start: "2026-10-01T00:00:00.000Z",
+        end: "2026-10-02T00:00:00.000Z",
+        allDay: true,
+      },
     });
   });
 
