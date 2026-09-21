@@ -306,7 +306,7 @@ class DecryptError extends Data.TaggedError("DecryptError") {}
  * stale reclamation. The trailing catch is what makes that a type, not a
  * convention: the error channel is `never`.
  */
-const attemptDelivery = Effect.fn("webhook.attemptDelivery")(
+export const attemptDelivery = Effect.fn("webhook.attemptDelivery")(
   function* (delivery: {
     id: string;
     eventType: string;
