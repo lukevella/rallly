@@ -90,12 +90,12 @@ test.describe("Webhooks settings", () => {
     await gotoWebhooks(page, email);
 
     await expect(
-      mainContent(page).getByText("No endpoints found"),
+      mainContent(page).getByText("No webhooks found"),
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Add endpoint" }).click();
+    await page.getByRole("button", { name: "Add webhook" }).click();
     const url = "https://example.com/hooks/rallly";
-    await page.getByLabel("Endpoint URL").fill(url);
+    await page.getByLabel("URL").fill(url);
     await page
       .getByRole("dialog")
       .getByRole("button", { name: "Add webhook" })
@@ -142,8 +142,8 @@ test.describe("Webhooks settings", () => {
     });
     await gotoWebhooks(page, email);
 
-    await page.getByRole("button", { name: "Add endpoint" }).click();
-    await page.getByLabel("Endpoint URL").fill("http://localhost:3000/hook");
+    await page.getByRole("button", { name: "Add webhook" }).click();
+    await page.getByLabel("URL").fill("http://localhost:3000/hook");
     await page
       .getByRole("dialog")
       .getByRole("button", { name: "Add webhook" })
@@ -197,7 +197,7 @@ test.describe("Webhooks settings", () => {
       .click();
 
     await expect(
-      mainContent(page).getByText("No endpoints found"),
+      mainContent(page).getByText("No webhooks found"),
     ).toBeVisible();
     expect(
       await prisma.spaceWebhook.count({ where: { spaceId: space.id } }),
@@ -263,9 +263,9 @@ test.describe("Webhooks settings", () => {
     await expect(
       mainContent(page).getByText("Upgrade for webhooks"),
     ).toHaveCount(0);
-    await expect(
-      page.getByRole("button", { name: "Add endpoint" }),
-    ).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Add webhook" })).toHaveCount(
+      0,
+    );
   });
 
   test("a hobby space sees the pay wall instead of the list", async ({
@@ -277,9 +277,9 @@ test.describe("Webhooks settings", () => {
     await expect(
       mainContent(page).getByText("Upgrade for webhooks"),
     ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "Add endpoint" }),
-    ).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Add webhook" })).toHaveCount(
+      0,
+    );
 
     await page.getByRole("button", { name: "Upgrade to Pro" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();

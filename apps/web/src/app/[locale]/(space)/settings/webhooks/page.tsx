@@ -44,7 +44,7 @@ export default async function WebhooksSettingsPage() {
         <SettingsPageDescription>
           <Trans
             i18nKey="webhooksDescription"
-            defaults="Send poll events to your own endpoints"
+            defaults="Send events to your own server"
           />
         </SettingsPageDescription>
         {enabled ? (
@@ -82,7 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
     }),
     description: t("webhooksSettingsDescription", {
       defaultValue:
-        "Send poll events to your own endpoints with signed, retried deliveries.",
+        "Send events to your own server with signed, retried deliveries.",
     }),
   };
 }

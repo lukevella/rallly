@@ -73,7 +73,7 @@ export function CreateWebhookButton() {
     <>
       <Button onClick={() => dialog.trigger()}>
         <PlusIcon data-icon="inline-start" />
-        <Trans i18nKey="addEndpoint" defaults="Add endpoint" />
+        <Trans i18nKey="addWebhook" defaults="Add webhook" />
       </Button>
       <Dialog {...dialog.dialogProps} onOpenChange={handleClose}>
         <DialogContent>
@@ -81,11 +81,11 @@ export function CreateWebhookButton() {
             <>
               <DialogHeader>
                 <DialogTitle>
-                  <Trans i18nKey="endpointAdded" defaults="Endpoint added" />
+                  <Trans i18nKey="webhookAdded" defaults="Webhook added" />
                 </DialogTitle>
                 <DialogDescription>
                   <Trans
-                    i18nKey="endpointAddedDescription"
+                    i18nKey="webhookAddedDescription"
                     defaults="Copy your signing secret now. You won't be able to see it again."
                   />
                 </DialogDescription>
@@ -137,7 +137,7 @@ export function CreateWebhookButton() {
             <>
               <DialogHeader>
                 <DialogTitle>
-                  <Trans i18nKey="addEndpoint" defaults="Add endpoint" />
+                  <Trans i18nKey="addWebhook" defaults="Add webhook" />
                 </DialogTitle>
               </DialogHeader>
               <Form {...form}>
@@ -153,7 +153,7 @@ export function CreateWebhookButton() {
                       toast.error(
                         t("webhookLimitReached", {
                           defaultValue:
-                            "You've reached the maximum number of endpoints. Delete one before adding another.",
+                            "You've reached the maximum number of webhooks. Delete one before adding another.",
                         }),
                       );
                     }
@@ -166,10 +166,7 @@ export function CreateWebhookButton() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            <Trans
-                              i18nKey="endpointUrl"
-                              defaults="Endpoint URL"
-                            />
+                            <Trans i18nKey="webhookUrl" defaults="URL" />
                           </FormLabel>
                           <FormControl>
                             <Input

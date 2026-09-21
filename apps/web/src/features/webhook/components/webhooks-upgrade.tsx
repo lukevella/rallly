@@ -27,7 +27,7 @@ export function WebhooksUpgrade() {
       <EmptyStateDescription>
         <Trans
           i18nKey="webhooksUpgradeDescription"
-          defaults="Get notified at your own endpoint when a poll is closed, reopened or scheduled. Included with Pro."
+          defaults="Get notified on your own server when a poll is closed, reopened or scheduled. Included with Pro."
         />
       </EmptyStateDescription>
       <EmptyStateFooter className="flex flex-wrap justify-center gap-2">

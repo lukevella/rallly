@@ -23,12 +23,12 @@ export function WebhooksList({ webhooks }: { webhooks: Webhook[] }) {
           <WebhookIcon />
         </EmptyStateIcon>
         <EmptyStateTitle>
-          <Trans i18nKey="noWebhooks" defaults="No endpoints found" />
+          <Trans i18nKey="noWebhooks" defaults="No webhooks found" />
         </EmptyStateTitle>
         <EmptyStateDescription>
           <Trans
             i18nKey="noWebhooksDescription"
-            defaults="Add an endpoint to be notified when your polls change"
+            defaults="Add a webhook to receive events on your own server"
           />
         </EmptyStateDescription>
       </EmptyState>
