@@ -7,11 +7,11 @@ import {
 import { ShieldAlertIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { getTranslation } from "@/i18n/server";
+import { githubRepoUrl } from "@/lib/constants";
 import { loadUpdateStatus } from "../loaders";
 import type { UpdateAdvisory } from "../service";
 
-const ADVISORIES_URL =
-  "https://github.com/lukevella/rallly/security/advisories";
+const ADVISORIES_URL = `${githubRepoUrl}/security/advisories`;
 
 const SEVERITY_RANK = { critical: 4, high: 3, medium: 2, low: 1 } as const;
 

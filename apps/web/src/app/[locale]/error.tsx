@@ -11,6 +11,7 @@ import { Link } from "@/components/link";
 import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
+import { githubRepoUrl } from "@/lib/constants";
 import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
 
 export default function LocaleErrorBoundary({
@@ -125,7 +126,7 @@ export default function LocaleErrorBoundary({
         }
       />
       <ErrorPageLinkItem
-        href="https://github.com/lukevella/rallly"
+        href={githubRepoUrl}
         icon={<GithubIcon className="size-4 text-muted-foreground" />}
         title={<Trans i18nKey="errorLinkGithub" defaults="GitHub" />}
         description={

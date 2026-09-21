@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 import { after, NextResponse } from "next/server";
 import * as z from "zod";
 import { createCache } from "@/lib/cache";
-import { isSelfHosted } from "@/lib/constants";
+import { githubRepo, isSelfHosted } from "@/lib/constants";
 import { createRatelimit } from "@/lib/rate-limit";
 import type { ReleaseChannels } from "./release-channels";
 import { buildReleaseChannels, buildUpdatesPayload } from "./release-channels";
@@ -13,10 +13,8 @@ import { buildSecurityAdvisories } from "./security-advisories";
 
 const logger = createLogger("api/updates");
 
-const GITHUB_RELEASES_URL =
-  "https://api.github.com/repos/lukevella/rallly/releases";
-const GITHUB_ADVISORIES_URL =
-  "https://api.github.com/repos/lukevella/rallly/security-advisories";
+const GITHUB_RELEASES_URL = `https://api.github.com/repos/${githubRepo}/releases`;
+const GITHUB_ADVISORIES_URL = `https://api.github.com/repos/${githubRepo}/security-advisories`;
 const RELEASES_PER_PAGE = 100;
 // Sequential unauthenticated requests count against a 60/hour IP budget, so
 // pagination is bounded; older majors beyond this window report no update.
