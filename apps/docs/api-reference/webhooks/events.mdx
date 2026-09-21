@@ -41,9 +41,9 @@ Every body has the same outer shape:
 | `X-Rallly-Signature` | `t=<unix seconds>,v1=<hex HMAC-SHA256>`, see [Security](/api-reference/webhooks/security) |
 | `User-Agent` | `Rallly-Webhooks/1.0` |
 
-## Poll events
+## Events
 
-Every poll event carries `data.poll`, a reference:
+Every event is about a poll and carries `data.poll`, a reference:
 
 ```json
 { "poll": { "id": "Xk3pQ9vLm2Ab" } }
@@ -57,8 +57,11 @@ Fetch `GET /polls/{pollId}` for the title, options, settings and current status.
 | `poll.updated` | The poll's details, options or settings changed. The event says that something changed, not what | |
 | `poll.closed` | The poll stopped accepting responses | `reason`: `manual` when the organizer closed it, `auto` when every option had passed |
 | `poll.reopened` | A closed poll accepts responses again | |
-| `poll.scheduled` | The organizer picked a time. The poll stops accepting responses | `event`: the span that was chosen, below |
+| `poll.scheduled` | The organizer picked a time. The poll stops accepting responses | `event`: the span that was chosen |
 | `poll.deleted` | The poll was deleted. `GET /polls/{pollId}` returns `404` from now on, so anything you need about it must already be stored | |
+| `poll.participant.created` | Someone responded to the poll | `participant`: a reference to the response |
+| `poll.participant.updated` | A participant changed their response or their name | `participant` |
+| `poll.participant.deleted` | A response was removed, by the participant or the organizer | `participant` |
 
 One event per transition. A poll that is closed, reopened and closed again produces three events, each describing the transition it records.
 
@@ -79,9 +82,9 @@ One event per transition. A poll that is closed, reopened and closed again produ
 
 `start` is inclusive and `end` is exclusive, both ISO 8601 instants in UTC. When `allDay` is true the span is a whole calendar day with no timezone, given as midnight to midnight UTC: read the date from `start` and ignore the time of day.
 
-## Participant events
+### The participant
 
-Every participant event carries the poll and the participant, both as references:
+The `poll.participant.*` events carry the participant as a reference beside the poll:
 
 ```json
 {
@@ -90,13 +93,7 @@ Every participant event carries the poll and the participant, both as references
 }
 ```
 
-Fetch `GET /polls/{pollId}/participants` for the participant's details.
-
-| Event | When |
-| --- | --- |
-| `poll.participant.created` | Someone responded to the poll |
-| `poll.participant.updated` | A participant changed their response or their name |
-| `poll.participant.deleted` | A response was removed, by the participant or the organizer. The participant is no longer listed |
+Fetch `GET /polls/{pollId}/participants` for the participant's details. After `poll.participant.deleted` the participant is no longer listed.
 
 ## Adding events
 
