@@ -41,16 +41,41 @@ const TEST_FILE_PATTERN = /\.test\.tsx?$/;
 
 const UNRESTRICTED_DIRS = new Set(["components", "assets"]);
 
-const LOADER_EXPORT_PATTERN =
+const LOADER_DECLARATION_PATTERN =
   /^export\s+(?:const|let|function|async\s+function)\s+([A-Za-z0-9_$]+)/gm;
+const LOADER_EXPORT_LIST_PATTERN = /^export\s*\{([^}]*)\}/gm;
+const LOADER_STAR_EXPORT_PATTERN = /^export\s*\*/m;
 
 const offenders = [];
 const loaderNameOffenders = [];
 
+function loaderExportNames(source) {
+  const names = [];
+  for (const match of source.matchAll(LOADER_DECLARATION_PATTERN)) {
+    names.push(match[1]);
+  }
+  for (const match of source.matchAll(LOADER_EXPORT_LIST_PATTERN)) {
+    for (const entry of match[1].split(",")) {
+      const trimmed = entry.trim();
+      if (!trimmed || trimmed.startsWith("type ")) {
+        continue;
+      }
+      // `local as exported` exports the alias; a bare name exports itself.
+      const parts = trimmed.split(/\s+as\s+/);
+      names.push(parts[parts.length - 1]);
+    }
+  }
+  return names;
+}
+
 function checkLoaderExports(absolutePath, relativePath) {
   const source = fs.readFileSync(absolutePath, "utf8");
-  for (const match of source.matchAll(LOADER_EXPORT_PATTERN)) {
-    const name = match[1];
+  if (LOADER_STAR_EXPORT_PATTERN.test(source)) {
+    loaderNameOffenders.push(
+      `${relativePath}: export * (names cannot be checked; export them explicitly)`,
+    );
+  }
+  for (const name of loaderExportNames(source)) {
     if (!name.startsWith("load")) {
       loaderNameOffenders.push(`${relativePath}: ${name}`);
     }
