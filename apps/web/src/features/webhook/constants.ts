@@ -77,10 +77,10 @@ export const getWebhookDocsPath = () =>
  * A change that could break a receiver (a renamed or removed field, a
  * changed shape) requires pinning to land first, in the same change:
  *
- *   1. nullable `version` on SpaceWebhook, defaulted to this constant at
- *      creation and backfilled to the value below for existing rows — safe
- *      because every endpoint created before that migration was, by
- *      definition, built against it;
+ *   1. (done) `version` on SpaceWebhook, written from this constant at
+ *      creation; rows that predate the column were backfilled to
+ *      2026-09-20, which is what every endpoint before it was built
+ *      against;
  *   2. `buildWebhookPayload` takes the endpoint's version and branches, so
  *      existing endpoints keep the shape they were written for while new
  *      ones default to the new version;

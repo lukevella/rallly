@@ -131,6 +131,8 @@ model SpaceWebhook {
   /// Subscribed event names (`poll.closed`, ...); validated by the feature schema, not a DB enum, so the vocabulary grows without migrations
   events  String[]
   enabled Boolean  @default(true)
+  /// The payload contract this endpoint was built against (WEBHOOK_VERSION at creation). The app writes it explicitly; the DB default only backfills rows that predate the column. A breaking payload change branches on this so existing endpoints keep their shape
+  version String   @default("2026-09-20")
   /// Fan-out position in the poll activity log: activities created after this instant are still to be delivered. Starts at creation so a new endpoint never replays history
   cursor  DateTime @default(now())
 

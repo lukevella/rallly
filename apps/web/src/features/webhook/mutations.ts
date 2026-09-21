@@ -20,6 +20,7 @@ import {
   IN_FLIGHT_TIMEOUT_MS,
   MAX_CONSECUTIVE_FAILURES,
   MAX_DELIVERY_ATTEMPTS,
+  WEBHOOK_VERSION,
 } from "./constants";
 import {
   listDueDeliveryIds,
@@ -456,6 +457,9 @@ export async function createWebhook({
       url,
       events,
       secret: encrypt(secret, env.SECRET_PASSWORD),
+      // Recorded here, not by the DB default, so a version bump in the
+      // constant is what new endpoints get.
+      version: WEBHOOK_VERSION,
     },
     select: { id: true },
   });

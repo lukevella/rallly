@@ -2,6 +2,7 @@ import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
+import { WEBHOOK_VERSION } from "@/features/webhook/constants";
 import {
   createUserInDb,
   loginWithEmail,
@@ -113,6 +114,9 @@ test.describe("Webhooks settings", () => {
     });
     expect(webhook.url).toBe(url);
     expect(webhook.enabled).toBe(true);
+    // Pinned at creation, so a later version bump cannot move an endpoint
+    // that was built against this one.
+    expect(webhook.version).toBe(WEBHOOK_VERSION);
     expect(webhook.events.sort()).toEqual([
       "poll.closed",
       "poll.reopened",
