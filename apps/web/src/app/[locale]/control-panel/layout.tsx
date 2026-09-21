@@ -3,6 +3,7 @@ import { GaugeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
+import { SecurityUpdateBanner } from "@/features/instance-settings/components/security-update-banner";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { UserProvider } from "@/features/user/client";
@@ -44,6 +45,11 @@ async function AdminGate({ children }: { children: React.ReactNode }) {
                   </div>
                 </div>
               </header>
+              {/* Own boundary: the update check may take up to 3s on a cold
+                  cache and must not hold back the page */}
+              <Suspense fallback={null}>
+                <SecurityUpdateBanner />
+              </Suspense>
               <div className="flex-1 p-4 lg:py-12">{children}</div>
             </div>
           </SidebarInset>

@@ -12,10 +12,12 @@ const updateStatusSchema = z.object({
   latest: z.string().nullish(),
   url: z.string().nullish(),
   publishedAt: z.string().nullish(),
+  security: z.boolean().nullish(),
   newMajor: z
     .object({
       version: z.string(),
       migrationGuideUrl: z.string(),
+      security: z.boolean().nullish(),
     })
     .nullish(),
 });
@@ -51,7 +53,13 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
     }
 
     const currentMajor = getMajorVersion(appVersion);
-    const { latest, url: releaseUrl, publishedAt, newMajor } = parsed.data;
+    const {
+      latest,
+      url: releaseUrl,
+      publishedAt,
+      security,
+      newMajor,
+    } = parsed.data;
 
     // The endpoint scopes `latest` to our own major. Guard anyway: a release
     // from another major must never surface as a pullable update, and this
@@ -68,6 +76,9 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
             latest,
             url: releaseUrl,
             publishedAt,
+            // Only meaningful alongside a pullable update; never let the
+            // flag alone raise an alarm
+            security: security === true,
           }
         : { status: "up-to-date" as const };
 
@@ -83,6 +94,7 @@ export async function getUpdateStatus({ instanceId }: { instanceId: string }) {
           ? {
               major: newMajorVersion,
               migrationGuideUrl: newMajor.migrationGuideUrl,
+              security: newMajor.security === true,
             }
           : null,
     };

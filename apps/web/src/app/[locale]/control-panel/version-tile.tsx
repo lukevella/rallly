@@ -73,6 +73,12 @@ async function UpdateStatusTile() {
           <span className="text-green-600">
             {t("upToDate", { defaultValue: "Up to date" })}
           </span>
+        ) : update.security ? (
+          <span className="text-destructive">
+            {t("securityUpdateAvailable", {
+              defaultValue: "Security update available",
+            })}
+          </span>
         ) : (
           <span className="text-primary">
             {t("updateAvailable", { defaultValue: "Update available" })}

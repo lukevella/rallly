@@ -3,12 +3,11 @@ import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { after, NextResponse } from "next/server";
 import * as z from "zod";
-import { getMajorVersion } from "@/features/instance-settings/utils";
 import { createCache } from "@/lib/cache";
 import { isSelfHosted } from "@/lib/constants";
 import { createRatelimit } from "@/lib/rate-limit";
 import type { ReleaseChannels } from "./release-channels";
-import { buildReleaseChannels } from "./release-channels";
+import { buildReleaseChannels, buildUpdatesPayload } from "./release-channels";
 
 const logger = createLogger("api/updates");
 
@@ -19,24 +18,10 @@ const RELEASES_PER_PAGE = 100;
 // pagination is bounded; older majors beyond this window report no update.
 const MAX_RELEASE_PAGES = 3;
 
-// The fleet starts linking here the moment a new major's first release is
-// tagged — the guide must be published at this path before tagging.
-function getMigrationGuideUrl(major: number) {
-  return `https://support.rallly.co/self-hosting/migrate-to-v${major}`;
-}
-
-type UpdatesPayload = {
-  latest: string | null;
-  url: string | null;
-  publishedAt: string | null;
-  newMajor?: {
-    version: string;
-    migrationGuideUrl: string;
-  };
-};
-
 const releaseChannelsCache = createCache<ReleaseChannels>({
-  namespace: "updates:release-channels",
+  // Bumped whenever the cached shape changes so a warm cache from the
+  // previous deploy cannot be read as the new shape
+  namespace: "updates:release-channels:v2",
   ttl: "1 h",
 });
 
@@ -97,37 +82,6 @@ async function getReleaseChannels(): Promise<ReleaseChannels | null> {
   return fresh;
 }
 
-function buildPayload(
-  channels: ReleaseChannels,
-  requestedMajor: number | null,
-): UpdatesPayload {
-  const latestRelease = channels.latestByMajor[channels.latestMajor];
-
-  if (requestedMajor === null) {
-    return {
-      latest: latestRelease.version,
-      url: latestRelease.url,
-      publishedAt: latestRelease.publishedAt,
-    };
-  }
-
-  const ownChannel = channels.latestByMajor[requestedMajor];
-
-  return {
-    latest: ownChannel?.version ?? null,
-    url: ownChannel?.url ?? null,
-    publishedAt: ownChannel?.publishedAt ?? null,
-    ...(channels.latestMajor > requestedMajor
-      ? {
-          newMajor: {
-            version: latestRelease.version,
-            migrationGuideUrl: getMigrationGuideUrl(channels.latestMajor),
-          },
-        }
-      : {}),
-  };
-}
-
 export async function GET(request: NextRequest) {
   if (isSelfHosted) {
     return new NextResponse(null, { status: 404 });
@@ -183,9 +137,10 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const requestedMajor = parsedVersion.success
-    ? getMajorVersion(parsedVersion.data)
-    : null;
-
-  return NextResponse.json(buildPayload(channels, requestedMajor));
+  return NextResponse.json(
+    buildUpdatesPayload(
+      channels,
+      parsedVersion.success ? parsedVersion.data : null,
+    ),
+  );
 }
