@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -211,6 +212,9 @@ export function CreateWebhookButton() {
                     />
                   </div>
                   <DialogFooter className="mt-6">
+                    <DialogClose render={<Button />}>
+                      <Trans i18nKey="cancel" defaults="Cancel" />
+                    </DialogClose>
                     <Button
                       variant="primary"
                       type="submit"
