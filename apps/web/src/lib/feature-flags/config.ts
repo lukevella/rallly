@@ -40,4 +40,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // channel carries the API host and its docs.
   api: !isSelfHosted,
   webhooks: isWebhooksEnabled,
+  // Cloud deploys continuously and is never behind a release; the check
+  // exists for operators who pull images.
+  updateCheck: isSelfHosted,
 };

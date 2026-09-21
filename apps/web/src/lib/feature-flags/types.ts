@@ -13,6 +13,7 @@ export interface FeatureFlagConfig {
   nonprofitDiscount: boolean;
   api: boolean;
   webhooks: boolean;
+  updateCheck: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;
