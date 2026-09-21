@@ -389,7 +389,16 @@ test.describe("Webhook delivery", () => {
           poll: { id: pollId, title: "Webhook poll", status: "open" },
           participant: {
             id: "webhook-delivery-participant",
-            ...responseSnapshot,
+            name: responseSnapshot.name,
+            email: responseSnapshot.email,
+            availability: [
+              {
+                start: "2026-10-01T09:00:00.000Z",
+                end: "2026-10-01T09:30:00.000Z",
+                allDay: false,
+                modifiers: [],
+              },
+            ],
           },
         },
       });

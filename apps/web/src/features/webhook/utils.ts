@@ -107,6 +107,35 @@ export function toWebhookEventType(activityType: string) {
   return ACTIVITY_EVENTS[activityType] ?? null;
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
+
+/**
+ * A vote as a range of availability. A "no" is not a range; an all-day
+ * option spans its UTC day; "ifNeedBe" is a modifier on an available range.
+ */
+function toAvailability(
+  kind: "date" | "time",
+  vote: { start: string; duration: number; type: "yes" | "no" | "ifNeedBe" },
+) {
+  if (vote.type === "no") {
+    return [];
+  }
+  const start = new Date(vote.start);
+  const allDay = kind === "date";
+  const end = new Date(
+    start.getTime() + (allDay ? DAY_MS : vote.duration * MINUTE_MS),
+  );
+  return [
+    {
+      start: start.toISOString(),
+      end: end.toISOString(),
+      allDay,
+      modifiers: vote.type === "ifNeedBe" ? ["ifNeedBe"] : [],
+    },
+  ];
+}
+
 // All-day options are stored as UTC midnight of the calendar date, so the
 // date is the first ten characters of the ISO string.
 function toOptionPayload(
@@ -192,7 +221,11 @@ export function buildWebhookPayload({
     id: participantId,
     name: snapshot.name,
     email: snapshot.email ?? null,
-    votes: snapshot.votes,
+    // Start order, so the list reads as a timeline whatever order the votes
+    // were stored in.
+    availability: [...snapshot.votes]
+      .sort((a, b) => a.start.localeCompare(b.start))
+      .flatMap((vote) => toAvailability(poll.kind, vote)),
   });
 
   switch (event.type) {

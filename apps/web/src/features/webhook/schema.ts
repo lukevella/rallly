@@ -78,6 +78,52 @@ const webhookPollSchema = z
   })
   .meta({ id: "WebhookPoll" });
 
+/**
+ * An option in the shape the API's poll resource uses, so an id or a date
+ * seen here matches what a follow-up API call returns. Which shape applies
+ * is given by the poll's `kind` in the same event.
+ */
+export const webhookOptionSchema = z
+  .union([
+    z.object({
+      id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
+      date: z.iso.date().meta({ example: "2025-01-15" }),
+    }),
+    z.object({
+      id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
+      startTime: z.iso.datetime().meta({ example: "2025-01-15T09:00:00.000Z" }),
+      duration: z.int().positive().meta({ example: 30 }),
+    }),
+  ])
+  .meta({
+    id: "WebhookOption",
+    description:
+      "Its shape follows the poll's `kind`: a date for `date` polls, a start time and duration for `time` polls.",
+  });
+
+/**
+ * A participant's response as availability: the ranges they can make, each
+ * with open-ended modifiers. Absence means unavailable, as in a free/busy
+ * listing, so a consumer that does not know a modifier still reads the
+ * range correctly as available.
+ */
+export const webhookAvailabilitySchema = z
+  .object({
+    start: z.iso.datetime().meta({ example: "2025-01-15T09:00:00.000Z" }),
+    end: z.iso.datetime().meta({ example: "2025-01-15T09:30:00.000Z" }),
+    allDay: z.boolean().meta({
+      description:
+        "True for the options of a `date` poll: the range is a floating calendar day, given as midnight to midnight UTC.",
+      example: false,
+    }),
+    modifiers: z.array(z.string()).meta({
+      description:
+        "Qualifiers on the availability. `ifNeedBe` means the participant can make it but would rather not. New modifiers may be added without a version change; an unknown one still leaves the range available.",
+      example: ["ifNeedBe"],
+    }),
+  })
+  .meta({ id: "WebhookAvailability" });
+
 export const webhookParticipantSchema = z
   .object({
     id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
@@ -87,26 +133,10 @@ export const webhookParticipantSchema = z
         "Null when the participant did not leave one. Polls can require it with `requireParticipantEmail`.",
       example: "jessie@example.com",
     }),
-    votes: z
-      .array(
-        z.object({
-          optionId: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-          start: z.iso.datetime().meta({
-            description:
-              "The option's start. For `date` polls this is midnight UTC of the calendar date.",
-            example: "2025-01-15T09:00:00.000Z",
-          }),
-          duration: z.int().nonnegative().meta({
-            description: "Minutes. Zero for the options of a `date` poll.",
-            example: 30,
-          }),
-          type: z.enum(["yes", "no", "ifNeedBe"]).meta({ example: "yes" }),
-        }),
-      )
-      .meta({
-        description:
-          "The participant's votes as the event left them. Options the participant did not answer are absent. On `poll.participant.deleted` these are the votes that were removed.",
-      }),
+    availability: z.array(webhookAvailabilitySchema).meta({
+      description:
+        "When the participant is available, one range per option they can make, in start order. Options they cannot make, or did not answer, are absent. Adjacent ranges are not merged. On `poll.participant.deleted` this is the availability that was removed.",
+    }),
   })
   .meta({ id: "WebhookParticipant" });
 
@@ -175,24 +205,7 @@ export const pollScheduledEventSchema = z
     type: z.literal("poll.scheduled"),
     data: z.object({
       poll: webhookPollScheduledSchema,
-      option: z
-        .union([
-          z.object({
-            id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-            date: z.iso.date().meta({ example: "2025-01-15" }),
-          }),
-          z.object({
-            id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-            startTime: z.iso
-              .datetime()
-              .meta({ example: "2025-01-15T09:00:00.000Z" }),
-            duration: z.int().positive().meta({ example: 30 }),
-          }),
-        ])
-        .meta({
-          description:
-            "The option the poll was scheduled on. Its shape follows the poll's `kind`: a date for `date` polls, a start time and duration for `time` polls.",
-        }),
+      option: webhookOptionSchema,
     }),
   })
   .meta({ id: "PollScheduledEvent" });

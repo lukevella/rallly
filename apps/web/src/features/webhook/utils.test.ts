@@ -88,6 +88,12 @@ describe("buildWebhookPayload", () => {
     duration: 30,
     type: "yes" as const,
   };
+  const availability = {
+    start: "2026-10-01T09:00:00.000Z",
+    end: "2026-10-01T09:30:00.000Z",
+    allDay: false,
+    modifiers: [],
+  };
 
   it("derives the status from the event, not the live poll", () => {
     const payload = buildWebhookPayload({
@@ -249,8 +255,60 @@ describe("buildWebhookPayload", () => {
           id: "part_1",
           name: "Jessie",
           email: "jessie@example.com",
-          votes: [vote],
+          availability: [availability],
         },
+      },
+    });
+  });
+
+  it("turns votes into availability: no is absent, ifNeedBe is a modifier, all-day spans the day", () => {
+    const payload = buildWebhookPayload({
+      activity: {
+        id: "act_12",
+        type: "response_created",
+        participantId: "part_1",
+        optionId: null,
+        payload: {
+          name: "Jessie",
+          votes: [
+            {
+              ...vote,
+              optionId: "opt_3",
+              start: "2026-10-03T00:00:00.000Z",
+              duration: 0,
+              type: "no",
+            },
+            {
+              ...vote,
+              optionId: "opt_2",
+              start: "2026-10-02T00:00:00.000Z",
+              duration: 0,
+              type: "ifNeedBe",
+            },
+            { ...vote, start: "2026-10-01T00:00:00.000Z", duration: 0 },
+          ],
+        },
+        createdAt,
+      },
+      poll: { ...poll, kind: "date" },
+    });
+
+    expect(payload?.data).toMatchObject({
+      participant: {
+        availability: [
+          {
+            start: "2026-10-01T00:00:00.000Z",
+            end: "2026-10-02T00:00:00.000Z",
+            allDay: true,
+            modifiers: [],
+          },
+          {
+            start: "2026-10-02T00:00:00.000Z",
+            end: "2026-10-03T00:00:00.000Z",
+            allDay: true,
+            modifiers: ["ifNeedBe"],
+          },
+        ],
       },
     });
   });
@@ -269,7 +327,7 @@ describe("buildWebhookPayload", () => {
     });
 
     expect(payload?.data).toMatchObject({
-      participant: { email: null, votes: [] },
+      participant: { email: null, availability: [] },
     });
   });
 
