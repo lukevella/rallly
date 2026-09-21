@@ -84,11 +84,18 @@ const webhookPollSchema = z
  * says all a receiver needs about its kind.
  */
 const timeRangeFields = {
-  start: z.iso.datetime().meta({ example: "2025-01-15T09:00:00.000Z" }),
-  end: z.iso.datetime().meta({ example: "2025-01-15T09:30:00.000Z" }),
+  start: z.iso.datetime().meta({
+    description: "Start of the span, inclusive, as a UTC instant.",
+    example: "2025-01-15T09:00:00.000Z",
+  }),
+  end: z.iso.datetime().meta({
+    description:
+      "End of the span, exclusive, as a UTC instant: a 30 minute slot starting at 09:00 ends at 09:30, and the instant 09:30 is not in it.",
+    example: "2025-01-15T09:30:00.000Z",
+  }),
   allDay: z.boolean().meta({
     description:
-      "True for the options of a `date` poll: the range is a floating calendar day, given as midnight to midnight UTC.",
+      "True for a whole calendar day. The day is a floating date with no timezone, given as `start` at 00:00:00Z on that date and `end` at 00:00:00Z on the next; read the date from `start` and ignore the time of day.",
     example: false,
   }),
 };
