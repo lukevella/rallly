@@ -8,9 +8,9 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { recordPollActivities } from "@/features/activity/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
-import { recordPollActivities } from "@/features/poll/activity/mutations";
 import {
   canUserManagePoll,
   getPolls,
@@ -23,6 +23,7 @@ import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
 } from "@/features/space/utils";
+import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 import { dayjs } from "@/lib/dayjs";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -221,6 +222,7 @@ export const polls = router({
             payload: { title },
           },
         ]);
+        scheduleWebhookDispatch({ pollId: pollId });
 
         return poll;
       });
@@ -579,6 +581,7 @@ export const polls = router({
               ]
             : []),
         ]);
+        scheduleWebhookDispatch({ pollId: pollId });
       });
 
       // Get updated poll data for group update
@@ -726,6 +729,7 @@ export const polls = router({
             payload: {},
           },
         ]);
+        scheduleWebhookDispatch({ pollId: pollId });
       });
 
       // Track poll deletion analytics
@@ -1104,6 +1108,7 @@ export const polls = router({
             },
           },
         ]);
+        scheduleWebhookDispatch({ pollId: poll.id });
 
         return event;
       });
@@ -1303,6 +1308,7 @@ export const polls = router({
             payload: {},
           },
         ]);
+        scheduleWebhookDispatch({ pollId: input.pollId });
       });
 
       track(ctx.user, {
@@ -1358,6 +1364,7 @@ export const polls = router({
             payload: { reason: "manual" },
           },
         ]);
+        scheduleWebhookDispatch({ pollId: input.pollId });
       });
 
       track(ctx.user, {
@@ -1445,6 +1452,7 @@ export const polls = router({
             payload: { title: input.newTitle },
           },
         ]);
+        scheduleWebhookDispatch({ pollId: newPoll.id });
 
         return newPoll;
       });

@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { pollClosedReasonSchema } from "@/features/poll/schema";
+
+/** Why a poll closed: the organizer, or every option having passed. */
+export const pollClosedReasonSchema = z.enum(["auto", "manual"]);
+
+export type PollClosedReason = z.infer<typeof pollClosedReasonSchema>;
 
 /**
  * Poll activity vocabulary v1. The `type` column is a plain string in the

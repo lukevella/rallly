@@ -470,49 +470,6 @@ test.describe("Webhook delivery", () => {
     expect(again.fannedOut).toBe(0);
   });
 
-  test("a run scoped to the poll is acknowledged at once and reads without the lag", async ({
-    request,
-  }) => {
-    await createWebhook();
-    await createActivity({
-      type: "poll_closed",
-      payload: { reason: "manual" },
-      createdAt: new Date(),
-    });
-
-    const response = await request.get(
-      `/api/house-keeping/deliver-webhooks?pollId=${pollId}`,
-      { headers: { Authorization: `Bearer ${CRON_SECRET}` } },
-    );
-    expect(response.status()).toBe(202);
-    expect(await response.json()).toEqual({ success: true, accepted: true });
-
-    // The dispatch runs after the response.
-    await expect
-      .poll(() => receiver.requests.length, { timeout: 15_000 })
-      .toBe(1);
-    expect(receiver.requests[0]?.headers["x-rallly-event"]).toBe("poll.closed");
-  });
-
-  test("a run scoped to another space's poll leaves this one alone", async ({
-    request,
-  }) => {
-    await createWebhook();
-    await createActivity({
-      type: "poll_closed",
-      payload: { reason: "manual" },
-      createdAt: secondsAgo(30),
-    });
-
-    const response = await request.get(
-      "/api/house-keeping/deliver-webhooks?pollId=no-such-poll",
-      { headers: { Authorization: `Bearer ${CRON_SECRET}` } },
-    );
-    expect(response.ok()).toBeTruthy();
-    expect((await response.json()).summary).toBeNull();
-    expect(receiver.requests).toHaveLength(0);
-  });
-
   test("delivers a response as soon as it is saved, without waiting for the cron", async ({
     page,
   }) => {

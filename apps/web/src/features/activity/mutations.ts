@@ -1,8 +1,6 @@
 import "server-only";
 
 import type { Prisma } from "@rallly/database";
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
-import { triggerHouseKeeping } from "@/lib/house-keeping/trigger";
 import type { PollActivityEvent } from "./schema";
 import { pollActivitySchema } from "./schema";
 
@@ -15,14 +13,9 @@ export type PollActivityWrite = { pollId: string } & PollActivityEvent;
  * its event is a permanent hole in the poll's history, and an event without
  * its mutation records something that never happened.
  *
- * The activity log is the webhook outbox, so a write also asks the
- * dispatcher to run for the poll's space once the response is sent, rather
- * than waiting for the next scheduled minute. The trigger fires after the
- * transaction commits; if the transaction rolls back the run finds nothing.
- * Only spaces with an enabled endpoint are asked, so the trigger costs
- * nothing everywhere else. The ask is an HTTP self-call because the
- * dispatcher lives in the webhook feature, which imports this one; calling
- * it here directly waits on the activity log becoming its own feature.
+ * The log is also the webhook outbox. Delivery is not triggered here: this
+ * feature is below the webhook feature in the graph, so the mutation that
+ * owns the transaction schedules the dispatch once it commits.
  */
 export async function recordPollActivities(
   tx: Prisma.TransactionClient,
@@ -46,17 +39,4 @@ export async function recordPollActivities(
       };
     }),
   });
-
-  if (!isFeatureEnabled("webhooks")) {
-    return;
-  }
-
-  for (const pollId of new Set(activities.map((a) => a.pollId))) {
-    const subscribed = await tx.spaceWebhook.count({
-      where: { enabled: true, space: { polls: { some: { id: pollId } } } },
-    });
-    if (subscribed > 0) {
-      triggerHouseKeeping("deliver-webhooks", { pollId });
-    }
-  }
 }

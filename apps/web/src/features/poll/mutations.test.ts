@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 
-// The activity writer reads the webhooks flag, whose module validates the
-// whole environment on import. Stub the env with nothing set.
+// The mutations schedule webhook dispatch, whose module validates the whole
+// environment on import. Stub the env with nothing set.
 vi.mock("@/env", () => ({ env: {} }));
 
 import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";

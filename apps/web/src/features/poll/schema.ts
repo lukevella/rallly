@@ -28,9 +28,12 @@ export const pollStatusSchema = z.enum([
 
 export type PollStatus = z.infer<typeof pollStatusSchema>;
 
-export const pollClosedReasonSchema = z.enum(["auto", "manual"]);
-
-export type PollClosedReason = z.infer<typeof pollClosedReasonSchema>;
+// Defined with the activity vocabulary, which records the reason; kept
+// reachable from the poll schema for its other readers.
+export {
+  type PollClosedReason,
+  pollClosedReasonSchema,
+} from "@/features/activity/schema";
 
 export const setPollMutedSchema = z.object({
   pollId: z.string(),

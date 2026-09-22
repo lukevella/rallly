@@ -1,4 +1,4 @@
-import { pollActivitySchema } from "@/features/poll/activity/schema";
+import { pollActivitySchema } from "@/features/activity/schema";
 import { RETRY_DELAYS_MS, WEBHOOK_VERSION } from "./constants";
 import type { WebhookEvent, WebhookEventType } from "./schema";
 

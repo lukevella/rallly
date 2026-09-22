@@ -3,7 +3,6 @@ import { Effect } from "effect";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
-import { after } from "next/server";
 import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
@@ -19,7 +18,6 @@ import {
   deleteOrphanedAnonymousUsers,
   hardDeleteUser,
 } from "@/features/user/mutations";
-import { findPollSpaceId } from "@/features/webhook/data";
 import { deliverWebhooks } from "@/features/webhook/mutations";
 import { WebhookSender } from "@/features/webhook/service";
 import { runtime } from "@/lib/effect/runtime";
@@ -211,40 +209,8 @@ app.get("/delete-orphaned-anonymous-users", async (c) => {
 });
 
 app.get("/deliver-webhooks", async (c) => {
-  // With `pollId` the run was triggered by a write to that poll and covers
-  // its space only. It is acknowledged at once and runs after the response,
-  // so the request that triggered it is not held for the dispatch. Without
-  // `pollId` this is the scheduled run over everything, which reports its
-  // summary because nothing is waiting on it.
-  const pollId = c.req.query("pollId");
-  if (pollId) {
-    const spaceId = await findPollSpaceId({ pollId });
-    if (!spaceId) {
-      return c.json({ success: true, summary: null });
-    }
-    after(async () => {
-      try {
-        const summary = await runtime.runPromise(
-          deliverWebhooks({ now: new Date(), scope: { spaceId } }).pipe(
-            Effect.provide(WebhookSender.layer),
-          ),
-        );
-        if (summary.fannedOut > 0 || summary.attempted > 0) {
-          logger.info(
-            { task: "deliver-webhooks", spaceId, ...summary },
-            "Dispatched webhook deliveries for a space",
-          );
-        }
-      } catch (error) {
-        logger.error(
-          { task: "deliver-webhooks", spaceId, error },
-          "Scoped webhook dispatch failed",
-        );
-      }
-    });
-    return c.json({ success: true, accepted: true }, 202);
-  }
-
+  // The scheduled run over every space. A write schedules its own scoped
+  // run in-process (scheduleWebhookDispatch); this one is the guarantee.
   // A DatabaseError rejects here and Hono answers 500, as an uncaught throw
   // did before.
   const summary = await runtime.runPromise(

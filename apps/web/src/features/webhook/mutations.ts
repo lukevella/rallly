@@ -4,13 +4,17 @@ import { randomBytes } from "node:crypto";
 import { subject } from "@casl/ability";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
 import { Clock, Data, Effect } from "effect";
+import { after } from "next/server";
 import { env } from "@/env";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import type { DatabaseError } from "@/lib/effect/db";
 import { fromPrisma } from "@/lib/effect/db";
+import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { defineAbilityForWebhooks } from "./ability";
 import {
   DELIVERY_CLAIM_BATCH_SIZE,
@@ -24,6 +28,7 @@ import {
   WEBHOOK_VERSION,
 } from "./constants";
 import {
+  findPollSpaceId,
   listDueDeliveryIds,
   listEnabledWebhooks,
   listWebhookActivities,
@@ -458,6 +463,51 @@ export const deliverWebhooks = Effect.fn("webhook.deliverWebhooks")(function* ({
   }
   return summary;
 });
+
+const logger = createLogger("webhook/dispatch");
+
+/**
+ * Runs the dispatcher for a poll's space once the current response is sent,
+ * so an event goes out seconds after the write instead of on the next
+ * scheduled minute. Called by the mutation that owns the transaction, after
+ * it commits. Needs a request scope for `after`; from a system context the
+ * call is a no-op and the scheduled run covers it. A space with no enabled
+ * endpoint costs one read and nothing else.
+ */
+export function scheduleWebhookDispatch({ pollId }: { pollId: string }) {
+  if (!isFeatureEnabled("webhooks")) {
+    return;
+  }
+
+  try {
+    after(async () => {
+      try {
+        const spaceId = await findPollSpaceId({ pollId });
+        if (!spaceId) {
+          return;
+        }
+        const summary = await runtime.runPromise(
+          deliverWebhooks({ now: new Date(), scope: { spaceId } }).pipe(
+            Effect.provide(WebhookSender.layer),
+          ),
+        );
+        if (summary.fannedOut > 0 || summary.attempted > 0) {
+          logger.info(
+            { spaceId, ...summary },
+            "Dispatched webhook deliveries after a write",
+          );
+        }
+      } catch (error) {
+        logger.error(
+          { pollId, error },
+          "Webhook dispatch after a write failed",
+        );
+      }
+    });
+  } catch {
+    // No request scope; the scheduled run delivers it.
+  }
+}
 
 /**
  * Endpoint management for the settings page. Scope is proven by the caller's
