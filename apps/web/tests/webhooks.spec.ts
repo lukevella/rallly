@@ -7,7 +7,7 @@ import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { encrypt } from "@rallly/utils/encryption";
 import { WEBHOOK_VERSION } from "@/features/webhook/constants";
-import { createUserInDb } from "./test-utils";
+import { createUserInDb, upgradeSpaceToPro } from "./test-utils";
 
 /**
  * Drives the webhook dispatcher cron against a local receiver: fan-out from
@@ -84,7 +84,9 @@ test.describe("Webhook delivery", () => {
     return data.summary as Record<string, number>;
   }
 
-  async function createWebhook(overrides: { events?: string[] } = {}) {
+  async function createWebhook(
+    overrides: { events?: string[]; cursor?: Date } = {},
+  ) {
     return prisma.spaceWebhook.create({
       data: {
         spaceId,
@@ -95,7 +97,7 @@ test.describe("Webhook delivery", () => {
           "poll.reopened",
           "poll.scheduled",
         ],
-        cursor: secondsAgo(120),
+        cursor: overrides.cursor ?? secondsAgo(120),
       },
     });
   }
@@ -130,6 +132,7 @@ test.describe("Webhook delivery", () => {
       where: { ownerId: owner.id },
     });
     spaceId = space.id;
+    await upgradeSpaceToPro({ spaceId, userId: owner.id, seats: 1 });
     const poll = await prisma.poll.create({
       data: {
         id: "webhook-delivery-poll",
@@ -148,6 +151,10 @@ test.describe("Webhook delivery", () => {
     receiver.status = 200;
     await prisma.spaceWebhook.deleteMany({ where: { spaceId } });
     await prisma.pollActivity.deleteMany({ where: { pollId } });
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "pro" },
+    });
   });
 
   test.afterAll(async () => {
@@ -226,6 +233,41 @@ test.describe("Webhook delivery", () => {
     const again = await runCron(request);
     expect(again.fannedOut).toBe(0);
     expect(receiver.requests).toHaveLength(1);
+  });
+
+  test("stops delivering when the space is no longer Pro, without replaying the gap on upgrade", async ({
+    request,
+  }) => {
+    // The event sits after the cursor but further back than the overlap
+    // window, so once the cursor has moved past it nothing re-reads it.
+    const webhook = await createWebhook({ cursor: secondsAgo(600) });
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "hobby" },
+    });
+    await createActivity({
+      type: "poll_closed",
+      payload: { reason: "manual" },
+      createdAt: secondsAgo(400),
+    });
+
+    const summary = await runCron(request);
+    expect(summary.fannedOut).toBe(0);
+    expect(receiver.requests).toHaveLength(0);
+
+    // The cursor moved past the event, so upgrading later resumes from now.
+    const paused = await prisma.spaceWebhook.findUniqueOrThrow({
+      where: { id: webhook.id },
+    });
+    expect(paused.cursor.getTime()).toBeGreaterThan(Date.now() - 20_000);
+
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "pro" },
+    });
+    const again = await runCron(request);
+    expect(again.fannedOut).toBe(0);
+    expect(receiver.requests).toHaveLength(0);
   });
 
   test("delivers only subscribed events and skips disabled endpoints", async ({

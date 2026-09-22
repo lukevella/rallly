@@ -7,6 +7,7 @@ import { prisma } from "@rallly/database";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
 import { Clock, Data, Effect } from "effect";
 import { env } from "@/env";
+import { resolveSpaceTier } from "@/features/billing/utils";
 import type { DatabaseError } from "@/lib/effect/db";
 import { fromPrisma } from "@/lib/effect/db";
 import { AppError } from "@/lib/errors/app-error";
@@ -46,6 +47,12 @@ import {
  * and never get past a window larger than what it reads. Each page commits
  * with its cursor, so a crash resumes from the last page, not the start.
  * Returns the number of deliveries created.
+ *
+ * Webhooks are a Pro capability, checked here the way the API checks it on
+ * every request: an endpoint whose space is no longer Pro fans out nothing,
+ * and its cursor still advances so an upgrade resumes from then rather than
+ * replaying the gap. As with re-enabling an endpoint, the overlap window
+ * behind the cursor can still deliver events from the last few minutes.
  */
 export const fanOutWebhookEvents = Effect.fn("webhook.fanOutWebhookEvents")(
   function* ({ now }: { now: Date }) {
@@ -54,6 +61,16 @@ export const fanOutWebhookEvents = Effect.fn("webhook.fanOutWebhookEvents")(
 
     for (const webhook of yield* fromPrisma(listEnabledWebhooks)) {
       if (webhook.cursor >= until) {
+        continue;
+      }
+
+      if (resolveSpaceTier(webhook.space.tier) !== "pro") {
+        yield* fromPrisma(() =>
+          prisma.spaceWebhook.update({
+            where: { id: webhook.id },
+            data: { cursor: until },
+          }),
+        );
         continue;
       }
 
