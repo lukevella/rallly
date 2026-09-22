@@ -1,11 +1,18 @@
 ---
 title: "Changelog"
+icon: "clock-rotate-left"
 description: "Changes to the API, newest first."
 ---
 
 <Update label="2026-09-22">
 - `GET /polls/{pollId}/participants/{participantId}` returns one participant. A missing participant on an existing poll is `404` with `PARTICIPANT_NOT_FOUND`.
 - Participants now carry `availability`: one `{ start, end, allDay, modifiers }` span per option they can make, in start order, on both the list and the single-participant endpoint. A span matches an option of the poll by its time; `end` is exclusive; `ifNeedBe` is a modifier.
+</Update>
+
+<Update label="2026-09-20">
+Webhooks, in beta. A space can register up to five HTTPS endpoints and receive signed, retried deliveries for nine poll and participant events. The event list and payloads may still change, and more events will be added. See [Webhooks](/api-reference/webhooks).
+
+The poll and participant resources are unchanged.
 </Update>
 
 <Update label="v1">
@@ -16,5 +23,4 @@ Initial stable release under `/v1`.
 - Bearer authentication with space API keys
 - Per space rate limits with `RateLimit-*` headers
 
-Webhooks for poll events are planned. There is no date yet.
 </Update>

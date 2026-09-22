@@ -1,0 +1,242 @@
+---
+title: "Events"
+icon: "bolt"
+description: "The envelope every event shares, the headers on every request, and the events you can subscribe to."
+---
+
+## Envelope
+
+Every body has the same outer shape. `data` is the only part that differs between events.
+
+```json
+{
+  "version": "2026-09-20",
+  "id": "cm5h8x2k40000q9l4f7e2d3an",
+  "type": "poll.closed",
+  "createdAt": "2025-01-12T08:30:00.000Z",
+  "data": {
+    "poll": { "id": "Xk3pQ9vLm2Ab" },
+    "reason": "manual"
+  }
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `version` | The payload contract the body was built against. See [Versioning](/api-reference/webhooks#versioning) |
+| `id` | The event's stable id. Retries carry the same `id`; deduplicate on it |
+| `type` | The event, also sent as the `X-Rallly-Event` header |
+| `createdAt` | When the change happened, not when the request was sent |
+| `data` | The event's payload. Each event page documents it |
+
+Payloads are deliberately thin. An event says what happened and to which poll or participant, by id; it does not describe them. Fetch the API for the current state when you need it, and treat the event as the signal to do so.
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Content-Type` | `application/json` |
+| `X-Rallly-Event` | The event type, the same as `type` in the body |
+| `X-Rallly-Delivery` | Unique per delivery attempt |
+| `X-Rallly-Webhook-Version` | The payload version, the same as `version` in the body |
+| `X-Rallly-Signature` | `t=<unix seconds>,v1=<hex HMAC-SHA256>`. See [Security](/api-reference/webhooks/security) |
+| `User-Agent` | `Rallly-Webhooks/1.0` |
+
+## Events
+
+Event names are `<resource>.<transition>`, or `<resource>.<part>.<transition>` for a change to part of a resource. New events may be added without a version change; ignore types you do not recognise rather than failing on them.
+
+Every poll event carries `data.poll`, a reference to the poll:
+
+```json
+{ "poll": { "id": "Xk3pQ9vLm2Ab" } }
+```
+
+Fetch `GET /polls/{pollId}` for the title, options, settings and current status. Events about a response add `data.participant`, a reference to the participant; fetch `GET /polls/{pollId}/participants/{participantId}` for their name, email and availability.
+
+One event per transition. A poll that is closed, reopened and closed again produces three events, each describing the transition it records.
+
+| Event | When |
+| --- | --- |
+| `poll.created` | A poll was created |
+| `poll.updated` | The poll's details, options or settings changed |
+| `poll.closed` | The poll stopped accepting responses |
+| `poll.reopened` | A closed poll accepts responses again |
+| `poll.scheduled` | The organizer picked a time |
+| `poll.deleted` | The poll was deleted |
+| `poll.participant.created` | Someone responded |
+| `poll.participant.updated` | A participant changed their response |
+| `poll.participant.deleted` | A response was removed |
+
+### Payloads
+
+<AccordionGroup>
+  <Accordion title="poll.created">
+    A poll was created, from the app or the API.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.created",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.updated">
+    The poll's details, options or settings changed. The event says that something changed, not what; fetch the poll for its current state.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.updated",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.closed">
+    The poll stopped accepting responses. `reason` is `manual` when the organizer closed it and `auto` when it closed because every option had passed.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.closed",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        },
+        "reason": "manual"
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.reopened">
+    A closed poll accepts responses again.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.reopened",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.scheduled">
+    The organizer picked a time. The poll stops accepting responses, and `event` is the span that was chosen: `start` inclusive, `end` exclusive, both UTC instants. `allDay: true` means a whole calendar day, given as midnight to midnight UTC.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.scheduled",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        },
+        "event": {
+          "start": "2025-01-15T09:00:00.000Z",
+          "end": "2025-01-15T09:30:00.000Z",
+          "allDay": false
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.deleted">
+    The poll was deleted. `GET /polls/{pollId}` returns `404` from now on, so anything you need about it must already be stored.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.deleted",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.participant.created">
+    Someone responded to the poll.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.participant.created",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        },
+        "participant": {
+          "id": "cm5j2r8wb0003q9l4a1x6p0zt"
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.participant.updated">
+    A participant changed their response or their name.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.participant.updated",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        },
+        "participant": {
+          "id": "cm5j2r8wb0003q9l4a1x6p0zt"
+        }
+      }
+    }
+    ```
+  </Accordion>
+  <Accordion title="poll.participant.deleted">
+    A response was removed, by the participant or the organizer. Fetching the participant returns `404`.
+
+    ```json
+    {
+      "version": "2026-09-20",
+      "id": "cm5h8x2k40000q9l4f7e2d3an",
+      "type": "poll.participant.deleted",
+      "createdAt": "2025-01-12T08:30:00.000Z",
+      "data": {
+        "poll": {
+          "id": "Xk3pQ9vLm2Ab"
+        },
+        "participant": {
+          "id": "cm5j2r8wb0003q9l4a1x6p0zt"
+        }
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,58 @@
+---
+title: "Security"
+icon: "shield-check"
+description: "Verify that a request came from Rallly before acting on it."
+---
+
+Anyone who knows your endpoint's URL can send it a request. The signing secret is what tells a genuine delivery from a forged one, so verify every request before you trust its body.
+
+## The signing secret
+
+Each endpoint has its own secret, shown once when the endpoint is created. Store it as you would any secret: in an environment variable or a secrets manager, never in client-side code or a repository. If it leaks, delete the endpoint and add it again; that mints a new secret.
+
+Deliveries do not come from a fixed set of IP addresses, so allowlisting is not a substitute for verifying the signature.
+
+## The signature header
+
+Every request carries:
+
+```http
+X-Rallly-Signature: t=1736670600,v1=5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e56ff536d0ce8e108d8bd
+```
+
+`t` is the time the request was signed, in seconds since the Unix epoch. `v1` is the hex HMAC-SHA256, keyed with the signing secret, of the string `<t>.<raw body>`: the timestamp, a full stop, and the request body exactly as received.
+
+## Verifying it
+
+1. Read the raw body as bytes. Do not parse and re-serialise it first; any change to whitespace or key order changes the digest.
+2. Split the header on `,` and each part on `=` to get `t` and `v1`.
+3. Check that `v1` is exactly 64 lowercase hex characters. Anything else is not a digest and is rejected before comparing, so a malformed header cannot make the comparison throw.
+4. Compute HMAC-SHA256 of `<t>.<raw body>` with the secret and compare it to `v1` with a constant-time comparison.
+5. Reject the request if `t` is more than a few minutes from now. This stops a captured request from being replayed later.
+
+```ts
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+function verify(header: string, rawBody: string, secret: string) {
+  const parts = Object.fromEntries(
+    header.split(",").map((part) => part.split("=") as [string, string]),
+  );
+  const timestamp = Number(parts.t);
+  if (Math.abs(Date.now() / 1000 - timestamp) > 300) {
+    return false; // missing, or older than five minutes
+  }
+  if (!/^[0-9a-f]{64}$/.test(parts.v1 ?? "")) {
+    return false; // not a SHA-256 hex digest, so never worth comparing
+  }
+  const expected = createHmac("sha256", secret)
+    .update(`${parts.t}.${rawBody}`)
+    .digest();
+  return timingSafeEqual(expected, Buffer.from(parts.v1, "hex"));
+}
+```
+
+## After verifying
+
+- Deduplicate on the body's `id`. Delivery is at least once, and retries of one event share it.
+- Treat the body as a notification, not as authority over your data. When an action depends on the poll's current state, fetch `GET /polls/{pollId}` with your API key rather than trusting a snapshot.
+- Respond `2xx` as soon as the request is stored. Work that takes longer than 10 seconds should happen after the response, or the delivery is retried.

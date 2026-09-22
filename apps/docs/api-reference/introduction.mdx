@@ -1,13 +1,12 @@
 ---
 title: "Introduction"
+icon: "house"
 description: "Create and manage scheduling polls from your own systems."
 ---
 
-The Rallly API lets you create polls, read their options, results and participants, and delete them from your own tools. Every request is scoped to one space: the API key identifies the space, and every poll you create or read belongs to it.
+The Rallly API lets you create polls, read their options, results and participants, and delete them from your own tools. Every request is scoped to one space: the API key identifies the space, and every poll you create or read belongs to it. [Webhooks](/api-reference/webhooks) tell your systems when a poll or a response changes, so you never have to poll for results.
 
-## Availability
-
-The API is available for spaces on a Pro plan of the cloud hosted version, at `https://api.rallly.co`. It is not available on self-hosted instances.
+<Note>The API requires a Pro plan.</Note>
 
 ## Getting a key
 
@@ -18,6 +17,8 @@ Only the space owner can create API keys, from **Settings → API keys**. See [A
 ```text
 https://api.rallly.co/v1
 ```
+
+The API is served by the cloud hosted version only; self-hosted instances do not have it.
 
 `v1` is stable. Additive changes such as new endpoints or new optional fields may land at any time; breaking changes only arrive under a new version prefix. The [changelog](/api-reference/changelog) records both.
 
