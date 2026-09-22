@@ -81,7 +81,7 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
 ## Auth
 
 <ParamField path="EMAIL_LOGIN_ENABLED" default="true">
-  Set to `false` to disable magic-link email sign-in. When disabled, users can only sign in via a configured SSO provider, and registration is disabled.
+  Set to `false` to disable email sign-in. When disabled, users can only sign in via a configured SSO provider. New users can still register through SSO unless `REGISTRATION_ENABLED` is `false` or registration is disabled in the control panel.
 
   <Note>Available from v4.4.0 and later.</Note>
 </ParamField>

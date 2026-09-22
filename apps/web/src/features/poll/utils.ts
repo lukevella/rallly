@@ -94,3 +94,44 @@ export function filterCommentsForViewer({
   }
   return comments.filter((comment) => comment.userId === viewerUserId);
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
+
+export type AvailabilitySpan = {
+  start: string;
+  end: string;
+  allDay: boolean;
+  modifiers: string[];
+};
+
+/**
+ * A participant's votes as availability: one span per option they can
+ * make, in option order. A "no" is absence, as in a free/busy listing, and
+ * "ifNeedBe" is a modifier on an available span. All-day options are stored
+ * as UTC midnight with a zero duration, so they span their UTC day.
+ */
+export function toAvailabilitySpans({
+  kind,
+  votes,
+}: {
+  kind: "date" | "time";
+  votes: {
+    type: VoteType;
+    option: { startTime: Date; duration: number };
+  }[];
+}): AvailabilitySpan[] {
+  const allDay = kind === "date";
+  return votes
+    .filter((vote) => vote.type !== "no")
+    .sort((a, b) => a.option.startTime.getTime() - b.option.startTime.getTime())
+    .map(({ type, option }) => ({
+      start: option.startTime.toISOString(),
+      end: new Date(
+        option.startTime.getTime() +
+          (allDay ? DAY_MS : option.duration * MINUTE_MS),
+      ).toISOString(),
+      allDay,
+      modifiers: type === "ifNeedBe" ? ["ifNeedBe"] : [],
+    }));
+}

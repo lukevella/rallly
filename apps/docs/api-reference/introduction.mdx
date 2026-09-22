@@ -25,8 +25,9 @@ The API is served by the cloud hosted version only; self-hosted instances do not
 ## Conventions
 
 - Requests and responses are JSON. Send `Content-Type: application/json` with a body.
-- List endpoints return the items in `data`. `GET /polls` is paginated: it returns a `nextCursor` beside `data`; pass it as the `cursor` query parameter for the next page, and it is `null` on the last page. `GET /polls/:pollId/participants` returns every participant in one response.
+- List endpoints return the items in `data`. `GET /polls` is paginated: it returns a `nextCursor` beside `data`; pass it as the `cursor` query parameter for the next page, and it is `null` on the last page. `GET /polls/:pollId/participants` returns every participant in one response, and `GET /polls/:pollId/participants/:participantId` returns one.
 - Timestamps are ISO 8601 instants in UTC. A `date` poll's options carry a floating `YYYY-MM-DD` date with no timezone; a `time` poll's options carry a `startTime` instant and a `duration` in minutes.
+- A participant's `availability` is a list of spans, `{ start, end, allDay, modifiers }`. A span matches an option by its time: `start` is the option's `startTime`, or midnight UTC of its `date` with `allDay: true`. `end` is exclusive.
 - Request bodies are validated strictly. A field that is not in the schema is rejected rather than ignored, so a misspelt setting never silently falls back to its default.
 
 ## Machine readable spec

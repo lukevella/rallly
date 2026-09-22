@@ -22,7 +22,10 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // widget and the secret verifies its tokens. With only one set, captcha
   // is disabled rather than half working.
   captcha: !!env.TURNSTILE_SECRET_KEY && !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-  registration: isEmailLoginEnabled && isRegistrationEnabled,
+  // Independent of emailLogin: an SSO-only instance still provisions accounts
+  // on first sign-in, and the create hook in lib/auth.ts enforces this flag
+  // on every path that mints an account, social callbacks included.
+  registration: isRegistrationEnabled,
   calendars: isCalendarsEnabled,
   eventTypes: isEventTypesEnabled,
   // The new poll admin at /polls/[pollId] is dev-only until it reaches
@@ -40,4 +43,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // channel carries the API host and its docs.
   api: !isSelfHosted,
   webhooks: isWebhooksEnabled,
+  // Cloud deploys continuously and is never behind a release; the check
+  // exists for operators who pull images.
+  updateCheck: isSelfHosted,
 };

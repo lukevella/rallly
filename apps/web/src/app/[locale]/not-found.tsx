@@ -6,6 +6,7 @@ import { Link } from "@/components/link";
 import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { getTranslation } from "@/i18n/server";
+import { githubRepoUrl } from "@/lib/constants";
 
 export default async function NotFoundPage() {
   // TODO (Luke Vella) [2023-11-03]: not-found doesn't have access to params right now
@@ -63,7 +64,7 @@ export default async function NotFoundPage() {
         })}
       />
       <ErrorPageLinkItem
-        href="https://github.com/lukevella/rallly"
+        href={githubRepoUrl}
         icon={<GithubIcon className="size-4 text-muted-foreground" />}
         title={t("errorLinkGithub", { defaultValue: "GitHub" })}
         description={t("errorLinkGithubDescription", {

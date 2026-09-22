@@ -2,10 +2,15 @@ import "server-only";
 
 import { cache } from "react";
 import { isSelfHosted } from "@/lib/constants";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getInstanceSettings } from "./data";
 import { getUpdateStatus } from "./service";
 
 export const loadUpdateStatus = cache(async () => {
+  if (!isFeatureEnabled("updateCheck")) {
+    return null;
+  }
+
   const { instanceId } = await getInstanceSettings();
 
   if (!instanceId) {

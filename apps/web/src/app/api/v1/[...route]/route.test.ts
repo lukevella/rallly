@@ -7,6 +7,7 @@ const mockDeletePoll = vi.fn();
 const mockCreatePoll = vi.fn();
 const mockGetPollResults = vi.fn();
 const mockGetPollParticipants = vi.fn();
+const mockGetPollParticipant = vi.fn();
 const mockListPolls = vi.fn();
 const mockGetPollWithOptions = vi.fn();
 const mockGetSpaceMemberByEmail = vi.fn();
@@ -25,6 +26,7 @@ vi.mock("@/features/poll/mutations", () => ({
 vi.mock("@/features/poll/data", () => ({
   getPollResults: (...args: unknown[]) => mockGetPollResults(...args),
   getPollParticipants: (...args: unknown[]) => mockGetPollParticipants(...args),
+  getPollParticipant: (...args: unknown[]) => mockGetPollParticipant(...args),
   listPolls: (...args: unknown[]) => mockListPolls(...args),
   getPollWithOptions: (...args: unknown[]) => mockGetPollWithOptions(...args),
 }));
@@ -90,6 +92,7 @@ import {
   createPollInputSchema,
   deletePollSuccessResponseSchema,
   errorResponseSchema,
+  getPollParticipantSuccessResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
   listPollsSuccessResponseSchema,
@@ -2682,6 +2685,7 @@ describe("API v1 - /polls", () => {
     it("should mark every key-scoped response no-store", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         participants: [],
       });
       mockListPolls.mockResolvedValue({ polls: [], nextCursor: null });
@@ -2709,18 +2713,57 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: new Date("2025-01-10T10:00:00Z"),
+        votes: [
+          {
+            type: "yes",
+            option: {
+              startTime: new Date("2025-01-15T09:00:00Z"),
+              duration: 30,
+            },
+          },
+          {
+            type: "ifNeedBe",
+            option: {
+              startTime: new Date("2025-01-16T09:00:00Z"),
+              duration: 30,
+            },
+          },
+          {
+            type: "no",
+            option: {
+              startTime: new Date("2025-01-17T09:00:00Z"),
+              duration: 30,
+            },
+          },
+        ],
       },
       {
         id: "participant-2",
         name: "Bob",
         email: null,
         createdAt: new Date("2025-01-10T11:00:00Z"),
+        votes: [],
+      },
+    ];
+    const aliceAvailability = [
+      {
+        start: "2025-01-15T09:00:00.000Z",
+        end: "2025-01-15T09:30:00.000Z",
+        allDay: false,
+        modifiers: [],
+      },
+      {
+        start: "2025-01-16T09:00:00.000Z",
+        end: "2025-01-16T09:30:00.000Z",
+        allDay: false,
+        modifiers: ["ifNeedBe"],
       },
     ];
 
     it("should return participants in the list shape", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         participants,
       });
 
@@ -2741,7 +2784,9 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: "2025-01-10T10:00:00.000Z",
+        availability: aliceAvailability,
       });
+      expect(json.data[1].availability).toEqual([]);
       expect(json.data[1].email).toBeNull();
       expect(json).not.toHaveProperty("nextCursor");
 
@@ -2754,6 +2799,7 @@ describe("API v1 - /polls", () => {
     it("should return every participant and ignore pagination query parameters", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         participants,
       });
 
@@ -2784,6 +2830,7 @@ describe("API v1 - /polls", () => {
     it("should return empty array when no participants", async () => {
       mockGetPollParticipants.mockResolvedValue({
         pollId: "test-poll-id",
+        kind: "time",
         participants: [],
       });
 
@@ -2819,6 +2866,96 @@ describe("API v1 - /polls", () => {
       const res = await app.request("/v1/polls/test-poll-id/participants", {
         method: "GET",
       });
+
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("Get poll participant", () => {
+    const participant = {
+      id: "participant-1",
+      name: "Alice",
+      email: "alice@example.com",
+      createdAt: new Date("2025-01-10T10:00:00Z"),
+      votes: [
+        {
+          type: "yes",
+          option: { startTime: new Date("2025-01-15T00:00:00Z"), duration: 0 },
+        },
+      ],
+    };
+    const authed = { Authorization: `Bearer ${testApiKey}` };
+
+    it("should return the participant with their availability", async () => {
+      mockGetPollParticipant.mockResolvedValue({
+        poll: { id: "test-poll-id", kind: "date" },
+        participant,
+      });
+
+      const res = await app.request(
+        "/v1/polls/test-poll-id/participants/participant-1",
+        { method: "GET", headers: authed },
+      );
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expectMatchesContract(getPollParticipantSuccessResponseSchema, json);
+      expect(json.data).toEqual({
+        id: "participant-1",
+        name: "Alice",
+        email: "alice@example.com",
+        createdAt: "2025-01-10T10:00:00.000Z",
+        availability: [
+          {
+            start: "2025-01-15T00:00:00.000Z",
+            end: "2025-01-16T00:00:00.000Z",
+            allDay: true,
+            modifiers: [],
+          },
+        ],
+      });
+      expect(mockGetPollParticipant).toHaveBeenCalledWith({
+        pollId: "test-poll-id",
+        participantId: "participant-1",
+        spaceId: "test-space-id",
+      });
+    });
+
+    it("should return POLL_NOT_FOUND when the poll is missing", async () => {
+      mockGetPollParticipant.mockResolvedValue({
+        poll: null,
+        participant: null,
+      });
+
+      const res = await app.request(
+        "/v1/polls/nonexistent-poll/participants/participant-1",
+        { method: "GET", headers: authed },
+      );
+
+      expect(res.status).toBe(404);
+      expect((await res.json()).error.code).toBe("POLL_NOT_FOUND");
+    });
+
+    it("should return PARTICIPANT_NOT_FOUND when the poll exists but the participant does not", async () => {
+      mockGetPollParticipant.mockResolvedValue({
+        poll: { id: "test-poll-id", kind: "time" },
+        participant: null,
+      });
+
+      const res = await app.request(
+        "/v1/polls/test-poll-id/participants/nonexistent",
+        { method: "GET", headers: authed },
+      );
+
+      expect(res.status).toBe(404);
+      expect((await res.json()).error.code).toBe("PARTICIPANT_NOT_FOUND");
+    });
+
+    it("should return 401 without authorization", async () => {
+      const res = await app.request(
+        "/v1/polls/test-poll-id/participants/participant-1",
+        { method: "GET" },
+      );
 
       expect(res.status).toBe(401);
     });
