@@ -209,6 +209,8 @@ app.get("/delete-orphaned-anonymous-users", async (c) => {
 });
 
 app.get("/deliver-webhooks", async (c) => {
+  // The scheduled run over every space. A write schedules its own scoped
+  // run in-process (scheduleWebhookDispatch); this one is the guarantee.
   // A DatabaseError rejects here and Hono answers 500, as an uncaught throw
   // did before.
   const summary = await runtime.runPromise(

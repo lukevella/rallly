@@ -4,8 +4,9 @@ import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { revalidatePath } from "next/cache";
-import { recordPollActivities } from "@/features/poll/activity/mutations";
+import { recordPollActivities } from "@/features/activity/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
+import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
 export type PollOption = {
   startTime: Date;
@@ -119,6 +120,7 @@ export const createPoll = async ({
         payload: { title },
       },
     ]);
+    scheduleWebhookDispatch({ pollId: poll.id });
 
     return poll;
   });
@@ -176,6 +178,7 @@ export const closePoll = async ({
         payload: { reason: "manual" },
       },
     ]);
+    scheduleWebhookDispatch({ pollId: pollId });
 
     return toPollResponse(closedPoll);
   });
@@ -229,6 +232,7 @@ export const deletePoll = async (
     await recordPollActivities(tx, [
       { pollId, type: "poll_deleted", userId: null, payload: {} },
     ]);
+    scheduleWebhookDispatch({ pollId: pollId });
 
     return { id: pollId };
   });

@@ -12,6 +12,10 @@ export type PollActivityWrite = { pollId: string } & PollActivityEvent;
  * records: activity cannot be backfilled, so a mutation committing without
  * its event is a permanent hole in the poll's history, and an event without
  * its mutation records something that never happened.
+ *
+ * The log is also the webhook outbox. Delivery is not triggered here: this
+ * feature is below the webhook feature in the graph, so the mutation that
+ * owns the transaction schedules the dispatch once it commits.
  */
 export async function recordPollActivities(
   tx: Prisma.TransactionClient,

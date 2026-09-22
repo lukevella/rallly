@@ -2,7 +2,7 @@ import "server-only";
 
 import type { Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { recordPollActivities } from "@/features/poll/activity/mutations";
+import { recordPollActivities } from "@/features/activity/mutations";
 import { MAX_PARTICIPANTS } from "@/features/poll/constants";
 import {
   attachParticipantToInvite,
@@ -11,6 +11,7 @@ import {
 import { revalidatePollPages } from "@/features/poll/mutations";
 import { generateAccessToken } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
+import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
 type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
 
@@ -239,6 +240,7 @@ export async function addParticipant({
           payload: { name: participant.name },
         },
       ]);
+      scheduleWebhookDispatch({ pollId: pollId });
 
       if (invite) {
         await attachParticipantToInvite(tx, {
@@ -320,6 +322,7 @@ export async function updateParticipantVotes({
           payload: { name: participant.name },
         },
       ]);
+      scheduleWebhookDispatch({ pollId: pollId });
     });
   } catch (error) {
     return refusal(error);
@@ -361,6 +364,7 @@ export async function renameParticipant({
           payload: { name },
         },
       ]);
+      scheduleWebhookDispatch({ pollId: pollId });
     });
   } catch (error) {
     return refusal(error);
@@ -427,6 +431,7 @@ export async function deleteParticipant({
           },
         },
       ]);
+      scheduleWebhookDispatch({ pollId: pollId });
     });
   } catch (error) {
     return refusal(error);

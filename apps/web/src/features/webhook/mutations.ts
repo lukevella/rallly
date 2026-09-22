@@ -4,13 +4,17 @@ import { randomBytes } from "node:crypto";
 import { subject } from "@casl/ability";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
 import { Clock, Data, Effect } from "effect";
+import { after } from "next/server";
 import { env } from "@/env";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import type { DatabaseError } from "@/lib/effect/db";
 import { fromPrisma } from "@/lib/effect/db";
+import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { defineAbilityForWebhooks } from "./ability";
 import {
   DELIVERY_CLAIM_BATCH_SIZE,
@@ -24,6 +28,7 @@ import {
   WEBHOOK_VERSION,
 } from "./constants";
 import {
+  findPollSpaceId,
   listDueDeliveryIds,
   listEnabledWebhooks,
   listWebhookActivities,
@@ -36,6 +41,9 @@ import {
   getRetryDelayMs,
   toWebhookEventType,
 } from "./utils";
+
+/** Limits a dispatcher run to one space's endpoints. */
+export type DispatchScope = { spaceId: string };
 
 /**
  * Turns new activity into delivery rows, one per (webhook, activity). The
@@ -55,11 +63,17 @@ import {
  * behind the cursor can still deliver events from the last few minutes.
  */
 export const fanOutWebhookEvents = Effect.fn("webhook.fanOutWebhookEvents")(
-  function* ({ now }: { now: Date }) {
-    const until = new Date(now.getTime() - FAN_OUT_LAG_MS);
+  function* ({ now, scope }: { now: Date; scope?: DispatchScope }) {
+    // A run triggered right after a write has nothing uncommitted to fear
+    // from its own row, so it reads up to now; the overlap window still
+    // covers any other row that commits late.
+    const lag = scope ? 0 : FAN_OUT_LAG_MS;
+    const until = new Date(now.getTime() - lag);
     let created = 0;
 
-    for (const webhook of yield* fromPrisma(listEnabledWebhooks)) {
+    for (const webhook of yield* fromPrisma(() =>
+      listEnabledWebhooks({ spaceId: scope?.spaceId }),
+    )) {
       if (webhook.cursor >= until) {
         continue;
       }
@@ -182,10 +196,18 @@ export const reclaimStaleDeliveries = Effect.fn(
  * completion means a run that dies after sending still used an attempt.
  */
 export const claimDueDeliveries = Effect.fn("webhook.claimDueDeliveries")(
-  function* ({ now, limit }: { now: Date; limit: number }) {
+  function* ({
+    now,
+    limit,
+    scope,
+  }: {
+    now: Date;
+    limit: number;
+    scope?: DispatchScope;
+  }) {
     const claimed: string[] = [];
     for (const id of yield* fromPrisma(() =>
-      listDueDeliveryIds({ now, limit }),
+      listDueDeliveryIds({ now, limit, spaceId: scope?.spaceId }),
     )) {
       const { count } = yield* fromPrisma(() =>
         prisma.webhookDelivery.updateMany({
@@ -387,17 +409,25 @@ export type DeliverWebhooksSummary = {
  * One dispatcher run: recover orphans, fan out new activity, then send what
  * is due. Sends run a few at a time so a slow endpoint cannot hold the whole
  * batch to its timeout, and every outcome is recorded before the run ends.
+ *
+ * The scheduled run takes no scope and covers everything. A run triggered
+ * by a write is scoped to that write's space and reads without the fan-out
+ * lag, so the event it was triggered for goes out at once; the scheduled
+ * run remains the guarantee for anything it misses.
  */
 export const deliverWebhooks = Effect.fn("webhook.deliverWebhooks")(function* ({
   now,
+  scope,
 }: {
   now: Date;
+  scope?: DispatchScope;
 }): Effect.fn.Return<DeliverWebhooksSummary, DatabaseError, WebhookSender> {
-  const reclaimed = yield* reclaimStaleDeliveries({ now });
-  const fannedOut = yield* fanOutWebhookEvents({ now });
+  const reclaimed = scope ? 0 : yield* reclaimStaleDeliveries({ now });
+  const fannedOut = yield* fanOutWebhookEvents({ now, scope });
   const deliveries = yield* claimDueDeliveries({
     now,
     limit: DELIVERY_CLAIM_BATCH_SIZE,
+    scope,
   });
 
   const outcomes = yield* Effect.forEach(
@@ -433,6 +463,51 @@ export const deliverWebhooks = Effect.fn("webhook.deliverWebhooks")(function* ({
   }
   return summary;
 });
+
+const logger = createLogger("webhook/dispatch");
+
+/**
+ * Runs the dispatcher for a poll's space once the current response is sent,
+ * so an event goes out seconds after the write instead of on the next
+ * scheduled minute. Called by the mutation that owns the transaction, after
+ * it commits. Needs a request scope for `after`; from a system context the
+ * call is a no-op and the scheduled run covers it. A space with no enabled
+ * endpoint costs one read and nothing else.
+ */
+export function scheduleWebhookDispatch({ pollId }: { pollId: string }) {
+  if (!isFeatureEnabled("webhooks")) {
+    return;
+  }
+
+  try {
+    after(async () => {
+      try {
+        const spaceId = await findPollSpaceId({ pollId });
+        if (!spaceId) {
+          return;
+        }
+        const summary = await runtime.runPromise(
+          deliverWebhooks({ now: new Date(), scope: { spaceId } }).pipe(
+            Effect.provide(WebhookSender.layer),
+          ),
+        );
+        if (summary.fannedOut > 0 || summary.attempted > 0) {
+          logger.info(
+            { spaceId, ...summary },
+            "Dispatched webhook deliveries after a write",
+          );
+        }
+      } catch (error) {
+        logger.error(
+          { pollId, error },
+          "Webhook dispatch after a write failed",
+        );
+      }
+    });
+  } catch {
+    // No request scope; the scheduled run delivers it.
+  }
+}
 
 /**
  * Endpoint management for the settings page. Scope is proven by the caller's

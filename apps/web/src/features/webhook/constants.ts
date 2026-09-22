@@ -27,7 +27,9 @@ export const MAX_DELIVERY_ATTEMPTS = RETRY_DELAYS_MS.length + 1;
  * Fan-out reads activities up to now minus this lag. cuid ids are not
  * monotonic, so the cursor is `createdAt`, which is the start of the
  * transaction that wrote the row, not its commit. The lag keeps the common
- * case from ever seeing an uncommitted row.
+ * case from ever seeing an uncommitted row. A run triggered by a write
+ * skips it: its own row has committed, and the overlap below catches any
+ * other that has not.
  */
 export const FAN_OUT_LAG_MS = 10_000;
 

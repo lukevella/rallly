@@ -8,6 +8,7 @@ import { prisma } from "@rallly/database";
 import { encrypt } from "@rallly/utils/encryption";
 import { WEBHOOK_VERSION } from "@/features/webhook/constants";
 import { WEBHOOK_EVENT_TYPES } from "@/features/webhook/schema";
+import { InvitePage } from "./invite-page";
 import { createUserInDb, upgradeSpaceToPro } from "./test-utils";
 
 /**
@@ -141,6 +142,15 @@ test.describe("Webhook delivery", () => {
         timeZone: "Europe/London",
         userId: owner.id,
         spaceId,
+        // Three options so the invite page's vote flow has something to
+        // answer; the immediate delivery test responds through it.
+        options: {
+          create: [
+            { startTime: new Date("2030-01-01T09:00:00Z"), duration: 30 },
+            { startTime: new Date("2030-01-02T09:00:00Z"), duration: 30 },
+            { startTime: new Date("2030-01-03T09:00:00Z"), duration: 30 },
+          ],
+        },
       },
     });
     pollId = poll.id;
@@ -458,6 +468,24 @@ test.describe("Webhook delivery", () => {
 
     const again = await runCron(request);
     expect(again.fannedOut).toBe(0);
+  });
+
+  test("delivers a response as soon as it is saved, without waiting for the cron", async ({
+    page,
+  }) => {
+    await createWebhook({ events: ["poll.participant.created"] });
+
+    await page.goto(`/invite/${pollId}`);
+    await new InvitePage(page).addParticipant("Jessie", "jessie@example.com");
+
+    // The write's own trigger delivers it; no cron run in this test.
+    await expect
+      .poll(() => receiver.requests.length, { timeout: 15_000 })
+      .toBe(1);
+    const body = JSON.parse(receiver.requests[0]?.body ?? "{}");
+    expect(body.type).toBe("poll.participant.created");
+    expect(body.data.poll.id).toBe(pollId);
+    expect(body.data.participant.id).toEqual(expect.any(String));
   });
 
   test("leaves activities inside the fan-out lag for the next run", async ({

@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { pollClosedReasonSchema } from "@/features/poll/schema";
+import { pollClosedReasonSchema } from "@/features/activity/schema";
 import { WEBHOOK_VERSION } from "./constants";
 import { getWebhookUrlRejection } from "./utils";
 

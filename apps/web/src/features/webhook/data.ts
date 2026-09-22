@@ -73,9 +73,13 @@ export function countSpaceWebhooks({ spaceId }: { spaceId: string }) {
  * created — not by a session, so they take plain ids.
  */
 
-export async function listEnabledWebhooks() {
+export async function listEnabledWebhooks({
+  spaceId,
+}: {
+  spaceId?: string;
+} = {}) {
   return prisma.spaceWebhook.findMany({
-    where: { enabled: true },
+    where: { enabled: true, ...(spaceId ? { spaceId } : {}) },
     select: {
       id: true,
       spaceId: true,
@@ -140,19 +144,30 @@ export async function listWebhookActivities({
 export async function listDueDeliveryIds({
   now,
   limit,
+  spaceId,
 }: {
   now: Date;
   limit: number;
+  spaceId?: string;
 }) {
   const rows = await prisma.webhookDelivery.findMany({
     where: {
       status: { in: ["pending", "failed"] },
       nextAttemptAt: { lte: now },
-      webhook: { enabled: true },
+      webhook: { enabled: true, ...(spaceId ? { spaceId } : {}) },
     },
     select: { id: true },
     orderBy: { nextAttemptAt: "asc" },
     take: limit,
   });
   return rows.map((row) => row.id);
+}
+
+/** The space a poll belongs to, for scoping an immediate dispatcher run. */
+export async function findPollSpaceId({ pollId }: { pollId: string }) {
+  const poll = await prisma.poll.findUnique({
+    where: { id: pollId },
+    select: { spaceId: true },
+  });
+  return poll?.spaceId ?? null;
 }
