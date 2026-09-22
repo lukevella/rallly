@@ -103,12 +103,7 @@
             "group": "Webhooks",
             "pages": [
               "api-reference/webhooks",
-              {
-                "group": "Events",
-                "icon": "bolt",
-                "root": "api-reference/webhooks/events",
-                "pages": ["api-reference/webhooks/events/poll"]
-              },
+              "api-reference/webhooks/events",
               "api-reference/webhooks/security"
             ]
           }
