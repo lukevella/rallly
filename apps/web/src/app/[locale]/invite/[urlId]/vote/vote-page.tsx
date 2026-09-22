@@ -1,5 +1,6 @@
 import { Card } from "@rallly/ui/card";
 import { Spinner } from "@/components/spinner";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { EventSidebar } from "@/features/poll/invite/components/event-sidebar";
 import { CreatorBanner } from "@/features/poll/vote/components/creator-banner";
 import { VotePageFooter } from "@/features/poll/vote/components/vote-page-footer";
@@ -37,7 +38,12 @@ export function VotePage({
     // Below lg the page itself scrolls and the card gives up its frame,
     // so a phone spends every pixel on the options. From lg up the card is
     // a fixed size centred in a page that never scrolls.
-    <div className="page-bg-gray-100 flex min-h-dvh flex-col lg:h-dvh lg:min-h-0 lg:items-center lg:justify-center lg:gap-3 lg:overflow-hidden lg:p-6 dark:bg-gray-900">
+    <div className="page-bg-gray-100 relative flex min-h-dvh flex-col lg:h-dvh lg:min-h-0 lg:items-center lg:justify-center lg:gap-3 lg:overflow-hidden lg:p-6 dark:bg-gray-900">
+      {/* Positioned rather than in the flow so it cannot shift the card off
+          centre. */}
+      <div className="absolute top-3 right-3 z-10 lg:top-6 lg:right-6">
+        <ThemeSwitcher />
+      </div>
       <main
         id="main-content"
         tabIndex={-1}

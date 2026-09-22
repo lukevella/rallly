@@ -30,19 +30,24 @@ export function TimeFormatSwitcher() {
         }
       }}
     >
+      {/* The visible label is compact to fit the header; the accessible
+          name stays the long form, which is what a screen reader should
+          read out. The shared `12h`/`24h` keys hold that long form and
+          are already translated, so they are reused here rather than
+          redefined. */}
       <SegmentedControlItem
         value="hours12"
         aria-label={t("12h")}
         className="px-2.5 text-xs"
       >
-        <Trans i18nKey="12h" />
+        <Trans i18nKey="12hShort" defaults="12h" />
       </SegmentedControlItem>
       <SegmentedControlItem
         value="hours24"
         aria-label={t("24h")}
         className="px-2.5 text-xs"
       >
-        <Trans i18nKey="24h" />
+        <Trans i18nKey="24hShort" defaults="24h" />
       </SegmentedControlItem>
     </SegmentedControl>
   );

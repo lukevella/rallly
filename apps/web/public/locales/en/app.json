@@ -1,6 +1,8 @@
 {
   "12h": "12-hour",
+  "12hShort": "12h",
   "24h": "24-hour",
+  "24hShort": "24h",
   "acceptInvite": "Accept invite",
   "acceptInviteMetadataTitle": "Join {spaceName}",
   "acceptInviteNotEnoughSeats": "There are not enough seats available to join this space",

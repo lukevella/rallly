@@ -1,6 +1,5 @@
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
   EventMetaDescription,
   EventMetaItem,
@@ -99,16 +98,14 @@ export async function EventSidebar({
           <VoteLegend allowTentativeVotes={poll.allowTentativeVotes} />
         </div>
       </div>
-      {/* Attribution can be turned off per instance or per space; the theme
-          switcher is page furniture and stays either way. */}
-      <div className="mt-6 flex items-center justify-between gap-2">
-        {hideAttribution ? (
-          <span />
-        ) : (
+      {/* Attribution can be turned off per instance or per space, and then
+          the footer goes with it. The theme switcher lives on the page, not
+          in the card. */}
+      {hideAttribution ? null : (
+        <div className="mt-6 flex justify-center">
           <PoweredByLink pollId={poll.id} spaceId={poll.spaceId} />
-        )}
-        <ThemeSwitcher />
-      </div>
+        </div>
+      )}
     </div>
   );
 }
