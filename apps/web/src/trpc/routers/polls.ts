@@ -709,9 +709,23 @@ export const polls = router({
         });
       }
 
-      await prisma.poll.update({
-        where: { id: pollId },
-        data: { deleted: true, deletedAt: new Date() },
+      await prisma.$transaction(async (tx) => {
+        // Guarded so a repeated delete records one transition, not two.
+        const { count } = await tx.poll.updateMany({
+          where: { id: pollId, deleted: false },
+          data: { deleted: true, deletedAt: new Date() },
+        });
+        if (count === 0) {
+          return;
+        }
+        await recordPollActivities(tx, [
+          {
+            pollId,
+            type: "poll_deleted",
+            userId: ctx.user.id,
+            payload: {},
+          },
+        ]);
       });
 
       // Track poll deletion analytics
