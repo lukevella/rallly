@@ -1,6 +1,7 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
-import { CircleCheckIcon, XIcon } from "lucide-react";
+import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
+import { XIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
 import * as React from "react";
@@ -56,23 +57,9 @@ export const VoteActions = () => {
             >
               <XIcon className="size-4" />
             </button>
-            <m.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                type: "spring",
-                duration: 0.6,
-                bounce: 0.45,
-                delay: 0.1,
-              }}
-              className="relative mb-3 inline-block"
-            >
-              <div className="absolute top-0 right-0 bottom-2 -left-1.5 origin-bottom -rotate-12 scale-95 rounded-xl bg-white opacity-75 shadow-xs ring-1 ring-gray-200 ring-inset" />
-              <div className="absolute top-0 -right-1.5 bottom-2 left-0 origin-bottom rotate-12 scale-95 rounded-xl bg-white opacity-75 shadow-xs ring-1 ring-gray-200 ring-inset" />
-              <div className="relative inline-flex rounded-xl bg-white p-2.5 shadow-xs ring-1 ring-gray-200 ring-inset">
-                <CircleCheckIcon className="size-5 text-green-500" />
-              </div>
-            </m.div>
+            <SuccessCheck state="in" className="mb-3">
+              <SuccessCheckIcon className="size-9" />
+            </SuccessCheck>
             <m.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}

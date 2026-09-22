@@ -47,7 +47,7 @@ function SuccessCheckIcon({ className }: { className?: string }) {
         strokeWidth="4.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-6"
+        className="size-1/2"
       >
         <title>Success</title>
         <path d="M14 25l7 7 13-15" pathLength={20} />
