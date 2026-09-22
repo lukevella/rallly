@@ -1,3 +1,6 @@
+import { Alert, AlertDescription } from "@rallly/ui/alert";
+import { Badge } from "@rallly/ui/badge";
+import { FlaskConicalIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -38,9 +41,16 @@ export default async function ApiKeysSettingsPage() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
-          <Trans i18nKey="apiKeys" defaults="API keys" />
-        </SettingsPageTitle>
+        {/* Beside the heading, not inside it: Badge renders a div, which is
+            not phrasing content an h1 may contain. */}
+        <div className="flex items-center gap-2">
+          <SettingsPageTitle>
+            <Trans i18nKey="apiKeys" defaults="API keys" />
+          </SettingsPageTitle>
+          <Badge variant="amber" size="sm">
+            <Trans i18nKey="beta" defaults="Beta" />
+          </Badge>
+        </div>
         <SettingsPageDescription>
           <Trans
             i18nKey="apiKeysDescription"
@@ -54,6 +64,15 @@ export default async function ApiKeysSettingsPage() {
         ) : null}
       </SettingsPageHeader>
       <SettingsPageContent>
+        <Alert variant="warning">
+          <FlaskConicalIcon />
+          <AlertDescription>
+            <Trans
+              i18nKey="apiBetaNotice"
+              defaults="The API is in beta. Endpoints and responses may still change, and more will be added."
+            />
+          </AlertDescription>
+        </Alert>
         {enabled ? <ApiKeysContent /> : <ApiAccessUpgrade />}
       </SettingsPageContent>
     </SettingsPage>

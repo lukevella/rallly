@@ -1,4 +1,6 @@
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Badge } from "@rallly/ui/badge";
+import { FlaskConicalIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -52,7 +54,7 @@ export default async function WebhooksSettingsPage() {
         <SettingsPageDescription>
           <Trans
             i18nKey="webhooksDescription"
-            defaults="Send events to your own server. Webhooks are in beta: events and payloads may still change, and more events will be added."
+            defaults="Send events to your own server"
           />
         </SettingsPageDescription>
         {enabled ? (
@@ -62,6 +64,15 @@ export default async function WebhooksSettingsPage() {
         ) : null}
       </SettingsPageHeader>
       <SettingsPageContent>
+        <Alert variant="warning">
+          <FlaskConicalIcon />
+          <AlertDescription>
+            <Trans
+              i18nKey="webhooksBetaNotice"
+              defaults="Webhooks are in beta. Events and payloads may still change, and more events will be added."
+            />
+          </AlertDescription>
+        </Alert>
         {enabled ? <WebhooksContent /> : <WebhooksUpgrade />}
       </SettingsPageContent>
     </SettingsPage>
