@@ -77,7 +77,11 @@ export function VotePanelHeader({
           className="flex shrink-0 items-center justify-end gap-2 sm:ms-auto"
         >
           {showViewSwitcher ? (
-            <VoteViewSwitcher value={view} onChange={onViewChange} />
+            <VoteViewSwitcher
+              views={views}
+              value={view}
+              onChange={onViewChange}
+            />
           ) : null}
           {showClock ? <TimeZoneSwitcher /> : null}
           {showTimeFormat ? <TimeFormatSwitcher /> : null}

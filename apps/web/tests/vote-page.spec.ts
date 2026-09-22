@@ -157,6 +157,49 @@ test.describe("vote page", () => {
 
     await context.close();
   });
+
+  test("week view groups times by day and navigates between weeks", async ({
+    page,
+  }) => {
+    await page.goto(voteUrl);
+    const main = page.locator("#main-content");
+    const footer = main.locator("footer");
+    await expect(main.getByTestId("poll-option").first()).toBeVisible();
+
+    await main.getByRole("radio", { name: "Week" }).click();
+
+    // Seven columns whatever the week holds, so the days stay in place
+    const columns = main.locator("section section");
+    await expect(columns).toHaveCount(7);
+
+    // The first week is the earliest, so there is nothing before it
+    await expect(
+      main.getByRole("button", { name: "Previous week" }),
+    ).toBeDisabled();
+    await main.getByRole("button", { name: "Next week" }).click();
+    await expect(
+      main.getByRole("button", { name: "Next week" }),
+    ).toBeDisabled();
+    await main.getByRole("button", { name: "Previous week" }).click();
+
+    // Hiding empty days leaves only the days that hold options
+    await main.getByRole("button", { name: "Hide empty days" }).click();
+    const shown = await columns.count();
+    expect(shown).toBeGreaterThan(0);
+    expect(shown).toBeLessThan(7);
+    await main.getByRole("button", { name: "Show empty days" }).click();
+    await expect(columns).toHaveCount(7);
+
+    // The views share the form, so a vote cast here survives the switch
+    await main
+      .getByTestId("vote-selector")
+      .first()
+      .getByRole("radio", { name: "Yes" })
+      .click();
+    await expect(footer.getByText("1 yes, 0 if need be")).toBeVisible();
+    await main.getByRole("radio", { name: "List" }).click();
+    await expect(footer.getByText("1 yes, 0 if need be")).toBeVisible();
+  });
 });
 
 test.describe("vote page calendar view", () => {

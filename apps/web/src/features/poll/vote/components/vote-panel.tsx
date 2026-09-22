@@ -7,6 +7,7 @@ import { VotePanelFooter } from "@/features/poll/vote/components/vote-panel-foot
 import { VotePanelHeader } from "@/features/poll/vote/components/vote-panel-header";
 import { VoteViewCalendar } from "@/features/poll/vote/components/vote-view-calendar";
 import { VoteViewList } from "@/features/poll/vote/components/vote-view-list";
+import { VoteViewWeek } from "@/features/poll/vote/components/vote-view-week";
 import type {
   VotePageView,
   VoteResult,
@@ -63,10 +64,13 @@ export function VotePanel({
     return null;
   }
 
-  // A calendar cell is a day, so only all-day polls can offer one; a time
-  // poll would have several options on one cell.
+  // A month cell is a day, so only all-day polls can offer a calendar; a
+  // time poll would have several options on one cell and gets the week
+  // view instead, which has room to stack them.
   const isTimeSlot = (results[0]?.duration ?? 0) > 0;
-  const views: VoteViewId[] = isTimeSlot ? ["list"] : ["list", "calendar"];
+  const views: VoteViewId[] = isTimeSlot
+    ? ["list", "week"]
+    : ["list", "calendar"];
   const activeView = views.includes(view) ? view : "list";
 
   // Safe to read the clock here: the panel renders only after hydration, so
@@ -118,6 +122,8 @@ export function VotePanel({
               />
             ) : activeView === "calendar" ? (
               <VoteViewCalendar {...viewProps} />
+            ) : activeView === "week" ? (
+              <VoteViewWeek {...viewProps} />
             ) : (
               <VoteViewList {...viewProps} />
             )}

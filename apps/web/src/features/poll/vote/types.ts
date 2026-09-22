@@ -67,4 +67,4 @@ export type VoteViewProps = {
 };
 
 /** Which voting view is on screen. */
-export type VoteViewId = "list" | "calendar";
+export type VoteViewId = "list" | "calendar" | "week";
