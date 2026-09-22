@@ -1,0 +1,86 @@
+---
+title: "Receive webhooks in n8n"
+sidebarTitle: "n8n"
+description: "Trigger an n8n workflow from a Rallly event, verify it, and fetch the poll."
+---
+
+This guide builds a workflow that receives a Rallly event, checks that it really came from Rallly, and fetches the poll it is about. Five nodes: Webhook, Code, Switch, HTTP Request, and whatever you do with the result.
+
+<Steps>
+  <Step title="Add a Webhook node">
+    Set **HTTP Method** to `POST` and **Respond** to `Immediately`. Rallly waits at most 10 seconds for a `2xx`, and responding first means a slow step later in the workflow never turns into a retry.
+
+    Under **Options**, switch on **Raw Body**. This is the step people miss. The signature covers the request body byte for byte; without this option the node parses the JSON and hands you an object, and re-serialising that object produces different bytes and a digest that never matches. With Raw Body on, the exact bytes are kept as binary data on the item, in the property named `data`.
+
+    Copy the node's **Production URL**.
+  </Step>
+
+  <Step title="Register the endpoint in Rallly">
+    In Rallly, open **Settings → Webhooks**, choose **Add webhook**, paste the URL and pick the events you want. Copy the signing secret: it is shown once.
+
+    In n8n, store the secret where the workflow can read it without it appearing in the workflow JSON. A workflow **variable** or an environment variable both work; the code below reads `$vars.RALLLY_WEBHOOK_SECRET`.
+  </Step>
+
+  <Step title="Verify the signature in a Code node">
+    Add a **Code** node after the Webhook node, mode **Run Once for All Items**, and paste:
+
+    ```js
+    const { createHmac, timingSafeEqual } = require("crypto");
+
+    const item = $input.first();
+    const header = item.json.headers["x-rallly-signature"] ?? "";
+    const rawBody = await this.helpers.getBinaryDataBuffer(0, "data");
+
+    const parts = Object.fromEntries(
+      header.split(",").map((part) => part.split("=")),
+    );
+    const timestamp = Number(parts.t);
+    if (Math.abs(Date.now() / 1000 - timestamp) > 300) {
+      throw new Error("Signature timestamp is missing or older than five minutes");
+    }
+    if (!/^[0-9a-f]{64}$/.test(parts.v1 ?? "")) {
+      throw new Error("Signature is not a SHA-256 digest");
+    }
+
+    const expected = createHmac("sha256", $vars.RALLLY_WEBHOOK_SECRET)
+      .update(`${parts.t}.`)
+      .update(rawBody)
+      .digest();
+    if (!timingSafeEqual(expected, Buffer.from(parts.v1, "hex"))) {
+      throw new Error("Signature does not match");
+    }
+
+    return [{ json: JSON.parse(rawBody.toString("utf8")) }];
+    ```
+
+    A request that fails any check stops the workflow with an error, and the node outputs the verified event body as the item. Everything after this node can trust `$json.type` and `$json.data`.
+
+    On self-hosted n8n, `require("crypto")` needs the built-in module allowed: set `NODE_FUNCTION_ALLOW_BUILTIN=crypto` in n8n's environment. n8n Cloud allows it already.
+  </Step>
+
+  <Step title="Branch on the event type">
+    Add a **Switch** node on `{{ $json.type }}` with one output per event you subscribed to, for example `poll.closed`, `poll.scheduled` and `poll.participant.created`. Add a fallback output and leave it unconnected: Rallly may add event types without a version change, and an unknown type should be ignored, not treated as an error.
+  </Step>
+
+  <Step title="Fetch the poll">
+    The event carries the poll's id and nothing else about it, so add an **HTTP Request** node:
+
+    - **Method** `GET`
+    - **URL** `https://api.rallly.co/v1/polls/{{ $json.data.poll.id }}`
+    - **Authentication** `Generic Credential Type` → `Bearer Auth`, with a credential holding your Rallly API key from **Settings → API keys**
+
+    For a `poll.participant.*` event, fetch the participant the same way: `https://api.rallly.co/v1/polls/{{ $json.data.poll.id }}/participants/{{ $json.data.participant.id }}` returns their name, email and availability.
+
+    From here the poll and the participant are ordinary items: post to Slack, write a row to a sheet, or update your own system.
+  </Step>
+</Steps>
+
+## Testing it
+
+Use the Webhook node's **Test URL** while building, then register the **Production URL** in Rallly. A quick end-to-end check is to close and reopen a poll in Rallly and watch `poll.closed` and `poll.reopened` arrive.
+
+## When something fails
+
+- **Signature does not match** on every request: Raw Body is off, or the secret in n8n is not the one Rallly showed when the endpoint was created. Delete and re-add the endpoint if the secret is lost.
+- **Timestamp older than five minutes**: the n8n host's clock is wrong, or the request was a replay. Rallly's retries are signed fresh, so a stale timestamp is never a retry.
+- **Endpoint disabled in Rallly**: twenty deliveries in a row exhausted their retries. Fix the workflow, then re-enable the endpoint from the settings page; events from while it was disabled are not replayed.

@@ -104,7 +104,11 @@
             "pages": [
               "api-reference/webhooks",
               "api-reference/webhooks/events",
-              "api-reference/webhooks/security"
+              "api-reference/webhooks/security",
+              {
+                "group": "Guides",
+                "pages": ["api-reference/webhooks/guides/n8n"]
+              }
             ]
           }
         ]
