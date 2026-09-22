@@ -5,7 +5,6 @@ import { isCalendarsEnabled } from "@/features/calendars/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
-import { isWebhooksEnabled } from "@/features/webhook/constants";
 import { isSelfHosted } from "@/lib/constants";
 import type { FeatureFlagConfig } from "@/lib/feature-flags/types";
 import { isStorageEnabled } from "@/lib/storage";
@@ -42,7 +41,9 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // The API launches cloud first; self-hosted gets it once the release
   // channel carries the API host and its docs.
   api: !isSelfHosted,
-  webhooks: isWebhooksEnabled,
+  // Webhooks ride on the API capability: the dispatcher cron runs on the
+  // cloud deployment and the docs live with the API reference.
+  webhooks: !isSelfHosted,
   // Cloud deploys continuously and is never behind a release; the check
   // exists for operators who pull images.
   updateCheck: isSelfHosted,
