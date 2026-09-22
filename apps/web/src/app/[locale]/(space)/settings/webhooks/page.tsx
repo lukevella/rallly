@@ -1,3 +1,4 @@
+import { Badge } from "@rallly/ui/badge";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -38,13 +39,16 @@ export default async function WebhooksSettingsPage() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle>
+        <SettingsPageTitle className="flex items-center gap-2">
           <Trans i18nKey="webhooks" defaults="Webhooks" />
+          <Badge variant="amber" size="sm">
+            <Trans i18nKey="beta" defaults="Beta" />
+          </Badge>
         </SettingsPageTitle>
         <SettingsPageDescription>
           <Trans
             i18nKey="webhooksDescription"
-            defaults="Send events to your own server"
+            defaults="Send events to your own server. Webhooks are in beta: events and payloads may still change, and more events will be added."
           />
         </SettingsPageDescription>
         {enabled ? (
