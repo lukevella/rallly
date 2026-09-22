@@ -71,13 +71,20 @@ test.describe("vote page", () => {
     await expect(bar.getByText("Test user")).toBeVisible();
     await expect(bar.getByRole("button", { name: "Edit" })).toBeVisible();
 
-    // The header is display settings only, so the prompt is gone and the
-    // response is not there either
+    // The header carries filters and display settings, never the response
     const header = main.locator("header");
-    await expect(
-      header.getByText("Please select as many times as possible"),
-    ).toHaveCount(0);
     await expect(header.getByText("Test user")).toHaveCount(0);
+
+    // Time format is its own control beside the time zone, and switching it
+    // reformats the options
+    const displays = header.getByTestId("display-settings");
+    await expect(
+      displays.getByRole("radio", { name: "12-hour" }),
+    ).toBeVisible();
+    const firstRow = main.getByTestId("poll-option").first();
+    await expect(firstRow).toContainText("PM");
+    await displays.getByRole("radio", { name: "24-hour" }).click();
+    await expect(firstRow).not.toContainText("PM");
 
     // Edit opens the form for editing and stops there. Save replaces Edit
     // in the same slot, so if the two footers share DOM nodes the pointer
@@ -125,9 +132,7 @@ test.describe("vote page", () => {
     await expect(votedRow).toContainText("yes");
   });
 
-  test("mobile stacks the header, the event and the list", async ({
-    browser,
-  }) => {
+  test("mobile stacks the event above the list", async ({ browser }) => {
     const context = await browser.newContext({
       viewport: { width: 375, height: 667 },
     });
@@ -143,12 +148,12 @@ test.describe("vote page", () => {
     const optionBox = await box(main.getByTestId("poll-option").first());
     expect(optionBox.y).toBeGreaterThan(sidebarBox.y + sidebarBox.height - 1);
 
-    // The prompt and the display controls take a line each, rather than
-    // sitting side by side and squeezing the prompt to three lines
+    // Filters sit on the left of the header and display settings on the
+    // right, so the header holds the controls rather than the response
     const header = main.locator("header");
-    const promptBox = await box(header.getByRole("heading", { level: 2 }));
-    const controlsBox = await box(header.getByTestId("display-settings"));
-    expect(controlsBox.y).toBeGreaterThan(promptBox.y + promptBox.height - 1);
+    await expect(header.getByTestId("filters")).toHaveCount(1);
+    await expect(header.getByTestId("display-settings")).toBeVisible();
+    await expect(header.getByRole("heading", { level: 2 })).toHaveCount(0);
 
     await context.close();
   });

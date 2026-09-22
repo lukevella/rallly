@@ -1,14 +1,16 @@
 "use client";
-import { TimesShownIn } from "@/components/clock";
-import { useVoteForm } from "@/features/poll/vote/components/vote-form";
+import { Button } from "@rallly/ui/button";
+import { EyeOffIcon } from "lucide-react";
+import { TimeFormatSwitcher } from "@/features/poll/vote/components/time-format-switcher";
+import { TimeZoneSwitcher } from "@/features/poll/vote/components/time-zone-switcher";
 import { VoteViewSwitcher } from "@/features/poll/vote/components/vote-view-switcher";
 import type { VotePageView, VoteViewId } from "@/features/poll/vote/types";
 import { Trans } from "@/i18n/client";
 
 /**
- * The panel's display settings: which view is on screen and, for a zoned
- * time poll, the clock. The prompt sits here too while the viewer is still
- * composing. The response itself belongs to the footer.
+ * The panel's controls: what is shown on the left, how it is shown on the
+ * right. Filtering lives on the left, display settings on the right; the
+ * response itself belongs to the footer.
  */
 export function VotePanelHeader({
   poll,
@@ -16,6 +18,9 @@ export function VotePanelHeader({
   views,
   view,
   onViewChange,
+  pastCount,
+  hidePast,
+  onHidePastChange,
 }: {
   poll: VotePageView["poll"];
   results: VotePageView["results"];
@@ -23,47 +28,53 @@ export function VotePanelHeader({
   views: VoteViewId[];
   view: VoteViewId;
   onViewChange: (view: VoteViewId) => void;
+  /** How many options have already passed; the filter hides itself at zero. */
+  pastCount: number;
+  hidePast: boolean;
+  onHidePastChange: (hidePast: boolean) => void;
 }) {
-  const form = useVoteForm();
-  const mode = form.watch("mode");
-
   const isTimeSlot = (results[0]?.duration ?? 0) > 0;
-  // Floating-time polls have no zone to switch, and dates have no time
-  // format, so the clock only appears on zoned time polls.
+  // Floating-time polls have no zone to switch, so the zone picker only
+  // appears on zoned time polls. Only a time poll has a format to set.
   const showClock = isTimeSlot && poll.timeZone !== null;
+  const showTimeFormat = isTimeSlot;
   const showViewSwitcher = views.length > 1;
-  const hasDisplaySettings = showClock || showViewSwitcher;
-  // The prompt asks for a vote, so it goes once one is saved.
-  const showPrompt = mode !== "view";
+  // Nothing to hide on a poll whose options are all still ahead.
+  const showHidePast = pastCount > 0;
 
-  if (!hasDisplaySettings && !showPrompt) {
+  const hasFilters = showHidePast;
+  const hasDisplaySettings = showClock || showTimeFormat || showViewSwitcher;
+
+  if (!hasFilters && !hasDisplaySettings) {
     return null;
   }
 
   return (
     <header // Below lg the page scrolls, so the header pins to the viewport; from
-      // lg up the panel's own layout places it. Below sm the prompt and the
-      // controls take a line each: side by side, the prompt wraps to three.
+      // lg up the panel's own layout places it. Below sm the two groups take
+      // a line each rather than squeezing onto one.
       className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 border-b bg-card px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
     >
-      {showPrompt ? (
-        <h2 className="font-medium text-sm">
-          {isTimeSlot ? (
-            <Trans
-              i18nKey="votingPromptTimes"
-              defaults="Please select as many times as possible"
-            />
-          ) : (
-            <Trans
-              i18nKey="votingPromptDates"
-              defaults="Please select as many dates as possible"
-            />
-          )}
-        </h2>
-      ) : (
-        // Holds the settings at the trailing edge with no prompt beside them.
-        <span />
-      )}
+      <div
+        data-testid="filters"
+        className="flex min-w-0 items-center gap-2 empty:hidden"
+      >
+        {showHidePast ? (
+          <Button
+            type="button"
+            variant={hidePast ? "primary" : "ghost"}
+            aria-pressed={hidePast}
+            onClick={() => onHidePastChange(!hidePast)}
+          >
+            <EyeOffIcon data-icon="inline-start" />
+            {isTimeSlot ? (
+              <Trans i18nKey="hidePastTimes" defaults="Hide past times" />
+            ) : (
+              <Trans i18nKey="hidePastDates" defaults="Hide past dates" />
+            )}
+          </Button>
+        ) : null}
+      </div>
       {hasDisplaySettings ? (
         <div
           data-testid="display-settings"
@@ -72,7 +83,8 @@ export function VotePanelHeader({
           {showViewSwitcher ? (
             <VoteViewSwitcher value={view} onChange={onViewChange} />
           ) : null}
-          {showClock ? <TimesShownIn /> : null}
+          {showClock ? <TimeZoneSwitcher /> : null}
+          {showTimeFormat ? <TimeFormatSwitcher /> : null}
         </div>
       ) : null}
     </header>
