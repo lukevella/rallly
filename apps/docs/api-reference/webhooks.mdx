@@ -7,13 +7,11 @@ description: "Get an HTTPS request when a poll or a response changes."
 
 Webhooks tell your own systems about poll and participant changes as they happen, so an integration never has to poll the API for results. Each endpoint you register receives a signed `POST` for every event it subscribes to.
 
-## Availability
-
-Webhooks are available to spaces on a Pro plan of the cloud hosted version. Only the space owner can manage endpoints, from **Settings → Webhooks**. They are not available on self-hosted instances.
+<Note>Webhooks require a Pro plan.</Note>
 
 ## Adding an endpoint
 
-1. Open **Settings → Webhooks** and choose **Add webhook**.
+1. As the space owner, open **Settings → Webhooks** and choose **Add webhook**.
 2. Enter the URL. It must be `https`, on a public host, with no credentials in it.
 3. Pick the events to receive. Every event is selected by default; you can change the selection later.
 4. Copy the signing secret. It is shown once. If you lose it, delete the endpoint and add it again.
