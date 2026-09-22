@@ -107,7 +107,8 @@
               "api-reference/webhooks/security",
               {
                 "group": "Guides",
-                "pages": ["api-reference/webhooks/guides/n8n"]
+                "pages": ["api-reference/webhooks/guides/n8n"],
+                "icon": "book-open"
               }
             ]
           }
