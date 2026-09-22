@@ -12,12 +12,14 @@ import { after } from "next/server";
 import { moderateContent } from "@/features/moderation/mutations";
 import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
+  getPollParticipant,
   getPollParticipants,
   getPollResults,
   getPollWithOptions,
   listPolls,
 } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
+import { toAvailabilitySpans } from "@/features/poll/utils";
 import { getSpaceMemberByEmail } from "@/features/space/member/data";
 import type { SpaceTier } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/features/space/types";
@@ -43,6 +45,7 @@ import {
   createPollInputSchema,
   deletePollSuccessResponseSchema,
   errorResponseSchema,
+  getPollParticipantSuccessResponseSchema,
   getPollParticipantsSuccessResponseSchema,
   getPollResultsSuccessResponseSchema,
   listPollsQuerySchema,
@@ -306,6 +309,7 @@ async function buildOpenApiSpec() {
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
           "| 404 | `NOT_FOUND` | No route matches the method and path |",
           "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
+          "| 404 | `PARTICIPANT_NOT_FOUND` | The participant does not exist or belongs to another poll |",
           "| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |",
           "| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |",
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
@@ -837,6 +841,23 @@ app.get(
   },
 );
 
+const toParticipantResponse = (
+  kind: "date" | "time",
+  participant: {
+    id: string;
+    name: string;
+    email: string | null;
+    createdAt: Date;
+    votes: Parameters<typeof toAvailabilitySpans>[0]["votes"];
+  },
+) => ({
+  id: participant.id,
+  name: participant.name,
+  email: participant.email,
+  createdAt: participant.createdAt.toISOString(),
+  availability: toAvailabilitySpans({ kind, votes: participant.votes }),
+});
+
 app.get(
   "/polls/:pollId/participants",
   spaceApiKeyAuth,
@@ -845,9 +866,9 @@ app.get(
     tags: ["Polls"],
     summary: "List poll participants",
     description: [
-      "Lists every participant of a poll in one response, oldest response first. The poll must belong to the space associated with the API key.",
+      "Lists every participant of a poll in one response, oldest response first, each with their availability. The poll must belong to the space associated with the API key.",
       "",
-      "Per-option answers are not included; use the results endpoint for aggregate availability.",
+      "For aggregate counts per option use the results endpoint.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
     responses: {
@@ -891,12 +912,81 @@ app.get(
 
     return c.json(
       getPollParticipantsSuccessResponseSchema.parse({
-        data: data.participants.map((participant) => ({
-          id: participant.id,
-          name: participant.name,
-          email: participant.email,
-          createdAt: participant.createdAt.toISOString(),
-        })),
+        data: data.participants.map((participant) =>
+          toParticipantResponse(data.kind, participant),
+        ),
+      }),
+    );
+  },
+);
+
+app.get(
+  "/polls/:pollId/participants/:participantId",
+  spaceApiKeyAuth,
+  rateLimit,
+  describeRoute({
+    tags: ["Polls"],
+    summary: "Get a poll participant",
+    description:
+      "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook.",
+    security: [{ bearerAuth: [] }],
+    responses: {
+      200: {
+        description: "Successful response",
+        content: {
+          "application/json": {
+            schema: resolver(getPollParticipantSuccessResponseSchema),
+          },
+        },
+      },
+      401: unauthorizedResponse,
+      403: spaceNotProResponse,
+      429: rateLimitExceededResponse,
+      503: serviceUnavailableResponse,
+      404: {
+        description:
+          "Poll not found (`POLL_NOT_FOUND`) or participant not found (`PARTICIPANT_NOT_FOUND`)",
+        content: {
+          "application/json": {
+            schema: resolver(errorResponseSchema),
+          },
+        },
+      },
+    },
+  }),
+  async (c) => {
+    const { pollId, participantId } = c.req.param();
+    const { spaceId } = c.get("apiAuth");
+
+    const { poll, participant } = await getPollParticipant({
+      pollId,
+      participantId,
+      spaceId,
+    });
+
+    if (!poll) {
+      return c.json(
+        apiError(
+          "POLL_NOT_FOUND",
+          "Poll not found or does not belong to this space.",
+        ),
+        404,
+      );
+    }
+
+    if (!participant) {
+      return c.json(
+        apiError(
+          "PARTICIPANT_NOT_FOUND",
+          "Participant not found or does not belong to this poll.",
+        ),
+        404,
+      );
+    }
+
+    return c.json(
+      getPollParticipantSuccessResponseSchema.parse({
+        data: toParticipantResponse(poll.kind, participant),
       }),
     );
   },

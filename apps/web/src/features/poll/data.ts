@@ -147,6 +147,20 @@ export async function getPollResults({
 /**
  * Every participant in response order (oldest first).
  */
+// Votes with their option's time, for the availability conversion.
+const apiParticipantSelect = {
+  id: true,
+  name: true,
+  email: true,
+  createdAt: true,
+  votes: {
+    select: {
+      type: true,
+      option: { select: { startTime: true, duration: true } },
+    },
+  },
+} satisfies Prisma.ParticipantSelect;
+
 export async function getPollParticipants({
   pollId,
   spaceId,
@@ -162,13 +176,9 @@ export async function getPollParticipants({
     },
     select: {
       id: true,
+      kind: true,
       participants: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-        },
+        select: apiParticipantSelect,
         orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       },
     },
@@ -180,7 +190,49 @@ export async function getPollParticipants({
 
   return {
     pollId: poll.id,
+    kind: poll.kind,
     participants: poll.participants,
+  };
+}
+
+/**
+ * One participant of a poll. Distinguishes a missing poll from a missing
+ * participant so the API can say which, and never returns a participant
+ * from another poll: the participant filter is nested under the poll's own
+ * scope check.
+ */
+export async function getPollParticipant({
+  pollId,
+  participantId,
+  spaceId,
+}: {
+  pollId: string;
+  participantId: string;
+  spaceId: AuthorizedSpaceId;
+}) {
+  const poll = await prisma.poll.findFirst({
+    where: {
+      id: pollId,
+      spaceId,
+      deleted: false,
+    },
+    select: {
+      id: true,
+      kind: true,
+      participants: {
+        where: { id: participantId },
+        select: apiParticipantSelect,
+      },
+    },
+  });
+
+  if (!poll) {
+    return { poll: null, participant: null };
+  }
+
+  return {
+    poll: { id: poll.id, kind: poll.kind },
+    participant: poll.participants[0] ?? null,
   };
 }
 
