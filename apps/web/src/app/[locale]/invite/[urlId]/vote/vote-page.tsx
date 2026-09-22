@@ -17,7 +17,6 @@ import type { UserDTO } from "@/features/user/schema";
 export function VotePage({
   view,
   footerLinks,
-  spaceId,
   hideAttribution,
   isCreator,
   requireParticipantEmail,
@@ -27,7 +26,6 @@ export function VotePage({
 }: {
   view: VotePageView;
   footerLinks: { label: string; href: string }[];
-  spaceId: string | null;
   hideAttribution: boolean;
   isCreator: boolean;
   requireParticipantEmail: boolean;
@@ -60,6 +58,7 @@ export function VotePage({
                 poll={view.poll}
                 spaceBrandingAllowed={spaceBrandingAllowed}
                 instanceBranding={instanceBranding}
+                hideAttribution={hideAttribution}
               />
             </aside>
             <section className="flex flex-1 flex-col lg:min-h-0 lg:border-l">
@@ -73,12 +72,7 @@ export function VotePage({
         </Card>
       </main>
       <div className="shrink-0">
-        <VotePageFooter
-          pollId={view.poll.id}
-          spaceId={spaceId}
-          hideAttribution={hideAttribution}
-          footerLinks={footerLinks}
-        />
+        <VotePageFooter footerLinks={footerLinks} />
       </div>
     </div>
   );

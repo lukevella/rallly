@@ -94,7 +94,6 @@ async function VotePageContent({ params, searchParams }: PageProps) {
         <VotePage
           view={view}
           footerLinks={footerLinks}
-          spaceId={poll.spaceId}
           hideAttribution={
             instanceBranding.hideAttribution ||
             (poll.space?.hideAttribution ?? false)

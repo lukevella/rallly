@@ -10,7 +10,7 @@ import {
 import { MoreHorizontalIcon, TagIcon, TrashIcon } from "lucide-react";
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+
 import {
   ChangeNameModal,
   DeleteParticipantModal,
@@ -51,15 +51,17 @@ export function VotePanelHeader({
   const deleteDialog = useDialog();
 
   const isTimeSlot = (results[0]?.duration ?? 0) > 0;
+  // Floating-time polls have no zone to switch, and dates have no time
+  // format, so the clock only appears on zoned time polls.
+  const showClock = isTimeSlot && poll.timeZone !== null;
+  const showViewSwitcher = views.length > 1;
+  const hasDisplaySettings = showClock || showViewSwitcher;
   const displaySettings = (
     <>
-      {views.length > 1 ? (
+      {showViewSwitcher ? (
         <VoteViewSwitcher value={view} onChange={onViewChange} />
       ) : null}
-      {/* Floating-time polls have no zone to switch, and dates have no time
-          format, so the clock only appears on zoned time polls. */}
-      {isTimeSlot && poll.timeZone ? <TimesShownIn /> : null}
-      <ThemeSwitcher />
+      {showClock ? <TimesShownIn /> : null}
     </>
   );
 
@@ -166,12 +168,14 @@ export function VotePanelHeader({
           />
         )}
       </h2>
-      <div
-        data-testid="display-settings"
-        className="flex shrink-0 items-center justify-end gap-2"
-      >
-        {displaySettings}
-      </div>
+      {hasDisplaySettings ? (
+        <div
+          data-testid="display-settings"
+          className="flex shrink-0 items-center justify-end gap-2"
+        >
+          {displaySettings}
+        </div>
+      ) : null}
     </header>
   );
 }
