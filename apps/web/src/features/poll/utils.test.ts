@@ -3,6 +3,7 @@ import {
   filterCommentsForViewer,
   filterParticipantsByVote,
   maskParticipantsForViewer,
+  toAvailabilitySpans,
 } from "./utils";
 
 const participant = (
@@ -139,5 +140,65 @@ describe("filterParticipantsByVote", () => {
       "yes",
     );
     expect(result.map((p) => p.id)).toEqual(["a"]);
+  });
+});
+
+describe("toAvailabilitySpans", () => {
+  const at = (iso: string) => new Date(iso);
+
+  it("drops no, makes ifNeedBe a modifier, and orders by option start", () => {
+    expect(
+      toAvailabilitySpans({
+        kind: "time",
+        votes: [
+          {
+            type: "no",
+            option: { startTime: at("2026-10-03T09:00:00Z"), duration: 30 },
+          },
+          {
+            type: "ifNeedBe",
+            option: { startTime: at("2026-10-02T09:00:00Z"), duration: 45 },
+          },
+          {
+            type: "yes",
+            option: { startTime: at("2026-10-01T09:00:00Z"), duration: 30 },
+          },
+        ],
+      }),
+    ).toEqual([
+      {
+        start: "2026-10-01T09:00:00.000Z",
+        end: "2026-10-01T09:30:00.000Z",
+        allDay: false,
+        modifiers: [],
+      },
+      {
+        start: "2026-10-02T09:00:00.000Z",
+        end: "2026-10-02T09:45:00.000Z",
+        allDay: false,
+        modifiers: ["ifNeedBe"],
+      },
+    ]);
+  });
+
+  it("spans the whole UTC day for a date poll", () => {
+    expect(
+      toAvailabilitySpans({
+        kind: "date",
+        votes: [
+          {
+            type: "yes",
+            option: { startTime: at("2026-10-01T00:00:00Z"), duration: 0 },
+          },
+        ],
+      }),
+    ).toEqual([
+      {
+        start: "2026-10-01T00:00:00.000Z",
+        end: "2026-10-02T00:00:00.000Z",
+        allDay: true,
+        modifiers: [],
+      },
+    ]);
   });
 });

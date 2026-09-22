@@ -4,10 +4,20 @@ import { WEBHOOK_VERSION } from "./constants";
 import { getWebhookUrlRejection } from "./utils";
 
 export const webhookEventTypeSchema = z
-  .enum(["poll.closed", "poll.reopened", "poll.scheduled"])
+  .enum([
+    "poll.created",
+    "poll.updated",
+    "poll.closed",
+    "poll.reopened",
+    "poll.scheduled",
+    "poll.deleted",
+    "poll.participant.created",
+    "poll.participant.updated",
+    "poll.participant.deleted",
+  ])
   .meta({
     id: "WebhookEventType",
-    description: "The poll lifecycle transition the event records.",
+    description: "The poll or participant change the event records.",
     example: "poll.closed",
   });
 
@@ -15,25 +25,62 @@ export type WebhookEventType = z.infer<typeof webhookEventTypeSchema>;
 
 export const WEBHOOK_EVENT_TYPES = webhookEventTypeSchema.options;
 
-const webhookPollSchema = (status: "open" | "closed" | "scheduled") =>
-  z
-    .object({
-      id: z.string().meta({ example: "Xk3pQ9vLm2Ab" }),
-      title: z.string().meta({ example: "Team sync" }),
-      status: z.literal(status).meta({
-        description:
-          "The status the transition moved the poll to. Reflects this event, not the poll's current state: a later transition arrives as its own event.",
-      }),
-      kind: z.enum(["date", "time"]).meta({ example: "time" }),
-      timeZone: z.string().nullable().meta({ example: "Europe/London" }),
-      adminUrl: z
-        .string()
-        .meta({ example: "https://app.rallly.co/poll/Xk3pQ9vLm2Ab" }),
-      inviteUrl: z
-        .string()
-        .meta({ example: "https://rallly.co/invite/Xk3pQ9vLm2Ab" }),
-    })
-    .meta({ id: `WebhookPoll${status[0]?.toUpperCase()}${status.slice(1)}` });
+/**
+ * Events reference the poll, they do not describe it: every other poll
+ * field is either derivable, or mutable and stale by the time a retry lands,
+ * and `GET /polls/{pollId}` returns the current truth in one call. The
+ * participant is carried in full for the opposite reason: nothing in the
+ * API returns a participant's availability.
+ */
+export const webhookPollRefSchema = z
+  .object({
+    id: z.string().meta({
+      description:
+        "The poll's id. Fetch `GET /polls/{pollId}` for its title, options, settings and current status.",
+      example: "Xk3pQ9vLm2Ab",
+    }),
+  })
+  .meta({ id: "WebhookPollRef" });
+
+/**
+ * The span of time a poll was scheduled as. There is no option id and no
+ * poll `kind`: the span is the fact, and `allDay` says all a receiver needs
+ * about its kind.
+ */
+const timeRangeFields = {
+  start: z.iso.datetime().meta({
+    description: "Start of the span, inclusive, as a UTC instant.",
+    example: "2025-01-15T09:00:00.000Z",
+  }),
+  end: z.iso.datetime().meta({
+    description:
+      "End of the span, exclusive, as a UTC instant: a 30 minute slot starting at 09:00 ends at 09:30, and the instant 09:30 is not in it.",
+    example: "2025-01-15T09:30:00.000Z",
+  }),
+  allDay: z.boolean().meta({
+    description:
+      "True for a whole calendar day. The day is a floating date with no timezone, given as `start` at 00:00:00Z on that date and `end` at 00:00:00Z on the next; read the date from `start` and ignore the time of day.",
+    example: false,
+  }),
+};
+
+export const webhookScheduledEventSchema = z
+  .object(timeRangeFields)
+  .meta({ id: "WebhookScheduledEvent" });
+
+/**
+ * Events reference the participant the same way they reference the poll:
+ * by id. Fetch `GET /polls/{pollId}/participants` for the rest.
+ */
+export const webhookParticipantRefSchema = z
+  .object({
+    id: z.string().meta({
+      description:
+        "The participant's id. Fetch `GET /polls/{pollId}/participants` for their details. After `poll.participant.deleted` the participant is no longer listed.",
+      example: "cm5h8x2k40000q9l4f7e2d3an",
+    }),
+  })
+  .meta({ id: "WebhookParticipantRef" });
 
 const envelope = {
   version: z.string().meta({
@@ -52,61 +99,138 @@ const envelope = {
   }),
 };
 
+export const pollCreatedEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("poll.created"),
+    data: z.object({ poll: webhookPollRefSchema }),
+  })
+  .meta({
+    id: "PollCreatedEvent",
+    description:
+      "A poll was created in the space, from the app or the API. It starts open.",
+  });
+
+export const pollUpdatedEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("poll.updated"),
+    data: z.object({ poll: webhookPollRefSchema }),
+  })
+  .meta({
+    id: "PollUpdatedEvent",
+    description:
+      "The poll's details, options or settings changed. The event says that something changed, not what: fetch the poll for its current state.",
+  });
+
 export const pollClosedEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.closed"),
     data: z.object({
-      poll: webhookPollSchema("closed"),
+      poll: webhookPollRefSchema,
       reason: pollClosedReasonSchema.meta({
         description:
           "`manual` when the organizer closed the poll, `auto` when it closed because every option had passed.",
       }),
     }),
   })
-  .meta({ id: "PollClosedEvent" });
+  .meta({
+    id: "PollClosedEvent",
+    description:
+      "The poll stopped accepting responses, either because the organizer closed it or because every option had passed. Reopening arrives as `poll.reopened`; scheduling arrives as `poll.scheduled`, not as a close.",
+  });
 
 export const pollReopenedEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.reopened"),
-    data: z.object({ poll: webhookPollSchema("open") }),
+    data: z.object({ poll: webhookPollRefSchema }),
   })
-  .meta({ id: "PollReopenedEvent" });
+  .meta({
+    id: "PollReopenedEvent",
+    description: "A closed poll accepts responses again.",
+  });
 
 export const pollScheduledEventSchema = z
   .object({
     ...envelope,
     type: z.literal("poll.scheduled"),
     data: z.object({
-      poll: webhookPollSchema("scheduled"),
-      option: z
-        .union([
-          z.object({
-            id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-            date: z.iso.date().meta({ example: "2025-01-15" }),
-          }),
-          z.object({
-            id: z.string().meta({ example: "cm5h8x2k40000q9l4f7e2d3an" }),
-            startTime: z.iso
-              .datetime()
-              .meta({ example: "2025-01-15T09:00:00.000Z" }),
-            duration: z.int().positive().meta({ example: 30 }),
-          }),
-        ])
-        .meta({
-          description:
-            "The option the poll was scheduled on. Its shape follows the poll's `kind`: a date for `date` polls, a start time and duration for `time` polls.",
-        }),
+      poll: webhookPollRefSchema,
+      event: webhookScheduledEventSchema.meta({
+        description: "The calendar event the poll was scheduled as.",
+      }),
     }),
   })
-  .meta({ id: "PollScheduledEvent" });
+  .meta({
+    id: "PollScheduledEvent",
+    description:
+      "The organizer picked a time. The poll stops accepting responses and `data.event` is the span that was chosen.",
+  });
+
+export const pollDeletedEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("poll.deleted"),
+    data: z.object({ poll: webhookPollRefSchema }),
+  })
+  .meta({
+    id: "PollDeletedEvent",
+    description:
+      "The poll was deleted. `GET /polls/{pollId}` returns 404 from now on, so anything you need about it must already be stored.",
+  });
+
+const participantEventData = z.object({
+  poll: webhookPollRefSchema,
+  participant: webhookParticipantRefSchema,
+});
+
+export const pollParticipantCreatedEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("poll.participant.created"),
+    data: participantEventData,
+  })
+  .meta({
+    id: "PollParticipantCreatedEvent",
+    description: "Someone responded to the poll.",
+  });
+
+export const pollParticipantUpdatedEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("poll.participant.updated"),
+    data: participantEventData,
+  })
+  .meta({
+    id: "PollParticipantUpdatedEvent",
+    description: "The participant changed their response or their name.",
+  });
+
+export const pollParticipantDeletedEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("poll.participant.deleted"),
+    data: participantEventData,
+  })
+  .meta({
+    id: "PollParticipantDeletedEvent",
+    description:
+      "A response was removed, by the participant or the organizer. `data.participant` is a reference to the removed response; fetching it returns 404.",
+  });
 
 export const webhookEventSchema = z
   .discriminatedUnion("type", [
+    pollCreatedEventSchema,
+    pollUpdatedEventSchema,
     pollClosedEventSchema,
     pollReopenedEventSchema,
     pollScheduledEventSchema,
+    pollDeletedEventSchema,
+    pollParticipantCreatedEventSchema,
+    pollParticipantUpdatedEventSchema,
+    pollParticipantDeletedEventSchema,
   ])
   .meta({ id: "WebhookEvent" });
 

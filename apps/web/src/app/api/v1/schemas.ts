@@ -7,8 +7,14 @@ import { timezoneSchema } from "@/lib/utils/timezone-schema";
 // owns them: the dispatcher builds exactly these shapes.
 export {
   pollClosedEventSchema,
+  pollCreatedEventSchema,
+  pollDeletedEventSchema,
+  pollParticipantCreatedEventSchema,
+  pollParticipantDeletedEventSchema,
+  pollParticipantUpdatedEventSchema,
   pollReopenedEventSchema,
   pollScheduledEventSchema,
+  pollUpdatedEventSchema,
   webhookEventSchema,
   webhookEventTypeSchema,
 } from "@/features/webhook/schema";
@@ -586,12 +592,40 @@ export const getPollResultsSuccessResponseSchema = z
   })
   .meta({ id: "GetPollResultsResponse" });
 
+export const availabilitySpanSchema = z
+  .object({
+    start: z.iso.datetime().meta({
+      description: "Start of the span, inclusive, as a UTC instant.",
+      example: "2025-01-15T09:00:00.000Z",
+    }),
+    end: z.iso.datetime().meta({
+      description:
+        "End of the span, exclusive, as a UTC instant: a 30 minute slot starting at 09:00 ends at 09:30, and the instant 09:30 is not in it.",
+      example: "2025-01-15T09:30:00.000Z",
+    }),
+    allDay: z.boolean().meta({
+      description:
+        "True for a whole calendar day. The day is a floating date with no timezone, given as `start` at 00:00:00Z on that date and `end` at 00:00:00Z on the next; read the date from `start` and ignore the time of day.",
+      example: false,
+    }),
+    modifiers: z.array(z.string()).meta({
+      description:
+        "Qualifiers on the availability. `ifNeedBe` means the participant can make it but would rather not. New modifiers may be added without a version change; one you do not recognise still leaves the span available.",
+      example: ["ifNeedBe"],
+    }),
+  })
+  .meta({ id: "AvailabilitySpan" });
+
 export const participantSchema = z
   .object({
     id: z.string().meta({ example: "cm5j2r8wb0003q9l4a1x6p0zt" }),
     name: z.string().meta({ example: "Jane Smith" }),
     email: z.string().nullable().meta({ example: "jane@example.com" }),
     createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),
+    availability: z.array(availabilitySpanSchema).meta({
+      description:
+        "When the participant is available: one span per option they can make, in start order, not merged. Options they cannot make, or did not answer, are absent. Each span matches an option of the poll by its time.",
+    }),
   })
   .meta({ id: "Participant" });
 
@@ -600,3 +634,9 @@ export const getPollParticipantsSuccessResponseSchema = z
     data: z.array(participantSchema),
   })
   .meta({ id: "GetPollParticipantsResponse" });
+
+export const getPollParticipantSuccessResponseSchema = z
+  .object({
+    data: participantSchema,
+  })
+  .meta({ id: "GetPollParticipantResponse" });

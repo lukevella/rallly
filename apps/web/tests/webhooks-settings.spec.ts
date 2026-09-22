@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
 import { WEBHOOK_VERSION } from "@/features/webhook/constants";
+import { WEBHOOK_EVENT_TYPES } from "@/features/webhook/schema";
 import {
   createUserInDb,
   loginWithEmail,
@@ -118,11 +119,8 @@ test.describe("Webhooks settings", () => {
     // Pinned at creation, so a later version bump cannot move an endpoint
     // that was built against this one.
     expect(webhook.version).toBe(WEBHOOK_VERSION);
-    expect(webhook.events.sort()).toEqual([
-      "poll.closed",
-      "poll.reopened",
-      "poll.scheduled",
-    ]);
+    // The form starts with every event selected.
+    expect([...webhook.events].sort()).toEqual([...WEBHOOK_EVENT_TYPES].sort());
     expect(decryptSecret(webhook.secret)).toBe(revealed);
     // Never replays history: a new endpoint starts at now.
     expect(webhook.cursor.getTime()).toBeGreaterThan(Date.now() - 60_000);
@@ -132,7 +130,9 @@ test.describe("Webhooks settings", () => {
     const row = endpointRow(page, url);
     await expect(row).toBeVisible();
     // The row summarises the subscription rather than listing it.
-    await expect(row.getByText("3 events")).toBeVisible();
+    await expect(
+      row.getByText(`${WEBHOOK_EVENT_TYPES.length} events`),
+    ).toBeVisible();
     // Closing the reveal is the only chance to copy it — reloading must not
     // surface the secret again.
     await page.reload();

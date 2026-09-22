@@ -3,6 +3,11 @@ title: "Changelog"
 description: "Changes to the API, newest first."
 ---
 
+<Update label="2026-09-22">
+- `GET /polls/{pollId}/participants/{participantId}` returns one participant. A missing participant on an existing poll is `404` with `PARTICIPANT_NOT_FOUND`.
+- Participants now carry `availability`: one `{ start, end, allDay, modifiers }` span per option they can make, in start order, on both the list and the single-participant endpoint. A span matches an option of the poll by its time; `end` is exclusive; `ifNeedBe` is a modifier.
+</Update>
+
 <Update label="v1">
 Initial stable release under `/v1`.
 

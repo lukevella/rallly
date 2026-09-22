@@ -55,6 +55,11 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
     payload: z.object({}),
   }),
   z.object({
+    type: z.literal("poll_deleted"),
+    ...actor,
+    payload: z.object({}),
+  }),
+  z.object({
     type: z.literal("poll_scheduled"),
     ...actor,
     optionId: z.string(),

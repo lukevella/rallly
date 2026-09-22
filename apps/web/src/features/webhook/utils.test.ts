@@ -46,32 +46,43 @@ describe("getRetryDelayMs", () => {
 });
 
 describe("toWebhookEventType", () => {
-  it("maps status transition activities to their event names", () => {
+  it("maps poll lifecycle activities to their event names", () => {
+    expect(toWebhookEventType("poll_created")).toBe("poll.created");
+    expect(toWebhookEventType("poll_updated")).toBe("poll.updated");
     expect(toWebhookEventType("poll_closed")).toBe("poll.closed");
     expect(toWebhookEventType("poll_reopened")).toBe("poll.reopened");
     expect(toWebhookEventType("poll_scheduled")).toBe("poll.scheduled");
+    expect(toWebhookEventType("poll_deleted")).toBe("poll.deleted");
+  });
+
+  it("files response activities under the poll resource", () => {
+    expect(toWebhookEventType("response_created")).toBe(
+      "poll.participant.created",
+    );
+    expect(toWebhookEventType("response_updated")).toBe(
+      "poll.participant.updated",
+    );
+    expect(toWebhookEventType("response_deleted")).toBe(
+      "poll.participant.deleted",
+    );
   });
 
   it("returns null for activities that are not webhook events", () => {
-    expect(toWebhookEventType("response_created")).toBeNull();
-    expect(toWebhookEventType("poll_created")).toBeNull();
+    expect(toWebhookEventType("invite_sent")).toBeNull();
+    expect(toWebhookEventType("option_added")).toBeNull();
   });
 });
 
 describe("buildWebhookPayload", () => {
-  const poll = {
-    id: "Xk3pQ9vLm2Ab",
-    title: "Team sync",
-    kind: "time" as const,
-    timeZone: "Europe/London",
-  };
+  const poll = { id: "Xk3pQ9vLm2Ab", kind: "time" as const };
   const createdAt = new Date("2026-09-15T10:00:00.000Z");
 
-  it("derives the status from the event, not the live poll", () => {
+  it("references the poll by id and carries the event's own facts", () => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_1",
         type: "poll_closed",
+        participantId: null,
         optionId: null,
         payload: { reason: "manual" },
         createdAt,
@@ -79,30 +90,21 @@ describe("buildWebhookPayload", () => {
       poll,
     });
 
-    expect(payload).toMatchObject({
+    expect(payload).toEqual({
+      version: expect.any(String),
       id: "act_1",
       type: "poll.closed",
       createdAt: "2026-09-15T10:00:00.000Z",
-      data: {
-        poll: {
-          id: "Xk3pQ9vLm2Ab",
-          title: "Team sync",
-          status: "closed",
-          kind: "time",
-          timeZone: "Europe/London",
-        },
-        reason: "manual",
-      },
+      data: { poll: { id: "Xk3pQ9vLm2Ab" }, reason: "manual" },
     });
-    expect(payload?.data.poll.adminUrl).toMatch(/\/poll\/Xk3pQ9vLm2Ab$/);
-    expect(payload?.data.poll.inviteUrl).toMatch(/\/invite\/Xk3pQ9vLm2Ab$/);
   });
 
-  it("marks a reopened poll as open", () => {
+  it("builds a reopened poll", () => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_2",
         type: "poll_reopened",
+        participantId: null,
         optionId: null,
         payload: {},
         createdAt,
@@ -111,7 +113,7 @@ describe("buildWebhookPayload", () => {
     });
 
     expect(payload?.type).toBe("poll.reopened");
-    expect(payload?.data.poll.status).toBe("open");
+    expect(payload?.data).toEqual({ poll: { id: "Xk3pQ9vLm2Ab" } });
   });
 
   it("carries the scheduled slot for a time poll", () => {
@@ -119,6 +121,7 @@ describe("buildWebhookPayload", () => {
       activity: {
         id: "act_3",
         type: "poll_scheduled",
+        participantId: null,
         optionId: "opt_1",
         payload: { start: "2026-10-01T09:00:00.000Z", duration: 30 },
         createdAt,
@@ -129,21 +132,22 @@ describe("buildWebhookPayload", () => {
     expect(payload).toMatchObject({
       type: "poll.scheduled",
       data: {
-        poll: { status: "scheduled" },
-        option: {
-          id: "opt_1",
-          startTime: "2026-10-01T09:00:00.000Z",
-          duration: 30,
+        poll: { id: "Xk3pQ9vLm2Ab" },
+        event: {
+          start: "2026-10-01T09:00:00.000Z",
+          end: "2026-10-01T09:30:00.000Z",
+          allDay: false,
         },
       },
     });
   });
 
-  it("carries the scheduled date for a date poll", () => {
+  it("spans the whole day for a scheduled date poll", () => {
     const payload = buildWebhookPayload({
       activity: {
         id: "act_4",
         type: "poll_scheduled",
+        participantId: null,
         optionId: "opt_2",
         payload: { start: "2026-10-01T00:00:00.000Z", duration: 0 },
         createdAt,
@@ -152,8 +156,76 @@ describe("buildWebhookPayload", () => {
     });
 
     expect(payload?.data).toMatchObject({
-      option: { id: "opt_2", date: "2026-10-01" },
+      event: {
+        start: "2026-10-01T00:00:00.000Z",
+        end: "2026-10-02T00:00:00.000Z",
+        allDay: true,
+      },
     });
+  });
+
+  it.each([
+    ["poll_created", "poll.created", { title: "Team sync" }],
+    ["poll_updated", "poll.updated", {}],
+    ["poll_deleted", "poll.deleted", {}],
+  ] as const)("builds %s as a bare reference to the poll", (type, eventType, activityPayload) => {
+    const payload = buildWebhookPayload({
+      activity: {
+        id: "act_8",
+        type,
+        participantId: null,
+        optionId: null,
+        payload: activityPayload,
+        createdAt,
+      },
+      poll,
+    });
+
+    expect(payload?.type).toBe(eventType);
+    expect(payload?.data).toEqual({ poll: { id: poll.id } });
+  });
+
+  it.each([
+    ["response_created", "poll.participant.created"],
+    ["response_updated", "poll.participant.updated"],
+    ["response_deleted", "poll.participant.deleted"],
+  ] as const)("builds %s from the response snapshot", (type, eventType) => {
+    const payload = buildWebhookPayload({
+      activity: {
+        id: "act_9",
+        type,
+        participantId: "part_1",
+        optionId: null,
+        // response_deleted requires the vote snapshot; the others ignore it
+        payload: { name: "Jessie", votes: [] },
+        createdAt,
+      },
+      poll,
+    });
+
+    expect(payload).toEqual({
+      version: expect.any(String),
+      id: "act_9",
+      createdAt: "2026-09-15T10:00:00.000Z",
+      type: eventType,
+      data: { poll: { id: poll.id }, participant: { id: "part_1" } },
+    });
+  });
+
+  it("returns null when a response row lost its participant ref", () => {
+    expect(
+      buildWebhookPayload({
+        activity: {
+          id: "act_11",
+          type: "response_created",
+          participantId: null,
+          optionId: null,
+          payload: { name: "Jessie" },
+          createdAt,
+        },
+        poll,
+      }),
+    ).toBeNull();
   });
 
   it("returns null for activities that are not webhook events", () => {
@@ -161,9 +233,10 @@ describe("buildWebhookPayload", () => {
       buildWebhookPayload({
         activity: {
           id: "act_5",
-          type: "response_created",
+          type: "invite_sent",
+          participantId: null,
           optionId: null,
-          payload: { name: "Jessie" },
+          payload: { email: "jessie@example.com" },
           createdAt,
         },
         poll,
@@ -177,6 +250,7 @@ describe("buildWebhookPayload", () => {
         activity: {
           id: "act_6",
           type: "poll_scheduled",
+          participantId: null,
           optionId: "opt_1",
           payload: {},
           createdAt,

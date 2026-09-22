@@ -7,6 +7,7 @@ import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { encrypt } from "@rallly/utils/encryption";
 import { WEBHOOK_VERSION } from "@/features/webhook/constants";
+import { WEBHOOK_EVENT_TYPES } from "@/features/webhook/schema";
 import { createUserInDb, upgradeSpaceToPro } from "./test-utils";
 
 /**
@@ -92,11 +93,7 @@ test.describe("Webhook delivery", () => {
         spaceId,
         url: receiver.url,
         secret: encrypt(WEBHOOK_SECRET, SECRET_PASSWORD),
-        events: overrides.events ?? [
-          "poll.closed",
-          "poll.reopened",
-          "poll.scheduled",
-        ],
+        events: overrides.events ?? [...WEBHOOK_EVENT_TYPES],
         cursor: overrides.cursor ?? secondsAgo(120),
         version: WEBHOOK_VERSION,
       },
@@ -108,14 +105,16 @@ test.describe("Webhook delivery", () => {
     payload,
     createdAt,
     optionId,
+    participantId,
   }: {
     type: string;
     payload: object;
     createdAt: Date;
     optionId?: string;
+    participantId?: string;
   }) {
     return prisma.pollActivity.create({
-      data: { pollId, type, payload, createdAt, optionId },
+      data: { pollId, type, payload, createdAt, optionId, participantId },
     });
   }
 
@@ -156,6 +155,10 @@ test.describe("Webhook delivery", () => {
       where: { id: spaceId },
       data: { tier: "pro" },
     });
+    await prisma.poll.update({
+      where: { id: pollId },
+      data: { status: "open", deleted: false, deletedAt: null },
+    });
   });
 
   test.afterAll(async () => {
@@ -174,8 +177,9 @@ test.describe("Webhook delivery", () => {
     });
     // Not a webhook event: must not produce a delivery
     await createActivity({
-      type: "response_created",
-      payload: { name: "Jessie" },
+      type: "option_added",
+      optionId: "webhook-delivery-option",
+      payload: { start: "2026-10-01T09:00:00.000Z", duration: 30 },
       createdAt: secondsAgo(30),
     });
 
@@ -197,16 +201,7 @@ test.describe("Webhook delivery", () => {
       id: activity.id,
       type: "poll.closed",
       createdAt: activity.createdAt.toISOString(),
-      data: {
-        poll: {
-          id: pollId,
-          title: "Webhook poll",
-          status: "closed",
-          kind: "time",
-          timeZone: "Europe/London",
-        },
-        reason: "manual",
-      },
+      data: { poll: { id: pollId }, reason: "manual" },
     });
 
     const delivery = await prisma.webhookDelivery.findUniqueOrThrow({
@@ -296,7 +291,7 @@ test.describe("Webhook delivery", () => {
     ).toBe(0);
   });
 
-  test("carries the scheduled option for a scheduled poll", async ({
+  test("carries the calendar event for a scheduled poll", async ({
     request,
   }) => {
     await createWebhook();
@@ -313,15 +308,107 @@ test.describe("Webhook delivery", () => {
     expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
       type: "poll.scheduled",
       data: {
-        poll: { status: "scheduled" },
-        option: {
-          id: "webhook-delivery-option",
-          startTime: "2026-10-01T09:00:00.000Z",
-          duration: 30,
+        poll: { id: pollId },
+        event: {
+          start: "2026-10-01T09:00:00.000Z",
+          end: "2026-10-01T09:30:00.000Z",
+          allDay: false,
         },
       },
     });
   });
+
+  test("delivers a created poll as open", async ({ request }) => {
+    await createWebhook();
+    await createActivity({
+      type: "poll_created",
+      payload: { title: "Webhook poll" },
+      createdAt: secondsAgo(30),
+    });
+
+    await runCron(request);
+
+    expect(receiver.requests).toHaveLength(1);
+    expect(receiver.requests[0]?.headers["x-rallly-event"]).toBe(
+      "poll.created",
+    );
+    expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
+      type: "poll.created",
+      data: { poll: { id: pollId } },
+    });
+  });
+
+  test("delivers an updated poll as a bare reference", async ({ request }) => {
+    await createWebhook();
+    await createActivity({
+      type: "poll_updated",
+      payload: {},
+      createdAt: secondsAgo(30),
+    });
+
+    await runCron(request);
+
+    expect(receiver.requests).toHaveLength(1);
+    expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
+      type: "poll.updated",
+      data: { poll: { id: pollId } },
+    });
+  });
+
+  test("delivers a deleted poll although the poll row is soft deleted", async ({
+    request,
+  }) => {
+    await createWebhook();
+    await prisma.poll.update({
+      where: { id: pollId },
+      data: { deleted: true, deletedAt: new Date() },
+    });
+    await createActivity({
+      type: "poll_deleted",
+      payload: {},
+      createdAt: secondsAgo(30),
+    });
+
+    const summary = await runCron(request);
+    expect(summary.fannedOut).toBe(1);
+
+    expect(receiver.requests).toHaveLength(1);
+    expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
+      type: "poll.deleted",
+      data: { poll: { id: pollId } },
+    });
+  });
+
+  for (const [activityType, eventType] of [
+    ["response_created", "poll.participant.created"],
+    ["response_updated", "poll.participant.updated"],
+    ["response_deleted", "poll.participant.deleted"],
+  ] as const) {
+    test(`delivers ${eventType} as a reference to the participant`, async ({
+      request,
+    }) => {
+      await createWebhook();
+      await createActivity({
+        type: activityType,
+        participantId: "webhook-delivery-participant",
+        payload: { name: "Jessie", votes: [] },
+        createdAt: secondsAgo(30),
+      });
+
+      const summary = await runCron(request);
+      expect(summary.fannedOut).toBe(1);
+
+      expect(receiver.requests).toHaveLength(1);
+      expect(receiver.requests[0]?.headers["x-rallly-event"]).toBe(eventType);
+      expect(JSON.parse(receiver.requests[0]?.body ?? "{}")).toMatchObject({
+        type: eventType,
+        data: {
+          poll: { id: pollId },
+          participant: { id: "webhook-delivery-participant" },
+        },
+      });
+    });
+  }
 
   test("picks up an activity that committed behind the cursor", async ({
     request,

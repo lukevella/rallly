@@ -88,10 +88,12 @@ export async function listEnabledWebhooks() {
 }
 
 /**
- * Status transition activities in a space's polls after the `(createdAt, id)`
- * keyset and up to `until`, oldest first. Keyset rather than offset so a run
- * of equal timestamps larger than one page still advances. Deleted polls are
- * excluded: their links no longer resolve and the poll is on its way out.
+ * Webhook activities in a space's polls after the `(createdAt, id)` keyset
+ * and up to `until`, oldest first. Keyset rather than offset so a run of
+ * equal timestamps larger than one page still advances. Deleted polls are
+ * not filtered out: `poll_deleted` is written in the same transaction as the
+ * soft delete, and anything recorded just before it happened and is still
+ * worth telling.
  */
 export async function listWebhookActivities({
   spaceId,
@@ -114,15 +116,16 @@ export async function listWebhookActivities({
             { createdAt: after.createdAt, id: { gt: after.id } },
           ]
         : [{ createdAt: { gt: after.createdAt } }],
-      poll: { spaceId, deleted: false },
+      poll: { spaceId },
     },
     select: {
       id: true,
       type: true,
+      participantId: true,
       optionId: true,
       payload: true,
       createdAt: true,
-      poll: { select: { id: true, title: true, kind: true, timeZone: true } },
+      poll: { select: { id: true, kind: true } },
     },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     take: limit,
