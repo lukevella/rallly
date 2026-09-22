@@ -1,11 +1,9 @@
 "use client";
-import { Button } from "@rallly/ui/button";
-import { EyeOffIcon } from "lucide-react";
+import { HidePastToggle } from "@/features/poll/vote/components/hide-past-toggle";
 import { TimeFormatSwitcher } from "@/features/poll/vote/components/time-format-switcher";
 import { TimeZoneSwitcher } from "@/features/poll/vote/components/time-zone-switcher";
 import { VoteViewSwitcher } from "@/features/poll/vote/components/vote-view-switcher";
 import type { VotePageView, VoteViewId } from "@/features/poll/vote/types";
-import { Trans } from "@/i18n/client";
 
 /**
  * The panel's controls: what is shown on the left, how it is shown on the
@@ -60,19 +58,11 @@ export function VotePanelHeader({
         className="flex min-w-0 items-center gap-2 empty:hidden"
       >
         {showHidePast ? (
-          <Button
-            type="button"
-            variant={hidePast ? "primary" : "ghost"}
-            aria-pressed={hidePast}
-            onClick={() => onHidePastChange(!hidePast)}
-          >
-            <EyeOffIcon data-icon="inline-start" />
-            {isTimeSlot ? (
-              <Trans i18nKey="hidePastTimes" defaults="Hide past times" />
-            ) : (
-              <Trans i18nKey="hidePastDates" defaults="Hide past dates" />
-            )}
-          </Button>
+          <HidePastToggle
+            checked={hidePast}
+            onCheckedChange={onHidePastChange}
+            isTimeSlot={isTimeSlot}
+          />
         ) : null}
       </div>
       {hasDisplaySettings ? (

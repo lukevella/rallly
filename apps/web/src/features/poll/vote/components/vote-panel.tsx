@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { VoteEmptyState } from "@/features/poll/vote/components/vote-empty-state";
 import { VoteForm } from "@/features/poll/vote/components/vote-form";
 import { VoteOutcome } from "@/features/poll/vote/components/vote-outcome";
 import { VotePanelFooter } from "@/features/poll/vote/components/vote-panel-footer";
@@ -109,7 +110,13 @@ export function VotePanel({
               hidePast={hidePast}
               onHidePastChange={setHidePast}
             />
-            {activeView === "calendar" ? (
+            {visibleResults.length === 0 ? (
+              <VoteEmptyState
+                isTimeSlot={isTimeSlot}
+                hiddenByFilter={results.length > 0}
+                onShowAll={() => setHidePast(false)}
+              />
+            ) : activeView === "calendar" ? (
               <VoteViewCalendar {...viewProps} />
             ) : (
               <VoteViewList {...viewProps} />
