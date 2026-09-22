@@ -213,6 +213,8 @@
 
   --ease-in-expo: cubic-bezier(0.68, -0.6, 0.32, 1.6);
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  /* Strong ease-out for UI that enters or changes value. */
+  --ease-out-ui: cubic-bezier(0.23, 1, 0.32, 1);
 
   --animate-caret-blink: caret-blink 1.25s ease-out infinite;
   --animate-switch-thumb-on: switch-thumb-on 350ms

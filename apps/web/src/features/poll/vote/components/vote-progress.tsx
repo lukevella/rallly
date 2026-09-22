@@ -41,6 +41,9 @@ export function VoteProgress({
         total: participantCount,
       });
 
+  const yesPct = pct(score.yes);
+  const tentativePct = pct(score.ifNeedBe);
+
   return (
     <span className="flex items-center">
       <span
@@ -48,18 +51,26 @@ export function VoteProgress({
         // The track needs to read as an empty share, so it sits a step away
         // from the surface in both themes rather than using one muted token.
         className={cn(
-          "flex h-1.5 w-16 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700",
+          "relative block h-1.5 w-16 overflow-hidden rounded-sm bg-gray-200 dark:bg-gray-700",
           className,
         )}
       >
+        {/* Each segment fills the track and is scaled down to its share, so
+            the size change is a transform rather than a width: width would
+            lay out and paint every frame, and two flex siblings animating
+            their widths would fight over the leftover space.
+            motion-reduce keeps the colour and drops the travel. */}
         <span
-          className="h-full bg-green-500"
-          style={{ width: `${pct(score.yes)}%` }}
+          className="absolute inset-0 origin-left bg-green-500 transition-transform duration-200 ease-out-ui motion-reduce:transition-none"
+          style={{ transform: `scaleX(${yesPct / 100})` }}
         />
         {showTentative ? (
           <span
-            className="h-full bg-amber-400"
-            style={{ width: `${pct(score.ifNeedBe)}%` }}
+            className="absolute inset-0 origin-left bg-amber-400 transition-transform duration-200 ease-out-ui motion-reduce:transition-none"
+            style={{
+              // Sits after the yes segment, then takes its own share.
+              transform: `translateX(${yesPct}%) scaleX(${tentativePct / 100})`,
+            }}
           />
         ) : null}
       </span>
