@@ -58,7 +58,7 @@ export const VoteActions = () => {
               <XIcon className="size-4" />
             </button>
             <SuccessCheck state="in" className="mb-3">
-              <SuccessCheckIcon />
+              <SuccessCheckIcon className="size-9" />
             </SuccessCheck>
             <m.div
               initial={{ opacity: 0, y: 6 }}
