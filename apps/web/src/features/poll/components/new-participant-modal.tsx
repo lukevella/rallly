@@ -21,8 +21,9 @@ import {
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MaxCharLength } from "@rallly/ui/max-char-length";
+import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import { Textarea } from "@rallly/ui/textarea";
-import { CircleCheckIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -184,10 +185,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     return (
       <>
         <div className="flex flex-col items-center gap-4 py-4 text-center">
-          <CircleCheckIcon
-            aria-hidden="true"
-            className="size-10 text-green-500"
-          />
+          <SuccessCheck state="in">
+            <SuccessCheckIcon />
+          </SuccessCheck>
           <DialogHeader>
             <DialogTitle>
               <Trans
