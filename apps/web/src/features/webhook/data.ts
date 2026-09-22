@@ -76,7 +76,13 @@ export function countSpaceWebhooks({ spaceId }: { spaceId: string }) {
 export async function listEnabledWebhooks() {
   return prisma.spaceWebhook.findMany({
     where: { enabled: true },
-    select: { id: true, spaceId: true, events: true, cursor: true },
+    select: {
+      id: true,
+      spaceId: true,
+      events: true,
+      cursor: true,
+      space: { select: { tier: true } },
+    },
     orderBy: { createdAt: "asc" },
   });
 }

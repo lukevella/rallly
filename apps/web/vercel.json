@@ -26,6 +26,10 @@
     {
       "path": "/api/house-keeping/delete-orphaned-anonymous-users",
       "schedule": "45 * * * *"
+    },
+    {
+      "path": "/api/house-keeping/deliver-webhooks",
+      "schedule": "* * * * *"
     }
   ]
 }

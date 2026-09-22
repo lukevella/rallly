@@ -27,7 +27,6 @@ import {
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
-import { ProBadge } from "@/features/billing/components/pro-badge";
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -194,8 +193,7 @@ export function DeveloperSidebarMenu() {
   const isWebhooksEnabled = useFeatureFlag("webhooks");
 
   // Owner only: a member has no self-serve path to the developer surface. A
-  // free space sees the entries with a Pro badge; each page offers the
-  // upgrade.
+  // free space still sees the entries; each page offers the upgrade.
   if (!isSpaceOwner || !isApiEnabled) {
     return null;
   }
@@ -219,7 +217,6 @@ export function DeveloperSidebarMenu() {
             >
               <KeyIcon />
               <Trans i18nKey="apiKeys" defaults="API keys" />
-              {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
           {isWebhooksEnabled ? (
@@ -235,7 +232,6 @@ export function DeveloperSidebarMenu() {
               >
                 <WebhookIcon />
                 <Trans i18nKey="webhooks" defaults="Webhooks" />
-                {space.tier !== "pro" ? <ProBadge className="ml-auto" /> : null}
               </SidebarMenuButton>
             </SidebarMenuItem>
           ) : null}
