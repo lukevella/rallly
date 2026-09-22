@@ -19,6 +19,10 @@ export type PollActivityWrite = { pollId: string } & PollActivityEvent;
  * dispatcher to run for the poll's space once the response is sent, rather
  * than waiting for the next scheduled minute. The trigger fires after the
  * transaction commits; if the transaction rolls back the run finds nothing.
+ * Only spaces with an enabled endpoint are asked, so the trigger costs
+ * nothing everywhere else. The ask is an HTTP self-call because the
+ * dispatcher lives in the webhook feature, which imports this one; calling
+ * it here directly waits on the activity log becoming its own feature.
  */
 export async function recordPollActivities(
   tx: Prisma.TransactionClient,
@@ -43,8 +47,15 @@ export async function recordPollActivities(
     }),
   });
 
-  if (isFeatureEnabled("webhooks")) {
-    for (const pollId of new Set(activities.map((a) => a.pollId))) {
+  if (!isFeatureEnabled("webhooks")) {
+    return;
+  }
+
+  for (const pollId of new Set(activities.map((a) => a.pollId))) {
+    const subscribed = await tx.spaceWebhook.count({
+      where: { enabled: true, space: { polls: { some: { id: pollId } } } },
+    });
+    if (subscribed > 0) {
       triggerHouseKeeping("deliver-webhooks", { pollId });
     }
   }
