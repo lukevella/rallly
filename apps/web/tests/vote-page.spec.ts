@@ -79,6 +79,33 @@ test.describe("vote page", () => {
     ).toHaveCount(0);
     await expect(header.getByText("Test user")).toHaveCount(0);
 
+    // Edit opens the form for editing and stops there. Save replaces Edit
+    // in the same slot, so if the two footers share DOM nodes the pointer
+    // release lands on Save and the response saves as editing begins.
+    const submits = await page.evaluate(() => {
+      const state = { count: 0 };
+      (window as unknown as { __submits: typeof state }).__submits = state;
+      document.querySelector("#vote-form")?.addEventListener("submit", () => {
+        state.count++;
+      });
+      return true;
+    });
+    expect(submits).toBe(true);
+
+    await bar.getByRole("button", { name: "Edit" }).click();
+    await expect(bar.getByRole("button", { name: "Save" })).toBeVisible();
+    await expect(page.getByTestId("vote-selector").first()).toBeVisible();
+    expect(
+      await page.evaluate(
+        () =>
+          (window as unknown as { __submits: { count: number } }).__submits
+            .count,
+      ),
+    ).toBe(0);
+
+    await bar.getByRole("button", { name: "Cancel" }).click();
+    await expect(bar.getByRole("button", { name: "Edit" })).toBeVisible();
+
     // Renaming and deleting live in the overflow menu, so changing a
     // response to a no is the prominent path
     await expect(bar.getByRole("button", { name: "Delete" })).toHaveCount(0);
