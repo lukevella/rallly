@@ -39,12 +39,16 @@ export default async function WebhooksSettingsPage() {
   return (
     <SettingsPage>
       <SettingsPageHeader>
-        <SettingsPageTitle className="flex items-center gap-2">
-          <Trans i18nKey="webhooks" defaults="Webhooks" />
+        {/* Beside the heading, not inside it: Badge renders a div, which is
+            not phrasing content an h1 may contain. */}
+        <div className="flex items-center gap-2">
+          <SettingsPageTitle>
+            <Trans i18nKey="webhooks" defaults="Webhooks" />
+          </SettingsPageTitle>
           <Badge variant="amber" size="sm">
             <Trans i18nKey="beta" defaults="Beta" />
           </Badge>
-        </SettingsPageTitle>
+        </div>
         <SettingsPageDescription>
           <Trans
             i18nKey="webhooksDescription"

@@ -56,6 +56,7 @@ async function createWebhookInDb({
       url,
       secret: encrypt("whsec_settings_test", SECRET_PASSWORD),
       events: ["poll.closed", "poll.reopened", "poll.scheduled"],
+      version: WEBHOOK_VERSION,
     },
   });
 }

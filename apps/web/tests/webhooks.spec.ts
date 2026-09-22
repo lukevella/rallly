@@ -98,6 +98,7 @@ test.describe("Webhook delivery", () => {
           "poll.scheduled",
         ],
         cursor: overrides.cursor ?? secondsAgo(120),
+        version: WEBHOOK_VERSION,
       },
     });
   }
