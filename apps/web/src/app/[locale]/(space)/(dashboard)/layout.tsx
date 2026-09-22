@@ -12,8 +12,10 @@ import {
   SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { SettingsIcon } from "lucide-react";
+import { Suspense } from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { PastDueAlert } from "@/features/billing/components/past-due-alert";
+import { UpdateIndicator } from "@/features/instance-settings/components/update-indicator";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
@@ -61,7 +63,16 @@ export default async function Layout({
                 <IfFeatureEnabled feature="feedback">
                   <FeedbackMenuItem />
                 </IfFeatureEnabled>
-                <ControlPanelMenuItem />
+                <ControlPanelMenuItem>
+                  {/* Admin-only and behind its own boundary: the update
+                      check is a network call that must not hold the
+                      sidebar back */}
+                  {user.role === "admin" ? (
+                    <Suspense fallback={null}>
+                      <UpdateIndicator />
+                    </Suspense>
+                  ) : null}
+                </ControlPanelMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     render={<HoverPrefetchLink href="/settings/profile" />}

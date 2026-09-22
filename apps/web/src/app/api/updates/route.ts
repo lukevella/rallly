@@ -3,40 +3,30 @@ import { createLogger } from "@rallly/logger";
 import type { NextRequest } from "next/server";
 import { after, NextResponse } from "next/server";
 import * as z from "zod";
-import { getMajorVersion } from "@/features/instance-settings/utils";
 import { createCache } from "@/lib/cache";
-import { isSelfHosted } from "@/lib/constants";
+import { githubRepo, isSelfHosted } from "@/lib/constants";
 import { createRatelimit } from "@/lib/rate-limit";
 import type { ReleaseChannels } from "./release-channels";
-import { buildReleaseChannels } from "./release-channels";
+import { buildReleaseChannels, buildUpdatesPayload } from "./release-channels";
+import type { SecurityAdvisory } from "./security-advisories";
+import { buildSecurityAdvisories } from "./security-advisories";
 
 const logger = createLogger("api/updates");
 
-const GITHUB_RELEASES_URL =
-  "https://api.github.com/repos/lukevella/rallly/releases";
+const GITHUB_RELEASES_URL = `https://api.github.com/repos/${githubRepo}/releases`;
+const GITHUB_ADVISORIES_URL = `https://api.github.com/repos/${githubRepo}/security-advisories`;
 const RELEASES_PER_PAGE = 100;
 // Sequential unauthenticated requests count against a 60/hour IP budget, so
 // pagination is bounded; older majors beyond this window report no update.
 const MAX_RELEASE_PAGES = 3;
 
-// The fleet starts linking here the moment a new major's first release is
-// tagged — the guide must be published at this path before tagging.
-function getMigrationGuideUrl(major: number) {
-  return `https://support.rallly.co/self-hosting/migrate-to-v${major}`;
-}
-
-type UpdatesPayload = {
-  latest: string | null;
-  url: string | null;
-  publishedAt: string | null;
-  newMajor?: {
-    version: string;
-    migrationGuideUrl: string;
-  };
-};
-
 const releaseChannelsCache = createCache<ReleaseChannels>({
   namespace: "updates:release-channels",
+  ttl: "1 h",
+});
+
+const advisoriesCache = createCache<SecurityAdvisory[]>({
+  namespace: "updates:advisories",
   ttl: "1 h",
 });
 
@@ -88,6 +78,60 @@ async function fetchReleaseChannels(): Promise<ReleaseChannels | null> {
   }
 }
 
+// Advisories are the severity source: a repository advisory's vulnerable
+// version range decides which callers get the security flag. A failed fetch
+// degrades to no severity rather than failing the update check.
+async function fetchSecurityAdvisories(): Promise<SecurityAdvisory[] | null> {
+  try {
+    const signal = AbortSignal.timeout(2500);
+    const advisories: unknown[] = [];
+    // Cursor pagination: the next page is only known from the Link header
+    let url: string | null =
+      `${GITHUB_ADVISORIES_URL}?state=published&per_page=${RELEASES_PER_PAGE}`;
+
+    for (let page = 1; url && page <= MAX_RELEASE_PAGES; page++) {
+      const res = await fetch(url, {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "User-Agent": "Rallly",
+        },
+        signal,
+      });
+      if (!res.ok) return null;
+
+      const batch = await res.json();
+      if (!Array.isArray(batch)) return null;
+
+      advisories.push(...batch);
+      url = getNextLink(res.headers.get("link"));
+      if (url && page === MAX_RELEASE_PAGES) {
+        logger.warn(
+          { pages: MAX_RELEASE_PAGES },
+          "Advisory list truncated at the pagination bound",
+        );
+      }
+    }
+
+    return buildSecurityAdvisories(advisories);
+  } catch (error) {
+    logger.warn({ error }, "Failed to fetch security advisories from GitHub");
+    return null;
+  }
+}
+
+function getNextLink(header: string | null) {
+  return header?.match(/<([^>]+)>;\s*rel="next"/)?.[1] ?? null;
+}
+
+async function getSecurityAdvisories(): Promise<SecurityAdvisory[]> {
+  const cached = await advisoriesCache.get("advisories");
+  if (cached) return cached;
+
+  const fresh = await fetchSecurityAdvisories();
+  if (fresh) await advisoriesCache.set("advisories", fresh);
+  return fresh ?? [];
+}
+
 async function getReleaseChannels(): Promise<ReleaseChannels | null> {
   const cached = await releaseChannelsCache.get("channels");
   if (cached) return cached;
@@ -95,37 +139,6 @@ async function getReleaseChannels(): Promise<ReleaseChannels | null> {
   const fresh = await fetchReleaseChannels();
   if (fresh) await releaseChannelsCache.set("channels", fresh);
   return fresh;
-}
-
-function buildPayload(
-  channels: ReleaseChannels,
-  requestedMajor: number | null,
-): UpdatesPayload {
-  const latestRelease = channels.latestByMajor[channels.latestMajor];
-
-  if (requestedMajor === null) {
-    return {
-      latest: latestRelease.version,
-      url: latestRelease.url,
-      publishedAt: latestRelease.publishedAt,
-    };
-  }
-
-  const ownChannel = channels.latestByMajor[requestedMajor];
-
-  return {
-    latest: ownChannel?.version ?? null,
-    url: ownChannel?.url ?? null,
-    publishedAt: ownChannel?.publishedAt ?? null,
-    ...(channels.latestMajor > requestedMajor
-      ? {
-          newMajor: {
-            version: latestRelease.version,
-            migrationGuideUrl: getMigrationGuideUrl(channels.latestMajor),
-          },
-        }
-      : {}),
-  };
 }
 
 export async function GET(request: NextRequest) {
@@ -142,7 +155,10 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const channels = await getReleaseChannels();
+  const [channels, advisories] = await Promise.all([
+    getReleaseChannels(),
+    getSecurityAdvisories(),
+  ]);
 
   if (!channels) {
     return NextResponse.json(
@@ -183,9 +199,11 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const requestedMajor = parsedVersion.success
-    ? getMajorVersion(parsedVersion.data)
-    : null;
-
-  return NextResponse.json(buildPayload(channels, requestedMajor));
+  return NextResponse.json(
+    buildUpdatesPayload({
+      channels,
+      advisories,
+      requestedVersion: parsedVersion.success ? parsedVersion.data : null,
+    }),
+  );
 }

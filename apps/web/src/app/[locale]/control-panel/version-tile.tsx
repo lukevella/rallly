@@ -5,9 +5,9 @@ import { Suspense } from "react";
 import { PageIcon } from "@/components/page-icons";
 import { loadUpdateStatus } from "@/features/instance-settings/loaders";
 import { getTranslation } from "@/i18n/server";
-import { appVersion } from "@/lib/constants";
+import { appVersion, githubRepoUrl } from "@/lib/constants";
 
-const RELEASES_URL = "https://github.com/lukevella/rallly/releases";
+const RELEASES_URL = `${githubRepoUrl}/releases`;
 
 const versionLabel = appVersion
   ? `v${appVersion.replace(/^v/, "")}`
