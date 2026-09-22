@@ -141,7 +141,7 @@ One event per transition. A poll that is closed, reopened and closed again produ
     ```
   </Accordion>
   <Accordion title="poll.scheduled">
-    The organizer picked a time. The poll stops accepting responses, and `event` is the span that was chosen.
+    The organizer picked a time. The poll stops accepting responses, and `event` is the span that was chosen: `start` inclusive, `end` exclusive, both UTC instants. `allDay: true` means a whole calendar day, given as midnight to midnight UTC.
 
     ```json
     {
@@ -240,7 +240,3 @@ One event per transition. A poll that is closed, reopened and closed again produ
     ```
   </Accordion>
 </AccordionGroup>
-
-### The scheduled span
-
-`poll.scheduled` carries the span of time the organizer chose as `data.event`. `start` is inclusive and `end` is exclusive, both ISO 8601 instants in UTC. When `allDay` is true the span is a whole calendar day with no timezone, given as midnight to midnight UTC: read the date from `start` and ignore the time of day.
