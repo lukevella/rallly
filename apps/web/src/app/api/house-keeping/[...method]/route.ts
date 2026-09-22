@@ -3,6 +3,7 @@ import { Effect } from "effect";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
+import { after } from "next/server";
 import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
@@ -211,20 +212,45 @@ app.get("/delete-orphaned-anonymous-users", async (c) => {
 
 app.get("/deliver-webhooks", async (c) => {
   // With `pollId` the run was triggered by a write to that poll and covers
-  // its space only; without it this is the scheduled run over everything.
+  // its space only. It is acknowledged at once and runs after the response,
+  // so the request that triggered it is not held for the dispatch. Without
+  // `pollId` this is the scheduled run over everything, which reports its
+  // summary because nothing is waiting on it.
   const pollId = c.req.query("pollId");
-  const spaceId = pollId ? await findPollSpaceId({ pollId }) : null;
-  if (pollId && !spaceId) {
-    return c.json({ success: true, summary: null });
+  if (pollId) {
+    const spaceId = await findPollSpaceId({ pollId });
+    if (!spaceId) {
+      return c.json({ success: true, summary: null });
+    }
+    after(async () => {
+      try {
+        const summary = await runtime.runPromise(
+          deliverWebhooks({ now: new Date(), scope: { spaceId } }).pipe(
+            Effect.provide(WebhookSender.layer),
+          ),
+        );
+        if (summary.fannedOut > 0 || summary.attempted > 0) {
+          logger.info(
+            { task: "deliver-webhooks", spaceId, ...summary },
+            "Dispatched webhook deliveries for a space",
+          );
+        }
+      } catch (error) {
+        logger.error(
+          { task: "deliver-webhooks", spaceId, error },
+          "Scoped webhook dispatch failed",
+        );
+      }
+    });
+    return c.json({ success: true, accepted: true }, 202);
   }
 
   // A DatabaseError rejects here and Hono answers 500, as an uncaught throw
   // did before.
   const summary = await runtime.runPromise(
-    deliverWebhooks({
-      now: new Date(),
-      scope: spaceId ? { spaceId } : undefined,
-    }).pipe(Effect.provide(WebhookSender.layer)),
+    deliverWebhooks({ now: new Date() }).pipe(
+      Effect.provide(WebhookSender.layer),
+    ),
   );
 
   // Runs every minute and most runs find nothing; log only when there was
