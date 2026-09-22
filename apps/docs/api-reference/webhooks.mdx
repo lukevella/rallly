@@ -24,7 +24,7 @@ A space can have up to five endpoints. A new endpoint starts receiving events fr
 
 An event says what happened and to which poll or participant. It references both by id and carries only the facts that belong to the event itself: the reason a poll closed, the time it was scheduled for. It does not carry the poll's title, options or settings, or the participant's details. Fetch the API when you need them; the fetch returns the current state, where a snapshot in the event would already be stale by the time a retry lands.
 
-See [Events](/api-reference/webhooks/events) for the list and the shape of each payload.
+See [Events](/api-reference/webhooks/events) for the envelope and headers, and [Poll events](/api-reference/webhooks/events/poll) for every event with its payload.
 
 ## Delivery
 

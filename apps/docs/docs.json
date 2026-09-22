@@ -104,6 +104,7 @@
             "pages": [
               "api-reference/webhooks",
               "api-reference/webhooks/events",
+              "api-reference/webhooks/events/poll",
               "api-reference/webhooks/security"
             ]
           }
