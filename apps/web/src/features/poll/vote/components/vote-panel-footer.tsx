@@ -9,7 +9,19 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
+import { MoreHorizontalIcon, TagIcon, TrashIcon } from "lucide-react";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import {
+  ChangeNameModal,
+  DeleteParticipantModal,
+} from "@/features/poll/components/participant-dropdown";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { useVoteForm } from "@/features/poll/vote/components/vote-form";
 import type { VotePageView } from "@/features/poll/vote/types";
@@ -57,9 +69,10 @@ function SelectionCount({
 }
 
 /**
- * The live selection count with the response actions: Decline and Continue
- * for a new response, Cancel and Save when editing. Absent once a response
- * is saved, which the header then summarizes.
+ * The response and its actions. While composing, that is the live selection
+ * count with Decline and Continue, or Cancel and Save when editing. Once a
+ * response is saved it becomes the participant's name with Edit and an
+ * overflow menu, so the panel header is left to display settings alone.
  */
 export function VotePanelFooter({
   poll,
@@ -75,8 +88,86 @@ export function VotePanelFooter({
   const { t } = useTranslation();
   const form = useVoteForm();
   const confirmDialog = useDialog();
+  const changeNameDialog = useDialog();
+  const deleteDialog = useDialog();
   const mode = form.watch("mode");
   const votes = form.watch("votes");
+
+  if (response && mode === "view") {
+    return (
+      <footer className="sticky bottom-0 z-10 flex min-h-16 shrink-0 items-center justify-between gap-4 border-t bg-card px-4 py-3 lg:static lg:bg-transparent">
+        <div className="flex min-w-0 items-center gap-2">
+          <OptimizedAvatarImage
+            size="sm"
+            name={response.name}
+            src={response.image ?? undefined}
+            className="shrink-0"
+          />
+          <p className="truncate font-medium text-sm">{response.name}</p>
+        </div>
+        {canVote ? (
+          <div className="flex shrink-0 items-center gap-2">
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger
+                data-testid="participant-menu"
+                render={
+                  <Button
+                    aria-label={t("moreOptions", {
+                      defaultValue: "More options",
+                    })}
+                    variant="ghost"
+                    size="icon"
+                  >
+                    <MoreHorizontalIcon />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => changeNameDialog.trigger()}>
+                  <TagIcon />
+                  <Trans i18nKey="changeName" defaults="Change name" />
+                </DropdownMenuItem>
+                {/* Removing the response entirely is rarer than changing it
+                    to a no, so it sits in the menu rather than beside Edit. */}
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => deleteDialog.trigger()}
+                >
+                  <TrashIcon />
+                  <Trans i18nKey="delete" defaults="Delete" />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              onClick={() => {
+                form.reset({
+                  mode: "edit",
+                  votes: results.map((result) => ({
+                    optionId: result.optionId,
+                    type: response.votes.find(
+                      (vote) => vote.optionId === result.optionId,
+                    )?.type,
+                  })),
+                });
+              }}
+            >
+              <Trans i18nKey="edit" defaults="Edit" />
+            </Button>
+            <ChangeNameModal
+              {...changeNameDialog.dialogProps}
+              oldName={response.name}
+              participantId={response.participantId}
+            />
+            <DeleteParticipantModal
+              {...deleteDialog.dialogProps}
+              participantId={response.participantId}
+              participantName={response.name}
+            />
+          </div>
+        ) : null}
+      </footer>
+    );
+  }
 
   if (!canVote || mode === "view") {
     return null;

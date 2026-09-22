@@ -66,17 +66,23 @@ test.describe("vote page", () => {
     await expect(page.getByText("Your response has been saved")).toBeVisible();
     await page.getByRole("button", { name: "Back to poll" }).click();
 
-    // Saved: the header names the response and offers Edit, the footer
+    // Saved: the footer names the response and offers Edit, the prompt
     // goes away, and the controls give way to the recorded votes
+    await expect(bar.getByText("Test user")).toBeVisible();
+    await expect(bar.getByRole("button", { name: "Edit" })).toBeVisible();
+
+    // The header is display settings only, so the prompt is gone and the
+    // response is not there either
     const header = main.locator("header");
-    await expect(header.getByText("Test user")).toBeVisible();
-    await expect(header.getByRole("button", { name: "Edit" })).toBeVisible();
-    await expect(bar).toHaveCount(0);
+    await expect(
+      header.getByText("Please select as many times as possible"),
+    ).toHaveCount(0);
+    await expect(header.getByText("Test user")).toHaveCount(0);
 
     // Renaming and deleting live in the overflow menu, so changing a
     // response to a no is the prominent path
-    await expect(header.getByRole("button", { name: "Delete" })).toHaveCount(0);
-    await header.getByTestId("participant-menu").click();
+    await expect(bar.getByRole("button", { name: "Delete" })).toHaveCount(0);
+    await bar.getByTestId("participant-menu").click();
     const menu = page.getByRole("menu");
     await expect(menu.getByRole("menuitem")).toHaveText([
       "Change name",

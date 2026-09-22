@@ -60,8 +60,6 @@ export function VotePanel({
             <VotePanelHeader
               poll={poll}
               results={results}
-              response={response}
-              canVote={canVote}
               views={views}
               view={activeView}
               onViewChange={setView}
