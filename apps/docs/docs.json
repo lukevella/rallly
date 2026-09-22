@@ -110,7 +110,8 @@
                 "pages": ["api-reference/webhooks/guides/n8n"],
                 "icon": "book-open"
               }
-            ]
+            ],
+            "tag": "Beta"
           }
         ]
       },
