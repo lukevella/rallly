@@ -37,6 +37,9 @@ import {
   toWebhookEventType,
 } from "./utils";
 
+/** Limits a dispatcher run to one space's endpoints. */
+export type DispatchScope = { spaceId: string };
+
 /**
  * Turns new activity into delivery rows, one per (webhook, activity). The
  * unique constraint makes re-reading harmless, so every run re-reads an
@@ -55,11 +58,17 @@ import {
  * behind the cursor can still deliver events from the last few minutes.
  */
 export const fanOutWebhookEvents = Effect.fn("webhook.fanOutWebhookEvents")(
-  function* ({ now }: { now: Date }) {
-    const until = new Date(now.getTime() - FAN_OUT_LAG_MS);
+  function* ({ now, scope }: { now: Date; scope?: DispatchScope }) {
+    // A run triggered right after a write has nothing uncommitted to fear
+    // from its own row, so it reads up to now; the overlap window still
+    // covers any other row that commits late.
+    const lag = scope ? 0 : FAN_OUT_LAG_MS;
+    const until = new Date(now.getTime() - lag);
     let created = 0;
 
-    for (const webhook of yield* fromPrisma(listEnabledWebhooks)) {
+    for (const webhook of yield* fromPrisma(() =>
+      listEnabledWebhooks({ spaceId: scope?.spaceId }),
+    )) {
       if (webhook.cursor >= until) {
         continue;
       }
@@ -182,10 +191,18 @@ export const reclaimStaleDeliveries = Effect.fn(
  * completion means a run that dies after sending still used an attempt.
  */
 export const claimDueDeliveries = Effect.fn("webhook.claimDueDeliveries")(
-  function* ({ now, limit }: { now: Date; limit: number }) {
+  function* ({
+    now,
+    limit,
+    scope,
+  }: {
+    now: Date;
+    limit: number;
+    scope?: DispatchScope;
+  }) {
     const claimed: string[] = [];
     for (const id of yield* fromPrisma(() =>
-      listDueDeliveryIds({ now, limit }),
+      listDueDeliveryIds({ now, limit, spaceId: scope?.spaceId }),
     )) {
       const { count } = yield* fromPrisma(() =>
         prisma.webhookDelivery.updateMany({
@@ -387,17 +404,25 @@ export type DeliverWebhooksSummary = {
  * One dispatcher run: recover orphans, fan out new activity, then send what
  * is due. Sends run a few at a time so a slow endpoint cannot hold the whole
  * batch to its timeout, and every outcome is recorded before the run ends.
+ *
+ * The scheduled run takes no scope and covers everything. A run triggered
+ * by a write is scoped to that write's space and reads without the fan-out
+ * lag, so the event it was triggered for goes out at once; the scheduled
+ * run remains the guarantee for anything it misses.
  */
 export const deliverWebhooks = Effect.fn("webhook.deliverWebhooks")(function* ({
   now,
+  scope,
 }: {
   now: Date;
+  scope?: DispatchScope;
 }): Effect.fn.Return<DeliverWebhooksSummary, DatabaseError, WebhookSender> {
-  const reclaimed = yield* reclaimStaleDeliveries({ now });
-  const fannedOut = yield* fanOutWebhookEvents({ now });
+  const reclaimed = scope ? 0 : yield* reclaimStaleDeliveries({ now });
+  const fannedOut = yield* fanOutWebhookEvents({ now, scope });
   const deliveries = yield* claimDueDeliveries({
     now,
     limit: DELIVERY_CLAIM_BATCH_SIZE,
+    scope,
   });
 
   const outcomes = yield* Effect.forEach(

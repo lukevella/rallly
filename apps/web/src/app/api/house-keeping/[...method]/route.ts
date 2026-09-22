@@ -18,6 +18,7 @@ import {
   deleteOrphanedAnonymousUsers,
   hardDeleteUser,
 } from "@/features/user/mutations";
+import { findPollSpaceId } from "@/features/webhook/data";
 import { deliverWebhooks } from "@/features/webhook/mutations";
 import { WebhookSender } from "@/features/webhook/service";
 import { runtime } from "@/lib/effect/runtime";
@@ -209,12 +210,21 @@ app.get("/delete-orphaned-anonymous-users", async (c) => {
 });
 
 app.get("/deliver-webhooks", async (c) => {
+  // With `pollId` the run was triggered by a write to that poll and covers
+  // its space only; without it this is the scheduled run over everything.
+  const pollId = c.req.query("pollId");
+  const spaceId = pollId ? await findPollSpaceId({ pollId }) : null;
+  if (pollId && !spaceId) {
+    return c.json({ success: true, summary: null });
+  }
+
   // A DatabaseError rejects here and Hono answers 500, as an uncaught throw
   // did before.
   const summary = await runtime.runPromise(
-    deliverWebhooks({ now: new Date() }).pipe(
-      Effect.provide(WebhookSender.layer),
-    ),
+    deliverWebhooks({
+      now: new Date(),
+      scope: spaceId ? { spaceId } : undefined,
+    }).pipe(Effect.provide(WebhookSender.layer)),
   );
 
   // Runs every minute and most runs find nothing; log only when there was
