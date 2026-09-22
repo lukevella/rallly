@@ -217,7 +217,7 @@ export const pollParticipantDeletedEventSchema = z
   .meta({
     id: "PollParticipantDeletedEvent",
     description:
-      "A response was removed, by the participant or the organizer. `data.participant` is the response as it stood when it was removed.",
+      "A response was removed, by the participant or the organizer. `data.participant` is a reference to the removed response; fetching it returns 404.",
   });
 
 export const webhookEventSchema = z

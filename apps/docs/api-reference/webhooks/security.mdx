@@ -26,8 +26,8 @@ X-Rallly-Signature: t=1736670600,v1=5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e
 
 1. Read the raw body as bytes. Do not parse and re-serialise it first; any change to whitespace or key order changes the digest.
 2. Split the header on `,` and each part on `=` to get `t` and `v1`.
-3. Compute HMAC-SHA256 of `<t>.<raw body>` with the secret and encode it as lowercase hex.
-4. Compare it to `v1` with a constant-time comparison.
+3. Check that `v1` is exactly 64 lowercase hex characters. Anything else is not a digest and is rejected before comparing, so a malformed header cannot make the comparison throw.
+4. Compute HMAC-SHA256 of `<t>.<raw body>` with the secret and compare it to `v1` with a constant-time comparison.
 5. Reject the request if `t` is more than a few minutes from now. This stops a captured request from being replayed later.
 
 ```ts
@@ -38,16 +38,16 @@ function verify(header: string, rawBody: string, secret: string) {
     header.split(",").map((part) => part.split("=") as [string, string]),
   );
   const timestamp = Number(parts.t);
-  if (!parts.v1 || Math.abs(Date.now() / 1000 - timestamp) > 300) {
+  if (Math.abs(Date.now() / 1000 - timestamp) > 300) {
     return false; // missing, or older than five minutes
+  }
+  if (!/^[0-9a-f]{64}$/.test(parts.v1 ?? "")) {
+    return false; // not a SHA-256 hex digest, so never worth comparing
   }
   const expected = createHmac("sha256", secret)
     .update(`${parts.t}.${rawBody}`)
-    .digest("hex");
-  return (
-    expected.length === parts.v1.length &&
-    timingSafeEqual(Buffer.from(expected), Buffer.from(parts.v1))
-  );
+    .digest();
+  return timingSafeEqual(expected, Buffer.from(parts.v1, "hex"));
 }
 ```
 
