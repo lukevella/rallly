@@ -238,7 +238,10 @@ export function VoteViewCalendar({
   const { weekStart } = getLocaleDefaults(locale);
 
   return (
-    <div className="relative flex-1 lg:min-h-0 lg:overflow-y-auto">
+    // A month is a fixed number of weeks, so from lg the grid fills the
+    // panel rather than scrolling inside it. Below lg the page scrolls and
+    // the weeks keep their natural height.
+    <div className="relative flex min-h-0 flex-1 flex-col">
       <DayContextValue.Provider value={ctx}>
         <MonthGrid
           // All-day options are stored as UTC wall time, so the calendar
@@ -262,7 +265,7 @@ export function VoteViewCalendar({
               t("previousMonth", { defaultValue: "Go to the previous month" }),
           }}
           renderDay={(dayProps) => <DayCell {...dayProps} />}
-          className="p-4"
+          className="min-h-0 flex-1 p-4"
         />
       </DayContextValue.Provider>
     </div>
