@@ -68,7 +68,11 @@ const columns = [
     meta: {
       className: "hidden justify-end text-muted-foreground text-sm sm:flex",
     },
-    cell: ({ getValue }) => <SpaceRole role={getValue()} />,
+    cell: ({ getValue }) => (
+      <Badge variant={getValue() === "admin" ? "secondary" : "default"}>
+        <SpaceRole role={getValue()} />
+      </Badge>
+    ),
   }),
   columnHelper.display({
     id: "actions",

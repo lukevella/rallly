@@ -133,19 +133,16 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
               {
                 value: "open",
                 label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
-                count: counts.open,
               },
               {
                 value: "closed",
                 label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
-                count: counts.closed,
               },
               {
                 value: "scheduled",
                 label: (
                   <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
                 ),
-                count: counts.scheduled,
               },
             ]}
           />

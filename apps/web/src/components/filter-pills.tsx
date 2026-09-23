@@ -19,7 +19,6 @@ export function FilterPills<T extends string>({
   options: {
     value: T;
     label: React.ReactNode;
-    count?: number;
   }[];
   label: string;
 }) {
@@ -51,11 +50,6 @@ export function FilterPills<T extends string>({
             )}
           >
             {option.label}
-            {option.count !== undefined ? (
-              <span className="rounded-md bg-foreground/5 px-1.5 py-0.5 text-xs tabular-nums dark:bg-foreground/10">
-                {option.count}
-              </span>
-            ) : null}
           </Link>
         );
       })}

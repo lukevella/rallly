@@ -51,7 +51,7 @@ export function ListViewTitle({
   return (
     <h1
       className={cn(
-        "truncate font-semibold text-foreground text-lg tracking-tight",
+        "truncate font-display font-semibold text-foreground text-lg tracking-tight",
         className,
       )}
     >
