@@ -89,11 +89,14 @@ export default async function Layout({
           <NavUser />
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset id="main-content" tabIndex={-1} className="min-w-0">
+      {/* Bounded to the viewport so a page can own its scroll area (list
+          views scroll their rows under a fixed header); other pages scroll
+          the wrapper below instead of the window. */}
+      <SidebarInset id="main-content" tabIndex={-1} className="h-svh min-w-0">
         <LicenseLimitWarning />
         <PastDueAlert />
-        <div className="flex flex-1 flex-col">
-          <div className="flex flex-1 flex-col">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          <div className="flex min-h-0 flex-1 flex-col">{children}</div>
         </div>
       </SidebarInset>
     </SpaceSidebarProvider>

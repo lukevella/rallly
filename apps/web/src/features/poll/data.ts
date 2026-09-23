@@ -354,6 +354,7 @@ export const getPolls = async ({
         title: true,
         status: true,
         closedReason: true,
+        timeZone: true,
         createdAt: true,
         updatedAt: true,
         user: {
@@ -363,15 +364,9 @@ export const getPolls = async ({
             image: true,
           },
         },
-        participants: {
+        _count: {
           select: {
-            id: true,
-            name: true,
-            user: {
-              select: {
-                image: true,
-              },
-            },
+            participants: true,
           },
         },
       },
@@ -381,26 +376,41 @@ export const getPolls = async ({
     }),
   ]);
 
-  const transformedPolls = polls.map((poll) => ({
-    id: poll.id,
-    title: poll.title,
-    status: poll.status,
-    closedReason: poll.closedReason,
-    createdAt: poll.createdAt,
-    updatedAt: poll.updatedAt,
-    user: poll.user
-      ? {
-          id: poll.user.id,
-          name: poll.user.name,
-          image: poll.user.image,
-        }
-      : null,
-    participants: poll.participants.map((participant) => ({
-      id: participant.id,
-      name: participant.name,
-      image: participant.user?.image ?? undefined,
-    })),
-  }));
+  const optionRanges = await prisma.option.groupBy({
+    by: ["pollId"],
+    where: { pollId: { in: polls.map((poll) => poll.id) } },
+    _min: { startTime: true },
+    _max: { startTime: true },
+  });
+  const rangeByPollId = new Map(
+    optionRanges.map((range) => [range.pollId, range]),
+  );
+
+  const transformedPolls = polls.map((poll) => {
+    const range = rangeByPollId.get(poll.id);
+    return {
+      id: poll.id,
+      title: poll.title,
+      status: poll.status,
+      closedReason: poll.closedReason,
+      // Null means the poll's times are floating: shown as stored to everyone
+      timeZone: poll.timeZone,
+      createdAt: poll.createdAt,
+      updatedAt: poll.updatedAt,
+      user: poll.user
+        ? {
+            id: poll.user.id,
+            name: poll.user.name,
+            image: poll.user.image,
+          }
+        : null,
+      participantCount: poll._count.participants,
+      dateRange:
+        range?._min.startTime && range._max.startTime
+          ? { start: range._min.startTime, end: range._max.startTime }
+          : null,
+    };
+  });
 
   const totalPages = Math.ceil(totalCount / pageSize);
   const hasNextPage = page < totalPages;

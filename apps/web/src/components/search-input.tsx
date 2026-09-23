@@ -1,12 +1,25 @@
 "use client";
 
-import { Input } from "@rallly/ui/input";
+import { cn } from "@rallly/ui";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@rallly/ui/input-group";
 import debounce from "lodash/debounce";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+import { Spinner } from "@/components/spinner";
+import { Trans } from "@/i18n/client";
 
-export function SearchInput({ placeholder }: { placeholder: string }) {
+export function SearchInput({
+  placeholder,
+  className,
+}: {
+  placeholder: string;
+  className?: string;
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -19,6 +32,11 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
 
   // Track input value in state
   const [inputValue, setInputValue] = React.useState(currentSearchValue);
+
+  // Searching covers the debounce wait and the navigation that follows
+  const [isDebouncing, setIsDebouncing] = React.useState(false);
+  const [isPending, startTransition] = React.useTransition();
+  const isSearching = isDebouncing || isPending;
 
   // Create a debounced function to update the URL
   // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
@@ -33,7 +51,10 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
 
       params.delete("page");
 
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      setIsDebouncing(false);
+      startTransition(() => {
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      });
     }, 500),
     [pathname, router, searchParams],
   );
@@ -42,29 +63,41 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
+    setIsDebouncing(true);
     debouncedUpdateUrl(newValue);
   };
 
   return (
     <form
-      className="relative w-72"
+      className={cn("w-72", className)}
       onSubmit={(e) => {
         e.preventDefault();
         debouncedUpdateUrl.flush();
       }}
     >
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
-        <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
-      </div>
-      <Input
-        ref={inputRef}
-        type="search"
-        autoFocus={searchParams.get("q") !== null}
-        placeholder={placeholder}
-        className="pl-8"
-        value={inputValue}
-        onChange={handleChange}
-      />
+      <InputGroup>
+        <InputGroupAddon>
+          <SearchIcon className="text-muted-foreground" />
+        </InputGroupAddon>
+        <InputGroupInput
+          ref={inputRef}
+          type="search"
+          autoFocus={searchParams.get("q") !== null}
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={handleChange}
+        />
+        {isSearching ? (
+          <InputGroupAddon align="inline-end">
+            <Spinner className="size-4" />
+          </InputGroupAddon>
+        ) : null}
+      </InputGroup>
+      <output aria-live="polite" className="sr-only">
+        {isSearching ? (
+          <Trans i18nKey="searching" defaults="Searching…" />
+        ) : null}
+      </output>
     </form>
   );
 }
