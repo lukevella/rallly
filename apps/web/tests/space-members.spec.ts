@@ -41,7 +41,7 @@ async function createMemberInDb({
 }: {
   spaceId: string;
   name: string;
-  /** Set to make this space the member's active space */
+  /** Makes this space the member's active space */
   lastSelectedAt?: Date;
 }) {
   const email = `${name.toLowerCase().replace(/\s/g, "-")}-${runId}@example.com`;
@@ -56,6 +56,16 @@ async function createMemberInDb({
       lastSelectedAt,
     },
   });
+
+  if (lastSelectedAt) {
+    // The active space is the membership with the latest lastSelectedAt,
+    // and Postgres sorts NULL first in a descending order, so the user's
+    // own space (never selected) would still win unless it gets a date too.
+    await prisma.spaceMember.updateMany({
+      where: { userId: user.id, spaceId: { not: spaceId } },
+      data: { lastSelectedAt: new Date(0) },
+    });
+  }
 
   return { user, email };
 }
