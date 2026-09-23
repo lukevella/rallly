@@ -37,9 +37,12 @@ async function createSpaceAdmin({
 async function createMemberInDb({
   spaceId,
   name,
+  lastSelectedAt,
 }: {
   spaceId: string;
   name: string;
+  /** Set to make this space the member's active space */
+  lastSelectedAt?: Date;
 }) {
   const email = `${name.toLowerCase().replace(/\s/g, "-")}-${runId}@example.com`;
   const user = await createUserInDb({ email, name });
@@ -50,6 +53,7 @@ async function createMemberInDb({
       spaceId,
       userId: user.id,
       role: "MEMBER",
+      lastSelectedAt,
     },
   });
 
@@ -238,5 +242,27 @@ test.describe("Space members", () => {
         "Increase the number of seats in this space from the billing page.",
       ),
     ).toBeVisible();
+  });
+
+  test("a non-admin member who opens the page directly sees access denied", async ({
+    page,
+  }) => {
+    const owner = await createSpaceAdmin({ name: "Gate Owner", seats: 3 });
+    const member = await createMemberInDb({
+      spaceId: owner.space.id,
+      name: "Gate Member",
+      lastSelectedAt: new Date(),
+    });
+
+    await gotoMembersPage(page, member.email);
+
+    await expect(mainContent(page).getByText("Access denied")).toBeVisible();
+    await expect(
+      mainContent(page).getByText("Only space admins can manage members."),
+    ).toBeVisible();
+    await expect(mainContent(page).getByText(owner.email)).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Invite member" }),
+    ).toHaveCount(0);
   });
 });
