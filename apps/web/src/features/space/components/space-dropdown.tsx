@@ -24,8 +24,9 @@ import { Link } from "@/components/link";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
+import { SpaceRole } from "@/features/space/components/space-role";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
-import type { SpaceTier } from "@/features/space/schema";
+import type { MemberRole, SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
@@ -34,7 +35,13 @@ import { SpaceIcon } from "./space-icon";
 export function SpaceDropdown({
   spaces,
 }: {
-  spaces: { id: string; name: string; image?: string; tier: SpaceTier }[];
+  spaces: {
+    id: string;
+    name: string;
+    image?: string;
+    tier: SpaceTier;
+    role: MemberRole;
+  }[];
 }) {
   const { data: activeSpace } = useSpace();
   const [pendingSpaceId, setPendingSpaceId] = React.useState<string>();
@@ -71,8 +78,10 @@ export function SpaceDropdown({
             <div className="truncate font-medium text-sm">
               {displayedSpace.name}
             </div>
-            <div className="text-muted-foreground text-xs">
+            <div className="truncate text-muted-foreground text-xs">
               <SpaceTierLabel tier={displayedSpace.tier} />
+              {" · "}
+              <SpaceRole role={displayedSpace.role} />
             </div>
           </div>
           <ChevronsUpDownIcon className="text-muted-foreground" />
