@@ -7,6 +7,7 @@ describe("getPostHogInitOptions", () => {
 
     expect(options.persistence).toBe("localStorage+cookie");
     expect(options.cross_subdomain_cookie).toBe(true);
+    expect(options.cookieWinsOnConflict).toBe(true);
     expect(options.cookieless_mode).toBeUndefined();
   });
 

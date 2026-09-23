@@ -18,5 +18,9 @@ export function getPostHogInitOptions(): Partial<PostHogConfig> {
     person_profiles: "identified_only",
     persistence: "localStorage+cookie",
     cross_subdomain_cookie: true,
+    // localStorage is per origin, so rallly.co and app.rallly.co each keep a
+    // copy that goes stale when the other signs in or out. The shared cookie
+    // is the one source both see.
+    cookieWinsOnConflict: true,
   };
 }

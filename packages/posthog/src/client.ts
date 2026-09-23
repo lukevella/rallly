@@ -18,7 +18,11 @@ let initialized = false;
  * effect captures an event or registers a group, and effects run child-first.
  * No-op on the server and when no key is configured.
  */
-export function initPostHog({ distinctId }: { distinctId?: string } = {}) {
+export function initPostHog({
+  distinctId,
+}: {
+  distinctId?: string | null;
+} = {}) {
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
   if (initialized || typeof window === "undefined" || !apiKey) {
     return;
@@ -57,6 +61,18 @@ export function initPostHog({ distinctId }: { distinctId?: string } = {}) {
   if (distinctId && posthog.get_distinct_id() !== distinctId) {
     posthog.identify(distinctId);
   }
+
+  // null means the page knows nobody is signed in. A session that expired or
+  // was revoked never ran signOut(), so the persisted id still belongs to the
+  // last account; drop it rather than attribute this visitor's events to
+  // them. undefined (the landing site) cannot see the session, so it leaves
+  // the id alone.
+  if (
+    distinctId === null &&
+    posthog.get_property("$user_state") === "identified"
+  ) {
+    posthog.reset();
+  }
 }
 
 /**
@@ -64,7 +80,8 @@ export function initPostHog({ distinctId }: { distinctId?: string } = {}) {
  * descendant renders or runs an effect — a sibling placed earlier in the
  * tree is not enough once Suspense boundaries stream in out of order. Pass
  * the logged-in user's id so the session is identified from its first
- * event; omit it for anonymous visitors and guests.
+ * event, null where the page can see there is no logged-in user (anonymous
+ * visitors and guests), and omit it where it cannot see the session at all.
  *
  * Identity is settled once per document: sign-in flows end in a full
  * navigation, never a router.refresh(), so the next load identifies, and
@@ -74,7 +91,7 @@ export function PostHogInit({
   distinctId,
   children,
 }: {
-  distinctId?: string;
+  distinctId?: string | null;
   children: React.ReactNode;
 }) {
   initPostHog({ distinctId });
