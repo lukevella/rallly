@@ -356,7 +356,6 @@
         "src/features/poll/components/types.ts",
         "src/features/poll/components/vote-icon.tsx",
         "src/features/poll/components/vote-selector.tsx",
-        "src/features/scheduled-event/components/scheduled-event-list.tsx",
         "src/features/scheduled-event/utils.ts",
         "src/features/setup/utils.ts",
         "src/features/space/actions.ts",

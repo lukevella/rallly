@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
-import { MoreVerticalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
+import { MoreHorizontalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
 import {
   changeMemberRoleAction,
   removeMemberAction,
@@ -78,10 +78,11 @@ export function MemberDropdownMenu({
               aria-label={t("moreOptions", { defaultValue: "More options" })}
               variant="ghost"
               size="icon"
+              className="size-8"
             />
           }
         >
-          <MoreVerticalIcon className="text-muted-foreground" />
+          <MoreHorizontalIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {member.role === "member" ? (

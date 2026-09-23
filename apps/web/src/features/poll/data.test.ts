@@ -3,17 +3,24 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const mockFindMany = vi.fn();
+const mockCount = vi.fn();
+const mockOptionGroupBy = vi.fn();
 
 vi.mock("@rallly/database", () => ({
   prisma: {
     poll: {
       findMany: (...args: unknown[]) => mockFindMany(...args),
+      count: (...args: unknown[]) => mockCount(...args),
     },
+    option: {
+      groupBy: (...args: unknown[]) => mockOptionGroupBy(...args),
+    },
+    $transaction: (operations: Promise<unknown>[]) => Promise.all(operations),
   },
 }));
 
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { listPolls } from "./data";
+import { getPolls, listPolls } from "./data";
 
 const spaceId = "test-space-id" as AuthorizedSpaceId;
 
@@ -101,5 +108,57 @@ describe("listPolls", () => {
         skip: 1,
       }),
     );
+  });
+});
+
+describe("getPolls", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const makeListedPoll = (id: string, participants: number) => ({
+    id,
+    title: `Poll ${id}`,
+    status: "open",
+    closedReason: null,
+    timeZone: "Europe/London",
+    createdAt: new Date("2025-01-10T12:00:00Z"),
+    updatedAt: new Date("2025-01-11T12:00:00Z"),
+    user: null,
+    _count: { participants },
+  });
+
+  it("returns each poll's participant count and option date range", async () => {
+    const start = new Date("2025-02-03T09:00:00Z");
+    const end = new Date("2025-02-07T15:00:00Z");
+    mockCount.mockResolvedValue(2);
+    mockFindMany.mockResolvedValue([
+      makeListedPoll("p1", 3),
+      makeListedPoll("p2", 0),
+    ]);
+    mockOptionGroupBy.mockResolvedValue([
+      { pollId: "p1", _min: { startTime: start }, _max: { startTime: end } },
+    ]);
+
+    const result = await getPolls({ scope: { spaceId } });
+
+    expect(mockOptionGroupBy).toHaveBeenCalledWith({
+      by: ["pollId"],
+      where: { pollId: { in: ["p1", "p2"] } },
+      _min: { startTime: true },
+      _max: { startTime: true },
+    });
+    expect(result.polls[0]).toMatchObject({
+      id: "p1",
+      participantCount: 3,
+      timeZone: "Europe/London",
+      dateRange: { start, end },
+    });
+    // A poll with no options has no range to show
+    expect(result.polls[1]).toMatchObject({
+      id: "p2",
+      participantCount: 0,
+      dateRange: null,
+    });
   });
 });

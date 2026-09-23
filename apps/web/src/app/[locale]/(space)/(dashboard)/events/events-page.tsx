@@ -1,7 +1,6 @@
 "use client";
 
 import { CalendarIcon } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import type React from "react";
 import {
@@ -10,21 +9,21 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { MemberSelector } from "@/components/member-selector";
+import { FilterPills } from "@/components/filter-pills";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageSkeleton,
-  PageTitle,
-} from "@/components/page-layout";
+  ListView,
+  ListViewHeader,
+  ListViewTitle,
+  ListViewTitleBar,
+  ListViewToolbar,
+} from "@/components/list-view";
+import { MemberSelector } from "@/components/member-selector";
 import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { EventsInfiniteList } from "./events-infinite-list";
-import { EventsTabbedView } from "./events-tabbed-view";
 import { eventsSearchParamsSchema } from "./schema";
 
 function EventsEmptyState({ status }: { status: Status }) {
@@ -100,7 +99,7 @@ function EventsEmptyState({ status }: { status: Status }) {
   );
 }
 
-function EventsPageContent() {
+export function EventsPage() {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const { data: space } = useSpace();
@@ -118,35 +117,57 @@ function EventsPageContent() {
   const visibleMember = showMemberFilter ? member : undefined;
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <Trans i18nKey="events" defaults="Events" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
-        <EventsTabbedView>
-          <div className="mb-4 flex gap-x-2">
+    <ListView>
+      <ListViewHeader>
+        <ListViewTitleBar>
+          <ListViewTitle>
+            <Trans i18nKey="events" defaults="Events" />
+          </ListViewTitle>
+        </ListViewTitleBar>
+        <ListViewToolbar>
+          <FilterPills
+            param="status"
+            value={status}
+            label={t("eventsListStatusFilter", {
+              defaultValue: "Filter by status",
+            })}
+            options={[
+              {
+                value: "upcoming",
+                label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
+              },
+              {
+                value: "past",
+                label: <Trans i18nKey="past" defaults="Past" />,
+              },
+              {
+                value: "canceled",
+                label: <Trans i18nKey="canceled" defaults="Canceled" />,
+              },
+            ]}
+          />
+          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
             <SearchInput
+              className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
               placeholder={t("searchEventsPlaceholder", {
                 defaultValue: "Search events by title...",
               })}
             />
-            {showMemberFilter ? <MemberSelector members={members} /> : null}
+            {showMemberFilter ? (
+              <MemberSelector
+                members={members}
+                className="min-w-0 sm:min-w-40"
+              />
+            ) : null}
           </div>
-          <EventsInfiniteList
-            status={status}
-            search={q}
-            member={visibleMember}
-            emptyState={<EventsEmptyState status={status || "upcoming"} />}
-          />
-        </EventsTabbedView>
-      </PageContent>
-    </PageContainer>
+        </ListViewToolbar>
+      </ListViewHeader>
+      <EventsInfiniteList
+        status={status}
+        search={q}
+        member={visibleMember}
+        emptyState={<EventsEmptyState status={status} />}
+      />
+    </ListView>
   );
 }
-
-export const EventsPage = dynamic(() => Promise.resolve(EventsPageContent), {
-  ssr: false,
-  loading: () => <PageSkeleton />,
-});

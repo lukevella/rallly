@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import {
   Select,
   SelectContent,
@@ -15,9 +16,10 @@ import { Trans } from "@/i18n/client";
 
 interface MemberSelectorProps {
   members: { userId: string; name: string; image?: string }[];
+  className?: string;
 }
 
-export function MemberSelector({ members }: MemberSelectorProps) {
+export function MemberSelector({ members, className }: MemberSelectorProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -79,7 +81,7 @@ export function MemberSelector({ members }: MemberSelectorProps) {
       }}
       disabled={isPending}
     >
-      <SelectTrigger className="min-w-48">
+      <SelectTrigger className={cn("min-w-48", className)}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

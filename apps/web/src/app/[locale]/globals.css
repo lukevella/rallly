@@ -3,6 +3,11 @@
 
 /* Any app specific overrides will go here */
 
+/* Inter Display: the same family at its largest optical size */
+@utility font-display {
+  font-variation-settings: "opsz" 32;
+}
+
 /*
  * The skip-to-content link moves focus to the page's #main-content landmark.
  * The link itself is the visible focus indicator, so suppress the outline on
