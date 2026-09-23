@@ -240,3 +240,19 @@ One event per transition. A poll that is closed, reopened and closed again produ
     ```
   </Accordion>
 </AccordionGroup>
+
+## Test events
+
+**Send test event** in the endpoint's menu on the settings page sends a `ping` to that endpoint straight away. It goes out whatever events the endpoint subscribes to, and it is signed and sent like any other event, so it checks your URL, your signature verification and your response in one go.
+
+```json
+{
+  "version": "2026-09-20",
+  "id": "ping_V1StGXR8Z5jdHi6BmyT",
+  "type": "ping",
+  "createdAt": "2025-01-12T08:30:00.000Z",
+  "data": {}
+}
+```
+
+A `ping` carries no data and is never retried. Respond with a `2xx` and otherwise ignore it. A failed test does not count toward disabling the endpoint.

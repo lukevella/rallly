@@ -4,12 +4,21 @@ import { getActiveSpaceForUser } from "@/features/space/data";
 import { loadOptionalUser } from "@/features/user/loaders";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
-import { authActionClient } from "@/lib/safe-action/server";
+import {
+  authActionClient,
+  createRateLimitMiddleware,
+} from "@/lib/safe-action/server";
 import { getWebhookAccess } from "./data";
-import { createWebhook, deleteWebhook, setWebhookEnabled } from "./mutations";
+import {
+  createWebhook,
+  deleteWebhook,
+  sendWebhookTestEvent,
+  setWebhookEnabled,
+} from "./mutations";
 import {
   createWebhookInputSchema,
   deleteWebhookSchema,
+  sendWebhookTestEventSchema,
   setWebhookEnabledSchema,
 } from "./schema";
 
@@ -107,4 +116,30 @@ export const deleteWebhookAction = authActionClient
         space: space.id,
       },
     });
+  });
+
+// Each call is an outbound request to a URL the owner chose, so it is
+// limited: enough to fix a receiver and try again, not enough to use Rallly
+// to hammer someone else's server.
+export const sendWebhookTestEventAction = authActionClient
+  .metadata({ actionName: "send_webhook_test_event" })
+  .inputSchema(sendWebhookTestEventSchema)
+  .use(createRateLimitMiddleware(10, "1 m"))
+  .action(async ({ ctx, parsedInput }) => {
+    const { space } = await requireWebhookAccess();
+
+    const result = await sendWebhookTestEvent({
+      spaceId: space.id,
+      webhookId: parsedInput.webhookId,
+    });
+
+    track(ctx.user, {
+      event: "developer:webhook_test_send",
+      properties: { ok: result.ok, status: result.status },
+      groups: {
+        space: space.id,
+      },
+    });
+
+    return result;
   });

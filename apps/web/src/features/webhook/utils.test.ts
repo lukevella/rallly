@@ -1,8 +1,12 @@
 import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
+import { MAX_CONSECUTIVE_FAILURES, WEBHOOK_VERSION } from "./constants";
+import { webhookPingEventSchema } from "./schema";
 import {
   buildWebhookPayload,
+  buildWebhookTestPayload,
   getRetryDelayMs,
+  getWebhookHealth,
   isPrivateAddress,
   signWebhookBody,
   toWebhookEventType,
@@ -258,6 +262,78 @@ describe("buildWebhookPayload", () => {
         poll,
       }),
     ).toBeNull();
+  });
+});
+
+describe("buildWebhookTestPayload", () => {
+  it("builds a ping in the shared envelope with no data", () => {
+    const payload = buildWebhookTestPayload({
+      id: "ping_abc",
+      createdAt: new Date("2026-09-23T10:00:00.000Z"),
+    });
+    expect(payload).toEqual({
+      version: WEBHOOK_VERSION,
+      id: "ping_abc",
+      type: "ping",
+      createdAt: "2026-09-23T10:00:00.000Z",
+      data: {},
+    });
+    expect(webhookPingEventSchema.safeParse(payload).success).toBe(true);
+  });
+});
+
+describe("getWebhookHealth", () => {
+  it("is idle when enabled and nothing has been attempted", () => {
+    expect(getWebhookHealth({ enabled: true, consecutiveFailures: 0 })).toBe(
+      "idle",
+    );
+  });
+
+  it("is healthy when the last attempt succeeded", () => {
+    expect(
+      getWebhookHealth({
+        enabled: true,
+        consecutiveFailures: 0,
+        lastAttempt: { status: "succeeded" },
+      }),
+    ).toBe("healthy");
+  });
+
+  it("is failing as soon as an attempt fails, before any event exhausts", () => {
+    expect(
+      getWebhookHealth({
+        enabled: true,
+        consecutiveFailures: 0,
+        lastAttempt: { status: "failed" },
+      }),
+    ).toBe("failing");
+  });
+
+  it("is failing while exhausted events are counted against it", () => {
+    expect(
+      getWebhookHealth({
+        enabled: true,
+        consecutiveFailures: 3,
+        lastAttempt: { status: "succeeded" },
+      }),
+    ).toBe("failing");
+  });
+
+  it("tells a dispatcher disable apart from an owner disable", () => {
+    expect(
+      getWebhookHealth({
+        enabled: false,
+        consecutiveFailures: MAX_CONSECUTIVE_FAILURES,
+        lastAttempt: { status: "exhausted" },
+      }),
+    ).toBe("disabled_after_failures");
+    expect(
+      getWebhookHealth({
+        enabled: false,
+        consecutiveFailures: 4,
+        lastAttempt: { status: "failed" },
+      }),
+    ).toBe("disabled");
   });
 });
 

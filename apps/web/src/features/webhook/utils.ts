@@ -1,6 +1,14 @@
 import { pollActivitySchema } from "@/features/activity/schema";
-import { RETRY_DELAYS_MS, WEBHOOK_VERSION } from "./constants";
-import type { WebhookEvent, WebhookEventType } from "./schema";
+import {
+  MAX_CONSECUTIVE_FAILURES,
+  RETRY_DELAYS_MS,
+  WEBHOOK_VERSION,
+} from "./constants";
+import type {
+  WebhookEvent,
+  WebhookEventType,
+  WebhookPingEvent,
+} from "./schema";
 
 /**
  * The resource half of an event name (`poll` in `poll.closed`). Event names
@@ -238,6 +246,62 @@ export function buildWebhookPayload({
     default:
       return null;
   }
+}
+
+/** The body of a test event: the shared envelope and nothing else. */
+export function buildWebhookTestPayload({
+  id,
+  createdAt,
+}: {
+  id: string;
+  createdAt: Date;
+}): WebhookPingEvent {
+  return {
+    version: WEBHOOK_VERSION,
+    id,
+    type: "ping",
+    createdAt: createdAt.toISOString(),
+    data: {},
+  };
+}
+
+export type WebhookHealth =
+  | "healthy"
+  | "failing"
+  | "disabled_after_failures"
+  | "disabled"
+  | "idle";
+
+/**
+ * An endpoint's state as the settings list presents it. Disabled by the
+ * dispatcher and disabled by the owner share `enabled: false`; they are told
+ * apart by the failure count, which only the dispatcher raises to the cap and
+ * which re-enabling clears. Failing is either signal: exhausted events count
+ * against the endpoint, but exhaustion takes the whole retry schedule, so a
+ * receiver that has been down for hours shows up first as a failed attempt.
+ */
+export function getWebhookHealth({
+  enabled,
+  consecutiveFailures,
+  lastAttempt,
+}: {
+  enabled: boolean;
+  consecutiveFailures: number;
+  lastAttempt?: { status: string };
+}): WebhookHealth {
+  if (!enabled) {
+    return consecutiveFailures >= MAX_CONSECUTIVE_FAILURES
+      ? "disabled_after_failures"
+      : "disabled";
+  }
+  if (
+    consecutiveFailures > 0 ||
+    lastAttempt?.status === "failed" ||
+    lastAttempt?.status === "exhausted"
+  ) {
+    return "failing";
+  }
+  return lastAttempt ? "healthy" : "idle";
 }
 
 function parseIPv4(address: string) {

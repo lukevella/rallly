@@ -32,8 +32,9 @@ export function getWebhookAccess(
 
 /**
  * A space's endpoints for the settings list. The last attempt's outcome comes
- * from the most recent delivery that was actually attempted, so an endpoint
- * with a queue of pending rows still shows the result the owner last saw.
+ * from the most recent delivery that was actually attempted, test events
+ * included, so an endpoint with a queue of pending rows still shows the
+ * result the owner last saw.
  */
 export async function getSpaceWebhooks({
   spaceId,
@@ -47,12 +48,14 @@ export async function getSpaceWebhooks({
       url: true,
       events: true,
       enabled: true,
+      consecutiveFailures: true,
       createdAt: true,
       deliveries: {
         where: { status: { in: ["succeeded", "failed", "exhausted"] } },
         select: {
           status: true,
           lastResponseStatus: true,
+          lastError: true,
           updatedAt: true,
         },
         orderBy: { updatedAt: "desc" },
