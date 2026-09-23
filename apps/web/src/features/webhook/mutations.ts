@@ -7,6 +7,7 @@ import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
 import { Clock, Data, Effect } from "effect";
+import { nanoid } from "nanoid";
 import { after } from "next/server";
 import { env } from "@/env";
 import { resolveSpaceTier } from "@/features/billing/utils";
@@ -38,6 +39,7 @@ import { MAX_WEBHOOKS_PER_SPACE } from "./schema";
 import { WebhookSender } from "./service";
 import {
   buildWebhookPayload,
+  buildWebhookTestPayload,
   getRetryDelayMs,
   toWebhookEventType,
 } from "./utils";
@@ -609,6 +611,74 @@ export async function setWebhookEnabled({
       ? { enabled: true, consecutiveFailures: 0, cursor: new Date() }
       : { enabled: false },
   });
+}
+
+/**
+ * Sends a `ping` to one endpoint now, through the same signing and sender
+ * as any delivery, and returns what came back. A diagnostic, not an event:
+ * one attempt and no retry, and a failure never counts toward disabling the
+ * endpoint, so testing a broken receiver cannot turn it off. A success
+ * resets the count as any success does: the endpoint has just proven it
+ * accepts deliveries.
+ *
+ * The row is written after the attempt, never as in flight: stale
+ * reclamation would otherwise hand a ping orphaned by a crash to the
+ * dispatcher, which would retry it and count its exhaustion. A failure is
+ * recorded as exhausted for the same reason. The activity id is the event
+ * id, since no activity produced it.
+ */
+export async function sendWebhookTestEvent({
+  spaceId,
+  webhookId,
+}: {
+  spaceId: string;
+  webhookId: string;
+}) {
+  await authorizeWebhook({ spaceId, webhookId, action: "update" });
+
+  const webhook = await prisma.spaceWebhook.findUniqueOrThrow({
+    where: { id: webhookId },
+    select: { url: true, secret: true },
+  });
+
+  const id = `ping_${nanoid()}`;
+  const now = new Date();
+  const payload = buildWebhookTestPayload({ id, createdAt: now });
+
+  const result = await runtime.runPromise(
+    attemptDelivery({
+      id,
+      eventType: payload.type,
+      payload,
+      webhook,
+    }).pipe(Effect.provide(WebhookSender.layer)),
+  );
+
+  await prisma.$transaction([
+    prisma.webhookDelivery.create({
+      data: {
+        id,
+        webhookId,
+        activityId: id,
+        eventType: payload.type,
+        payload: payload as unknown as Prisma.InputJsonObject,
+        status: result.ok ? "succeeded" : "exhausted",
+        attempts: 1,
+        lastResponseStatus: result.status,
+        lastError: result.ok ? null : result.error,
+      },
+    }),
+    ...(result.ok
+      ? [
+          prisma.spaceWebhook.update({
+            where: { id: webhookId },
+            data: { lastDeliveredAt: now, consecutiveFailures: 0 },
+          }),
+        ]
+      : []),
+  ]);
+
+  return result;
 }
 
 export async function deleteWebhook({
