@@ -103,6 +103,7 @@ function DropdownMenuRadioItem({
       data-slot="dropdown-menu-radio-item"
       className={cn(
         dropdownMenuItemVariants({ variant: "default" }),
+        "pr-8",
         className,
       )}
       closeOnClick

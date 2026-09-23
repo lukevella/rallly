@@ -86,10 +86,7 @@ export function SpaceDropdown({
           </div>
           <ChevronsUpDownIcon className="text-muted-foreground" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="min-w-[var(--anchor-width)]"
-          align="start"
-        >
+        <DropdownMenuContent className="w-(--anchor-width)" align="start">
           <DropdownMenuLabel>
             <Trans i18nKey="spaces" defaults="Spaces" />
           </DropdownMenuLabel>
@@ -108,7 +105,9 @@ export function SpaceDropdown({
                 className="flex items-center gap-2"
               >
                 <SpaceIcon size="sm" src={space.image} name={space.name} />
-                <span>{space.name}</span>
+                <span className="min-w-0 truncate" title={space.name}>
+                  {space.name}
+                </span>
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>
