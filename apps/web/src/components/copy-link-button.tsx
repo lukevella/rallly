@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
+import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { useState } from "react";
+import { LinkIcon } from "lucide-react";
 import { useCopyToClipboard } from "react-use";
 
 import { useTranslation } from "@/i18n/client";
@@ -16,10 +16,9 @@ export function CopyLinkButton({
   className?: string;
 }) {
   const [, copy] = useCopyToClipboard();
-  const [didCopy, setDidCopy] = useState(false);
   const { t } = useTranslation();
   return (
-    <Tooltip open={didCopy ? true : undefined}>
+    <Tooltip>
       <TooltipTrigger
         render={
           <Button
@@ -29,23 +28,15 @@ export function CopyLinkButton({
             size="icon"
             onClick={() => {
               copy(href);
-              setDidCopy(true);
-              setTimeout(() => setDidCopy(false), 1000);
+              toast.success(t("linkCopied", { defaultValue: "Link copied" }));
             }}
           >
-            <CopyIcon className="text-muted-foreground" />
+            <LinkIcon className="text-muted-foreground" />
           </Button>
         }
       />
       <TooltipContent>
-        {didCopy ? (
-          <div className="flex items-center gap-2">
-            <CheckIcon className="size-4 text-green-400" />
-            {t("copied", { defaultValue: "Copied" })}
-          </div>
-        ) : (
-          <p>{t("copyLink", { defaultValue: "Copy link" })}</p>
-        )}
+        <p>{t("copyLink", { defaultValue: "Copy link" })}</p>
       </TooltipContent>
     </Tooltip>
   );
