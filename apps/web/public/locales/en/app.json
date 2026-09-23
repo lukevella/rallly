@@ -996,6 +996,7 @@
   "webhookDeleted": "Webhook deleted",
   "webhookDocs": "Webhook docs",
   "webhookEventComboboxEmpty": "No events found",
+  "webhookEventComboboxPlaceholder": "Select events",
   "webhookEventCount": "{count, plural, one {# event} other {# events}}",
   "webhookHealthDisabledAfterFailures": "Turned off after failures",
   "webhookHealthFailedInARow": "{count, plural, one {# event} other {# events}} failed in a row",

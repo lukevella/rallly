@@ -31,7 +31,7 @@ import { useCopyToClipboard } from "react-use";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { createWebhookAction } from "../actions";
-import { createWebhookInputSchema, WEBHOOK_EVENT_TYPES } from "../schema";
+import { createWebhookInputSchema } from "../schema";
 import { WebhookEventCombobox } from "./webhook-event-combobox";
 
 export function CreateWebhookButton() {
@@ -46,7 +46,7 @@ export function CreateWebhookButton() {
     resolver: zodResolver(createWebhookInputSchema),
     defaultValues: {
       url: "",
-      events: [...WEBHOOK_EVENT_TYPES],
+      events: [],
     },
   });
 

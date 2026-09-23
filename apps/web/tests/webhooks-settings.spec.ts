@@ -10,7 +10,6 @@ import {
   MAX_CONSECUTIVE_FAILURES,
   WEBHOOK_VERSION,
 } from "@/features/webhook/constants";
-import { WEBHOOK_EVENT_TYPES } from "@/features/webhook/schema";
 import {
   createUserInDb,
   loginWithEmail,
@@ -163,10 +162,18 @@ test.describe("Webhooks settings", () => {
     await page.getByRole("button", { name: "Add webhook" }).click();
     const url = "https://example.com/hooks/rallly";
     await page.getByLabel("URL").fill(url);
-    await page
+    const submit = page
       .getByRole("dialog")
-      .getByRole("button", { name: "Add webhook" })
-      .click();
+      .getByRole("button", { name: "Add webhook" });
+
+    // No events are preselected, and at least one is required.
+    await submit.click();
+    await expect(page.getByText("Select at least one event")).toBeVisible();
+
+    await page.getByLabel("Events").click();
+    await page.getByRole("option", { name: "poll.closed" }).click();
+    await page.keyboard.press("Escape");
+    await submit.click();
 
     // The secret is shown once, and it is the real one: what the dialog
     // displays must decrypt back out of the row the dispatcher signs with.
@@ -183,8 +190,7 @@ test.describe("Webhooks settings", () => {
     // Pinned at creation, so a later version bump cannot move an endpoint
     // that was built against this one.
     expect(webhook.version).toBe(WEBHOOK_VERSION);
-    // The form starts with every event selected.
-    expect([...webhook.events].sort()).toEqual([...WEBHOOK_EVENT_TYPES].sort());
+    expect(webhook.events).toEqual(["poll.closed"]);
     expect(decryptSecret(webhook.secret)).toBe(revealed);
     // Never replays history: a new endpoint starts at now.
     expect(webhook.cursor.getTime()).toBeGreaterThan(Date.now() - 60_000);
@@ -194,9 +200,7 @@ test.describe("Webhooks settings", () => {
     const row = endpointRow(page, url);
     await expect(row).toBeVisible();
     // The row summarises the subscription rather than listing it.
-    await expect(
-      row.getByText(`${WEBHOOK_EVENT_TYPES.length} events`),
-    ).toBeVisible();
+    await expect(row.getByText("1 event")).toBeVisible();
     // Closing the reveal is the only chance to copy it — reloading must not
     // surface the secret again.
     await page.reload();

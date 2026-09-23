@@ -52,10 +52,17 @@ export function WebhookEventCombobox({
         <ComboboxInput
           id={id}
           onBlur={onBlur}
-          placeholder={t("webhookEventCount", {
-            defaultValue: "{count, plural, one {# event} other {# events}}",
-            count: value.length,
-          })}
+          placeholder={
+            value.length > 0
+              ? t("webhookEventCount", {
+                  defaultValue:
+                    "{count, plural, one {# event} other {# events}}",
+                  count: value.length,
+                })
+              : t("webhookEventComboboxPlaceholder", {
+                  defaultValue: "Select events",
+                })
+          }
           {...ariaProps}
         />
       </div>

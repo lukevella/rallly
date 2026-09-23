@@ -286,9 +286,13 @@ export const webhookUrlSchema = z
 // to a run, and keeps the list readable.
 export const MAX_WEBHOOKS_PER_SPACE = 5;
 
+const webhookEventsSchema = z
+  .array(webhookEventTypeSchema)
+  .min(1, "Select at least one event");
+
 export const createWebhookInputSchema = z.object({
   url: webhookUrlSchema,
-  events: z.array(webhookEventTypeSchema).min(1),
+  events: webhookEventsSchema,
 });
 
 export type CreateWebhookInput = z.infer<typeof createWebhookInputSchema>;
@@ -296,7 +300,7 @@ export type CreateWebhookInput = z.infer<typeof createWebhookInputSchema>;
 export const updateWebhookInputSchema = z.object({
   webhookId: z.string(),
   url: webhookUrlSchema.optional(),
-  events: z.array(webhookEventTypeSchema).min(1).optional(),
+  events: webhookEventsSchema.optional(),
   enabled: z.boolean().optional(),
 });
 
