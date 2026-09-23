@@ -5,7 +5,13 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@rallly/ui/alert";
-import { InfoIcon, SparklesIcon } from "lucide-react";
+import { InfoIcon, ShieldXIcon, SparklesIcon } from "lucide-react";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { Link } from "@/components/link";
 import { ListViewActions } from "@/components/list-view";
 import { defineAbilityForSpace } from "@/features/space/ability";
@@ -33,10 +39,19 @@ async function getMemberAbility() {
   });
 }
 
+// Member management is admin only: the sidebar and home tile hide the page
+// from members, and a direct link lands on the denied state below.
+function isSpaceAdmin(space: { role: string }) {
+  return space.role === "admin";
+}
+
 export async function MembersPageActions() {
   const space = await loadActiveSpace();
 
-  if (defineAbilityForSpace(space).cannot("invite", "Member")) {
+  if (
+    !isSpaceAdmin(space) ||
+    defineAbilityForSpace(space).cannot("invite", "Member")
+  ) {
     return null;
   }
 
@@ -64,8 +79,28 @@ export async function MembersPageActions() {
 }
 
 export async function MembersPageContent() {
-  const [space, members, seatUsage, memberAbility] = await Promise.all([
-    loadActiveSpace(),
+  const space = await loadActiveSpace();
+
+  if (!isSpaceAdmin(space)) {
+    return (
+      <EmptyState className="h-96">
+        <EmptyStateIcon>
+          <ShieldXIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="accessDenied" defaults="Access denied" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="membersAdminRequired"
+            defaults="Only space admins can manage members."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
+
+  const [members, seatUsage, memberAbility] = await Promise.all([
     loadSpaceMembers(),
     loadSeatUsage(),
     getMemberAbility(),
