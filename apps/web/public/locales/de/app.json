@@ -983,6 +983,7 @@
   "webhookAddedDescription": "Kopiere jetzt dein Signing-Secret. Du wirst es später nicht noch einmal ansehen können.",
   "webhookDeleted": "Webhook gelöscht",
   "webhookEventComboboxEmpty": "Keine Ereignisse gefunden",
+  "webhookEventComboboxPlaceholder": "Ereignisse auswählen",
   "webhookLimitReached": "Du hast die maximale Anzahl an Webhooks erreicht. Lösche einen, bevor du einen neuen hinzufügst.",
   "webhooksDescription": "Sende Ereignisse an deinen eigenen Server",
   "webhooksSettingsDescription": "Sende Ereignisse mit signierten und bei Bedarf wiederholten Zustellungen an deinen eigenen Server.",
