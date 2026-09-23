@@ -996,6 +996,7 @@
   "webhookDeleted": "Webhook törölve",
   "webhookDocs": "Webhook dokumentáció",
   "webhookEventComboboxEmpty": "Nem található esemény",
+  "webhookEventComboboxPlaceholder": "Esemény kiválasztása",
   "webhookEventCount": "{count, plural, one {# esemény} other {# esemény}}",
   "webhookHealthDisabledAfterFailures": "Kikapcsolva hibás futások után",
   "webhookHealthFailedInARow": "{count, plural, one {# esemény} other {# esemény}} meghiúsult egymás után",
