@@ -242,7 +242,7 @@ function ApplicationForm({
         <p className="text-pretty text-muted-foreground text-sm leading-relaxed">
           <Trans
             i18nKey="nonprofitApplyOffer"
-            defaults="Registered nonprofits get {percent}% off Rallly Pro."
+            defaults="Registered nonprofits and public educational institutions get {percent}% off Rallly Pro."
             values={{ percent: NONPROFIT_DISCOUNT_PERCENT }}
           />
         </p>
@@ -336,7 +336,7 @@ function ApplicationForm({
                   <FormLabel>
                     <Trans
                       i18nKey="nonprofitDocuments"
-                      defaults="Proof of nonprofit registration"
+                      defaults="Proof of eligibility"
                     />
                   </FormLabel>
                   <Tooltip>
@@ -356,7 +356,7 @@ function ApplicationForm({
                     <TooltipContent className="max-w-xs">
                       <Trans
                         i18nKey="nonprofitDocumentExamples"
-                        defaults="For example an IRS determination letter, a charity commission registration certificate, or an extract from your national nonprofit register."
+                        defaults="For example an IRS determination letter, a charity commission registration certificate, an extract from your national nonprofit register, or a tax exemption letter issued by a government authority."
                       />
                     </TooltipContent>
                   </Tooltip>

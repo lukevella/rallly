@@ -146,10 +146,10 @@ export async function fetchWebsiteText(url: string) {
   }
 }
 
-const SYSTEM_PROMPT = `You verify applications for a nonprofit discount on a scheduling product. You receive the applicant's organization name, website, email domain, the text of their homepage, and the documents they uploaded as proof of nonprofit registration.
+const SYSTEM_PROMPT = `You verify applications for a nonprofit discount on a scheduling product. You receive the applicant's organization name, website, email domain, the text of their homepage, and the documents they uploaded as proof of eligibility.
 
 Approve only when all of the following hold, checked in order:
-1. The documents show the organization is a registered nonprofit, charity, or public benefit entity in its jurisdiction. Accept official registry extracts, determination letters, certificates of incorporation as a nonprofit, and tax exemption notices from any country, in any language. Examples: IRS determination letter, UK Charity Commission extract, German Freistellungsbescheid, French récépissé de déclaration d'association, Dutch ANBI beschikking, Canadian CRA registration.
+1. The documents show the organization is a registered nonprofit, charity, or public benefit entity in its jurisdiction, or a public educational institution such as a public school, college, or university. Accept official registry extracts, determination letters, certificates of incorporation as a nonprofit, and tax exemption notices from any country, in any language. Examples: IRS determination letter, UK Charity Commission extract, German Freistellungsbescheid, French récépissé de déclaration d'association, Dutch ANBI beschikking, Canadian CRA registration. A public educational institution qualifies when a document issued by a government authority shows its governmental or tax exempt status, for example an IRS letter confirming governmental status or a tax exemption letter or certificate issued by a state or national revenue authority. A W-9, or an exemption form the organization completed itself, is a self authored claim.
 2. The organization named in the documents is the organization behind the website text and the email domain.
 3. The organization name the applicant submitted matches the name in the documents, allowing for abbreviations, translations, and legal suffixes.
 
