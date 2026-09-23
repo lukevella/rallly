@@ -2,43 +2,50 @@ import { Skeleton } from "@rallly/ui/skeleton";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderContent,
-  PageTitle,
-} from "@/components/page-layout";
+  ListView,
+  ListViewContent,
+  ListViewHeader,
+  ListViewTitle,
+  ListViewTitleBar,
+} from "@/components/list-view";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { MembersPageActions, MembersPageContent } from "./members-page";
 
 export default function Page() {
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageTitle>
+    <ListView>
+      <ListViewHeader>
+        <ListViewTitleBar>
+          <ListViewTitle>
             <Trans i18nKey="members" defaults="Members" />
-          </PageTitle>
-        </PageHeaderContent>
-        <Suspense>
-          <MembersPageActions />
-        </Suspense>
-      </PageHeader>
-      <PageContent className="space-y-4">
+          </ListViewTitle>
+          <Suspense>
+            <MembersPageActions />
+          </Suspense>
+        </ListViewTitleBar>
+      </ListViewHeader>
+      <ListViewContent className="pt-2">
         <Suspense
           fallback={
-            <div className="space-y-4">
-              <Skeleton className="h-7 w-full" />
-              <Skeleton className="h-7 w-full" />
-              <Skeleton className="h-7 w-1/2" />
+            <div aria-hidden className="py-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
+                  key={i}
+                  className="flex h-12 items-center gap-3 px-8"
+                >
+                  <Skeleton className="size-6 rounded-full" />
+                  <Skeleton className="h-4 w-48" />
+                </div>
+              ))}
             </div>
           }
         >
           <MembersPageContent />
         </Suspense>
-      </PageContent>
-    </PageContainer>
+      </ListViewContent>
+    </ListView>
   );
 }
 

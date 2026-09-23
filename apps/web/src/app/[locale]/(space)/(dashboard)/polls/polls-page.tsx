@@ -112,7 +112,7 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
           <ListViewTitle>
             <Trans i18nKey="polls" defaults="Polls" />
           </ListViewTitle>
-          <ListViewActions className="ml-auto">
+          <ListViewActions>
             <Link
               href="/new"
               className={buttonVariants({ variant: "primary" })}

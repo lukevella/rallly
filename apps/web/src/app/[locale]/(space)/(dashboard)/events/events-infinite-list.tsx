@@ -14,20 +14,20 @@ import { DataList } from "@/components/data-list";
 import { ListViewContent } from "@/components/list-view";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
-import {
-  EventDate,
-  EventTimeRange,
-} from "@/features/scheduled-event/components/event-date-time";
-import {
-  ScheduledEventRowActions,
-  ScheduledEventStatusIcon,
-} from "@/features/scheduled-event/components/scheduled-event-row";
+import { EventTimeRange } from "@/features/scheduled-event/components/event-date-time";
+import { ScheduledEventRowActions } from "@/features/scheduled-event/components/scheduled-event-row";
 import type {
   ScheduledEventStatus,
   Status,
 } from "@/features/scheduled-event/schema";
 import { Trans } from "@/i18n/client";
+import { CalendarDate } from "@/lib/datetime/calendar-date";
+import { useDateTimeConfig } from "@/lib/datetime/client";
 import type { DateInput } from "@/lib/datetime/types";
+import {
+  calendarDateToUTCMidnight,
+  getCalendarDate,
+} from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
 
@@ -46,9 +46,20 @@ type EventRow = {
 const columnHelper = createColumnHelper<EventRow>();
 
 const columns = [
-  columnHelper.accessor("status", {
-    header: () => <Trans i18nKey="eventsListStatus" defaults="Status" />,
-    cell: ({ getValue }) => <ScheduledEventStatusIcon status={getValue()} />,
+  columnHelper.accessor("end", {
+    header: () => <Trans i18nKey="eventsListTime" defaults="Time" />,
+    meta: {
+      className:
+        "justify-end whitespace-nowrap text-right text-muted-foreground text-sm tabular-nums",
+    },
+    cell: ({ row }) => (
+      <EventTimeRange
+        start={row.original.start}
+        end={row.original.end}
+        allDay={row.original.allDay}
+        timeZone={row.original.timeZone}
+      />
+    ),
   }),
   columnHelper.accessor("title", {
     header: () => <Trans i18nKey="title" defaults="Title" />,
@@ -61,30 +72,6 @@ const columns = [
       >
         {row.original.title}
       </span>
-    ),
-  }),
-  columnHelper.accessor("start", {
-    header: () => <Trans i18nKey="eventsListWhen" defaults="When" />,
-    meta: {
-      className:
-        "hidden justify-end gap-1.5 whitespace-nowrap text-muted-foreground text-sm md:flex",
-    },
-    cell: ({ row }) => (
-      <>
-        <EventDate
-          value={row.original.start}
-          allDay={row.original.allDay}
-          timeZone={row.original.timeZone}
-          preset="date"
-        />
-        <span aria-hidden>·</span>
-        <EventTimeRange
-          start={row.original.start}
-          end={row.original.end}
-          allDay={row.original.allDay}
-          timeZone={row.original.timeZone}
-        />
-      </>
     ),
   }),
   columnHelper.accessor((event) => event.invites.length, {
@@ -135,6 +122,47 @@ const columns = [
   }),
 ];
 
+/**
+ * The calendar day an event falls on, as YYYY-MM-DD. All-day and floating
+ * events are stored as UTC wall time; fixed instants use the viewer's zone.
+ */
+function getDayKey(event: EventRow, viewerTimeZone: string) {
+  const timeZone =
+    event.allDay || event.timeZone === null ? "UTC" : viewerTimeZone;
+  return getCalendarDate(new Date(event.start), timeZone);
+}
+
+/**
+ * Groups events by day, keeping the order the days arrive in, with all-day
+ * events first within each day and the rest by start time.
+ */
+function groupByDay(events: EventRow[], viewerTimeZone: string) {
+  const days = new Map<string, EventRow[]>();
+  for (const event of events) {
+    const key = getDayKey(event, viewerTimeZone);
+    const day = days.get(key);
+    if (day) {
+      day.push(event);
+    } else {
+      days.set(key, [event]);
+    }
+  }
+  const dayKeyById = new Map<string, string>();
+  const sorted: EventRow[] = [];
+  for (const [key, day] of days) {
+    day.sort(
+      (a, b) =>
+        Number(b.allDay) - Number(a.allDay) ||
+        new Date(a.start).getTime() - new Date(b.start).getTime(),
+    );
+    for (const event of day) {
+      dayKeyById.set(event.id, key);
+      sorted.push(event);
+    }
+  }
+  return { sorted, dayKeyById };
+}
+
 function EventsListSkeleton() {
   return (
     <div aria-hidden className="py-2">
@@ -142,7 +170,7 @@ function EventsListSkeleton() {
         <div
           // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
           key={i}
-          className="flex h-12 items-center gap-3 px-6 md:px-8"
+          className="flex h-12 items-center gap-3 px-8"
         >
           <Skeleton className="size-4 rounded-full" />
           <Skeleton className="h-4 w-48" />
@@ -189,8 +217,14 @@ export function EventsInfiniteList({
     [data],
   );
 
+  const viewerTimeZone = useDateTimeConfig().timeZone ?? getBrowserTimeZone();
+  const { sorted, dayKeyById } = React.useMemo(
+    () => groupByDay(events, viewerTimeZone),
+    [events, viewerTimeZone],
+  );
+
   const table = useReactTable({
-    data: events,
+    data: sorted,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (event) => event.id,
@@ -253,7 +287,27 @@ export function EventsInfiniteList({
     <ListViewContent>
       <DataList
         table={table}
-        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] md:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
+        getGroup={(event) => {
+          const key = dayKeyById.get(event.id) ?? "";
+          return {
+            id: key,
+            label: (
+              <>
+                <CalendarDate
+                  value={calendarDateToUTCMidnight(key)}
+                  preset="weekday"
+                  className="font-medium text-foreground"
+                />
+                <CalendarDate
+                  value={calendarDateToUTCMidnight(key)}
+                  preset="dateLong"
+                  className="text-muted-foreground"
+                />
+              </>
+            ),
+          };
+        }}
+        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto]"
       />
       {hasNextPage && (
         <div ref={loadMoreRef} className="flex justify-center py-4">

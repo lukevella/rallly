@@ -22,55 +22,13 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import {
-  CalendarPlusIcon,
-  CircleCheckIcon,
-  CircleDashedIcon,
-  CircleXIcon,
-  MoreHorizontalIcon,
-} from "lucide-react";
+import { CalendarPlusIcon, MoreHorizontalIcon } from "lucide-react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { AddToCalendarMenuItems } from "@/features/calendars/components/add-to-calendar-menu-items";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
 import type { ScheduledEventStatus } from "@/features/scheduled-event/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-
-export function ScheduledEventStatusIcon({
-  status,
-}: {
-  status: ScheduledEventStatus;
-}) {
-  switch (status) {
-    case "confirmed":
-      return (
-        <span className="inline-flex">
-          <CircleCheckIcon className="size-4 text-green-500" />
-          <span className="sr-only">
-            <Trans i18nKey="eventStatusConfirmed" defaults="Confirmed" />
-          </span>
-        </span>
-      );
-    case "unconfirmed":
-      return (
-        <span className="inline-flex">
-          <CircleDashedIcon className="size-4 text-gray-500" />
-          <span className="sr-only">
-            <Trans i18nKey="eventStatusUnconfirmed" defaults="Unconfirmed" />
-          </span>
-        </span>
-      );
-    case "canceled":
-      return (
-        <span className="inline-flex">
-          <CircleXIcon className="size-4 text-rose-500" />
-          <span className="sr-only">
-            <Trans i18nKey="canceled" defaults="Canceled" />
-          </span>
-        </span>
-      );
-  }
-}
 
 export function ScheduledEventRowActions({
   eventId,

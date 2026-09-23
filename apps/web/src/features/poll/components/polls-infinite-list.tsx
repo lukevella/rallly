@@ -276,7 +276,7 @@ const columns = [
   columnHelper.accessor("dateRange", {
     header: () => <Trans i18nKey="pollsListDates" defaults="Dates" />,
     meta: {
-      className: "hidden justify-end text-muted-foreground text-sm md:flex",
+      className: "hidden justify-end text-muted-foreground text-xs md:flex",
     },
     cell: ({ getValue, row }) => {
       const range = getValue();

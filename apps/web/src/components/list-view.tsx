@@ -30,11 +30,11 @@ export function ListViewTitleBar({
   return (
     <div
       className={cn(
-        "flex h-14 items-center justify-between gap-4 pr-2 pl-4 md:pr-4 md:pl-6",
+        "flex h-16 items-end justify-between gap-4 pr-4 pb-1 pl-4 md:pl-6",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-2">
+      <div className="flex h-9 min-w-0 flex-1 items-center gap-2">
         <SidebarTrigger className="md:hidden" />
         {children}
       </div>
@@ -65,7 +65,7 @@ export function ListViewActions({
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={cn("flex shrink-0 items-center gap-2", className)}>
+    <div className={cn("ml-auto flex shrink-0 items-center gap-2", className)}>
       {children}
     </div>
   );
@@ -78,7 +78,7 @@ export function ListViewToolbar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 py-2 pr-2 pl-4 md:pr-4 md:pl-6",
+        "flex flex-wrap items-center gap-x-2 gap-y-4 px-4 pt-4 pb-3",
         className,
       )}
     >

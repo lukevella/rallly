@@ -33,7 +33,7 @@ export function FilterPills<T extends string>({
   };
 
   return (
-    <nav aria-label={label} className="flex items-center gap-1 md:-ml-3.5">
+    <nav aria-label={label} className="flex items-center gap-1">
       {options.map((option) => {
         const selected = option.value === value;
         return (
