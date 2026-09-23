@@ -11,6 +11,30 @@ import {
 } from "./utils";
 
 let initialized = false;
+let syncedDistinctId: string | null | undefined;
+
+function syncIdentity(distinctId: string | null | undefined) {
+  syncedDistinctId = distinctId;
+
+  // Merges the persisted anonymous id into the user the first time they load
+  // a page signed in. posthog-js only merges from an anonymous id, so a
+  // browser still carrying another account's id is switched, not merged.
+  if (distinctId && posthog.get_distinct_id() !== distinctId) {
+    posthog.identify(distinctId);
+  }
+
+  // null means the page knows nobody is signed in. A session that expired or
+  // was revoked never ran signOut(), so the persisted id still belongs to the
+  // last account; drop it rather than attribute this visitor's events to
+  // them. undefined (the landing site) cannot see the session, so it leaves
+  // the id alone.
+  if (
+    distinctId === null &&
+    posthog.get_property("$user_state") === "identified"
+  ) {
+    posthog.reset();
+  }
+}
 
 /**
  * Initialise the browser client once per page load. Idempotent and safe to
@@ -24,7 +48,16 @@ export function initPostHog({
   distinctId?: string | null;
 } = {}) {
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
-  if (initialized || typeof window === "undefined" || !apiKey) {
+  if (typeof window === "undefined" || !apiKey) {
+    return;
+  }
+  if (initialized) {
+    // Re-sync only when the session actually changed (e.g. a refresh after
+    // a failed session read). Re-running on every render would re-identify
+    // the old user in the window between signOut()'s reset() and navigation.
+    if (distinctId !== syncedDistinctId) {
+      syncIdentity(distinctId);
+    }
     return;
   }
   initialized = true;
@@ -55,24 +88,7 @@ export function initPostHog({
     ...getPostHogInitOptions(),
   });
 
-  // Merges the persisted anonymous id into the user the first time they load
-  // a page signed in. posthog-js only merges from an anonymous id, so a
-  // browser still carrying another account's id is switched, not merged.
-  if (distinctId && posthog.get_distinct_id() !== distinctId) {
-    posthog.identify(distinctId);
-  }
-
-  // null means the page knows nobody is signed in. A session that expired or
-  // was revoked never ran signOut(), so the persisted id still belongs to the
-  // last account; drop it rather than attribute this visitor's events to
-  // them. undefined (the landing site) cannot see the session, so it leaves
-  // the id alone.
-  if (
-    distinctId === null &&
-    posthog.get_property("$user_state") === "identified"
-  ) {
-    posthog.reset();
-  }
+  syncIdentity(distinctId);
 }
 
 /**
@@ -83,9 +99,9 @@ export function initPostHog({
  * event, null where the page can see there is no logged-in user (anonymous
  * visitors and guests), and omit it where it cannot see the session at all.
  *
- * Identity is settled once per document: sign-in flows end in a full
- * navigation, never a router.refresh(), so the next load identifies, and
+ * Sign-in flows end in a full navigation so the next load identifies, and
  * sign-out calls posthog.reset() so the browser gets a fresh anonymous id.
+ * A later render with a different id re-syncs the identity.
  */
 export function PostHogInit({
   distinctId,

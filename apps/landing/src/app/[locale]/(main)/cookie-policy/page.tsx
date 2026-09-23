@@ -44,14 +44,15 @@ export default async function CookiePolicy() {
         <h2>Analytics</h2>
         <p>
           We use PostHog for product analytics. PostHog sets a first-party
-          cookie (<code>ph_*_posthog</code>) and a matching local storage entry
-          holding a random identifier, shared between this website and the app
-          at app.rallly.co. It lets us see which pages lead people to sign up.
-          When you sign in, activity recorded under that identifier, including
-          pages you visited on this website before creating an account, is
-          linked to your account. Your analytics profile carries the name and
-          email address on your account, so it is identified data rather than
-          anonymous data. Our{" "}
+          cookie (<code>ph_*_posthog</code>) holding a random identifier, and a
+          copy in your browser&apos;s local storage. The cookie is shared
+          between this website and the app at app.rallly.co; local storage is
+          kept separately by each. It lets us see which pages lead people to
+          sign up. When you sign in, activity recorded under that identifier,
+          including pages you visited on this website before creating an
+          account, is linked to your account. Your analytics profile carries the
+          name and email address on your account, so it is identified data
+          rather than anonymous data. Our{" "}
           <LinkBase href="/privacy-policy">privacy policy</LinkBase> explains
           why we keep it and when it is erased. The data collected includes
           pages visited, events triggered, the website that referred you, and
