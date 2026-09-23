@@ -1,4 +1,6 @@
 {
+  "apiAnnouncement": "Esittelyssä Rallly API",
+  "apiBlogBadge": "Uutta",
   "assistantsDescription": "Tuetpa sitten yhtä johtajaa tai kokonaista osastoa, löydät ajan, joka sopii kymmeniin täysiin kalentereihin ilman ainuttakaan muistutusviestiä. Jaa yksi linkki, seuraa vastausten saapumista ja lyö lukkoon ajankohta, johon kaikki pääsevät. Ilmainen, eivätkä kutsutut tarvitse tiliä.",
   "assistantsFaqBranding": "Voivatko kyselyt käyttää yrityksemme ilmettä?",
   "assistantsFaqBrandingAnswer": "<0>Rallly Pro</0>:n avulla voit lisätä oman logosi ja värisi sekä poistaa Rallly-maininnan, jolloin hallitukselle tai asiakkaalle lähettämäsi kysely näyttää tulevan omasta organisaatiostasi. Kaikki muu on ilmaista.",
