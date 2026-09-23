@@ -23,11 +23,20 @@ export function OptimizedAvatarImage({
     .replace(/[^\p{L}]/gu, "")
     .toUpperCase();
 
+  const hasInitials = /^\p{L}+$/u.test(initials);
+
   return (
-    <Avatar className={className} size={size === "md" ? "default" : size}>
+    <Avatar
+      className={className}
+      size={size === "md" ? "default" : size}
+      bordered={!!src || !hasInitials}
+    >
       <AvatarImage src={src ? resolveStorageUrl(src) : undefined} alt={name} />
-      <AvatarFallback className={cn("shrink-0")}>
-        {/^\p{L}+$/u.test(initials) ? (
+      <AvatarFallback
+        className={cn("shrink-0")}
+        seed={hasInitials ? name.trim() : undefined}
+      >
+        {hasInitials ? (
           initials
         ) : (
           <UserIcon className="size-4 shrink-0 text-muted-foreground" />

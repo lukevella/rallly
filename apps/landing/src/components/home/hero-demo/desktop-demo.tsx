@@ -1,4 +1,5 @@
 import { cn } from "@rallly/ui";
+import { Avatar, AvatarFallback } from "@rallly/ui/avatar";
 import type { TFunction } from "i18next";
 import {
   ClockIcon,
@@ -194,9 +195,11 @@ export const DesktopDemo = ({
               {preset.participants.map((participant) => (
                 <React.Fragment key={participant.name}>
                   <div className="flex items-center gap-2.5 border-gray-100 border-t px-3 py-3 text-left">
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-100 font-medium text-[10px] text-gray-600 uppercase">
-                      {getInitials(participant.name)}
-                    </span>
+                    <Avatar size="sm" className="size-7" bordered={false}>
+                      <AvatarFallback seed={participant.name}>
+                        {getInitials(participant.name)}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="min-w-0 flex-1 truncate text-gray-800 text-sm">
                       {participant.name}
                     </span>

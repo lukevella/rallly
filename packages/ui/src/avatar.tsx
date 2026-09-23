@@ -71,15 +71,39 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
   );
 }
 
+// Cool half of the palette only, so a fallback never reads as an error or
+// a warning. Full class strings so Tailwind can see them.
+const avatarPalette = [
+  "bg-lime-50 text-lime-700 dark:bg-lime-950 dark:text-lime-300",
+  "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+  "bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300",
+  "bg-cyan-50 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300",
+  "bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-300",
+  "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300",
+  "bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-950 dark:text-fuchsia-300",
+  "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
+];
+
+function paletteFromSeed(seed: string) {
+  let hash = 0;
+  for (const char of seed) {
+    hash = (hash * 31 + (char.codePointAt(0) ?? 0)) >>> 0;
+  }
+  return avatarPalette[hash % avatarPalette.length];
+}
+
 function AvatarFallback({
   className,
+  seed,
   ...props
-}: AvatarPrimitive.Fallback.Props) {
+}: AvatarPrimitive.Fallback.Props & { seed?: string }) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
         "flex size-full items-center justify-center rounded-[inherit] bg-muted text-muted-foreground text-xs group-data-[size=lg]/avatar:text-sm group-data-[size=sm]/avatar:text-[0.625rem] group-data-[size=xl]/avatar:text-base",
+        seed && "font-semibold",
+        seed && paletteFromSeed(seed),
         className,
       )}
       {...props}
