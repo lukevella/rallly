@@ -54,7 +54,7 @@ export function VotePanelHeader({
       // px-1.5 rather than px-4: every control here is a button carrying
       // its own px-2.5, so the two together put the label at the same 16px
       // from the card edge as the footer's text.
-      className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 border-b bg-card px-1.5 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
+      className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 bg-card px-1.5 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
     >
       <div
         data-testid="filters"

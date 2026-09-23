@@ -101,7 +101,7 @@ export function VotePanelFooter({
       // Save button that takes its place and submits the response.
       <footer
         key="saved"
-        className="sticky bottom-0 z-10 flex min-h-16 shrink-0 items-center justify-between gap-4 border-t bg-card px-4 py-3 lg:static lg:bg-transparent"
+        className="sticky bottom-0 z-10 flex min-h-16 shrink-0 items-center justify-between gap-4 bg-card px-4 py-3 lg:static lg:bg-transparent"
       >
         <div className="flex min-w-0 items-center gap-2">
           <OptimizedAvatarImage
@@ -204,7 +204,7 @@ export function VotePanelFooter({
     // saved footer above, so the two never share DOM nodes.
     <footer
       key="composing"
-      className="sticky bottom-0 z-10 flex min-h-16 shrink-0 items-center justify-between gap-4 border-t bg-card px-4 py-3 lg:static lg:bg-transparent"
+      className="sticky bottom-0 z-10 flex min-h-16 shrink-0 items-center justify-between gap-4 bg-card px-4 py-3 lg:static lg:bg-transparent"
     >
       <SelectionCount
         yesCount={yesCount}
