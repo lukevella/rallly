@@ -478,6 +478,7 @@
   "licenseKeyGenericError": "An error occurred while validating the license key",
   "licenseLimitWarning": "You have exceeded the limits of your license. Please <a>upgrade</a>.",
   "licenseType": "License type",
+  "linkCopied": "Link copied",
   "loading": "Loading...",
   "location": "Location",
   "locationCustomLink": "Custom link",
