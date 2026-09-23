@@ -427,6 +427,46 @@ test.describe("Webhooks settings", () => {
     }
   });
 
+  test("a successful test event keeps an endpoint Rallly turned off marked as such", async ({
+    page,
+  }) => {
+    const receiver = await startReceiver(204);
+    try {
+      const { space, email } = await createOwner("webhooks-test-off", {
+        pro: true,
+      });
+      const webhook = await createWebhookInDb({
+        spaceId: space.id,
+        url: receiver.url,
+        enabled: false,
+        consecutiveFailures: MAX_CONSECUTIVE_FAILURES,
+      });
+
+      await gotoWebhooks(page, email);
+
+      await endpointRow(page, receiver.url)
+        .getByRole("button", { name: "More options" })
+        .click();
+      await page.getByRole("menuitem", { name: "Send test event" }).click();
+      await expect(page.getByText("Test event delivered")).toBeVisible();
+
+      // The count is what tells a dispatcher disable from an owner disable,
+      // so only turning the endpoint back on clears it.
+      const after = await prisma.spaceWebhook.findUniqueOrThrow({
+        where: { id: webhook.id },
+      });
+      expect(after.enabled).toBe(false);
+      expect(after.consecutiveFailures).toBe(MAX_CONSECUTIVE_FAILURES);
+      await expect(
+        endpointRow(page, receiver.url).getByRole("button", {
+          name: "Turned off after failures",
+        }),
+      ).toBeVisible();
+    } finally {
+      await receiver.stop();
+    }
+  });
+
   test("a failed test event does not count against the endpoint", async ({
     page,
   }) => {

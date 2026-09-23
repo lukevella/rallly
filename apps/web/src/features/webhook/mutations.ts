@@ -617,9 +617,11 @@ export async function setWebhookEnabled({
  * Sends a `ping` to one endpoint now, through the same signing and sender
  * as any delivery, and returns what came back. A diagnostic, not an event:
  * one attempt and no retry, and a failure never counts toward disabling the
- * endpoint, so testing a broken receiver cannot turn it off. A success
- * resets the count as any success does: the endpoint has just proven it
- * accepts deliveries.
+ * endpoint, so testing a broken receiver cannot turn it off. On an enabled
+ * endpoint a success resets the count as any success does: the endpoint has
+ * just proven it accepts deliveries. On a disabled one the count stays, since
+ * it is what marks the endpoint as turned off by the dispatcher rather than
+ * by its owner; re-enabling clears it.
  *
  * The row is written after the attempt, never as in flight: stale
  * reclamation would otherwise hand a ping orphaned by a crash to the
@@ -672,7 +674,11 @@ export async function sendWebhookTestEvent({
       ? [
           prisma.spaceWebhook.update({
             where: { id: webhookId },
-            data: { lastDeliveredAt: now, consecutiveFailures: 0 },
+            data: { lastDeliveredAt: now },
+          }),
+          prisma.spaceWebhook.updateMany({
+            where: { id: webhookId, enabled: true },
+            data: { consecutiveFailures: 0 },
           }),
         ]
       : []),
