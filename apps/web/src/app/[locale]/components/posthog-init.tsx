@@ -18,7 +18,7 @@ export async function PostHogSessionInit({
   const user = session?.user;
 
   return (
-    <PostHogInit distinctId={user && !user.isGuest ? user.id : undefined}>
+    <PostHogInit distinctId={user && !user.isGuest ? user.id : null}>
       {children}
     </PostHogInit>
   );

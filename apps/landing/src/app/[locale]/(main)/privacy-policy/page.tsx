@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-14">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-23">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -53,6 +53,9 @@ export default async function PrivacyPolicy() {
           can find your account&apos;s activity and work out what went wrong. It
           is not written into individual analytics events, is not used for
           marketing, and is erased from Posthog when you delete your account.
+          When you create an account, the pages you visited on our website
+          beforehand are linked to your profile so we can tell which pages lead
+          people to Rallly.
         </p>
 
         <h2>Optional information about your work</h2>

@@ -129,9 +129,9 @@ export function RsvpVerifyEmail({
     }
 
     dialog.dismiss();
-    // A full reload, not router.refresh(): the PostHog client fixes its
-    // identity at page load (cookieless for the guest who opened this page),
-    // and only a new document can start it as the signed-in user.
+    // A full reload, not router.refresh(): the PostHog client settles its
+    // identity at page load, so only a new document identifies the guest who
+    // opened this page as the signed-in user.
     window.location.reload();
   });
 
