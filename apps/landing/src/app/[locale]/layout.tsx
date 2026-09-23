@@ -41,8 +41,6 @@ export default async function Root(props: {
       <body>
         <LazyMotion features={domAnimation}>
           <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
-            {/* Both cookieless (daily-rotating server-side hash, nothing
-                stored on the device), so neither needs consent. */}
             <PostHogInit>{children}</PostHogInit>
             <Analytics />
           </I18nProvider>

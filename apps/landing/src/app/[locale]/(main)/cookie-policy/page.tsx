@@ -9,7 +9,7 @@ export default async function CookiePolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Cookie policy" lastUpdated="2026-09-08">
+      <LegalPageLayout title="Cookie policy" lastUpdated="2026-09-23">
         <p>
           This Policy explains how we use cookies and other similar technologies
           on our website, and your options to control them.
@@ -43,18 +43,22 @@ export default async function CookiePolicy() {
 
         <h2>Analytics</h2>
         <p>
-          We use PostHog for product analytics. PostHog does not set cookies and
-          does not store anything on your device. Users who are signed in are
-          recognised through their account: their analytics profile is keyed to
-          their account and carries the name and email address on it, so it is
-          identified data rather than anonymous data. Our{" "}
+          We use PostHog for product analytics. PostHog sets a first-party
+          cookie (<code>ph_*_posthog</code>) and a matching local storage entry
+          holding a random identifier, shared between this website and the app
+          at app.rallly.co. It lets us see which pages lead people to sign up.
+          When you sign in, activity recorded under that identifier, including
+          pages you visited on this website before creating an account, is
+          linked to your account. Your analytics profile carries the name and
+          email address on your account, so it is identified data rather than
+          anonymous data. Our{" "}
           <LinkBase href="/privacy-policy">privacy policy</LinkBase> explains
-          why we keep it and when it is erased. Visitors who are not signed in
-          are counted using a hash derived from IP address and browser that
-          changes every day and cannot be used to identify anyone. The data
-          collected includes pages visited, events triggered, and device type.
-          It is stored on PostHog&apos;s servers in the EU and is not used for
-          advertising or shared with third parties.
+          why we keep it and when it is erased. The data collected includes
+          pages visited, events triggered, the website that referred you, and
+          device type. It is stored on PostHog&apos;s servers in the EU and is
+          not used for advertising or shared with third parties. The cookie
+          expires after one year, and signing out replaces the identifier with a
+          new one.
         </p>
 
         <h2>Your options</h2>

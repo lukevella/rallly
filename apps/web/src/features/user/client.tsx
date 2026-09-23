@@ -25,8 +25,8 @@ export function UserProvider({
   const name = user?.name;
   const email = user?.email;
 
-  // The client is already identified as this user from init (bootstrap in
-  // packages/posthog/src/client-config.ts), so no identify() here. Name and
+  // The client is already identified as this user from init (initPostHog in
+  // packages/posthog/src/client.ts), so no identify() here. Name and
   // email ride along so a profile PostHog has to recreate for an existing
   // account is never empty. Changing the language refreshes the router with
   // a new [locale] param, so this re-runs; posthog-js drops a repeat $set
