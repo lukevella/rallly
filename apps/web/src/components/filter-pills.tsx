@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 import { Link } from "@/components/link";
 
 /**
@@ -23,6 +24,10 @@ export function FilterPills<T extends string>({
   label: string;
 }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  // The URL only updates once the server render lands, so mark the clicked
+  // pill selected for the duration of the navigation.
+  const [selectedValue, setSelectedValue] = React.useOptimistic(value);
 
   const hrefFor = (optionValue: T) => {
     const params = new URLSearchParams(searchParams);
@@ -34,13 +39,21 @@ export function FilterPills<T extends string>({
   return (
     <nav aria-label={label} className="flex items-center gap-1">
       {options.map((option) => {
-        const selected = option.value === value;
+        const selected = option.value === selectedValue;
+        const href = hrefFor(option.value);
         return (
           <Link
             key={option.value}
-            href={hrefFor(option.value)}
+            href={href}
             replace
             scroll={false}
+            onNavigate={(e) => {
+              e.preventDefault();
+              React.startTransition(() => {
+                setSelectedValue(option.value);
+                router.replace(href, { scroll: false });
+              });
+            }}
             aria-current={selected ? "page" : undefined}
             className={cn(
               "inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-sm ring-1 ring-transparent ring-inset transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
