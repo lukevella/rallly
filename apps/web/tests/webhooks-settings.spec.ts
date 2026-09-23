@@ -1,8 +1,15 @@
+import { createHmac } from "node:crypto";
+import type { Server } from "node:http";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { decrypt, encrypt } from "@rallly/utils/encryption";
-import { WEBHOOK_VERSION } from "@/features/webhook/constants";
+import {
+  MAX_CONSECUTIVE_FAILURES,
+  WEBHOOK_VERSION,
+} from "@/features/webhook/constants";
 import { WEBHOOK_EVENT_TYPES } from "@/features/webhook/schema";
 import {
   createUserInDb,
@@ -12,8 +19,9 @@ import {
 
 /**
  * The webhooks settings page: adding an endpoint and revealing its signing
- * secret once, disabling one, deleting one, and the two states that deny
- * access — a member of the space, and a space still on the hobby tier.
+ * secret once, disabling one, deleting one, its health and a test event,
+ * and the two states that deny access — a member of the space, and a space
+ * still on the hobby tier.
  */
 
 const runId = Date.now().toString(36);
@@ -44,22 +52,78 @@ async function createOwner(name: string, { pro }: { pro: boolean }) {
   return { user, space, email };
 }
 
+const WEBHOOK_SECRET = "whsec_settings_test";
+
 async function createWebhookInDb({
   spaceId,
   url,
+  enabled = true,
+  consecutiveFailures = 0,
 }: {
   spaceId: string;
   url: string;
+  enabled?: boolean;
+  consecutiveFailures?: number;
 }) {
   return prisma.spaceWebhook.create({
     data: {
       spaceId,
       url,
-      secret: encrypt("whsec_settings_test", SECRET_PASSWORD),
+      secret: encrypt(WEBHOOK_SECRET, SECRET_PASSWORD),
       events: ["poll.closed", "poll.reopened", "poll.scheduled"],
       version: WEBHOOK_VERSION,
+      enabled,
+      consecutiveFailures,
     },
   });
+}
+
+async function createAttemptInDb({
+  webhookId,
+  status,
+  lastResponseStatus,
+  lastError,
+}: {
+  webhookId: string;
+  status: "succeeded" | "failed" | "exhausted";
+  lastResponseStatus: number | null;
+  lastError: string | null;
+}) {
+  return prisma.webhookDelivery.create({
+    data: {
+      webhookId,
+      activityId: `webhooks-settings-${runId}-${webhookId}`,
+      eventType: "poll.closed",
+      payload: { type: "poll.closed" },
+      status,
+      attempts: 1,
+      lastResponseStatus,
+      lastError,
+    },
+  });
+}
+
+/** A loopback endpoint answering every request with `status`. */
+async function startReceiver(status: number) {
+  const requests: { headers: Record<string, unknown>; body: string }[] = [];
+  const server: Server = createServer((req, res) => {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk;
+    });
+    req.on("end", () => {
+      requests.push({ headers: req.headers, body });
+      res.statusCode = status;
+      res.end();
+    });
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const { port } = server.address() as AddressInfo;
+  return {
+    url: `http://127.0.0.1:${port}/hook`,
+    requests,
+    stop: () => new Promise<void>((resolve) => server.close(() => resolve())),
+  };
 }
 
 function decryptSecret(stored: string) {
@@ -209,29 +273,252 @@ test.describe("Webhooks settings", () => {
     ).toBe(0);
   });
 
-  test("shows the last delivery result for an endpoint", async ({ page }) => {
-    const { space, email } = await createOwner("webhooks-delivery", {
+  test("shows a failing endpoint and its last error in place", async ({
+    page,
+  }) => {
+    const { space, email } = await createOwner("webhooks-failing", {
       pro: true,
     });
-    const url = "https://example.com/hooks/delivery";
+    const url = "https://example.com/hooks/failing";
     const webhook = await createWebhookInDb({ spaceId: space.id, url });
-    await prisma.webhookDelivery.create({
-      data: {
-        webhookId: webhook.id,
-        activityId: `webhooks-settings-${runId}`,
-        eventType: "poll.closed",
-        payload: { type: "poll.closed" },
-        status: "failed",
-        attempts: 1,
-        lastResponseStatus: 500,
-      },
+    // A retry is still scheduled, so nothing has exhausted yet: the failed
+    // attempt alone is what marks the endpoint failing.
+    await createAttemptInDb({
+      webhookId: webhook.id,
+      status: "failed",
+      lastResponseStatus: 500,
+      lastError: "HTTP 500",
     });
 
     await gotoWebhooks(page, email);
 
+    await endpointRow(page, url)
+      .getByRole("button", { name: "Failing" })
+      .click();
+    const popover = page.getByRole("dialog");
+    await expect(popover.getByText("Last attempt failed")).toBeVisible();
+    await expect(popover.getByText(/returned 500/)).toBeVisible();
+    await expect(popover.getByText("HTTP 500")).toBeVisible();
+  });
+
+  test("tells an endpoint Rallly turned off apart from one the owner did", async ({
+    page,
+  }) => {
+    const { space, email } = await createOwner("webhooks-turned-off", {
+      pro: true,
+    });
+    const turnedOffUrl = "https://example.com/hooks/turned-off";
+    const turnedOff = await createWebhookInDb({
+      spaceId: space.id,
+      url: turnedOffUrl,
+      enabled: false,
+      consecutiveFailures: MAX_CONSECUTIVE_FAILURES,
+    });
+    await createAttemptInDb({
+      webhookId: turnedOff.id,
+      status: "exhausted",
+      lastResponseStatus: null,
+      lastError: "getaddrinfo ENOTFOUND example.invalid",
+    });
+    const switchedOffUrl = "https://example.com/hooks/switched-off";
+    await createWebhookInDb({
+      spaceId: space.id,
+      url: switchedOffUrl,
+      enabled: false,
+    });
+
+    await gotoWebhooks(page, email);
+
+    // The owner's own choice is the switch; nothing repeats it.
     await expect(
-      endpointRow(page, url).getByText(/Failed .* with 500/),
+      endpointRow(page, switchedOffUrl).getByRole("button", {
+        name: "Turned off after failures",
+      }),
+    ).toHaveCount(0);
+
+    await endpointRow(page, turnedOffUrl)
+      .getByRole("button", { name: "Turned off after failures" })
+      .click();
+    const popover = page.getByRole("dialog");
+    await expect(popover.getByText("Turned off by Rallly")).toBeVisible();
+    await expect(
+      popover.getByText("getaddrinfo ENOTFOUND example.invalid"),
     ).toBeVisible();
+
+    // Turning it back on clears the count, so it is no longer shown as
+    // turned off by Rallly.
+    await page.keyboard.press("Escape");
+    await endpointRow(page, turnedOffUrl)
+      .getByRole("switch", { name: "Enabled" })
+      .click();
+    await expect
+      .poll(
+        async () =>
+          (
+            await prisma.spaceWebhook.findUniqueOrThrow({
+              where: { id: turnedOff.id },
+            })
+          ).consecutiveFailures,
+      )
+      .toBe(0);
+  });
+
+  test("sends a signed test event and reports the response", async ({
+    page,
+  }) => {
+    const receiver = await startReceiver(204);
+    try {
+      const { space, email } = await createOwner("webhooks-test-event", {
+        pro: true,
+      });
+      const webhook = await createWebhookInDb({
+        spaceId: space.id,
+        url: receiver.url,
+        consecutiveFailures: 3,
+      });
+
+      await gotoWebhooks(page, email);
+
+      await endpointRow(page, receiver.url)
+        .getByRole("button", { name: "More options" })
+        .click();
+      await page.getByRole("menuitem", { name: "Send test event" }).click();
+
+      await expect(page.getByText("Test event delivered")).toBeVisible();
+      await expect(page.getByText("Endpoint responded 204")).toBeVisible();
+
+      expect(receiver.requests).toHaveLength(1);
+      const [request] = receiver.requests;
+      const body = JSON.parse(request?.body ?? "{}");
+      expect(body).toMatchObject({
+        version: WEBHOOK_VERSION,
+        type: "ping",
+        data: {},
+      });
+      expect(request?.headers["x-rallly-event"]).toBe("ping");
+      const [t, v1] = String(request?.headers["x-rallly-signature"])
+        .split(",")
+        .map((part) => part.split("=")[1]);
+      expect(v1).toBe(
+        createHmac("sha256", WEBHOOK_SECRET)
+          .update(`${t}.${request?.body}`)
+          .digest("hex"),
+      );
+
+      const delivery = await prisma.webhookDelivery.findFirstOrThrow({
+        where: { webhookId: webhook.id },
+      });
+      expect(delivery).toMatchObject({
+        eventType: "ping",
+        status: "succeeded",
+        attempts: 1,
+        lastResponseStatus: 204,
+      });
+      // A success is a success: it clears the count like any delivery.
+      expect(
+        (
+          await prisma.spaceWebhook.findUniqueOrThrow({
+            where: { id: webhook.id },
+          })
+        ).consecutiveFailures,
+      ).toBe(0);
+    } finally {
+      await receiver.stop();
+    }
+  });
+
+  test("a successful test event keeps an endpoint Rallly turned off marked as such", async ({
+    page,
+  }) => {
+    const receiver = await startReceiver(204);
+    try {
+      const { space, email } = await createOwner("webhooks-test-off", {
+        pro: true,
+      });
+      const webhook = await createWebhookInDb({
+        spaceId: space.id,
+        url: receiver.url,
+        enabled: false,
+        consecutiveFailures: MAX_CONSECUTIVE_FAILURES,
+      });
+
+      await gotoWebhooks(page, email);
+
+      await endpointRow(page, receiver.url)
+        .getByRole("button", { name: "More options" })
+        .click();
+      await page.getByRole("menuitem", { name: "Send test event" }).click();
+      await expect(page.getByText("Test event delivered")).toBeVisible();
+
+      // The count is what tells a dispatcher disable from an owner disable,
+      // so only turning the endpoint back on clears it.
+      const after = await prisma.spaceWebhook.findUniqueOrThrow({
+        where: { id: webhook.id },
+      });
+      expect(after.enabled).toBe(false);
+      expect(after.consecutiveFailures).toBe(MAX_CONSECUTIVE_FAILURES);
+      await expect(
+        endpointRow(page, receiver.url).getByRole("button", {
+          name: "Turned off after failures",
+        }),
+      ).toBeVisible();
+    } finally {
+      await receiver.stop();
+    }
+  });
+
+  test("a failed test event does not count against the endpoint", async ({
+    page,
+  }) => {
+    const receiver = await startReceiver(503);
+    try {
+      const { space, email } = await createOwner("webhooks-test-fail", {
+        pro: true,
+      });
+      // One exhausted event short of being turned off: a test must not be
+      // what tips it over.
+      const webhook = await createWebhookInDb({
+        spaceId: space.id,
+        url: receiver.url,
+        consecutiveFailures: MAX_CONSECUTIVE_FAILURES - 1,
+      });
+
+      await gotoWebhooks(page, email);
+
+      await endpointRow(page, receiver.url)
+        .getByRole("button", { name: "More options" })
+        .click();
+      await page.getByRole("menuitem", { name: "Send test event" }).click();
+
+      await expect(page.getByText("Test event failed")).toBeVisible();
+      expect(receiver.requests).toHaveLength(1);
+
+      const after = await prisma.spaceWebhook.findUniqueOrThrow({
+        where: { id: webhook.id },
+      });
+      expect(after.enabled).toBe(true);
+      expect(after.consecutiveFailures).toBe(MAX_CONSECUTIVE_FAILURES - 1);
+
+      // Recorded as exhausted, never as a failure awaiting retry, so the
+      // dispatcher leaves it alone.
+      const delivery = await prisma.webhookDelivery.findFirstOrThrow({
+        where: { webhookId: webhook.id },
+      });
+      expect(delivery).toMatchObject({
+        eventType: "ping",
+        status: "exhausted",
+        lastResponseStatus: 503,
+        lastError: "HTTP 503",
+      });
+
+      await expect(
+        endpointRow(page, receiver.url).getByRole("button", {
+          name: "Failing",
+        }),
+      ).toBeVisible();
+    } finally {
+      await receiver.stop();
+    }
   });
 
   test("a member of the space cannot reach the page", async ({ page }) => {

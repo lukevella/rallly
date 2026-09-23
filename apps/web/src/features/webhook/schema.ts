@@ -236,6 +236,26 @@ export const webhookEventSchema = z
 
 export type WebhookEvent = z.infer<typeof webhookEventSchema>;
 
+/**
+ * Sent only by "Send test event" in the settings page, to that one endpoint,
+ * whatever it subscribes to. Deliberately outside `webhookEventTypeSchema`:
+ * it is not something an endpoint subscribes to, so it never appears in the
+ * picker and a test never fails for want of a subscription.
+ */
+export const webhookPingEventSchema = z
+  .object({
+    ...envelope,
+    type: z.literal("ping"),
+    data: z.object({}),
+  })
+  .meta({
+    id: "WebhookPingEvent",
+    description:
+      "A test event sent from the webhooks settings page. It carries no data; respond with a 2xx and otherwise ignore it.",
+  });
+
+export type WebhookPingEvent = z.infer<typeof webhookPingEventSchema>;
+
 const rejectionMessages = {
   invalid: "Enter a valid URL",
   insecure_scheme: "Webhook URLs must use https",
@@ -288,5 +308,9 @@ export const setWebhookEnabledSchema = z.object({
 });
 
 export const deleteWebhookSchema = z.object({
+  webhookId: z.string(),
+});
+
+export const sendWebhookTestEventSchema = z.object({
   webhookId: z.string(),
 });

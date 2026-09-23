@@ -11,7 +11,7 @@ import { StackedList, StackedListItem } from "@/components/stacked-list";
 import { Trans } from "@/i18n/client";
 import type { getSpaceWebhooks } from "../data";
 import { WebhookActions } from "./webhook-actions";
-import { WebhookLastDelivery } from "./webhook-last-delivery";
+import { WebhookHealth } from "./webhook-health";
 
 type Webhook = Awaited<ReturnType<typeof getSpaceWebhooks>>[number];
 
@@ -58,7 +58,11 @@ export function WebhooksList({ webhooks }: { webhooks: Webhook[] }) {
               </div>
             </div>
           </div>
-          <WebhookLastDelivery delivery={webhook.deliveries[0]} />
+          <WebhookHealth
+            enabled={webhook.enabled}
+            consecutiveFailures={webhook.consecutiveFailures}
+            lastAttempt={webhook.deliveries[0]}
+          />
           <WebhookActions
             webhookId={webhook.id}
             webhookUrl={webhook.url}

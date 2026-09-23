@@ -22,6 +22,8 @@ Webhooks tell your own systems about poll and participant changes as they happen
 
 A space can have up to five endpoints. A new endpoint starts receiving events from the moment it is created; history is never replayed.
 
+To check the endpoint before any poll changes, choose **Send test event** from its menu. Rallly sends a signed [`ping`](/api-reference/webhooks/events#test-events) and shows the response it got back.
+
 ## What an event carries
 
 An event says what happened and to which poll or participant. It references both by id and carries only the facts that belong to the event itself: the reason a poll closed, the time it was scheduled for. It does not carry the poll's title, options or settings, or the participant's details. Fetch the API when you need them; the fetch returns the current state, where a snapshot in the event would already be stale by the time a retry lands.
@@ -34,7 +36,7 @@ Every delivery is a `POST` with a JSON body. Respond with any `2xx` status withi
 
 Delivery is at least once. A delivery that fails is retried with backoff after 1 minute, 5 minutes, 30 minutes, 2 hours and 12 hours; after the sixth failure it is exhausted and not retried. Failed deliveries never block later ones, so a burst of events can arrive out of order: sort on `createdAt` if order matters, and deduplicate on `id`, which retries of one event share.
 
-An endpoint that exhausts twenty deliveries in a row is disabled. Re-enable it from the settings page once the receiver is fixed; events that happened while it was disabled are not delivered.
+The settings page shows each endpoint's health. An endpoint is **Failing** once an attempt fails, and selecting that label shows the last error and response status. An endpoint that exhausts twenty deliveries in a row is turned off and shown as **Turned off after failures**. Fix the receiver, send a test event to confirm it, then turn the endpoint back on; events that happened while it was off are not delivered.
 
 Every request is signed. Verify the signature before acting on a body; [Security](/api-reference/webhooks/security) shows how.
 
