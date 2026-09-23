@@ -10,23 +10,22 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { FilterPills } from "@/components/filter-pills";
 import { Link } from "@/components/link";
-import { MemberSelector } from "@/components/member-selector";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderActions,
-  PageHeaderContent,
-  PageTitle,
-} from "@/components/page-layout";
+  ListView,
+  ListViewActions,
+  ListViewHeader,
+  ListViewTitleBar,
+  ListViewToolbar,
+} from "@/components/list-view";
+import { MemberSelector } from "@/components/member-selector";
 import { SearchInput } from "@/components/search-input";
 import { PollsInfiniteList } from "@/features/poll/components/polls-infinite-list";
 import type { PollStatus } from "@/features/poll/schema";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { PollsTabbedView } from "./polls-tabbed-view";
 import { searchParamsSchema } from "./schema";
 
 function NoOpenPollsEmptyState({ closedCount }: { closedCount: number }) {
@@ -106,44 +105,77 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
     status === "open" && !hasFilters && counts.closed > 0;
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageTitle>
+    <ListView>
+      <ListViewHeader>
+        <ListViewTitleBar>
+          <h1 className="truncate text-foreground text-sm">
             <Trans i18nKey="polls" defaults="Polls" />
-          </PageTitle>
-        </PageHeaderContent>
-        <PageHeaderActions>
-          <Link href="/new" className={buttonVariants({ variant: "primary" })}>
-            <PlusIcon data-icon="inline-start" />
-            <Trans i18nKey="newPoll" defaults="New poll" />
-          </Link>
-        </PageHeaderActions>
-      </PageHeader>
-      <PageContent>
-        <PollsTabbedView counts={counts}>
-          <div className="mb-6 flex gap-x-2">
+          </h1>
+          <ListViewActions className="ml-auto">
+            <Link
+              href="/new"
+              className={buttonVariants({ variant: "primary" })}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="createPoll" defaults="Create poll" />
+            </Link>
+          </ListViewActions>
+        </ListViewTitleBar>
+        <ListViewToolbar>
+          <FilterPills
+            param="status"
+            value={status}
+            label={t("pollsListStatusFilter", {
+              defaultValue: "Filter by status",
+            })}
+            options={[
+              {
+                value: "open",
+                label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
+                count: counts.open,
+              },
+              {
+                value: "closed",
+                label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
+                count: counts.closed,
+              },
+              {
+                value: "scheduled",
+                label: (
+                  <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
+                ),
+                count: counts.scheduled,
+              },
+            ]}
+          />
+          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
             <SearchInput
+              className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
               placeholder={t("searchPollsPlaceholder", {
                 defaultValue: "Search polls by title...",
               })}
             />
-            {showMemberFilter ? <MemberSelector members={members} /> : null}
+            {showMemberFilter ? (
+              <MemberSelector
+                members={members}
+                className="min-w-0 sm:min-w-40"
+              />
+            ) : null}
           </div>
-          <PollsInfiniteList
-            status={status}
-            search={q}
-            member={visibleMember}
-            emptyState={
-              showClosedPollsPointer ? (
-                <NoOpenPollsEmptyState closedCount={counts.closed} />
-              ) : (
-                <PollsEmptyState />
-              )
-            }
-          />
-        </PollsTabbedView>
-      </PageContent>
-    </PageContainer>
+        </ListViewToolbar>
+      </ListViewHeader>
+      <PollsInfiniteList
+        status={status}
+        search={q}
+        member={visibleMember}
+        emptyState={
+          showClosedPollsPointer ? (
+            <NoOpenPollsEmptyState closedCount={counts.closed} />
+          ) : (
+            <PollsEmptyState />
+          )
+        }
+      />
+    </ListView>
   );
 }

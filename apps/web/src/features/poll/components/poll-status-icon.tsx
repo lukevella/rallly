@@ -69,5 +69,10 @@ export function PollStatusIcon({
     );
   }
 
-  return <span className={cn("inline-flex", className)}>{icon}</span>;
+  return (
+    <span className={cn("inline-flex", className)}>
+      {icon}
+      <span className="sr-only">{label}</span>
+    </span>
+  );
 }
