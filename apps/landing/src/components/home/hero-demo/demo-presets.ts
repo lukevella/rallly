@@ -195,7 +195,7 @@ const defaultParticipants: DemoPreset["participants"] = [
     votes: ["ifNeedBe", "yes", "no", "yes", "yes", "yes", "no", "no"],
   },
   {
-    name: "Priya Patel",
+    name: "Claire Fontaine",
     votes: ["yes", "yes", "yes", "no", "yes", "yes", "no", "yes"],
   },
   {
