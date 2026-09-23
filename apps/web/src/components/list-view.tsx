@@ -42,6 +42,24 @@ export function ListViewTitleBar({
   );
 }
 
+// Same type as PageTitle on the other dashboard pages; the sidebar trigger
+// lives in ListViewTitleBar instead.
+export function ListViewTitle({
+  children,
+  className,
+}: React.PropsWithChildren<{ className?: string }>) {
+  return (
+    <h1
+      className={cn(
+        "truncate font-semibold text-foreground text-lg tracking-tight",
+        className,
+      )}
+    >
+      {children}
+    </h1>
+  );
+}
+
 export function ListViewActions({
   children,
   className,

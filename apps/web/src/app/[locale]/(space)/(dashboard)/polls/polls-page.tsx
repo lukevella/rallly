@@ -16,6 +16,7 @@ import {
   ListView,
   ListViewActions,
   ListViewHeader,
+  ListViewTitle,
   ListViewTitleBar,
   ListViewToolbar,
 } from "@/components/list-view";
@@ -108,9 +109,9 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
     <ListView>
       <ListViewHeader>
         <ListViewTitleBar>
-          <h1 className="truncate text-foreground text-sm">
+          <ListViewTitle>
             <Trans i18nKey="polls" defaults="Polls" />
-          </h1>
+          </ListViewTitle>
           <ListViewActions className="ml-auto">
             <Link
               href="/new"

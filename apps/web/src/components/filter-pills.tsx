@@ -33,7 +33,7 @@ export function FilterPills<T extends string>({
   };
 
   return (
-    <nav aria-label={label} className="-ml-3 flex items-center gap-1">
+    <nav aria-label={label} className="flex items-center gap-1 md:-ml-3.5">
       {options.map((option) => {
         const selected = option.value === value;
         return (
@@ -44,15 +44,15 @@ export function FilterPills<T extends string>({
             scroll={false}
             aria-current={selected ? "page" : undefined}
             className={cn(
-              "inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3 text-sm ring-1 ring-transparent ring-inset transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-sm ring-1 ring-transparent ring-inset transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               selected
-                ? "bg-sidebar-accent text-sidebar-accent-foreground ring-button-outline"
-                : "text-muted-foreground hover:bg-sidebar-accent",
+                ? "bg-white text-sidebar-accent-foreground ring-button-outline dark:bg-muted"
+                : "text-muted-foreground hover:bg-white dark:hover:bg-muted",
             )}
           >
             {option.label}
             {option.count !== undefined ? (
-              <span className="rounded-md bg-foreground/10 px-1.5 py-0.5 text-xs tabular-nums">
+              <span className="rounded-md bg-foreground/5 px-1.5 py-0.5 text-xs tabular-nums dark:bg-foreground/10">
                 {option.count}
               </span>
             ) : null}

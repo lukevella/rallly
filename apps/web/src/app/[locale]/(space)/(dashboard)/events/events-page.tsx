@@ -13,6 +13,7 @@ import { FilterPills } from "@/components/filter-pills";
 import {
   ListView,
   ListViewHeader,
+  ListViewTitle,
   ListViewTitleBar,
   ListViewToolbar,
 } from "@/components/list-view";
@@ -119,9 +120,9 @@ export function EventsPage() {
     <ListView>
       <ListViewHeader>
         <ListViewTitleBar>
-          <h1 className="truncate text-foreground text-sm">
+          <ListViewTitle>
             <Trans i18nKey="events" defaults="Events" />
-          </h1>
+          </ListViewTitle>
         </ListViewTitleBar>
         <ListViewToolbar>
           <FilterPills
