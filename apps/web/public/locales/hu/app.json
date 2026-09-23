@@ -995,8 +995,6 @@
   "webhookDocs": "Webhook dokumentáció",
   "webhookEventComboboxEmpty": "Nem található esemény",
   "webhookEventCount": "{count, plural, one {# esemény} other {# esemény}}",
-  "webhookLastDeliveryFailed": "Sikertelen: {date}",
-  "webhookLastDeliveryFailedWithStatus": "Sikertelen: {date}, állapot: {status}",
   "webhookLastDeliverySucceeded": "Kézbesítve: {date}",
   "webhookLimitReached": "Elérted a webhook-ok maximális számát. Törölj egyet, mielőtt létrehoznál egy másikat.",
   "webhooks": "Webhookok",
