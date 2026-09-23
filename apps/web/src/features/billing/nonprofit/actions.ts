@@ -7,10 +7,12 @@ import { nonprofitDocumentAssetProfile } from "@/features/billing/nonprofit/cons
 import {
   applyForNonprofitDiscount,
   deleteNonprofitDocuments,
+  grantNonprofitDiscount,
 } from "@/features/billing/nonprofit/mutations";
 import {
   applyForNonprofitDiscountSchema,
   discardNonprofitDocumentsSchema,
+  grantNonprofitDiscountSchema,
   signNonprofitDocumentUploadSchema,
 } from "@/features/billing/nonprofit/schema";
 import type { NonprofitApplicationStatus } from "@/features/billing/nonprofit/types";
@@ -19,6 +21,7 @@ import { defineAbilityForMember } from "@/features/space/member/ability";
 import { AppError } from "@/lib/errors/app-error";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import {
+  adminActionClient,
   authActionClient,
   createRateLimitMiddleware,
 } from "@/lib/safe-action/server";
@@ -160,3 +163,25 @@ export const applyForNonprofitDiscountAction = authActionClient
       }
     },
   );
+
+/**
+ * Control panel grant for organizations the automated review cannot judge.
+ * The space's owner is the beneficiary; the admin is recorded on the row.
+ */
+export const grantNonprofitDiscountAction = adminActionClient
+  .metadata({ actionName: "grant_nonprofit_discount" })
+  .inputSchema(grantNonprofitDiscountSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    if (!isFeatureEnabled("nonprofitDiscount")) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "Nonprofit discount is not available on this instance",
+      });
+    }
+
+    return await grantNonprofitDiscount({
+      spaceId: parsedInput.spaceId,
+      organizationName: parsedInput.organizationName,
+      grantedBy: ctx.user.id,
+    });
+  });

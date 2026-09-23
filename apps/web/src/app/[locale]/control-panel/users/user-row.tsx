@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import {
+  BadgePercentIcon,
   BanIcon,
   MoreHorizontal,
   TrashIcon,
@@ -31,6 +32,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { BanUserDialog } from "./dialogs/ban-user-dialog";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
+import { GrantNonprofitDiscountDialog } from "./dialogs/grant-nonprofit-discount-dialog";
 
 export function UserRow({
   name,
@@ -42,6 +44,7 @@ export function UserRow({
   canChangeRole,
   canBan,
   canDelete,
+  nonprofitSpaces,
 }: {
   name: string;
   email: string;
@@ -52,6 +55,8 @@ export function UserRow({
   canChangeRole: boolean;
   canBan: boolean;
   canDelete: boolean;
+  /** Spaces the user owns, empty when the nonprofit discount is off. */
+  nonprofitSpaces: { id: string; name: string; granted: boolean }[];
 }) {
   const { t } = useTranslation();
   const changeRole = useSafeAction(changeRoleAction);
@@ -60,6 +65,7 @@ export function UserRow({
   const [isPending, startTransition] = useTransition();
   const deleteDialog = useDialog();
   const banDialog = useDialog();
+  const grantDialog = useDialog();
 
   return (
     <>
@@ -123,6 +129,15 @@ export function UserRow({
                   </DropdownMenuRadioGroup>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
+              {nonprofitSpaces.length > 0 ? (
+                <DropdownMenuItem onClick={() => grantDialog.trigger()}>
+                  <BadgePercentIcon />
+                  <Trans
+                    i18nKey="grantNonprofitDiscountTitle"
+                    defaults="Grant nonprofit discount"
+                  />
+                </DropdownMenuItem>
+              ) : null}
               <DropdownMenuSeparator />
               {banned ? (
                 <DropdownMenuItem
@@ -163,6 +178,17 @@ export function UserRow({
         </div>
       </StackedListItem>
       <BanUserDialog {...banDialog.dialogProps} userId={userId} email={email} />
+      {nonprofitSpaces.length > 0 ? (
+        <GrantNonprofitDiscountDialog
+          // Remount after a grant so the form's defaults skip granted spaces.
+          key={nonprofitSpaces
+            .map((space) => `${space.id}:${space.granted}`)
+            .join(",")}
+          {...grantDialog.dialogProps}
+          email={email}
+          spaces={nonprofitSpaces}
+        />
+      ) : null}
       <DeleteUserDialog
         {...deleteDialog.dialogProps}
         userId={userId}

@@ -38,6 +38,11 @@ export const applyForNonprofitDiscountSchema = z.object({
   documentKeys: z.array(z.string().min(1)).min(1).max(MAX_DOCUMENTS),
 });
 
+export const grantNonprofitDiscountSchema = z.object({
+  spaceId: z.string().min(1),
+  organizationName: z.string().trim().min(1).max(200),
+});
+
 export type ApplyForNonprofitDiscountInput = z.infer<
   typeof applyForNonprofitDiscountSchema
 >;

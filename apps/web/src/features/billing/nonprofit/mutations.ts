@@ -153,6 +153,84 @@ type Decision = {
   organizationNameInDocuments: string | null;
 };
 
+type ApplicationFields = {
+  spaceId: string;
+  userId: string;
+  organizationName: string;
+  website: string;
+  emailDomain: string;
+};
+
+/**
+ * With `grant`, the grant is claimed conditionally so two concurrent
+ * approvals cannot both record one; the loser writes nothing and gets false.
+ */
+async function writeApplication({
+  application,
+  decision,
+  grant,
+}: {
+  application: ApplicationFields;
+  decision: Decision;
+  grant: boolean;
+}) {
+  const data = {
+    ...application,
+    status: decision.status,
+    reason: decision.reason,
+    model: decision.model,
+  };
+
+  if (!grant) {
+    await prisma.nonprofitApplication.create({ data });
+    return true;
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    const { count } = await tx.space.updateMany({
+      where: { id: application.spaceId, nonprofitDiscountGrantedAt: null },
+      data: { nonprofitDiscountGrantedAt: new Date() },
+    });
+    if (count === 0) return false;
+    await tx.nonprofitApplication.create({ data });
+    return true;
+  });
+}
+
+/**
+ * Every decision, automated or manual, emails support: that inbox is the
+ * only view of who is applying and who was granted.
+ */
+async function notifySupport({
+  application,
+  decision,
+}: {
+  application: ApplicationFields;
+  decision: Decision;
+}) {
+  try {
+    await sendRawEmail({
+      to: env.SUPPORT_EMAIL,
+      subject: `Nonprofit application ${decision.status}: ${application.organizationName}`,
+      text: [
+        `Space: ${application.spaceId}`,
+        `Organization: ${application.organizationName}`,
+        `Website: ${application.website || "-"}`,
+        `Email domain: ${application.emailDomain}`,
+        `Outcome: ${decision.status} (${decision.reasonCode})`,
+        `Reason: ${decision.reason ?? "-"}`,
+        `Model: ${decision.model ?? "none (deterministic)"}`,
+        `Organization name in documents: ${decision.organizationNameInDocuments ?? "-"}`,
+      ].join("\n"),
+    });
+  } catch (error) {
+    logger.error(
+      { error, spaceId: application.spaceId, status: decision.status },
+      "Failed to send nonprofit application notification",
+    );
+  }
+}
+
 export type ApplyForNonprofitDiscountResult =
   | { outcome: "already_granted" }
   | { outcome: NonprofitApplicationStatus; reason: string | null };
@@ -208,35 +286,19 @@ export async function applyForNonprofitDiscount({
   const websiteOrigin = normalizeWebsite(website);
   const websiteHost = websiteOrigin ? new URL(websiteOrigin).hostname : null;
 
-  // Writes the row and fires the side effects. With `grant`, the grant is
-  // claimed conditionally so two concurrent approvals cannot both record
-  // one; the loser returns false and skips the side effects.
-  const record = async (decision: Decision, { grant = false } = {}) => {
-    const application = {
-      spaceId,
-      userId,
-      organizationName,
-      website,
-      emailDomain,
-      status: decision.status,
-      reason: decision.reason,
-      model: decision.model,
-    };
+  const application = {
+    spaceId,
+    userId,
+    organizationName,
+    website,
+    emailDomain,
+  };
 
-    if (grant) {
-      const claimed = await prisma.$transaction(async (tx) => {
-        const { count } = await tx.space.updateMany({
-          where: { id: spaceId, nonprofitDiscountGrantedAt: null },
-          data: { nonprofitDiscountGrantedAt: new Date() },
-        });
-        if (count === 0) return false;
-        await tx.nonprofitApplication.create({ data: application });
-        return true;
-      });
-      if (!claimed) return false;
-    } else {
-      await prisma.nonprofitApplication.create({ data: application });
-    }
+  // Writes the row and fires the side effects; false when a concurrent
+  // approval already claimed the grant.
+  const record = async (decision: Decision, { grant = false } = {}) => {
+    const claimed = await writeApplication({ application, decision, grant });
+    if (!claimed) return false;
 
     const actor = { id: userId, isGuest: false };
     const groups = { space: spaceId };
@@ -256,27 +318,7 @@ export async function applyForNonprofitDiscount({
       });
     }
 
-    try {
-      await sendRawEmail({
-        to: env.SUPPORT_EMAIL,
-        subject: `Nonprofit application ${decision.status}: ${organizationName}`,
-        text: [
-          `Space: ${spaceId}`,
-          `Organization: ${organizationName}`,
-          `Website: ${website}`,
-          `Email domain: ${emailDomain}`,
-          `Outcome: ${decision.status} (${decision.reasonCode})`,
-          `Reason: ${decision.reason ?? "-"}`,
-          `Model: ${decision.model ?? "none (deterministic)"}`,
-          `Organization name in documents: ${decision.organizationNameInDocuments ?? "-"}`,
-        ].join("\n"),
-      });
-    } catch (error) {
-      logger.error(
-        { error, spaceId, status: decision.status },
-        "Failed to send nonprofit application notification",
-      );
-    }
+    await notifySupport({ application, decision });
     return true;
   };
 
@@ -362,4 +404,92 @@ export async function applyForNonprofitDiscount({
       cause: error,
     });
   }
+}
+
+export type GrantNonprofitDiscountResult =
+  | { outcome: "granted" }
+  | { outcome: "already_granted" };
+
+/**
+ * An admin's grant, for organizations the automated review cannot judge.
+ * Recorded as an approved application on behalf of the space owner so
+ * manual and automated grants share one history, one analytics event and
+ * one support email.
+ */
+export async function grantNonprofitDiscount({
+  spaceId,
+  organizationName,
+  grantedBy,
+}: {
+  spaceId: string;
+  organizationName: string;
+  grantedBy: string;
+}): Promise<GrantNonprofitDiscountResult> {
+  const space = await prisma.space.findUnique({
+    where: { id: spaceId },
+    select: {
+      ownerId: true,
+      nonprofitDiscountGrantedAt: true,
+      owner: { select: { email: true } },
+      subscriptions: {
+        where: { active: true },
+        select: { id: true },
+        take: 1,
+      },
+    },
+  });
+
+  if (!space) {
+    throw new AppError({ code: "NOT_FOUND", message: "Space not found" });
+  }
+
+  if (space.nonprofitDiscountGrantedAt) {
+    return { outcome: "already_granted" };
+  }
+
+  // Stripe first so a failure leaves nothing granted.
+  const subscription = space.subscriptions[0];
+  if (subscription) {
+    await applyNonprofitCouponToSubscription({
+      subscriptionId: subscription.id,
+    });
+  } else {
+    await ensureNonprofitCoupon();
+  }
+
+  const { email } = space.owner;
+  const application = {
+    spaceId,
+    userId: space.ownerId,
+    organizationName,
+    website: "",
+    emailDomain: email.slice(email.lastIndexOf("@") + 1),
+  };
+  const decision: Decision = {
+    status: "approved",
+    reasonCode: "manual",
+    reason: `Granted manually by admin ${grantedBy}`,
+    model: null,
+    organizationNameInDocuments: null,
+  };
+
+  const claimed = await writeApplication({
+    application,
+    decision,
+    grant: true,
+  });
+  if (!claimed) return { outcome: "already_granted" };
+
+  track(
+    { id: space.ownerId, isGuest: false },
+    {
+      event: "billing:nonprofit_application_approve",
+      properties: { reason_code: decision.reasonCode },
+      groups: { space: spaceId },
+    },
+  );
+
+  await notifySupport({ application, decision });
+
+  return { outcome: "granted" };
 }

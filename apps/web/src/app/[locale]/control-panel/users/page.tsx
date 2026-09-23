@@ -23,6 +23,7 @@ import { defineAbilityFor } from "@/features/user/ability";
 import { loadAdmin } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { UserRow } from "./user-row";
 import { UserSearchInput } from "./user-search-input";
 import { UsersTabbedView } from "./users-tabbed-view";
@@ -74,6 +75,10 @@ async function loadData({
         image: true,
         role: true,
         banned: true,
+        spaces: {
+          select: { id: true, name: true, nonprofitDiscountGrantedAt: true },
+          orderBy: { createdAt: "asc" },
+        },
       },
       take: pageSize,
       skip: (page - 1) * pageSize,
@@ -88,12 +93,20 @@ async function loadData({
   ]);
 
   const ability = defineAbilityFor({ role: user.role, id: user.id });
+  const isNonprofitDiscountEnabled = isFeatureEnabled("nonprofitDiscount");
 
   return {
     adminUser: user,
-    allUsers: allUsers.map((u) => ({
+    allUsers: allUsers.map(({ spaces, ...u }) => ({
       ...u,
       image: u.image ?? undefined,
+      nonprofitSpaces: isNonprofitDiscountEnabled
+        ? spaces.map((space) => ({
+            id: space.id,
+            name: space.name,
+            granted: space.nonprofitDiscountGrantedAt !== null,
+          }))
+        : [],
       canChangeRole: ability.can("update", subject("User", u), "role"),
       canBan: ability.can("update", subject("User", u), "banned"),
       canDelete: ability.can("delete", subject("User", u)),
@@ -156,6 +169,7 @@ export default async function AdminPage(props: {
                       canChangeRole={user.canChangeRole}
                       canBan={user.canBan}
                       canDelete={user.canDelete}
+                      nonprofitSpaces={user.nonprofitSpaces}
                     />
                   ))}
                 </StackedList>
