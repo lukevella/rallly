@@ -456,8 +456,7 @@ export default async function DataProcessingAgreement() {
           Changes to Annex 2
         </h2>
         <p>
-          Every change to the Sub-processors in Annex 2 is recorded here on the
-          date it was published.
+          Every change to Annex 2 is recorded here on the date it was published.
         </p>
         <ul>
           {changelog.map((change) => (

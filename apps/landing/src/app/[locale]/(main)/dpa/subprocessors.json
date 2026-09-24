@@ -67,6 +67,10 @@
   ],
   "changelog": [
     {
+      "date": "2026-09-24",
+      "summary": "Added a Data processed column describing the processing each Sub-processor already performs. No Sub-processors were added or changed."
+    },
+    {
       "date": "2026-09-14",
       "summary": "Added OpenAI. Automated content moderation has sent flagged poll content to OpenAI since it launched on 3 March 2025, so this entry is a disclosure of existing processing rather than the advance notice described in Section 6.3. The objection right in Section 6.4 applies from the date this entry was added."
     },
