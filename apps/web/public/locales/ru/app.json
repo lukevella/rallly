@@ -543,8 +543,6 @@
   "noKeepCurrentTimezone": "Нет, оставить текущий часовой пояс",
   "noLicenseKey": "Лицензионный ключ не найден",
   "noLicenseKeyDescription": "Этот экземпляр еще не имеет лицензионного ключа.",
-  "nonprofitDocumentAdd": "Прикрепить документ",
-  "nonprofitVerifying": "Верификация, это займёт минуту",
   "noOpenPolls": "Нет открытых опросов",
   "noOpenPollsDescription": "Опросы автоматически закрываются, когда все их даты пройдут. У вас {count, plural, one {# закрытый опрос} few {# закрытых опроса} many {# закрытых опросов} other {# закрытых опросов}}.",
   "noParticipants": "Нет участников",
