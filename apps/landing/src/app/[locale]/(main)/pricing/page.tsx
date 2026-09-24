@@ -928,7 +928,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="faqNonprofitAnswer"
-              defaults="Yes. Registered nonprofits get 30% off Rallly Pro. <1>Create a free account</1>, then email us at <0>support@rallly.co</0> from the same email address to request the discount. If you can, include a document showing your nonprofit status, such as a tax exemption letter or charity registration certificate."
+              defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. <1>Create a free account</1>, then email us at <0>support@rallly.co</0> from the same email address to request the discount. If you can, include a document showing your nonprofit status, such as a tax exemption letter or charity registration certificate."
               components={[
                 <a
                   key="email"
