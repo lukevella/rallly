@@ -2,13 +2,14 @@
 
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { refresh } from "next/cache";
 import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { spaceIconAssetProfile } from "@/features/space/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
+import { setActiveSpace } from "@/features/space/member/mutations";
 import {
   createSpace,
   deleteSpace,
@@ -27,7 +28,6 @@ import {
   updateSpaceSharedSchema,
   updateSpaceShowBrandingSchema,
 } from "@/features/space/schema";
-import { setActiveSpace } from "@/features/user/mutations";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import {
@@ -69,24 +69,22 @@ export const setActiveSpaceAction = authActionClient
   .metadata({ actionName: "set_active_space" })
   .inputSchema(z.object({ spaceId: z.string() }))
   .action(async ({ ctx, parsedInput }) => {
-    const member = await prisma.spaceMember.findFirst({
-      where: {
-        spaceId: parsedInput.spaceId,
-        ...effectiveSpaceMemberWhere({ userId: ctx.user.id }),
-      },
+    const updated = await setActiveSpace({
+      userId: ctx.user.id,
+      spaceId: parsedInput.spaceId,
     });
 
-    if (!member) {
+    if (!updated) {
       throw new AppError({
         code: "NOT_FOUND",
         message: "Space not found",
       });
     }
 
-    await setActiveSpace({
-      userId: ctx.user.id,
-      spaceId: parsedInput.spaceId,
-    });
+    // Renders the new space's tree into the action response, so the client
+    // needs no follow-up router.refresh(). Unlike revalidatePath, this
+    // leaves the Data Cache alone.
+    refresh();
 
     track(ctx.user, {
       event: "space_set_active",
