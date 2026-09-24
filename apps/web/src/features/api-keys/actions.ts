@@ -1,5 +1,7 @@
 "use server";
 
+import { refresh } from "next/cache";
+
 import { isApiAccessEnabled } from "@/features/api-keys/data";
 import { createApiKey, revokeApiKey } from "@/features/api-keys/mutations";
 import {
@@ -63,6 +65,8 @@ export const createApiKeyAction = authActionClient
       });
     }
 
+    refresh();
+
     return result;
   });
 
@@ -80,4 +84,6 @@ export const revokeApiKeyAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });

@@ -1,5 +1,7 @@
 "use server";
 
+import { refresh } from "next/cache";
+
 import { headers } from "next/headers";
 import * as z from "zod";
 import { adoptOrphanedPolls } from "@/features/poll/mutations";
@@ -64,6 +66,7 @@ export const setupSpaceAction = authActionClient
         userId: ctx.user.id,
         spaceId: ownedSpace.id,
       });
+      refresh();
       return;
     }
 
@@ -142,4 +145,6 @@ export const setupSpaceAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });

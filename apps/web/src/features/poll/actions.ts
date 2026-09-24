@@ -1,5 +1,7 @@
 "use server";
 
+import { refresh } from "next/cache";
+
 import { setPollMuted } from "@/features/poll/mutations";
 import { setPollMutedSchema } from "@/features/poll/schema";
 import { identifyGroup } from "@/lib/posthog";
@@ -26,6 +28,8 @@ export const setPollMutedAction = authActionClient
         },
       });
     }
+
+    refresh();
 
     return result;
   });

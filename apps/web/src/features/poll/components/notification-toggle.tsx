@@ -14,8 +14,8 @@ export function NotificationToggle() {
   const poll = usePoll();
   const { user, ownsObject } = useUser();
   const { t } = useTranslation();
-  // useSafeAction refreshes the router on success, which is what flips
-  // `poll.muted` in the layout's server props.
+  // The action refreshes the page, which is what flips `poll.muted` in the
+  // layout's server props.
   const setPollMuted = useSafeAction(setPollMutedAction, {
     onSuccess: ({ data, input }) => {
       if (!data?.ok) {

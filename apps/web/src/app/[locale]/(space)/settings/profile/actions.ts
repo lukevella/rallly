@@ -1,6 +1,8 @@
 "use server";
+
 import { subject } from "@casl/ability";
 import { sendAccountDeletionScheduledEmail } from "@rallly/emails/templates/account-deletion-scheduled";
+import { refresh } from "next/cache";
 import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
 import {
@@ -84,6 +86,8 @@ export const scheduleAccountDeletionAction = authActionClient
         props: { deletionDate },
       }),
     );
+
+    refresh();
   });
 
 // Self-hosted instances have no scheduler running the remove-deleted-users
@@ -123,4 +127,6 @@ export const cancelAccountDeletionAction = authActionClient
     await resumeUserSubscriptionRenewals({ userId: ctx.user.id });
 
     track(ctx.user, { event: "account_deletion_cancel" });
+
+    refresh();
   });

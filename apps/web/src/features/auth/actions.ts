@@ -1,5 +1,7 @@
 "use server";
+
 import { sendPasswordAddedEmail } from "@rallly/emails/templates/password-added";
+import { refresh } from "next/cache";
 import { headers } from "next/headers";
 import { after } from "next/server";
 import * as z from "zod";
@@ -78,6 +80,8 @@ export const setPasswordAction = authActionClient
       user: ctx.user,
       password: parsedInput.password,
     });
+
+    refresh();
   });
 
 // Other sessions are deliberately NOT revoked: adding a first credential is

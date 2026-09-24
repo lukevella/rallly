@@ -169,7 +169,7 @@ export function SetupForm({
 
             // Server errors surface through the global useSafeAction toast;
             // the button unlocks (hasSucceeded stays false) so the user can
-            // retry. On success the hook refreshes the router and the page
+            // retry. On success the action refreshes the page, which
             // redirects onward while the button stays loading.
             await setupSpace.executeAsync(
               spaceType === "work"

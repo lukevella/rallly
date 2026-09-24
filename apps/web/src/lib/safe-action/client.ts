@@ -1,31 +1,11 @@
 "use client";
 import { toast } from "@rallly/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useTranslation } from "@/i18n/client";
 import type { AppErrorCode } from "@/lib/errors/app-error";
 
 export const useSafeAction: typeof useAction = (action, options) => {
-  const router = useRouter();
-  return useSafeActionBase(action, {
-    ...options,
-    onSuccess: (args) => {
-      router.refresh();
-      options?.onSuccess?.(args);
-    },
-  });
-};
-
-/**
- * For actions that call refresh() or revalidatePath: the action response
- * already carries the re-rendered page, so a router.refresh() would be a
- * second render.
- */
-export const useRevalidatingSafeAction: typeof useAction = (action, options) =>
-  useSafeActionBase(action, options);
-
-const useSafeActionBase: typeof useAction = (action, options) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useAction(action, {
