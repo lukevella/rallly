@@ -8,7 +8,7 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const avatarVariants = cva(
-  "group/avatar relative flex shrink-0 select-none overflow-hidden bg-muted",
+  "group/avatar relative flex shrink-0 select-none overflow-hidden",
   {
     variants: {
       size: {
