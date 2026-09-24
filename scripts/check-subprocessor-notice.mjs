@@ -168,19 +168,18 @@ function main() {
     process.exit(2);
   }
 
-  let baseSource;
+  const baseBlob = `${baseRef}:${SUBPROCESSORS_FILE}`;
   try {
-    baseSource = execFileSync(
-      "git",
-      ["cat-file", "blob", `${baseRef}:${SUBPROCESSORS_FILE}`],
-      { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
-    );
+    execFileSync("git", ["cat-file", "-e", baseBlob], { stdio: "ignore" });
   } catch {
     console.log(
       `${SUBPROCESSORS_FILE} does not exist on ${baseRef}; nothing to compare.`,
     );
     return;
   }
+  const baseSource = execFileSync("git", ["cat-file", "blob", baseBlob], {
+    encoding: "utf8",
+  });
 
   const errors = checkSubprocessorNotice({
     base: JSON.parse(baseSource),
