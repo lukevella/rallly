@@ -1,0 +1,82 @@
+{
+  "subprocessors": [
+    {
+      "name": "Vercel",
+      "url": "https://security.vercel.com/",
+      "purpose": "Application hosting",
+      "dataProcessed": "All Customer Data in transit, and request logs including IP addresses",
+      "location": "United States",
+      "transferMechanism": "EU-US DPF + UK Extension (SCCs fallback)"
+    },
+    {
+      "name": "Neon",
+      "url": "https://neon.com/security",
+      "purpose": "Managed PostgreSQL database",
+      "dataProcessed": "All Customer Data at rest, including backups",
+      "location": "United States",
+      "transferMechanism": "EU-US DPF + UK Extension, certified under Databricks, Inc. (SCCs fallback)"
+    },
+    {
+      "name": "Upstash",
+      "url": "https://upstash.com/docs/common/help/compliance",
+      "purpose": "Session data, rate limiting",
+      "dataProcessed": "Session records including user IDs, IP addresses and device information; rate limit counters keyed by user ID or IP address",
+      "location": "United States",
+      "transferMechanism": "EU-US DPF + UK Extension (SCCs + UK Addendum fallback)"
+    },
+    {
+      "name": "Amazon Web Services",
+      "url": "https://aws.amazon.com/compliance/",
+      "purpose": "Transactional email, object storage",
+      "dataProcessed": "Recipient names and email addresses, and the content of emails we send; uploaded images such as profile pictures and logos",
+      "location": "United States",
+      "transferMechanism": "EU-US DPF + UK Extension, certified under Amazon.com, Inc. (SCCs fallback)"
+    },
+    {
+      "name": "OpenAI",
+      "url": "https://openai.com/policies/business-terms/",
+      "purpose": "Automated content moderation (poll title, description and location only, when flagged by pattern matching)",
+      "dataProcessed": "Poll title, description and location of flagged polls, without account data",
+      "location": "United States",
+      "transferMechanism": "SCCs + UK Addendum (OpenAI Data Processing Addendum)"
+    },
+    {
+      "name": "Stripe",
+      "url": "https://stripe.com/docs/security",
+      "purpose": "Payment processing (billing contact data only)",
+      "dataProcessed": "Billing contact name, email address and billing address",
+      "location": "United States",
+      "transferMechanism": "EU-US DPF + UK Extension (SCCs + UK Addendum fallback)"
+    },
+    {
+      "name": "PostHog (EU)",
+      "url": "https://posthog.com/privacy",
+      "purpose": "Product analytics",
+      "dataProcessed": "User IDs, names, email addresses, IP addresses and product usage events",
+      "location": "European Union",
+      "transferMechanism": "EU data residency (no US transfer)"
+    },
+    {
+      "name": "Sentry",
+      "url": "https://sentry.io/security/",
+      "purpose": "Error monitoring",
+      "dataProcessed": "Error reports and diagnostic context, including user IDs",
+      "location": "United States",
+      "transferMechanism": "EU-US DPF + UK Extension (SCCs + UK Addendum fallback)"
+    }
+  ],
+  "changelog": [
+    {
+      "date": "2026-09-24",
+      "summary": "Added a Data processed column describing the processing each Sub-processor already performs. No Sub-processors were added or changed."
+    },
+    {
+      "date": "2026-09-14",
+      "summary": "Added OpenAI. Automated content moderation has sent flagged poll content to OpenAI since it launched on 3 March 2025, so this entry is a disclosure of existing processing rather than the advance notice described in Section 6.3. The objection right in Section 6.4 applies from the date this entry was added."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Annex 2 published with Vercel, Neon, Upstash, Amazon Web Services, Stripe, PostHog and Sentry."
+    }
+  ]
+}

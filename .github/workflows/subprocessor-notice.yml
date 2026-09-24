@@ -1,0 +1,34 @@
+name: Sub-processor notice
+on:
+  pull_request:
+    branches:
+      - main
+    # `edited` reruns the check when the notice-sent line is added to the body.
+    types: [opened, edited, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Sub-processor notice
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Fetch base branch
+        run: git fetch --depth=1 origin "$BASE_REF"
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Check DPA section 6.3 notice
+        run: node scripts/check-subprocessor-notice.mjs "origin/$BASE_REF"
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_BODY: ${{ github.event.pull_request.body }}
