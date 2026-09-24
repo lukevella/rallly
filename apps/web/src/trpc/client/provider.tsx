@@ -1,8 +1,5 @@
 "use client";
-import {
-  hasServerError,
-  isActionMutationError,
-} from "@next-safe-action/adapter-tanstack-query";
+import { isActionMutationError } from "@next-safe-action/adapter-tanstack-query";
 import { toast } from "@rallly/ui/sonner";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
@@ -163,11 +160,6 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
     }
 
     function handleMutationError(error: Error) {
-      // Redirects and notFound() are rethrown for Next.js to handle
-      if (isNavigationError(error)) {
-        return;
-      }
-
       if (isTRPCClientError(error)) {
         handleTRPCError(error);
         return;
@@ -175,9 +167,14 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
 
       if (isActionMutationError(error)) {
         // Validation errors belong to the form that sent the input
-        if (hasServerError(error)) {
+        if (typeof error.serverError === "string") {
           showErrorToast(error.serverError);
         }
+        return;
+      }
+
+      // Redirects and notFound() are rethrown for Next.js to handle
+      if (isNavigationError(error)) {
         return;
       }
 
