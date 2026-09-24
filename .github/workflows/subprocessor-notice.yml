@@ -14,8 +14,12 @@ jobs:
   check:
     name: Sub-processor notice
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Fetch base branch
         run: git fetch --depth=1 origin "$BASE_REF"
         env:

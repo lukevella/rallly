@@ -18,6 +18,7 @@
 // - A changed purpose, data, location or transfer mechanism on an existing
 //   entry needs `notice-sent: YYYY-MM-DD` or `notice-not-required: <reason>`
 //   in the PR body, and a new changelog entry.
+// - Bringing forward or removing a pending effectiveDate counts as adding.
 // - Removals, link changes and changelog edits pass.
 //
 // Usage: PR_BODY="..." node scripts/check-subprocessor-notice.mjs <base-ref>
@@ -43,7 +44,11 @@ function parseDate(value) {
     return null;
   }
   const date = new Date(`${value}T00:00:00Z`);
-  return Number.isNaN(date.getTime()) ? null : date;
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  // Date rolls impossible days over (2026-02-30 becomes 2026-03-02).
+  return date.toISOString().slice(0, 10) === value ? date : null;
 }
 
 function daysBetween(from, to) {
@@ -54,7 +59,20 @@ export function checkSubprocessorNotice({ base, head, prBody, today }) {
   const errors = [];
   const baseByName = new Map(base.subprocessors.map((s) => [s.name, s]));
 
-  const added = head.subprocessors.filter((s) => !baseByName.has(s.name));
+  // A pending start date brought forward or removed shortens the notice
+  // period, so it is checked as if the entry were new.
+  const added = head.subprocessors.filter((s) => {
+    const previous = baseByName.get(s.name);
+    if (!previous) {
+      return true;
+    }
+    const previousStart = parseDate(previous.effectiveDate);
+    if (!previousStart || previousStart <= today) {
+      return false;
+    }
+    const start = parseDate(s.effectiveDate);
+    return !start || start < previousStart;
+  });
   const changed = head.subprocessors.filter((s) => {
     const previous = baseByName.get(s.name);
     return (
@@ -83,7 +101,7 @@ export function checkSubprocessorNotice({ base, head, prBody, today }) {
     const names = added.map((s) => s.name).join(", ");
     if (!noticeSentMatch) {
       errors.push(
-        `Adding ${names} requires a "notice-sent: YYYY-MM-DD" line in the PR body, asserting the change notice was emailed to the Subprocessor notifications segment.`,
+        `Adding or bringing forward ${names} requires a "notice-sent: YYYY-MM-DD" line in the PR body, asserting the change notice was emailed to the Subprocessor notifications segment.`,
       );
     }
     for (const subprocessor of added) {
@@ -138,6 +156,15 @@ function main() {
     console.error(
       "Usage: node scripts/check-subprocessor-notice.mjs <base-ref>",
     );
+    process.exit(2);
+  }
+
+  try {
+    execFileSync("git", ["rev-parse", "--verify", `${baseRef}^{commit}`], {
+      stdio: "ignore",
+    });
+  } catch {
+    console.error(`Base ref ${baseRef} not found.`);
     process.exit(2);
   }
 
