@@ -2,9 +2,24 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
+import DateFormatter from "@/components/blog/date-formatter";
 import { LegalPageLayout } from "@/components/legal-page-layout";
 import { Section } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
+import data from "./subprocessors.json";
+
+type Subprocessor = {
+  name: string;
+  url: string;
+  purpose: string;
+  dataProcessed: string;
+  location: string;
+  transferMechanism: string;
+  effectiveDate?: string;
+};
+
+const subprocessors: Subprocessor[] = data.subprocessors;
+const changelog: { date: string; summary: string }[] = data.changelog;
 
 export default async function DataProcessingAgreement() {
   cacheLife("max");
@@ -12,7 +27,7 @@ export default async function DataProcessingAgreement() {
     <Section>
       <LegalPageLayout
         title="Data processing agreement"
-        lastUpdated="2026-09-14"
+        lastUpdated="2026-09-24"
       >
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
@@ -380,7 +395,10 @@ export default async function DataProcessingAgreement() {
         </h2>
         <p>
           We use the following Sub-processors to provide the Service. Changes to
-          this list are notified as set out in Section 6.
+          this list are notified as set out in Section 6 and recorded under{" "}
+          <a href="#annex-2-changes">Changes to Annex 2</a>. A Sub-processor
+          shown with a start date does not process Customer Data before that
+          date.
         </p>
         <div className="overflow-x-auto">
           <table className="whitespace-nowrap lg:whitespace-normal">
@@ -388,148 +406,69 @@ export default async function DataProcessingAgreement() {
               <tr>
                 <th>Provider</th>
                 <th>Purpose</th>
+                <th>Data processed</th>
                 <th>Location</th>
                 <th>Transfer mechanism</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <a
-                    href="https://security.vercel.com/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Vercel
-                  </a>
-                </td>
-                <td>Application hosting</td>
-                <td>United States</td>
-                <td>EU-US DPF + UK Extension (SCCs fallback)</td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://neon.com/security"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Neon
-                  </a>
-                </td>
-                <td>Managed PostgreSQL database</td>
-                <td>United States</td>
-                <td>
-                  EU-US DPF + UK Extension, certified under Databricks, Inc.
-                  (SCCs fallback)
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://upstash.com/docs/common/help/compliance"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Upstash
-                  </a>
-                </td>
-                <td>Session data, rate limiting</td>
-                <td>United States</td>
-                <td>EU-US DPF + UK Extension (SCCs + UK Addendum fallback)</td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://aws.amazon.com/compliance/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Amazon Web Services
-                  </a>
-                </td>
-                <td>Transactional email, object storage</td>
-                <td>United States</td>
-                <td>
-                  EU-US DPF + UK Extension, certified under Amazon.com, Inc.
-                  (SCCs fallback)
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://openai.com/policies/business-terms/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    OpenAI
-                  </a>
-                </td>
-                <td>
-                  Automated content moderation (poll title, description and
-                  location only, when flagged by pattern matching)
-                </td>
-                <td>United States</td>
-                <td>SCCs + UK Addendum (OpenAI Data Processing Addendum)</td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://stripe.com/docs/security"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Stripe
-                  </a>
-                </td>
-                <td>Payment processing (billing contact data only)</td>
-                <td>United States</td>
-                <td>EU-US DPF + UK Extension (SCCs + UK Addendum fallback)</td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://posthog.com/privacy"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    PostHog (EU)
-                  </a>
-                </td>
-                <td>Product analytics</td>
-                <td>European Union</td>
-                <td>EU data residency (no US transfer)</td>
-              </tr>
-              <tr>
-                <td>
-                  <a
-                    href="https://sentry.io/security/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Sentry
-                  </a>
-                </td>
-                <td>Error monitoring</td>
-                <td>United States</td>
-                <td>EU-US DPF + UK Extension (SCCs + UK Addendum fallback)</td>
-              </tr>
+              {subprocessors.map((subprocessor) => (
+                <tr key={subprocessor.name}>
+                  <td>
+                    <a
+                      href={subprocessor.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      {subprocessor.name}
+                    </a>
+                    {subprocessor.effectiveDate ? (
+                      <>
+                        <br />
+                        <small>
+                          From{" "}
+                          <DateFormatter
+                            dateString={subprocessor.effectiveDate}
+                          />
+                        </small>
+                      </>
+                    ) : null}
+                  </td>
+                  <td>{subprocessor.purpose}</td>
+                  <td>{subprocessor.dataProcessed}</td>
+                  <td>{subprocessor.location}</td>
+                  <td>{subprocessor.transferMechanism}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-        <p>
-          OpenAI was added to this annex on 14 September 2026. Automated content
-          moderation has sent flagged poll content to OpenAI since it launched
-          on 3 March 2025, so this entry is a disclosure of existing processing
-          rather than the advance notice described in Section 6.3. The objection
-          right in Section 6.4 applies from the date this entry was added.
-        </p>
         <p>
           Stripe, PostHog, and Sentry primarily support processing for which we
           act as a controller (billing, product analytics, and error monitoring)
           and are included above for transparency. For payment transactions,
           Stripe acts as an independent controller under its own terms.
         </p>
+
+        <hr />
+
+        <h2 id="annex-2-changes" className="scroll-mt-24">
+          Changes to Annex 2
+        </h2>
+        <p>
+          Every change to the Sub-processors in Annex 2 is recorded here on the
+          date it was published.
+        </p>
+        <ul>
+          {changelog.map((change) => (
+            <li key={`${change.date}-${change.summary}`}>
+              <strong>
+                <DateFormatter dateString={change.date} />:
+              </strong>{" "}
+              {change.summary}
+            </li>
+          ))}
+        </ul>
 
         <hr />
 
