@@ -66,6 +66,7 @@ export const setupSpaceAction = authActionClient
         userId: ctx.user.id,
         spaceId: ownedSpace.id,
       });
+      refresh();
       return;
     }
 
