@@ -63,9 +63,6 @@ export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
             return;
           }
 
-          // The action response already swapped the page to the
-          // installed-license branch and may have unmounted this form; the
-          // promise still resolves, so the owner can close the dialog.
           onSuccess?.();
         })}
       >

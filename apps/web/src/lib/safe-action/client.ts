@@ -20,9 +20,8 @@ function runCallback(callback: () => unknown) {
 }
 
 /**
- * Does not refresh the router. An action whose write changes the page calls
- * refresh() or revalidatePath on the server, so the re-rendered page comes
- * back in the action response instead of a second request.
+ * An action whose write changes the page calls refresh() or revalidatePath
+ * on the server; the re-rendered page comes back in the action response.
  *
  * That re-render can unmount the component that ran the action (a deleted
  * row, a closed dialog) before next-safe-action's effect-driven callbacks
