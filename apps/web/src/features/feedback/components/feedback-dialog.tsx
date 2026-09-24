@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -12,18 +13,18 @@ import {
 } from "@rallly/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Textarea } from "@rallly/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
 import { CheckCircle2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { submitFeedbackAction } from "../actions";
 import { isFeedbackEnabled } from "../constants";
 import { feedbackSchema } from "../schema";
 
 export function FeedbackDialog(props: DialogProps) {
   const { t } = useTranslation();
-  const submitFeedback = useSafeAction(submitFeedbackAction);
+  const submitFeedback = useMutation(mutationOptions(submitFeedbackAction));
   const form = useForm({
     resolver: zodResolver(feedbackSchema),
   });
@@ -35,7 +36,7 @@ export function FeedbackDialog(props: DialogProps) {
   return (
     <Dialog {...props}>
       <DialogContent>
-        {!submitFeedback.hasSucceeded ? (
+        {!submitFeedback.isSuccess ? (
           <>
             <DialogHeader>
               <DialogTitle>
@@ -51,8 +52,8 @@ export function FeedbackDialog(props: DialogProps) {
 
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(async (data) => {
-                  await submitFeedback.executeAsync(data);
+                onSubmit={form.handleSubmit((data) => {
+                  submitFeedback.mutate(data);
                 })}
               >
                 <FormField
@@ -61,7 +62,7 @@ export function FeedbackDialog(props: DialogProps) {
                   render={({ field }) => (
                     <FormItem>
                       <Textarea
-                        disabled={form.formState.isSubmitting}
+                        disabled={submitFeedback.isPending}
                         className="w-full"
                         rows={5}
                         {...field}
@@ -75,7 +76,7 @@ export function FeedbackDialog(props: DialogProps) {
                 />
                 <Button
                   type="submit"
-                  loading={form.formState.isSubmitting}
+                  loading={submitFeedback.isPending}
                   className="mt-6"
                   variant="primary"
                 >

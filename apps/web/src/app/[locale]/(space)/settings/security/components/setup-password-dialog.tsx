@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -15,6 +16,7 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
 import { Form } from "@rallly/ui/form";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -23,7 +25,6 @@ import { setPasswordAction } from "@/features/auth/actions";
 import { PasswordStrengthMeter } from "@/features/auth/components/password-strength-meter";
 import { usePasswordValidationSchema } from "@/features/auth/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function SetupPasswordDialog({
   trigger,
@@ -40,17 +41,19 @@ export function SetupPasswordDialog({
   });
   const { formState } = form;
 
-  const setPassword = useSafeAction(setPasswordAction, {
-    onSuccess: () => {
-      form.reset();
-      dialog.dismiss();
-      toast.success(
-        t("passwordSetSuccess", {
-          defaultValue: "Your password has been set successfully",
-        }),
-      );
-    },
-  });
+  const setPassword = useMutation(
+    mutationOptions(setPasswordAction, {
+      onSuccess: () => {
+        form.reset();
+        dialog.dismiss();
+        toast.success(
+          t("passwordSetSuccess", {
+            defaultValue: "Your password has been set successfully",
+          }),
+        );
+      },
+    }),
+  );
 
   return (
     <Dialog
@@ -67,7 +70,9 @@ export function SetupPasswordDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(async (data) => {
-              await setPassword.executeAsync({ password: data.password });
+              try {
+                await setPassword.mutateAsync({ password: data.password });
+              } catch {}
             })}
           >
             <DialogHeader>

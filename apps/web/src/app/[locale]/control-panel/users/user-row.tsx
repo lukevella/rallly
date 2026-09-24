@@ -1,4 +1,5 @@
 "use client";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
@@ -15,6 +16,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { useMutation } from "@tanstack/react-query";
 import {
   BanIcon,
   MoreHorizontal,
@@ -22,13 +24,11 @@ import {
   UserCheckIcon,
   UserPenIcon,
 } from "lucide-react";
-import { useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { StackedListItem } from "@/components/stacked-list";
 import { changeRoleAction, unbanUserAction } from "@/features/user/actions";
 import { userRoleSchema } from "@/features/user/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { BanUserDialog } from "./dialogs/ban-user-dialog";
 import { DeleteUserDialog } from "./dialogs/delete-user-dialog";
 
@@ -54,10 +54,10 @@ export function UserRow({
   canDelete: boolean;
 }) {
   const { t } = useTranslation();
-  const changeRole = useSafeAction(changeRoleAction);
-  const unbanUser = useSafeAction(unbanUserAction);
+  const changeRole = useMutation(mutationOptions(changeRoleAction));
+  const unbanUser = useMutation(mutationOptions(unbanUserAction));
 
-  const [isPending, startTransition] = useTransition();
+  const isPending = changeRole.isPending || unbanUser.isPending;
   const deleteDialog = useDialog();
   const banDialog = useDialog();
 
@@ -105,12 +105,10 @@ export function UserRow({
                 <DropdownMenuSubContent>
                   <DropdownMenuRadioGroup
                     value={role}
-                    onValueChange={async (value) => {
-                      startTransition(async () => {
-                        await changeRole.executeAsync({
-                          role: userRoleSchema.parse(value),
-                          userId,
-                        });
+                    onValueChange={(value) => {
+                      changeRole.mutate({
+                        role: userRoleSchema.parse(value),
+                        userId,
                       });
                     }}
                   >
@@ -127,9 +125,7 @@ export function UserRow({
               {banned ? (
                 <DropdownMenuItem
                   onClick={() => {
-                    startTransition(async () => {
-                      await unbanUser.executeAsync({ userId });
-                    });
+                    unbanUser.mutate({ userId });
                   }}
                   disabled={!canBan}
                 >

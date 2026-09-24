@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -18,10 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { BanIcon, MoreVerticalIcon } from "lucide-react";
 import { revokeApiKeyAction } from "@/features/api-keys/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function RevokeApiKeyButton({
   apiKeyId,
@@ -32,14 +33,16 @@ export function RevokeApiKeyButton({
 }) {
   const { t } = useTranslation();
   const revokeDialog = useDialog();
-  const revokeApiKey = useSafeAction(revokeApiKeyAction, {
-    onSuccess: () => {
-      toast.success(t("revoked", { defaultValue: "Revoked" }));
-    },
-    onSettled: () => {
-      revokeDialog.dismiss();
-    },
-  });
+  const revokeApiKey = useMutation(
+    mutationOptions(revokeApiKeyAction, {
+      onSuccess: () => {
+        toast.success(t("revoked", { defaultValue: "Revoked" }));
+      },
+      onSettled: () => {
+        revokeDialog.dismiss();
+      },
+    }),
+  );
 
   return (
     <>
@@ -87,9 +90,9 @@ export function RevokeApiKeyButton({
           <DialogFooter>
             <Button
               variant="destructive"
-              loading={revokeApiKey.isExecuting}
+              loading={revokeApiKey.isPending}
               onClick={() => {
-                revokeApiKey.execute({ id: apiKeyId });
+                revokeApiKey.mutate({ id: apiKeyId });
               }}
             >
               <Trans i18nKey="revoke" defaults="Revoke" />

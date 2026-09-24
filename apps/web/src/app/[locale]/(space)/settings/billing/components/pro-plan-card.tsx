@@ -1,9 +1,11 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { TriangleAlertIcon } from "lucide-react";
 import {
   openCancelPlanAction,
@@ -20,7 +22,6 @@ import { formatMinorUnitAmount } from "@/features/billing/utils";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { ManageSeatsDialog } from "./manage-seats-dialog";
 import {
   PlanCard,
@@ -73,15 +74,19 @@ export function ProPlanCard({
   const { locale } = useDateTimeConfig();
   const { formatDateTime } = useDateTime();
   const switchToYearlyDialog = useDialog();
-  const openCancelPlan = useSafeAction(openCancelPlanAction);
-  const openPaymentMethodUpdate = useSafeAction(openPaymentMethodUpdateAction);
-  const resumePlan = useSafeAction(resumePlanAction, {
-    onSuccess: () => {
-      toast.success(
-        t("planResumedToast", { defaultValue: "Your plan will renew" }),
-      );
-    },
-  });
+  const openCancelPlan = useMutation(mutationOptions(openCancelPlanAction));
+  const openPaymentMethodUpdate = useMutation(
+    mutationOptions(openPaymentMethodUpdateAction),
+  );
+  const resumePlan = useMutation(
+    mutationOptions(resumePlanAction, {
+      onSuccess: () => {
+        toast.success(
+          t("planResumedToast", { defaultValue: "Your plan will renew" }),
+        );
+      },
+    }),
+  );
 
   const formatCurrency = (minorUnitAmount: number) =>
     formatMinorUnitAmount({ amount: minorUnitAmount, currency, locale });
@@ -178,8 +183,8 @@ export function ProPlanCard({
           {endsAtPeriodEnd ? (
             canResume ? (
               <Button
-                loading={resumePlan.isExecuting}
-                onClick={() => resumePlan.execute()}
+                loading={resumePlan.isPending}
+                onClick={() => resumePlan.mutate()}
               >
                 <Trans i18nKey="resumePlan" defaults="Resume plan" />
               </Button>
@@ -188,8 +193,8 @@ export function ProPlanCard({
             <>
               {needsPayment ? (
                 <Button
-                  loading={openPaymentMethodUpdate.isExecuting}
-                  onClick={() => openPaymentMethodUpdate.execute()}
+                  loading={openPaymentMethodUpdate.isPending}
+                  onClick={() => openPaymentMethodUpdate.mutate()}
                 >
                   <TriangleAlertIcon className="text-amber-500" />
                   <Trans
@@ -265,8 +270,8 @@ export function ProPlanCard({
           <Button
             variant="ghost"
             className="text-muted-foreground"
-            loading={openCancelPlan.isExecuting}
-            onClick={() => openCancelPlan.execute()}
+            loading={openCancelPlan.isPending}
+            onClick={() => openCancelPlan.mutate()}
           >
             <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
           </Button>

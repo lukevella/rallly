@@ -1,11 +1,12 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowUpRightIcon, CreditCardIcon } from "lucide-react";
 import { openBillingDetailsAction } from "@/features/billing/actions";
 import type { PaymentMethodCard } from "@/features/billing/schema";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import {
   PlanCard,
   PlanCardActions,
@@ -41,7 +42,9 @@ export function PaymentAndBillingCard({
   }[];
   className?: string;
 }) {
-  const openBillingDetails = useSafeAction(openBillingDetailsAction);
+  const openBillingDetails = useMutation(
+    mutationOptions(openBillingDetailsAction),
+  );
   const [primary] = paymentMethods;
 
   return (
@@ -102,8 +105,8 @@ export function PaymentAndBillingCard({
         </PlanCardContent>
         <PlanCardActions>
           <Button
-            loading={openBillingDetails.isExecuting}
-            onClick={() => openBillingDetails.execute()}
+            loading={openBillingDetails.isPending}
+            onClick={() => openBillingDetails.mutate()}
           >
             <Trans i18nKey="manageBilling" defaults="Manage billing" />
             <ArrowUpRightIcon className="text-muted-foreground" />

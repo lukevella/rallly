@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
@@ -10,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import {
   LinkIcon,
   MailIcon,
@@ -23,7 +25,6 @@ import { usePoll } from "@/features/poll/client";
 import { revokePollInviteAction } from "@/features/poll/invite/actions";
 import type { PollInviteStatus } from "@/features/poll/invite/utils";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export type InviteeRowStatus = PollInviteStatus | "sending";
 
@@ -83,30 +84,31 @@ function InviteeRowMenu({
   const [state, copyToClipboard] = useCopyToClipboard();
 
   // The success handler refetches the list, which is what drops the row.
-  const revoke = useSafeAction(revokePollInviteAction, {
-    onSuccess: ({ data }) => {
-      if (!data) return;
-      if (data.ok) {
-        toast(
-          t("shareDialogInviteRemoved", {
-            defaultValue: "Invite for {email} removed",
-            email,
-          }),
-        );
-        return;
-      }
-      toast.error(
-        data.reason === "alreadyResponded"
-          ? t("shareDialogAlreadyResponded", {
-              defaultValue: "{email} has already responded",
+  const revoke = useMutation(
+    mutationOptions(revokePollInviteAction, {
+      onSuccess: (data) => {
+        if (data.ok) {
+          toast(
+            t("shareDialogInviteRemoved", {
+              defaultValue: "Invite for {email} removed",
               email,
-            })
-          : t("actionErrorNotFound", {
-              defaultValue: "The resource was not found",
             }),
-      );
-    },
-  });
+          );
+          return;
+        }
+        toast.error(
+          data.reason === "alreadyResponded"
+            ? t("shareDialogAlreadyResponded", {
+                defaultValue: "{email} has already responded",
+                email,
+              })
+            : t("actionErrorNotFound", {
+                defaultValue: "The resource was not found",
+              }),
+        );
+      },
+    }),
+  );
 
   // react-use records a failed copy as `error` and a successful one as
   // `value`; the toast only claims success in the second case.
@@ -163,7 +165,7 @@ function InviteeRowMenu({
           <DropdownMenuItem
             variant="destructive"
             disabled={revoke.isPending}
-            onClick={() => revoke.execute({ pollId: poll.id, inviteId })}
+            onClick={() => revoke.mutate({ pollId: poll.id, inviteId })}
           >
             <Trash2Icon />
             <Trans i18nKey="shareDialogRemoveInvite" defaults="Remove invite" />

@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { useMutation } from "@tanstack/react-query";
 import {
   ChevronsUpDownIcon,
   PlusIcon,
@@ -28,7 +30,6 @@ import { SpaceRole } from "@/features/space/components/space-role";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import type { MemberRole, SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
 
@@ -46,9 +47,11 @@ export function SpaceDropdown({
   const { data: activeSpace } = useSpace();
   const [pendingSpaceId, setPendingSpaceId] = React.useState<string>();
 
-  const setActiveSpace = useSafeAction(setActiveSpaceAction, {
-    onError: () => setPendingSpaceId(undefined),
-  });
+  const setActiveSpace = useMutation(
+    mutationOptions(setActiveSpaceAction, {
+      onError: () => setPendingSpaceId(undefined),
+    }),
+  );
   const newSpaceDialog = useDialog();
 
   const pendingSpace = spaces.find((space) => space.id === pendingSpaceId);
@@ -95,7 +98,7 @@ export function SpaceDropdown({
             onValueChange={(value) => {
               if (value === selectedSpaceId) return;
               setPendingSpaceId(value);
-              setActiveSpace.execute({ spaceId: value });
+              setActiveSpace.mutate({ spaceId: value });
             }}
           >
             {spaces.map((space) => (

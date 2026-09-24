@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -11,11 +12,11 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { submitRsvpAction } from "@/features/scheduled-event/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 const formSchema = z.object({
   name: z.string().trim().min(1).max(100),
@@ -30,7 +31,6 @@ export function RegistrationForm({
   onSuccess: (registration: { name: string; email: string }) => void;
 }) {
   const { t } = useTranslation();
-  const submitRsvp = useSafeAction(submitRsvpAction);
   const form = useForm({
     defaultValues: {
       name: "",
@@ -38,31 +38,34 @@ export function RegistrationForm({
     },
     resolver: zodResolver(formSchema),
   });
+  const submitRsvp = useMutation(
+    mutationOptions(submitRsvpAction, {
+      onSuccess: (data, input) => {
+        if (!data.ok) {
+          form.setError("email", {
+            message: t("eventRegisterAlreadyResponded", {
+              defaultValue: "This email has already been used to respond",
+            }),
+          });
+          return;
+        }
+
+        onSuccess({ name: input.name, email: input.email });
+      },
+    }),
+  );
 
   return (
     <Form {...form}>
       <form
         className="grid gap-4"
-        onSubmit={form.handleSubmit(async (data) => {
-          const result = await submitRsvp.executeAsync({
+        onSubmit={form.handleSubmit((data) => {
+          submitRsvp.mutate({
             eventId,
             name: data.name,
             email: data.email,
             status: "accepted",
           });
-
-          if (result.data?.ok === false) {
-            form.setError("email", {
-              message: t("eventRegisterAlreadyResponded", {
-                defaultValue: "This email has already been used to respond",
-              }),
-            });
-            return;
-          }
-
-          if (result.data?.ok) {
-            onSuccess({ name: data.name, email: data.email });
-          }
         })}
       >
         <FormField
@@ -76,7 +79,7 @@ export function RegistrationForm({
                 <Input
                   autoFocus
                   autoComplete="name"
-                  disabled={form.formState.isSubmitting}
+                  disabled={submitRsvp.isPending}
                   placeholder={t("namePlaceholder", {
                     defaultValue: "Jessie Smith",
                   })}
@@ -98,7 +101,7 @@ export function RegistrationForm({
                 <Input
                   type="email"
                   autoComplete="email"
-                  disabled={form.formState.isSubmitting}
+                  disabled={submitRsvp.isPending}
                   placeholder={t("emailPlaceholder", {
                     defaultValue: "jessie.smith@example.com",
                   })}
@@ -113,7 +116,7 @@ export function RegistrationForm({
           size="lg"
           variant="primary"
           type="submit"
-          loading={form.formState.isSubmitting}
+          loading={submitRsvp.isPending}
         >
           <Trans i18nKey="register" defaults="Register" />
         </Button>

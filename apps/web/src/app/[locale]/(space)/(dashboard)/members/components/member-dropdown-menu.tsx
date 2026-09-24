@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -19,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { MoreHorizontalIcon, ShieldIcon, UserIcon, XIcon } from "lucide-react";
 import {
   changeMemberRoleAction,
@@ -27,7 +29,6 @@ import {
 import type { MemberDTO } from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function MemberDropdownMenu({
   member,
@@ -40,30 +41,34 @@ export function MemberDropdownMenu({
 }) {
   const removeMemberDialog = useDialog();
   const { t } = useTranslation();
-  const removeMember = useSafeAction(removeMemberAction, {
-    onSuccess: () => {
-      toast.success(
-        t("removeMemberSuccess", {
-          defaultValue: "Member removed successfully",
-        }),
-      );
-    },
-    onSettled: () => {
-      removeMemberDialog.dismiss();
-    },
-  });
-  const changeMemberRole = useSafeAction(changeMemberRoleAction, {
-    onSuccess: () => {
-      toast.success(
-        t("roleChangedSuccess", {
-          defaultValue: "Role changed successfully",
-        }),
-      );
-    },
-  });
+  const removeMember = useMutation(
+    mutationOptions(removeMemberAction, {
+      onSuccess: () => {
+        toast.success(
+          t("removeMemberSuccess", {
+            defaultValue: "Member removed successfully",
+          }),
+        );
+      },
+      onSettled: () => {
+        removeMemberDialog.dismiss();
+      },
+    }),
+  );
+  const changeMemberRole = useMutation(
+    mutationOptions(changeMemberRoleAction, {
+      onSuccess: () => {
+        toast.success(
+          t("roleChangedSuccess", {
+            defaultValue: "Role changed successfully",
+          }),
+        );
+      },
+    }),
+  );
 
   const handleRoleChange = (newRole: MemberRole) => {
-    changeMemberRole.execute({
+    changeMemberRole.mutate({
       memberId: member.id,
       role: newRole,
     });
@@ -131,9 +136,9 @@ export function MemberDropdownMenu({
           <DialogFooter>
             <Button
               variant="destructive"
-              loading={removeMember.isExecuting}
+              loading={removeMember.isPending}
               onClick={() => {
-                removeMember.execute({ memberId: member.id });
+                removeMember.mutate({ memberId: member.id });
               }}
             >
               <Trans i18nKey="confirm" defaults="Confirm" />

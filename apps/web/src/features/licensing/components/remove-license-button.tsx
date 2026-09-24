@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -12,18 +13,19 @@ import {
   DialogTrigger,
   useDialog,
 } from "@rallly/ui/dialog";
-
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { useMutation } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import { useTransition } from "react";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { removeInstanceLicenseAction } from "../actions";
 
 export function RemoveLicenseButton() {
   const [isPending, startTransition] = useTransition();
   const dialog = useDialog();
-  const removeInstanceLicense = useSafeAction(removeInstanceLicenseAction);
+  const removeInstanceLicense = useMutation(
+    mutationOptions(removeInstanceLicenseAction),
+  );
   return (
     <Dialog {...dialog.dialogProps}>
       <Tooltip>
@@ -66,7 +68,11 @@ export function RemoveLicenseButton() {
             variant="destructive"
             onClick={() =>
               startTransition(async () => {
-                await removeInstanceLicense.executeAsync();
+                try {
+                  await removeInstanceLicense.mutateAsync();
+                } catch {
+                  // The mutation cache toasts the error
+                }
                 dialog.dismiss();
               })
             }

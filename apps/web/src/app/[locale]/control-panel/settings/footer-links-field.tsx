@@ -1,10 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import { FieldError, FieldLabel } from "@rallly/ui/field";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -16,7 +18,6 @@ import {
   isValidFooterLinkHref,
 } from "@/features/instance-settings/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { updateFooterLinksAction } from "./actions";
 
 export function FooterLinksField({
@@ -25,8 +26,6 @@ export function FooterLinksField({
   defaultValue: FooterLink[];
 }) {
   const { t } = useTranslation();
-  const updateFooterLinks = useSafeAction(updateFooterLinksAction);
-
   // Mirrors footerLinksSchema, with the href message translated. The server
   // action still validates against the un-localised schema.
   const formSchema = z.object({
@@ -60,6 +59,15 @@ export function FooterLinksField({
     },
   });
 
+  const updateFooterLinks = useMutation(
+    mutationOptions(updateFooterLinksAction, {
+      onSuccess: (_data, input) => {
+        form.reset(input);
+        toast.success(t("saved", { defaultValue: "Saved" }));
+      },
+    }),
+  );
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "footerLinks",
@@ -68,13 +76,8 @@ export function FooterLinksField({
   return (
     <form
       className="space-y-4"
-      onSubmit={form.handleSubmit(async (data) => {
-        const result = await updateFooterLinks.executeAsync(data);
-
-        if (!result?.serverError && !result?.validationErrors) {
-          form.reset(data);
-          toast.success(t("saved", { defaultValue: "Saved" }));
-        }
+      onSubmit={form.handleSubmit((data) => {
+        updateFooterLinks.mutate(data);
       })}
     >
       {fields.length > 0 ? (
@@ -159,7 +162,7 @@ export function FooterLinksField({
         </Button>
         <Button
           type="submit"
-          loading={updateFooterLinks.isExecuting}
+          loading={updateFooterLinks.isPending}
           disabled={!form.formState.isDirty}
         >
           <Trans i18nKey="save" defaults="Save" />

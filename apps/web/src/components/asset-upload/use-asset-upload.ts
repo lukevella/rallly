@@ -1,35 +1,13 @@
 "use client";
 
+import {
+  hasServerError,
+  isActionMutationError,
+} from "@next-safe-action/adapter-tanstack-query";
 import { toast } from "@rallly/ui/sonner";
 import React from "react";
 import { useTranslation } from "@/i18n/client";
 import { uploadAsset } from "@/lib/storage/upload-client";
-
-/**
- * A safe-action result, structurally. Actions resolve (rather than reject)
- * on server errors, so success has to be read off the result — forgetting
- * that check is the bug class this hook exists to remove.
- */
-interface ActionResult<T> {
-  data?: T;
-  serverError?: unknown;
-  validationErrors?: unknown;
-}
-
-/**
- * Server errors already surface a toast via useSafeAction's global handler;
- * this marker keeps the hook from toasting the same failure twice.
- */
-class ActionFailedError extends Error {}
-
-function assertActionOk(result: ActionResult<unknown> | undefined) {
-  if (result?.serverError) {
-    throw new ActionFailedError("Action failed");
-  }
-  if (!result || result.validationErrors) {
-    throw new Error("Action failed");
-  }
-}
 
 /**
  * The two-phase upload protocol, once: sign against the slot's profile,
@@ -47,46 +25,49 @@ export function useAssetUpload<TAccept extends string>({
   signUpload: (input: {
     fileType: TAccept;
     fileSize: number;
-  }) => Promise<ActionResult<{ url: string; key: string }> | undefined>;
-  persistUpload: (key: string) => Promise<ActionResult<unknown> | undefined>;
+  }) => Promise<{ url: string; key: string }>;
+  persistUpload: (key: string) => Promise<unknown>;
 }) {
   const { t } = useTranslation();
   const [isUploading, startUploading] = React.useTransition();
 
+  const showUploadError = () => {
+    toast.error(
+      t("assetUploadError", {
+        defaultValue: "Failed to upload",
+      }),
+      {
+        description: t("assetUploadErrorDescription", {
+          defaultValue:
+            "There was an issue uploading your file. Please try again later.",
+        }),
+      },
+    );
+  };
+
   const upload = (file: File, options?: { onSuccess?: () => void }) => {
     startUploading(async () => {
       try {
-        const signResult = await signUpload({
+        const signedUpload = await signUpload({
           fileType: file.type as TAccept,
           fileSize: file.size,
         });
 
-        assertActionOk(signResult);
-
-        const signedUpload = signResult?.data;
-
-        if (!signedUpload) {
-          throw new Error("Failed to get upload URL");
+        try {
+          await uploadAsset({ url: signedUpload.url, file });
+        } catch {
+          showUploadError();
+          return;
         }
 
-        await uploadAsset({ url: signedUpload.url, file });
-
-        assertActionOk(await persistUpload(signedUpload.key));
+        await persistUpload(signedUpload.key);
 
         options?.onSuccess?.();
       } catch (error) {
-        if (!(error instanceof ActionFailedError)) {
-          toast.error(
-            t("assetUploadError", {
-              defaultValue: "Failed to upload",
-            }),
-            {
-              description: t("assetUploadErrorDescription", {
-                defaultValue:
-                  "There was an issue uploading your file. Please try again later.",
-              }),
-            },
-          );
+        // The mutation cache toasts server errors and failed requests;
+        // only validation errors are left to report here
+        if (isActionMutationError(error) && !hasServerError(error)) {
+          showUploadError();
         }
       }
     });

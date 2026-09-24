@@ -1,6 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  isActionMutationError,
+  mutationOptions,
+} from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -11,11 +15,11 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { validateLicenseKeyAction } from "@/features/licensing/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { checkLicenseKey } from "../utils";
 
 const formSchema = z.object({
@@ -33,37 +37,32 @@ export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
     resolver: zodResolver(formSchema),
   });
 
-  const validateLicenseKey = useSafeAction(validateLicenseKeyAction);
+  const validateLicenseKey = useMutation(
+    mutationOptions(validateLicenseKeyAction, {
+      onSuccess: () => {
+        onSuccess?.();
+      },
+      onError: (error) => {
+        form.setError("licenseKey", {
+          message: isActionMutationError(error)
+            ? t("licenseKeyErrorInvalidLicenseKey", {
+                defaultValue: "Invalid license key",
+              })
+            : t("licenseKeyGenericError", {
+                defaultValue:
+                  "An error occurred while validating the license key",
+              }),
+        });
+      },
+    }),
+  );
 
   return (
     <Form {...form}>
       <form
         className="space-y-4"
-        onSubmit={form.handleSubmit(async (data) => {
-          try {
-            const result = await validateLicenseKey.executeAsync({
-              key: data.licenseKey,
-            });
-
-            if (!result.data) {
-              form.setError("licenseKey", {
-                message: t("licenseKeyErrorInvalidLicenseKey", {
-                  defaultValue: "Invalid license key",
-                }),
-              });
-              return;
-            }
-          } catch (_error) {
-            form.setError("licenseKey", {
-              message: t("licenseKeyGenericError", {
-                defaultValue:
-                  "An error occurred while validating the license key",
-              }),
-            });
-            return;
-          }
-
-          onSuccess?.();
+        onSubmit={form.handleSubmit((data) => {
+          validateLicenseKey.mutate({ key: data.licenseKey });
         })}
       >
         <FormField
@@ -77,7 +76,7 @@ export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
                 <FormControl>
                   <Input
                     className="font-mono"
-                    disabled={form.formState.isSubmitting}
+                    disabled={validateLicenseKey.isPending}
                     placeholder="RLYV4-XXXX-XXXX-XXXX-XXXX-XXXX"
                     {...field}
                   />
@@ -91,7 +90,7 @@ export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
         <div className="flex gap-2">
           <Button
             variant="primary"
-            loading={form.formState.isSubmitting}
+            loading={validateLicenseKey.isPending}
             type="submit"
           >
             <Trans i18nKey="activate" defaults="Activate" />

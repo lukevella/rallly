@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { useMutation } from "@tanstack/react-query";
 import { UsersIcon } from "lucide-react";
 import React from "react";
 import {
@@ -26,7 +28,6 @@ import { ProBadge } from "@/features/billing/components/pro-badge";
 import { updateSpaceSharedAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function CollaborationSection({
   disabled = false,
@@ -37,7 +38,7 @@ export function CollaborationSection({
   const { t } = useTranslation();
   const isFree = useIsFree();
 
-  const updateShared = useSafeAction(updateSpaceSharedAction);
+  const updateShared = useMutation(mutationOptions(updateSpaceSharedAction));
 
   // Optimistic value shown until the post-action router refresh delivers
   // the updated space data; reverts automatically if the action fails.
@@ -74,11 +75,10 @@ export function CollaborationSection({
     React.startTransition(async () => {
       setOptimisticShared(next);
       setPendingShared(null);
-      const result = await updateShared.executeAsync({ shared: next });
-
-      if (!result?.serverError && !result?.validationErrors) {
+      try {
+        await updateShared.mutateAsync({ shared: next });
         toast.success(t("saved", { defaultValue: "Saved" }));
-      }
+      } catch {}
     });
   };
 
@@ -123,7 +123,7 @@ export function CollaborationSection({
                 size="sm"
                 variant="primary"
                 onClick={handleSave}
-                loading={updateShared.isExecuting}
+                loading={updateShared.isPending}
                 className={cn(!showSaveButton && "invisible")}
               >
                 <Trans i18nKey="save" defaults="Save" />
@@ -132,7 +132,7 @@ export function CollaborationSection({
                 id="space-shared"
                 checked={checked}
                 onCheckedChange={handleToggle}
-                disabled={disabled || updateShared.isExecuting}
+                disabled={disabled || updateShared.isPending}
               />
             </div>
           </Field>

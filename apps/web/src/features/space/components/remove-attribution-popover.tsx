@@ -22,7 +22,7 @@ export function RemoveAttributionPopover({ pollId }: { pollId: string }) {
   const { t } = useTranslation();
   // Dismissed before opening the pay wall so the dialog doesn't stack on it
   const popover = useDialog();
-  const { isExecuting, toggle } = useHideAttributionToggle({
+  const { isPending, toggle } = useHideAttributionToggle({
     // The badge is only rendered while attribution is shown
     hideAttribution: false,
     payWallTrigger: {
@@ -84,7 +84,7 @@ export function RemoveAttributionPopover({ pollId }: { pollId: string }) {
           <Button
             variant="primary"
             className="w-full"
-            disabled={isExecuting}
+            disabled={isPending}
             onClick={() => toggle(true)}
           >
             <Trans i18nKey="remove" defaults="Remove" />

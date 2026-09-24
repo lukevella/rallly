@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -19,9 +20,9 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { useMutation } from "@tanstack/react-query";
 import { MoreVerticalIcon, SendIcon, Trash2Icon } from "lucide-react";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import {
   deleteWebhookAction,
   sendWebhookTestEventAction,
@@ -40,60 +41,61 @@ export function WebhookActions({
   const { t } = useTranslation();
   const deleteDialog = useDialog();
 
-  const setEnabled = useSafeAction(setWebhookEnabledAction);
-  const sendTestEvent = useSafeAction(sendWebhookTestEventAction, {
-    onExecute: () => {
-      toast.loading(
-        t("webhookTestEventSending", { defaultValue: "Sending test event" }),
-        { id: `webhook-test-${webhookId}` },
-      );
-    },
-    onSuccess: ({ data }) => {
-      if (!data) {
-        return;
-      }
-      const id = `webhook-test-${webhookId}`;
-      if (data.ok) {
-        toast.success(
-          t("webhookTestEventDelivered", {
-            defaultValue: "Test event delivered",
-          }),
-          {
-            id,
-            description: t("webhookTestEventRespondedWith", {
-              defaultValue: "Endpoint responded {status}",
-              status: data.status,
+  const setEnabled = useMutation(mutationOptions(setWebhookEnabledAction));
+  const sendTestEvent = useMutation(
+    mutationOptions(sendWebhookTestEventAction, {
+      onMutate: () => {
+        toast.loading(
+          t("webhookTestEventSending", { defaultValue: "Sending test event" }),
+          { id: `webhook-test-${webhookId}` },
+        );
+      },
+      onSuccess: (data) => {
+        const id = `webhook-test-${webhookId}`;
+        if (data.ok) {
+          toast.success(
+            t("webhookTestEventDelivered", {
+              defaultValue: "Test event delivered",
             }),
-          },
-        );
-      } else {
-        toast.error(
-          t("webhookTestEventFailed", { defaultValue: "Test event failed" }),
-          { id, description: data.error },
-        );
-      }
-    },
-    onError: () => {
-      toast.dismiss(`webhook-test-${webhookId}`);
-    },
-  });
-  const deleteWebhook = useSafeAction(deleteWebhookAction, {
-    onSuccess: () => {
-      toast.success(t("webhookDeleted", { defaultValue: "Webhook deleted" }));
-    },
-    onSettled: () => {
-      deleteDialog.dismiss();
-    },
-  });
+            {
+              id,
+              description: t("webhookTestEventRespondedWith", {
+                defaultValue: "Endpoint responded {status}",
+                status: data.status,
+              }),
+            },
+          );
+        } else {
+          toast.error(
+            t("webhookTestEventFailed", { defaultValue: "Test event failed" }),
+            { id, description: data.error },
+          );
+        }
+      },
+      onError: () => {
+        toast.dismiss(`webhook-test-${webhookId}`);
+      },
+    }),
+  );
+  const deleteWebhook = useMutation(
+    mutationOptions(deleteWebhookAction, {
+      onSuccess: () => {
+        toast.success(t("webhookDeleted", { defaultValue: "Webhook deleted" }));
+      },
+      onSettled: () => {
+        deleteDialog.dismiss();
+      },
+    }),
+  );
 
   return (
     <>
       <Switch
         checked={enabled}
-        disabled={setEnabled.isExecuting}
+        disabled={setEnabled.isPending}
         aria-label={t("enabled", { defaultValue: "Enabled" })}
         onCheckedChange={(checked) => {
-          setEnabled.execute({ webhookId, enabled: checked });
+          setEnabled.mutate({ webhookId, enabled: checked });
         }}
       />
       <DropdownMenu>
@@ -110,9 +112,9 @@ export function WebhookActions({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            disabled={sendTestEvent.isExecuting}
+            disabled={sendTestEvent.isPending}
             onClick={() => {
-              sendTestEvent.execute({ webhookId });
+              sendTestEvent.mutate({ webhookId });
             }}
           >
             <SendIcon />
@@ -146,9 +148,9 @@ export function WebhookActions({
           <DialogFooter>
             <Button
               variant="destructive"
-              loading={deleteWebhook.isExecuting}
+              loading={deleteWebhook.isPending}
               onClick={() => {
-                deleteWebhook.execute({ webhookId });
+                deleteWebhook.mutate({ webhookId });
               }}
             >
               <Trans i18nKey="delete" defaults="Delete" />

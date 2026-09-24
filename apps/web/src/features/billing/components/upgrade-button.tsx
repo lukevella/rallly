@@ -1,13 +1,14 @@
 "use client";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import type { DisplayedCurrency } from "@rallly/billing";
 import { Button } from "@rallly/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
 
 import { upgradeToProAction } from "@/features/billing/actions";
 import { useUser } from "@/features/user/client";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export const UpgradeButton = ({
   children,
@@ -24,7 +25,7 @@ export const UpgradeButton = ({
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useUser();
-  const upgradeToPro = useSafeAction(upgradeToProAction);
+  const upgradeToPro = useMutation(mutationOptions(upgradeToProAction));
 
   return (
     <Button
@@ -32,14 +33,14 @@ export const UpgradeButton = ({
       size="xl"
       className={className}
       variant="primary"
-      loading={upgradeToPro.isExecuting}
+      loading={upgradeToPro.isPending}
       onClick={() => {
         onClick?.();
         if (!user || user.isGuest) {
           router.push(`/register?redirectTo=${encodeURIComponent(pathname)}`);
           return;
         }
-        upgradeToPro.execute({
+        upgradeToPro.mutate({
           period: annual ? "yearly" : "monthly",
           currency,
           returnPath: pathname,

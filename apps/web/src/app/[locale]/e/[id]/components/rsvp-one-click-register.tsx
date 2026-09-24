@@ -1,10 +1,11 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { registerForEventAction } from "@/features/scheduled-event/actions";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function RsvpOneClickRegister({
   eventId,
@@ -17,7 +18,7 @@ export function RsvpOneClickRegister({
   email: string;
   image?: string;
 }) {
-  const register = useSafeAction(registerForEventAction);
+  const register = useMutation(mutationOptions(registerForEventAction));
 
   return (
     <div className="flex flex-col gap-3">
@@ -31,9 +32,9 @@ export function RsvpOneClickRegister({
       <Button
         size="lg"
         variant="primary"
-        loading={register.isExecuting}
-        onClick={async () => {
-          await register.executeAsync({ eventId });
+        loading={register.isPending}
+        onClick={() => {
+          register.mutate({ eventId });
         }}
       >
         <Trans i18nKey="rsvpOneClickRegister" defaults="One-click register" />

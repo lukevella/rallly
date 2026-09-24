@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ButtonGroup, ButtonGroupItem } from "@rallly/ui/button-group";
@@ -14,6 +15,7 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import { useMutation } from "@tanstack/react-query";
 import { BriefcaseIcon, UserIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +32,6 @@ import { authClient } from "@/lib/auth-client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
 import type { TimeFormat } from "@/lib/datetime/types";
 import { useLocale } from "@/lib/locale/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 function useSetupFormSchema() {
@@ -106,7 +107,7 @@ export function SetupForm({
   const { t } = useTranslation();
   const { locale } = useLocale();
   const schema = useSetupFormSchema();
-  const setupSpace = useSafeAction(setupSpaceAction);
+  const setupSpace = useMutation(mutationOptions(setupSpaceAction));
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -167,20 +168,22 @@ export function SetupForm({
               return;
             }
 
-            // Server errors surface through the global useSafeAction toast;
-            // the button unlocks (hasSucceeded stays false) so the user can
-            // retry. On success the action refreshes the page, which
-            // redirects onward while the button stays loading.
-            await setupSpace.executeAsync(
-              spaceType === "work"
-                ? {
-                    spaceType,
-                    organizationName: organizationName.trim(),
-                    industry: industry ?? undefined,
-                    jobTitle: jobTitle ?? undefined,
-                  }
-                : { spaceType },
-            );
+            // Server errors surface through the global mutation toast; the
+            // button unlocks (isSuccess stays false) so the user can retry.
+            // On success the action refreshes the page, which redirects
+            // onward while the button stays loading.
+            try {
+              await setupSpace.mutateAsync(
+                spaceType === "work"
+                  ? {
+                      spaceType,
+                      organizationName: organizationName.trim(),
+                      industry: industry ?? undefined,
+                      jobTitle: jobTitle ?? undefined,
+                    }
+                  : { spaceType },
+              );
+            } catch {}
           },
         )}
         className="space-y-4"
@@ -387,7 +390,7 @@ export function SetupForm({
             type="submit"
             variant="primary"
             size="lg"
-            loading={form.formState.isSubmitting || setupSpace.hasSucceeded}
+            loading={form.formState.isSubmitting || setupSpace.isSuccess}
             className="w-full"
           >
             <Trans i18nKey="continue" defaults="Continue" />

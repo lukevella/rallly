@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -8,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { updateLocalizationAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
 import { useTimeZoneChange } from "@/lib/datetime/timezone-sync";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 /**
  * Offers to update the account's home time zone when TimeZoneSync detects
@@ -30,7 +31,9 @@ export function TimeZoneMismatchDialog({
 
   const [prompt, setPrompt] = React.useState<{ currentTimeZone: string }>();
 
-  const updateLocalization = useSafeAction(updateLocalizationAction);
+  const updateLocalization = useMutation(
+    mutationOptions(updateLocalizationAction),
+  );
 
   React.useEffect(() => {
     if (change && homeTimeZone && change.currentTimeZone !== homeTimeZone) {
@@ -73,7 +76,7 @@ export function TimeZoneMismatchDialog({
           <Button
             variant="primary"
             onClick={() => {
-              updateLocalization.execute({
+              updateLocalization.mutate({
                 timeZone: prompt.currentTimeZone,
               });
               setPrompt(undefined);

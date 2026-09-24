@@ -1,4 +1,5 @@
 "use client";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -14,13 +15,13 @@ import {
 } from "@rallly/ui/dialog";
 import { Form, FormField, FormItem, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { ACCOUNT_DELETION_GRACE_DAYS } from "@/features/user/account-deletion/constants";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { isSelfHosted } from "@/lib/constants";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { deleteAccountAction, scheduleAccountDeletionAction } from "../actions";
 
 export function DeleteAccountDialog(props: {
@@ -43,11 +44,13 @@ function ScheduleAccountDeletionDialog({
   summary?: React.ReactNode;
 }) {
   const dialog = useDialog();
-  const scheduleAccountDeletion = useSafeAction(scheduleAccountDeletionAction, {
-    onSuccess: () => {
-      dialog.dismiss();
-    },
-  });
+  const scheduleAccountDeletion = useMutation(
+    mutationOptions(scheduleAccountDeletionAction, {
+      onSuccess: () => {
+        dialog.dismiss();
+      },
+    }),
+  );
 
   return (
     <Dialog {...dialog.dialogProps}>
@@ -89,8 +92,8 @@ function ScheduleAccountDeletionDialog({
           </DialogClose>
           <Button
             variant="destructive"
-            loading={scheduleAccountDeletion.isExecuting}
-            onClick={() => scheduleAccountDeletion.executeAsync()}
+            loading={scheduleAccountDeletion.isPending}
+            onClick={() => scheduleAccountDeletion.mutate()}
           >
             <Trans i18nKey="deleteAccount" defaults="Delete account" />
           </Button>
@@ -118,17 +121,19 @@ function InstantDeleteAccountDialog({
     },
   });
 
-  const deleteAccount = useSafeAction(deleteAccountAction, {
-    onSuccess: () => {
-      // The server already revoked the session; sign out clears the cookies
-      // before leaving the page.
-      signOut()
-        .catch(() => {})
-        .finally(() => {
-          window.location.href = "/";
-        });
-    },
-  });
+  const deleteAccount = useMutation(
+    mutationOptions(deleteAccountAction, {
+      onSuccess: () => {
+        // The server already revoked the session; sign out clears the cookies
+        // before leaving the page.
+        signOut()
+          .catch(() => {})
+          .finally(() => {
+            window.location.href = "/";
+          });
+      },
+    }),
+  );
 
   return (
     <Form {...form}>
@@ -136,8 +141,8 @@ function InstantDeleteAccountDialog({
         <DialogTrigger render={trigger} />
         <DialogContent>
           <form
-            onSubmit={form.handleSubmit(async () => {
-              await deleteAccount.executeAsync();
+            onSubmit={form.handleSubmit(() => {
+              deleteAccount.mutate();
             })}
           >
             <DialogHeader>
@@ -207,7 +212,7 @@ function InstantDeleteAccountDialog({
               <Button
                 type="submit"
                 variant="destructive"
-                loading={deleteAccount.isExecuting}
+                loading={deleteAccount.isPending}
               >
                 <Trans i18nKey="deleteAccount" defaults="Delete account" />
               </Button>

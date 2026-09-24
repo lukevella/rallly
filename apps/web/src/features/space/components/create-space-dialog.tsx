@@ -1,5 +1,7 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
@@ -20,11 +22,11 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { createSpaceAction } from "@/features/space/actions";
 import { createSpaceSchema } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function CreateSpaceDialog(props: DialogProps) {
   const form = useForm({
@@ -34,7 +36,7 @@ export function CreateSpaceDialog(props: DialogProps) {
     },
   });
 
-  const createSpace = useSafeAction(createSpaceAction);
+  const createSpace = useMutation(mutationOptions(createSpaceAction));
 
   return (
     <Dialog {...props}>
@@ -53,11 +55,14 @@ export function CreateSpaceDialog(props: DialogProps) {
           </DialogHeader>
           <form
             onSubmit={form.handleSubmit(async ({ name }) => {
-              const result = await createSpace.executeAsync({ name });
-              if (result?.data) {
-                props.onOpenChange?.(false);
-                form.reset();
+              try {
+                await createSpace.mutateAsync({ name });
+              } catch {
+                // The mutation cache toasts the error
+                return;
               }
+              props.onOpenChange?.(false);
+              form.reset();
             })}
           >
             <FormField

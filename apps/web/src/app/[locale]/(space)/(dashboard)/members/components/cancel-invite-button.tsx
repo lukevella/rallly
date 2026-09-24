@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -12,9 +13,9 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { cancelInviteAction } from "@/features/space/member/actions";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function CancelInviteButton({
   inviteId,
@@ -27,18 +28,20 @@ export function CancelInviteButton({
 }) {
   const cancelInviteDialog = useDialog();
   const { t } = useTranslation();
-  const cancelInvite = useSafeAction(cancelInviteAction, {
-    onSuccess: () => {
-      toast.success(
-        t("inviteCanceledSuccess", {
-          defaultValue: "Invite canceled successfully",
-        }),
-      );
-    },
-    onSettled: () => {
-      cancelInviteDialog.dismiss();
-    },
-  });
+  const cancelInvite = useMutation(
+    mutationOptions(cancelInviteAction, {
+      onSuccess: () => {
+        toast.success(
+          t("inviteCanceledSuccess", {
+            defaultValue: "Invite canceled successfully",
+          }),
+        );
+      },
+      onSettled: () => {
+        cancelInviteDialog.dismiss();
+      },
+    }),
+  );
 
   return (
     <>
@@ -68,9 +71,9 @@ export function CancelInviteButton({
           <DialogFooter>
             <Button
               variant="destructive"
-              loading={cancelInvite.isExecuting}
+              loading={cancelInvite.isPending}
               onClick={() => {
-                cancelInvite.execute({ inviteId });
+                cancelInvite.mutate({ inviteId });
               }}
             >
               <Trans i18nKey="confirm" defaults="Confirm" />

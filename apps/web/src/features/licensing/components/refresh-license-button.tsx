@@ -1,14 +1,17 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { useMutation } from "@tanstack/react-query";
 import { RefreshCwIcon } from "lucide-react";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { refreshInstanceLicenseAction } from "../actions";
 
 export function RefreshLicenseButton() {
-  const refreshInstanceLicense = useSafeAction(refreshInstanceLicenseAction);
+  const refreshInstanceLicense = useMutation(
+    mutationOptions(refreshInstanceLicenseAction),
+  );
 
   return (
     <Tooltip>
@@ -16,8 +19,8 @@ export function RefreshLicenseButton() {
         render={
           <Button
             variant="ghost"
-            loading={refreshInstanceLicense.isExecuting}
-            onClick={async () => await refreshInstanceLicense.executeAsync()}
+            loading={refreshInstanceLicense.isPending}
+            onClick={() => refreshInstanceLicense.mutate()}
           >
             <RefreshCwIcon className="text-muted-foreground" />
             <span className="sr-only">

@@ -1,14 +1,15 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
+import { useMutation } from "@tanstack/react-query";
 import { BellIcon, BellOffIcon } from "lucide-react";
 import { setPollMutedAction } from "@/features/poll/actions";
 import { usePoll } from "@/features/poll/client";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function NotificationToggle() {
   const poll = usePoll();
@@ -16,38 +17,40 @@ export function NotificationToggle() {
   const { t } = useTranslation();
   // The action refreshes the page, which is what flips `poll.muted` in the
   // layout's server props.
-  const setPollMuted = useSafeAction(setPollMutedAction, {
-    onSuccess: ({ data, input }) => {
-      if (!data?.ok) {
-        return;
-      }
-      if (input.muted) {
-        toast(
-          t("notificationToggleMutedToast", {
-            defaultValue: "Notifications are off for this poll",
-          }),
-          {
-            icon: <BellOffIcon className="size-4" />,
-            action: {
-              label: t("undo", { defaultValue: "Undo" }),
-              onClick: () => {
-                setPollMuted.execute({ pollId: input.pollId, muted: false });
+  const setPollMuted = useMutation(
+    mutationOptions(setPollMutedAction, {
+      onSuccess: (data, input) => {
+        if (!data.ok) {
+          return;
+        }
+        if (input.muted) {
+          toast(
+            t("notificationToggleMutedToast", {
+              defaultValue: "Notifications are off for this poll",
+            }),
+            {
+              icon: <BellOffIcon className="size-4" />,
+              action: {
+                label: t("undo", { defaultValue: "Undo" }),
+                onClick: () => {
+                  setPollMuted.mutate({ pollId: input.pollId, muted: false });
+                },
               },
             },
-          },
-        );
-      } else {
-        toast(
-          t("notificationToggleUnmutedToast", {
-            defaultValue: "Notifications are on for this poll",
-          }),
-          {
-            icon: <BellIcon className="size-4" />,
-          },
-        );
-      }
-    },
-  });
+          );
+        } else {
+          toast(
+            t("notificationToggleUnmutedToast", {
+              defaultValue: "Notifications are on for this poll",
+            }),
+            {
+              icon: <BellIcon className="size-4" />,
+            },
+          );
+        }
+      },
+    }),
+  );
 
   if (user?.isGuest || !ownsObject(poll)) {
     return null;
@@ -68,9 +71,9 @@ export function NotificationToggle() {
                   })
                 : t("muteNotifications", { defaultValue: "Mute notifications" })
             }
-            loading={setPollMuted.isExecuting}
+            loading={setPollMuted.isPending}
             onClick={() => {
-              setPollMuted.execute({ pollId: poll.id, muted: !poll.muted });
+              setPollMuted.mutate({ pollId: poll.id, muted: !poll.muted });
             }}
           >
             {poll.muted ? <BellOffIcon /> : <BellIcon />}
