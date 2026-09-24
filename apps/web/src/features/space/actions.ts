@@ -2,6 +2,7 @@
 
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
+import { refresh } from "next/cache";
 import { createMiddleware } from "next-safe-action";
 import * as z from "zod";
 import { getInstancePolicy } from "@/features/instance-policy/data";
@@ -79,6 +80,11 @@ export const setActiveSpaceAction = authActionClient
         message: "Space not found",
       });
     }
+
+    // Renders the new space's tree into the action response, so the client
+    // needs no follow-up router.refresh(). Unlike revalidatePath, this
+    // leaves the Data Cache alone.
+    refresh();
 
     track(ctx.user, {
       event: "space_set_active",

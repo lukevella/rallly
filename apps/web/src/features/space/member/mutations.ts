@@ -18,9 +18,7 @@ function revalidateMembersPage() {
 }
 
 /**
- * Returns false when the user is not an effective member of the space. The
- * layout revalidation puts the new space's tree into the action response,
- * so the client needs no follow-up refresh.
+ * Returns false when the user is not an effective member of the space.
  */
 export async function setActiveSpace({
   userId,
@@ -34,12 +32,7 @@ export async function setActiveSpace({
     data: { lastSelectedAt: new Date() },
   });
 
-  if (count === 0) {
-    return false;
-  }
-
-  revalidatePath("/", "layout");
-  return true;
+  return count > 0;
 }
 
 export async function inviteMember({

@@ -18,8 +18,9 @@ export const useSafeAction: typeof useAction = (action, options) => {
 };
 
 /**
- * For actions that call revalidatePath: the action response already carries
- * the re-rendered page, so a router.refresh() would be a second render.
+ * For actions that call refresh() or revalidatePath: the action response
+ * already carries the re-rendered page, so a router.refresh() would be a
+ * second render.
  */
 export const useRevalidatingSafeAction: typeof useAction = (action, options) =>
   useSafeActionBase(action, options);
