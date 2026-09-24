@@ -28,7 +28,7 @@ import { SpaceRole } from "@/features/space/components/space-role";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import type { MemberRole, SpaceTier } from "@/features/space/schema";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
+import { useRevalidatingSafeAction } from "@/lib/safe-action/client";
 import { CreateSpaceDialog } from "./create-space-dialog";
 import { SpaceIcon } from "./space-icon";
 
@@ -46,7 +46,7 @@ export function SpaceDropdown({
   const { data: activeSpace } = useSpace();
   const [pendingSpaceId, setPendingSpaceId] = React.useState<string>();
 
-  const setActiveSpace = useSafeAction(setActiveSpaceAction, {
+  const setActiveSpace = useRevalidatingSafeAction(setActiveSpaceAction, {
     onError: () => setPendingSpaceId(undefined),
   });
   const newSpaceDialog = useDialog();

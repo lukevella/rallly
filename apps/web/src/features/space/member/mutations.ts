@@ -7,14 +7,39 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { revalidatePath } from "next/cache";
 import { getInstanceBranding } from "@/emails/branding";
 import { getTotalSeatsForSpace } from "@/features/space/data";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { MemberRole } from "@/features/space/schema";
 import { toDBRole } from "@/features/space/utils";
-import { setActiveSpace } from "@/features/user/mutations";
 
 const logger = createLogger("space/member/mutations");
 
 function revalidateMembersPage() {
   revalidatePath("/[locale]/(space)/(dashboard)/members", "page");
+}
+
+/**
+ * Returns false when the user is not an effective member of the space. The
+ * layout revalidation puts the new space's tree into the action response,
+ * so the client needs no follow-up refresh.
+ */
+export async function setActiveSpace({
+  userId,
+  spaceId,
+}: {
+  userId: string;
+  spaceId: string;
+}) {
+  const { count } = await prisma.spaceMember.updateMany({
+    where: { spaceId, ...effectiveSpaceMemberWhere({ userId }) },
+    data: { lastSelectedAt: new Date() },
+  });
+
+  if (count === 0) {
+    return false;
+  }
+
+  revalidatePath("/", "layout");
+  return true;
 }
 
 export async function inviteMember({
