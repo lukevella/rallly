@@ -12,7 +12,7 @@ import {
   createStripeSubscriptionUpdateConfirmation,
   resumeSubscriptionRenewal,
 } from "@/features/billing/mutations";
-import { getNonprofitStatus } from "@/features/billing/nonprofit/data";
+import { getNonprofitDiscountGrantedAt } from "@/features/billing/nonprofit/data";
 import { ensureNonprofitCoupon } from "@/features/billing/nonprofit/mutations";
 import { buildCheckoutDiscountParams } from "@/features/billing/nonprofit/utils";
 import type {
@@ -104,12 +104,12 @@ export const upgradeToProAction = authActionClient
       customerId = customer.id;
     }
 
-    const [proPricingData, nonprofit] = await Promise.all([
+    const [proPricingData, nonprofitGrantedAt] = await Promise.all([
       getProPricing({ stripe }),
-      getNonprofitStatus(space.id),
+      getNonprofitDiscountGrantedAt(space.id),
     ]);
     const discount = buildCheckoutDiscountParams(
-      nonprofit.grantedAt ? await ensureNonprofitCoupon() : null,
+      nonprofitGrantedAt ? await ensureNonprofitCoupon() : null,
     );
 
     const checkoutSession = await stripe.checkout.sessions.create({
@@ -174,7 +174,7 @@ export const upgradeToProAction = authActionClient
       properties: {
         interval: period === "yearly" ? "year" : "month",
         currency,
-        nonprofit_discount: Boolean(nonprofit.grantedAt),
+        nonprofit_discount: Boolean(nonprofitGrantedAt),
       },
       groups: {
         space: space.id,

@@ -21,8 +21,8 @@ model Space {
   // When the org layer lands, shared
   // spaces map to teams and unshared spaces to organizations.
   shared                     Boolean    @default(false)
-  // Set once the space's nonprofit application is approved; the coupon is
-  // applied at checkout and to the active subscription from this.
+  // Set by hand when support grants the nonprofit discount; checkout applies
+  // the coupon from this. An existing subscription gets it in Stripe.
   nonprofitDiscountGrantedAt DateTime?  @map("nonprofit_discount_granted_at")
   createdAt                  DateTime   @default(now()) @map("created_at")
   updatedAt                  DateTime   @updatedAt @map("updated_at")

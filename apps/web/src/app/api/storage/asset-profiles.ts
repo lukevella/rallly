@@ -1,4 +1,3 @@
-import { nonprofitDocumentAssetProfile } from "@/features/billing/nonprofit/constants";
 import {
   brandingLogoAssetProfile,
   brandingLogoIconAssetProfile,
@@ -15,5 +14,4 @@ export const assetProfiles: readonly AssetProfile[] = [
   spaceIconAssetProfile,
   brandingLogoAssetProfile,
   brandingLogoIconAssetProfile,
-  nonprofitDocumentAssetProfile,
 ];
