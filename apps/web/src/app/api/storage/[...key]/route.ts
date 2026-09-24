@@ -4,7 +4,6 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { assetProfiles } from "@/app/api/storage/asset-profiles";
 import { env } from "@/env";
-import { nonprofitDocumentAssetProfile } from "@/features/billing/nonprofit/constants";
 import { isSelfHosted } from "@/lib/constants";
 import { parseAssetKey } from "@/lib/storage/asset-profile";
 import { verifyUploadToken } from "@/lib/storage/asset-upload";
@@ -49,12 +48,10 @@ export async function GET(
     return new NextResponse("No key provided", { status: 400 });
   }
 
-  // Verification documents are read by the reviewer straight from the
-  // bucket and never served; this route has no auth, so refuse by profile
-  if (
-    parseAssetKey(imageKey, assetProfiles)?.profile ===
-    nonprofitDocumentAssetProfile
-  ) {
+  // The retired nonprofit review stored verification documents here and
+  // deleted them after each decision. This route has no auth, so any that
+  // survived a failed delete must stay unservable.
+  if (imageKey.startsWith("nonprofit-documents/")) {
     return new NextResponse("Not found", { status: 404 });
   }
 

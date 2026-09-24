@@ -50,7 +50,7 @@ const IGNORED_RELATIONS = new Map([
   ],
   [
     "nonprofitApplications",
-    "Audit record of a space's automated nonprofit review. Only a space owner can apply, and guests cannot own a space (the purge already retains anyone with `spaces`), so a guest never has one.",
+    "Audit record of a space's automated nonprofit review (retired; the table keeps past decisions). Only a space owner can apply, and guests cannot own a space (the purge already retains anyone with `spaces`), so a guest never has one.",
   ],
 ]);
 

@@ -10,7 +10,6 @@ export interface FeatureFlagConfig {
   pollAdmin: boolean;
   quickCreate: boolean;
   inProcessRateLimit: boolean;
-  nonprofitDiscount: boolean;
   api: boolean;
   webhooks: boolean;
   updateCheck: boolean;
