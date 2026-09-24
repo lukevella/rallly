@@ -1,5 +1,7 @@
 "use server";
+
 import { subject } from "@casl/ability";
+import { refresh } from "next/cache";
 import * as z from "zod";
 import {
   cancelUserSubscriptions,
@@ -52,6 +54,8 @@ export const deleteUserAction = adminActionClient
 
     await hardDeleteUser({ userId });
 
+    refresh();
+
     return {
       success: true,
     };
@@ -97,4 +101,6 @@ export const banUserAction = adminActionClient
       userId,
       reason: reason || "Banned from the control panel",
     });
+
+    refresh();
   });

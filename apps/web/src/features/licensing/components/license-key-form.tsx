@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { validateLicenseKeyAction } from "@/features/licensing/actions";
@@ -27,7 +26,6 @@ const formSchema = z.object({
 
 export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
   const { t } = useTranslation();
-  const router = useRouter();
   const form = useForm({
     defaultValues: {
       licenseKey: "",
@@ -65,11 +63,10 @@ export function LicenseKeyForm({ onSuccess }: { onSuccess?: () => void }) {
             return;
           }
 
-          // Refreshing swaps the page to the installed-license branch, which
-          // unmounts this form. Notify the owner first so closing the dialog
-          // doesn't depend on that re-render winning a race.
+          // The action response already swapped the page to the
+          // installed-license branch and may have unmounted this form; the
+          // promise still resolves, so the owner can close the dialog.
           onSuccess?.();
-          router.refresh();
         })}
       >
         <FormField

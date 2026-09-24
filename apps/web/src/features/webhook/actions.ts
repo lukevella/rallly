@@ -1,5 +1,7 @@
 "use server";
 
+import { refresh } from "next/cache";
+
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { loadOptionalUser } from "@/features/user/loaders";
 import { AppError } from "@/lib/errors/app-error";
@@ -74,6 +76,8 @@ export const createWebhookAction = authActionClient
       });
     }
 
+    refresh();
+
     return result;
   });
 
@@ -97,6 +101,8 @@ export const setWebhookEnabledAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 export const deleteWebhookAction = authActionClient
@@ -116,6 +122,8 @@ export const deleteWebhookAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 // Each call is an outbound request to a URL the owner chose, so it is
@@ -140,6 +148,8 @@ export const sendWebhookTestEventAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
 
     return result;
   });

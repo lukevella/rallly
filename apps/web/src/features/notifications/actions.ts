@@ -1,5 +1,7 @@
 "use server";
 
+import { refresh } from "next/cache";
+
 import {
   unsubscribeWithToken,
   updateNotificationPreference,
@@ -28,6 +30,8 @@ export const updateNotificationPreferenceAction = authActionClient
         enabled: parsedInput.enabled,
       },
     });
+
+    refresh();
   });
 
 // Public: the signed token is the credential, verified in the mutation.
@@ -35,5 +39,9 @@ export const unsubscribeWithTokenAction = actionClient
   .metadata({ actionName: "unsubscribe_with_token" })
   .inputSchema(unsubscribeWithTokenSchema)
   .action(async ({ parsedInput }) => {
-    return unsubscribeWithToken({ token: parsedInput.token });
+    const result = await unsubscribeWithToken({ token: parsedInput.token });
+
+    refresh();
+
+    return result;
   });
