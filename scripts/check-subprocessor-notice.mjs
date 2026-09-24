@@ -169,9 +169,20 @@ function main() {
   }
 
   const baseBlob = `${baseRef}:${SUBPROCESSORS_FILE}`;
-  try {
-    execFileSync("git", ["cat-file", "-e", baseBlob], { stdio: "ignore" });
-  } catch {
+  // ls-tree prints nothing for a missing path and throws on real git errors.
+  const baseListing = execFileSync(
+    "git",
+    [
+      "--literal-pathspecs",
+      "ls-tree",
+      "--name-only",
+      baseRef,
+      "--",
+      SUBPROCESSORS_FILE,
+    ],
+    { encoding: "utf8" },
+  );
+  if (baseListing.trim() === "") {
     console.log(
       `${SUBPROCESSORS_FILE} does not exist on ${baseRef}; nothing to compare.`,
     );
