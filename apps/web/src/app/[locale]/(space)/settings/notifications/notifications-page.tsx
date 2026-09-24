@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import {
   Field,
   FieldContent,
@@ -9,6 +10,7 @@ import {
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { useMutation } from "@tanstack/react-query";
 import { InboxIcon, MessageCircleIcon } from "lucide-react";
 import React from "react";
 import {
@@ -26,7 +28,6 @@ import type {
   NotificationPreferences,
 } from "@/features/notifications/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function NotificationsPage({
   initialPreferences,
@@ -35,7 +36,9 @@ export function NotificationsPage({
 }) {
   const { t } = useTranslation();
   const [preferences, setPreferences] = React.useState(initialPreferences);
-  const updatePreference = useSafeAction(updateNotificationPreferenceAction);
+  const updatePreference = useMutation(
+    mutationOptions(updateNotificationPreferenceAction),
+  );
 
   const setPreference = async (
     eventType: ActivityEventType,
@@ -43,13 +46,13 @@ export function NotificationsPage({
   ) => {
     const previous = preferences[eventType];
     setPreferences((old) => ({ ...old, [eventType]: enabled }));
-    const result = await updatePreference.executeAsync({ eventType, enabled });
-    if (result?.serverError || result?.validationErrors) {
+    try {
+      await updatePreference.mutateAsync({ eventType, enabled });
+      toast.success(t("saved", { defaultValue: "Saved" }));
+    } catch {
       // Roll back only the toggled field — a full-snapshot restore could
       // clobber another toggle that succeeded while this one was in flight.
       setPreferences((old) => ({ ...old, [eventType]: previous }));
-    } else {
-      toast.success(t("saved", { defaultValue: "Saved" }));
     }
   };
 

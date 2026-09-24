@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -20,10 +21,10 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { deleteUserAction } from "../actions";
 
 const useSchema = (email: string) => {
@@ -58,11 +59,13 @@ export function DeleteUserDialog({
     },
   });
 
-  const deleteUser = useSafeAction(deleteUserAction, {
-    onSuccess: () => {
-      onOpenChange(false);
-    },
-  });
+  const deleteUser = useMutation(
+    mutationOptions(deleteUserAction, {
+      onSuccess: () => {
+        onOpenChange(false);
+      },
+    }),
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -80,8 +83,8 @@ export function DeleteUserDialog({
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(async () => {
-              await deleteUser.executeAsync({ userId });
+            onSubmit={form.handleSubmit(() => {
+              deleteUser.mutate({ userId });
             })}
           >
             <FormField
@@ -115,7 +118,7 @@ export function DeleteUserDialog({
               </DialogClose>
               <Button
                 variant="destructive"
-                loading={deleteUser.isExecuting}
+                loading={deleteUser.isPending}
                 type="submit"
               >
                 <Trans i18nKey="delete" defaults="Delete" />

@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import {
   Field,
   FieldContent,
@@ -15,6 +16,7 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import {
   CalendarIcon,
   ClockIcon,
@@ -31,7 +33,6 @@ import { useDateTime } from "@/lib/datetime/client";
 import { getLocaleDefaults } from "@/lib/datetime/locales";
 import type { TimeFormat } from "@/lib/datetime/types";
 import { setLocaleCookie, useLocale } from "@/lib/locale/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 export const LocalizationPreferences = ({
@@ -48,7 +49,9 @@ export const LocalizationPreferences = ({
   const { locale } = useLocale();
   const localeDefaults = getLocaleDefaults(locale);
   const { weekdays } = useDateTime();
-  const updateLocalization = useSafeAction(updateLocalizationAction);
+  const updateLocalization = useMutation(
+    mutationOptions(updateLocalizationAction),
+  );
 
   const [language, setLanguage] = React.useState(
     initialValues.locale ?? locale,
@@ -69,12 +72,13 @@ export const LocalizationPreferences = ({
     timeFormat?: TimeFormat;
     weekStart?: number;
   }) => {
-    const result = await updateLocalization.executeAsync(input);
-    const saved = !result?.serverError && !result?.validationErrors;
-    if (saved) {
-      toast.success(t("saved", { defaultValue: "Saved" }));
+    try {
+      await updateLocalization.mutateAsync(input);
+    } catch {
+      return false;
     }
-    return saved;
+    toast.success(t("saved", { defaultValue: "Saved" }));
+    return true;
   };
 
   const weekStartOptions = weekdays().map(({ day, label }) => ({
@@ -115,8 +119,8 @@ export const LocalizationPreferences = ({
               }
               const previousLanguage = language;
               setLanguage(nextLanguage);
-              // Set the cookie before executing: useSafeAction refreshes the
-              // router on success, and that refresh must read the new locale.
+              // Set the cookie before executing: the action refreshes the
+              // page on success, and that refresh must read the new locale.
               // Writing the cookie server-side would collide with
               // updateUser's session cookie and drop it. Roll it back to the
               // locale this page is rendered in if the save doesn't land.

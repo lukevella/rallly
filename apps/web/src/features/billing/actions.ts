@@ -2,6 +2,7 @@
 
 import { displayedCurrencies, getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
@@ -314,6 +315,8 @@ export const resumePlanAction = authActionClient
       properties: { interval: subscription.interval },
       groups: { space: space.id },
     });
+
+    refresh();
   });
 
 export const openBillingDetailsAction = authActionClient

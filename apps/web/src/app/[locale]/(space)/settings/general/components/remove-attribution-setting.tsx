@@ -17,7 +17,7 @@ export function RemoveAttributionSetting({
   disabled?: boolean;
 }) {
   const { data: space } = useSpace();
-  const { hideAttribution, isExecuting, toggle } = useHideAttributionToggle({
+  const { hideAttribution, isPending, toggle } = useHideAttributionToggle({
     hideAttribution: space.hideAttribution,
     payWallTrigger: { from: "custom-branding", setting: "hide_attribution" },
   });
@@ -43,7 +43,7 @@ export function RemoveAttributionSetting({
         id="hide-attribution"
         checked={hideAttribution}
         onCheckedChange={toggle}
-        disabled={disabled || isExecuting}
+        disabled={disabled || isPending}
       />
     </Field>
   );

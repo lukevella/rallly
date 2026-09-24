@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import {
   Field,
   FieldContent,
@@ -10,6 +11,7 @@ import {
   FieldTitle,
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import type React from "react";
 import type { Control } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
@@ -30,7 +32,6 @@ import { SpaceIcon } from "@/features/space/components/space-icon";
 import { spaceIconAssetProfile } from "@/features/space/constants";
 import type { SpaceDTO } from "@/features/space/types";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 const spaceSettingsSchema = z.object({
   name: z
@@ -52,10 +53,12 @@ export function SpaceSettingsForm({
 }: SpaceSettingsFormProps) {
   const { t } = useTranslation();
 
-  const updateSpace = useSafeAction(updateSpaceAction);
-  const getImageUploadUrl = useSafeAction(getSpaceImageUploadUrlAction);
-  const updateImage = useSafeAction(updateSpaceImageAction);
-  const removeImage = useSafeAction(removeSpaceImageAction);
+  const updateSpace = useMutation(mutationOptions(updateSpaceAction));
+  const getImageUploadUrl = useMutation(
+    mutationOptions(getSpaceImageUploadUrlAction),
+  );
+  const updateImage = useMutation(mutationOptions(updateSpaceImageAction));
+  const removeImage = useMutation(mutationOptions(removeSpaceImageAction));
 
   const form = useForm({
     resolver: zodResolver(spaceSettingsSchema),
@@ -85,9 +88,14 @@ export function SpaceSettingsForm({
           <ImageUploadControl
             profile={spaceIconAssetProfile}
             crop
-            signUpload={(input) => getImageUploadUrl.executeAsync(input)}
-            persistUpload={(imageKey) => updateImage.executeAsync({ imageKey })}
-            onRemove={() => removeImage.executeAsync()}
+            signUpload={(input) => getImageUploadUrl.mutateAsync(input)}
+            persistUpload={(imageKey) => updateImage.mutateAsync({ imageKey })}
+            onRemove={async () => {
+              // A rejection inside ImageUpload's transition would reach the error boundary
+              try {
+                await removeImage.mutateAsync();
+              } catch {}
+            }}
             hasCurrentImage={!!space.image}
           />
         </ImageUpload>
@@ -107,21 +115,18 @@ export function SpaceSettingsForm({
         <SpaceNameField
           control={form.control}
           disabled={disabled}
-          isSaving={updateSpace.isExecuting}
+          isSaving={updateSpace.isPending}
           isDirty={form.formState.isDirty}
           onSubmit={form.handleSubmit(async (data) => {
-            const result = await updateSpace.executeAsync({
-              name: data.name,
-            });
-
-            if (!result?.serverError && !result?.validationErrors) {
+            try {
+              await updateSpace.mutateAsync({ name: data.name });
               form.reset(data);
               toast.success(
                 t("spaceUpdatedSuccess", {
                   defaultValue: "Space updated successfully",
                 }),
               );
-            }
+            } catch {}
           })}
         />
       </Field>

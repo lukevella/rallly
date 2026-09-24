@@ -1,5 +1,7 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   ImageUpload,
   ImageUploadControl,
@@ -13,7 +15,6 @@ import {
 } from "@/features/user/actions";
 import { avatarAssetProfile } from "@/features/user/constants";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 function ProfilePictureUpload({
   image,
@@ -22,9 +23,11 @@ function ProfilePictureUpload({
   image?: string;
   name: string;
 }) {
-  const getAvatarUploadUrl = useSafeAction(getAvatarUploadUrlAction);
-  const updateUserAvatar = useSafeAction(updateUserAvatarAction);
-  const removeUserAvatar = useSafeAction(removeUserAvatarAction);
+  const getAvatarUploadUrl = useMutation(
+    mutationOptions(getAvatarUploadUrlAction),
+  );
+  const updateUserAvatar = useMutation(mutationOptions(updateUserAvatarAction));
+  const removeUserAvatar = useMutation(mutationOptions(removeUserAvatarAction));
 
   return (
     <ImageUpload>
@@ -34,11 +37,11 @@ function ProfilePictureUpload({
       <ImageUploadControl
         profile={avatarAssetProfile}
         crop
-        signUpload={(input) => getAvatarUploadUrl.executeAsync(input)}
-        persistUpload={(imageKey) =>
-          updateUserAvatar.executeAsync({ imageKey })
-        }
-        onRemove={() => removeUserAvatar.executeAsync()}
+        signUpload={(input) => getAvatarUploadUrl.mutateAsync(input)}
+        persistUpload={(imageKey) => updateUserAvatar.mutateAsync({ imageKey })}
+        // The global handler reports the failure; a rejection here would
+        // escape the remove transition.
+        onRemove={() => removeUserAvatar.mutateAsync().catch(() => {})}
         hasCurrentImage={!!image}
       />
     </ImageUpload>

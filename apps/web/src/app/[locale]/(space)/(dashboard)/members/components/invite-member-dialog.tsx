@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
@@ -28,6 +29,7 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { CheckIcon, XIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -37,7 +39,6 @@ import { inviteMemberAction } from "@/features/space/member/actions";
 import type { MemberRole } from "@/features/space/schema";
 import { memberRoleSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 function useInviteMemberFormSchema() {
   const { t } = useTranslation();
@@ -132,75 +133,73 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
     resolver: zodResolver(formSchema),
   });
 
-  const inviteMember = useSafeAction(inviteMemberAction, {
-    onSuccess: ({ data }) => {
-      if (!data) {
-        return;
-      }
-
-      if (data.ok) {
-        switch (data.code) {
-          case "INVITE_SENT":
-            toast.success(
-              t("inviteSent", {
-                defaultValue: "Invitation sent",
-              }),
-            );
-            form.reset();
-            break;
-          case "INVITE_UPDATED":
-            toast.success(
-              t("inviteUpdated", {
-                defaultValue: "Invitation updated with new role",
-              }),
-            );
-            form.reset();
-            break;
+  const inviteMember = useMutation(
+    mutationOptions(inviteMemberAction, {
+      onSuccess: (data) => {
+        if (data.ok) {
+          switch (data.code) {
+            case "INVITE_SENT":
+              toast.success(
+                t("inviteSent", {
+                  defaultValue: "Invitation sent",
+                }),
+              );
+              form.reset();
+              break;
+            case "INVITE_UPDATED":
+              toast.success(
+                t("inviteUpdated", {
+                  defaultValue: "Invitation updated with new role",
+                }),
+              );
+              form.reset();
+              break;
+          }
+          onSuccess?.();
+        } else {
+          switch (data.reason) {
+            case "ALREADY_MEMBER":
+              form.setError("email", {
+                type: "manual",
+                message: t("alreadyMember", {
+                  defaultValue: "This person is already a member of this space",
+                }),
+              });
+              break;
+            case "INVITE_PENDING":
+              form.setError("email", {
+                type: "manual",
+                message: t("invitePending", {
+                  defaultValue:
+                    "An invitation has already been sent to this email address",
+                }),
+              });
+              break;
+            case "NOT_ENOUGH_SEATS":
+              form.setError("root", {
+                type: "manual",
+                message: t("inviteNotEnoughSeats", {
+                  defaultValue:
+                    "There are not enough seats available to send this invite",
+                }),
+              });
+              break;
+            case "INVITE_FAILED":
+              form.setError("root", {
+                type: "manual",
+                message: t("inviteFailed", {
+                  defaultValue: "Failed to send invitation",
+                }),
+              });
+              break;
+          }
         }
-        onSuccess?.();
-      } else {
-        switch (data.reason) {
-          case "ALREADY_MEMBER":
-            form.setError("email", {
-              type: "manual",
-              message: t("alreadyMember", {
-                defaultValue: "This person is already a member of this space",
-              }),
-            });
-            break;
-          case "INVITE_PENDING":
-            form.setError("email", {
-              type: "manual",
-              message: t("invitePending", {
-                defaultValue:
-                  "An invitation has already been sent to this email address",
-              }),
-            });
-            break;
-          case "NOT_ENOUGH_SEATS":
-            form.setError("root", {
-              type: "manual",
-              message: t("inviteNotEnoughSeats", {
-                defaultValue:
-                  "There are not enough seats available to send this invite",
-              }),
-            });
-            break;
-          case "INVITE_FAILED":
-            form.setError("root", {
-              type: "manual",
-              message: t("inviteFailed", {
-                defaultValue: "Failed to send invitation",
-              }),
-            });
-            break;
-        }
-      }
-    },
-  });
+      },
+    }),
+  );
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => inviteMember.execute(data))}>
+      <form onSubmit={form.handleSubmit((data) => inviteMember.mutate(data))}>
         <div className="space-y-4">
           <FormField
             control={form.control}
@@ -266,7 +265,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
         <div className="mt-4 flex">
           <Button
             variant="primary"
-            loading={inviteMember.isExecuting}
+            loading={inviteMember.isPending}
             type="submit"
           >
             <Trans i18nKey="inviteMemberFormSubmit" defaults="Send invite" />

@@ -1,13 +1,14 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { BellOffIcon } from "lucide-react";
 import React from "react";
 import { Link } from "@/components/link";
 import { unsubscribeWithTokenAction } from "@/features/notifications/actions";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function MutePollForm({
   token,
@@ -21,13 +22,15 @@ export function MutePollForm({
   initialMuted: boolean;
 }) {
   const [muted, setMuted] = React.useState(initialMuted);
-  const unsubscribe = useSafeAction(unsubscribeWithTokenAction, {
-    onSuccess: ({ data }) => {
-      if (data?.ok) {
-        setMuted(true);
-      }
-    },
-  });
+  const unsubscribe = useMutation(
+    mutationOptions(unsubscribeWithTokenAction, {
+      onSuccess: (data) => {
+        if (data.ok) {
+          setMuted(true);
+        }
+      },
+    }),
+  );
 
   if (muted) {
     return (
@@ -84,8 +87,8 @@ export function MutePollForm({
       <div className="flex flex-col gap-2">
         <Button
           variant="primary"
-          loading={unsubscribe.isExecuting}
-          onClick={() => unsubscribe.execute({ token })}
+          loading={unsubscribe.isPending}
+          onClick={() => unsubscribe.mutate({ token })}
         >
           <Trans i18nKey="muteNotifications" defaults="Mute notifications" />
         </Button>

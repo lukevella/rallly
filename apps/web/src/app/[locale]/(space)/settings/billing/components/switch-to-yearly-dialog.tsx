@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { yearlySavingsPercent } from "@rallly/billing";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
@@ -12,9 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
+import { useMutation } from "@tanstack/react-query";
 import { switchToYearlyAction } from "@/features/billing/actions";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function SwitchToYearlyDialog({
   children,
@@ -27,7 +28,7 @@ export function SwitchToYearlyDialog({
   /** Per seat yearly amount in the currency's minor unit. */
   yearlyAmount: number;
 }) {
-  const switchToYearly = useSafeAction(switchToYearlyAction);
+  const switchToYearly = useMutation(mutationOptions(switchToYearlyAction));
 
   return (
     <Dialog {...dialogProps}>
@@ -59,8 +60,8 @@ export function SwitchToYearlyDialog({
           </DialogClose>
           <Button
             variant="primary"
-            loading={switchToYearly.isExecuting}
-            onClick={() => switchToYearly.execute()}
+            loading={switchToYearly.isPending}
+            onClick={() => switchToYearly.mutate()}
           >
             <Trans i18nKey="switchToYearly" defaults="Switch to yearly" />
           </Button>

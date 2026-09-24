@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
@@ -9,6 +10,7 @@ import {
   InputGroupInput,
 } from "@rallly/ui/input-group";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { MailIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -35,7 +37,6 @@ import { sendPollInviteAction } from "@/features/poll/invite/actions";
 import { sendPollInviteSchema } from "@/features/poll/invite/schema";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 
 type Row = {
@@ -125,59 +126,57 @@ export function InviteByEmail() {
       count,
     });
 
-  const sendInvite = useSafeAction(sendPollInviteAction, {
-    onSuccess: async ({ data, input }) => {
-      if (!data) {
+  const sendInvite = useMutation(
+    mutationOptions(sendPollInviteAction, {
+      onSuccess: (data, input) => {
+        if (data.ok) {
+          announce(
+            t("shareDialogInviteSent", {
+              defaultValue: "Invite sent to {email}",
+              email: input.email,
+            }),
+          );
+          return;
+        }
         setSending((prev) => prev.filter((address) => address !== input.email));
-        return;
-      }
-      if (data.ok) {
-        announce(
-          t("shareDialogInviteSent", {
-            defaultValue: "Invite sent to {email}",
+        const messages = {
+          alreadyInvited: t("shareDialogAlreadyInvited", {
+            defaultValue: "{email} is already invited",
             email: input.email,
           }),
-        );
-        return;
-      }
-      setSending((prev) => prev.filter((address) => address !== input.email));
-      const messages = {
-        alreadyInvited: t("shareDialogAlreadyInvited", {
-          defaultValue: "{email} is already invited",
-          email: input.email,
-        }),
-        alreadyResponded: t("shareDialogAlreadyResponded", {
-          defaultValue: "{email} has already responded",
-          email: input.email,
-        }),
-        dailyLimit: t("shareDialogDailyLimit", {
-          defaultValue: "You've reached today's limit of 100 invites",
-        }),
-        pollClosed: t("shareDialogPollClosed", {
-          defaultValue: "Reopen the poll to send invites",
-        }),
-        sendFailed: t("shareDialogSendFailed", {
-          defaultValue: "Couldn't send to {email}. Try again.",
-          email: input.email,
-        }),
-        notFound: t("actionErrorNotFound", {
-          defaultValue: "The resource was not found",
-        }),
-        paymentRequired: t("actionErrorPaymentRequired", {
-          defaultValue: "You need to upgrade to perform this action",
-        }),
-      };
-      toast.error(messages[data.reason]);
-      announce(messages[data.reason]);
-      if (data.reason === "sendFailed") {
+          alreadyResponded: t("shareDialogAlreadyResponded", {
+            defaultValue: "{email} has already responded",
+            email: input.email,
+          }),
+          dailyLimit: t("shareDialogDailyLimit", {
+            defaultValue: "You've reached today's limit of 100 invites",
+          }),
+          pollClosed: t("shareDialogPollClosed", {
+            defaultValue: "Reopen the poll to send invites",
+          }),
+          sendFailed: t("shareDialogSendFailed", {
+            defaultValue: "Couldn't send to {email}. Try again.",
+            email: input.email,
+          }),
+          notFound: t("actionErrorNotFound", {
+            defaultValue: "The resource was not found",
+          }),
+          paymentRequired: t("actionErrorPaymentRequired", {
+            defaultValue: "You need to upgrade to perform this action",
+          }),
+        };
+        toast.error(messages[data.reason]);
+        announce(messages[data.reason]);
+        if (data.reason === "sendFailed") {
+          form.setValue("email", input.email);
+        }
+      },
+      onError: (_error, input) => {
+        setSending((prev) => prev.filter((address) => address !== input.email));
         form.setValue("email", input.email);
-      }
-    },
-    onError: ({ input }) => {
-      setSending((prev) => prev.filter((address) => address !== input.email));
-      form.setValue("email", input.email);
-    },
-  });
+      },
+    }),
+  );
 
   const onInvalid = () => {
     announce(
@@ -206,7 +205,7 @@ export function InviteByEmail() {
     setSending((prev) => [address, ...prev]);
     form.reset();
     form.setFocus("email");
-    sendInvite.execute({ pollId: poll.id, email: address });
+    sendInvite.mutate({ pollId: poll.id, email: address });
   };
 
   return (

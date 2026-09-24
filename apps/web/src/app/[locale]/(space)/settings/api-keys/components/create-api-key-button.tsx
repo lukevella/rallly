@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
@@ -20,9 +21,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@rallly/ui/form";
-
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -30,13 +31,15 @@ import { useCopyToClipboard } from "react-use";
 import { createApiKeyAction } from "@/features/api-keys/actions";
 import { createApiKeySchema } from "@/features/api-keys/schema";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
-  const createApiKey = useSafeAction(createApiKeyAction);
+  // The result carries the plaintext key; keep it out of the mutation cache
+  const createApiKey = useMutation(
+    mutationOptions(createApiKeyAction, { gcTime: 0 }),
+  );
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -49,6 +52,7 @@ export function CreateApiKeyButton() {
 
   const handleClose = () => {
     dialog.dismiss();
+    createApiKey.reset();
     setCreatedApiKey(null);
     form.reset();
   };
@@ -145,20 +149,20 @@ export function CreateApiKeyButton() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(async (data) => {
-                    const result = await createApiKey.executeAsync(data);
-                    if (result?.data?.ok) {
-                      setCreatedApiKey(result.data.apiKey);
-                      form.reset();
-                    } else if (
-                      result?.data?.reason === "max_api_keys_exceeded"
-                    ) {
-                      toast.error(
-                        t("apiKeyLimitReached", {
-                          defaultValue:
-                            "You've reached the maximum number of API keys. Revoke one before creating another.",
-                        }),
-                      );
-                    }
+                    try {
+                      const result = await createApiKey.mutateAsync(data);
+                      if (result.ok) {
+                        setCreatedApiKey(result.apiKey);
+                        form.reset();
+                      } else if (result.reason === "max_api_keys_exceeded") {
+                        toast.error(
+                          t("apiKeyLimitReached", {
+                            defaultValue:
+                              "You've reached the maximum number of API keys. Revoke one before creating another.",
+                          }),
+                        );
+                      }
+                    } catch {}
                   })}
                 >
                   <div className="space-y-4">
@@ -188,8 +192,8 @@ export function CreateApiKeyButton() {
                     <Button
                       variant="primary"
                       type="submit"
-                      disabled={createApiKey.isExecuting}
-                      loading={createApiKey.isExecuting}
+                      disabled={createApiKey.isPending}
+                      loading={createApiKey.isPending}
                     >
                       <Trans i18nKey="create" defaults="Create" />
                     </Button>

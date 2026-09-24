@@ -12,10 +12,11 @@ vi.mock("@/lib/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
 }));
 
-const { mockExecute } = vi.hoisted(() => ({ mockExecute: vi.fn() }));
+const { mockMutate } = vi.hoisted(() => ({ mockMutate: vi.fn() }));
 vi.mock("@/features/user/actions", () => ({ updateLocalizationAction: {} }));
-vi.mock("@/lib/safe-action/client", () => ({
-  useSafeAction: () => ({ execute: mockExecute }),
+vi.mock("@tanstack/react-query", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@tanstack/react-query")>()),
+  useMutation: () => ({ mutate: mockMutate }),
 }));
 
 function renderDialog(props: { homeTimeZone?: string } = {}) {
@@ -29,7 +30,7 @@ function renderDialog(props: { homeTimeZone?: string } = {}) {
 describe("TimeZoneMismatchDialog", () => {
   beforeEach(() => {
     mockTimeZone = "America/New_York";
-    mockExecute.mockClear();
+    mockMutate.mockClear();
   });
 
   afterEach(() => {
@@ -83,7 +84,7 @@ describe("TimeZoneMismatchDialog", () => {
 
     await user.click(screen.getByText("Yes, update my time zone"));
 
-    expect(mockExecute).toHaveBeenCalledWith({ timeZone: "America/New_York" });
+    expect(mockMutate).toHaveBeenCalledWith({ timeZone: "America/New_York" });
   });
 
   it("shows when the zone changes while the tab is open and regains focus", async () => {
@@ -112,7 +113,7 @@ describe("TimeZoneMismatchDialog", () => {
 
     await user.click(screen.getByText("No, keep the current time zone"));
 
-    expect(mockExecute).not.toHaveBeenCalled();
+    expect(mockMutate).not.toHaveBeenCalled();
     expect(
       screen.queryByText("Time zone mismatch detected"),
     ).not.toBeInTheDocument();

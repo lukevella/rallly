@@ -18,8 +18,9 @@ vi.mock("@/features/billing/actions", () => ({
   resumePlanAction: vi.fn(),
 }));
 
-vi.mock("@/lib/safe-action/client", () => ({
-  useSafeAction: () => ({ execute: vi.fn(), isExecuting: false }),
+vi.mock("@tanstack/react-query", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@tanstack/react-query")>()),
+  useMutation: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
 vi.mock("@/lib/datetime/client", () => ({

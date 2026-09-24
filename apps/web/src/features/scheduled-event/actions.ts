@@ -2,6 +2,7 @@
 
 import { sendEventRsvpConfirmationEmail } from "@rallly/emails/templates/event-rsvp-confirmation";
 import { createLogger } from "@rallly/logger";
+import { refresh } from "next/cache";
 import { headers } from "next/headers";
 import { after } from "next/server";
 import * as z from "zod";
@@ -288,5 +289,11 @@ export const cancelRsvpAction = actionClient
     }),
   )
   .action(async ({ parsedInput }) => {
-    return await cancelRsvp({ inviteUid: parsedInput.inviteUid });
+    const result = await cancelRsvp({ inviteUid: parsedInput.inviteUid });
+
+    // A not_found result means the RSVP is already gone, so the page is
+    // stale either way.
+    refresh();
+
+    return result;
   });

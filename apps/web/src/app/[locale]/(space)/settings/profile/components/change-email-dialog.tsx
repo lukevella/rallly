@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -16,6 +17,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@rallly/ui/field";
 import { Form } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -24,7 +26,6 @@ import { InputOTP } from "@/components/input-otp";
 import { checkEmailAvailabilityAction } from "@/features/user/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 const emailSchema = z.object({
   email: z.email(),
@@ -43,7 +44,9 @@ function RequestEmailChangeForm({
 }) {
   const { t } = useTranslation();
   const emailId = React.useId();
-  const checkEmailAvailability = useSafeAction(checkEmailAvailabilityAction);
+  const checkEmailAvailability = useMutation(
+    mutationOptions(checkEmailAvailabilityAction),
+  );
   const form = useForm({
     defaultValues: { email: currentEmail },
     resolver: zodResolver(emailSchema),
@@ -56,16 +59,29 @@ function RequestEmailChangeForm({
         onSubmit={form.handleSubmit(async (data) => {
           // Better-Auth reports success without sending when the address is
           // taken, so the conflict has to be caught before that call.
-          const availability = await checkEmailAvailability.executeAsync({
-            email: data.email,
-          });
+          let availability: Awaited<
+            ReturnType<typeof checkEmailAvailability.mutateAsync>
+          >;
+          try {
+            availability = await checkEmailAvailability.mutateAsync({
+              email: data.email,
+            });
+          } catch {
+            form.setError("email", {
+              message: t("emailChangeRequestError", {
+                defaultValue:
+                  "We couldn't process this request. Please try again later.",
+              }),
+            });
+            return;
+          }
 
-          if (availability?.data?.ok === false) {
+          if (!availability.ok) {
             form.setError(
               "email",
               {
                 message:
-                  availability.data.reason === "same_email"
+                  availability.reason === "same_email"
                     ? t("emailChangeSameAddress", {
                         defaultValue:
                           "This is already your email address. Enter a different one.",
@@ -77,16 +93,6 @@ function RequestEmailChangeForm({
               },
               { shouldFocus: true },
             );
-            return;
-          }
-
-          if (!availability?.data?.ok) {
-            form.setError("email", {
-              message: t("emailChangeRequestError", {
-                defaultValue:
-                  "We couldn't process this request. Please try again later.",
-              }),
-            });
             return;
           }
 

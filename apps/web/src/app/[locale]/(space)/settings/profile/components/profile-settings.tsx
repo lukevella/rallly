@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Form,
@@ -10,12 +11,12 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { updateUserNameAction } from "@/features/user/actions";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 import { ProfilePicture } from "./profile-picture";
 
@@ -30,7 +31,7 @@ export const ProfileSettings = ({
   name: string;
   image?: string;
 }) => {
-  const updateUserName = useSafeAction(updateUserNameAction);
+  const updateUserName = useMutation(mutationOptions(updateUserNameAction));
   const form = useForm({
     defaultValues: {
       name,
@@ -45,7 +46,11 @@ export const ProfileSettings = ({
         <form
           onSubmit={handleSubmit(async (data) => {
             if (data.name !== name) {
-              await updateUserName.executeAsync({ name: data.name });
+              try {
+                await updateUserName.mutateAsync({ name: data.name });
+              } catch {
+                return;
+              }
             }
             reset(data);
           })}

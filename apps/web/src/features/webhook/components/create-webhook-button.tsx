@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { passwordManagerIgnoreProps } from "@rallly/ui";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
@@ -24,12 +25,12 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { AlertTriangleIcon, CheckIcon, CopyIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useCopyToClipboard } from "react-use";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { createWebhookAction } from "../actions";
 import { createWebhookInputSchema } from "../schema";
 import { WebhookEventCombobox } from "./webhook-event-combobox";
@@ -38,7 +39,7 @@ export function CreateWebhookButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdSecret, setCreatedSecret] = React.useState<string | null>(null);
-  const createWebhook = useSafeAction(createWebhookAction);
+  const createWebhook = useMutation(mutationOptions(createWebhookAction));
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -142,20 +143,22 @@ export function CreateWebhookButton() {
               </DialogHeader>
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit(async (data) => {
-                    const result = await createWebhook.executeAsync(data);
-                    if (result?.data?.ok) {
-                      setCreatedSecret(result.data.secret);
-                      form.reset();
-                    } else if (
-                      result?.data?.reason === "max_webhooks_exceeded"
-                    ) {
-                      toast.error(
-                        t("webhookLimitReached", {
-                          defaultValue:
-                            "You've reached the maximum number of webhooks. Delete one before adding another.",
-                        }),
-                      );
+                  onSubmit={form.handleSubmit(async (values) => {
+                    try {
+                      const data = await createWebhook.mutateAsync(values);
+                      if (data.ok) {
+                        setCreatedSecret(data.secret);
+                        form.reset();
+                      } else if (data.reason === "max_webhooks_exceeded") {
+                        toast.error(
+                          t("webhookLimitReached", {
+                            defaultValue:
+                              "You've reached the maximum number of webhooks. Delete one before adding another.",
+                          }),
+                        );
+                      }
+                    } catch {
+                      // The mutation cache toasts the error
                     }
                   })}
                 >
@@ -209,8 +212,8 @@ export function CreateWebhookButton() {
                     <Button
                       variant="primary"
                       type="submit"
-                      disabled={createWebhook.isExecuting}
-                      loading={createWebhook.isExecuting}
+                      disabled={createWebhook.isPending}
+                      loading={createWebhook.isPending}
                     >
                       <Trans i18nKey="addWebhook" defaults="Add webhook" />
                     </Button>

@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { parseColor } from "@rallly/ui/color-picker";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@rallly/ui/field";
 import { toast } from "@rallly/ui/sonner";
 import { Switch } from "@rallly/ui/switch";
+import { useMutation } from "@tanstack/react-query";
 import { LockIcon } from "lucide-react";
 import React from "react";
 import { ColorPickerWithSaveButton } from "@/components/color-picker-with-save-button";
@@ -33,7 +35,6 @@ import {
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { BrandingPreview } from "./branding-preview";
 import { RemoveAttributionSetting } from "./remove-attribution-setting";
 
@@ -55,8 +56,10 @@ export function CustomBrandingSection({
   const isDefault =
     hexColor.toLowerCase() === DEFAULT_PRIMARY_COLOR.toLowerCase();
 
-  const updateShowBranding = useSafeAction(updateSpaceShowBrandingAction);
-  const updateSpace = useSafeAction(updateSpaceAction);
+  const updateShowBranding = useMutation(
+    mutationOptions(updateSpaceShowBrandingAction),
+  );
+  const updateSpace = useMutation(mutationOptions(updateSpaceAction));
 
   // Optimistic value shown until the post-action router refresh delivers
   // the updated space data; reverts automatically if the action fails.
@@ -72,22 +75,18 @@ export function CustomBrandingSection({
 
     React.startTransition(async () => {
       setOptimisticShowBranding(newChecked);
-      const result = await updateShowBranding.executeAsync({
-        showBranding: newChecked,
-      });
-
-      if (!result?.serverError && !result?.validationErrors) {
+      try {
+        await updateShowBranding.mutateAsync({ showBranding: newChecked });
         toast.success(t("saved", { defaultValue: "Saved" }));
-      }
+      } catch {}
     });
   };
 
   const persistColor = async (value: string | null) => {
-    const result = await updateSpace.executeAsync({ primaryColor: value });
-
-    if (!result?.serverError && !result?.validationErrors) {
+    try {
+      await updateSpace.mutateAsync({ primaryColor: value });
       toast.success(t("saved", { defaultValue: "Saved" }));
-    }
+    } catch {}
   };
 
   const handleSave = () => {
@@ -156,7 +155,7 @@ export function CustomBrandingSection({
                   value={color}
                   onChange={setColor}
                   disabled={disabled}
-                  isSaving={updateSpace.isExecuting}
+                  isSaving={updateSpace.isPending}
                   onSave={handleSave}
                   onReset={handleReset}
                   showReset={!isDefault}
@@ -187,7 +186,7 @@ export function CustomBrandingSection({
                     id="show-branding"
                     checked={showBranding}
                     onCheckedChange={handleToggle}
-                    disabled={disabled || updateShowBranding.isExecuting}
+                    disabled={disabled || updateShowBranding.isPending}
                   />
                 </Field>
                 <BrandingPreview

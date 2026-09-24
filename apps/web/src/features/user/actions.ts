@@ -1,7 +1,9 @@
 "use server";
+
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { supportedLngs } from "@rallly/languages";
+import { refresh } from "next/cache";
 import { headers } from "next/headers";
 import * as z from "zod";
 import { avatarAssetProfile } from "@/features/user/constants";
@@ -41,6 +43,8 @@ export const updateUserNameAction = authActionClient
       body: { name: parsedInput.name },
       headers: await headers(),
     });
+
+    refresh();
   });
 
 export const updateLocalizationAction = authActionClient
@@ -69,6 +73,8 @@ export const updateLocalizationAction = authActionClient
       },
       headers: await headers(),
     });
+
+    refresh();
   });
 
 // Better-Auth's request-email-change endpoint returns success without sending
@@ -142,6 +148,8 @@ export const updateUserAvatarAction = authActionClient
         });
       },
     });
+
+    refresh();
   });
 
 export const removeUserAvatarAction = authActionClient
@@ -157,6 +165,8 @@ export const removeUserAvatarAction = authActionClient
         });
       },
     });
+
+    refresh();
   });
 
 export const changeRoleAction = adminActionClient
@@ -196,6 +206,8 @@ export const changeRoleAction = adminActionClient
     }
 
     await updateUserRole({ userId: targetUser.id, role });
+
+    refresh();
   });
 
 export const unbanUserAction = adminActionClient
@@ -234,4 +246,6 @@ export const unbanUserAction = adminActionClient
     }
 
     await unbanUser({ userId });
+
+    refresh();
   });

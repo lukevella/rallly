@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import {
   Field,
@@ -16,12 +17,12 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { toast } from "@rallly/ui/sonner";
+import { useMutation } from "@tanstack/react-query";
 import { ContainerIcon } from "lucide-react";
 import React from "react";
 import type { InstanceSettings } from "@/features/instance-settings/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { updateInstanceSettingsAction } from "./actions";
 
 export function InstanceSettingsForm({
@@ -34,20 +35,21 @@ export function InstanceSettingsForm({
     !isRegistrationEnabled || Boolean(defaultValue.disableUserRegistration),
   );
 
-  const updateInstanceSettings = useSafeAction(updateInstanceSettingsAction);
+  const updateInstanceSettings = useMutation(
+    mutationOptions(updateInstanceSettingsAction),
+  );
   const { t } = useTranslation();
 
   const handleChange = (value: string) => {
     const disabled = value === "disabled";
     setDisableUserRegistration(disabled);
     toast.promise(
-      updateInstanceSettings.executeAsync({
+      updateInstanceSettings.mutateAsync({
         disableUserRegistration: disabled,
       }),
       {
         loading: t("saving", { defaultValue: "Saving..." }),
         success: t("saved", { defaultValue: "Saved" }),
-        error: t("unexpectedError", { defaultValue: "Unexpected error" }),
       },
     );
   };

@@ -81,9 +81,6 @@ export const setActiveSpaceAction = authActionClient
       });
     }
 
-    // Renders the new space's tree into the action response, so the client
-    // needs no follow-up router.refresh(). Unlike revalidatePath, this
-    // leaves the Data Cache alone.
     refresh();
 
     track(ctx.user, {
@@ -127,6 +124,8 @@ export const createSpaceAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
 
     return space;
   });
@@ -175,6 +174,8 @@ export const deleteSpaceAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 export const updateSpaceAction = authActionClient
@@ -225,6 +226,8 @@ export const updateSpaceAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 export const updateSpaceShowBrandingAction = authActionClient
@@ -272,6 +275,8 @@ export const updateSpaceShowBrandingAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 export const updateSpaceHideAttributionAction = authActionClient
@@ -319,6 +324,8 @@ export const updateSpaceHideAttributionAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 export const updateSpaceSharedAction = authActionClient
@@ -365,6 +372,8 @@ export const updateSpaceSharedAction = authActionClient
         space: space.id,
       },
     });
+
+    refresh();
   });
 
 export const getSpaceImageUploadUrlAction = authActionClient
@@ -396,6 +405,8 @@ export const updateSpaceImageAction = authActionClient
       spaceId: space.id,
       imageKey: parsedInput.imageKey,
     });
+
+    refresh();
   });
 
 export const removeSpaceImageAction = authActionClient
@@ -403,4 +414,6 @@ export const removeSpaceImageAction = authActionClient
   .use(spaceUpdateAbilityMiddleware)
   .action(async ({ ctx }) => {
     await updateSpaceImage({ spaceId: ctx.space.id, imageKey: null });
+
+    refresh();
   });

@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -19,10 +20,10 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Textarea } from "@rallly/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 import { banUserAction } from "../actions";
 
 const useSchema = () => {
@@ -58,11 +59,13 @@ export function BanUserDialog({
     },
   });
 
-  const banUser = useSafeAction(banUserAction, {
-    onSuccess: () => {
-      onOpenChange(false);
-    },
-  });
+  const banUser = useMutation(
+    mutationOptions(banUserAction, {
+      onSuccess: () => {
+        onOpenChange(false);
+      },
+    }),
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -84,8 +87,8 @@ export function BanUserDialog({
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(async (data) => {
-              await banUser.executeAsync({
+            onSubmit={form.handleSubmit((data) => {
+              banUser.mutate({
                 userId,
                 reason: data.reason || undefined,
               });
@@ -115,7 +118,7 @@ export function BanUserDialog({
               </DialogClose>
               <Button
                 variant="destructive"
-                loading={banUser.isExecuting}
+                loading={banUser.isPending}
                 type="submit"
               >
                 <Trans i18nKey="banUser" defaults="Ban user" />

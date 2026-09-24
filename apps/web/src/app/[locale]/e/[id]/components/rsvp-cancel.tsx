@@ -1,13 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
+import { useMutation } from "@tanstack/react-query";
 import { cancelRsvpAction } from "@/features/scheduled-event/actions";
 import { Trans } from "@/i18n/client";
-import { useSafeAction } from "@/lib/safe-action/client";
 
 export function RsvpCancel({ inviteUid }: { inviteUid: string }) {
-  const router = useRouter();
-  const cancelRsvp = useSafeAction(cancelRsvpAction);
+  const cancelRsvp = useMutation(mutationOptions(cancelRsvpAction));
 
   return (
     <p className="text-muted-foreground text-sm">
@@ -18,14 +17,10 @@ export function RsvpCancel({ inviteUid }: { inviteUid: string }) {
           a: (
             <button
               type="button"
-              disabled={cancelRsvp.isExecuting}
+              disabled={cancelRsvp.isPending}
               className="underline hover:text-foreground"
-              onClick={async () => {
-                await cancelRsvp.executeAsync({ inviteUid });
-                // Re-run the server query so the card reflects the
-                // cancellation (a not_found result means it's already gone
-                // server-side, so refreshing is correct either way).
-                router.refresh();
+              onClick={() => {
+                cancelRsvp.mutate({ inviteUid });
               }}
             />
           ),

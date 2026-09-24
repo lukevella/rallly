@@ -1,11 +1,12 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { cn } from "@rallly/ui";
+import { useMutation } from "@tanstack/react-query";
 import { ImageUploadControl } from "@/components/image-upload";
 import { LOGO_VIEWBOX } from "@/features/branding/constants";
 import { brandingLogoProfiles } from "@/features/instance-settings/constants";
 import type { BrandingLogoType } from "@/features/instance-settings/schema";
-import { useSafeAction } from "@/lib/safe-action/client";
 import {
   getBrandingLogoUploadUrlAction,
   removeBrandingLogoAction,
@@ -46,9 +47,11 @@ export function LogoUploadField({
   hasCustomLogo: boolean;
   disabled?: boolean;
 }) {
-  const getLogoUploadUrl = useSafeAction(getBrandingLogoUploadUrlAction);
-  const updateLogo = useSafeAction(updateBrandingLogoAction);
-  const removeLogo = useSafeAction(removeBrandingLogoAction);
+  const getLogoUploadUrl = useMutation(
+    mutationOptions(getBrandingLogoUploadUrlAction),
+  );
+  const updateLogo = useMutation(mutationOptions(updateBrandingLogoAction));
+  const removeLogo = useMutation(mutationOptions(removeBrandingLogoAction));
 
   return (
     <div className="w-full space-y-3">
@@ -127,12 +130,14 @@ export function LogoUploadField({
         profile={brandingLogoProfiles[logoType]}
         disabled={disabled}
         signUpload={(input) =>
-          getLogoUploadUrl.executeAsync({ logoType, ...input })
+          getLogoUploadUrl.mutateAsync({ logoType, ...input })
         }
         persistUpload={(imageKey) =>
-          updateLogo.executeAsync({ logoType, imageKey })
+          updateLogo.mutateAsync({ logoType, imageKey })
         }
-        onRemove={() => removeLogo.executeAsync({ logoType })}
+        // The global handler reports the failure; a rejection here would
+        // escape the remove transition.
+        onRemove={() => removeLogo.mutateAsync({ logoType }).catch(() => {})}
         hasCurrentImage={hasCustomLogo}
       />
     </div>
