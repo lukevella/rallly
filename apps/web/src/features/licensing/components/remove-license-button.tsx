@@ -71,7 +71,8 @@ export function RemoveLicenseButton() {
                 try {
                   await removeInstanceLicense.mutateAsync();
                 } catch {
-                  // The mutation cache toasts the error
+                  // The mutation cache toasts the error; keep the dialog open to retry
+                  return;
                 }
                 dialog.dismiss();
               })

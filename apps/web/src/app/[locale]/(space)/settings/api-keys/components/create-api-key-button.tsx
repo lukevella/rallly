@@ -36,7 +36,10 @@ export function CreateApiKeyButton() {
   const { t } = useTranslation();
   const dialog = useDialog();
   const [createdApiKey, setCreatedApiKey] = React.useState<string | null>(null);
-  const createApiKey = useMutation(mutationOptions(createApiKeyAction));
+  // The result carries the plaintext key; keep it out of the mutation cache
+  const createApiKey = useMutation(
+    mutationOptions(createApiKeyAction, { gcTime: 0 }),
+  );
   const [, copy] = useCopyToClipboard();
   const [didCopy, setDidCopy] = React.useState(false);
 
@@ -49,6 +52,7 @@ export function CreateApiKeyButton() {
 
   const handleClose = () => {
     dialog.dismiss();
+    createApiKey.reset();
     setCreatedApiKey(null);
     form.reset();
   };
