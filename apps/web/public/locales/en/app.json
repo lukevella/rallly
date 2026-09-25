@@ -630,6 +630,7 @@
   "noWebhooksDescription": "Add a webhook to receive events on your own server",
   "oidcAutoSignInDescription": "You are being redirected to the login page...",
   "openPollCount": "{count, plural, other {# open}}",
+  "opensInNewTab": "(opens in new tab)",
   "optional": "(optional)",
   "optionalLabel": "(Optional)",
   "optionCount": "{count, plural, one {# option} other {# options}}",
