@@ -310,9 +310,31 @@
   }
 }
 
+/* iOS Safari zooms the page whenever a focused field is under 16px. The whole
+ * type scale grows by 8/7 on touch devices, the factor that lands text-sm on
+ * 16px exactly, so fields and the copy around them keep their proportions.
+ * Line heights are unitless ratios and follow the size on their own. */
+@layer base {
+  @media (pointer: coarse) {
+    :root {
+      --text-xs: calc(0.75rem * 8 / 7);
+      --text-sm: calc(0.875rem * 8 / 7);
+      --text-base: calc(1rem * 8 / 7);
+      --text-lg: calc(1.125rem * 8 / 7);
+      --text-xl: calc(1.25rem * 8 / 7);
+      --text-2xl: calc(1.5rem * 8 / 7);
+      --text-3xl: calc(1.875rem * 8 / 7);
+      --text-4xl: calc(2.25rem * 8 / 7);
+      --text-5xl: calc(3rem * 8 / 7);
+      --text-6xl: calc(3.75rem * 8 / 7);
+      --text-7xl: calc(4.5rem * 8 / 7);
+    }
+  }
+}
+
 @layer base {
   body {
-    @apply text-foreground bg-background;
+    @apply text-base text-foreground bg-background;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
@@ -323,8 +345,10 @@
   html.light body:has(.page-bg-gray-50) {
     @apply bg-gray-50;
   }
+  /* The type scale is rem based, so html keeps the browser's 16px root and
+   * the token lands on body, where scaling it cannot feed back into rem. */
   html {
-    @apply h-full font-sans text-base text-gray-700;
+    @apply h-full font-sans text-gray-700;
   }
   *,
   ::before,
