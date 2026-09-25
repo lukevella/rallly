@@ -4,7 +4,7 @@ import { createLogger } from "@rallly/logger";
 import { google } from "googleapis";
 import { env } from "@/env";
 import { loadCredential } from "@/features/credentials/data";
-import { saveOAuthCredentials } from "@/features/credentials/mutations";
+import { updateOAuthCredentialTokens } from "@/features/credentials/mutations";
 import type { OAuthCredentials } from "@/features/credentials/schema";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
 import { getConferencingConnectionForProvider } from "./data";
@@ -57,10 +57,7 @@ export async function createConferencingMeeting({
   try {
     switch (provider) {
       case "zoom": {
-        const secret = await refreshZoomTokenIfExpired({
-          userId,
-          credential,
-        });
+        const secret = await refreshZoomTokenIfExpired({ credential });
         const conferencing = await createZoomMeeting({
           accessToken: secret.accessToken,
           title,
@@ -86,10 +83,8 @@ export async function createConferencingMeeting({
 }
 
 async function refreshZoomTokenIfExpired({
-  userId,
   credential,
 }: {
-  userId: string;
   credential: NonNullable<Awaited<ReturnType<typeof loadCredential>>>;
 }): Promise<OAuthCredentials> {
   const expiresAt = credential.secret.expiresAt
@@ -116,13 +111,9 @@ async function refreshZoomTokenIfExpired({
     credential.secret.refreshToken,
   );
 
-  // Zoom rotates the refresh token on every refresh; the old one is dead.
-  await saveOAuthCredentials({
-    userId,
-    provider: credential.provider,
-    providerAccountId: await zoomAccountId(tokens.accessToken),
-    tokens,
-  });
+  // Zoom rotates the refresh token on every refresh; the old one is dead,
+  // so the new pair is persisted before anything else can fail.
+  await updateOAuthCredentialTokens({ id: credential.id, tokens });
 
   return {
     accessToken: tokens.accessToken,
@@ -131,18 +122,6 @@ async function refreshZoomTokenIfExpired({
     scopes: tokens.scopes,
   };
 }
-
-async function zoomAccountId(accessToken: string) {
-  const res = await fetch("https://api.zoom.us/v2/users/me", {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  if (!res.ok) {
-    throw new Error(`Zoom user lookup failed with status ${res.status}`);
-  }
-  const { id } = (await res.json()) as { id: string };
-  return id;
-}
-
 async function createZoomMeeting({
   accessToken,
   title,

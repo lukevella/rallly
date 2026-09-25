@@ -111,6 +111,8 @@
   "brandingSettingsDescription": "Customize your instance branding",
   "brandingStorageNotConfigured": "Logo uploads require object storage, which has not been configured on this instance.",
   "calendar": "Calendar",
+  "calendarConnected": "Calendar connected",
+  "calendarConnectFailed": "We couldn't connect that calendar. Please try again.",
   "calendarDisconnectedError": "Failed to disconnect calendar",
   "calendarDisconnectedSuccess": "Calendar disconnected successfully",
   "calendarHelp": "You can't create a poll without any options. Add at least one option to continue.",

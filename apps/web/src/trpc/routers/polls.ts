@@ -16,7 +16,10 @@ import {
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { pollConferencingSchema } from "@/features/conferencing/schema";
 import { createConferencingMeeting } from "@/features/conferencing/service";
-import { conferencingProviderLabels } from "@/features/conferencing/utils";
+import {
+  conferencingProviderLabels,
+  getConferencingUri,
+} from "@/features/conferencing/utils";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
@@ -997,6 +1000,7 @@ export const polls = router({
           title: true,
           location: true,
           conferencing: true,
+          status: true,
           description: true,
           spaceId: true,
           hideParticipants: true,
@@ -1011,6 +1015,7 @@ export const polls = router({
           },
           user: {
             select: {
+              id: true,
               name: true,
               email: true,
               locale: true,
@@ -1095,11 +1100,21 @@ export const polls = router({
       const eventId = nanoid();
       const uid = `${eventId}@rallly.co`;
 
+      // A second booking would mint a second meeting and orphan the first
+      // event, so a poll is booked once; reopen it to book again.
+      if (poll.status === "scheduled") {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Poll is already scheduled",
+        });
+      }
+
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and
-      // try again, instead of an event going out without a link.
+      // try again, instead of an event going out without a link. The poll
+      // owner's account hosts the meeting, whichever member books it.
       const conferencing = await mintConferencing({
-        userId: ctx.user.id,
+        userId: poll.user.id,
         conferencing: parsePollConferencing(poll.conferencing, {
           pollId: poll.id,
         }),
@@ -1113,12 +1128,19 @@ export const polls = router({
         p.votes.some((v) => v.optionId === input.optionId && v.type !== "no"),
       );
 
+      // The calendar entry carries the join link the same way the event API
+      // does: as the location when there is no place, and in the description.
+      const conferencingUri = conferencing
+        ? getConferencingUri(conferencing)
+        : undefined;
       const event = createIcsEvent({
         uid,
         sequence: 0,
         title: poll.title,
-        location: poll.location ?? undefined,
-        description: poll.description ?? undefined,
+        location: poll.location || conferencingUri,
+        description:
+          [poll.description, conferencingUri].filter(Boolean).join("\n\n") ||
+          undefined,
         start: eventTimes.start,
         end: eventTimes.end,
         allDay: eventTimes.allDay,

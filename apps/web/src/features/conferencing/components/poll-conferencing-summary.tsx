@@ -33,7 +33,10 @@ export function PollConferencingSummary({
           className="group inline-flex min-w-0 items-center gap-1 hover:text-foreground"
         >
           <span className="truncate">{conferencing.label}</span>
-          <ArrowUpRightIcon className="transition-colors group-hover:text-foreground" />
+          <ArrowUpRightIcon
+            aria-hidden="true"
+            className="transition-colors group-hover:text-foreground"
+          />
           <span className="sr-only">
             <Trans i18nKey="opensInNewTab" defaults="(opens in new tab)" />
           </span>

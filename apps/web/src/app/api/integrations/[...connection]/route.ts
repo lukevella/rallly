@@ -3,6 +3,7 @@ import {
   createCalendarConnection,
   syncCalendars,
 } from "@/features/calendars/mutations";
+import { isConferencingEnabled } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
@@ -104,7 +105,11 @@ const { handler } = OAuthIntegration<Integration>({
         });
       }
       case "google-meet": {
-        if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+        if (
+          !isConferencingEnabled ||
+          !env.GOOGLE_CLIENT_ID ||
+          !env.GOOGLE_CLIENT_SECRET
+        ) {
           return null;
         }
         return new GoogleOAuthClient({
@@ -123,7 +128,11 @@ const { handler } = OAuthIntegration<Integration>({
         });
       }
       case "zoom": {
-        if (!env.ZOOM_CLIENT_ID || !env.ZOOM_CLIENT_SECRET) {
+        if (
+          !isConferencingEnabled ||
+          !env.ZOOM_CLIENT_ID ||
+          !env.ZOOM_CLIENT_SECRET
+        ) {
           return null;
         }
         return new ZoomOAuthClient({

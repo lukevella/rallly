@@ -15,7 +15,7 @@ export const pollConferencingSchema = z.discriminatedUnion("provider", [
   z.object({
     provider: z.literal("custom"),
     label: z.string().trim().min(1).max(100),
-    uri: z.url().optional(),
+    uri: z.url({ protocol: /^https?$/ }).optional(),
   }),
 ]);
 export type PollConferencing = z.infer<typeof pollConferencingSchema>;
@@ -39,7 +39,7 @@ const phoneConferencingSchema = z.object({
 
 const customConferencingSchema = z.object({
   provider: z.literal("custom"),
-  uri: z.url(),
+  uri: z.url({ protocol: /^https?$/ }),
   label: z.string().min(1),
 });
 
