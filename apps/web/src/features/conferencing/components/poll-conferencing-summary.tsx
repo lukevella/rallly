@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRightIcon, VideoIcon } from "lucide-react";
+import { ArrowUpRightIcon, DotIcon, VideoIcon } from "lucide-react";
 import { ConferencingProviderIcon } from "@/features/conferencing/components/conferencing-provider-icon";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import {
@@ -31,7 +31,10 @@ export function PollConferencingSummary({
         >
           <span className="truncate">{conferencing.label}</span>
           {showHost ? (
-            <span className="truncate text-muted-foreground">{host}</span>
+            <>
+              <DotIcon aria-hidden="true" />
+              <span className="truncate text-muted-foreground">{host}</span>
+            </>
           ) : null}
           <ArrowUpRightIcon className="transition-colors group-hover:text-foreground" />
           <span className="sr-only">
