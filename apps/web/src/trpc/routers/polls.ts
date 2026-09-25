@@ -59,6 +59,18 @@ const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
     .add(option.duration === 0 ? 24 * 60 : option.duration, "minute")
     .isAfter(dayjs());
 
+function moderatedLinkText(uri: string | undefined) {
+  if (!uri) {
+    return "";
+  }
+  try {
+    const { origin, pathname } = new URL(uri);
+    return `${origin}${pathname}`;
+  } catch {
+    return uri;
+  }
+}
+
 async function mintConferencing({
   userId,
   conferencing,
@@ -199,10 +211,11 @@ export const polls = router({
           Description: input.description || "",
           Location: input.location || "",
           // The pasted URL goes in with its label so a benign label cannot
-          // hide a scam destination from moderation.
+          // hide a scam destination from moderation. Only the origin and
+          // path: a Zoom join link carries the meeting password in its query.
           Conferencing:
             input.conferencing?.provider === "custom"
-              ? `${input.conferencing.label} ${input.conferencing.uri ?? ""}`
+              ? `${input.conferencing.label} ${moderatedLinkText(input.conferencing.uri)}`
               : "",
         },
       });
