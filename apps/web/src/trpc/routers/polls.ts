@@ -13,7 +13,10 @@ import {
   getConnectedConferencingProviders,
   parsePollConferencing,
 } from "@/features/conferencing/data";
-import type { PollConferencing } from "@/features/conferencing/schema";
+import type {
+  Conferencing,
+  PollConferencing,
+} from "@/features/conferencing/schema";
 import { pollConferencingSchema } from "@/features/conferencing/schema";
 import { createConferencingMeeting } from "@/features/conferencing/service";
 import {
@@ -77,7 +80,7 @@ async function mintConferencing({
   start: Date;
   end: Date;
   timeZone: string | null | undefined;
-}) {
+}): Promise<Conferencing | null> {
   if (!conferencing) {
     return null;
   }

@@ -15,7 +15,9 @@ const mockTrack = vi.fn();
 const mockIdentifyGroup = vi.fn();
 
 const mockGetAvailableConferencingProviders = vi.fn(() => [] as string[]);
-const mockGetConnectedConferencingProviders = vi.fn(async () => [] as string[]);
+const mockGetConnectedConferencingProviders = vi.fn(
+  async (_userId: string) => [] as string[],
+);
 
 vi.mock("@/features/conferencing/constants", () => ({
   isConferencingEnabled: false,
@@ -24,8 +26,8 @@ vi.mock("@/features/conferencing/constants", () => ({
 }));
 
 vi.mock("@/features/conferencing/data", () => ({
-  getConnectedConferencingProviders: (...args: unknown[]) =>
-    mockGetConnectedConferencingProviders(...args),
+  getConnectedConferencingProviders: (userId: string) =>
+    mockGetConnectedConferencingProviders(userId),
   parsePollConferencing: (value: unknown) => value,
 }));
 
