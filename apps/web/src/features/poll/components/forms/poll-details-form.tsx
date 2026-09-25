@@ -1,9 +1,22 @@
 import { Button } from "@rallly/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { PlusIcon } from "lucide-react";
+import { BuildingIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
+import {
+  ConferencingField,
+  ConferencingProviderMenuItems,
+} from "@/features/conferencing/components/conferencing-field";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFormValidation } from "@/lib/utils/form-validation";
@@ -11,12 +24,33 @@ import { useFormValidation } from "@/lib/utils/form-validation";
 import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
-export const PollDetailsForm = () => {
+// `conferencing` is absent on forms that don't support video calls (the edit
+// form); "Add location" then opens the address field directly.
+export const PollDetailsForm = ({
+  conferencing,
+}: {
+  conferencing?: ConferencingOptions | null;
+}) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
 
   const { requiredString } = useFormValidation();
   const { register } = form;
+
+  // Optional fields reveal themselves whenever they hold content — covering
+  // values restored asynchronously (persisted drafts, the edit form) — or once
+  // the user opens them. Remove clears the value and resets `opened`, so the
+  // field collapses again.
+  const [locationOpened, setLocationOpened] = React.useState(false);
+  const hasLocation = !!form.watch("location")?.trim();
+  const locationExpanded = locationOpened || hasLocation;
+
+  const [descriptionOpened, setDescriptionOpened] = React.useState(false);
+  const hasDescription = !!form.watch("description")?.trim();
+  const descriptionExpanded = descriptionOpened || hasDescription;
+
+  const canAddAddress = !locationExpanded;
+  const canAddVideoCall = !!conferencing && !form.watch("conferencingProvider");
 
   return (
     <div className="grid gap-4 py-1">
@@ -42,55 +76,99 @@ export const PollDetailsForm = () => {
           </FormItem>
         )}
       />
-
-      <FormItem>
-        <div>
-          <FormLabel className="inline-block" htmlFor="location">
-            {t("location")}
-          </FormLabel>
-          <span className="ml-1 text-muted-foreground text-sm">
-            <Trans i18nKey="optionalLabel" defaults="(Optional)" />
-          </span>
-        </div>
-        <Input
-          type="text"
-          id="location"
-          className="w-full"
-          placeholder={t("locationPlaceholder")}
-          {...register("location")}
+      {locationExpanded ? (
+        <FormItem>
+          <div className="flex items-center justify-between">
+            <FormLabel htmlFor="location">{t("location")}</FormLabel>
+            <Button
+              type="button"
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                form.setValue("location", "");
+                setLocationOpened(false);
+              }}
+            >
+              <Trans i18nKey="remove" defaults="Remove" />
+            </Button>
+          </div>
+          <Input
+            type="text"
+            id="location"
+            className="w-full"
+            placeholder={t("locationPlaceholder")}
+            {...register("location")}
+          />
+        </FormItem>
+      ) : null}
+      {conferencing ? (
+        <ConferencingField connected={conferencing.connected} />
+      ) : null}
+      {descriptionExpanded ? (
+        <DescriptionField
+          onRemove={() => {
+            form.setValue("description", "");
+            setDescriptionOpened(false);
+          }}
         />
-      </FormItem>
-      <DescriptionField />
+      ) : null}
+      {canAddAddress || canAddVideoCall || !descriptionExpanded ? (
+        <div className="flex flex-wrap gap-2">
+          {canAddVideoCall ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={<Button type="button" className="rounded-full" />}
+              >
+                <PlusIcon data-icon="inline-start" />
+                <Trans i18nKey="addLocation" defaults="Add location" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {canAddAddress ? (
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>
+                      <Trans i18nKey="inPerson" defaults="In-person" />
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => setLocationOpened(true)}>
+                      <BuildingIcon />
+                      <Trans i18nKey="address" defaults="Address" />
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                ) : null}
+                <ConferencingProviderMenuItems
+                  available={conferencing.available}
+                />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : canAddAddress ? (
+            <Button
+              type="button"
+              className="rounded-full"
+              onClick={() => setLocationOpened(true)}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addLocation" defaults="Add location" />
+            </Button>
+          ) : null}
+          {!descriptionExpanded ? (
+            <Button
+              type="button"
+              className="rounded-full"
+              onClick={() => setDescriptionOpened(true)}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addDescription" defaults="Add description" />
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 };
 
-const DescriptionField = () => {
+const DescriptionField = ({ onRemove }: { onRemove: () => void }) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
-
-  // Reveal the editor whenever the field holds content — this covers values
-  // restored asynchronously (persisted drafts, the edit form) that aren't yet
-  // present on first render — or once the user opens it via the button. Remove
-  // clears the value and resets `opened`, so it collapses again.
-  const [opened, setOpened] = React.useState(false);
-  const hasContent = !!form.watch("description")?.trim();
-  const expanded = opened || hasContent;
-
-  if (!expanded) {
-    return (
-      <div>
-        <Button
-          type="button"
-          className="rounded-full"
-          onClick={() => setOpened(true)}
-        >
-          <PlusIcon data-icon="inline-start" />
-          <Trans i18nKey="addDescription" defaults="Add description" />
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <FormItem>
@@ -103,10 +181,7 @@ const DescriptionField = () => {
           variant="link"
           size="sm"
           className="h-auto p-0 text-muted-foreground hover:text-foreground"
-          onClick={() => {
-            form.setValue("description", "");
-            setOpened(false);
-          }}
+          onClick={onRemove}
         >
           <Trans i18nKey="remove" defaults="Remove" />
         </Button>

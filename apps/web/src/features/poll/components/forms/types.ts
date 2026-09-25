@@ -1,9 +1,14 @@
+import type { ConferencingProvider } from "@/features/conferencing/schema";
 import type { DateTimeOption } from "./poll-options-form/types";
 
 export interface PollDetailsData {
   title: string;
   location: string;
   description: string;
+  // Empty string is "none"; the form persists to storage, which has no undefined.
+  conferencingProvider?: ConferencingProvider | "custom" | "";
+  conferencingUrl?: string;
+  conferencingLabel?: string;
 }
 
 export type PollOptionsData = {

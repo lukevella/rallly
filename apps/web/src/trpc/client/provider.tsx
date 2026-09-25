@@ -70,6 +70,24 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
             },
           );
           break;
+        // Finalizing a poll mints the meeting link first; these carry their
+        // own remedy and must not be reported as a generic server error.
+        case "CONFERENCING_NOT_CONNECTED":
+          toast.error(
+            t("actionErrorConferencingNotConnected", {
+              defaultValue:
+                "Your video call account is not connected. Connect it in Conferencing settings and try again.",
+            }),
+          );
+          break;
+        case "CONFERENCING_FAILED":
+          toast.error(
+            t("actionErrorConferencingFailed", {
+              defaultValue:
+                "We couldn't create the meeting link. Check your account in Conferencing settings and try again.",
+            }),
+          );
+          break;
         case "UNAUTHORIZED":
           toast.error(
             t("actionErrorUnauthorized", {
@@ -147,8 +165,10 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
       }
 
       showErrorToast(
-        error.data.appError === "INVALID_SESSION"
-          ? "INVALID_SESSION"
+        error.data.appError === "INVALID_SESSION" ||
+          error.data.appError === "CONFERENCING_NOT_CONNECTED" ||
+          error.data.appError === "CONFERENCING_FAILED"
+          ? error.data.appError
           : error.data.code,
       );
     }

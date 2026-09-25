@@ -3,6 +3,7 @@ import "server-only";
 import type { PollStatus, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { shortUrl } from "@rallly/utils/absolute-url";
+import { parsePollConferencing } from "@/features/conferencing/data";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { VOTE_TYPES } from "@/features/poll/constants";
 import type {
@@ -259,6 +260,7 @@ export async function listPolls({
       title: true,
       description: true,
       location: true,
+      conferencing: true,
       timeZone: true,
       status: true,
       kind: true,
@@ -302,8 +304,9 @@ export async function listPolls({
   const page = hasMore ? polls.slice(0, limit) : polls;
 
   return {
-    polls: page.map(({ _count, ...poll }) => ({
+    polls: page.map(({ _count, conferencing, ...poll }) => ({
       ...poll,
+      conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
       participantCount: _count.participants,
     })),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
@@ -600,6 +603,7 @@ export async function getPollWithOptions({
       title: true,
       description: true,
       location: true,
+      conferencing: true,
       timeZone: true,
       status: true,
       kind: true,
@@ -640,8 +644,12 @@ export async function getPollWithOptions({
     return null;
   }
 
-  const { _count, ...rest } = poll;
-  return { ...rest, participantCount: _count.participants };
+  const { _count, conferencing, ...rest } = poll;
+  return {
+    ...rest,
+    conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
+    participantCount: _count.participants,
+  };
 }
 
 /**
@@ -701,6 +709,7 @@ export async function getPollDetails({
       timeZone: true,
       title: true,
       location: true,
+      conferencing: true,
       description: true,
       createdAt: true,
       status: true,
@@ -757,11 +766,13 @@ export async function getPollDetails({
     deleted: _deleted,
     user,
     space,
+    conferencing,
     ...pollFields
   } = poll;
 
   return {
     ...pollFields,
+    conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
     space: space
       ? {

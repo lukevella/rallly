@@ -54,3 +54,23 @@ export async function saveOAuthCredentials({
     return credential;
   }
 }
+
+// A refresh replaces the tokens on a credential the caller already holds.
+// Persisting by id keeps the write free of any further provider call, which
+// matters for providers that revoke the old refresh token on rotation.
+export async function updateOAuthCredentialTokens({
+  id,
+  tokens,
+}: {
+  id: string;
+  tokens: OAuthTokens;
+}) {
+  return await prisma.credential.update({
+    where: { id },
+    data: {
+      secret: encrypt(JSON.stringify(tokens), env.SECRET_PASSWORD),
+      scopes: tokens.scopes,
+      expiresAt: tokens.expiresAt,
+    },
+  });
+}

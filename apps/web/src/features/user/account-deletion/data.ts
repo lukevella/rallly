@@ -1,7 +1,6 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
-import { upcomingScheduledEventWhere } from "@/features/scheduled-event/utils";
 
 export async function findUsersScheduledForRemoval({
   cutoff,
@@ -27,26 +26,16 @@ export async function findUsersScheduledForRemoval({
 // dialog mentions those without numbers.
 export async function getAccountDeletionSummary({
   userId,
-  timeZone,
 }: {
   userId: string;
-  timeZone: string;
 }) {
-  const [activePollCount, upcomingEventCount, activeSubscriptionCount] =
-    await Promise.all([
-      prisma.poll.count({ where: { userId, deleted: false, status: "open" } }),
-      prisma.scheduledEvent.count({
-        where: {
-          userId,
-          ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
-        },
-      }),
-      prisma.subscription.count({ where: { userId, active: true } }),
-    ]);
+  const [activePollCount, activeSubscriptionCount] = await Promise.all([
+    prisma.poll.count({ where: { userId, deleted: false, status: "open" } }),
+    prisma.subscription.count({ where: { userId, active: true } }),
+  ]);
 
   return {
     activePollCount,
-    upcomingEventCount,
     hasActiveSubscription: activeSubscriptionCount > 0,
   };
 }

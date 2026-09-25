@@ -6,6 +6,7 @@ export interface FeatureFlagConfig {
   captcha: boolean;
   registration: boolean;
   calendars: boolean;
+  conferencing: boolean;
   eventTypes: boolean;
   pollAdmin: boolean;
   quickCreate: boolean;

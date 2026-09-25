@@ -3,6 +3,7 @@ import { Card, CardContent } from "@rallly/ui/card";
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
 import { useBranding } from "@/features/branding/client";
+import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
 import { useInstancePolicy } from "@/features/instance-policy/client";
 import { usePoll } from "@/features/poll/client";
 import {
@@ -97,6 +98,11 @@ export function EventCard() {
             <EventMetaItem>
               <MapPinIcon />
               <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+            </EventMetaItem>
+          ) : null}
+          {poll.conferencing ? (
+            <EventMetaItem>
+              <PollConferencingSummary conferencing={poll.conferencing} />
             </EventMetaItem>
           ) : null}
         </EventMetaList>

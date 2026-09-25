@@ -37,6 +37,9 @@ model Poll {
   title                   String
   description             String?
   location                String?
+  /// What the organizer asked for: a provider to mint a link with at
+  /// finalize ("zoom" | "meet"), or a link they pasted themselves.
+  conferencing            Json?
   userId                  String?           @map("user_id")
   timeZone                String?           @map("time_zone")
   status                  PollStatus        @default(open)

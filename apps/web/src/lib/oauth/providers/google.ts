@@ -53,6 +53,10 @@ export class GoogleOAuthClient implements OAuthClient {
 
     authUrl.searchParams.set("access_type", "offline");
     authUrl.searchParams.set("prompt", "consent");
+    // Calendar and Meet share one credential row per Google account, so a
+    // later consent must return a token carrying every scope granted so far
+    // rather than replacing them with only the newly requested ones.
+    authUrl.searchParams.set("include_granted_scopes", "true");
 
     return authUrl;
   }

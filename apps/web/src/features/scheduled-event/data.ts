@@ -327,6 +327,23 @@ export async function getUpcomingEventCount({
   });
 }
 
+// Everything a user hosts, across spaces: the account deletion dialog warns
+// about events that would be lost, wherever they live.
+export async function getUserUpcomingEventCount({
+  userId,
+  timeZone,
+}: {
+  userId: string;
+  timeZone: string;
+}) {
+  return prisma.scheduledEvent.count({
+    where: {
+      userId,
+      ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
+    },
+  });
+}
+
 export const getUpcomingEvents = async ({
   search,
   member,

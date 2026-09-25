@@ -1,6 +1,7 @@
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { BarChart2Icon, CalendarIcon, InfoIcon } from "lucide-react";
+import { getUserUpcomingEventCount } from "@/features/scheduled-event/data";
 import { getAccountDeletionSummary } from "@/features/user/account-deletion/data";
 import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
@@ -9,11 +10,17 @@ import { Trans } from "@/i18n/client";
 // settings page never waits on the counts.
 export async function AccountDeletionSummary() {
   const user = await loadUser();
-  const { activePollCount, upcomingEventCount, hasActiveSubscription } =
-    await getAccountDeletionSummary({
-      userId: user.id,
-      timeZone: user.timeZone ?? "UTC",
-    });
+  // Composed here rather than inside the user feature so user does not
+  // depend on scheduled-event (which depends on conferencing, which gates
+  // its loaders on user).
+  const [{ activePollCount, hasActiveSubscription }, upcomingEventCount] =
+    await Promise.all([
+      getAccountDeletionSummary({ userId: user.id }),
+      getUserUpcomingEventCount({
+        userId: user.id,
+        timeZone: user.timeZone ?? "UTC",
+      }),
+    ]);
 
   const hasResources = activePollCount > 0 || upcomingEventCount > 0;
 

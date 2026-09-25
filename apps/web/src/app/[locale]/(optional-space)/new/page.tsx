@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Link } from "@/components/link";
 import { BrandStyle } from "@/features/branding/components/brand-style";
+import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { CreatePoll } from "@/features/poll/components/create-poll";
 import { getActiveSpaceForUser } from "@/features/space/data";
@@ -30,6 +31,8 @@ export default async function Page() {
     redirect("/setup");
   }
 
+  const conferencing = await loadConferencingOptions({ userId });
+
   const primaryColor =
     space?.primaryColor &&
     isSpaceBrandingActive({
@@ -43,6 +46,7 @@ export default async function Page() {
     <div className="page-bg-gray-100 absolute inset-0 h-dvh scroll-pt-16 overflow-auto dark:bg-gray-900">
       {primaryColor ? <BrandStyle primaryColor={primaryColor} /> : null}
       <CreatePoll
+        conferencing={conferencing}
         nav={
           <Breadcrumb>
             <BreadcrumbList>

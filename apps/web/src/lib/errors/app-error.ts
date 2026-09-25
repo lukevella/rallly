@@ -9,7 +9,9 @@ export type AppErrorCode =
   | "POLL_FULL"
   | "SERVICE_UNAVAILABLE"
   | "SETUP_REQUIRED"
-  | "TOO_MANY_REQUESTS";
+  | "TOO_MANY_REQUESTS"
+  | "CONFERENCING_NOT_CONNECTED"
+  | "CONFERENCING_FAILED";
 
 export class AppError extends Error {
   code: AppErrorCode;

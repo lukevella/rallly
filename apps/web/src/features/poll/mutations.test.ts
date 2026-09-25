@@ -182,10 +182,16 @@ describe("closePoll", () => {
     expect(mockUpdate).not.toHaveBeenCalled();
   });
 
-  const openPoll = { id: "p1", status: "open", _count: { participants: 2 } };
+  const openPoll = {
+    id: "p1",
+    status: "open",
+    conferencing: null,
+    _count: { participants: 2 },
+  };
   const closedPoll = {
     id: "p1",
     status: "closed",
+    conferencing: null,
     _count: { participants: 2 },
   };
 
@@ -201,7 +207,12 @@ describe("closePoll", () => {
         data: { status: "closed", closedReason: "manual" },
       }),
     );
-    expect(result).toEqual({ id: "p1", status: "closed", participantCount: 2 });
+    expect(result).toEqual({
+      id: "p1",
+      status: "closed",
+      conferencing: null,
+      participantCount: 2,
+    });
   });
 
   it("is idempotent and does not update an already-closed poll", async () => {
@@ -211,7 +222,12 @@ describe("closePoll", () => {
 
     expect(mockUpdate).not.toHaveBeenCalled();
     expect(mockActivityCreateMany).not.toHaveBeenCalled();
-    expect(result).toEqual({ id: "p1", status: "closed", participantCount: 2 });
+    expect(result).toEqual({
+      id: "p1",
+      status: "closed",
+      conferencing: null,
+      participantCount: 2,
+    });
   });
 
   it("records a poll_closed activity alongside the close", async () => {

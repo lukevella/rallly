@@ -4,11 +4,14 @@ import { zValidator } from "@hono/zod-validator";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { generateCodeVerifier, generateState } from "arctic";
+import type { Context } from "hono";
 import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
 import * as z from "zod";
+import { FLASH_MAX_AGE, flashCookieName } from "@/lib/flash/constants";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
+import { OAUTH_FLASH_KEY } from "./constants";
 import type { CreateOAuthOptions } from "./types";
 
 const logger = createLogger("oauth");
@@ -31,6 +34,28 @@ export function OAuthIntegration<T extends string>(
   const CODE_VERIFIER = `${prefix}code-verifier`;
   const REDIRECT_TO = `${prefix}redirect-to`;
   const STATE = `${prefix}state`;
+
+  // Outcome travels as a one-shot flash (`lib/flash`), not a query param, so
+  // a reload of the landing page never replays the toast.
+  const setOutcome = (
+    c: Context,
+    outcome: { connected: string } | { error: string },
+  ) => {
+    setCookie(
+      c,
+      flashCookieName(OAUTH_FLASH_KEY),
+      "connected" in outcome
+        ? `connected:${outcome.connected}`
+        : `error:${outcome.error}`,
+      {
+        httpOnly: false,
+        secure: cookieOptions.secure,
+        sameSite: "lax",
+        maxAge: FLASH_MAX_AGE,
+        path: "/",
+      },
+    );
+  };
 
   const app = new Hono().basePath(basePath);
 
@@ -128,9 +153,8 @@ export function OAuthIntegration<T extends string>(
         state !== storedState ||
         !codeVerifier
       ) {
-        const errorUrl = new URL(redirectTo, absoluteUrl());
-        errorUrl.searchParams.set("error", "invalid_request");
-        return c.redirect(errorUrl.toString());
+        setOutcome(c, { error: "invalid_request" });
+        return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
       }
 
       // Exchange code for tokens
@@ -145,19 +169,14 @@ export function OAuthIntegration<T extends string>(
         tokens,
       });
 
-      // Redirect with success
-      const successUrl = new URL(redirectTo, absoluteUrl());
-      successUrl.searchParams.set("connected", "true");
-      successUrl.searchParams.set("integration", id);
-
-      return c.redirect(successUrl.toString());
+      setOutcome(c, { connected: id });
+      return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
     } catch (error) {
       logger.error({ error }, "OAuth connection failed");
 
       const redirectTo = getCookie(c, REDIRECT_TO) || "/";
-      const errorUrl = new URL(redirectTo, absoluteUrl());
-      errorUrl.searchParams.set("error", "connection_failed");
-      return c.redirect(errorUrl.toString());
+      setOutcome(c, { error: "connection_failed" });
+      return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
     }
   });
 

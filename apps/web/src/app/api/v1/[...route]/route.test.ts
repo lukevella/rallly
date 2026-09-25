@@ -14,6 +14,23 @@ const mockGetSpaceMemberByEmail = vi.fn();
 const mockTrack = vi.fn();
 const mockIdentifyGroup = vi.fn();
 
+const mockGetAvailableConferencingProviders = vi.fn(() => [] as string[]);
+const mockGetConnectedConferencingProviders = vi.fn(
+  async (_userId: string) => [] as string[],
+);
+
+vi.mock("@/features/conferencing/constants", () => ({
+  isConferencingEnabled: false,
+  getAvailableConferencingProviders: () =>
+    mockGetAvailableConferencingProviders(),
+}));
+
+vi.mock("@/features/conferencing/data", () => ({
+  getConnectedConferencingProviders: (userId: string) =>
+    mockGetConnectedConferencingProviders(userId),
+  parsePollConferencing: (value: unknown) => value,
+}));
+
 vi.mock("@/features/moderation/mutations", () => ({
   moderateContent: vi.fn().mockResolvedValue({ verdict: "safe", reason: "" }),
 }));
@@ -170,6 +187,7 @@ describe("API v1 - /polls", () => {
       title: "Test Poll",
       description: null,
       location: null,
+      conferencing: null,
       timeZone: null,
       status: "open",
       kind: "date",
@@ -768,6 +786,152 @@ describe("API v1 - /polls", () => {
           title: "Team offsite",
           location: "Conference Room A",
         }),
+      );
+    });
+
+    it("stores a custom video call and echoes it back", async () => {
+      mockCreatePoll.mockImplementationOnce(async (input) => ({
+        id: "test-poll-id",
+        title: input.title,
+        description: null,
+        location: null,
+        conferencing: input.conferencing,
+        timeZone: null,
+        status: "open",
+        kind: "date",
+        createdAt: new Date("2025-01-10T12:00:00Z"),
+        updatedAt: new Date("2025-01-10T12:00:00Z"),
+        requireParticipantEmail: false,
+        hideParticipants: false,
+        hideScores: false,
+        disableComments: true,
+        allowTentativeVotes: true,
+        participantCount: 0,
+        user: null,
+        options: [],
+      }));
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          conferencing: {
+            provider: "custom",
+            label: "Microsoft Teams",
+            uri: "https://teams.microsoft.com/l/meetup-join/abc",
+          },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          conferencing: {
+            provider: "custom",
+            label: "Microsoft Teams",
+            uri: "https://teams.microsoft.com/l/meetup-join/abc",
+          },
+        }),
+      );
+      const body = await res.json();
+      expect(body.data.conferencing).toEqual({
+        provider: "custom",
+        label: "Microsoft Teams",
+        uri: "https://teams.microsoft.com/l/meetup-join/abc",
+      });
+    });
+
+    it("rejects a non-http custom link", async () => {
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          conferencing: {
+            provider: "custom",
+            label: "Call",
+            uri: "javascript:alert(1)",
+          },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+        }),
+      });
+
+      expect(res.status).toBe(400);
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("rejects a provider the instance does not offer", async () => {
+      mockGetAvailableConferencingProviders.mockReturnValueOnce([]);
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          conferencing: { provider: "zoom" },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+        }),
+      });
+
+      expect(res.status).toBe(400);
+      expect((await res.json()).error.code).toBe("CONFERENCING_UNAVAILABLE");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("rejects a provider the organizer has not connected", async () => {
+      mockGetAvailableConferencingProviders.mockReturnValueOnce(["zoom"]);
+      mockGetConnectedConferencingProviders.mockResolvedValueOnce([]);
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          conferencing: { provider: "zoom" },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+        }),
+      });
+
+      expect(res.status).toBe(400);
+      expect((await res.json()).error.code).toBe("CONFERENCING_NOT_CONNECTED");
+      expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+
+    it("stores a connected provider", async () => {
+      mockGetAvailableConferencingProviders.mockReturnValueOnce(["zoom"]);
+      mockGetConnectedConferencingProviders.mockResolvedValueOnce(["zoom"]);
+      const res = await app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${testApiKey}`,
+        },
+        body: JSON.stringify({
+          title: "Team sync",
+          conferencing: { provider: "zoom" },
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+        }),
+      });
+
+      expect(res.status).toBe(201);
+      expect(mockCreatePoll).toHaveBeenCalledWith(
+        expect.objectContaining({ conferencing: { provider: "zoom" } }),
       );
     });
 

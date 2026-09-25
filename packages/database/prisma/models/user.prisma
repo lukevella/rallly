@@ -81,8 +81,9 @@ model User {
   hostedEventTypes      EventType[]
   hostedSheets          Sheet[]
 
-  calendarConnections CalendarConnection[]
-  credentials         Credential[]
+  calendarConnections     CalendarConnection[]
+  conferencingConnections ConferencingConnection[]
+  credentials             Credential[]
 
   // Default destination calendar for new events
   defaultDestinationCalendarId String?           @map("default_destination_calendar_id")

@@ -21,6 +21,7 @@ import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
+import { CalendarConnectionFlash } from "./components/calendar-connection-flash";
 import { CalendarConnectionList } from "./components/calendar-connection-list";
 import { ConnectCalendarDropdown } from "./components/connect-calendar-dropdown";
 import { DefaultCalendarSelect } from "./components/default-calendar-select";
@@ -42,6 +43,7 @@ export default async function CalendarsPage() {
   return (
     <HydrationBoundary state={dehydrate(trpc.queryClient)}>
       <SettingsPage>
+        <CalendarConnectionFlash />
         <SettingsPageHeader>
           <SettingsPageTitle>
             <Trans i18nKey="calendars" defaults="Calendars" />

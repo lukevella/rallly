@@ -15,8 +15,9 @@ model Credential {
   updatedAt         DateTime       @updatedAt @map("updated_at")
 
   // Relationships
-  calendarConnections CalendarConnection[]
-  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calendarConnections     CalendarConnection[]
+  conferencingConnections ConferencingConnection[]
+  user                    User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Constraints and indexes
   @@unique([userId, provider, providerAccountId], name: "user_provider_account_unique")
@@ -82,4 +83,24 @@ model ProviderCalendar {
   @@index([isPrimary], name: "primary_calendar_idx")
   @@index([lastSyncedAt], name: "sync_time_idx")
   @@map("provider_calendars")
+}
+
+model ConferencingConnection {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  provider          String
+  integrationId     String  @map("integration_id")
+  providerAccountId String  @map("provider_account_id")
+  email             String
+  displayName       String? @map("display_name")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  credential   Credential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+  credentialId String     @map("credential_id")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider, providerAccountId], name: "user_provider_account_unique")
+  @@map("conferencing_connections")
 }

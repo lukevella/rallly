@@ -110,6 +110,14 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string().optional(),
 
     /**
+     * Conferencing integrations (Zoom, Google Meet). The flag needs at least
+     * one provider's OAuth app configured; see createFinalSchema below.
+     */
+    CONFERENCING_ENABLED: z.enum(["true", "false"]).default("false"),
+    ZOOM_CLIENT_ID: z.string().optional(),
+    ZOOM_CLIENT_SECRET: z.string().optional(),
+
+    /**
      * Microsoft Integration
      */
     MICROSOFT_TENANT_ID: z.string().optional().default("common"),
@@ -280,6 +288,9 @@ export const env = createEnv({
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    CONFERENCING_ENABLED: process.env.CONFERENCING_ENABLED,
+    ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID,
+    ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET,
     MICROSOFT_TENANT_ID: process.env.MICROSOFT_TENANT_ID,
     MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
     MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
@@ -315,6 +326,30 @@ export const env = createEnv({
           path: [env.SMTP_USER ? "SMTP_PWD" : "SMTP_USER"],
           message:
             "SMTP_USER and SMTP_PWD must be set together. Set both to use authenticated SMTP, or neither to connect without authentication.",
+        });
+      }
+
+      if (Boolean(env.ZOOM_CLIENT_ID) !== Boolean(env.ZOOM_CLIENT_SECRET)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [env.ZOOM_CLIENT_ID ? "ZOOM_CLIENT_SECRET" : "ZOOM_CLIENT_ID"],
+          message:
+            "ZOOM_CLIENT_ID and ZOOM_CLIENT_SECRET must be set together.",
+        });
+      }
+
+      // A flag that is on with nothing behind it would render an empty
+      // settings page; fail loudly at boot instead of hiding the feature.
+      const hasZoom = Boolean(env.ZOOM_CLIENT_ID && env.ZOOM_CLIENT_SECRET);
+      const hasGoogle = Boolean(
+        env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET,
+      );
+      if (env.CONFERENCING_ENABLED === "true" && !hasZoom && !hasGoogle) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["CONFERENCING_ENABLED"],
+          message:
+            "CONFERENCING_ENABLED is set but no conferencing provider is configured. Set ZOOM_CLIENT_ID and ZOOM_CLIENT_SECRET for Zoom, or GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET for Google Meet, or turn the flag off.",
         });
       }
     }),
