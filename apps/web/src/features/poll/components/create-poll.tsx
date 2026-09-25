@@ -41,12 +41,14 @@ const toPollConferencing = (
     case "zoom":
     case "meet":
       return { provider: data.conferencingProvider };
-    case "custom":
+    case "custom": {
+      const uri = data.conferencingUrl?.trim();
       return {
         provider: "custom" as const,
-        uri: data.conferencingUrl?.trim() ?? "",
-        label: data.conferencingLabel?.trim() || "Video call",
+        label: data.conferencingLabel?.trim() ?? "",
+        ...(uri ? { uri } : {}),
       };
+    }
     default:
       return undefined;
   }

@@ -78,9 +78,12 @@ async function mintConferencing({
     return null;
   }
 
-  // A pasted link is already the stored shape; nothing to mint.
+  // A pasted link is already the stored shape; nothing to mint. A call named
+  // without a link has nothing the event can carry.
   if (conferencing.provider === "custom") {
-    return conferencing;
+    return conferencing.uri
+      ? { provider: "custom", uri: conferencing.uri, label: conferencing.label }
+      : null;
   }
 
   const result = await createConferencingMeeting({
@@ -199,7 +202,7 @@ export const polls = router({
           // hide a scam destination from moderation.
           Conferencing:
             input.conferencing?.provider === "custom"
-              ? `${input.conferencing.label} ${input.conferencing.uri}`
+              ? `${input.conferencing.label} ${input.conferencing.uri ?? ""}`
               : "",
         },
       });

@@ -18,6 +18,14 @@ export function PollConferencingSummary({
   conferencing: PollConferencing;
 }) {
   if (conferencing.provider === "custom") {
+    if (!conferencing.uri) {
+      return (
+        <>
+          <VideoIcon />
+          <span className="truncate">{conferencing.label}</span>
+        </>
+      );
+    }
     const host = getLinkHost(conferencing.uri);
     const showHost = host && host !== conferencing.label.toLowerCase();
     return (

@@ -105,12 +105,18 @@ export function ConferencingField({
     form.setValue("conferencingProvider", "");
     form.setValue("conferencingUrl", "");
     form.setValue("conferencingLabel", "");
-    form.clearErrors(["conferencingProvider", "conferencingUrl"]);
+    form.clearErrors([
+      "conferencingProvider",
+      "conferencingLabel",
+      "conferencingUrl",
+    ]);
   };
 
   const header = (
     <div className="flex items-center justify-between">
-      <FormLabel htmlFor={value === "custom" ? "conferencing-url" : undefined}>
+      <FormLabel
+        htmlFor={value === "custom" ? "conferencing-label" : undefined}
+      >
         <Trans i18nKey="videoCall" defaults="Video call" />
       </FormLabel>
       <Button
@@ -129,16 +135,46 @@ export function ConferencingField({
     return (
       <FormItem>
         {header}
-        <div className="grid gap-2 sm:grid-cols-[1fr_12rem]">
+        <div className="grid gap-2 sm:grid-cols-[12rem_1fr]">
+          <Controller
+            control={form.control}
+            name="conferencingLabel"
+            rules={{
+              validate: (label) =>
+                label?.trim()
+                  ? true
+                  : t("customVideoCallNameRequired", {
+                      defaultValue: "Name the call, like Microsoft Teams.",
+                    }),
+            }}
+            render={({ field, fieldState }) => (
+              <div className="grid gap-2">
+                <Input
+                  {...field}
+                  value={field.value ?? ""}
+                  id="conferencing-label"
+                  type="text"
+                  maxLength={100}
+                  placeholder={t("customVideoCallNamePlaceholder", {
+                    defaultValue: "Microsoft Teams",
+                  })}
+                  aria-invalid={fieldState.error ? true : undefined}
+                />
+                {fieldState.error ? (
+                  <p className="text-destructive text-sm" role="alert">
+                    {fieldState.error.message}
+                  </p>
+                ) : null}
+              </div>
+            )}
+          />
           <Controller
             control={form.control}
             name="conferencingUrl"
             rules={{
               validate: (url) => {
                 if (!url?.trim()) {
-                  return t("customLinkRequired", {
-                    defaultValue: "Paste the link people should join with.",
-                  });
+                  return true;
                 }
                 try {
                   const { protocol } = new URL(url.trim());
@@ -165,7 +201,12 @@ export function ConferencingField({
                   type="text"
                   inputMode="url"
                   autoComplete="url"
-                  placeholder="https://"
+                  aria-label={t("customLinkOptional", {
+                    defaultValue: "Link (optional)",
+                  })}
+                  placeholder={t("customLinkOptional", {
+                    defaultValue: "Link (optional)",
+                  })}
                   aria-invalid={fieldState.error ? true : undefined}
                 />
                 {fieldState.error ? (
@@ -175,16 +216,6 @@ export function ConferencingField({
                 ) : null}
               </div>
             )}
-          />
-          <Input
-            id="conferencing-label"
-            type="text"
-            maxLength={100}
-            aria-label={t("customLinkLabel", { defaultValue: "Label" })}
-            placeholder={t("customLinkLabelPlaceholder", {
-              defaultValue: "Video call",
-            })}
-            {...form.register("conferencingLabel")}
           />
         </div>
       </FormItem>

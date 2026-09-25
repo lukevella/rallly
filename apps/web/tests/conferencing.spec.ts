@@ -126,8 +126,10 @@ test.describe
 
       await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Custom" }).click();
-      await page.getByLabel("Video call").fill("https://meet.jit.si/rallly");
-      await page.getByLabel("Label").fill("Jitsi");
+      await page.getByLabel("Video call").fill("Jitsi");
+      await page
+        .getByLabel("Link (optional)")
+        .fill("https://meet.jit.si/rallly");
 
       const pollPage = await newPollPage.create({ name: `Link poll ${runId}` });
       await pollPage.closeShareDialog();
@@ -138,8 +140,31 @@ test.describe
       });
       expect(poll.conferencing).toEqual({
         provider: "custom",
-        uri: "https://meet.jit.si/rallly",
         label: "Jitsi",
+        uri: "https://meet.jit.si/rallly",
+      });
+    });
+
+    test("a named call needs no link", async () => {
+      const newPollPage = new NewPollPage(page);
+      await newPollPage.goto();
+
+      await page.getByRole("button", { name: "Add location" }).click();
+      await page.getByRole("menuitem", { name: "Custom" }).click();
+      await page.getByLabel("Video call").fill("Microsoft Teams");
+
+      const pollPage = await newPollPage.create({
+        name: `Named poll ${runId}`,
+      });
+      await pollPage.closeShareDialog();
+
+      const poll = await prisma.poll.findFirstOrThrow({
+        where: { title: `Named poll ${runId}` },
+        select: { conferencing: true },
+      });
+      expect(poll.conferencing).toEqual({
+        provider: "custom",
+        label: "Microsoft Teams",
       });
     });
 
@@ -149,7 +174,8 @@ test.describe
 
       await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Custom" }).click();
-      await page.getByLabel("Video call").fill("not a link");
+      await page.getByLabel("Video call").fill("Jitsi");
+      await page.getByLabel("Link (optional)").fill("not a link");
       await page.getByLabel(/title|event/i).fill("Invalid link");
       await page.getByRole("button", { name: /^create poll$/i }).click();
       await expect(

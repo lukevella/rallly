@@ -6,14 +6,16 @@ export const conferencingProviderSchema = z.enum(["zoom", "meet"]);
 export type ConferencingProvider = z.infer<typeof conferencingProviderSchema>;
 
 // What a poll records before there is a link: a provider to mint with at
-// finalize, or a link the organizer pasted (any service, no account needed).
+// finalize, or a call the organizer names themselves (any service, no
+// account needed). The link is optional: most organizers announce the tool
+// first and send the link once the time is set.
 export const pollConferencingSchema = z.discriminatedUnion("provider", [
   z.object({ provider: z.literal("zoom") }),
   z.object({ provider: z.literal("meet") }),
   z.object({
     provider: z.literal("custom"),
-    uri: z.url(),
     label: z.string().trim().min(1).max(100),
+    uri: z.url().optional(),
   }),
 ]);
 export type PollConferencing = z.infer<typeof pollConferencingSchema>;
