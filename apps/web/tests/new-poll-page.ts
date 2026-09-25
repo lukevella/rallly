@@ -20,7 +20,23 @@ export class NewPollPage {
 
     await page.getByLabel(/title|event/i).fill(name);
 
-    await page.getByLabel("Location").fill("Online");
+    // "Add location" is a menu when the organizer can add a video call and a
+    // plain button otherwise; either way the address field appears after.
+    // Exact label: the open menu is also named "Add location". A click that
+    // lands before React hydrates is dropped, so retry until the field shows.
+    const locationField = page.getByLabel("Location", { exact: true });
+    await expect(async () => {
+      await page
+        .getByRole("button", { name: "Add location" })
+        .click({ timeout: 2000 });
+      const addressItem = page.getByRole("menuitem", { name: "Address" });
+      await addressItem.or(locationField).first().waitFor({ timeout: 2000 });
+      if (await addressItem.isVisible()) {
+        await addressItem.click();
+      }
+      await expect(locationField).toBeVisible({ timeout: 2000 });
+    }).toPass();
+    await locationField.fill("Online");
 
     // The description is a rich text editor revealed on demand, so open it, then
     // type into its contenteditable (fill() doesn't work on contenteditable).

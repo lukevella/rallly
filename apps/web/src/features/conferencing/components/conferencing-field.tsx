@@ -1,7 +1,11 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { DropdownMenuItem } from "@rallly/ui/dropdown-menu";
+import {
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from "@rallly/ui/dropdown-menu";
 import { FormItem, FormLabel } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { VideoIcon } from "lucide-react";
@@ -27,8 +31,8 @@ type ConferencingFormValues = {
   conferencingLabel?: string;
 };
 
-// Entries for the "Add video call" menu. Renders nothing once a choice is
-// made: an event carries one meeting link.
+// Menu entries for the shared "Add location" menu. Renders nothing once a
+// choice is made: an event carries one meeting link.
 export function ConferencingProviderMenuItems({
   available,
 }: Pick<ConferencingOptions, "available">) {
@@ -40,7 +44,10 @@ export function ConferencingProviderMenuItems({
   }
 
   return (
-    <>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>
+        <Trans i18nKey="videoCall" defaults="Video call" />
+      </DropdownMenuLabel>
       {available.map((provider) => (
         <DropdownMenuItem
           key={provider}
@@ -64,7 +71,7 @@ export function ConferencingProviderMenuItems({
         <VideoIcon />
         <Trans i18nKey="customVideoCall" defaults="Custom" />
       </DropdownMenuItem>
-    </>
+    </DropdownMenuGroup>
   );
 }
 

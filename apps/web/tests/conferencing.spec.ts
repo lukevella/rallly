@@ -76,7 +76,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add video call" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Zoom" }).click();
 
       const error = page.locator("#create-poll").getByRole("alert");
@@ -86,7 +86,7 @@ test.describe
       ).toHaveAttribute("href", "/settings/conferencing");
 
       await page.getByRole("button", { name: "Remove" }).click();
-      await page.getByRole("button", { name: "Add video call" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await expect(page.getByRole("menuitem", { name: "Zoom" })).toBeVisible();
       await page.keyboard.press("Escape");
     });
@@ -103,7 +103,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add video call" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Zoom" }).click();
       await expect(page.locator("#create-poll").getByRole("alert")).toHaveCount(
         0,
@@ -124,7 +124,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add video call" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Custom" }).click();
       await page.getByLabel("Video call").fill("Jitsi");
       await page
@@ -149,7 +149,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add video call" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Custom" }).click();
       await page.getByLabel("Video call").fill("Microsoft Teams");
 
@@ -172,7 +172,7 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
 
-      await page.getByRole("button", { name: "Add video call" }).click();
+      await page.getByRole("button", { name: "Add location" }).click();
       await page.getByRole("menuitem", { name: "Custom" }).click();
       await page.getByLabel("Video call").fill("Jitsi");
       await page.getByLabel("Link (optional)").fill("not a link");
