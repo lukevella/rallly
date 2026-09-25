@@ -571,6 +571,8 @@ app.post(
             apiVersion: "v1",
             optionCount: poll.options.length,
             hasLocation: !!poll.location,
+            hasConferencing: !!poll.conferencing,
+            conferencingProvider: poll.conferencing?.provider ?? null,
             hasDescription: !!poll.description,
             timeZone: poll.timeZone,
             requireParticipantEmail: input.requireEmail,

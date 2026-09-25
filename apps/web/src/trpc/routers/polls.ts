@@ -373,6 +373,8 @@ export const polls = router({
           source: "web",
           optionCount: poll.options.length,
           hasLocation: !!location,
+          hasConferencing: !!conferencing,
+          conferencingProvider: conferencing?.provider ?? null,
           hasDescription: !!description,
           timezone: input.timeZone,
           disableComments: poll.disableComments,
