@@ -9,6 +9,10 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
+import { getAvailableConferencingProviders } from "@/features/conferencing/constants";
+import { getConnectedConferencingProviders } from "@/features/conferencing/data";
+import type { PollConferencing } from "@/features/conferencing/schema";
+import { moderatedLinkText } from "@/features/conferencing/utils";
 import { moderateContent } from "@/features/moderation/mutations";
 import { MAX_POLL_OPTIONS } from "@/features/poll/constants";
 import {
@@ -100,6 +104,7 @@ function toPollResponseBody(poll: {
   title: string;
   description: string | null;
   location: string | null;
+  conferencing: PollConferencing | null;
   timeZone: string | null;
   status: string;
   kind: PollKind;
@@ -125,6 +130,7 @@ function toPollResponseBody(poll: {
       title: poll.title,
       description: poll.description,
       location: poll.location,
+      conferencing: poll.conferencing ?? null,
       timeZone: poll.timeZone,
       status: poll.status,
       kind: poll.kind,
@@ -304,7 +310,7 @@ async function buildOpenApiSpec() {
           "| 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |",
           "| 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |",
           "| 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |",
-          "| 400 | `INAPPROPRIATE_CONTENT` | The title, description or location was flagged by content moderation |",
+          "| 400 | `CONFERENCING_UNAVAILABLE` | The requested video call provider is not offered on this instance |\n| 400 | `CONFERENCING_NOT_CONNECTED` | The organizer has not connected an account for the requested video call provider |\n| 400 | `INAPPROPRIATE_CONTENT` | The title, description, location or video call was flagged by content moderation |",
           "| 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked, or its owner is banned |",
           "| 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |",
           "| 404 | `NOT_FOUND` | No route matches the method and path |",
@@ -480,6 +486,35 @@ app.post(
       organizerUserId = spaceMember.userId;
     }
 
+    // Same gates as the app: the instance must offer the provider and the
+    // organizer must have linked an account, since their account hosts the
+    // meeting at finalize. A custom call needs neither.
+    const conferencing = input.conferencing;
+    if (conferencing && conferencing.provider !== "custom") {
+      if (
+        !getAvailableConferencingProviders().includes(conferencing.provider)
+      ) {
+        return c.json(
+          apiError(
+            "CONFERENCING_UNAVAILABLE",
+            `${conferencing.provider} is not available on this instance.`,
+          ),
+          400,
+        );
+      }
+      const connected =
+        await getConnectedConferencingProviders(organizerUserId);
+      if (!connected.includes(conferencing.provider)) {
+        return c.json(
+          apiError(
+            "CONFERENCING_NOT_CONNECTED",
+            `The organizer has not connected a ${conferencing.provider} account.`,
+          ),
+          400,
+        );
+      }
+    }
+
     // Same gate as the app. The strike goes to the key holder, who is the
     // paying account, whichever member the poll is organized by.
     const moderation = await moderateContent({
@@ -488,6 +523,10 @@ app.post(
         Title: input.title,
         Description: input.description ?? "",
         Location: input.location ?? "",
+        Conferencing:
+          conferencing?.provider === "custom"
+            ? `${conferencing.label} ${moderatedLinkText(conferencing.uri)}`
+            : "",
       },
     });
 
@@ -573,6 +612,7 @@ app.post(
         title: input.title,
         description: input.description,
         location: input.location,
+        conferencing,
         requireParticipantEmail: input.requireEmail,
         hideParticipants: input.hideParticipants,
         hideScores: input.hideScores,
@@ -643,6 +683,7 @@ app.post(
       title: input.title,
       description: input.description,
       location: input.location,
+      conferencing,
       timeZone,
       requireParticipantEmail: input.requireEmail,
       hideParticipants: input.hideParticipants,

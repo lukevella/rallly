@@ -5,6 +5,8 @@ import { prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { revalidatePath } from "next/cache";
 import { recordPollActivities } from "@/features/activity/mutations";
+import { parsePollConferencing } from "@/features/conferencing/data";
+import type { PollConferencing } from "@/features/conferencing/schema";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
@@ -18,6 +20,7 @@ export type CreatePollParams = {
   title: string;
   description?: string;
   location?: string;
+  conferencing?: PollConferencing;
   timeZone?: string;
   requireParticipantEmail?: boolean;
   hideParticipants?: boolean;
@@ -35,6 +38,7 @@ const pollResponseSelect = {
   title: true,
   description: true,
   location: true,
+  conferencing: true,
   timeZone: true,
   status: true,
   kind: true,
@@ -70,16 +74,28 @@ const pollResponseSelect = {
   },
 } satisfies Prisma.PollSelect;
 
-const toPollResponse = <T extends { _count: { participants: number } }>({
+const toPollResponse = <
+  T extends {
+    id: string;
+    conferencing: Prisma.JsonValue | null;
+    _count: { participants: number };
+  },
+>({
   _count,
+  conferencing,
   ...poll
-}: T) => ({ ...poll, participantCount: _count.participants });
+}: T) => ({
+  ...poll,
+  conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
+  participantCount: _count.participants,
+});
 
 export const createPoll = async ({
   userId,
   title,
   description,
   location,
+  conferencing,
   timeZone,
   requireParticipantEmail,
   hideParticipants,
@@ -98,6 +114,7 @@ export const createPoll = async ({
         title,
         description,
         location,
+        conferencing,
         timeZone,
         requireParticipantEmail,
         hideParticipants,

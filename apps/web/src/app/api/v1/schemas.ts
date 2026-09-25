@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { pollConferencingSchema } from "@/features/conferencing/schema";
 import { MAX_POLL_TITLE_LENGTH } from "@/features/poll/schema";
 import { MAX_SLOT_GENERATION_DAYS } from "@/lib/datetime/slot-generator";
 import { timezoneSchema } from "@/lib/utils/timezone-schema";
@@ -174,7 +175,22 @@ const pollSettingsFields = {
     .max(1000)
     .optional()
     .meta({ example: "Pick a time that works for everyone" }),
-  location: z.string().trim().max(255).optional().meta({ example: "Zoom" }),
+  location: z.string().trim().max(255).optional().meta({
+    description: "Where the event takes place, as free text.",
+    example: "Conference Room A",
+  }),
+  conferencing: pollConferencingSchema.optional().meta({
+    description:
+      "The video call for the event. `zoom` and `meet` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
+    examples: [
+      { provider: "zoom" },
+      {
+        provider: "custom",
+        label: "Microsoft Teams",
+        uri: "https://teams.microsoft.com/l/meetup-join/abc",
+      },
+    ],
+  }),
   requireEmail: z.boolean().optional().meta({
     description: "Require participants to provide their email address",
     example: true,
@@ -221,6 +237,7 @@ const createDatePollInputSchema = z
     }),
     description: pollSettingsFields.description,
     location: pollSettingsFields.location,
+    conferencing: pollSettingsFields.conferencing,
     requireEmail: pollSettingsFields.requireEmail,
     hideParticipants: pollSettingsFields.hideParticipants,
     hideScores: pollSettingsFields.hideScores,
@@ -242,6 +259,7 @@ const createTimePollInputSchema = z
     }),
     description: pollSettingsFields.description,
     location: pollSettingsFields.location,
+    conferencing: pollSettingsFields.conferencing,
     requireEmail: pollSettingsFields.requireEmail,
     hideParticipants: pollSettingsFields.hideParticipants,
     hideScores: pollSettingsFields.hideScores,
@@ -425,7 +443,12 @@ const pollSchema = z
     description: z.string().nullable().meta({
       example: "Pick a time that works for everyone",
     }),
-    location: z.string().nullable().meta({ example: "Zoom" }),
+    location: z.string().nullable().meta({ example: "Conference Room A" }),
+    conferencing: pollConferencingSchema.nullable().meta({
+      description:
+        "The video call for the event, or `null`. A `zoom` or `meet` entry has no link until the poll is finalized; a `custom` entry carries the organizer's label and, when given, the link.",
+      example: { provider: "zoom" },
+    }),
     timeZone: z.string().nullable().meta({ example: "Europe/London" }),
     status: pollStatusSchema,
     kind: pollKindSchema,

@@ -260,6 +260,7 @@ export async function listPolls({
       title: true,
       description: true,
       location: true,
+      conferencing: true,
       timeZone: true,
       status: true,
       kind: true,
@@ -303,8 +304,9 @@ export async function listPolls({
   const page = hasMore ? polls.slice(0, limit) : polls;
 
   return {
-    polls: page.map(({ _count, ...poll }) => ({
+    polls: page.map(({ _count, conferencing, ...poll }) => ({
       ...poll,
+      conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
       participantCount: _count.participants,
     })),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
@@ -601,6 +603,7 @@ export async function getPollWithOptions({
       title: true,
       description: true,
       location: true,
+      conferencing: true,
       timeZone: true,
       status: true,
       kind: true,
@@ -641,8 +644,12 @@ export async function getPollWithOptions({
     return null;
   }
 
-  const { _count, ...rest } = poll;
-  return { ...rest, participantCount: _count.participants };
+  const { _count, conferencing, ...rest } = poll;
+  return {
+    ...rest,
+    conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
+    participantCount: _count.participants,
+  };
 }
 
 /**

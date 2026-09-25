@@ -25,7 +25,9 @@ Every failure is `application/json` with the same shape:
 | 400 | `INVALID_AUTHORIZATION_HEADER` | The `Authorization` header is not `Bearer <key>` |
 | 400 | `ORGANIZER_NOT_MEMBER` | The organizer email is not a member of the space |
 | 400 | `TOO_MANY_OPTIONS` | More than the maximum number of poll options |
-| 400 | `INAPPROPRIATE_CONTENT` | The title, description or location was flagged by content moderation |
+| 400 | `CONFERENCING_UNAVAILABLE` | The requested video call provider is not offered on this instance |
+| 400 | `CONFERENCING_NOT_CONNECTED` | The organizer has not connected an account for the requested video call provider |
+| 400 | `INAPPROPRIATE_CONTENT` | The title, description, location or video call was flagged by content moderation |
 | 401 | `UNAUTHORIZED` | The API key is missing, invalid, expired or revoked, or its owner is banned |
 | 403 | `SPACE_NOT_PRO` | The space behind the key has no Pro subscription |
 | 404 | `NOT_FOUND` | No route matches the method and path |

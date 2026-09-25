@@ -72,3 +72,17 @@ export function getConferencingUri(conferencing: Conferencing): string {
   }
   return conferencing.uri;
 }
+
+// What moderation sees of a pasted link: the origin and path only. A Zoom
+// join link carries the meeting password in its query string.
+export function moderatedLinkText(uri: string | undefined) {
+  if (!uri) {
+    return "";
+  }
+  try {
+    const { origin, pathname } = new URL(uri);
+    return `${origin}${pathname}`;
+  } catch {
+    return uri;
+  }
+}

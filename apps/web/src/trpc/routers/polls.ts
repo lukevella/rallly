@@ -19,6 +19,7 @@ import { createConferencingMeeting } from "@/features/conferencing/service";
 import {
   conferencingProviderLabels,
   getConferencingUri,
+  moderatedLinkText,
 } from "@/features/conferencing/utils";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
@@ -61,18 +62,6 @@ const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
   dayjs(option.startTime)
     .add(option.duration === 0 ? 24 * 60 : option.duration, "minute")
     .isAfter(dayjs());
-
-function moderatedLinkText(uri: string | undefined) {
-  if (!uri) {
-    return "";
-  }
-  try {
-    const { origin, pathname } = new URL(uri);
-    return `${origin}${pathname}`;
-  } catch {
-    return uri;
-  }
-}
 
 async function mintConferencing({
   userId,
