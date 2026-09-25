@@ -72,3 +72,13 @@ export function getConferencingUri(conferencing: Conferencing): string {
   }
   return conferencing.uri;
 }
+
+// The host a pasted link points at, shown next to the organizer's label so a
+// label like "Zoom" cannot mask where the link really goes.
+export function getLinkHost(uri: string): string | null {
+  try {
+    return new URL(uri).hostname || null;
+  } catch {
+    return null;
+  }
+}

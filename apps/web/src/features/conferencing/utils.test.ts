@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { conferencingSchema } from "./schema";
 import {
   getConferencingUri,
+  getLinkHost,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
   zoomMeetingResponseSchema,
@@ -64,5 +65,17 @@ describe("meetSpaceToConferencing", () => {
     expect(
       meetSpaceResponseSchema.safeParse({ name: "spaces/abc" }).success,
     ).toBe(false);
+  });
+});
+
+describe("getLinkHost", () => {
+  it("returns the hostname of a pasted link", () => {
+    expect(getLinkHost("https://meet.example.com/abc?x=1")).toBe(
+      "meet.example.com",
+    );
+  });
+
+  it("returns null for a value that is not a URL", () => {
+    expect(getLinkHost("not a url")).toBeNull();
   });
 });

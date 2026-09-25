@@ -195,9 +195,11 @@ export const polls = router({
           Title: input.title,
           Description: input.description || "",
           Location: input.location || "",
+          // The pasted URL goes in with its label so a benign label cannot
+          // hide a scam destination from moderation.
           Conferencing:
             input.conferencing?.provider === "custom"
-              ? input.conferencing.label
+              ? `${input.conferencing.label} ${input.conferencing.uri}`
               : "",
         },
       });
