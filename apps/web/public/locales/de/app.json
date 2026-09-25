@@ -12,6 +12,8 @@
   "accountDeletionCancelled": "Dein Konto ist nicht mehr zur Löschung vorgemerkt",
   "accountMenu": "Konto-Menü",
   "accountNotLinkedDescription": "Ein Benutzer mit dieser E-Mail existiert bereits. Bitte melde dich mit der ursprünglichen Methode an.",
+  "actionErrorConferencingFailed": "Wir konnten den Besprechungslink nicht erstellen. Überprüfe dein Konto in den Konferenzeinstellungen und versuche es erneut.",
+  "actionErrorConferencingNotConnected": "Dein Videoanrufkonto ist nicht verbunden. Verbinde es in den Konferenzeinstellungen und versuche es erneut.",
   "actionErrorForbidden": "Du bist nicht berechtigt, diese Aktion auszuführen",
   "actionErrorInternalServerError": "Ein interner Serverfehler ist aufgetreten",
   "actionErrorInvalidSession": "Deine Sitzung ist nicht mehr gültig",
