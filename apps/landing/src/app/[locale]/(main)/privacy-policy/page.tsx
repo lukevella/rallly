@@ -104,32 +104,24 @@ export default async function PrivacyPolicy() {
         <h2>Google user data</h2>
 
         <p>
-          If you connect a Google account, Rallly accesses only the data needed
-          for the features you turn on:
+          If you sign in with Google, we receive your name, email address and
+          profile picture to create and identify your account.
         </p>
 
-        <ul>
-          <li>
-            Google Calendar: the email address of the connected account and the
-            list of your calendars with their details, such as name, time zone
-            and your access level, so you can choose which calendars to use in
-            Rallly.
-          </li>
-          <li>
-            Google Meet: when you schedule a poll that uses Google Meet as its
-            video call, Rallly creates one Meet meeting space in your account
-            and stores its join link on the event. Rallly does not read, list or
-            change any other meetings.
-          </li>
-        </ul>
+        <p>
+          If you connect Google Meet, Rallly creates a Meet meeting space in
+          your account when you schedule a poll that uses Google Meet as its
+          video call, and stores its join link on the event. We also store the
+          email address of the connected account so you can see which account is
+          connected. Rallly does not read, list or change any other meetings.
+        </p>
 
         <p>
           We store the OAuth tokens needed to provide these features along with
           the data described above. We do not sell Google user data, use it for
           advertising, use it to train AI models, or share it with third parties
           except as needed to provide the service. You can disconnect Google
-          Calendar or Google Meet in your settings, and revoke Rallly&apos;s
-          access at any time at{" "}
+          Meet in your settings, and revoke Rallly&apos;s access at any time at{" "}
           <a href="https://myaccount.google.com/permissions">
             myaccount.google.com/permissions
           </a>
