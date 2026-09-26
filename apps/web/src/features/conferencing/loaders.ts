@@ -30,8 +30,11 @@ export const loadConferencingOptions = cache(
     email: string | null;
   }) => {
     const available = getAvailableConferencingProvidersFor({ email });
+    // A provider the user linked before it was gated is not offered either.
     const connected = userId
-      ? await getConnectedConferencingProviders(userId)
+      ? (await getConnectedConferencingProviders(userId)).filter((provider) =>
+          available.includes(provider),
+        )
       : [];
     return { available, connected };
   },
