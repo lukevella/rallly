@@ -33,10 +33,6 @@
             ]
           },
           {
-            "group": "Integrations",
-            "pages": ["integrations/zoom"]
-          },
-          {
             "group": "Guides",
             "pages": ["guide/participant-guide", "guide/content-moderation"]
           },
