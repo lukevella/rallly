@@ -97,6 +97,7 @@ const columns = [
           .map((other) => ({
             id: other.member.id,
             name: other.member.name,
+            image: other.member.image,
             isActor: other.isActor,
           }))}
       />

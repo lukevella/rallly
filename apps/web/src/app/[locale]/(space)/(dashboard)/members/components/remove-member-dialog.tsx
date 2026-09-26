@@ -19,13 +19,28 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import React from "react";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/i18n/client";
 
 export type RemovalRecipient = {
   id: string;
   name: string;
+  image?: string;
   isActor: boolean;
 };
+
+function RecipientLabel({ recipient }: { recipient: RemovalRecipient }) {
+  return (
+    <span className="flex items-center gap-2">
+      <OptimizedAvatarImage
+        src={recipient.image}
+        name={recipient.name}
+        size="sm"
+      />
+      <span className="truncate">{recipient.name}</span>
+    </span>
+  );
+}
 
 export function RemoveMemberDialog({
   memberName,
@@ -85,7 +100,10 @@ export function RemoveMemberDialog({
             </FieldLabel>
             <Select
               items={Object.fromEntries(
-                recipients.map((recipient) => [recipient.id, recipient.name]),
+                recipients.map((recipient) => [
+                  recipient.id,
+                  <RecipientLabel key={recipient.id} recipient={recipient} />,
+                ]),
               )}
               value={toMemberId}
               onValueChange={(value) => {
@@ -100,7 +118,7 @@ export function RemoveMemberDialog({
               <SelectContent>
                 {recipients.map((recipient) => (
                   <SelectItem key={recipient.id} value={recipient.id}>
-                    {recipient.name}
+                    <RecipientLabel recipient={recipient} />
                   </SelectItem>
                 ))}
               </SelectContent>
