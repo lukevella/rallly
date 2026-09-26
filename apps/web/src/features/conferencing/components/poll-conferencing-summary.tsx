@@ -7,48 +7,54 @@ import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { Trans } from "@/i18n/client";
 
 // What the organizer asked for, as shown on the poll page. A provider has no
-// link until the poll is finalized, so it shows as the service name; a
-// pasted link is already joinable.
+// link until the poll is finalized and the meeting is minted; a pasted link
+// is joinable from the start.
 export function PollConferencingSummary({
   conferencing,
+  meetingUri,
 }: {
   conferencing: PollConferencing;
+  meetingUri?: string | null;
 }) {
-  if (conferencing.provider === "custom") {
-    if (!conferencing.uri) {
-      return (
+  const joinUri =
+    meetingUri ??
+    (conferencing.provider === "custom" ? conferencing.uri : undefined);
+
+  return (
+    <>
+      {conferencing.provider === "custom" ? (
         <>
           <VideoIcon />
           <span className="truncate">{conferencing.label}</span>
         </>
-      );
-    }
-    return (
-      <>
-        <VideoIcon />
-        <a
-          href={conferencing.uri}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex min-w-0 items-center gap-1 hover:text-foreground"
-        >
-          <span className="truncate">{conferencing.label}</span>
-          <ArrowUpRightIcon
-            aria-hidden="true"
-            className="transition-colors group-hover:text-foreground"
+      ) : (
+        <>
+          <ConferencingProviderIcon
+            provider={conferencing.provider}
+            size={16}
           />
-          <span className="sr-only">
-            <Trans i18nKey="opensInNewTab" defaults="(opens in new tab)" />
+          <span>{conferencingProviderLabels[conferencing.provider]}</span>
+        </>
+      )}
+      {joinUri ? (
+        <>
+          <span aria-hidden="true" className="text-muted-foreground">
+            ·
           </span>
-        </a>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <ConferencingProviderIcon provider={conferencing.provider} size={16} />
-      <span>{conferencingProviderLabels[conferencing.provider]}</span>
+          <a
+            href={joinUri}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-0.5 font-medium text-link"
+          >
+            <Trans i18nKey="joinMeeting" defaults="Join" />
+            <ArrowUpRightIcon aria-hidden="true" className="text-current!" />
+            <span className="sr-only">
+              <Trans i18nKey="opensInNewTab" defaults="(opens in new tab)" />
+            </span>
+          </a>
+        </>
+      ) : null}
     </>
   );
 }

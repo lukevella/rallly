@@ -3,7 +3,11 @@ import "server-only";
 import type { PollStatus, Prisma, VoteType } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { shortUrl } from "@rallly/utils/absolute-url";
-import { parsePollConferencing } from "@/features/conferencing/data";
+import {
+  parseConferencing,
+  parsePollConferencing,
+} from "@/features/conferencing/data";
+import { getConferencingUri } from "@/features/conferencing/utils";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { VOTE_TYPES } from "@/features/poll/constants";
 import type {
@@ -746,6 +750,7 @@ export async function getPollDetails({
           end: true,
           allDay: true,
           status: true,
+          conferencing: true,
         },
       },
     },
@@ -769,6 +774,15 @@ export async function getPollDetails({
     conferencing,
     ...pollFields
   } = poll;
+
+  // The minted meeting is already public through the event's calendar
+  // links, which this page offers to anyone holding the poll link.
+  const eventConferencing =
+    scheduledEvent && scheduledEvent.status !== "canceled"
+      ? parseConferencing(scheduledEvent.conferencing, {
+          scheduledEventId: scheduledEvent.id,
+        })
+      : null;
 
   return {
     ...pollFields,
@@ -799,6 +813,9 @@ export async function getPollDetails({
                   60_000,
               ),
           status: scheduledEvent.status,
+          conferencingUri: eventConferencing
+            ? getConferencingUri(eventConferencing)
+            : null,
         }
       : null,
     inviteLink: shortUrl(`/invite/${poll.id}`),
