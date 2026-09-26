@@ -71,6 +71,7 @@ export function ConferencingProviderList({
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       variant="destructive"
+                      disabled={disconnect.isPending}
                       onClick={() => {
                         toast.promise(
                           disconnect.mutateAsync({ id: connection.id }),
