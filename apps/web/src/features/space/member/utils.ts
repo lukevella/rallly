@@ -18,3 +18,21 @@ export function effectiveSpaceMemberWhere({ userId }: { userId: string }) {
     OR: [{ space: { tier: "pro" as const } }, { space: { ownerId: userId } }],
   };
 }
+
+/**
+ * The same rule as effectiveSpaceMemberWhere for a membership already in
+ * hand. Keep the two in step.
+ */
+export function isEffectiveSpaceMember({
+  userId,
+  space,
+}: {
+  userId: string;
+  space: { tier: "hobby" | "pro"; ownerId: string };
+}) {
+  if (!isBillingEnabled) {
+    return true;
+  }
+
+  return space.tier === "pro" || space.ownerId === userId;
+}

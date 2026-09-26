@@ -19,6 +19,9 @@ import {
   inviteMemberSchema,
   removeMemberSchema,
 } from "@/features/space/member/schema";
+import { isEffectiveSpaceMember } from "@/features/space/member/utils";
+import { getDeviceTimeZone } from "@/lib/datetime/server";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -184,8 +187,35 @@ export const removeMemberAction = authActionClient
       });
     }
 
+    // The recipient must be someone who can actually take the content over:
+    // a current, effective member of this space other than the one leaving.
+    const recipient = await getMember(parsedInput.content.toMemberId);
+
+    if (
+      !recipient ||
+      recipient.spaceId !== space.id ||
+      recipient.id === member.id ||
+      !isEffectiveSpaceMember({ userId: recipient.userId, space })
+    ) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "The recipient must be an active member of this space",
+      });
+    }
+
+    // Live is measured against the viewer's present, so the device zone
+    // decides which events are still ahead; the stored preference is the
+    // fallback for devices whose zone cookie hasn't been set yet.
+    const timeZone =
+      (await getDeviceTimeZone()) ??
+      normalizeTimeZone(ctx.user.timeZone) ??
+      "UTC";
+
     const { removedUserId, memberCount } = await removeMember({
       memberId: parsedInput.memberId,
+      transferToUserId: recipient.userId,
+      now: new Date(),
+      timeZone,
     });
 
     identifyGroup({

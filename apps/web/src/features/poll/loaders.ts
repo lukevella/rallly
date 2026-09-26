@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import {
   canUserManagePoll,
+  countOpenPollsByCreator,
   getPoll,
   getPollAvailability,
   getPollDetails,
@@ -18,12 +19,21 @@ import {
   filterCommentsForViewer,
   maskParticipantsForViewer,
 } from "@/features/poll/utils";
-import { loadActiveSpaceContentScope } from "@/features/space/loaders";
+import {
+  loadActiveSpace,
+  loadActiveSpaceContentScope,
+} from "@/features/space/loaders";
 import { getSession } from "@/lib/auth";
 
 export const loadPollStatusCounts = cache(async () => {
   const scope = await loadActiveSpaceContentScope();
   return getPollStatusCounts({ scope });
+});
+
+/** Open polls per creator in the active space, for the members page. */
+export const loadOpenPollCountsByCreator = cache(async () => {
+  const space = await loadActiveSpace();
+  return countOpenPollsByCreator({ spaceId: space.id });
 });
 
 export const loadPoll = cache(async (pollId: string) => {

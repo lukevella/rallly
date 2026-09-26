@@ -2,8 +2,25 @@ import "server-only";
 
 import { prisma } from "@rallly/database";
 import type { MemberDTO, MemberInviteDTO } from "@/features/space/member/types";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { fromDBRole } from "@/features/space/utils";
+
+/** Whether the user is currently an effective member of the space. */
+export async function hasEffectiveMembership({
+  spaceId,
+  userId,
+}: {
+  spaceId: string;
+  userId: string;
+}) {
+  const membership = await prisma.spaceMember.findFirst({
+    where: { spaceId, ...effectiveSpaceMemberWhere({ userId }) },
+    select: { id: true },
+  });
+
+  return membership !== null;
+}
 
 export async function getInvite(inviteId: string) {
   return prisma.spaceMemberInvite.findUnique({

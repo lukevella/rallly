@@ -431,6 +431,29 @@ export const getPolls = async ({
   };
 };
 
+/**
+ * Open polls per creator across the whole space, for the member removal
+ * dialog: the admin removing someone needs the count whatever the
+ * collaboration setting, since the content changes hands.
+ */
+export async function countOpenPollsByCreator({
+  spaceId,
+}: {
+  spaceId: AuthorizedSpaceId;
+}) {
+  const rows = await prisma.poll.groupBy({
+    by: ["userId"],
+    where: { spaceId, status: "open", deleted: false, userId: { not: null } },
+    _count: { _all: true },
+  });
+
+  return new Map(
+    rows.flatMap((row) =>
+      row.userId ? [[row.userId, row._count._all] as const] : [],
+    ),
+  );
+}
+
 export const getPollStatusCounts = async ({
   scope,
 }: {

@@ -8,9 +8,37 @@ import { parseLocation } from "@/features/location/data";
 import type { Location } from "@/features/location/schema";
 // From lib, not features/space: space imports this feature for its loaders,
 // so importing space back would create a feature cycle.
-import type { SpaceContentScope } from "@/lib/tenant-scope";
+import type { AuthorizedSpaceId, SpaceContentScope } from "@/lib/tenant-scope";
 import type { Status } from "./schema";
-import { pastScheduledEventWhere, upcomingScheduledEventWhere } from "./utils";
+import {
+  liveScheduledEventWhere,
+  pastScheduledEventWhere,
+  upcomingScheduledEventWhere,
+} from "./utils";
+
+/**
+ * Live events (see liveScheduledEventWhere) per host across the whole
+ * space, for the member removal dialog: the admin removing someone needs
+ * the count whatever the collaboration setting, since the content changes
+ * hands.
+ */
+export async function countLiveEventsByHost({
+  spaceId,
+  now,
+  timeZone,
+}: {
+  spaceId: AuthorizedSpaceId;
+  now: Date;
+  timeZone: string;
+}) {
+  const rows = await prisma.scheduledEvent.groupBy({
+    by: ["userId"],
+    where: { spaceId, ...liveScheduledEventWhere({ now, timeZone }) },
+    _count: { _all: true },
+  });
+
+  return new Map(rows.map((row) => [row.userId, row._count._all]));
+}
 
 export function getPublicScheduledEvent(id: string) {
   return prisma.scheduledEvent.findUnique({

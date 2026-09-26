@@ -18,6 +18,10 @@ type MemberRow = {
   canUpdate: boolean;
   canDelete: boolean;
   inactive: boolean;
+  isActor: boolean;
+  // What the member still has running here; removal hands it over.
+  openPollCount: number;
+  liveEventCount: number;
 };
 
 const columnHelper = createColumnHelper<MemberRow>();
@@ -77,11 +81,24 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: () => <Trans i18nKey="membersListActions" defaults="Actions" />,
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <MemberDropdownMenu
         member={row.original.member}
         canUpdate={row.original.canUpdate}
         canDelete={row.original.canDelete}
+        openPollCount={row.original.openPollCount}
+        liveEventCount={row.original.liveEventCount}
+        // Anyone still active here can take the leaver's content over.
+        recipients={table.options.data
+          .filter(
+            (other) =>
+              other.member.id !== row.original.member.id && !other.inactive,
+          )
+          .map((other) => ({
+            id: other.member.id,
+            name: other.member.name,
+            isActor: other.isActor,
+          }))}
       />
     ),
   }),
