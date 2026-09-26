@@ -1,0 +1,112 @@
+---
+icon: video
+title: Zoom
+description: Connect your Zoom account so Rallly creates the meeting link when you finalize a poll
+---
+
+With the Zoom integration, Rallly creates a Zoom meeting on your account at the moment you finalize a poll. The join link goes into the event, the calendar invite and the confirmation emails, so participants never wait for a link to follow.
+
+## How it works
+
+1. You connect your Zoom account once, from your settings.
+2. When you create a poll, you choose Zoom as the video call. The poll shows "Zoom" to participants while voting is open; there is no link yet.
+3. When you finalize the poll, Rallly creates a Zoom meeting for the chosen time on your Zoom account and attaches the join link to the event.
+
+The meeting is created on the Zoom account you connected, so it follows that account's settings, such as waiting rooms, passcodes and recording defaults. Rallly does not change those settings.
+
+## Requirements
+
+- A Zoom account. A free Zoom plan is enough.
+- The Zoom integration must be enabled on the Rallly instance you use. On rallly.co it is available to all accounts; on a self-hosted instance the administrator turns it on (see [Configuration](/self-hosting/configuration)).
+- Finalizing a poll is a Pro feature on rallly.co. Connecting Zoom and choosing it for a poll works on every plan; the meeting is created when the poll is finalized.
+
+## Adding the app
+
+<Steps>
+  <Step title="Open Conferencing settings">
+    In Rallly, open **Settings** from the sidebar and choose **Conferencing**.
+  </Step>
+  <Step title="Connect your account">
+    Click **Connect account** and choose **Zoom**. You are sent to Zoom to sign in and approve the connection.
+  </Step>
+  <Step title="Approve the permissions">
+    Zoom shows what Rallly is asking for (listed under [Permissions](#permissions)). Click **Allow**. You are returned to Rallly and your Zoom account appears in the list of connected accounts.
+  </Step>
+</Steps>
+
+You can connect one Zoom account per Rallly account. To switch to a different Zoom account, remove the current one first.
+
+## Using the integration
+
+### Choosing Zoom for a poll
+
+When creating a poll, click **Add location** and choose **Zoom** under **Video call**. The form shows "Zoom" as the video call for this poll. If your Zoom account is not connected, the form tells you so and links to Conferencing settings.
+
+Participants see "Zoom" on the poll page while voting is open. No meeting exists yet.
+
+### Finalizing the poll
+
+When you finalize the poll and pick the winning time, Rallly:
+
+1. Creates a scheduled Zoom meeting on your account for that date and time, using the poll title as the meeting topic.
+2. Attaches the join link to the event.
+3. Includes the link in the calendar invite (`.ics`) and in the confirmation emails sent to you and to participants.
+
+The meeting also appears in your Zoom account under **Meetings**, where you can edit or delete it like any other meeting.
+
+If the meeting cannot be created, for example because the Zoom connection has expired, the poll stays open and Rallly shows an error. Reconnect your account in Conferencing settings and finalize again.
+
+### Which account hosts the meeting
+
+The meeting is created on the Zoom account of the poll's organizer. If a space member finalizes a poll organized by someone else, the meeting is still created on the organizer's Zoom account.
+
+## Permissions
+
+When you connect, Rallly asks Zoom for these permissions:
+
+| Permission | Why |
+| --- | --- |
+| View your user information (`user:read:user`) | To show which Zoom account is connected, by name and email, and to tell accounts apart. |
+| Create meetings (`meeting:write:meeting`) | To create the meeting when you finalize a poll. |
+
+Rallly does not read your existing meetings, recordings, contacts or chat, and does not join or record meetings.
+
+## Data Rallly stores
+
+For a connected Zoom account, Rallly stores:
+
+- Your Zoom account id, display name and email address, to show the connection in your settings.
+- The access token and refresh token Zoom issues, encrypted at rest, so Rallly can create meetings on your behalf without asking you to sign in each time.
+
+For each finalized poll, Rallly stores the meeting id, join link and passcode of the meeting it created, as part of the event.
+
+Rallly does not store the content of any meeting.
+
+## Removing the app
+
+### From Rallly
+
+1. Open **Settings**, then **Conferencing**.
+2. On your Zoom account, click the **More options** button and choose **Disconnect**.
+
+The connection is removed immediately. Polls that already chose Zoom keep that choice but can no longer be finalized with a Zoom link until an account is connected again. Meetings Rallly already created stay in your Zoom account; delete them from Zoom if you no longer need them.
+
+### From Zoom
+
+You can also remove the app from the Zoom side:
+
+1. Sign in to the [Zoom App Marketplace](https://marketplace.zoom.us/).
+2. Click **Manage**, then **Added Apps**.
+3. Find **Rallly** and click **Remove**.
+
+Removing the app from Zoom revokes Rallly's access. Disconnect the account in Rallly as well so it no longer appears in your settings.
+
+## Troubleshooting
+
+**"Zoom is not connected" when creating a poll.** Your Rallly account has no Zoom connection, or it was removed. Connect one in Conferencing settings and choose Zoom again.
+
+**Finalizing fails with a video call error.** The Zoom connection has expired or was revoked on the Zoom side. Disconnect and reconnect the account, then finalize again. The poll is unchanged until finalizing succeeds.
+
+**The meeting was created on the wrong account.** The meeting is always created on the poll organizer's connected Zoom account. Check which account is connected in Conferencing settings.
+
+Still stuck? [Contact support](/contact/support).
