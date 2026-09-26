@@ -23,11 +23,17 @@ import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
-async function ConnectAction() {
+// The page exists for a user only while some provider is offered to them.
+async function AvailabilityGate() {
   const providers = await loadAvailableConferencingProviders();
   if (providers.length === 0) {
-    return null;
+    notFound();
   }
+  return null;
+}
+
+async function ConnectAction() {
+  const providers = await loadAvailableConferencingProviders();
   return <ConnectConferencingDropdown providers={providers} />;
 }
 
@@ -38,6 +44,9 @@ export default function ConferencingPage() {
 
   return (
     <SettingsPage>
+      <Suspense fallback={null}>
+        <AvailabilityGate />
+      </Suspense>
       <ConferencingConnectionFlash />
       <SettingsPageHeader>
         <SettingsPageTitle>

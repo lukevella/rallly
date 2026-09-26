@@ -20,20 +20,33 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
   return providers;
 }
 
-// Until Zoom publishes the app, only Zoom's reviewers and the accounts that
-// own it can authorize it, so Zoom is offered to the addresses listed here
-// alone. Unset, as it is once the app is published, Zoom is open to everyone.
-export function isZoomAllowedFor(email: string | null) {
-  const allowlist = process.env.ZOOM_ALLOWED_EMAILS;
+// While a provider's allowlist is set, only the listed accounts are offered
+// it, for a provider whose OAuth app is not yet published or verified and so
+// authorizes nobody else. Unset, the provider is open to everyone.
+const providerAllowlists: Record<ConferencingProvider, string | undefined> = {
+  zoom: process.env.ZOOM_ALLOWED_EMAILS,
+  meet: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
+};
+
+export function isConferencingProviderAllowedFor({
+  provider,
+  email,
+}: {
+  provider: ConferencingProvider;
+  email: string | null;
+}) {
+  const allowlist = providerAllowlists[provider];
   return !allowlist || isEmailAllowlisted({ email, allowlist });
 }
 
+// What this user is offered. Conferencing settings exist for a user only
+// while this is non empty.
 export function getAvailableConferencingProvidersFor({
   email,
 }: {
   email: string | null;
 }) {
-  return getAvailableConferencingProviders().filter(
-    (provider) => provider !== "zoom" || isZoomAllowedFor(email),
+  return getAvailableConferencingProviders().filter((provider) =>
+    isConferencingProviderAllowedFor({ provider, email }),
   );
 }
