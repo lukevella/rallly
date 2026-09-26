@@ -65,7 +65,7 @@
   "faqNeedAccount": "Szükségem van fiókra a Rallly használatához?",
   "faqNeedAccountAnswer": "Nem. Létrehozhatsz egy szavazást és szavazhatsz regisztráció nélkül. Egy ingyenes fiók létrehozásával bármely eszközről kezelheted a szavazásaidat, és értesítést kapsz, amikor valaki válaszol.",
   "faqNonprofit": "Kedvezményt kínáltok nonprofit szervezeteknek?",
-  "faqNonprofitAnswer": "Igen. Regisztrált nonprofitoknak kedvezményes Rallly Pro-előfizetéseket kínálunk. Írj nekünk a <0>support@rallly.co</0> címre, és segítünk beállítani.",
+  "faqNonprofitAnswer": "Igen. Regisztrált nonprofit szervezetek számára kedvezményes Rallly Pro előfizetést kínálunk. <1>Hozz létre egy ingyenes fiókot</1>, majd küldj egy emailt nekünk a <0>support@rallly.co</0> címre a regisztrált email címedről, a kedvezmény igényléséről. Ha tudod, csatolj egy dokumentumot, ami igazolja nonprofit státuszodat, például egy bírósági nyilvántartásba vételi igazolást.",
   "faqPrivacy": "Az adataim privátak?",
   "faqPrivacyAnswer": "Igen. Az adatvédelem központi szerepet játszik a Rallly tervezésében. Nem jelenítünk meg hirdetéseket és nem adjuk el az adataidat; csak annyit gyűjtünk, amennyi a szolgáltatás működtetéséhez szükséges, és az ingyenes csomagban lévő szavazások automatikusan törlődnek, ha inaktívvá válnak. A Rallly nyílt forráskódú is, így bárki ellenőrizheti, hogyan kezeljük az adatait. A részleteket elolvashatod az <0>adatvédelmi irányelvekben</0>.",
   "faqSectionNotAnswered": "Nem találtad a választ? <0>Írj nekünk</0>.",
