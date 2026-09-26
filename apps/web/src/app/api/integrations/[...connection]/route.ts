@@ -3,8 +3,12 @@ import {
   createCalendarConnection,
   syncCalendars,
 } from "@/features/calendars/mutations";
-import { isConferencingEnabled } from "@/features/conferencing/constants";
+import {
+  isConferencingEnabled,
+  isConferencingProviderAllowedFor,
+} from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
+import type { ConferencingProvider } from "@/features/conferencing/schema";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
@@ -24,6 +28,14 @@ async function requireSessionUserId() {
     throw new Error("User not found");
   }
   return session.user.id;
+}
+
+async function isAllowedForSession(provider: ConferencingProvider) {
+  const session = await getSession();
+  return isConferencingProviderAllowedFor({
+    provider,
+    email: session?.user.email ?? null,
+  });
 }
 
 function conferencingOnConnect({
@@ -57,7 +69,7 @@ function conferencingOnConnect({
 
 const { handler } = OAuthIntegration<Integration>({
   basePath: "/api/integrations",
-  getIntegration: ({ integrationId, callbackUrl }) => {
+  getIntegration: async ({ integrationId, callbackUrl }) => {
     switch (integrationId) {
       case "google-calendar": {
         if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -108,7 +120,8 @@ const { handler } = OAuthIntegration<Integration>({
         if (
           !isConferencingEnabled ||
           !env.GOOGLE_CLIENT_ID ||
-          !env.GOOGLE_CLIENT_SECRET
+          !env.GOOGLE_CLIENT_SECRET ||
+          !(await isAllowedForSession("meet"))
         ) {
           return null;
         }
@@ -131,7 +144,8 @@ const { handler } = OAuthIntegration<Integration>({
         if (
           !isConferencingEnabled ||
           !env.ZOOM_CLIENT_ID ||
-          !env.ZOOM_CLIENT_SECRET
+          !env.ZOOM_CLIENT_SECRET ||
+          !(await isAllowedForSession("zoom"))
         ) {
           return null;
         }

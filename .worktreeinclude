@@ -1,0 +1,7 @@
+# Gitignored files Claude Code copies from the main checkout into each new
+# worktree, so every worktree starts with the same local configuration.
+apps/web/.env
+apps/landing/.env
+packages/database/.env
+packages/billing/.env
+packages/posthog/.env

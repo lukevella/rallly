@@ -33,7 +33,11 @@ import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
 
-export function AccountSidebarMenu() {
+export function AccountSidebarMenu({
+  showConferencing,
+}: {
+  showConferencing: boolean;
+}) {
   const { t } = useTranslation();
   const pathname = usePathname();
   const menuItems = [
@@ -70,7 +74,6 @@ export function AccountSidebarMenu() {
   ];
 
   const isCalendarsEnabled = useFeatureFlag("calendars");
-  const isConferencingEnabled = useFeatureFlag("conferencing");
 
   if (isCalendarsEnabled) {
     menuItems.push({
@@ -81,7 +84,7 @@ export function AccountSidebarMenu() {
     });
   }
 
-  if (isConferencingEnabled) {
+  if (showConferencing) {
     menuItems.push({
       id: "conferencing",
       label: t("conferencing", { defaultValue: "Conferencing" }),

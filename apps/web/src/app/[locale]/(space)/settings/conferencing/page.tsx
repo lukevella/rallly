@@ -14,12 +14,28 @@ import { Spinner } from "@/components/spinner";
 import { ConferencingConnectionFlash } from "@/features/conferencing/components/conferencing-connection-flash";
 import { ConferencingConnectionList } from "@/features/conferencing/components/conferencing-connection-list";
 import { ConnectConferencingDropdown } from "@/features/conferencing/components/connect-conferencing-dropdown";
-import { getAvailableConferencingProviders } from "@/features/conferencing/constants";
-import { loadConferencingConnections } from "@/features/conferencing/loaders";
+import {
+  loadAvailableConferencingProviders,
+  loadConferencingConnections,
+} from "@/features/conferencing/loaders";
 import { integrationIdToConferencingProvider } from "@/features/conferencing/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+
+// The page exists for a user only while some provider is offered to them.
+async function AvailabilityGate() {
+  const providers = await loadAvailableConferencingProviders();
+  if (providers.length === 0) {
+    notFound();
+  }
+  return null;
+}
+
+async function ConnectAction() {
+  const providers = await loadAvailableConferencingProviders();
+  return <ConnectConferencingDropdown providers={providers} />;
+}
 
 export default function ConferencingPage() {
   if (!isFeatureEnabled("conferencing")) {
@@ -28,6 +44,9 @@ export default function ConferencingPage() {
 
   return (
     <SettingsPage>
+      <Suspense fallback={null}>
+        <AvailabilityGate />
+      </Suspense>
       <ConferencingConnectionFlash />
       <SettingsPageHeader>
         <SettingsPageTitle>
@@ -40,9 +59,9 @@ export default function ConferencingPage() {
           />
         </SettingsPageDescription>
         <SettingsPageAction>
-          <ConnectConferencingDropdown
-            providers={getAvailableConferencingProviders()}
-          />
+          <Suspense fallback={null}>
+            <ConnectAction />
+          </Suspense>
         </SettingsPageAction>
       </SettingsPageHeader>
       <SettingsPageContent>

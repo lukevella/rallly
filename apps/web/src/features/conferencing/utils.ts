@@ -179,3 +179,20 @@ export async function createZoomUrlValidationResponse({
   );
   return { plainToken, encryptedToken };
 }
+
+// A comma separated list of addresses, matched case insensitively.
+export function isEmailAllowlisted({
+  email,
+  allowlist,
+}: {
+  email: string | null;
+  allowlist: string;
+}) {
+  if (!email) {
+    return false;
+  }
+  const normalized = email.trim().toLowerCase();
+  return allowlist
+    .split(",")
+    .some((entry) => entry.trim().toLowerCase() === normalized);
+}
