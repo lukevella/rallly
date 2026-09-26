@@ -2,6 +2,7 @@ import "server-only";
 
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
+import { after } from "next/server";
 import { loadCredential } from "@/features/credentials/data";
 import type { UserInfo } from "@/lib/oauth/types";
 import { revokeZoomToken } from "./service";
@@ -106,6 +107,7 @@ const removeConferencingConnection = async ({
   ]);
 
   if (count > 0 && credential) {
-    await revokeZoomToken(credential.secret);
+    // The disconnect is done once the rows are gone; Zoom need not answer first.
+    after(() => revokeZoomToken({ credential }));
   }
 };
