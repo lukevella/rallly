@@ -32,15 +32,7 @@ export function ConferencingProviderList({
 }) {
   const { t } = useTranslation();
   const disconnect = useMutation(
-    mutationOptions(disconnectConferencingConnectionAction, {
-      onSuccess: () => {
-        toast.success(
-          t("conferencingDisconnected", {
-            defaultValue: "Account disconnected",
-          }),
-        );
-      },
-    }),
+    mutationOptions(disconnectConferencingConnectionAction),
   );
 
   return (
@@ -80,7 +72,17 @@ export function ConferencingProviderList({
                     <DropdownMenuItem
                       variant="destructive"
                       onClick={() => {
-                        disconnect.mutate({ id: connection.id });
+                        toast.promise(
+                          disconnect.mutateAsync({ id: connection.id }),
+                          {
+                            loading: t("conferencingDisconnecting", {
+                              defaultValue: "Disconnecting account…",
+                            }),
+                            success: t("conferencingDisconnected", {
+                              defaultValue: "Account disconnected",
+                            }),
+                          },
+                        );
                       }}
                     >
                       <UnplugIcon />
