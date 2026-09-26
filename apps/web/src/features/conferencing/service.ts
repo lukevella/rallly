@@ -122,6 +122,34 @@ async function refreshZoomTokenIfExpired({
     scopes: tokens.scopes,
   };
 }
+// Best effort: the tokens are already deleted locally, and a grant Zoom still
+// holds is one the user can remove from their own Zoom app list.
+export async function revokeZoomToken(secret: OAuthCredentials) {
+  if (!env.ZOOM_CLIENT_ID || !env.ZOOM_CLIENT_SECRET) {
+    return;
+  }
+
+  const client = new ZoomOAuthClient({
+    clientId: env.ZOOM_CLIENT_ID,
+    clientSecret: env.ZOOM_CLIENT_SECRET,
+    scopes: secret.scopes,
+  });
+
+  try {
+    // Zoom rejects an expired access token, and they only live an hour, so
+    // a stale one is exchanged in memory before revoking.
+    const isExpired =
+      secret.expiresAt && new Date(secret.expiresAt).getTime() <= Date.now();
+    const accessToken =
+      isExpired && secret.refreshToken
+        ? (await client.refreshAccessToken(secret.refreshToken)).accessToken
+        : secret.accessToken;
+    await client.revokeToken(accessToken);
+  } catch (error) {
+    logger.warn({ err: error }, "Failed to revoke Zoom token");
+  }
+}
+
 async function createZoomMeeting({
   accessToken,
   title,
