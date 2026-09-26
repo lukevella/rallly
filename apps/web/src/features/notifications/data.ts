@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 
 import { defaultNotificationPreferences } from "./constants";
 import type { ActivityEventType, NotificationPreferences } from "./schema";
@@ -47,7 +48,7 @@ export async function getNotificationRecipient({
 }): Promise<NotificationRecipient | null> {
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
-    select: { userId: true, muted: true, deleted: true },
+    select: { userId: true, spaceId: true, muted: true, deleted: true },
   });
 
   if (
@@ -60,7 +61,21 @@ export async function getNotificationRecipient({
   }
 
   const creator = await prisma.user.findUnique({
-    where: { id: poll.userId, isAnonymous: false },
+    where: {
+      id: poll.userId,
+      isAnonymous: false,
+      // A poll in a space notifies its creator only while they remain an
+      // effective member of it. Once they have left, the poll is the
+      // space's and its responses are none of their business.
+      ...(poll.spaceId && {
+        memberOf: {
+          some: {
+            spaceId: poll.spaceId,
+            ...effectiveSpaceMemberWhere({ userId: poll.userId }),
+          },
+        },
+      }),
+    },
     select: {
       id: true,
       email: true,

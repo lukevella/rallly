@@ -478,52 +478,64 @@ export async function canUserManagePoll(
     return false;
   }
 
-  if (poll.userId && poll.userId === user.id) {
-    // user is owner
+  const isCreator = Boolean(poll.userId) && poll.userId === user.id;
+
+  if (!poll.spaceId) {
+    // A poll outside any space (legacy, guest) is its creator's.
+    return isCreator;
+  }
+
+  // A poll in a space is the space's: only effective members manage it. The
+  // creator is no exception, so they lose it with their membership, whether
+  // removed or locked out by a downgrade.
+  const membership = await prisma.spaceMember.findFirst({
+    where: {
+      spaceId: poll.spaceId,
+      ...effectiveSpaceMemberWhere({ userId: user.id }),
+    },
+    select: {
+      space: { select: { shared: true } },
+    },
+  });
+
+  if (!membership) {
+    return false;
+  }
+
+  if (isCreator) {
     return true;
   }
 
-  if (poll.spaceId) {
-    const membership = await prisma.spaceMember.findFirst({
-      where: {
-        spaceId: poll.spaceId,
-        ...effectiveSpaceMemberWhere({ userId: user.id }),
-      },
-      select: {
-        space: { select: { shared: true } },
-      },
-    });
+  // Members manage each other's polls only in a shared space. Uniform
+  // across roles: admins are members here too.
+  const { spacesAlwaysShared } = await getInstancePolicy();
 
-    const { spacesAlwaysShared } = await getInstancePolicy();
-
-    if (membership && (spacesAlwaysShared || membership.space.shared)) {
-      // Members manage each other's polls only in a shared space. Uniform
-      // across roles: admins are members here too.
-      return true;
-    }
-  }
-
-  return false;
+  return spacesAlwaysShared || membership.space.shared;
 }
 
 export const hasPollAdminAccess = async (pollId: string, userId: string) => {
   const { spacesAlwaysShared } = await getInstancePolicy();
 
+  // Same rule as canUserManagePoll, expressed as a query.
   const poll = await prisma.poll.findFirst({
     where: {
       id: pollId,
       deleted: false,
       OR: [
-        { userId: userId },
-        // Members reach each other's polls only in a shared space. Uniform
-        // across roles: admins are members here too.
+        // A poll outside any space (legacy, guest) is its creator's.
+        { spaceId: null, userId },
+        // A poll in a space is the space's: only effective members manage
+        // it, the creator included. Members reach each other's polls only
+        // in a shared space. Uniform across roles: admins are members here
+        // too.
         {
-          space: {
+          space: { members: { some: effectiveSpaceMemberWhere({ userId }) } },
+          OR: [
+            { userId },
             // The row is not coerced the way the DTO is, so the policy has
             // to override it here
-            ...(spacesAlwaysShared ? {} : { shared: true }),
-            members: { some: effectiveSpaceMemberWhere({ userId }) },
-          },
+            { space: spacesAlwaysShared ? {} : { shared: true } },
+          ],
         },
       ],
     },
