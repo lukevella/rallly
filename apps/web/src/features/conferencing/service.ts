@@ -142,13 +142,14 @@ export async function revokeZoomToken({
 
   try {
     // Zoom rejects an expired access token, and they only live an hour, so
-    // a stale one is exchanged in memory before revoking.
+    // one that is stale, close to expiry or of unknown age is exchanged in
+    // memory first, with the same margin refreshZoomTokenIfExpired uses.
     const expiresAt = secret.expiresAt
       ? new Date(secret.expiresAt)
       : credential.expiresAt;
-    const isExpired = expiresAt && expiresAt.getTime() <= Date.now();
+    const isFresh = expiresAt && expiresAt.getTime() - 60_000 > Date.now();
     const accessToken =
-      isExpired && secret.refreshToken
+      !isFresh && secret.refreshToken
         ? (await client.refreshAccessToken(secret.refreshToken)).accessToken
         : secret.accessToken;
     await client.revokeToken(accessToken);
