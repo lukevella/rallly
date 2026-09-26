@@ -167,12 +167,51 @@ test.describe("Zoom deauthorization endpoint", () => {
     });
   });
 
+  test("a late event keeps a connection made after the deauthorization", async ({
+    request,
+  }) => {
+    const deauthorizedAt = new Date(Date.now() - 60_000);
+    // Only the second user's rows predate the deauthorization; the first
+    // user reconnected since, which rewrote theirs.
+    const before = { updatedAt: new Date(deauthorizedAt.getTime() - 60_000) };
+    await prisma.conferencingConnection.updateMany({
+      where: { userId: userIds[1] },
+      data: before,
+    });
+    await prisma.credential.updateMany({
+      where: { userId: userIds[1] },
+      data: before,
+    });
+
+    const res = await postZoomEvent(request, {
+      event: "app_deauthorized",
+      payload: {
+        user_id: zoomUserId,
+        deauthorization_time: deauthorizedAt.toISOString(),
+      },
+    });
+    expect(res.status()).toBe(200);
+    expect(await countZoomRows(zoomUserId)).toEqual({
+      connections: 1,
+      credentials: 1,
+    });
+    expect(
+      await prisma.conferencingConnection.count({
+        where: { userId: userIds[0] },
+      }),
+    ).toBe(1);
+  });
+
   test("an event for an unknown Zoom user is still acknowledged", async ({
     request,
   }) => {
     const res = await postZoomEvent(request, {
       event: "app_deauthorized",
-      payload: { account_id: "account", user_id: `unknown-${runId}` },
+      payload: {
+        account_id: "account",
+        user_id: `unknown-${runId}`,
+        deauthorization_time: new Date().toISOString(),
+      },
     });
     expect(res.status()).toBe(200);
   });

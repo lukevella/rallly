@@ -64,4 +64,5 @@ export const zoomUrlValidationPayloadSchema = z.object({
 
 export const zoomDeauthorizationPayloadSchema = z.object({
   user_id: z.string().min(1),
+  deauthorization_time: z.iso.datetime(),
 });

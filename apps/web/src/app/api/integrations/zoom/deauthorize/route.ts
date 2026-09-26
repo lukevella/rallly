@@ -73,7 +73,10 @@ async function handleZoomEvent(req: NextRequest, event: WideEvent) {
       }
       event.zoomUserId = payload.data.user_id;
       const result = await runtime.runPromise(
-        removeDeauthorizedZoomUser({ zoomUserId: payload.data.user_id }),
+        removeDeauthorizedZoomUser({
+          zoomUserId: payload.data.user_id,
+          deauthorizedAt: new Date(payload.data.deauthorization_time),
+        }),
       );
       event.removedConnections = result.removedConnections;
       event.removedCredentials = result.removedCredentials;
