@@ -99,4 +99,12 @@ export class ZoomOAuthClient implements OAuthClient {
       handleOAuthError(error);
     }
   }
+
+  async revokeToken(accessToken: string): Promise<void> {
+    try {
+      await this.client.revokeToken(accessToken);
+    } catch (error) {
+      handleOAuthError(error);
+    }
+  }
 }
