@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-23">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-26">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -99,6 +99,42 @@ export default async function PrivacyPolicy() {
           have already given, email us at{" "}
           <a href="mailto:support@rallly.co">support@rallly.co</a> and we will
           update or erase it.
+        </p>
+
+        <h2>Google user data</h2>
+
+        <p>
+          If you sign in with Google, we receive your name, email address and
+          profile picture to create and identify your account.
+        </p>
+
+        <p>
+          If you connect Google Meet, Rallly creates a Meet meeting space in
+          your account when you schedule a poll that uses Google Meet as its
+          video call, and stores its join link on the event. We also store the
+          email address of the connected account so you can see which account is
+          connected. Rallly does not read, list or change any other meetings.
+        </p>
+
+        <p>
+          We store the OAuth tokens needed to provide these features along with
+          the data described above. We do not sell Google user data, use it for
+          advertising, use it to train AI models, or share it with third parties
+          except as needed to provide the service. You can disconnect Google
+          Meet in your settings, and revoke Rallly&apos;s access at any time at{" "}
+          <a href="https://myaccount.google.com/permissions">
+            myaccount.google.com/permissions
+          </a>
+          .
+        </p>
+
+        <p>
+          Rallly&apos;s use and transfer of information received from Google
+          APIs to any other app will adhere to the{" "}
+          <a href="https://developers.google.com/terms/api-services-user-data-policy">
+            Google API Services User Data Policy
+          </a>
+          , including the Limited Use requirements.
         </p>
 
         <h2>Content moderation</h2>
