@@ -100,24 +100,6 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
 
 See the [Single Sign-On guide](/self-hosting/single-sign-on) for setup instructions and the full list of variables.
 
-## Conferencing
-
-Let users connect Zoom or Google Meet so a meeting link is created when they finalize a poll. See the [Zoom guide](/integrations/zoom) for what users see.
-
-<ParamField path="CONFERENCING_ENABLED" default="false">
-  Set to `true` to turn the feature on. At least one provider below must be configured, otherwise the instance refuses to start.
-</ParamField>
-
-<ParamField path="ZOOM_CLIENT_ID">
-  Client ID of your Zoom OAuth app. Create a **General app** (user-managed) on the [Zoom App Marketplace](https://marketplace.zoom.us/) with the scopes `meeting:write:meeting` and `user:read:user`, and set its redirect URL to `https://<your-domain>/api/integrations/callback/zoom`.
-</ParamField>
-
-<ParamField path="ZOOM_CLIENT_SECRET">
-  Client secret of the Zoom OAuth app. Must be set together with `ZOOM_CLIENT_ID`.
-</ParamField>
-
-Google Meet reuses the Google OAuth app configured for [Single Sign-On](/self-hosting/single-sign-on) (`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`). Add `https://<your-domain>/api/integrations/callback/google-meet` to that app's redirect URLs and enable the Google Meet REST API on its Google Cloud project.
-
 ## Branding
 
 Customise the look of your instance. These settings can also be changed from the Control Panel, where a saved value takes precedence over the environment variable. See [White Labeling](/self-hosting/white-labeling) for details.
