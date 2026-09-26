@@ -40,6 +40,7 @@ export function AccountSidebarMenu({
 }) {
   const { t } = useTranslation();
   const pathname = usePathname();
+  const isCalendarsEnabled = useFeatureFlag("calendars");
   const menuItems = [
     {
       id: "profile",
@@ -53,6 +54,16 @@ export function AccountSidebarMenu({
       icon: <Settings2Icon />,
       href: "/settings/preferences",
     },
+    ...(showConferencing
+      ? [
+          {
+            id: "conferencing",
+            label: t("conferencing", { defaultValue: "Conferencing" }),
+            icon: <VideoIcon />,
+            href: "/settings/conferencing",
+          },
+        ]
+      : []),
     {
       id: "security",
       label: t("security", { defaultValue: "Security" }),
@@ -71,27 +82,17 @@ export function AccountSidebarMenu({
       icon: <PanelsTopLeftIcon />,
       href: "/settings/spaces",
     },
+    ...(isCalendarsEnabled
+      ? [
+          {
+            id: "calendars",
+            label: t("calendars", { defaultValue: "Calendars" }),
+            icon: <CalendarIcon />,
+            href: "/settings/calendars",
+          },
+        ]
+      : []),
   ];
-
-  const isCalendarsEnabled = useFeatureFlag("calendars");
-
-  if (isCalendarsEnabled) {
-    menuItems.push({
-      id: "calendars",
-      label: t("calendars", { defaultValue: "Calendars" }),
-      icon: <CalendarIcon />,
-      href: "/settings/calendars",
-    });
-  }
-
-  if (showConferencing) {
-    menuItems.push({
-      id: "conferencing",
-      label: t("conferencing", { defaultValue: "Conferencing" }),
-      icon: <VideoIcon />,
-      href: "/settings/conferencing",
-    });
-  }
 
   return (
     <SidebarMenu>
