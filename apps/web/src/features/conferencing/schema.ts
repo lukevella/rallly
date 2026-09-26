@@ -50,3 +50,18 @@ export const conferencingSchema = z.discriminatedUnion("provider", [
 ]);
 
 export type Conferencing = z.infer<typeof conferencingSchema>;
+
+// A Zoom event notification. The payload is parsed per event, so an event
+// this app does not handle is acknowledged rather than rejected.
+export const zoomWebhookEventSchema = z.object({
+  event: z.string(),
+  payload: z.unknown(),
+});
+
+export const zoomUrlValidationPayloadSchema = z.object({
+  plainToken: z.string().min(1),
+});
+
+export const zoomDeauthorizationPayloadSchema = z.object({
+  user_id: z.string().min(1),
+});

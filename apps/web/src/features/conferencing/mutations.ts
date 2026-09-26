@@ -1,6 +1,8 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { Effect } from "effect";
+import { fromPrisma } from "@/lib/effect/db";
 import type { UserInfo } from "@/lib/oauth/types";
 
 export const createConferencingConnection = async ({
@@ -66,3 +68,31 @@ export const disconnectConferencingConnection = async ({
 
   return { ok: true as const };
 };
+
+// Zoom has already revoked the grant, so unlike a disconnect there is nothing
+// to revoke. The Zoom user id is global, so every Rallly account that linked it
+// loses the connection, and every Zoom credential for it goes, including one
+// an earlier disconnect left behind.
+export const removeDeauthorizedZoomUser = Effect.fn(
+  "conferencing.removeDeauthorizedZoomUser",
+)(function* ({ zoomUserId }: { zoomUserId: string }) {
+  const [connections, credentials] = yield* fromPrisma(() =>
+    prisma.$transaction([
+      prisma.conferencingConnection.deleteMany({
+        where: { provider: "zoom", providerAccountId: zoomUserId },
+      }),
+      prisma.credential.deleteMany({
+        where: {
+          provider: "zoom",
+          providerAccountId: zoomUserId,
+          calendarConnections: { none: {} },
+          conferencingConnections: { none: {} },
+        },
+      }),
+    ]),
+  );
+  return {
+    removedConnections: connections.count,
+    removedCredentials: credentials.count,
+  };
+});
