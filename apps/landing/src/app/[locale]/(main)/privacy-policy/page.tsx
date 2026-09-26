@@ -109,23 +109,36 @@ export default async function PrivacyPolicy() {
         </p>
 
         <p>
-          If you connect Google Meet, Rallly creates a Meet meeting space in
-          your account when you schedule a poll that uses Google Meet as its
-          video call, and stores its join link on the event. We also store the
-          email address of the connected account so you can see which account is
-          connected. Rallly does not read, list or change any other meetings.
+          If you connect Google Meet, Rallly uses the permission to create Meet
+          meeting spaces (<code>meetings.space.created</code>) only to create a
+          meeting space in your account when you finalize a poll that uses
+          Google Meet as its video call. We store the meeting link and meeting
+          code on the event, so they can be included in the calendar invite and
+          confirmation emails sent to you and your participants. Rallly does not
+          read, list or change any other meetings, and does not join or record
+          meetings.
         </p>
 
         <p>
-          We store the OAuth tokens needed to provide these features along with
-          the data described above. We do not sell Google user data, use it for
-          advertising, use it to train AI models, or share it with third parties
-          except as needed to provide the service. You can disconnect Google
-          Meet in your settings, and revoke Rallly&apos;s access at any time at{" "}
+          We store your Google account id and email address to identify the
+          connection and show which account is connected, and the OAuth tokens
+          Google issues, encrypted at rest, so Rallly can create meetings
+          without asking you to sign in each time. We use this data only to
+          create meetings for you as the organizer. We do not sell Google user
+          data, use it for advertising, use it to train AI models, or share it
+          with third parties except as needed to provide the service.
+        </p>
+
+        <p>
+          When you disconnect Google Meet in your settings, we delete the stored
+          account details and tokens. When you delete your Rallly account, we
+          delete them along with your events, including the details of meetings
+          Rallly created. You can also revoke Rallly&apos;s access at any time
+          at{" "}
           <a href="https://myaccount.google.com/permissions">
             myaccount.google.com/permissions
           </a>
-          .
+          . Meetings Rallly already created stay in your Google account.
         </p>
 
         <p>
@@ -134,7 +147,45 @@ export default async function PrivacyPolicy() {
           <a href="https://developers.google.com/terms/api-services-user-data-policy">
             Google API Services User Data Policy
           </a>
-          , including the Limited Use requirements.
+          , including the Limited Use requirements. This applies to all Google
+          user data Rallly receives, whatever permission it was received under.
+        </p>
+
+        <h2>Zoom user data</h2>
+
+        <p>
+          If you connect Zoom, Rallly uses the permissions you approve only to
+          read your Zoom user id and email address, and to create a meeting on
+          your Zoom account when you finalize a poll that uses Zoom as its video
+          call. Rallly does not read your existing meetings, recordings,
+          contacts or chat, and does not join or record meetings.
+        </p>
+
+        <p>
+          We store your Zoom user id and email address to identify the
+          connection and show which account is connected, and the access and
+          refresh tokens Zoom issues, encrypted at rest, so Rallly can create
+          meetings without asking you to sign in each time. For each meeting
+          Rallly creates, we store its meeting id, join link and passcode on the
+          event, so they can be included in the calendar invite and confirmation
+          emails sent to you and your participants.
+        </p>
+
+        <p>
+          We use this data only to create meetings for you as the organizer. We
+          do not sell Zoom user data, use it for advertising, use it to train AI
+          models, or share it with third parties except as needed to provide the
+          service.
+        </p>
+
+        <p>
+          When you disconnect Zoom in your settings, we delete the stored
+          account details and tokens and ask Zoom to revoke Rallly&apos;s
+          access. If you remove Rallly from your Zoom account in the Zoom App
+          Marketplace, Zoom notifies us and we delete them. When you delete your
+          Rallly account, we delete them along with your events, including the
+          details of meetings Rallly created. Meetings Rallly already created
+          stay in your Zoom account.
         </p>
 
         <h2>Content moderation</h2>
