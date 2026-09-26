@@ -76,16 +76,13 @@ test.describe
       await prisma.user.delete({ where: { id: userId } });
     });
 
-    test("settings page starts empty and offers the configured providers", async () => {
+    test("settings page lists the configured providers to connect", async () => {
       await page.goto("/settings/conferencing");
       await expect(
         page.getByRole("heading", { name: "Conferencing" }),
       ).toBeVisible();
-      await expect(page.getByText("No accounts connected")).toBeVisible();
-
-      await page.getByRole("button", { name: "Connect account" }).click();
-      await expect(page.getByRole("menuitem", { name: "Zoom" })).toBeVisible();
-      await page.keyboard.press("Escape");
+      await expect(page.getByText("Zoom", { exact: true })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Connect" })).toBeVisible();
     });
 
     test("poll form blocks a provider the organizer has not connected", async () => {
@@ -113,6 +110,9 @@ test.describe
       await expect(
         page.getByText(`organizer-${runId}@zoom.example`),
       ).toBeVisible();
+      await expect(page.getByRole("button", { name: "Connect" })).toHaveCount(
+        0,
+      );
     });
 
     test("poll form accepts a connected provider and stores it", async () => {
@@ -203,7 +203,7 @@ test.describe
       await page.goto("/settings/conferencing");
       await page.getByRole("button", { name: "More options" }).click();
       await page.getByRole("menuitem", { name: "Disconnect" }).click();
-      await expect(page.getByText("No accounts connected")).toBeVisible();
+      await expect(page.getByRole("button", { name: "Connect" })).toBeVisible();
       expect(
         await prisma.conferencingConnection.count({ where: { userId } }),
       ).toBe(0);
@@ -246,7 +246,7 @@ test.describe
       await page.goto("/settings/conferencing");
       await page.getByRole("button", { name: "More options" }).click();
       await page.getByRole("menuitem", { name: "Disconnect" }).click();
-      await expect(page.getByText("No accounts connected")).toBeVisible();
+      await expect(page.getByText(email)).toHaveCount(0);
       expect(
         await prisma.credential.count({ where: { id: credential.id } }),
       ).toBe(1);
