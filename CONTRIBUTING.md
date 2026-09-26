@@ -115,8 +115,10 @@ To contribute documentation please check out the [contributing guide](https://su
 
 Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
 
-## License 👩‍⚖️
+## Contributor License Agreement 👩‍⚖️
 
-By contributing to this project, you agree that your contributions will be licensed under the [AGPL-3.0 license](LICENSE).
+Before we can merge your first pull request, you need to sign our [Contributor License Agreement](https://cla-assistant.io/lukevella/rallly). The CLA assistant bot comments on your pull request with a link. You sign once with your GitHub account and it covers all your future contributions.
+
+By signing, you license your contribution under the same license as the project, currently [AGPL-3.0](LICENSE), and you grant the project maintainers the irrevocable right to relicense it, including under other open source or proprietary licenses. You keep the copyright in your work. Read the [full agreement](https://cla-assistant.io/lukevella/rallly) before you sign.
 
 Thank you for your interest in contributing to this project!
