@@ -48,7 +48,7 @@ export interface CreateOAuthOptions<T extends string> {
   }: {
     integrationId: T;
     callbackUrl: string;
-  }) => OAuthClient | null;
+  }) => OAuthClient | null | Promise<OAuthClient | null>;
   cookieConfig?: {
     prefix?: string;
     maxAge?: number;

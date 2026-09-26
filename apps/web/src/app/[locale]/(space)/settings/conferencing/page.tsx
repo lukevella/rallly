@@ -14,12 +14,22 @@ import { Spinner } from "@/components/spinner";
 import { ConferencingConnectionFlash } from "@/features/conferencing/components/conferencing-connection-flash";
 import { ConferencingConnectionList } from "@/features/conferencing/components/conferencing-connection-list";
 import { ConnectConferencingDropdown } from "@/features/conferencing/components/connect-conferencing-dropdown";
-import { getAvailableConferencingProviders } from "@/features/conferencing/constants";
-import { loadConferencingConnections } from "@/features/conferencing/loaders";
+import {
+  loadAvailableConferencingProviders,
+  loadConferencingConnections,
+} from "@/features/conferencing/loaders";
 import { integrationIdToConferencingProvider } from "@/features/conferencing/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+
+async function ConnectAction() {
+  const providers = await loadAvailableConferencingProviders();
+  if (providers.length === 0) {
+    return null;
+  }
+  return <ConnectConferencingDropdown providers={providers} />;
+}
 
 export default function ConferencingPage() {
   if (!isFeatureEnabled("conferencing")) {
@@ -40,9 +50,9 @@ export default function ConferencingPage() {
           />
         </SettingsPageDescription>
         <SettingsPageAction>
-          <ConnectConferencingDropdown
-            providers={getAvailableConferencingProviders()}
-          />
+          <Suspense fallback={null}>
+            <ConnectAction />
+          </Suspense>
         </SettingsPageAction>
       </SettingsPageHeader>
       <SettingsPageContent>

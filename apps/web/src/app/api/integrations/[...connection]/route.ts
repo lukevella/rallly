@@ -3,7 +3,10 @@ import {
   createCalendarConnection,
   syncCalendars,
 } from "@/features/calendars/mutations";
-import { isConferencingEnabled } from "@/features/conferencing/constants";
+import {
+  isConferencingEnabled,
+  isZoomAllowedFor,
+} from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
@@ -57,7 +60,7 @@ function conferencingOnConnect({
 
 const { handler } = OAuthIntegration<Integration>({
   basePath: "/api/integrations",
-  getIntegration: ({ integrationId, callbackUrl }) => {
+  getIntegration: async ({ integrationId, callbackUrl }) => {
     switch (integrationId) {
       case "google-calendar": {
         if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -133,6 +136,10 @@ const { handler } = OAuthIntegration<Integration>({
           !env.ZOOM_CLIENT_ID ||
           !env.ZOOM_CLIENT_SECRET
         ) {
+          return null;
+        }
+        const session = await getSession();
+        if (!isZoomAllowedFor(session?.user.email ?? null)) {
           return null;
         }
         return new ZoomOAuthClient({

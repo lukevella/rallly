@@ -22,8 +22,8 @@ import { getSession } from "@/lib/auth";
 
 export default async function Page() {
   const session = await getSession();
-  const userId =
-    session?.user.id && !session.user.isGuest ? session.user.id : null;
+  const user = session?.user && !session.user.isGuest ? session.user : null;
+  const userId = user?.id ?? null;
 
   const space = userId ? await getActiveSpaceForUser(userId) : null;
 
@@ -31,7 +31,10 @@ export default async function Page() {
     redirect("/setup");
   }
 
-  const conferencing = await loadConferencingOptions({ userId });
+  const conferencing = await loadConferencingOptions({
+    userId,
+    email: user?.email ?? null,
+  });
 
   const primaryColor =
     space?.primaryColor &&

@@ -72,7 +72,7 @@ export function OAuthIntegration<T extends string>(
     try {
       const { id } = c.req.valid("param");
 
-      const integration = getIntegration({
+      const integration = await getIntegration({
         integrationId: id as T,
         callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
       });
@@ -128,7 +128,7 @@ export function OAuthIntegration<T extends string>(
     try {
       const { id } = c.req.valid("param");
 
-      const integration = getIntegration({
+      const integration = await getIntegration({
         integrationId: id as T,
         callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
       });

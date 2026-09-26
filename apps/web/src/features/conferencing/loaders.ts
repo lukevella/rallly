@@ -2,11 +2,16 @@ import "server-only";
 
 import { cache } from "react";
 import { loadUser } from "@/features/user/loaders";
-import { getAvailableConferencingProviders } from "./constants";
+import { getAvailableConferencingProvidersFor } from "./constants";
 import {
   getConferencingConnections,
   getConnectedConferencingProviders,
 } from "./data";
+
+export const loadAvailableConferencingProviders = cache(async () => {
+  const user = await loadUser();
+  return getAvailableConferencingProvidersFor({ email: user.email });
+});
 
 export const loadConferencingConnections = cache(async () => {
   const user = await loadUser();
@@ -17,8 +22,14 @@ export const loadConferencingConnections = cache(async () => {
 // the organizer has already linked. Guests have nothing to link; a pasted
 // link needs no provider, so the options always exist.
 export const loadConferencingOptions = cache(
-  async ({ userId }: { userId: string | null }) => {
-    const available = getAvailableConferencingProviders();
+  async ({
+    userId,
+    email,
+  }: {
+    userId: string | null;
+    email: string | null;
+  }) => {
+    const available = getAvailableConferencingProvidersFor({ email });
     const connected = userId
       ? await getConnectedConferencingProviders(userId)
       : [];
