@@ -120,13 +120,16 @@ export default async function PrivacyPolicy() {
         </p>
 
         <p>
-          We store your Google account id and email address to identify the
-          connection and show which account is connected, and the OAuth tokens
-          Google issues, encrypted at rest, so Rallly can create meetings
-          without asking you to sign in each time. We use this data only to
-          create meetings for you as the organizer. We do not sell Google user
-          data, use it for advertising, use it to train AI models, or share it
-          with third parties except as needed to provide the service.
+          When you connect, Google also shares your Google account id, email
+          address and basic profile (name and profile picture). We do not store
+          your name or profile picture. We store your Google account id and
+          email address to identify the connection and show which account is
+          connected, and the OAuth tokens Google issues, encrypted at rest, so
+          Rallly can create meetings without asking you to sign in each time. We
+          use this data only to identify the connected account and to create
+          meetings for you as the organizer. We do not sell Google user data,
+          use it for advertising, use it to train AI models, or share it with
+          third parties except as needed to provide the service.
         </p>
 
         <p>
@@ -155,27 +158,28 @@ export default async function PrivacyPolicy() {
 
         <p>
           If you connect Zoom, Rallly uses the permissions you approve only to
-          read your Zoom user id and email address, and to create a meeting on
-          your Zoom account when you finalize a poll that uses Zoom as its video
-          call. Rallly does not read your existing meetings, recordings,
-          contacts or chat, and does not join or record meetings.
+          read your Zoom user id, name and email address, and to create a
+          meeting on your Zoom account when you finalize a poll that uses Zoom
+          as its video call. Rallly does not read your existing meetings,
+          recordings, contacts or chat, and does not join or record meetings.
         </p>
 
         <p>
-          We store your Zoom user id and email address to identify the
-          connection and show which account is connected, and the access and
-          refresh tokens Zoom issues, encrypted at rest, so Rallly can create
-          meetings without asking you to sign in each time. For each meeting
-          Rallly creates, we store its meeting id, join link and passcode on the
-          event, so they can be included in the calendar invite and confirmation
-          emails sent to you and your participants.
+          We do not store your name. We store your Zoom user id and email
+          address to identify the connection and show which account is
+          connected, and the access and refresh tokens Zoom issues, encrypted at
+          rest, so Rallly can create meetings without asking you to sign in each
+          time. For each meeting Rallly creates, we store its meeting id, join
+          link and passcode on the event, so they can be included in the
+          calendar invite and confirmation emails sent to you and your
+          participants.
         </p>
 
         <p>
-          We use this data only to create meetings for you as the organizer. We
-          do not sell Zoom user data, use it for advertising, use it to train AI
-          models, or share it with third parties except as needed to provide the
-          service.
+          We use this data only to identify the connected account and to create
+          meetings for you as the organizer. We do not sell Zoom user data, use
+          it for advertising, use it to train AI models, or share it with third
+          parties except as needed to provide the service.
         </p>
 
         <p>
