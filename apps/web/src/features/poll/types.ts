@@ -33,7 +33,13 @@ export type PollDetails = {
     hideAttribution: boolean;
     primaryColor: string | null;
   } | null;
-  event: { id: string; start: Date; duration: number; status: string } | null;
+  event: {
+    id: string;
+    start: Date;
+    duration: number;
+    status: string;
+    conferencingUri: string | null;
+  } | null;
   inviteLink: string;
 };
 

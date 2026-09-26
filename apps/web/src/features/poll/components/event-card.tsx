@@ -102,7 +102,10 @@ export function EventCard() {
           ) : null}
           {poll.conferencing ? (
             <EventMetaItem>
-              <PollConferencingSummary conferencing={poll.conferencing} />
+              <PollConferencingSummary
+                conferencing={poll.conferencing}
+                meetingUri={poll.event?.conferencingUri}
+              />
             </EventMetaItem>
           ) : null}
         </EventMetaList>
