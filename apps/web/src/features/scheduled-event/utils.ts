@@ -122,6 +122,19 @@ export function pastScheduledEventWhere(args: { now: Date; timeZone: string }) {
   return scheduledEventWhere({ ...args, past: true });
 }
 
+/**
+ * Events with something still ahead, whatever their confirmation state: the
+ * upcoming agenda plus unconfirmed bookings awaiting a decision. This is
+ * what a departing host hands over; past and cancelled events stay behind
+ * as history.
+ */
+export function liveScheduledEventWhere(args: { now: Date; timeZone: string }) {
+  return {
+    ...scheduledEventWhere({ ...args, past: false }),
+    status: { in: ["confirmed", "unconfirmed"] },
+  } satisfies Prisma.ScheduledEventWhereInput;
+}
+
 export type EventPhase = "canceled" | "ended" | "inProgress" | "upcoming";
 
 /**

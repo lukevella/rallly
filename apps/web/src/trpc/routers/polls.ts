@@ -34,6 +34,7 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { hasEffectiveMembership } from "@/features/space/member/data";
 import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
@@ -1103,12 +1104,21 @@ export const polls = router({
         });
       }
 
+      // The poll owner's account hosts the meeting, whichever member books
+      // it. Unless the owner has left the space: then whoever schedules the
+      // poll adopts it and becomes its organizer, so the meeting is minted on
+      // their account and the poll's notifications reach them.
+      const organizerId =
+        poll.user.id === ctx.user.id ||
+        (await hasEffectiveMembership({ spaceId, userId: poll.user.id }))
+          ? poll.user.id
+          : ctx.user.id;
+
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and
-      // try again, instead of an event going out without a link. The poll
-      // owner's account hosts the meeting, whichever member books it.
+      // try again, instead of an event going out without a link.
       const conferencing = await mintConferencing({
-        userId: poll.user.id,
+        userId: organizerId,
         conferencing: parsePollConferencing(poll.conferencing, {
           pollId: poll.id,
         }),
@@ -1225,6 +1235,7 @@ export const polls = router({
             status: "scheduled",
             closedReason: null,
             scheduledEventId: event.id,
+            userId: organizerId,
           },
         });
 
@@ -1421,7 +1432,7 @@ export const polls = router({
           where: {
             id: input.pollId,
           },
-          select: { scheduledEventId: true },
+          select: { scheduledEventId: true, userId: true, spaceId: true },
         });
 
         if (poll?.scheduledEventId) {
@@ -1429,6 +1440,26 @@ export const polls = router({
             where: {
               id: poll.scheduledEventId,
             },
+          });
+        }
+
+        // A poll whose creator has left the space has no one to notify and,
+        // in an independent space, no list to appear in. Whoever reopens it
+        // becomes its organizer.
+        if (
+          poll?.spaceId &&
+          poll.userId !== ctx.user.id &&
+          !(
+            poll.userId &&
+            (await hasEffectiveMembership({
+              spaceId: poll.spaceId,
+              userId: poll.userId,
+            }))
+          )
+        ) {
+          await tx.poll.update({
+            where: { id: input.pollId },
+            data: { userId: ctx.user.id },
           });
         }
 

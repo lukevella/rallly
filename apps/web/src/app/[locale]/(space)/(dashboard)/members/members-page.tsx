@@ -14,10 +14,12 @@ import {
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
 import { ListViewActions } from "@/components/list-view";
+import { loadOpenPollCountsByCreator } from "@/features/poll/loaders";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
 import {
+  loadLiveEventCountsByHost,
   loadPendingInvites,
   loadSpaceMembers,
 } from "@/features/space/member/loaders";
@@ -100,10 +102,20 @@ export async function MembersPageContent() {
     );
   }
 
-  const [members, seatUsage, memberAbility] = await Promise.all([
+  const [
+    user,
+    members,
+    seatUsage,
+    memberAbility,
+    openPollCounts,
+    liveEventCounts,
+  ] = await Promise.all([
+    loadUser(),
     loadSpaceMembers(),
     loadSeatUsage(),
     getMemberAbility(),
+    loadOpenPollCountsByCreator(),
+    loadLiveEventCountsByHost(),
   ]);
 
   const canInviteMembers = defineAbilityForSpace(space).can("invite", "Member");
@@ -212,6 +224,9 @@ export async function MembersPageContent() {
             subject("SpaceMember", { ...member }),
           ),
           inactive: showInactive && !member.isOwner,
+          isActor: member.userId === user.id,
+          openPollCount: openPollCounts.get(member.userId) ?? 0,
+          liveEventCount: liveEventCounts.get(member.userId) ?? 0,
         }))}
       />
     </>

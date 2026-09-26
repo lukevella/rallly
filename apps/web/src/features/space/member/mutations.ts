@@ -1,11 +1,13 @@
 import "server-only";
 
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendSpaceInviteEmail } from "@rallly/emails/templates/space-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { revalidatePath } from "next/cache";
 import { getInstanceBranding } from "@/emails/branding";
+import { liveScheduledEventWhere } from "@/features/scheduled-event/utils";
 import { getTotalSeatsForSpace } from "@/features/space/data";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { MemberRole } from "@/features/space/schema";
@@ -188,18 +190,96 @@ export async function cancelInvite({ inviteId }: { inviteId: string }) {
   revalidateMembersPage();
 }
 
-export async function removeMember({ memberId }: { memberId: string }) {
-  const removedMember = await prisma.spaceMember.delete({
-    where: { id: memberId },
-  });
+/**
+ * Removes the membership and hands the member's live content in that space
+ * to another member, in one transaction so a failed transfer leaves the
+ * membership in place. Live is what still has something ahead: open polls,
+ * scheduled polls whose event is still to come (with that event), upcoming
+ * and unconfirmed events, event types and sheets. Settled content (closed
+ * polls, past and cancelled events) keeps its author; membership checks on
+ * management and notifications already make it inert for them.
+ */
+export async function removeMember({
+  memberId,
+  transferToUserId,
+  now,
+  timeZone,
+}: {
+  memberId: string;
+  transferToUserId: string;
+  now: Date;
+  timeZone: string;
+}) {
+  const result = await prisma.$transaction(async (tx) => {
+    const removedMember = await tx.spaceMember.delete({
+      where: { id: memberId },
+    });
 
-  const memberCount = await prisma.spaceMember.count({
-    where: { spaceId: removedMember.spaceId },
+    await transferLiveContent(tx, {
+      spaceId: removedMember.spaceId,
+      fromUserId: removedMember.userId,
+      toUserId: transferToUserId,
+      now,
+      timeZone,
+    });
+
+    const memberCount = await tx.spaceMember.count({
+      where: { spaceId: removedMember.spaceId },
+    });
+
+    return { removedUserId: removedMember.userId, memberCount };
   });
 
   revalidateMembersPage();
 
-  return { removedUserId: removedMember.userId, memberCount };
+  return result;
+}
+
+async function transferLiveContent(
+  tx: Prisma.TransactionClient,
+  {
+    spaceId,
+    fromUserId,
+    toUserId,
+    now,
+    timeZone,
+  }: {
+    spaceId: string;
+    fromUserId: string;
+    toUserId: string;
+    now: Date;
+    timeZone: string;
+  },
+) {
+  const liveEvent = liveScheduledEventWhere({ now, timeZone });
+
+  await tx.poll.updateMany({
+    where: {
+      spaceId,
+      userId: fromUserId,
+      deleted: false,
+      OR: [
+        { status: "open" },
+        { status: "scheduled", scheduledEvent: liveEvent },
+      ],
+    },
+    data: { userId: toUserId },
+  });
+
+  await tx.scheduledEvent.updateMany({
+    where: { spaceId, userId: fromUserId, ...liveEvent },
+    data: { userId: toUserId },
+  });
+
+  await tx.eventType.updateMany({
+    where: { spaceId, hostId: fromUserId, deleted: false },
+    data: { hostId: toUserId },
+  });
+
+  await tx.sheet.updateMany({
+    where: { spaceId, hostId: fromUserId, deleted: false },
+    data: { hostId: toUserId },
+  });
 }
 
 export async function changeMemberRole({
