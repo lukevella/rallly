@@ -94,7 +94,7 @@ When you connect, Rallly asks Zoom for these permissions:
 
 | Permission | Why |
 | --- | --- |
-| View your user information (`user:read:user`) | To show which Zoom account is connected, by name and email, and to tell accounts apart. |
+| View your user information (`user:read:user`) | To read your Zoom account id and email, which identify the connection and show which account is connected. |
 | Create meetings (`meeting:write:meeting`) | To create the meeting when you finalize a poll. |
 
 Rallly does not read your existing meetings, recordings, contacts or chat, and does not join or record meetings.
@@ -103,7 +103,7 @@ Rallly does not read your existing meetings, recordings, contacts or chat, and d
 
 For a connected Zoom account, Rallly stores:
 
-- Your Zoom account id, display name and email address, to show the connection in your settings.
+- Your Zoom account id and email address, to identify the connection and show it in your settings.
 - The access token and refresh token Zoom issues, encrypted at rest, so Rallly can create meetings on your behalf without asking you to sign in each time.
 
 For each finalized poll, Rallly stores the meeting id, join link and passcode of the meeting it created, as part of the event.
