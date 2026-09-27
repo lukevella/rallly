@@ -54,6 +54,16 @@ export function AccountSidebarMenu({
       icon: <Settings2Icon />,
       href: "/settings/preferences",
     },
+    ...(isCalendarsEnabled
+      ? [
+          {
+            id: "calendars",
+            label: t("calendars", { defaultValue: "Calendars" }),
+            icon: <CalendarIcon />,
+            href: "/settings/calendars",
+          },
+        ]
+      : []),
     ...(showConferencing
       ? [
           {
@@ -82,16 +92,6 @@ export function AccountSidebarMenu({
       icon: <PanelsTopLeftIcon />,
       href: "/settings/spaces",
     },
-    ...(isCalendarsEnabled
-      ? [
-          {
-            id: "calendars",
-            label: t("calendars", { defaultValue: "Calendars" }),
-            icon: <CalendarIcon />,
-            href: "/settings/calendars",
-          },
-        ]
-      : []),
   ];
 
   return (
