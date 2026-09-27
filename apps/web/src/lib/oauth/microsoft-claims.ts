@@ -5,11 +5,11 @@
 export function isMicrosoftEmailVerified(claims: {
   email?: string | null;
   email_verified?: boolean;
-  xms_edov?: boolean;
+  xms_edov?: boolean | string | number;
   verified_primary_email?: string[];
   verified_secondary_email?: string[];
 }) {
-  if (claims.email_verified === true || claims.xms_edov === true) {
+  if (claims.email_verified === true || isTruthyClaim(claims.xms_edov)) {
     return true;
   }
   const email = claims.email?.toLowerCase();
@@ -20,4 +20,10 @@ export function isMicrosoftEmailVerified(claims: {
     ...(claims.verified_primary_email ?? []),
     ...(claims.verified_secondary_email ?? []),
   ].some((verified) => verified.toLowerCase() === email);
+}
+
+// Microsoft documents `xms_edov` as a boolean but emits it as the string "1"
+// for personal accounts.
+function isTruthyClaim(value: boolean | string | number | undefined) {
+  return value === true || value === 1 || value === "1" || value === "true";
 }
