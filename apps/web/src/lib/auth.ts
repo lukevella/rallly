@@ -255,9 +255,29 @@ export const authLib = betterAuth({
             // better-auth only reads the verified email lists, which personal
             // Microsoft accounts do not carry; they are vouched for by
             // `xms_edov` instead.
-            mapProfileToUser: (profile) => ({
-              emailVerified: isMicrosoftEmailVerified(profile),
-            }),
+            mapProfileToUser: (profile) => {
+              const emailVerified = isMicrosoftEmailVerified(profile);
+              if (!emailVerified) {
+                // Which claims Microsoft sent decides whether the refusal is
+                // the registration's configuration or the account type.
+                logger.warn(
+                  {
+                    tid: profile.tid,
+                    idp: profile.idp,
+                    hasEmail: !!profile.email,
+                    emailVerifiedClaim: profile.email_verified,
+                    xmsEdov: profile.xms_edov,
+                    verifiedPrimaryCount:
+                      profile.verified_primary_email?.length ?? null,
+                    verifiedSecondaryCount:
+                      profile.verified_secondary_email?.length ?? null,
+                    claims: Object.keys(profile).sort(),
+                  },
+                  "Microsoft sign-in refused: email not vouched for",
+                );
+              }
+              return { emailVerified };
+            },
           }
         : undefined,
   },
