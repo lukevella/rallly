@@ -50,6 +50,7 @@ import {
   LOCALE_COOKIE_NAME,
   LOCALE_COOKIE_OPTIONS,
 } from "@/lib/locale/constants";
+import { isMicrosoftEmailVerified } from "@/lib/oauth/microsoft-claims";
 import { track } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
@@ -251,6 +252,12 @@ export const authLib = betterAuth({
             clientId: env.MICROSOFT_CLIENT_ID,
             clientSecret: env.MICROSOFT_CLIENT_SECRET,
             redirectURI: absoluteUrl("/api/auth/callback/microsoft-entra-id"),
+            // better-auth only reads the verified email lists, which personal
+            // Microsoft accounts do not carry; they are vouched for by
+            // `xms_edov` instead.
+            mapProfileToUser: (profile) => ({
+              emailVerified: isMicrosoftEmailVerified(profile),
+            }),
           }
         : undefined,
   },
