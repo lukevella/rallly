@@ -8,6 +8,24 @@ describe("isMicrosoftEmailVerified", () => {
     ).toBe(true);
   });
 
+  it("reads the domain owner verified claim in the string form Microsoft emits", () => {
+    expect(
+      isMicrosoftEmailVerified({ email: "user@outlook.com", xms_edov: "1" }),
+    ).toBe(true);
+    expect(
+      isMicrosoftEmailVerified({ email: "user@outlook.com", xms_edov: "true" }),
+    ).toBe(true);
+    expect(
+      isMicrosoftEmailVerified({ email: "user@outlook.com", xms_edov: "0" }),
+    ).toBe(false);
+    expect(
+      isMicrosoftEmailVerified({
+        email: "user@outlook.com",
+        xms_edov: "false",
+      }),
+    ).toBe(false);
+  });
+
   it("trusts an explicit email_verified claim", () => {
     expect(
       isMicrosoftEmailVerified({
