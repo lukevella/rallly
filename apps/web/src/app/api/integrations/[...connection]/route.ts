@@ -73,7 +73,7 @@ function conferencingOnConnect({
 
 const { handler } = OAuthIntegration<Integration>({
   basePath: "/api/integrations",
-  getIntegration: async ({ integrationId, callbackUrl }) => {
+  getIntegration: async ({ integrationId, callbackUrl, flow }) => {
     switch (integrationId) {
       case "google-calendar": {
         if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -169,7 +169,10 @@ const { handler } = OAuthIntegration<Integration>({
           !isConferencingEnabled ||
           !env.MICROSOFT_CLIENT_ID ||
           !env.MICROSOFT_CLIENT_SECRET ||
-          !(await isAllowedForSession("teams"))
+          // The rollout allowlist limits who connects. Approving the app for
+          // an organization connects no one, and the administrator doing it
+          // is rarely on the list or signed in to Rallly.
+          (flow === "connect" && !(await isAllowedForSession("teams")))
         ) {
           return null;
         }

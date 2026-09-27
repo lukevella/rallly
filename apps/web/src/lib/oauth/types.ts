@@ -48,9 +48,13 @@ export interface CreateOAuthOptions<T extends string> {
   getIntegration: ({
     integrationId,
     callbackUrl,
+    flow,
   }: {
     integrationId: T;
     callbackUrl: string;
+    // `admin_consent` runs for an administrator who may have no Rallly
+    // session, so per user gates must not apply to it.
+    flow: "connect" | "admin_consent";
   }) => OAuthClient | null | Promise<OAuthClient | null>;
   cookieConfig?: {
     prefix?: string;

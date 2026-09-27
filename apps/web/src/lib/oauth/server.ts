@@ -79,6 +79,7 @@ export function OAuthIntegration<T extends string>(
       const integration = await getIntegration({
         integrationId: id as T,
         callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
+        flow: "connect",
       });
 
       if (!integration) {
@@ -137,6 +138,7 @@ export function OAuthIntegration<T extends string>(
       const integration = await getIntegration({
         integrationId: id as T,
         callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
+        flow: "admin_consent",
       });
 
       if (!integration?.getAdminConsentUrl) {
@@ -174,13 +176,16 @@ export function OAuthIntegration<T extends string>(
   app.get("/callback/:id", validateParams, async (c) => {
     try {
       const { id } = c.req.valid("param");
+      const isAdminConsent =
+        c.req.query("admin_consent")?.toLowerCase() === "true";
 
       const integration = await getIntegration({
         integrationId: id as T,
         callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
+        flow: isAdminConsent ? "admin_consent" : "connect",
       });
 
-      if (!integration) {
+      if (!integration || (isAdminConsent && !integration.getAdminConsentUrl)) {
         return c.json({ error: `${id} integration not configured` }, 404);
       }
 
@@ -194,7 +199,7 @@ export function OAuthIntegration<T extends string>(
 
       // The return leg of an admin consent grant carries no code; the
       // administrator's own sign in was never meant to create a connection.
-      if (c.req.query("admin_consent")?.toLowerCase() === "true") {
+      if (isAdminConsent) {
         if (!state || !storedState || state !== storedState) {
           setOutcome(c, { error: "invalid_request", integrationId: id });
         } else {
