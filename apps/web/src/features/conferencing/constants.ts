@@ -5,7 +5,8 @@ export const isConferencingEnabled =
   process.env.CONFERENCING_ENABLED === "true";
 
 // A provider is offered when its OAuth app is configured; Google Meet reuses
-// the Google OAuth app the calendars integration already needs.
+// the Google OAuth app the calendars integration already needs, and Microsoft
+// Teams the Microsoft app sign in uses.
 export function getAvailableConferencingProviders(): ConferencingProvider[] {
   if (!isConferencingEnabled) {
     return [];
@@ -17,6 +18,9 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     providers.push("meet");
   }
+  if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
+    providers.push("teams");
+  }
   return providers;
 }
 
@@ -27,6 +31,7 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
 const providerAllowlists: Record<ConferencingProvider, string | undefined> = {
   zoom: process.env.ZOOM_ALLOWED_EMAILS,
   meet: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
+  teams: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
 };
 
 export function isConferencingProviderAllowedFor({
@@ -51,3 +56,13 @@ export function getAvailableConferencingProvidersFor({
     isConferencingProviderAllowedFor({ provider, email }),
   );
 }
+
+// `offline_access` is what makes Microsoft issue a refresh token.
+export const MICROSOFT_TEAMS_SCOPES = [
+  "openid",
+  "profile",
+  "email",
+  "offline_access",
+  "User.Read",
+  "OnlineMeetings.ReadWrite",
+];

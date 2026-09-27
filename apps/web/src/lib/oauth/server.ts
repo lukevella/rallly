@@ -39,22 +39,26 @@ export function OAuthIntegration<T extends string>(
   // a reload of the landing page never replays the toast.
   const setOutcome = (
     c: Context,
-    outcome: { connected: string } | { error: string },
+    outcome:
+      | { connected: string }
+      | { adminConsent: string }
+      | { error: string; integrationId: string },
   ) => {
-    setCookie(
-      c,
-      flashCookieName(OAUTH_FLASH_KEY),
-      "connected" in outcome
-        ? `connected:${outcome.connected}`
-        : `error:${outcome.error}`,
-      {
-        httpOnly: false,
-        secure: cookieOptions.secure,
-        sameSite: "lax",
-        maxAge: FLASH_MAX_AGE,
-        path: "/",
-      },
-    );
+    let value: string;
+    if ("connected" in outcome) {
+      value = `connected:${outcome.connected}`;
+    } else if ("adminConsent" in outcome) {
+      value = `admin_consent:${outcome.adminConsent}`;
+    } else {
+      value = `error:${outcome.error}:${outcome.integrationId}`;
+    }
+    setCookie(c, flashCookieName(OAUTH_FLASH_KEY), value, {
+      httpOnly: false,
+      secure: cookieOptions.secure,
+      sameSite: "lax",
+      maxAge: FLASH_MAX_AGE,
+      path: "/",
+    });
   };
 
   const app = new Hono().basePath(basePath);
@@ -123,6 +127,49 @@ export function OAuthIntegration<T extends string>(
     }
   });
 
+  // A link a user hands to their administrator when their organization does
+  // not let users approve apps themselves. It carries no session: the
+  // administrator need not have a Rallly account.
+  app.get("/admin-consent/:id", validateParams, async (c) => {
+    try {
+      const { id } = c.req.valid("param");
+
+      const integration = await getIntegration({
+        integrationId: id as T,
+        callbackUrl: absoluteUrl(`${basePath}/callback/${id}`),
+      });
+
+      if (!integration?.getAdminConsentUrl) {
+        return c.json({ error: `${id} does not support admin consent` }, 404);
+      }
+
+      const state = generateState();
+      const redirectTo = validateRedirectUrl(c.req.query("redirect")) || "/";
+
+      setCookie(c, STATE, state, {
+        httpOnly: true,
+        secure: cookieOptions.secure,
+        sameSite: cookieOptions.sameSite,
+        maxAge: cookieOptions.maxAge,
+        path: "/",
+      });
+
+      setCookie(c, REDIRECT_TO, redirectTo, {
+        httpOnly: true,
+        secure: cookieOptions.secure,
+        sameSite: cookieOptions.sameSite,
+        maxAge: cookieOptions.maxAge,
+        path: "/",
+      });
+
+      return c.redirect(integration.getAdminConsentUrl(state).toString());
+    } catch (error) {
+      logger.error({ error }, "Admin consent initiation failed");
+
+      return c.json({ error: "Failed to initiate admin consent" }, 404);
+    }
+  });
+
   // OAuth callback endpoint
   app.get("/callback/:id", validateParams, async (c) => {
     try {
@@ -145,6 +192,17 @@ export function OAuthIntegration<T extends string>(
 
       const redirectTo = validateRedirectUrl(storedRedirect) || "/";
 
+      // The return leg of an admin consent grant carries no code; the
+      // administrator's own sign in was never meant to create a connection.
+      if (c.req.query("admin_consent")?.toLowerCase() === "true") {
+        if (!state || !storedState || state !== storedState) {
+          setOutcome(c, { error: "invalid_request", integrationId: id });
+        } else {
+          setOutcome(c, { adminConsent: id });
+        }
+        return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
+      }
+
       // Validate OAuth callback parameters
       if (
         !code ||
@@ -153,7 +211,7 @@ export function OAuthIntegration<T extends string>(
         state !== storedState ||
         !codeVerifier
       ) {
-        setOutcome(c, { error: "invalid_request" });
+        setOutcome(c, { error: "invalid_request", integrationId: id });
         return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
       }
 
@@ -175,7 +233,10 @@ export function OAuthIntegration<T extends string>(
       logger.error({ error }, "OAuth connection failed");
 
       const redirectTo = getCookie(c, REDIRECT_TO) || "/";
-      setOutcome(c, { error: "connection_failed" });
+      setOutcome(c, {
+        error: "connection_failed",
+        integrationId: c.req.param("id") ?? "",
+      });
       return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
     }
   });

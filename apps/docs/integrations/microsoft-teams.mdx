@@ -1,0 +1,142 @@
+---
+icon: video
+title: Microsoft Teams
+description: Connect your Microsoft work or school account so Rallly creates the Teams meeting link when you finalize a poll
+---
+
+With the Microsoft Teams integration, Rallly creates a Teams meeting on your Microsoft account at the moment you finalize a poll. The join link goes into the event, the calendar invite and the confirmation emails, so participants never wait for a link to follow.
+
+## How it works
+
+1. You connect your Microsoft work or school account once, from your settings.
+2. When you create a poll, you choose Microsoft Teams as the video call. The poll shows "Microsoft Teams" to participants while voting is open; there is no link yet.
+3. When you finalize the poll, Rallly creates a Teams meeting for the chosen time on your Microsoft account and attaches the join link to the event.
+
+The meeting is created on the Microsoft account you connected, so it follows your organization's Teams meeting policies, such as the lobby and who can present. Rallly does not change those settings.
+
+## Requirements
+
+- A Microsoft work or school account with a Microsoft Teams license. Personal Microsoft accounts (Outlook.com, Hotmail, Live) are not supported: Microsoft does not let apps create Teams meetings for them, so Rallly asks Microsoft for a work or school account when you connect.
+- You must have used Teams at least once with that account. An account whose Microsoft 365 plan does not include Teams cannot create meetings.
+- Your organization must let you approve Rallly, or an administrator must approve it for the organization. See [Admin approval](#admin-approval).
+- The Microsoft Teams integration must be enabled on the Rallly instance you use. On a self-hosted instance the administrator turns it on.
+- Finalizing a poll is a Pro feature on rallly.co. Connecting Microsoft Teams and choosing it for a poll works on every plan; the meeting is created when the poll is finalized.
+
+## Adding the app
+
+<Steps>
+  <Step title="Open Conferencing settings">
+    In Rallly, open **Settings** from the sidebar and choose **Conferencing**.
+  </Step>
+  <Step title="Connect your account">
+    Next to **Microsoft Teams**, click **Connect**. You are sent to Microsoft to pick your work or school account and sign in.
+  </Step>
+  <Step title="Approve the permissions">
+    Microsoft shows what Rallly is asking for (listed under [Permissions](#permissions)). Click **Accept**. You are returned to Rallly, where the email address of your Microsoft account appears next to Microsoft Teams.
+  </Step>
+</Steps>
+
+You can connect one Microsoft account for Microsoft Teams. To switch to a different account, disconnect the current one, then connect the new one.
+
+Connecting Microsoft Teams is separate from signing in to Rallly with Microsoft. You can sign in with any method and still connect Teams, and connecting Teams does not change how you sign in.
+
+### Admin approval
+
+Many organizations do not let their users approve apps themselves. If yours is one of them, Microsoft shows "Need admin approval" instead of the permissions, and Rallly shows an error when you return. Only an administrator of your organization can resolve this.
+
+When the connection fails, Rallly offers a **Copy link** button. Send that link to your IT administrator. The administrator opens it, signs in with their administrator account and approves Rallly for the whole organization; they do not need a Rallly account. On rallly.co the link is:
+
+```
+https://app.rallly.co/api/integrations/admin-consent/microsoft-teams?redirect=/settings/conferencing
+```
+
+On a self-hosted instance, replace `https://app.rallly.co` with the address of your instance.
+
+After the administrator approves, connect Microsoft Teams again. Microsoft no longer asks for approval. Administrators who prefer the Microsoft Entra admin center can grant the same approval under **Enterprise apps**, after searching for Rallly and opening **Permissions**.
+
+## Using the integration
+
+### Choosing Microsoft Teams for a poll
+
+When creating a poll, click **Add location** and choose **Microsoft Teams** under **Video call**. The form shows "Microsoft Teams" as the video call for this poll.
+
+If your Microsoft Teams account is not connected, the form tells you so and links to Conferencing settings.
+
+Participants see "Microsoft Teams" on the poll page while voting is open. No meeting link exists yet.
+
+### Finalizing the poll
+
+When you finalize the poll and pick the winning time, Rallly:
+
+1. Creates a Teams meeting for that time on your Microsoft account.
+2. Attaches the join link, meeting ID and passcode to the event.
+3. Includes them in the calendar invite (`.ics`) and in the confirmation emails sent to you and to participants.
+
+Rallly does not add the meeting to your Outlook calendar; the calendar invite Rallly sends covers it.
+
+If the meeting cannot be created, for example because the Microsoft connection has expired or your account has no Teams license, the poll stays open and Rallly shows an error. Reconnect your account in Conferencing settings and finalize again.
+
+### Which account hosts the meeting
+
+The meeting is created on the Microsoft account of the poll's organizer. If a space member finalizes a poll organized by someone else, the meeting is still created on the organizer's Microsoft account, and the organizer is the host.
+
+## Permissions
+
+When you connect, Rallly asks Microsoft for these permissions:
+
+| Permission | Why |
+| --- | --- |
+| Read and create your online meetings (`OnlineMeetings.ReadWrite`) | To create the Teams meeting when you finalize a poll. |
+| Sign you in and read your profile (`User.Read`) | To identify the connection and show which account is connected. |
+| Maintain access to data you have given it access to (`offline_access`) | So Rallly can create meetings when you finalize a poll without asking you to sign in each time. |
+| View your basic profile and email address (`openid`, `profile`, `email`) | Requested with the sign in to identify the account. Rallly does not store your name. |
+
+Rallly uses `OnlineMeetings.ReadWrite` only to create a meeting when you finalize a poll. Rallly does not read your other meetings, chats, recordings, transcripts, files, contacts, calendar or email, and does not join or record meetings.
+
+## Data Rallly stores
+
+For a connected Microsoft account, Rallly stores:
+
+- Your Microsoft account id and email address, to identify the connection and show it in your settings.
+- The access token and refresh token Microsoft issues, encrypted at rest, so Rallly can create meetings on your behalf without asking you to sign in each time.
+
+For each finalized poll, Rallly stores the join link, meeting ID and passcode of the meeting it created, as part of the event.
+
+Rallly does not store the content of any meeting.
+
+## Removing the app
+
+### From Rallly
+
+1. Open **Settings**, then **Conferencing**.
+2. Next to **Microsoft Teams**, click the **More options** button and choose **Disconnect**.
+
+The connection is removed immediately, Rallly deletes the tokens it stored for that Microsoft account and stops creating Teams meetings for you.
+
+Microsoft does not let apps revoke their own access, so disconnecting in Rallly does not remove Rallly from your Microsoft account. Rallly no longer holds tokens to use it, but to remove the permission itself, follow the steps below.
+
+Polls that already chose Microsoft Teams keep that choice but can no longer be finalized with a Teams link until an account is connected again. Meetings Rallly already created keep working.
+
+### From your Microsoft account
+
+1. Open [My Apps](https://myapps.microsoft.com) and sign in with the account you connected.
+2. Find **Rallly**, open its menu and choose **Manage your application**.
+3. Choose **Revoke permissions** and confirm.
+
+If you do not see the option, your organization manages app permissions centrally; ask your administrator to remove Rallly. Microsoft does not tell Rallly, so the connection still appears in your settings until you disconnect it in Rallly as well; Rallly can no longer use it.
+
+## Troubleshooting
+
+**Microsoft says "Need admin approval".** Your organization does not let users approve apps. Send your administrator the link described under [Admin approval](#admin-approval).
+
+**Microsoft does not accept your personal account.** Microsoft Teams meetings can only be created for work or school accounts. Connect the account your organization gave you.
+
+**"Microsoft Teams is not connected" when creating a poll.** Your Rallly account has no Microsoft Teams connection, or it was removed. Connect one in Conferencing settings and choose Microsoft Teams again.
+
+**Finalizing fails with a video call error.** Your account may have no Teams license, you may never have used Teams with it, the connection may have expired after 90 days without use, or your password was changed or your administrator removed Rallly. Check that you can open Teams with that account, then disconnect and reconnect Microsoft Teams in Conferencing settings and finalize again. The poll is unchanged until finalizing succeeds.
+
+**Participants wait in the lobby.** Who waits in the lobby follows your organization's Teams meeting policies. The host can admit people from the meeting, or change the meeting options in Teams.
+
+**The meeting was created on the wrong account.** The meeting is always created on the poll organizer's connected Microsoft account. Check which account is connected in Conferencing settings.
+
+Still stuck? [Contact support](/contact/support).

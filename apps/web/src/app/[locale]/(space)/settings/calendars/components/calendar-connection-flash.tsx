@@ -19,7 +19,7 @@ export function CalendarConnectionFlash() {
       toast.success(
         t("calendarConnected", { defaultValue: "Calendar connected" }),
       );
-    } else {
+    } else if (flash.startsWith("error:")) {
       toast.error(
         t("calendarConnectFailed", {
           defaultValue: "We couldn't connect that calendar. Please try again.",

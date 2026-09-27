@@ -1,17 +1,23 @@
 import "server-only";
 
 import { createLogger } from "@rallly/logger";
+import { OAuth2RequestError } from "arctic";
 import { google } from "googleapis";
 import { env } from "@/env";
 import { loadCredential } from "@/features/credentials/data";
 import { updateOAuthCredentialTokens } from "@/features/credentials/mutations";
 import type { OAuthCredentials } from "@/features/credentials/schema";
+import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
+import { MICROSOFT_TEAMS_SCOPES } from "./constants";
 import { getConferencingConnectionForProvider } from "./data";
 import type { Conferencing, ConferencingProvider } from "./schema";
 import {
+  getMicrosoftTeamsAuthority,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
+  teamsMeetingResponseSchema,
+  teamsMeetingToConferencing,
   zoomMeetingResponseSchema,
   zoomMeetingToConferencing,
 } from "./utils";
@@ -71,8 +77,27 @@ export async function createConferencingMeeting({
         const conferencing = await createMeetSpace(credential.secret);
         return { ok: true, conferencing };
       }
+      case "teams": {
+        const secret = await refreshMicrosoftTokenIfExpired({ credential });
+        const conferencing = await createTeamsMeeting({
+          accessToken: secret.accessToken,
+          title,
+          start,
+          end,
+        });
+        return { ok: true, conferencing };
+      }
     }
   } catch (error) {
+    // The grant is gone (expired after inactivity, password change, revoked
+    // by the user or their admin); only reconnecting brings it back.
+    if (error instanceof OAuth2RequestError && error.code === "invalid_grant") {
+      logger.warn(
+        { userId, provider, connectionId: connection.id },
+        "Conferencing grant is no longer valid",
+      );
+      return { ok: false, reason: "not_connected" };
+    }
     // `err` is the key pino's default serializer expands; `error` logs as {}.
     logger.error(
       { err: error, userId, provider, connectionId: connection.id },
@@ -82,18 +107,22 @@ export async function createConferencingMeeting({
   }
 }
 
-async function refreshZoomTokenIfExpired({
-  credential,
-}: {
-  credential: NonNullable<Awaited<ReturnType<typeof loadCredential>>>;
-}): Promise<OAuthCredentials> {
+type StoredCredential = NonNullable<Awaited<ReturnType<typeof loadCredential>>>;
+
+// Checked a minute early so a token that expires mid-request is not used.
+function isAccessTokenFresh(credential: StoredCredential) {
   const expiresAt = credential.secret.expiresAt
     ? new Date(credential.secret.expiresAt)
     : credential.expiresAt;
-  // Refresh a minute early so a token that expires mid-request is not used.
-  const isFresh = expiresAt && expiresAt.getTime() - 60_000 > Date.now();
+  return Boolean(expiresAt && expiresAt.getTime() - 60_000 > Date.now());
+}
 
-  if (isFresh || !credential.secret.refreshToken) {
+async function refreshZoomTokenIfExpired({
+  credential,
+}: {
+  credential: StoredCredential;
+}): Promise<OAuthCredentials> {
+  if (isAccessTokenFresh(credential) || !credential.secret.refreshToken) {
     return credential.secret;
   }
 
@@ -122,12 +151,49 @@ async function refreshZoomTokenIfExpired({
     scopes: tokens.scopes,
   };
 }
+
+async function refreshMicrosoftTokenIfExpired({
+  credential,
+}: {
+  credential: StoredCredential;
+}): Promise<OAuthCredentials> {
+  if (isAccessTokenFresh(credential) || !credential.secret.refreshToken) {
+    return credential.secret;
+  }
+
+  if (!env.MICROSOFT_CLIENT_ID || !env.MICROSOFT_CLIENT_SECRET) {
+    throw new Error("Microsoft is not configured");
+  }
+
+  const client = new MicrosoftOAuthClient({
+    tenant: getMicrosoftTeamsAuthority(env.MICROSOFT_TENANT_ID),
+    clientId: env.MICROSOFT_CLIENT_ID,
+    clientSecret: env.MICROSOFT_CLIENT_SECRET,
+    scopes: MICROSOFT_TEAMS_SCOPES,
+  });
+
+  const tokens = await client.refreshAccessToken(
+    credential.secret.refreshToken,
+  );
+
+  // Every refresh returns a new refresh token; persist it before the meeting
+  // call so a failure there does not leave the stored one behind.
+  await updateOAuthCredentialTokens({ id: credential.id, tokens });
+
+  return {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    expiresAt: tokens.expiresAt?.toISOString(),
+    scopes: tokens.scopes,
+  };
+}
+
 // Best effort: the tokens are already deleted locally, and a grant Zoom still
 // holds is one the user can remove from their own Zoom app list.
 export async function revokeZoomToken({
   credential,
 }: {
-  credential: NonNullable<Awaited<ReturnType<typeof loadCredential>>>;
+  credential: StoredCredential;
 }) {
   const { secret } = credential;
   if (!env.ZOOM_CLIENT_ID || !env.ZOOM_CLIENT_SECRET) {
@@ -144,12 +210,8 @@ export async function revokeZoomToken({
     // Zoom rejects an expired access token, and they only live an hour, so
     // one that is stale, close to expiry or of unknown age is exchanged in
     // memory first, with the same margin refreshZoomTokenIfExpired uses.
-    const expiresAt = secret.expiresAt
-      ? new Date(secret.expiresAt)
-      : credential.expiresAt;
-    const isFresh = expiresAt && expiresAt.getTime() - 60_000 > Date.now();
     const accessToken =
-      !isFresh && secret.refreshToken
+      !isAccessTokenFresh(credential) && secret.refreshToken
         ? (await client.refreshAccessToken(secret.refreshToken)).accessToken
         : secret.accessToken;
     await client.revokeToken(accessToken);
@@ -198,6 +260,46 @@ async function createZoomMeeting({
 
   return zoomMeetingToConferencing(
     zoomMeetingResponseSchema.parse(await res.json()),
+  );
+}
+
+// Graph does not add the meeting to the organizer's Outlook calendar; the
+// event's own invite carries it.
+async function createTeamsMeeting({
+  accessToken,
+  title,
+  start,
+  end,
+}: {
+  accessToken: string;
+  title: string;
+  start: Date;
+  end: Date;
+}): Promise<Conferencing> {
+  const res = await fetch(
+    "https://graph.microsoft.com/v1.0/me/onlineMeetings",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        subject: title,
+        startDateTime: start.toISOString(),
+        endDateTime: end.toISOString(),
+      }),
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(
+      `Teams meeting creation failed with status ${res.status}: ${await res.text()}`,
+    );
+  }
+
+  return teamsMeetingToConferencing(
+    teamsMeetingResponseSchema.parse(await res.json()),
   );
 }
 

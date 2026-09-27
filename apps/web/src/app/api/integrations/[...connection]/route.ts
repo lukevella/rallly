@@ -6,12 +6,15 @@ import {
 import {
   isConferencingEnabled,
   isConferencingProviderAllowedFor,
+  MICROSOFT_TEAMS_SCOPES,
 } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import type { ConferencingProvider } from "@/features/conferencing/schema";
+import { getMicrosoftTeamsAuthority } from "@/features/conferencing/utils";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
+import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
 import { OAuthIntegration } from "@/lib/oauth/server";
 import type { OAuthClient } from "@/lib/oauth/types";
@@ -20,6 +23,7 @@ type Integration =
   | "google-calendar"
   | "outlook-calendar"
   | "google-meet"
+  | "microsoft-teams"
   | "zoom";
 
 async function requireSessionUserId() {
@@ -157,6 +161,27 @@ const { handler } = OAuthIntegration<Integration>({
           onConnect: conferencingOnConnect({
             integrationId,
             displayName: "Zoom",
+          }),
+        });
+      }
+      case "microsoft-teams": {
+        if (
+          !isConferencingEnabled ||
+          !env.MICROSOFT_CLIENT_ID ||
+          !env.MICROSOFT_CLIENT_SECRET ||
+          !(await isAllowedForSession("teams"))
+        ) {
+          return null;
+        }
+        return new MicrosoftOAuthClient({
+          tenant: getMicrosoftTeamsAuthority(env.MICROSOFT_TENANT_ID),
+          clientId: env.MICROSOFT_CLIENT_ID,
+          clientSecret: env.MICROSOFT_CLIENT_SECRET,
+          callbackUrl,
+          scopes: MICROSOFT_TEAMS_SCOPES,
+          onConnect: conferencingOnConnect({
+            integrationId,
+            displayName: "Microsoft Teams",
           }),
         });
       }
