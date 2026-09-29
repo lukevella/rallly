@@ -12,6 +12,7 @@ import * as z from "zod";
 import { FLASH_MAX_AGE, flashCookieName } from "@/lib/flash/constants";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 import { OAUTH_FLASH_KEY } from "./constants";
+import { OAuthConnectionRefusedError } from "./errors";
 import type { CreateOAuthOptions } from "./types";
 
 const logger = createLogger("oauth");
@@ -254,11 +255,17 @@ export function OAuthIntegration<T extends string>(
       setOutcome(c, { connected: id });
       return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
     } catch (error) {
-      logger.error({ error }, "OAuth connection failed");
+      const refusal =
+        error instanceof OAuthConnectionRefusedError ? error.reason : null;
+      if (refusal) {
+        logger.warn({ reason: refusal }, "OAuth connection refused");
+      } else {
+        logger.error({ error }, "OAuth connection failed");
+      }
 
       const redirectTo = getCookie(c, REDIRECT_TO) || "/";
       setOutcome(c, {
-        error: "connection_failed",
+        error: refusal ?? "connection_failed",
         integrationId: c.req.param("id") ?? "",
       });
       return c.redirect(new URL(redirectTo, absoluteUrl()).toString());

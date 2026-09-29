@@ -6,6 +6,7 @@ import {
   getConferencingUri,
   getMicrosoftTeamsAuthority,
   isEmailAllowlisted,
+  isTeamsMeetingRefusal,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
   teamsMeetingResponseSchema,
@@ -115,6 +116,26 @@ describe("teamsMeetingToConferencing", () => {
     expect(teamsMeetingResponseSchema.safeParse({ id: "abc" }).success).toBe(
       false,
     );
+  });
+});
+
+describe("isTeamsMeetingRefusal", () => {
+  it("reads a client error as the account being unable to host", () => {
+    expect(isTeamsMeetingRefusal(400)).toBe(true);
+    expect(isTeamsMeetingRefusal(403)).toBe(true);
+    expect(isTeamsMeetingRefusal(404)).toBe(true);
+  });
+
+  it("does not blame the account for a bad token, a timeout or throttling", () => {
+    expect(isTeamsMeetingRefusal(401)).toBe(false);
+    expect(isTeamsMeetingRefusal(408)).toBe(false);
+    expect(isTeamsMeetingRefusal(429)).toBe(false);
+  });
+
+  it("does not blame the account for a Microsoft outage or a success", () => {
+    expect(isTeamsMeetingRefusal(500)).toBe(false);
+    expect(isTeamsMeetingRefusal(503)).toBe(false);
+    expect(isTeamsMeetingRefusal(201)).toBe(false);
   });
 });
 

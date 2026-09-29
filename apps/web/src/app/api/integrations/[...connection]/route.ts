@@ -10,9 +10,11 @@ import {
 } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import type { ConferencingProvider } from "@/features/conferencing/schema";
+import { checkTeamsCanHostMeetings } from "@/features/conferencing/service";
 import { getMicrosoftTeamsAuthority } from "@/features/conferencing/utils";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
+import { OAuthConnectionRefusedError } from "@/lib/oauth/errors";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
 import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
@@ -182,10 +184,20 @@ const { handler } = OAuthIntegration<Integration>({
           clientSecret: env.MICROSOFT_CLIENT_SECRET,
           callbackUrl,
           scopes: MICROSOFT_TEAMS_SCOPES,
-          onConnect: conferencingOnConnect({
-            integrationId,
-            displayName: "Microsoft Teams",
-          }),
+          onConnect: async (params) => {
+            // An account without a Teams license signs in fine and only
+            // fails when a poll is finalized, so it is refused here instead.
+            const check = await checkTeamsCanHostMeetings({
+              accessToken: params.tokens.accessToken,
+            });
+            if (!check.ok && check.reason === "refused") {
+              throw new OAuthConnectionRefusedError("cannot_host_meetings");
+            }
+            await conferencingOnConnect({
+              integrationId,
+              displayName: "Microsoft Teams",
+            })(params);
+          },
         });
       }
       default:
