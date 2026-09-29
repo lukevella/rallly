@@ -217,6 +217,17 @@ describe("provinces that stopped changing clocks", () => {
     expect(out).toContain("02:30");
   });
 
+  it("formats a range whose endpoints need different offsets", () => {
+    // 10:00 at UTC-7 in January, 10:00 at UTC-6 in November.
+    const out = formatDateTimeRange(
+      new Date("2026-01-15T17:00:00Z"),
+      new Date("2026-11-05T16:00:00Z"),
+      { preset: "datetime", ...ctx("en", "hours24", "America/Edmonton") },
+    );
+    expect(out).toContain("Jan 15, 2026, 10:00");
+    expect(out).toContain("Nov 5, 2026, 10:00");
+  });
+
   it("formats date parts on the right calendar day after the cutoff", () => {
     expect(
       formatDateParts(new Date("2026-11-06T06:30:00Z"), {
