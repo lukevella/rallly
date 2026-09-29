@@ -1170,7 +1170,7 @@ export const polls = router({
       const uid = `${eventId}@rallly.co`;
 
       // A second booking would mint a second meeting and orphan the first
-      // event, so a poll is booked once; reopen it to book again.
+      // event, so a poll is booked once.
       if (poll.status === "scheduled") {
         throw new TRPCError({
           code: "CONFLICT",
@@ -1478,11 +1478,12 @@ export const polls = router({
       await prisma.$transaction(async (tx) => {
         // Conditional transition: only the call that actually flips the
         // status appends a lifecycle event, so repeated or concurrent calls
-        // can't record a reopen that didn't happen.
+        // can't record a reopen that didn't happen. Scheduling is final: the
+        // booked event has already gone out to attendees.
         const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-            status: { not: "open" },
+            status: { notIn: ["open", "scheduled"] },
           },
           data: {
             status: "open",
@@ -1491,6 +1492,16 @@ export const polls = router({
         });
 
         if (count === 0) {
+          const current = await tx.poll.findUnique({
+            where: { id: input.pollId },
+            select: { status: true },
+          });
+          if (current?.status === "scheduled") {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "A scheduled poll cannot be reopened",
+            });
+          }
           return;
         }
 
