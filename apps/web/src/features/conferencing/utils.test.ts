@@ -126,8 +126,9 @@ describe("isTeamsMeetingRefusal", () => {
     expect(isTeamsMeetingRefusal(404)).toBe(true);
   });
 
-  it("does not blame the account for a bad token or throttling", () => {
+  it("does not blame the account for a bad token, a timeout or throttling", () => {
     expect(isTeamsMeetingRefusal(401)).toBe(false);
+    expect(isTeamsMeetingRefusal(408)).toBe(false);
     expect(isTeamsMeetingRefusal(429)).toBe(false);
   });
 

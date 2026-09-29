@@ -93,9 +93,16 @@ export const teamsMeetingProbeResponseSchema = z.object({
 
 // Graph answers a request the account is not entitled to make with a client
 // error: no Teams license, Teams never opened, or a policy that blocks
-// meetings. 401 (token) and 429 (throttling) say nothing about the account.
+// meetings. 401 (token), 408 (timeout) and 429 (throttling) say nothing about
+// the account.
 export function isTeamsMeetingRefusal(status: number) {
-  return status >= 400 && status < 500 && status !== 401 && status !== 429;
+  return (
+    status >= 400 &&
+    status < 500 &&
+    status !== 401 &&
+    status !== 408 &&
+    status !== 429
+  );
 }
 
 // Graph's online meetings API serves work and school accounts only, so a
