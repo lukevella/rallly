@@ -29,7 +29,7 @@ import {
 } from "@/features/poll/participant/schema";
 import { getLocale } from "@/i18n/server/get-locale";
 import { AppError } from "@/lib/errors/app-error";
-import { track } from "@/lib/posthog";
+import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
 import {
   anyUserActionClient,
   createRateLimitMiddleware,
@@ -119,15 +119,30 @@ async function sendNewResponseNotificationEmail({
   excludeUserId: string;
 }) {
   try {
-    const recipient = await getNotificationRecipient({
+    const result = await getNotificationRecipient({
       pollId,
       type: "poll.response.submitted",
       excludeUserId,
     });
 
-    if (!recipient) {
+    if (!result.ok) {
+      logger.info(
+        { pollId, reason: result.reason },
+        "Skipped new response notification email",
+      );
+      trackSystemEvent({
+        event: "poll_notification:email_skip",
+        properties: {
+          poll_id: pollId,
+          type: "poll.response.submitted",
+          reason: result.reason,
+        },
+      });
+      await flushPostHog();
       return;
     }
+
+    const { recipient } = result;
 
     const unsubscribeToken = createUnsubscribeToken({
       target: { kind: "poll", pollId, userId: recipient.id },
