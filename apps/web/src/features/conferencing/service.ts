@@ -334,11 +334,16 @@ export type TeamsHostCheckResult =
   | { ok: true }
   | { ok: false; reason: "refused" | "inconclusive" };
 
+// The check runs inside the OAuth callback, so a request Microsoft never
+// answers must not hold the connection open.
+const TEAMS_CHECK_CREATE_TIMEOUT_MS = 10_000;
+const TEAMS_CHECK_DELETE_TIMEOUT_MS = 5_000;
+
 // Proves at connect time that the account can host meetings, by creating one
 // and deleting it again, so a missing Teams license surfaces while the user
 // is looking at the connection rather than when they finalize a poll. Graph
 // meetings are never written to a calendar, so the user sees nothing. Only a
-// refusal blocks the connection; an outage or a throttle must not.
+// refusal blocks the connection; an outage, a timeout or a throttle must not.
 export async function checkTeamsCanHostMeetings({
   accessToken,
 }: {
@@ -348,6 +353,8 @@ export async function checkTeamsCanHostMeetings({
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
   };
+
+  let meetingId: string;
   try {
     const start = new Date(Date.now() + 60 * 60_000);
     const end = new Date(start.getTime() + 30 * 60_000);
@@ -359,6 +366,7 @@ export async function checkTeamsCanHostMeetings({
         startDateTime: start.toISOString(),
         endDateTime: end.toISOString(),
       }),
+      signal: AbortSignal.timeout(TEAMS_CHECK_CREATE_TIMEOUT_MS),
     });
 
     if (!res.ok) {
@@ -370,22 +378,52 @@ export async function checkTeamsCanHostMeetings({
       return { ok: false, reason: refused ? "refused" : "inconclusive" };
     }
 
-    const { id } = teamsMeetingProbeResponseSchema.parse(await res.json());
-    const deleted = await fetch(
-      `${TEAMS_ONLINE_MEETINGS_URL}/${encodeURIComponent(id)}`,
-      { method: "DELETE", headers },
-    );
-    if (!deleted.ok) {
-      logger.warn(
-        { status: deleted.status },
-        "Teams connection check meeting was not deleted",
-      );
-    }
-    return { ok: true };
+    meetingId = teamsMeetingProbeResponseSchema.parse(await res.json()).id;
   } catch (error) {
     logger.warn({ err: error }, "Teams connection check failed to run");
     return { ok: false, reason: "inconclusive" };
   }
+
+  // The account has proven it can host. Whether the test meeting could be
+  // removed is a separate matter and never changes that answer.
+  await deleteTeamsCheckMeeting({ meetingId, headers });
+  return { ok: true };
+}
+
+// Tried twice, since a failure here is usually transient. A meeting that
+// stays behind is on no calendar and expires on Microsoft's side; its id is
+// logged so it can be removed by hand.
+async function deleteTeamsCheckMeeting({
+  meetingId,
+  headers,
+}: {
+  meetingId: string;
+  headers: Record<string, string>;
+}) {
+  let failure: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(
+        `${TEAMS_ONLINE_MEETINGS_URL}/${encodeURIComponent(meetingId)}`,
+        {
+          method: "DELETE",
+          headers,
+          signal: AbortSignal.timeout(TEAMS_CHECK_DELETE_TIMEOUT_MS),
+        },
+      );
+      // Already gone is as good as deleted.
+      if (res.ok || res.status === 404) {
+        return;
+      }
+      failure = new Error(`Delete answered with status ${res.status}`);
+    } catch (error) {
+      failure = error;
+    }
+  }
+  logger.warn(
+    { err: failure, meetingId },
+    "Teams connection check meeting was left behind",
+  );
 }
 
 async function createMeetSpace(
