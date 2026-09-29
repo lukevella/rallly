@@ -255,7 +255,7 @@ export const CreatePoll = ({
               // anchored to a concrete zone.
               timeZone:
                 !formData?.lockTimeZone && !formData?.allDay
-                  ? formData?.timeZone || getBrowserTimeZone()
+                  ? formData?.timeZone || user?.timeZone || getBrowserTimeZone()
                   : null,
               hideParticipants: formData?.hideParticipants,
               disableComments: !formData?.enableComments,
