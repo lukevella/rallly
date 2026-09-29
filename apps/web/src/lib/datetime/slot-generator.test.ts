@@ -315,4 +315,44 @@ describe("time-slots utilities", () => {
       });
     });
   });
+
+  // Alberta, Manitoba and British Columbia stopped falling back on 2026-11-01.
+  // These must hold on engines whose tz data predates the change.
+  describe("provinces that stopped changing clocks", () => {
+    it("parses Alberta wall times at UTC-6 after the cutoff", () => {
+      expect(
+        parseStartTime("2026-11-05T10:00:00", "America/Edmonton", 60).startTime,
+      ).toEqual(new Date("2026-11-05T16:00:00Z"));
+    });
+
+    it("parses Manitoba wall times at UTC-5 after the cutoff", () => {
+      expect(
+        parseStartTime("2026-11-05T10:00:00", "America/Winnipeg", 60).startTime,
+      ).toEqual(new Date("2026-11-05T15:00:00Z"));
+    });
+
+    it("parses British Columbia wall times at UTC-7 after the cutoff", () => {
+      expect(
+        parseStartTime("2026-11-05T10:00:00", "America/Vancouver", 60)
+          .startTime,
+      ).toEqual(new Date("2026-11-05T17:00:00Z"));
+    });
+
+    it("generates Alberta slots at UTC-6 after the cutoff", () => {
+      const slots = generateTimeSlots(
+        {
+          startDate: "2026-11-05",
+          endDate: "2026-11-05",
+          daysOfWeek: ["thu"],
+          fromTime: "10:00",
+          toTime: "11:00",
+        },
+        "America/Edmonton",
+        60,
+      );
+      expect(slots.map((slot) => slot.startTime)).toEqual([
+        new Date("2026-11-05T16:00:00Z"),
+      ]);
+    });
+  });
 });
