@@ -543,6 +543,7 @@
   "manageBilling": "Manage billing",
   "manageSeats": "Manage seats",
   "manageSeatsDescription": "Adjust the number of seats for your space.",
+  "manageSeatsInputLabel": "Number of seats",
   "maxAttendees": "Max attendees",
   "maxAttendeesInvalid": "Must be a positive integer",
   "member": "Member",

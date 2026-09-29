@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@rallly/ui";
+import { cn, passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -15,7 +15,7 @@ import {
 import { NumberTicker } from "@rallly/ui/number-ticker";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 const MAX_SEATS = 999;
@@ -90,6 +90,7 @@ export function ManageSeatsDialog({
   currentSeats,
   usedSeats,
 }: DialogProps & { currentSeats: number; usedSeats: number }) {
+  const { t } = useTranslation();
   const [newSeatCount, setNewSeatCount] = React.useState(currentSeats);
   // The stepper is allowed below usedSeats so the reason surfaces as a
   // message; a silently clamped button leaves the user guessing.
@@ -101,19 +102,59 @@ export function ManageSeatsDialog({
 
   const updateSeats = trpc.billing.updateSeats.useMutation();
 
+  // Holds the raw text while the field is focused so it can be empty or
+  // mid-edit; null means the ticker shows the committed count.
+  const [draft, setDraft] = React.useState<string | null>(null);
+  const isEditing = draft !== null;
+
+  // MAX_SEATS caps increases only; a space already above it can still step
+  // down one seat at a time.
+  const maxSeats = Math.max(MAX_SEATS, currentSeats);
+  const canIncrement = newSeatCount < MAX_SEATS;
+
+  const updateSeatCount = (next: number) => {
+    const clamped = Math.min(Math.max(next, 1), maxSeats);
+    setNewSeatCount(clamped);
+    setShowUsedSeatsError(clamped < usedSeats);
+    return clamped;
+  };
+
   const handleDecrement = () => {
     if (newSeatCount <= 1) {
       return;
     }
-    const next = newSeatCount - 1;
-    setNewSeatCount(next);
-    setShowUsedSeatsError(next < usedSeats);
+    updateSeatCount(newSeatCount - 1);
   };
 
   const handleIncrement = () => {
-    const next = Math.min(newSeatCount + 1, MAX_SEATS);
-    setNewSeatCount(next);
-    setShowUsedSeatsError(next < usedSeats);
+    if (!canIncrement) {
+      return;
+    }
+    updateSeatCount(newSeatCount + 1);
+  };
+
+  const handleInputChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, String(maxSeats).length);
+    setDraft(digits);
+    const parsed = Number.parseInt(digits, 10);
+    if (parsed >= 1) {
+      updateSeatCount(parsed);
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      if (e.key === "ArrowUp" && !canIncrement) {
+        return;
+      }
+      const next = updateSeatCount(
+        newSeatCount + (e.key === "ArrowUp" ? 1 : -1),
+      );
+      setDraft(String(next));
+    } else if (e.key === "Enter") {
+      e.currentTarget.blur();
+    }
   };
 
   const handleUpdate = async () => {
@@ -150,18 +191,46 @@ export function ManageSeatsDialog({
               </span>
             </Button>
             <SeatGauge usedSeats={usedSeats} totalSeats={newSeatCount}>
-              <NumberTicker
-                value={newSeatCount}
-                announceChanges
-                duration={0.4}
-                className="inline-flex w-[3ch] justify-center font-semibold text-3xl"
-              />
+              <span className="relative inline-flex font-semibold text-3xl">
+                <NumberTicker
+                  value={newSeatCount}
+                  announceChanges
+                  duration={0.4}
+                  className={cn(
+                    "inline-flex w-[3ch] justify-center",
+                    isEditing && "invisible",
+                  )}
+                />
+                <input
+                  {...passwordManagerIgnoreProps}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  aria-label={t("manageSeatsInputLabel", {
+                    defaultValue: "Number of seats",
+                  })}
+                  value={draft ?? String(newSeatCount)}
+                  onFocus={(e) => {
+                    setDraft(String(newSeatCount));
+                    e.currentTarget.select();
+                  }}
+                  onBlur={() => setDraft(null)}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  onKeyDown={handleInputKeyDown}
+                  className={cn(
+                    "absolute inset-0 w-full appearance-none border-0 bg-transparent p-0 text-center tabular-nums outline-none",
+                    isEditing
+                      ? "text-foreground"
+                      : "text-transparent caret-transparent",
+                  )}
+                />
+              </span>
             </SeatGauge>
             <Button
               size="icon-lg"
               className="rounded-full"
               onClick={handleIncrement}
-              disabled={newSeatCount >= MAX_SEATS}
+              disabled={!canIncrement}
             >
               <PlusIcon />
               <span className="sr-only">
