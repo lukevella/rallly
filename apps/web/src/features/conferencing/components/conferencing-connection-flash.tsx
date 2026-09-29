@@ -31,6 +31,13 @@ export function ConferencingConnectionFlash() {
             "Approved. People in your organization can now connect this app.",
         }),
       );
+    } else if (flash.startsWith("error:admin_consent_denied:")) {
+      toast.error(
+        t("conferencingAdminConsentDenied", {
+          defaultValue:
+            "The app was not approved. People in your organization still can't connect it.",
+        }),
+      );
     } else if (flash.endsWith(":microsoft-teams")) {
       // A failure here is often the organization's consent policy, which
       // only an administrator can resolve, so the toast stays until closed.

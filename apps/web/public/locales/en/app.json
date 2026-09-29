@@ -171,6 +171,7 @@
   "commentsSheetSubmitted": "Your comment has been added",
   "commentsTriggerLabel": "{count, plural, =0 {Comments} one {1 Comment} other {# Comments}}",
   "conferencing": "Conferencing",
+  "conferencingAdminConsentDenied": "The app was not approved. People in your organization still can't connect it.",
   "conferencingAdminConsentGranted": "Approved. People in your organization can now connect this app.",
   "conferencingConnected": "Account connected",
   "conferencingConnectFailed": "We couldn't connect that account. Please try again.",

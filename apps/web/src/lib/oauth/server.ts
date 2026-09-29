@@ -6,7 +6,7 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { generateCodeVerifier, generateState } from "arctic";
 import type { Context } from "hono";
 import { Hono } from "hono";
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
 import * as z from "zod";
 import { FLASH_MAX_AGE, flashCookieName } from "@/lib/flash/constants";
@@ -34,6 +34,10 @@ export function OAuthIntegration<T extends string>(
   const CODE_VERIFIER = `${prefix}code-verifier`;
   const REDIRECT_TO = `${prefix}redirect-to`;
   const STATE = `${prefix}state`;
+  // Marks a browser that started an admin consent grant, so a decline, which
+  // Microsoft reports with `error` and no `admin_consent`, is told apart from
+  // a user declining an ordinary connect.
+  const ADMIN_CONSENT = `${prefix}admin-consent`;
 
   // Outcome travels as a one-shot flash (`lib/flash`), not a query param, so
   // a reload of the landing page never replays the toast.
@@ -94,6 +98,8 @@ export function OAuthIntegration<T extends string>(
         state,
         codeVerifier,
       );
+
+      deleteCookie(c, ADMIN_CONSENT, { path: "/" });
 
       // Set secure cookies
       setCookie(c, STATE, state, {
@@ -164,6 +170,14 @@ export function OAuthIntegration<T extends string>(
         path: "/",
       });
 
+      setCookie(c, ADMIN_CONSENT, id, {
+        httpOnly: true,
+        secure: cookieOptions.secure,
+        sameSite: cookieOptions.sameSite,
+        maxAge: cookieOptions.maxAge,
+        path: "/",
+      });
+
       return c.redirect(integration.getAdminConsentUrl(state).toString());
     } catch (error) {
       logger.error({ error }, "Admin consent initiation failed");
@@ -176,8 +190,10 @@ export function OAuthIntegration<T extends string>(
   app.get("/callback/:id", validateParams, async (c) => {
     try {
       const { id } = c.req.valid("param");
-      const isAdminConsent =
+      const isAdminConsentGranted =
         c.req.query("admin_consent")?.toLowerCase() === "true";
+      const isAdminConsent =
+        isAdminConsentGranted || getCookie(c, ADMIN_CONSENT) === id;
 
       const integration = await getIntegration({
         integrationId: id as T,
@@ -200,10 +216,13 @@ export function OAuthIntegration<T extends string>(
       // The return leg of an admin consent grant carries no code; the
       // administrator's own sign in was never meant to create a connection.
       if (isAdminConsent) {
+        deleteCookie(c, ADMIN_CONSENT, { path: "/" });
         if (!state || !storedState || state !== storedState) {
           setOutcome(c, { error: "invalid_request", integrationId: id });
-        } else {
+        } else if (isAdminConsentGranted) {
           setOutcome(c, { adminConsent: id });
+        } else {
+          setOutcome(c, { error: "admin_consent_denied", integrationId: id });
         }
         return c.redirect(new URL(redirectTo, absoluteUrl()).toString());
       }
