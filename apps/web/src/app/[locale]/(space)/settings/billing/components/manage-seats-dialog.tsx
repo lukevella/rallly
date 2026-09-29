@@ -107,8 +107,13 @@ export function ManageSeatsDialog({
   const [draft, setDraft] = React.useState<string | null>(null);
   const isEditing = draft !== null;
 
+  // MAX_SEATS caps increases only; a space already above it can still step
+  // down one seat at a time.
+  const maxSeats = Math.max(MAX_SEATS, currentSeats);
+  const canIncrement = newSeatCount < MAX_SEATS;
+
   const updateSeatCount = (next: number) => {
-    const clamped = Math.min(Math.max(next, 1), MAX_SEATS);
+    const clamped = Math.min(Math.max(next, 1), maxSeats);
     setNewSeatCount(clamped);
     setShowUsedSeatsError(clamped < usedSeats);
     return clamped;
@@ -122,11 +127,14 @@ export function ManageSeatsDialog({
   };
 
   const handleIncrement = () => {
+    if (!canIncrement) {
+      return;
+    }
     updateSeatCount(newSeatCount + 1);
   };
 
   const handleInputChange = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, String(MAX_SEATS).length);
+    const digits = value.replace(/\D/g, "").slice(0, String(maxSeats).length);
     setDraft(digits);
     const parsed = Number.parseInt(digits, 10);
     if (parsed >= 1) {
@@ -137,6 +145,9 @@ export function ManageSeatsDialog({
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       e.preventDefault();
+      if (e.key === "ArrowUp" && !canIncrement) {
+        return;
+      }
       const next = updateSeatCount(
         newSeatCount + (e.key === "ArrowUp" ? 1 : -1),
       );
@@ -219,7 +230,7 @@ export function ManageSeatsDialog({
               size="icon-lg"
               className="rounded-full"
               onClick={handleIncrement}
-              disabled={newSeatCount >= MAX_SEATS}
+              disabled={!canIncrement}
             >
               <PlusIcon />
               <span className="sr-only">
