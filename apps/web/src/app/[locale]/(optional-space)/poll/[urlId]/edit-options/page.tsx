@@ -12,8 +12,8 @@ import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { filterParticipantsByVote } from "@/features/poll/utils";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useDateTimeConfig } from "@/lib/datetime/client";
 import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
 import { dayjs } from "@/lib/dayjs";
 import {
@@ -48,7 +48,7 @@ const Page = () => {
   const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
   const { t } = useTranslation();
-  const { timeZone: preferredTimeZone } = useDateTimeConfig();
+  const { user } = useUser();
   const modalContext = useModalContext();
   const router = useRouter();
   const pollLink = `/poll/${poll.id}`;
@@ -101,7 +101,7 @@ const Page = () => {
           // all-day (floating), else the organizer's zone.
           const submittedTimeZone =
             !data.lockTimeZone && !data.allDay
-              ? data.timeZone || preferredTimeZone || getBrowserTimeZone()
+              ? data.timeZone || user?.timeZone || getBrowserTimeZone()
               : null;
 
           const encodedOptions = data.options.map(encodeDateOption);

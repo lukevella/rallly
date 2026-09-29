@@ -28,6 +28,7 @@ import {
 } from "@/components/empty-state";
 import { useHeadlessDatePicker } from "@/components/headless-date-picker";
 import type { NewEventData } from "@/features/poll/components/forms/types";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { Duration } from "@/lib/datetime/duration";
@@ -51,8 +52,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChangeDuration,
 }) => {
   const { t } = useTranslation();
-  const { locale, timeZone: preferredTimeZone } = useDateTimeConfig();
-  const defaultTimeZone = preferredTimeZone ?? getBrowserTimeZone();
+  const { locale } = useDateTimeConfig();
+  const { user } = useUser();
+  const defaultTimeZone = user?.timeZone || getBrowserTimeZone();
   // Time-based options are the default. With no options yet the selected
   // duration drives the mode (0 = all-day) so the first selection creates the
   // right kind of option; once options exist their type is the source of truth.

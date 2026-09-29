@@ -17,11 +17,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CalendarIcon, InfoIcon, TableIcon } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 
-import { useDateTimeConfig } from "@/lib/datetime/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar/month-calendar";
@@ -35,8 +34,8 @@ const PollOptionsForm = ({
   const form = useFormContext<NewEventData>();
 
   const { watch, setValue, formState } = form;
-  const { timeZone: preferredTimeZone } = useDateTimeConfig();
-  const defaultTimeZone = preferredTimeZone ?? getBrowserTimeZone();
+  const { user } = useUser();
+  const defaultTimeZone = user?.timeZone || getBrowserTimeZone();
 
   const views = React.useMemo(() => {
     const res = [
