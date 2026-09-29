@@ -543,6 +543,7 @@ export const polls = router({
           select: {
             title: true,
             location: true,
+            conferencing: true,
             description: true,
             timeZone: true,
             hideParticipants: true,
@@ -694,7 +695,9 @@ export const polls = router({
             (input.description || null) !== (prior.description || null)) ||
           (conferencing !== undefined &&
             JSON.stringify(conferencing) !==
-              JSON.stringify(priorConferencing)) ||
+              JSON.stringify(
+                parsePollConferencing(prior.conferencing, { pollId }),
+              )) ||
           nextTimeZone !== prior.timeZone ||
           (input.hideParticipants !== undefined &&
             input.hideParticipants !== prior.hideParticipants) ||
