@@ -10,7 +10,7 @@ export default async function TermsOfUse() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Terms of use" lastUpdated="2026-09-04">
+      <LegalPageLayout title="Terms of use" lastUpdated="2026-09-29">
         <p>
           This website and the Rallly software and services are operated by
           Stack Snap Ltd. References to &quot;we&quot;, &quot;us&quot; or
@@ -221,15 +221,38 @@ export default async function TermsOfUse() {
 
         <h2>7. Limitation of liability</h2>
         <p>
-          To the maximum extent permitted by law, we will not be liable for any
-          damages arising from the use or inability to use this website, the
-          hosted service, or any self‑hosted installation of Rallly, including
-          but not limited to direct, indirect, incidental, consequential, or
-          punitive damages.
+          7.1 Nothing in these Terms limits or excludes our liability for death
+          or personal injury caused by our negligence, for fraud or fraudulent
+          misrepresentation, or for any other liability that cannot be limited
+          or excluded under applicable law. If you are a consumer, nothing in
+          these Terms affects your statutory rights.
         </p>
         <p>
-          Nothing in these Terms limits or excludes any liability that cannot be
-          limited or excluded under applicable law.
+          7.2 Subject to section 7.1, we will not be liable for any indirect or
+          consequential loss, or for any loss of profit, revenue, business,
+          goodwill or anticipated savings, arising from the use or inability to
+          use this website, the hosted service, or any self‑hosted installation
+          of Rallly.
+        </p>
+        <p>
+          7.3 Subject to section 7.1, our total liability to you arising under
+          or in connection with these Terms, whether in contract, tort
+          (including negligence) or otherwise, is limited to:
+        </p>
+        <ul>
+          <li>
+            if you paid us fees in the 12 months before the event giving rise to
+            the claim, the greater of those fees and £1,000; or
+          </li>
+          <li>otherwise, £100.</li>
+        </ul>
+        <p>
+          7.4 Liability arising under our{" "}
+          <LinkBase href="/dpa">Data Processing Agreement</LinkBase> is governed
+          by section 10 of the Data Processing Agreement. Any amount we pay
+          under these Terms counts towards the limit in section 10 of the Data
+          Processing Agreement, and any amount we pay under the Data Processing
+          Agreement counts towards the limit in section 7.3.
         </p>
 
         <hr />
