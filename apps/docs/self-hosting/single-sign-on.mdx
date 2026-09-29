@@ -59,6 +59,16 @@ If `optionalClaims` is `null`, replace it with `{ "idToken": [ ...the four entri
 Once the claims are present, a Microsoft sign-in whose address Microsoft does not vouch for fails with "Your email address is not verified". Existing users are not affected. Single-tenant registrations do not need this.
 </Accordion>
 
+<Accordion title="Using the same registration for Microsoft Teams">
+With `CONFERENCING_ENABLED=true`, the Microsoft registration also powers the [Microsoft Teams integration](/integrations/microsoft-teams); there are no separate Teams variables. Add the redirect URI:
+
+```
+https://<YOUR_DOMAIN>/api/integrations/callback/microsoft-teams
+```
+
+Under **API permissions**, add the delegated Microsoft Graph permissions `OnlineMeetings.ReadWrite`, `User.Read` and `offline_access`. If your organization does not let users consent to apps, choose **Grant admin consent** on the same page. Teams meetings can only be created for work or school accounts, so with `MICROSOFT_TENANT_ID` set to `common` or `consumers` Teams connects through the `organizations` endpoint; with a tenant ID it connects through that tenant.
+</Accordion>
+
 <ParamField path="MICROSOFT_TENANT_ID">
   The tenant ID of your Microsoft application.
 </ParamField>

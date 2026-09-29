@@ -6,12 +6,15 @@ import {
 import {
   isConferencingEnabled,
   isConferencingProviderAllowedFor,
+  MICROSOFT_TEAMS_SCOPES,
 } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import type { ConferencingProvider } from "@/features/conferencing/schema";
+import { getMicrosoftTeamsAuthority } from "@/features/conferencing/utils";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
+import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
 import { OAuthIntegration } from "@/lib/oauth/server";
 import type { OAuthClient } from "@/lib/oauth/types";
@@ -20,6 +23,7 @@ type Integration =
   | "google-calendar"
   | "outlook-calendar"
   | "google-meet"
+  | "microsoft-teams"
   | "zoom";
 
 async function requireSessionUserId() {
@@ -69,7 +73,7 @@ function conferencingOnConnect({
 
 const { handler } = OAuthIntegration<Integration>({
   basePath: "/api/integrations",
-  getIntegration: async ({ integrationId, callbackUrl }) => {
+  getIntegration: async ({ integrationId, callbackUrl, flow }) => {
     switch (integrationId) {
       case "google-calendar": {
         if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -157,6 +161,30 @@ const { handler } = OAuthIntegration<Integration>({
           onConnect: conferencingOnConnect({
             integrationId,
             displayName: "Zoom",
+          }),
+        });
+      }
+      case "microsoft-teams": {
+        if (
+          !isConferencingEnabled ||
+          !env.MICROSOFT_CLIENT_ID ||
+          !env.MICROSOFT_CLIENT_SECRET ||
+          // The rollout allowlist limits who connects. Approving the app for
+          // an organization connects no one, and the administrator doing it
+          // is rarely on the list or signed in to Rallly.
+          (flow === "connect" && !(await isAllowedForSession("teams")))
+        ) {
+          return null;
+        }
+        return new MicrosoftOAuthClient({
+          tenant: getMicrosoftTeamsAuthority(env.MICROSOFT_TENANT_ID),
+          clientId: env.MICROSOFT_CLIENT_ID,
+          clientSecret: env.MICROSOFT_CLIENT_SECRET,
+          callbackUrl,
+          scopes: MICROSOFT_TEAMS_SCOPES,
+          onConnect: conferencingOnConnect({
+            integrationId,
+            displayName: "Microsoft Teams",
           }),
         });
       }

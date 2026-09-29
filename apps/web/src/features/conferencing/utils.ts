@@ -2,13 +2,15 @@ import * as z from "zod";
 import type { Conferencing, ConferencingProvider } from "./schema";
 
 // Which OAuth integration backs each provider. Google Meet shares the Google
-// OAuth app (and credential row) with Google Calendar.
+// OAuth app (and credential row) with Google Calendar; Microsoft Teams shares
+// the Microsoft app with sign in.
 export const conferencingProviderIntegrations: Record<
   ConferencingProvider,
   { integrationId: string; oauthProvider: string }
 > = {
   zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   meet: { integrationId: "google-meet", oauthProvider: "google" },
+  teams: { integrationId: "microsoft-teams", oauthProvider: "microsoft" },
 };
 
 export function integrationIdToConferencingProvider(
@@ -28,6 +30,7 @@ export const conferencingProviderLabels: Record<ConferencingProvider, string> =
   {
     zoom: "Zoom",
     meet: "Google Meet",
+    teams: "Microsoft Teams",
   };
 
 export const zoomMeetingResponseSchema = z.object({
@@ -60,6 +63,37 @@ export function meetSpaceToConferencing(
     uri: space.meetingUri,
     meetingId: space.meetingCode,
   };
+}
+
+export const teamsMeetingResponseSchema = z.object({
+  joinWebUrl: z.url(),
+  joinMeetingIdSettings: z
+    .object({
+      joinMeetingId: z.string().nullish(),
+      passcode: z.string().nullish(),
+    })
+    .nullish(),
+});
+
+export function teamsMeetingToConferencing(
+  meeting: z.infer<typeof teamsMeetingResponseSchema>,
+): Conferencing {
+  return {
+    provider: "teams",
+    uri: meeting.joinWebUrl,
+    meetingId: meeting.joinMeetingIdSettings?.joinMeetingId || undefined,
+    password: meeting.joinMeetingIdSettings?.passcode || undefined,
+  };
+}
+
+// Graph's online meetings API serves work and school accounts only, so a
+// multitenant registration connects Teams through the `organizations`
+// authority, which keeps personal accounts from starting the flow. A single
+// tenant registration keeps its own tenant.
+export function getMicrosoftTeamsAuthority(tenantId: string) {
+  return tenantId === "common" || tenantId === "consumers"
+    ? "organizations"
+    : tenantId;
 }
 
 // Returns the URI suitable for an href / ICS CONFERENCE value.

@@ -4,9 +4,12 @@ import { conferencingSchema } from "./schema";
 import {
   createZoomUrlValidationResponse,
   getConferencingUri,
+  getMicrosoftTeamsAuthority,
   isEmailAllowlisted,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
+  teamsMeetingResponseSchema,
+  teamsMeetingToConferencing,
   verifyZoomWebhookSignature,
   zoomMeetingResponseSchema,
   zoomMeetingToConferencing,
@@ -68,6 +71,63 @@ describe("meetSpaceToConferencing", () => {
     expect(
       meetSpaceResponseSchema.safeParse({ name: "spaces/abc" }).success,
     ).toBe(false);
+  });
+});
+
+describe("teamsMeetingToConferencing", () => {
+  it("maps a Teams meeting into the stored link shape", () => {
+    const meeting = teamsMeetingResponseSchema.parse({
+      id: "MSpkYzE3",
+      joinWebUrl:
+        "https://teams.microsoft.com/l/meetup-join/19%3ameeting_abc%40thread.v2/0",
+      subject: "ignored",
+      joinMeetingIdSettings: {
+        isPasscodeRequired: true,
+        joinMeetingId: "1234567890",
+        passcode: "Xy7Zq2",
+      },
+      audioConferencing: null,
+    });
+    const conferencing = teamsMeetingToConferencing(meeting);
+    expect(conferencing).toEqual({
+      provider: "teams",
+      uri: "https://teams.microsoft.com/l/meetup-join/19%3ameeting_abc%40thread.v2/0",
+      meetingId: "1234567890",
+      password: "Xy7Zq2",
+    });
+    expect(conferencingSchema.parse(conferencing)).toEqual(conferencing);
+  });
+
+  it("keeps the link when Graph omits the meeting id settings", () => {
+    const meeting = teamsMeetingResponseSchema.parse({
+      joinWebUrl: "https://teams.microsoft.com/l/meetup-join/abc",
+      joinMeetingIdSettings: null,
+    });
+    expect(teamsMeetingToConferencing(meeting)).toEqual({
+      provider: "teams",
+      uri: "https://teams.microsoft.com/l/meetup-join/abc",
+      meetingId: undefined,
+      password: undefined,
+    });
+  });
+
+  it("rejects a meeting without a join link", () => {
+    expect(teamsMeetingResponseSchema.safeParse({ id: "abc" }).success).toBe(
+      false,
+    );
+  });
+});
+
+describe("getMicrosoftTeamsAuthority", () => {
+  it("keeps personal accounts out of a multitenant registration", () => {
+    expect(getMicrosoftTeamsAuthority("common")).toBe("organizations");
+    expect(getMicrosoftTeamsAuthority("consumers")).toBe("organizations");
+    expect(getMicrosoftTeamsAuthority("organizations")).toBe("organizations");
+  });
+
+  it("keeps a single tenant registration on its tenant", () => {
+    const tenantId = "6d0cfca5-dad4-4d15-a6cf-1552842fab87";
+    expect(getMicrosoftTeamsAuthority(tenantId)).toBe(tenantId);
   });
 });
 

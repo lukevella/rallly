@@ -40,6 +40,7 @@ const toPollConferencing = (
   switch (data.conferencingProvider) {
     case "zoom":
     case "meet":
+    case "teams":
       return { provider: data.conferencingProvider };
     case "custom": {
       const uri = data.conferencingUrl?.trim();

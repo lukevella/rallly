@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-26">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-27">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -190,6 +190,46 @@ export default async function PrivacyPolicy() {
           Rallly account, we delete them along with your events, including the
           details of meetings Rallly created. Meetings Rallly already created
           stay in your Zoom account.
+        </p>
+
+        <h2>Microsoft user data</h2>
+
+        <p>
+          If you connect Microsoft Teams, Rallly uses the permission to create
+          online meetings (<code>OnlineMeetings.ReadWrite</code>) only to create
+          a meeting on your Microsoft account when you finalize a poll that uses
+          Microsoft Teams as its video call, and reads your Microsoft account
+          id, name and email address to identify the connection. Rallly does not
+          read your other meetings, chats, recordings, files, contacts, calendar
+          or email, and does not join or record meetings.
+        </p>
+
+        <p>
+          We do not store your name. We store your Microsoft account id and
+          email address to identify the connection and show which account is
+          connected, and the access and refresh tokens Microsoft issues,
+          encrypted at rest, so Rallly can create meetings without asking you to
+          sign in each time. For each meeting Rallly creates, we store its join
+          link, meeting id and passcode on the event, so they can be included in
+          the calendar invite and confirmation emails sent to you and your
+          participants.
+        </p>
+
+        <p>
+          We use this data only to identify the connected account and to create
+          meetings for you as the organizer. We do not sell Microsoft user data,
+          use it for advertising, use it to train AI models, or share it with
+          third parties except as needed to provide the service.
+        </p>
+
+        <p>
+          When you disconnect Microsoft Teams in your settings, we delete the
+          stored account details and tokens. When you delete your Rallly
+          account, we delete them along with your events, including the details
+          of meetings Rallly created. Microsoft does not let apps revoke their
+          own access; you can remove Rallly&apos;s permissions at any time at{" "}
+          <a href="https://myapps.microsoft.com">myapps.microsoft.com</a>.
+          Meetings Rallly already created stay in your Microsoft account.
         </p>
 
         <h2>Content moderation</h2>
