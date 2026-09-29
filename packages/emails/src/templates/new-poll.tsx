@@ -10,6 +10,7 @@ import {
   Container,
   Heading,
   Link,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -64,7 +65,7 @@ async function NewPollEmail({
               i18nKey="newPoll_content"
               values={{ title }}
               components={{
-                b: <strong />,
+                b: <Strong />,
               }}
               defaults="Your meeting poll titled <b>{title}</b> is ready! Share it using the link below:"
             />

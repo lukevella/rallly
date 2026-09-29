@@ -12,6 +12,7 @@ import {
   Heading,
   Link,
   Section,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -80,7 +81,7 @@ async function NewParticipantEmail({
               ns="emails"
               i18nKey="newParticipant_content"
               defaults="<b>{name}</b> has responded to <b>{title}</b>."
-              components={{ b: <strong /> }}
+              components={{ b: <Strong /> }}
               values={{ name: participantName, title }}
             />
           </Text>

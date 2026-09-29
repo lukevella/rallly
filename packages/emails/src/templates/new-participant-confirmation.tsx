@@ -10,6 +10,7 @@ import {
   Container,
   Heading,
   Link,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -59,7 +60,7 @@ async function NewParticipantConfirmationEmail({
               ns="emails"
               i18nKey="newParticipantConfirmation_content"
               defaults="Your response to <b>{title}</b> has been submitted."
-              components={{ b: <strong /> }}
+              components={{ b: <Strong /> }}
               values={{ title }}
             />
           </Text>

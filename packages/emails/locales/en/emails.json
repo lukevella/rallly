@@ -20,6 +20,8 @@
   "eventCanceledHeading": "Event canceled",
   "eventCanceledPreview": "Event canceled",
   "eventCanceledSubject": "Canceled: {title}",
+  "eventConferencingPhone": "Phone",
+  "eventConferencingVideoCall": "Video call",
   "eventRsvpConfirmationAcceptedContent": "You accepted the invitation to <b>{title}</b> hosted by <b>{hostName}</b>. The event is scheduled for:",
   "eventRsvpConfirmationAcceptedHeading": "You're going",
   "eventRsvpConfirmationAcceptedPreview": "You accepted {title}",

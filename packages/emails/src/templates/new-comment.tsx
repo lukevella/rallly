@@ -12,6 +12,7 @@ import {
   Heading,
   Link,
   Section,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -75,7 +76,7 @@ async function NewCommentEmail({
               ns="emails"
               i18nKey="newComment_content"
               defaults="<b>{authorName}</b> has commented on <b>{title}</b>."
-              components={{ b: <strong /> }}
+              components={{ b: <Strong /> }}
               values={{ authorName, title }}
             />
           </Text>
