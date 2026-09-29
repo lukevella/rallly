@@ -1,3 +1,4 @@
+import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
 import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 
 function toDate(value: DateInput) {
@@ -20,7 +21,7 @@ export function toISODate(value: DateInput) {
  */
 export function getCalendarDate(now: Date, timeZone: string): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
+    timeZone: resolveTimeZone(timeZone, now),
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

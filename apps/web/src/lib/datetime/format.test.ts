@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatDate,
+  formatDateParts,
   formatDateTime,
   formatDateTimeRange,
   formatRelativeTime,
@@ -171,5 +172,72 @@ describe("formatRelativeTime", () => {
 
   it("localizes relative time", () => {
     expect(formatRelativeTime(twoHoursAgo(), "de")).toBe("vor 2 Stunden");
+  });
+});
+
+// Alberta, Manitoba and British Columbia stopped falling back on 2026-11-01.
+// These must hold on engines whose tz data predates the change.
+describe("provinces that stopped changing clocks", () => {
+  const time = (instant: string, timeZone: string) =>
+    formatDateTime(new Date(instant), {
+      preset: "time",
+      ...ctx("en", "hours24", timeZone),
+    });
+
+  it("formats Alberta times at UTC-6 after the cutoff", () => {
+    expect(time("2026-11-05T16:00:00Z", "America/Edmonton")).toBe("10:00");
+  });
+
+  it("formats Manitoba times at UTC-5 after the cutoff", () => {
+    expect(time("2026-11-05T15:00:00Z", "America/Winnipeg")).toBe("10:00");
+  });
+
+  it("formats British Columbia times at UTC-7 after the cutoff", () => {
+    expect(time("2026-11-05T17:00:00Z", "America/Vancouver")).toBe("10:00");
+  });
+
+  it("formats ranges after the cutoff", () => {
+    const out = formatDateTimeRange(
+      new Date("2026-11-05T16:00:00Z"),
+      new Date("2026-11-05T17:00:00Z"),
+      { preset: "time", ...ctx("en", "hours24", "America/Edmonton") },
+    );
+    expect(out).toContain("10:00");
+    expect(out).toContain("11:00");
+  });
+
+  it("formats a range that crosses the cutoff", () => {
+    // 01:30 MDT to 02:30 at UTC-6; the old rules put the end at 01:30 MST.
+    const out = formatDateTimeRange(
+      new Date("2026-11-01T07:30:00Z"),
+      new Date("2026-11-01T08:30:00Z"),
+      { preset: "time", ...ctx("en", "hours24", "America/Edmonton") },
+    );
+    expect(out).toContain("01:30");
+    expect(out).toContain("02:30");
+  });
+
+  it("formats a range whose endpoints need different offsets", () => {
+    // 10:00 at UTC-7 in January, 10:00 at UTC-6 in November.
+    const out = formatDateTimeRange(
+      new Date("2026-01-15T17:00:00Z"),
+      new Date("2026-11-05T16:00:00Z"),
+      { preset: "datetime", ...ctx("en", "hours24", "America/Edmonton") },
+    );
+    expect(out).toContain("Jan 15, 2026, 10:00");
+    expect(out).toContain("Nov 5, 2026, 10:00");
+  });
+
+  it("formats date parts on the right calendar day after the cutoff", () => {
+    expect(
+      formatDateParts(new Date("2026-11-06T06:30:00Z"), {
+        locale: "en",
+        timeZone: "America/Edmonton",
+      }).day,
+    ).toBe("6");
+  });
+
+  it("leaves times before the cutoff unchanged", () => {
+    expect(time("2026-07-01T16:00:00Z", "America/Edmonton")).toBe("10:00");
   });
 });

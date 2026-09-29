@@ -1,3 +1,4 @@
+import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
 import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 
 export type DatePreset =
@@ -21,6 +22,10 @@ export type FormatDateTimeOptions = {
 
 function toDate(value: DateInput): Date {
   return value instanceof Date ? value : new Date(value);
+}
+
+function resolveOptionalTimeZone(timeZone: string | undefined, date: Date) {
+  return timeZone ? resolveTimeZone(timeZone, date) : timeZone;
 }
 
 const formatters = new Map<string, Intl.DateTimeFormat>();
@@ -109,7 +114,11 @@ export function formatDateTime(
   value: DateInput,
   options: FormatDateTimeOptions,
 ): string {
-  return getCachedIntlDateFormatter(options).format(toDate(value));
+  const date = toDate(value);
+  return getCachedIntlDateFormatter({
+    ...options,
+    timeZone: resolveOptionalTimeZone(options.timeZone, date),
+  }).format(date);
 }
 
 export function formatDateTimeRange(
@@ -117,10 +126,24 @@ export function formatDateTimeRange(
   end: DateInput,
   options: FormatDateTimeOptions,
 ): string {
-  return getCachedIntlDateFormatter(options).formatRange(
-    toDate(start),
-    toDate(end),
-  );
+  const startDate = toDate(start);
+  const endDate = toDate(end);
+  const startTimeZone = resolveOptionalTimeZone(options.timeZone, startDate);
+  const endTimeZone = resolveOptionalTimeZone(options.timeZone, endDate);
+  const formatter = getCachedIntlDateFormatter({
+    ...options,
+    timeZone: startTimeZone,
+  });
+  if (startTimeZone === endTimeZone) {
+    return formatter.formatRange(startDate, endDate);
+  }
+  // Only a range crossing an override cutoff lands here; no single zone
+  // formats both ends correctly, so each end gets its own.
+  const endFormatter = getCachedIntlDateFormatter({
+    ...options,
+    timeZone: endTimeZone,
+  });
+  return `${formatter.format(startDate)} – ${endFormatter.format(endDate)}`;
 }
 
 // All-day values are stored as UTC midnight, so they always format in UTC.
@@ -153,7 +176,9 @@ export function formatDateParts(
   value: DateInput,
   options: { locale: string; timeZone?: string },
 ): DateParts {
-  const key = `${options.locale}|${options.timeZone ?? ""}`;
+  const date = toDate(value);
+  const timeZone = resolveOptionalTimeZone(options.timeZone, date);
+  const key = `${options.locale}|${timeZone ?? ""}`;
   let f = partsFormatters.get(key);
   if (!f) {
     f = new Intl.DateTimeFormat(options.locale, {
@@ -162,13 +187,13 @@ export function formatDateParts(
       month: "short",
       year: "numeric",
       // An empty string is an invalid IANA zone and throws; treat it as "unset".
-      timeZone: options.timeZone || undefined,
+      timeZone: timeZone || undefined,
     });
     partsFormatters.set(key, f);
   }
 
   const parts: DateParts = { weekday: "", day: "", month: "", year: "" };
-  for (const part of f.formatToParts(toDate(value))) {
+  for (const part of f.formatToParts(date)) {
     if (part.type in parts) {
       parts[part.type as keyof DateParts] = part.value;
     }

@@ -23,6 +23,7 @@ import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
 } from "@/features/space/utils";
+import { resolveTimeZoneAtWallTime } from "@/lib/datetime/time-zone-overrides";
 import { dayjs } from "@/lib/dayjs";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -179,7 +180,9 @@ export const polls = router({
       const optionsData = input.options.map((option) => ({
         startTime:
           timeZone && option.endDate
-            ? dayjs(option.startDate).tz(timeZone, true).toDate()
+            ? dayjs(option.startDate)
+                .tz(resolveTimeZoneAtWallTime(timeZone, option.startDate), true)
+                .toDate()
             : dayjs(option.startDate).utc(true).toDate(),
         duration: option.endDate
           ? dayjs(option.endDate).diff(dayjs(option.startDate), "minute")
@@ -374,7 +377,12 @@ export const polls = router({
             if (end) {
               return {
                 startTime: input.timeZone
-                  ? dayjs(start).tz(input.timeZone, true).toDate()
+                  ? dayjs(start)
+                      .tz(
+                        resolveTimeZoneAtWallTime(input.timeZone, start),
+                        true,
+                      )
+                      .toDate()
                   : dayjs(start).utc(true).toDate(),
                 duration: dayjs(end).diff(dayjs(start), "minute"),
                 pollId,

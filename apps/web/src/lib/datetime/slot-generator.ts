@@ -1,3 +1,4 @@
+import { resolveTimeZoneAtWallTime } from "@/lib/datetime/time-zone-overrides";
 import { dayjs } from "@/lib/dayjs";
 
 export type SlotGeneratorInput = {
@@ -29,7 +30,7 @@ const parseDateTimeInTimeZone = (value: string, timeZone?: string) =>
   hasTzOffset(value)
     ? dayjs(value)
     : timeZone
-      ? dayjs(value).tz(timeZone, true)
+      ? dayjs(value).tz(resolveTimeZoneAtWallTime(timeZone, value), true)
       : dayjs(value).utc(true);
 
 const parseLocalDateTimeInTimeZone = (
@@ -38,7 +39,10 @@ const parseLocalDateTimeInTimeZone = (
   timeZone: string | undefined,
 ) =>
   timeZone
-    ? dayjs(`${date}T${time}`).tz(timeZone, true)
+    ? dayjs(`${date}T${time}`).tz(
+        resolveTimeZoneAtWallTime(timeZone, `${date}T${time}`),
+        true,
+      )
     : dayjs(`${date}T${time}`).utc(true);
 
 export const parseStartTime = (
@@ -88,9 +92,9 @@ export const generateTimeSlots = (
     }
     daysVisited++;
     const date = cursor.format("YYYY-MM-DD");
-    // Get day of week in the target timezone
-    const dayInTz = timeZone ? dayjs.tz(date, timeZone).day() : cursor.day();
-    if (!allowed.has(dayInTz)) {
+    // The cursor's UTC date is the calendar date itself, so its weekday is
+    // the same in every zone.
+    if (!allowed.has(cursor.day())) {
       continue;
     }
     const windowStart = parseLocalDateTimeInTimeZone(
