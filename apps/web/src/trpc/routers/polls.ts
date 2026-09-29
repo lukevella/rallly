@@ -644,10 +644,12 @@ export const polls = router({
         });
         const kind = (maxDuration._max.duration ?? 0) > 0 ? "time" : "date";
 
-        await tx.poll.update({
-          select: { id: true },
+        // Conditional on status so a booking that lands after the check above
+        // rolls this edit back instead of it silently missing the event.
+        const { count: updated } = await tx.poll.updateMany({
           where: {
             id: pollId,
+            status: { not: "scheduled" },
           },
           data: {
             title: input.title,
@@ -665,6 +667,13 @@ export const polls = router({
             kind,
           },
         });
+
+        if (updated === 0) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "A scheduled poll cannot be edited",
+          });
+        }
 
         // The effective persisted timeZone: forced null for date-only polls,
         // untouched when the input omits it.
