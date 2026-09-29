@@ -13,7 +13,10 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Link } from "@/components/link";
 import { ConferencingProviderIcon } from "@/features/conferencing/components/conferencing-provider-icon";
-import type { ConferencingProvider } from "@/features/conferencing/schema";
+import type {
+  ConferencingProvider,
+  PollConferencing,
+} from "@/features/conferencing/schema";
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 
@@ -30,6 +33,37 @@ type ConferencingFormValues = {
   conferencingUrl?: string;
   conferencingLabel?: string;
 };
+
+export const toPollConferencing = (
+  data: ConferencingFormValues,
+): PollConferencing | undefined => {
+  switch (data.conferencingProvider) {
+    case "zoom":
+    case "meet":
+    case "teams":
+      return { provider: data.conferencingProvider };
+    case "custom": {
+      const uri = data.conferencingUrl?.trim();
+      return {
+        provider: "custom",
+        label: data.conferencingLabel?.trim() ?? "",
+        ...(uri ? { uri } : {}),
+      };
+    }
+    default:
+      return undefined;
+  }
+};
+
+export const toConferencingFormValues = (
+  conferencing: PollConferencing | null,
+): Required<ConferencingFormValues> => ({
+  conferencingProvider: conferencing?.provider ?? "",
+  conferencingUrl:
+    conferencing?.provider === "custom" ? (conferencing.uri ?? "") : "",
+  conferencingLabel:
+    conferencing?.provider === "custom" ? conferencing.label : "",
+});
 
 // Menu entries for the shared "Add location" menu. Renders nothing once a
 // choice is made: an event carries one meeting link.

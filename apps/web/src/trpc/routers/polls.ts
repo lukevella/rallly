@@ -1,4 +1,4 @@
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
 import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
 import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
@@ -406,6 +406,8 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
+        // Omitted leaves it unchanged; null removes it.
+        conferencing: pollConferencingSchema.nullable().optional(),
         description: z
           .string()
           .trim()
@@ -433,6 +435,47 @@ export const polls = router({
         });
       }
 
+      const current = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: { status: true, userId: true, conferencing: true },
+      });
+
+      if (!current) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // The booked event holds its own copy of the poll's details, so an edit
+      // after booking would never reach it.
+      if (current.status === "scheduled") {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A scheduled poll cannot be edited",
+        });
+      }
+
+      // The meeting is minted from the owner's account at booking, whoever
+      // edits. Checked only when the provider changes, so an unrelated edit
+      // still saves after the owner disconnects.
+      const conferencing = input.conferencing;
+      const priorConferencing = parsePollConferencing(current.conferencing, {
+        pollId,
+      });
+      if (
+        conferencing &&
+        conferencing.provider !== "custom" &&
+        conferencing.provider !== priorConferencing?.provider
+      ) {
+        const connected = current.userId
+          ? await getConnectedConferencingProviders(current.userId)
+          : [];
+        if (!connected.includes(conferencing.provider)) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Conferencing provider is not connected",
+          });
+        }
+      }
+
       const moderation = await moderateContent({
         userId: ctx.user.id,
         userEmail: ctx.user.email,
@@ -440,6 +483,10 @@ export const polls = router({
           Title: input.title || "",
           Description: input.description || "",
           Location: input.location || "",
+          Conferencing:
+            conferencing?.provider === "custom"
+              ? `${conferencing.label} ${moderatedLinkText(conferencing.uri)}`
+              : "",
         },
       });
 
@@ -605,6 +652,7 @@ export const polls = router({
           data: {
             title: input.title,
             location: input.location,
+            conferencing: conferencing === null ? Prisma.DbNull : conferencing,
             description: input.description,
             // Date-only polls are floating: keep timeZone null so it stays the
             // single source of truth for whether options are timezone-bound.
@@ -635,6 +683,9 @@ export const polls = router({
             (input.location || null) !== (prior.location || null)) ||
           (input.description !== undefined &&
             (input.description || null) !== (prior.description || null)) ||
+          (conferencing !== undefined &&
+            JSON.stringify(conferencing) !==
+              JSON.stringify(priorConferencing)) ||
           nextTimeZone !== prior.timeZone ||
           (input.hideParticipants !== undefined &&
             input.hideParticipants !== prior.hideParticipants) ||

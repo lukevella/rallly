@@ -19,6 +19,7 @@ import { useForm, useFormContext } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { Link } from "@/components/link";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
+import { toPollConferencing } from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
@@ -30,30 +31,6 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { setFlash } from "@/lib/flash/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
-
-const toPollConferencing = (
-  data: Pick<
-    NewEventData,
-    "conferencingProvider" | "conferencingUrl" | "conferencingLabel"
-  >,
-) => {
-  switch (data.conferencingProvider) {
-    case "zoom":
-    case "meet":
-    case "teams":
-      return { provider: data.conferencingProvider };
-    case "custom": {
-      const uri = data.conferencingUrl?.trim();
-      return {
-        provider: "custom" as const,
-        label: data.conferencingLabel?.trim() ?? "",
-        ...(uri ? { uri } : {}),
-      };
-    }
-    default:
-      return undefined;
-  }
-};
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {

@@ -79,6 +79,8 @@ const ManagePoll: React.FunctionComponent<{
   const scheduleDialog = useDialog();
   const isFree = useIsFree();
   const { exportToCsv } = useCsvExporter();
+  // Edits made after booking would never reach the booked event.
+  const editingLocked = poll.status === "scheduled";
 
   return (
     <>
@@ -93,23 +95,46 @@ const ManagePoll: React.FunctionComponent<{
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            render={<Link href={`/poll/${poll.id}/edit-details`} />}
+            disabled={editingLocked}
+            render={
+              editingLocked ? undefined : (
+                <Link href={`/poll/${poll.id}/edit-details`} />
+              )
+            }
           >
             <PencilIcon />
             <Trans i18nKey="editDetails" />
           </DropdownMenuItem>
           <DropdownMenuItem
-            render={<Link href={`/poll/${poll.id}/edit-options`} />}
+            disabled={editingLocked}
+            render={
+              editingLocked ? undefined : (
+                <Link href={`/poll/${poll.id}/edit-options`} />
+              )
+            }
           >
             <TableIcon />
             <Trans i18nKey="editOptions" />
           </DropdownMenuItem>
           <DropdownMenuItem
-            render={<Link href={`/poll/${poll.id}/edit-settings`} />}
+            disabled={editingLocked}
+            render={
+              editingLocked ? undefined : (
+                <Link href={`/poll/${poll.id}/edit-settings`} />
+              )
+            }
           >
             <Settings2Icon />
             <Trans i18nKey="editSettings" defaults="Edit settings" />
           </DropdownMenuItem>
+          {editingLocked ? (
+            <p className="max-w-56 px-2 py-1.5 text-muted-foreground text-xs">
+              <Trans
+                i18nKey="scheduledPollLockedDescription"
+                defaults="A scheduled poll can no longer be edited."
+              />
+            </p>
+          ) : null}
           <DropdownMenuSeparator />
           {poll.status === "scheduled" || poll.status === "canceled" ? null : (
             <>
