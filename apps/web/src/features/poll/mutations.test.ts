@@ -230,6 +230,21 @@ describe("closePoll", () => {
     });
   });
 
+  it("leaves a scheduled poll unchanged", async () => {
+    mockFindFirst.mockResolvedValue({ ...openPoll, status: "scheduled" });
+
+    const result = await closePoll({ pollId: "p1", spaceId });
+
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockActivityCreateMany).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      id: "p1",
+      status: "scheduled",
+      conferencing: null,
+      participantCount: 2,
+    });
+  });
+
   it("records a poll_closed activity alongside the close", async () => {
     mockFindFirst.mockResolvedValue(openPoll);
     mockUpdate.mockResolvedValue(closedPoll);

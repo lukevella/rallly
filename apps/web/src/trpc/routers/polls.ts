@@ -1560,11 +1560,12 @@ export const polls = router({
         // mutations: an already-closed poll keeps its closedReason (so an
         // auto-close stays "auto"), and only the call that actually flips
         // the status appends a lifecycle event — repeated or concurrent
-        // calls can't record a close that didn't happen.
+        // calls can't record a close that didn't happen. A scheduled poll is
+        // final; closing it would let reopen delete the booked event.
         const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-            status: { not: "closed" },
+            status: { notIn: ["closed", "scheduled"] },
           },
           data: {
             status: "closed",
