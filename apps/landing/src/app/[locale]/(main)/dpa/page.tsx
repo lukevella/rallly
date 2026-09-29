@@ -327,9 +327,10 @@ export default async function DataProcessingAgreement() {
         </p>
         <p>
           10.4 Nothing in this DPA limits or excludes either party&apos;s
-          liability for fraud, its liability to data subjects under Data
-          Protection Laws, or any liability that cannot be limited or excluded
-          under Data Protection Laws.
+          liability for death or personal injury caused by negligence, for fraud
+          or fraudulent misrepresentation, to data subjects under Data
+          Protection Laws, or any other liability that cannot be limited or
+          excluded under applicable law.
         </p>
 
         <hr />
