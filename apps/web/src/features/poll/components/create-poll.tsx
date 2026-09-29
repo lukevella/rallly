@@ -27,6 +27,7 @@ import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useDateTimeConfig } from "@/lib/datetime/client";
 import { setFlash } from "@/lib/flash/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
@@ -162,6 +163,7 @@ export const CreatePoll = ({
   const router = useRouter();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = !!user && !user.isGuest;
+  const { timeZone: preferredTimeZone } = useDateTimeConfig();
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
   // There is no CSS selector for "sticky element is stuck": a sentinel after
   // the bar tells us when it has settled into its natural resting position.
@@ -255,7 +257,9 @@ export const CreatePoll = ({
               // anchored to a concrete zone.
               timeZone:
                 !formData?.lockTimeZone && !formData?.allDay
-                  ? formData?.timeZone || getBrowserTimeZone()
+                  ? formData?.timeZone ||
+                    preferredTimeZone ||
+                    getBrowserTimeZone()
                   : null,
               hideParticipants: formData?.hideParticipants,
               disableComments: !formData?.enableComments,
