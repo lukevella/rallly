@@ -3,7 +3,8 @@
   "root": true,
   "plugins": [
     "./biome-plugins/use-icon-button-label.grit",
-    "./biome-plugins/no-raw-datetime-formatting.grit"
+    "./biome-plugins/no-raw-datetime-formatting.grit",
+    "./biome-plugins/no-unresolved-dayjs-tz.grit"
   ],
   "assist": {
     "actions": {

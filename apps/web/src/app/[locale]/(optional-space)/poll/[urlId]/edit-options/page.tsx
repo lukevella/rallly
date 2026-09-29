@@ -13,22 +13,24 @@ import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { filterParticipantsByVote } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
+import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
 import { dayjs } from "@/lib/dayjs";
 import {
   encodeDateOption,
   getBrowserTimeZone,
 } from "@/lib/utils/date-time-utils";
 
+const toPollWallTime = (
+  value: ReturnType<typeof dayjs>,
+  timeZone: string | null,
+) =>
+  timeZone ? value.tz(resolveTimeZone(timeZone, value.toDate())) : value.utc();
+
 const convertOptionToString = (
   option: { startTime: Date; duration: number },
   timeZone: string | null,
 ) => {
-  let start = dayjs(option.startTime);
-  if (timeZone) {
-    start = start.tz(timeZone);
-  } else {
-    start = start.utc();
-  }
+  const start = toPollWallTime(dayjs(option.startTime), timeZone);
   return option.duration === 0
     ? start.format("YYYY-MM-DD")
     : `${start.format("YYYY-MM-DDTHH:mm:ss")}/${start
@@ -53,25 +55,17 @@ const Page = () => {
     router.push(pollLink);
   };
 
-  let firstDate = dayjs(poll.options[0]?.startTime);
-
-  if (poll.timeZone) {
-    firstDate = firstDate.tz(poll.timeZone);
-  } else {
-    firstDate = firstDate.utc();
-  }
+  const firstDate = toPollWallTime(
+    dayjs(poll.options[0]?.startTime),
+    poll.timeZone,
+  );
 
   const form = useForm({
     defaultValues: {
       navigationDate: firstDate.format("YYYY-MM-DD"),
       view: "month" as const,
       options: poll.options.map((option) => {
-        let start = dayjs(option.startTime);
-        if (poll.timeZone) {
-          start = start.tz(poll.timeZone);
-        } else {
-          start = start.utc();
-        }
+        const start = toPollWallTime(dayjs(option.startTime), poll.timeZone);
         return option.duration > 0
           ? {
               type: "timeSlot" as const,

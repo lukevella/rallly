@@ -63,6 +63,15 @@ describe("getCalendarDate", () => {
   });
 });
 
+describe("getCalendarDate in provinces that stopped changing clocks", () => {
+  it("uses Alberta's UTC-6 after the cutoff", () => {
+    // 00:30 on Nov 6 at UTC-6; still Nov 5 under the old UTC-7 rule.
+    expect(
+      getCalendarDate(new Date("2026-11-06T06:30:00Z"), "America/Edmonton"),
+    ).toBe("2026-11-06");
+  });
+});
+
 describe("calendarDateToUTCMidnight", () => {
   it("encodes a calendar date as UTC midnight", () => {
     expect(calendarDateToUTCMidnight("2025-07-01").toISOString()).toBe(
