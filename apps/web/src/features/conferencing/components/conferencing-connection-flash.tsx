@@ -38,6 +38,21 @@ export function ConferencingConnectionFlash() {
             "The app was not approved. People in your organization still can't connect it.",
         }),
       );
+    } else if (flash.startsWith("error:cannot_host_meetings:")) {
+      // Nothing the user can retry their way out of, so it stays until closed.
+      toast.error(
+        t("conferencingTeamsCannotHost", {
+          defaultValue: "This Microsoft account can't create Teams meetings",
+        }),
+        {
+          description: t("conferencingTeamsCannotHostDescription", {
+            defaultValue:
+              "It needs a Teams license, and Teams must have been opened with it at least once. Check with your IT administrator, then connect again.",
+          }),
+          duration: Number.POSITIVE_INFINITY,
+          closeButton: true,
+        },
+      );
     } else if (flash.endsWith(":microsoft-teams")) {
       // A failure here is often the organization's consent policy, which
       // only an administrator can resolve, so the toast stays until closed.

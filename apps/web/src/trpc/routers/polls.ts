@@ -107,10 +107,13 @@ async function mintConferencing({
   }
 
   const label = conferencingProviderLabels[conferencing.provider];
-  const code =
-    result.reason === "not_connected"
-      ? "CONFERENCING_NOT_CONNECTED"
-      : "CONFERENCING_FAILED";
+  const code = (
+    {
+      not_connected: "CONFERENCING_NOT_CONNECTED",
+      cannot_host: "CONFERENCING_CANNOT_HOST",
+      provider_error: "CONFERENCING_FAILED",
+    } as const
+  )[result.reason];
   throw new TRPCError({
     code: "PRECONDITION_FAILED",
     message: `${label} meeting could not be created (${code})`,

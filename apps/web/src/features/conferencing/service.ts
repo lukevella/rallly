@@ -14,8 +14,10 @@ import { getConferencingConnectionForProvider } from "./data";
 import type { Conferencing, ConferencingProvider } from "./schema";
 import {
   getMicrosoftTeamsAuthority,
+  isTeamsMeetingRefusal,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
+  teamsMeetingProbeResponseSchema,
   teamsMeetingResponseSchema,
   teamsMeetingToConferencing,
   zoomMeetingResponseSchema,
@@ -26,7 +28,24 @@ const logger = createLogger("conferencing/service");
 
 export type CreateConferencingMeetingResult =
   | { ok: true; conferencing: Conferencing }
-  | { ok: false; reason: "not_connected" | "provider_error" };
+  | {
+      ok: false;
+      reason: "not_connected" | "cannot_host" | "provider_error";
+    };
+
+// Microsoft refused the request itself, which reconnecting does not fix: the
+// account has no Teams license, never opened Teams, or a policy blocks it.
+class TeamsMeetingRefusedError extends Error {
+  status: number;
+  constructor({ status, body }: { status: number; body: string }) {
+    super(`Teams meeting creation refused with status ${status}: ${body}`);
+    this.name = "TeamsMeetingRefusedError";
+    this.status = status;
+  }
+}
+
+const TEAMS_ONLINE_MEETINGS_URL =
+  "https://graph.microsoft.com/v1.0/me/onlineMeetings";
 
 // Mints a meeting link for a scheduled time. The organizer's own account
 // hosts the meeting, so the link inherits their provider settings.
@@ -97,6 +116,13 @@ export async function createConferencingMeeting({
         "Conferencing grant is no longer valid",
       );
       return { ok: false, reason: "not_connected" };
+    }
+    if (error instanceof TeamsMeetingRefusedError) {
+      logger.warn(
+        { err: error, userId, provider, connectionId: connection.id },
+        "Microsoft account cannot host Teams meetings",
+      );
+      return { ok: false, reason: "cannot_host" };
     }
     // `err` is the key pino's default serializer expands; `error` logs as {}.
     logger.error(
@@ -276,31 +302,90 @@ async function createTeamsMeeting({
   start: Date;
   end: Date;
 }): Promise<Conferencing> {
-  const res = await fetch(
-    "https://graph.microsoft.com/v1.0/me/onlineMeetings",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        subject: title,
-        startDateTime: start.toISOString(),
-        endDateTime: end.toISOString(),
-      }),
+  const res = await fetch(TEAMS_ONLINE_MEETINGS_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({
+      subject: title,
+      startDateTime: start.toISOString(),
+      endDateTime: end.toISOString(),
+    }),
+  });
 
   if (!res.ok) {
+    const body = await res.text();
+    if (isTeamsMeetingRefusal(res.status)) {
+      throw new TeamsMeetingRefusedError({ status: res.status, body });
+    }
     throw new Error(
-      `Teams meeting creation failed with status ${res.status}: ${await res.text()}`,
+      `Teams meeting creation failed with status ${res.status}: ${body}`,
     );
   }
 
   return teamsMeetingToConferencing(
     teamsMeetingResponseSchema.parse(await res.json()),
   );
+}
+
+export type TeamsHostCheckResult =
+  | { ok: true }
+  | { ok: false; reason: "refused" | "inconclusive" };
+
+// Proves at connect time that the account can host meetings, by creating one
+// and deleting it again, so a missing Teams license surfaces while the user
+// is looking at the connection rather than when they finalize a poll. Graph
+// meetings are never written to a calendar, so the user sees nothing. Only a
+// refusal blocks the connection; an outage or a throttle must not.
+export async function checkTeamsCanHostMeetings({
+  accessToken,
+}: {
+  accessToken: string;
+}): Promise<TeamsHostCheckResult> {
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+  try {
+    const start = new Date(Date.now() + 60 * 60_000);
+    const end = new Date(start.getTime() + 30 * 60_000);
+    const res = await fetch(TEAMS_ONLINE_MEETINGS_URL, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        subject: "Rallly connection check",
+        startDateTime: start.toISOString(),
+        endDateTime: end.toISOString(),
+      }),
+    });
+
+    if (!res.ok) {
+      const refused = isTeamsMeetingRefusal(res.status);
+      logger.warn(
+        { status: res.status, body: await res.text(), refused },
+        "Teams connection check did not create a meeting",
+      );
+      return { ok: false, reason: refused ? "refused" : "inconclusive" };
+    }
+
+    const { id } = teamsMeetingProbeResponseSchema.parse(await res.json());
+    const deleted = await fetch(
+      `${TEAMS_ONLINE_MEETINGS_URL}/${encodeURIComponent(id)}`,
+      { method: "DELETE", headers },
+    );
+    if (!deleted.ok) {
+      logger.warn(
+        { status: deleted.status },
+        "Teams connection check meeting was not deleted",
+      );
+    }
+    return { ok: true };
+  } catch (error) {
+    logger.warn({ err: error }, "Teams connection check failed to run");
+    return { ok: false, reason: "inconclusive" };
+  }
 }
 
 async function createMeetSpace(

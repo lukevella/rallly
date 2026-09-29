@@ -36,6 +36,8 @@ The meeting is created on the Microsoft account you connected, so it follows you
   </Step>
 </Steps>
 
+When you connect, Rallly checks that the account can create Teams meetings by creating a test meeting and deleting it straight away. The test meeting does not appear in your calendar or in Teams. If Microsoft refuses it, Rallly does not connect the account and tells you why; see [Troubleshooting](#troubleshooting).
+
 You can connect one Microsoft account for Microsoft Teams. To switch to a different account, disconnect the current one, then connect the new one.
 
 Connecting Microsoft Teams is separate from signing in to Rallly with Microsoft. You can sign in with any method and still connect Teams, and connecting Teams does not change how you sign in.
@@ -74,7 +76,7 @@ When you finalize the poll and pick the winning time, Rallly:
 
 Rallly does not add the meeting to your Outlook calendar; the calendar invite Rallly sends covers it.
 
-If the meeting cannot be created, for example because the Microsoft connection has expired or your account has no Teams license, the poll stays open and Rallly shows an error. Reconnect your account in Conferencing settings and finalize again.
+If the meeting cannot be created, for example because the Microsoft connection has expired or your account no longer has a Teams license, the poll stays open and Rallly shows an error that says which it is. See [Troubleshooting](#troubleshooting).
 
 ### Which account hosts the meeting
 
@@ -86,12 +88,12 @@ When you connect, Rallly asks Microsoft for these permissions:
 
 | Permission | Why |
 | --- | --- |
-| Read and create your online meetings (`OnlineMeetings.ReadWrite`) | To create the Teams meeting when you finalize a poll. |
+| Read and create your online meetings (`OnlineMeetings.ReadWrite`) | To create the Teams meeting when you finalize a poll, and to check once, when you connect, that your account can create meetings. |
 | Sign you in and read your profile (`User.Read`) | To identify the connection and show which account is connected. |
 | Maintain access to data you have given it access to (`offline_access`) | So Rallly can create meetings when you finalize a poll without asking you to sign in each time. |
 | View your basic profile and email address (`openid`, `profile`, `email`) | Requested with the sign in to identify the account. Rallly does not store your name. |
 
-Rallly uses `OnlineMeetings.ReadWrite` only to create a meeting when you finalize a poll. Rallly does not read your other meetings, chats, recordings, transcripts, files, contacts, calendar or email, and does not join or record meetings.
+Rallly uses `OnlineMeetings.ReadWrite` only to create a meeting when you finalize a poll and to create and immediately delete one test meeting when you connect. Rallly does not read your other meetings, chats, recordings, transcripts, files, contacts, calendar or email, and does not join or record meetings.
 
 ## Data Rallly stores
 
@@ -131,9 +133,13 @@ If you do not see the option, your organization manages app permissions centrall
 
 **Microsoft does not accept your personal account.** Microsoft Teams meetings can only be created for work or school accounts. Connect the account your organization gave you.
 
+**Rallly says the account can't create Teams meetings.** Microsoft refused the test meeting Rallly creates when you connect. The account has no Teams license, Teams has never been opened with it, or your organization's policies do not let it create meetings. Open [Teams](https://teams.microsoft.com) with that account: if Teams does not open, ask your IT administrator for a license that includes Teams. Once Teams opens, connect the account in Rallly again.
+
 **"Microsoft Teams is not connected" when creating a poll.** Your Rallly account has no Microsoft Teams connection, or it was removed. Connect one in Conferencing settings and choose Microsoft Teams again.
 
-**Finalizing fails with a video call error.** Your account may have no Teams license, you may never have used Teams with it, the connection may have expired after 90 days without use, or your password was changed or your administrator removed Rallly. Check that you can open Teams with that account, then disconnect and reconnect Microsoft Teams in Conferencing settings and finalize again. The poll is unchanged until finalizing succeeds.
+**Finalizing fails because Microsoft Teams couldn't create the meeting.** The account could create meetings when you connected it and no longer can, usually because its Teams license was removed. Check that you can open Teams with that account, then finalize again. The poll is unchanged until finalizing succeeds.
+
+**Finalizing fails because the account is not connected.** The connection expired after 90 days without use, your password was changed, or your administrator removed Rallly. Disconnect and reconnect Microsoft Teams in Conferencing settings and finalize again.
 
 **Participants wait in the lobby.** Who waits in the lobby follows your organization's Teams meeting policies. The host can admit people from the meeting, or change the meeting options in Teams.
 
