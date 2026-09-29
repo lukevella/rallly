@@ -346,6 +346,10 @@ export const authLib = betterAuth({
   account: {
     accountLinking: {
       enabled: true,
+      // The OIDC provider is the instance's own directory, and many omit the
+      // email_verified claim. Without trust, a user whose row predates their
+      // first OIDC sign-in (an email login, or a changed subject) is refused.
+      trustedProviders: ["oidc"],
     },
     fields: {
       providerId: "provider",
