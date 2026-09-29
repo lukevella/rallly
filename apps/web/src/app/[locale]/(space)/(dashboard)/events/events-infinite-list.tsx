@@ -14,6 +14,8 @@ import { DataList } from "@/components/data-list";
 import { ListViewContent } from "@/components/list-view";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
+import { EventConferencingSummary } from "@/features/conferencing/components/event-conferencing-summary";
+import type { Conferencing } from "@/features/conferencing/schema";
 import { EventTimeRange } from "@/features/scheduled-event/components/event-date-time";
 import { ScheduledEventRowActions } from "@/features/scheduled-event/components/scheduled-event-row";
 import type {
@@ -39,6 +41,7 @@ type EventRow = {
   end: DateInput;
   allDay: boolean;
   timeZone: string | null;
+  conferencing: Conferencing | null;
   invites: { id: string }[];
   createdBy: { name: string; image?: string };
 };
@@ -73,6 +76,22 @@ const columns = [
         {row.original.title}
       </span>
     ),
+  }),
+  columnHelper.accessor("conferencing", {
+    header: () => <Trans i18nKey="conferencing" defaults="Conferencing" />,
+    meta: {
+      className:
+        "hidden gap-1.5 whitespace-nowrap text-muted-foreground text-sm lg:flex [&_svg]:size-4 [&_svg]:shrink-0",
+    },
+    cell: ({ row, getValue }) => {
+      const conferencing = getValue();
+      return conferencing ? (
+        <EventConferencingSummary
+          conferencing={conferencing}
+          joinable={row.original.status !== "canceled"}
+        />
+      ) : null;
+    },
   }),
   columnHelper.accessor((event) => event.invites.length, {
     id: "attendees",
@@ -307,7 +326,7 @@ export function EventsInfiniteList({
             ),
           };
         }}
-        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto]"
+        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] lg:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
       />
       {hasNextPage && (
         <div ref={loadMoreRef} className="flex justify-center py-4">
