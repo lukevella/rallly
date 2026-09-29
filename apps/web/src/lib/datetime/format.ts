@@ -126,11 +126,13 @@ export function formatDateTimeRange(
   end: DateInput,
   options: FormatDateTimeOptions,
 ): string {
-  const startDate = toDate(start);
+  const endDate = toDate(end);
+  // Resolved from the end: a substitute has the zone's offset just before the
+  // cutoff, so it is also right for a start that falls before it.
   return getCachedIntlDateFormatter({
     ...options,
-    timeZone: resolveOptionalTimeZone(options.timeZone, startDate),
-  }).formatRange(startDate, toDate(end));
+    timeZone: resolveOptionalTimeZone(options.timeZone, endDate),
+  }).formatRange(toDate(start), endDate);
 }
 
 // All-day values are stored as UTC midnight, so they always format in UTC.

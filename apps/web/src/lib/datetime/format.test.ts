@@ -206,6 +206,17 @@ describe("provinces that stopped changing clocks", () => {
     expect(out).toContain("11:00");
   });
 
+  it("formats a range that crosses the cutoff", () => {
+    // 01:30 MDT to 02:30 at UTC-6; the old rules put the end at 01:30 MST.
+    const out = formatDateTimeRange(
+      new Date("2026-11-01T07:30:00Z"),
+      new Date("2026-11-01T08:30:00Z"),
+      { preset: "time", ...ctx("en", "hours24", "America/Edmonton") },
+    );
+    expect(out).toContain("01:30");
+    expect(out).toContain("02:30");
+  });
+
   it("formats date parts on the right calendar day after the cutoff", () => {
     expect(
       formatDateParts(new Date("2026-11-06T06:30:00Z"), {
