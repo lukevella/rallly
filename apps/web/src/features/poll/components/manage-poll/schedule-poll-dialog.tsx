@@ -19,6 +19,7 @@ import {
   FormLabel,
 } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -239,11 +240,27 @@ export function SchedulePollDialog(props: DialogProps) {
         <SchedulePollForm
           name="schedule-form"
           onSubmit={(data) => {
-            scheduleEvent.mutate({
-              pollId: poll.id,
-              optionId: data.selectedOptionId,
-              notify: data.notify,
-            });
+            toast.promise(
+              scheduleEvent.mutateAsync({
+                pollId: poll.id,
+                optionId: data.selectedOptionId,
+                notify: data.notify,
+              }),
+              {
+                loading: (
+                  <Trans i18nKey="schedulingPoll" defaults="Scheduling..." />
+                ),
+                success: (
+                  <Trans i18nKey="pollScheduled" defaults="Poll scheduled" />
+                ),
+                error: (
+                  <Trans
+                    i18nKey="schedulePollError"
+                    defaults="Failed to schedule poll"
+                  />
+                ),
+              },
+            );
             props.onOpenChange?.(false);
           }}
         />
