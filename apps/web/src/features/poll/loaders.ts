@@ -3,6 +3,7 @@ import "server-only";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
+import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
   canUserManagePoll,
   getPoll,
@@ -19,6 +20,7 @@ import {
   maskParticipantsForViewer,
 } from "@/features/poll/utils";
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
+import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
 
 export const loadPollStatusCounts = cache(async () => {
@@ -130,4 +132,16 @@ export const loadAdminPoll = cache(async (pollId: string) => {
     comments,
     user,
   };
+});
+
+// The meeting is minted from the poll owner's account at booking, whoever
+// edits the poll, so the form offers what the owner can use.
+export const loadPollConferencingOptions = cache(async (pollId: string) => {
+  const { poll } = await loadAdminPoll(pollId);
+  const owner = poll.userId ? await getUser(poll.userId) : null;
+  const host = owner && !owner.isGuest ? owner : null;
+  return loadConferencingOptions({
+    userId: host?.id ?? null,
+    email: host?.email ?? null,
+  });
 });

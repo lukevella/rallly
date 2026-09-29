@@ -1,4 +1,4 @@
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
 import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
 import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
@@ -406,6 +406,8 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
+        // Omitted leaves it unchanged; null removes it.
+        conferencing: pollConferencingSchema.nullable().optional(),
         description: z
           .string()
           .trim()
@@ -433,6 +435,47 @@ export const polls = router({
         });
       }
 
+      const current = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: { status: true, userId: true, conferencing: true },
+      });
+
+      if (!current) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // The booked event holds its own copy of the poll's details, so an edit
+      // after booking would never reach it.
+      if (current.status === "scheduled") {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A scheduled poll cannot be edited",
+        });
+      }
+
+      // The meeting is minted from the owner's account at booking, whoever
+      // edits. Checked only when the provider changes, so an unrelated edit
+      // still saves after the owner disconnects.
+      const conferencing = input.conferencing;
+      const priorConferencing = parsePollConferencing(current.conferencing, {
+        pollId,
+      });
+      if (
+        conferencing &&
+        conferencing.provider !== "custom" &&
+        conferencing.provider !== priorConferencing?.provider
+      ) {
+        const connected = current.userId
+          ? await getConnectedConferencingProviders(current.userId)
+          : [];
+        if (!connected.includes(conferencing.provider)) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Conferencing provider is not connected",
+          });
+        }
+      }
+
       const moderation = await moderateContent({
         userId: ctx.user.id,
         userEmail: ctx.user.email,
@@ -440,6 +483,10 @@ export const polls = router({
           Title: input.title || "",
           Description: input.description || "",
           Location: input.location || "",
+          Conferencing:
+            conferencing?.provider === "custom"
+              ? `${conferencing.label} ${moderatedLinkText(conferencing.uri)}`
+              : "",
         },
       });
 
@@ -496,6 +543,7 @@ export const polls = router({
           select: {
             title: true,
             location: true,
+            conferencing: true,
             description: true,
             timeZone: true,
             hideParticipants: true,
@@ -597,14 +645,17 @@ export const polls = router({
         });
         const kind = (maxDuration._max.duration ?? 0) > 0 ? "time" : "date";
 
-        await tx.poll.update({
-          select: { id: true },
+        // Conditional on status so a booking that lands after the check above
+        // rolls this edit back instead of it silently missing the event.
+        const { count: updated } = await tx.poll.updateMany({
           where: {
             id: pollId,
+            status: { not: "scheduled" },
           },
           data: {
             title: input.title,
             location: input.location,
+            conferencing: conferencing === null ? Prisma.DbNull : conferencing,
             description: input.description,
             // Date-only polls are floating: keep timeZone null so it stays the
             // single source of truth for whether options are timezone-bound.
@@ -617,6 +668,13 @@ export const polls = router({
             kind,
           },
         });
+
+        if (updated === 0) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "A scheduled poll cannot be edited",
+          });
+        }
 
         // The effective persisted timeZone: forced null for date-only polls,
         // untouched when the input omits it.
@@ -635,6 +693,11 @@ export const polls = router({
             (input.location || null) !== (prior.location || null)) ||
           (input.description !== undefined &&
             (input.description || null) !== (prior.description || null)) ||
+          (conferencing !== undefined &&
+            JSON.stringify(conferencing) !==
+              JSON.stringify(
+                parsePollConferencing(prior.conferencing, { pollId }),
+              )) ||
           nextTimeZone !== prior.timeZone ||
           (input.hideParticipants !== undefined &&
             input.hideParticipants !== prior.hideParticipants) ||
@@ -1107,7 +1170,7 @@ export const polls = router({
       const uid = `${eventId}@rallly.co`;
 
       // A second booking would mint a second meeting and orphan the first
-      // event, so a poll is booked once; reopen it to book again.
+      // event, so a poll is booked once.
       if (poll.status === "scheduled") {
         throw new TRPCError({
           code: "CONFLICT",
@@ -1415,11 +1478,12 @@ export const polls = router({
       await prisma.$transaction(async (tx) => {
         // Conditional transition: only the call that actually flips the
         // status appends a lifecycle event, so repeated or concurrent calls
-        // can't record a reopen that didn't happen.
+        // can't record a reopen that didn't happen. Scheduling is final: the
+        // booked event has already gone out to attendees.
         const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-            status: { not: "open" },
+            status: { notIn: ["open", "scheduled"] },
           },
           data: {
             status: "open",
@@ -1428,6 +1492,16 @@ export const polls = router({
         });
 
         if (count === 0) {
+          const current = await tx.poll.findUnique({
+            where: { id: input.pollId },
+            select: { status: true },
+          });
+          if (current?.status === "scheduled") {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "A scheduled poll cannot be reopened",
+            });
+          }
           return;
         }
 
@@ -1486,11 +1560,12 @@ export const polls = router({
         // mutations: an already-closed poll keeps its closedReason (so an
         // auto-close stays "auto"), and only the call that actually flips
         // the status appends a lifecycle event — repeated or concurrent
-        // calls can't record a close that didn't happen.
+        // calls can't record a close that didn't happen. A scheduled poll is
+        // final; closing it would let reopen delete the booked event.
         const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-            status: { not: "closed" },
+            status: { notIn: ["closed", "scheduled"] },
           },
           data: {
             status: "closed",

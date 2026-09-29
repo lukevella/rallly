@@ -24,8 +24,7 @@ import { useFormValidation } from "@/lib/utils/form-validation";
 import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
-// `conferencing` is absent on forms that don't support video calls (the edit
-// form); "Add location" then opens the address field directly.
+// Without `conferencing`, "Add location" opens the address field directly.
 export const PollDetailsForm = ({
   conferencing,
 }: {

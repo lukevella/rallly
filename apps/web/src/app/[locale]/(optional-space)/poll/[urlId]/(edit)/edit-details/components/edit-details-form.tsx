@@ -13,12 +13,22 @@ import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Link } from "@/components/link";
+import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
+import {
+  toConferencingFormValues,
+  toPollConferencing,
+} from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
+import type { PollDetailsData } from "@/features/poll/components/forms/types";
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { Trans } from "@/i18n/client";
 
-const Page = () => {
+export function EditDetailsForm({
+  conferencing,
+}: {
+  conferencing: ConferencingOptions;
+}) {
   const { poll } = usePoll();
   const { mutate: updatePollMutation, isPending: isUpdating } =
     useUpdatePollMutation();
@@ -30,11 +40,12 @@ const Page = () => {
     router.push(pollLink);
   };
 
-  const form = useForm({
+  const form = useForm<PollDetailsData>({
     defaultValues: {
       title: poll.title,
       location: poll.location ?? "",
       description: poll.description ?? "",
+      ...toConferencingFormValues(poll.conferencing),
     },
   });
 
@@ -44,7 +55,13 @@ const Page = () => {
         onSubmit={form.handleSubmit((data) => {
           //submit
           updatePollMutation(
-            { pollId: poll.id, ...data },
+            {
+              pollId: poll.id,
+              title: data.title,
+              location: data.location,
+              description: data.description,
+              conferencing: toPollConferencing(data) ?? null,
+            },
             {
               onSuccess: (res) => {
                 if (res.ok) {
@@ -68,7 +85,7 @@ const Page = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <PollDetailsForm />
+            <PollDetailsForm conferencing={conferencing} />
           </CardContent>
           <CardFooter className="justify-between">
             <Link href={pollLink} className={buttonVariants()}>
@@ -82,6 +99,4 @@ const Page = () => {
       </form>
     </Form>
   );
-};
-
-export default Page;
+}

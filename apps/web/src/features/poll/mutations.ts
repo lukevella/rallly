@@ -148,7 +148,8 @@ export const createPoll = async ({
 /**
  * Closes a poll manually. Idempotent: closing an already-closed poll returns
  * the poll unchanged without altering its `closedReason` (so a poll auto-closed
- * by the cron job keeps `closedReason: "auto"`). Returns `null` when the poll
+ * by the cron job keeps `closedReason: "auto"`). A scheduled poll is final and
+ * is returned unchanged too. Returns `null` when the poll
  * does not exist in the space, letting the caller surface a 404.
  *
  * `userId` attributes the activity event when the actor is known; API key
@@ -177,7 +178,7 @@ export const closePoll = async ({
       return null;
     }
 
-    if (poll.status === "closed") {
+    if (poll.status === "closed" || poll.status === "scheduled") {
       return toPollResponse(poll);
     }
 
