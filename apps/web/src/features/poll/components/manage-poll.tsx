@@ -80,7 +80,9 @@ const ManagePoll: React.FunctionComponent<{
   const isFree = useIsFree();
   const { exportToCsv } = useCsvExporter();
   // Edits made after booking would never reach the booked event.
-  const editingLocked = poll.status === "scheduled";
+  const canEdit = poll.status !== "scheduled";
+  const canChangeStatus =
+    poll.status !== "scheduled" && poll.status !== "canceled";
 
   return (
     <>
@@ -94,49 +96,30 @@ const ManagePoll: React.FunctionComponent<{
           <ChevronDownIcon data-icon="inline-end" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            disabled={editingLocked}
-            render={
-              editingLocked ? undefined : (
-                <Link href={`/poll/${poll.id}/edit-details`} />
-              )
-            }
-          >
-            <PencilIcon />
-            <Trans i18nKey="editDetails" />
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={editingLocked}
-            render={
-              editingLocked ? undefined : (
-                <Link href={`/poll/${poll.id}/edit-options`} />
-              )
-            }
-          >
-            <TableIcon />
-            <Trans i18nKey="editOptions" />
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={editingLocked}
-            render={
-              editingLocked ? undefined : (
-                <Link href={`/poll/${poll.id}/edit-settings`} />
-              )
-            }
-          >
-            <Settings2Icon />
-            <Trans i18nKey="editSettings" defaults="Edit settings" />
-          </DropdownMenuItem>
-          {editingLocked ? (
-            <p className="max-w-56 px-2 py-1.5 text-muted-foreground text-xs">
-              <Trans
-                i18nKey="scheduledPollLockedDescription"
-                defaults="A scheduled poll can no longer be edited."
-              />
-            </p>
+          {canEdit ? (
+            <>
+              <DropdownMenuItem
+                render={<Link href={`/poll/${poll.id}/edit-details`} />}
+              >
+                <PencilIcon />
+                <Trans i18nKey="editDetails" />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={<Link href={`/poll/${poll.id}/edit-options`} />}
+              >
+                <TableIcon />
+                <Trans i18nKey="editOptions" />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={<Link href={`/poll/${poll.id}/edit-settings`} />}
+              >
+                <Settings2Icon />
+                <Trans i18nKey="editSettings" defaults="Edit settings" />
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           ) : null}
-          <DropdownMenuSeparator />
-          {poll.status === "scheduled" || poll.status === "canceled" ? null : (
+          {canChangeStatus ? (
             <>
               <DropdownMenuItem
                 disabled={!!poll.event}
@@ -157,9 +140,9 @@ const ManagePoll: React.FunctionComponent<{
                 {isFree ? <ProBadge /> : null}
               </DropdownMenuItem>
               <OpenCloseToggle />
+              <DropdownMenuSeparator />
             </>
-          )}
-          <DropdownMenuSeparator />
+          ) : null}
           <DropdownMenuItem onClick={exportToCsv}>
             <DownloadIcon />
             <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
