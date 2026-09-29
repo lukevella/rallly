@@ -20,3 +20,13 @@ export type EmailChrome = EmailBranding & {
   domain: string;
   supportEmail: string;
 };
+
+/**
+ * The meeting an event email shows under its date. `label` names a custom
+ * meeting; `url` is omitted when there is nothing to join.
+ */
+export type EmailConferencing = {
+  provider: "zoom" | "meet" | "teams" | "phone" | "custom";
+  label?: string;
+  url?: string;
+};

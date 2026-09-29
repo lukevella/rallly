@@ -63,11 +63,17 @@ export const Button = (
         textAlign: "center",
         margin: "0 auto",
         fontSize: "16px",
-        fontWeight: "bold",
+        fontWeight: 600,
         color: "white",
       }}
     />
   );
+};
+
+// Emphasis inside copy. Inline weight because <strong> defaults to bold and
+// email clients ignore stylesheet overrides.
+export const Strong = (props: React.ComponentProps<"strong">) => {
+  return <strong {...props} style={{ fontWeight: 600, ...props.style }} />;
 };
 
 export const Link = (props: LinkProps & { color?: string }) => {
@@ -103,7 +109,7 @@ export const Heading = (
       as={as}
       style={{
         fontSize: fontSize[as],
-        fontWeight: "bold",
+        fontWeight: 600,
         ...props.style,
       }}
     />
@@ -170,7 +176,7 @@ export const Signature = () => {
         style={{
           fontSize: 16,
           margin: 0,
-          fontWeight: "bold",
+          fontWeight: 600,
           color: darkTextColor,
           fontFamily,
         }}

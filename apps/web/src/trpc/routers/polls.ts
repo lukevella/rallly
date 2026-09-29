@@ -8,6 +8,7 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { toEmailConferencing } from "@/emails/conferencing";
 import { recordPollActivities } from "@/features/activity/mutations";
 import {
   getConnectedConferencingProviders,
@@ -1138,6 +1139,9 @@ export const polls = router({
       const conferencingUri = conferencing
         ? getConferencingUri(conferencing)
         : undefined;
+      const emailConferencing = conferencing
+        ? toEmailConferencing(conferencing)
+        : undefined;
       const event = createIcsEvent({
         uid,
         sequence: 0,
@@ -1306,7 +1310,7 @@ export const polls = router({
         const hostName = poll.user.name;
         const hostLocale = poll.user.locale ?? undefined;
 
-        const { date, day, dow, time } = formatEventDateTime({
+        const { date, time } = formatEventDateTime({
           start: scheduledEvent.start,
           end: scheduledEvent.end,
           allDay: scheduledEvent.allDay,
@@ -1329,7 +1333,8 @@ export const polls = router({
             props: {
               name: hostName,
               pollUrl: absoluteUrl(`/poll/${poll.id}`),
-              location: poll.location,
+              location: poll.location || undefined,
+              conferencing: emailConferencing,
               title: poll.title,
               attendees: poll.participants
                 .filter((p) =>
@@ -1339,15 +1344,13 @@ export const polls = router({
                 )
                 .map((p) => p.name),
               date,
-              day,
-              dow,
               time,
             },
           }),
         );
 
         for (const p of participantsToEmail) {
-          const { date, day, dow, time } = formatEventDateTime({
+          const { date, time } = formatEventDateTime({
             start: scheduledEvent.start,
             end: scheduledEvent.end,
             allDay: scheduledEvent.allDay,
@@ -1371,9 +1374,9 @@ export const polls = router({
                 pollUrl: shortUrl(`/invite/${poll.id}`),
                 title: poll.title,
                 hostName: poll.user?.name ?? "",
+                location: poll.location || undefined,
+                conferencing: emailConferencing,
                 date,
-                day,
-                dow,
                 time,
               },
             }),

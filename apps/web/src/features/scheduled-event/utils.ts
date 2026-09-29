@@ -1,9 +1,5 @@
 import type { Prisma, ScheduledEventStatus } from "@rallly/database";
-import {
-  formatDateParts,
-  formatDateTime,
-  formatDateTimeRange,
-} from "@/lib/datetime/format";
+import { formatDateTime, formatDateTimeRange } from "@/lib/datetime/format";
 import type { TimeFormat } from "@/lib/datetime/types";
 import {
   calendarDateToUTCMidnight,
@@ -12,8 +8,6 @@ import {
 
 export interface FormattedEventDateTime {
   date: string;
-  day: string;
-  dow: string;
   /** Undefined for all-day events; the email templates render a localized "All day" label. */
   time?: string;
 }
@@ -53,19 +47,12 @@ export const formatEventDateTime = ({
 }: FormatEventDateTimeOptions): FormattedEventDateTime => {
   const displayTimeZone =
     allDay || !timeZone ? "UTC" : inviteeTimeZone || timeZone;
-  const { weekday, day } = formatDateParts(start, {
-    locale,
-    timeZone: displayTimeZone,
-  });
-
   return {
     date: formatDateTime(start, {
       preset: "dateLong",
       locale,
       timeZone: displayTimeZone,
     }),
-    day,
-    dow: weekday,
     time: allDay
       ? undefined
       : formatDateTimeRange(start, end, {

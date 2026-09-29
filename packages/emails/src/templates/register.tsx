@@ -61,7 +61,7 @@ async function RegisterEmail({
             style={{
               ...trackingWide,
               fontSize: "32px",
-              fontWeight: "bold",
+              fontWeight: 600,
             }}
             id="code"
           >

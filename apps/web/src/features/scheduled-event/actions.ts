@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { after } from "next/server";
 import * as z from "zod";
 import { getSpaceBranding } from "@/emails/branding";
+import { toEmailConferencing } from "@/emails/conferencing";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
@@ -140,7 +141,7 @@ async function sendRsvpConfirmation({
     );
   }
 
-  const { day, dow, date, time } = formatEventDateTime({
+  const { date, time } = formatEventDateTime({
     start: event.start,
     end: event.end,
     allDay: event.allDay,
@@ -167,11 +168,12 @@ async function sendRsvpConfirmation({
       title: event.title,
       hostName: event.user.name,
       response: status,
-      day,
-      dow,
       date,
       time,
-      location: locationText ?? conferencingUri,
+      location: locationText,
+      conferencing: conferencing
+        ? toEmailConferencing(conferencing)
+        : undefined,
     },
   });
 }

@@ -8,4 +8,4 @@ export {
   type SendRawEmailOptions,
   sendRawEmail,
 } from "./send";
-export type { EmailBranding } from "./types";
+export type { EmailBranding, EmailConferencing } from "./types";
