@@ -316,7 +316,8 @@ async function createTeamsMeeting({
   });
 
   if (!res.ok) {
-    const body = await res.text();
+    // Read for the log only; the status decides which error this is.
+    const body = await res.text().catch(() => "");
     if (isTeamsMeetingRefusal(res.status)) {
       throw new TeamsMeetingRefusedError({ status: res.status, body });
     }
@@ -370,9 +371,12 @@ export async function checkTeamsCanHostMeetings({
     });
 
     if (!res.ok) {
+      // The status alone decides; the body is only read for the log, and a
+      // read that fails must not turn a refusal into an inconclusive check.
       const refused = isTeamsMeetingRefusal(res.status);
+      const body = await res.text().catch(() => undefined);
       logger.warn(
-        { status: res.status, body: await res.text(), refused },
+        { status: res.status, body, refused },
         "Teams connection check did not create a meeting",
       );
       return { ok: false, reason: refused ? "refused" : "inconclusive" };

@@ -57,6 +57,19 @@ describe("checkTeamsCanHostMeetings", () => {
     expect(fetchStub).toHaveBeenCalledTimes(1);
   });
 
+  it("still refuses when the refusal's body cannot be read", async () => {
+    const refusal = respond(403);
+    vi.spyOn(refusal, "text").mockRejectedValue(
+      new DOMException("The operation timed out.", "TimeoutError"),
+    );
+    stubFetch(refusal);
+
+    expect(await checkTeamsCanHostMeetings({ accessToken: "token" })).toEqual({
+      ok: false,
+      reason: "refused",
+    });
+  });
+
   it("is inconclusive when Microsoft is unavailable or throttling", async () => {
     stubFetch(respond(503));
     expect(await checkTeamsCanHostMeetings({ accessToken: "token" })).toEqual({
