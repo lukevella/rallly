@@ -1,3 +1,4 @@
+import type { PollConferencing } from "@/features/conferencing/schema";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 
@@ -28,6 +29,7 @@ export type VotePageView = {
     title: string;
     description: string | null;
     location: string | null;
+    conferencing: PollConferencing | null;
     status: PollStatus;
     closedReason: PollClosedReason | null;
     allowTentativeVotes: boolean;
@@ -43,7 +45,13 @@ export type VotePageView = {
       hideAttribution: boolean;
       primaryColor: string | null;
     } | null;
-    event: { id: string; start: Date; duration: number } | null;
+    event: {
+      id: string;
+      start: Date;
+      duration: number;
+      /** The minted meeting's link, once the poll is finalized. */
+      conferencingUri: string | null;
+    } | null;
   };
   results: VoteResult[];
   /** Denominator for the per-option tallies; null when scores are hidden. */

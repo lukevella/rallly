@@ -59,6 +59,7 @@ export const loadVotePage = cache(
         title: poll.title,
         description: poll.description,
         location: poll.location,
+        conferencing: poll.conferencing,
         status: poll.status,
         closedReason: poll.closedReason,
         allowTentativeVotes: poll.allowTentativeVotes,
@@ -81,6 +82,7 @@ export const loadVotePage = cache(
               id: poll.event.id,
               start: poll.event.start,
               duration: poll.event.duration,
+              conferencingUri: poll.event.conferencingUri,
             }
           : null,
       },

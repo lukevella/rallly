@@ -1,5 +1,7 @@
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
+import type { PollConferencing } from "@/features/conferencing/schema";
 import {
   EventMetaDescription,
   EventMetaItem,
@@ -17,6 +19,8 @@ type SidebarPoll = {
   title: string;
   description: string | null;
   location: string | null;
+  conferencing: PollConferencing | null;
+  event: { conferencingUri: string | null } | null;
   allowTentativeVotes: boolean;
   spaceId: string | null;
   user: { name: string } | null;
@@ -25,7 +29,7 @@ type SidebarPoll = {
 
 /**
  * The event's identity in the vote page sidebar: branding chip, title,
- * description, organizer, location and the vote legend, with attribution
+ * description, organizer, location, video call and the vote legend, with attribution
  * and the theme switcher in a footer beneath them. Rendered on the server;
  * nothing here depends on the viewer's clock.
  */
@@ -91,6 +95,14 @@ export async function EventSidebar({
             <EventMetaItem>
               <MapPinIcon />
               <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+            </EventMetaItem>
+          ) : null}
+          {poll.conferencing ? (
+            <EventMetaItem>
+              <PollConferencingSummary
+                conferencing={poll.conferencing}
+                meetingUri={poll.event?.conferencingUri}
+              />
             </EventMetaItem>
           ) : null}
         </EventMetaList>
