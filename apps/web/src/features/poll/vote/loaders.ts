@@ -41,12 +41,20 @@ export const loadVotePage = cache(
 
     const userId = session?.user?.id;
 
+    const responsePromise = getViewerResponse({
+      pollId,
+      userId,
+      participantIds,
+    });
+
     const [response, scores, participantCount] = await Promise.all([
-      getViewerResponse({ pollId, userId, participantIds }),
+      responsePromise,
       // Scores stay hidden until the viewer has responded, so they are not
       // read at all when they cannot be shown.
-      poll.hideScores && !userId && participantIds.length === 0
-        ? null
+      poll.hideScores
+        ? responsePromise.then((found) =>
+            found ? getOptionScores({ pollId }) : null,
+          )
         : getOptionScores({ pollId }),
       countParticipants({ pollId }),
     ]);
