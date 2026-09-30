@@ -539,7 +539,6 @@
         "src/lib/datetime/**",
         "src/features/poll/components/forms/poll-options-form/**",
         "src/components/headless-date-picker.tsx",
-        "src/**/edit-options/page.tsx",
         "src/trpc/routers/polls.ts",
         "src/trpc/routers/index.ts",
         "src/lib/utils/date-time-utils.ts",
