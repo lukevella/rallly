@@ -33,11 +33,6 @@ type VoteFormValues = z.infer<typeof schema>;
 export const useVoteForm = () => useFormContext<VoteFormValues>();
 
 /**
- * Read and write one option's vote. Every view goes through this, so the
- * selection survives switching between them and no view needs to know how
- * the votes array is laid out.
- */
-/**
  * Writes one option's vote. Separate from `useVote` so a view that handles
  * clicks above its cells can set a vote without subscribing to one option.
  *
@@ -71,6 +66,11 @@ export function useSetVote() {
   );
 }
 
+/**
+ * Read and write one option's vote. Every view goes through this, so the
+ * selection survives switching between them and no view needs to know how
+ * the votes array is laid out.
+ */
 export function useVote(optionId: string) {
   const form = useVoteForm();
   const votes = form.watch("votes");
