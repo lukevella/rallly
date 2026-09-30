@@ -200,7 +200,10 @@ export function VoteViewWeek({
     ? week.days.filter((day) => day.results.length > 0)
     : week.days;
   const emptyDayCount = week.days.length - days.length;
-  const hasEmptyDays = week.days.some((day) => day.results.length === 0);
+  // Kept while hiding is on, so a fully booked week still offers the way
+  // back.
+  const hasEmptyDays =
+    hideEmptyDays || week.days.some((day) => day.results.length === 0);
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
