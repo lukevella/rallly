@@ -551,9 +551,6 @@ importers:
       '@vercel/functions':
         specifier: ^3.3.6
         version: 3.4.1(@aws-sdk/credential-provider-web-identity@3.972.76)
-      dayjs:
-        specifier: ^1.11.13
-        version: 1.11.19
       pg:
         specifier: ^8.17.1
         version: 8.18.0

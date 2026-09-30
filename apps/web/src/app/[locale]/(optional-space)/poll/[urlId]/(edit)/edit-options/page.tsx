@@ -14,29 +14,26 @@ import { usePoll } from "@/features/poll/components/poll-context";
 import { filterParticipantsByVote } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
-import { dayjs } from "@/lib/dayjs";
+import {
+  addMinutesToWallTime,
+  instantToWallTime,
+} from "@/lib/datetime/wall-time";
 import {
   encodeDateOption,
   getBrowserTimeZone,
 } from "@/lib/utils/date-time-utils";
 
-const toPollWallTime = (
-  value: ReturnType<typeof dayjs>,
-  timeZone: string | null,
-) =>
-  timeZone ? value.tz(resolveTimeZone(timeZone, value.toDate())) : value.utc();
+const toPollWallTime = (value: Date, timeZone: string | null) =>
+  instantToWallTime(value, timeZone ?? "UTC");
 
 const convertOptionToString = (
   option: { startTime: Date; duration: number },
   timeZone: string | null,
 ) => {
-  const start = toPollWallTime(dayjs(option.startTime), timeZone);
+  const start = toPollWallTime(option.startTime, timeZone);
   return option.duration === 0
-    ? start.format("YYYY-MM-DD")
-    : `${start.format("YYYY-MM-DDTHH:mm:ss")}/${start
-        .add(option.duration, "minute")
-        .format("YYYY-MM-DDTHH:mm:ss")}`;
+    ? start.slice(0, 10)
+    : `${start}/${addMinutesToWallTime(start, option.duration)}`;
 };
 
 const Page = () => {
@@ -58,28 +55,26 @@ const Page = () => {
   };
 
   const firstDate = toPollWallTime(
-    dayjs(poll.options[0]?.startTime),
+    poll.options[0]?.startTime ?? new Date(),
     poll.timeZone,
   );
 
   const form = useForm({
     defaultValues: {
-      navigationDate: firstDate.format("YYYY-MM-DD"),
+      navigationDate: firstDate.slice(0, 10),
       view: "month" as const,
       options: poll.options.map((option) => {
-        const start = toPollWallTime(dayjs(option.startTime), poll.timeZone);
+        const start = toPollWallTime(option.startTime, poll.timeZone);
         return option.duration > 0
           ? {
               type: "timeSlot" as const,
-              start: start.format("YYYY-MM-DDTHH:mm:ss"),
+              start,
               duration: option.duration,
-              end: start
-                .add(option.duration, "minute")
-                .format("YYYY-MM-DDTHH:mm:ss"),
+              end: addMinutesToWallTime(start, option.duration),
             }
           : {
               type: "date" as const,
-              date: start.format("YYYY-MM-DD"),
+              date: start.slice(0, 10),
             };
       }),
       timeZone: poll.timeZone ?? "",
