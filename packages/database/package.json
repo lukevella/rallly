@@ -18,7 +18,6 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@vercel/functions": "^3.3.6",
-    "dayjs": "^1.11.13",
     "pg": "^8.17.1"
   },
   "devDependencies": {
