@@ -253,6 +253,5 @@ describe("provinces that stopped changing clocks", () => {
 
   it("leaves times before the cutoff unchanged", () => {
     expect(time("2026-07-01T16:00:00Z", "America/Edmonton")).toBe("10:00");
-    });
   });
 });
