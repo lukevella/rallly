@@ -13,7 +13,7 @@ Rallly is a meeting scheduling application built with Next.js that allows users 
 - Better-Auth for authentication
 - TailwindCSS for styling
 - TypeScript throughout
-- `Intl` for all user-facing date and number formatting, wrapped in `lib/datetime/` (`format.ts`, `relative-time.tsx`, `duration.tsx`). dayjs is legacy: it survives only for calendar arithmetic and machine-format ISO strings in the poll options form, slot generator and CSV export. Never add a new dayjs import and never use it to render a date to a user
+- `Intl` for all user-facing date and number formatting, wrapped in `lib/datetime/` (`format.ts`, `relative-time.tsx`, `duration.tsx`). Converting between wall-clock times and instants goes through `wallTimeToInstant`/`instantToWallTime` in `lib/datetime/wall-time.ts`, which apply the time zone overrides. dayjs is legacy: it survives only for calendar arithmetic and machine-format ISO strings in the poll options form and CSV export, without its timezone plugin. Never add a new dayjs import and never use it to render a date to a user
 - Base UI (`@base-ui/react`) for primitives in `packages/ui`. Radix was removed; never reintroduce it
 
 ## Development Commands

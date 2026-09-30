@@ -40,8 +40,10 @@ import {
   isSpaceBrandingActive,
 } from "@/features/space/utils";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
-import { resolveTimeZoneAtWallTime } from "@/lib/datetime/time-zone-overrides";
-import { dayjs } from "@/lib/dayjs";
+import {
+  wallTimeDiffInMinutes,
+  wallTimeToInstant,
+} from "@/lib/datetime/wall-time";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -64,9 +66,9 @@ const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 // Mirrors the auto-close-polls house-keeping task: an option ends at
 // start + duration, with all-day options (duration 0) treated as 24h.
 const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
-  dayjs(option.startTime)
-    .add(option.duration === 0 ? 24 * 60 : option.duration, "minute")
-    .isAfter(dayjs());
+  option.startTime.getTime() +
+    (option.duration === 0 ? 24 * 60 : option.duration) * 60_000 >
+  Date.now();
 
 async function mintConferencing({
   userId,
@@ -270,14 +272,12 @@ export const polls = router({
       const timeZone = isTimePoll ? input.timeZone : null;
 
       const optionsData = input.options.map((option) => ({
-        startTime:
-          timeZone && option.endDate
-            ? dayjs(option.startDate)
-                .tz(resolveTimeZoneAtWallTime(timeZone, option.startDate), true)
-                .toDate()
-            : dayjs(option.startDate).utc(true).toDate(),
+        startTime: wallTimeToInstant(
+          option.startDate,
+          timeZone && option.endDate ? timeZone : "UTC",
+        ),
         duration: option.endDate
-          ? dayjs(option.endDate).diff(dayjs(option.startDate), "minute")
+          ? wallTimeDiffInMinutes(option.startDate, option.endDate)
           : 0,
       }));
 
@@ -515,20 +515,13 @@ export const polls = router({
 
             if (end) {
               return {
-                startTime: input.timeZone
-                  ? dayjs(start)
-                      .tz(
-                        resolveTimeZoneAtWallTime(input.timeZone, start),
-                        true,
-                      )
-                      .toDate()
-                  : dayjs(start).utc(true).toDate(),
-                duration: dayjs(end).diff(dayjs(start), "minute"),
+                startTime: wallTimeToInstant(start, input.timeZone ?? "UTC"),
+                duration: wallTimeDiffInMinutes(start, end),
                 pollId,
               };
             } else {
               return {
-                startTime: dayjs(start).utc(true).toDate(),
+                startTime: wallTimeToInstant(start, "UTC"),
                 duration: 0,
                 pollId,
               };
@@ -1004,9 +997,10 @@ export const polls = router({
             start: res.scheduledEvent.start,
             duration: res.scheduledEvent.allDay
               ? 0
-              : dayjs(res.scheduledEvent.end).diff(
-                  dayjs(res.scheduledEvent.start),
-                  "minute",
+              : Math.trunc(
+                  (res.scheduledEvent.end.getTime() -
+                    res.scheduledEvent.start.getTime()) /
+                    60_000,
                 ),
             status: res.scheduledEvent.status,
           }
@@ -1450,7 +1444,9 @@ export const polls = router({
           event: "poll_schedule",
           properties: {
             attendee_count: attendees.length,
-            days_since_created: dayjs().diff(poll.createdAt, "day"),
+            days_since_created: Math.trunc(
+              (Date.now() - poll.createdAt.getTime()) / 86_400_000,
+            ),
             participant_count: poll.participants.length,
           },
           groups: {

@@ -1,5 +1,4 @@
-import { resolveTimeZoneAtWallTime } from "@/lib/datetime/time-zone-overrides";
-import { dayjs } from "@/lib/dayjs";
+import { wallTimeToInstant } from "@/lib/datetime/wall-time";
 
 export type SlotGeneratorInput = {
   startDate: string;
@@ -28,35 +27,24 @@ const hasTzOffset = (value: string) =>
 
 const parseDateTimeInTimeZone = (value: string, timeZone?: string) =>
   hasTzOffset(value)
-    ? dayjs(value)
-    : timeZone
-      ? dayjs(value).tz(resolveTimeZoneAtWallTime(timeZone, value), true)
-      : dayjs(value).utc(true);
-
-const parseLocalDateTimeInTimeZone = (
-  date: string,
-  time: string,
-  timeZone: string | undefined,
-) =>
-  timeZone
-    ? dayjs(`${date}T${time}`).tz(
-        resolveTimeZoneAtWallTime(timeZone, `${date}T${time}`),
-        true,
-      )
-    : dayjs(`${date}T${time}`).utc(true);
+    ? new Date(value)
+    : wallTimeToInstant(value, timeZone ?? "UTC");
 
 export const parseStartTime = (
   startTime: string,
   timeZone: string | undefined,
   duration: number,
 ): TimeSlot => ({
-  startTime: parseDateTimeInTimeZone(startTime, timeZone).toDate(),
+  startTime: parseDateTimeInTimeZone(startTime, timeZone),
   duration,
 });
 
 // Safety bound against unbounded input: the API accepts any two valid dates, so
 // without this a range like 1900-9999 would iterate millions of days.
 export const MAX_SLOT_GENERATION_DAYS = 366;
+
+const MINUTE_MS = 60_000;
+const DAY_MS = 24 * 60 * MINUTE_MS;
 
 export const generateTimeSlots = (
   generator: SlotGeneratorInput,
@@ -75,45 +63,41 @@ export const generateTimeSlots = (
 
   const allowed = new Set(generator.daysOfWeek.map((d) => dayMap[d]));
 
-  // Use UTC for date iteration to avoid local timezone interference
-  const startDay = dayjs.utc(generator.startDate).startOf("day");
-  const endDay = dayjs.utc(generator.endDate).startOf("day");
+  // Iterate calendar dates as UTC midnights so no zone can shift them.
+  const startDay = Date.parse(generator.startDate.slice(0, 10));
+  const endDay = Date.parse(generator.endDate.slice(0, 10));
 
+  const zone = timeZone ?? "UTC";
   const results: Array<TimeSlot> = [];
   let daysVisited = 0;
 
-  for (
-    let cursor = startDay;
-    cursor.isSameOrBefore(endDay, "day");
-    cursor = cursor.add(1, "day")
-  ) {
+  for (let cursor = startDay; cursor <= endDay; cursor += DAY_MS) {
     if (daysVisited >= MAX_SLOT_GENERATION_DAYS) {
       break;
     }
     daysVisited++;
-    const date = cursor.format("YYYY-MM-DD");
+    const day = new Date(cursor);
+    const date = day.toISOString().slice(0, 10);
     // The cursor's UTC date is the calendar date itself, so its weekday is
     // the same in every zone.
-    if (!allowed.has(cursor.day())) {
+    if (!allowed.has(day.getUTCDay())) {
       continue;
     }
-    const windowStart = parseLocalDateTimeInTimeZone(
-      date,
-      generator.fromTime,
-      timeZone,
-    );
-    const windowEnd = parseLocalDateTimeInTimeZone(
-      date,
-      generator.toTime,
-      timeZone,
-    );
-    if (!windowEnd.isAfter(windowStart)) {
+    const windowStart = wallTimeToInstant(
+      `${date}T${generator.fromTime}`,
+      zone,
+    ).getTime();
+    const windowEnd = wallTimeToInstant(
+      `${date}T${generator.toTime}`,
+      zone,
+    ).getTime();
+    if (!(windowEnd > windowStart)) {
       continue;
     }
 
     const duration = durationMinutes;
     const interval = generator.interval ?? durationMinutes;
-    const totalMinutes = windowEnd.diff(windowStart, "minute");
+    const totalMinutes = (windowEnd - windowStart) / MINUTE_MS;
 
     // A non-positive (or NaN) interval would never advance the loop below.
     if (!(duration > 0) || !(interval > 0)) {
@@ -125,9 +109,8 @@ export const generateTimeSlots = (
       offset + duration <= totalMinutes;
       offset += interval
     ) {
-      const t = windowStart.add(offset, "minute");
       results.push({
-        startTime: t.toDate(),
+        startTime: new Date(windowStart + offset * MINUTE_MS),
         duration,
       });
     }

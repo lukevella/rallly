@@ -5,7 +5,7 @@ import type {
 import { dayjs } from "@/lib/dayjs";
 
 export function getBrowserTimeZone() {
-  return dayjs.tz.guess();
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
 export const encodeDateOption = (option: DateTimeOption) => {
