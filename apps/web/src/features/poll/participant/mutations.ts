@@ -237,7 +237,10 @@ export async function addParticipant({
           type: "response_created",
           userId,
           participantId: participant.id,
-          payload: { name: participant.name },
+          payload: {
+            name: participant.name,
+            ...(participant.note && { note: participant.note }),
+          },
         },
       ]);
       scheduleWebhookDispatch({ pollId: pollId });

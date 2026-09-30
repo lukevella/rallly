@@ -102,7 +102,9 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
     type: z.literal("response_created"),
     ...actor,
     participantId: z.string(),
-    payload: z.object({ name: z.string() }),
+    // A response's note is set once, when it's created, so the snapshot
+    // stays accurate. Rows written before the note was recorded lack it.
+    payload: z.object({ name: z.string(), note: z.string().optional() }),
   }),
   z.object({
     type: z.literal("response_updated"),

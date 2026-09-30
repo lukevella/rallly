@@ -29,6 +29,27 @@ describe("pollActivitySchema", () => {
     expect(result.success).toBe(false);
   });
 
+  it("reads a response note when present and tolerates rows without one", () => {
+    const withNote = parsePollActivity({
+      ...emptyRefs,
+      type: "response_created",
+      participantId: "p1",
+      payload: { name: "Jessie Smith", note: "Mornings work best" },
+    });
+    const withoutNote = parsePollActivity({
+      ...emptyRefs,
+      type: "response_created",
+      participantId: "p1",
+      payload: { name: "Jessie Smith" },
+    });
+
+    expect(withNote?.payload).toEqual({
+      name: "Jessie Smith",
+      note: "Mornings work best",
+    });
+    expect(withoutNote?.payload).toEqual({ name: "Jessie Smith" });
+  });
+
   it("requires the subject ref of a response event", () => {
     const result = pollActivitySchema.safeParse({
       type: "response_created",

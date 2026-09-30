@@ -1,4 +1,5 @@
-import { loadPoll } from "@/features/poll/loaders";
+import { PollDatesList } from "@/features/poll/components/poll-dates-list";
+import { loadPoll, loadPollResults } from "@/features/poll/loaders";
 
 export default async function Page({
   params,
@@ -6,6 +7,16 @@ export default async function Page({
   params: Promise<{ pollId: string }>;
 }) {
   const { pollId } = await params;
-  await loadPoll(pollId);
-  return null;
+  const [poll, results] = await Promise.all([
+    loadPoll(pollId),
+    loadPollResults(pollId),
+  ]);
+  return (
+    <PollDatesList
+      kind={results.kind}
+      options={results.options}
+      participantCount={results.participantCount}
+      timeZone={poll.timeZone}
+    />
+  );
 }

@@ -16,7 +16,7 @@ type DataListGroup = { id: string; label: React.ReactNode };
 
 function DataListRow<TData>({ row }: { row: Row<TData> }) {
   return (
-    <li className="relative col-span-full grid h-12 grid-cols-subgrid items-center rounded-lg pr-3 pl-4 hover:bg-accent/60 has-[a:focus-visible]:bg-accent/60">
+    <li className="relative col-span-full grid h-12 grid-cols-subgrid items-center rounded-lg pr-3 pl-4 hover:bg-accent/60 has-[a:focus-visible]:bg-accent/60 has-[a[aria-current=page]]:bg-accent">
       {row.getVisibleCells().map((cell) => (
         <div
           key={cell.id}

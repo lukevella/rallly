@@ -3,12 +3,14 @@ import "server-only";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
+import { listPollActivity } from "@/features/activity/data";
 import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
   canUserManagePoll,
   getPoll,
   getPollAvailability,
   getPollDetails,
+  getPollResults,
   getPollStatusCounts,
   listParticipantIdsByToken,
   listPollComments,
@@ -38,6 +40,110 @@ export const loadPoll = cache(async (pollId: string) => {
 
   return poll;
 });
+
+// Responses for the poll admin pages. loadPoll proves the poll is in the
+// viewer's space before any response is read; one read of the full rows per
+// request is shared by the list and the detail.
+const loadParticipantRows = cache(async (pollId: string) => {
+  await loadPoll(pollId);
+  return listPollParticipants({ pollId });
+});
+
+// The link from the response's confirmation email, for the host to hand to
+// a respondent who lost it.
+const getEditUrl = ({ pollId, token }: { pollId: string; token: string }) =>
+  shortUrl(getPollInvitePath({ pollId, token }));
+
+export const loadPollParticipants = cache(async (pollId: string) => {
+  const participants = await loadParticipantRows(pollId);
+  return participants.map(({ id, name, note, image, createdAt, token }) => ({
+    id,
+    name,
+    note,
+    image,
+    createdAt,
+    editUrl: getEditUrl({ pollId, token }),
+  }));
+});
+
+/**
+ * One response with its votes, or null when it no longer exists (e.g. it
+ * was deleted while its link stayed open).
+ */
+export const loadOptionalPollResponse = cache(
+  async (pollId: string, participantId: string) => {
+    const participants = await loadParticipantRows(pollId);
+    const participant = participants.find(({ id }) => id === participantId);
+
+    if (!participant) {
+      return null;
+    }
+
+    const { token, userId: _userId, ...rest } = participant;
+    return { ...rest, editUrl: getEditUrl({ pollId, token }) };
+  },
+);
+
+/**
+ * Every option with its vote counts, in date order.
+ */
+export const loadPollResults = cache(async (pollId: string) => {
+  const [scope] = await Promise.all([
+    loadActiveSpaceContentScope(),
+    loadPoll(pollId),
+  ]);
+  const results = await getPollResults({ pollId, spaceId: scope.spaceId });
+
+  if (!results) {
+    notFound();
+  }
+
+  return results;
+});
+
+/**
+ * The poll's most popular options, best first. Options nobody can attend are
+ * left out, so a poll without votes has none.
+ */
+export const loadPollTopOptions = cache(
+  async (pollId: string, limit: number) => {
+    const results = await loadPollResults(pollId);
+    return {
+      participantCount: results.participantCount,
+      options: results.options
+        .filter((option) => option.score > 0)
+        .sort(
+          (a, b) =>
+            b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
+        )
+        .slice(0, limit),
+    };
+  },
+);
+
+export const loadPollActivity = cache(
+  async (pollId: string, limit?: number) => {
+    const [scope] = await Promise.all([
+      loadActiveSpaceContentScope(),
+      loadPoll(pollId),
+    ]);
+    return listPollActivity({ pollId, spaceId: scope.spaceId, limit });
+  },
+);
+
+export const loadPollResponseActivity = cache(
+  async (pollId: string, participantId: string) => {
+    const [scope] = await Promise.all([
+      loadActiveSpaceContentScope(),
+      loadPoll(pollId),
+    ]);
+    return listPollActivity({
+      pollId,
+      spaceId: scope.spaceId,
+      participantId,
+    });
+  },
+);
 
 /**
  * The token from the emailed link is its own proof of scope: no session is

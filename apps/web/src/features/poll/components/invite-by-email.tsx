@@ -27,7 +27,6 @@ import { RegisterLink } from "@/components/register-link";
 import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
-import { usePoll } from "@/features/poll/client";
 import type { InviteeRowStatus } from "@/features/poll/components/invitee-list";
 import {
   InviteeListPreview,
@@ -35,6 +34,7 @@ import {
 } from "@/features/poll/components/invitee-list";
 import { sendPollInviteAction } from "@/features/poll/invite/actions";
 import { sendPollInviteSchema } from "@/features/poll/invite/schema";
+import type { PollStatus } from "@/features/poll/schema";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
@@ -55,19 +55,24 @@ type InviteFormValues = { email: string };
  * page views never open it. The send action's success refetches it, which is
  * what replaces an optimistic "Sending" row with the real one.
  */
-export function InviteByEmail() {
-  const poll = usePoll();
+export function InviteByEmail({
+  pollId,
+  pollStatus,
+}: {
+  pollId: string;
+  pollStatus: PollStatus;
+}) {
   const { user } = useUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
 
   const isGuest = !user || user.isGuest;
   const invitesQuery = trpc.polls.invites.list.useQuery(
-    { pollId: poll.id },
+    { pollId: pollId },
     { enabled: !isGuest },
   );
   const invites = invitesQuery.data ?? [];
-  const isOpen = poll.status === "open";
+  const isOpen = pollStatus === "open";
 
   const form = useForm<InviteFormValues>({
     resolver: zodResolver(inviteFormSchema),
@@ -189,7 +194,7 @@ export function InviteByEmail() {
 
   const onValid = ({ email: address }: InviteFormValues) => {
     if (isFree) {
-      showPayWall({ from: "invite-dialog", pollId: poll.id });
+      showPayWall({ from: "invite-dialog", pollId: pollId });
       return;
     }
     if (rows.some((row) => row.email.toLowerCase() === address)) {
@@ -205,7 +210,7 @@ export function InviteByEmail() {
     setSending((prev) => [address, ...prev]);
     form.reset();
     form.setFocus("email");
-    sendInvite.mutate({ pollId: poll.id, email: address });
+    sendInvite.mutate({ pollId, email: address });
   };
 
   return (
