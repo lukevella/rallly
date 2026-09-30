@@ -8,10 +8,13 @@ import { NewPollPage } from "./new-poll-page";
  * holding another row.
  */
 function optionRow(main: Locator) {
+  // has/hasNot resolve inside each li, so they are built from the page: a
+  // locator scoped to main would look for main inside the row.
+  const page = main.page();
   return main
     .locator("li")
-    .filter({ has: main.getByTestId("poll-option") })
-    .filter({ hasNot: main.locator("li") });
+    .filter({ has: page.getByTestId("poll-option") })
+    .filter({ hasNot: page.locator("li") });
 }
 
 async function box(locator: Locator) {
