@@ -32,7 +32,7 @@ function ButtonGroup({
       className={cn(
         // Matches SegmentedControl and Tabs: a recessed track with the
         // active item floating above it.
-        "inline-flex h-9 items-center gap-0.5 rounded-xl border border-input bg-muted p-0.5 dark:bg-gray-900",
+        "inline-flex h-9 items-center gap-0.5 rounded-[10px] border border-input bg-muted p-0.5 dark:bg-gray-900",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ function ButtonGroupItem({ className, ...props }: Toggle.Props) {
     <Toggle
       data-slot="button-group-item"
       className={cn(
-        "inline-flex h-full flex-1 cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-lg px-3 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring data-disabled:pointer-events-none data-pressed:bg-card data-pressed:text-foreground data-disabled:opacity-50 data-pressed:shadow-xs dark:data-pressed:bg-gray-800",
+        "inline-flex h-full flex-1 cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-[8px] px-3 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring data-disabled:pointer-events-none data-pressed:bg-card data-pressed:text-foreground data-disabled:opacity-50 data-pressed:shadow-xs dark:data-pressed:bg-gray-800",
         className,
       )}
       {...props}
