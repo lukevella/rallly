@@ -44,7 +44,8 @@ export const VoteSegmentedControl = ({
     <SegmentedControl
       data-testid="vote-selector"
       aria-label={optionLabel}
-      className={cn("h-11", className)}
+      // Touch-sized below sm; from there it matches a default button.
+      className={cn("h-11 sm:h-9", className)}
       value={value ?? null}
       onValueChange={(newValue) => {
         if (newValue) {
@@ -57,7 +58,7 @@ export const VoteSegmentedControl = ({
           key={type}
           value={type}
           aria-label={voteLabels[type]}
-          className="w-11 data-unchecked:[&_svg]:text-gray-400"
+          className="w-11 sm:w-9 data-unchecked:[&_svg]:text-gray-400 dark:data-unchecked:[&_svg]:text-gray-600"
         >
           <VoteIcon type={type} />
         </SegmentedControlItem>

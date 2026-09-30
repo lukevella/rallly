@@ -14,9 +14,20 @@ declare module "@tanstack/react-table" {
 
 type DataListGroup = { id: string; label: React.ReactNode };
 
-function DataListRow<TData>({ row }: { row: Row<TData> }) {
+function DataListRow<TData>({
+  row,
+  className,
+}: {
+  row: Row<TData>;
+  className?: string;
+}) {
   return (
-    <li className="relative col-span-full grid h-12 grid-cols-subgrid items-center rounded-lg pr-3 pl-4 hover:bg-accent/60 has-[a:focus-visible]:bg-accent/60 has-[a[aria-current=page]]:bg-accent">
+    <li
+      className={cn(
+        "relative col-span-full grid h-12 grid-cols-subgrid items-center rounded-lg pr-3 pl-4 hover:bg-accent/60 has-[a:focus-visible]:bg-accent/60 has-[a[aria-current=page]]:bg-accent",
+        className,
+      )}
+    >
       {row.getVisibleCells().map((cell) => (
         <div
           key={cell.id}
@@ -45,23 +56,34 @@ function DataListRow<TData>({ row }: { row: Row<TData> }) {
  * To make a whole row clickable, render a link in one cell with an
  * `after:absolute after:inset-0` overlay and give other interactive cells
  * `relative z-10` so they sit above it.
+ *
+ * `getRowClassName` styles a row from its data, e.g. to tint it by state.
  */
 export function DataList<TData>({
   table,
   getGroup,
+  getRowClassName,
+  rowGapClassName,
   className,
 }: {
   table: Table<TData>;
   getGroup?: (row: TData) => DataListGroup;
+  getRowClassName?: (row: TData) => string | undefined;
+  /** Space between rows, e.g. when rows carry their own background. */
+  rowGapClassName?: string;
   className?: string;
 }) {
   const rows = table.getRowModel().rows;
 
   if (!getGroup) {
     return (
-      <ul className={cn("grid gap-x-5 px-4 py-2", className)}>
+      <ul className={cn("grid gap-x-5 px-4 py-2", rowGapClassName, className)}>
         {rows.map((row) => (
-          <DataListRow key={row.id} row={row} />
+          <DataListRow
+            key={row.id}
+            row={row}
+            className={getRowClassName?.(row.original)}
+          />
         ))}
       </ul>
     );
@@ -88,9 +110,18 @@ export function DataList<TData>({
           <h2 className="col-span-full mb-1 flex h-12 items-center gap-2 rounded-lg bg-muted/60 px-4 text-sm">
             {group.label}
           </h2>
-          <ul className="col-span-full grid grid-cols-subgrid">
+          <ul
+            className={cn(
+              "col-span-full grid grid-cols-subgrid",
+              rowGapClassName,
+            )}
+          >
             {rows.map((row) => (
-              <DataListRow key={row.id} row={row} />
+              <DataListRow
+                key={row.id}
+                row={row}
+                className={getRowClassName?.(row.original)}
+              />
             ))}
           </ul>
         </li>

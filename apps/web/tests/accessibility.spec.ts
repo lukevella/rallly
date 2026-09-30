@@ -85,4 +85,28 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
       expect(await scan(page)).toEqual([]);
     });
   });
+
+  test.describe("vote page calendar", () => {
+    let voteUrl: string;
+
+    test.beforeAll(async ({ browser }) => {
+      const page = await browser.newPage();
+      const newPollPage = new NewPollPage(page);
+      await newPollPage.goto();
+      await newPollPage.create({ name: "Accessibility Dates", allDay: true });
+      const match = page.url().match(/\/poll\/([a-zA-Z0-9]+)/);
+      if (!match) {
+        throw new Error(`could not extract poll id from ${page.url()}`);
+      }
+      voteUrl = `/invite/${match[1]}/vote`;
+      await page.close();
+    });
+
+    test("month grid", async ({ page }) => {
+      await page.goto(voteUrl);
+      await page.getByRole("radio", { name: "Calendar" }).click();
+      await page.getByRole("grid").waitFor();
+      expect(await scan(page)).toEqual([]);
+    });
+  });
 });

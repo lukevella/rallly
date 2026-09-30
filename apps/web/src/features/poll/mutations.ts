@@ -429,6 +429,8 @@ export async function removeDeletedPolls() {
  * render of the page that called it and drops the router's copy of both.
  */
 export function revalidatePollPages() {
-  revalidatePath("/[locale]/invite/[urlId]", "page");
+  // "layout" so the nested /vote route is covered too; as a "page" it
+  // would keep serving a response the viewer has just deleted.
+  revalidatePath("/[locale]/invite/[urlId]", "layout");
   revalidatePath("/[locale]/(optional-space)/poll/[urlId]", "layout");
 }
