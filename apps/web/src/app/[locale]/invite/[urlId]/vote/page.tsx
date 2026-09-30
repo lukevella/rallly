@@ -10,7 +10,7 @@ import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-ope
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import { loadPollAvailability } from "@/features/poll/loaders";
 import { PollBranding } from "@/features/poll/vote/components/poll-branding";
-import { loadVotePage } from "@/features/poll/vote/loaders";
+import { loadCanManagePoll, loadVotePage } from "@/features/poll/vote/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
 import { getSession } from "@/lib/auth";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
@@ -65,6 +65,7 @@ async function VotePageContent({ params, searchParams }: PageProps) {
     footerLinks,
     instancePolicy,
     instanceBranding,
+    canManage,
   ] = await Promise.all([
     loadVotePage({ pollId: urlId, token }),
     getSession(),
@@ -73,6 +74,7 @@ async function VotePageContent({ params, searchParams }: PageProps) {
     loadFooterLinks(),
     loadInstancePolicy(),
     loadInstanceBranding(),
+    loadCanManagePoll(urlId),
   ]);
 
   const { poll } = view;
@@ -98,7 +100,7 @@ async function VotePageContent({ params, searchParams }: PageProps) {
             instanceBranding.hideAttribution ||
             (poll.space?.hideAttribution ?? false)
           }
-          isCreator={!!session?.user && session.user.id === poll.userId}
+          canManage={canManage}
           requireParticipantEmail={poll.requireParticipantEmail}
           user={session?.user ?? null}
           spaceBrandingAllowed={instancePolicy.spaceBrandingAllowed}
