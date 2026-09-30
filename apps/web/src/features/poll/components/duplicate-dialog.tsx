@@ -11,9 +11,9 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import { useRouter } from "next/navigation";
+import { DuplicateForm } from "@/features/poll/components/duplicate-form";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { DuplicateForm } from "./duplicate-form";
 
 const formName = "duplicate-form";
 export function DuplicateDialog({

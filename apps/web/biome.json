@@ -474,7 +474,6 @@
     {
       "includes": [
         "src/features/billing/components/pay-wall-dialog.tsx",
-        "src/features/poll/components/manage-poll.tsx",
         "src/lib/auth.ts",
         "src/lib/feature-flags/config.ts",
         "src/lib/safe-action/server.ts"

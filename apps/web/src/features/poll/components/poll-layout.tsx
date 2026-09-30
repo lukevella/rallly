@@ -19,11 +19,16 @@ import { ShareDialog } from "@/features/poll/components/share-dialog";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
+  const poll = usePoll();
   return (
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <ShareDialog />
+      <ShareDialog
+        pollId={poll.id}
+        pollStatus={poll.status}
+        inviteLink={poll.inviteLink}
+      />
     </div>
   );
 };

@@ -45,6 +45,7 @@ export async function getPoll({
       id: true,
       title: true,
       status: true,
+      timeZone: true,
     },
   });
 }

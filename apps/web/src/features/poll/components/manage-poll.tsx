@@ -21,11 +21,11 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
 import { Link } from "@/components/link";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
+import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { SchedulePollDialog } from "@/features/poll/components/manage-poll/schedule-poll-dialog";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";

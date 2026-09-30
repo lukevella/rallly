@@ -14,15 +14,22 @@ import { Separator } from "@rallly/ui/separator";
 import { Share2Icon } from "lucide-react";
 import React from "react";
 import { useIsFree } from "@/features/billing/client";
-import { usePoll } from "@/features/poll/client";
 import { InviteByEmail } from "@/features/poll/components/invite-by-email";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
+import type { PollStatus } from "@/features/poll/schema";
 import { Trans } from "@/i18n/client";
 import { useFlash } from "@/lib/flash/client";
 
-export function ShareDialog() {
-  const poll = usePoll();
+export function ShareDialog({
+  pollId,
+  pollStatus,
+  inviteLink,
+}: {
+  pollId: string;
+  pollStatus: PollStatus;
+  inviteLink: string;
+}) {
   const dialog = useDialog();
   const isFree = useIsFree();
   const isOpen = dialog.dialogProps.open;
@@ -35,7 +42,7 @@ export function ShareDialog() {
   // replay it.
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per flash arrival
   React.useEffect(() => {
-    if (sharePollFlash !== poll.id) return;
+    if (sharePollFlash !== pollId) return;
     openSource.current = "poll_created";
     dialog.trigger();
   }, [sharePollFlash]);
@@ -43,12 +50,12 @@ export function ShareDialog() {
   React.useEffect(() => {
     if (!isOpen) return;
     posthog?.capture("poll_share:dialog_open", {
-      poll_id: poll.id,
+      poll_id: pollId,
       tier: isFree ? "free" : "pro",
       source: openSource.current,
     });
     openSource.current = "manual";
-  }, [isOpen, poll.id, isFree]);
+  }, [isOpen, pollId, isFree]);
 
   return (
     <>
@@ -71,9 +78,9 @@ export function ShareDialog() {
               />
             </DialogDescription>
           </DialogHeader>
-          <InviteLinkRow inviteLink={poll.inviteLink} />
+          <InviteLinkRow pollId={pollId} inviteLink={inviteLink} />
           <Separator />
-          <InviteByEmail />
+          <InviteByEmail pollId={pollId} pollStatus={pollStatus} />
         </DialogContent>
       </Dialog>
     </>
