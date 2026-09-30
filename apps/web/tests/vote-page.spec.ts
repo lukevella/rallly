@@ -2,6 +2,18 @@ import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { NewPollPage } from "./new-poll-page";
 
+/**
+ * The list row an option sits in, which is what carries its geometry.
+ * A grouped list nests rows inside a group item, so this excludes anything
+ * holding another row.
+ */
+function optionRow(main: Locator) {
+  return main
+    .locator("li")
+    .filter({ has: main.getByTestId("poll-option") })
+    .filter({ hasNot: main.locator("li") });
+}
+
 async function box(locator: Locator) {
   const rect = await locator.boundingBox();
   if (!rect) {
@@ -36,7 +48,9 @@ test.describe("vote page", () => {
 
     // Sidebar sits to the left of the list at desktop width
     const sidebarBox = await box(sidebar);
-    const optionBox = await box(main.getByTestId("poll-option").first());
+    // The row, not the option cell: the cell holds a time that renders
+    // only after hydration, so it has no box until then.
+    const optionBox = await box(optionRow(main).first());
     expect(optionBox.x).toBeGreaterThan(sidebarBox.x + sidebarBox.width - 1);
 
     // The grid never renders on this page
@@ -126,8 +140,8 @@ test.describe("vote page", () => {
     await expect(page.getByTestId("vote-selector")).toHaveCount(0);
 
     // The saved yes shows as a vote icon, and the tally counts it without
-    // naming who voted
-    const votedRow = main.getByTestId("poll-option").first();
+    // naming who voted. Both sit beside the option in its row.
+    const votedRow = optionRow(main).first();
     await expect(votedRow).toContainText("Yes");
     await expect(votedRow).toContainText("yes");
   });
@@ -145,7 +159,7 @@ test.describe("vote page", () => {
       "Vote Page Meetup",
     );
     const sidebarBox = await box(sidebar);
-    const optionBox = await box(main.getByTestId("poll-option").first());
+    const optionBox = await box(optionRow(main).first());
     expect(optionBox.y).toBeGreaterThan(sidebarBox.y + sidebarBox.height - 1);
 
     // Filters sit on the left of the header and display settings on the

@@ -51,10 +51,10 @@ export function VotePanelHeader({
     <header // Below lg the page scrolls, so the header pins to the viewport; from
       // lg up the panel's own layout places it. Below sm the two groups take
       // a line each rather than squeezing onto one.
-      // px-1.5 rather than px-4: every control here is a button carrying
-      // its own px-2.5, so the two together put the label at the same 16px
-      // from the card edge as the footer's text.
-      className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 bg-card px-1.5 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
+      // px-4 to match the rows and the footer. The segmented controls paint
+      // their own background, so their box edge is the edge you see; a
+      // smaller pad would leave them overhanging everything below.
+      className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-col items-stretch gap-2 bg-card px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:static lg:bg-transparent"
     >
       <div
         data-testid="filters"

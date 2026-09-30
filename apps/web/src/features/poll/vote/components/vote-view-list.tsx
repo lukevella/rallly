@@ -1,28 +1,29 @@
-/** biome-ignore-all lint/a11y/useSemanticElements: ARIA table on divs so rows can be CSS grids; table elements lose their semantics under display: grid in Chrome and Safari */
-/** biome-ignore-all lint/a11y/useFocusableInteractive: row and header roles are only interactive inside role="grid", not role="table" */
 "use client";
-import { cn } from "@rallly/ui";
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
-  getGroupedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
+import { DataList } from "@/components/data-list";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import type { VoteType } from "@/features/poll/constants";
 import { OptionDate } from "@/features/poll/vote/components/option-date";
-import { useVote } from "@/features/poll/vote/components/vote-form";
+import {
+  useVote,
+  useVotesByOption,
+} from "@/features/poll/vote/components/vote-form";
 import { VoteScore } from "@/features/poll/vote/components/vote-score";
 import type { VoteResult, VoteViewProps } from "@/features/poll/vote/types";
-import {
-  EventDate,
-  EventTimeRange,
-} from "@/features/scheduled-event/components/event-date-time";
-import { Trans, useTranslation } from "@/i18n/client";
+import { EventTimeRange } from "@/features/scheduled-event/components/event-date-time";
+import { Trans } from "@/i18n/client";
+import { CalendarDate } from "@/lib/datetime/calendar-date";
 import { useDateTime } from "@/lib/datetime/client";
+import {
+  calendarDateToUTCMidnight,
+  getCalendarDate,
+} from "@/lib/datetime/utils";
 
 /** A recorded vote: icon only, with the vote type for screen readers. */
 function VoteLabel({ type }: { type?: VoteType }) {
@@ -47,14 +48,6 @@ function VoteLabel({ type }: { type?: VoteType }) {
 }
 
 const columnHelper = createColumnHelper<VoteResult>();
-
-// Stable references: TanStack recomputes the grouped model whenever these
-// change identity; fresh objects each render freeze the page on the first
-// pointer press.
-const tableState = {
-  grouping: ["group"],
-  columnVisibility: { group: false },
-};
 
 const endOf = (result: VoteResult) =>
   new Date(result.startTime.getTime() + result.duration * 60_000);
@@ -88,8 +81,9 @@ function VoteCell({
 }
 
 /**
- * The options as a table, grouped by day for time polls and flat for date
- * polls, with the viewer's vote control on each row.
+ * The options as a list. A time poll groups them by day under the same
+ * headings the events page uses; a date poll's rows each carry their own
+ * full date, so they run flat.
  */
 export function VoteViewList({
   poll,
@@ -99,8 +93,6 @@ export function VoteViewList({
   canVote,
 }: VoteViewProps) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
-  const { t } = useTranslation();
-  const headingId = React.useId();
 
   const isTimeSlot = (results[0]?.duration ?? 0) > 0;
   // All-day dates and floating times are stored as UTC wall time and read
@@ -117,51 +109,31 @@ export function VoteViewList({
 
   const columns = React.useMemo(
     () => [
-      // A time poll groups by day and shows that day in a gutter. A date
-      // poll's rows each carry their own full date, so they all share one
-      // group and the list renders flat.
-      columnHelper.accessor(
-        (result) =>
-          isTimeSlot
-            ? formatDateTime(result.startTime, "dateFull", {
-                timeZone: readZone,
-              })
-            : "",
-        {
-          id: "group",
-          cell: ({ row }) => (
-            <EventDate
-              value={row.original.startTime}
-              allDay={false}
-              timeZone={poll.timeZone}
-              preset="weekdayMonthDayShort"
-            />
-          ),
-        },
-      ),
       columnHelper.display({
         id: "option",
-        header: () =>
-          isTimeSlot ? (
-            <Trans i18nKey="time" defaults="Time" />
-          ) : (
-            <Trans i18nKey="date" defaults="Date" />
-          ),
-        cell: ({ row }) =>
-          isTimeSlot ? (
-            <EventTimeRange
-              start={row.original.startTime}
-              end={endOf(row.original)}
-              allDay={false}
-              timeZone={poll.timeZone}
-            />
-          ) : (
-            <OptionDate value={row.original.startTime} />
-          ),
+        meta: { className: "text-sm" },
+        cell: ({ row }) => (
+          // DataList owns the row element, so the option cell carries the
+          // handle tests use to find an option.
+          <span data-testid="poll-option" className="truncate">
+            {isTimeSlot ? (
+              <EventTimeRange
+                start={row.original.startTime}
+                end={endOf(row.original)}
+                allDay={false}
+                timeZone={poll.timeZone}
+              />
+            ) : (
+              <OptionDate value={row.original.startTime} />
+            )}
+          </span>
+        ),
       }),
       columnHelper.display({
         id: "votes",
-        header: () => <Trans i18nKey="votes" defaults="Votes" />,
+        // The vote control needs the width on a narrow screen, and the bar
+        // is what can go.
+        meta: { className: "hidden justify-end sm:flex" },
         cell: ({ row }) => (
           <VoteScore
             optionId={row.original.optionId}
@@ -175,15 +147,19 @@ export function VoteViewList({
       }),
       columnHelper.display({
         id: "vote",
-        header: () => <Trans i18nKey="yourVote" defaults="Your vote" />,
+        meta: { className: "justify-end" },
         cell: ({ row }) => {
           const result = row.original;
           const optionLabel = isTimeSlot
-            ? `${row.getValue<string>("group")}, ${formatDateTimeRange(
+            ? `${formatDateTime(result.startTime, "dateFull", {
+                timeZone: readZone,
+              })}, ${formatDateTimeRange(
                 result.startTime,
                 endOf(result),
                 "time",
-                { timeZone: readZone },
+                {
+                  timeZone: readZone,
+                },
               )}`
             : formatDateTime(result.startTime, "dateFull", { timeZone: "UTC" });
           return (
@@ -216,128 +192,63 @@ export function VoteViewList({
     data: results,
     columns,
     getRowId: (result) => result.optionId,
-    state: tableState,
     getCoreRowModel: getCoreRowModel(),
-    getGroupedRowModel: getGroupedRowModel(),
   });
 
-  const visibleColumnCount = table.getVisibleLeafColumns().length;
+  // The tint follows the vote being composed, not just the saved one, so
+  // the row responds as the viewer picks. Same colours as the calendar.
+  // The gradient is a background image, so the row's hover colour would
+  // show through its transparent end; hover is cleared to keep it clean.
+  const { byOption: currentVotes } = useVotesByOption(savedVotes);
+  const getRowClassName = (result: VoteResult) => {
+    const vote = currentVotes.get(result.optionId);
+    if (vote === "yes") {
+      return "bg-linear-to-r from-green-50 to-transparent text-green-700 hover:bg-transparent dark:from-green-500/10 dark:text-green-400";
+    }
+    if (vote === "ifNeedBe") {
+      return "bg-linear-to-r from-amber-50 to-transparent text-amber-700 hover:bg-transparent dark:from-amber-500/10 dark:text-amber-400";
+    }
+    return undefined;
+  };
+
+  // DataList groups adjacent rows, and the loader returns options in time
+  // order, so each day's slots already sit together.
+  const getGroup = isTimeSlot
+    ? (result: VoteResult) => {
+        const key = getCalendarDate(result.startTime, readZone ?? "UTC");
+        return {
+          id: key,
+          label: (
+            <>
+              <CalendarDate
+                value={calendarDateToUTCMidnight(key)}
+                preset="weekday"
+                className="font-medium text-foreground"
+              />
+              <CalendarDate
+                value={calendarDateToUTCMidnight(key)}
+                preset="dateLong"
+                className="text-muted-foreground"
+              />
+            </>
+          ),
+        };
+      }
+    : undefined;
 
   return (
-    // The scroll area. Scroll padding keeps a focused row clear of the
-    // pinned group heading.
-    // `relative` makes this the containing block for the sticky group
-    // headings; without it they propagate their height to the root element
-    // and the whole page gains a scrollbar.
-    // Only the results scroll, and only from lg: below that the page scrolls,
-    // so the list grows to its natural height and the phone scrolls as one.
-    <div className="lg:scrollbar-thin dark:lg:scrollbar-thumb-gray-600 dark:lg:scrollbar-track-gray-800 hover:lg:scrollbar-thumb-gray-400 dark:hover:lg:scrollbar-thumb-gray-500 lg:scrollbar-thumb-gray-300 lg:scrollbar-track-transparent relative flex-1 lg:min-h-0 lg:overflow-y-auto lg:[scroll-padding-top:3rem]">
-      <div
-        role="table"
-        aria-label={t("pollOptions", { defaultValue: "Poll options" })}
-        aria-colcount={visibleColumnCount}
-        className="text-sm"
-      >
-        <div role="rowgroup" className="sr-only">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <div key={headerGroup.id} role="row">
-              {headerGroup.headers.map((header) => (
-                <div key={header.id} role="columnheader">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        {table.getGroupedRowModel().rows.map((groupRow, groupIndex) => {
-          const id = `${headingId}-${groupIndex}`;
-          const rows = groupRow.subRows.map((row) => (
-            <div
-              key={row.id}
-              role="row"
-              data-testid="poll-option"
-              className={cn(
-                "col-span-2 grid h-16 grid-cols-subgrid items-center gap-x-4 border-b px-4 sm:col-span-3",
-                // From sm a time poll's day gutter supplies the left
-                // padding, so the row would otherwise double it.
-                isTimeSlot && "sm:pl-0",
-              )}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <div
-                  key={cell.id}
-                  role="cell"
-                  className={
-                    cell.column.id === "option"
-                      ? "truncate"
-                      : cell.column.id === "votes"
-                        ? // The vote control needs the width on a narrow
-                          // screen, and the bar is what can go.
-                          "hidden justify-self-end sm:block"
-                        : "justify-self-end"
-                  }
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </div>
-              ))}
-            </div>
-          ));
-
-          // A time poll's rows share a day, so the day sits in a gutter
-          // beside them. A date poll's rows each carry their own full
-          // date, so there is nothing to group and the list runs flat.
-          if (!isTimeSlot) {
-            return (
-              <div
-                key={groupRow.id}
-                role="rowgroup"
-                className="grid grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[1fr_auto_auto]"
-              >
-                {rows}
-              </div>
-            );
-          }
-
-          const groupCell = groupRow
-            .getAllCells()
-            .find((cell) => cell.column.id === "group");
-          const heading = groupCell
-            ? flexRender(
-                groupCell.column.columnDef.cell,
-                groupCell.getContext(),
-              )
-            : null;
-
-          return (
-            <div
-              key={groupRow.id}
-              role="rowgroup"
-              aria-labelledby={id}
-              // Below sm the heading takes a line of its own above its
-              // rows: a gutter would leave the rows too little width.
-              className="grid sm:grid-cols-[8rem_1fr_auto_auto]"
-            >
-              <div
-                id={id}
-                role="rowheader"
-                // Sticks while any of its rows is in view, then the next
-                // group's heading pushes it out. The rows are a fixed
-                // height with centred content, so the heading is padded to
-                // sit on the first row's baseline.
-                className="sticky top-14 z-10 self-start border-b bg-card px-4 pt-3 pb-2 text-muted-foreground tabular-nums sm:border-b-0 sm:pt-[1.375rem] sm:pr-4 sm:pl-4 lg:top-0"
-              >
-                {heading}
-              </div>
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] sm:col-span-3 sm:grid-cols-subgrid">
-                {rows}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    // The scroll area. Only the results scroll, and only from lg: below
+    // that the page scrolls, so the list grows to its natural height.
+    <div className="lg:scrollbar-thin dark:lg:scrollbar-thumb-gray-600 dark:lg:scrollbar-track-gray-800 hover:lg:scrollbar-thumb-gray-400 dark:hover:lg:scrollbar-thumb-gray-500 lg:scrollbar-thumb-gray-300 lg:scrollbar-track-transparent relative flex-1 lg:min-h-0 lg:overflow-y-auto">
+      <DataList
+        table={table}
+        getGroup={getGroup}
+        getRowClassName={getRowClassName}
+        rowGapClassName="gap-y-1"
+        // py-4 to match DataList's own px-4: its default py-2 leaves the
+        // last row's vote control close to the panel's edge.
+        className="grid-cols-[minmax(0,1fr)_auto] py-4 sm:grid-cols-[minmax(0,1fr)_auto_auto]"
+      />
     </div>
   );
 }
