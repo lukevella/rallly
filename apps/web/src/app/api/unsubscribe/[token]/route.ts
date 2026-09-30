@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { unsubscribeWithToken } from "@/features/notifications/mutations";
+import { flushPostHog, track } from "@/lib/posthog";
 
 type Context = { params: Promise<{ token: string }> };
 
@@ -14,6 +15,22 @@ export async function POST(_request: Request, { params }: Context) {
 
   if (!result.ok && result.reason === "invalidToken") {
     return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+  }
+
+  if (result.ok) {
+    track(
+      { id: result.target.userId, isGuest: false },
+      {
+        event: "poll_notification:mute_update",
+        properties: {
+          poll_id: result.target.pollId,
+          muted: true,
+          source: "one_click",
+        },
+        groups: { poll: result.target.pollId },
+      },
+    );
+    after(() => flushPostHog());
   }
 
   // An item that no longer exists (or changed owner) has nothing left to

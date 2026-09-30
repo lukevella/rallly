@@ -32,10 +32,19 @@ type NotificationRecipient = {
   locale: string | null;
 };
 
+export type NotificationSkipReason =
+  | "no_creator"
+  | "poll_deleted"
+  | "triggered_by_creator"
+  | "poll_muted"
+  | "creator_is_guest"
+  | "not_effective_member"
+  | "preference_off";
+
 /**
  * Get the poll creator if they should receive a notification for this event.
- * Returns null if the creator has notifications disabled or is the one who
- * triggered the event.
+ * Otherwise returns why not, so a skipped notification can be traced after
+ * the fact.
  */
 export async function getNotificationRecipient({
   pollId,
@@ -45,41 +54,51 @@ export async function getNotificationRecipient({
   pollId: string;
   type: ActivityEventType;
   excludeUserId: string;
-}): Promise<NotificationRecipient | null> {
+}): Promise<
+  | { ok: true; recipient: NotificationRecipient }
+  | { ok: false; reason: NotificationSkipReason }
+> {
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
     select: { userId: true, spaceId: true, muted: true, deleted: true },
   });
 
-  if (
-    !poll?.userId ||
-    poll.deleted ||
-    poll.userId === excludeUserId ||
-    poll.muted
-  ) {
-    return null;
+  if (!poll?.userId) {
+    return { ok: false, reason: "no_creator" };
+  }
+
+  if (poll.deleted) {
+    return { ok: false, reason: "poll_deleted" };
+  }
+
+  if (poll.userId === excludeUserId) {
+    return { ok: false, reason: "triggered_by_creator" };
+  }
+
+  if (poll.muted) {
+    return { ok: false, reason: "poll_muted" };
   }
 
   const creator = await prisma.user.findUnique({
-    where: {
-      id: poll.userId,
-      isAnonymous: false,
-      // A poll in a space notifies its creator only while they remain an
-      // effective member of it. Once they have left, the poll is the
-      // space's and its responses are none of their business.
-      ...(poll.spaceId && {
-        memberOf: {
-          some: {
-            spaceId: poll.spaceId,
-            ...effectiveSpaceMemberWhere({ userId: poll.userId }),
-          },
-        },
-      }),
-    },
+    where: { id: poll.userId },
     select: {
       id: true,
       email: true,
       locale: true,
+      isAnonymous: true,
+      // A poll in a space notifies its creator only while they remain an
+      // effective member of it. Once they have left, the poll is the
+      // space's and its responses are none of their business.
+      memberOf: poll.spaceId
+        ? {
+            where: {
+              spaceId: poll.spaceId,
+              ...effectiveSpaceMemberWhere({ userId: poll.userId }),
+            },
+            select: { id: true },
+            take: 1,
+          }
+        : false,
       notificationPreferences: {
         select: { prefs: true },
       },
@@ -87,19 +106,30 @@ export async function getNotificationRecipient({
   });
 
   if (!creator) {
-    return null;
+    return { ok: false, reason: "no_creator" };
+  }
+
+  if (creator.isAnonymous) {
+    return { ok: false, reason: "creator_is_guest" };
+  }
+
+  if (poll.spaceId && creator.memberOf.length === 0) {
+    return { ok: false, reason: "not_effective_member" };
   }
 
   const prefs = parsePrefs(creator.notificationPreferences?.prefs);
 
   if (!prefs[type]) {
-    return null;
+    return { ok: false, reason: "preference_off" };
   }
 
   return {
-    id: creator.id,
-    email: creator.email,
-    locale: creator.locale,
+    ok: true,
+    recipient: {
+      id: creator.id,
+      email: creator.email,
+      locale: creator.locale,
+    },
   };
 }
 
