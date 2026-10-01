@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Denne instans har ikke nogen licensnøgle endnu.",
   "noOpenPolls": "Ingen åbne Afstemninger",
   "noOpenPollsDescription": "Afstemninger lukkes automatisk, når alle deres datoer er passeret. Du har {count, plural, one {1 lukket Afstemning} other {# lukkede Afstemninger}}.",
-  "noParticipants": "Ingen deltagere",
   "noParticipantsDescription": "Klik på <b>Del</b> for at invitere deltagere",
   "noPolls": "Ingen afstemninger",
   "noPollsDescription": "Kom i gang ved at oprette en ny afstemning.",
