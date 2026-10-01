@@ -100,7 +100,7 @@ test.beforeAll(async () => {
       status: "open",
       timeZone,
       options: {
-        create: [slot(0, 12), slot(0, 18), slot(1, 12), slot(1, 18)],
+        create: [slot(0, 17), slot(0, 18), slot(1, 17), slot(1, 18)],
       },
       participants: {
         create: [
@@ -142,120 +142,128 @@ test.afterAll(async () => {
   await prisma.user.delete({ where: { id: organizer.id } }).catch(() => {});
 });
 
-test("voting", async ({ page }) => {
-  await page.goto(`/invite/${pollId}`);
-  await page.getByRole("heading", { name: "Monthly Meetup" }).waitFor();
+for (const theme of ["light", "dark"] as const) {
+  test.describe(theme, () => {
+    test.use({ colorScheme: theme });
+    const image = (name: string) =>
+      pressImage(theme === "dark" ? `${name}-dark` : name);
 
-  const selectors = page.getByTestId("vote-selector");
-  await selectors.first().waitFor();
-  // Clicks cycle yes, if need be, no.
-  await selectors.nth(0).click();
-  await selectors.nth(1).click();
-  await selectors.nth(1).click();
-  await selectors.nth(1).click();
-  await selectors.nth(2).click();
-  await selectors.nth(3).click();
-  await page.waitForLoadState("networkidle");
-  await page.screenshot({ path: pressImage("voting") });
-});
+    test("voting", async ({ page }) => {
+      await page.goto(`/invite/${pollId}`);
+      await page.getByRole("heading", { name: "Monthly Meetup" }).waitFor();
 
-test("results and schedule", async ({ page }) => {
-  await loginWithEmail(page, { email: organizer.email });
-  await page.goto(`/poll/${pollId}`);
-  await page.getByRole("heading", { name: "Monthly Meetup" }).waitFor();
-  await page.getByText("Olivia Brown").waitFor();
-  await page.waitForLoadState("networkidle");
-  await page.screenshot({ path: pressImage("review-results") });
-
-  await page.getByRole("button", { name: "Manage" }).click();
-  await page.getByRole("menuitem", { name: "Schedule" }).click();
-  const dialog = page.getByRole("dialog", { name: "Schedule" });
-  await expect(dialog).toBeVisible();
-  await page.waitForTimeout(1500);
-  await page.screenshot({ path: pressImage("finalize") });
-});
-
-test("calendar views", async ({ page }) => {
-  await loginWithEmail(page, { email: organizer.email });
-  await page.goto(`/poll/${pollId}/edit-options`);
-
-  // The smallest div holding both the header and the footer is the card.
-  const card = page
-    .locator("div")
-    .filter({ has: page.getByRole("heading", { name: "Calendar" }) })
-    .filter({ has: page.getByText("Lock time zone") })
-    .last();
-  await card.waitFor();
-  await page.getByText("Add time option").first().waitFor();
-
-  const captureCard = async (name: string) => {
-    await page.waitForLoadState("networkidle");
-    const box = await card.boundingBox();
-    if (!box) {
-      throw new Error("Calendar card not visible");
-    }
-    // Pad the card out to 4:3 so it matches the page shots.
-    const margin = 24;
-    let width = box.width + margin * 2;
-    let height = box.height + margin * 2;
-    if (width / height > 4 / 3) {
-      height = (width * 3) / 4;
-    } else {
-      width = (height * 4) / 3;
-    }
-    await page.screenshot({
-      path: pressImage(name),
-      fullPage: true,
-      clip: {
-        x: box.x + box.width / 2 - width / 2,
-        y: Math.max(0, box.y + box.height / 2 - height / 2),
-        width,
-        height,
-      },
+      const selectors = page.getByTestId("vote-selector");
+      await selectors.first().waitFor();
+      // Clicks cycle yes, if need be, no.
+      await selectors.nth(0).click();
+      await selectors.nth(1).click();
+      await selectors.nth(1).click();
+      await selectors.nth(1).click();
+      await selectors.nth(2).click();
+      await selectors.nth(3).click();
+      await page.waitForLoadState("networkidle");
+      await page.screenshot({ path: image("voting") });
     });
-  };
 
-  await captureCard("calendar-month-view");
+    test("results and schedule", async ({ page }) => {
+      await loginWithEmail(page, { email: organizer.email });
+      await page.goto(`/poll/${pollId}`);
+      await page.getByRole("heading", { name: "Monthly Meetup" }).waitFor();
+      await page.getByText("Olivia Brown").waitFor();
+      await page.waitForLoadState("networkidle");
+      await page.screenshot({ path: image("review-results") });
 
-  await page.getByRole("tab", { name: "Week view" }).click();
-  await expect(page.getByText("Add time option").first()).toBeHidden();
-  await captureCard("calendar-week-view");
-});
+      await page.getByRole("button", { name: "Manage" }).click();
+      await page.getByRole("menuitem", { name: "Schedule" }).click();
+      const dialog = page.getByRole("dialog", { name: "Schedule" });
+      await expect(dialog).toBeVisible();
+      await page.waitForTimeout(1500);
+      await page.screenshot({ path: image("finalize") });
+    });
 
-test("create poll", async ({ page }) => {
-  await loginWithEmail(page, { email: organizer.email });
-  await page.goto("/new");
+    test("calendar views", async ({ page }) => {
+      await loginWithEmail(page, { email: organizer.email });
+      await page.goto(`/poll/${pollId}/edit-options`);
 
-  await page.getByLabel("Title").fill("Monthly Meetup");
+      // The smallest div holding both the header and the footer is the card.
+      const card = page
+        .locator("div")
+        .filter({ has: page.getByRole("heading", { name: "Calendar" }) })
+        .filter({ has: page.getByText("Lock time zone") })
+        .last();
+      await card.waitFor();
+      await page.getByText("Add time option").first().waitFor();
 
-  // "Add location" is a menu when the organizer can add a video call and a
-  // plain button otherwise; either way the address field appears after.
-  const locationField = page.getByLabel("Location", { exact: true });
-  await expect(async () => {
-    await page
-      .getByRole("button", { name: "Add location" })
-      .click({ timeout: 2000 });
-    const addressItem = page.getByRole("menuitem", { name: "Address" });
-    await addressItem.or(locationField).first().waitFor({ timeout: 2000 });
-    if (await addressItem.isVisible()) {
-      await addressItem.click();
-    }
-    await expect(locationField).toBeVisible({ timeout: 2000 });
-  }).toPass();
-  await locationField.fill("Joe's Coffee Shop");
+      const captureCard = async (name: string) => {
+        await page.waitForLoadState("networkidle");
+        const box = await card.boundingBox();
+        if (!box) {
+          throw new Error("Calendar card not visible");
+        }
+        // Pad the card out to 4:3 so it matches the page shots.
+        const margin = 24;
+        let width = box.width + margin * 2;
+        let height = box.height + margin * 2;
+        if (width / height > 4 / 3) {
+          height = (width * 3) / 4;
+        } else {
+          width = (height * 4) / 3;
+        }
+        await page.screenshot({
+          path: image(name),
+          fullPage: true,
+          clip: {
+            x: box.x + box.width / 2 - width / 2,
+            y: Math.max(0, box.y + box.height / 2 - height / 2),
+            width,
+            height,
+          },
+        });
+      };
 
-  // The description stays collapsed: with it open the sticky create bar
-  // lands on the time slot list.
-  await page.getByLabel("Title").click();
+      await captureCard("calendar-month-view");
 
-  // Pick the same two days so the time slot list has content.
-  await page.getByRole("button", { name: "Next month" }).click();
-  await page.getByRole("button", { name: String(base.date()) }).click();
-  await page
-    .getByRole("button", { name: String(base.add(1, "day").date()) })
-    .click();
-  await page.getByText("Add time option").first().waitFor();
+      await page.getByRole("tab", { name: "Week view" }).click();
+      await expect(page.getByText("Add time option").first()).toBeHidden();
+      await captureCard("calendar-week-view");
+    });
 
-  await page.waitForLoadState("networkidle");
-  await page.screenshot({ path: pressImage("create-poll") });
-});
+    test("create poll", async ({ page }) => {
+      await loginWithEmail(page, { email: organizer.email });
+      await page.goto("/new");
+
+      await page.getByLabel("Title").fill("Monthly Meetup");
+
+      // "Add location" is a menu when the organizer can add a video call and a
+      // plain button otherwise; either way the address field appears after.
+      const locationField = page.getByLabel("Location", { exact: true });
+      await expect(async () => {
+        await page
+          .getByRole("button", { name: "Add location" })
+          .click({ timeout: 2000 });
+        const addressItem = page.getByRole("menuitem", { name: "Address" });
+        await addressItem.or(locationField).first().waitFor({ timeout: 2000 });
+        if (await addressItem.isVisible()) {
+          await addressItem.click();
+        }
+        await expect(locationField).toBeVisible({ timeout: 2000 });
+      }).toPass();
+      await locationField.fill("Joe's Coffee Shop");
+
+      // The description stays collapsed: with it open the sticky create bar
+      // lands on the time slot list.
+      await page.getByLabel("Title").click();
+
+      // Pick the same two days so the time slot list has content.
+      await page.getByRole("button", { name: "Next month" }).click();
+      await page.getByRole("button", { name: String(base.date()) }).click();
+      await page
+        .getByRole("button", { name: String(base.add(1, "day").date()) })
+        .click();
+      await page.getByText("Add time option").first().waitFor();
+
+      await page.waitForLoadState("networkidle");
+      await page.screenshot({ path: image("create-poll") });
+    });
+  });
+}
