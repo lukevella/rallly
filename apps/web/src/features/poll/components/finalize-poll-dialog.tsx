@@ -25,6 +25,7 @@ import {
   DataListRow,
 } from "@/components/data-list";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
 import { primePayWall, usePayWallStore } from "@/features/billing/client";
 import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import { ConferencingProviderIcon } from "@/features/conferencing/components/conferencing-provider-icon";
@@ -40,6 +41,7 @@ import {
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
+import { useDateTimeConfig } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
 
 type RankedOption = {
@@ -195,7 +197,11 @@ function PickDateStep({
 
 function PickedDate({ option }: { option: RankedOption }) {
   const poll = usePoll();
+  const { timeZone: displayTimeZone } = useDateTimeConfig();
   const allDay = option.duration === 0;
+  // Fixed instants render in the viewer's zone; floating times have none.
+  const cityTimeZone =
+    !allDay && poll.timeZone !== null ? displayTimeZone : undefined;
   return (
     <div className="flex items-start gap-3">
       {/* The icon centers on the first line, not the block. */}
@@ -218,6 +224,17 @@ function PickedDate({ option }: { option: RankedOption }) {
             allDay={allDay}
             timeZone={poll.timeZone}
           />
+          {cityTimeZone ? (
+            <>
+              {" ("}
+              <Trans
+                i18nKey="cityTime"
+                defaults="{city} time"
+                values={{ city: getCityFromTimezoneId(cityTimeZone) }}
+              />
+              {")"}
+            </>
+          ) : null}
         </div>
       </div>
     </div>
