@@ -87,7 +87,7 @@ async function deleteResponse(page: Page, name: string) {
 
 async function reopenShareDialog(page: Page) {
   await page.reload();
-  await page.getByRole("button", { name: "Share" }).click();
+  await page.getByRole("button", { name: "Share" }).first().click();
   return page.getByRole("dialog", { name: "Share" });
 }
 
@@ -321,7 +321,9 @@ test.describe("Email invites", () => {
     await expect(row.getByText("Sent")).toBeVisible();
 
     await page.reload();
-    await expect(page.getByRole("button", { name: "Share" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Share" }).first(),
+    ).toBeVisible();
     await expect(dialog).toBeHidden();
   });
 

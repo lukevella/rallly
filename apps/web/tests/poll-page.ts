@@ -27,7 +27,7 @@ export class PollPage {
   async openShareDialog() {
     const dialog = this.page.getByRole("dialog", { name: "Share" });
     if (!(await dialog.isVisible())) {
-      await this.page.getByRole("button", { name: "Share" }).click();
+      await this.page.getByRole("button", { name: "Share" }).first().click();
     }
     await expect(dialog).toBeVisible();
     return dialog;
