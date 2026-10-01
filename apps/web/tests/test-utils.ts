@@ -10,20 +10,17 @@ export { loginWithEmail } from "@rallly/test-helpers";
  * below after the offset is applied.
  */
 export function fromNow({
-  months = 0,
   days = 0,
   hours = 0,
   minutes = 0,
   startOfHour = false,
 }: {
-  months?: number;
   days?: number;
   hours?: number;
   minutes?: number;
   startOfHour?: boolean;
 }) {
   const date = new Date();
-  date.setMonth(date.getMonth() + months);
   date.setDate(date.getDate() + days);
   date.setTime(date.getTime() + (hours * 60 + minutes) * 60_000);
   if (startOfHour) {
@@ -114,7 +111,7 @@ export async function upgradeSpaceToPro({
         currency: "USD",
         interval: "month",
         periodStart: new Date(),
-        periodEnd: fromNow({ months: 1 }),
+        periodEnd: fromNow({ days: 30 }),
         userId,
         spaceId,
       },
