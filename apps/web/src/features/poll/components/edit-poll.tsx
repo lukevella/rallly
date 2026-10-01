@@ -11,6 +11,7 @@ import {
 } from "@rallly/ui/card";
 import { Form } from "@rallly/ui/form";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "@/components/link";
 import { useModalContext } from "@/components/modal/modal-provider";
@@ -195,15 +196,19 @@ export function EditPoll({
     (participant) => participant.votes.length > 0,
   );
 
-  const form = useForm<NewEventData>({
-    defaultValues: getDefaultValues(poll),
-  });
+  const [defaultValues] = React.useState(() => getDefaultValues(poll));
+  const form = useForm<NewEventData>({ defaultValues });
 
   const onSubmit = form.handleSubmit((data) => {
-    const { dirtyFields } = form.formState;
     const input: Parameters<typeof update.mutate>[0] = { pollId: poll.id };
 
-    const detailsChanged = detailFields.some((field) => dirtyFields[field]);
+    // Compared against the starting values rather than dirtyFields: the
+    // Remove buttons clear a field with setValue, which doesn't mark it dirty.
+    const isChanged = (
+      field: (typeof detailFields)[number] | (typeof settingFields)[number],
+    ) => (data[field] ?? "") !== (defaultValues[field] ?? "");
+
+    const detailsChanged = detailFields.some(isChanged);
     if (detailsChanged) {
       input.title = data.title;
       input.location = data.location;
@@ -222,7 +227,7 @@ export function EditPoll({
       input.optionsToAdd = dateChanges.optionsToAdd;
     }
 
-    const settingsChanged = settingFields.some((field) => dirtyFields[field]);
+    const settingsChanged = settingFields.some(isChanged);
     if (settingsChanged) {
       input.hideParticipants = data.hideParticipants;
       input.hideScores = data.hideScores;
