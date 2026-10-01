@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Esta instância ainda não tem uma chave de licença.",
   "noOpenPolls": "Sem enquetes abertas",
   "noOpenPollsDescription": "As enquetes se fecham automaticamente assim que todas as datas passarem. Você tem {count, plural, one {1 enquete fechada} other {# enquetes fechadas}}.",
-  "noParticipants": "Sem participantes",
   "noParticipantsDescription": "Clique em <b>Compartilhar</b> para convidar participantes",
   "noPolls": "Sem enquetes",
   "noPollsDescription": "Comece criando uma nova enquete.",
