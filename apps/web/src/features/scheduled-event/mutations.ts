@@ -403,9 +403,10 @@ export const deliverInviteEmails = Effect.fn(
 /**
  * Sends a booked event's first batch of invite emails once the response is
  * out, so a typical poll's participants hear within seconds. Where the
- * house-keeping cron runs, it drains whatever is left at its own pace;
- * without it, this keeps going until the event's queue is empty. Needs a
- * request scope for `after`.
+ * house-keeping cron runs, it drains whatever is left at its own pace.
+ * Without it, this run stands in for the cron: it is unscoped and keeps
+ * going until the queue is empty, so it also recovers claims an earlier run
+ * abandoned. Needs a request scope for `after`.
  */
 export function scheduleInviteEmailDelivery(scope: InviteEmailScope) {
   const drain = !isFeatureEnabled("houseKeepingCron");
@@ -413,9 +414,10 @@ export function scheduleInviteEmailDelivery(scope: InviteEmailScope) {
     try {
       for (;;) {
         const summary = await runtime.runPromise(
-          deliverInviteEmails({ now: new Date(), scope }).pipe(
-            Effect.provide(InviteEmailSender.layer),
-          ),
+          deliverInviteEmails({
+            now: new Date(),
+            scope: drain ? undefined : scope,
+          }).pipe(Effect.provide(InviteEmailSender.layer)),
         );
         if (!drain || summary.attempted < INVITE_EMAIL_BATCH_SIZE) {
           return;
