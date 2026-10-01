@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Deze instance heeft nog geen licentiesleutel.",
   "noOpenPolls": "Geen open polls",
   "noOpenPollsDescription": "Polls worden automatisch gesloten zodra al hun data voorbij zijn. Je hebt {count, plural, one {# gesloten poll} other {# gesloten polls}}.",
-  "noParticipants": "Geen deelnemers",
   "noParticipantsDescription": "Klik op <b>Delen</b> om deelnemers uit te nodigen",
   "noPolls": "Geen polls",
   "noPollsDescription": "Ga aan de slag door een nieuwe poll te maken.",
