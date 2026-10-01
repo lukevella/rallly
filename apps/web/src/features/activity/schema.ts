@@ -40,6 +40,10 @@ const optionsSnapshotSchema = z.object({
   options: z
     .array(optionSnapshotSchema.extend({ optionId: z.string() }))
     .min(1),
+  // The zone the dates were stored in (null when floating). A time zone edit
+  // re-stores every date, so the poll's current zone can't render the old
+  // ones. Absent on entries written before it was recorded.
+  timeZone: z.string().nullable().optional(),
 });
 
 const changeActionSchema = z.enum(["added", "changed", "removed"]);

@@ -727,7 +727,10 @@ export const polls = router({
                   pollId,
                   type: "options_deleted" as const,
                   userId: ctx.user.id,
-                  payload: { options: deletedOptions.map(toOptionSnapshot) },
+                  payload: {
+                    options: deletedOptions.map(toOptionSnapshot),
+                    timeZone: prior.timeZone,
+                  },
                 },
               ]
             : []),
@@ -737,7 +740,10 @@ export const polls = router({
                   pollId,
                   type: "options_added" as const,
                   userId: ctx.user.id,
-                  payload: { options: addedOptions.map(toOptionSnapshot) },
+                  payload: {
+                    options: addedOptions.map(toOptionSnapshot),
+                    timeZone: nextTimeZone,
+                  },
                 },
               ]
             : []),

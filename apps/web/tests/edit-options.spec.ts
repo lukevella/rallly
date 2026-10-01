@@ -21,7 +21,7 @@ test.describe("edit options", () => {
     // Polls default to timed options. Selecting all-day replaces the voted
     // time options with date options, which deletes the options that have votes.
     await editOptionsPage.selectAllDay();
-    await page.getByRole("button", { name: "Save" }).click();
+    await page.getByRole("button", { name: "Save changes" }).click();
     await expect(page.locator('text="Are you sure?"')).toBeVisible();
     await page.click("text='Delete'");
   });

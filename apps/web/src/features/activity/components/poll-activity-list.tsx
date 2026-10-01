@@ -390,7 +390,14 @@ function ActivityDescription({
             defaults="{count, plural, one {Date added} other {# dates added}}"
             values={{ count: event.payload.options.length }}
           />
-          <OptionChips options={event.payload.options} timeZone={timeZone} />
+          <OptionChips
+            options={event.payload.options}
+            timeZone={
+              event.payload.timeZone === undefined
+                ? timeZone
+                : event.payload.timeZone
+            }
+          />
         </>
       );
     case "options_deleted":
@@ -401,7 +408,14 @@ function ActivityDescription({
             defaults="{count, plural, one {Date removed} other {# dates removed}}"
             values={{ count: event.payload.options.length }}
           />
-          <OptionChips options={event.payload.options} timeZone={timeZone} />
+          <OptionChips
+            options={event.payload.options}
+            timeZone={
+              event.payload.timeZone === undefined
+                ? timeZone
+                : event.payload.timeZone
+            }
+          />
         </>
       );
     case "option_added":
