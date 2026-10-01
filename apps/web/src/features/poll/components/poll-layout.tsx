@@ -15,20 +15,15 @@ import { usePoll } from "@/features/poll/client";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
-import { ShareDialog } from "@/features/poll/components/share-dialog";
+import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
-  const poll = usePoll();
   return (
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <ShareDialog
-        pollId={poll.id}
-        pollStatus={poll.status}
-        inviteLink={poll.inviteLink}
-      />
+      <PollPrimaryActions />
     </div>
   );
 };

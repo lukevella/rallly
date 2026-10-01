@@ -34,6 +34,7 @@ import {
   hasPollAdminAccess,
 } from "@/features/poll/data";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
+import { getFinalizePlanGate } from "@/features/poll/utils";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import {
@@ -1058,12 +1059,12 @@ export const polls = router({
         event,
       };
     }),
-  book: proProcedure
+  book: spaceProcedure
     .input(
       z.object({
         pollId: z.string(),
         optionId: z.string(),
-        notify: z.enum(["none", "all", "attendees"]),
+        notifyParticipantIds: z.array(z.string()),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -1196,15 +1197,31 @@ export const polls = router({
         });
       }
 
+      const pollConferencing = parsePollConferencing(poll.conferencing, {
+        pollId: poll.id,
+      });
+
+      // Finalizing and notifying are free; a Zoom or Teams meeting is what
+      // the plan pays for. ctx.space is the coerced DTO, the same tier the
+      // client gates on.
+      const planGate = getFinalizePlanGate({
+        tier: ctx.space.tier,
+        conferencing: pollConferencing,
+      });
+      if (planGate) {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message: "Creating a video meeting requires a paid plan",
+        });
+      }
+
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and
       // try again, instead of an event going out without a link. The poll
       // owner's account hosts the meeting, whichever member books it.
       const conferencing = await mintConferencing({
         userId: poll.user.id,
-        conferencing: parsePollConferencing(poll.conferencing, {
-          pollId: poll.id,
-        }),
+        conferencing: pollConferencing,
         title: poll.title,
         start: eventTimes.start,
         end: eventTimes.end,
@@ -1354,38 +1371,19 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const participantsToEmail: Array<{
-          name: string;
-          email: string;
-          locale: string | undefined;
-          timeZone: string | null;
-        }> = [];
-
-        if (input.notify === "all") {
-          poll.participants.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-                timeZone: p.timeZone,
-              });
-            }
-          });
-        }
-
-        if (input.notify === "attendees") {
-          attendees.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-                timeZone: p.timeZone,
-              });
-            }
-          });
-        }
+        const notifyIds = new Set(input.notifyParticipantIds);
+        const participantsToEmail = poll.participants.flatMap((p) =>
+          notifyIds.has(p.id) && p.email
+            ? [
+                {
+                  name: p.name,
+                  email: p.email,
+                  locale: p.locale ?? undefined,
+                  timeZone: p.timeZone,
+                },
+              ]
+            : [],
+        );
 
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
