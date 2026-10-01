@@ -1,6 +1,6 @@
 "use cache";
 
-import { buttonVariants, cn } from "@rallly/ui";
+import { buttonVariants } from "@rallly/ui";
 import { DownloadIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
@@ -17,6 +17,8 @@ import {
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
+import { AssetCard } from "./asset-card";
+import { ScreenshotGallery } from "./screenshot-gallery";
 
 function Fact({
   label,
@@ -29,50 +31,6 @@ function Fact({
     <div>
       <dt className="font-medium text-gray-800 text-sm">{label}</dt>
       <dd className="mt-1 text-gray-600 text-sm">{children}</dd>
-    </div>
-  );
-}
-
-function AssetCard({
-  name,
-  preview,
-  previewClassName,
-  links,
-  dark,
-}: {
-  name: string;
-  preview: React.ReactNode;
-  previewClassName?: string;
-  links: { label: string; href: string }[];
-  dark?: boolean;
-}) {
-  return (
-    <div className="overflow-hidden rounded-lg border">
-      <div
-        className={cn(
-          "flex items-center justify-center",
-          dark ? "bg-gray-900" : "bg-white",
-          previewClassName ?? "h-32",
-        )}
-      >
-        {preview}
-      </div>
-      <div className="flex items-center justify-between gap-2 border-t bg-gray-50 px-4 py-3">
-        <div className="text-gray-800 text-sm">{name}</div>
-        <div className="flex gap-3">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              download
-              aria-label={`${name} (${link.label})`}
-              className="font-medium text-primary text-sm hover:underline"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -457,31 +415,19 @@ export default async function Page(props: {
           </SectionDescription>
         </SectionHeading>
         <SectionContent>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {screenshots.map((screenshot) => (
-              <AssetCard
-                key={screenshot.file}
-                name={screenshot.name}
-                previewClassName="aspect-[4/3]"
-                preview={
-                  <Image
-                    src={`/press/screenshots/${screenshot.file}.png`}
-                    width={2560}
-                    height={1920}
-                    alt={screenshot.name}
-                    className="size-full object-cover"
-                    sizes="(min-width: 640px) 50vw, 100vw"
-                  />
-                }
-                links={[
-                  {
-                    label: "PNG",
-                    href: `/press/screenshots/${screenshot.file}.png`,
-                  },
-                ]}
-              />
-            ))}
-          </div>
+          <ScreenshotGallery
+            screenshots={screenshots}
+            labels={{
+              light: t("pressKitThemeLight", {
+                ns: "home",
+                defaultValue: "Light",
+              }),
+              dark: t("pressKitThemeDark", {
+                ns: "home",
+                defaultValue: "Dark",
+              }),
+            }}
+          />
         </SectionContent>
       </Section>
       <Section>
