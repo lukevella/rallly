@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-import dayjs from "dayjs";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
-import { createSpaceInDb, createTestPoll, createUserInDb } from "./test-utils";
+import {
+  createSpaceInDb,
+  createTestPoll,
+  createUserInDb,
+  fromNow,
+} from "./test-utils";
 
 /**
  * This test suite tests the house-keeping API endpoints:
@@ -90,14 +94,14 @@ test.describe("House-keeping API", () => {
       id: "old-poll-free-user",
       title: "Old Poll from Free User",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
     });
     createdPollIds.push(oldPollFromFreeUser.id);
 
     const oldPollNoUser = await createTestPoll({
       id: "old-poll-no-user",
       title: "Old Poll with No User",
-      updatedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
     });
     createdPollIds.push(oldPollNoUser.id);
 
@@ -107,7 +111,7 @@ test.describe("House-keeping API", () => {
       title: "Old Poll in Paid Space",
       userId: spaceOwner.id,
       spaceId: paidSpace.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
     });
     createdPollIds.push(oldPollInPaidSpace.id);
 
@@ -115,7 +119,7 @@ test.describe("House-keeping API", () => {
       id: "recent-poll-free-user",
       title: "Recent Poll from Free User",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(15, "day").toDate(),
+      updatedAt: fromNow({ days: -15 }),
     });
     createdPollIds.push(recentPollFromFreeUser.id);
 
@@ -123,7 +127,7 @@ test.describe("House-keeping API", () => {
       id: "old-poll-future-options",
       title: "Old Poll with Future Options",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
       hasFutureOptions: true,
     });
     createdPollIds.push(oldPollWithFutureOptions.id);
@@ -134,8 +138,8 @@ test.describe("House-keeping API", () => {
       id: "old-poll-recent-participant",
       title: "Old Poll with Recent Participant",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
-      participantActiveAt: dayjs().subtract(15, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
+      participantActiveAt: fromNow({ days: -15 }),
     });
     createdPollIds.push(oldPollWithRecentParticipant.id);
 
@@ -144,8 +148,8 @@ test.describe("House-keeping API", () => {
       id: "old-poll-recent-comment",
       title: "Old Poll with Recent Comment",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
-      commentCreatedAt: dayjs().subtract(15, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
+      commentCreatedAt: fromNow({ days: -15 }),
     });
     createdPollIds.push(oldPollWithRecentComment.id);
 
@@ -155,9 +159,9 @@ test.describe("House-keeping API", () => {
       id: "old-poll-old-activity",
       title: "Old Poll with Old Activity",
       userId: freeUser.id,
-      updatedAt: dayjs().subtract(35, "day").toDate(),
-      participantActiveAt: dayjs().subtract(35, "day").toDate(),
-      commentCreatedAt: dayjs().subtract(40, "day").toDate(),
+      updatedAt: fromNow({ days: -35 }),
+      participantActiveAt: fromNow({ days: -35 }),
+      commentCreatedAt: fromNow({ days: -40 }),
     });
     createdPollIds.push(oldPollWithOldActivity.id);
 
@@ -243,7 +247,7 @@ test.describe("House-keeping API", () => {
         id: "old-deleted-poll",
         title: "Old Deleted Poll",
         deleted: true,
-        deletedAt: dayjs().subtract(8, "day").toDate(), // Deleted 8 days ago
+        deletedAt: fromNow({ days: -8 }), // Deleted 8 days ago
       },
     });
     createdPollIds.push(oldDeletedPoll.id);
@@ -254,7 +258,7 @@ test.describe("House-keeping API", () => {
         id: "recent-deleted-poll",
         title: "Recent Deleted Poll",
         deleted: true,
-        deletedAt: dayjs().subtract(3, "day").toDate(), // Deleted 3 days ago
+        deletedAt: fromNow({ days: -3 }), // Deleted 3 days ago
       },
     });
     createdPollIds.push(recentDeletedPoll.id);
@@ -301,7 +305,7 @@ test.describe("House-keeping API", () => {
         title: "Auto-close: all options in the past",
         options: {
           create: {
-            startTime: dayjs().subtract(10, "day").toDate(),
+            startTime: fromNow({ days: -10 }),
             duration: 60,
           },
         },
@@ -317,7 +321,7 @@ test.describe("House-keeping API", () => {
         title: "Auto-close: past all-day option",
         options: {
           create: {
-            startTime: dayjs().subtract(5, "day").toDate(),
+            startTime: fromNow({ days: -5 }),
             duration: 0,
           },
         },
@@ -332,7 +336,7 @@ test.describe("House-keeping API", () => {
         title: "Auto-close: has a future option",
         options: {
           create: {
-            startTime: dayjs().add(10, "day").toDate(),
+            startTime: fromNow({ days: 10 }),
             duration: 60,
           },
         },
@@ -347,8 +351,8 @@ test.describe("House-keeping API", () => {
         title: "Auto-close: past and future options",
         options: {
           create: [
-            { startTime: dayjs().subtract(10, "day").toDate(), duration: 60 },
-            { startTime: dayjs().add(10, "day").toDate(), duration: 60 },
+            { startTime: fromNow({ days: -10 }), duration: 60 },
+            { startTime: fromNow({ days: 10 }), duration: 60 },
           ],
         },
       },
@@ -363,7 +367,7 @@ test.describe("House-keeping API", () => {
         title: "Auto-close: option still running",
         options: {
           create: {
-            startTime: dayjs().subtract(30, "minute").toDate(),
+            startTime: fromNow({ minutes: -30 }),
             duration: 120,
           },
         },
@@ -389,7 +393,7 @@ test.describe("House-keeping API", () => {
         status: "scheduled",
         options: {
           create: {
-            startTime: dayjs().subtract(10, "day").toDate(),
+            startTime: fromNow({ days: -10 }),
             duration: 60,
           },
         },
@@ -427,12 +431,8 @@ test.describe("House-keeping API", () => {
     request,
     baseURL,
   }) => {
-    const stale = dayjs()
-      .subtract(SESSION_TTL_DAYS + 1, "day")
-      .toDate();
-    const recent = dayjs()
-      .subtract(SESSION_TTL_DAYS - 1, "day")
-      .toDate();
+    const stale = fromNow({ days: -(SESSION_TTL_DAYS + 1) });
+    const recent = fromNow({ days: -(SESSION_TTL_DAYS - 1) });
 
     // Should be deleted: stale guest with no resources.
     const orphanedGuest = await createUserInDb({
@@ -514,8 +514,8 @@ test.describe("House-keeping API", () => {
         spaceId: hostSpace.id,
         title: "Orphaned Guest Event",
         uid: "orphaned-guest-event-uid",
-        start: dayjs().add(1, "day").toDate(),
-        end: dayjs().add(1, "day").add(1, "hour").toDate(),
+        start: fromNow({ days: 1 }),
+        end: fromNow({ days: 1, hours: 1 }),
         invites: {
           create: {
             uid: "orphaned-guest-invite-uid",
