@@ -14,6 +14,7 @@ export interface FeatureFlagConfig {
   api: boolean;
   webhooks: boolean;
   updateCheck: boolean;
+  houseKeepingCron: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;

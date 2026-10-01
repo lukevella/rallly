@@ -132,7 +132,7 @@ export async function sendFinalizeParticipantEmail({
   ...rest
 }: SendArgs<FinalizeParticipantEmailProps>) {
   const { t } = await createEmailI18n(locale);
-  await sendRenderedEmail({
+  return sendRenderedEmail({
     to,
     subject: t("finalizeParticipant_subject", {
       defaultValue: "Date booked for {title}",

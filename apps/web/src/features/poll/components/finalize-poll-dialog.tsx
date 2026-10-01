@@ -505,7 +505,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
               />{" "}
               <Trans
                 i18nKey="finalizeSuccessNotified"
-                defaults="{count, plural, =0 {No participants were notified.} one {# participant has been notified.} other {# participants have been notified.}}"
+                defaults="{count, plural, =0 {No participants were notified.} one {# participant will be notified.} other {# participants will be notified.}}"
                 values={{ count: notifyIds.size }}
               />
             </DialogDescription>

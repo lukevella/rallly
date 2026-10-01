@@ -12,6 +12,8 @@ import {
   deleteInactivePolls,
   removeDeletedPolls,
 } from "@/features/poll/mutations";
+import { deliverInviteEmails } from "@/features/scheduled-event/mutations";
+import { InviteEmailSender } from "@/features/scheduled-event/service";
 import { findUsersScheduledForRemoval } from "@/features/user/account-deletion/data";
 import { getAccountDeletionCutoff } from "@/features/user/account-deletion/utils";
 import {
@@ -225,6 +227,26 @@ app.get("/deliver-webhooks", async (c) => {
     logger.info(
       { task: "deliver-webhooks", ...summary },
       "Dispatched webhook deliveries",
+    );
+  }
+
+  return c.json({ success: true, summary });
+});
+
+app.get("/send-invite-emails", async (c) => {
+  // The scheduled drain behind a booking's own first batch. Each run sends
+  // one batch, so a large poll's participants go out at that rate.
+  const summary = await runtime.runPromise(
+    deliverInviteEmails({ now: new Date() }).pipe(
+      Effect.provide(InviteEmailSender.layer),
+    ),
+  );
+
+  // Runs every minute and most runs find nothing.
+  if (summary.attempted > 0 || summary.abandoned > 0) {
+    logger.info(
+      { task: "send-invite-emails", ...summary },
+      "Sent queued invite emails",
     );
   }
 

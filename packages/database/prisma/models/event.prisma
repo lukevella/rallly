@@ -15,6 +15,15 @@ enum ScheduledEventInviteStatus {
   @@map("scheduled_event_invite_status")
 }
 
+enum ScheduledEventInviteEmailStatus {
+  pending
+  sent
+  skipped
+  failed
+
+  @@map("scheduled_event_invite_email_status")
+}
+
 model ScheduledEvent {
   id            String               @id @default(cuid())
   userId        String               @map("user_id")
@@ -69,17 +78,23 @@ model RescheduledEventDate {
 }
 
 model ScheduledEventInvite {
-  id               String                     @id @default(cuid())
-  uid              String                     @unique
-  scheduledEventId String                     @map("scheduled_event_id")
-  inviteeName      String                     @map("invitee_name")
-  inviteeEmail     String                     @map("invitee_email") @db.Citext
-  inviteeId        String?                    @map("invitee_id")
-  inviteeTimeZone  String?                    @map("invitee_time_zone")
-  inviteeLocale    String?                    @map("invitee_locale")
-  status           ScheduledEventInviteStatus @default(pending)
-  createdAt        DateTime                   @default(now()) @map("created_at")
-  updatedAt        DateTime                   @updatedAt @map("updated_at")
+  id               String                           @id @default(cuid())
+  uid              String                           @unique
+  scheduledEventId String                           @map("scheduled_event_id")
+  inviteeName      String                           @map("invitee_name")
+  inviteeEmail     String                           @map("invitee_email") @db.Citext
+  inviteeId        String?                          @map("invitee_id")
+  inviteeTimeZone  String?                          @map("invitee_time_zone")
+  inviteeLocale    String?                          @map("invitee_locale")
+  status           ScheduledEventInviteStatus       @default(pending)
+  /// Delivery of the email that announces the event to this invitee. Null
+  /// when the invite was not created by a fan-out (an RSVP, for example).
+  emailStatus      ScheduledEventInviteEmailStatus? @map("email_status")
+  emailSentAt      DateTime?                        @map("email_sent_at")
+  emailAttempts    Int                              @default(0) @map("email_attempts")
+  emailClaimedAt   DateTime?                        @map("email_claimed_at")
+  createdAt        DateTime                         @default(now()) @map("created_at")
+  updatedAt        DateTime                         @updatedAt @map("updated_at")
 
   scheduledEvent ScheduledEvent @relation(fields: [scheduledEventId], references: [id], onDelete: Cascade)
   user           User?          @relation(fields: [inviteeId], references: [id], onDelete: SetNull) // Optional relation to User model
@@ -87,5 +102,6 @@ model ScheduledEventInvite {
   @@unique([scheduledEventId, inviteeEmail])
   @@index([inviteeId])
   @@index([inviteeEmail])
+  @@index([emailStatus, scheduledEventId])
   @@map("scheduled_event_invites")
 }
