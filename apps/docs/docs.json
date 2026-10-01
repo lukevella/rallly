@@ -33,6 +33,10 @@
             ]
           },
           {
+            "group": "Integrations",
+            "pages": ["integrations/google-meet"]
+          },
+          {
             "group": "Guides",
             "pages": ["guide/participant-guide", "guide/content-moderation"]
           },
