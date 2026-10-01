@@ -11,6 +11,7 @@ import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { toEmailConferencing } from "@/emails/conferencing";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { getPollChanges } from "@/features/activity/utils";
+import { resolveSpaceTier } from "@/features/billing/utils";
 import {
   getConnectedConferencingProviders,
   parsePollConferencing,
@@ -36,6 +37,7 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import type { SpaceTier } from "@/features/space/schema";
 import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
@@ -52,7 +54,6 @@ import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
   privateProcedure,
-  proProcedure,
   publicProcedure,
   requireUserMiddleware,
   router,
@@ -135,6 +136,32 @@ const toOptionSnapshot = (option: {
   start: option.startTime.toISOString(),
   duration: option.duration,
 });
+
+// A poll's paid features follow the poll's space, which is not always the
+// active one: the admin page authorizes against the poll's space, so a
+// member of several spaces can manage a poll outside the space they have
+// selected. A poll outside any space falls back to the active space, the
+// tier its admin page shows.
+async function assertPollSpaceIsPro({
+  userId,
+  space,
+}: {
+  userId: string;
+  space: { tier: SpaceTier } | null;
+}) {
+  const tier = space
+    ? resolveSpaceTier(space.tier)
+    : ((await getActiveSpaceForUser(userId))?.tier ??
+      resolveSpaceTier("hobby"));
+
+  if (tier !== "pro") {
+    throw new TRPCError({
+      code: "PAYMENT_REQUIRED",
+      message:
+        "You must have an active paid subscription to perform this action",
+    });
+  }
+}
 
 export const polls = router({
   invites,
@@ -1058,7 +1085,7 @@ export const polls = router({
         event,
       };
     }),
-  book: proProcedure
+  book: privateProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -1139,6 +1166,8 @@ export const polls = router({
           message: "Poll not found",
         });
       }
+
+      await assertPollSpaceIsPro({ userId: ctx.user.id, space: poll.space });
 
       if (!poll.user) {
         throw new TRPCError({
@@ -1615,7 +1644,7 @@ export const polls = router({
         },
       });
     }),
-  duplicate: proProcedure
+  duplicate: privateProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -1646,6 +1675,7 @@ export const polls = router({
           disableComments: true,
           allowTentativeVotes: true,
           spaceId: true,
+          space: { select: { tier: true } },
           kind: true,
           options: {
             select: {
@@ -1659,6 +1689,8 @@ export const polls = router({
       if (!poll) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
+
+      await assertPollSpaceIsPro({ userId: ctx.user.id, space: poll.space });
 
       const newPoll = await prisma.$transaction(async (tx) => {
         const newPoll = await tx.poll.create({
