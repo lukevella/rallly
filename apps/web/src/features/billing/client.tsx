@@ -37,6 +37,7 @@ export function useIsFree() {
 export type PayWallTrigger = {
   from:
     | "poll-settings"
+    | "poll-details-form"
     | "manage-poll"
     | "custom-branding"
     | "api-keys"

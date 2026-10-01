@@ -66,10 +66,20 @@ export const toConferencingFormValues = (
 });
 
 // Menu entries for the shared "Add location" menu. Renders nothing once a
-// choice is made: an event carries one meeting link.
+// choice is made: an event carries one meeting link. A provider link is
+// minted when the poll is scheduled, so a caller whose plan cannot schedule
+// passes `upsell` to mark the providers and take the click instead of
+// letting a choice be made that can never be cashed in. A pasted link is
+// joinable from the start and is never gated.
 export function ConferencingProviderMenuItems({
   available,
-}: Pick<ConferencingOptions, "available">) {
+  upsell,
+}: Pick<ConferencingOptions, "available"> & {
+  upsell?: {
+    badge: React.ReactNode;
+    onSelect: (provider: ConferencingProvider) => void;
+  };
+}) {
   const form = useFormContext<ConferencingFormValues>();
   const value = form.watch("conferencingProvider");
 
@@ -86,6 +96,10 @@ export function ConferencingProviderMenuItems({
         <DropdownMenuItem
           key={provider}
           onClick={() => {
+            if (upsell) {
+              upsell.onSelect(provider);
+              return;
+            }
             form.setValue("conferencingProvider", provider, {
               shouldDirty: true,
             });
@@ -93,6 +107,7 @@ export function ConferencingProviderMenuItems({
         >
           <ConferencingProviderIcon provider={provider} size={16} />
           {conferencingProviderLabels[provider]}
+          {upsell?.badge}
         </DropdownMenuItem>
       ))}
       <DropdownMenuItem
