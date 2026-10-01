@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Ta instancja nie posiada jeszcze klucza licencyjnego.",
   "noOpenPolls": "Brak otwartych ankiet",
   "noOpenPollsDescription": "Ankiety są automatycznie zamykane, gdy wszystkie ich daty miną. Masz {count, plural, one {# zamkniętą ankietę} few {# zamknięte ankiety} many {# zamkniętych ankiet} other {# zamkniętych ankiet}}.",
-  "noParticipants": "Brak uczestników",
   "noParticipantsDescription": "Kliknij <b>Udostępnij</b>, aby zaprosić uczestników",
   "noPolls": "Brak ankiet",
   "noPollsDescription": "Zacznij od utworzenia nowej ankiety.",
