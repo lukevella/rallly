@@ -10,6 +10,7 @@ import * as z from "zod";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { toEmailConferencing } from "@/emails/conferencing";
 import { recordPollActivities } from "@/features/activity/mutations";
+import { getPollChanges } from "@/features/activity/utils";
 import {
   getConnectedConferencingProviders,
   parsePollConferencing,
@@ -124,6 +125,16 @@ async function mintConferencing({
     cause: new AppError({ code, message: `${label}: ${result.reason}` }),
   });
 }
+
+const toOptionSnapshot = (option: {
+  id: string;
+  startTime: Date;
+  duration: number;
+}) => ({
+  optionId: option.id,
+  start: option.startTime.toISOString(),
+  duration: option.duration,
+});
 
 export const polls = router({
   invites,
@@ -678,59 +689,65 @@ export const polls = router({
               : input.timeZone
             : null;
 
-        // Empty strings and null are the same absent value to the reader, so
-        // normalize before comparing.
-        const detailsOrSettingsChanged =
-          (input.title !== undefined && input.title !== prior.title) ||
-          (input.location !== undefined &&
-            (input.location || null) !== (prior.location || null)) ||
-          (input.description !== undefined &&
-            (input.description || null) !== (prior.description || null)) ||
-          (conferencing !== undefined &&
-            JSON.stringify(conferencing) !==
-              JSON.stringify(
-                parsePollConferencing(prior.conferencing, { pollId }),
-              )) ||
-          nextTimeZone !== prior.timeZone ||
-          (input.hideParticipants !== undefined &&
-            input.hideParticipants !== prior.hideParticipants) ||
-          (input.disableComments !== undefined &&
-            input.disableComments !== prior.disableComments) ||
-          (input.allowTentativeVotes !== undefined &&
-            input.allowTentativeVotes !== prior.allowTentativeVotes) ||
-          (input.hideScores !== undefined &&
-            input.hideScores !== prior.hideScores) ||
-          (input.requireParticipantEmail !== undefined &&
-            input.requireParticipantEmail !== prior.requireParticipantEmail);
+        const changes = getPollChanges({
+          prior: {
+            title: prior.title,
+            description: prior.description,
+            location: prior.location,
+            conferencing: parsePollConferencing(prior.conferencing, {
+              pollId,
+            }),
+            timeZone: prior.timeZone,
+          },
+          next: {
+            title: input.title,
+            description: input.description,
+            location: input.location,
+            conferencing,
+            timeZone: nextTimeZone,
+            settingsChanged:
+              (input.hideParticipants !== undefined &&
+                input.hideParticipants !== prior.hideParticipants) ||
+              (input.disableComments !== undefined &&
+                input.disableComments !== prior.disableComments) ||
+              (input.allowTentativeVotes !== undefined &&
+                input.allowTentativeVotes !== prior.allowTentativeVotes) ||
+              (input.hideScores !== undefined &&
+                input.hideScores !== prior.hideScores) ||
+              (input.requireParticipantEmail !== undefined &&
+                input.requireParticipantEmail !==
+                  prior.requireParticipantEmail),
+          },
+        });
 
         await recordPollActivities(tx, [
-          ...deletedOptions.map((option) => ({
-            pollId,
-            type: "option_deleted" as const,
-            userId: ctx.user.id,
-            optionId: option.id,
-            payload: {
-              start: option.startTime.toISOString(),
-              duration: option.duration,
-            },
-          })),
-          ...addedOptions.map((option) => ({
-            pollId,
-            type: "option_added" as const,
-            userId: ctx.user.id,
-            optionId: option.id,
-            payload: {
-              start: option.startTime.toISOString(),
-              duration: option.duration,
-            },
-          })),
-          ...(detailsOrSettingsChanged
+          ...(deletedOptions.length > 0
+            ? [
+                {
+                  pollId,
+                  type: "options_deleted" as const,
+                  userId: ctx.user.id,
+                  payload: { options: deletedOptions.map(toOptionSnapshot) },
+                },
+              ]
+            : []),
+          ...(addedOptions.length > 0
+            ? [
+                {
+                  pollId,
+                  type: "options_added" as const,
+                  userId: ctx.user.id,
+                  payload: { options: addedOptions.map(toOptionSnapshot) },
+                },
+              ]
+            : []),
+          ...(changes.length > 0
             ? [
                 {
                   pollId,
                   type: "poll_updated" as const,
                   userId: ctx.user.id,
-                  payload: {},
+                  payload: { changes },
                 },
               ]
             : []),

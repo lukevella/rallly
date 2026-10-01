@@ -3,23 +3,31 @@
 import { cn } from "@rallly/ui";
 import type { LucideIcon } from "lucide-react";
 import {
+  AlignLeftIcon,
   BellIcon,
   CalendarCheckIcon,
   CalendarMinusIcon,
   CalendarPlusIcon,
   CircleStopIcon,
+  GlobeIcon,
   MailIcon,
   MailOpenIcon,
   MailXIcon,
+  MapPinIcon,
   PencilIcon,
   PlayIcon,
   PlusIcon,
+  Settings2Icon,
   TrashIcon,
+  TypeIcon,
   UserMinusIcon,
   UserPenIcon,
   UserPlusIcon,
+  VideoIcon,
 } from "lucide-react";
-import type { PollActivityEvent } from "@/features/activity/schema";
+import type { PollActivityEvent, PollChange } from "@/features/activity/schema";
+import type { PollConferencing } from "@/features/conferencing/schema";
+import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import {
   EventDate,
   EventTimeRange,
@@ -50,6 +58,8 @@ const iconByType: Record<PollActivityEvent["type"], LucideIcon> = {
   response_deleted: UserMinusIcon,
   option_added: CalendarPlusIcon,
   option_deleted: CalendarMinusIcon,
+  options_added: CalendarPlusIcon,
+  options_deleted: CalendarMinusIcon,
 };
 
 // Tints group events by what they did to the poll. Colour only reinforces
@@ -83,7 +93,30 @@ const toneByType: Record<
   response_deleted: "removed",
   option_added: "added",
   option_deleted: "removed",
+  options_added: "added",
+  options_deleted: "removed",
 };
+
+function OptionChips({
+  options,
+  timeZone,
+}: {
+  options: { optionId: string; start: string; duration: number }[];
+  timeZone: string | null;
+}) {
+  return (
+    <span className="mt-1.5 flex flex-wrap gap-1.5">
+      {options.map((option) => (
+        <OptionChip
+          key={option.optionId}
+          start={option.start}
+          duration={option.duration}
+          timeZone={timeZone}
+        />
+      ))}
+    </span>
+  );
+}
 
 function OptionChip({
   start,
@@ -115,6 +148,116 @@ function OptionChip({
       )}
     </span>
   );
+}
+
+const iconByChange: Record<PollChange["field"], LucideIcon> = {
+  title: TypeIcon,
+  description: AlignLeftIcon,
+  location: MapPinIcon,
+  conferencing: VideoIcon,
+  timeZone: GlobeIcon,
+  settings: Settings2Icon,
+};
+
+function toneOfChange(change: PollChange): keyof typeof toneClassName {
+  if ("action" in change) {
+    return change.action === "added"
+      ? "added"
+      : change.action === "removed"
+        ? "removed"
+        : "changed";
+  }
+  return "changed";
+}
+
+const conferencingName = (conferencing: PollConferencing) =>
+  conferencing.provider === "custom"
+    ? conferencing.label
+    : conferencingProviderLabels[conferencing.provider];
+
+function ChangeDescription({ change }: { change: PollChange }) {
+  const b = <b className="font-medium" />;
+  switch (change.field) {
+    case "title":
+      return (
+        <Trans
+          i18nKey="pollActivityTitleChanged"
+          defaults="Title changed from <b>{from}</b>"
+          values={{ from: change.from }}
+          components={{ b }}
+        />
+      );
+    case "description":
+      return change.action === "added" ? (
+        <Trans
+          i18nKey="pollActivityDescriptionAdded"
+          defaults="Description added"
+        />
+      ) : change.action === "removed" ? (
+        <Trans
+          i18nKey="pollActivityDescriptionRemoved"
+          defaults="Description removed"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityDescriptionChanged"
+          defaults="Description changed"
+        />
+      );
+    case "location":
+      return change.action === "added" ? (
+        <Trans i18nKey="pollActivityLocationAdded" defaults="Location added" />
+      ) : change.action === "removed" ? (
+        <Trans
+          i18nKey="pollActivityLocationRemoved"
+          defaults="Location <b>{from}</b> removed"
+          values={{ from: change.from }}
+          components={{ b }}
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityLocationChanged"
+          defaults="Location changed from <b>{from}</b>"
+          values={{ from: change.from }}
+          components={{ b }}
+        />
+      );
+    case "conferencing":
+      return change.action === "added" || !change.from ? (
+        <Trans
+          i18nKey="pollActivityConferencingAdded"
+          defaults="Video call added"
+        />
+      ) : change.action === "removed" ? (
+        <Trans
+          i18nKey="pollActivityConferencingRemoved"
+          defaults="Video call <b>{from}</b> removed"
+          values={{ from: conferencingName(change.from) }}
+          components={{ b }}
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityConferencingChanged"
+          defaults="Video call changed from <b>{from}</b>"
+          values={{ from: conferencingName(change.from) }}
+          components={{ b }}
+        />
+      );
+    case "timeZone":
+      return (
+        <Trans
+          i18nKey="pollActivityTimeZoneChanged"
+          defaults="Time zone changed"
+        />
+      );
+    case "settings":
+      return (
+        <Trans
+          i18nKey="pollActivitySettingsChanged"
+          defaults="Settings changed"
+        />
+      );
+  }
 }
 
 function ActivityDescription({
@@ -239,6 +382,28 @@ function ActivityDescription({
           components={{ b }}
         />
       );
+    case "options_added":
+      return (
+        <>
+          <Trans
+            i18nKey="pollActivityOptionsAdded"
+            defaults="{count, plural, one {Date added} other {# dates added}}"
+            values={{ count: event.payload.options.length }}
+          />
+          <OptionChips options={event.payload.options} timeZone={timeZone} />
+        </>
+      );
+    case "options_deleted":
+      return (
+        <>
+          <Trans
+            i18nKey="pollActivityOptionsDeleted"
+            defaults="{count, plural, one {Date removed} other {# dates removed}}"
+            values={{ count: event.payload.options.length }}
+          />
+          <OptionChips options={event.payload.options} timeZone={timeZone} />
+        </>
+      );
     case "option_added":
       return (
         <>
@@ -275,43 +440,67 @@ export function PollActivityList({
 }) {
   return (
     <ol className={cn("flex flex-col", className)}>
-      {activity.map(({ id, createdAt, event }) => {
-        const Icon = iconByType[event.type];
-        const note =
-          event.type === "response_created" ? event.payload.note : undefined;
-        return (
-          <li key={id} className="group relative flex gap-3 pb-6 last:pb-0">
-            {/* The rail joining this event's icon to the next one */}
-            <div
-              aria-hidden
-              className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
-            />
-            <div
-              className={cn(
-                "flex size-8 shrink-0 items-center justify-center rounded-full",
-                toneClassName[toneByType[event.type]],
-              )}
-            >
-              <Icon aria-hidden className="size-4" />
-            </div>
-            <div className="min-w-0 flex-1 space-y-1 pt-1.5">
-              <p className="text-sm leading-5">
+      {activity
+        .flatMap(({ id, createdAt, event }) => {
+          // An itemized edit shows one line per field it changed.
+          if (event.type === "poll_updated" && event.payload.changes?.length) {
+            return event.payload.changes.map((change, index) => ({
+              key: `${id}:${index}`,
+              createdAt,
+              Icon: iconByChange[change.field],
+              tone: toneOfChange(change),
+              description: <ChangeDescription change={change} />,
+              note: undefined,
+            }));
+          }
+          return [
+            {
+              key: id,
+              createdAt,
+              Icon: iconByType[event.type],
+              tone: toneByType[event.type],
+              description: (
                 <ActivityDescription event={event} timeZone={timeZone} />
-              </p>
-              <Time
-                value={createdAt}
-                preset="datetime"
-                className="block text-muted-foreground text-xs"
+              ),
+              note:
+                event.type === "response_created"
+                  ? event.payload.note
+                  : undefined,
+            },
+          ];
+        })
+        .map(({ key, createdAt, Icon, tone, description, note }) => {
+          return (
+            <li key={key} className="group relative flex gap-3 pb-6 last:pb-0">
+              {/* The rail joining this event's icon to the next one */}
+              <div
+                aria-hidden
+                className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
               />
-              {note ? (
-                <p className="mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2 text-sm">
-                  {note}
-                </p>
-              ) : null}
-            </div>
-          </li>
-        );
-      })}
+              <div
+                className={cn(
+                  "flex size-8 shrink-0 items-center justify-center rounded-full",
+                  toneClassName[tone],
+                )}
+              >
+                <Icon aria-hidden className="size-4" />
+              </div>
+              <div className="min-w-0 flex-1 space-y-1 pt-1.5">
+                <p className="text-sm leading-5">{description}</p>
+                <Time
+                  value={createdAt}
+                  preset="datetime"
+                  className="block text-muted-foreground text-xs"
+                />
+                {note ? (
+                  <p className="mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2 text-sm">
+                    {note}
+                  </p>
+                ) : null}
+              </div>
+            </li>
+          );
+        })}
     </ol>
   );
 }

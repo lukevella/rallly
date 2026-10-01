@@ -15,10 +15,12 @@ import {
   CopyIcon,
   DownloadIcon,
   MoreHorizontalIcon,
+  PencilIcon,
   PlayIcon,
   TrashIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Link } from "@/components/link";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
@@ -69,6 +71,17 @@ export function PollAdminMenu() {
           <MoreHorizontalIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {poll.status === "scheduled" ? null : (
+            <>
+              <DropdownMenuItem
+                render={<Link href={`/poll/${poll.id}/edit?from=admin`} />}
+              >
+                <PencilIcon />
+                <Trans i18nKey="edit" defaults="Edit" />
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuItem onClick={exportToCsv}>
             <DownloadIcon />
             <Trans i18nKey="exportToCsv" defaults="Export to CSV" />

@@ -24,6 +24,7 @@ import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-f
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
+import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
@@ -68,30 +69,6 @@ const GuestModeBadge = () => {
         </p>
       </PopoverContent>
     </Popover>
-  );
-};
-
-const SelectedOptionsCount = () => {
-  const form = useFormContext<NewEventData>();
-  const optionCount = form.watch("options").length;
-  const allDay = form.watch("allDay");
-
-  if (allDay) {
-    return (
-      <Trans
-        i18nKey="createPollFooterDatesSelected"
-        defaults="{count, plural, =0 {No dates selected} one {1 date selected} other {# dates selected}}"
-        values={{ count: optionCount }}
-      />
-    );
-  }
-
-  return (
-    <Trans
-      i18nKey="createPollFooterTimesSelected"
-      defaults="{count, plural, =0 {No times selected} one {1 time selected} other {# times selected}}"
-      values={{ count: optionCount }}
-    />
   );
 };
 
