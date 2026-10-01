@@ -3,7 +3,11 @@ import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { encrypt } from "@rallly/utils/encryption";
 import { NewPollPage } from "./new-poll-page";
-import { createUserInDb, loginWithEmail } from "./test-utils";
+import {
+  createUserInDb,
+  loginWithEmail,
+  upgradeSpaceToPro,
+} from "./test-utils";
 
 const runId = Date.now().toString(36);
 
@@ -83,6 +87,32 @@ test.describe
       ).toBeVisible();
       await expect(page.getByText("Zoom", { exact: true })).toBeVisible();
       await expect(page.getByRole("button", { name: "Connect" })).toBeVisible();
+    });
+
+    test("poll form sends a free space to the pay wall for Zoom", async () => {
+      const newPollPage = new NewPollPage(page);
+      await newPollPage.goto();
+
+      await page.getByRole("button", { name: "Add location" }).click();
+      const zoom = page.getByRole("menuitem", { name: "Zoom" });
+      await expect(zoom.getByText("Pro")).toBeVisible();
+      await zoom.click();
+
+      await expect(page.getByText("Select plan:")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.locator("#create-poll").getByRole("alert")).toHaveCount(
+        0,
+      );
+      await expect(
+        page.locator("#create-poll").getByText("Zoom", { exact: true }),
+      ).toHaveCount(0);
+
+      // The remaining tests exercise a Pro organizer. The tier is read from
+      // the database on every page load, so no new login is needed.
+      const space = await prisma.space.findFirstOrThrow({
+        where: { ownerId: userId },
+      });
+      await upgradeSpaceToPro({ spaceId: space.id, userId, seats: 1 });
     });
 
     test("poll form blocks a provider the organizer has not connected", async () => {

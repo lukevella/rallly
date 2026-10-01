@@ -33,6 +33,19 @@ export const conferencingProviderLabels: Record<ConferencingProvider, string> =
     teams: "Microsoft Teams",
   };
 
+// Which providers a paid plan unlocks. Google Meet stays free: a Gmail
+// organizer is the referral engine and rarely converts, so gating Meet
+// protects nothing. Zoom and Teams are the tools people have through an
+// employer, which is where the upsell lands.
+const proConferencingProviders: ReadonlySet<ConferencingProvider> = new Set([
+  "zoom",
+  "teams",
+]);
+
+export function isProConferencingProvider(provider: ConferencingProvider) {
+  return proConferencingProviders.has(provider);
+}
+
 export const zoomMeetingResponseSchema = z.object({
   id: z.number(),
   join_url: z.url(),
