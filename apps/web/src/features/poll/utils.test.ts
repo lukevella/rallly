@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   filterCommentsForViewer,
   filterParticipantsByVote,
+  getFinalizePlanGate,
   maskParticipantsForViewer,
+  rankOptionsByPopularity,
   toAvailabilitySpans,
 } from "./utils";
 
@@ -200,5 +202,109 @@ describe("toAvailabilitySpans", () => {
         modifiers: [],
       },
     ]);
+  });
+});
+
+describe("rankOptionsByPopularity", () => {
+  const options = [
+    { id: "a", startTime: new Date("2026-03-01T10:00:00Z"), duration: 60 },
+    { id: "b", startTime: new Date("2026-03-02T10:00:00Z"), duration: 60 },
+    { id: "c", startTime: new Date("2026-03-03T10:00:00Z"), duration: 60 },
+  ];
+  const vote = (optionId: string, type: "yes" | "ifNeedBe" | "no") => ({
+    optionId,
+    type,
+  });
+
+  it("orders by yes plus ifNeedBe, then yes, then ifNeedBe", () => {
+    const participants = [
+      {
+        id: "p1",
+        votes: [vote("a", "no"), vote("b", "yes"), vote("c", "yes")],
+      },
+      {
+        id: "p2",
+        votes: [vote("a", "yes"), vote("b", "ifNeedBe"), vote("c", "yes")],
+      },
+      {
+        id: "p3",
+        votes: [vote("a", "yes"), vote("b", "yes"), vote("c", "no")],
+      },
+    ];
+
+    const ranked = rankOptionsByPopularity({ options, participants });
+
+    expect(ranked.map((r) => r.id)).toEqual(["b", "a", "c"]);
+    expect(ranked[0].votes).toEqual({
+      yes: ["p1", "p3"],
+      ifNeedBe: ["p2"],
+      no: [],
+    });
+  });
+
+  it("keeps option order for ties", () => {
+    const ranked = rankOptionsByPopularity({ options, participants: [] });
+    expect(ranked.map((r) => r.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("ignores votes for options that no longer exist", () => {
+    const participants = [{ id: "p1", votes: [vote("gone", "yes")] }];
+    const ranked = rankOptionsByPopularity({ options, participants });
+    expect(ranked.every((r) => r.votes.yes.length === 0)).toBe(true);
+  });
+});
+
+describe("getFinalizePlanGate", () => {
+  it("lets a pro space notify and mint a meeting", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "pro",
+        conferencing: { provider: "meet" },
+      }),
+    ).toBeNull();
+  });
+
+  it("lets a free space finalize silently without a provider link", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: null,
+      }),
+    ).toBeNull();
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: { provider: "custom" },
+      }),
+    ).toBeNull();
+  });
+
+  it("lets a free space notify participants", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: null,
+      }),
+    ).toBeNull();
+  });
+
+  it("gates Zoom and Teams links on a free space", () => {
+    for (const provider of ["zoom", "teams"] as const) {
+      expect(
+        getFinalizePlanGate({
+          tier: "hobby",
+          conferencing: { provider },
+        }),
+      ).toBe("conferencing");
+    }
+  });
+
+  it("lets a free space mint a Google Meet link", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: { provider: "meet" },
+      }),
+    ).toBeNull();
   });
 });

@@ -5,7 +5,6 @@ import { PLAN_NAMES, yearlySavingsPercent } from "@rallly/billing";
 import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
-  CalendarCheckIcon,
   CalendarSearchIcon,
   ClockIcon,
   CopyIcon,
@@ -337,16 +336,6 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
-                <PlanBenefit icon={<CalendarCheckIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="finalizeDate"
-                      defaults="Finalize date"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -559,32 +548,6 @@ export default async function Page(props: {
                     i18nKey="comparePollRetentionIndefinite"
                     defaults="Indefinite"
                   />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
-                  <CompareTableFeatureName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="finalizeDate"
-                      defaults="Finalize date"
-                    />
-                  </CompareTableFeatureName>
-                  <CompareTableFeatureDescription>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="finalizeDateDescription"
-                      defaults="Select a final date for your event"
-                    />
-                  </CompareTableFeatureDescription>
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableDash label={notIncluded} />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <CompareTableCheck label={included} />
                 </CompareTableCell>
               </tr>
               <tr>
