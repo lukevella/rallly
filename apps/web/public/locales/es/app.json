@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Esta instancia todavía no tiene una clave de licencia.",
   "noOpenPolls": "No hay encuestas abiertas",
   "noOpenPollsDescription": "Las encuestas se cierran automáticamente una vez que todas sus fechas han pasado. Tienes {count, plural, one {# encuesta cerrada} other {# encuestas cerradas}}.",
-  "noParticipants": "Sin participantes",
   "noParticipantsDescription": "Haz clic en <b>compartir</b> para invitar participantes",
   "noPolls": "No hay encuestas",
   "noPollsDescription": "Comienza creando una nueva encuesta.",
