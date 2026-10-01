@@ -35,6 +35,7 @@ import {
   hasPollAdminAccess,
 } from "@/features/poll/data";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
+import { getFinalizePlanGate } from "@/features/poll/utils";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
@@ -141,26 +142,16 @@ const toOptionSnapshot = (option: {
 // active one: the admin page authorizes against the poll's space, so a
 // member of several spaces can manage a poll outside the space they have
 // selected. A poll outside any space falls back to the active space, the
-// tier its admin page shows.
-async function assertPollSpaceIsPro({
-  userId,
+// tier its admin page shows. The active tier is the coerced DTO's, so both
+// branches agree with the client gate.
+function getPollTier({
   space,
+  activeSpaceTier,
 }: {
-  userId: string;
   space: { tier: SpaceTier } | null;
+  activeSpaceTier: SpaceTier;
 }) {
-  const tier = space
-    ? resolveSpaceTier(space.tier)
-    : ((await getActiveSpaceForUser(userId))?.tier ??
-      resolveSpaceTier("hobby"));
-
-  if (tier !== "pro") {
-    throw new TRPCError({
-      code: "PAYMENT_REQUIRED",
-      message:
-        "You must have an active paid subscription to perform this action",
-    });
-  }
+  return space ? resolveSpaceTier(space.tier) : activeSpaceTier;
 }
 
 export const polls = router({
@@ -1085,12 +1076,12 @@ export const polls = router({
         event,
       };
     }),
-  book: privateProcedure
+  book: spaceProcedure
     .input(
       z.object({
         pollId: z.string(),
         optionId: z.string(),
-        notify: z.enum(["none", "all", "attendees"]),
+        notifyParticipantIds: z.array(z.string()),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -1167,8 +1158,6 @@ export const polls = router({
         });
       }
 
-      await assertPollSpaceIsPro({ userId: ctx.user.id, space: poll.space });
-
       if (!poll.user) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -1225,15 +1214,33 @@ export const polls = router({
         });
       }
 
+      const pollConferencing = parsePollConferencing(poll.conferencing, {
+        pollId: poll.id,
+      });
+
+      // Finalizing and notifying are free; a Zoom or Teams meeting is what
+      // the plan pays for.
+      const planGate = getFinalizePlanGate({
+        tier: getPollTier({
+          space: poll.space,
+          activeSpaceTier: ctx.space.tier,
+        }),
+        conferencing: pollConferencing,
+      });
+      if (planGate) {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message: "Creating a video meeting requires a paid plan",
+        });
+      }
+
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and
       // try again, instead of an event going out without a link. The poll
       // owner's account hosts the meeting, whichever member books it.
       const conferencing = await mintConferencing({
         userId: poll.user.id,
-        conferencing: parsePollConferencing(poll.conferencing, {
-          pollId: poll.id,
-        }),
+        conferencing: pollConferencing,
         title: poll.title,
         start: eventTimes.start,
         end: eventTimes.end,
@@ -1383,38 +1390,19 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const participantsToEmail: Array<{
-          name: string;
-          email: string;
-          locale: string | undefined;
-          timeZone: string | null;
-        }> = [];
-
-        if (input.notify === "all") {
-          poll.participants.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-                timeZone: p.timeZone,
-              });
-            }
-          });
-        }
-
-        if (input.notify === "attendees") {
-          attendees.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-                timeZone: p.timeZone,
-              });
-            }
-          });
-        }
+        const notifyIds = new Set(input.notifyParticipantIds);
+        const participantsToEmail = poll.participants.flatMap((p) =>
+          notifyIds.has(p.id) && p.email
+            ? [
+                {
+                  name: p.name,
+                  email: p.email,
+                  locale: p.locale ?? undefined,
+                  timeZone: p.timeZone,
+                },
+              ]
+            : [],
+        );
 
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
@@ -1644,7 +1632,7 @@ export const polls = router({
         },
       });
     }),
-  duplicate: privateProcedure
+  duplicate: spaceProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -1690,7 +1678,16 @@ export const polls = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
       }
 
-      await assertPollSpaceIsPro({ userId: ctx.user.id, space: poll.space });
+      if (
+        getPollTier({ space: poll.space, activeSpaceTier: ctx.space.tier }) !==
+        "pro"
+      ) {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message:
+            "You must have an active paid subscription to perform this action",
+        });
+      }
 
       const newPoll = await prisma.$transaction(async (tx) => {
         const newPoll = await tx.poll.create({

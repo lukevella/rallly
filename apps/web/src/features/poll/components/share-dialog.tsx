@@ -27,10 +27,12 @@ export function ShareDialog({
   pollId,
   pollStatus,
   inviteLink,
+  variant = "primary",
 }: {
   pollId: string;
   pollStatus: PollStatus;
   inviteLink: string;
+  variant?: "primary" | "default";
 }) {
   const dialog = useDialog();
   const sharePollFlash = useFlash(SHARE_POLL_FLASH_KEY);
@@ -50,7 +52,7 @@ export function ShareDialog({
   return (
     <>
       <Button
-        variant="primary"
+        variant={variant}
         {...dialog.triggerProps}
         onClick={() => {
           setSource("manual");

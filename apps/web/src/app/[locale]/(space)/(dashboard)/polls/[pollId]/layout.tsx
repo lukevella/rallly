@@ -16,7 +16,7 @@ import {
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
-import { ShareDialog } from "@/features/poll/components/share-dialog";
+import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -40,7 +40,7 @@ async function PollHeaderActions({
 }) {
   const { pollId } = await params;
   await loadPoll(pollId);
-  // The schedule dialog and CSV export read the whole poll, votes included,
+  // The finalize dialog and CSV export read the whole poll, votes included,
   // from the poll context the legacy admin page provides.
   const { poll, participants, comments } = await loadAdminPoll(pollId);
   return (
@@ -52,11 +52,7 @@ async function PollHeaderActions({
     >
       <LegacyPollContextProvider>
         <PollAdminMenu />
-        <ShareDialog
-          pollId={poll.id}
-          pollStatus={poll.status}
-          inviteLink={poll.inviteLink}
-        />
+        <PollPrimaryActions />
       </LegacyPollContextProvider>
     </PollProvider>
   );

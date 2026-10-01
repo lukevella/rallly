@@ -1,6 +1,9 @@
 import { customAlphabet } from "nanoid";
+import type { PollConferencing } from "@/features/conferencing/schema";
+import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollComment, PollParticipant } from "@/features/poll/types";
+import type { SpaceTier } from "@/features/space/schema";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -134,4 +137,77 @@ export function toAvailabilitySpans({
       allDay,
       modifiers: type === "ifNeedBe" ? ["ifNeedBe"] : [],
     }));
+}
+
+export type OptionVotes = {
+  yes: string[];
+  ifNeedBe: string[];
+  no: string[];
+};
+
+/**
+ * Options in the order a host picks from: most available first, with a
+ * firm yes outranking an ifNeedBe at the same total. Ties keep option order.
+ */
+export function rankOptionsByPopularity<T extends { id: string }>({
+  options,
+  participants,
+}: {
+  options: T[];
+  participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
+}): (T & { votes: OptionVotes })[] {
+  const votesByOptionId = new Map<string, OptionVotes>(
+    options.map((option) => [option.id, { yes: [], ifNeedBe: [], no: [] }]),
+  );
+  for (const participant of participants) {
+    for (const vote of participant.votes) {
+      votesByOptionId.get(vote.optionId)?.[vote.type].push(participant.id);
+    }
+  }
+  const score = (votes: OptionVotes) => [
+    votes.yes.length + votes.ifNeedBe.length,
+    votes.yes.length,
+    votes.ifNeedBe.length,
+  ];
+  return options
+    .map((option) => ({
+      ...option,
+      votes: votesByOptionId.get(option.id) ?? {
+        yes: [],
+        ifNeedBe: [],
+        no: [],
+      },
+    }))
+    .sort((a, b) => {
+      const sa = score(a.votes);
+      const sb = score(b.votes);
+      for (let i = 0; i < sa.length; i++) {
+        if (sa[i] !== sb[i]) return sb[i] - sa[i];
+      }
+      return 0;
+    });
+}
+
+export type FinalizePlanGate = "conferencing";
+
+/**
+ * Finalizing and notifying participants are free. What a free space cannot
+ * do at finalize is mint a meeting with a Pro provider.
+ */
+export function getFinalizePlanGate({
+  tier,
+  conferencing,
+}: {
+  tier: SpaceTier;
+  conferencing: { provider: PollConferencing["provider"] } | null;
+}): FinalizePlanGate | null {
+  if (tier === "pro") return null;
+  if (
+    conferencing &&
+    conferencing.provider !== "custom" &&
+    isProConferencingProvider(conferencing.provider)
+  ) {
+    return "conferencing";
+  }
+  return null;
 }

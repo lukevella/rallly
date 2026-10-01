@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import {
-  CalendarCheck2Icon,
   ChevronDownIcon,
   CircleStopIcon,
   CopyIcon,
@@ -24,7 +23,6 @@ import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
-import { SchedulePollDialog } from "@/features/poll/components/manage-poll/schedule-poll-dialog";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
@@ -74,7 +72,6 @@ const ManagePoll: React.FunctionComponent<{
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
-  const scheduleDialog = useDialog();
   const isFree = useIsFree();
   const { exportToCsv } = useCsvExporter();
   // Edits made after booking would never reach the booked event.
@@ -107,24 +104,6 @@ const ManagePoll: React.FunctionComponent<{
           ) : null}
           {canChangeStatus ? (
             <>
-              <DropdownMenuItem
-                disabled={!!poll.event}
-                onClick={() => {
-                  if (isFree) {
-                    showPayWall({
-                      from: "manage-poll",
-                      action: "schedule",
-                      pollId: poll.id,
-                    });
-                  } else {
-                    scheduleDialog.trigger();
-                  }
-                }}
-              >
-                <CalendarCheck2Icon />
-                <Trans i18nKey="schedulePoll" defaults="Schedule" />
-                {isFree ? <ProBadge /> : null}
-              </DropdownMenuItem>
               <OpenCloseToggle />
               <DropdownMenuSeparator />
             </>
@@ -172,7 +151,6 @@ const ManagePoll: React.FunctionComponent<{
         pollTitle={poll.title}
         {...duplicateDialog.dialogProps}
       />
-      <SchedulePollDialog {...scheduleDialog.dialogProps} />
     </>
   );
 };

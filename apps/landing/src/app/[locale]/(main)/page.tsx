@@ -176,7 +176,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="faqAfterVotingAnswer"
-              defaults="The results show which times work for the most people. With Rallly Pro you can finalize the poll, which notifies participants of the chosen time by email."
+              defaults="The results show which times work for the most people. Finalize the poll to lock in the chosen time and notify participants by email with a calendar invite."
             />
           </FaqItem>
           <FaqItem
