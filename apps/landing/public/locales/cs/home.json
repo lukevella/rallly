@@ -57,7 +57,6 @@
   "ericJobTitle": "Výkonný asistent na MIT",
   "ericQuote": "„Pokud vaše plánování schůzek probíhá stále v emailech, důrazně vás vyzývám, abyste vyzkoušeli Rallly a nechali ho zjednodušit vaše plánování schůzek. Bude více organizované a váš den bude méně stresující.“",
   "faqAfterVoting": "Co se stane poté, co všichni hlasují?",
-  "faqAfterVotingAnswer": "Výsledky ukazují, které časy vyhovují největšímu počtu lidí. S Rallly Pro můžete hlasování uzavřít, čímž budou účastníci e‑mailem upozorněni na vybraný čas.",
   "faqDoodleDifference": "V čem se Rallly liší od Doodle?",
   "faqDoodleDifferenceAnswer": "Rallly nabízí profesionální, bezreklamní hlasování pro schůzky v přehledném a snadno použitelném rozhraní. Účastníci mohou hlasovat bez vytvoření účtu a pokud chcete plnou kontrolu nad svými daty, můžete Rallly provozovat na vlastním serveru.",
   "faqIsFree": "Je Rallly zdarma?",
@@ -276,6 +275,5 @@
   "when2meetComparisonNoAccount": "Hlasování bez vytváření účtu",
   "when2meetComparisonNotifications": "E-mailová oznámení, když lidé odpoví",
   "when2meetComparisonOpenSource": "Otevřený zdrojový kód a možnost vlastního hostování",
-  "when2meetComparisonTitle": "When2meet vs. Rallly",
-  "when2meetComparisonWithPro": "S Rallly Pro"
+  "when2meetComparisonTitle": "When2meet vs. Rallly"
 }
