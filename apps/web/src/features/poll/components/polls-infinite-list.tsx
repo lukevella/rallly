@@ -196,7 +196,10 @@ function PollRowActions({
               <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem onClick={() => deletePollDialog.trigger()}>
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => deletePollDialog.trigger()}
+          >
             <TrashIcon />
             <span>
               <Trans i18nKey="deleteMenuItem" defaults="Delete" />
