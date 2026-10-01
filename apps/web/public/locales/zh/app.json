@@ -516,7 +516,6 @@
   "noLicenseKeyDescription": "此实例还没有许可证密钥。",
   "noOpenPolls": "没有开放的投票",
   "noOpenPollsDescription": "投票在其所有日期都结束后会自动关闭。您有 {count, plural, other {# 个已关闭的投票}}。",
-  "noParticipants": "暂无参与者",
   "noParticipantsDescription": "点击 <b>分享</b> 来邀请参与者",
   "noPolls": "没有投票",
   "noPollsDescription": "首先，建立一个新投票吧！",
