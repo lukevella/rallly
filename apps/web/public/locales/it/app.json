@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Questa istanza non ha ancora una chiave di licenza.",
   "noOpenPolls": "Nessun sondaggio aperto",
   "noOpenPollsDescription": "I sondaggi si chiudono automaticamente una volta che tutte le loro date sono passate. Hai {count, plural, one {# sondaggio chiuso} other {# sondaggi chiusi}}.",
-  "noParticipants": "Nessun partecipante",
   "noParticipantsDescription": "Clicca <b>Condividi</b> per invitare i partecipanti",
   "noPolls": "Nessun sondaggio",
   "noPollsDescription": "Inizia creando un nuovo sondaggio.",
