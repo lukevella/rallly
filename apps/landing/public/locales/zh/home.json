@@ -55,7 +55,6 @@
   "ericJobTitle": "MIT 行政助理",
   "ericQuote": "“如果您使用电子邮件安排工作流程，我强烈建议您尝试让 Rallly 简化您的日程安排，让工作更加轻松更有条理”",
   "faqAfterVoting": "大家投票后会怎样？",
-  "faqAfterVotingAnswer": "结果会显示最适合最多人的时间。使用 Rallly Pro 可最终确定投票，并通过电子邮件通知参与者已选定的时间。",
   "faqDoodleDifference": "Rallly 与 Doodle 有何不同？",
   "faqDoodleDifferenceAnswer": "Rallly 为你提供专业、无广告的会议投票，界面简洁易用。参与者可在不创建账号的情况下投票；如果你需要完全控制数据，甚至可以在自己的服务器上部署 Rallly。",
   "faqIsFree": "Rallly 是免费的吗？",
@@ -274,6 +273,5 @@
   "when2meetComparisonNoAccount": "无需注册账号即可投票",
   "when2meetComparisonNotifications": "有人回复时发送邮件通知",
   "when2meetComparisonOpenSource": "开源且可自行托管",
-  "when2meetComparisonTitle": "When2meet 与 Rallly 对比",
-  "when2meetComparisonWithPro": "使用 Rallly Pro"
+  "when2meetComparisonTitle": "When2meet 与 Rallly 对比"
 }
