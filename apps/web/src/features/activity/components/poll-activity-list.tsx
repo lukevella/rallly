@@ -4,16 +4,19 @@ import { cn } from "@rallly/ui";
 import type { LucideIcon } from "lucide-react";
 import {
   AlignLeftIcon,
+  BarChart2Icon,
   BellIcon,
   CalendarCheckIcon,
   CalendarMinusIcon,
   CalendarPlusIcon,
   CircleStopIcon,
   GlobeIcon,
+  ListChecksIcon,
   MailIcon,
   MailOpenIcon,
   MailXIcon,
   MapPinIcon,
+  MessageCircleIcon,
   PencilIcon,
   PlayIcon,
   PlusIcon,
@@ -23,6 +26,7 @@ import {
   UserMinusIcon,
   UserPenIcon,
   UserPlusIcon,
+  VenetianMaskIcon,
   VideoIcon,
 } from "lucide-react";
 import type { PollActivityEvent, PollChange } from "@/features/activity/schema";
@@ -156,6 +160,11 @@ const iconByChange: Record<PollChange["field"], LucideIcon> = {
   location: MapPinIcon,
   conferencing: VideoIcon,
   timeZone: GlobeIcon,
+  hideParticipants: VenetianMaskIcon,
+  hideScores: BarChart2Icon,
+  disableComments: MessageCircleIcon,
+  allowTentativeVotes: ListChecksIcon,
+  requireParticipantEmail: MailIcon,
   settings: Settings2Icon,
 };
 
@@ -167,7 +176,18 @@ function toneOfChange(change: PollChange): keyof typeof toneClassName {
         ? "removed"
         : "changed";
   }
-  return "changed";
+  switch (change.field) {
+    // Tinted by what participants gain or lose: hiding takes something away.
+    case "hideParticipants":
+    case "hideScores":
+    case "disableComments":
+      return change.from ? "added" : "removed";
+    case "allowTentativeVotes":
+    case "requireParticipantEmail":
+      return change.from ? "removed" : "added";
+    default:
+      return "changed";
+  }
 }
 
 const conferencingName = (conferencing: PollConferencing) =>
@@ -248,6 +268,60 @@ function ChangeDescription({ change }: { change: PollChange }) {
         <Trans
           i18nKey="pollActivityTimeZoneChanged"
           defaults="Time zone changed"
+        />
+      );
+    case "hideParticipants":
+      return change.from ? (
+        <Trans
+          i18nKey="pollActivityParticipantNamesShown"
+          defaults="Participant names shown"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityParticipantNamesHidden"
+          defaults="Participant names hidden"
+        />
+      );
+    case "hideScores":
+      return change.from ? (
+        <Trans i18nKey="pollActivityVotesShown" defaults="Votes shown" />
+      ) : (
+        <Trans i18nKey="pollActivityVotesHidden" defaults="Votes hidden" />
+      );
+    case "disableComments":
+      return change.from ? (
+        <Trans
+          i18nKey="pollActivityCommentsTurnedOn"
+          defaults="Comments turned on"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityCommentsTurnedOff"
+          defaults="Comments turned off"
+        />
+      );
+    case "allowTentativeVotes":
+      return change.from ? (
+        <Trans
+          i18nKey="pollActivityIfNeedBeTurnedOff"
+          defaults="“If need be” answers turned off"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityIfNeedBeTurnedOn"
+          defaults="“If need be” answers turned on"
+        />
+      );
+    case "requireParticipantEmail":
+      return change.from ? (
+        <Trans
+          i18nKey="pollActivityParticipantEmailOptional"
+          defaults="Participant email optional"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityParticipantEmailRequired"
+          defaults="Participant email required"
         />
       );
     case "settings":

@@ -85,6 +85,21 @@ describe("pollActivitySchema", () => {
     expect(event?.type).toBe("poll_scheduled");
   });
 
+  it("reads itemized setting changes alongside the earlier collapsed one", () => {
+    const result = pollActivitySchema.safeParse({
+      type: "poll_updated",
+      userId: "u1",
+      payload: {
+        changes: [
+          { field: "disableComments", from: false },
+          { field: "settings" },
+        ],
+      },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("requires the subject ref of a response event", () => {
     const result = pollActivitySchema.safeParse({
       type: "response_created",
