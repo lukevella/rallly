@@ -3,28 +3,49 @@ title: "Edit a Poll"
 description: "How to make changes to an existing meeting poll."
 ---
 
-From the admin page, click on **Manage** to open the dropdown menu.
+Everything about a poll is edited on one page: its details, its dates and
+times, and its settings.
 
-<Frame caption="Admin controls">
-  ![](/images/meeting-poll/editing-poll-1.png)
-</Frame>
+<Steps>
+  <Step title="Open the edit page">
+    From the admin page, click **Manage** and select **Edit** from the
+    dropdown menu.
 
-## Changing the title, description or location
+    <Frame caption="Admin controls">
+      <img src="/images/administrators/edit-poll-menu.png" alt="Manage dropdown menu with the Edit item"/>
+    </Frame>
 
-To change these details of your poll:
+  </Step>
+  <Step title="Make your changes">
+    The edit page is laid out like the create page and filled in with the
+    poll's current values.
 
-1. Click **Manage**
-2. Select **Edit details** from the dropdown menu
+    <Frame caption="Edit page">
+      <img src="/images/administrators/edit-poll-page.png" alt="Edit poll page"/>
+    </Frame>
 
-<Frame>![](/images/meeting-poll/editing-poll-2.png)</Frame>
+    **Event** - Change the title, location or description.
 
-3.  Enter the new details of your poll in to the form and click **Save**.
+    **Calendar** - Add or remove options using the calendar. Switch
+    between month and week view, change the duration, or make the poll all
+    day.
 
-## Changing poll settings
+    **Settings** - Require an email address from participants, hide
+    participant names, hide votes until a participant has voted, allow
+    comments, and choose the vote options.
 
-1.  Click **Manage**
-2.  Select **Edit settings** from the dropdown menu
-3.  Change the settings you want and click **Save**.
+  </Step>
+  <Step title="Save">
+    Click **Save changes**. Only the parts you changed are updated, so a
+    poll's responses stay intact when you fix a typo in the title.
+
+    If you remove an option that participants have voted for, Rallly asks you
+    to confirm first. Their votes for that option are deleted with it.
+
+  </Step>
+</Steps>
+
+## Vote options
 
 **Vote options** decides which answers participants can give. By default they
 can answer **Yes**, **If need be** or **No**. Switch to **Yes** and **No** if
@@ -36,13 +57,11 @@ you want a straight answer with no maybes.
   back to offering **If need be** is always allowed.
 </Note>
 
-## Adding or removing dates or times
+## What can't be changed
 
-1.  Click **Manage**
-2.  Select **Edit options** from the dropdown menu
-
-<Frame caption="Date or time picker">
-  ![](/images/meeting-poll/editing-poll-3.png)
-</Frame>
-
-3.  Add/remove options using the date/time picker
+- **Time zone** - Once votes have been cast, the poll's time zone is locked.
+  Changing it would move every option under participants who already answered.
+- **Scheduled polls** - A poll that has been scheduled can no longer be edited,
+  because the calendar invites your participants received would not pick up
+  the change. The **Edit** item is hidden from the **Manage** menu for these
+  polls.
