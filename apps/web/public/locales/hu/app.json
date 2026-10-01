@@ -609,7 +609,6 @@
   "noLicenseKeyDescription": "Ez a példány nem rendelkezik még licenckulccsal.",
   "noOpenPolls": "Nincs nyitott szavazás",
   "noOpenPollsDescription": "A szavazások automatikusan lezáródnak, ha minden dátum múltbéli. Jelenleg {count, plural,one {1 lezárt szavazás} other {# lezárt szavazás}}od van.",
-  "noParticipants": "Nincsenek résztvevők",
   "noParticipantsDescription": "Kattints a <b>Megosztás</b>ra a résztvevők meghívásához",
   "noPolls": "Nincsenek szavazások",
   "noPollsDescription": "Kezdj neki egy új szavazás létrehozásával.",
