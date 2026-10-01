@@ -6,10 +6,10 @@ import {
   deleteAllMessages,
   getMessages,
 } from "@rallly/test-helpers";
-import dayjs from "dayjs";
 import { InvitePage } from "./invite-page";
 import {
   createUserInDb,
+  fromNow,
   loginWithEmail,
   upgradeSpaceToPro,
 } from "./test-utils";
@@ -83,7 +83,7 @@ async function createPoll({
       kind: "time",
       options: {
         create: [1, 2, 3].map((day) => ({
-          startTime: dayjs().add(day, "day").startOf("hour").toDate(),
+          startTime: fromNow({ days: day, startOfHour: true }),
           duration: 60,
         })),
       },

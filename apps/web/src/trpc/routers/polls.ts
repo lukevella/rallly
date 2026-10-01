@@ -10,6 +10,7 @@ import { getInstanceBranding } from "@/emails/branding";
 import { toEmailConferencing } from "@/emails/conferencing";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { getPollChanges } from "@/features/activity/utils";
+import { resolveSpaceTier } from "@/features/billing/utils";
 import {
   getConnectedConferencingProviders,
   parsePollConferencing,
@@ -37,6 +38,7 @@ import { getFinalizePlanGate } from "@/features/poll/utils";
 import { scheduleInviteEmailDelivery } from "@/features/scheduled-event/mutations";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import type { SpaceTier } from "@/features/space/schema";
 import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
@@ -53,7 +55,6 @@ import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
   privateProcedure,
-  proProcedure,
   publicProcedure,
   requireUserMiddleware,
   router,
@@ -136,6 +137,22 @@ const toOptionSnapshot = (option: {
   start: option.startTime.toISOString(),
   duration: option.duration,
 });
+
+// A poll's paid features follow the poll's space, which is not always the
+// active one: the admin page authorizes against the poll's space, so a
+// member of several spaces can manage a poll outside the space they have
+// selected. A poll outside any space falls back to the active space, the
+// tier its admin page shows. The active tier is the coerced DTO's, so both
+// branches agree with the client gate.
+function getPollTier({
+  space,
+  activeSpaceTier,
+}: {
+  space: { tier: SpaceTier } | null;
+  activeSpaceTier: SpaceTier;
+}) {
+  return space ? resolveSpaceTier(space.tier) : activeSpaceTier;
+}
 
 export const polls = router({
   invites,
@@ -1193,10 +1210,12 @@ export const polls = router({
       });
 
       // Finalizing and notifying are free; a Zoom or Teams meeting is what
-      // the plan pays for. ctx.space is the coerced DTO, the same tier the
-      // client gates on.
+      // the plan pays for.
       const planGate = getFinalizePlanGate({
-        tier: ctx.space.tier,
+        tier: getPollTier({
+          space: poll.space,
+          activeSpaceTier: ctx.space.tier,
+        }),
         conferencing: pollConferencing,
       });
       if (planGate) {
@@ -1572,7 +1591,7 @@ export const polls = router({
         },
       });
     }),
-  duplicate: proProcedure
+  duplicate: spaceProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -1603,6 +1622,7 @@ export const polls = router({
           disableComments: true,
           allowTentativeVotes: true,
           spaceId: true,
+          space: { select: { tier: true } },
           kind: true,
           options: {
             select: {
@@ -1615,6 +1635,17 @@ export const polls = router({
 
       if (!poll) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
+      if (
+        getPollTier({ space: poll.space, activeSpaceTier: ctx.space.tier }) !==
+        "pro"
+      ) {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message:
+            "You must have an active paid subscription to perform this action",
+        });
       }
 
       const newPoll = await prisma.$transaction(async (tx) => {

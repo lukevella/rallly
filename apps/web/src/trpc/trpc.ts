@@ -172,19 +172,6 @@ export const spaceProcedure = privateProcedure.use(async ({ ctx, next }) => {
   });
 });
 
-export const proProcedure = spaceProcedure.use(async ({ ctx, next }) => {
-  // ctx.space is the coerced DTO: without billing every space is pro here
-  if (ctx.space.tier !== "pro") {
-    throw new TRPCError({
-      code: "PAYMENT_REQUIRED",
-      message:
-        "You must have an active paid subscription to perform this action",
-    });
-  }
-
-  return next();
-});
-
 export const spaceOwnerProcedure = spaceProcedure.use(async ({ ctx, next }) => {
   if (ctx.space.ownerId !== ctx.user.id) {
     throw new TRPCError({
