@@ -2,7 +2,6 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
@@ -13,6 +12,7 @@ import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { SocialProof } from "@/components/home/social-proof";
 import { Stats } from "@/components/home/stats";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
@@ -156,7 +156,7 @@ export default async function Page(props: {
               i18nKey="thesisDefenseFaqBrandingAnswer"
               defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to an external examiner looks like it came from your department. Everything else is free to use."
               components={[
-                <Link
+                <LinkBase
                   key="pricing"
                   className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                   href="/pricing"
@@ -180,7 +180,7 @@ export default async function Page(props: {
               i18nKey="faqPrivacyAnswer"
               defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
               components={[
-                <Link
+                <LinkBase
                   key="privacy"
                   className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                   href="/privacy-policy"

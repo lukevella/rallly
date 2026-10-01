@@ -11,6 +11,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import DateFormatter from "@/components/blog/date-formatter";
 import { Cta } from "@/components/home/cta";
 import { Section } from "@/components/section";
+import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAllPosts, getPostBySlug } from "@/lib/api";
 
@@ -42,7 +43,7 @@ export default async function Page(props: {
     <div className="divide-y">
       <Section>
         <nav className="flex items-center gap-2 text-sm">
-          <Link href="/blog" className="text-gray-500 hover:text-gray-800">
+          <LinkBase href="/blog" className="text-gray-500 hover:text-gray-800">
             <Trans
               t={t}
               i18n={i18n}
@@ -50,7 +51,7 @@ export default async function Page(props: {
               i18nKey="blog"
               defaults="Blog"
             />
-          </Link>
+          </LinkBase>
           {post.category ? (
             <>
               <span aria-hidden="true" className="text-gray-400">
