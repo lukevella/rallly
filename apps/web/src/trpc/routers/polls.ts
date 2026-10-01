@@ -1109,6 +1109,7 @@ export const polls = router({
           description: true,
           spaceId: true,
           hideParticipants: true,
+          space: { select: { tier: true } },
           user: {
             select: {
               id: true,
