@@ -177,13 +177,14 @@ function toneOfChange(change: PollChange): keyof typeof toneClassName {
         : "changed";
   }
   switch (change.field) {
-    // Tinted by what participants gain or lose: hiding takes something away.
+    // Tinted by what participants gain or lose: hiding something or
+    // requiring an email takes something away.
     case "hideParticipants":
     case "hideScores":
     case "disableComments":
+    case "requireParticipantEmail":
       return change.from ? "added" : "removed";
     case "allowTentativeVotes":
-    case "requireParticipantEmail":
       return change.from ? "removed" : "added";
     default:
       return "changed";
