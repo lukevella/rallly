@@ -189,15 +189,24 @@ test.describe("vote page", () => {
     const columns = main.locator("section section");
     await expect(columns).toHaveCount(7);
 
-    // The first week is the earliest, so there is nothing before it
-    await expect(
-      main.getByRole("button", { name: "Previous week" }),
-    ).toBeDisabled();
-    await main.getByRole("button", { name: "Next week" }).click();
-    await expect(
-      main.getByRole("button", { name: "Next week" }),
-    ).toBeDisabled();
-    await main.getByRole("button", { name: "Previous week" }).click();
+    // The first week is the earliest, so there is nothing before it. How
+    // many weeks the options span depends on the month they fall in, so
+    // walk to the last one and back rather than assuming a count.
+    const previous = main.getByRole("button", { name: "Previous week" });
+    const next = main.getByRole("button", { name: "Next week" });
+    await expect(previous).toBeDisabled();
+    let weeks = 1;
+    while (await next.isEnabled()) {
+      await next.click();
+      weeks++;
+      expect(weeks).toBeLessThan(6);
+    }
+    await expect(next).toBeDisabled();
+    expect(weeks).toBeGreaterThan(1);
+    for (let i = 1; i < weeks; i++) {
+      await previous.click();
+    }
+    await expect(previous).toBeDisabled();
 
     // Hiding empty days leaves only the days that hold options
     await main.getByRole("button", { name: "Hide empty days" }).click();

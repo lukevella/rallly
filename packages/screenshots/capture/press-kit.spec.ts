@@ -256,9 +256,14 @@ for (const theme of ["light", "dark"] as const) {
 
       // Pick the same two days so the time slot list has content.
       await page.getByRole("button", { name: "Next month" }).click();
-      await page.getByRole("button", { name: String(base.date()) }).click();
       await page
-        .getByRole("button", { name: String(base.add(1, "day").date()) })
+        .getByRole("button", { name: String(base.date()), exact: true })
+        .click();
+      await page
+        .getByRole("button", {
+          name: String(base.add(1, "day").date()),
+          exact: true,
+        })
         .click();
       await page.getByText("Add time option").first().waitFor();
 
