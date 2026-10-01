@@ -539,6 +539,12 @@ export const polls = router({
             }
           }) ?? [];
 
+        // Lock the poll row for the rest of the transaction. Concurrent edits
+        // then queue, so each reads the values the previous one committed and
+        // records the right previous value. It is also the lock vote writes
+        // take, which the tentative vote check below relies on.
+        await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
+
         // Prior persisted values, read before the update so poll_updated is
         // recorded only when a detail or setting actually changes (the edit
         // forms always send some fields, e.g. timeZone on option-only edits).
@@ -569,12 +575,9 @@ export const polls = router({
         // poll whose responses are all yes/no can still be switched, and an
         // organizer who turned it off can always turn it back on.
         if (input.allowTentativeVotes === false && prior.allowTentativeVotes) {
-          // Take the same row lock the vote writes take, so a tentative vote
-          // committing concurrently either lands before this count sees it or
-          // waits and then fails its own check. Without the lock, READ
-          // COMMITTED lets one slip in between the count and the update.
-          await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
-
+          // The row lock taken above makes a tentative vote committing
+          // concurrently either land before this count sees it or wait and
+          // then fail its own check.
           const tentativeVoteCount = await tx.vote.count({
             where: { pollId, type: "ifNeedBe" },
           });
