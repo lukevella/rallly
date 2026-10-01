@@ -518,7 +518,6 @@
   "noLicenseKeyDescription": "Denna instans har ännu ingen licensnyckel.",
   "noOpenPolls": "Inga öppna förfrågningar",
   "noOpenPollsDescription": "Förfrågningar stängs automatiskt när alla deras datum har passerat. Du har {count, plural, one {1 stängd förfrågan} other {# stängda förfrågningar}}.",
-  "noParticipants": "Inga deltagare",
   "noParticipantsDescription": "Klicka på <b>Dela</b> för att bjuda in deltagare",
   "noPolls": "Inga förfrågningar",
   "noPollsDescription": "Kom igång genom att skapa en ny förfrågan.",
