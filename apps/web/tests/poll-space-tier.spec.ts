@@ -1,7 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
-import dayjs from "dayjs";
 import {
   createUserInDb,
   loginWithEmail,
@@ -64,6 +63,10 @@ test.beforeAll(async ({ browser }) => {
     },
   });
 
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setMinutes(0, 0, 0);
+
   const poll = await prisma.poll.create({
     data: {
       id: `space-tier-${runId}`,
@@ -73,7 +76,7 @@ test.beforeAll(async ({ browser }) => {
       kind: "time",
       options: {
         create: {
-          startTime: dayjs().add(1, "day").startOf("hour").toDate(),
+          startTime: tomorrow,
           duration: 60,
         },
       },
