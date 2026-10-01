@@ -17,7 +17,10 @@ import type {
   ConferencingProvider,
   PollConferencing,
 } from "@/features/conferencing/schema";
-import { conferencingProviderLabels } from "@/features/conferencing/utils";
+import {
+  conferencingProviderLabels,
+  isProConferencingProvider,
+} from "@/features/conferencing/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 
 export type ConferencingOptions = {
@@ -66,11 +69,10 @@ export const toConferencingFormValues = (
 });
 
 // Menu entries for the shared "Add location" menu. Renders nothing once a
-// choice is made: an event carries one meeting link. A provider link is
-// minted when the poll is scheduled, so a caller whose plan cannot schedule
-// passes `upsell` to mark the providers and take the click instead of
-// letting a choice be made that can never be cashed in. A pasted link is
-// joinable from the start and is never gated.
+// choice is made: an event carries one meeting link. A caller on a free
+// plan passes `upsell` to mark the Pro providers and take the click, so a
+// choice that can never be cashed in is not made. Google Meet and a pasted
+// link are never gated.
 export function ConferencingProviderMenuItems({
   available,
   upsell,
@@ -92,24 +94,27 @@ export function ConferencingProviderMenuItems({
       <DropdownMenuLabel>
         <Trans i18nKey="videoCall" defaults="Video call" />
       </DropdownMenuLabel>
-      {available.map((provider) => (
-        <DropdownMenuItem
-          key={provider}
-          onClick={() => {
-            if (upsell) {
-              upsell.onSelect(provider);
-              return;
-            }
-            form.setValue("conferencingProvider", provider, {
-              shouldDirty: true,
-            });
-          }}
-        >
-          <ConferencingProviderIcon provider={provider} size={16} />
-          {conferencingProviderLabels[provider]}
-          {upsell?.badge}
-        </DropdownMenuItem>
-      ))}
+      {available.map((provider) => {
+        const gate = isProConferencingProvider(provider) ? upsell : undefined;
+        return (
+          <DropdownMenuItem
+            key={provider}
+            onClick={() => {
+              if (gate) {
+                gate.onSelect(provider);
+                return;
+              }
+              form.setValue("conferencingProvider", provider, {
+                shouldDirty: true,
+              });
+            }}
+          >
+            <ConferencingProviderIcon provider={provider} size={16} />
+            {conferencingProviderLabels[provider]}
+            {gate?.badge}
+          </DropdownMenuItem>
+        );
+      })}
       <DropdownMenuItem
         onClick={() => {
           form.setValue("conferencingProvider", "custom", {
