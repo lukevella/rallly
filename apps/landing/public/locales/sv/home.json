@@ -55,7 +55,6 @@
   "ericJobTitle": "Executive Assistant på MIT",
   "ericQuote": "\"Om ditt sätt att komma överens om scheman är via e-post rekommenderar jag starkt att du testar Rallly och låter det underlätta dina scheman så att din arbetsdag blir tydligare och mer avslappnad.\"",
   "faqAfterVoting": "Vad händer efter att alla röstat?",
-  "faqAfterVotingAnswer": "Resultatet visar vilka tider som passar flest. Med Rallly Pro kan du slutföra förfrågan, vilket meddelar deltagarna om den valda tiden via e-post.",
   "faqDoodleDifference": "Hur skiljer sig Rallly från Doodle?",
   "faqDoodleDifferenceAnswer": "Rallly ger dig professionella, annonserfria förfrågningar för möten i ett rent och lättanvänt gränssnitt. Deltagare kan rösta utan att skapa ett konto, och om du vill ha full kontroll över dina uppgifter kan du till och med köra Rallly på din egen server.",
   "faqIsFree": "Är Rallly gratis?",
@@ -274,6 +273,5 @@
   "when2meetComparisonNoAccount": "Rösta utan att skapa ett konto",
   "when2meetComparisonNotifications": "E-postaviseringar när folk svarar",
   "when2meetComparisonOpenSource": "Öppen källkod och möjlighet till egen hosting",
-  "when2meetComparisonTitle": "When2meet mot Rallly",
-  "when2meetComparisonWithPro": "Med Rallly Pro"
+  "when2meetComparisonTitle": "When2meet mot Rallly"
 }
