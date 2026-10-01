@@ -77,6 +77,23 @@ if (!!env.TURNSTILE_SECRET_KEY !== !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
   );
 }
 
+const oidcRequiredEnv = {
+  OIDC_DISCOVERY_URL: env.OIDC_DISCOVERY_URL,
+  OIDC_CLIENT_ID: env.OIDC_CLIENT_ID,
+  OIDC_CLIENT_SECRET: env.OIDC_CLIENT_SECRET,
+};
+
+const missingOidcEnv = Object.entries(oidcRequiredEnv)
+  .filter(([, value]) => !value)
+  .map(([name]) => name);
+
+if (missingOidcEnv.length > 0 && missingOidcEnv.length < 3) {
+  logger.warn(
+    { missing: missingOidcEnv },
+    `OIDC login is disabled: ${missingOidcEnv.join(", ")} must be set alongside the other OIDC variables`,
+  );
+}
+
 // Conditional plugins are typed as BetterAuthPlugin[] — they don't add user
 // fields so losing their specific types doesn't affect session type inference.
 const conditionalPlugins: BetterAuthPlugin[] = [
