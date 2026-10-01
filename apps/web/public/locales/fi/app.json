@@ -569,7 +569,6 @@
   "noLicenseKeyDescription": "Tällä instanssilla ei ole vielä lisenssiavainta.",
   "noOpenPolls": "Ei avoimia kyselyjä",
   "noOpenPollsDescription": "Kyselyt sulkeutuvat automaattisesti, kun kaikki niiden päivät ovat menneet. Sinulla on {count, plural, one {1 suljettu kysely} other {# suljettua kyselyä}}.",
-  "noParticipants": "Ei osallistujia",
   "noParticipantsDescription": "Klikkaa <b>Jaa</b> kutsuaksesi osallistujia",
   "noPolls": "Ei kyselyjä",
   "noPollsDescription": "Aloita luomalla uusi kysely.",
