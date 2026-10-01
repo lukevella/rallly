@@ -562,7 +562,6 @@
   "noLicenseKeyDescription": "Tato instance zatím nemá žádný licenční klíč.",
   "noOpenPolls": "Žádná otevřená Hlasování",
   "noOpenPollsDescription": "Hlasování se automaticky uzavřou, jakmile uplynou všechny jejich termíny. Máte {count, plural, one {# uzavřené Hlasování} few {# uzavřená Hlasování} many {# uzavřených Hlasování} other {# uzavřených Hlasování}}.",
-  "noParticipants": "Žádní účastníci",
   "noParticipantsDescription": "Klikněte na <b>Sdílet</b> a pozvěte účastníky",
   "noPolls": "Žádné ankety",
   "noPollsDescription": "Začněte vytvořením nové ankety.",
