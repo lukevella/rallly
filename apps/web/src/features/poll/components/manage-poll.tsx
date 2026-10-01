@@ -15,8 +15,6 @@ import {
   DownloadIcon,
   PencilIcon,
   PlayIcon,
-  Settings2Icon,
-  TableIcon,
   TrashIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -99,22 +97,10 @@ const ManagePoll: React.FunctionComponent<{
           {canEdit ? (
             <>
               <DropdownMenuItem
-                render={<Link href={`/poll/${poll.id}/edit-details`} />}
+                render={<Link href={`/poll/${poll.id}/edit`} />}
               >
                 <PencilIcon />
-                <Trans i18nKey="editDetails" />
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                render={<Link href={`/poll/${poll.id}/edit-options`} />}
-              >
-                <TableIcon />
-                <Trans i18nKey="editOptions" />
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                render={<Link href={`/poll/${poll.id}/edit-settings`} />}
-              >
-                <Settings2Icon />
-                <Trans i18nKey="editSettings" defaults="Edit settings" />
+                <Trans i18nKey="edit" defaults="Edit" />
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>

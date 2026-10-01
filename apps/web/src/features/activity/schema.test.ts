@@ -50,6 +50,41 @@ describe("pollActivitySchema", () => {
     expect(withoutNote?.payload).toEqual({ name: "Jessie Smith" });
   });
 
+  it("reads a batch of added dates as one event", () => {
+    const event = parsePollActivity({
+      ...emptyRefs,
+      type: "options_added",
+      payload: {
+        options: [
+          { optionId: "o1", start: "2026-10-11T00:00:00.000Z", duration: 0 },
+          { optionId: "o2", start: "2026-10-12T00:00:00.000Z", duration: 0 },
+        ],
+      },
+    });
+
+    expect(event?.type).toBe("options_added");
+  });
+
+  it("rejects an empty batch of dates", () => {
+    const result = pollActivitySchema.safeParse({
+      type: "options_deleted",
+      userId: "u1",
+      payload: { options: [] },
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("reads a poll scheduled for a time that isn't one of its options", () => {
+    const event = parsePollActivity({
+      ...emptyRefs,
+      type: "poll_scheduled",
+      payload: { start: "2026-10-11T09:00:00.000Z", duration: 60 },
+    });
+
+    expect(event?.type).toBe("poll_scheduled");
+  });
+
   it("requires the subject ref of a response event", () => {
     const result = pollActivitySchema.safeParse({
       type: "response_created",

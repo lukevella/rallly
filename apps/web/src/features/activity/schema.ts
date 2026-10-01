@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { pollConferencingSchema } from "@/features/conferencing/schema";
 
 /** Why a poll closed: the organizer, or every option having passed. */
 export const pollClosedReasonSchema = z.enum(["auto", "manual"]);
@@ -33,6 +34,47 @@ const voteSnapshotSchema = z.object({
   type: z.enum(["yes", "no", "ifNeedBe"]),
 });
 
+// One event per edit rather than per date, so replacing a poll's dates reads
+// as one change in the timeline.
+const optionsSnapshotSchema = z.object({
+  options: z
+    .array(optionSnapshotSchema.extend({ optionId: z.string() }))
+    .min(1),
+  // The zone the dates were stored in (null when floating). A time zone edit
+  // re-stores every date, so the poll's current zone can't render the old
+  // ones. Absent on entries written before it was recorded.
+  timeZone: z.string().nullable().optional(),
+});
+
+const changeActionSchema = z.enum(["added", "changed", "removed"]);
+
+/**
+ * One field a poll_updated edit touched, with the value it had before. The
+ * current value lives on the poll, so only the old one is snapshotted.
+ */
+export const pollChangeSchema = z.discriminatedUnion("field", [
+  z.object({ field: z.literal("title"), from: z.string() }),
+  z.object({
+    field: z.literal("description"),
+    action: changeActionSchema,
+    from: z.string().nullable(),
+  }),
+  z.object({
+    field: z.literal("location"),
+    action: changeActionSchema,
+    from: z.string().nullable(),
+  }),
+  z.object({
+    field: z.literal("conferencing"),
+    action: changeActionSchema,
+    from: pollConferencingSchema.nullable(),
+  }),
+  z.object({ field: z.literal("timeZone"), from: z.string().nullable() }),
+  z.object({ field: z.literal("settings") }),
+]);
+
+export type PollChange = z.infer<typeof pollChangeSchema>;
+
 const inviteePayloadSchema = z.object({
   email: z.string(),
 });
@@ -46,7 +88,8 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("poll_updated"),
     ...actor,
-    payload: z.object({}),
+    // Absent on entries written before changes were itemized.
+    payload: z.object({ changes: z.array(pollChangeSchema).optional() }),
   }),
   z.object({
     type: z.literal("poll_closed"),
@@ -66,7 +109,9 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("poll_scheduled"),
     ...actor,
-    optionId: z.string(),
+    // The payload is the scheduled time. The option is optional because a
+    // poll can be scheduled for a time that isn't one of its options.
+    optionId: z.string().optional(),
     payload: optionSnapshotSchema,
   }),
   z.object({
@@ -121,6 +166,18 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
       votes: z.array(voteSnapshotSchema),
     }),
   }),
+  z.object({
+    type: z.literal("options_added"),
+    ...actor,
+    payload: optionsSnapshotSchema,
+  }),
+  z.object({
+    type: z.literal("options_deleted"),
+    ...actor,
+    payload: optionsSnapshotSchema,
+  }),
+  // One event per date, written before edits were batched into
+  // options_added and options_deleted. Still read for that history.
   z.object({
     type: z.literal("option_added"),
     ...actor,

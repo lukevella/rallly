@@ -47,9 +47,9 @@ export class PollPage {
     const pollUrl = page.url();
     await page.getByRole("button", { name: "Manage" }).click();
 
-    await page.getByRole("menuitem", { name: "Edit options" }).click();
+    await page.getByRole("menuitem", { name: "Edit" }).click();
 
-    await page.waitForURL(`${pollUrl}/edit-options`);
+    await page.waitForURL(`${pollUrl}/edit`);
 
     return new EditOptionsPage(page);
   }
