@@ -21,12 +21,9 @@ import {
   filterCommentsForViewer,
   maskParticipantsForViewer,
 } from "@/features/poll/utils";
-import { getActiveSpaceForUser } from "@/features/space/data";
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
-import { setActiveSpace } from "@/features/space/member/mutations";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
-import { getPathname } from "@/lib/pathname";
 
 export const loadPollStatusCounts = cache(async () => {
   const scope = await loadActiveSpaceContentScope();
@@ -221,27 +218,6 @@ export const loadAdminPoll = cache(async (pollId: string) => {
 
   if (!user || !(await canUserManagePoll(user, poll))) {
     redirect(`/invite/${pollId}`);
-  }
-
-  // Access is proven against the poll's space, not the active one, so a deep
-  // link can land a member of several spaces in a poll outside the space the
-  // rest of the app is showing. Make the poll's space active, the same write
-  // the space switcher does, then reload: the parent layout's tier and the
-  // page's space resolve in parallel with this loader, so the only way every
-  // reader sees the switch is a fresh request.
-  if (poll.spaceId) {
-    const activeSpace = await getActiveSpaceForUser(user.id);
-
-    if (activeSpace?.id !== poll.spaceId) {
-      const switched = await setActiveSpace({
-        userId: user.id,
-        spaceId: poll.spaceId,
-      });
-
-      if (switched) {
-        redirect((await getPathname()) ?? `/poll/${pollId}`);
-      }
-    }
   }
 
   const [participants, comments] = await Promise.all([
