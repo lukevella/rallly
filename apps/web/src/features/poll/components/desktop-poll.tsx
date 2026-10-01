@@ -4,12 +4,14 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
+import { useDialog } from "@rallly/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ExpandIcon,
   PlusIcon,
+  Share2Icon,
   ShrinkIcon,
   Users2Icon,
 } from "lucide-react";
@@ -21,6 +23,7 @@ import { TimesShownIn } from "@/components/clock";
 import {
   EmptyState,
   EmptyStateDescription,
+  EmptyStateFooter,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
@@ -29,7 +32,9 @@ import {
   useParticipants,
   usePermissions,
   usePoll,
+  useRole,
 } from "@/features/poll/client";
+import { SharePollDialog } from "@/features/poll/components/share-dialog";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
@@ -190,6 +195,74 @@ function TableControls({
         {expanded ? <EscapeListener onEscape={onCollapse} /> : null}
       </div>
     </div>
+  );
+}
+
+function DesktopPollEmptyState() {
+  const poll = usePoll();
+  const role = useRole();
+  const { canAddNewParticipant } = usePermissions();
+  const votingForm = useVotingForm();
+  const shareDialog = useDialog();
+  const canShare = role === "admin";
+
+  return (
+    <EmptyState className="p-16">
+      <EmptyStateIcon>
+        <Users2Icon />
+      </EmptyStateIcon>
+      <EmptyStateTitle>
+        <Trans i18nKey="noResponses" defaults="No responses" />
+      </EmptyStateTitle>
+      {canAddNewParticipant || canShare ? (
+        <EmptyStateDescription>
+          {canAddNewParticipant && canShare ? (
+            <Trans
+              i18nKey="desktopPollEmptyStateDescription"
+              components={{ b: <strong className="font-semibold" /> }}
+              defaults="Click <b>+</b> to add a response or <b>Share</b> to invite participants"
+            />
+          ) : canAddNewParticipant ? (
+            <Trans
+              i18nKey="desktopPollEmptyStateAddDescription"
+              components={{ b: <strong className="font-semibold" /> }}
+              defaults="Click <b>+</b> to add a response"
+            />
+          ) : (
+            <Trans
+              i18nKey="noParticipantsDescription"
+              components={{ b: <strong className="font-semibold" /> }}
+              defaults="Click <b>Share</b> to invite participants"
+            />
+          )}
+        </EmptyStateDescription>
+      ) : null}
+      {canAddNewParticipant || canShare ? (
+        <EmptyStateFooter className="flex gap-2">
+          {canAddNewParticipant ? (
+            <Button onClick={() => votingForm.newParticipant()}>
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addResponse" defaults="Add response" />
+            </Button>
+          ) : null}
+          {canShare ? (
+            <>
+              <Button {...shareDialog.triggerProps}>
+                <Share2Icon data-icon="inline-start" />
+                <Trans i18nKey="share" defaults="Share" />
+              </Button>
+              <SharePollDialog
+                {...shareDialog.dialogProps}
+                pollId={poll.id}
+                pollStatus={poll.status}
+                inviteLink={poll.inviteLink}
+                source="empty_state"
+              />
+            </>
+          ) : null}
+        </EmptyStateFooter>
+      ) : null}
+    </EmptyState>
   );
 }
 
@@ -388,24 +461,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                   </ScrollContainer>
                 </div>
               ) : (
-                <EmptyState className="p-16">
-                  <EmptyStateIcon>
-                    <Users2Icon />
-                  </EmptyStateIcon>
-                  <EmptyStateTitle>
-                    <Trans
-                      i18nKey="noParticipants"
-                      defaults="No participants"
-                    />
-                  </EmptyStateTitle>
-                  <EmptyStateDescription>
-                    <Trans
-                      i18nKey="noParticipantsDescription"
-                      components={{ b: <strong className="font-semibold" /> }}
-                      defaults="Click <b>Share</b> to invite participants"
-                    />
-                  </EmptyStateDescription>
-                </EmptyState>
+                <DesktopPollEmptyState />
               )}
               {mode === "new" ? (
                 <div className="border-t p-3">
