@@ -535,7 +535,6 @@
   "noLicenseKeyDescription": "Cette instance n'a pas encore de clé de licence.",
   "noOpenPolls": "Aucun sondage ouvert",
   "noOpenPollsDescription": "Les sondages se ferment automatiquement une fois que toutes leurs dates sont passées. Vous avez {count, plural, one {# sondage fermé} other {# sondages fermés}}.",
-  "noParticipants": "Aucun participant",
   "noParticipantsDescription": "Cliquez sur <b>Partager</b> pour inviter les participants",
   "noPolls": "Aucun sondage",
   "noPollsDescription": "Commencez par créer un nouveau sondage.",
