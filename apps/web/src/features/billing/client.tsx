@@ -10,14 +10,23 @@ import type { SpaceTier } from "@/features/space/schema";
 
 const TierContext = React.createContext<SpaceTier | null>(null);
 
+/**
+ * A null tier inherits the enclosing provider's, so a nested provider can
+ * override the tier only when it has one of its own.
+ */
 export function TierProvider({
   tier,
   children,
 }: {
-  tier: SpaceTier;
+  tier: SpaceTier | null;
   children: React.ReactNode;
 }) {
-  return <TierContext.Provider value={tier}>{children}</TierContext.Provider>;
+  const inherited = React.useContext(TierContext);
+  return (
+    <TierContext.Provider value={tier ?? inherited}>
+      {children}
+    </TierContext.Provider>
+  );
 }
 
 export function useTier(): SpaceTier {

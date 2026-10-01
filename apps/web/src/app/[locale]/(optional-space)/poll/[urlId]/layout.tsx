@@ -17,27 +17,21 @@ async function AdminPollLayout({
   const { urlId } = await params;
   const { poll, participants, comments } = await loadAdminPoll(urlId);
 
-  const provider = (
-    <PollProvider
-      poll={poll}
-      participants={participants}
-      comments={comments}
-      viewerRole="admin"
-    >
-      <PollLayout>{children}</PollLayout>
-    </PollProvider>
-  );
-
   // Access is proven against the poll's space, not the active one, so the
   // paid features on these pages follow the poll's space too: the server
   // gates them on the same tier. A poll outside any space keeps the active
   // space's tier from the parent layout.
-  return poll.space ? (
-    <TierProvider tier={resolveSpaceTier(poll.space.tier)}>
-      {provider}
+  return (
+    <TierProvider tier={poll.space ? resolveSpaceTier(poll.space.tier) : null}>
+      <PollProvider
+        poll={poll}
+        participants={participants}
+        comments={comments}
+        viewerRole="admin"
+      >
+        <PollLayout>{children}</PollLayout>
+      </PollProvider>
     </TierProvider>
-  ) : (
-    provider
   );
 }
 
