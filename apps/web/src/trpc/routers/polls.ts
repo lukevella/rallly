@@ -701,6 +701,11 @@ export const polls = router({
               pollId,
             }),
             timeZone: prior.timeZone,
+            hideParticipants: prior.hideParticipants,
+            hideScores: prior.hideScores,
+            disableComments: prior.disableComments,
+            allowTentativeVotes: prior.allowTentativeVotes,
+            requireParticipantEmail: prior.requireParticipantEmail,
           },
           next: {
             title: input.title,
@@ -708,18 +713,11 @@ export const polls = router({
             location: input.location,
             conferencing,
             timeZone: nextTimeZone,
-            settingsChanged:
-              (input.hideParticipants !== undefined &&
-                input.hideParticipants !== prior.hideParticipants) ||
-              (input.disableComments !== undefined &&
-                input.disableComments !== prior.disableComments) ||
-              (input.allowTentativeVotes !== undefined &&
-                input.allowTentativeVotes !== prior.allowTentativeVotes) ||
-              (input.hideScores !== undefined &&
-                input.hideScores !== prior.hideScores) ||
-              (input.requireParticipantEmail !== undefined &&
-                input.requireParticipantEmail !==
-                  prior.requireParticipantEmail),
+            hideParticipants: input.hideParticipants,
+            hideScores: input.hideScores,
+            disableComments: input.disableComments,
+            allowTentativeVotes: input.allowTentativeVotes,
+            requireParticipantEmail: input.requireParticipantEmail,
           },
         });
 

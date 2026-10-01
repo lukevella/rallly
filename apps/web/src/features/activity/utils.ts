@@ -3,6 +3,16 @@ import type { PollChange } from "./schema";
 
 type ChangeAction = "added" | "changed" | "removed";
 
+const settingFields = [
+  "hideParticipants",
+  "hideScores",
+  "disableComments",
+  "allowTentativeVotes",
+  "requireParticipantEmail",
+] as const;
+
+type PollSettings = Record<(typeof settingFields)[number], boolean>;
+
 const getChangeAction = (from: unknown, to: unknown): ChangeAction =>
   from === null ? "added" : to === null ? "removed" : "changed";
 
@@ -21,15 +31,14 @@ export function getPollChanges({
     location: string | null;
     conferencing: PollConferencing | null;
     timeZone: string | null;
-  };
+  } & PollSettings;
   next: {
     title?: string;
     description?: string;
     location?: string;
     conferencing?: PollConferencing | null;
     timeZone: string | null;
-    settingsChanged: boolean;
-  };
+  } & Partial<PollSettings>;
 }): PollChange[] {
   const changes: PollChange[] = [];
 
@@ -64,8 +73,11 @@ export function getPollChanges({
     changes.push({ field: "timeZone", from: prior.timeZone });
   }
 
-  if (next.settingsChanged) {
-    changes.push({ field: "settings" });
+  for (const field of settingFields) {
+    const value = next[field];
+    if (value !== undefined && value !== prior[field]) {
+      changes.push({ field, from: prior[field] });
+    }
   }
 
   return changes;

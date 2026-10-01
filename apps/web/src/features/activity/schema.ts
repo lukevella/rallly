@@ -70,6 +70,12 @@ export const pollChangeSchema = z.discriminatedUnion("field", [
     from: pollConferencingSchema.nullable(),
   }),
   z.object({ field: z.literal("timeZone"), from: z.string().nullable() }),
+  z.object({ field: z.literal("hideParticipants"), from: z.boolean() }),
+  z.object({ field: z.literal("hideScores"), from: z.boolean() }),
+  z.object({ field: z.literal("disableComments"), from: z.boolean() }),
+  z.object({ field: z.literal("allowTentativeVotes"), from: z.boolean() }),
+  z.object({ field: z.literal("requireParticipantEmail"), from: z.boolean() }),
+  // Written before settings changes were itemized. Still read for that history.
   z.object({ field: z.literal("settings") }),
 ]);
 
