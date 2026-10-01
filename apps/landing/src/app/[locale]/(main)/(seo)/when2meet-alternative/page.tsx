@@ -225,12 +225,7 @@ export default async function Page(props: {
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="when2meetComparisonWithPro"
-                    defaults="With Rallly Pro"
-                  />
+                  <CompareTableCheck label={included} />
                 </CompareTableCell>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
