@@ -28,6 +28,8 @@ type FinalizeParticipantEmailProps = {
   pollUrl: string;
   location?: string;
   conferencing?: EmailConferencing;
+  /** Their vote on the booked date; omitted when they didn't vote on it. */
+  vote?: "yes" | "ifNeedBe" | "no";
 };
 
 async function FinalizeParticipantEmail({
@@ -38,6 +40,7 @@ async function FinalizeParticipantEmail({
   time,
   location,
   conferencing,
+  vote,
   locale = "en",
   chrome,
 }: FinalizeParticipantEmailProps) {
@@ -84,6 +87,42 @@ async function FinalizeParticipantEmail({
             baseUrl={chrome.baseUrl}
             locale={locale}
           />
+          {vote === "yes" ? (
+            <Text>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="finalizeParticipant_voteYes"
+                defaults="You voted <b>Yes</b> for this date."
+                components={{ b: <Strong /> }}
+              />
+            </Text>
+          ) : null}
+          {vote === "ifNeedBe" ? (
+            <Text>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="finalizeParticipant_voteIfNeedBe"
+                defaults="You voted <b>If need be</b> for this date."
+                components={{ b: <Strong /> }}
+              />
+            </Text>
+          ) : null}
+          {vote === "no" ? (
+            <Text>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="finalizeParticipant_voteNo"
+                defaults="You voted <b>No</b> for this date."
+                components={{ b: <Strong /> }}
+              />
+            </Text>
+          ) : null}
           <Text>
             {t("finalizeParticipant_content2", {
               defaultValue:
@@ -118,6 +157,7 @@ FinalizeParticipantEmail.PreviewProps = {
     provider: "meet",
     url: "https://meet.google.com/oce-zdyd-aoq",
   },
+  vote: "no",
   locale: "en",
   chrome: previewChrome,
 } as FinalizeParticipantEmailProps;

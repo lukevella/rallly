@@ -568,6 +568,7 @@ export function getInviteEmailData({ uid }: { uid: string }) {
       inviteeEmail: true,
       inviteeLocale: true,
       inviteeTimeZone: true,
+      status: true,
       scheduledEvent: {
         select: {
           id: true,
