@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { Checkbox } from "@rallly/ui/checkbox";
@@ -318,9 +319,14 @@ function VoteShortcut({
       aria-label={label}
       aria-pressed={pressed}
       className="inline-flex h-7 items-center gap-1.5 rounded-full border border-input border-dashed pr-3 pl-2 text-muted-foreground text-sm outline-none transition-colors hover:border-solid hover:bg-foreground/3 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-foreground/15 aria-pressed:border-solid aria-pressed:bg-foreground/6 aria-pressed:text-foreground aria-pressed:hover:border-foreground/25 aria-pressed:hover:bg-foreground/10"
-      onClick={() =>
-        onChange(toggleIds({ selectedIds, ids, checked: !pressed }))
-      }
+      onClick={() => {
+        posthog?.capture("poll_finalize:vote_shortcut_click", {
+          vote_type: voteType === "ifNeedBe" ? "if_need_be" : voteType,
+          selected: !pressed,
+          count: ids.length,
+        });
+        onChange(toggleIds({ selectedIds, ids, checked: !pressed }));
+      }}
     >
       <VoteIcon type={voteType} />
       <span className="tabular-nums">{ids.length}</span>
@@ -380,9 +386,12 @@ function NotifyStep({
           checked={allSelected}
           indeterminate={!allSelected && someSelected}
           disabled={notifiableIds.length === 0}
-          onCheckedChange={(checked) =>
-            onChange(new Set(checked ? notifiableIds : []))
-          }
+          onCheckedChange={(checked) => {
+            posthog?.capture("poll_finalize:select_all_click", {
+              selected: checked,
+            });
+            onChange(new Set(checked ? notifiableIds : []));
+          }}
         />
         <Label htmlFor="notify-all" className="text-sm">
           <Trans

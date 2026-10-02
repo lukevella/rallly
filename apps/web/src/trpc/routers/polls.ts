@@ -36,7 +36,10 @@ import {
   hasPollAdminAccess,
 } from "@/features/poll/data";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
-import { getFinalizePlanGate } from "@/features/poll/utils";
+import {
+  getFinalizePlanGate,
+  summarizeNotifySelection,
+} from "@/features/poll/utils";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
@@ -1455,6 +1458,11 @@ export const polls = router({
               (Date.now() - poll.createdAt.getTime()) / 86_400_000,
             ),
             participant_count: poll.participants.length,
+            ...summarizeNotifySelection({
+              participants: poll.participants,
+              optionId: input.optionId,
+              notifyParticipantIds: input.notifyParticipantIds,
+            }),
           },
           groups: {
             poll: poll.id,

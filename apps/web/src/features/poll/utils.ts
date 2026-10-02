@@ -188,6 +188,69 @@ export function rankOptionsByPopularity<T extends { id: string }>({
     });
 }
 
+const notifyBuckets = {
+  yes: "yes",
+  ifNeedBe: "if_need_be",
+  no: "no",
+} as const;
+
+type NotifyBucket =
+  | (typeof notifyBuckets)[keyof typeof notifyBuckets]
+  | "no_response";
+
+export type NotifySelectionSummary = Record<
+  `notify_eligible_${NotifyBucket}` | `notify_sent_${NotifyBucket}`,
+  number
+> & { notify_selection_changed: boolean };
+
+/**
+ * Who a host could have notified at finalize and who they did, by vote on
+ * the chosen option, so the default selection can be judged from data.
+ * Only participants with an email can be notified.
+ */
+export function summarizeNotifySelection({
+  participants,
+  optionId,
+  notifyParticipantIds,
+}: {
+  participants: {
+    id: string;
+    email: string | null;
+    votes: { optionId: string; type: VoteType }[];
+  }[];
+  optionId: string;
+  notifyParticipantIds: string[];
+}): NotifySelectionSummary {
+  const notifyIds = new Set(notifyParticipantIds);
+  const summary: NotifySelectionSummary = {
+    notify_eligible_yes: 0,
+    notify_eligible_if_need_be: 0,
+    notify_eligible_no: 0,
+    notify_eligible_no_response: 0,
+    notify_sent_yes: 0,
+    notify_sent_if_need_be: 0,
+    notify_sent_no: 0,
+    notify_sent_no_response: 0,
+    notify_selection_changed: false,
+  };
+  let eligible = 0;
+  let sent = 0;
+  for (const participant of participants) {
+    if (!participant.email) continue;
+    const vote = participant.votes.find((v) => v.optionId === optionId)?.type;
+    const bucket: NotifyBucket = vote ? notifyBuckets[vote] : "no_response";
+    summary[`notify_eligible_${bucket}`]++;
+    eligible++;
+    if (notifyIds.has(participant.id)) {
+      summary[`notify_sent_${bucket}`]++;
+      sent++;
+    }
+  }
+  // The dialog starts with everyone who has an email selected.
+  summary.notify_selection_changed = sent !== eligible;
+  return summary;
+}
+
 export type FinalizePlanGate = "conferencing";
 
 /**
