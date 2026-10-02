@@ -157,6 +157,15 @@ export const attemptQueuedEmail = Effect.fn("emailQueue.attemptQueuedEmail")(
         error: error.message,
       }),
   }),
+  // A handler that throws (bad stored data reaching Intl, a template bug)
+  // fails its own email, not the whole batch it was claimed with.
+  Effect.catchDefect((defect) =>
+    Effect.succeed<QueuedEmailAttempt>({
+      ok: false,
+      skip: false,
+      error: defect instanceof Error ? defect.message : "Unexpected error",
+    }),
+  ),
 );
 
 /**
