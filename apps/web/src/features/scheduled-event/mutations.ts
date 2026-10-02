@@ -94,6 +94,15 @@ export async function cancelRsvp({ inviteUid }: { inviteUid: string }) {
 
 const failWith = (message: string) => () => new QueuedEmailFailed({ message });
 
+// The invitee's vote on the booked option, recorded on the invite when the
+// poll was finalized. Pending means they never voted on it.
+const voteByInviteStatus = {
+  accepted: "yes",
+  tentative: "ifNeedBe",
+  declined: "no",
+  pending: undefined,
+} as const satisfies Record<ScheduledEventInviteStatus, string | undefined>;
+
 /**
  * The queue handler for `scheduled_event_invite`: tells one invitee their
  * event is booked, built from the invite (the subject, by uid) and its event
@@ -191,6 +200,7 @@ export const sendScheduledEventInviteEmail = Effect.fn(
             : undefined,
           date,
           time,
+          vote: voteByInviteStatus[invite.status],
         },
       }),
     catch: (cause) =>
