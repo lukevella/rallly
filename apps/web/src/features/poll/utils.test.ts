@@ -5,6 +5,7 @@ import {
   getFinalizePlanGate,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
+  summarizeNotifySelection,
   toAvailabilitySpans,
 } from "./utils";
 
@@ -306,5 +307,81 @@ describe("getFinalizePlanGate", () => {
         conferencing: { provider: "meet" },
       }),
     ).toBeNull();
+  });
+});
+
+describe("summarizeNotifySelection", () => {
+  const voter = (
+    id: string,
+    type: "yes" | "ifNeedBe" | "no" | null,
+    email: string | null = `${id}@example.com`,
+  ) => ({
+    id,
+    email,
+    votes: type ? [{ optionId: "opt-1", type }] : [],
+  });
+
+  const participants = [
+    voter("a", "yes"),
+    voter("b", "yes"),
+    voter("c", "ifNeedBe"),
+    voter("d", "no"),
+    voter("e", null),
+    voter("f", "yes", null),
+  ];
+
+  it("counts eligible and notified participants by vote", () => {
+    expect(
+      summarizeNotifySelection({
+        participants,
+        optionId: "opt-1",
+        notifyParticipantIds: ["a", "c"],
+      }),
+    ).toEqual({
+      notify_eligible_yes: 2,
+      notify_eligible_if_need_be: 1,
+      notify_eligible_no: 1,
+      notify_eligible_no_response: 1,
+      notify_sent_yes: 1,
+      notify_sent_if_need_be: 1,
+      notify_sent_no: 0,
+      notify_sent_no_response: 0,
+      notify_selection_changed: true,
+    });
+  });
+
+  it("reports an untouched selection when everyone with an email is notified", () => {
+    const summary = summarizeNotifySelection({
+      participants,
+      optionId: "opt-1",
+      notifyParticipantIds: ["a", "b", "c", "d", "e"],
+    });
+    expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("ignores participants without an email even when selected", () => {
+    const summary = summarizeNotifySelection({
+      participants,
+      optionId: "opt-1",
+      notifyParticipantIds: ["a", "b", "c", "d", "e", "f"],
+    });
+    expect(summary.notify_sent_yes).toBe(2);
+    expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("buckets votes on other options as no response", () => {
+    const summary = summarizeNotifySelection({
+      participants: [
+        {
+          id: "g",
+          email: "g@example.com",
+          votes: [{ optionId: "opt-2", type: "yes" as const }],
+        },
+      ],
+      optionId: "opt-1",
+      notifyParticipantIds: ["g"],
+    });
+    expect(summary.notify_eligible_no_response).toBe(1);
+    expect(summary.notify_sent_no_response).toBe(1);
   });
 });
