@@ -11,8 +11,10 @@ import { createSpaceInDb, createUserInDb, loginWithEmail } from "./test-utils";
 
 /**
  * Booking a poll queues one email per invite the organizer chose to notify;
- * the minute cron sends them. These tests seed a booked event with invites
- * in each state, run the cron and assert on mailpit and the invite rows.
+ * the booking sends its first batch and the minute cron drains the queue.
+ * The first suite seeds a booked event with a queued email, runs the cron
+ * and asserts on mailpit and the queue row; the second books through the
+ * finalize wizard.
  */
 
 const CRON_SECRET = process.env.CRON_SECRET;
@@ -21,11 +23,12 @@ const EVENT_UID = "invite-email-event@rallly.co";
 const POLL_ID = "invite-email-poll";
 const TITLE = "Invite Email Test Event";
 const HOST_EMAIL = "invite-email-host@rallly.co";
+const QUEUED_INVITE_UID = "invite-email-queued";
 
 const YEAR = new Date().getFullYear() + 1;
 
 async function runCron(request: APIRequestContext) {
-  const response = await request.get("/api/house-keeping/send-invite-emails", {
+  const response = await request.get("/api/house-keeping/send-queued-emails", {
     headers: { Authorization: `Bearer ${CRON_SECRET}` },
   });
   expect(response.ok()).toBeTruthy();
@@ -37,6 +40,7 @@ async function runCron(request: APIRequestContext) {
 async function cleanup() {
   await prisma.poll.deleteMany({ where: { id: POLL_ID } });
   await prisma.scheduledEvent.deleteMany({ where: { id: EVENT_ID } });
+  // Queued emails go with the user that queued them.
   await prisma.user.deleteMany({ where: { email: HOST_EMAIL } });
 }
 
@@ -76,20 +80,18 @@ async function seed({
         createMany: {
           data: [
             {
-              uid: "invite-email-pending",
-              inviteeName: "Pending Invitee",
-              inviteeEmail: "invite-pending@example.com",
+              uid: QUEUED_INVITE_UID,
+              inviteeName: "Queued Invitee",
+              inviteeEmail: "invite-queued@example.com",
               inviteeTimeZone: "America/New_York",
               inviteeLocale: "en",
               status: "accepted",
-              emailStatus: "pending",
             },
             {
-              uid: "invite-email-skipped",
-              inviteeName: "Skipped Invitee",
-              inviteeEmail: "invite-skipped@example.com",
+              uid: "invite-email-not-queued",
+              inviteeName: "Not Queued Invitee",
+              inviteeEmail: "invite-not-queued@example.com",
               status: "accepted",
-              emailStatus: "skipped",
             },
           ],
         },
@@ -106,13 +108,21 @@ async function seed({
       scheduledEventId: EVENT_ID,
     },
   });
+  return prisma.queuedEmail.create({
+    data: {
+      kind: "scheduled_event_invite",
+      subjectId: QUEUED_INVITE_UID,
+      batchId: EVENT_ID,
+      userId: user.id,
+    },
+  });
 }
 
-function findInvite(uid: string) {
-  return prisma.scheduledEventInvite.findUniqueOrThrow({ where: { uid } });
+function findQueued(id: string) {
+  return prisma.queuedEmail.findUniqueOrThrow({ where: { id } });
 }
 
-test.describe("Invite emails", () => {
+test.describe("Queued invite emails", () => {
   test.beforeEach(async () => {
     await deleteAllMessages();
   });
@@ -122,15 +132,15 @@ test.describe("Invite emails", () => {
     await deleteAllMessages();
   });
 
-  test("sends pending invites once and leaves skipped ones alone", async ({
+  test("sends a queued invite once and nothing to invites not queued", async ({
     request,
   }) => {
-    await seed();
+    const queued = await seed();
 
     const summary = await runCron(request);
     expect(summary.sent).toBeGreaterThanOrEqual(1);
 
-    const { email } = await captureOne("invite-pending@example.com");
+    const { email } = await captureOne("invite-queued@example.com");
     expect(email.Subject).toBe(`Date booked for ${TITLE}`);
     expect(email.Text).toContain("Invite Email Host");
     expect(email.Attachments).toHaveLength(1);
@@ -140,15 +150,11 @@ test.describe("Invite emails", () => {
     expect(ics).toContain(`UID:${EVENT_UID}`);
     expect(ics).toContain("LOCATION:100 Fish Street\\, London");
 
-    const sent = await findInvite("invite-email-pending");
-    expect(sent.emailStatus).toBe("sent");
-    expect(sent.emailSentAt).not.toBeNull();
-    expect(sent.emailAttempts).toBe(1);
-    expect(sent.emailClaimedAt).toBeNull();
-
-    const skipped = await findInvite("invite-email-skipped");
-    expect(skipped.emailStatus).toBe("skipped");
-    expect(skipped.emailAttempts).toBe(0);
+    const sent = await findQueued(queued.id);
+    expect(sent.status).toBe("sent");
+    expect(sent.sentAt).not.toBeNull();
+    expect(sent.attempts).toBe(1);
+    expect(sent.claimedAt).toBeNull();
 
     // A second run finds nothing left to send.
     await deleteAllMessages();
@@ -161,63 +167,65 @@ test.describe("Invite emails", () => {
     ).toHaveLength(0);
   });
 
-  test("skips invites of a canceled event", async ({ request }) => {
-    await seed({ status: "canceled" });
+  test("skips an invite whose event was canceled", async ({ request }) => {
+    const queued = await seed({ status: "canceled" });
 
     await runCron(request);
 
-    const invite = await findInvite("invite-email-pending");
-    expect(invite.emailStatus).toBe("skipped");
+    const row = await findQueued(queued.id);
+    expect(row.status).toBe("skipped");
+    expect(row.lastError).toBe("Event was canceled");
     const { messages } = await getMessages();
     expect(messages).toHaveLength(0);
   });
 
-  test("skips invites queued by an account banned since", async ({
+  test("skips emails queued by an account banned since", async ({
     request,
   }) => {
-    await seed({ banned: true });
+    const queued = await seed({ banned: true });
 
     await runCron(request);
 
-    const invite = await findInvite("invite-email-pending");
-    expect(invite.emailStatus).toBe("skipped");
+    const row = await findQueued(queued.id);
+    expect(row.status).toBe("skipped");
+    expect(row.lastError).toBe("Queued by a banned account");
     const { messages } = await getMessages();
     expect(messages).toHaveLength(0);
   });
 
-  test("does not claim an invite another run claimed recently", async ({
+  test("does not claim an email another run claimed recently", async ({
     request,
   }) => {
-    await seed();
-    await prisma.scheduledEventInvite.update({
-      where: { uid: "invite-email-pending" },
-      data: { emailClaimedAt: new Date(), emailAttempts: 1 },
+    const queued = await seed();
+    await prisma.queuedEmail.update({
+      where: { id: queued.id },
+      data: { claimedAt: new Date(), attempts: 1 },
     });
 
     await runCron(request);
 
-    const invite = await findInvite("invite-email-pending");
-    expect(invite.emailStatus).toBe("pending");
-    expect(invite.emailAttempts).toBe(1);
+    const row = await findQueued(queued.id);
+    expect(row.status).toBe("pending");
+    expect(row.attempts).toBe(1);
   });
 
-  test("fails an invite whose final claim was abandoned", async ({
+  test("fails an email whose final claim was abandoned", async ({
     request,
   }) => {
-    await seed();
-    await prisma.scheduledEventInvite.update({
-      where: { uid: "invite-email-pending" },
+    const queued = await seed();
+    await prisma.queuedEmail.update({
+      where: { id: queued.id },
       data: {
-        emailClaimedAt: new Date(Date.now() - 60 * 60_000),
-        emailAttempts: 3,
+        claimedAt: new Date(Date.now() - 60 * 60_000),
+        attempts: 3,
       },
     });
 
     const summary = await runCron(request);
     expect(summary.abandoned).toBeGreaterThanOrEqual(1);
 
-    const invite = await findInvite("invite-email-pending");
-    expect(invite.emailStatus).toBe("failed");
+    const row = await findQueued(queued.id);
+    expect(row.status).toBe("failed");
   });
 });
 
@@ -336,24 +344,30 @@ test.describe("Booking a poll", () => {
       invites.map((i) => ({
         email: i.inviteeEmail,
         status: i.status,
-        emailStatus: i.emailStatus,
-        attempts: i.emailAttempts,
         locale: i.inviteeLocale,
       })),
     ).toEqual([
+      { email: ALICE, status: "accepted", locale: "en" },
+      { email: BOB, status: "tentative", locale: "en" },
+    ]);
+
+    // Only the selected address was queued, and the booking sent it.
+    const queued = await prisma.queuedEmail.findMany({
+      where: { batchId: scheduledEventId ?? "" },
+    });
+    expect(
+      queued.map((q) => ({
+        kind: q.kind,
+        subjectId: q.subjectId,
+        status: q.status,
+        attempts: q.attempts,
+      })),
+    ).toEqual([
       {
-        email: ALICE,
-        status: "accepted",
-        emailStatus: "sent",
+        kind: "scheduled_event_invite",
+        subjectId: invites[0].uid,
+        status: "sent",
         attempts: 1,
-        locale: "en",
-      },
-      {
-        email: BOB,
-        status: "tentative",
-        emailStatus: "skipped",
-        attempts: 0,
-        locale: "en",
       },
     ]);
 

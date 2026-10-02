@@ -3,6 +3,7 @@ import { Effect } from "effect";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
+import { runQueuedEmailDelivery } from "@/emails/queue";
 import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
@@ -12,8 +13,6 @@ import {
   deleteInactivePolls,
   removeDeletedPolls,
 } from "@/features/poll/mutations";
-import { deliverInviteEmails } from "@/features/scheduled-event/mutations";
-import { InviteEmailSender } from "@/features/scheduled-event/service";
 import { findUsersScheduledForRemoval } from "@/features/user/account-deletion/data";
 import { getAccountDeletionCutoff } from "@/features/user/account-deletion/utils";
 import {
@@ -233,20 +232,16 @@ app.get("/deliver-webhooks", async (c) => {
   return c.json({ success: true, summary });
 });
 
-app.get("/send-invite-emails", async (c) => {
-  // The scheduled drain behind a booking's own first batch. Each run sends
-  // one batch, so a large poll's participants go out at that rate.
-  const summary = await runtime.runPromise(
-    deliverInviteEmails({ now: new Date() }).pipe(
-      Effect.provide(InviteEmailSender.layer),
-    ),
-  );
+app.get("/send-queued-emails", async (c) => {
+  // The scheduled drain behind each action's own first batch. Each run
+  // sends one batch, so a large fan-out goes out at that rate.
+  const summary = await runQueuedEmailDelivery({});
 
   // Runs every minute and most runs find nothing.
   if (summary.attempted > 0 || summary.abandoned > 0) {
     logger.info(
-      { task: "send-invite-emails", ...summary },
-      "Sent queued invite emails",
+      { task: "send-queued-emails", ...summary },
+      "Sent queued emails",
     );
   }
 

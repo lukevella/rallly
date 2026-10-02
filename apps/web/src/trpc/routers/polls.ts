@@ -8,6 +8,7 @@ import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
 import { toEmailConferencing } from "@/emails/conferencing";
+import { scheduleQueuedEmailDelivery } from "@/emails/queue";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { getPollChanges } from "@/features/activity/utils";
 import { resolveSpaceTier } from "@/features/billing/utils";
@@ -26,6 +27,7 @@ import {
   getConferencingUri,
   moderatedLinkText,
 } from "@/features/conferencing/utils";
+import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
@@ -35,7 +37,6 @@ import {
 } from "@/features/poll/data";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import { getFinalizePlanGate } from "@/features/poll/utils";
-import { scheduleInviteEmailDelivery } from "@/features/scheduled-event/mutations";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
@@ -1290,8 +1291,7 @@ export const polls = router({
           status: (typeof inviteStatusByVote)[keyof typeof inviteStatusByVote];
         }
       >();
-      // The organizer's choice is kept on the invite: an address is emailed
-      // when any participant behind it was selected, and the queue sends it.
+      // An address is emailed when any participant behind it was selected.
       const notifyIds = new Set(input.notifyParticipantIds);
       const notifyEmails = new Set(
         poll.participants.flatMap((p) =>
@@ -1321,12 +1321,10 @@ export const polls = router({
           status,
         });
       }
-      const inviteData = Array.from(invitesByEmail, ([key, invite]) => ({
-        ...invite,
-        emailStatus: notifyEmails.has(key)
-          ? ("pending" as const)
-          : ("skipped" as const),
-      }));
+      const inviteData = Array.from(invitesByEmail.values());
+      const notifyInviteUids = Array.from(invitesByEmail)
+        .filter(([key]) => notifyEmails.has(key))
+        .map(([, invite]) => invite.uid);
 
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
@@ -1379,6 +1377,14 @@ export const polls = router({
             },
           },
         ]);
+        // Queued with the event so the selection is kept even if the
+        // request dies before anything is sent.
+        await queueEmails(tx, {
+          kind: "scheduled_event_invite",
+          userId: ctx.user.id,
+          batchId: event.id,
+          subjectIds: notifyInviteUids,
+        });
         scheduleWebhookDispatch({ pollId: poll.id });
 
         return event;
@@ -1439,7 +1445,7 @@ export const polls = router({
           }),
         );
 
-        scheduleInviteEmailDelivery({ scheduledEventId: scheduledEvent.id });
+        scheduleQueuedEmailDelivery({ batchId: scheduledEvent.id });
 
         track(ctx.user, {
           event: "poll_schedule",

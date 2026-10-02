@@ -560,18 +560,14 @@ export const getEventsChronological = async ({
 
 // Everything an invite email is built from, read at send time so the email
 // describes the event as it is when it goes out. The poll owner is the
-// organizer and host, as on the confirmation the host receives; the booking
-// user is selected for the ban check.
-export function listInviteEmailData({ inviteIds }: { inviteIds: string[] }) {
-  return prisma.scheduledEventInvite.findMany({
-    where: { id: { in: inviteIds } },
+// organizer and host, as on the confirmation the host receives.
+export function getInviteEmailData({ uid }: { uid: string }) {
+  return prisma.scheduledEventInvite.findUnique({
+    where: { uid },
     select: {
-      id: true,
-      inviteeName: true,
       inviteeEmail: true,
       inviteeLocale: true,
       inviteeTimeZone: true,
-      emailAttempts: true,
       scheduledEvent: {
         select: {
           id: true,
@@ -587,7 +583,6 @@ export function listInviteEmailData({ inviteIds }: { inviteIds: string[] }) {
           timeZone: true,
           status: true,
           deletedAt: true,
-          user: { select: { banned: true } },
           space: {
             select: {
               tier: true,

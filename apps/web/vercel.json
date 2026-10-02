@@ -32,7 +32,7 @@
       "schedule": "* * * * *"
     },
     {
-      "path": "/api/house-keeping/send-invite-emails",
+      "path": "/api/house-keeping/send-queued-emails",
       "schedule": "* * * * *"
     }
   ]

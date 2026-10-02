@@ -66,6 +66,7 @@ model User {
   comments                Comment[]
   polls                   Poll[]
   notificationPreferences UserNotificationPreferences?
+  queuedEmails            QueuedEmail[]
   accounts                Account[]
   participants            Participant[]
   paymentMethods          PaymentMethod[]
