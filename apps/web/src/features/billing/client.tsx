@@ -10,14 +10,23 @@ import type { SpaceTier } from "@/features/space/schema";
 
 const TierContext = React.createContext<SpaceTier | null>(null);
 
+/**
+ * A null tier inherits the enclosing provider's, so a nested provider can
+ * override the tier only when it has one of its own.
+ */
 export function TierProvider({
   tier,
   children,
 }: {
-  tier: SpaceTier;
+  tier: SpaceTier | null;
   children: React.ReactNode;
 }) {
-  return <TierContext.Provider value={tier}>{children}</TierContext.Provider>;
+  const inherited = React.useContext(TierContext);
+  return (
+    <TierContext.Provider value={tier ?? inherited}>
+      {children}
+    </TierContext.Provider>
+  );
 }
 
 export function useTier(): SpaceTier {
@@ -37,6 +46,7 @@ export function useIsFree() {
 export type PayWallTrigger = {
   from:
     | "poll-settings"
+    | "poll-details-form"
     | "manage-poll"
     | "custom-branding"
     | "api-keys"
@@ -46,30 +56,46 @@ export type PayWallTrigger = {
     | "billing-settings"
     | "sidebar"
     | "invite-dialog"
+    | "finalize-dialog"
     | "poll-footer";
   setting?: string;
   action?: string;
   pollId?: string;
 };
 
+export type PayWallPricing = {
+  prices: PricesByCurrency;
+  defaultCurrency: string;
+};
+
 type PayWallStore = {
   isOpen: boolean;
   trigger: PayWallTrigger | null;
+  /** Loaded once by the app-wide instance; nested instances read it here. */
+  pricing: PayWallPricing | null;
+  /** Records the trigger without opening the app-wide dialog, for a pay
+   * wall a dialog nests inside itself. */
+  prime: (trigger: PayWallTrigger) => void;
   show: (trigger: PayWallTrigger) => void;
   hide: () => void;
 };
 
-export const usePayWallStore = create<PayWallStore>((set) => ({
+export const usePayWallStore = create<PayWallStore>((set, get) => ({
   isOpen: false,
   trigger: null,
-  show: (trigger) => {
+  pricing: null,
+  prime: (trigger) => {
     posthog?.capture("trigger paywall", {
       from: trigger.from,
       setting: trigger.setting,
       action: trigger.action,
       poll_id: trigger.pollId,
     });
-    set({ isOpen: true, trigger });
+    set({ trigger });
+  },
+  show: (trigger) => {
+    get().prime(trigger);
+    set({ isOpen: true });
   },
   hide: () => set({ isOpen: false }),
 }));
@@ -77,10 +103,8 @@ export const usePayWallStore = create<PayWallStore>((set) => ({
 export const showPayWall = (trigger: PayWallTrigger) =>
   usePayWallStore.getState().show(trigger);
 
-export type PayWallPricing = {
-  prices: PricesByCurrency;
-  defaultCurrency: string;
-};
+export const primePayWall = (trigger: PayWallTrigger) =>
+  usePayWallStore.getState().prime(trigger);
 
 // Same cookie the pricing page writes, so a currency picked in either place
 // is what the other opens in. Shared across subdomains via the cookie domain.

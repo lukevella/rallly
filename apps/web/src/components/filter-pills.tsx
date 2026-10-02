@@ -1,9 +1,9 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
+import { pillVariants } from "@/components/pill-variants";
 
 /**
  * A single-select filter kept in a URL search param. Each option is a link,
@@ -55,12 +55,7 @@ export function FilterPills<T extends string>({
               });
             }}
             aria-current={selected ? "page" : undefined}
-            className={cn(
-              "inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-sm ring-1 ring-transparent ring-inset transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              selected
-                ? "bg-white text-sidebar-accent-foreground ring-button-outline dark:bg-muted"
-                : "text-muted-foreground hover:bg-white dark:hover:bg-muted",
-            )}
+            className={pillVariants({ selected })}
           >
             {option.label}
           </Link>

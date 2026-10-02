@@ -12,6 +12,8 @@ import { Input } from "@rallly/ui/input";
 import { BuildingIcon, PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { showPayWall, useIsFree } from "@/features/billing/client";
+import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
 import {
   ConferencingField,
@@ -24,8 +26,7 @@ import { useFormValidation } from "@/lib/utils/form-validation";
 import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
-// `conferencing` is absent on forms that don't support video calls (the edit
-// form); "Add location" then opens the address field directly.
+// Without `conferencing`, "Add location" opens the address field directly.
 export const PollDetailsForm = ({
   conferencing,
 }: {
@@ -33,6 +34,7 @@ export const PollDetailsForm = ({
 }) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
+  const isFree = useIsFree();
 
   const { requiredString } = useFormValidation();
   const { register } = form;
@@ -137,6 +139,20 @@ export const PollDetailsForm = ({
                 ) : null}
                 <ConferencingProviderMenuItems
                   available={conferencing.available}
+                  upsell={
+                    isFree
+                      ? {
+                          badge: <ProBadge />,
+                          onSelect: (provider) => {
+                            showPayWall({
+                              from: "poll-details-form",
+                              action: "conferencing",
+                              setting: provider,
+                            });
+                          },
+                        }
+                      : undefined
+                  }
                 />
               </DropdownMenuContent>
             </DropdownMenu>

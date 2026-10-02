@@ -20,8 +20,6 @@ describe("formatEventDateTime", () => {
     });
     expect(result).toEqual({
       date: "June 26, 2026",
-      day: "26",
-      dow: "Fri",
       time: undefined,
     });
   });

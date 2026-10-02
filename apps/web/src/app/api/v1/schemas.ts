@@ -181,7 +181,7 @@ const pollSettingsFields = {
   }),
   conferencing: pollConferencingSchema.optional().meta({
     description:
-      "The video call for the event. `zoom` and `meet` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
+      "The video call for the event. `zoom`, `meet` and `teams` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
     examples: [
       { provider: "zoom" },
       {
@@ -446,7 +446,7 @@ const pollSchema = z
     location: z.string().nullable().meta({ example: "Conference Room A" }),
     conferencing: pollConferencingSchema.nullable().meta({
       description:
-        "The video call for the event, or `null`. A `zoom` or `meet` entry has no link until the poll is finalized; a `custom` entry carries the organizer's label and, when given, the link.",
+        "The video call for the event, or `null`. A `zoom`, `meet` or `teams` entry has no link until the poll is finalized; a `custom` entry carries the organizer's label and, when given, the link.",
       example: { provider: "zoom" },
     }),
     timeZone: z.string().nullable().meta({ example: "Europe/London" }),

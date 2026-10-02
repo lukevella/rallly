@@ -1,29 +1,21 @@
-import {
-  Column,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Preview,
-  Row,
-  Section,
-} from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
+import { EventDetails } from "../components/event-details";
 import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
-  borderColor,
   Container,
   Heading,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
 import type { SendArgs } from "../send";
 import { sendRenderedEmail } from "../send";
-import type { EmailChrome } from "../types";
+import type { EmailChrome, EmailConferencing } from "../types";
 
 export type EventRsvpConfirmationEmailProps = {
   locale?: string;
@@ -31,22 +23,20 @@ export type EventRsvpConfirmationEmailProps = {
   title: string;
   hostName: string;
   response: "accepted" | "declined";
-  day: string;
-  dow: string;
   date: string;
   time?: string;
   location?: string;
+  conferencing?: EmailConferencing;
 };
 
 async function EventRsvpConfirmationEmail({
   title,
   hostName,
   response,
-  day,
-  dow,
   date,
   time,
   location,
+  conferencing,
   locale = "en",
   chrome,
 }: EventRsvpConfirmationEmailProps) {
@@ -92,7 +82,7 @@ async function EventRsvpConfirmationEmail({
                 defaults="You accepted the invitation to <b>{title}</b> hosted by <b>{hostName}</b>. The event is scheduled for:"
                 values={{ hostName, title }}
                 components={{
-                  b: <strong />,
+                  b: <Strong />,
                 }}
               />
             ) : (
@@ -104,54 +94,19 @@ async function EventRsvpConfirmationEmail({
                 defaults="You declined the invitation to <b>{title}</b> hosted by <b>{hostName}</b>. The event is scheduled for:"
                 values={{ hostName, title }}
                 components={{
-                  b: <strong />,
+                  b: <Strong />,
                 }}
               />
             )}
           </Text>
-          <Section data-testid="date-section">
-            <Row>
-              <Column style={{ width: 48 }}>
-                <Section
-                  style={{
-                    borderRadius: 5,
-                    margin: 0,
-                    width: 48,
-                    height: 48,
-                    textAlign: "center",
-                    border: `1px solid ${borderColor}`,
-                  }}
-                >
-                  <Text
-                    style={{ margin: "0 0 4px 0", fontSize: 10, lineHeight: 1 }}
-                  >
-                    {dow}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      lineHeight: 1,
-                      fontWeight: "bold",
-                      margin: 0,
-                    }}
-                  >
-                    {day}
-                  </Text>
-                </Section>
-              </Column>
-              <Column style={{ paddingLeft: 16 }} align="left">
-                <Text style={{ margin: 0, fontWeight: "bold" }}>{date}</Text>
-                <Text light={true} style={{ margin: 0 }}>
-                  {time ?? t("allDay", { defaultValue: "All day" })}
-                </Text>
-              </Column>
-            </Row>
-          </Section>
-          {location ? (
-            <Text light={true} style={{ margin: "8px 0 0 0" }}>
-              {location}
-            </Text>
-          ) : null}
+          <EventDetails
+            date={date}
+            time={time}
+            location={location}
+            conferencing={conferencing}
+            baseUrl={chrome.baseUrl}
+            locale={locale}
+          />
           <Text>
             {t("eventRsvpConfirmationAttachmentNote", {
               defaultValue:
@@ -170,11 +125,13 @@ EventRsvpConfirmationEmail.PreviewProps = {
   title: "Team Offsite",
   hostName: "Host",
   response: "accepted",
-  day: "12",
-  dow: "Fri",
   date: "Friday, 12th June 2020",
   time: "6:00 PM to 11:00 PM BST",
   location: "Codfather, 100 Fish Street, London",
+  conferencing: {
+    provider: "meet",
+    url: "https://meet.google.com/oce-zdyd-aoq",
+  },
   locale: "en",
   chrome: previewChrome,
 } as EventRsvpConfirmationEmailProps;

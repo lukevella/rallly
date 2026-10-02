@@ -78,6 +78,12 @@ const nextConfig: NextConfig = {
         destination: "/settings/profile",
         permanent: true,
       },
+      // Details, dates and settings used to be edited on separate pages.
+      {
+        source: "/poll/:urlId/:page(edit-details|edit-options|edit-settings)",
+        destination: "/poll/:urlId/edit",
+        permanent: true,
+      },
       // Login and registration are a single flow on /login: entering an
       // unknown email creates an account on OTP verification. redirectTo
       // and other query params are passed through automatically.

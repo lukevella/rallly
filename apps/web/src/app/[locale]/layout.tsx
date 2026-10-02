@@ -27,8 +27,6 @@ import { TRPCProvider } from "@/trpc/client/provider";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  // The optical size axis gives headings the Inter Display cut
-  axes: ["opsz"],
 });
 
 export const viewport: Viewport = {

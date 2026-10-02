@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
+import { toEmailConferencing } from "@/emails/conferencing";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
 import { parseLocation } from "@/features/location/data";
@@ -169,7 +170,7 @@ export const events = router({
 
       for (const invite of updatedEvent.invites) {
         if (invite.status !== "declined") {
-          const { day, dow, date, time } = formatEventDateTime({
+          const { date, time } = formatEventDateTime({
             start: updatedEvent.start,
             end: updatedEvent.end,
             allDay: updatedEvent.allDay,
@@ -191,10 +192,16 @@ export const events = router({
               props: {
                 title: updatedEvent.title,
                 hostName: ctx.user.name,
-                day,
-                dow,
                 date,
                 time,
+                location: cancelLocationText,
+                // The meeting may no longer exist, so its link is dropped.
+                conferencing: cancelConferencing
+                  ? {
+                      ...toEmailConferencing(cancelConferencing),
+                      url: undefined,
+                    }
+                  : undefined,
               },
             }),
           );

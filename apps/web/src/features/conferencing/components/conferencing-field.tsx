@@ -13,8 +13,14 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Link } from "@/components/link";
 import { ConferencingProviderIcon } from "@/features/conferencing/components/conferencing-provider-icon";
-import type { ConferencingProvider } from "@/features/conferencing/schema";
-import { conferencingProviderLabels } from "@/features/conferencing/utils";
+import type {
+  ConferencingProvider,
+  PollConferencing,
+} from "@/features/conferencing/schema";
+import {
+  conferencingProviderLabels,
+  isProConferencingProvider,
+} from "@/features/conferencing/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 
 export type ConferencingOptions = {
@@ -31,11 +37,51 @@ type ConferencingFormValues = {
   conferencingLabel?: string;
 };
 
+export const toPollConferencing = (
+  data: ConferencingFormValues,
+): PollConferencing | undefined => {
+  switch (data.conferencingProvider) {
+    case "zoom":
+    case "meet":
+    case "teams":
+      return { provider: data.conferencingProvider };
+    case "custom": {
+      const uri = data.conferencingUrl?.trim();
+      return {
+        provider: "custom",
+        label: data.conferencingLabel?.trim() ?? "",
+        ...(uri ? { uri } : {}),
+      };
+    }
+    default:
+      return undefined;
+  }
+};
+
+export const toConferencingFormValues = (
+  conferencing: PollConferencing | null,
+): Required<ConferencingFormValues> => ({
+  conferencingProvider: conferencing?.provider ?? "",
+  conferencingUrl:
+    conferencing?.provider === "custom" ? (conferencing.uri ?? "") : "",
+  conferencingLabel:
+    conferencing?.provider === "custom" ? conferencing.label : "",
+});
+
 // Menu entries for the shared "Add location" menu. Renders nothing once a
-// choice is made: an event carries one meeting link.
+// choice is made: an event carries one meeting link. A caller on a free
+// plan passes `upsell` to mark the Pro providers and take the click, so a
+// choice that can never be cashed in is not made. Google Meet and a pasted
+// link are never gated.
 export function ConferencingProviderMenuItems({
   available,
-}: Pick<ConferencingOptions, "available">) {
+  upsell,
+}: Pick<ConferencingOptions, "available"> & {
+  upsell?: {
+    badge: React.ReactNode;
+    onSelect: (provider: ConferencingProvider) => void;
+  };
+}) {
   const form = useFormContext<ConferencingFormValues>();
   const value = form.watch("conferencingProvider");
 
@@ -48,19 +94,27 @@ export function ConferencingProviderMenuItems({
       <DropdownMenuLabel>
         <Trans i18nKey="videoCall" defaults="Video call" />
       </DropdownMenuLabel>
-      {available.map((provider) => (
-        <DropdownMenuItem
-          key={provider}
-          onClick={() => {
-            form.setValue("conferencingProvider", provider, {
-              shouldDirty: true,
-            });
-          }}
-        >
-          <ConferencingProviderIcon provider={provider} size={16} />
-          {conferencingProviderLabels[provider]}
-        </DropdownMenuItem>
-      ))}
+      {available.map((provider) => {
+        const gate = isProConferencingProvider(provider) ? upsell : undefined;
+        return (
+          <DropdownMenuItem
+            key={provider}
+            onClick={() => {
+              if (gate) {
+                gate.onSelect(provider);
+                return;
+              }
+              form.setValue("conferencingProvider", provider, {
+                shouldDirty: true,
+              });
+            }}
+          >
+            <ConferencingProviderIcon provider={provider} size={16} />
+            {conferencingProviderLabels[provider]}
+            {gate?.badge}
+          </DropdownMenuItem>
+        );
+      })}
       <DropdownMenuItem
         onClick={() => {
           form.setValue("conferencingProvider", "custom", {

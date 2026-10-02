@@ -11,6 +11,7 @@ export type AppErrorCode =
   | "SETUP_REQUIRED"
   | "TOO_MANY_REQUESTS"
   | "CONFERENCING_NOT_CONNECTED"
+  | "CONFERENCING_CANNOT_HOST"
   | "CONFERENCING_FAILED";
 
 export class AppError extends Error {

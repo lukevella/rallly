@@ -27,7 +27,7 @@ export class PollPage {
   async openShareDialog() {
     const dialog = this.page.getByRole("dialog", { name: "Share" });
     if (!(await dialog.isVisible())) {
-      await this.page.getByRole("button", { name: "Share" }).click();
+      await this.page.getByRole("button", { name: "Share" }).first().click();
     }
     await expect(dialog).toBeVisible();
     return dialog;
@@ -47,9 +47,9 @@ export class PollPage {
     const pollUrl = page.url();
     await page.getByRole("button", { name: "Manage" }).click();
 
-    await page.getByRole("menuitem", { name: "Edit options" }).click();
+    await page.getByRole("menuitem", { name: "Edit" }).click();
 
-    await page.waitForURL(`${pollUrl}/edit-options`);
+    await page.waitForURL(`${pollUrl}/edit`);
 
     return new EditOptionsPage(page);
   }

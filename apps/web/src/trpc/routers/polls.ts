@@ -1,14 +1,17 @@
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
-import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
 import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
-import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { getInstanceBranding } from "@/emails/branding";
+import { toEmailConferencing } from "@/emails/conferencing";
+import { scheduleQueuedEmailDelivery } from "@/emails/queue";
 import { recordPollActivities } from "@/features/activity/mutations";
+import { getPollChanges } from "@/features/activity/utils";
+import { resolveSpaceTier } from "@/features/billing/utils";
 import {
   getConnectedConferencingProviders,
   parsePollConferencing,
@@ -24,6 +27,7 @@ import {
   getConferencingUri,
   moderatedLinkText,
 } from "@/features/conferencing/utils";
+import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
@@ -32,14 +36,22 @@ import {
   hasPollAdminAccess,
 } from "@/features/poll/data";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
+import {
+  getFinalizePlanGate,
+  summarizeNotifySelection,
+} from "@/features/poll/utils";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import type { SpaceTier } from "@/features/space/schema";
 import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
 } from "@/features/space/utils";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
-import { dayjs } from "@/lib/dayjs";
+import {
+  wallTimeDiffInMinutes,
+  wallTimeToInstant,
+} from "@/lib/datetime/wall-time";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -47,7 +59,6 @@ import {
   createRateLimitMiddleware,
   possiblyPublicProcedure,
   privateProcedure,
-  proProcedure,
   publicProcedure,
   requireUserMiddleware,
   router,
@@ -62,9 +73,9 @@ const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 // Mirrors the auto-close-polls house-keeping task: an option ends at
 // start + duration, with all-day options (duration 0) treated as 24h.
 const optionEndsInFuture = (option: { startTime: Date; duration: number }) =>
-  dayjs(option.startTime)
-    .add(option.duration === 0 ? 24 * 60 : option.duration, "minute")
-    .isAfter(dayjs());
+  option.startTime.getTime() +
+    (option.duration === 0 ? 24 * 60 : option.duration) * 60_000 >
+  Date.now();
 
 async function mintConferencing({
   userId,
@@ -107,15 +118,44 @@ async function mintConferencing({
   }
 
   const label = conferencingProviderLabels[conferencing.provider];
-  const code =
-    result.reason === "not_connected"
-      ? "CONFERENCING_NOT_CONNECTED"
-      : "CONFERENCING_FAILED";
+  const code = (
+    {
+      not_connected: "CONFERENCING_NOT_CONNECTED",
+      cannot_host: "CONFERENCING_CANNOT_HOST",
+      provider_error: "CONFERENCING_FAILED",
+    } as const
+  )[result.reason];
   throw new TRPCError({
     code: "PRECONDITION_FAILED",
     message: `${label} meeting could not be created (${code})`,
     cause: new AppError({ code, message: `${label}: ${result.reason}` }),
   });
+}
+
+const toOptionSnapshot = (option: {
+  id: string;
+  startTime: Date;
+  duration: number;
+}) => ({
+  optionId: option.id,
+  start: option.startTime.toISOString(),
+  duration: option.duration,
+});
+
+// A poll's paid features follow the poll's space, which is not always the
+// active one: the admin page authorizes against the poll's space, so a
+// member of several spaces can manage a poll outside the space they have
+// selected. A poll outside any space falls back to the active space, the
+// tier its admin page shows. The active tier is the coerced DTO's, so both
+// branches agree with the client gate.
+function getPollTier({
+  space,
+  activeSpaceTier,
+}: {
+  space: { tier: SpaceTier } | null;
+  activeSpaceTier: SpaceTier;
+}) {
+  return space ? resolveSpaceTier(space.tier) : activeSpaceTier;
 }
 
 export const polls = router({
@@ -265,12 +305,12 @@ export const polls = router({
       const timeZone = isTimePoll ? input.timeZone : null;
 
       const optionsData = input.options.map((option) => ({
-        startTime:
-          timeZone && option.endDate
-            ? dayjs(option.startDate).tz(timeZone, true).toDate()
-            : dayjs(option.startDate).utc(true).toDate(),
+        startTime: wallTimeToInstant(
+          option.startDate,
+          timeZone && option.endDate ? timeZone : "UTC",
+        ),
         duration: option.endDate
-          ? dayjs(option.endDate).diff(dayjs(option.startDate), "minute")
+          ? wallTimeDiffInMinutes(option.startDate, option.endDate)
           : 0,
       }));
 
@@ -399,6 +439,8 @@ export const polls = router({
         title: z.string().trim().optional(),
         timeZone: timeZoneInput,
         location: z.string().trim().optional(),
+        // Omitted leaves it unchanged; null removes it.
+        conferencing: pollConferencingSchema.nullable().optional(),
         description: z
           .string()
           .trim()
@@ -426,6 +468,47 @@ export const polls = router({
         });
       }
 
+      const current = await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: { status: true, userId: true, conferencing: true },
+      });
+
+      if (!current) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // The booked event holds its own copy of the poll's details, so an edit
+      // after booking would never reach it.
+      if (current.status === "scheduled") {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A scheduled poll cannot be edited",
+        });
+      }
+
+      // The meeting is minted from the owner's account at booking, whoever
+      // edits. Checked only when the provider changes, so an unrelated edit
+      // still saves after the owner disconnects.
+      const conferencing = input.conferencing;
+      const priorConferencing = parsePollConferencing(current.conferencing, {
+        pollId,
+      });
+      if (
+        conferencing &&
+        conferencing.provider !== "custom" &&
+        conferencing.provider !== priorConferencing?.provider
+      ) {
+        const connected = current.userId
+          ? await getConnectedConferencingProviders(current.userId)
+          : [];
+        if (!connected.includes(conferencing.provider)) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "Conferencing provider is not connected",
+          });
+        }
+      }
+
       const moderation = await moderateContent({
         userId: ctx.user.id,
         userEmail: ctx.user.email,
@@ -433,6 +516,10 @@ export const polls = router({
           Title: input.title || "",
           Description: input.description || "",
           Location: input.location || "",
+          Conferencing:
+            conferencing?.provider === "custom"
+              ? `${conferencing.label} ${moderatedLinkText(conferencing.uri)}`
+              : "",
         },
       });
 
@@ -461,20 +548,24 @@ export const polls = router({
 
             if (end) {
               return {
-                startTime: input.timeZone
-                  ? dayjs(start).tz(input.timeZone, true).toDate()
-                  : dayjs(start).utc(true).toDate(),
-                duration: dayjs(end).diff(dayjs(start), "minute"),
+                startTime: wallTimeToInstant(start, input.timeZone ?? "UTC"),
+                duration: wallTimeDiffInMinutes(start, end),
                 pollId,
               };
             } else {
               return {
-                startTime: dayjs(start).utc(true).toDate(),
+                startTime: wallTimeToInstant(start, "UTC"),
                 duration: 0,
                 pollId,
               };
             }
           }) ?? [];
+
+        // Lock the poll row for the rest of the transaction. Concurrent edits
+        // then queue, so each reads the values the previous one committed and
+        // records the right previous value. It is also the lock vote writes
+        // take, which the tentative vote check below relies on.
+        await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
 
         // Prior persisted values, read before the update so poll_updated is
         // recorded only when a detail or setting actually changes (the edit
@@ -484,6 +575,7 @@ export const polls = router({
           select: {
             title: true,
             location: true,
+            conferencing: true,
             description: true,
             timeZone: true,
             hideParticipants: true,
@@ -505,12 +597,9 @@ export const polls = router({
         // poll whose responses are all yes/no can still be switched, and an
         // organizer who turned it off can always turn it back on.
         if (input.allowTentativeVotes === false && prior.allowTentativeVotes) {
-          // Take the same row lock the vote writes take, so a tentative vote
-          // committing concurrently either lands before this count sees it or
-          // waits and then fails its own check. Without the lock, READ
-          // COMMITTED lets one slip in between the count and the update.
-          await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
-
+          // The row lock taken above makes a tentative vote committing
+          // concurrently either land before this count sees it or wait and
+          // then fail its own check.
           const tentativeVoteCount = await tx.vote.count({
             where: { pollId, type: "ifNeedBe" },
           });
@@ -585,14 +674,17 @@ export const polls = router({
         });
         const kind = (maxDuration._max.duration ?? 0) > 0 ? "time" : "date";
 
-        await tx.poll.update({
-          select: { id: true },
+        // Conditional on status so a booking that lands after the check above
+        // rolls this edit back instead of it silently missing the event.
+        const { count: updated } = await tx.poll.updateMany({
           where: {
             id: pollId,
+            status: { not: "scheduled" },
           },
           data: {
             title: input.title,
             location: input.location,
+            conferencing: conferencing === null ? Prisma.DbNull : conferencing,
             description: input.description,
             // Date-only polls are floating: keep timeZone null so it stays the
             // single source of truth for whether options are timezone-bound.
@@ -606,6 +698,13 @@ export const polls = router({
           },
         });
 
+        if (updated === 0) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "A scheduled poll cannot be edited",
+          });
+        }
+
         // The effective persisted timeZone: forced null for date-only polls,
         // untouched when the input omits it.
         const nextTimeZone =
@@ -615,54 +714,69 @@ export const polls = router({
               : input.timeZone
             : null;
 
-        // Empty strings and null are the same absent value to the reader, so
-        // normalize before comparing.
-        const detailsOrSettingsChanged =
-          (input.title !== undefined && input.title !== prior.title) ||
-          (input.location !== undefined &&
-            (input.location || null) !== (prior.location || null)) ||
-          (input.description !== undefined &&
-            (input.description || null) !== (prior.description || null)) ||
-          nextTimeZone !== prior.timeZone ||
-          (input.hideParticipants !== undefined &&
-            input.hideParticipants !== prior.hideParticipants) ||
-          (input.disableComments !== undefined &&
-            input.disableComments !== prior.disableComments) ||
-          (input.allowTentativeVotes !== undefined &&
-            input.allowTentativeVotes !== prior.allowTentativeVotes) ||
-          (input.hideScores !== undefined &&
-            input.hideScores !== prior.hideScores) ||
-          (input.requireParticipantEmail !== undefined &&
-            input.requireParticipantEmail !== prior.requireParticipantEmail);
+        const changes = getPollChanges({
+          prior: {
+            title: prior.title,
+            description: prior.description,
+            location: prior.location,
+            conferencing: parsePollConferencing(prior.conferencing, {
+              pollId,
+            }),
+            timeZone: prior.timeZone,
+            hideParticipants: prior.hideParticipants,
+            hideScores: prior.hideScores,
+            disableComments: prior.disableComments,
+            allowTentativeVotes: prior.allowTentativeVotes,
+            requireParticipantEmail: prior.requireParticipantEmail,
+          },
+          next: {
+            title: input.title,
+            description: input.description,
+            location: input.location,
+            conferencing,
+            timeZone: nextTimeZone,
+            hideParticipants: input.hideParticipants,
+            hideScores: input.hideScores,
+            disableComments: input.disableComments,
+            allowTentativeVotes: input.allowTentativeVotes,
+            requireParticipantEmail: input.requireParticipantEmail,
+          },
+        });
 
         await recordPollActivities(tx, [
-          ...deletedOptions.map((option) => ({
-            pollId,
-            type: "option_deleted" as const,
-            userId: ctx.user.id,
-            optionId: option.id,
-            payload: {
-              start: option.startTime.toISOString(),
-              duration: option.duration,
-            },
-          })),
-          ...addedOptions.map((option) => ({
-            pollId,
-            type: "option_added" as const,
-            userId: ctx.user.id,
-            optionId: option.id,
-            payload: {
-              start: option.startTime.toISOString(),
-              duration: option.duration,
-            },
-          })),
-          ...(detailsOrSettingsChanged
+          ...(deletedOptions.length > 0
+            ? [
+                {
+                  pollId,
+                  type: "options_deleted" as const,
+                  userId: ctx.user.id,
+                  payload: {
+                    options: deletedOptions.map(toOptionSnapshot),
+                    timeZone: prior.timeZone,
+                  },
+                },
+              ]
+            : []),
+          ...(addedOptions.length > 0
+            ? [
+                {
+                  pollId,
+                  type: "options_added" as const,
+                  userId: ctx.user.id,
+                  payload: {
+                    options: addedOptions.map(toOptionSnapshot),
+                    timeZone: nextTimeZone,
+                  },
+                },
+              ]
+            : []),
+          ...(changes.length > 0
             ? [
                 {
                   pollId,
                   type: "poll_updated" as const,
                   userId: ctx.user.id,
-                  payload: {},
+                  payload: { changes },
                 },
               ]
             : []),
@@ -929,9 +1043,10 @@ export const polls = router({
             start: res.scheduledEvent.start,
             duration: res.scheduledEvent.allDay
               ? 0
-              : dayjs(res.scheduledEvent.end).diff(
-                  dayjs(res.scheduledEvent.start),
-                  "minute",
+              : Math.trunc(
+                  (res.scheduledEvent.end.getTime() -
+                    res.scheduledEvent.start.getTime()) /
+                    60_000,
                 ),
             status: res.scheduledEvent.status,
           }
@@ -965,12 +1080,12 @@ export const polls = router({
         event,
       };
     }),
-  book: proProcedure
+  book: spaceProcedure
     .input(
       z.object({
         pollId: z.string(),
         optionId: z.string(),
-        notify: z.enum(["none", "all", "attendees"]),
+        notifyParticipantIds: z.array(z.string()),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -998,15 +1113,7 @@ export const polls = router({
           description: true,
           spaceId: true,
           hideParticipants: true,
-          space: {
-            select: {
-              tier: true,
-              showBranding: true,
-              hideAttribution: true,
-              primaryColor: true,
-              image: true,
-            },
-          },
+          space: { select: { tier: true } },
           user: {
             select: {
               id: true,
@@ -1095,11 +1202,31 @@ export const polls = router({
       const uid = `${eventId}@rallly.co`;
 
       // A second booking would mint a second meeting and orphan the first
-      // event, so a poll is booked once; reopen it to book again.
+      // event, so a poll is booked once.
       if (poll.status === "scheduled") {
         throw new TRPCError({
           code: "CONFLICT",
           message: "Poll is already scheduled",
+        });
+      }
+
+      const pollConferencing = parsePollConferencing(poll.conferencing, {
+        pollId: poll.id,
+      });
+
+      // Finalizing and notifying are free; a Zoom or Teams meeting is what
+      // the plan pays for.
+      const planGate = getFinalizePlanGate({
+        tier: getPollTier({
+          space: poll.space,
+          activeSpaceTier: ctx.space.tier,
+        }),
+        conferencing: pollConferencing,
+      });
+      if (planGate) {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message: "Creating a video meeting requires a paid plan",
         });
       }
 
@@ -1109,9 +1236,7 @@ export const polls = router({
       // owner's account hosts the meeting, whichever member books it.
       const conferencing = await mintConferencing({
         userId: poll.user.id,
-        conferencing: parsePollConferencing(poll.conferencing, {
-          pollId: poll.id,
-        }),
+        conferencing: pollConferencing,
         title: poll.title,
         start: eventTimes.start,
         end: eventTimes.end,
@@ -1126,6 +1251,9 @@ export const polls = router({
       // does: as the location when there is no place, and in the description.
       const conferencingUri = conferencing
         ? getConferencingUri(conferencing)
+        : undefined;
+      const emailConferencing = conferencing
+        ? toEmailConferencing(conferencing)
         : undefined;
       const event = createIcsEvent({
         uid,
@@ -1147,14 +1275,20 @@ export const polls = router({
 
       // A poll can have several participants sharing an email; an event holds at
       // most one invite per email, so collapse them, keeping the most committal
-      // response (accepted > tentative > declined) so a stale "no" duplicate
-      // can't bury an "accepted".
+      // response (accepted > tentative > declined > pending) so a stale "no"
+      // duplicate can't bury an "accepted". No vote on the option is pending,
+      // not declined: the invitee never answered.
       const inviteStatusByVote = {
         yes: "accepted",
         ifNeedBe: "tentative",
         no: "declined",
       } as const;
-      const inviteStatusRank = { accepted: 0, tentative: 1, declined: 2 };
+      const inviteStatusRank = {
+        accepted: 0,
+        tentative: 1,
+        declined: 2,
+        pending: 3,
+      };
       const invitesByEmail = new Map<
         string,
         {
@@ -1162,15 +1296,21 @@ export const polls = router({
           inviteeName: string;
           inviteeEmail: string;
           inviteeTimeZone: string | null | undefined;
-          status: (typeof inviteStatusByVote)[keyof typeof inviteStatusByVote];
+          inviteeLocale: string | null;
+          status: keyof typeof inviteStatusRank;
         }
       >();
+      // An address is emailed when any participant behind it was selected.
+      const notifyIds = new Set(input.notifyParticipantIds);
+      const notifyEmails = new Set(
+        poll.participants.flatMap((p) =>
+          p.email && notifyIds.has(p.id) ? [p.email.trim().toLowerCase()] : [],
+        ),
+      );
       for (const p of poll.participants) {
         if (!p.email) continue;
-        const status =
-          inviteStatusByVote[
-            p.votes.find((v) => v.optionId === input.optionId)?.type ?? "no"
-          ];
+        const vote = p.votes.find((v) => v.optionId === input.optionId)?.type;
+        const status = vote ? inviteStatusByVote[vote] : "pending";
         const key = p.email.trim().toLowerCase();
         const existing = invitesByEmail.get(key);
         if (
@@ -1184,10 +1324,14 @@ export const polls = router({
           inviteeName: p.name,
           inviteeEmail: p.email,
           inviteeTimeZone: p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
+          inviteeLocale: p.locale,
           status,
         });
       }
       const inviteData = Array.from(invitesByEmail.values());
+      const notifyInviteUids = Array.from(invitesByEmail)
+        .filter(([key]) => notifyEmails.has(key))
+        .map(([, invite]) => invite.uid);
 
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
@@ -1240,6 +1384,14 @@ export const polls = router({
             },
           },
         ]);
+        // Queued with the event so the selection is kept even if the
+        // request dies before anything is sent.
+        await queueEmails(tx, {
+          kind: "scheduled_event_invite",
+          userId: ctx.user.id,
+          batchId: event.id,
+          subjectIds: notifyInviteUids,
+        });
         scheduleWebhookDispatch({ pollId: poll.id });
 
         return event;
@@ -1258,44 +1410,11 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const participantsToEmail: Array<{
-          name: string;
-          email: string;
-          locale: string | undefined;
-          timeZone: string | null;
-        }> = [];
-
-        if (input.notify === "all") {
-          poll.participants.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-                timeZone: p.timeZone,
-              });
-            }
-          });
-        }
-
-        if (input.notify === "attendees") {
-          attendees.forEach((p) => {
-            if (p.email) {
-              participantsToEmail.push({
-                name: p.name,
-                email: p.email,
-                locale: p.locale ?? undefined,
-                timeZone: p.timeZone,
-              });
-            }
-          });
-        }
-
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
         const hostLocale = poll.user.locale ?? undefined;
 
-        const { date, day, dow, time } = formatEventDateTime({
+        const { date, time } = formatEventDateTime({
           start: scheduledEvent.start,
           end: scheduledEvent.end,
           allDay: scheduledEvent.allDay,
@@ -1304,7 +1423,6 @@ export const polls = router({
           timeFormat: poll.user.timeFormat,
         });
 
-        const space = poll.space;
         after(async () =>
           sendFinalizeHostEmail({
             to: hostEmail,
@@ -1318,7 +1436,8 @@ export const polls = router({
             props: {
               name: hostName,
               pollUrl: absoluteUrl(`/poll/${poll.id}`),
-              location: poll.location,
+              location: poll.location || undefined,
+              conferencing: emailConferencing,
               title: poll.title,
               attendees: poll.participants
                 .filter((p) =>
@@ -1328,53 +1447,26 @@ export const polls = router({
                 )
                 .map((p) => p.name),
               date,
-              day,
-              dow,
               time,
             },
           }),
         );
 
-        for (const p of participantsToEmail) {
-          const { date, day, dow, time } = formatEventDateTime({
-            start: scheduledEvent.start,
-            end: scheduledEvent.end,
-            allDay: scheduledEvent.allDay,
-            timeZone: scheduledEvent.timeZone,
-            inviteeTimeZone: p.timeZone,
-            locale: p.locale,
-          });
-          after(async () =>
-            sendFinalizeParticipantEmail({
-              to: p.email,
-              locale: p.locale ?? undefined,
-              branding: space
-                ? await getSpaceBranding(space)
-                : await getInstanceBranding(),
-              icalEvent: {
-                filename: "invite.ics",
-                method: "request",
-                content: event.value,
-              },
-              props: {
-                pollUrl: shortUrl(`/invite/${poll.id}`),
-                title: poll.title,
-                hostName: poll.user?.name ?? "",
-                date,
-                day,
-                dow,
-                time,
-              },
-            }),
-          );
-        }
+        scheduleQueuedEmailDelivery({ batchId: scheduledEvent.id });
 
         track(ctx.user, {
           event: "poll_schedule",
           properties: {
             attendee_count: attendees.length,
-            days_since_created: dayjs().diff(poll.createdAt, "day"),
+            days_since_created: Math.trunc(
+              (Date.now() - poll.createdAt.getTime()) / 86_400_000,
+            ),
             participant_count: poll.participants.length,
+            ...summarizeNotifySelection({
+              participants: poll.participants,
+              optionId: input.optionId,
+              notifyParticipantIds: input.notifyParticipantIds,
+            }),
           },
           groups: {
             poll: poll.id,
@@ -1401,11 +1493,12 @@ export const polls = router({
       await prisma.$transaction(async (tx) => {
         // Conditional transition: only the call that actually flips the
         // status appends a lifecycle event, so repeated or concurrent calls
-        // can't record a reopen that didn't happen.
+        // can't record a reopen that didn't happen. Scheduling is final: the
+        // booked event has already gone out to attendees.
         const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-            status: { not: "open" },
+            status: { notIn: ["open", "scheduled"] },
           },
           data: {
             status: "open",
@@ -1414,6 +1507,16 @@ export const polls = router({
         });
 
         if (count === 0) {
+          const current = await tx.poll.findUnique({
+            where: { id: input.pollId },
+            select: { status: true },
+          });
+          if (current?.status === "scheduled") {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "A scheduled poll cannot be reopened",
+            });
+          }
           return;
         }
 
@@ -1472,11 +1575,12 @@ export const polls = router({
         // mutations: an already-closed poll keeps its closedReason (so an
         // auto-close stays "auto"), and only the call that actually flips
         // the status appends a lifecycle event — repeated or concurrent
-        // calls can't record a close that didn't happen.
+        // calls can't record a close that didn't happen. A scheduled poll is
+        // final; closing it would let reopen delete the booked event.
         const { count } = await tx.poll.updateMany({
           where: {
             id: input.pollId,
-            status: { not: "closed" },
+            status: { notIn: ["closed", "scheduled"] },
           },
           data: {
             status: "closed",
@@ -1506,7 +1610,7 @@ export const polls = router({
         },
       });
     }),
-  duplicate: proProcedure
+  duplicate: spaceProcedure
     .input(
       z.object({
         pollId: z.string(),
@@ -1537,6 +1641,7 @@ export const polls = router({
           disableComments: true,
           allowTentativeVotes: true,
           spaceId: true,
+          space: { select: { tier: true } },
           kind: true,
           options: {
             select: {
@@ -1549,6 +1654,17 @@ export const polls = router({
 
       if (!poll) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Poll not found" });
+      }
+
+      if (
+        getPollTier({ space: poll.space, activeSpaceTier: ctx.space.tier }) !==
+        "pro"
+      ) {
+        throw new TRPCError({
+          code: "PAYMENT_REQUIRED",
+          message:
+            "You must have an active paid subscription to perform this action",
+        });
       }
 
       const newPoll = await prisma.$transaction(async (tx) => {

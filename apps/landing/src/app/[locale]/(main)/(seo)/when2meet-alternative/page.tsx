@@ -2,7 +2,6 @@
 
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
-import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
 import {
   CompareTable,
@@ -226,12 +225,7 @@ export default async function Page(props: {
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="home"
-                    i18nKey="when2meetComparisonWithPro"
-                    defaults="With Rallly Pro"
-                  />
+                  <CompareTableCheck label={included} />
                 </CompareTableCell>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
@@ -411,7 +405,7 @@ export default async function Page(props: {
               i18nKey="faqIsFreeAnswer"
               defaults="Yes. 99% of people use Rallly completely free. Creating polls, sharing them, and collecting votes costs nothing and there is no limit on participants. We also offer <0>Rallly Pro</0>, a paid subscription with features that are useful if you use Rallly professionally, like adding your own branding, removing Rallly attribution from your polls, and keeping polls around indefinitely."
               components={[
-                <Link
+                <LinkBase
                   key="pricing"
                   className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                   href="/pricing"
@@ -450,7 +444,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="faqAfterVotingAnswer"
-              defaults="The results show which times work for the most people. With Rallly Pro you can finalize the poll, which notifies participants of the chosen time by email."
+              defaults="The results show which times work for the most people. Finalize the poll to lock in the chosen time and notify participants by email with a calendar invite."
             />
           </FaqItem>
           <FaqItem
@@ -469,7 +463,7 @@ export default async function Page(props: {
               i18nKey="faqPrivacyAnswer"
               defaults="Yes. Privacy is central to how we build Rallly. We do not show ads or sell your data, we collect only what we need to run the service, and polls on the free plan are deleted automatically once they become inactive. Rallly is also open source, so anyone can inspect how their data is handled. You can read the details in our <0>privacy policy</0>."
               components={[
-                <Link
+                <LinkBase
                   key="privacy"
                   className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
                   href="/privacy-policy"

@@ -4,7 +4,6 @@ import { ClockIcon } from "lucide-react";
 import type * as React from "react";
 import { useOptions } from "@/features/poll/components/poll-context";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
-import { Trans } from "@/i18n/client";
 
 const TimeRange: React.FunctionComponent<{
   start: string;
@@ -157,11 +156,7 @@ const PollHeader = () => {
                     end={option.endTime}
                     duration={option.duration}
                   />
-                ) : (
-                  <p className="whitespace-nowrap font-normal text-muted-foreground text-xs">
-                    <Trans i18nKey="allDay" defaults="All day" />
-                  </p>
-                )}
+                ) : null}
                 <ConnectedScoreSummary optionId={option.optionId} />
               </div>
             </th>

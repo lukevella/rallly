@@ -5,22 +5,27 @@ import type { AuthorizedSpaceId } from "@/features/space/types";
 import { parsePollActivity } from "./schema";
 
 /**
- * Latest activity for a poll, newest first. Rows whose type or payload this
+ * Latest activity for a poll, newest first; every row when no limit is
+ * given. Rows whose type or payload this
  * version of the vocabulary can't interpret are skipped rather than failing
  * the feed.
  */
 export async function listPollActivity({
   pollId,
   spaceId,
+  participantId,
   limit,
 }: {
   pollId: string;
   spaceId: AuthorizedSpaceId;
-  limit: number;
+  /** Only the events about this response. */
+  participantId?: string;
+  limit?: number;
 }) {
   const rows = await prisma.pollActivity.findMany({
     where: {
       pollId,
+      ...(participantId && { participantId }),
       poll: {
         spaceId,
         deleted: false,

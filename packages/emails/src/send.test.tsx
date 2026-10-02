@@ -73,3 +73,32 @@ test("omits unsubscribe headers when no URL is given", async () => {
   expect(sendMail).toHaveBeenCalledTimes(1);
   expect(sendMail.mock.calls[0][0]).toMatchObject({ headers: undefined });
 });
+
+test("redirects SES feedback to SES_FEEDBACK_EMAIL when set", async () => {
+  process.env.SES_FEEDBACK_EMAIL = "complaints@example.com";
+  try {
+    await sendRawEmail({
+      to: "user@example.com",
+      subject: "Hello",
+      text: "Hi",
+    });
+  } finally {
+    delete process.env.SES_FEEDBACK_EMAIL;
+  }
+
+  expect(sendMail).toHaveBeenCalledTimes(1);
+  expect(sendMail.mock.calls[0][0]).toMatchObject({
+    ses: { FeedbackForwardingEmailAddress: "complaints@example.com" },
+  });
+});
+
+test("passes no SES options when SES_FEEDBACK_EMAIL is unset", async () => {
+  await sendRawEmail({
+    to: "user@example.com",
+    subject: "Hello",
+    text: "Hi",
+  });
+
+  expect(sendMail).toHaveBeenCalledTimes(1);
+  expect(sendMail.mock.calls[0][0]).toMatchObject({ ses: undefined });
+});

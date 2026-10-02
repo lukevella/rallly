@@ -1,5 +1,3 @@
-import "@/lib/dayjs";
-
 import { mergeRouters, router } from "../trpc";
 import { auth } from "./auth";
 import { billing } from "./billing";

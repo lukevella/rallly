@@ -1,0 +1,46 @@
+enum QueuedEmailKind {
+  scheduled_event_invite
+
+  @@map("queued_email_kind")
+}
+
+enum QueuedEmailStatus {
+  pending
+  sent
+  skipped
+  failed
+
+  @@map("queued_email_status")
+}
+
+/// An email waiting to be sent by the queue, one row per recipient. The
+/// email is built when it is sent, from the row its subject points at.
+model QueuedEmail {
+  id        String            @id @default(cuid())
+  kind      QueuedEmailKind
+  /// The row the email is about, interpreted by the kind. Not a foreign key:
+  /// kinds point at different tables, and a subject deleted before the send
+  /// makes its handler skip the email.
+  subjectId String            @map("subject_id")
+  /// Groups the emails one action queued, so the action can send its own
+  /// first batch at once and its progress can be read back.
+  batchId   String            @map("batch_id")
+  /// The account whose action queued the email. Banning it skips whatever
+  /// is still pending.
+  userId    String            @map("user_id")
+  status    QueuedEmailStatus @default(pending)
+  attempts  Int               @default(0)
+  claimedAt DateTime?         @map("claimed_at")
+  sentAt    DateTime?         @map("sent_at")
+  lastError String?           @map("last_error")
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([status, updatedAt])
+  @@index([batchId])
+  @@index([userId, status])
+  @@map("queued_emails")
+}

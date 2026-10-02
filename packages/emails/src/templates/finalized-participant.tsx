@@ -1,51 +1,46 @@
-import {
-  Column,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Preview,
-  Row,
-  Section,
-} from "@react-email/components";
+import { Head, Hr, Html, Img, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
+import { EventDetails } from "../components/event-details";
 import { PoweredBy } from "../components/powered-by";
 import { previewChrome } from "../components/preview-chrome";
 import {
   Body,
   Button,
-  borderColor,
   Container,
   Heading,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
 import type { SendArgs } from "../send";
 import { sendRenderedEmail } from "../send";
-import type { EmailChrome } from "../types";
+import type { EmailChrome, EmailConferencing } from "../types";
 
 type FinalizeParticipantEmailProps = {
   locale?: string;
   chrome: EmailChrome;
   date: string;
-  day: string;
-  dow: string;
   time?: string;
   title: string;
   hostName: string;
   pollUrl: string;
+  location?: string;
+  conferencing?: EmailConferencing;
+  /** Their vote on the booked date; omitted when they didn't vote on it. */
+  vote?: "yes" | "ifNeedBe" | "no";
 };
 
 async function FinalizeParticipantEmail({
   title,
   hostName,
   pollUrl,
-  day,
-  dow,
   date,
   time,
+  location,
+  conferencing,
+  vote,
   locale = "en",
   chrome,
 }: FinalizeParticipantEmailProps) {
@@ -80,48 +75,54 @@ async function FinalizeParticipantEmail({
               defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
               values={{ hostName, title }}
               components={{
-                b: <strong />,
+                b: <Strong />,
               }}
             />
           </Text>
-          <Section data-testid="date-section">
-            <Row>
-              <Column style={{ width: 48 }}>
-                <Section
-                  style={{
-                    borderRadius: 5,
-                    margin: 0,
-                    width: 48,
-                    height: 48,
-                    textAlign: "center",
-                    border: `1px solid ${borderColor}`,
-                  }}
-                >
-                  <Text
-                    style={{ margin: "0 0 4px 0", fontSize: 10, lineHeight: 1 }}
-                  >
-                    {dow}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      lineHeight: 1,
-                      fontWeight: "bold",
-                      margin: 0,
-                    }}
-                  >
-                    {day}
-                  </Text>
-                </Section>
-              </Column>
-              <Column style={{ paddingLeft: 16 }} align="left">
-                <Text style={{ margin: 0, fontWeight: "bold" }}>{date}</Text>
-                <Text light={true} style={{ margin: 0 }}>
-                  {time ?? t("allDay", { defaultValue: "All day" })}
-                </Text>
-              </Column>
-            </Row>
-          </Section>
+          <EventDetails
+            date={date}
+            time={time}
+            location={location}
+            conferencing={conferencing}
+            baseUrl={chrome.baseUrl}
+            locale={locale}
+          />
+          {vote === "yes" ? (
+            <Text>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="finalizeParticipant_voteYes"
+                defaults="You voted <b>Yes</b> for this date."
+                components={{ b: <Strong /> }}
+              />
+            </Text>
+          ) : null}
+          {vote === "ifNeedBe" ? (
+            <Text>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="finalizeParticipant_voteIfNeedBe"
+                defaults="You voted <b>If need be</b> for this date."
+                components={{ b: <Strong /> }}
+              />
+            </Text>
+          ) : null}
+          {vote === "no" ? (
+            <Text>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="finalizeParticipant_voteNo"
+                defaults="You voted <b>No</b> for this date."
+                components={{ b: <Strong /> }}
+              />
+            </Text>
+          ) : null}
           <Text>
             {t("finalizeParticipant_content2", {
               defaultValue:
@@ -149,10 +150,14 @@ FinalizeParticipantEmail.PreviewProps = {
   title: "Untitled Poll",
   hostName: "Host",
   pollUrl: "https://rallly.co",
-  day: "12",
-  dow: "Fri",
   date: "Friday, 12th June 2020",
   time: "6:00 PM to 11:00 PM BST",
+  location: "Codfather, 100 Fish Street, London",
+  conferencing: {
+    provider: "meet",
+    url: "https://meet.google.com/oce-zdyd-aoq",
+  },
+  vote: "no",
   locale: "en",
   chrome: previewChrome,
 } as FinalizeParticipantEmailProps;
@@ -167,7 +172,7 @@ export async function sendFinalizeParticipantEmail({
   ...rest
 }: SendArgs<FinalizeParticipantEmailProps>) {
   const { t } = await createEmailI18n(locale);
-  await sendRenderedEmail({
+  return sendRenderedEmail({
     to,
     subject: t("finalizeParticipant_subject", {
       defaultValue: "Date booked for {title}",

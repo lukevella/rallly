@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { usePathname } from "next/navigation";
 import { Link } from "@/components/link";
+import { pillVariants } from "@/components/pill-variants";
 import { Trans } from "@/i18n/client";
 
 export function PollShellTabs() {
@@ -29,7 +29,7 @@ export function PollShellTabs() {
   ];
 
   return (
-    <nav className="flex space-x-4 border-b border-b-border">
+    <nav className="flex items-center gap-1">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href;
         return (
@@ -37,12 +37,7 @@ export function PollShellTabs() {
             key={tab.href}
             href={tab.href}
             aria-current={isActive ? "page" : undefined}
-            className={cn(
-              "-mb-px inline-flex h-9 items-center whitespace-nowrap border-b-2 px-1 pt-1 pb-1 font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-              isActive
-                ? "border-foreground text-foreground"
-                : "border-transparent text-muted-foreground hover:border-accent-border hover:text-accent-foreground",
-            )}
+            className={pillVariants({ selected: isActive })}
           >
             {tab.label}
           </Link>

@@ -182,7 +182,7 @@ const CopyEditLinkMenuItem = ({
   );
 };
 
-const DeleteParticipantModal = ({
+export const DeleteParticipantModal = ({
   open,
   onOpenChange,
   participantId,
@@ -264,7 +264,7 @@ const changeNameSchema = z.object({
   name: z.string().trim().min(1),
 });
 
-const ChangeNameModal = (props: {
+export const ChangeNameModal = (props: {
   oldName: string;
   participantId: string;
   open: boolean;

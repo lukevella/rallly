@@ -5,13 +5,19 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/components/link";
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderContent,
-  PageTitle,
-} from "@/components/page-layout";
-import { loadPoll } from "@/features/poll/loaders";
+  ListView,
+  ListViewActions,
+  ListViewContent,
+  ListViewHeader,
+  ListViewTitle,
+  ListViewTitleBar,
+  ListViewToolbar,
+} from "@/components/list-view";
+import { PollProvider } from "@/features/poll/client";
+import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
+import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
+import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
+import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PollDetailSheet } from "./poll-detail-sheet";
@@ -27,6 +33,31 @@ async function PollPageTitle({
   return poll.title;
 }
 
+async function PollHeaderActions({
+  params,
+}: {
+  params: Promise<{ pollId: string }>;
+}) {
+  const { pollId } = await params;
+  await loadPoll(pollId);
+  // The finalize dialog and CSV export read the whole poll, votes included,
+  // from the poll context the legacy admin page provides.
+  const { poll, participants, comments } = await loadAdminPoll(pollId);
+  return (
+    <PollProvider
+      poll={poll}
+      participants={participants}
+      comments={comments}
+      viewerRole="admin"
+    >
+      <LegacyPollContextProvider>
+        <PollAdminMenu />
+        <PollPrimaryActions />
+      </LegacyPollContextProvider>
+    </PollProvider>
+  );
+}
+
 export default function Layout({
   children,
   params,
@@ -39,9 +70,9 @@ export default function Layout({
   }
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent className="flex items-center gap-2">
+    <ListView>
+      <ListViewHeader>
+        <ListViewTitleBar className="md:pl-4">
           <Link
             href="/polls"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
@@ -51,18 +82,23 @@ export default function Layout({
               <Trans i18nKey="back" defaults="Back" />
             </span>
           </Link>
-          <PageTitle>
+          <ListViewTitle>
             <Suspense fallback={<Skeleton className="h-5 w-40" />}>
               <PollPageTitle params={params} />
             </Suspense>
-          </PageTitle>
-        </PageHeaderContent>
-      </PageHeader>
-      <PageContent>
-        <PollShellTabs />
-        <div className="mt-4 lg:mt-6">{children}</div>
-      </PageContent>
+          </ListViewTitle>
+          <ListViewActions>
+            <Suspense>
+              <PollHeaderActions params={params} />
+            </Suspense>
+          </ListViewActions>
+        </ListViewTitleBar>
+        <ListViewToolbar>
+          <PollShellTabs />
+        </ListViewToolbar>
+      </ListViewHeader>
+      <ListViewContent>{children}</ListViewContent>
       <PollDetailSheet />
-    </PageContainer>
+    </ListView>
   );
 }

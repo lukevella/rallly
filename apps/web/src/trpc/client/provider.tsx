@@ -80,6 +80,15 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
             }),
           );
           break;
+        // Only Microsoft Teams reports this today, so the copy names it.
+        case "CONFERENCING_CANNOT_HOST":
+          toast.error(
+            t("actionErrorConferencingCannotHost", {
+              defaultValue:
+                "Microsoft Teams couldn't create the meeting. Check that your Microsoft account has a Teams license and that you can open Teams with it, then try again.",
+            }),
+          );
+          break;
         case "CONFERENCING_FAILED":
           toast.error(
             t("actionErrorConferencingFailed", {
@@ -167,6 +176,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
       showErrorToast(
         error.data.appError === "INVALID_SESSION" ||
           error.data.appError === "CONFERENCING_NOT_CONNECTED" ||
+          error.data.appError === "CONFERENCING_CANNOT_HOST" ||
           error.data.appError === "CONFERENCING_FAILED"
           ? error.data.appError
           : error.data.code,

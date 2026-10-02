@@ -1,9 +1,33 @@
 import { randomUUID } from "node:crypto";
 import type { SpaceTier, UserRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import dayjs from "dayjs";
 
 export { loginWithEmail } from "@rallly/test-helpers";
+
+/**
+ * A date offset from now, for seeding rows relative to the test's clock.
+ * Negative values go into the past. `startOfHour` zeroes the minutes and
+ * below after the offset is applied.
+ */
+export function fromNow({
+  days = 0,
+  hours = 0,
+  minutes = 0,
+  startOfHour = false,
+}: {
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  startOfHour?: boolean;
+}) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  date.setTime(date.getTime() + (hours * 60 + minutes) * 60_000);
+  if (startOfHour) {
+    date.setMinutes(0, 0, 0);
+  }
+  return date;
+}
 
 export async function createUserInDb({
   email,
@@ -87,7 +111,7 @@ export async function upgradeSpaceToPro({
         currency: "USD",
         interval: "month",
         periodStart: new Date(),
-        periodEnd: dayjs().add(1, "month").toDate(),
+        periodEnd: fromNow({ days: 30 }),
         userId,
         spaceId,
       },
@@ -161,7 +185,7 @@ export async function createTestPoll({
       kind: "time" as const,
       options: {
         create: {
-          startTime: dayjs().add(10, "day").toDate(),
+          startTime: fromNow({ days: 10 }),
           duration: 60,
         },
       },

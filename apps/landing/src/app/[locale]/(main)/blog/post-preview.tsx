@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import Link from "next/link";
+import { LinkBase } from "@/i18n/client/link";
 
 dayjs.extend(localizedFormat);
 
@@ -33,9 +33,9 @@ export const PostPreview = ({
         <time dateTime={date}>{dayjs(date).format("LL")}</time>
       </div>
       <h2 className="mt-2 text-balance font-medium text-gray-800 text-xl tracking-tight">
-        <Link href={`/blog/${slug}`} className="hover:underline">
+        <LinkBase href={`/blog/${slug}`} className="hover:underline">
           {title}
-        </Link>
+        </LinkBase>
       </h2>
       <p className="mt-2 max-w-prose text-pretty text-base/6 text-gray-500">
         {excerpt}

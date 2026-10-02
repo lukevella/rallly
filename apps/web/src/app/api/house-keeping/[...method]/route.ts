@@ -3,6 +3,7 @@ import { Effect } from "effect";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { handle } from "hono/vercel";
+import { runQueuedEmailDelivery } from "@/emails/queue";
 import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
@@ -225,6 +226,22 @@ app.get("/deliver-webhooks", async (c) => {
     logger.info(
       { task: "deliver-webhooks", ...summary },
       "Dispatched webhook deliveries",
+    );
+  }
+
+  return c.json({ success: true, summary });
+});
+
+app.get("/send-queued-emails", async (c) => {
+  // The scheduled drain behind each action's own first batch. Each run
+  // sends one batch, so a large fan-out goes out at that rate.
+  const summary = await runQueuedEmailDelivery({});
+
+  // Runs every minute and most runs find nothing.
+  if (summary.attempted > 0 || summary.abandoned > 0 || summary.purged > 0) {
+    logger.info(
+      { task: "send-queued-emails", ...summary },
+      "Sent queued emails",
     );
   }
 

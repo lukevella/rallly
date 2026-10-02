@@ -65,7 +65,7 @@
     "class-variance-authority": "^0.7.1",
     "cookie": "^0.7.0",
     "dayjs": "^1.11.13",
-    "effect": "4.0.0-rc.116",
+    "effect": "4.0.0",
     "es-toolkit": "^1.39.9",
     "googleapis": "^169.0.0",
     "hono": "^4.13.5",
@@ -100,7 +100,7 @@
     "superjson": "^2.0.0",
     "tailwindcss": "^4.1.18",
     "tldts": "^6.1.86",
-    "undici": "^7.29.0",
+    "undici": "^7.29.1",
     "zod": "^4.3.6",
     "zustand": "^5.0.14",
     "zxcvbn": "^4.4.2"

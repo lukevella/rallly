@@ -5,15 +5,19 @@ import { Button } from "@rallly/ui/button";
 import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
 import React from "react";
 import { useCopyToClipboard } from "react-use";
-import { usePoll } from "@/features/poll/client";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
  * The invite link with its copy action. The URL is shown because hosts have
  * learned to look for something that looks like a link.
  */
-export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
-  const poll = usePoll();
+export function InviteLinkRow({
+  pollId,
+  inviteLink,
+}: {
+  pollId: string;
+  inviteLink: string;
+}) {
   const { t } = useTranslation();
   const [didCopy, setDidCopy] = React.useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
@@ -27,9 +31,9 @@ export function InviteLinkRow({ inviteLink }: { inviteLink: string }) {
     }
     if (state.value) {
       setDidCopy(true);
-      posthog?.capture("poll_share:invite_link_copy", { poll_id: poll.id });
+      posthog?.capture("poll_share:invite_link_copy", { poll_id: pollId });
     }
-  }, [state, poll.id]);
+  }, [state, pollId]);
 
   React.useEffect(() => {
     if (!didCopy) return;

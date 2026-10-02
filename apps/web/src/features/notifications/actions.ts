@@ -41,6 +41,21 @@ export const unsubscribeWithTokenAction = actionClient
   .action(async ({ parsedInput }) => {
     const result = await unsubscribeWithToken({ token: parsedInput.token });
 
+    if (result.ok) {
+      track(
+        { id: result.target.userId, isGuest: false },
+        {
+          event: "poll_notification:mute_update",
+          properties: {
+            poll_id: result.target.pollId,
+            muted: true,
+            source: "unsubscribe_page",
+          },
+          groups: { poll: result.target.pollId },
+        },
+      );
+    }
+
     refresh();
 
     return result;

@@ -557,3 +557,51 @@ export const getEventsChronological = async ({
       return getUpcomingEvents({ ...commonParams, timeZone });
   }
 };
+
+// Everything an invite email is built from, read at send time so the email
+// describes the event as it is when it goes out. The poll owner is the
+// organizer and host, as on the confirmation the host receives.
+export function getInviteEmailData({ uid }: { uid: string }) {
+  return prisma.scheduledEventInvite.findUnique({
+    where: { uid },
+    select: {
+      inviteeEmail: true,
+      inviteeLocale: true,
+      inviteeTimeZone: true,
+      status: true,
+      scheduledEvent: {
+        select: {
+          id: true,
+          uid: true,
+          sequence: true,
+          title: true,
+          description: true,
+          location: true,
+          conferencing: true,
+          start: true,
+          end: true,
+          allDay: true,
+          timeZone: true,
+          status: true,
+          deletedAt: true,
+          space: {
+            select: {
+              tier: true,
+              showBranding: true,
+              hideAttribution: true,
+              primaryColor: true,
+              image: true,
+            },
+          },
+          polls: {
+            take: 1,
+            select: {
+              id: true,
+              user: { select: { name: true, email: true, banned: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+}

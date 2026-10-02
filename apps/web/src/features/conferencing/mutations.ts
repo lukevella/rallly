@@ -28,7 +28,7 @@ export const createConferencingConnection = async ({
   displayName: string;
   userInfo: UserInfo;
 }) => {
-  return await prisma.conferencingConnection.upsert({
+  const connection = await prisma.conferencingConnection.upsert({
     where: {
       user_provider_account_unique: {
         userId,
@@ -50,6 +50,19 @@ export const createConferencingConnection = async ({
       email: userInfo.email,
     },
   });
+
+  // A poll names only the provider, so a second account for the same
+  // integration would never host a meeting. Connecting one replaces the rest.
+  const replaced = await prisma.conferencingConnection.findMany({
+    where: { userId, integrationId, id: { not: connection.id } },
+    select: { id: true, provider: true, credentialId: true },
+  });
+
+  for (const previous of replaced) {
+    await removeConferencingConnection(previous);
+  }
+
+  return connection;
 };
 
 export const disconnectConferencingConnection = async ({

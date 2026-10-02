@@ -2,13 +2,15 @@ import * as z from "zod";
 import type { Conferencing, ConferencingProvider } from "./schema";
 
 // Which OAuth integration backs each provider. Google Meet shares the Google
-// OAuth app (and credential row) with Google Calendar.
+// OAuth app (and credential row) with Google Calendar; Microsoft Teams shares
+// the Microsoft app with sign in.
 export const conferencingProviderIntegrations: Record<
   ConferencingProvider,
   { integrationId: string; oauthProvider: string }
 > = {
   zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   meet: { integrationId: "google-meet", oauthProvider: "google" },
+  teams: { integrationId: "microsoft-teams", oauthProvider: "microsoft" },
 };
 
 export function integrationIdToConferencingProvider(
@@ -28,7 +30,21 @@ export const conferencingProviderLabels: Record<ConferencingProvider, string> =
   {
     zoom: "Zoom",
     meet: "Google Meet",
+    teams: "Microsoft Teams",
   };
+
+// Which providers a paid plan unlocks. Google Meet stays free: a Gmail
+// organizer is the referral engine and rarely converts, so gating Meet
+// protects nothing. Zoom and Teams are the tools people have through an
+// employer, which is where the upsell lands.
+const proConferencingProviders: ReadonlySet<ConferencingProvider> = new Set([
+  "zoom",
+  "teams",
+]);
+
+export function isProConferencingProvider(provider: ConferencingProvider) {
+  return proConferencingProviders.has(provider);
+}
 
 export const zoomMeetingResponseSchema = z.object({
   id: z.number(),
@@ -60,6 +76,56 @@ export function meetSpaceToConferencing(
     uri: space.meetingUri,
     meetingId: space.meetingCode,
   };
+}
+
+export const teamsMeetingResponseSchema = z.object({
+  joinWebUrl: z.url(),
+  joinMeetingIdSettings: z
+    .object({
+      joinMeetingId: z.string().nullish(),
+      passcode: z.string().nullish(),
+    })
+    .nullish(),
+});
+
+export function teamsMeetingToConferencing(
+  meeting: z.infer<typeof teamsMeetingResponseSchema>,
+): Conferencing {
+  return {
+    provider: "teams",
+    uri: meeting.joinWebUrl,
+    meetingId: meeting.joinMeetingIdSettings?.joinMeetingId || undefined,
+    password: meeting.joinMeetingIdSettings?.passcode || undefined,
+  };
+}
+
+// The meeting Rallly creates and deletes to check an account at connect time.
+export const teamsMeetingProbeResponseSchema = z.object({
+  id: z.string().min(1),
+});
+
+// Graph answers a request the account is not entitled to make with a client
+// error: no Teams license, Teams never opened, or a policy that blocks
+// meetings. 401 (token), 408 (timeout) and 429 (throttling) say nothing about
+// the account.
+export function isTeamsMeetingRefusal(status: number) {
+  return (
+    status >= 400 &&
+    status < 500 &&
+    status !== 401 &&
+    status !== 408 &&
+    status !== 429
+  );
+}
+
+// Graph's online meetings API serves work and school accounts only, so a
+// multitenant registration connects Teams through the `organizations`
+// authority, which keeps personal accounts from starting the flow. A single
+// tenant registration keeps its own tenant.
+export function getMicrosoftTeamsAuthority(tenantId: string) {
+  return tenantId === "common" || tenantId === "consumers"
+    ? "organizations"
+    : tenantId;
 }
 
 // Returns the URI suitable for an href / ICS CONFERENCE value.

@@ -474,7 +474,6 @@
     {
       "includes": [
         "src/features/billing/components/pay-wall-dialog.tsx",
-        "src/features/poll/components/manage-poll.tsx",
         "src/lib/auth.ts",
         "src/lib/feature-flags/config.ts",
         "src/lib/safe-action/server.ts"
@@ -539,9 +538,7 @@
         "src/lib/datetime/**",
         "src/features/poll/components/forms/poll-options-form/**",
         "src/components/headless-date-picker.tsx",
-        "src/**/edit-options/page.tsx",
         "src/trpc/routers/polls.ts",
-        "src/trpc/routers/index.ts",
         "src/lib/utils/date-time-utils.ts",
         "src/features/poll/components/manage-poll/use-csv-exporter.ts",
         "src/test/setup.ts"

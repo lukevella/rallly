@@ -16,7 +16,7 @@ import {
 } from "@/features/poll/comment/schema";
 import { hasPollAdminAccess } from "@/features/poll/data";
 import { AppError } from "@/lib/errors/app-error";
-import { track } from "@/lib/posthog";
+import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
 import {
   anyUserActionClient,
   createRateLimitMiddleware,
@@ -38,15 +38,30 @@ async function sendNewCommentNotificationEmail({
   excludeUserId: string;
 }) {
   try {
-    const recipient = await getNotificationRecipient({
+    const result = await getNotificationRecipient({
       pollId,
       type: "poll.comment.added",
       excludeUserId,
     });
 
-    if (!recipient) {
+    if (!result.ok) {
+      logger.info(
+        { pollId, reason: result.reason },
+        "Skipped new comment notification email",
+      );
+      trackSystemEvent({
+        event: "poll_notification:email_skip",
+        properties: {
+          poll_id: pollId,
+          type: "poll.comment.added",
+          reason: result.reason,
+        },
+      });
+      await flushPostHog();
       return;
     }
+
+    const { recipient } = result;
 
     const unsubscribeToken = createUnsubscribeToken({
       target: { kind: "poll", pollId, userId: recipient.id },

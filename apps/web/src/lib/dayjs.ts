@@ -9,12 +9,10 @@ import localeData from "dayjs/plugin/localeData";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import minMax from "dayjs/plugin/minMax";
 import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
 import toArray from "dayjs/plugin/toArray";
 import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
-dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 dayjs.extend(calendar);
 dayjs.extend(duration);

@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-26">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-29">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -109,6 +109,15 @@ export default async function PrivacyPolicy() {
         </p>
 
         <p>
+          If you connect Google Calendar, Rallly reads the list of calendars in
+          your Google account, with each calendar&apos;s name, time zone and
+          whether you can add events to it, so you can see and choose your
+          calendars in your settings. We store that list for as long as the
+          calendar is connected. Rallly does not read, create or change events
+          in your calendars through this connection.
+        </p>
+
+        <p>
           If you connect Google Meet, Rallly uses the permission to create Meet
           meeting spaces (<code>meetings.space.created</code>) only to create a
           meeting space in your account when you finalize a poll that uses
@@ -120,24 +129,30 @@ export default async function PrivacyPolicy() {
         </p>
 
         <p>
-          When you connect, Google also shares your Google account id, email
-          address and basic profile (name and profile picture). We do not store
-          your name or profile picture. We store your Google account id and
-          email address to identify the connection and show which account is
-          connected, and the OAuth tokens Google issues, encrypted at rest, so
-          Rallly can create meetings without asking you to sign in each time. We
-          use this data only to identify the connected account and to create
-          meetings for you as the organizer. We do not sell Google user data,
-          use it for advertising, use it to train AI models, or share it with
-          third parties except as needed to provide the service.
+          When you connect Google Calendar or Google Meet, Google also shares
+          your Google account id, email address and basic profile (name and
+          profile picture). We do not store your name or profile picture. We
+          store your Google account id and email address to identify the
+          connection and show which account is connected, and the OAuth tokens
+          Google issues, encrypted as described in{" "}
+          <a href="#data-protection">How we protect your data</a>, so Rallly can
+          act for you without asking you to sign in each time. If you connect
+          the same Google account for both, the two connections share one set of
+          tokens. We use this data only to identify the connected account, to
+          show your calendars and to create meetings for you as the organizer.
+          We do not sell Google user data, use it for advertising, use it to
+          train AI models, or share it with third parties except as needed to
+          provide the service.
         </p>
 
         <p>
-          When you disconnect Google Meet in your settings, we delete the stored
-          account details and tokens. When you delete your Rallly account, we
-          delete them along with your events, including the details of meetings
-          Rallly created. You can also revoke Rallly&apos;s access at any time
-          at{" "}
+          When you disconnect Google Calendar in your settings, we delete the
+          connection and the list of calendars we stored. When you disconnect
+          Google Meet, we delete the connection, and we delete the stored tokens
+          unless your Google Calendar connection on the same Google account
+          still uses them. When you delete your Rallly account, we delete all of
+          it along with your events, including the details of meetings Rallly
+          created. You can also revoke Rallly&apos;s access at any time at{" "}
           <a href="https://myaccount.google.com/permissions">
             myaccount.google.com/permissions
           </a>
@@ -191,6 +206,79 @@ export default async function PrivacyPolicy() {
           details of meetings Rallly created. Meetings Rallly already created
           stay in your Zoom account.
         </p>
+
+        <h2>Microsoft user data</h2>
+
+        <p>
+          If you connect Microsoft Teams, Rallly uses the permission to create
+          online meetings (<code>OnlineMeetings.ReadWrite</code>) only to create
+          a meeting on your Microsoft account when you finalize a poll that uses
+          Microsoft Teams as its video call, and reads your Microsoft account
+          id, name and email address to identify the connection. Rallly does not
+          read your other meetings, chats, recordings, files, contacts, calendar
+          or email, and does not join or record meetings.
+        </p>
+
+        <p>
+          We do not store your name. We store your Microsoft account id and
+          email address to identify the connection and show which account is
+          connected, and the access and refresh tokens Microsoft issues,
+          encrypted at rest, so Rallly can create meetings without asking you to
+          sign in each time. For each meeting Rallly creates, we store its join
+          link, meeting id and passcode on the event, so they can be included in
+          the calendar invite and confirmation emails sent to you and your
+          participants.
+        </p>
+
+        <p>
+          We use this data only to identify the connected account and to create
+          meetings for you as the organizer. We do not sell Microsoft user data,
+          use it for advertising, use it to train AI models, or share it with
+          third parties except as needed to provide the service.
+        </p>
+
+        <p>
+          When you disconnect Microsoft Teams in your settings, we delete the
+          stored account details and tokens. When you delete your Rallly
+          account, we delete them along with your events, including the details
+          of meetings Rallly created. Microsoft does not let apps revoke their
+          own access; you can remove Rallly&apos;s permissions at any time at{" "}
+          <a href="https://myapps.microsoft.com">myapps.microsoft.com</a>.
+          Meetings Rallly already created stay in your Microsoft account.
+        </p>
+
+        <h2 id="data-protection">How we protect your data</h2>
+
+        <p>
+          We use the following measures to keep your data, including the data we
+          receive from Google, Zoom and Microsoft, confidential and secure:
+        </p>
+
+        <ul>
+          <li>
+            Encryption in transit: all traffic to rallly.co, and between our
+            servers and the service providers listed below, is encrypted with
+            TLS (HTTPS).
+          </li>
+          <li>
+            Encryption of access tokens: the OAuth access and refresh tokens
+            that Google, Zoom and Microsoft issue when you connect an account
+            are encrypted with AES-256-GCM by our application before they are
+            written to the database. The encryption key is kept separately from
+            the database, so a copy of the database alone does not reveal the
+            tokens.
+          </li>
+          <li>
+            Encryption at rest: our database and its backups are hosted by Neon,
+            which encrypts all stored data at rest.
+          </li>
+          <li>
+            Restricted access: access to our production systems and data is
+            limited to the people who need it to operate and support the
+            service, and data from connected accounts is used only for the
+            purposes described in this policy.
+          </li>
+        </ul>
 
         <h2>Content moderation</h2>
 

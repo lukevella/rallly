@@ -6,12 +6,17 @@ import {
 import {
   isConferencingEnabled,
   isConferencingProviderAllowedFor,
+  MICROSOFT_TEAMS_SCOPES,
 } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import type { ConferencingProvider } from "@/features/conferencing/schema";
+import { checkTeamsCanHostMeetings } from "@/features/conferencing/service";
+import { getMicrosoftTeamsAuthority } from "@/features/conferencing/utils";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
 import { getSession } from "@/lib/auth";
+import { OAuthConnectionRefusedError } from "@/lib/oauth/errors";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
+import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
 import { OAuthIntegration } from "@/lib/oauth/server";
 import type { OAuthClient } from "@/lib/oauth/types";
@@ -20,6 +25,7 @@ type Integration =
   | "google-calendar"
   | "outlook-calendar"
   | "google-meet"
+  | "microsoft-teams"
   | "zoom";
 
 async function requireSessionUserId() {
@@ -69,7 +75,7 @@ function conferencingOnConnect({
 
 const { handler } = OAuthIntegration<Integration>({
   basePath: "/api/integrations",
-  getIntegration: async ({ integrationId, callbackUrl }) => {
+  getIntegration: async ({ integrationId, callbackUrl, flow }) => {
     switch (integrationId) {
       case "google-calendar": {
         if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -158,6 +164,40 @@ const { handler } = OAuthIntegration<Integration>({
             integrationId,
             displayName: "Zoom",
           }),
+        });
+      }
+      case "microsoft-teams": {
+        if (
+          !isConferencingEnabled ||
+          !env.MICROSOFT_CLIENT_ID ||
+          !env.MICROSOFT_CLIENT_SECRET ||
+          // The rollout allowlist limits who connects. Approving the app for
+          // an organization connects no one, and the administrator doing it
+          // is rarely on the list or signed in to Rallly.
+          (flow === "connect" && !(await isAllowedForSession("teams")))
+        ) {
+          return null;
+        }
+        return new MicrosoftOAuthClient({
+          tenant: getMicrosoftTeamsAuthority(env.MICROSOFT_TENANT_ID),
+          clientId: env.MICROSOFT_CLIENT_ID,
+          clientSecret: env.MICROSOFT_CLIENT_SECRET,
+          callbackUrl,
+          scopes: MICROSOFT_TEAMS_SCOPES,
+          onConnect: async (params) => {
+            // An account without a Teams license signs in fine and only
+            // fails when a poll is finalized, so it is refused here instead.
+            const check = await checkTeamsCanHostMeetings({
+              accessToken: params.tokens.accessToken,
+            });
+            if (!check.ok && check.reason === "refused") {
+              throw new OAuthConnectionRefusedError("cannot_host_meetings");
+            }
+            await conferencingOnConnect({
+              integrationId,
+              displayName: "Microsoft Teams",
+            })(params);
+          },
         });
       }
       default:

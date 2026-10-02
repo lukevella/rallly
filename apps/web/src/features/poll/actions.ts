@@ -4,7 +4,7 @@ import { refresh } from "next/cache";
 
 import { setPollMuted } from "@/features/poll/mutations";
 import { setPollMutedSchema } from "@/features/poll/schema";
-import { identifyGroup } from "@/lib/posthog";
+import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 
 export const setPollMutedAction = authActionClient
@@ -20,6 +20,11 @@ export const setPollMutedAction = authActionClient
     });
 
     if (result.ok) {
+      track(ctx.user, {
+        event: "poll_notification:mute_update",
+        properties: { poll_id: pollId, muted, source: "app" },
+        groups: { poll: pollId },
+      });
       identifyGroup({
         groupType: "poll",
         groupKey: pollId,

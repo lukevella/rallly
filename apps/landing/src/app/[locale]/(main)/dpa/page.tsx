@@ -27,7 +27,7 @@ export default async function DataProcessingAgreement() {
     <Section>
       <LegalPageLayout
         title="Data processing agreement"
-        lastUpdated="2026-09-24"
+        lastUpdated="2026-09-29"
       >
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
@@ -307,10 +307,30 @@ export default async function DataProcessingAgreement() {
 
         <h2>10. Liability</h2>
         <p>
-          Each party&apos;s liability under or in connection with this DPA is
-          subject to the limitations and exclusions of liability in the Terms of
-          Use, except to the extent liability cannot be limited under Data
-          Protection Laws.
+          10.1 This section applies to liability arising under or in connection
+          with this DPA instead of the limitations and exclusions of liability
+          in the Terms of Use.
+        </p>
+        <p>
+          10.2 Each party&apos;s total liability to the other arising under or
+          in connection with this DPA, whether in contract, tort (including
+          negligence) or otherwise, is limited to the greater of (a) the fees
+          paid or payable by you under the Terms of Use in the 12 months before
+          the event giving rise to the claim, and (b) £1,000. Any amount paid
+          under the Terms of Use counts towards this limit, and any amount paid
+          under this DPA counts towards the limit in the Terms of Use.
+        </p>
+        <p>
+          10.3 Neither party is liable to the other under this DPA for any
+          indirect or consequential loss, or for any loss of profit, revenue,
+          business or goodwill.
+        </p>
+        <p>
+          10.4 Nothing in this DPA limits or excludes either party&apos;s
+          liability for death or personal injury caused by negligence, for fraud
+          or fraudulent misrepresentation, to data subjects under Data
+          Protection Laws, or any other liability that cannot be limited or
+          excluded under applicable law.
         </p>
 
         <hr />

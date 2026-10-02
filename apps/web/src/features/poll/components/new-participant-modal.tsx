@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
 import { Link } from "@/components/link";
-import { usePoll } from "@/features/poll/client";
+import { usePollOrNull } from "@/features/poll/client";
 import {
   useAddParticipant,
   useEditToken,
@@ -58,6 +58,9 @@ const schema = z.union([requiredEmailSchema, optionalEmailSchema]);
 
 interface NewParticipantModalProps {
   votes: { optionId: string; type: VoteType }[];
+  /** These fall back to the poll in context on the legacy surfaces. */
+  pollId?: string;
+  requireParticipantEmail?: boolean;
   onSubmit?: (data: { id: string }) => void;
   onCancel?: () => void;
 }
@@ -127,9 +130,11 @@ const VoteSummary = ({
 
 export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { t } = useTranslation();
-  const poll = usePoll();
+  const poll = usePollOrNull();
 
-  const isEmailRequired = poll.requireParticipantEmail;
+  const isEmailRequired =
+    props.requireParticipantEmail ?? poll?.requireParticipantEmail ?? false;
+  const pollId = props.pollId ?? poll?.id;
   const { timeZone } = useDateTimeConfig();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
@@ -224,12 +229,12 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 posthog?.capture(
                   "new_participant_dialog:create_poll_button_click",
                   {
-                    pollId: poll.id,
-                    spaceId: poll.spaceId,
-                    tier: poll.space?.tier,
+                    pollId,
+                    spaceId: poll?.spaceId,
+                    tier: poll?.space?.tier,
                     $groups: {
-                      poll: poll.id,
-                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                      poll: pollId,
+                      ...(poll?.spaceId ? { space: poll.spaceId } : {}),
                     },
                   },
                 );
@@ -263,13 +268,16 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         <form
           id="new-participant-form"
           onSubmit={handleSubmit(async (data) => {
+            if (!pollId) {
+              throw new Error("NewParticipantForm needs a pollId");
+            }
             await createGuestIfNeeded();
             const result = await addParticipant.execute({
               name: data.name,
               votes: props.votes,
               email: data.email,
               note: data.note,
-              pollId: poll.id,
+              pollId,
               timeZone,
               token,
             });
@@ -399,12 +407,12 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                 posthog?.capture(
                   "new_participant_dialog:add_note_button_click",
                   {
-                    pollId: poll.id,
-                    spaceId: poll.spaceId,
-                    tier: poll.space?.tier,
+                    pollId,
+                    spaceId: poll?.spaceId,
+                    tier: poll?.space?.tier,
                     $groups: {
-                      poll: poll.id,
-                      ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                      poll: pollId,
+                      ...(poll?.spaceId ? { space: poll.spaceId } : {}),
                     },
                   },
                 );

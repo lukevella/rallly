@@ -15,7 +15,7 @@ export default defineConfig({
     baseURL,
   },
   webServer: {
-    command: `NEXT_PUBLIC_BASE_URL=${baseURL} HIDE_DEV_INDICATOR=true pnpm --filter @rallly/web exec next dev --port ${PORT}`,
+    command: `NEXT_PUBLIC_BASE_URL=${baseURL} NEXT_PUBLIC_COOKIE_DOMAIN= RATE_LIMIT_ENABLED=false HIDE_DEV_INDICATOR=true pnpm --filter @rallly/web exec next dev --port ${PORT}`,
     url: baseURL,
     reuseExistingServer: true,
     timeout: 120000,

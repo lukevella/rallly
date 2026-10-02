@@ -17,8 +17,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CalendarIcon, InfoIcon, TableIcon } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
+import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
@@ -34,6 +34,8 @@ const PollOptionsForm = ({
   const form = useFormContext<NewEventData>();
 
   const { watch, setValue, formState } = form;
+  const { user } = useUser();
+  const defaultTimeZone = user?.timeZone || getBrowserTimeZone();
 
   const views = React.useMemo(() => {
     const res = [
@@ -163,7 +165,7 @@ const PollOptionsForm = ({
                   watchOptions.filter((option) => option.type === "timeSlot"),
                 );
                 if (!watchTimeZone) {
-                  setValue("timeZone", getBrowserTimeZone());
+                  setValue("timeZone", defaultTimeZone);
                 }
                 dateOrTimeRangeDialog.dismiss();
               }}
@@ -242,7 +244,7 @@ const PollOptionsForm = ({
                     // Unlocking turns conversion back on; seed the organizer's
                     // zone so the selector has a value.
                     if (!checked && !watchTimeZone) {
-                      setValue("timeZone", getBrowserTimeZone());
+                      setValue("timeZone", defaultTimeZone);
                     }
                   }}
                 />
@@ -281,7 +283,7 @@ const PollOptionsForm = ({
               {showTimeZoneSelect ? (
                 <TimeZoneSelect
                   disabled={disableTimeZoneChange}
-                  value={watchTimeZone || getBrowserTimeZone()}
+                  value={watchTimeZone || defaultTimeZone}
                   onValueChange={(value) => setValue("timeZone", value)}
                 />
               ) : null}

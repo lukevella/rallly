@@ -14,56 +14,104 @@ declare module "@tanstack/react-table" {
 
 type DataListGroup = { id: string; label: React.ReactNode };
 
-function DataListRow<TData>({ row }: { row: Row<TData> }) {
+/**
+ * The grid every row lines up on. `className` sets `grid-cols-*` once and
+ * each row is a subgrid of it, so cells align down the list.
+ */
+export function DataListRoot({
+  className,
+  ...props
+}: React.ComponentProps<"ul">) {
+  return <ul className={cn("grid gap-x-5 px-4 py-2", className)} {...props} />;
+}
+
+/**
+ * One row of the grid. To make a whole row clickable, render a link or
+ * button in one cell with an `after:absolute after:inset-0` overlay and give
+ * other interactive cells `relative z-10` so they sit above it.
+ */
+export function DataListRow({
+  className,
+  ...props
+}: React.ComponentProps<"li">) {
   return (
-    <li className="relative col-span-full grid h-12 grid-cols-subgrid items-center rounded-lg pr-3 pl-4 hover:bg-accent/60 has-[a:focus-visible]:bg-accent/60">
+    <li
+      className={cn(
+        "relative col-span-full grid h-12 grid-cols-subgrid items-center rounded-lg pr-3 pl-4 hover:bg-accent/60 has-[:is(a,button):focus-visible]:bg-accent/60 has-[a[aria-current=page]]:bg-accent",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function DataListCell({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("flex min-w-0 items-center", className)} {...props} />
+  );
+}
+
+function DataListTableRow<TData>({
+  row,
+  className,
+}: {
+  row: Row<TData>;
+  className?: string;
+}) {
+  return (
+    <DataListRow className={className}>
       {row.getVisibleCells().map((cell) => (
-        <div
+        <DataListCell
           key={cell.id}
-          className={cn(
-            "flex min-w-0 items-center",
-            cell.column.columnDef.meta?.className,
-          )}
+          className={cell.column.columnDef.meta?.className}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
-        </div>
+        </DataListCell>
       ))}
-    </li>
+    </DataListRow>
   );
 }
 
 /**
- * Renders a TanStack table as a list laid out on a CSS grid. Rows are
- * subgrids of the root, so `className` sets `grid-cols-*` once and every
- * row's columns line up. A cell hidden with `display: none` gives up its
- * track, so the template must list only the columns visible at each
- * breakpoint.
+ * Renders a TanStack table on the DataList grid. A cell hidden with
+ * `display: none` gives up its track, so the template must list only the
+ * columns visible at each breakpoint.
  *
  * `getGroup` splits the rows into labelled groups. Rows are grouped where
  * they are adjacent, so sort them by group first.
  *
- * To make a whole row clickable, render a link in one cell with an
- * `after:absolute after:inset-0` overlay and give other interactive cells
- * `relative z-10` so they sit above it.
+ * `getRowClassName` styles a row from its data, e.g. to tint it by state.
  */
 export function DataList<TData>({
   table,
   getGroup,
+  getRowClassName,
+  rowGapClassName,
   className,
 }: {
   table: Table<TData>;
   getGroup?: (row: TData) => DataListGroup;
+  getRowClassName?: (row: TData) => string | undefined;
+  /** Space between rows, e.g. when rows carry their own background. */
+  rowGapClassName?: string;
   className?: string;
 }) {
   const rows = table.getRowModel().rows;
 
   if (!getGroup) {
     return (
-      <ul className={cn("grid gap-x-5 px-4 py-2", className)}>
+      <DataListRoot className={cn(rowGapClassName, className)}>
         {rows.map((row) => (
-          <DataListRow key={row.id} row={row} />
+          <DataListTableRow
+            key={row.id}
+            row={row}
+            className={getRowClassName?.(row.original)}
+          />
         ))}
-      </ul>
+      </DataListRoot>
     );
   }
 
@@ -79,7 +127,7 @@ export function DataList<TData>({
   }
 
   return (
-    <ul className={cn("grid gap-x-5 px-4 py-2", className)}>
+    <DataListRoot className={className}>
       {groups.map(({ group, rows }) => (
         <li
           key={group.id}
@@ -88,13 +136,22 @@ export function DataList<TData>({
           <h2 className="col-span-full mb-1 flex h-12 items-center gap-2 rounded-lg bg-muted/60 px-4 text-sm">
             {group.label}
           </h2>
-          <ul className="col-span-full grid grid-cols-subgrid">
+          <ul
+            className={cn(
+              "col-span-full grid grid-cols-subgrid",
+              rowGapClassName,
+            )}
+          >
             {rows.map((row) => (
-              <DataListRow key={row.id} row={row} />
+              <DataListTableRow
+                key={row.id}
+                row={row}
+                className={getRowClassName?.(row.original)}
+              />
             ))}
           </ul>
         </li>
       ))}
-    </ul>
+    </DataListRoot>
   );
 }

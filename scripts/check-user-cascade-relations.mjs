@@ -49,6 +49,10 @@ const IGNORED_RELATIONS = new Map([
     "Per-user settings, meaningless once the account is gone.",
   ],
   [
+    "queuedEmails",
+    "Delivery state for emails the account's actions queued, sent within minutes and carrying no user-authored content. Once the account is gone, what it queued should not go out.",
+  ],
+  [
     "nonprofitApplications",
     "Audit record of a space's automated nonprofit review (retired; the table keeps past decisions). Only a space owner can apply, and guests cannot own a space (the purge already retains anyone with `spaces`), so a guest never has one.",
   ],

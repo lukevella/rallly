@@ -55,6 +55,7 @@ export const disconnectCalendarConnection = async (
 ) => {
   const connection = await prisma.calendarConnection.findFirst({
     where: { id, userId },
+    select: { id: true, credentialId: true },
   });
 
   if (!connection) {
@@ -64,9 +65,20 @@ export const disconnectCalendarConnection = async (
     };
   }
 
-  return await prisma.calendarConnection.delete({
-    where: { id },
-  });
+  // A Google credential can also back a Google Meet connection on the same
+  // account, so the credential goes only once nothing references it.
+  const [deleted] = await prisma.$transaction([
+    prisma.calendarConnection.delete({ where: { id: connection.id } }),
+    prisma.credential.deleteMany({
+      where: {
+        id: connection.credentialId,
+        calendarConnections: { none: {} },
+        conferencingConnections: { none: {} },
+      },
+    }),
+  ]);
+
+  return deleted;
 };
 
 /**

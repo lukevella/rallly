@@ -9,6 +9,7 @@ import {
   Button,
   Container,
   Heading,
+  Strong,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -60,7 +61,7 @@ async function PollInviteEmail({
               i18nKey="pollInvite_content"
               defaults="<b>{hostName}</b> is finding a time for <b>{pollTitle}</b> and wants to know when you're available."
               values={{ hostName, pollTitle }}
-              components={{ b: <strong /> }}
+              components={{ b: <Strong /> }}
             />
           </Text>
           <Button href={inviteUrl} id="inviteUrl" color={chrome.primaryColor}>

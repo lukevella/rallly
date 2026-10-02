@@ -50,6 +50,7 @@ import {
   LOCALE_COOKIE_NAME,
   LOCALE_COOKIE_OPTIONS,
 } from "@/lib/locale/constants";
+import { isMicrosoftEmailVerified } from "@/lib/oauth/microsoft-claims";
 import { track } from "@/lib/posthog";
 import { getValueByPath } from "@/lib/utils/get-value-by-path";
 
@@ -73,6 +74,23 @@ const isCaptchaEnabled =
 if (!!env.TURNSTILE_SECRET_KEY !== !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
   logger.warn(
     "Captcha is disabled: NEXT_PUBLIC_TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY must be set together",
+  );
+}
+
+const oidcRequiredEnv = {
+  OIDC_DISCOVERY_URL: env.OIDC_DISCOVERY_URL,
+  OIDC_CLIENT_ID: env.OIDC_CLIENT_ID,
+  OIDC_CLIENT_SECRET: env.OIDC_CLIENT_SECRET,
+};
+
+const missingOidcEnv = Object.entries(oidcRequiredEnv)
+  .filter(([, value]) => !value)
+  .map(([name]) => name);
+
+if (missingOidcEnv.length > 0 && missingOidcEnv.length < 3) {
+  logger.warn(
+    { missing: missingOidcEnv },
+    `OIDC login is disabled: ${missingOidcEnv.join(", ")} must be set alongside the other OIDC variables`,
   );
 }
 
@@ -251,6 +269,32 @@ export const authLib = betterAuth({
             clientId: env.MICROSOFT_CLIENT_ID,
             clientSecret: env.MICROSOFT_CLIENT_SECRET,
             redirectURI: absoluteUrl("/api/auth/callback/microsoft-entra-id"),
+            // better-auth only reads the verified email lists, which personal
+            // Microsoft accounts do not carry; they are vouched for by
+            // `xms_edov` instead.
+            mapProfileToUser: (profile) => {
+              const emailVerified = isMicrosoftEmailVerified(profile);
+              if (!emailVerified) {
+                // Which claims Microsoft sent decides whether the refusal is
+                // the registration's configuration or the account type.
+                logger.warn(
+                  {
+                    tid: profile.tid,
+                    idp: profile.idp,
+                    hasEmail: !!profile.email,
+                    emailVerifiedClaim: profile.email_verified,
+                    xmsEdov: profile.xms_edov,
+                    verifiedPrimaryCount:
+                      profile.verified_primary_email?.length ?? null,
+                    verifiedSecondaryCount:
+                      profile.verified_secondary_email?.length ?? null,
+                    claims: Object.keys(profile).sort(),
+                  },
+                  "Microsoft sign-in refused: email not vouched for",
+                );
+              }
+              return { emailVerified };
+            },
           }
         : undefined,
   },
@@ -319,6 +363,10 @@ export const authLib = betterAuth({
   account: {
     accountLinking: {
       enabled: true,
+      // The OIDC provider is the instance's own directory, and many omit the
+      // email_verified claim. Without trust, a user whose row predates their
+      // first OIDC sign-in (an email login, or a changed subject) is refused.
+      trustedProviders: ["oidc"],
     },
     fields: {
       providerId: "provider",

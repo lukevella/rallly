@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   filterCommentsForViewer,
   filterParticipantsByVote,
+  getFinalizePlanGate,
   maskParticipantsForViewer,
+  rankOptionsByPopularity,
+  summarizeNotifySelection,
   toAvailabilitySpans,
 } from "./utils";
 
@@ -200,5 +203,199 @@ describe("toAvailabilitySpans", () => {
         modifiers: [],
       },
     ]);
+  });
+});
+
+describe("rankOptionsByPopularity", () => {
+  const options = [
+    { id: "a", startTime: new Date("2026-03-01T10:00:00Z"), duration: 60 },
+    { id: "b", startTime: new Date("2026-03-02T10:00:00Z"), duration: 60 },
+    { id: "c", startTime: new Date("2026-03-03T10:00:00Z"), duration: 60 },
+  ];
+  const vote = (optionId: string, type: "yes" | "ifNeedBe" | "no") => ({
+    optionId,
+    type,
+  });
+
+  it("orders by yes plus ifNeedBe, then yes, then ifNeedBe", () => {
+    const participants = [
+      {
+        id: "p1",
+        votes: [vote("a", "no"), vote("b", "yes"), vote("c", "yes")],
+      },
+      {
+        id: "p2",
+        votes: [vote("a", "yes"), vote("b", "ifNeedBe"), vote("c", "yes")],
+      },
+      {
+        id: "p3",
+        votes: [vote("a", "yes"), vote("b", "yes"), vote("c", "no")],
+      },
+    ];
+
+    const ranked = rankOptionsByPopularity({ options, participants });
+
+    expect(ranked.map((r) => r.id)).toEqual(["b", "a", "c"]);
+    expect(ranked[0].votes).toEqual({
+      yes: ["p1", "p3"],
+      ifNeedBe: ["p2"],
+      no: [],
+    });
+  });
+
+  it("keeps option order for ties", () => {
+    const ranked = rankOptionsByPopularity({ options, participants: [] });
+    expect(ranked.map((r) => r.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("ignores votes for options that no longer exist", () => {
+    const participants = [{ id: "p1", votes: [vote("gone", "yes")] }];
+    const ranked = rankOptionsByPopularity({ options, participants });
+    expect(ranked.every((r) => r.votes.yes.length === 0)).toBe(true);
+  });
+});
+
+describe("getFinalizePlanGate", () => {
+  it("lets a pro space notify and mint a meeting", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "pro",
+        conferencing: { provider: "meet" },
+      }),
+    ).toBeNull();
+  });
+
+  it("lets a free space finalize silently without a provider link", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: null,
+      }),
+    ).toBeNull();
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: { provider: "custom" },
+      }),
+    ).toBeNull();
+  });
+
+  it("lets a free space notify participants", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: null,
+      }),
+    ).toBeNull();
+  });
+
+  it("gates Zoom and Teams links on a free space", () => {
+    for (const provider of ["zoom", "teams"] as const) {
+      expect(
+        getFinalizePlanGate({
+          tier: "hobby",
+          conferencing: { provider },
+        }),
+      ).toBe("conferencing");
+    }
+  });
+
+  it("lets a free space mint a Google Meet link", () => {
+    expect(
+      getFinalizePlanGate({
+        tier: "hobby",
+        conferencing: { provider: "meet" },
+      }),
+    ).toBeNull();
+  });
+});
+
+describe("summarizeNotifySelection", () => {
+  const voter = (
+    id: string,
+    type: "yes" | "ifNeedBe" | "no" | null,
+    email: string | null = `${id}@example.com`,
+  ) => ({
+    id,
+    email,
+    votes: type ? [{ optionId: "opt-1", type }] : [],
+  });
+
+  const participants = [
+    voter("a", "yes"),
+    voter("b", "yes"),
+    voter("c", "ifNeedBe"),
+    voter("d", "no"),
+    voter("e", null),
+    voter("f", "yes", null),
+  ];
+
+  it("counts eligible and selected participants by vote", () => {
+    expect(
+      summarizeNotifySelection({
+        participants,
+        optionId: "opt-1",
+        notifyParticipantIds: ["a", "c"],
+      }),
+    ).toEqual({
+      notify_eligible_yes: 2,
+      notify_eligible_if_need_be: 1,
+      notify_eligible_no: 1,
+      notify_eligible_no_response: 1,
+      notify_selected_yes: 1,
+      notify_selected_if_need_be: 1,
+      notify_selected_no: 0,
+      notify_selected_no_response: 0,
+      notify_selection_changed: true,
+    });
+  });
+
+  it("reports an untouched selection when everyone with an email is selected", () => {
+    const summary = summarizeNotifySelection({
+      participants,
+      optionId: "opt-1",
+      notifyParticipantIds: ["a", "b", "c", "d", "e"],
+    });
+    expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("ignores participants without an email even when selected", () => {
+    const summary = summarizeNotifySelection({
+      participants,
+      optionId: "opt-1",
+      notifyParticipantIds: ["a", "b", "c", "d", "e", "f"],
+    });
+    expect(summary.notify_selected_yes).toBe(2);
+    expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("counts participants sharing an address under their own vote", () => {
+    const summary = summarizeNotifySelection({
+      participants: [
+        voter("h", "yes", "Shared@example.com"),
+        voter("i", "no", "shared@example.com"),
+      ],
+      optionId: "opt-1",
+      notifyParticipantIds: ["h"],
+    });
+    expect(summary.notify_selected_yes).toBe(1);
+    expect(summary.notify_selected_no).toBe(0);
+    expect(summary.notify_selection_changed).toBe(true);
+  });
+
+  it("buckets votes on other options as no response", () => {
+    const summary = summarizeNotifySelection({
+      participants: [
+        {
+          id: "g",
+          email: "g@example.com",
+          votes: [{ optionId: "opt-2", type: "yes" as const }],
+        },
+      ],
+      optionId: "opt-1",
+      notifyParticipantIds: ["g"],
+    });
+    expect(summary.notify_eligible_no_response).toBe(1);
+    expect(summary.notify_selected_no_response).toBe(1);
   });
 });

@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { PageSection, PageSectionContent } from "@/components/page-layout";
 import {
   SettingsPage,
-  SettingsPageAction,
   SettingsPageContent,
   SettingsPageDescription,
   SettingsPageHeader,
@@ -12,12 +11,13 @@ import {
 } from "@/components/settings-layout";
 import { Spinner } from "@/components/spinner";
 import { ConferencingConnectionFlash } from "@/features/conferencing/components/conferencing-connection-flash";
-import { ConferencingConnectionList } from "@/features/conferencing/components/conferencing-connection-list";
-import { ConnectConferencingDropdown } from "@/features/conferencing/components/connect-conferencing-dropdown";
+import { ConferencingProviderList } from "@/features/conferencing/components/conferencing-provider-list";
 import {
   loadAvailableConferencingProviders,
   loadConferencingConnections,
 } from "@/features/conferencing/loaders";
+import type { ConferencingProvider } from "@/features/conferencing/schema";
+import { conferencingProviderSchema } from "@/features/conferencing/schema";
 import { integrationIdToConferencingProvider } from "@/features/conferencing/utils";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
@@ -30,11 +30,6 @@ async function AvailabilityGate() {
     notFound();
   }
   return null;
-}
-
-async function ConnectAction() {
-  const providers = await loadAvailableConferencingProviders();
-  return <ConnectConferencingDropdown providers={providers} />;
 }
 
 export default function ConferencingPage() {
@@ -58,17 +53,12 @@ export default function ConferencingPage() {
             defaults="Connect the tools you use for video calls so we can add meeting links to your events."
           />
         </SettingsPageDescription>
-        <SettingsPageAction>
-          <Suspense fallback={null}>
-            <ConnectAction />
-          </Suspense>
-        </SettingsPageAction>
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSection>
           <PageSectionContent>
             <Suspense fallback={<Spinner />}>
-              <ConnectionList />
+              <ProviderList />
             </Suspense>
           </PageSectionContent>
         </PageSection>
@@ -77,17 +67,39 @@ export default function ConferencingPage() {
   );
 }
 
-async function ConnectionList() {
-  const connections = await loadConferencingConnections();
+async function ProviderList() {
+  const [available, connections] = await Promise.all([
+    loadAvailableConferencingProviders(),
+    loadConferencingConnections(),
+  ]);
   // The stored provider is the OAuth provider ("google"); the form and icons
   // speak in conferencing providers, which the integration id identifies.
-  const items = connections.flatMap((connection) => {
+  const connected = new Map<
+    ConferencingProvider,
+    { id: string; email: string }
+  >();
+  for (const connection of connections) {
     const provider = integrationIdToConferencingProvider(
       connection.integrationId,
     );
-    return provider ? [{ ...connection, provider }] : [];
-  });
-  return <ConferencingConnectionList connections={items} />;
+    // Connections come oldest first, and the oldest is the one finalizing uses.
+    if (provider && !connected.has(provider)) {
+      connected.set(provider, { id: connection.id, email: connection.email });
+    }
+  }
+  // A provider no longer offered stays listed while connected, so it can
+  // still be disconnected.
+  const providers = conferencingProviderSchema.options.filter(
+    (provider) => available.includes(provider) || connected.has(provider),
+  );
+  return (
+    <ConferencingProviderList
+      providers={providers.map((provider) => ({
+        provider,
+        connection: connected.get(provider) ?? null,
+      }))}
+    />
+  );
 }
 
 export async function generateMetadata(): Promise<Metadata> {

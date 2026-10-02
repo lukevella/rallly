@@ -52,6 +52,10 @@ export function PollProvider({
 
 export const usePoll = () => useRequiredContext(PollContext).poll;
 
+/** The poll when a provider is mounted, for components shared with pages
+ * that pass their data as props instead. */
+export const usePollOrNull = () => React.useContext(PollContext)?.poll ?? null;
+
 export const useRole = () => useRequiredContext(PollContext).viewerRole;
 
 export const useComments = () => useRequiredContext(PollContext).comments;
