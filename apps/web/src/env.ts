@@ -60,6 +60,11 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_REGION: z.string().optional(),
     /**
+     * Where SES sends bounce and complaint reports instead of the From
+     * address. Must be an address on a verified SES identity.
+     */
+    SES_FEEDBACK_EMAIL: z.email().optional(),
+    /**
      * Comma separated list of email addresses that are allowed to register and login.
      * If not set, all emails are allowed. Wildcard characters are supported.
      *
@@ -272,6 +277,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
+    SES_FEEDBACK_EMAIL: process.env.SES_FEEDBACK_EMAIL,
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
     S3_ENDPOINT: process.env.S3_ENDPOINT,
     S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
