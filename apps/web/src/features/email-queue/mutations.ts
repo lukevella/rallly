@@ -171,8 +171,9 @@ export const attemptQueuedEmail = Effect.fn("emailQueue.attemptQueuedEmail")(
 /**
  * Records an attempt. A failure with attempts left keeps its claim, so the
  * email waits out the claim timeout before the cron's next try. Every write
- * is conditional on the email still being pending, so it cannot undo a
- * skip applied while the send was in flight.
+ * is conditional on the email still being pending under this claim's
+ * attempt, so it cannot undo a skip applied while the send was in flight,
+ * nor overwrite a newer claim taken after this one timed out.
  */
 export const recordQueuedEmailResult = Effect.fn(
   "emailQueue.recordQueuedEmailResult",
@@ -187,7 +188,7 @@ export const recordQueuedEmailResult = Effect.fn(
   result: QueuedEmailAttempt;
   now: Date;
 }) {
-  const where = { id, status: "pending" } as const;
+  const where = { id, status: "pending", attempts } as const;
   if (result.ok) {
     yield* fromPrisma(() =>
       prisma.queuedEmail.updateMany({
