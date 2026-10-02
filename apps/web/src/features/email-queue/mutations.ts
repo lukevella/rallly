@@ -294,8 +294,9 @@ export type DeliverQueuedEmailsSummary = Record<
 >;
 
 /**
- * One run: purge old emails, fail abandoned final attempts, claim a batch, send it a few at a
- * time under the shared send rate and record every outcome. The scheduled
+ * One run: purge old emails, fail abandoned final attempts, claim a batch,
+ * send it a few at a time under the shared send rate and record every
+ * outcome. The scheduled
  * run covers every batch; a run triggered by the action that queued the
  * emails is limited to that action's batch so its first emails go out at
  * once. Past the run budget, or when the shared rate has no slot in time,
@@ -315,7 +316,21 @@ export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
     DatabaseError,
     QueuedEmailHandlers | SendRateLimiter
   > {
-    const purged = batchId ? 0 : yield* purgeQueuedEmails({ now });
+    // Housekeeping: a purge that fails is retried next run, and must not
+    // stop this one sending.
+    const purged = batchId
+      ? 0
+      : yield* purgeQueuedEmails({ now }).pipe(
+          Effect.catchTag("DatabaseError", (error) =>
+            Effect.sync(() => {
+              logger.error(
+                { error: error.cause },
+                "Failed to purge queued emails",
+              );
+              return 0;
+            }),
+          ),
+        );
     const abandoned = batchId ? 0 : yield* failAbandonedQueuedEmails({ now });
     const ids = yield* claimQueuedEmails({ now, limit, batchId });
     const emails =
