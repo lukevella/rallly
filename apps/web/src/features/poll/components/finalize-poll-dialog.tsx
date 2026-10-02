@@ -373,8 +373,8 @@ function NotifyStep({
   const someSelected = notifiableIds.some((id) => selectedIds.has(id));
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card">
-      <div className="flex h-12 items-center gap-3 border-b bg-muted/40 pr-3 pl-6">
+    <div className="overflow-hidden rounded-xl border border-card-border bg-card">
+      <div className="flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 pr-3 pl-6">
         <Checkbox
           id="notify-all"
           checked={allSelected}
