@@ -30,6 +30,10 @@
     {
       "path": "/api/house-keeping/deliver-webhooks",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/house-keeping/send-queued-emails",
+      "schedule": "* * * * *"
     }
   ]
 }

@@ -155,10 +155,16 @@ function buildSesOptions(): Record<string, unknown> | undefined {
   return { FeedbackForwardingEmailAddress: feedbackAddress };
 }
 
+/**
+ * Resolves true once the transport accepted the message, or when the
+ * instance has no email configured and there is nothing to send. False is a
+ * transport failure, already logged; callers that keep delivery state retry
+ * on it, everyone else can ignore it.
+ */
 async function dispatch(options: DispatchOptions) {
   if (!process.env.SUPPORT_EMAIL) {
     logger.info("SUPPORT_EMAIL not configured - skipping email send");
-    return;
+    return true;
   }
 
   try {
@@ -184,6 +190,7 @@ async function dispatch(options: DispatchOptions) {
       },
       `Sent email: ${options.errorLabel}`,
     );
+    return true;
   } catch (e) {
     // Operational (SMTP/transport) failures are logged, not thrown — sending is
     // fire-and-forget. Render/template (code) errors are NOT caught here, so they
@@ -198,6 +205,7 @@ async function dispatch(options: DispatchOptions) {
       },
       `Failed to send email: ${options.errorLabel}`,
     );
+    return false;
   }
 }
 
@@ -220,7 +228,7 @@ export async function sendRenderedEmail(options: {
     render(options.element, { plainText: true }),
   ]);
 
-  await dispatch({
+  return dispatch({
     to: options.to,
     from: options.from,
     replyTo: options.replyTo,
@@ -251,5 +259,5 @@ export type SendRawEmailOptions = {
  * For the rare app-specific cases that don't warrant a React template.
  */
 export async function sendRawEmail(options: SendRawEmailOptions) {
-  await dispatch({ ...options, errorLabel: options.subject });
+  return dispatch({ ...options, errorLabel: options.subject });
 }

@@ -1,14 +1,14 @@
 import { Prisma, prisma } from "@rallly/database";
 import { sendFinalizeHostEmail } from "@rallly/emails/templates/finalized-host";
-import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
 import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import * as z from "zod";
-import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
+import { getInstanceBranding } from "@/emails/branding";
 import { toEmailConferencing } from "@/emails/conferencing";
+import { scheduleQueuedEmailDelivery } from "@/emails/queue";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { getPollChanges } from "@/features/activity/utils";
 import { resolveSpaceTier } from "@/features/billing/utils";
@@ -27,6 +27,7 @@ import {
   getConferencingUri,
   moderatedLinkText,
 } from "@/features/conferencing/utils";
+import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
 import {
@@ -1109,15 +1110,7 @@ export const polls = router({
           description: true,
           spaceId: true,
           hideParticipants: true,
-          space: {
-            select: {
-              tier: true,
-              showBranding: true,
-              hideAttribution: true,
-              primaryColor: true,
-              image: true,
-            },
-          },
+          space: { select: { tier: true } },
           user: {
             select: {
               id: true,
@@ -1294,9 +1287,17 @@ export const polls = router({
           inviteeName: string;
           inviteeEmail: string;
           inviteeTimeZone: string | null | undefined;
+          inviteeLocale: string | null;
           status: (typeof inviteStatusByVote)[keyof typeof inviteStatusByVote];
         }
       >();
+      // An address is emailed when any participant behind it was selected.
+      const notifyIds = new Set(input.notifyParticipantIds);
+      const notifyEmails = new Set(
+        poll.participants.flatMap((p) =>
+          p.email && notifyIds.has(p.id) ? [p.email.trim().toLowerCase()] : [],
+        ),
+      );
       for (const p of poll.participants) {
         if (!p.email) continue;
         const status =
@@ -1316,10 +1317,14 @@ export const polls = router({
           inviteeName: p.name,
           inviteeEmail: p.email,
           inviteeTimeZone: p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
+          inviteeLocale: p.locale,
           status,
         });
       }
       const inviteData = Array.from(invitesByEmail.values());
+      const notifyInviteUids = Array.from(invitesByEmail)
+        .filter(([key]) => notifyEmails.has(key))
+        .map(([, invite]) => invite.uid);
 
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
@@ -1372,6 +1377,14 @@ export const polls = router({
             },
           },
         ]);
+        // Queued with the event so the selection is kept even if the
+        // request dies before anything is sent.
+        await queueEmails(tx, {
+          kind: "scheduled_event_invite",
+          userId: ctx.user.id,
+          batchId: event.id,
+          subjectIds: notifyInviteUids,
+        });
         scheduleWebhookDispatch({ pollId: poll.id });
 
         return event;
@@ -1390,20 +1403,6 @@ export const polls = router({
           message: "Failed to generate ics",
         });
       } else {
-        const notifyIds = new Set(input.notifyParticipantIds);
-        const participantsToEmail = poll.participants.flatMap((p) =>
-          notifyIds.has(p.id) && p.email
-            ? [
-                {
-                  name: p.name,
-                  email: p.email,
-                  locale: p.locale ?? undefined,
-                  timeZone: p.timeZone,
-                },
-              ]
-            : [],
-        );
-
         const hostEmail = poll.user.email;
         const hostName = poll.user.name;
         const hostLocale = poll.user.locale ?? undefined;
@@ -1417,7 +1416,6 @@ export const polls = router({
           timeFormat: poll.user.timeFormat,
         });
 
-        const space = poll.space;
         after(async () =>
           sendFinalizeHostEmail({
             to: hostEmail,
@@ -1447,39 +1445,7 @@ export const polls = router({
           }),
         );
 
-        for (const p of participantsToEmail) {
-          const { date, time } = formatEventDateTime({
-            start: scheduledEvent.start,
-            end: scheduledEvent.end,
-            allDay: scheduledEvent.allDay,
-            timeZone: scheduledEvent.timeZone,
-            inviteeTimeZone: p.timeZone,
-            locale: p.locale,
-          });
-          after(async () =>
-            sendFinalizeParticipantEmail({
-              to: p.email,
-              locale: p.locale ?? undefined,
-              branding: space
-                ? await getSpaceBranding(space)
-                : await getInstanceBranding(),
-              icalEvent: {
-                filename: "invite.ics",
-                method: "request",
-                content: event.value,
-              },
-              props: {
-                pollUrl: shortUrl(`/invite/${poll.id}`),
-                title: poll.title,
-                hostName: poll.user?.name ?? "",
-                location: poll.location || undefined,
-                conferencing: emailConferencing,
-                date,
-                time,
-              },
-            }),
-          );
-        }
+        scheduleQueuedEmailDelivery({ batchId: scheduledEvent.id });
 
         track(ctx.user, {
           event: "poll_schedule",
