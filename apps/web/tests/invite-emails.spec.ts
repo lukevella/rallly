@@ -227,6 +227,55 @@ test.describe("Queued invite emails", () => {
     const row = await findQueued(queued.id);
     expect(row.status).toBe("failed");
   });
+
+  test("purges finished emails past the retention period and keeps the rest", async ({
+    request,
+  }) => {
+    const queued = await seed();
+    const daysAgo = (days: number) =>
+      new Date(Date.now() - days * 24 * 60 * 60_000);
+    const base = {
+      kind: "scheduled_event_invite" as const,
+      batchId: EVENT_ID,
+      userId: queued.userId,
+    };
+    const [oldSent, oldFailed, oldSkipped, recentSent] = await Promise.all([
+      prisma.queuedEmail.create({
+        data: { ...base, subjectId: "old-sent", status: "sent" },
+      }),
+      prisma.queuedEmail.create({
+        data: { ...base, subjectId: "old-failed", status: "failed" },
+      }),
+      prisma.queuedEmail.create({
+        data: { ...base, subjectId: "old-skipped", status: "skipped" },
+      }),
+      prisma.queuedEmail.create({
+        data: { ...base, subjectId: "recent-sent", status: "sent" },
+      }),
+    ]);
+    // Prisma stamps updatedAt on every write, so age the rows directly. The
+    // queued pending email is aged too: pending is never purged.
+    await prisma.$executeRaw`
+      UPDATE queued_emails SET updated_at = ${daysAgo(31)}
+      WHERE id IN (${oldSent.id}, ${oldFailed.id}, ${oldSkipped.id}, ${queued.id})`;
+    await prisma.$executeRaw`
+      UPDATE queued_emails SET updated_at = ${daysAgo(29)}
+      WHERE id = ${recentSent.id}`;
+
+    const summary = await runCron(request);
+    expect(summary.purged).toBeGreaterThanOrEqual(3);
+
+    const remaining = await prisma.queuedEmail.findMany({
+      where: { batchId: EVENT_ID },
+      select: { id: true },
+    });
+    const ids = remaining.map((row) => row.id);
+    expect(ids).not.toContain(oldSent.id);
+    expect(ids).not.toContain(oldFailed.id);
+    expect(ids).not.toContain(oldSkipped.id);
+    expect(ids).toContain(recentSent.id);
+    expect(ids).toContain(queued.id);
+  });
 });
 
 test.describe("Booking a poll", () => {

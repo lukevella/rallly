@@ -96,7 +96,11 @@ export function startQueuedEmailScheduler() {
     running = true;
     try {
       const summary = await runQueuedEmailDelivery({});
-      if (summary.attempted > 0 || summary.abandoned > 0) {
+      if (
+        summary.attempted > 0 ||
+        summary.abandoned > 0 ||
+        summary.purged > 0
+      ) {
         logger.info(summary, "Sent queued emails");
       }
     } catch (error) {

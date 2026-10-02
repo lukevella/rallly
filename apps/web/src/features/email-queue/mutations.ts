@@ -11,9 +11,12 @@ import {
   QUEUED_EMAIL_CLAIM_TIMEOUT_MS,
   QUEUED_EMAIL_CONCURRENCY,
   QUEUED_EMAIL_KINDS,
+  QUEUED_EMAIL_PURGE_CHUNK_SIZE,
+  QUEUED_EMAIL_PURGE_MAX_CHUNKS,
+  QUEUED_EMAIL_RETENTION_MS,
   QUEUED_EMAIL_RUN_BUDGET_MS,
 } from "./constants";
-import { listQueuedEmails } from "./data";
+import { listPurgeableQueuedEmailIds, listQueuedEmails } from "./data";
 import { QueuedEmailHandlers, SendRateLimiter } from "./service";
 import type { QueuedEmailKind } from "./types";
 
@@ -76,6 +79,39 @@ export const failAbandonedQueuedEmails = Effect.fn(
   );
   return count;
 });
+
+/**
+ * Deletes emails that reached a final state longer ago than the retention
+ * period, a chunk at a time so a backlog never becomes one long statement.
+ * Deleting a row twice is harmless, so overlapping runs need no locking.
+ * A run stops after a fixed number of chunks; the next run continues.
+ * Pending emails are never purged.
+ */
+export const purgeQueuedEmails = Effect.fn("emailQueue.purgeQueuedEmails")(
+  function* ({ now }: { now: Date }) {
+    const cutoff = new Date(now.getTime() - QUEUED_EMAIL_RETENTION_MS);
+    let purged = 0;
+    for (let chunk = 0; chunk < QUEUED_EMAIL_PURGE_MAX_CHUNKS; chunk++) {
+      const ids = yield* fromPrisma(() =>
+        listPurgeableQueuedEmailIds({
+          cutoff,
+          limit: QUEUED_EMAIL_PURGE_CHUNK_SIZE,
+        }),
+      );
+      if (ids.length === 0) {
+        break;
+      }
+      const { count } = yield* fromPrisma(() =>
+        prisma.queuedEmail.deleteMany({ where: { id: { in: ids } } }),
+      );
+      purged += count;
+      if (ids.length < QUEUED_EMAIL_PURGE_CHUNK_SIZE) {
+        break;
+      }
+    }
+    return purged;
+  },
+);
 
 /**
  * Claims a batch of pending emails in one statement. SKIP LOCKED lets
@@ -253,13 +289,14 @@ export const releaseQueuedEmail = Effect.fn("emailQueue.releaseQueuedEmail")(
 );
 
 export type DeliverQueuedEmailsSummary = Record<
-  QueuedEmailOutcome | "attempted" | "abandoned",
+  QueuedEmailOutcome | "attempted" | "abandoned" | "purged",
   number
 >;
 
 /**
- * One run: fail abandoned final attempts, claim a batch, send it a few at a
- * time under the shared send rate and record every outcome. The scheduled
+ * One run: purge old emails, fail abandoned final attempts, claim a batch,
+ * send it a few at a time under the shared send rate and record every
+ * outcome. The scheduled
  * run covers every batch; a run triggered by the action that queued the
  * emails is limited to that action's batch so its first emails go out at
  * once. Past the run budget, or when the shared rate has no slot in time,
@@ -279,6 +316,21 @@ export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
     DatabaseError,
     QueuedEmailHandlers | SendRateLimiter
   > {
+    // Housekeeping: a purge that fails is retried next run, and must not
+    // stop this one sending.
+    const purged = batchId
+      ? 0
+      : yield* purgeQueuedEmails({ now }).pipe(
+          Effect.catchTag("DatabaseError", (error) =>
+            Effect.sync(() => {
+              logger.error(
+                { error: error.cause },
+                "Failed to purge queued emails",
+              );
+              return 0;
+            }),
+          ),
+        );
     const abandoned = batchId ? 0 : yield* failAbandonedQueuedEmails({ now });
     const ids = yield* claimQueuedEmails({ now, limit, batchId });
     const emails =
@@ -307,6 +359,7 @@ export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
     );
 
     const summary: DeliverQueuedEmailsSummary = {
+      purged,
       abandoned,
       attempted: emails.length,
       sent: 0,
