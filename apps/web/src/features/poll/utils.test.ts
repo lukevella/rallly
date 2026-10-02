@@ -5,6 +5,7 @@ import {
   getFinalizePlanGate,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
+  summarizeNotifySelection,
   toAvailabilitySpans,
 } from "./utils";
 
@@ -306,5 +307,95 @@ describe("getFinalizePlanGate", () => {
         conferencing: { provider: "meet" },
       }),
     ).toBeNull();
+  });
+});
+
+describe("summarizeNotifySelection", () => {
+  const voter = (
+    id: string,
+    type: "yes" | "ifNeedBe" | "no" | null,
+    email: string | null = `${id}@example.com`,
+  ) => ({
+    id,
+    email,
+    votes: type ? [{ optionId: "opt-1", type }] : [],
+  });
+
+  const participants = [
+    voter("a", "yes"),
+    voter("b", "yes"),
+    voter("c", "ifNeedBe"),
+    voter("d", "no"),
+    voter("e", null),
+    voter("f", "yes", null),
+  ];
+
+  it("counts eligible and selected participants by vote", () => {
+    expect(
+      summarizeNotifySelection({
+        participants,
+        optionId: "opt-1",
+        notifyParticipantIds: ["a", "c"],
+      }),
+    ).toEqual({
+      notify_eligible_yes: 2,
+      notify_eligible_if_need_be: 1,
+      notify_eligible_no: 1,
+      notify_eligible_no_response: 1,
+      notify_selected_yes: 1,
+      notify_selected_if_need_be: 1,
+      notify_selected_no: 0,
+      notify_selected_no_response: 0,
+      notify_selection_changed: true,
+    });
+  });
+
+  it("reports an untouched selection when everyone with an email is selected", () => {
+    const summary = summarizeNotifySelection({
+      participants,
+      optionId: "opt-1",
+      notifyParticipantIds: ["a", "b", "c", "d", "e"],
+    });
+    expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("ignores participants without an email even when selected", () => {
+    const summary = summarizeNotifySelection({
+      participants,
+      optionId: "opt-1",
+      notifyParticipantIds: ["a", "b", "c", "d", "e", "f"],
+    });
+    expect(summary.notify_selected_yes).toBe(2);
+    expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("counts participants sharing an address under their own vote", () => {
+    const summary = summarizeNotifySelection({
+      participants: [
+        voter("h", "yes", "Shared@example.com"),
+        voter("i", "no", "shared@example.com"),
+      ],
+      optionId: "opt-1",
+      notifyParticipantIds: ["h"],
+    });
+    expect(summary.notify_selected_yes).toBe(1);
+    expect(summary.notify_selected_no).toBe(0);
+    expect(summary.notify_selection_changed).toBe(true);
+  });
+
+  it("buckets votes on other options as no response", () => {
+    const summary = summarizeNotifySelection({
+      participants: [
+        {
+          id: "g",
+          email: "g@example.com",
+          votes: [{ optionId: "opt-2", type: "yes" as const }],
+        },
+      ],
+      optionId: "opt-1",
+      notifyParticipantIds: ["g"],
+    });
+    expect(summary.notify_eligible_no_response).toBe(1);
+    expect(summary.notify_selected_no_response).toBe(1);
   });
 });

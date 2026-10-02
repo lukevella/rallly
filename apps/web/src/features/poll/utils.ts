@@ -188,6 +188,71 @@ export function rankOptionsByPopularity<T extends { id: string }>({
     });
 }
 
+const notifyBuckets = {
+  yes: "yes",
+  ifNeedBe: "if_need_be",
+  no: "no",
+} as const;
+
+type NotifyBucket =
+  | (typeof notifyBuckets)[keyof typeof notifyBuckets]
+  | "no_response";
+
+export type NotifySelectionSummary = Record<
+  `notify_eligible_${NotifyBucket}` | `notify_selected_${NotifyBucket}`,
+  number
+> & { notify_selection_changed: boolean };
+
+/**
+ * Who a host could have notified at finalize and who they selected, by vote
+ * on the chosen option, so the default selection can be judged from data.
+ * Only participants with an email can be notified. This measures the host's
+ * choice per participant, not delivery: participants sharing an address get
+ * one email, but each is counted under their own vote.
+ */
+export function summarizeNotifySelection({
+  participants,
+  optionId,
+  notifyParticipantIds,
+}: {
+  participants: {
+    id: string;
+    email: string | null;
+    votes: { optionId: string; type: VoteType }[];
+  }[];
+  optionId: string;
+  notifyParticipantIds: string[];
+}): NotifySelectionSummary {
+  const notifyIds = new Set(notifyParticipantIds);
+  const summary: NotifySelectionSummary = {
+    notify_eligible_yes: 0,
+    notify_eligible_if_need_be: 0,
+    notify_eligible_no: 0,
+    notify_eligible_no_response: 0,
+    notify_selected_yes: 0,
+    notify_selected_if_need_be: 0,
+    notify_selected_no: 0,
+    notify_selected_no_response: 0,
+    notify_selection_changed: false,
+  };
+  let eligible = 0;
+  let selected = 0;
+  for (const participant of participants) {
+    if (!participant.email) continue;
+    const vote = participant.votes.find((v) => v.optionId === optionId)?.type;
+    const bucket: NotifyBucket = vote ? notifyBuckets[vote] : "no_response";
+    summary[`notify_eligible_${bucket}`]++;
+    eligible++;
+    if (notifyIds.has(participant.id)) {
+      summary[`notify_selected_${bucket}`]++;
+      selected++;
+    }
+  }
+  // The dialog starts with everyone who has an email selected.
+  summary.notify_selection_changed = selected !== eligible;
+  return summary;
+}
+
 export type FinalizePlanGate = "conferencing";
 
 /**
