@@ -330,7 +330,7 @@ describe("summarizeNotifySelection", () => {
     voter("f", "yes", null),
   ];
 
-  it("counts eligible and notified participants by vote", () => {
+  it("counts eligible and selected participants by vote", () => {
     expect(
       summarizeNotifySelection({
         participants,
@@ -342,15 +342,15 @@ describe("summarizeNotifySelection", () => {
       notify_eligible_if_need_be: 1,
       notify_eligible_no: 1,
       notify_eligible_no_response: 1,
-      notify_sent_yes: 1,
-      notify_sent_if_need_be: 1,
-      notify_sent_no: 0,
-      notify_sent_no_response: 0,
+      notify_selected_yes: 1,
+      notify_selected_if_need_be: 1,
+      notify_selected_no: 0,
+      notify_selected_no_response: 0,
       notify_selection_changed: true,
     });
   });
 
-  it("reports an untouched selection when everyone with an email is notified", () => {
+  it("reports an untouched selection when everyone with an email is selected", () => {
     const summary = summarizeNotifySelection({
       participants,
       optionId: "opt-1",
@@ -365,8 +365,22 @@ describe("summarizeNotifySelection", () => {
       optionId: "opt-1",
       notifyParticipantIds: ["a", "b", "c", "d", "e", "f"],
     });
-    expect(summary.notify_sent_yes).toBe(2);
+    expect(summary.notify_selected_yes).toBe(2);
     expect(summary.notify_selection_changed).toBe(false);
+  });
+
+  it("counts participants sharing an address under their own vote", () => {
+    const summary = summarizeNotifySelection({
+      participants: [
+        voter("h", "yes", "Shared@example.com"),
+        voter("i", "no", "shared@example.com"),
+      ],
+      optionId: "opt-1",
+      notifyParticipantIds: ["h"],
+    });
+    expect(summary.notify_selected_yes).toBe(1);
+    expect(summary.notify_selected_no).toBe(0);
+    expect(summary.notify_selection_changed).toBe(true);
   });
 
   it("buckets votes on other options as no response", () => {
@@ -382,6 +396,6 @@ describe("summarizeNotifySelection", () => {
       notifyParticipantIds: ["g"],
     });
     expect(summary.notify_eligible_no_response).toBe(1);
-    expect(summary.notify_sent_no_response).toBe(1);
+    expect(summary.notify_selected_no_response).toBe(1);
   });
 });
