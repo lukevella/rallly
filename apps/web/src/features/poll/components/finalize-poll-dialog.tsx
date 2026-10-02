@@ -313,19 +313,18 @@ function VoteShortcut({
     no: t("notifySelectNo", { defaultValue: "Select everyone who voted no" }),
   }[voteType];
   return (
-    <Button
-      size="sm"
-      variant="ghost"
+    <button
+      type="button"
       aria-label={label}
       aria-pressed={pressed}
-      className="aria-pressed:bg-accent aria-pressed:ring-button-outline"
+      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-input border-dashed pr-3 pl-2 text-muted-foreground text-sm outline-none transition-colors hover:border-foreground/20 hover:border-solid hover:bg-accent hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-solid aria-pressed:bg-accent/60 aria-pressed:text-foreground"
       onClick={() =>
         onChange(toggleIds({ selectedIds, ids, checked: !pressed }))
       }
     >
       <VoteIcon type={voteType} />
       <span className="tabular-nums">{ids.length}</span>
-    </Button>
+    </button>
   );
 }
 
@@ -428,7 +427,7 @@ function NotifyStep({
             <DataListCell>
               <span className="truncate text-muted-foreground text-sm">
                 {participant.email ?? (
-                  <span className="italic">
+                  <span className="pr-0.5 italic">
                     <Trans i18nKey="noEmail" defaults="No email" />
                   </span>
                 )}
