@@ -11,6 +11,17 @@ export async function register() {
     setupOutboundProxy();
 
     await import("../sentry.server.config");
+
+    // On Vercel the house-keeping cron runs the email queue; everywhere else
+    // (dev, the self-hosted image) a long-lived server runs it itself. Never
+    // during a build, which must not touch the database.
+    if (
+      !process.env.VERCEL &&
+      process.env.NEXT_PHASE !== "phase-production-build"
+    ) {
+      const { startQueuedEmailScheduler } = await import("@/emails/queue");
+      startQueuedEmailScheduler();
+    }
   }
 
   if (process.env.NEXT_RUNTIME === "edge") {

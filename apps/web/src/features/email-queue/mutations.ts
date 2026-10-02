@@ -10,14 +10,11 @@ import {
   MAX_QUEUED_EMAIL_ATTEMPTS,
   QUEUED_EMAIL_CLAIM_TIMEOUT_MS,
   QUEUED_EMAIL_CONCURRENCY,
+  QUEUED_EMAIL_KINDS,
   QUEUED_EMAIL_RUN_BUDGET_MS,
 } from "./constants";
 import { listQueuedEmails } from "./data";
-import {
-  QueuedEmailHandlers,
-  RetryQueuedEmails,
-  SendRateLimiter,
-} from "./service";
+import { QueuedEmailHandlers, SendRateLimiter } from "./service";
 import type { QueuedEmailKind } from "./types";
 
 const logger = createLogger("email-queue");
@@ -84,7 +81,9 @@ export const failAbandonedQueuedEmails = Effect.fn(
  * Claims a batch of pending emails in one statement. SKIP LOCKED lets
  * overlapping runs claim disjoint batches instead of queueing behind each
  * other, and the attempt is counted at claim time so an email whose send
- * keeps killing the run still exhausts.
+ * keeps killing the run still exhausts. Only kinds this build has a handler
+ * for are claimed: a process on older code, mid upgrade or sharing a dev
+ * database, would otherwise spend the attempts of kinds it cannot send.
  */
 export const claimQueuedEmails = Effect.fn("emailQueue.claimQueuedEmails")(
   function* ({
@@ -106,6 +105,7 @@ export const claimQueuedEmails = Effect.fn("emailQueue.claimQueuedEmails")(
         WHERE id IN (
           SELECT id FROM queued_emails
           WHERE status = 'pending'
+            AND kind::text = ANY(${[...QUEUED_EMAIL_KINDS]})
             AND attempts < ${MAX_QUEUED_EMAIL_ATTEMPTS}
             AND (claimed_at IS NULL OR claimed_at < ${staleBefore})
             ${batchId ? PrismaRuntime.sql`AND batch_id = ${batchId}` : PrismaRuntime.empty}
@@ -179,7 +179,7 @@ export const attemptQueuedEmail = Effect.fn("emailQueue.attemptQueuedEmail")(
 
 /**
  * Records an attempt. A failure with attempts left keeps its claim, so the
- * email waits out the claim timeout before the cron's next try. Every write
+ * email waits out the claim timeout before a scheduled run tries again. Every write
  * is conditional on the email still being pending under this claim's
  * attempt, so it cannot undo a skip applied while the send was in flight,
  * nor overwrite a newer claim taken after this one timed out.
@@ -217,7 +217,7 @@ export const recordQueuedEmailResult = Effect.fn(
     return "skipped" satisfies QueuedEmailOutcome as QueuedEmailOutcome;
   }
   logger.warn({ id, attempts, error: result.error }, "Queued email failed");
-  if ((yield* RetryQueuedEmails) && attempts < MAX_QUEUED_EMAIL_ATTEMPTS) {
+  if (attempts < MAX_QUEUED_EMAIL_ATTEMPTS) {
     yield* fromPrisma(() =>
       prisma.queuedEmail.updateMany({
         where,

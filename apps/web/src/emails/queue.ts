@@ -3,6 +3,7 @@ import "server-only";
 import { createLogger } from "@rallly/logger";
 import { Effect, Layer } from "effect";
 import { after } from "next/server";
+import { env } from "@/env";
 import {
   QUEUED_EMAIL_BATCH_SIZE,
   QUEUED_EMAIL_IMMEDIATE_BATCH_SIZE,
@@ -14,7 +15,6 @@ import {
 } from "@/features/email-queue/service";
 import { sendScheduledEventInviteEmail } from "@/features/scheduled-event/mutations";
 import { runtime } from "@/lib/effect/runtime";
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
 const logger = createLogger("email-queue");
 
@@ -53,32 +53,58 @@ export function runQueuedEmailDelivery({
 
 /**
  * Sends the first emails an action queued once its response is out, so a
- * typical fan-out lands within seconds. Where the house-keeping cron runs,
- * it drains whatever is left at its own pace. Without it, this run stands
- * in for the cron: it covers every batch and keeps going until the queue is
- * empty, so it also recovers claims an earlier run abandoned. Needs a
- * request scope for `after`.
+ * typical fan-out lands within seconds. The rest, and any retry, is left to
+ * the scheduled runs. Needs a request scope for `after`.
  */
 export function scheduleQueuedEmailDelivery({ batchId }: { batchId: string }) {
-  const drain = !isFeatureEnabled("houseKeepingCron");
   after(async () => {
     try {
-      for (;;) {
-        const summary = await runQueuedEmailDelivery({
-          batchId: drain ? undefined : batchId,
-        });
-        // Without the cron nothing else will pick up the rest, including
-        // claims a run handed back when its budget ran out.
-        if (
-          !drain ||
-          (summary.attempted < QUEUED_EMAIL_BATCH_SIZE &&
-            summary.deferred === 0)
-        ) {
-          return;
-        }
-      }
+      await runQueuedEmailDelivery({ batchId });
     } catch (error) {
       logger.error({ batchId, error }, "Queued email delivery failed");
     }
   });
+}
+
+const SCHEDULER_INTERVAL_MS = 60_000;
+
+const schedulerState = globalThis as typeof globalThis & {
+  queuedEmailScheduler?: ReturnType<typeof setInterval>;
+};
+
+/**
+ * Runs the queue every minute inside this server process, the same run the
+ * house-keeping cron triggers on Vercel. For long-lived servers only: `next
+ * dev` and the self-hosted image. A tick that finds the previous run still
+ * going is skipped, and the timer is kept on `globalThis` so a dev reload
+ * cannot start a second one. Several processes can each run one; claims do
+ * not overlap.
+ */
+export function startQueuedEmailScheduler() {
+  if (
+    env.EMAIL_QUEUE_SCHEDULER_ENABLED === "false" ||
+    schedulerState.queuedEmailScheduler
+  ) {
+    return;
+  }
+
+  let running = false;
+  const timer = setInterval(async () => {
+    if (running) {
+      return;
+    }
+    running = true;
+    try {
+      const summary = await runQueuedEmailDelivery({});
+      if (summary.attempted > 0 || summary.abandoned > 0) {
+        logger.info(summary, "Sent queued emails");
+      }
+    } catch (error) {
+      logger.error({ error }, "Scheduled queued email delivery failed");
+    } finally {
+      running = false;
+    }
+  }, SCHEDULER_INTERVAL_MS);
+  timer.unref();
+  schedulerState.queuedEmailScheduler = timer;
 }

@@ -169,6 +169,12 @@ export const env = createEnv({
      * @default "true"
      */
     RATE_LIMIT_ENABLED: z.enum(["true", "false"]).default("true"),
+    /**
+     * Run the queued email scheduler inside the server process. Off where a
+     * test needs to control exactly when the queue runs.
+     * @default "true"
+     */
+    EMAIL_QUEUE_SCHEDULER_ENABLED: z.enum(["true", "false"]).default("true"),
 
     /**
      * Take the app offline for scheduled maintenance. Page traffic is
@@ -320,6 +326,7 @@ export const env = createEnv({
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
+    EMAIL_QUEUE_SCHEDULER_ENABLED: process.env.EMAIL_QUEUE_SCHEDULER_ENABLED,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     MAINTENANCE_BYPASS_TOKEN: process.env.MAINTENANCE_BYPASS_TOKEN,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,

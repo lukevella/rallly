@@ -46,8 +46,4 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // Cloud deploys continuously and is never behind a release; the check
   // exists for operators who pull images.
   updateCheck: isSelfHosted,
-  // vercel.json schedules the /api/house-keeping tasks on the cloud
-  // deployment; a self-hosted instance has no scheduler calling them, so work
-  // queued for a task has to finish in the request that queued it.
-  houseKeepingCron: !isSelfHosted,
 };

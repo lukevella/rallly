@@ -2,7 +2,6 @@ import "server-only";
 
 import { createLogger } from "@rallly/logger";
 import { Context, Data, Effect, Layer } from "effect";
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { createSharedRate } from "@/lib/rate-limit";
 import {
   QUEUED_EMAIL_RATE_WAIT_MS,
@@ -37,16 +36,6 @@ export class QueuedEmailHandlers extends Context.Service<
   QueuedEmailHandlers,
   Record<QueuedEmailKind, QueuedEmailHandler>
 >()("rallly/email-queue/QueuedEmailHandlers") {}
-
-/**
- * Whether a failed email stays queued for another attempt. Retries are
- * picked up by the house-keeping cron, so an instance without it fails the
- * email on the first error instead of leaving it pending for good.
- */
-export const RetryQueuedEmails = Context.Reference<boolean>(
-  "rallly/email-queue/RetryQueuedEmails",
-  { defaultValue: () => isFeatureEnabled("houseKeepingCron") },
-);
 
 /**
  * The send rate every queue run shares, across processes. `acquire` waits
