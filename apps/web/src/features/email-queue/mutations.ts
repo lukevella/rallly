@@ -8,12 +8,16 @@ import type { DatabaseError } from "@/lib/effect/db";
 import { fromPrisma } from "@/lib/effect/db";
 import {
   MAX_QUEUED_EMAIL_ATTEMPTS,
-  QUEUED_EMAIL_BATCH_SIZE,
   QUEUED_EMAIL_CLAIM_TIMEOUT_MS,
   QUEUED_EMAIL_CONCURRENCY,
+  QUEUED_EMAIL_RUN_BUDGET_MS,
 } from "./constants";
 import { listQueuedEmails } from "./data";
-import { QueuedEmailHandlers, RetryQueuedEmails } from "./service";
+import {
+  QueuedEmailHandlers,
+  RetryQueuedEmails,
+  SendRateLimiter,
+} from "./service";
 import type { QueuedEmailKind } from "./types";
 
 const logger = createLogger("email-queue");
@@ -122,7 +126,12 @@ type QueuedEmailAttempt =
   | { ok: false; skip: true; reason: string }
   | { ok: false; skip: false; error: string };
 
-export type QueuedEmailOutcome = "sent" | "skipped" | "retrying" | "failed";
+export type QueuedEmailOutcome =
+  | "sent"
+  | "skipped"
+  | "retrying"
+  | "failed"
+  | "deferred";
 
 /**
  * Hands one claimed email to its kind's handler. An email queued by an
@@ -226,6 +235,23 @@ export const recordQueuedEmailResult = Effect.fn(
   return "failed" satisfies QueuedEmailOutcome as QueuedEmailOutcome;
 });
 
+/**
+ * Hands an unattempted claim back: the claim is cleared and its attempt
+ * uncounted, so the next run takes it at once and it costs no attempt.
+ * Conditional on the claim, like every result write.
+ */
+export const releaseQueuedEmail = Effect.fn("emailQueue.releaseQueuedEmail")(
+  function* ({ id, attempts }: { id: string; attempts: number }) {
+    yield* fromPrisma(() =>
+      prisma.queuedEmail.updateMany({
+        where: { id, status: "pending", attempts },
+        data: { claimedAt: null, attempts: { decrement: 1 } },
+      }),
+    );
+    return "deferred" satisfies QueuedEmailOutcome as QueuedEmailOutcome;
+  },
+);
+
 export type DeliverQueuedEmailsSummary = Record<
   QueuedEmailOutcome | "attempted" | "abandoned",
   number
@@ -233,38 +259,46 @@ export type DeliverQueuedEmailsSummary = Record<
 
 /**
  * One run: fail abandoned final attempts, claim a batch, send it a few at a
- * time and record every outcome. The scheduled run covers every batch; a
- * run triggered by the action that queued the emails is limited to that
- * action's batch so its first emails go out at once.
+ * time under the shared send rate and record every outcome. The scheduled
+ * run covers every batch; a run triggered by the action that queued the
+ * emails is limited to that action's batch so its first emails go out at
+ * once. Past the run budget, or when the shared rate has no slot in time,
+ * the remaining claims are handed back for the next run.
  */
 export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
   function* ({
     now,
+    limit,
     batchId,
   }: {
     now: Date;
+    limit: number;
     batchId?: string;
   }): Effect.fn.Return<
     DeliverQueuedEmailsSummary,
     DatabaseError,
-    QueuedEmailHandlers
+    QueuedEmailHandlers | SendRateLimiter
   > {
     const abandoned = batchId ? 0 : yield* failAbandonedQueuedEmails({ now });
-    const ids = yield* claimQueuedEmails({
-      now,
-      limit: QUEUED_EMAIL_BATCH_SIZE,
-      batchId,
-    });
+    const ids = yield* claimQueuedEmails({ now, limit, batchId });
     const emails =
       ids.length > 0 ? yield* fromPrisma(() => listQueuedEmails({ ids })) : [];
+    const deadline = now.getTime() + QUEUED_EMAIL_RUN_BUDGET_MS;
+    const rate = yield* SendRateLimiter;
 
     const outcomes = yield* Effect.forEach(
       emails,
       Effect.fn("emailQueue.deliverQueuedEmail")(function* (email) {
+        const claim = { id: email.id, attempts: email.attempts };
+        if ((yield* Clock.currentTimeMillis) > deadline) {
+          return yield* releaseQueuedEmail(claim);
+        }
+        if (!(yield* rate.acquire())) {
+          return yield* releaseQueuedEmail(claim);
+        }
         const result = yield* attemptQueuedEmail(email);
         return yield* recordQueuedEmailResult({
-          id: email.id,
-          attempts: email.attempts,
+          ...claim,
           result,
           now: new Date(yield* Clock.currentTimeMillis),
         });
@@ -279,6 +313,7 @@ export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
       skipped: 0,
       retrying: 0,
       failed: 0,
+      deferred: 0,
     };
     for (const outcome of outcomes) {
       summary[outcome]++;

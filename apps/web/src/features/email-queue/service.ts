@@ -1,9 +1,16 @@
 import "server-only";
 
-import type { Effect } from "effect";
-import { Context, Data } from "effect";
+import { createLogger } from "@rallly/logger";
+import { Context, Data, Effect, Layer } from "effect";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { createSharedRate } from "@/lib/rate-limit";
+import {
+  QUEUED_EMAIL_RATE_WAIT_MS,
+  QUEUED_EMAIL_SENDS_PER_SECOND,
+} from "./constants";
 import type { QueuedEmailKind } from "./types";
+
+const logger = createLogger("email-queue");
 
 /** The subject is gone, or no longer warrants the email. Not retried. */
 export class QueuedEmailSkipped extends Data.TaggedError("QueuedEmailSkipped")<{
@@ -40,3 +47,36 @@ export const RetryQueuedEmails = Context.Reference<boolean>(
   "rallly/email-queue/RetryQueuedEmails",
   { defaultValue: () => isFeatureEnabled("houseKeepingCron") },
 );
+
+/**
+ * The send rate every queue run shares, across processes. `acquire` waits
+ * for a slot and answers false if none freed up in time. Without Redis
+ * there is no shared rate and every send goes ahead; a failure to reach
+ * Redis does the same, logged, rather than stalling the queue.
+ */
+export class SendRateLimiter extends Context.Service<
+  SendRateLimiter,
+  { acquire(): Effect.Effect<boolean> }
+>()("rallly/email-queue/SendRateLimiter") {
+  static readonly layer = Layer.sync(SendRateLimiter, () => {
+    const rate = createSharedRate(QUEUED_EMAIL_SENDS_PER_SECOND, "1 s");
+    return SendRateLimiter.of({
+      acquire: () =>
+        rate
+          ? Effect.tryPromise(() =>
+              rate.acquire("email-queue:send", QUEUED_EMAIL_RATE_WAIT_MS),
+            ).pipe(
+              Effect.catch((error) =>
+                Effect.sync(() => {
+                  logger.error(
+                    { error },
+                    "Shared send rate unavailable, sending unthrottled",
+                  );
+                  return true;
+                }),
+              ),
+            )
+          : Effect.succeed(true),
+    });
+  });
+}

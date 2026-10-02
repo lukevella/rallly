@@ -79,3 +79,28 @@ export function createRatelimit(requests: number, duration: Duration) {
 
   return createMemoryLimiter(requests, duration);
 }
+
+/**
+ * A rate shared by every process, for work that should wait its turn rather
+ * than be refused. `acquire` resolves true once a slot is free, false if
+ * none freed up within the timeout. Needs Redis: a per-process counter
+ * shares nothing across serverless instances, so without Redis (or with
+ * rate limiting off) there is no limiter and callers go unthrottled.
+ */
+export function createSharedRate(requests: number, duration: Duration) {
+  if (!isRateLimitEnabled || !redis) {
+    return null;
+  }
+
+  const limiter = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(requests, duration),
+  });
+
+  return {
+    async acquire(key: string, timeoutMs: number) {
+      const res = await limiter.blockUntilReady(key, timeoutMs);
+      return res.success;
+    },
+  };
+}
