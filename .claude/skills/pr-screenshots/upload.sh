@@ -15,6 +15,26 @@ REF=refs/meta/pr-assets
 pr="$1"
 shift
 
+# Files land at <pr>/<basename>, so two inputs with one name would collide.
+duplicates=$(for file in "$@"; do basename "$file"; done | sort | uniq -d)
+if [ -n "$duplicates" ]; then
+  echo "duplicate file names: $duplicates" >&2
+  exit 1
+fi
+
+urlencode() {
+  local LC_ALL=C s="$1" out="" c i
+  for ((i = 0; i < ${#s}; i++)); do
+    c="${s:i:1}"
+    case "$c" in
+      [A-Za-z0-9._~-]) out+="$c" ;;
+      # printf reads bytes above 0x7F as negative; mask back to one byte.
+      *) out+=$(printf '%%%02X' $(($(printf '%d' "'$c") & 255))) ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
 repo=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 git fetch -q origin "+$REF:$REF" 2>/dev/null || true
 
@@ -42,7 +62,7 @@ git update-ref "$REF" "$commit"
 git push -q origin "$REF:$REF"
 
 for file in "$@"; do
-  url="https://raw.githubusercontent.com/$repo/$commit/$pr/$(basename "$file")"
+  url="https://raw.githubusercontent.com/$repo/$commit/$pr/$(urlencode "$(basename "$file")")"
   status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
   if [ "$status" != "200" ]; then
     echo "$url returned $status" >&2
