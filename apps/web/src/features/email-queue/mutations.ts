@@ -16,7 +16,7 @@ import {
   QUEUED_EMAIL_RETENTION_MS,
   QUEUED_EMAIL_RUN_BUDGET_MS,
 } from "./constants";
-import { listQueuedEmails } from "./data";
+import { listPurgeableQueuedEmailIds, listQueuedEmails } from "./data";
 import { QueuedEmailHandlers, SendRateLimiter } from "./service";
 import type { QueuedEmailKind } from "./types";
 
@@ -83,6 +83,7 @@ export const failAbandonedQueuedEmails = Effect.fn(
 /**
  * Deletes emails that reached a final state longer ago than the retention
  * period, a chunk at a time so a backlog never becomes one long statement.
+ * Deleting a row twice is harmless, so overlapping runs need no locking.
  * A run stops after a fixed number of chunks; the next run continues.
  * Pending emails are never purged.
  */
@@ -91,18 +92,20 @@ export const purgeQueuedEmails = Effect.fn("emailQueue.purgeQueuedEmails")(
     const cutoff = new Date(now.getTime() - QUEUED_EMAIL_RETENTION_MS);
     let purged = 0;
     for (let chunk = 0; chunk < QUEUED_EMAIL_PURGE_MAX_CHUNKS; chunk++) {
-      const count = yield* fromPrisma(
-        () => prisma.$executeRaw`
-          DELETE FROM queued_emails
-          WHERE id IN (
-            SELECT id FROM queued_emails
-            WHERE status IN ('sent', 'skipped', 'failed')
-              AND updated_at < ${cutoff}
-            LIMIT ${QUEUED_EMAIL_PURGE_CHUNK_SIZE}
-          )`,
+      const ids = yield* fromPrisma(() =>
+        listPurgeableQueuedEmailIds({
+          cutoff,
+          limit: QUEUED_EMAIL_PURGE_CHUNK_SIZE,
+        }),
+      );
+      if (ids.length === 0) {
+        break;
+      }
+      const { count } = yield* fromPrisma(() =>
+        prisma.queuedEmail.deleteMany({ where: { id: { in: ids } } }),
       );
       purged += count;
-      if (count < QUEUED_EMAIL_PURGE_CHUNK_SIZE) {
+      if (ids.length < QUEUED_EMAIL_PURGE_CHUNK_SIZE) {
         break;
       }
     }

@@ -14,3 +14,23 @@ export function listQueuedEmails({ ids }: { ids: string[] }) {
     },
   });
 }
+
+/** Emails in a final state last updated before the cutoff, oldest first. */
+export async function listPurgeableQueuedEmailIds({
+  cutoff,
+  limit,
+}: {
+  cutoff: Date;
+  limit: number;
+}) {
+  const rows = await prisma.queuedEmail.findMany({
+    where: {
+      status: { in: ["sent", "skipped", "failed"] },
+      updatedAt: { lt: cutoff },
+    },
+    orderBy: { updatedAt: "asc" },
+    select: { id: true },
+    take: limit,
+  });
+  return rows.map((row) => row.id);
+}
