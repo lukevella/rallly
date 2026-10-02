@@ -11,6 +11,9 @@ import {
   QUEUED_EMAIL_CLAIM_TIMEOUT_MS,
   QUEUED_EMAIL_CONCURRENCY,
   QUEUED_EMAIL_KINDS,
+  QUEUED_EMAIL_PURGE_CHUNK_SIZE,
+  QUEUED_EMAIL_PURGE_MAX_CHUNKS,
+  QUEUED_EMAIL_RETENTION_MS,
   QUEUED_EMAIL_RUN_BUDGET_MS,
 } from "./constants";
 import { listQueuedEmails } from "./data";
@@ -76,6 +79,36 @@ export const failAbandonedQueuedEmails = Effect.fn(
   );
   return count;
 });
+
+/**
+ * Deletes emails that reached a final state longer ago than the retention
+ * period, a chunk at a time so a backlog never becomes one long statement.
+ * A run stops after a fixed number of chunks; the next run continues.
+ * Pending emails are never purged.
+ */
+export const purgeQueuedEmails = Effect.fn("emailQueue.purgeQueuedEmails")(
+  function* ({ now }: { now: Date }) {
+    const cutoff = new Date(now.getTime() - QUEUED_EMAIL_RETENTION_MS);
+    let purged = 0;
+    for (let chunk = 0; chunk < QUEUED_EMAIL_PURGE_MAX_CHUNKS; chunk++) {
+      const count = yield* fromPrisma(
+        () => prisma.$executeRaw`
+          DELETE FROM queued_emails
+          WHERE id IN (
+            SELECT id FROM queued_emails
+            WHERE status IN ('sent', 'skipped', 'failed')
+              AND updated_at < ${cutoff}
+            LIMIT ${QUEUED_EMAIL_PURGE_CHUNK_SIZE}
+          )`,
+      );
+      purged += count;
+      if (count < QUEUED_EMAIL_PURGE_CHUNK_SIZE) {
+        break;
+      }
+    }
+    return purged;
+  },
+);
 
 /**
  * Claims a batch of pending emails in one statement. SKIP LOCKED lets
@@ -253,12 +286,12 @@ export const releaseQueuedEmail = Effect.fn("emailQueue.releaseQueuedEmail")(
 );
 
 export type DeliverQueuedEmailsSummary = Record<
-  QueuedEmailOutcome | "attempted" | "abandoned",
+  QueuedEmailOutcome | "attempted" | "abandoned" | "purged",
   number
 >;
 
 /**
- * One run: fail abandoned final attempts, claim a batch, send it a few at a
+ * One run: purge old emails, fail abandoned final attempts, claim a batch, send it a few at a
  * time under the shared send rate and record every outcome. The scheduled
  * run covers every batch; a run triggered by the action that queued the
  * emails is limited to that action's batch so its first emails go out at
@@ -279,6 +312,7 @@ export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
     DatabaseError,
     QueuedEmailHandlers | SendRateLimiter
   > {
+    const purged = batchId ? 0 : yield* purgeQueuedEmails({ now });
     const abandoned = batchId ? 0 : yield* failAbandonedQueuedEmails({ now });
     const ids = yield* claimQueuedEmails({ now, limit, batchId });
     const emails =
@@ -307,6 +341,7 @@ export const deliverQueuedEmails = Effect.fn("emailQueue.deliverQueuedEmails")(
     );
 
     const summary: DeliverQueuedEmailsSummary = {
+      purged,
       abandoned,
       attempted: emails.length,
       sent: 0,

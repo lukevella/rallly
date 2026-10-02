@@ -39,6 +39,18 @@ export const QUEUED_EMAIL_CLAIM_TIMEOUT_MS = 10 * 60_000;
 export const MAX_QUEUED_EMAIL_ATTEMPTS = 3;
 
 /**
+ * Emails that reached a final state are deleted after this long. Long
+ * enough to answer "did my participants get the email" and to look into
+ * abuse, and to cover any per-account email budget window, which must not
+ * be longer than this.
+ */
+export const QUEUED_EMAIL_RETENTION_MS = 30 * 24 * 60 * 60_000;
+
+/** Rows deleted per statement, and statements per run, when purging. */
+export const QUEUED_EMAIL_PURGE_CHUNK_SIZE = 1000;
+export const QUEUED_EMAIL_PURGE_MAX_CHUNKS = 20;
+
+/**
  * A run stops starting sends after this long and hands the rest of its
  * claims back. Together with the rate wait it bounds how late a run can
  * send, which keeps every send inside its claim: an email reclaimed by

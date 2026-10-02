@@ -238,7 +238,7 @@ app.get("/send-queued-emails", async (c) => {
   const summary = await runQueuedEmailDelivery({});
 
   // Runs every minute and most runs find nothing.
-  if (summary.attempted > 0 || summary.abandoned > 0) {
+  if (summary.attempted > 0 || summary.abandoned > 0 || summary.purged > 0) {
     logger.info(
       { task: "send-queued-emails", ...summary },
       "Sent queued emails",

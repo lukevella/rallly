@@ -39,6 +39,7 @@ model QueuedEmail {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([status, createdAt])
+  @@index([status, updatedAt])
   @@index([batchId])
   @@index([userId, status])
   @@map("queued_emails")
