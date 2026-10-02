@@ -32,7 +32,10 @@ import { ConferencingProviderIcon } from "@/features/conferencing/components/con
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
+import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
+import type { VoteType } from "@/features/poll/constants";
+import { VOTE_TYPES } from "@/features/poll/constants";
 import type { PollParticipant } from "@/features/poll/types";
 import type { OptionVotes } from "@/features/poll/utils";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
@@ -40,7 +43,7 @@ import {
   EventDate,
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
 
@@ -258,17 +261,111 @@ function ParticipantCell({ participant }: { participant: PollParticipant }) {
   );
 }
 
-function NotifyStep({
+function voteFor(participant: PollParticipant, optionId: string) {
+  return participant.votes.find((vote) => vote.optionId === optionId)?.type;
+}
+
+// Yes first, then if need be, then no, then people who didn't vote.
+function voteRank(vote: VoteType | undefined) {
+  return vote ? VOTE_TYPES.indexOf(vote) : VOTE_TYPES.length;
+}
+
+function toggleIds({
+  selectedIds,
+  ids,
+  checked,
+}: {
+  selectedIds: Set<string>;
+  ids: string[];
+  checked: boolean;
+}) {
+  const next = new Set(selectedIds);
+  for (const id of ids) {
+    if (checked) {
+      next.add(id);
+    } else {
+      next.delete(id);
+    }
+  }
+  return next;
+}
+
+function VoteShortcut({
+  voteType,
+  ids,
   selectedIds,
   onChange,
 }: {
+  voteType: VoteType;
+  ids: string[];
+  selectedIds: Set<string>;
+  onChange: (next: Set<string>) => void;
+}) {
+  const { t } = useTranslation();
+  const pressed = ids.every((id) => selectedIds.has(id));
+  const label = {
+    yes: t("notifySelectYes", {
+      defaultValue: "Select everyone who voted yes",
+    }),
+    ifNeedBe: t("notifySelectIfNeedBe", {
+      defaultValue: "Select everyone who voted if need be",
+    }),
+    no: t("notifySelectNo", { defaultValue: "Select everyone who voted no" }),
+  }[voteType];
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-pressed={pressed}
+      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-input border-dashed pr-3 pl-2 text-muted-foreground text-sm outline-none transition-colors hover:border-solid hover:bg-foreground/3 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-foreground/15 aria-pressed:border-solid aria-pressed:bg-foreground/6 aria-pressed:text-foreground aria-pressed:hover:border-foreground/25 aria-pressed:hover:bg-foreground/10"
+      onClick={() =>
+        onChange(toggleIds({ selectedIds, ids, checked: !pressed }))
+      }
+    >
+      <VoteIcon type={voteType} />
+      <span className="tabular-nums">{ids.length}</span>
+    </button>
+  );
+}
+
+function NotifyStep({
+  optionId,
+  selectedIds,
+  onChange,
+}: {
+  optionId: string;
   selectedIds: Set<string>;
   onChange: (next: Set<string>) => void;
 }) {
   const { participants } = useParticipants();
+  const sortedParticipants = React.useMemo(
+    () =>
+      [...participants].sort(
+        (a, b) =>
+          voteRank(voteFor(a, optionId)) - voteRank(voteFor(b, optionId)),
+      ),
+    [participants, optionId],
+  );
   const notifiableIds = React.useMemo(
     () => participants.filter((p) => p.email).map((p) => p.id),
     [participants],
+  );
+  const notifiableIdsByVote = React.useMemo(() => {
+    const byVote: Record<VoteType, string[]> = {
+      yes: [],
+      ifNeedBe: [],
+      no: [],
+    };
+    for (const participant of participants) {
+      const vote = voteFor(participant, optionId);
+      if (participant.email && vote) {
+        byVote[vote].push(participant.id);
+      }
+    }
+    return byVote;
+  }, [participants, optionId]);
+  const voteTypes = VOTE_TYPES.filter(
+    (type) => notifiableIdsByVote[type].length > 0,
   );
   const allSelected =
     notifiableIds.length > 0 &&
@@ -276,8 +373,8 @@ function NotifyStep({
   const someSelected = notifiableIds.some((id) => selectedIds.has(id));
 
   return (
-    <div className="overflow-hidden rounded-xl border">
-      <div className="flex h-12 items-center gap-3 border-b bg-muted/40 pr-5 pl-6">
+    <div className="overflow-hidden rounded-xl border border-card-border bg-card">
+      <div className="flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 pr-3 pl-6">
         <Checkbox
           id="notify-all"
           checked={allSelected}
@@ -296,9 +393,20 @@ function NotifyStep({
             }}
           />
         </Label>
+        <div className="ml-auto flex items-center gap-1">
+          {voteTypes.map((voteType) => (
+            <VoteShortcut
+              key={voteType}
+              voteType={voteType}
+              ids={notifiableIdsByVote[voteType]}
+              selectedIds={selectedIds}
+              onChange={onChange}
+            />
+          ))}
+        </div>
       </div>
-      <DataListRoot className="max-h-72 grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)] overflow-y-auto px-2">
-        {participants.map((participant) => (
+      <DataListRoot className="max-h-72 grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] overflow-y-auto px-2">
+        {sortedParticipants.map((participant) => (
           <DataListRow key={participant.id}>
             <DataListCell>
               <Checkbox
@@ -306,15 +414,11 @@ function NotifyStep({
                 className="relative z-10"
                 checked={selectedIds.has(participant.id)}
                 disabled={!participant.email}
-                onCheckedChange={(checked) => {
-                  const next = new Set(selectedIds);
-                  if (checked) {
-                    next.add(participant.id);
-                  } else {
-                    next.delete(participant.id);
-                  }
-                  onChange(next);
-                }}
+                onCheckedChange={(checked) =>
+                  onChange(
+                    toggleIds({ selectedIds, ids: [participant.id], checked }),
+                  )
+                }
               />
             </DataListCell>
             <DataListCell>
@@ -323,9 +427,14 @@ function NotifyStep({
             <DataListCell>
               <span className="truncate text-muted-foreground text-sm">
                 {participant.email ?? (
-                  <Trans i18nKey="noEmail" defaults="No email" />
+                  <span className="pr-0.5 italic">
+                    <Trans i18nKey="noEmail" defaults="No email" />
+                  </span>
                 )}
               </span>
+            </DataListCell>
+            <DataListCell>
+              <VoteIcon type={voteFor(participant, optionId)} />
             </DataListCell>
           </DataListRow>
         ))}
@@ -596,7 +705,11 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
           />
         </DialogDescription>
       </DialogHeader>
-      <NotifyStep selectedIds={notifyIds} onChange={setNotifyIds} />
+      <NotifyStep
+        optionId={option.id}
+        selectedIds={notifyIds}
+        onChange={setNotifyIds}
+      />
       <DialogFooter>
         <Button onClick={() => setStep("date")}>
           <Trans i18nKey="back" defaults="Back" />
