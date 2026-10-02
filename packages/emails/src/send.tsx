@@ -140,6 +140,21 @@ function buildHeaders(
   };
 }
 
+/**
+ * SES forwards bounce and complaint reports to the From address unless told
+ * otherwise. A From on the custom MAIL FROM subdomain cannot receive mail (its
+ * MX belongs to SES), so the reports are redirected to a mailbox that can. The
+ * address must belong to a verified SES identity. Ignored by the SMTP
+ * transport.
+ */
+function buildSesOptions(): Record<string, unknown> | undefined {
+  const feedbackAddress = process.env.SES_FEEDBACK_EMAIL;
+  if (!feedbackAddress) {
+    return undefined;
+  }
+  return { FeedbackForwardingEmailAddress: feedbackAddress };
+}
+
 async function dispatch(options: DispatchOptions) {
   if (!process.env.SUPPORT_EMAIL) {
     logger.info("SUPPORT_EMAIL not configured - skipping email send");
@@ -157,6 +172,7 @@ async function dispatch(options: DispatchOptions) {
       attachments: options.attachments,
       icalEvent: options.icalEvent,
       headers: buildHeaders(options.listUnsubscribeUrl),
+      ses: buildSesOptions(),
     });
     // Proves the hand-off to the server, so "sent but never arrived" can be
     // separated from "never sent" without an SMTP transcript.
