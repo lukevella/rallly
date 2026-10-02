@@ -57,7 +57,6 @@
   "ericJobTitle": "Ügyvezető Asszisztens az MIT-nál",
   "ericQuote": "\"Ha emailekben menedzseled az időpontjaidat, erősen ajánlom, hogy tégy egy próbát és engedd, hogy a Rallly leegyszerűsítse a szervezési feladataid jobban rendszerezett és kevésbé stresszes napokat eredményezve.\"",
   "faqAfterVoting": "Mi történik, miután mindenki szavazott?",
-  "faqAfterVotingAnswer": "Az eredmények megmutatják, mely időpontok felelnek meg a legtöbb embernek. A Rallly Pro-val véglegesítheted a szavazást, amely emailben értesíti a résztvevőket a kiválasztott időpontról.",
   "faqDoodleDifference": "Miben különbözik a Rallly a Doodle-tól?",
   "faqDoodleDifferenceAnswer": "A Rallly professzionális, reklámmentes találkozó-szavazásokat kínál tiszta, könnyen használható felületen. A résztvevők fiók létrehozása nélkül is szavazhatnak, és ha teljes kontrollt szeretnél az adataid felett, akár a saját szervereden is üzemeltetheted a Rallly-t.",
   "faqIsFree": "A Rallly ingyenes?",
@@ -277,6 +276,5 @@
   "when2meetComparisonNoAccount": "Szavazás fiók létrehozása nélkül",
   "when2meetComparisonNotifications": "E-mail-értesítés, amikor válaszolnak",
   "when2meetComparisonOpenSource": "Nyílt forráskódú és saját szerveren futtatható",
-  "when2meetComparisonTitle": "When2meet vs. Rallly",
-  "when2meetComparisonWithPro": "Rallly Próval"
+  "when2meetComparisonTitle": "When2meet vs. Rallly"
 }

@@ -55,7 +55,6 @@
   "ericJobTitle": "Asystent wykonawczy w MIT",
   "ericQuote": "\"Jeśli Twój harmonogram pracy opiera się na wiadomościach e-mail, zdecydowanie zachęcam do wypróbowania Rallly i uproszczenia zadań związanych z planowaniem, aby uzyskać bardziej zorganizowany i mniej stresujący dzień pracy.\"",
   "faqAfterVoting": "Co się dzieje, gdy wszyscy zagłosują?",
-  "faqAfterVotingAnswer": "Wyniki pokazują, które terminy pasują największej liczbie osób. W Rallly Pro możesz sfinalizować ankietę — wtedy uczestnicy zostaną powiadomieni e‑mailem o wybranym terminie.",
   "faqDoodleDifference": "Czym Rallly różni się od Doodle?",
   "faqDoodleDifferenceAnswer": "Rallly oferuje profesjonalne, pozbawione reklam ankiety spotkań w czystym i łatwym w obsłudze interfejsie. Uczestnicy mogą głosować bez tworzenia konta, a jeśli chcesz pełnej kontroli nad danymi, możesz nawet uruchomić Rallly na własnym serwerze.",
   "faqIsFree": "Czy Rallly jest darmowy?",
@@ -274,6 +273,5 @@
   "when2meetComparisonNoAccount": "Głosowanie bez zakładania konta",
   "when2meetComparisonNotifications": "Powiadomienia e-mail, gdy ludzie odpowiadają",
   "when2meetComparisonOpenSource": "Otwarte oprogramowanie z możliwością własnego hostingu",
-  "when2meetComparisonTitle": "When2meet a Rallly",
-  "when2meetComparisonWithPro": "Z Rallly Pro"
+  "when2meetComparisonTitle": "When2meet a Rallly"
 }

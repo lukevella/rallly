@@ -57,7 +57,6 @@
   "ericJobTitle": "Executive Assistent bei MIT",
   "ericQuote": "„Wenn dein Zeitplan-Workflow über E-Mails läuft, empfehle ich dir für einen besser organisierten und weniger stressigen Arbeitsalltag dringend, mit Rallly deine Planungsaufgaben zu vereinfachen.“",
   "faqAfterVoting": "Was passiert, nachdem alle abgestimmt haben?",
-  "faqAfterVotingAnswer": "Die Ergebnisse zeigen, welche Zeiten für die meisten passen. Mit Rallly Pro kannst du die Umfrage abschließen; dann werden die Teilnehmer per E‑Mail über die gewählte Zeit informiert.",
   "faqDoodleDifference": "Worin unterscheidet sich Rallly von Doodle?",
   "faqDoodleDifferenceAnswer": "Rallly bietet professionelle, werbefreie Meeting‑Umfragen in einer klaren und einfach zu bedienenden Oberfläche. Teilnehmer können ohne Konto abstimmen, und wenn du volle Kontrolle über deine Daten willst, kannst du Rallly sogar auf deinem eigenen Server hosten.",
   "faqIsFree": "Ist Rallly kostenlos?",
@@ -222,6 +221,8 @@
   "pressKitScreenshotsDescription": "Hochauflösende Produkt-Screenshots, die du in deiner Berichterstattung verwenden kannst.",
   "pressKitScreenshotsTitle": "Screenshots",
   "pressKitScreenshotVoting": "An einer Umfrage teilnehmen",
+  "pressKitThemeDark": "Dunkel",
+  "pressKitThemeLight": "Hell",
   "socialProofDescription": "Frag jeden, der es schon benutzt hat. Der schnellste Weg, einen Gruppentermin zu finden, ist auch der einfachste.",
   "socialProofTitle": "Beliebt für seine Einfachheit",
   "sportsClubsDescription": "Finden Sie heraus, an welchen Abenden Ihre Mannschaft tatsächlich kann. Teilen Sie einen Link mit Spielern, Eltern und Trainern, sehen Sie die Zahlen für jede Einheit und buchen Sie den Platz ein einziges Mal. Kostenlos, ohne Begrenzung, wie viele Personen Sie fragen.",
@@ -276,6 +277,5 @@
   "when2meetComparisonNoAccount": "Abstimmen ohne Konto",
   "when2meetComparisonNotifications": "E-Mail-Benachrichtigungen bei Antworten",
   "when2meetComparisonOpenSource": "Open Source und selbst hostbar",
-  "when2meetComparisonTitle": "When2meet vs. Rallly",
-  "when2meetComparisonWithPro": "Mit Rallly Pro"
+  "when2meetComparisonTitle": "When2meet vs. Rallly"
 }

@@ -20,6 +20,8 @@
   "eventCanceledHeading": "Esemény lemondva",
   "eventCanceledPreview": "Esemény lemondva",
   "eventCanceledSubject": "Lemondva: {title}",
+  "eventConferencingPhone": "Telefon",
+  "eventConferencingVideoCall": "Videóhívás",
   "eventRsvpConfirmationAcceptedContent": "Elfogadtad a meghívást a következőhöz: <b>{title}</b>, amelyet <b>{hostName}</b> rendezett. Az esemény időpontja:",
   "eventRsvpConfirmationAcceptedHeading": "Részt veszel",
   "eventRsvpConfirmationAcceptedPreview": "Elfogadtad a(z) {title} eseményt",
