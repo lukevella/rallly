@@ -428,7 +428,9 @@ function NotifyStep({
             <DataListCell>
               <span className="truncate text-muted-foreground text-sm">
                 {participant.email ?? (
-                  <Trans i18nKey="noEmail" defaults="No email" />
+                  <span className="italic">
+                    <Trans i18nKey="noEmail" defaults="No email" />
+                  </span>
                 )}
               </span>
             </DataListCell>
