@@ -302,7 +302,7 @@ function VoteShortcut({
   onChange: (next: Set<string>) => void;
 }) {
   const { t } = useTranslation();
-  const pressed = ids.length > 0 && ids.every((id) => selectedIds.has(id));
+  const pressed = ids.every((id) => selectedIds.has(id));
   const label = {
     yes: t("notifySelectYes", {
       defaultValue: "Select everyone who voted yes",
@@ -318,7 +318,6 @@ function VoteShortcut({
       variant="ghost"
       aria-label={label}
       aria-pressed={pressed}
-      disabled={ids.length === 0}
       className="aria-pressed:bg-accent aria-pressed:ring-button-outline"
       onClick={() =>
         onChange(toggleIds({ selectedIds, ids, checked: !pressed }))
@@ -339,7 +338,6 @@ function NotifyStep({
   selectedIds: Set<string>;
   onChange: (next: Set<string>) => void;
 }) {
-  const poll = usePoll();
   const { participants } = useParticipants();
   const sortedParticipants = React.useMemo(
     () =>
@@ -367,12 +365,8 @@ function NotifyStep({
     }
     return byVote;
   }, [participants, optionId]);
-  // Tentative votes cast before the option was turned off still count.
   const voteTypes = VOTE_TYPES.filter(
-    (type) =>
-      type !== "ifNeedBe" ||
-      poll.allowTentativeVotes ||
-      notifiableIdsByVote.ifNeedBe.length > 0,
+    (type) => notifiableIdsByVote[type].length > 0,
   );
   const allSelected =
     notifiableIds.length > 0 &&
