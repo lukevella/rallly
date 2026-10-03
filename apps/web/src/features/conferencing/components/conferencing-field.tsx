@@ -5,6 +5,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@rallly/ui/dropdown-menu";
 import { FormItem, FormLabel } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
@@ -68,15 +69,17 @@ export const toConferencingFormValues = (
     conferencing?.provider === "custom" ? conferencing.label : "",
 });
 
-// Menu entries for the shared "Add location" menu. Renders nothing once a
-// choice is made: an event carries one meeting link. A caller on a free
-// plan passes `upsell` to mark the Pro providers and take the click, so a
-// choice that can never be cashed in is not made. Google Meet and a pasted
+// Menu entries for the "Add video call" menu: linked providers first,
+// then the rest this instance offers, then a pasted link. Renders nothing
+// once a choice is made: an event carries one meeting link. A caller on a
+// free plan passes `upsell` to mark the Pro providers and take the click, so
+// a choice that can never be cashed in is not made. Google Meet and a pasted
 // link are never gated.
 export function ConferencingProviderMenuItems({
   available,
+  connected,
   upsell,
-}: Pick<ConferencingOptions, "available"> & {
+}: ConferencingOptions & {
   upsell?: {
     badge: React.ReactNode;
     onSelect: (provider: ConferencingProvider) => void;
@@ -89,32 +92,51 @@ export function ConferencingProviderMenuItems({
     return null;
   }
 
+  const unconnected = available.filter(
+    (provider) => !connected.includes(provider),
+  );
+
+  const renderItem = (provider: ConferencingProvider) => {
+    const gate = isProConferencingProvider(provider) ? upsell : undefined;
+    return (
+      <DropdownMenuItem
+        key={provider}
+        onClick={() => {
+          if (gate) {
+            gate.onSelect(provider);
+            return;
+          }
+          form.setValue("conferencingProvider", provider, {
+            shouldDirty: true,
+          });
+        }}
+      >
+        <ConferencingProviderIcon provider={provider} size={16} />
+        {conferencingProviderLabels[provider]}
+        {gate?.badge}
+      </DropdownMenuItem>
+    );
+  };
+
   return (
-    <DropdownMenuGroup>
-      <DropdownMenuLabel>
-        <Trans i18nKey="videoCall" defaults="Video call" />
-      </DropdownMenuLabel>
-      {available.map((provider) => {
-        const gate = isProConferencingProvider(provider) ? upsell : undefined;
-        return (
-          <DropdownMenuItem
-            key={provider}
-            onClick={() => {
-              if (gate) {
-                gate.onSelect(provider);
-                return;
-              }
-              form.setValue("conferencingProvider", provider, {
-                shouldDirty: true,
-              });
-            }}
-          >
-            <ConferencingProviderIcon provider={provider} size={16} />
-            {conferencingProviderLabels[provider]}
-            {gate?.badge}
-          </DropdownMenuItem>
-        );
-      })}
+    <>
+      {connected.length > 0 ? (
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <Trans i18nKey="conferencingMenuConnected" defaults="Connected" />
+          </DropdownMenuLabel>
+          {connected.map(renderItem)}
+        </DropdownMenuGroup>
+      ) : null}
+      {unconnected.length > 0 ? (
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <Trans i18nKey="conferencingMenuAvailable" defaults="Available" />
+          </DropdownMenuLabel>
+          {unconnected.map(renderItem)}
+        </DropdownMenuGroup>
+      ) : null}
+      {available.length > 0 ? <DropdownMenuSeparator /> : null}
       <DropdownMenuItem
         onClick={() => {
           form.setValue("conferencingProvider", "custom", {
@@ -125,7 +147,7 @@ export function ConferencingProviderMenuItems({
         <VideoIcon />
         <Trans i18nKey="customVideoCall" defaults="Custom" />
       </DropdownMenuItem>
-    </DropdownMenuGroup>
+    </>
   );
 }
 

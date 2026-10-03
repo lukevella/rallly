@@ -2,14 +2,11 @@ import { Button } from "@rallly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { FormField, FormItem, FormLabel, FormMessage } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { BuildingIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { showPayWall, useIsFree } from "@/features/billing/client";
@@ -26,7 +23,7 @@ import { useFormValidation } from "@/lib/utils/form-validation";
 import { LazyRichTextEditor } from "./lazy-rich-text-editor";
 import type { NewEventData } from "./types";
 
-// Without `conferencing`, "Add location" opens the address field directly.
+// Without `conferencing`, only "Add location" is offered.
 export const PollDetailsForm = ({
   conferencing,
 }: {
@@ -117,28 +114,28 @@ export const PollDetailsForm = ({
       ) : null}
       {canAddAddress || canAddVideoCall || !descriptionExpanded ? (
         <div className="flex flex-wrap gap-2">
+          {canAddAddress ? (
+            <Button
+              type="button"
+              className="rounded-full"
+              onClick={() => setLocationOpened(true)}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addLocation" defaults="Add location" />
+            </Button>
+          ) : null}
           {canAddVideoCall ? (
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={<Button type="button" className="rounded-full" />}
               >
                 <PlusIcon data-icon="inline-start" />
-                <Trans i18nKey="addLocation" defaults="Add location" />
+                <Trans i18nKey="addVideoCall" defaults="Add video call" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                {canAddAddress ? (
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>
-                      <Trans i18nKey="inPerson" defaults="In-person" />
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => setLocationOpened(true)}>
-                      <BuildingIcon />
-                      <Trans i18nKey="address" defaults="Address" />
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                ) : null}
                 <ConferencingProviderMenuItems
                   available={conferencing.available}
+                  connected={conferencing.connected}
                   upsell={
                     isFree
                       ? {
@@ -156,15 +153,6 @@ export const PollDetailsForm = ({
                 />
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : canAddAddress ? (
-            <Button
-              type="button"
-              className="rounded-full"
-              onClick={() => setLocationOpened(true)}
-            >
-              <PlusIcon data-icon="inline-start" />
-              <Trans i18nKey="addLocation" defaults="Add location" />
-            </Button>
           ) : null}
           {!descriptionExpanded ? (
             <Button
