@@ -3,7 +3,6 @@ import "server-only";
 import { zValidator } from "@hono/zod-validator";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { generateCodeVerifier, generateState } from "arctic";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
@@ -13,6 +12,7 @@ import { FLASH_MAX_AGE, flashCookieName } from "@/lib/flash/constants";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 import { OAUTH_FLASH_KEY } from "./constants";
 import { OAuthConnectionRefusedError } from "./errors";
+import { generateCodeVerifier, generateState } from "./oauth2";
 import type { CreateOAuthOptions } from "./types";
 
 const logger = createLogger("oauth");

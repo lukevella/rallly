@@ -1,7 +1,12 @@
 import "server-only";
 
-import { MicrosoftEntraId } from "arctic";
 import * as z from "zod";
+import type { OAuth2ClientConfig } from "../oauth2";
+import {
+  createAuthorizationUrl,
+  refreshAccessToken,
+  validateAuthorizationCode,
+} from "../oauth2";
 import type { OAuthClient, OAuthTokens, UserInfo } from "../types";
 import { handleOAuthError } from "./base";
 
@@ -23,7 +28,7 @@ interface MicrosoftOAuthClientConfig {
 
 export class MicrosoftOAuthClient implements OAuthClient {
   provider = "microsoft";
-  private client: MicrosoftEntraId;
+  private client: OAuth2ClientConfig;
   private tenant: string;
   private clientId: string;
   private callbackUrl: string;
@@ -38,12 +43,7 @@ export class MicrosoftOAuthClient implements OAuthClient {
     callbackUrl = "",
     onConnect,
   }: MicrosoftOAuthClientConfig) {
-    this.client = new MicrosoftEntraId(
-      tenant,
-      clientId,
-      clientSecret,
-      callbackUrl,
-    );
+    this.client = { clientId, clientSecret, redirectUri: callbackUrl };
     this.tenant = tenant;
     this.clientId = clientId;
     this.callbackUrl = callbackUrl;
@@ -52,15 +52,21 @@ export class MicrosoftOAuthClient implements OAuthClient {
   }
 
   getAuthorizationUrl(state: string, codeVerifier: string): URL {
-    const url = this.client.createAuthorizationURL(
+    const url = createAuthorizationUrl({
+      endpoint: `https://login.microsoftonline.com/${this.tenant}/oauth2/v2.0/authorize`,
+      client: this.client,
       state,
       codeVerifier,
-      this.scopes,
-    );
+      scopes: this.scopes,
+    });
     // Without it Microsoft silently reuses whichever account the browser is
     // signed in to, which is often not the one that holds the Teams license.
     url.searchParams.set("prompt", "select_account");
     return url;
+  }
+
+  private get tokenEndpoint() {
+    return `https://login.microsoftonline.com/${this.tenant}/oauth2/v2.0/token`;
   }
 
   // Tenant wide consent for organizations that do not let users consent to
@@ -78,18 +84,13 @@ export class MicrosoftOAuthClient implements OAuthClient {
 
   async exchangeCode(code: string, codeVerifier: string): Promise<OAuthTokens> {
     try {
-      const tokens = await this.client.validateAuthorizationCode(
+      const tokens = await validateAuthorizationCode({
+        endpoint: this.tokenEndpoint,
+        client: this.client,
         code,
         codeVerifier,
-      );
-      return {
-        accessToken: tokens.accessToken(),
-        refreshToken: tokens.hasRefreshToken()
-          ? tokens.refreshToken()
-          : undefined,
-        expiresAt: tokens.accessTokenExpiresAt(),
-        scopes: tokens.hasScopes() ? tokens.scopes() : this.scopes,
-      };
+      });
+      return { ...tokens, scopes: tokens.scopes ?? this.scopes };
     } catch (error) {
       handleOAuthError(error);
     }
@@ -127,17 +128,16 @@ export class MicrosoftOAuthClient implements OAuthClient {
   // is not bound to a scope, so the scopes are named again on each call.
   async refreshAccessToken(refreshToken: string): Promise<OAuthTokens> {
     try {
-      const tokens = await this.client.refreshAccessToken(
+      const tokens = await refreshAccessToken({
+        endpoint: this.tokenEndpoint,
+        client: this.client,
         refreshToken,
-        this.scopes,
-      );
+        scopes: this.scopes,
+      });
       return {
-        accessToken: tokens.accessToken(),
-        refreshToken: tokens.hasRefreshToken()
-          ? tokens.refreshToken()
-          : refreshToken,
-        expiresAt: tokens.accessTokenExpiresAt(),
-        scopes: tokens.hasScopes() ? tokens.scopes() : this.scopes,
+        ...tokens,
+        refreshToken: tokens.refreshToken ?? refreshToken,
+        scopes: tokens.scopes ?? this.scopes,
       };
     } catch (error) {
       handleOAuthError(error);

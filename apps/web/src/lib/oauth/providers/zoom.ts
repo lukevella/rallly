@@ -1,9 +1,19 @@
 import "server-only";
 
-import { Zoom } from "arctic";
 import * as z from "zod";
+import type { OAuth2ClientConfig } from "../oauth2";
+import {
+  createAuthorizationUrl,
+  refreshAccessToken,
+  revokeToken,
+  validateAuthorizationCode,
+} from "../oauth2";
 import type { OAuthClient, OAuthTokens, UserInfo } from "../types";
 import { handleOAuthError } from "./base";
+
+const AUTHORIZATION_ENDPOINT = "https://zoom.us/oauth/authorize";
+const TOKEN_ENDPOINT = "https://zoom.us/oauth/token";
+const REVOCATION_ENDPOINT = "https://zoom.us/oauth/revoke";
 
 const zoomUserSchema = z.object({
   id: z.string(),
@@ -23,7 +33,7 @@ interface ZoomOAuthClientConfig {
 
 export class ZoomOAuthClient implements OAuthClient {
   provider = "zoom";
-  private client: Zoom;
+  private client: OAuth2ClientConfig;
   scopes: string[];
   onConnect?: OAuthClient["onConnect"];
 
@@ -34,29 +44,30 @@ export class ZoomOAuthClient implements OAuthClient {
     callbackUrl = "",
     onConnect,
   }: ZoomOAuthClientConfig) {
-    this.client = new Zoom(clientId, clientSecret, callbackUrl);
+    this.client = { clientId, clientSecret, redirectUri: callbackUrl };
     this.scopes = scopes;
     this.onConnect = onConnect;
   }
 
   getAuthorizationUrl(state: string, codeVerifier: string): URL {
-    return this.client.createAuthorizationURL(state, codeVerifier, this.scopes);
+    return createAuthorizationUrl({
+      endpoint: AUTHORIZATION_ENDPOINT,
+      client: this.client,
+      state,
+      codeVerifier,
+      scopes: this.scopes,
+    });
   }
 
   async exchangeCode(code: string, codeVerifier: string): Promise<OAuthTokens> {
     try {
-      const tokens = await this.client.validateAuthorizationCode(
+      const tokens = await validateAuthorizationCode({
+        endpoint: TOKEN_ENDPOINT,
+        client: this.client,
         code,
         codeVerifier,
-      );
-      return {
-        accessToken: tokens.accessToken(),
-        refreshToken: tokens.hasRefreshToken()
-          ? tokens.refreshToken()
-          : undefined,
-        expiresAt: tokens.accessTokenExpiresAt(),
-        scopes: tokens.hasScopes() ? tokens.scopes() : this.scopes,
-      };
+      });
+      return { ...tokens, scopes: tokens.scopes ?? this.scopes };
     } catch (error) {
       handleOAuthError(error);
     }
@@ -86,14 +97,15 @@ export class ZoomOAuthClient implements OAuthClient {
 
   async refreshAccessToken(refreshToken: string): Promise<OAuthTokens> {
     try {
-      const tokens = await this.client.refreshAccessToken(refreshToken);
+      const tokens = await refreshAccessToken({
+        endpoint: TOKEN_ENDPOINT,
+        client: this.client,
+        refreshToken,
+      });
       return {
-        accessToken: tokens.accessToken(),
-        refreshToken: tokens.hasRefreshToken()
-          ? tokens.refreshToken()
-          : refreshToken,
-        expiresAt: tokens.accessTokenExpiresAt(),
-        scopes: tokens.hasScopes() ? tokens.scopes() : this.scopes,
+        ...tokens,
+        refreshToken: tokens.refreshToken ?? refreshToken,
+        scopes: tokens.scopes ?? this.scopes,
       };
     } catch (error) {
       handleOAuthError(error);
@@ -102,7 +114,11 @@ export class ZoomOAuthClient implements OAuthClient {
 
   async revokeToken(accessToken: string): Promise<void> {
     try {
-      await this.client.revokeToken(accessToken);
+      await revokeToken({
+        endpoint: REVOCATION_ENDPOINT,
+        client: this.client,
+        token: accessToken,
+      });
     } catch (error) {
       handleOAuthError(error);
     }
