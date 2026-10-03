@@ -354,6 +354,7 @@ async function createWebexMeeting({
   const window = getWebexMeetingWindow({ start, end, now: new Date() });
   const res = await fetch("https://webexapis.com/v1/meetings", {
     method: "POST",
+    signal: AbortSignal.timeout(15_000),
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",

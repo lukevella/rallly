@@ -79,6 +79,7 @@ export class WebexOAuthClient implements OAuthClient {
     try {
       const res = await fetch("https://webexapis.com/v1/people/me", {
         headers: { Authorization: `Bearer ${tokens.accessToken}` },
+        signal: AbortSignal.timeout(10_000),
       });
       if (!res.ok) {
         throw new Error(`Webex user lookup failed with status ${res.status}`);
