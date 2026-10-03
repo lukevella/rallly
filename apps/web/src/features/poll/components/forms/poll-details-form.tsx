@@ -130,7 +130,7 @@ export const PollDetailsForm = ({
                 render={<Button type="button" className="rounded-full" />}
               >
                 <PlusIcon data-icon="inline-start" />
-                <Trans i18nKey="addConferencing" defaults="Add conferencing" />
+                <Trans i18nKey="addVideoCall" defaults="Add video call" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <ConferencingProviderMenuItems

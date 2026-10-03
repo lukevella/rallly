@@ -69,7 +69,7 @@ export const toConferencingFormValues = (
     conferencing?.provider === "custom" ? conferencing.label : "",
 });
 
-// Menu entries for the "Add conferencing" menu: linked providers first,
+// Menu entries for the "Add video call" menu: linked providers first,
 // then the rest this instance offers, then a pasted link. Renders nothing
 // once a choice is made: an event carries one meeting link. A caller on a
 // free plan passes `upsell` to mark the Pro providers and take the click, so
