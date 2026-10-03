@@ -34,7 +34,7 @@
           },
           {
             "group": "Integrations",
-            "pages": ["integrations/google-meet"]
+            "pages": ["integrations/google-meet", "integrations/webex"]
           },
           {
             "group": "Guides",
