@@ -1,0 +1,116 @@
+---
+icon: video
+title: Webex
+description: Connect your Webex account so Rallly creates the Webex meeting link when you finalize a poll
+---
+
+With the Webex integration, Rallly creates a Webex meeting on your account at the moment you finalize a poll. The join link goes into the event, the calendar invite and the confirmation emails, so participants never wait for a link to follow.
+
+<Callout icon="gem" color="#4f46e5">
+  Webex meeting links require a [Pro subscription](https://rallly.co/pricing) on rallly.co. Connecting your account works on every plan, but choosing Webex as the video call for a poll is a Pro feature.
+</Callout>
+
+## How it works
+
+1. You connect your Webex account once, from your settings.
+2. When you create a poll, you choose Webex as the video call. The poll shows "Webex" to participants while voting is open; there is no link yet.
+3. When you finalize the poll, Rallly creates a Webex meeting for the chosen time on your Webex account and attaches the join link to the event.
+
+The meeting is created on the Webex account you connected, so it follows that account's and your organization's Webex settings, such as the lobby and the meeting password. Rallly does not change those settings.
+
+## Requirements
+
+- A Webex account that can host meetings.
+- Your organization must allow Webex integrations. Integrations are allowed by default; an administrator can block them in Control Hub. See [Organization restrictions](#organization-restrictions).
+- The Webex integration must be enabled on the Rallly instance you use. On a self-hosted instance the administrator turns it on.
+
+## Adding the app
+
+<Steps>
+  <Step title="Open Conferencing settings">
+    In Rallly, open **Settings** from the sidebar and choose **Conferencing**.
+  </Step>
+  <Step title="Connect your account">
+    Next to **Webex**, click **Connect**. You are sent to Webex to sign in.
+  </Step>
+  <Step title="Approve the permissions">
+    Webex shows what Rallly is asking for (listed under [Permissions](#permissions)). Click **Accept**. You are returned to Rallly, where the email address of your Webex account appears next to Webex.
+  </Step>
+</Steps>
+
+You can connect one Webex account. To switch to a different account, disconnect the current one, then connect the new one.
+
+### Organization restrictions
+
+A Webex administrator can block integrations for everyone in the organization, or allow only some of them, under **Management** > **Apps** > **Integrations** in Control Hub. If yours does, Webex refuses the connection and Rallly shows an error when you return. Only an administrator of your organization can allow Rallly.
+
+## Using the integration
+
+### Choosing Webex for a poll
+
+When creating a poll, click **Add video call** and choose **Webex**. The form shows "Webex" as the video call for this poll.
+
+If your Webex account is not connected, the form tells you so and links to Conferencing settings.
+
+Participants see "Webex" on the poll page while voting is open. No meeting link exists yet.
+
+### Finalizing the poll
+
+When you finalize the poll and pick the winning time, Rallly:
+
+1. Creates a Webex meeting for that time on your Webex account.
+2. Attaches the join link, meeting number and password to the event.
+3. Includes them in the calendar invite (`.ics`) and in the confirmation emails sent to you and to participants.
+
+Rallly asks Webex not to send its own invitation emails; the invite Rallly sends covers it.
+
+Webex only schedules meetings between 10 minutes and 23 hours 59 minutes long that have not started yet. Rallly fits the Webex meeting to those limits: an all day event gets a meeting of 23 hours 59 minutes, an event shorter than 10 minutes gets a 10 minute meeting, and an event that has already started gets a meeting that starts at the next minute. The event itself keeps the time you picked.
+
+If the meeting cannot be created, for example because the Webex connection has expired, the poll stays open and Rallly shows an error. See [Troubleshooting](#troubleshooting).
+
+### Which account hosts the meeting
+
+The meeting is created on the Webex account of the poll's organizer. If a space member finalizes a poll organized by someone else, the meeting is still created on the organizer's Webex account, and the organizer is the host.
+
+## Permissions
+
+When you connect, Rallly asks Webex for these permissions:
+
+| Permission | Why |
+| --- | --- |
+| Create, manage, or cancel your scheduled Webex meetings (`meeting:schedules_write`) | To create the meeting when you finalize a poll. |
+| Read your users' company directory (`spark:people_read`) | To read your Webex account id, email address and name, which identify the connection and show which account is connected. |
+
+Rallly uses `meeting:schedules_write` only to create a meeting when you finalize a poll, and `spark:people_read` only to read your own profile. Rallly does not read your existing meetings, messages, recordings, transcripts or contacts, and does not join or record meetings.
+
+## Data Rallly stores
+
+For a connected Webex account, Rallly stores:
+
+- Your Webex account id and email address, to identify the connection and show it in your settings.
+- The access token and refresh token Webex issues, encrypted at rest, so Rallly can create meetings on your behalf without asking you to sign in each time.
+
+For each finalized poll, Rallly stores the join link, meeting number and password of the meeting it created, as part of the event.
+
+Rallly does not store the content of any meeting.
+
+## Removing the app
+
+1. Open **Settings**, then **Conferencing**.
+2. Next to **Webex**, click the **More options** button and choose **Disconnect**.
+
+The connection is removed immediately, Rallly deletes the tokens it stored for that Webex account and stops creating Webex meetings for you. Polls that already chose Webex keep that choice but can no longer be finalized with a Webex link until an account is connected again. Meetings Rallly already created stay in your Webex account; delete them from Webex if you no longer need them.
+
+## Troubleshooting
+
+**Webex refuses the connection.** Your organization blocks Webex integrations. Ask your Webex administrator to allow Rallly; see [Organization restrictions](#organization-restrictions).
+
+**"Webex is not connected" when creating a poll.** Your Rallly account has no Webex connection, or it was removed. Connect one in Conferencing settings and choose Webex again.
+
+**Finalizing fails because the account is not connected.** The connection expired after a long period without use, or your administrator removed Rallly. Disconnect and reconnect Webex in Conferencing settings and finalize again.
+
+**Finalizing fails because the meeting link couldn't be created.** The connected account may not be able to host meetings, for example a Webex account that only has messaging. Check that you can schedule a meeting in Webex with that account, then finalize again. The poll is unchanged until finalizing succeeds.
+
+**The meeting was created on the wrong account.** The meeting is always created on the poll organizer's connected Webex account. Check which account is connected in Conferencing settings.
+
+Still stuck? [Contact support](/contact/support).

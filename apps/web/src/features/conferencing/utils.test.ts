@@ -5,6 +5,7 @@ import {
   createZoomUrlValidationResponse,
   getConferencingUri,
   getMicrosoftTeamsAuthority,
+  getWebexMeetingWindow,
   isEmailAllowlisted,
   isTeamsMeetingRefusal,
   meetSpaceResponseSchema,
@@ -12,6 +13,8 @@ import {
   teamsMeetingResponseSchema,
   teamsMeetingToConferencing,
   verifyZoomWebhookSignature,
+  webexMeetingResponseSchema,
+  webexMeetingToConferencing,
   zoomMeetingResponseSchema,
   zoomMeetingToConferencing,
 } from "./utils";
@@ -116,6 +119,93 @@ describe("teamsMeetingToConferencing", () => {
     expect(teamsMeetingResponseSchema.safeParse({ id: "abc" }).success).toBe(
       false,
     );
+  });
+});
+
+describe("webexMeetingToConferencing", () => {
+  it("maps a Webex meeting into the stored link shape", () => {
+    const meeting = webexMeetingResponseSchema.parse({
+      id: "870f51ff287b41be84648412901e0402",
+      meetingNumber: "123456789",
+      title: "ignored",
+      password: "BgJep@43",
+      webLink:
+        "https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1",
+      sipAddress: "123456789@site4-example.webex.com",
+    });
+    const conferencing = webexMeetingToConferencing(meeting);
+    expect(conferencing).toEqual({
+      provider: "webex",
+      uri: "https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1",
+      meetingId: "123456789",
+      password: "BgJep@43",
+    });
+    expect(conferencingSchema.parse(conferencing)).toEqual(conferencing);
+  });
+
+  it("rejects a meeting without a join link", () => {
+    expect(
+      webexMeetingResponseSchema.safeParse({ meetingNumber: "123456789" })
+        .success,
+    ).toBe(false);
+  });
+});
+
+describe("getWebexMeetingWindow", () => {
+  const now = new Date("2026-10-03T09:00:30Z");
+
+  it("keeps a future meeting within the allowed length unchanged", () => {
+    const start = new Date("2026-10-04T10:00:00Z");
+    const end = new Date("2026-10-04T11:00:00Z");
+    expect(getWebexMeetingWindow({ start, end, now })).toEqual({ start, end });
+  });
+
+  it("starts a meeting already under way at the next whole minute", () => {
+    expect(
+      getWebexMeetingWindow({
+        start: new Date("2026-10-03T08:30:00Z"),
+        end: new Date("2026-10-03T09:30:00Z"),
+        now,
+      }),
+    ).toEqual({
+      start: new Date("2026-10-03T09:01:00Z"),
+      end: new Date("2026-10-03T09:30:00Z"),
+    });
+  });
+
+  it("lengthens a meeting shorter than 10 minutes", () => {
+    const start = new Date("2026-10-04T10:00:00Z");
+    expect(
+      getWebexMeetingWindow({
+        start,
+        end: new Date("2026-10-04T10:05:00Z"),
+        now,
+      }),
+    ).toEqual({ start, end: new Date("2026-10-04T10:10:00Z") });
+  });
+
+  it("caps an all day event at 23 hours 59 minutes", () => {
+    const start = new Date("2026-10-04T00:00:00Z");
+    expect(
+      getWebexMeetingWindow({
+        start,
+        end: new Date("2026-10-05T00:00:00Z"),
+        now,
+      }),
+    ).toEqual({ start, end: new Date("2026-10-04T23:59:00Z") });
+  });
+
+  it("gives an event that has already ended the shortest meeting", () => {
+    expect(
+      getWebexMeetingWindow({
+        start: new Date("2026-10-02T10:00:00Z"),
+        end: new Date("2026-10-02T11:00:00Z"),
+        now,
+      }),
+    ).toEqual({
+      start: new Date("2026-10-03T09:01:00Z"),
+      end: new Date("2026-10-03T09:11:00Z"),
+    });
   });
 });
 

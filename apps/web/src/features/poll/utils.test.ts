@@ -289,8 +289,8 @@ describe("getFinalizePlanGate", () => {
     ).toBeNull();
   });
 
-  it("gates Zoom and Teams links on a free space", () => {
-    for (const provider of ["zoom", "teams"] as const) {
+  it("gates Zoom, Teams and Webex links on a free space", () => {
+    for (const provider of ["zoom", "teams", "webex"] as const) {
       expect(
         getFinalizePlanGate({
           tier: "hobby",

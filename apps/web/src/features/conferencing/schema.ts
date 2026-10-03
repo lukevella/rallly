@@ -2,7 +2,12 @@ import * as z from "zod";
 
 // Providers Rallly can mint links for. Distinct from the stored-link union
 // below, which also covers links pasted by hand (custom) and phone dial-ins.
-export const conferencingProviderSchema = z.enum(["zoom", "meet", "teams"]);
+export const conferencingProviderSchema = z.enum([
+  "zoom",
+  "meet",
+  "teams",
+  "webex",
+]);
 export type ConferencingProvider = z.infer<typeof conferencingProviderSchema>;
 
 // What a poll records before there is a link: a provider to mint with at
@@ -13,6 +18,7 @@ export const pollConferencingSchema = z.discriminatedUnion("provider", [
   z.object({ provider: z.literal("zoom") }),
   z.object({ provider: z.literal("meet") }),
   z.object({ provider: z.literal("teams") }),
+  z.object({ provider: z.literal("webex") }),
   z.object({
     provider: z.literal("custom"),
     label: z.string().trim().min(1).max(100),
@@ -26,7 +32,7 @@ export const disconnectConferencingConnectionSchema = z.object({
 });
 
 const webConferencingSchema = z.object({
-  provider: z.enum(["zoom", "meet", "teams"]),
+  provider: z.enum(["zoom", "meet", "teams", "webex"]),
   uri: z.url(),
   meetingId: z.string().optional(),
   password: z.string().optional(),
