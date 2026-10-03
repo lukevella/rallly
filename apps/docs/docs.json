@@ -34,7 +34,10 @@
           },
           {
             "group": "Integrations",
-            "pages": ["integrations/google-meet"]
+            "pages": [
+              "integrations/google-meet",
+              "integrations/microsoft-teams"
+            ]
           },
           {
             "group": "Guides",
