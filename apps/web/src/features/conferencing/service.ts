@@ -1,12 +1,12 @@
 import "server-only";
 
 import { createLogger } from "@rallly/logger";
-import { OAuth2RequestError } from "arctic";
 import { google } from "googleapis";
 import { env } from "@/env";
 import { loadCredential } from "@/features/credentials/data";
 import { updateOAuthCredentialTokens } from "@/features/credentials/mutations";
 import type { OAuthCredentials } from "@/features/credentials/schema";
+import { OAuth2RequestError } from "@/lib/oauth/errors";
 import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
 import { MICROSOFT_TEAMS_SCOPES } from "./constants";

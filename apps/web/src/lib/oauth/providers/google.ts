@@ -1,9 +1,17 @@
 import "server-only";
 
-import { Google } from "arctic";
 import { google } from "googleapis";
+import type { OAuth2ClientConfig } from "../oauth2";
+import {
+  createAuthorizationUrl,
+  refreshAccessToken,
+  validateAuthorizationCode,
+} from "../oauth2";
 import type { OAuthClient, OAuthTokens, UserInfo } from "../types";
 import { handleOAuthError } from "./base";
+
+const AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
+const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 
 interface GoogleOAuthClientConfig {
   clientId: string;
@@ -20,7 +28,7 @@ interface GoogleOAuthClientConfig {
 
 export class GoogleOAuthClient implements OAuthClient {
   provider = "google";
-  private client: Google;
+  private client: OAuth2ClientConfig;
   private clientId: string;
   private clientSecret: string;
   scopes: string[];
@@ -37,7 +45,7 @@ export class GoogleOAuthClient implements OAuthClient {
     callbackUrl = "",
     onConnect,
   }: GoogleOAuthClientConfig) {
-    this.client = new Google(clientId, clientSecret, callbackUrl);
+    this.client = { clientId, clientSecret, redirectUri: callbackUrl };
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.scopes = scopes;
@@ -45,11 +53,13 @@ export class GoogleOAuthClient implements OAuthClient {
   }
 
   getAuthorizationUrl(state: string, codeVerifier: string): URL {
-    const authUrl = this.client.createAuthorizationURL(
+    const authUrl = createAuthorizationUrl({
+      endpoint: AUTHORIZATION_ENDPOINT,
+      client: this.client,
       state,
       codeVerifier,
-      this.scopes,
-    );
+      scopes: this.scopes,
+    });
 
     authUrl.searchParams.set("access_type", "offline");
     authUrl.searchParams.set("prompt", "consent");
@@ -63,19 +73,14 @@ export class GoogleOAuthClient implements OAuthClient {
 
   async exchangeCode(code: string, codeVerifier: string): Promise<OAuthTokens> {
     try {
-      const tokens = await this.client.validateAuthorizationCode(
+      const tokens = await validateAuthorizationCode({
+        endpoint: TOKEN_ENDPOINT,
+        client: this.client,
         code,
         codeVerifier,
-      );
+      });
 
-      return {
-        accessToken: tokens.accessToken(),
-        refreshToken: tokens.hasRefreshToken()
-          ? tokens.refreshToken()
-          : undefined,
-        expiresAt: tokens.accessTokenExpiresAt(),
-        scopes: tokens.scopes(),
-      };
+      return { ...tokens, scopes: tokens.scopes ?? this.scopes };
     } catch (error) {
       handleOAuthError(error);
     }
@@ -111,16 +116,13 @@ export class GoogleOAuthClient implements OAuthClient {
 
   async refreshAccessToken(refreshToken: string): Promise<OAuthTokens> {
     try {
-      const tokens = await this.client.refreshAccessToken(refreshToken);
+      const tokens = await refreshAccessToken({
+        endpoint: TOKEN_ENDPOINT,
+        client: this.client,
+        refreshToken,
+      });
 
-      return {
-        accessToken: tokens.accessToken(),
-        refreshToken: tokens.hasRefreshToken()
-          ? tokens.refreshToken()
-          : undefined,
-        expiresAt: tokens.accessTokenExpiresAt(),
-        scopes: tokens.scopes(),
-      };
+      return { ...tokens, scopes: tokens.scopes ?? this.scopes };
     } catch (error) {
       handleOAuthError(error);
     }
