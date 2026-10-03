@@ -26,7 +26,7 @@ export type EmailChrome = EmailBranding & {
  * meeting; `url` is omitted when there is nothing to join.
  */
 export type EmailConferencing = {
-  provider: "zoom" | "meet" | "teams" | "phone" | "custom";
+  provider: "zoom" | "meet" | "teams" | "webex" | "phone" | "custom";
   label?: string;
   url?: string;
 };

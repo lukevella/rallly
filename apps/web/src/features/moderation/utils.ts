@@ -35,7 +35,7 @@ export function containsSuspiciousPatterns(text: string) {
   // Raw HTTP(S) URLs — but exclude common meeting/location domains
   const rawUrlPattern = /https?:\/\/[^\s]+/i;
   const safeUrlPattern =
-    /https?:\/\/([\w-]+\.)?(zoom\.us|meet\.google\.com|teams\.microsoft\.com|maps\.(google|apple)\.com|chat\.whatsapp\.com|wa\.me|t\.me|discord\.(gg|com))[^\s]*/i;
+    /https?:\/\/([\w-]+\.)?(zoom\.us|meet\.google\.com|teams\.microsoft\.com|webex\.com|maps\.(google|apple)\.com|chat\.whatsapp\.com|wa\.me|t\.me|discord\.(gg|com))[^\s]*/i;
 
   const hasUnsafeUrl = rawUrlPattern.test(text) && !safeUrlPattern.test(text);
 

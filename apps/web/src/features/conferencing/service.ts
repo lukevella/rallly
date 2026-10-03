@@ -8,18 +8,22 @@ import { updateOAuthCredentialTokens } from "@/features/credentials/mutations";
 import type { OAuthCredentials } from "@/features/credentials/schema";
 import { OAuth2RequestError } from "@/lib/oauth/errors";
 import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
+import { WebexOAuthClient } from "@/lib/oauth/providers/webex";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
-import { MICROSOFT_TEAMS_SCOPES } from "./constants";
+import { MICROSOFT_TEAMS_SCOPES, WEBEX_SCOPES } from "./constants";
 import { getConferencingConnectionForProvider } from "./data";
 import type { Conferencing, ConferencingProvider } from "./schema";
 import {
   getMicrosoftTeamsAuthority,
+  getWebexMeetingWindow,
   isTeamsMeetingRefusal,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
   teamsMeetingProbeResponseSchema,
   teamsMeetingResponseSchema,
   teamsMeetingToConferencing,
+  webexMeetingResponseSchema,
+  webexMeetingToConferencing,
   zoomMeetingResponseSchema,
   zoomMeetingToConferencing,
 } from "./utils";
@@ -103,6 +107,17 @@ export async function createConferencingMeeting({
           title,
           start,
           end,
+        });
+        return { ok: true, conferencing };
+      }
+      case "webex": {
+        const secret = await refreshWebexTokenIfExpired({ credential });
+        const conferencing = await createWebexMeeting({
+          accessToken: secret.accessToken,
+          title,
+          start,
+          end,
+          timeZone,
         });
         return { ok: true, conferencing };
       }
@@ -214,6 +229,39 @@ async function refreshMicrosoftTokenIfExpired({
   };
 }
 
+async function refreshWebexTokenIfExpired({
+  credential,
+}: {
+  credential: StoredCredential;
+}): Promise<OAuthCredentials> {
+  if (isAccessTokenFresh(credential) || !credential.secret.refreshToken) {
+    return credential.secret;
+  }
+
+  if (!env.WEBEX_CLIENT_ID || !env.WEBEX_CLIENT_SECRET) {
+    throw new Error("Webex is not configured");
+  }
+
+  const client = new WebexOAuthClient({
+    clientId: env.WEBEX_CLIENT_ID,
+    clientSecret: env.WEBEX_CLIENT_SECRET,
+    scopes: WEBEX_SCOPES,
+  });
+
+  const tokens = await client.refreshAccessToken(
+    credential.secret.refreshToken,
+  );
+
+  await updateOAuthCredentialTokens({ id: credential.id, tokens });
+
+  return {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    expiresAt: tokens.expiresAt?.toISOString(),
+    scopes: tokens.scopes,
+  };
+}
+
 // Best effort: the tokens are already deleted locally, and a grant Zoom still
 // holds is one the user can remove from their own Zoom app list.
 export async function revokeZoomToken({
@@ -286,6 +334,47 @@ async function createZoomMeeting({
 
   return zoomMeetingToConferencing(
     zoomMeetingResponseSchema.parse(await res.json()),
+  );
+}
+
+// Rallly sends the invites, so Webex is told not to email anyone.
+async function createWebexMeeting({
+  accessToken,
+  title,
+  start,
+  end,
+  timeZone,
+}: {
+  accessToken: string;
+  title: string;
+  start: Date;
+  end: Date;
+  timeZone?: string | null;
+}): Promise<Conferencing> {
+  const window = getWebexMeetingWindow({ start, end, now: new Date() });
+  const res = await fetch("https://webexapis.com/v1/meetings", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: title.slice(0, 128),
+      start: window.start.toISOString(),
+      end: window.end.toISOString(),
+      sendEmail: false,
+      ...(timeZone ? { timezone: timeZone } : {}),
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Webex meeting creation failed with status ${res.status}: ${await res.text()}`,
+    );
+  }
+
+  return webexMeetingToConferencing(
+    webexMeetingResponseSchema.parse(await res.json()),
   );
 }
 

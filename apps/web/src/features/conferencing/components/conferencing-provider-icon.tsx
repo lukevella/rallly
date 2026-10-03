@@ -1,5 +1,6 @@
 import GoogleMeetIcon from "@/features/conferencing/assets/google-meet.svg";
 import MicrosoftTeamsIcon from "@/features/conferencing/assets/microsoft-teams.svg";
+import WebexIcon from "@/features/conferencing/assets/webex.svg";
 import ZoomIcon from "@/features/conferencing/assets/zoom.svg";
 import type { ConferencingProvider } from "@/features/conferencing/schema";
 
@@ -19,5 +20,7 @@ export function ConferencingProviderIcon({
       return (
         <MicrosoftTeamsIcon width={size} height={size} aria-hidden="true" />
       );
+    case "webex":
+      return <WebexIcon width={size} height={size} aria-hidden="true" />;
   }
 }

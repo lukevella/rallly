@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
   cacheLife("max");
   return (
     <Section>
-      <LegalPageLayout title="Privacy policy" lastUpdated="2026-09-29">
+      <LegalPageLayout title="Privacy policy" lastUpdated="2026-10-03">
         <p>
           At rallly.co, we take your privacy seriously. This privacy policy
           explains how we collect, use, and disclose your personal data, and
@@ -247,11 +247,50 @@ export default async function PrivacyPolicy() {
           Meetings Rallly already created stay in your Microsoft account.
         </p>
 
+        <h2>Webex user data</h2>
+
+        <p>
+          If you connect Webex, Rallly uses the permission to schedule meetings
+          (<code>meeting:schedules_write</code>) only to create a meeting on
+          your Webex account when you finalize a poll that uses Webex as its
+          video call, and reads your Webex account id, name and email address to
+          identify the connection. Rallly does not read your existing meetings,
+          messages, recordings, transcripts or contacts, and does not join or
+          record meetings.
+        </p>
+
+        <p>
+          We do not store your name. We store your Webex account id and email
+          address to identify the connection and show which account is
+          connected, and the access and refresh tokens Webex issues, encrypted
+          at rest, so Rallly can create meetings without asking you to sign in
+          each time. For each meeting Rallly creates, we store its join link,
+          meeting number and password on the event, so they can be included in
+          the calendar invite and confirmation emails sent to you and your
+          participants.
+        </p>
+
+        <p>
+          We use this data only to identify the connected account and to create
+          meetings for you as the organizer. We do not sell Webex user data, use
+          it for advertising, use it to train AI models, or share it with third
+          parties except as needed to provide the service.
+        </p>
+
+        <p>
+          When you disconnect Webex in your settings, we delete the stored
+          account details and tokens. When you delete your Rallly account, we
+          delete them along with your events, including the details of meetings
+          Rallly created. Meetings Rallly already created stay in your Webex
+          account.
+        </p>
+
         <h2 id="data-protection">How we protect your data</h2>
 
         <p>
           We use the following measures to keep your data, including the data we
-          receive from Google, Zoom and Microsoft, confidential and secure:
+          receive from Google, Zoom, Microsoft and Webex, confidential and
+          secure:
         </p>
 
         <ul>
@@ -262,11 +301,11 @@ export default async function PrivacyPolicy() {
           </li>
           <li>
             Encryption of access tokens: the OAuth access and refresh tokens
-            that Google, Zoom and Microsoft issue when you connect an account
-            are encrypted with AES-256-GCM by our application before they are
-            written to the database. The encryption key is kept separately from
-            the database, so a copy of the database alone does not reveal the
-            tokens.
+            that Google, Zoom, Microsoft and Webex issue when you connect an
+            account are encrypted with AES-256-GCM by our application before
+            they are written to the database. The encryption key is kept
+            separately from the database, so a copy of the database alone does
+            not reveal the tokens.
           </li>
           <li>
             Encryption at rest: our database and its backups are hosted by Neon,

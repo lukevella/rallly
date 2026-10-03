@@ -11,6 +11,7 @@ export const conferencingProviderIntegrations: Record<
   zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   meet: { integrationId: "google-meet", oauthProvider: "google" },
   teams: { integrationId: "microsoft-teams", oauthProvider: "microsoft" },
+  webex: { integrationId: "webex", oauthProvider: "webex" },
 };
 
 export function integrationIdToConferencingProvider(
@@ -31,15 +32,17 @@ export const conferencingProviderLabels: Record<ConferencingProvider, string> =
     zoom: "Zoom",
     meet: "Google Meet",
     teams: "Microsoft Teams",
+    webex: "Webex",
   };
 
 // Which providers a paid plan unlocks. Google Meet stays free: a Gmail
 // organizer is the referral engine and rarely converts, so gating Meet
-// protects nothing. Zoom and Teams are the tools people have through an
-// employer, which is where the upsell lands.
+// protects nothing. Zoom, Teams and Webex are the tools people have through
+// an employer, which is where the upsell lands.
 const proConferencingProviders: ReadonlySet<ConferencingProvider> = new Set([
   "zoom",
   "teams",
+  "webex",
 ]);
 
 export function isProConferencingProvider(provider: ConferencingProvider) {
@@ -116,6 +119,52 @@ export function isTeamsMeetingRefusal(status: number) {
     status !== 408 &&
     status !== 429
   );
+}
+
+export const webexMeetingResponseSchema = z.object({
+  webLink: z.url(),
+  meetingNumber: z.string().nullish(),
+  password: z.string().nullish(),
+});
+
+export function webexMeetingToConferencing(
+  meeting: z.infer<typeof webexMeetingResponseSchema>,
+): Conferencing {
+  return {
+    provider: "webex",
+    uri: meeting.webLink,
+    meetingId: meeting.meetingNumber || undefined,
+    password: meeting.password || undefined,
+  };
+}
+
+const WEBEX_MIN_DURATION_MS = 10 * 60_000;
+const WEBEX_MAX_DURATION_MS = (23 * 60 + 59) * 60_000;
+
+// Webex refuses a meeting that starts in the past or lasts under 10 minutes
+// or over 23 hours 59 minutes. An event already under way starts its meeting
+// now, and an all day event gets the longest meeting Webex allows; the link
+// is what matters, and the invite carries the event's real times.
+export function getWebexMeetingWindow({
+  start,
+  end,
+  now,
+}: {
+  start: Date;
+  end: Date;
+  now: Date;
+}) {
+  // Webex schedules to the minute, so "now" is the next whole minute.
+  const earliest = new Date(Math.ceil((now.getTime() + 1) / 60_000) * 60_000);
+  const windowStart = start < earliest ? earliest : start;
+  const duration = Math.min(
+    Math.max(end.getTime() - windowStart.getTime(), WEBEX_MIN_DURATION_MS),
+    WEBEX_MAX_DURATION_MS,
+  );
+  return {
+    start: windowStart,
+    end: new Date(windowStart.getTime() + duration),
+  };
 }
 
 // Graph's online meetings API serves work and school accounts only, so a
