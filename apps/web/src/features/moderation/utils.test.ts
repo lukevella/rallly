@@ -19,4 +19,18 @@ describe("containsSuspiciousPatterns", () => {
       true,
     );
   });
+
+  it("does not trust a known domain written as userinfo", () => {
+    expect(
+      containsSuspiciousPatterns("https://webex.com:@evil.example/x"),
+    ).toBe(true);
+  });
+
+  it("does not let a trusted link vouch for another link", () => {
+    expect(
+      containsSuspiciousPatterns(
+        "https://zoom.us/j/123 then https://evil.example/x",
+      ),
+    ).toBe(true);
+  });
 });
