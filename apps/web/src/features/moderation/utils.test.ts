@@ -32,5 +32,10 @@ describe("containsSuspiciousPatterns", () => {
         "https://zoom.us/j/123 then https://evil.example/x",
       ),
     ).toBe(true);
+    expect(
+      containsSuspiciousPatterns(
+        "https://zoom.us/j/123,https://evil.example/x",
+      ),
+    ).toBe(true);
   });
 });

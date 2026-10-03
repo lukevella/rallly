@@ -32,10 +32,12 @@ export function containsSuspiciousPatterns(text: string) {
   const cryptoScamPattern =
     /(\d+\.\d+\s*BTC|cloud mining|your balance|was mined|unclaimed funds)/i;
 
-  // Raw HTTP(S) URLs, except those on common meeting/location domains
-  const hasUnsafeUrl = (text.match(/https?:\/\/[^\s]+/gi) ?? []).some(
-    (url) => !isTrustedUrl(url),
-  );
+  // Raw HTTP(S) URLs, except those on common meeting/location domains. A
+  // match ends where the next scheme starts, so links run together are each
+  // judged on their own host.
+  const hasUnsafeUrl = (
+    text.match(/https?:\/\/(?:(?!https?:\/\/)\S)+/gi) ?? []
+  ).some((url) => !isTrustedUrl(url));
 
   return (
     // Simple pattern checks (least intensive)
