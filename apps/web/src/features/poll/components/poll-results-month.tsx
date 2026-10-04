@@ -131,7 +131,7 @@ export function PollResultsMonth({
           </span>
         </Button>
       </div>
-      <div className="relative min-h-0 overflow-auto px-2 pb-2">
+      <div className="relative min-h-0 overflow-auto">
         <table
           role="table"
           aria-label={t("pollResultsTableLabel", { defaultValue: "Results" })}
