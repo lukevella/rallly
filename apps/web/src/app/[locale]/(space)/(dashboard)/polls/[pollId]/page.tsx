@@ -47,7 +47,7 @@ async function Results({
           </div>
         ) : (
           <div className="h-full px-4 pb-4 md:px-6 md:pb-6">
-            <Card className="h-full">
+            <Card className="flex max-h-full flex-col">
               {results.kind === "date" ? (
                 <PollResultsMonth
                   options={results.options}

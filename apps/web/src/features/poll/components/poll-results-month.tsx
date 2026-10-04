@@ -67,7 +67,7 @@ export function PollResultsMonth({
   const highlightAfter = hasHighlightAfter({ monthKey, options, states });
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex min-h-0 flex-col">
       <div className="flex shrink-0 items-center gap-2 px-3 pt-3 pb-2">
         <Button
           variant="ghost"
@@ -131,7 +131,7 @@ export function PollResultsMonth({
           </span>
         </Button>
       </div>
-      <div className="relative min-h-0 flex-1 overflow-auto px-2 pb-2">
+      <div className="relative min-h-0 overflow-auto px-2 pb-2">
         <table
           role="table"
           aria-label={t("pollResultsTableLabel", { defaultValue: "Results" })}

@@ -64,7 +64,7 @@ export function PollResultsGrid({
   );
 
   return (
-    <div className="relative h-full overflow-auto">
+    <div className="relative min-h-0 overflow-auto">
       <table
         role="table"
         aria-label={t("pollResultsTableLabel", { defaultValue: "Results" })}
