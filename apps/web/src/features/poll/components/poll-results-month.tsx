@@ -5,6 +5,7 @@
 
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
@@ -141,12 +142,15 @@ export function PollResultsMonth({
               role="row"
               className="sticky top-0 z-10 col-span-full grid grid-cols-subgrid border-b bg-card"
             >
-              {orderedWeekdays.map((weekday) => (
+              {orderedWeekdays.map((weekday, index) => (
                 <th
                   key={weekday.day}
                   scope="col"
                   role="columnheader"
-                  className="py-2 text-center font-medium text-muted-foreground text-xs"
+                  className={cn(
+                    "py-2 text-center font-medium text-muted-foreground text-xs",
+                    index > 0 && "border-l",
+                  )}
                 >
                   <span aria-hidden="true">
                     {hydrated ? weekday.short : "\u00a0"}
@@ -163,12 +167,19 @@ export function PollResultsMonth({
               <tr
                 role="row"
                 key={week.find(Boolean)?.dateKey}
-                className="col-span-full grid grid-cols-subgrid"
+                className="col-span-full grid grid-cols-subgrid border-b last:border-b-0"
               >
                 {week.map((day, index) => {
+                  const columnBorder = index > 0 && "border-l";
                   if (!day) {
-                    // biome-ignore lint/suspicious/noArrayIndexKey: blanks have no identity
-                    return <td role="cell" key={index} />;
+                    return (
+                      <td
+                        role="cell"
+                        // biome-ignore lint/suspicious/noArrayIndexKey: blanks have no identity
+                        key={index}
+                        className={cn(columnBorder)}
+                      />
+                    );
                   }
                   const option = optionByDate.get(day.dateKey);
                   if (!option) {
@@ -176,7 +187,10 @@ export function PollResultsMonth({
                       <td
                         role="cell"
                         key={day.dateKey}
-                        className="flex aspect-square items-start justify-center p-2 text-muted-foreground/50 text-xs"
+                        className={cn(
+                          "flex aspect-square items-start justify-center p-2 text-muted-foreground/50 text-xs",
+                          columnBorder,
+                        )}
                       >
                         {day.day}
                       </td>
@@ -198,7 +212,7 @@ export function PollResultsMonth({
                       state={states.get(option.id) ?? "normal"}
                       available={getOptionAvailability(option)}
                       total={participantCount}
-                      className="aspect-square"
+                      className={cn("aspect-square", columnBorder)}
                     />
                   );
                 })}

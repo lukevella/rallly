@@ -93,8 +93,9 @@ export function PollResultsGrid({
                 scope="col"
                 role="columnheader"
                 className={cn(
-                  "px-2 py-3 text-center font-medium text-sm",
-                  grid.dateGapBefore.has(index) && "border-l border-dashed",
+                  "px-2 py-3 text-center font-medium text-xs",
+                  "border-l",
+                  grid.dateGapBefore.has(index) && "border-dashed",
                 )}
               >
                 {dateLabels[index]}
@@ -108,9 +109,8 @@ export function PollResultsGrid({
               role="row"
               key={slot.key}
               className={cn(
-                "col-span-full grid grid-cols-subgrid",
-                grid.slotGapBefore.has(rowIndex) &&
-                  "mt-3 border-t border-dashed pt-3",
+                "col-span-full grid grid-cols-subgrid border-b last:border-b-0",
+                grid.slotGapBefore.has(rowIndex + 1) && "border-dashed",
               )}
             >
               <th
@@ -125,8 +125,10 @@ export function PollResultsGrid({
                   timeGridCellKey(date.key, slot.key),
                 );
                 const option = optionId ? optionById.get(optionId) : undefined;
-                const gapClass =
-                  grid.dateGapBefore.has(index) && "border-l border-dashed";
+                const gapClass = cn(
+                  "border-l",
+                  grid.dateGapBefore.has(index) && "border-dashed",
+                );
                 return option ? (
                   <PollResultsCell
                     key={date.key}
@@ -138,10 +140,10 @@ export function PollResultsGrid({
                     state={states.get(option.id) ?? "normal"}
                     available={getOptionAvailability(option)}
                     total={participantCount}
-                    className={cn(gapClass)}
+                    className={gapClass}
                   />
                 ) : (
-                  <td role="cell" key={date.key} className={cn(gapClass)} />
+                  <td role="cell" key={date.key} className={gapClass} />
                 );
               })}
             </tr>
