@@ -71,7 +71,7 @@ export function LegalPageLayout({
         {title}
       </h1>
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-        <aside className="flex flex-col gap-8 lg:sticky lg:top-24 lg:order-2 lg:w-56 lg:shrink-0">
+        <aside className="flex flex-col gap-8 lg:sticky lg:top-[calc(var(--site-header-height,61px)+0.75rem)] lg:order-2 lg:w-56 lg:shrink-0">
           {items.length > 0 ? (
             <div className="hidden lg:block">
               <LegalPageIndex items={items} />
