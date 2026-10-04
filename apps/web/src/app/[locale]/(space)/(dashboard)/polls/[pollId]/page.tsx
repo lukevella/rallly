@@ -1,3 +1,4 @@
+import { Card } from "@rallly/ui/card";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { Suspense } from "react";
 import { PollDatesList } from "@/features/poll/components/poll-dates-list";
@@ -44,17 +45,23 @@ async function Results({
               timeZone={poll.timeZone}
             />
           </div>
-        ) : results.kind === "date" ? (
-          <PollResultsMonth
-            options={results.options}
-            participantCount={results.participantCount}
-          />
         ) : (
-          <PollResultsGrid
-            options={results.options}
-            participantCount={results.participantCount}
-            timeZone={poll.timeZone}
-          />
+          <div className="h-full px-4 pb-4 md:px-6 md:pb-6">
+            <Card className="h-full">
+              {results.kind === "date" ? (
+                <PollResultsMonth
+                  options={results.options}
+                  participantCount={results.participantCount}
+                />
+              ) : (
+                <PollResultsGrid
+                  options={results.options}
+                  participantCount={results.participantCount}
+                  timeZone={poll.timeZone}
+                />
+              )}
+            </Card>
+          </div>
         )}
       </div>
     </div>

@@ -17,6 +17,7 @@ import {
 } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 
 export function PollResultsGrid({
   options,
@@ -30,6 +31,8 @@ export function PollResultsGrid({
   const { t } = useTranslation();
   const config = useDateTimeConfig();
   const { formatDateTime, formatDateTimeRange } = useDateTime();
+  // Intl output differs between Node and browsers, so labels wait for hydration.
+  const hydrated = useHydrated();
   // Floating polls are stored as UTC wall time; zoned polls follow the viewer.
   const displayZone = timeZone ? (config.timeZone ?? "UTC") : "UTC";
 
@@ -37,6 +40,23 @@ export function PollResultsGrid({
   const grid = React.useMemo(
     () => buildTimeGrid({ options, timeZone: displayZone }),
     [options, displayZone],
+  );
+  const dateLabels = grid.dates.map((date) =>
+    !hydrated
+      ? "\u00a0"
+      : formatDateTime(date.sampleStart, "weekdayMonthDayShort", {
+          timeZone: displayZone,
+        }),
+  );
+  const slotLabels = grid.slots.map((slot) =>
+    !hydrated
+      ? "\u00a0"
+      : formatDateTimeRange(
+          slot.sampleStart,
+          new Date(slot.sampleStart.getTime() + slot.duration * 60_000),
+          "time",
+          { timeZone: displayZone },
+        ),
   );
   const optionById = React.useMemo(
     () => new Map(options.map((option) => [option.id, option])),
@@ -56,12 +76,12 @@ export function PollResultsGrid({
         <thead role="rowgroup" className="contents">
           <tr
             role="row"
-            className="sticky top-0 z-20 col-span-full grid grid-cols-subgrid border-b bg-background"
+            className="sticky top-0 z-20 col-span-full grid grid-cols-subgrid border-b bg-card"
           >
             <th
               scope="col"
               role="columnheader"
-              className="sticky left-0 z-10 bg-background"
+              className="sticky left-0 z-10 bg-card"
             >
               <span className="sr-only">
                 <Trans i18nKey="pollResultsTime" defaults="Time" />
@@ -77,9 +97,7 @@ export function PollResultsGrid({
                   grid.dateGapBefore.has(index) && "border-l border-dashed",
                 )}
               >
-                {formatDateTime(date.sampleStart, "weekdayMonthDayShort", {
-                  timeZone: displayZone,
-                })}
+                {dateLabels[index]}
               </th>
             ))}
           </tr>
@@ -98,14 +116,9 @@ export function PollResultsGrid({
               <th
                 scope="row"
                 role="rowheader"
-                className="sticky left-0 z-10 flex items-center whitespace-nowrap bg-background px-4 text-muted-foreground text-sm tabular-nums"
+                className="sticky left-0 z-10 flex items-center whitespace-nowrap bg-card px-4 text-muted-foreground text-sm tabular-nums"
               >
-                {formatDateTimeRange(
-                  slot.sampleStart,
-                  new Date(slot.sampleStart.getTime() + slot.duration * 60_000),
-                  "time",
-                  { timeZone: displayZone },
-                )}
+                {slotLabels[rowIndex]}
               </th>
               {grid.dates.map((date, index) => {
                 const optionId = grid.cells.get(
@@ -117,6 +130,11 @@ export function PollResultsGrid({
                 return option ? (
                   <PollResultsCell
                     key={date.key}
+                    label={
+                      hydrated
+                        ? `${dateLabels[index]}, ${slotLabels[rowIndex]}`
+                        : undefined
+                    }
                     state={states.get(option.id) ?? "normal"}
                     available={getOptionAvailability(option)}
                     total={participantCount}

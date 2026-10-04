@@ -23,6 +23,7 @@ import {
 } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 
 function HighlightDot() {
   return (
@@ -43,6 +44,8 @@ export function PollResultsMonth({
   const { t } = useTranslation();
   const { weekStart } = useDateTimeConfig();
   const { formatDateTime, weekdays } = useDateTime();
+  // Intl output differs between Node and browsers, so labels wait for hydration.
+  const hydrated = useHydrated();
 
   const states = React.useMemo(() => classifyOptions(options), [options]);
   const optionByDate = React.useMemo(
@@ -64,7 +67,7 @@ export function PollResultsMonth({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex shrink-0 items-center gap-2 px-4 pb-2 md:px-6">
+      <div className="flex shrink-0 items-center gap-2 px-3 pt-3 pb-2">
         <Button
           variant="ghost"
           size="icon"
@@ -94,9 +97,15 @@ export function PollResultsMonth({
           className="min-w-36 text-center font-medium text-sm"
           aria-live="polite"
         >
-          {formatDateTime(new Date(`${monthKey}-01T00:00:00Z`), "monthYear", {
-            timeZone: "UTC",
-          })}
+          {!hydrated
+            ? "\u00a0"
+            : formatDateTime(
+                new Date(`${monthKey}-01T00:00:00Z`),
+                "monthYear",
+                {
+                  timeZone: "UTC",
+                },
+              )}
         </h3>
         <Button
           variant="ghost"
@@ -121,7 +130,7 @@ export function PollResultsMonth({
           </span>
         </Button>
       </div>
-      <div className="relative min-h-0 flex-1 overflow-auto px-3 md:px-5">
+      <div className="relative min-h-0 flex-1 overflow-auto px-2 pb-2">
         <table
           role="table"
           aria-label={t("pollResultsTableLabel", { defaultValue: "Results" })}
@@ -130,7 +139,7 @@ export function PollResultsMonth({
           <thead role="rowgroup" className="contents">
             <tr
               role="row"
-              className="sticky top-0 z-10 col-span-full grid grid-cols-subgrid border-b bg-background"
+              className="sticky top-0 z-10 col-span-full grid grid-cols-subgrid border-b bg-card"
             >
               {orderedWeekdays.map((weekday) => (
                 <th
@@ -139,8 +148,12 @@ export function PollResultsMonth({
                   role="columnheader"
                   className="py-2 text-center font-medium text-muted-foreground text-xs"
                 >
-                  <span aria-hidden="true">{weekday.short}</span>
-                  <span className="sr-only">{weekday.label}</span>
+                  <span aria-hidden="true">
+                    {hydrated ? weekday.short : "\u00a0"}
+                  </span>
+                  <span className="sr-only">
+                    {hydrated ? weekday.label : "\u00a0"}
+                  </span>
                 </th>
               ))}
             </tr>
@@ -173,11 +186,15 @@ export function PollResultsMonth({
                     <PollResultsCell
                       key={day.dateKey}
                       day={day.day}
-                      label={formatDateTime(
-                        new Date(`${day.dateKey}T00:00:00Z`),
-                        "dateFull",
-                        { timeZone: "UTC" },
-                      )}
+                      label={
+                        !hydrated
+                          ? undefined
+                          : formatDateTime(
+                              new Date(`${day.dateKey}T00:00:00Z`),
+                              "dateFull",
+                              { timeZone: "UTC" },
+                            )
+                      }
                       state={states.get(option.id) ?? "normal"}
                       available={getOptionAvailability(option)}
                       total={participantCount}
