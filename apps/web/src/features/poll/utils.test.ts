@@ -1,10 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
+  addMonths,
+  buildMonthGrid,
   buildTimeGrid,
   classifyOptions,
   filterCommentsForViewer,
   filterParticipantsByVote,
   getFinalizePlanGate,
+  getInitialMonth,
+  getMonthRange,
+  hasHighlightAfter,
+  hasHighlightBefore,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
@@ -524,5 +530,70 @@ describe("buildTimeGrid", () => {
     });
     expect([...grid.dateGapBefore]).toEqual([2]);
     expect([...grid.slotGapBefore]).toEqual([2]);
+  });
+});
+
+describe("buildMonthGrid", () => {
+  it("pads leading and trailing days to full weeks", () => {
+    // Sept 2026 starts on a Tuesday.
+    const weeks = buildMonthGrid({ monthKey: "2026-09", weekStart: 1 });
+    expect(weeks[0]?.[0]).toBeNull();
+    expect(weeks[0]?.[1]).toEqual({ dateKey: "2026-09-01", day: 1 });
+    expect(weeks.every((week) => week.length === 7)).toBe(true);
+    expect(weeks.flat().filter(Boolean)).toHaveLength(30);
+  });
+
+  it("has no leading blanks when the month starts on the week start", () => {
+    // Nov 2026 starts on a Sunday.
+    const weeks = buildMonthGrid({ monthKey: "2026-11", weekStart: 0 });
+    expect(weeks[0]?.[0]).toEqual({ dateKey: "2026-11-01", day: 1 });
+  });
+});
+
+describe("month navigation helpers", () => {
+  const options = [
+    { id: "a", startTime: new Date("2026-08-30T00:00:00Z") },
+    { id: "b", startTime: new Date("2026-09-03T00:00:00Z") },
+    { id: "c", startTime: new Date("2026-10-12T00:00:00Z") },
+  ];
+
+  it("adds months across years", () => {
+    expect(addMonths("2026-12", 1)).toBe("2027-01");
+    expect(addMonths("2026-01", -1)).toBe("2025-12");
+  });
+
+  it("bounds navigation to months with options", () => {
+    expect(getMonthRange(options)).toEqual({
+      first: "2026-08",
+      last: "2026-10",
+    });
+    expect(getMonthRange(options.slice(1, 2))).toEqual({
+      first: "2026-09",
+      last: "2026-09",
+    });
+  });
+
+  it("opens on the first best option's month, else the first option's", () => {
+    const states = new Map([
+      ["a", "normal" as const],
+      ["b", "best" as const],
+      ["c", "best" as const],
+    ]);
+    expect(getInitialMonth({ options, states })).toBe("2026-09");
+    expect(getInitialMonth({ options, states: new Map() })).toBe("2026-08");
+  });
+
+  it("reports highlights on either side of the current month", () => {
+    const states = new Map([
+      ["a", "popular" as const],
+      ["b", "best" as const],
+      ["c", "normal" as const],
+    ]);
+    expect(hasHighlightBefore({ monthKey: "2026-09", options, states })).toBe(
+      true,
+    );
+    expect(hasHighlightAfter({ monthKey: "2026-09", options, states })).toBe(
+      false,
+    );
   });
 });

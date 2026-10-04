@@ -414,3 +414,112 @@ export function buildTimeGrid({
     slotGapBefore,
   };
 }
+
+export function toDateKey(instant: Date) {
+  return instantToWallTime(instant, "UTC").slice(0, 10);
+}
+
+export function toMonthKey(dateKey: string) {
+  return dateKey.slice(0, 7);
+}
+
+export function addMonths(monthKey: string, count: number) {
+  const year = Number(monthKey.slice(0, 4));
+  const month = Number(monthKey.slice(5, 7));
+  return new Date(Date.UTC(year, month - 1 + count, 1))
+    .toISOString()
+    .slice(0, 7);
+}
+
+export type MonthGridDay = { dateKey: string; day: number };
+
+/** Weeks of seven days; days outside the month are null. */
+export function buildMonthGrid({
+  monthKey,
+  weekStart,
+}: {
+  monthKey: string;
+  weekStart: number;
+}) {
+  const year = Number(monthKey.slice(0, 4));
+  const month = Number(monthKey.slice(5, 7));
+  const leading =
+    (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() - weekStart + 7) % 7;
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+  const cells: (MonthGridDay | null)[] = Array.from(
+    { length: leading },
+    () => null,
+  );
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push({
+      dateKey: `${monthKey}-${String(day).padStart(2, "0")}`,
+      day,
+    });
+  }
+  while (cells.length % 7 !== 0) {
+    cells.push(null);
+  }
+
+  const weeks: (MonthGridDay | null)[][] = [];
+  for (let i = 0; i < cells.length; i += 7) {
+    weeks.push(cells.slice(i, i + 7));
+  }
+  return weeks;
+}
+
+const optionMonthKey = (option: Pick<PollResultOption, "startTime">) =>
+  toMonthKey(toDateKey(option.startTime));
+
+export function getMonthRange(options: Pick<PollResultOption, "startTime">[]) {
+  const keys = options.map(optionMonthKey).sort();
+  return { first: keys[0] ?? "", last: keys[keys.length - 1] ?? "" };
+}
+
+export function getInitialMonth({
+  options,
+  states,
+}: {
+  options: Pick<PollResultOption, "id" | "startTime">[];
+  states: Map<string, OptionState>;
+}) {
+  const sorted = [...options].sort(
+    (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+  );
+  const target =
+    sorted.find((option) => states.get(option.id) === "best") ?? sorted[0];
+  return target ? optionMonthKey(target) : "";
+}
+
+type HighlightInput = {
+  monthKey: string;
+  options: Pick<PollResultOption, "id" | "startTime">[];
+  states: Map<string, OptionState>;
+};
+
+const isHighlighted = (states: Map<string, OptionState>, id: string) => {
+  const state = states.get(id);
+  return state === "best" || state === "popular";
+};
+
+export function hasHighlightBefore({
+  monthKey,
+  options,
+  states,
+}: HighlightInput) {
+  return options.some(
+    (option) =>
+      isHighlighted(states, option.id) && optionMonthKey(option) < monthKey,
+  );
+}
+
+export function hasHighlightAfter({
+  monthKey,
+  options,
+  states,
+}: HighlightInput) {
+  return options.some(
+    (option) =>
+      isHighlighted(states, option.id) && optionMonthKey(option) > monthKey,
+  );
+}
