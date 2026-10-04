@@ -1,3 +1,8 @@
+// Grid layout replaces the table's display values, which strips implicit
+// table semantics in some engines; explicit roles restore them.
+// biome-ignore-all lint/a11y/noRedundantRoles: see above
+// biome-ignore-all lint/a11y/useSemanticElements: see above
+
 "use client";
 
 import { Button } from "@rallly/ui/button";
@@ -116,17 +121,22 @@ export function PollResultsMonth({
           </span>
         </Button>
       </div>
-      <div className="min-h-0 flex-1 overflow-auto px-3 md:px-5">
+      <div className="relative min-h-0 flex-1 overflow-auto px-3 md:px-5">
         <table
+          role="table"
           aria-label={t("pollResultsTableLabel", { defaultValue: "Results" })}
           className="grid grid-cols-7"
         >
-          <thead className="contents">
-            <tr className="sticky top-0 z-10 col-span-full grid grid-cols-subgrid border-b bg-background">
+          <thead role="rowgroup" className="contents">
+            <tr
+              role="row"
+              className="sticky top-0 z-10 col-span-full grid grid-cols-subgrid border-b bg-background"
+            >
               {orderedWeekdays.map((weekday) => (
                 <th
                   key={weekday.day}
                   scope="col"
+                  role="columnheader"
                   className="py-2 text-center font-medium text-muted-foreground text-xs"
                 >
                   <span aria-hidden="true">{weekday.short}</span>
@@ -135,21 +145,23 @@ export function PollResultsMonth({
               ))}
             </tr>
           </thead>
-          <tbody className="contents">
+          <tbody role="rowgroup" className="contents">
             {weeks.map((week) => (
               <tr
+                role="row"
                 key={week.find(Boolean)?.dateKey}
                 className="col-span-full grid grid-cols-subgrid"
               >
                 {week.map((day, index) => {
                   if (!day) {
                     // biome-ignore lint/suspicious/noArrayIndexKey: blanks have no identity
-                    return <td key={index} />;
+                    return <td role="cell" key={index} />;
                   }
                   const option = optionByDate.get(day.dateKey);
                   if (!option) {
                     return (
                       <td
+                        role="cell"
                         key={day.dateKey}
                         className="flex aspect-square items-start justify-center p-2 text-muted-foreground/50 text-xs"
                       >

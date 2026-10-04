@@ -1,3 +1,8 @@
+// Grid layout replaces the table's display values, which strips implicit
+// table semantics in some engines; explicit roles restore them.
+// biome-ignore-all lint/a11y/noRedundantRoles: see above
+// biome-ignore-all lint/a11y/useSemanticElements: see above
+
 "use client";
 
 import { cn } from "@rallly/ui";
@@ -21,7 +26,7 @@ export function PollResultsCell({
   className?: string;
 }) {
   return (
-    <td className={cn("p-1", className)}>
+    <td role="cell" className={cn("p-1", className)}>
       <div
         className={cn(
           "flex h-full min-h-12 flex-col items-center justify-center gap-0.5 rounded-md text-sm tabular-nums",

@@ -1,3 +1,8 @@
+// Grid layout replaces the table's display values, which strips implicit
+// table semantics in some engines; explicit roles restore them.
+// biome-ignore-all lint/a11y/noRedundantRoles: see above
+// biome-ignore-all lint/a11y/useSemanticElements: see above
+
 "use client";
 
 import { cn } from "@rallly/ui";
@@ -39,25 +44,34 @@ export function PollResultsGrid({
   );
 
   return (
-    <div className="h-full overflow-auto">
+    <div className="relative h-full overflow-auto">
       <table
+        role="table"
         aria-label={t("pollResultsTableLabel", { defaultValue: "Results" })}
         className="grid w-max min-w-full"
         style={{
           gridTemplateColumns: `auto repeat(${grid.dates.length}, minmax(6rem, 1fr))`,
         }}
       >
-        <thead className="contents">
-          <tr className="sticky top-0 z-20 col-span-full grid grid-cols-subgrid border-b bg-background">
-            <div className="sticky left-0 z-10 bg-background">
+        <thead role="rowgroup" className="contents">
+          <tr
+            role="row"
+            className="sticky top-0 z-20 col-span-full grid grid-cols-subgrid border-b bg-background"
+          >
+            <th
+              scope="col"
+              role="columnheader"
+              className="sticky left-0 z-10 bg-background"
+            >
               <span className="sr-only">
                 <Trans i18nKey="pollResultsTime" defaults="Time" />
               </span>
-            </div>
+            </th>
             {grid.dates.map((date, index) => (
               <th
                 key={date.key}
                 scope="col"
+                role="columnheader"
                 className={cn(
                   "px-2 py-3 text-center font-medium text-sm",
                   grid.dateGapBefore.has(index) && "border-l border-dashed",
@@ -70,9 +84,10 @@ export function PollResultsGrid({
             ))}
           </tr>
         </thead>
-        <tbody className="contents">
+        <tbody role="rowgroup" className="contents">
           {grid.slots.map((slot, rowIndex) => (
             <tr
+              role="row"
               key={slot.key}
               className={cn(
                 "col-span-full grid grid-cols-subgrid",
@@ -82,6 +97,7 @@ export function PollResultsGrid({
             >
               <th
                 scope="row"
+                role="rowheader"
                 className="sticky left-0 z-10 flex items-center whitespace-nowrap bg-background px-4 text-muted-foreground text-sm tabular-nums"
               >
                 {formatDateTimeRange(
@@ -107,7 +123,7 @@ export function PollResultsGrid({
                     className={cn(gapClass)}
                   />
                 ) : (
-                  <td key={date.key} className={cn(gapClass)} />
+                  <td role="cell" key={date.key} className={cn(gapClass)} />
                 );
               })}
             </tr>
