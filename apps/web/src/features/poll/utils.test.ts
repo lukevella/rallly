@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  classifyOptions,
   filterCommentsForViewer,
   filterParticipantsByVote,
   getFinalizePlanGate,
@@ -397,5 +398,62 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+const resultOption = (id: string, yes: number, ifNeedBe: number) => ({
+  id,
+  votes: [
+    { type: "yes" as const, count: yes },
+    { type: "ifNeedBe" as const, count: ifNeedBe },
+    { type: "no" as const, count: 0 },
+  ],
+  score: (yes + ifNeedBe) * 1000 + yes,
+});
+
+describe("classifyOptions", () => {
+  it("marks every option normal when nobody is available", () => {
+    const states = classifyOptions([
+      resultOption("a", 0, 0),
+      resultOption("b", 0, 0),
+    ]);
+    expect([...states.values()]).toEqual(["normal", "normal"]);
+  });
+
+  it("marks all options tied on score as best", () => {
+    const states = classifyOptions([
+      resultOption("a", 3, 1),
+      resultOption("b", 3, 1),
+    ]);
+    expect(states.get("a")).toBe("best");
+    expect(states.get("b")).toBe("best");
+  });
+
+  it("lets yes votes break an availability tie", () => {
+    const states = classifyOptions([
+      resultOption("a", 4, 0),
+      resultOption("b", 2, 2),
+    ]);
+    expect(states.get("a")).toBe("best");
+    expect(states.get("b")).toBe("popular");
+  });
+
+  it("treats exactly 75% of the best's availability as popular", () => {
+    const states = classifyOptions([
+      resultOption("best", 8, 0),
+      resultOption("edge", 6, 0),
+      resultOption("below", 5, 0),
+    ]);
+    expect(states.get("edge")).toBe("popular");
+    expect(states.get("below")).toBe("normal");
+  });
+
+  it("never marks an option without availability as popular", () => {
+    const states = classifyOptions([
+      resultOption("a", 1, 0),
+      resultOption("b", 0, 0),
+    ]);
+    expect(states.get("a")).toBe("best");
+    expect(states.get("b")).toBe("normal");
   });
 });

@@ -67,3 +67,14 @@ export type PollComment = {
   userId: string | null;
   createdAt: Date;
 };
+
+/** One option as `getPollResults` returns it. */
+export type PollResultOption = {
+  id: string;
+  startTime: Date;
+  duration: number;
+  votes: { type: VoteType; count: number }[];
+  score: number;
+};
+
+export type OptionState = "best" | "popular" | "normal";

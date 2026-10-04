@@ -2,7 +2,12 @@ import { customAlphabet } from "nanoid";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
-import type { PollComment, PollParticipant } from "@/features/poll/types";
+import type {
+  OptionState,
+  PollComment,
+  PollParticipant,
+  PollResultOption,
+} from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
@@ -275,4 +280,45 @@ export function getFinalizePlanGate({
     return "conferencing";
   }
   return null;
+}
+
+export function getOptionAvailability(option: Pick<PollResultOption, "votes">) {
+  let availability = 0;
+  for (const vote of option.votes) {
+    if (vote.type === "yes" || vote.type === "ifNeedBe") {
+      availability += vote.count;
+    }
+  }
+  return availability;
+}
+
+/**
+ * Best is the top score (availability first, yes breaks ties, matching
+ * getPollResults); popular is within 75% of the best's availability.
+ */
+export function classifyOptions(
+  options: Pick<PollResultOption, "id" | "votes" | "score">[],
+) {
+  const topScore = Math.max(0, ...options.map((option) => option.score));
+  const bestOption = options.find(
+    (option) => option.score === topScore && getOptionAvailability(option) > 0,
+  );
+  const bestAvailability = bestOption ? getOptionAvailability(bestOption) : 0;
+
+  const states = new Map<string, OptionState>();
+  for (const option of options) {
+    const availability = getOptionAvailability(option);
+    if (bestAvailability > 0 && option.score === topScore) {
+      states.set(option.id, "best");
+    } else if (
+      availability > 0 &&
+      bestAvailability > 0 &&
+      availability >= bestAvailability * 0.75
+    ) {
+      states.set(option.id, "popular");
+    } else {
+      states.set(option.id, "normal");
+    }
+  }
+  return states;
 }
