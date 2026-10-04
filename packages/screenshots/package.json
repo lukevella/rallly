@@ -7,6 +7,7 @@
   "dependencies": {
     "@rallly/database": "workspace:*",
     "@rallly/test-helpers": "workspace:*",
+    "@rallly/utils": "workspace:*",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.4",
     "nanoid": "^5.0.9"
