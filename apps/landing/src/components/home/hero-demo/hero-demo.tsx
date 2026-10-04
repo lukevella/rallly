@@ -50,12 +50,13 @@ const CachedDemo = async ({
   const scores = getScores(days, demoPreset.participants);
 
   return (
-    <div className="relative z-10 select-none md:mx-auto md:max-w-full lg:-mx-6 lg:mb-12 lg:max-w-none">
-      <div className="mr-[calc(50%-50vw)] overflow-hidden [mask-image:linear-gradient(to_left,transparent,black_6rem)] md:mr-0 md:overflow-visible md:[mask-image:none]">
-        <div
-          aria-hidden="true"
-          className="w-max [zoom:0.65] lg:w-auto md:[zoom:0.75] lg:[zoom:1]"
-        >
+    <div className="relative z-10 flex select-none justify-end lg:block">
+      {/* Below lg the whole composition is laid out at a fixed desktop width
+          and scaled down. It is right aligned to the container, so the
+          browser window overflows the viewport on the left while the phone
+          stays in view. */}
+      <div className="relative mb-12 w-[1060px] shrink-0 [zoom:0.6] lg:w-auto md:[zoom:0.75] lg:[zoom:1]">
+        <div aria-hidden="true">
           <DesktopDemo
             locale={locale}
             days={days}
@@ -64,19 +65,18 @@ const CachedDemo = async ({
             t={t}
           />
         </div>
-      </div>
-      {/* The grid is centred in the frame, so the phone is anchored to the
-          frame's centre rather than its edge: its bezel starts 1px past the
-          sixth option column boundary at any lg viewport width, leaving the
-          previous column clear and hiding the next one's content. */}
-      <div className="hidden lg:absolute lg:-bottom-12 lg:left-[calc(50%+205px)] lg:block lg:w-[320px]">
-        <TryItPrompt
-          text={t("heroDemoTryIt", {
-            ns: "home",
-            defaultValue: "Go ahead, try voting!",
-          })}
-        />
-        <MobileDemo locale={locale} days={days} scores={scores} t={t} />
+        {/* Inset from the window's right edge by a share of its width, so the
+            gap between the two right edges scales with the layout and never
+            closes. */}
+        <div className="absolute right-[4%] -bottom-12 w-[320px]">
+          <TryItPrompt
+            text={t("heroDemoTryIt", {
+              ns: "home",
+              defaultValue: "Go ahead, try voting!",
+            })}
+          />
+          <MobileDemo locale={locale} days={days} scores={scores} t={t} />
+        </div>
       </div>
     </div>
   );

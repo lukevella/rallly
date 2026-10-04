@@ -1,9 +1,15 @@
 import { cn } from "@rallly/ui";
 
-// The shared device bezel: glass frame, identical corner treatment for the
-// desktop and phone shots, differing only in size. The screen radius is the
-// frame radius minus the 1px border and 6px padding so the corners stay
-// concentric.
+// The window the desktop demo sits in: a light border and a soft, layered
+// shadow.
+export const DemoWindow = ({ children }: { children: React.ReactNode }) => (
+  <div className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_24px_-6px_rgb(0_0_0/0.06),0_24px_64px_-16px_rgb(0_0_0/0.10)]">
+    {children}
+  </div>
+);
+
+// The phone's glass bezel. The screen radius is the frame radius minus the 1px
+// border and 6px padding so the corners stay concentric.
 export const DemoFrame = ({
   children,
   className,
