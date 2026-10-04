@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { conferencingSchema } from "./schema";
 import {
   createZoomUrlValidationResponse,
+  formatWebexDateTime,
   getConferencingUri,
   getMicrosoftTeamsAuthority,
   getWebexMeetingWindow,
@@ -148,6 +149,37 @@ describe("webexMeetingToConferencing", () => {
       webexMeetingResponseSchema.safeParse({ meetingNumber: "123456789" })
         .success,
     ).toBe(false);
+  });
+});
+
+describe("formatWebexDateTime", () => {
+  const date = new Date("2026-10-16T11:00:00Z");
+
+  it("writes a zoned time with that zone's offset", () => {
+    expect(formatWebexDateTime({ date, timeZone: "Europe/London" })).toBe(
+      "2026-10-16T12:00:00+01:00",
+    );
+    expect(formatWebexDateTime({ date, timeZone: "America/New_York" })).toBe(
+      "2026-10-16T07:00:00-04:00",
+    );
+    expect(formatWebexDateTime({ date, timeZone: "Asia/Kolkata" })).toBe(
+      "2026-10-16T16:30:00+05:30",
+    );
+  });
+
+  it("follows the offset in force on the day", () => {
+    expect(
+      formatWebexDateTime({
+        date: new Date("2026-12-01T11:00:00Z"),
+        timeZone: "Europe/London",
+      }),
+    ).toBe("2026-12-01T11:00:00+00:00");
+  });
+
+  it("writes a floating time in UTC", () => {
+    expect(formatWebexDateTime({ date, timeZone: null })).toBe(
+      "2026-10-16T11:00:00.000Z",
+    );
   });
 });
 

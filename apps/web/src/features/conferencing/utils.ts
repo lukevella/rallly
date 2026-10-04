@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { instantToWallTime } from "@/lib/datetime/wall-time";
 import type { Conferencing, ConferencingProvider } from "./schema";
 
 // Which OAuth integration backs each provider. Google Meet shares the Google
@@ -165,6 +166,32 @@ export function getWebexMeetingWindow({
     start: windowStart,
     end: new Date(windowStart.getTime() + duration),
   };
+}
+
+// Webex rejects a time whose offset differs from the meeting's `timezone`, so
+// a zoned meeting is written as that zone's wall time with its offset
+// (2026-10-16T12:00:00+01:00) and a floating one in UTC.
+export function formatWebexDateTime({
+  date,
+  timeZone,
+}: {
+  date: Date;
+  timeZone?: string | null;
+}) {
+  if (!timeZone) {
+    return date.toISOString();
+  }
+  const wallTime = instantToWallTime(date, timeZone);
+  const offsetMinutes = Math.round(
+    (Date.parse(`${wallTime}Z`) - date.getTime()) / 60_000,
+  );
+  const sign = offsetMinutes < 0 ? "-" : "+";
+  const hours = String(Math.floor(Math.abs(offsetMinutes) / 60)).padStart(
+    2,
+    "0",
+  );
+  const minutes = String(Math.abs(offsetMinutes) % 60).padStart(2, "0");
+  return `${wallTime}${sign}${hours}:${minutes}`;
 }
 
 // Graph's online meetings API serves work and school accounts only, so a
