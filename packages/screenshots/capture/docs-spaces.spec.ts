@@ -1,4 +1,5 @@
-import { test } from "@playwright/test";
+import type { Locator } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
 import { deleteAllMessages, loginWithEmail } from "@rallly/test-helpers";
 import { docsImagePath } from "./helpers";
@@ -6,6 +7,26 @@ import { docsImagePath } from "./helpers";
 test.use({ deviceScaleFactor: 2, viewport: { width: 1280, height: 900 } });
 
 const pollId = "docs-delete-poll";
+
+// A dialog animates in, so its box is only final once two reads agree.
+async function settledBox(locator: Locator) {
+  await locator.waitFor();
+  let previous = "";
+  await expect
+    .poll(
+      async () => {
+        const current = JSON.stringify(await locator.boundingBox());
+        const settled = current === previous;
+        previous = current;
+        return settled;
+      },
+      { intervals: [100] },
+    )
+    .toBe(true);
+  const box = await locator.boundingBox();
+  if (!box) throw new Error("dialog not visible");
+  return box;
+}
 
 test.beforeAll(async () => {
   await prisma.poll.delete({ where: { id: pollId } }).catch(() => {});
@@ -48,10 +69,7 @@ test("spaces and poll admin screenshots", async ({ page }) => {
 
   await page.getByRole("button", { name: "Manage seats" }).click();
   const seatsDialog = page.getByRole("dialog");
-  await seatsDialog.waitFor();
-  await page.waitForTimeout(800);
-  const seatsBox = await seatsDialog.boundingBox();
-  if (!seatsBox) throw new Error("seats dialog not visible");
+  const seatsBox = await settledBox(seatsDialog);
   await page.screenshot({
     path: docsImagePath("spaces/manage-seats"),
     clip: {
@@ -72,10 +90,7 @@ test("spaces and poll admin screenshots", async ({ page }) => {
   });
   await page.getByRole("menuitem", { name: "Delete" }).click();
   const confirm = page.getByRole("alertdialog").or(page.getByRole("dialog"));
-  await confirm.waitFor();
-  await page.waitForTimeout(800);
-  const box = await confirm.boundingBox();
-  if (!box) throw new Error("confirm dialog not visible");
+  const box = await settledBox(confirm);
   await page.screenshot({
     path: docsImagePath("administrators/delete-poll-confirm"),
     clip: {
