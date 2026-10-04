@@ -14,6 +14,7 @@ import { MICROSOFT_TEAMS_SCOPES, WEBEX_SCOPES } from "./constants";
 import { getConferencingConnectionForProvider } from "./data";
 import type { Conferencing, ConferencingProvider } from "./schema";
 import {
+  formatWebexDateTime,
   getMicrosoftTeamsAuthority,
   getWebexMeetingWindow,
   isTeamsMeetingRefusal,
@@ -361,8 +362,8 @@ async function createWebexMeeting({
     },
     body: JSON.stringify({
       title: title.slice(0, 128),
-      start: window.start.toISOString(),
-      end: window.end.toISOString(),
+      start: formatWebexDateTime({ date: window.start, timeZone }),
+      end: formatWebexDateTime({ date: window.end, timeZone }),
       sendEmail: false,
       ...(timeZone ? { timezone: timeZone } : {}),
     }),
