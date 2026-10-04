@@ -116,7 +116,7 @@ export function PollResultsGrid({
               <th
                 scope="row"
                 role="rowheader"
-                className="sticky left-0 z-10 flex items-center whitespace-nowrap bg-card px-4 text-muted-foreground text-sm tabular-nums"
+                className="sticky left-0 z-10 flex items-center whitespace-nowrap bg-card px-4 font-normal text-muted-foreground text-sm tabular-nums"
               >
                 {slotLabels[rowIndex]}
               </th>
