@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { PollDatesList } from "@/features/poll/components/poll-dates-list";
 import { PollResultsGrid } from "@/features/poll/components/poll-results-grid";
 import { PollResultsMonth } from "@/features/poll/components/poll-results-month";
-import { PollResultsViewSwitch } from "@/features/poll/components/poll-results-view-switch";
+import { PollResultsTabs } from "@/features/poll/components/poll-results-tabs";
 import { loadPoll, loadPollResults } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 
@@ -26,45 +26,44 @@ async function Results({
   ]);
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex shrink-0 items-center justify-between gap-4 px-4 py-3 md:px-6">
-        <PollResultsViewSwitch pollId={pollId} view={view} />
-        {results.participantCount === 0 ? (
+    <PollResultsTabs
+      defaultView={view}
+      aside={
+        results.participantCount === 0 ? (
           <p className="text-muted-foreground text-sm">
             <Trans i18nKey="pollOverviewNoVotes" defaults="No votes yet" />
           </p>
-        ) : null}
-      </div>
-      <div className="min-h-0 flex-1">
-        {view === "list" ? (
-          <div className="h-full overflow-y-auto">
-            <PollDatesList
-              kind={results.kind}
-              options={results.options}
-              participantCount={results.participantCount}
-              timeZone={poll.timeZone}
-            />
-          </div>
-        ) : (
-          <div className="h-full px-4 pb-4 md:px-6 md:pb-6">
-            <Card className="flex max-h-full flex-col">
-              {results.kind === "date" ? (
-                <PollResultsMonth
-                  options={results.options}
-                  participantCount={results.participantCount}
-                />
-              ) : (
-                <PollResultsGrid
-                  options={results.options}
-                  participantCount={results.participantCount}
-                  timeZone={poll.timeZone}
-                />
-              )}
-            </Card>
-          </div>
-        )}
-      </div>
-    </div>
+        ) : null
+      }
+      grid={
+        <div className="h-full px-4 pb-4 md:px-6 md:pb-6">
+          <Card className="flex max-h-full flex-col">
+            {results.kind === "date" ? (
+              <PollResultsMonth
+                options={results.options}
+                participantCount={results.participantCount}
+              />
+            ) : (
+              <PollResultsGrid
+                options={results.options}
+                participantCount={results.participantCount}
+                timeZone={poll.timeZone}
+              />
+            )}
+          </Card>
+        </div>
+      }
+      list={
+        <div className="h-full overflow-y-auto">
+          <PollDatesList
+            kind={results.kind}
+            options={results.options}
+            participantCount={results.participantCount}
+            timeZone={poll.timeZone}
+          />
+        </div>
+      }
+    />
   );
 }
 
