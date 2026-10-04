@@ -12,7 +12,7 @@ import { useRefSlug } from "@/lib/use-ref-slug";
 
 // The action bar of the phone demo, plus the confirmation it opens. The
 // surrounding poll layout stays on the server. Must be a direct child of the
-// relative screen so the confirmation overlay covers the whole screen.
+// relative DemoScreen so the confirmation overlay covers the whole screen.
 export const VoteActions = () => {
   const { t } = useTranslation("home");
   const ref = useRefSlug();
