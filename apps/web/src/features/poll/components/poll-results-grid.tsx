@@ -81,7 +81,7 @@ export function PollResultsGrid({
             <th
               scope="col"
               role="columnheader"
-              className="sticky left-0 z-10 bg-card"
+              className="sticky left-0 z-10 border-r bg-card"
             >
               <span className="sr-only">
                 <Trans i18nKey="pollResultsTime" defaults="Time" />
@@ -94,7 +94,7 @@ export function PollResultsGrid({
                 role="columnheader"
                 className={cn(
                   "px-2 py-3 text-center font-medium text-xs",
-                  "border-l",
+                  index > 0 && "border-l",
                   grid.dateGapBefore.has(index) && "border-dashed",
                 )}
               >
@@ -116,7 +116,7 @@ export function PollResultsGrid({
               <th
                 scope="row"
                 role="rowheader"
-                className="sticky left-0 z-10 flex items-center whitespace-nowrap bg-card px-4 font-normal text-muted-foreground text-xs tabular-nums"
+                className="sticky left-0 z-10 flex items-center whitespace-nowrap border-r bg-card px-4 font-normal text-muted-foreground text-xs tabular-nums"
               >
                 {slotLabels[rowIndex]}
               </th>
@@ -126,7 +126,7 @@ export function PollResultsGrid({
                 );
                 const option = optionId ? optionById.get(optionId) : undefined;
                 const gapClass = cn(
-                  "border-l",
+                  index > 0 && "border-l",
                   grid.dateGapBefore.has(index) && "border-dashed",
                 );
                 return option ? (
