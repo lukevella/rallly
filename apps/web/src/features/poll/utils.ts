@@ -9,6 +9,7 @@ import type {
   PollResultOption,
 } from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
+import { instantToWallTime } from "@/lib/datetime/wall-time";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -321,4 +322,95 @@ export function classifyOptions(
     }
   }
   return states;
+}
+
+export type TimeGridDate = { key: string; sampleStart: Date };
+export type TimeGridSlot = {
+  key: string;
+  startMinutes: number;
+  duration: number;
+  sampleStart: Date;
+};
+
+const SLOT_GAP_MINUTES = 120;
+
+const dayNumber = (dateKey: string) =>
+  Date.UTC(
+    Number(dateKey.slice(0, 4)),
+    Number(dateKey.slice(5, 7)) - 1,
+    Number(dateKey.slice(8, 10)),
+  ) / DAY_MS;
+
+export function timeGridCellKey(dateKey: string, slotKey: string) {
+  return `${dateKey}|${slotKey}`;
+}
+
+/**
+ * Dates that have options become columns; distinct start/duration slots
+ * across the whole poll become rows, so rows line up between dates.
+ * `timeZone` must be the zone the grid is displayed in.
+ */
+export function buildTimeGrid({
+  options,
+  timeZone,
+}: {
+  options: Pick<PollResultOption, "id" | "startTime" | "duration">[];
+  timeZone: string;
+}) {
+  const dates = new Map<string, TimeGridDate>();
+  const slots = new Map<string, TimeGridSlot>();
+  const cells = new Map<string, string>();
+
+  for (const option of options) {
+    const wall = instantToWallTime(option.startTime, timeZone);
+    const dateKey = wall.slice(0, 10);
+    const startMinutes =
+      Number(wall.slice(11, 13)) * 60 + Number(wall.slice(14, 16));
+    const slotKey = `${startMinutes}:${option.duration}`;
+    if (!dates.has(dateKey)) {
+      dates.set(dateKey, { key: dateKey, sampleStart: option.startTime });
+    }
+    if (!slots.has(slotKey)) {
+      slots.set(slotKey, {
+        key: slotKey,
+        startMinutes,
+        duration: option.duration,
+        sampleStart: option.startTime,
+      });
+    }
+    cells.set(timeGridCellKey(dateKey, slotKey), option.id);
+  }
+
+  const sortedDates = [...dates.values()].sort((a, b) =>
+    a.key.localeCompare(b.key),
+  );
+  const sortedSlots = [...slots.values()].sort(
+    (a, b) => a.startMinutes - b.startMinutes || a.duration - b.duration,
+  );
+
+  const dateGapBefore = new Set<number>();
+  sortedDates.forEach((date, index) => {
+    const previous = sortedDates[index - 1];
+    if (previous && dayNumber(date.key) - dayNumber(previous.key) > 1) {
+      dateGapBefore.add(index);
+    }
+  });
+  const slotGapBefore = new Set<number>();
+  sortedSlots.forEach((slot, index) => {
+    const previous = sortedSlots[index - 1];
+    if (
+      previous &&
+      slot.startMinutes - previous.startMinutes >= SLOT_GAP_MINUTES
+    ) {
+      slotGapBefore.add(index);
+    }
+  });
+
+  return {
+    dates: sortedDates,
+    slots: sortedSlots,
+    cells,
+    dateGapBefore,
+    slotGapBefore,
+  };
 }

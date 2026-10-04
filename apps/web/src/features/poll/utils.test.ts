@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildTimeGrid,
   classifyOptions,
   filterCommentsForViewer,
   filterParticipantsByVote,
@@ -7,6 +8,7 @@ import {
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
+  timeGridCellKey,
   toAvailabilitySpans,
 } from "./utils";
 
@@ -455,5 +457,72 @@ describe("classifyOptions", () => {
     ]);
     expect(states.get("a")).toBe("best");
     expect(states.get("b")).toBe("normal");
+  });
+});
+
+const timeOption = (id: string, iso: string, duration = 60) => ({
+  id,
+  startTime: new Date(iso),
+  duration,
+});
+
+describe("buildTimeGrid", () => {
+  it("gives overlapping slots their own rows and unions slots across dates", () => {
+    const grid = buildTimeGrid({
+      timeZone: "UTC",
+      options: [
+        timeOption("a", "2026-08-24T01:00:00Z"),
+        timeOption("b", "2026-08-24T01:30:00Z"),
+        timeOption("c", "2026-08-25T01:00:00Z"),
+      ],
+    });
+    expect(grid.dates.map((d) => d.key)).toEqual(["2026-08-24", "2026-08-25"]);
+    expect(grid.slots.map((s) => s.key)).toEqual(["60:60", "90:60"]);
+    expect(grid.cells.get(timeGridCellKey("2026-08-25", "60:60"))).toBe("c");
+    expect(
+      grid.cells.get(timeGridCellKey("2026-08-25", "90:60")),
+    ).toBeUndefined();
+  });
+
+  it("orders slots by start then duration", () => {
+    const grid = buildTimeGrid({
+      timeZone: "UTC",
+      options: [
+        timeOption("long", "2026-08-24T09:00:00Z", 90),
+        timeOption("short", "2026-08-24T09:00:00Z", 30),
+      ],
+    });
+    expect(grid.slots.map((s) => s.key)).toEqual(["540:30", "540:90"]);
+  });
+
+  it("groups by date in the display zone", () => {
+    const grid = buildTimeGrid({
+      timeZone: "Asia/Tokyo",
+      options: [timeOption("a", "2026-08-24T23:00:00Z")],
+    });
+    expect(grid.dates[0]?.key).toBe("2026-08-25");
+    expect(grid.slots[0]?.startMinutes).toBe(8 * 60);
+  });
+
+  it("keeps an option crossing midnight in its start date's column", () => {
+    const grid = buildTimeGrid({
+      timeZone: "UTC",
+      options: [timeOption("late", "2026-08-27T23:30:00Z", 60)],
+    });
+    expect(grid.dates.map((d) => d.key)).toEqual(["2026-08-27"]);
+    expect(grid.slots[0]?.key).toBe("1410:60");
+  });
+
+  it("marks skipped days and time jumps of two hours or more", () => {
+    const grid = buildTimeGrid({
+      timeZone: "UTC",
+      options: [
+        timeOption("a", "2026-08-27T01:00:00Z"),
+        timeOption("b", "2026-08-28T02:30:00Z"),
+        timeOption("c", "2026-08-31T21:00:00Z"),
+      ],
+    });
+    expect([...grid.dateGapBefore]).toEqual([2]);
+    expect([...grid.slotGapBefore]).toEqual([2]);
   });
 });
