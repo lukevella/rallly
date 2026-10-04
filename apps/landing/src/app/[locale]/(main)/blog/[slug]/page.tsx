@@ -65,7 +65,7 @@ export default async function Page(props: {
           {post.title}
         </h1>
         <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-          <aside className="lg:sticky lg:top-24 lg:order-2 lg:w-56 lg:shrink-0">
+          <aside className="lg:sticky lg:top-[calc(var(--site-header-height,61px)+0.75rem)] lg:order-2 lg:w-56 lg:shrink-0">
             <dl className="flex flex-wrap gap-x-12 gap-y-6 lg:flex-col">
               <div>
                 <dt className="text-gray-500 text-sm">

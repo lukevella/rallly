@@ -1,4 +1,5 @@
 import { cn } from "@rallly/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CircleCheckIcon, XIcon } from "lucide-react";
 import type * as React from "react";
 
@@ -48,27 +49,14 @@ export function CompareTableHead({
 
 export function CompareTableFeature({
   className,
-  icon,
-  children,
   ...props
-}: React.ComponentProps<"th"> & { icon?: React.ReactNode }) {
+}: React.ComponentProps<"th">) {
   return (
     <th
       scope="row"
       className={cn("py-4 pr-4 text-left font-normal text-gray-600", className)}
       {...props}
-    >
-      {icon ? (
-        <div className="flex gap-x-3">
-          <span className="flex h-lh shrink-0 items-center [&_svg]:size-4 [&_svg]:text-gray-400">
-            {icon}
-          </span>
-          <div>{children}</div>
-        </div>
-      ) : (
-        children
-      )}
-    </th>
+    />
   );
 }
 
@@ -107,8 +95,10 @@ export function CompareTableFeatureDescription({
 
 export function CompareTableSection({
   className,
+  icon,
+  children,
   ...props
-}: React.ComponentProps<"th">) {
+}: React.ComponentProps<"th"> & { icon?: React.ReactNode }) {
   return (
     <tr>
       <th
@@ -119,7 +109,12 @@ export function CompareTableSection({
           className,
         )}
         {...props}
-      />
+      >
+        <span className="flex items-center gap-x-2 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-gray-400">
+          {icon}
+          {children}
+        </span>
+      </th>
     </tr>
   );
 }
@@ -139,5 +134,40 @@ export function CompareTableDash({ label }: { label: string }) {
       <XIcon className="size-4 text-gray-400" aria-hidden="true" />
       <span className="sr-only">{label}</span>
     </>
+  );
+}
+
+export function CompareTableLogos({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("flex items-center gap-x-2", className)} {...props} />
+  );
+}
+
+export function CompareTableLogo({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        delay={0}
+        render={
+          <button
+            type="button"
+            aria-label={label}
+            className="inline-flex rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-primary [&_svg]:size-5"
+          />
+        }
+      >
+        {children}
+      </TooltipTrigger>
+      <TooltipContent side="top">{label}</TooltipContent>
+    </Tooltip>
   );
 }
