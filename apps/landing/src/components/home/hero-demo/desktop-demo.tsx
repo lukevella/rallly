@@ -9,9 +9,10 @@ import {
   UserIcon,
 } from "lucide-react";
 import * as React from "react";
+import { BrowserChrome } from "./browser-chrome";
 import type { DemoDay } from "./demo-data";
 import { formatDemoParts, getInitials } from "./demo-data";
-import { DemoFrame, DemoScreen } from "./demo-frame";
+import { DemoWindow } from "./demo-frame";
 import type { DemoPreset } from "./demo-presets";
 import { VoteCount } from "./vote-count";
 import { VoteIcon } from "./vote-icon";
@@ -44,8 +45,9 @@ export const DesktopDemo = ({
   }
 
   return (
-    <DemoFrame>
-      <DemoScreen className="bg-gray-100 p-4 sm:p-6">
+    <DemoWindow>
+      <BrowserChrome url="app.rallly.co/invite/k3Xb9qLm" />
+      <div className="bg-gray-100 p-4 sm:p-6">
         {/* Pinned to the grid width (235px + 8 × 84px) so a long description
             wraps instead of stretching the card past the table. */}
         <div className="mx-auto w-[907px] space-y-3 text-left">
@@ -222,7 +224,7 @@ export const DesktopDemo = ({
             </div>
           </div>
         </div>
-      </DemoScreen>
-    </DemoFrame>
+      </div>
+    </DemoWindow>
   );
 };
