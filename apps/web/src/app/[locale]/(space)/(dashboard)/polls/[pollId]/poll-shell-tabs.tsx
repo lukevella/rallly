@@ -12,15 +12,11 @@ export function PollShellTabs() {
   const tabs = [
     {
       href: basePath,
-      label: <Trans i18nKey="overview" defaults="Overview" />,
+      label: <Trans i18nKey="results" defaults="Results" />,
     },
     {
       href: `${basePath}/responses`,
       label: <Trans i18nKey="responses" defaults="Responses" />,
-    },
-    {
-      href: `${basePath}/dates`,
-      label: <Trans i18nKey="dates" defaults="Dates" />,
     },
     {
       href: `${basePath}/activity`,

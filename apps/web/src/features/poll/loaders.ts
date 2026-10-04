@@ -101,26 +101,6 @@ export const loadPollResults = cache(async (pollId: string) => {
   return results;
 });
 
-/**
- * The poll's most popular options, best first. Options nobody can attend are
- * left out, so a poll without votes has none.
- */
-export const loadPollTopOptions = cache(
-  async (pollId: string, limit: number) => {
-    const results = await loadPollResults(pollId);
-    return {
-      participantCount: results.participantCount,
-      options: results.options
-        .filter((option) => option.score > 0)
-        .sort(
-          (a, b) =>
-            b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
-        )
-        .slice(0, limit),
-    };
-  },
-);
-
 export const loadPollActivity = cache(
   async (pollId: string, limit?: number) => {
     const [scope] = await Promise.all([

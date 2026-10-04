@@ -1,143 +1,76 @@
-import { ActivityIcon, CalendarIcon, InboxIcon } from "lucide-react";
-import {
-  EmptyState,
-  EmptyStateDescription,
-  EmptyStateIcon,
-  EmptyStateTitle,
-} from "@/components/empty-state";
-import { PollActivityList } from "@/features/activity/components/poll-activity-list";
-import { PollResponsesList } from "@/features/poll/components/poll-responses-list";
-import { PollTopDates } from "@/features/poll/components/poll-top-dates";
-import {
-  loadPoll,
-  loadPollActivity,
-  loadPollParticipants,
-  loadPollResults,
-  loadPollTopOptions,
-} from "@/features/poll/loaders";
+import { Skeleton } from "@rallly/ui/skeleton";
+import { Suspense } from "react";
+import { PollDatesList } from "@/features/poll/components/poll-dates-list";
+import { PollResultsGrid } from "@/features/poll/components/poll-results-grid";
+import { PollResultsMonth } from "@/features/poll/components/poll-results-month";
+import { PollResultsViewSwitch } from "@/features/poll/components/poll-results-view-switch";
+import { loadPoll, loadPollResults } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
-import { OverviewSection } from "./components/overview-section";
 
-export default async function Page({
+async function Results({
   params,
+  searchParams,
 }: {
   params: Promise<{ pollId: string }>;
+  searchParams: Promise<{ view?: string }>;
 }) {
-  const { pollId } = await params;
-  const [poll, participants, results, topOptions, activity] = await Promise.all(
-    [
-      loadPoll(pollId),
-      loadPollParticipants(pollId),
-      loadPollResults(pollId),
-      loadPollTopOptions(pollId, 3),
-      loadPollActivity(pollId, 5),
-    ],
-  );
+  const [{ pollId }, { view: viewParam }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+  const view = viewParam === "list" ? "list" : "grid";
+  const [poll, results] = await Promise.all([
+    loadPoll(pollId),
+    loadPollResults(pollId),
+  ]);
 
   return (
-    <div className="space-y-8 px-7.5 pt-4 pb-8">
-      <OverviewSection
-        title={
-          <Trans
-            i18nKey="pollOverviewPopularDates"
-            defaults="Most popular dates"
+    <div className="flex h-full flex-col">
+      <div className="flex shrink-0 items-center justify-between gap-4 px-4 py-3 md:px-6">
+        <PollResultsViewSwitch pollId={pollId} view={view} />
+        {results.participantCount === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            <Trans i18nKey="pollOverviewNoVotes" defaults="No votes yet" />
+          </p>
+        ) : null}
+      </div>
+      <div className="min-h-0 flex-1">
+        {view === "list" ? (
+          <div className="h-full overflow-y-auto">
+            <PollDatesList
+              kind={results.kind}
+              options={results.options}
+              participantCount={results.participantCount}
+              timeZone={poll.timeZone}
+            />
+          </div>
+        ) : results.kind === "date" ? (
+          <PollResultsMonth
+            options={results.options}
+            participantCount={results.participantCount}
           />
-        }
-        viewAllHref={`/polls/${pollId}/dates`}
-        count={results.options.length}
-      >
-        {topOptions.options.length > 0 ? (
-          <PollTopDates
-            options={topOptions.options}
-            participantCount={topOptions.participantCount}
+        ) : (
+          <PollResultsGrid
+            options={results.options}
+            participantCount={results.participantCount}
             timeZone={poll.timeZone}
-            className="-mx-3.5"
           />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <CalendarIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans i18nKey="pollOverviewNoVotes" defaults="No votes yet" />
-            </EmptyStateTitle>
-            <EmptyStateDescription>
-              <Trans
-                i18nKey="pollOverviewNoPopularDates"
-                defaults="Popular dates will show up here once participants vote."
-              />
-            </EmptyStateDescription>
-          </EmptyState>
         )}
-      </OverviewSection>
-      <OverviewSection
-        title={
-          <Trans
-            i18nKey="pollOverviewRecentResponses"
-            defaults="Recent responses"
-          />
-        }
-        viewAllHref={
-          participants.length > 0 ? `/polls/${pollId}/responses` : undefined
-        }
-        count={participants.length}
-      >
-        {participants.length > 0 ? (
-          <PollResponsesList
-            pollId={pollId}
-            participants={participants.slice(0, 5)}
-            pollOpen={poll.status === "open"}
-            className="-mx-4 px-0 py-0"
-          />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <InboxIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans
-                i18nKey="pollOverviewNoResponses"
-                defaults="No responses yet"
-              />
-            </EmptyStateTitle>
-            <EmptyStateDescription>
-              <Trans
-                i18nKey="pollOverviewNoResponsesDescription"
-                defaults="Responses will show up here once participants vote."
-              />
-            </EmptyStateDescription>
-          </EmptyState>
-        )}
-      </OverviewSection>
-      <OverviewSection
-        title={
-          <Trans
-            i18nKey="pollOverviewRecentActivity"
-            defaults="Recent activity"
-          />
-        }
-        viewAllHref={`/polls/${pollId}/activity`}
-      >
-        {activity.length > 0 ? (
-          <PollActivityList
-            activity={activity}
-            timeZone={poll.timeZone}
-            className="pt-2"
-          />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <ActivityIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans
-                i18nKey="pollOverviewNoActivity"
-                defaults="No activity yet"
-              />
-            </EmptyStateTitle>
-          </EmptyState>
-        )}
-      </OverviewSection>
+      </div>
     </div>
+  );
+}
+
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ pollId: string }>;
+  searchParams: Promise<{ view?: string }>;
+}) {
+  return (
+    <Suspense fallback={<Skeleton className="m-6 h-96" />}>
+      <Results params={params} searchParams={searchParams} />
+    </Suspense>
   );
 }

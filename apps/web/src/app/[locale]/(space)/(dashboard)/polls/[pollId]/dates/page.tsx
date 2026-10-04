@@ -1,5 +1,4 @@
-import { PollDatesList } from "@/features/poll/components/poll-dates-list";
-import { loadPoll, loadPollResults } from "@/features/poll/loaders";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
@@ -7,16 +6,5 @@ export default async function Page({
   params: Promise<{ pollId: string }>;
 }) {
   const { pollId } = await params;
-  const [poll, results] = await Promise.all([
-    loadPoll(pollId),
-    loadPollResults(pollId),
-  ]);
-  return (
-    <PollDatesList
-      kind={results.kind}
-      options={results.options}
-      participantCount={results.participantCount}
-      timeZone={poll.timeZone}
-    />
-  );
+  redirect(`/polls/${pollId}?view=list`);
 }
