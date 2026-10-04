@@ -9,6 +9,7 @@ import {
   getFinalizePlanGate,
   getInitialMonth,
   getMonthRange,
+  groupOptionsByDate,
   hasHighlightAfter,
   hasHighlightBefore,
   maskParticipantsForViewer,
@@ -595,5 +596,24 @@ describe("month navigation helpers", () => {
     expect(hasHighlightAfter({ monthKey: "2026-09", options, states })).toBe(
       false,
     );
+  });
+});
+
+describe("groupOptionsByDate", () => {
+  it("groups options by date in the display zone, in chronological order", () => {
+    const groups = groupOptionsByDate({
+      timeZone: "Asia/Tokyo",
+      options: [
+        timeOption("late", "2026-08-25T03:00:00Z"),
+        timeOption("early", "2026-08-24T23:00:00Z"),
+        timeOption("prev", "2026-08-24T01:00:00Z"),
+      ],
+    });
+    expect(
+      groups.map((group) => [group.dateKey, group.options.map((o) => o.id)]),
+    ).toEqual([
+      ["2026-08-24", ["prev"]],
+      ["2026-08-25", ["early", "late"]],
+    ]);
   });
 });

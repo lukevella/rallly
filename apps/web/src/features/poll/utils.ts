@@ -523,3 +523,23 @@ export function hasHighlightAfter({
       isHighlighted(states, option.id) && optionMonthKey(option) > monthKey,
   );
 }
+
+/** Options grouped by their date in `timeZone`, both in chronological order. */
+export function groupOptionsByDate<
+  T extends Pick<PollResultOption, "startTime">,
+>({ options, timeZone }: { options: T[]; timeZone: string }) {
+  const groups = new Map<string, T[]>();
+  const sorted = [...options].sort(
+    (a, b) => a.startTime.getTime() - b.startTime.getTime(),
+  );
+  for (const option of sorted) {
+    const dateKey = instantToWallTime(option.startTime, timeZone).slice(0, 10);
+    const group = groups.get(dateKey);
+    if (group) {
+      group.push(option);
+    } else {
+      groups.set(dateKey, [option]);
+    }
+  }
+  return [...groups].map(([dateKey, options]) => ({ dateKey, options }));
+}

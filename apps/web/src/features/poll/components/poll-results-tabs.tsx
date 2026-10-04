@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@rallly/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@rallly/ui/tabs";
 import { LayoutGridIcon, ListIcon } from "lucide-react";
 import { Trans } from "@/i18n/client";
@@ -48,11 +49,17 @@ export function PollResultsTabs({
         </TabsList>
         {aside}
       </div>
-      <TabsContent value="grid" className="min-h-0 flex-1">
-        {grid}
+      <TabsContent
+        value="grid"
+        className="min-h-0 flex-1 px-4 pb-4 md:px-6 md:pb-6"
+      >
+        <Card className="flex max-h-full flex-col">{grid}</Card>
       </TabsContent>
-      <TabsContent value="list" className="min-h-0 flex-1">
-        {list}
+      <TabsContent
+        value="list"
+        className="min-h-0 flex-1 px-4 pb-4 md:px-6 md:pb-6"
+      >
+        <Card className="flex max-h-full flex-col">{list}</Card>
       </TabsContent>
     </Tabs>
   );

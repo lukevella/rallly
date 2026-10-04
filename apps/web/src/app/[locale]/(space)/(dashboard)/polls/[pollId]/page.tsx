@@ -1,8 +1,7 @@
-import { Card } from "@rallly/ui/card";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { Suspense } from "react";
-import { PollDatesList } from "@/features/poll/components/poll-dates-list";
 import { PollResultsGrid } from "@/features/poll/components/poll-results-grid";
+import { PollResultsList } from "@/features/poll/components/poll-results-list";
 import { PollResultsMonth } from "@/features/poll/components/poll-results-month";
 import { PollResultsTabs } from "@/features/poll/components/poll-results-tabs";
 import { loadPoll, loadPollResults } from "@/features/poll/loaders";
@@ -36,32 +35,26 @@ async function Results({
         ) : null
       }
       grid={
-        <div className="h-full px-4 pb-4 md:px-6 md:pb-6">
-          <Card className="flex max-h-full flex-col">
-            {results.kind === "date" ? (
-              <PollResultsMonth
-                options={results.options}
-                participantCount={results.participantCount}
-              />
-            ) : (
-              <PollResultsGrid
-                options={results.options}
-                participantCount={results.participantCount}
-                timeZone={poll.timeZone}
-              />
-            )}
-          </Card>
-        </div>
-      }
-      list={
-        <div className="h-full overflow-y-auto">
-          <PollDatesList
-            kind={results.kind}
+        results.kind === "date" ? (
+          <PollResultsMonth
+            options={results.options}
+            participantCount={results.participantCount}
+          />
+        ) : (
+          <PollResultsGrid
             options={results.options}
             participantCount={results.participantCount}
             timeZone={poll.timeZone}
           />
-        </div>
+        )
+      }
+      list={
+        <PollResultsList
+          kind={results.kind}
+          options={results.options}
+          participantCount={results.participantCount}
+          timeZone={poll.timeZone}
+        />
       }
     />
   );
