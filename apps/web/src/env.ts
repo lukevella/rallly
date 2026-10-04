@@ -115,8 +115,8 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string().optional(),
 
     /**
-     * Conferencing integrations (Zoom, Google Meet, Microsoft Teams). The
-     * flag needs at least one provider's OAuth app configured; see
+     * Conferencing integrations (Zoom, Google Meet, Microsoft Teams, Webex).
+     * The flag needs at least one provider's OAuth app configured; see
      * createFinalSchema below.
      */
     CONFERENCING_ENABLED: z.enum(["true", "false"]).default("false"),
@@ -124,11 +124,14 @@ export const env = createEnv({
     ZOOM_CLIENT_SECRET: z.string().optional(),
     // Signs Zoom's event notifications, including app deauthorization.
     ZOOM_WEBHOOK_SECRET_TOKEN: z.string().optional(),
+    WEBEX_CLIENT_ID: z.string().optional(),
+    WEBEX_CLIENT_SECRET: z.string().optional(),
     // Comma separated. While set, only these accounts are offered the
     // provider: an unpublished or unverified OAuth app authorizes no one else.
     ZOOM_ALLOWED_EMAILS: z.string().optional(),
     GOOGLE_MEET_ALLOWED_EMAILS: z.string().optional(),
     MICROSOFT_TEAMS_ALLOWED_EMAILS: z.string().optional(),
+    WEBEX_ALLOWED_EMAILS: z.string().optional(),
 
     /**
      * Microsoft app registration, shared by sign in and Microsoft Teams.
@@ -313,6 +316,9 @@ export const env = createEnv({
     ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET,
     ZOOM_WEBHOOK_SECRET_TOKEN: process.env.ZOOM_WEBHOOK_SECRET_TOKEN,
     ZOOM_ALLOWED_EMAILS: process.env.ZOOM_ALLOWED_EMAILS,
+    WEBEX_CLIENT_ID: process.env.WEBEX_CLIENT_ID,
+    WEBEX_CLIENT_SECRET: process.env.WEBEX_CLIENT_SECRET,
+    WEBEX_ALLOWED_EMAILS: process.env.WEBEX_ALLOWED_EMAILS,
     GOOGLE_MEET_ALLOWED_EMAILS: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
     MICROSOFT_TEAMS_ALLOWED_EMAILS: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
     MICROSOFT_TENANT_ID: process.env.MICROSOFT_TENANT_ID,
@@ -363,6 +369,17 @@ export const env = createEnv({
         });
       }
 
+      if (Boolean(env.WEBEX_CLIENT_ID) !== Boolean(env.WEBEX_CLIENT_SECRET)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [
+            env.WEBEX_CLIENT_ID ? "WEBEX_CLIENT_SECRET" : "WEBEX_CLIENT_ID",
+          ],
+          message:
+            "WEBEX_CLIENT_ID and WEBEX_CLIENT_SECRET must be set together.",
+        });
+      }
+
       // A flag that is on with nothing behind it would render an empty
       // settings page; fail loudly at boot instead of hiding the feature.
       const hasZoom = Boolean(env.ZOOM_CLIENT_ID && env.ZOOM_CLIENT_SECRET);
@@ -372,17 +389,19 @@ export const env = createEnv({
       const hasMicrosoft = Boolean(
         env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET,
       );
+      const hasWebex = Boolean(env.WEBEX_CLIENT_ID && env.WEBEX_CLIENT_SECRET);
       if (
         env.CONFERENCING_ENABLED === "true" &&
         !hasZoom &&
         !hasGoogle &&
-        !hasMicrosoft
+        !hasMicrosoft &&
+        !hasWebex
       ) {
         ctx.addIssue({
           code: "custom",
           path: ["CONFERENCING_ENABLED"],
           message:
-            "CONFERENCING_ENABLED is set but no conferencing provider is configured. Set ZOOM_CLIENT_ID and ZOOM_CLIENT_SECRET for Zoom, GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET for Google Meet, or MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET for Microsoft Teams, or turn the flag off.",
+            "CONFERENCING_ENABLED is set but no conferencing provider is configured. Set ZOOM_CLIENT_ID and ZOOM_CLIENT_SECRET for Zoom, GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET for Google Meet, MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET for Microsoft Teams, or WEBEX_CLIENT_ID and WEBEX_CLIENT_SECRET for Webex, or turn the flag off.",
         });
       }
     }),

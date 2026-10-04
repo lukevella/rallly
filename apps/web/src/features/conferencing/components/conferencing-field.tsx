@@ -45,6 +45,7 @@ export const toPollConferencing = (
     case "zoom":
     case "meet":
     case "teams":
+    case "webex":
       return { provider: data.conferencingProvider };
     case "custom": {
       const uri = data.conferencingUrl?.trim();

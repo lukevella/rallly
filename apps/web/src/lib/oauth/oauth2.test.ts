@@ -98,6 +98,31 @@ describe("validateAuthorizationCode", () => {
     });
   });
 
+  it("sends the credentials in the form body for a post client", async () => {
+    const fetchMock = stubFetch(200, { access_token: "access" });
+
+    await validateAuthorizationCode({
+      endpoint: "https://provider.example/token",
+      client: { ...client, authentication: "post" },
+      code: "code",
+      codeVerifier: "verifier",
+    });
+
+    const [, init] = fetchMock.mock.calls[0] as unknown as [
+      string,
+      RequestInit,
+    ];
+    expect(new Headers(init.headers).has("Authorization")).toBe(false);
+    expect(Object.fromEntries(init.body as URLSearchParams)).toEqual({
+      grant_type: "authorization_code",
+      code: "code",
+      redirect_uri: "https://example.com/callback",
+      code_verifier: "verifier",
+      client_id: "client",
+      client_secret: "secret",
+    });
+  });
+
   it("leaves optional fields undefined when the provider omits them", async () => {
     stubFetch(200, { access_token: "access" });
 

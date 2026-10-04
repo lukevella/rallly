@@ -5,13 +5,16 @@ import * as z from "zod";
 import { OAuth2RequestError } from "./errors";
 
 // The authorization code grant with PKCE (RFC 6749, RFC 7636) for a
-// confidential client, which authenticates to the token endpoint with HTTP
-// Basic credentials. Every provider we integrate with accepts this shape.
+// confidential client. It authenticates to the token endpoint with HTTP Basic
+// credentials unless the provider documents only the form body (Webex).
 
 export interface OAuth2ClientConfig {
   clientId: string;
   clientSecret: string;
   redirectUri: string;
+  // RFC 6749 section 2.3.1: `basic` (client_secret_basic) or `post`
+  // (client_secret_post). Defaults to `basic`.
+  authentication?: "basic" | "post";
 }
 
 export interface OAuth2TokenResponse {
@@ -141,18 +144,18 @@ async function postForm({
   client: OAuth2ClientConfig;
   body: URLSearchParams;
 }) {
-  const credentials = Buffer.from(
-    `${client.clientId}:${client.clientSecret}`,
-  ).toString("base64");
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (client.authentication === "post") {
+    body.set("client_id", client.clientId);
+    body.set("client_secret", client.clientSecret);
+  } else {
+    const credentials = Buffer.from(
+      `${client.clientId}:${client.clientSecret}`,
+    ).toString("base64");
+    headers.Authorization = `Basic ${credentials}`;
+  }
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${credentials}`,
-      Accept: "application/json",
-    },
-    body,
-  });
+  const response = await fetch(endpoint, { method: "POST", headers, body });
 
   if (response.ok) {
     return response;

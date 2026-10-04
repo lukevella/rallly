@@ -6,7 +6,7 @@ export const isConferencingEnabled =
 
 // A provider is offered when its OAuth app is configured; Google Meet reuses
 // the Google OAuth app the calendars integration already needs, and Microsoft
-// Teams the Microsoft app sign in uses.
+// Teams the Microsoft app sign in uses. Webex has an integration of its own.
 export function getAvailableConferencingProviders(): ConferencingProvider[] {
   if (!isConferencingEnabled) {
     return [];
@@ -21,6 +21,9 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
   if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
     providers.push("teams");
   }
+  if (process.env.WEBEX_CLIENT_ID && process.env.WEBEX_CLIENT_SECRET) {
+    providers.push("webex");
+  }
   return providers;
 }
 
@@ -32,6 +35,7 @@ const providerAllowlists: Record<ConferencingProvider, string | undefined> = {
   zoom: process.env.ZOOM_ALLOWED_EMAILS,
   meet: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
   teams: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
+  webex: process.env.WEBEX_ALLOWED_EMAILS,
 };
 
 export function isConferencingProviderAllowedFor({
@@ -66,3 +70,6 @@ export const MICROSOFT_TEAMS_SCOPES = [
   "User.Read",
   "OnlineMeetings.ReadWrite",
 ];
+
+// Both are scopes a user grants for themselves; no Webex review is involved.
+export const WEBEX_SCOPES = ["meeting:schedules_write", "spark:people_read"];

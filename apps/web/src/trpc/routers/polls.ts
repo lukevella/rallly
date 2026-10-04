@@ -1214,7 +1214,7 @@ export const polls = router({
         pollId: poll.id,
       });
 
-      // Finalizing and notifying are free; a Zoom or Teams meeting is what
+      // Finalizing and notifying are free; a Zoom, Teams or Webex meeting is what
       // the plan pays for.
       const planGate = getFinalizePlanGate({
         tier: getPollTier({

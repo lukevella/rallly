@@ -8,6 +8,7 @@ const providerIcons: Record<EmailConferencing["provider"], string> = {
   zoom: "zoom.png",
   meet: "google-meet.png",
   teams: "microsoft-teams.png",
+  webex: "webex.png",
   phone: "phone.png",
   custom: "video.png",
 };
@@ -16,6 +17,7 @@ const providerNames = {
   zoom: "Zoom",
   meet: "Google Meet",
   teams: "Microsoft Teams",
+  webex: "Webex",
 } as const;
 
 // When and where an event happens, one icon row each. Icons are PNGs served

@@ -7,6 +7,7 @@ import {
   isConferencingEnabled,
   isConferencingProviderAllowedFor,
   MICROSOFT_TEAMS_SCOPES,
+  WEBEX_SCOPES,
 } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
 import type { ConferencingProvider } from "@/features/conferencing/schema";
@@ -17,6 +18,7 @@ import { getSession } from "@/lib/auth";
 import { OAuthConnectionRefusedError } from "@/lib/oauth/errors";
 import { GoogleOAuthClient } from "@/lib/oauth/providers/google";
 import { MicrosoftOAuthClient } from "@/lib/oauth/providers/microsoft";
+import { WebexOAuthClient } from "@/lib/oauth/providers/webex";
 import { ZoomOAuthClient } from "@/lib/oauth/providers/zoom";
 import { OAuthIntegration } from "@/lib/oauth/server";
 import type { OAuthClient } from "@/lib/oauth/types";
@@ -26,6 +28,7 @@ type Integration =
   | "outlook-calendar"
   | "google-meet"
   | "microsoft-teams"
+  | "webex"
   | "zoom";
 
 async function requireSessionUserId() {
@@ -163,6 +166,26 @@ const { handler } = OAuthIntegration<Integration>({
           onConnect: conferencingOnConnect({
             integrationId,
             displayName: "Zoom",
+          }),
+        });
+      }
+      case "webex": {
+        if (
+          !isConferencingEnabled ||
+          !env.WEBEX_CLIENT_ID ||
+          !env.WEBEX_CLIENT_SECRET ||
+          !(await isAllowedForSession("webex"))
+        ) {
+          return null;
+        }
+        return new WebexOAuthClient({
+          clientId: env.WEBEX_CLIENT_ID,
+          clientSecret: env.WEBEX_CLIENT_SECRET,
+          callbackUrl,
+          scopes: WEBEX_SCOPES,
+          onConnect: conferencingOnConnect({
+            integrationId,
+            displayName: "Webex",
           }),
         });
       }

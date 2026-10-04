@@ -32,12 +32,12 @@ export function containsSuspiciousPatterns(text: string) {
   const cryptoScamPattern =
     /(\d+\.\d+\s*BTC|cloud mining|your balance|was mined|unclaimed funds)/i;
 
-  // Raw HTTP(S) URLs — but exclude common meeting/location domains
-  const rawUrlPattern = /https?:\/\/[^\s]+/i;
-  const safeUrlPattern =
-    /https?:\/\/([\w-]+\.)?(zoom\.us|meet\.google\.com|teams\.microsoft\.com|maps\.(google|apple)\.com|chat\.whatsapp\.com|wa\.me|t\.me|discord\.(gg|com))[^\s]*/i;
-
-  const hasUnsafeUrl = rawUrlPattern.test(text) && !safeUrlPattern.test(text);
+  // Raw HTTP(S) URLs, except those on common meeting/location domains. A
+  // match ends where the next scheme starts, so links run together are each
+  // judged on their own host.
+  const hasUnsafeUrl = (
+    text.match(/https?:\/\/(?:(?!https?:\/\/)\S)+/gi) ?? []
+  ).some((url) => !isTrustedUrl(url));
 
   return (
     // Simple pattern checks (least intensive)
@@ -54,5 +54,33 @@ export function containsSuspiciousPatterns(text: string) {
     phoneNumberPattern.test(text) ||
     // Most intensive pattern (Unicode handling)
     suspiciousUnicodePattern.test(text)
+  );
+}
+
+const trustedHosts = [
+  "zoom.us",
+  "meet.google.com",
+  "teams.microsoft.com",
+  "webex.com",
+  "maps.google.com",
+  "maps.apple.com",
+  "chat.whatsapp.com",
+  "wa.me",
+  "t.me",
+  "discord.gg",
+  "discord.com",
+];
+
+// Judged on the parsed hostname, so a lookalike host or userinfo in front of
+// the real host (https://webex.com:@evil.example) is not trusted.
+function isTrustedUrl(url: string) {
+  let hostname: string;
+  try {
+    hostname = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return trustedHosts.some(
+    (host) => hostname === host || hostname.endsWith(`.${host}`),
   );
 }
