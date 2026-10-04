@@ -12,6 +12,7 @@ import { getTranslation } from "@/i18n/server";
 import { Footer } from "./footer";
 import { MobileMenu } from "./mobile-menu";
 import { NavLink } from "./nav-link";
+import { SiteHeader } from "./site-header";
 
 export async function generateStaticParams() {
   return Object.keys(languages).map((locale) => ({ locale }));
@@ -34,8 +35,8 @@ export default async function Root(props: {
   const { t } = await getTranslation(locale, ["common", "home"]);
   return (
     <div className="relative z-10 flex min-h-full flex-col overflow-x-clip">
-      <header className="sticky top-0 z-20 bg-gray-100">
-        <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-4 sm:px-6 sm:py-6">
+      <SiteHeader>
+        <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-3 sm:px-6">
           <div className="flex grow items-center gap-x-12">
             <LinkBase
               className="relative inline-block h-7 w-32 rounded-sm"
@@ -96,7 +97,7 @@ export default async function Root(props: {
             </div>
           </div>
         </div>
-      </header>
+      </SiteHeader>
       <div className="mx-auto flex w-full max-w-6xl grow flex-col space-y-8 px-4 pb-4 sm:px-6 sm:pb-6">
         <section className="relative grow">{children}</section>
         <footer className="border-t pt-8 sm:pt-16">

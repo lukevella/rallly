@@ -13,12 +13,16 @@ import {
   PaletteIcon,
   Settings2Icon,
   TerminalIcon,
-  TimerResetIcon,
   UserPlusIcon,
+  UsersIcon,
+  WebhookIcon,
 } from "lucide-react";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import GoogleMeetIcon from "@/assets/google-meet.svg";
+import MicrosoftTeamsIcon from "@/assets/microsoft-teams.svg";
+import WebexIcon from "@/assets/webex.svg";
 import {
   CompareTable,
   CompareTableCell,
@@ -28,6 +32,8 @@ import {
   CompareTableFeatureDescription,
   CompareTableFeatureName,
   CompareTableHead,
+  CompareTableHeader,
+  CompareTableSection,
 } from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
@@ -76,6 +82,7 @@ const faqLinkClassName =
   "text-gray-800 underline underline-offset-2 hover:text-gray-600";
 
 const apiDocsUrl = "https://support.rallly.co/api-reference/introduction";
+const webhooksDocsUrl = "https://support.rallly.co/api-reference/webhooks";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
@@ -227,7 +234,7 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
-                <PlanBenefit icon={<TimerResetIcon />}>
+                <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
                       t={t}
@@ -306,43 +313,13 @@ export default async function Page(props: {
                 </Link>
               </div>
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
-                <PlanBenefit icon={<PaletteIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="customBranding"
-                      defaults="Custom branding"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<MailPlusIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="emailInvites"
-                      defaults="Email invites"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<EyeOffIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="removeAttribution"
-                      defaults="Remove attribution"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="featureNameExtendedPollLifetime"
-                      defaults="Extended poll lifetime"
+                      i18nKey="indefinitePollRetention"
+                      defaults="Indefinite poll retention"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
@@ -366,6 +343,16 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                <PlanBenefit icon={<MailPlusIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="emailInvites"
+                      defaults="Email invites"
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
                 <PlanBenefit icon={<UserPlusIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -376,6 +363,26 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                <PlanBenefit icon={<PaletteIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="customBranding"
+                      defaults="Custom branding"
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
+                <PlanBenefit icon={<EyeOffIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="removeAttribution"
+                      defaults="Remove attribution"
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
                 <PlanBenefit icon={<TerminalIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -383,6 +390,16 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="apiAccess"
                       defaults="API access"
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
+                <PlanBenefit icon={<WebhookIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="webhooks"
+                      defaults="Webhooks"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
@@ -425,8 +442,8 @@ export default async function Page(props: {
         </SectionHeading>
         <SectionContent>
           <CompareTable>
-            <thead>
-              <tr className="border-b">
+            <CompareTableHeader>
+              <tr>
                 <th className="w-3/5">
                   <span className="sr-only">
                     <Trans
@@ -440,16 +457,26 @@ export default async function Page(props: {
                 <CompareTableHead>{PLAN_NAMES.HOBBY}</CompareTableHead>
                 <CompareTableHead>{PLAN_NAMES.PRO}</CompareTableHead>
               </tr>
-            </thead>
+            </CompareTableHeader>
             <tbody className="divide-y">
+              <CompareTableSection>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="compareSchedulingPoll"
+                  defaults="Scheduling poll"
+                />
+              </CompareTableSection>
               <tr>
-                <CompareTableFeature>
+                <CompareTableFeature
+                  icon={<CalendarSearchIcon aria-hidden="true" />}
+                >
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="compareSchedulingPolls"
-                      defaults="Scheduling polls"
+                      i18nKey="comparePolls"
+                      defaults="Polls"
                     />
                   </CompareTableFeatureName>
                   <CompareTableFeatureDescription>
@@ -479,7 +506,7 @@ export default async function Page(props: {
                 </CompareTableCell>
               </tr>
               <tr>
-                <CompareTableFeature>
+                <CompareTableFeature icon={<UsersIcon aria-hidden="true" />}>
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -515,7 +542,7 @@ export default async function Page(props: {
                 </CompareTableCell>
               </tr>
               <tr>
-                <CompareTableFeature>
+                <CompareTableFeature icon={<ClockIcon aria-hidden="true" />}>
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -551,7 +578,7 @@ export default async function Page(props: {
                 </CompareTableCell>
               </tr>
               <tr>
-                <CompareTableFeature>
+                <CompareTableFeature icon={<CopyIcon aria-hidden="true" />}>
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -577,7 +604,9 @@ export default async function Page(props: {
                 </CompareTableCell>
               </tr>
               <tr>
-                <CompareTableFeature>
+                <CompareTableFeature
+                  icon={<Settings2Icon aria-hidden="true" />}
+                >
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -603,7 +632,79 @@ export default async function Page(props: {
                 </CompareTableCell>
               </tr>
               <tr>
-                <CompareTableFeature>
+                <CompareTableFeature icon={<MailPlusIcon aria-hidden="true" />}>
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="emailInvites"
+                      defaults="Email invites"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="emailInvitesDescription"
+                      defaults="Track who opened and responded with personal invite links"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+            </tbody>
+            <tbody className="divide-y">
+              <CompareTableSection>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="compareTeam"
+                  defaults="Team"
+                />
+              </CompareTableSection>
+              <tr>
+                <CompareTableFeature icon={<UserPlusIcon aria-hidden="true" />}>
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="teamCollaboration"
+                      defaults="Team collaboration"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="teamCollaborationDescription"
+                      defaults="Invite your team to manage polls together"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+            </tbody>
+            <tbody className="divide-y">
+              <CompareTableSection>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="branding"
+                  defaults="Branding"
+                />
+              </CompareTableSection>
+              <tr>
+                <CompareTableFeature icon={<PaletteIcon aria-hidden="true" />}>
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -629,33 +730,7 @@ export default async function Page(props: {
                 </CompareTableCell>
               </tr>
               <tr>
-                <CompareTableFeature>
-                  <CompareTableFeatureName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="emailInvites"
-                      defaults="Email invites"
-                    />
-                  </CompareTableFeatureName>
-                  <CompareTableFeatureDescription>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="emailInvitesDescription"
-                      defaults="Track who opened and responded with personal invite links"
-                    />
-                  </CompareTableFeatureDescription>
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableDash label={notIncluded} />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <CompareTableCheck label={included} />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
+                <CompareTableFeature icon={<EyeOffIcon aria-hidden="true" />}>
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -680,34 +755,18 @@ export default async function Page(props: {
                   <CompareTableCheck label={included} />
                 </CompareTableCell>
               </tr>
+            </tbody>
+            <tbody className="divide-y">
+              <CompareTableSection>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="developer"
+                  defaults="Developer"
+                />
+              </CompareTableSection>
               <tr>
-                <CompareTableFeature>
-                  <CompareTableFeatureName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="teamCollaboration"
-                      defaults="Team collaboration"
-                    />
-                  </CompareTableFeatureName>
-                  <CompareTableFeatureDescription>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="teamCollaborationDescription"
-                      defaults="Invite your team to manage polls together"
-                    />
-                  </CompareTableFeatureDescription>
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <CompareTableDash label={notIncluded} />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <CompareTableCheck label={included} />
-                </CompareTableCell>
-              </tr>
-              <tr>
-                <CompareTableFeature>
+                <CompareTableFeature icon={<TerminalIcon aria-hidden="true" />}>
                   <CompareTableFeatureName>
                     <Trans
                       t={t}
@@ -727,6 +786,89 @@ export default async function Page(props: {
                       defaults="Create polls and read results from your own systems. <a>Read the API docs</a>"
                     />
                   </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature icon={<WebhookIcon aria-hidden="true" />}>
+                  <CompareTableFeatureName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="webhooks"
+                      defaults="Webhooks"
+                    />
+                  </CompareTableFeatureName>
+                  <CompareTableFeatureDescription>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="webhooksDescription"
+                      components={{
+                        a: (
+                          <a
+                            className={faqLinkClassName}
+                            href={webhooksDocsUrl}
+                          />
+                        ),
+                      }}
+                      defaults="Notify your own systems when polls and responses change. <a>Read the webhook docs</a>"
+                    />
+                  </CompareTableFeatureDescription>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+            </tbody>
+            <tbody className="divide-y">
+              <CompareTableSection>
+                <Trans
+                  t={t}
+                  ns="pricing"
+                  i18nKey="integrations"
+                  defaults="Integrations"
+                />
+              </CompareTableSection>
+              <tr>
+                <CompareTableFeature
+                  icon={<GoogleMeetIcon aria-hidden="true" />}
+                >
+                  <CompareTableFeatureName>Google Meet</CompareTableFeatureName>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature
+                  icon={<MicrosoftTeamsIcon aria-hidden="true" />}
+                >
+                  <CompareTableFeatureName>
+                    Microsoft Teams
+                  </CompareTableFeatureName>
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableDash label={notIncluded} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature icon={<WebexIcon aria-hidden="true" />}>
+                  <CompareTableFeatureName>Webex</CompareTableFeatureName>
                 </CompareTableFeature>
                 <CompareTableCell>
                   <CompareTableDash label={notIncluded} />
