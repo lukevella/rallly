@@ -6,6 +6,7 @@ import { isConferencingEnabled } from "@/features/conferencing/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
+import { isReviewRequestEnabled } from "@/features/review-request/constants";
 import { isSelfHosted } from "@/lib/constants";
 import type { FeatureFlagConfig } from "@/lib/feature-flags/types";
 import { isStorageEnabled } from "@/lib/storage";
@@ -46,4 +47,6 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // Cloud deploys continuously and is never behind a release; the check
   // exists for operators who pull images.
   updateCheck: isSelfHosted,
+  // Review sites list the cloud product; nobody to review it for self-hosted.
+  reviewRequests: isReviewRequestEnabled,
 };

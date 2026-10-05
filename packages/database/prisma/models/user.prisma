@@ -37,31 +37,34 @@ enum UserRole {
 }
 
 model User {
-  id              String      @id @default(cuid())
-  name            String
-  email           String      @unique @db.Citext
-  emailVerified   Boolean?    @map("email_verified")
-  image           String?
-  timeZone        String?     @map("time_zone")
-  weekStart       Int?        @map("week_start")
-  timeFormat      TimeFormat? @map("time_format")
-  locale          String?
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime?   @updatedAt @map("updated_at")
-  customerId      String?     @map("customer_id")
-  banned          Boolean     @default(false)
-  bannedAt        DateTime?   @map("banned_at")
-  banReason       String?     @map("ban_reason")
-  banExpires      DateTime?   @map("ban_expires")
-  role            UserRole    @default(user)
-  lastLoginMethod String?     @map("last_login_method")
-  isAnonymous     Boolean     @default(false) @map("anonymous")
-  lastSeenAt      DateTime    @default(now()) @map("last_seen_at")
-  deletedAt       DateTime?   @map("deleted_at")
+  id                String      @id @default(cuid())
+  name              String
+  email             String      @unique @db.Citext
+  emailVerified     Boolean?    @map("email_verified")
+  image             String?
+  timeZone          String?     @map("time_zone")
+  weekStart         Int?        @map("week_start")
+  timeFormat        TimeFormat? @map("time_format")
+  locale            String?
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime?   @updatedAt @map("updated_at")
+  customerId        String?     @map("customer_id")
+  banned            Boolean     @default(false)
+  bannedAt          DateTime?   @map("banned_at")
+  banReason         String?     @map("ban_reason")
+  banExpires        DateTime?   @map("ban_expires")
+  role              UserRole    @default(user)
+  lastLoginMethod   String?     @map("last_login_method")
+  isAnonymous       Boolean     @default(false) @map("anonymous")
+  lastSeenAt        DateTime    @default(now()) @map("last_seen_at")
+  deletedAt         DateTime?   @map("deleted_at")
   // Self-declared role, optional. Free-form string rather than an enum so
   // the taxonomy can change without a migration; validation lives in
   // features/user/schema.ts.
-  jobTitle        String?     @map("job_title")
+  jobTitle          String?     @map("job_title")
+  // When the user was asked in-app for a review on a third-party site. The
+  // ask shows once per user, so a set value means never ask again.
+  reviewRequestedAt DateTime?   @map("review_requested_at")
 
   comments                Comment[]
   polls                   Poll[]

@@ -40,6 +40,7 @@ import { VOTE_TYPES } from "@/features/poll/constants";
 import type { PollParticipant } from "@/features/poll/types";
 import type { OptionVotes } from "@/features/poll/utils";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
+import { ReviewRequestCard } from "@/features/review-request/components/review-request-card";
 import {
   EventDate,
   EventTimeRange,
@@ -574,9 +575,11 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
   const option = options.find((o) => o.id === optionId);
+  const [askForReview, setAskForReview] = React.useState(false);
 
   const finalize = trpc.polls.book.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setAskForReview(data?.askForReview ?? false);
       setStep("done");
       // The page behind the dialog picks up the scheduled status.
       router.refresh();
@@ -646,6 +649,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
             </DialogDescription>
           </DialogHeader>
         </div>
+        {askForReview ? <ReviewRequestCard /> : null}
         <Button className="w-full" onClick={onClose}>
           <Trans i18nKey="backToPoll" defaults="Back to poll" />
         </Button>
