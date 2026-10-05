@@ -636,16 +636,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
               <Trans i18nKey="finalizeSuccessTitle" defaults="Date scheduled" />
             </DialogTitle>
             <DialogDescription>
-              <Trans
-                i18nKey="finalizeSuccessDate"
-                defaults="Your event is booked for <date></date>."
-                components={{ date: <PickedDateText option={option} /> }}
-              />{" "}
-              <Trans
-                i18nKey="finalizeSuccessNotified"
-                defaults="{count, plural, =0 {No participants were notified.} one {# participant will be notified.} other {# participants will be notified.}}"
-                values={{ count: notifyIds.size }}
-              />
+              <PickedDateText option={option} />
             </DialogDescription>
           </DialogHeader>
         </div>

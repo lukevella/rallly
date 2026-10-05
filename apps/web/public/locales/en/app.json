@@ -391,8 +391,6 @@
   "finalizePoll": "Finalize poll",
   "finalizePollDescription": "Pick the date that works best.",
   "finalizePollError": "Failed to finalize poll",
-  "finalizeSuccessDate": "Your event is booked for <date></date>.",
-  "finalizeSuccessNotified": "{count, plural, =0 {No participants were notified.} one {# participant will be notified.} other {# participants will be notified.}}",
   "finalizeSuccessTitle": "Date scheduled",
   "finalizeSummaryDescription": "Check the details before you finalize.",
   "finalizeSummaryTitle": "Summary",

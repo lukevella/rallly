@@ -371,9 +371,7 @@ test.describe("Booking a poll", () => {
     await dialog
       .getByRole("button", { name: "Finalize and notify 1 participant" })
       .click();
-    await expect(
-      dialog.getByText("1 participant will be notified."),
-    ).toBeVisible();
+    await expect(dialog.getByText("Date scheduled")).toBeVisible();
 
     // No cron run: the booking's own after() sends the first batch.
     const { email } = await captureOne(ALICE);
