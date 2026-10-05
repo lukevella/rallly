@@ -391,8 +391,6 @@
   "finalizePoll": "Szavazás véglegesítése",
   "finalizePollDescription": "Válaszd ki a legmegfelelőbb dátumot.",
   "finalizePollError": "Nem sikerült véglegesíteni a szavazást",
-  "finalizeSuccessDate": "Az eseményed <date></date> dátumra lett rögzítve.",
-  "finalizeSuccessNotified": "{count, plural, =0 {Nincs értesítendő résztvevő.} one {# résztvevő lesz értesítve.} other {# résztvevő lesz értesítve.}}",
   "finalizeSuccessTitle": "Dátum ütemezve",
   "finalizeSummaryDescription": "Ellenőrizd a részleteket mielőtt véglegesíted.",
   "finalizeSummaryTitle": "Összefoglaló",
