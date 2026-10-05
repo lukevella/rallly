@@ -3,7 +3,7 @@
 import { posthog } from "@rallly/posthog/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@rallly/ui/avatar";
 import { Button } from "@rallly/ui/button";
-import { XIcon } from "lucide-react";
+import { StarIcon, XIcon } from "lucide-react";
 import React from "react";
 import { Trans, useTranslation } from "@/i18n/client";
 import { founderPhotoUrl, reviewRequestUrl } from "../constants";
@@ -22,7 +22,8 @@ export function ReviewRequestCard() {
   }
 
   return (
-    <div className="relative flex flex-col gap-4 rounded-lg border bg-gray-50 p-5 text-left text-sm">
+    <div className="relative flex flex-col gap-4 overflow-hidden rounded-lg border bg-gray-50 p-5 text-left text-sm dark:bg-gray-700/50">
+      <StarIcon className="pointer-events-none absolute -top-5 right-16 size-24 opacity-5" />
       <Button
         size="icon-sm"
         variant="ghost"
