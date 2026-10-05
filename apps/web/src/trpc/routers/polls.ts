@@ -40,6 +40,7 @@ import {
   getFinalizePlanGate,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
+import { claimReviewRequest } from "@/features/review-request/mutations";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
@@ -1472,6 +1473,13 @@ export const polls = router({
             poll: poll.id,
           },
         });
+
+        const askForReview = await claimReviewRequest({
+          userId: ctx.user.id,
+          participantCount: poll.participants.length,
+        });
+
+        return { askForReview };
       }
     }),
   reopen: privateProcedure
