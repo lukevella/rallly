@@ -1474,12 +1474,13 @@ export const polls = router({
           },
         });
 
-        const askForReview = await claimReviewRequest({
+        const reviewSite = await claimReviewRequest({
           userId: ctx.user.id,
+          email: ctx.user.email,
           participantCount: poll.participants.length,
         });
 
-        return { askForReview };
+        return { reviewSite };
       }
     }),
   reopen: privateProcedure

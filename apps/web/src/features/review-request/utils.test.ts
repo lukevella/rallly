@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isEligibleForReviewRequest } from "./utils";
+import { isEligibleForReviewRequest, pickReviewSite } from "./utils";
 
 describe("isEligibleForReviewRequest", () => {
   it("asks on the second finalized poll with three participants", () => {
@@ -27,5 +27,31 @@ describe("isEligibleForReviewRequest", () => {
         participantCount: 2,
       }),
     ).toBe(false);
+  });
+});
+
+describe("pickReviewSite", () => {
+  it("sends free mail addresses to Trustpilot", () => {
+    expect(
+      pickReviewSite({ email: "Ada@Gmail.com", businessSite: "capterra" }),
+    ).toBe("trustpilot");
+  });
+
+  it("sends company addresses to the business site", () => {
+    expect(
+      pickReviewSite({ email: "ada@example.com", businessSite: "capterra" }),
+    ).toBe("capterra");
+    expect(
+      pickReviewSite({ email: "ada@example.com", businessSite: "g2" }),
+    ).toBe("g2");
+  });
+
+  it("does not treat a subdomain of a free mail provider as consumer", () => {
+    expect(
+      pickReviewSite({
+        email: "ada@corp.gmail.com.example",
+        businessSite: "g2",
+      }),
+    ).toBe("g2");
   });
 });

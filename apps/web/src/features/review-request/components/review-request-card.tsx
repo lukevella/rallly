@@ -6,15 +6,17 @@ import { XIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { Trans, useTranslation } from "@/i18n/client";
-import { reviewRequestUrl } from "../constants";
+import type { ReviewSite } from "../constants";
+import { reviewSites } from "../constants";
 
 /**
- * Asks the user for a G2 review as a short note signed by the founder. The
+ * Asks the user for a review on the given site as a short note signed by the founder. The
  * server decides eligibility and records the ask, so this renders only when
  * it should and only once per user.
  */
-export function ReviewRequestCard() {
+export function ReviewRequestCard({ site }: { site: ReviewSite }) {
   const { t } = useTranslation();
+  const { name, url } = reviewSites[site];
   const [dismissed, setDismissed] = React.useState(false);
 
   if (dismissed) {
@@ -31,7 +33,7 @@ export function ReviewRequestCard() {
         onClick={() => {
           posthog?.capture("review_request:dismiss_click", {
             channel: "in_app",
-            destination: "g2",
+            destination: site,
           });
           setDismissed(true);
         }}
@@ -41,24 +43,19 @@ export function ReviewRequestCard() {
       <p className="text-pretty pr-6">
         <Trans
           i18nKey="reviewRequestMessage"
-          defaults="If Rallly saved you some back-and-forth, would you leave a quick review on G2? It helps others find us."
+          defaults="If Rallly saved you some back-and-forth, would you leave a quick review on {site}? It helps others find us."
+          values={{ site: name }}
         />
       </p>
       <Button
         className="w-full"
         variant="primary"
         nativeButton={false}
-        render={
-          <a
-            href={reviewRequestUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-        }
+        render={<a href={url} target="_blank" rel="noopener noreferrer" />}
         onClick={() => {
           posthog?.capture("review_request:cta_click", {
             channel: "in_app",
-            destination: "g2",
+            destination: site,
           });
           setDismissed(true);
         }}
