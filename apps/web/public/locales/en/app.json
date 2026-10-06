@@ -894,7 +894,7 @@
   "reviewRequestClose": "Dismiss",
   "reviewRequestCta": "Write a review",
   "reviewRequestFounderRole": "Founder of Rallly",
-  "reviewRequestMessage": "If Rallly saved you some back-and-forth, would you leave a quick review on G2? It helps others find us.",
+  "reviewRequestMessage": "If Rallly saved you some back-and-forth, would you leave a quick review on {site}? It helps others find us.",
   "revoke": "Revoke",
   "revokeConfirmation": "Are you sure you want to revoke {name}? This will immediately disable the key.",
   "revoked": "Revoked",
