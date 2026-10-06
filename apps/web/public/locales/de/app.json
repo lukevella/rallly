@@ -894,6 +894,7 @@
   "reviewRequestClose": "Verwerfen",
   "reviewRequestCta": "Bewertung schreiben",
   "reviewRequestFounderRole": "Gründer von Rallly",
+  "reviewRequestMessage": "Wenn Rallly dir etwas Hin- und Her-Geschreibe erspart hat, würdest du dann eine kurze Bewertung auf {site} hinterlassen? Das hilft anderen, uns zu finden.",
   "revoke": "Widerrufen",
   "revokeConfirmation": "Bist du sicher, dass du {name} widerrufen möchtest? Dadurch wird der Schlüssel sofort deaktiviert.",
   "revoked": "Widerrufen",
