@@ -82,7 +82,7 @@ async function AccountDeletionScheduledEmail({
             color={chrome.primaryColor}
           >
             {t("accountDeletionScheduled_button", {
-              defaultValue: "Manage Account",
+              defaultValue: "Manage account",
             })}
           </Button>
           <Hr />

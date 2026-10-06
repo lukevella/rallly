@@ -135,7 +135,7 @@ async function FinalizeParticipantEmail({
               i18n={i18n}
               ns="emails"
               i18nKey="finalizeParticipant_button"
-              defaults="View Event"
+              defaults="View event"
             />
           </Button>
           <Hr style={{ margin: "16px 0" }} />

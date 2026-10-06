@@ -67,7 +67,7 @@ async function LicenseKeyEmail({
               i18n={i18n}
               ns="emails"
               i18nKey="license_key_yourKey"
-              defaults="License Details"
+              defaults="License details"
             />
           </Heading>
           <table>
@@ -102,7 +102,7 @@ async function LicenseKeyEmail({
                   i18n={i18n}
                   ns="emails"
                   i18nKey="license_key_licenseKey"
-                  defaults="License Key"
+                  defaults="License key"
                 />
               </td>
               <td
@@ -122,7 +122,7 @@ async function LicenseKeyEmail({
               i18n={i18n}
               ns="emails"
               i18nKey="license_key_nextStepsHeading"
-              defaults="Next Steps"
+              defaults="Next steps"
             />
           </Heading>
           <Text>

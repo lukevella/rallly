@@ -50,7 +50,7 @@ async function NewParticipantConfirmationEmail({
           />
           <Heading>
             {t("newParticipantConfirmation_heading", {
-              defaultValue: "Poll Response Confirmation",
+              defaultValue: "Poll response confirmation",
             })}
           </Heading>
           <Text>

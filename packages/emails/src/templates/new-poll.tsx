@@ -54,7 +54,7 @@ async function NewPollEmail({
           />
           <Heading>
             {t("newPoll_heading", {
-              defaultValue: "New Poll Created",
+              defaultValue: "New poll created",
             })}
           </Heading>
           <Text>
@@ -77,7 +77,7 @@ async function NewPollEmail({
           </Text>
           <Button href={adminLink} color={chrome.primaryColor}>
             {t("newPoll_button", {
-              defaultValue: "Manage Poll",
+              defaultValue: "Manage poll",
             })}
           </Button>
           <Hr style={{ margin: "16px 0" }} />

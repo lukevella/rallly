@@ -91,7 +91,7 @@ async function FinalizeHostEmail({
             })}
           </Text>
           <Button href={pollUrl} color={chrome.primaryColor}>
-            {t("finalizeHost_button", { defaultValue: "View Event" })}
+            {t("finalizeHost_button", { defaultValue: "View event" })}
           </Button>
           <Hr style={{ margin: "16px 0" }} />
           <PoweredBy chrome={chrome} locale={locale} />

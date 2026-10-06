@@ -66,7 +66,7 @@ async function NewCommentEmail({
               i18n={i18n}
               ns="emails"
               i18nKey="newComment_heading"
-              defaults="New Comment"
+              defaults="New comment"
             />
           </Heading>
           <Text>

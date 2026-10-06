@@ -71,7 +71,7 @@ async function NewParticipantEmail({
               i18n={i18n}
               ns="emails"
               i18nKey="newParticipant_heading"
-              defaults="New Response"
+              defaults="New response"
             />
           </Heading>
           <Text>

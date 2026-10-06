@@ -68,7 +68,7 @@ async function SpaceInviteEmail({
           </Text>
           <Button href={inviteUrl} id="inviteUrl" color={chrome.primaryColor}>
             {t("spaceInvite_button", {
-              defaultValue: "Accept Invitation",
+              defaultValue: "Accept invitation",
             })}
           </Button>
           <Hr style={{ margin: "16px 0" }} />
