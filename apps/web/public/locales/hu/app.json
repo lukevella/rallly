@@ -656,7 +656,7 @@
   "notifyNewResponse": "Új szavazat",
   "notifyNewResponseDescription": "Kérj email értesítést, ha a résztvevő beküldi válaszát.",
   "notifyParticipants": "Résztvevők értesítése",
-  "notifyParticipantsDescription": "Küld el emailben a végső dátumot és egy naptár meghívót a kiválasztott személyeknek.",
+  "notifyParticipantsDescription": "Küldd el emailben a végső dátumot és egy naptár meghívót a kiválasztott személyeknek.",
   "notifySelectedCount": "{count, plural, =0 {Összes kiválasztása} one {# kiválasztva} other {# kiválasztva}}",
   "notifySelectIfNeedBe": "Válassz ki mindenkit, aki ha szükségesre szavazott",
   "notifySelectNo": "Válassz ki mindenkit, aki nemre szavazott",
