@@ -24,7 +24,11 @@ function trackHistoryPageviews() {
     const { pathname } = window.location;
     if (pathname === lastPathname) return;
     lastPathname = pathname;
-    posthog.capture("$pageview", { navigation_type: navigationType });
+    // Runs inside the router's own history call, so analytics must never
+    // throw back into navigation
+    try {
+      posthog.capture("$pageview", { navigation_type: navigationType });
+    } catch {}
   };
 
   for (const method of ["pushState", "replaceState"] as const) {
