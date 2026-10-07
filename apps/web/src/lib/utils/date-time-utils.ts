@@ -2,7 +2,6 @@ import type {
   DateTimeOption,
   TimeOption,
 } from "@/features/poll/components/forms/poll-options-form/types";
-import { dayjs } from "@/lib/dayjs";
 
 export function getBrowserTimeZone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -42,18 +41,6 @@ export const getOptionDateTimeLabel = (option: ParsedDateTimeOpton) => {
   return option.type === "timeSlot"
     ? `${date}, ${option.startTime} – ${option.endTime}`
     : date;
-};
-
-export const removeAllOptionsForDay = (
-  options: DateTimeOption[],
-  date: Date,
-) => {
-  return options.filter((option) => {
-    return !dayjs(date).isSame(
-      option.type === "date" ? option.date : option.start,
-      "day",
-    );
-  });
 };
 
 export const expectTimeOption = (d: DateTimeOption): TimeOption => {

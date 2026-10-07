@@ -37,10 +37,13 @@ import { dayjs } from "@/lib/dayjs";
 import {
   expectTimeOption,
   getBrowserTimeZone,
-  removeAllOptionsForDay,
 } from "@/lib/utils/date-time-utils";
 import type { DateTimeOption, DateTimePickerProps } from "../types";
-import { formatDateWithoutTime, formatDateWithoutTz } from "../utils";
+import {
+  formatDateWithoutTime,
+  formatDateWithoutTz,
+  removeAllOptionsForDay,
+} from "../utils";
 import TimePicker from "./time-picker";
 
 const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
