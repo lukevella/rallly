@@ -65,7 +65,7 @@ export function SectionSplit({
     <Section
       className={cn(
         "lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start lg:gap-x-16",
-        "[&>header]:lg:sticky [&>header]:lg:top-[calc(var(--site-header-height,61px)+0.75rem)]",
+        "[&>header]:lg:sticky [&>header]:lg:top-[calc(var(--site-header-height,61px)+2rem)]",
         "[&>header+div]:lg:mt-0",
         className,
       )}
