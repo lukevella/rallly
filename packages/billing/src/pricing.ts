@@ -1,3 +1,8 @@
+export const PLAN_NAMES = {
+  HOBBY: "Hobby",
+  PRO: "Pro",
+} as const;
+
 export const pricingData = {
   monthly: {
     amount: 1000,

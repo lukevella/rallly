@@ -1,7 +1,7 @@
 "use client";
 
 import type { PricesByCurrency } from "@rallly/billing";
-import { CURRENCY_COOKIE_NAME } from "@rallly/billing";
+import { CURRENCY_COOKIE_NAME } from "@rallly/billing/pricing";
 import { posthog } from "@rallly/posthog/client";
 import Cookies from "js-cookie";
 import React from "react";

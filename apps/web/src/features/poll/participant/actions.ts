@@ -4,9 +4,13 @@ import { sendNewParticipantEmail } from "@rallly/emails/templates/new-participan
 import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/new-participant-confirmation";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
+import { Effect } from "effect";
 import { after } from "next/server";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { env } from "@/env";
+import { resolveSpaceTier } from "@/features/billing/utils";
+import { chargeEmailBudget } from "@/features/email-budget/mutations";
+import { EmailBudgetStore } from "@/features/email-budget/service";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
@@ -28,6 +32,7 @@ import {
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
 import { getLocale } from "@/i18n/server/get-locale";
+import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
 import {
@@ -200,8 +205,22 @@ export const addParticipantAction = anyUserActionClient
     const { participant, poll, editToken, viaInvite, totalResponses } = result;
 
     if (email) {
-      after(async () =>
-        sendNewParticipantConfirmationEmail({
+      after(async () => {
+        // Sent to an address the responder typed, so it is charged to the
+        // poll owner: a host cannot use their poll to mail strangers.
+        const { allowed } = await runtime.runPromise(
+          chargeEmailBudget({
+            ownerId: poll.userId,
+            tier: resolveSpaceTier(poll.space?.tier ?? "hobby"),
+            pollId: poll.id,
+            kind: "participant_confirmation",
+            recipients: 1,
+          }).pipe(Effect.provide(EmailBudgetStore.layer)),
+        );
+        if (allowed === 0) {
+          return;
+        }
+        await sendNewParticipantConfirmationEmail({
           to: email,
           locale,
           branding: poll.space
@@ -213,8 +232,8 @@ export const addParticipantAction = anyUserActionClient
               getPollInvitePath({ pollId: poll.id, token: editToken }),
             ),
           },
-        }),
-      );
+        });
+      });
     }
 
     after(() =>
