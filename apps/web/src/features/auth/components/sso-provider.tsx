@@ -2,6 +2,7 @@
 import { Button } from "@rallly/ui/button";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
+import { LastUsedBadge } from "@/features/auth/components/last-used-badge";
 
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
@@ -42,14 +43,17 @@ export function SSOProvider({
   providerId,
   name,
   redirectTo,
+  isLastUsed,
 }: {
   providerId: string;
   name: string;
   redirectTo?: string;
+  isLastUsed?: boolean;
 }) {
   return (
     <Button
       size="xl"
+      className="relative"
       key={providerId}
       onClick={() => {
         authClient.signIn.social({
@@ -61,6 +65,7 @@ export function SSOProvider({
     >
       <SSOImage provider={providerId} />
       <span>{name}</span>
+      {isLastUsed ? <LastUsedBadge /> : null}
     </Button>
   );
 }

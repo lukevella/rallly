@@ -18,6 +18,7 @@ import * as z from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Link } from "@/components/link";
 import { Turnstile } from "@/components/turnstile";
+import { LastUsedBadge } from "@/features/auth/components/last-used-badge";
 import { Trans, useTranslation } from "@/i18n/client";
 import { authClient } from "@/lib/auth-client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
@@ -40,8 +41,10 @@ function useLoginWithEmailSchema() {
 
 export function LoginWithEmailForm({
   isRegistrationEnabled,
+  isLastUsed,
 }: {
   isRegistrationEnabled: boolean;
+  isLastUsed?: boolean;
 }) {
   const isCaptchaEnabled = useFeatureFlag("captcha");
   const isTurnstileEnabled = isCaptchaEnabled && !!turnstileSiteKey;
@@ -294,7 +297,7 @@ export function LoginWithEmailForm({
             size="xl"
             loading={form.formState.isSubmitting}
             type="submit"
-            className="w-full"
+            className="relative w-full"
             variant="primary"
           >
             {showPasswordField ? (
@@ -312,6 +315,7 @@ export function LoginWithEmailForm({
                 defaults="Continue with email"
               />
             )}
+            {isLastUsed ? <LastUsedBadge /> : null}
           </Button>
         </div>
       </form>

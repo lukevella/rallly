@@ -506,6 +506,7 @@
   "languageAndRegionDescription": "Set your language, time zone, and date and time formats",
   "languageSettingDescription": "The language the app is displayed in.",
   "lastUsedAt": "Last used {date}",
+  "lastUsedLoginMethod": "Last used",
   "learnMore": "Learn more",
   "leaveSpace": "Leave space",
   "leaveSpaceDescription": "Remove yourself from this space.",
