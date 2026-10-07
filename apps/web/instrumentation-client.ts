@@ -24,31 +24,10 @@ Sentry.init({
     "Load failed",
     "The network connection was lost",
     "The Internet connection appears to be offline",
-    // Known upstream Firefox error thrown from inside the bundled rrweb
-    // session-replay code (@sentry-internal/replay): when a replay starts
-    // recording on error, rrweb can touch a DOM node the browser has already
-    // garbage-collected, throwing "TypeError: can't access dead object". This
-    // originates in vendored code, not our own logic, and only clutters error
-    // tracking. https://bugzilla.mozilla.org/show_bug.cgi?id=695480
-    "can't access dead object",
   ],
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
-
-  replaysOnErrorSampleRate: 1.0,
-
-  // Only record replays for sessions with errors
-  replaysSessionSampleRate: 0,
-
-  // You can remove this option if you're not planning to use the Sentry Session Replay feature:
-  integrations: [
-    Sentry.replayIntegration({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
-  ],
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
