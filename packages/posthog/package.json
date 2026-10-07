@@ -4,8 +4,7 @@
   "private": true,
   "exports": {
     "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./utils": "./src/utils.ts"
+    "./client": "./src/client.ts"
   },
   "scripts": {
     "backfill-space-group-properties": "dotenv -e .env -- pnpx tsx ./src/scripts/backfill-space-group-properties.ts",
