@@ -40,7 +40,7 @@ import {
   getFinalizePlanGate,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
-import { claimReviewRequest } from "@/features/review-request/mutations";
+import { queueReviewRequest } from "@/features/review-request/mutations";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
@@ -1474,13 +1474,10 @@ export const polls = router({
           },
         });
 
-        const reviewSite = await claimReviewRequest({
+        await queueReviewRequest({
           userId: ctx.user.id,
-          email: ctx.user.email,
           participantCount: poll.participants.length,
         });
-
-        return { reviewSite };
       }
     }),
   reopen: privateProcedure

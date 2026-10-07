@@ -35,3 +35,12 @@ export function pickReviewSite({
     ? ("trustpilot" as const)
     : businessSite;
 }
+
+/**
+ * The first word of the account name, for a "Hi {name}" greeting. Empty when
+ * the name looks like an email address, which is what some sign-ups store.
+ */
+export function getFirstName(name: string) {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  return first.includes("@") ? "" : first;
+}

@@ -25,7 +25,10 @@ function attemptWith(handler: QueuedEmailHandler, banned = false) {
       Effect.provide(
         Layer.succeed(
           QueuedEmailHandlers,
-          QueuedEmailHandlers.of({ scheduled_event_invite: handler }),
+          QueuedEmailHandlers.of({
+            scheduled_event_invite: handler,
+            review_request: handler,
+          }),
         ),
       ),
     ),
