@@ -1,7 +1,7 @@
 import "server-only";
 
 import { Context, Data, Effect, Layer } from "effect";
-import { createRatelimit } from "@/lib/rate-limit";
+import { createBudget } from "@/lib/rate-limit";
 import {
   EMAIL_BUDGET_RECIPIENTS_PER_DAY,
   EMAIL_BUDGET_WINDOW,
@@ -13,42 +13,35 @@ export class EmailBudgetUnavailable extends Data.TaggedError(
 )<{ cause: unknown }> {}
 
 // Module level so the in-memory fallback keeps its counts across requests.
-const limiter = createRatelimit(
+const budget = createBudget(
   EMAIL_BUDGET_RECIPIENTS_PER_DAY,
   EMAIL_BUDGET_WINDOW,
 );
 
 /**
- * Recipients left in a key's window, and spending them. With rate limiting
- * off there is no budget: every key has unlimited recipients left.
+ * Takes up to `points` from a key's allowance in one atomic step and
+ * answers how many it got. With rate limiting off there is no allowance and
+ * every reservation is granted in full.
  */
 export class EmailBudgetStore extends Context.Service<
   EmailBudgetStore,
   {
-    remaining(key: string): Effect.Effect<number, EmailBudgetUnavailable>;
-    consume(input: {
+    reserve(input: {
       key: string;
       points: number;
-    }): Effect.Effect<void, EmailBudgetUnavailable>;
+    }): Effect.Effect<number, EmailBudgetUnavailable>;
   }
 >()("rallly/email-budget/EmailBudgetStore") {
   static readonly layer = Layer.succeed(
     EmailBudgetStore,
     EmailBudgetStore.of({
-      remaining: (key) =>
-        limiter
+      reserve: ({ key, points }) =>
+        budget
           ? Effect.tryPromise({
-              try: () => limiter.remaining(key),
+              try: () => budget.reserve(key, points),
               catch: (cause) => new EmailBudgetUnavailable({ cause }),
             })
-          : Effect.succeed(Number.POSITIVE_INFINITY),
-      consume: ({ key, points }) =>
-        limiter
-          ? Effect.tryPromise({
-              try: () => limiter.limit(key, { rate: points }),
-              catch: (cause) => new EmailBudgetUnavailable({ cause }),
-            }).pipe(Effect.asVoid)
-          : Effect.void,
+          : Effect.succeed(points),
     }),
   );
 }

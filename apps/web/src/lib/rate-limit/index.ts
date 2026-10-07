@@ -31,34 +31,24 @@ function createMemoryLimiter(maxRequests: number, duration: Duration) {
   const windows = new Map<string, { count: number; resetAt: number }>();
 
   return {
-    async limit(key: string, { rate = 1 }: { rate?: number } = {}) {
+    async limit(key: string) {
       const now = Date.now();
       const entry = windows.get(key);
 
       if (!entry || now >= entry.resetAt) {
-        windows.set(key, { count: rate, resetAt: now + windowMs });
+        windows.set(key, { count: 1, resetAt: now + windowMs });
         // Schedule cleanup so the entry doesn't live forever
         setTimeout(() => windows.delete(key), windowMs).unref?.();
-        return {
-          success: rate <= maxRequests,
-          remainingPoints: Math.max(0, maxRequests - rate),
-        };
+        return { success: true, remainingPoints: maxRequests - 1 };
       }
 
-      entry.count += rate;
+      entry.count++;
 
       if (entry.count > maxRequests) {
         return { success: false, remainingPoints: 0 };
       }
 
       return { success: true, remainingPoints: maxRequests - entry.count };
-    },
-    async remaining(key: string) {
-      const entry = windows.get(key);
-      if (!entry || Date.now() >= entry.resetAt) {
-        return maxRequests;
-      }
-      return Math.max(0, maxRequests - entry.count);
     },
     name: "memory" as const,
   };
@@ -76,15 +66,12 @@ export function createRatelimit(requests: number, duration: Duration) {
     });
 
     return {
-      async limit(key: string, { rate = 1 }: { rate?: number } = {}) {
-        const res = await limiter.limit(key, { rate });
+      async limit(key: string) {
+        const res = await limiter.limit(key);
         return {
           success: res.success,
           remainingPoints: res.remaining,
         };
-      },
-      async remaining(key: string) {
-        return limiter.getRemaining(key);
       },
       name: "redis" as const,
     };
@@ -114,6 +101,61 @@ export function createSharedRate(requests: number, duration: Duration) {
     async acquire(key: string, timeoutMs: number) {
       const res = await limiter.blockUntilReady(key, timeoutMs);
       return res.success;
+    },
+  };
+}
+
+// Adds the points and starts the window on the first reservation, in one
+// step, so concurrent reservations cannot both read the same balance.
+const RESERVE_SCRIPT = `
+local used = redis.call("INCRBY", KEYS[1], ARGV[1])
+if used == tonumber(ARGV[1]) then
+  redis.call("PEXPIRE", KEYS[1], ARGV[2])
+end
+return used
+`;
+
+/**
+ * A fixed-window allowance of points per key. `reserve` atomically takes up
+ * to `points` and resolves how many it got, so a caller can do part of a
+ * batch when the allowance runs out midway. Returns null with rate limiting
+ * off, meaning no allowance applies.
+ */
+export function createBudget(points: number, duration: Duration) {
+  if (!isRateLimitEnabled) {
+    return null;
+  }
+
+  const windowMs = parseDurationMs(duration);
+  const granted = (requested: number, usedAfter: number) =>
+    Math.max(0, Math.min(requested, points - (usedAfter - requested)));
+
+  if (redis) {
+    const client = redis;
+    return {
+      async reserve(key: string, requested: number) {
+        const usedAfter = await client.eval<[number, number], number>(
+          RESERVE_SCRIPT,
+          [key],
+          [requested, windowMs],
+        );
+        return granted(requested, usedAfter);
+      },
+    };
+  }
+
+  const windows = new Map<string, { used: number; resetAt: number }>();
+  return {
+    async reserve(key: string, requested: number) {
+      const now = Date.now();
+      let entry = windows.get(key);
+      if (!entry || now >= entry.resetAt) {
+        entry = { used: 0, resetAt: now + windowMs };
+        windows.set(key, entry);
+        setTimeout(() => windows.delete(key), windowMs).unref?.();
+      }
+      entry.used += requested;
+      return granted(requested, entry.used);
     },
   };
 }

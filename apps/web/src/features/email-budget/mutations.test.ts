@@ -6,22 +6,22 @@ vi.mock("@/env", () => ({ env: {} }));
 import { chargeEmailBudget } from "./mutations";
 import { EmailBudgetStore, EmailBudgetUnavailable } from "./service";
 
+// Mirrors the real store: a reservation is granted what is left, and the
+// whole request is counted against the key.
 function stubStore(budget: number) {
   const spent = new Map<string, number>();
-  const consume = vi.fn(({ key, points }: { key: string; points: number }) =>
+  const reserve = vi.fn(({ key, points }: { key: string; points: number }) =>
     Effect.sync(() => {
-      spent.set(key, (spent.get(key) ?? 0) + points);
+      const used = spent.get(key) ?? 0;
+      spent.set(key, used + points);
+      return Math.max(0, Math.min(points, budget - used));
     }),
   );
   const layer = Layer.succeed(
     EmailBudgetStore,
-    EmailBudgetStore.of({
-      remaining: (key) =>
-        Effect.succeed(Math.max(0, budget - (spent.get(key) ?? 0))),
-      consume,
-    }),
+    EmailBudgetStore.of({ reserve }),
   );
-  return { layer, consume, spent };
+  return { layer, reserve };
 }
 
 function charge(
@@ -48,7 +48,7 @@ describe("chargeEmailBudget", () => {
       allowed: 4,
       skipped: 0,
     });
-    expect(store.consume).toHaveBeenCalledWith({
+    expect(store.reserve).toHaveBeenCalledWith({
       key: "email-budget:user_1",
       points: 4,
     });
@@ -65,7 +65,6 @@ describe("chargeEmailBudget", () => {
       allowed: 0,
       skipped: 1,
     });
-    expect(store.spent.get("email-budget:user_1")).toBe(10);
   });
 
   it("keeps a separate budget per owner, guests included", async () => {
@@ -83,16 +82,15 @@ describe("chargeEmailBudget", () => {
       allowed: 50,
       skipped: 0,
     });
-    expect(store.consume).not.toHaveBeenCalled();
+    expect(store.reserve).not.toHaveBeenCalled();
   });
 
-  it("allows every send when the store is unavailable", async () => {
+  it("allows every recipient when the reservation fails", async () => {
     const layer = Layer.succeed(
       EmailBudgetStore,
       EmailBudgetStore.of({
-        remaining: () =>
+        reserve: () =>
           Effect.fail(new EmailBudgetUnavailable({ cause: "down" })),
-        consume: () => Effect.void,
       }),
     );
     expect(await charge(layer, { recipients: 3 })).toEqual({
