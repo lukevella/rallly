@@ -150,9 +150,13 @@ export function createBudget(points: number, duration: Duration) {
       const now = Date.now();
       let entry = windows.get(key);
       if (!entry || now >= entry.resetAt) {
-        entry = { used: 0, resetAt: now + windowMs };
-        windows.set(key, entry);
-        setTimeout(() => windows.delete(key), windowMs).unref?.();
+        const fresh = { used: 0, resetAt: now + windowMs };
+        entry = fresh;
+        windows.set(key, fresh);
+        // A late timer must not evict the window that replaced its own.
+        setTimeout(() => {
+          if (windows.get(key) === fresh) windows.delete(key);
+        }, windowMs).unref?.();
       }
       entry.used += requested;
       return granted(requested, entry.used);
