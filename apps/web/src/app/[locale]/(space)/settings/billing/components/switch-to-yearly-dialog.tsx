@@ -1,7 +1,7 @@
 "use client";
 
 import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
-import { yearlySavingsPercent } from "@rallly/billing";
+import { yearlySavingsPercent } from "@rallly/billing/pricing";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
