@@ -19,8 +19,10 @@ import { useHydrated } from "@/lib/datetime/use-hydrated";
  * nothing else is fetched.
  */
 export function InvitePage({
+  description,
   footerLinks,
 }: {
+  description: React.ReactNode;
   footerLinks: { label: string; href: string }[];
 }) {
   const hydrated = useHydrated();
@@ -37,7 +39,7 @@ export function InvitePage({
         className="mx-auto w-full max-w-4xl space-y-3"
       >
         <CreatorBanner />
-        <EventCard />
+        <EventCard description={description} />
         <VotingForm>
           <ResponsiveResults />
           <FloatingComments />

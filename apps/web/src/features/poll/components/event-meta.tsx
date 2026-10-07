@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { MarkdownDescription } from "@rallly/ui/markdown-description";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 
 export function EventMetaTitle({
@@ -13,24 +12,6 @@ export function EventMetaTitle({
     <h1 className={cn("font-semibold text-xl tracking-tight", className)}>
       {children}
     </h1>
-  );
-}
-
-export function EventMetaDescription({
-  className,
-  content,
-}: {
-  className?: string;
-  content?: string | null;
-}) {
-  if (!content) {
-    return null;
-  }
-  return (
-    <MarkdownDescription
-      content={content}
-      className={cn(className, "min-w-0 opacity-90")}
-    />
   );
 }
 
