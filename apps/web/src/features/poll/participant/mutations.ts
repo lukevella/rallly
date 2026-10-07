@@ -110,6 +110,7 @@ export type AddParticipantResult =
       };
       poll: {
         id: string;
+        userId: string | null;
         title: string;
         allowTentativeVotes: boolean;
         space: {
@@ -214,6 +215,7 @@ export async function addParticipant({
           poll: {
             select: {
               id: true,
+              userId: true,
               title: true,
               allowTentativeVotes: true,
               space: {

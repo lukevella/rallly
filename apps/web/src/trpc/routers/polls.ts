@@ -4,6 +4,7 @@ import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
+import { Effect } from "effect";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
@@ -27,6 +28,8 @@ import {
   getConferencingUri,
   moderatedLinkText,
 } from "@/features/conferencing/utils";
+import { chargeEmailBudget } from "@/features/email-budget/mutations";
+import { EmailBudgetStore } from "@/features/email-budget/service";
 import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
@@ -53,6 +56,7 @@ import {
   wallTimeDiffInMinutes,
   wallTimeToInstant,
 } from "@/lib/datetime/wall-time";
+import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
@@ -1330,9 +1334,26 @@ export const polls = router({
         });
       }
       const inviteData = Array.from(invitesByEmail.values());
-      const notifyInviteUids = Array.from(invitesByEmail)
+      const selectedInviteUids = Array.from(invitesByEmail)
         .filter(([key]) => notifyEmails.has(key))
         .map(([, invite]) => invite.uid);
+
+      // Spent before the event is written, so the queue only ever holds
+      // emails the budget allowed. The schedule goes ahead either way; the
+      // host is told who was not emailed.
+      const budget = await runtime.runPromise(
+        chargeEmailBudget({
+          ownerId: poll.user.id,
+          tier: getPollTier({
+            space: poll.space,
+            activeSpaceTier: ctx.space.tier,
+          }),
+          pollId: poll.id,
+          kind: "scheduled_event_invite",
+          recipients: selectedInviteUids.length,
+        }).pipe(Effect.provide(EmailBudgetStore.layer)),
+      );
+      const notifyInviteUids = selectedInviteUids.slice(0, budget.allowed);
 
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
@@ -1463,6 +1484,7 @@ export const polls = router({
               (Date.now() - poll.createdAt.getTime()) / 86_400_000,
             ),
             participant_count: poll.participants.length,
+            notify_budget_skipped_count: budget.skipped,
             ...summarizeNotifySelection({
               participants: poll.participants,
               optionId: input.optionId,
@@ -1480,7 +1502,7 @@ export const polls = router({
           participantCount: poll.participants.length,
         });
 
-        return { reviewSite };
+        return { reviewSite, skippedNotifications: budget.skipped };
       }
     }),
   reopen: privateProcedure

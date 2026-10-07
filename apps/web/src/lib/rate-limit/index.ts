@@ -104,3 +104,62 @@ export function createSharedRate(requests: number, duration: Duration) {
     },
   };
 }
+
+// Adds the points and starts the window on the first reservation, in one
+// step, so concurrent reservations cannot both read the same balance.
+const RESERVE_SCRIPT = `
+local used = redis.call("INCRBY", KEYS[1], ARGV[1])
+if used == tonumber(ARGV[1]) then
+  redis.call("PEXPIRE", KEYS[1], ARGV[2])
+end
+return used
+`;
+
+/**
+ * A fixed-window allowance of points per key. `reserve` atomically takes up
+ * to `points` and resolves how many it got, so a caller can do part of a
+ * batch when the allowance runs out midway. Returns null with rate limiting
+ * off, meaning no allowance applies.
+ */
+export function createBudget(points: number, duration: Duration) {
+  if (!isRateLimitEnabled) {
+    return null;
+  }
+
+  const windowMs = parseDurationMs(duration);
+  const granted = (requested: number, usedAfter: number) =>
+    Math.max(0, Math.min(requested, points - (usedAfter - requested)));
+
+  if (redis) {
+    const client = redis;
+    return {
+      async reserve(key: string, requested: number) {
+        const usedAfter = await client.eval<[number, number], number>(
+          RESERVE_SCRIPT,
+          [key],
+          [requested, windowMs],
+        );
+        return granted(requested, usedAfter);
+      },
+    };
+  }
+
+  const windows = new Map<string, { used: number; resetAt: number }>();
+  return {
+    async reserve(key: string, requested: number) {
+      const now = Date.now();
+      let entry = windows.get(key);
+      if (!entry || now >= entry.resetAt) {
+        const fresh = { used: 0, resetAt: now + windowMs };
+        entry = fresh;
+        windows.set(key, fresh);
+        // A late timer must not evict the window that replaced its own.
+        setTimeout(() => {
+          if (windows.get(key) === fresh) windows.delete(key);
+        }, windowMs).unref?.();
+      }
+      entry.used += requested;
+      return granted(requested, entry.used);
+    },
+  };
+}

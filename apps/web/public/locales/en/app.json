@@ -388,6 +388,7 @@
   "fileTooLarge": "File too large",
   "finalize": "Finalize",
   "finalizeAndNotify": "{count, plural, =0 {Finalize} one {Finalize and notify # participant} other {Finalize and notify # participants}}",
+  "finalizeNotifyBudgetSkipped": "{count, plural, one {# participant wasn't emailed} other {# participants weren't emailed}} because this account reached its daily email limit. Share the poll link with them instead.",
   "finalizePoll": "Finalize poll",
   "finalizePollDescription": "Pick the date that works best.",
   "finalizePollError": "Failed to finalize poll",
