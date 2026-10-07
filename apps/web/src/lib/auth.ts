@@ -43,7 +43,10 @@ import {
   parseRefParam,
   REF_COOKIE_NAME,
 } from "@/lib/acquisition";
-import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
+import {
+  LAST_LOGIN_METHOD_COOKIE_NAME,
+  SESSION_TTL_SECONDS,
+} from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
 import {
@@ -201,6 +204,14 @@ export const authLib = betterAuth({
     }),
     lastLoginMethod({
       storeInDatabase: true,
+      cookieName: LAST_LOGIN_METHOD_COOKIE_NAME,
+      // The default resolver only knows password sign-in as "email"; both
+      // OTP verification paths are the same email login to the user.
+      customResolveMethod: (ctx) =>
+        ctx.path === "/sign-in/email-otp" ||
+        ctx.path === "/email-otp/verify-email"
+          ? "email"
+          : null,
     }),
     emailOTP({
       // The "sign-in" OTP type creates an account for an unknown address; the

@@ -1,15 +1,18 @@
 "use client";
 import { Button } from "@rallly/ui/button";
 
+import { LastUsedBadge } from "@/features/auth/components/last-used-badge";
 import { authClient } from "@/lib/auth-client";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
 
 export function LoginWithOIDC({
   name,
   redirectTo,
+  isLastUsed,
 }: {
   name: string;
   redirectTo?: string;
+  isLastUsed?: boolean;
 }) {
   return (
     <Button
@@ -20,10 +23,11 @@ export function LoginWithOIDC({
           errorCallbackURL: "/login",
         });
       }}
-      className="w-full"
+      className="relative w-full"
       size="xl"
     >
       {name}
+      {isLastUsed ? <LastUsedBadge /> : null}
     </Button>
   );
 }
