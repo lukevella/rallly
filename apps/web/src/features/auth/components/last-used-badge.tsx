@@ -8,7 +8,7 @@ export function LastUsedBadge() {
     <span
       className={cn(
         badgeVariants({ variant: "secondary", size: "sm" }),
-        "absolute -top-2.5 right-3 bg-background ring-1 ring-primary/20",
+        "absolute -top-2.5 right-3 bg-background text-foreground ring-1 ring-primary/20",
       )}
     >
       <Trans i18nKey="lastUsedLoginMethod" defaults="Last used" />
