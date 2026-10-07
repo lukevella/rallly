@@ -31,24 +31,34 @@ function createMemoryLimiter(maxRequests: number, duration: Duration) {
   const windows = new Map<string, { count: number; resetAt: number }>();
 
   return {
-    async limit(key: string) {
+    async limit(key: string, { rate = 1 }: { rate?: number } = {}) {
       const now = Date.now();
       const entry = windows.get(key);
 
       if (!entry || now >= entry.resetAt) {
-        windows.set(key, { count: 1, resetAt: now + windowMs });
+        windows.set(key, { count: rate, resetAt: now + windowMs });
         // Schedule cleanup so the entry doesn't live forever
         setTimeout(() => windows.delete(key), windowMs).unref?.();
-        return { success: true, remainingPoints: maxRequests - 1 };
+        return {
+          success: rate <= maxRequests,
+          remainingPoints: Math.max(0, maxRequests - rate),
+        };
       }
 
-      entry.count++;
+      entry.count += rate;
 
       if (entry.count > maxRequests) {
         return { success: false, remainingPoints: 0 };
       }
 
       return { success: true, remainingPoints: maxRequests - entry.count };
+    },
+    async remaining(key: string) {
+      const entry = windows.get(key);
+      if (!entry || Date.now() >= entry.resetAt) {
+        return maxRequests;
+      }
+      return Math.max(0, maxRequests - entry.count);
     },
     name: "memory" as const,
   };
@@ -66,12 +76,15 @@ export function createRatelimit(requests: number, duration: Duration) {
     });
 
     return {
-      async limit(key: string) {
-        const res = await limiter.limit(key);
+      async limit(key: string, { rate = 1 }: { rate?: number } = {}) {
+        const res = await limiter.limit(key, { rate });
         return {
           success: res.success,
           remainingPoints: res.remaining,
         };
+      },
+      async remaining(key: string) {
+        return limiter.getRemaining(key);
       },
       name: "redis" as const,
     };
