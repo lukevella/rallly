@@ -53,14 +53,12 @@ export function MemberDropdownMenu({
           );
           return;
         }
+        removeMemberDialog.dismiss();
         toast.success(
           t("removeMemberSuccess", {
             defaultValue: "Member removed successfully",
           }),
         );
-      },
-      onSettled: () => {
-        removeMemberDialog.dismiss();
       },
     }),
   );
