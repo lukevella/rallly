@@ -4,6 +4,7 @@ import { cn } from "@rallly/ui";
 import type { LucideIcon } from "lucide-react";
 import {
   AlignLeftIcon,
+  ArrowRightLeftIcon,
   BarChart2Icon,
   BellIcon,
   CalendarCheckIcon,
@@ -51,6 +52,7 @@ const iconByType: Record<PollActivityEvent["type"], LucideIcon> = {
   poll_closed: CircleStopIcon,
   poll_reopened: PlayIcon,
   poll_deleted: TrashIcon,
+  poll_organizer_changed: ArrowRightLeftIcon,
   poll_scheduled: CalendarCheckIcon,
   invite_sent: MailIcon,
   invite_opened: MailOpenIcon,
@@ -86,6 +88,7 @@ const toneByType: Record<
   poll_closed: "closed",
   poll_reopened: "added",
   poll_deleted: "removed",
+  poll_organizer_changed: "changed",
   poll_scheduled: "milestone",
   invite_sent: "invite",
   invite_opened: "invite",
@@ -371,6 +374,18 @@ function ActivityDescription({
     case "poll_deleted":
       return (
         <Trans i18nKey="pollActivityPollDeleted" defaults="Poll deleted" />
+      );
+    case "poll_organizer_changed":
+      return (
+        <Trans
+          i18nKey="pollActivityOrganizerChanged"
+          defaults="Organizer changed from <b>{from}</b> to <b>{to}</b>"
+          values={{
+            from: event.payload.from.name,
+            to: event.payload.to.name,
+          }}
+          components={{ b }}
+        />
       );
     case "poll_scheduled":
       return (

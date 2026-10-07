@@ -91,12 +91,30 @@ Changing roles affects what the member can do immediately. Be careful when grant
 To remove a member from your space:
 
 1. **Locate the member** you want to remove
-2. **Click the dropdown menu** and select "Remove from space"
-3. **Confirm the removal** - this action cannot be easily undone
+2. **Click the dropdown menu** and select "Remove member"
+3. **Choose what happens to their content** and confirm
 
-<Info>
-When you remove a member, they lose access to all polls and data immediately. Consider whether they need to export any important information first.
-</Info>
+The member loses access to the space immediately.
+
+#### What happens to their content
+
+If the member created anything in the space, the dialog lists it in two groups:
+
+- **Active**: open polls, upcoming events, event types and sheets
+- **Finished**: closed polls and past or canceled events
+
+You then choose one outcome for all of it:
+
+- **Reassign**: everything moves to another member, active and finished alike. They become its organizer: they get its notifications, can manage it, and appear as the organizer in calendar invites. Each reassigned poll records the change in its activity.
+- **Delete**: polls, event types and sheets are deleted. Upcoming events are canceled and their attendees get a cancellation email; past events are deleted without notifying anyone.
+
+Reassign is selected by default when the member has anything active, with you as the recipient; you can pick any other current member instead. When nothing is active, delete is selected by default.
+
+<Warning>
+Video call links on upcoming events were created on the removed member's account. After reassigning, those links may stop working, so check them and share new ones with attendees if needed.
+</Warning>
+
+A member who created nothing in the space is removed with a simple confirmation.
 
 ## Managing Pending Invitations
 
@@ -162,7 +180,6 @@ To cancel a pending invitation:
   
   <Accordion title="Cannot remove a member">
     - Ensure you have admin or owner permissions
-    - Check if the member has any active polls that need to be transferred
     - Try using the member dropdown menu instead of bulk actions
     - Contact support for assistance
   </Accordion>

@@ -1,11 +1,17 @@
 import "server-only";
 
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendSpaceInviteEmail } from "@rallly/emails/templates/space-invite";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { getInstanceBranding } from "@/emails/branding";
+import type { PollActivityWrite } from "@/features/activity/mutations";
+import { recordPollActivities } from "@/features/activity/mutations";
+import { scheduledEventTag } from "@/features/scheduled-event/constants";
+import { sendScheduledEventCanceledEmails } from "@/features/scheduled-event/mutations";
+import { activeScheduledEventWhere } from "@/features/scheduled-event/utils";
 import { getTotalSeatsForSpace } from "@/features/space/data";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type { MemberRole } from "@/features/space/schema";
@@ -188,18 +194,315 @@ export async function cancelInvite({ inviteId }: { inviteId: string }) {
   revalidateMembersPage();
 }
 
-export async function removeMember({ memberId }: { memberId: string }) {
-  const removedMember = await prisma.spaceMember.delete({
-    where: { id: memberId },
+/** Content in one space, by id. */
+export type SpaceContentIds = {
+  pollIds: string[];
+  eventIds: string[];
+  eventTypeIds: string[];
+  sheetIds: string[];
+};
+
+/** Everything the user created in the space that hasn't been deleted. */
+async function findOwnedContentIds(
+  tx: Prisma.TransactionClient,
+  { spaceId, userId }: { spaceId: string; userId: string },
+): Promise<SpaceContentIds> {
+  const polls = await tx.poll.findMany({
+    where: { spaceId, userId, deleted: false },
+    select: { id: true },
+  });
+  const events = await tx.scheduledEvent.findMany({
+    where: { spaceId, userId, deletedAt: null },
+    select: { id: true },
+  });
+  const eventTypes = await tx.eventType.findMany({
+    where: { spaceId, hostId: userId, deleted: false },
+    select: { id: true },
+  });
+  const sheets = await tx.sheet.findMany({
+    where: { spaceId, hostId: userId, deleted: false },
+    select: { id: true },
   });
 
-  const memberCount = await prisma.spaceMember.count({
-    where: { spaceId: removedMember.spaceId },
+  return {
+    pollIds: polls.map(({ id }) => id),
+    eventIds: events.map(({ id }) => id),
+    eventTypeIds: eventTypes.map(({ id }) => id),
+    sheetIds: sheets.map(({ id }) => id),
+  };
+}
+
+/**
+ * Makes the recipient the organizer of the given content, whatever its
+ * status. Ids outside the space are ignored. Each poll that changes hands
+ * records poll_organizer_changed so its history explains the new organizer.
+ */
+export async function reassignSpaceContent(
+  tx: Prisma.TransactionClient,
+  {
+    spaceId,
+    actorId,
+    toUserId,
+    reason,
+    content,
+  }: {
+    spaceId: string;
+    actorId: string;
+    toUserId: string;
+    reason: "member_removed";
+    content: SpaceContentIds;
+  },
+) {
+  const recipient = await tx.user.findUniqueOrThrow({
+    where: { id: toUserId },
+    select: { id: true, name: true },
   });
+
+  const polls = await tx.poll.findMany({
+    where: {
+      id: { in: content.pollIds },
+      spaceId,
+      userId: { not: toUserId },
+    },
+    select: { id: true, user: { select: { id: true, name: true } } },
+  });
+
+  await tx.poll.updateMany({
+    where: { id: { in: content.pollIds }, spaceId },
+    data: { userId: toUserId },
+  });
+  await tx.scheduledEvent.updateMany({
+    where: { id: { in: content.eventIds }, spaceId },
+    data: { userId: toUserId },
+  });
+  await tx.eventType.updateMany({
+    where: { id: { in: content.eventTypeIds }, spaceId },
+    data: { hostId: toUserId },
+  });
+  await tx.sheet.updateMany({
+    where: { id: { in: content.sheetIds }, spaceId },
+    data: { hostId: toUserId },
+  });
+
+  await recordPollActivities(
+    tx,
+    polls.flatMap((poll): PollActivityWrite[] =>
+      poll.user
+        ? [
+            {
+              pollId: poll.id,
+              type: "poll_organizer_changed",
+              userId: actorId,
+              payload: { from: poll.user, to: recipient, reason },
+            },
+          ]
+        : [],
+    ),
+  );
+}
+
+/**
+ * Deletes the given content. Polls, event types and sheets are soft deleted;
+ * events are soft deleted too, and the ones still ahead are canceled first.
+ * Returns the canceled events: their attendees are told once the caller's
+ * transaction commits.
+ */
+export async function deleteSpaceContent(
+  tx: Prisma.TransactionClient,
+  {
+    spaceId,
+    actorId,
+    content,
+    now,
+    timeZone,
+  }: {
+    spaceId: string;
+    actorId: string;
+    content: SpaceContentIds;
+    now: Date;
+    timeZone: string;
+  },
+) {
+  const polls = await tx.poll.findMany({
+    where: { id: { in: content.pollIds }, spaceId, deletedAt: null },
+    select: { id: true },
+  });
+  await tx.poll.updateMany({
+    where: { id: { in: polls.map(({ id }) => id) } },
+    data: { deleted: true, deletedAt: now },
+  });
+  // The webhook outbox: the scheduled delivery run sends poll.deleted.
+  await recordPollActivities(
+    tx,
+    polls.map(({ id }) => ({
+      pollId: id,
+      type: "poll_deleted" as const,
+      userId: actorId,
+      payload: {},
+    })),
+  );
+
+  const activeEvents = await tx.scheduledEvent.findMany({
+    where: {
+      id: { in: content.eventIds },
+      spaceId,
+      ...activeScheduledEventWhere({ now, timeZone }),
+    },
+    select: { id: true },
+  });
+  const canceledEventIds = activeEvents.map(({ id }) => id);
+  await tx.scheduledEvent.updateMany({
+    where: { id: { in: canceledEventIds } },
+    data: { status: "canceled", sequence: { increment: 1 } },
+  });
+  await tx.scheduledEvent.updateMany({
+    where: { id: { in: content.eventIds }, spaceId, deletedAt: null },
+    data: { deletedAt: now },
+  });
+
+  await tx.eventType.updateMany({
+    where: { id: { in: content.eventTypeIds }, spaceId, deleted: false },
+    data: { deleted: true, deletedAt: now },
+  });
+  await tx.sheet.updateMany({
+    where: { id: { in: content.sheetIds }, spaceId, deleted: false },
+    data: { deleted: true, deletedAt: now },
+  });
+
+  return { canceledEventIds };
+}
+
+class RecipientNotAvailableError extends Error {}
+
+/**
+ * Removes the membership and settles everything the member created in the
+ * space, in one transaction so a failure leaves the membership in place:
+ * reassigned to a current, effective member of the space, or deleted.
+ */
+export async function removeMember({
+  memberId,
+  actor,
+  content,
+  now,
+  timeZone,
+}: {
+  memberId: string;
+  actor: { id: string; name: string; email: string };
+  content: { reassignToUserId: string } | { delete: true };
+  now: Date;
+  timeZone: string;
+}) {
+  let result: {
+    spaceId: string;
+    removedUserId: string;
+    memberCount: number;
+    contentIds: SpaceContentIds;
+    canceledEventIds: string[];
+  };
+
+  try {
+    result = await prisma.$transaction(async (tx) => {
+      const removedMember = await tx.spaceMember.delete({
+        where: { id: memberId },
+      });
+      const { spaceId, userId } = removedMember;
+
+      const contentIds = await findOwnedContentIds(tx, { spaceId, userId });
+      let canceledEventIds: string[] = [];
+
+      if ("reassignToUserId" in content) {
+        // Checked after the delete so the member leaving can't receive it.
+        const recipient = await tx.spaceMember.findFirst({
+          where: {
+            spaceId,
+            ...effectiveSpaceMemberWhere({ userId: content.reassignToUserId }),
+          },
+          select: { id: true },
+        });
+
+        if (!recipient) {
+          throw new RecipientNotAvailableError();
+        }
+
+        await reassignSpaceContent(tx, {
+          spaceId,
+          actorId: actor.id,
+          toUserId: content.reassignToUserId,
+          reason: "member_removed",
+          content: contentIds,
+        });
+      } else {
+        ({ canceledEventIds } = await deleteSpaceContent(tx, {
+          spaceId,
+          actorId: actor.id,
+          content: contentIds,
+          now,
+          timeZone,
+        }));
+      }
+
+      const memberCount = await tx.spaceMember.count({ where: { spaceId } });
+
+      return {
+        spaceId,
+        removedUserId: userId,
+        memberCount,
+        contentIds,
+        canceledEventIds,
+      };
+    });
+  } catch (error) {
+    if (error instanceof RecipientNotAvailableError) {
+      return { ok: false as const, reason: "RECIPIENT_NOT_AVAILABLE" as const };
+    }
+    throw error;
+  }
+
+  for (const eventId of result.canceledEventIds) {
+    try {
+      await sendScheduledEventCanceledEmails({
+        eventId,
+        organizer: { name: actor.name, email: actor.email },
+      });
+    } catch (error) {
+      logger.error(
+        { error, eventId },
+        "Failed to send cancellation emails for a removed member's event",
+      );
+    }
+  }
+
+  for (const eventId of result.contentIds.eventIds) {
+    updateTag(scheduledEventTag(eventId));
+  }
+
+  logger.info(
+    {
+      spaceId: result.spaceId,
+      actorId: actor.id,
+      removedUserId: result.removedUserId,
+      memberCount: result.memberCount,
+      outcome: "reassignToUserId" in content ? "reassign" : "delete",
+      recipientUserId:
+        "reassignToUserId" in content ? content.reassignToUserId : null,
+      pollCount: result.contentIds.pollIds.length,
+      eventCount: result.contentIds.eventIds.length,
+      eventTypeCount: result.contentIds.eventTypeIds.length,
+      sheetCount: result.contentIds.sheetIds.length,
+      canceledEventCount: result.canceledEventIds.length,
+      ...result.contentIds,
+      canceledEventIds: result.canceledEventIds,
+    },
+    "Space member removed",
+  );
 
   revalidateMembersPage();
 
-  return { removedUserId: removedMember.userId, memberCount };
+  return {
+    ok: true as const,
+    removedUserId: result.removedUserId,
+    memberCount: result.memberCount,
+  };
 }
 
 export async function changeMemberRole({

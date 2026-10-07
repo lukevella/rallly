@@ -18,3 +18,19 @@ export type MemberInviteDTO = {
   role: MemberRole;
   invitedBy: { name: string };
 };
+
+/** What a member created in a space, as the remove member dialog shows it. */
+export type MemberContentSummary = {
+  active: {
+    polls: number;
+    events: number;
+    eventTypes: number;
+    sheets: number;
+  };
+  finished: {
+    polls: number;
+    events: number;
+  };
+  /** Active events carrying a video call link minted on the member's account. */
+  activeEventsWithVideoCall: number;
+};

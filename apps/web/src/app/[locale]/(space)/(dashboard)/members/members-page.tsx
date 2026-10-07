@@ -17,7 +17,9 @@ import { ListViewActions } from "@/components/list-view";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
+import { emptyMemberContentSummary } from "@/features/space/member/constants";
 import {
+  loadMemberContentSummaries,
   loadPendingInvites,
   loadSpaceMembers,
 } from "@/features/space/member/loaders";
@@ -100,11 +102,14 @@ export async function MembersPageContent() {
     );
   }
 
-  const [members, seatUsage, memberAbility] = await Promise.all([
-    loadSpaceMembers(),
-    loadSeatUsage(),
-    getMemberAbility(),
-  ]);
+  const [user, members, seatUsage, memberAbility, contentSummaries] =
+    await Promise.all([
+      loadUser(),
+      loadSpaceMembers(),
+      loadSeatUsage(),
+      getMemberAbility(),
+      loadMemberContentSummaries(),
+    ]);
 
   const canInviteMembers = defineAbilityForSpace(space).can("invite", "Member");
   const invites = canInviteMembers ? await loadPendingInvites() : [];
@@ -212,6 +217,9 @@ export async function MembersPageContent() {
             subject("SpaceMember", { ...member }),
           ),
           inactive: showInactive && !member.isOwner,
+          isActor: member.userId === user.id,
+          contentSummary:
+            contentSummaries.get(member.userId) ?? emptyMemberContentSummary,
         }))}
       />
     </>
