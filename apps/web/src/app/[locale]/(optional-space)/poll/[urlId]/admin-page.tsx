@@ -3,6 +3,7 @@ import { useInstancePolicy } from "@/features/instance-policy/client";
 import { usePoll } from "@/features/poll/client";
 import { CommentsSheet } from "@/features/poll/components/comments-sheet";
 import { EventCard } from "@/features/poll/components/event-card";
+import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { ResponsiveResults } from "@/features/poll/components/responsive-results";
 import { VotingForm } from "@/features/poll/components/voting-form";
@@ -27,7 +28,11 @@ export function AdminPage({
   return (
     <div className="space-y-3 lg:space-y-4">
       <GuestPollAlert />
-      <EventCard />
+      <EventCard
+        description={
+          <EventMetaDescription className="mt-4" content={poll.description} />
+        }
+      />
       <VotingForm>
         <ResponsiveResults />
       </VotingForm>

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PollProvider } from "@/features/poll/client";
+import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { VisibilityProvider } from "@/features/poll/components/visibility";
@@ -84,7 +85,16 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
             <LegacyPollContextProvider>
               <VisibilityProvider>
                 <PollBrandingFromContext />
-                <InvitePage footerLinks={footerLinks} />
+                <InvitePage
+                  // Rendered here so the markdown parser stays on the server
+                  description={
+                    <EventMetaDescription
+                      className="mt-4"
+                      content={poll.description}
+                    />
+                  }
+                  footerLinks={footerLinks}
+                />
               </VisibilityProvider>
             </LegacyPollContextProvider>
           </PollProvider>

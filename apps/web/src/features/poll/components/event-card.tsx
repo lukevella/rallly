@@ -8,7 +8,6 @@ import { PollConferencingSummary } from "@/features/conferencing/components/poll
 import { useInstancePolicy } from "@/features/instance-policy/client";
 import { usePoll } from "@/features/poll/client";
 import {
-  EventMetaDescription,
   EventMetaItem,
   EventMetaList,
   EventMetaTitle,
@@ -53,7 +52,11 @@ function IconDescription({
  * location. `EventCard` frames it as a standalone card with the response
  * legend; the vote page places it in the sidebar of the merged card.
  */
-export function EventDetails() {
+export function EventDetails({
+  description,
+}: {
+  description: React.ReactNode;
+}) {
   const poll = usePoll();
   const branding = useBranding();
   const { spaceBrandingAllowed } = useInstancePolicy();
@@ -81,7 +84,7 @@ export function EventDetails() {
         </div>
       ) : null}
       <EventMetaTitle>{poll.title}</EventMetaTitle>
-      <EventMetaDescription className="mt-4" content={poll.description} />
+      {description}
       <EventMetaList className="mt-4">
         {poll.user ? (
           <EventMetaItem>
@@ -112,13 +115,13 @@ export function EventDetails() {
   );
 }
 
-export function EventCard() {
+export function EventCard({ description }: { description: React.ReactNode }) {
   const poll = usePoll();
   return (
     <Card>
       <RandomGradientBar />
       <CardContent>
-        <EventDetails />
+        <EventDetails description={description} />
         <h2 className="mt-4 mb-1.5 text-muted-foreground text-xs">
           <Trans i18nKey="responseOptions" defaults="Response options" />
         </h2>
