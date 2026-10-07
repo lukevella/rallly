@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getFirstName,
+  getReviewGuidelinesUrl,
   isEligibleForReviewRequest,
   pickReviewSite,
 } from "./utils";
@@ -71,5 +72,17 @@ describe("getFirstName", () => {
 
   it("returns nothing for a blank name", () => {
     expect(getFirstName("   ")).toBe("");
+  });
+});
+
+describe("getReviewGuidelinesUrl", () => {
+  it("links Capterra's community guidelines, which its vendor terms require", () => {
+    expect(getReviewGuidelinesUrl("capterra")).toBe(
+      "https://www.capterra.com/legal/community-guidelines/",
+    );
+  });
+
+  it("returns nothing for a site without the requirement", () => {
+    expect(getReviewGuidelinesUrl("trustpilot")).toBeUndefined();
   });
 });

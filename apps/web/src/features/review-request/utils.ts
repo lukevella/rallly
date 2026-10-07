@@ -1,5 +1,5 @@
-import type { BusinessReviewSite } from "./constants";
-import { consumerEmailDomains } from "./constants";
+import type { BusinessReviewSite, ReviewSite } from "./constants";
+import { consumerEmailDomains, reviewSites } from "./constants";
 
 // One finalized poll can be a fluke; a second one means Rallly worked for them
 const minFinalizedPolls = 2;
@@ -43,4 +43,11 @@ export function pickReviewSite({
 export function getFirstName(name: string) {
   const first = name.trim().split(/\s+/)[0] ?? "";
   return first.includes("@") ? "" : first;
+}
+
+/** The site's reviewer rules, for sites whose vendor terms require linking them. */
+export function getReviewGuidelinesUrl(site: ReviewSite) {
+  const config: { name: string; url: string; guidelinesUrl?: string } =
+    reviewSites[site];
+  return config.guidelinesUrl;
 }

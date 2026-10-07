@@ -18,7 +18,10 @@ export const reviewSites = {
   },
   capterra: {
     name: "Capterra",
+    // Capterra's vendor terms require this exact URL, UTM parameters
+    // included, and telling reviewers to follow its community guidelines
     url: "https://reviews.capterra.com/products/new/98997d01-ab0a-4292-9842-5b34c9411138/?utm_source=vp&utm_campaign=vendor_request",
+    guidelinesUrl: "https://www.capterra.com/legal/community-guidelines/",
   },
   g2: {
     name: "G2",

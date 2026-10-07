@@ -23,6 +23,8 @@ export type ReviewRequestEmailProps = {
   firstName: string;
   siteName: string;
   reviewUrl: string;
+  /** The site's reviewer rules, when its vendor terms require linking them. */
+  guidelinesUrl?: string;
 };
 
 /**
@@ -36,6 +38,7 @@ async function ReviewRequestEmail({
   firstName,
   siteName,
   reviewUrl,
+  guidelinesUrl,
 }: ReviewRequestEmailProps) {
   const { t, i18n } = await createEmailI18n(locale);
   return (
@@ -79,6 +82,21 @@ async function ReviewRequestEmail({
               siteName,
             })}
           </Button>
+          {guidelinesUrl ? (
+            <Text small light={true}>
+              <Trans
+                t={t}
+                i18n={i18n}
+                ns="emails"
+                i18nKey="reviewRequest_guidelines"
+                defaults="Reviews must follow the <a>{siteName} community guidelines</a>."
+                values={{ siteName }}
+                components={{
+                  a: <Link color={chrome.primaryColor} href={guidelinesUrl} />,
+                }}
+              />
+            </Text>
+          ) : null}
           <Text>
             {t("reviewRequest_reply", {
               defaultValue:
@@ -120,6 +138,7 @@ ReviewRequestEmail.PreviewProps = {
   firstName: "Jessie",
   siteName: "Capterra",
   reviewUrl: "https://www.capterra.com",
+  guidelinesUrl: "https://www.capterra.com/legal/community-guidelines/",
 } as ReviewRequestEmailProps;
 
 export default ReviewRequestEmail;

@@ -17,6 +17,7 @@ import { reviewRequestEmailDelayMs, reviewSites } from "./constants";
 import { countFinalizedPolls, getReviewRequestRecipient } from "./data";
 import {
   getFirstName,
+  getReviewGuidelinesUrl,
   isEligibleForReviewRequest,
   pickReviewSite,
 } from "./utils";
@@ -134,6 +135,7 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
             firstName: getFirstName(user.name),
             siteName: reviewSites[site].name,
             reviewUrl: reviewSites[site].url,
+            guidelinesUrl: getReviewGuidelinesUrl(site),
           },
         }),
       catch: failWith("Failed to send the review request email"),

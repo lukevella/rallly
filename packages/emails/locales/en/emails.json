@@ -107,6 +107,7 @@
   "reviewRequest_footer": "You're receiving this because you scheduled a meeting on <domain />. We'll only ask once.",
   "reviewRequest_greeting": "Hi {firstName},",
   "reviewRequest_greetingNoName": "Hi there,",
+  "reviewRequest_guidelines": "Reviews must follow the <a>{siteName} community guidelines</a>.",
   "reviewRequest_intro": "I saw you just scheduled another meeting with Rallly. I hope it saved you some back-and-forth.",
   "reviewRequest_preview": "Would you leave a quick review of Rallly on {siteName}?",
   "reviewRequest_reply": "Good, bad or somewhere in between, an honest review helps. And if something about Rallly is getting in your way, just reply. I read every reply.",
