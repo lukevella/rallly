@@ -1138,7 +1138,7 @@
   "webhookHealthTurnedOffReason": "{count} Ereignisse sind hintereinander fehlgeschlagen.",
   "webhookLastDeliverySucceeded": "Zugestellt {date}",
   "webhookLimitReached": "Du hast die maximale Anzahl an Webhooks erreicht. Lösche einen, bevor du einen neuen hinzufügst.",
-  "webhooks": "Webhooks},{",
+  "webhooks": "Webhooks",
   "webhooksBetaNotice": "Webhooks sind in der Beta-Phase. Ereignisse und Payloads können sich noch ändern; es werden weitere Ereignisse hinzugefügt.",
   "webhooksDescription": "Sende Ereignisse an deinen eigenen Server",
   "webhookSecretSecurityWarning": "Bewahre dieses Secret sicher auf. Verwende es, um zu verifizieren, dass Zustellungen von Rallly stammen.",
