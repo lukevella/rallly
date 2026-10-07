@@ -81,6 +81,12 @@ export const pollChangeSchema = z.discriminatedUnion("field", [
 
 export type PollChange = z.infer<typeof pollChangeSchema>;
 
+/** A user as they were named when the event happened. */
+const userSnapshotSchema = z.object({ id: z.string(), name: z.string() });
+
+/** Why a poll changed hands: its organizer was removed from the space. */
+export const pollOrganizerChangedReasonSchema = z.enum(["member_removed"]);
+
 const inviteePayloadSchema = z.object({
   email: z.string(),
 });
@@ -111,6 +117,15 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
     type: z.literal("poll_deleted"),
     ...actor,
     payload: z.object({}),
+  }),
+  z.object({
+    type: z.literal("poll_organizer_changed"),
+    ...actor,
+    payload: z.object({
+      from: userSnapshotSchema,
+      to: userSnapshotSchema,
+      reason: pollOrganizerChangedReasonSchema,
+    }),
   }),
   z.object({
     type: z.literal("poll_scheduled"),

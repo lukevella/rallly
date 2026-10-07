@@ -2,16 +2,7 @@
 
 import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { Button } from "@rallly/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  useDialog,
-} from "@rallly/ui/dialog";
+import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,32 +17,48 @@ import {
   changeMemberRoleAction,
   removeMemberAction,
 } from "@/features/space/member/actions";
-import type { MemberDTO } from "@/features/space/member/types";
+import type {
+  MemberContentSummary,
+  MemberDTO,
+} from "@/features/space/member/types";
 import type { MemberRole } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
+import type { RemovalRecipient } from "./remove-member-dialog";
+import { RemoveMemberDialog } from "./remove-member-dialog";
 
 export function MemberDropdownMenu({
   member,
   canUpdate,
   canDelete,
+  contentSummary,
+  recipients,
 }: {
   member: MemberDTO;
   canUpdate: boolean;
   canDelete: boolean;
+  contentSummary: MemberContentSummary;
+  recipients: RemovalRecipient[];
 }) {
   const removeMemberDialog = useDialog();
   const { t } = useTranslation();
   const removeMember = useMutation(
     mutationOptions(removeMemberAction, {
-      onSuccess: () => {
+      onSuccess: (result) => {
+        if (result && !result.ok) {
+          toast.error(
+            t("removeMemberRecipientUnavailable", {
+              defaultValue:
+                "The member you chose can no longer receive this content. Choose someone else.",
+            }),
+          );
+          return;
+        }
+        removeMemberDialog.dismiss();
         toast.success(
           t("removeMemberSuccess", {
             defaultValue: "Member removed successfully",
           }),
         );
-      },
-      onSettled: () => {
-        removeMemberDialog.dismiss();
       },
     }),
   );
@@ -120,35 +127,16 @@ export function MemberDropdownMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog {...removeMemberDialog.dialogProps}>
-        <DialogContent size="sm">
-          <DialogHeader>
-            <DialogTitle>
-              <Trans i18nKey="removeMember" defaults="Remove member" />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans
-                i18nKey="removeMemberConfirmation"
-                defaults="Are you sure you want to remove this member?"
-              />
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="destructive"
-              loading={removeMember.isPending}
-              onClick={() => {
-                removeMember.mutate({ memberId: member.id });
-              }}
-            >
-              <Trans i18nKey="confirm" defaults="Confirm" />
-            </Button>
-            <DialogClose render={<Button />}>
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <RemoveMemberDialog
+        {...removeMemberDialog.dialogProps}
+        memberName={member.name}
+        summary={contentSummary}
+        recipients={recipients}
+        pending={removeMember.isPending}
+        onConfirm={(content) => {
+          removeMember.mutate({ memberId: member.id, content });
+        }}
+      />
     </>
   );
 }

@@ -9,7 +9,10 @@ import {
 import { DataList } from "@/components/data-list";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { SpaceRole } from "@/features/space/components/space-role";
-import type { MemberDTO } from "@/features/space/member/types";
+import type {
+  MemberContentSummary,
+  MemberDTO,
+} from "@/features/space/member/types";
 import { Trans } from "@/i18n/client";
 import { MemberDropdownMenu } from "./member-dropdown-menu";
 
@@ -18,6 +21,8 @@ type MemberRow = {
   canUpdate: boolean;
   canDelete: boolean;
   inactive: boolean;
+  isActor: boolean;
+  contentSummary: MemberContentSummary;
 };
 
 const columnHelper = createColumnHelper<MemberRow>();
@@ -77,11 +82,24 @@ const columns = [
   columnHelper.display({
     id: "actions",
     header: () => <Trans i18nKey="membersListActions" defaults="Actions" />,
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <MemberDropdownMenu
         member={row.original.member}
         canUpdate={row.original.canUpdate}
         canDelete={row.original.canDelete}
+        contentSummary={row.original.contentSummary}
+        // Anyone still active here can take the leaver's content over.
+        recipients={table.options.data
+          .filter(
+            (other) =>
+              other.member.id !== row.original.member.id && !other.inactive,
+          )
+          .map((other) => ({
+            id: other.member.id,
+            name: other.member.name,
+            image: other.member.image,
+            isActor: other.isActor,
+          }))}
       />
     ),
   }),
