@@ -1,4 +1,7 @@
-export const QUEUED_EMAIL_KINDS = ["scheduled_event_invite"] as const;
+export const QUEUED_EMAIL_KINDS = [
+  "scheduled_event_invite",
+  "review_request",
+] as const;
 
 /**
  * Emails an action sends from its own request, right after the response.

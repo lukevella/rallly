@@ -4,6 +4,10 @@ import { isSelfHosted } from "@/lib/constants";
 // through the README and the license email instead
 export const isReviewRequestEnabled = !isSelfHosted;
 
+// Long enough that the email reads as a note rather than a receipt for the
+// finalize click, short enough that the booking is still fresh
+export const reviewRequestEmailDelayMs = 60 * 60_000;
+
 // Consumers review on Trustpilot; business users on one B2B site at a time,
 // because splitting a few reviews a week across sites leaves each too thin for
 // its badges. REVIEW_REQUEST_BUSINESS_SITE picks the B2B site.
@@ -14,11 +18,14 @@ export const reviewSites = {
   },
   capterra: {
     name: "Capterra",
+    // Capterra's vendor terms require this exact URL, UTM parameters
+    // included, and telling reviewers to follow its community guidelines
     url: "https://reviews.capterra.com/products/new/98997d01-ab0a-4292-9842-5b34c9411138/?utm_source=vp&utm_campaign=vendor_request",
+    guidelinesUrl: "https://www.capterra.com/legal/community-guidelines/",
   },
   g2: {
     name: "G2",
-    url: "https://www.g2.com/products/rallly/review_modalities/new?utm_source=rallly&utm_medium=in-app&utm_campaign=review-request",
+    url: "https://www.g2.com/products/rallly/review_modalities/new?utm_source=rallly&utm_medium=email&utm_campaign=review-request",
   },
 } as const;
 

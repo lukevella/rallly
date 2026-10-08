@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { isEligibleForReviewRequest, pickReviewSite } from "./utils";
+import {
+  getFirstName,
+  getReviewGuidelinesUrl,
+  isEligibleForReviewRequest,
+  pickReviewSite,
+} from "./utils";
 
 describe("isEligibleForReviewRequest", () => {
   it("asks on the second finalized poll with three participants", () => {
@@ -53,5 +58,31 @@ describe("pickReviewSite", () => {
         businessSite: "g2",
       }),
     ).toBe("g2");
+  });
+});
+
+describe("getFirstName", () => {
+  it("takes the first word of the name", () => {
+    expect(getFirstName("  Ada Lovelace ")).toBe("Ada");
+  });
+
+  it("returns nothing for a name that is an email address", () => {
+    expect(getFirstName("ada@example.com")).toBe("");
+  });
+
+  it("returns nothing for a blank name", () => {
+    expect(getFirstName("   ")).toBe("");
+  });
+});
+
+describe("getReviewGuidelinesUrl", () => {
+  it("links Capterra's community guidelines, which its vendor terms require", () => {
+    expect(getReviewGuidelinesUrl("capterra")).toBe(
+      "https://www.capterra.com/legal/community-guidelines/",
+    );
+  });
+
+  it("returns nothing for a site without the requirement", () => {
+    expect(getReviewGuidelinesUrl("trustpilot")).toBeUndefined();
   });
 });

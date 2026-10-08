@@ -24,7 +24,8 @@ const logger = createLogger("email-queue");
 
 /**
  * Queues one email per subject inside the caller's transaction, so the
- * emails exist exactly when the change they announce does.
+ * emails exist exactly when the change they announce does. With `sendAfter`
+ * no run claims them before that time.
  */
 export async function queueEmails(
   tx: Prisma.TransactionClient,
@@ -33,11 +34,13 @@ export async function queueEmails(
     userId,
     batchId,
     subjectIds,
+    sendAfter,
   }: {
     kind: QueuedEmailKind;
     userId: string;
     batchId: string;
     subjectIds: string[];
+    sendAfter?: Date;
   },
 ) {
   if (subjectIds.length === 0) {
@@ -49,6 +52,7 @@ export async function queueEmails(
       userId,
       batchId,
       subjectId,
+      sendAfter,
     })),
   });
 }
@@ -117,9 +121,10 @@ export const purgeQueuedEmails = Effect.fn("emailQueue.purgeQueuedEmails")(
  * Claims a batch of pending emails in one statement. SKIP LOCKED lets
  * overlapping runs claim disjoint batches instead of queueing behind each
  * other, and the attempt is counted at claim time so an email whose send
- * keeps killing the run still exhausts. Only kinds this build has a handler
- * for are claimed: a process on older code, mid upgrade or sharing a dev
- * database, would otherwise spend the attempts of kinds it cannot send.
+ * keeps killing the run still exhausts. Emails not due yet are left alone.
+ * Only kinds this build has a handler for are claimed: a process on older
+ * code, mid upgrade or sharing a dev database, would otherwise spend the
+ * attempts of kinds it cannot send.
  */
 export const claimQueuedEmails = Effect.fn("emailQueue.claimQueuedEmails")(
   function* ({
@@ -143,6 +148,7 @@ export const claimQueuedEmails = Effect.fn("emailQueue.claimQueuedEmails")(
           WHERE status = 'pending'
             AND kind::text = ANY(${[...QUEUED_EMAIL_KINDS]})
             AND attempts < ${MAX_QUEUED_EMAIL_ATTEMPTS}
+            AND (send_after IS NULL OR send_after <= ${now})
             AND (claimed_at IS NULL OR claimed_at < ${staleBefore})
             ${batchId ? PrismaRuntime.sql`AND batch_id = ${batchId}` : PrismaRuntime.empty}
           ORDER BY created_at, id

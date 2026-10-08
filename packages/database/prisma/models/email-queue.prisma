@@ -1,5 +1,6 @@
 enum QueuedEmailKind {
   scheduled_event_invite
+  review_request
 
   @@map("queued_email_kind")
 }
@@ -29,6 +30,8 @@ model QueuedEmail {
   /// is still pending.
   userId    String            @map("user_id")
   status    QueuedEmailStatus @default(pending)
+  /// Not claimed before this time. Unset sends at the next run.
+  sendAfter DateTime?         @map("send_after")
   attempts  Int               @default(0)
   claimedAt DateTime?         @map("claimed_at")
   sentAt    DateTime?         @map("sent_at")

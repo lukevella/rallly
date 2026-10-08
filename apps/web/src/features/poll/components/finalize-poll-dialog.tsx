@@ -47,8 +47,6 @@ import { VOTE_TYPES } from "@/features/poll/constants";
 import type { PollParticipant } from "@/features/poll/types";
 import type { OptionVotes } from "@/features/poll/utils";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
-import { ReviewRequestCard } from "@/features/review-request/components/review-request-card";
-import type { ReviewSite } from "@/features/review-request/constants";
 import {
   EventDate,
   EventTimeRange,
@@ -583,12 +581,10 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
   const option = options.find((o) => o.id === optionId);
-  const [reviewSite, setReviewSite] = React.useState<ReviewSite | null>(null);
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
 
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
-      setReviewSite(data?.reviewSite ?? null);
       setSkippedNotifications(data?.skippedNotifications ?? 0);
       setStep("done");
       // The page behind the dialog picks up the scheduled status.
@@ -662,7 +658,6 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
             </AlertDescription>
           </Alert>
         ) : null}
-        {reviewSite ? <ReviewRequestCard site={reviewSite} /> : null}
         <Button className="w-full" onClick={onClose}>
           <Trans i18nKey="backToPoll" defaults="Back to poll" />
         </Button>
