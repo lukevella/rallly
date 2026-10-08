@@ -4,6 +4,8 @@ import { Link } from "@/components/link";
 import { DEFAULT_APP_NAME } from "@/features/branding/constants";
 import { Trans } from "@/i18n/client";
 
+const LOGO_MASK = "url(/static/logo.svg) center / contain no-repeat";
+
 /** The attribution pill. Client only because the click is tracked. */
 export function PoweredByLink({
   pollId,
@@ -28,10 +30,13 @@ export function PoweredByLink({
       }}
     >
       <Trans i18nKey="poweredBy" defaults="Powered by" />
-      {/* The wordmark is masked so it inherits the pill's text color in both themes */}
+      {/* The wordmark is masked so it inherits the pill's text color in both
+          themes. The mask sits in an inline style because a url() in the
+          stylesheet resolves against the asset host, not this page's origin. */}
       <span
         aria-hidden="true"
-        className="h-3.5 w-[75px] bg-foreground [mask:url(/static/logo.svg)_no-repeat_center/contain]"
+        className="h-3.5 w-[75px] bg-foreground"
+        style={{ mask: LOGO_MASK, WebkitMask: LOGO_MASK }}
       />
       <span className="sr-only"> {DEFAULT_APP_NAME}</span>
     </Link>
