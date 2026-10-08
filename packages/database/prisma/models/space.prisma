@@ -24,6 +24,12 @@ model Space {
   // Set once the space's nonprofit application is approved; the coupon is
   // applied at checkout and to the active subscription from this.
   nonprofitDiscountGrantedAt DateTime?  @map("nonprofit_discount_granted_at")
+  // The free 14-day trial the owner starts in the product, once per space.
+  // Started means used: trialStartedAt is never cleared, so a space gets one
+  // trial. While trialEndsAt is in the future the space is pro without a
+  // subscription; the end-trials housekeeping job downgrades it afterwards.
+  trialStartedAt             DateTime?  @map("trial_started_at")
+  trialEndsAt                DateTime?  @map("trial_ends_at")
   createdAt                  DateTime   @default(now()) @map("created_at")
   updatedAt                  DateTime   @updatedAt @map("updated_at")
 
@@ -45,6 +51,7 @@ model Space {
   webhooks SpaceWebhook[]
 
   @@index([ownerId])
+  @@index([trialEndsAt])
   @@map("spaces")
 }
 
