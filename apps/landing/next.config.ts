@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   allowedDevOrigins: [process.env.DEV_DOMAIN ?? "landing.rallly.localhost"],
   productionBrowserSourceMaps: true,
+  // Serves /_next/static from a CDN-cached host to keep the immutable
+  // bundles off Vercel's bandwidth bill. Unset outside production.
+  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
   transpilePackages: [
     "@rallly/ui",
     "@rallly/tailwind-config",
