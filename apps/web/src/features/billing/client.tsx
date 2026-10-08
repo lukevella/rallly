@@ -8,26 +8,54 @@ import React from "react";
 import { create } from "zustand";
 import type { SpaceTier } from "@/features/space/schema";
 
-const TierContext = React.createContext<SpaceTier | null>(null);
+type TierContextValue = {
+  tier: SpaceTier;
+  trialStartedAt: Date | null;
+  trialEndsAt: Date | null;
+};
+
+const TierContext = React.createContext<TierContextValue | null>(null);
 
 export function TierProvider({
   tier,
+  trialStartedAt = null,
+  trialEndsAt = null,
   children,
 }: {
   tier: SpaceTier;
+  trialStartedAt?: Date | null;
+  trialEndsAt?: Date | null;
   children: React.ReactNode;
 }) {
-  return <TierContext.Provider value={tier}>{children}</TierContext.Provider>;
+  const value = React.useMemo(
+    () => ({ tier, trialStartedAt, trialEndsAt }),
+    [tier, trialStartedAt, trialEndsAt],
+  );
+
+  return <TierContext.Provider value={value}>{children}</TierContext.Provider>;
 }
 
-export function useTier(): SpaceTier {
-  const tier = React.useContext(TierContext);
+function useTierContext() {
+  const value = React.useContext(TierContext);
 
-  if (tier === null) {
+  if (value === null) {
     throw new Error("useTier must be used within a TierProvider");
   }
 
-  return tier;
+  return value;
+}
+
+export function useTier(): SpaceTier {
+  return useTierContext().tier;
+}
+
+/**
+ * The space's free trial dates, beside its tier. Both null until the trial
+ * starts; kept after it ends, so a space with trialStartedAt has used it.
+ */
+export function useTrial() {
+  const { trialStartedAt, trialEndsAt } = useTierContext();
+  return { trialStartedAt, trialEndsAt };
 }
 
 export function useIsFree() {

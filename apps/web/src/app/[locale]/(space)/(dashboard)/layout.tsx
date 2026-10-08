@@ -47,6 +47,8 @@ export default async function Layout({
               name: space.name,
               image: space.image,
               tier: space.tier,
+              trialStartedAt: space.trialStartedAt,
+              trialEndsAt: space.trialEndsAt,
             }))}
           />
         </SidebarHeader>

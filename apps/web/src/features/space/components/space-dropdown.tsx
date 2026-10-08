@@ -34,7 +34,14 @@ import { SpaceIcon } from "./space-icon";
 export function SpaceDropdown({
   spaces,
 }: {
-  spaces: { id: string; name: string; image?: string; tier: SpaceTier }[];
+  spaces: {
+    id: string;
+    name: string;
+    image?: string;
+    tier: SpaceTier;
+    trialStartedAt: Date | null;
+    trialEndsAt: Date | null;
+  }[];
 }) {
   const { data: activeSpace } = useSpace();
   const [pendingSpaceId, setPendingSpaceId] = React.useState<string>();

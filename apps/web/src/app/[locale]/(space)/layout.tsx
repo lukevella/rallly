@@ -36,7 +36,11 @@ async function SpaceGate({ children }: { children: React.ReactNode }) {
           timeFormat={user?.timeFormat}
           weekStart={user?.weekStart}
         >
-          <TierProvider tier={space.tier}>
+          <TierProvider
+            tier={space.tier}
+            trialStartedAt={space.trialStartedAt}
+            trialEndsAt={space.trialEndsAt}
+          >
             <SpaceProvider space={space}>
               {children}
               <PayWall pricing={payWallPricing} />

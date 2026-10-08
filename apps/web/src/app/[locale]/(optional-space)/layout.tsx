@@ -51,7 +51,11 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
           }
           weekStart={user?.weekStart ?? undefined}
         >
-          <TierProvider tier={tier}>
+          <TierProvider
+            tier={tier}
+            trialStartedAt={space?.trialStartedAt}
+            trialEndsAt={space?.trialEndsAt}
+          >
             {children}
             <PayWall pricing={payWallPricing} />
           </TierProvider>

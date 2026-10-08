@@ -9,6 +9,7 @@ import * as Sentry from "@sentry/nextjs";
 import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
+import { syncSpaceTier } from "@/features/billing/mutations";
 import {
   customerMetadataSchema,
   subscriptionMetadataSchema,
@@ -28,37 +29,6 @@ async function getExpandedSubscription(subscriptionId: string) {
   return getStripe().subscriptions.retrieve(subscriptionId, {
     expand: ["items.data.price.currency_options"],
   });
-}
-
-/**
- * Recomputes a space's tier from its subscriptions so the tier reflects whether
- * *any* subscription is active, rather than the state of a single webhook event.
- * Must run after the triggering subscription's `active` flag has been written in
- * the same transaction. Returns the resolved tier.
- */
-async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
-  const activeSubscription = await tx.subscription.findFirst({
-    where: { spaceId, active: true },
-    select: { id: true },
-  });
-
-  const tier = activeSubscription ? "pro" : "hobby";
-
-  await tx.space.update({
-    where: { id: spaceId },
-    data: {
-      tier,
-      ...(tier === "hobby"
-        ? { showBranding: false, hideAttribution: false }
-        : {}),
-    },
-  });
-
-  if (tier === "hobby") {
-    await tx.spaceMemberInvite.deleteMany({ where: { spaceId } });
-  }
-
-  return tier;
 }
 
 async function createOrUpdatePaymentMethod(

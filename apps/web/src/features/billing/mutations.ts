@@ -5,11 +5,13 @@ import {
   PORTAL_CONFIG_PURPOSE,
   portalConfigPriceKey,
 } from "@rallly/billing/lib/portal";
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { isBillingEnabled } from "@/features/billing/constants";
 import type { BillingReturnFlow } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
+import { isTrialRunning } from "@/features/billing/trial/utils";
 import { isStripeResourceMissingError } from "@/features/billing/utils";
 
 export async function createStripePortalSession({
@@ -418,4 +420,54 @@ export async function deleteStripeCustomer({
       throw error;
     }
   }
+}
+
+/**
+ * Recomputes a space's tier from its subscriptions and its free trial, so the
+ * tier reflects whether *any* subscription is active or the trial is still
+ * running, rather than the state of a single webhook event. Must run after
+ * the triggering subscription's `active` flag has been written in the same
+ * transaction. Returns the resolved tier.
+ *
+ * The one place a space's tier is decided: the Stripe webhook and the
+ * end-trials housekeeping job both go through here, so a trial ending is the
+ * same downgrade as a subscription lapsing.
+ */
+export async function syncSpaceTier(
+  tx: Prisma.TransactionClient,
+  spaceId: string,
+  now = new Date(),
+) {
+  const activeSubscription = await tx.subscription.findFirst({
+    where: { spaceId, active: true },
+    select: { id: true },
+  });
+
+  // A subscription cancelled during the trial must not cut it short; the
+  // dates end it as usual.
+  const space = await tx.space.findUnique({
+    where: { id: spaceId },
+    select: { trialEndsAt: true },
+  });
+
+  const tier =
+    activeSubscription || (space && isTrialRunning(space, now))
+      ? "pro"
+      : "hobby";
+
+  await tx.space.update({
+    where: { id: spaceId },
+    data: {
+      tier,
+      ...(tier === "hobby"
+        ? { showBranding: false, hideAttribution: false }
+        : {}),
+    },
+  });
+
+  if (tier === "hobby") {
+    await tx.spaceMemberInvite.deleteMany({ where: { spaceId } });
+  }
+
+  return tier;
 }

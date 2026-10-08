@@ -52,6 +52,8 @@ export function createSpaceDTO({
     memberCount: number;
     seatCount: number;
     subscriptionPastDue?: boolean;
+    trialStartedAt?: Date | null;
+    trialEndsAt?: Date | null;
   };
   policy: Pick<InstancePolicy, "spacesAlwaysShared">;
 }): SpaceDTO {
@@ -72,6 +74,8 @@ export function createSpaceDTO({
     showBranding: space.showBranding,
     hideAttribution: space.hideAttribution,
     subscriptionPastDue: space.subscriptionPastDue ?? false,
+    trialStartedAt: space.trialStartedAt ?? null,
+    trialEndsAt: space.trialEndsAt ?? null,
   };
 }
 

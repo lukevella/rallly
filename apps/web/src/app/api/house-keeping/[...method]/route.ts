@@ -6,6 +6,7 @@ import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
 } from "@/features/billing/mutations";
+import { endExpiredTrials } from "@/features/billing/trial/mutations";
 import {
   autoClosePolls,
   deleteInactivePolls,
@@ -21,6 +22,7 @@ import { deliverWebhooks } from "@/features/webhook/mutations";
 import {
   deletePostHogPerson,
   flushPostHog,
+  identifyGroup,
   trackSystemEvent,
 } from "@/lib/posthog";
 
@@ -89,6 +91,32 @@ app.get("/remove-deleted-polls", async (c) => {
       deleted: {
         polls: totalDeletedPolls,
       },
+    },
+  });
+});
+
+app.get("/end-trials", async (c) => {
+  const endedSpaceIds = await endExpiredTrials();
+
+  for (const spaceId of endedSpaceIds) {
+    identifyGroup({
+      groupType: "space",
+      groupKey: spaceId,
+      properties: { tier: "hobby" },
+    });
+  }
+
+  await flushPostHog();
+
+  logger.info(
+    { task: "end-trials", ended: endedSpaceIds.length },
+    "Moved spaces whose free trial ended back to hobby",
+  );
+
+  return c.json({
+    success: true,
+    summary: {
+      ended: endedSpaceIds.length,
     },
   });
 });
