@@ -6,7 +6,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@rallly/ui/input-group";
-import debounce from "lodash/debounce";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -38,33 +37,42 @@ export function SearchInput({
   const [isPending, startTransition] = React.useTransition();
   const isSearching = isDebouncing || isPending;
 
-  // Create a debounced function to update the URL
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix this later
-  const debouncedUpdateUrl = React.useCallback(
-    debounce((value: string) => {
-      const params = new URLSearchParams(searchParams);
-      if (value) {
-        params.set("q", value);
-      } else {
-        params.delete("q");
-      }
+  const updateUrl = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set("q", value);
+    } else {
+      params.delete("q");
+    }
 
-      params.delete("page");
+    params.delete("page");
 
-      setIsDebouncing(false);
-      startTransition(() => {
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-      });
-    }, 500),
-    [pathname, router, searchParams],
-  );
+    setIsDebouncing(false);
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
+  };
+
+  // Debounce URL updates while typing; submitting flushes the pending value
+  const pendingValue = React.useRef<string | null>(null);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const flushUpdate = () => {
+    clearTimeout(timer.current);
+    if (pendingValue.current === null) return;
+    const value = pendingValue.current;
+    pendingValue.current = null;
+    updateUrl(value);
+  };
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
     setIsDebouncing(true);
-    debouncedUpdateUrl(newValue);
+    pendingValue.current = newValue;
+    clearTimeout(timer.current);
+    timer.current = setTimeout(flushUpdate, 500);
   };
 
   return (
@@ -72,7 +80,7 @@ export function SearchInput({
       className={cn("w-72", className)}
       onSubmit={(e) => {
         e.preventDefault();
-        debouncedUpdateUrl.flush();
+        flushUpdate();
       }}
     >
       <InputGroup>
