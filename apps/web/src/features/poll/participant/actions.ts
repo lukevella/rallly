@@ -44,8 +44,9 @@ import {
 
 const logger = createLogger("participants");
 
-// Guest sessions are free to mint, so the per-user limit alone resets with a
-// new session; the per-IP and per-poll limits hold regardless of session.
+// Guest sessions are free to mint, so a per-user limit would reset with a new
+// session, and it would also refuse a host entering responses for others.
+// The per-IP and per-poll limits hold regardless of session.
 // The IP limit is loose because offices, schools and mobile carriers put many
 // people behind one address. The largest poll in 90 days took 295 responses
 // in total, p99 is 23, so the per-poll cap does not touch real use.
@@ -188,7 +189,6 @@ async function sendNewResponseNotificationEmail({
 
 export const addParticipantAction = anyUserActionClient
   .metadata({ actionName: "add_participant" })
-  .use(createRateLimitMiddleware({ requests: 10, duration: "1 h", by: "user" }))
   .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(addParticipantSchema)
   .action(async ({ ctx, parsedInput }) => {
