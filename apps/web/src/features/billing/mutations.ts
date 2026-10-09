@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { Stripe } from "@rallly/billing";
 import {
   ACCOUNT_PORTAL_CONFIG_VERSION,
   PORTAL_CONFIG_PURPOSE,
@@ -8,23 +9,12 @@ import {
 import { prisma } from "@rallly/database";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { isBillingEnabled } from "@/features/billing/constants";
-import type { BillingReturnFlow } from "@/features/billing/schema";
+import type {
+  BillingReturnFlow,
+  CancellationReason,
+} from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
 import { isStripeResourceMissingError } from "@/features/billing/utils";
-
-export async function createStripePortalSession({
-  customerId,
-  returnPath = "/settings/billing",
-}: {
-  customerId: string;
-  returnPath?: string;
-}) {
-  const portalSession = await getStripe().billingPortal.sessions.create({
-    customer: customerId,
-    return_url: absoluteUrl(returnPath),
-  });
-  return portalSession.url;
-}
 
 async function findConfigurationByMetadata(
   match: Record<string, string>,
@@ -233,31 +223,43 @@ export async function createStripeSubscriptionUpdateConfirmation({
   return portalSession.url;
 }
 
-/**
- * Stripe's cancellation screen (reasons, period end confirmation) as a deep
- * link. Uses the account's default portal configuration, the one that has
- * cancellation enabled; the code defined configurations disable it.
- */
-export async function createStripeCancelSession({
-  customerId,
+const cancellationFeedback = {
+  one_off_event: "unused",
+  not_using: "unused",
+  too_expensive: "too_expensive",
+  missing_features: "missing_features",
+  switched_service: "switched_service",
+  other: "other",
+} satisfies Record<
+  CancellationReason,
+  Stripe.SubscriptionUpdateParams.CancellationDetails.Feedback
+>;
+
+// The reason goes to Stripe's feedback so ChartMogul keeps reporting it; the
+// finer reason rides in metadata, which Stripe's fixed list cannot carry.
+// Stripe is the source of truth; the row is written too so the page shows
+// "Ends" as soon as the action returns.
+export async function scheduleSubscriptionCancellation({
   subscriptionId,
+  reason,
+  comment,
 }: {
-  customerId: string;
   subscriptionId: string;
+  reason: CancellationReason;
+  comment?: string;
 }) {
-  const session = await getStripe().billingPortal.sessions.create({
-    customer: customerId,
-    return_url: absoluteUrl("/settings/billing"),
-    flow_data: {
-      type: "subscription_cancel",
-      subscription_cancel: { subscription: subscriptionId },
-      after_completion: {
-        type: "redirect",
-        redirect: { return_url: billingReturnUrl("cancel") },
-      },
+  await getStripe().subscriptions.update(subscriptionId, {
+    cancel_at_period_end: true,
+    cancellation_details: {
+      feedback: cancellationFeedback[reason],
+      comment: comment ?? "",
     },
+    metadata: { cancelReason: reason },
   });
-  return session.url;
+  await prisma.subscription.update({
+    where: { id: subscriptionId },
+    data: { cancelAtPeriodEnd: true },
+  });
 }
 
 /**
@@ -308,6 +310,8 @@ export async function resumeSubscriptionRenewal({
 }) {
   await getStripe().subscriptions.update(subscriptionId, {
     cancel_at_period_end: false,
+    cancellation_details: { feedback: "", comment: "" },
+    metadata: { cancelReason: "" },
   });
   await prisma.subscription.update({
     where: { id: subscriptionId },

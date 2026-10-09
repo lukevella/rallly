@@ -25,21 +25,6 @@ export function BillingFlashAlert() {
         <AlertTitle>
           <Trans i18nKey="planChangedAlertTitle" defaults="Plan changed" />
         </AlertTitle>
-      ) : flow.data === "cancel" ? (
-        <>
-          <AlertTitle>
-            <Trans
-              i18nKey="planCancelScheduledAlertTitle"
-              defaults="Cancellation scheduled"
-            />
-          </AlertTitle>
-          <AlertDescription>
-            <Trans
-              i18nKey="planCancelScheduledAlertDescription"
-              defaults="Your plan stays active until the end of the current billing period. You can resume it any time before then."
-            />
-          </AlertDescription>
-        </>
       ) : (
         <>
           <AlertTitle>
