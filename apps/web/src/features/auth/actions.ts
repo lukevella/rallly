@@ -63,7 +63,7 @@ export async function setPasswordForUser({
 // endpoint directly rather than going through a mutation.
 export const setPasswordAction = authActionClient
   .metadata({ actionName: "set_password" })
-  .use(createRateLimitMiddleware(5, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 5, duration: "1 h", by: "user" }))
   .inputSchema(z.object({ password: passwordSchema }))
   .action(async ({ ctx, parsedInput }) => {
     // The UI hides this behind the emailLogin flag; gate the action too so a

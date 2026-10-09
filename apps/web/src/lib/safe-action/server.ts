@@ -1,7 +1,10 @@
 import "server-only";
 
+import type { WideEvent } from "@rallly/logger";
+import { createWideEvent, logger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
 import { APIError } from "better-auth/api";
+import { headers } from "next/headers";
 import { after } from "next/server";
 import { createMiddleware, createSafeActionClient } from "next-safe-action";
 import * as z from "zod";
@@ -13,37 +16,40 @@ import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { assertAppAvailable } from "@/lib/maintenance-server";
 import { flushPostHog } from "@/lib/posthog";
 import type { Duration } from "@/lib/rate-limit";
-import { createRatelimit } from "@/lib/rate-limit";
+import { createRateLimitGuard } from "@/lib/rate-limit";
 
-export const createRateLimitMiddleware = (
-  requests: number,
-  duration: Duration,
-) =>
-  createMiddleware<{
+/**
+ * Limits an action per user or per client address. Limit by address where a
+ * caller can repeat the action under a fresh guest session. An unknown
+ * address (a self-hosted instance with no proxy headers) is not limited, so
+ * unrelated visitors never share one bucket.
+ */
+export const createRateLimitMiddleware = ({
+  requests,
+  duration,
+  by,
+}: {
+  requests: number;
+  duration: Duration;
+  by: "user" | "ip";
+}) => {
+  const guard = createRateLimitGuard(requests, duration);
+
+  return createMiddleware<{
     metadata: {
       actionName: string;
     };
-    ctx: { user: { id: string } };
+    ctx: { user?: { id: string } | null; event: WideEvent };
   }>().define(async ({ next, metadata, ctx }) => {
-    const ratelimit = createRatelimit(requests, duration);
+    const id = by === "user" ? ctx.user?.id : ctx.event.ip;
 
-    if (!ratelimit) {
-      return next();
-    }
-
-    const { success } = await ratelimit.limit(
-      `${metadata.actionName}:${ctx.user.id}`,
-    );
-
-    if (!success) {
-      throw new AppError({
-        code: "TOO_MANY_REQUESTS",
-        message: "You are making too many requests.",
-      });
+    if (id) {
+      await guard(`${metadata.actionName}:${by}:${id}`, ctx.event);
     }
 
     return next();
   });
+};
 
 export const actionClient = createSafeActionClient({
   defineMetadataSchema: () =>
@@ -98,6 +104,43 @@ export const actionClient = createSafeActionClient({
     return "INTERNAL_SERVER_ERROR" as const;
   },
 })
+  // One wide event per action call, emitted once the result is known.
+  .use(async ({ next, metadata }) => {
+    const headerList = await headers();
+    const startTime = Date.now();
+    const event = createWideEvent({
+      service: "action",
+      requestId:
+        headerList.get("x-vercel-id") ??
+        headerList.get("x-request-id") ??
+        undefined,
+      actionName: metadata.actionName,
+      // x-real-ip is what Vercel sets; self-hosted proxies set the other.
+      ip:
+        headerList.get("x-real-ip") ??
+        headerList.get("x-forwarded-for")?.split(",")[0]?.trim(),
+      ja4Digest: headerList.get("x-vercel-ja4-digest") ?? undefined,
+    });
+
+    try {
+      const result = await next({ ctx: { event } });
+      if (typeof result.serverError === "string") {
+        event.errorCode = result.serverError;
+      } else if (result.validationErrors) {
+        event.errorCode = "VALIDATION_ERROR";
+      }
+      return result;
+    } finally {
+      event.durationMs = Date.now() - startTime;
+      if (event.errorCode === "INTERNAL_SERVER_ERROR") {
+        logger.error(event);
+      } else if (event.errorCode) {
+        logger.warn(event);
+      } else {
+        logger.info(event);
+      }
+    }
+  })
   // The PostHog client only enqueues; a serverless function freezes once the
   // action response is sent, so the buffer must be flushed here. Route
   // handlers get the same through withPostHog. Runs in finally so a failed
@@ -114,7 +157,7 @@ export const actionClient = createSafeActionClient({
     return next();
   });
 
-export const authActionClient = actionClient.use(async ({ next }) => {
+export const authActionClient = actionClient.use(async ({ ctx, next }) => {
   const user = await loadOptionalUser();
 
   if (!user) {
@@ -126,6 +169,9 @@ export const authActionClient = actionClient.use(async ({ next }) => {
 
   const ability = defineAbilityFor(user);
 
+  ctx.event.userId = user.id;
+  ctx.event.isGuest = user.isGuest;
+
   return next({
     ctx: { user, ability },
   });
@@ -135,13 +181,20 @@ export const authActionClient = actionClient.use(async ({ next }) => {
  * For writes on public pages: the session user may be a guest, and there
  * may be none at all when the credential is a token from an emailed link.
  */
-export const optionalUserActionClient = actionClient.use(async ({ next }) => {
-  const user = await loadOptionalActor();
+export const optionalUserActionClient = actionClient.use(
+  async ({ ctx, next }) => {
+    const user = await loadOptionalActor();
 
-  return next({
-    ctx: { user },
-  });
-});
+    if (user) {
+      ctx.event.userId = user.id;
+      ctx.event.isGuest = user.isGuest;
+    }
+
+    return next({
+      ctx: { user },
+    });
+  },
+);
 
 /**
  * For writes a guest may perform. The client creates the guest session

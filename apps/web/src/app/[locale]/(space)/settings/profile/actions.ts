@@ -34,7 +34,7 @@ import {
 export const scheduleAccountDeletionAction = authActionClient
   .metadata({ actionName: "schedule_account_deletion" })
   // Each call hits Stripe and sends an email — keep the ceiling low.
-  .use(createRateLimitMiddleware(3, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 3, duration: "1 h", by: "user" }))
   .action(async ({ ctx }) => {
     if (isSelfHosted) {
       throw new AppError({
@@ -95,7 +95,7 @@ export const scheduleAccountDeletionAction = authActionClient
 // Deletion happens immediately instead; there is no recovery window.
 export const deleteAccountAction = authActionClient
   .metadata({ actionName: "delete_account" })
-  .use(createRateLimitMiddleware(3, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 3, duration: "1 h", by: "user" }))
   .action(async ({ ctx }) => {
     if (!isSelfHosted) {
       throw new AppError({
@@ -121,7 +121,7 @@ export const deleteAccountAction = authActionClient
 
 export const cancelAccountDeletionAction = authActionClient
   .metadata({ actionName: "cancel_account_deletion" })
-  .use(createRateLimitMiddleware(10, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 10, duration: "1 h", by: "user" }))
   .action(async ({ ctx }) => {
     await cancelAccountDeletion({ userId: ctx.user.id });
     await resumeUserSubscriptionRenewals({ userId: ctx.user.id });

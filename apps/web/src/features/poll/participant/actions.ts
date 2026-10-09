@@ -35,6 +35,7 @@ import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
+import { createRateLimitGuard } from "@/lib/rate-limit";
 import {
   anyUserActionClient,
   createRateLimitMiddleware,
@@ -42,6 +43,14 @@ import {
 } from "@/lib/safe-action/server";
 
 const logger = createLogger("participants");
+
+// Guest sessions are free to mint, so a per-user limit would reset with a new
+// session, and it would also refuse a host entering responses for others.
+// The per-IP and per-poll limits hold regardless of session.
+// The IP limit is loose because offices, schools and mobile carriers put many
+// people behind one address. The largest poll in 90 days took 295 responses
+// in total, p99 is 23, so the per-poll cap does not touch real use.
+const pollResponseGuard = createRateLimitGuard(200, "1 h");
 
 type Actor = { id: string; isGuest: boolean };
 
@@ -180,10 +189,13 @@ async function sendNewResponseNotificationEmail({
 
 export const addParticipantAction = anyUserActionClient
   .metadata({ actionName: "add_participant" })
-  .use(createRateLimitMiddleware(10, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(addParticipantSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { pollId, votes, name, email, note, timeZone, token } = parsedInput;
+
+    ctx.event.pollId = pollId;
+    await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);
     const locale = await getLocale();
 
     const result = await addParticipant({
@@ -284,6 +296,7 @@ export const addParticipantAction = anyUserActionClient
 
 export const updateParticipantVotesAction = optionalUserActionClient
   .metadata({ actionName: "update_participant_votes" })
+  .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(updateParticipantVotesSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { participantId, votes, token } = parsedInput;

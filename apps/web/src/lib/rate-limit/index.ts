@@ -1,5 +1,7 @@
 import "server-only";
+import type { WideEvent } from "@rallly/logger";
 import { Ratelimit } from "@upstash/ratelimit";
+import { AppError } from "@/lib/errors/app-error";
 import { redis } from "@/lib/kv";
 import { isRateLimitEnabled } from "./constants";
 
@@ -78,6 +80,42 @@ export function createRatelimit(requests: number, duration: Duration) {
   }
 
   return createMemoryLimiter(requests, duration);
+}
+
+/**
+ * Refuses a key past `requests` per `duration` with TOO_MANY_REQUESTS and
+ * records the limiter and its remaining points on the request's wide event,
+ * as the tRPC middleware does. With several guards on one request the event
+ * keeps the lowest remaining count, the one closest to refusing.
+ */
+export function createRateLimitGuard(requests: number, duration: Duration) {
+  const ratelimit = createRatelimit(requests, duration);
+
+  return async (key: string, event?: WideEvent) => {
+    if (event) {
+      event.rateLimiter = ratelimit?.name ?? "none";
+    }
+
+    if (!ratelimit) {
+      return;
+    }
+
+    const { success, remainingPoints } = await ratelimit.limit(key);
+
+    if (event) {
+      event.rateLimiterRemainingPoints = Math.min(
+        event.rateLimiterRemainingPoints ?? remainingPoints,
+        remainingPoints,
+      );
+    }
+
+    if (!success) {
+      throw new AppError({
+        code: "TOO_MANY_REQUESTS",
+        message: "You are making too many requests.",
+      });
+    }
+  };
 }
 
 /**
