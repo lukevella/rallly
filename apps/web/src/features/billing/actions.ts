@@ -188,12 +188,17 @@ export const upgradeToProAction = authActionClient
 /**
  * The active space's subscription, proven manageable by the caller: the
  * caller must hold `manage Billing` on the space (owner) and the subscription
- * must belong to that space. Every subscription changing action starts here.
+ * must belong to that space. Inactive subscriptions are only accepted when
+ * `allowInactive` is set, for actions that stay useful after cancellation
+ * (invoices, billing details). Every subscription changing action starts here.
  */
-async function requireManagedSubscription(user: {
-  id: string;
-  customerId?: string;
-}) {
+async function requireManagedSubscription(
+  user: {
+    id: string;
+    customerId?: string;
+  },
+  { allowInactive = false }: { allowInactive?: boolean } = {},
+) {
   const space = await getActiveSpaceForUser(user.id);
 
   if (!space) {
@@ -214,10 +219,12 @@ async function requireManagedSubscription(user: {
 
   const subscription = await getSpaceSubscription(space.id);
 
-  if (!subscription?.active) {
+  if (!subscription || (!subscription.active && !allowInactive)) {
     throw new AppError({
       code: "NOT_FOUND",
-      message: "No active subscription for this space",
+      message: allowInactive
+        ? "No subscription for this space"
+        : "No active subscription for this space",
     });
   }
 
@@ -322,7 +329,10 @@ export const resumePlanAction = authActionClient
 export const openBillingDetailsAction = authActionClient
   .metadata({ actionName: "open_billing_details" })
   .action(async ({ ctx }) => {
-    const { space, customerId } = await requireManagedSubscription(ctx.user);
+    // Invoices stay reachable after the subscription ends.
+    const { space, customerId } = await requireManagedSubscription(ctx.user, {
+      allowInactive: true,
+    });
 
     track(ctx.user, {
       event: "space_billing:billing_details_click",
