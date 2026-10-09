@@ -358,7 +358,6 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
   const subscription = await getExpandedSubscription(
     (event.data.object as Stripe.Subscription).id,
   );
-  const details = getSubscriptionDetails(subscription);
 
   // void any unpaid invoices
   const invoices = await stripe.invoices.list({
@@ -408,6 +407,18 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     },
   });
 
+  // Analytics only: malformed price data must not make Stripe retry an event
+  // whose cleanup has already run.
+  let details: {
+    interval: string | null;
+    amount: number | null;
+    currency: string | null;
+  };
+  try {
+    details = getSubscriptionDetails(subscription);
+  } catch {
+    details = { interval: null, amount: null, currency: null };
+  }
   const cancelReason = cancellationReasonSchema.safeParse(
     subscription.metadata.cancelReason,
   );
