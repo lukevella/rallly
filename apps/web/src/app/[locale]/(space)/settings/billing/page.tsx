@@ -105,7 +105,7 @@ export default async function BillingSettingsPage() {
             <HobbyPlanCard />
           )}
           <BillingFlashAlert />
-          {overview?.subscription.active ? (
+          {overview ? (
             <PaymentAndBillingCard paymentMethods={paymentMethods} />
           ) : null}
           <SupportCard />
