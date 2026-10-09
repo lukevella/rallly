@@ -3,7 +3,6 @@ import "server-only";
 import type { WideEvent } from "@rallly/logger";
 import { createWideEvent, logger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
-import { ipAddress } from "@vercel/functions";
 import { APIError } from "better-auth/api";
 import { headers } from "next/headers";
 import { after } from "next/server";
@@ -116,8 +115,9 @@ export const actionClient = createSafeActionClient({
         headerList.get("x-request-id") ??
         undefined,
       actionName: metadata.actionName,
+      // x-real-ip is what Vercel sets; self-hosted proxies set the other.
       ip:
-        ipAddress(headerList) ??
+        headerList.get("x-real-ip") ??
         headerList.get("x-forwarded-for")?.split(",")[0]?.trim(),
       ja4Digest: headerList.get("x-vercel-ja4-digest") ?? undefined,
     });
