@@ -96,7 +96,7 @@ export const setActiveSpaceAction = authActionClient
 
 export const createSpaceAction = authActionClient
   .metadata({ actionName: "create_space" })
-  .use(createRateLimitMiddleware(5, "1 m"))
+  .use(createRateLimitMiddleware({ requests: 5, duration: "1 m", by: "user" }))
   .inputSchema(createSpaceSchema)
   .action(async ({ ctx, parsedInput }) => {
     const space = await createSpace({

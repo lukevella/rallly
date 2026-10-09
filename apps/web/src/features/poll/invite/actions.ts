@@ -22,7 +22,7 @@ import {
 export const sendPollInviteAction = authActionClient
   .metadata({ actionName: "send_poll_invite" })
   // One email per call; the daily recipient cap lives in the mutation.
-  .use(createRateLimitMiddleware(30, "1 m"))
+  .use(createRateLimitMiddleware({ requests: 30, duration: "1 m", by: "user" }))
   .inputSchema(sendPollInviteSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { pollId, email } = parsedInput;

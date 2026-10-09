@@ -19,43 +19,35 @@ import { flushPostHog } from "@/lib/posthog";
 import type { Duration } from "@/lib/rate-limit";
 import { createRateLimitGuard } from "@/lib/rate-limit";
 
-export const createRateLimitMiddleware = (
-  requests: number,
-  duration: Duration,
-) => {
-  const guard = createRateLimitGuard(requests, duration);
-
-  return createMiddleware<{
-    metadata: {
-      actionName: string;
-    };
-    ctx: { user: { id: string }; event: WideEvent };
-  }>().define(async ({ next, metadata, ctx }) => {
-    await guard(`${metadata.actionName}:${ctx.user.id}`, ctx.event);
-    return next();
-  });
-};
-
 /**
- * Limits by client address, for actions a caller can repeat under a fresh
- * guest session. Skipped when the address is unknown (a self-hosted instance
- * with no proxy headers), so unrelated visitors never share one bucket.
+ * Limits an action per user or per client address. Limit by address where a
+ * caller can repeat the action under a fresh guest session. An unknown
+ * address (a self-hosted instance with no proxy headers) is not limited, so
+ * unrelated visitors never share one bucket.
  */
-export const createIpRateLimitMiddleware = (
-  requests: number,
-  duration: Duration,
-) => {
+export const createRateLimitMiddleware = ({
+  requests,
+  duration,
+  by,
+}: {
+  requests: number;
+  duration: Duration;
+  by: "user" | "ip";
+}) => {
   const guard = createRateLimitGuard(requests, duration);
 
   return createMiddleware<{
     metadata: {
       actionName: string;
     };
-    ctx: { event: WideEvent };
+    ctx: { user?: { id: string } | null; event: WideEvent };
   }>().define(async ({ next, metadata, ctx }) => {
-    if (ctx.event.ip) {
-      await guard(`${metadata.actionName}:ip:${ctx.event.ip}`, ctx.event);
+    const id = by === "user" ? ctx.user?.id : ctx.event.ip;
+
+    if (id) {
+      await guard(`${metadata.actionName}:${by}:${id}`, ctx.event);
     }
+
     return next();
   });
 };
