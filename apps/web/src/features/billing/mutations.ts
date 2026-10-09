@@ -16,20 +16,6 @@ import type {
 import { getStripe } from "@/features/billing/service";
 import { isStripeResourceMissingError } from "@/features/billing/utils";
 
-export async function createStripePortalSession({
-  customerId,
-  returnPath = "/settings/billing",
-}: {
-  customerId: string;
-  returnPath?: string;
-}) {
-  const portalSession = await getStripe().billingPortal.sessions.create({
-    customer: customerId,
-    return_url: absoluteUrl(returnPath),
-  });
-  return portalSession.url;
-}
-
 async function findConfigurationByMetadata(
   match: Record<string, string>,
 ): Promise<string | undefined> {

@@ -116,10 +116,8 @@ export const upgradeToProAction = authActionClient
     );
 
     const checkoutSession = await stripe.checkout.sessions.create({
-      success_url: absoluteUrl(
-        returnPath ?? "/api/stripe/portal?session_id={CHECKOUT_SESSION_ID}",
-      ),
-      cancel_url: absoluteUrl(returnPath),
+      success_url: absoluteUrl(returnPath ?? "/settings/billing"),
+      cancel_url: absoluteUrl(returnPath ?? "/settings/billing"),
       customer: customerId,
       customer_update: {
         name: "auto",
