@@ -8,7 +8,6 @@ import { toast } from "@rallly/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
 import { TriangleAlertIcon } from "lucide-react";
 import {
-  openCancelPlanAction,
   openPaymentMethodUpdateAction,
   resumePlanAction,
 } from "@/features/billing/actions";
@@ -22,6 +21,7 @@ import { formatMinorUnitAmount } from "@/features/billing/utils";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { CancelPlanDialog } from "./cancel-plan-dialog";
 import { ManageSeatsDialog } from "./manage-seats-dialog";
 import {
   PlanCard,
@@ -74,7 +74,7 @@ export function ProPlanCard({
   const { locale } = useDateTimeConfig();
   const { formatDateTime } = useDateTime();
   const switchToYearlyDialog = useDialog();
-  const openCancelPlan = useMutation(mutationOptions(openCancelPlanAction));
+  const cancelPlanDialog = useDialog();
   const openPaymentMethodUpdate = useMutation(
     mutationOptions(openPaymentMethodUpdateAction),
   );
@@ -267,14 +267,23 @@ export function ProPlanCard({
           />
         </span>
         {endsAtPeriodEnd ? null : (
-          <Button
-            variant="ghost"
-            className="text-muted-foreground"
-            loading={openCancelPlan.isPending}
-            onClick={() => openCancelPlan.mutate()}
-          >
-            <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
-          </Button>
+          <CancelPlanDialog {...cancelPlanDialog.dialogProps} periodEnd={date}>
+            <DialogTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  className="text-muted-foreground"
+                  onClick={() => {
+                    posthog?.capture("space_billing:cancel_plan_click", {
+                      interval,
+                    });
+                  }}
+                />
+              }
+            >
+              <Trans i18nKey="cancelPlan" defaults="Cancel plan" />
+            </DialogTrigger>
+          </CancelPlanDialog>
         )}
       </PlanCardFooter>
     </PlanCard>

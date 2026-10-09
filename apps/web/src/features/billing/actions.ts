@@ -5,13 +5,14 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+import { CANCELLATION_COMMENT_MAX_LENGTH } from "@/features/billing/constants";
 import { getProPrices, getSpaceSubscription } from "@/features/billing/data";
 import {
   createAccountPortalSession,
   createPaymentMethodUpdateSession,
-  createStripeCancelSession,
   createStripeSubscriptionUpdateConfirmation,
   resumeSubscriptionRenewal,
+  scheduleSubscriptionCancellation,
 } from "@/features/billing/mutations";
 import { getNonprofitDiscountGrantedAt } from "@/features/billing/nonprofit/data";
 import { ensureNonprofitCoupon } from "@/features/billing/nonprofit/mutations";
@@ -21,6 +22,7 @@ import type {
   SubscriptionCheckoutMetadata,
   SubscriptionMetadata,
 } from "@/features/billing/schema";
+import { cancellationReasonSchema } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
 import {
   canChangeBillingInterval,
@@ -274,24 +276,38 @@ export const switchToYearlyAction = authActionClient
     );
   });
 
-export const openCancelPlanAction = authActionClient
-  .metadata({ actionName: "open_cancel_plan" })
-  .action(async ({ ctx }) => {
-    const { space, subscription, customerId } =
-      await requireManagedSubscription(ctx.user);
+export const cancelPlanAction = authActionClient
+  .metadata({ actionName: "cancel_plan" })
+  .inputSchema(
+    z.object({
+      reason: cancellationReasonSchema,
+      comment: z
+        .string()
+        .trim()
+        .max(CANCELLATION_COMMENT_MAX_LENGTH)
+        .optional(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const { space, subscription } = await requireManagedSubscription(ctx.user);
+
+    await scheduleSubscriptionCancellation({
+      subscriptionId: subscription.id,
+      reason: parsedInput.reason,
+      comment: parsedInput.comment || undefined,
+    });
 
     track(ctx.user, {
-      event: "space_billing:cancel_plan_click",
-      properties: { interval: subscription.interval },
+      event: "space_billing:cancel_plan_submit",
+      properties: {
+        interval: subscription.interval,
+        reason: parsedInput.reason,
+        has_comment: Boolean(parsedInput.comment),
+      },
       groups: { space: space.id },
     });
 
-    redirect(
-      await createStripeCancelSession({
-        customerId,
-        subscriptionId: subscription.id,
-      }),
-    );
+    refresh();
   });
 
 export const resumePlanAction = authActionClient

@@ -9,3 +9,5 @@ export { PLAN_NAMES } from "@rallly/billing/pricing";
 
 // Flash set by /api/stripe/return after a portal flow; value is the flow name.
 export const BILLING_FLASH_KEY = "billing";
+
+export const CANCELLATION_COMMENT_MAX_LENGTH = 500;

@@ -13,7 +13,7 @@ vi.mock("@rallly/posthog/client", () => ({
 vi.mock("@/features/billing/actions", () => ({
   switchToYearlyAction: vi.fn(),
   openBillingDetailsAction: vi.fn(),
-  openCancelPlanAction: vi.fn(),
+  cancelPlanAction: vi.fn(),
   openPaymentMethodUpdateAction: vi.fn(),
   resumePlanAction: vi.fn(),
 }));
@@ -32,6 +32,12 @@ vi.mock("@/lib/datetime/client", () => ({
 // so the real DialogTrigger inside the card still mounts.
 vi.mock("./manage-seats-dialog", () => ({
   ManageSeatsDialog: ({ children }: { children: React.ReactNode }) => (
+    <Dialog>{children}</Dialog>
+  ),
+}));
+
+vi.mock("./cancel-plan-dialog", () => ({
+  CancelPlanDialog: ({ children }: { children: React.ReactNode }) => (
     <Dialog>{children}</Dialog>
   ),
 }));
