@@ -61,7 +61,10 @@ import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
 import {
+  createGuestIpRateLimitMiddleware,
   createRateLimitMiddleware,
+} from "../rate-limit";
+import {
   possiblyPublicProcedure,
   privateProcedure,
   publicProcedure,
@@ -74,6 +77,16 @@ import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
+
+// A guest's id is a cookie, so the hourly per-user limit resets with a
+// cleared cookie. Only about 700 guests create 4 or more polls in a month,
+// so a daily cap of 20 per address touches nobody real and leaves room for
+// offices and campuses where many guests share one address.
+const guestPollCreationIpLimit = createGuestIpRateLimitMiddleware({
+  name: "create_poll",
+  requests: 20,
+  duration: "1 d",
+});
 
 // Mirrors the auto-close-polls house-keeping task: an option ends at
 // start + duration, with all-day options (duration 0) treated as 24h.
@@ -231,6 +244,7 @@ export const polls = router({
     )
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
+    .use(guestPollCreationIpLimit)
     .mutation(async ({ ctx, input }) => {
       const activeSpace = ctx.user.isGuest
         ? null
