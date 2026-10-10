@@ -40,6 +40,7 @@ async function SpaceGate({ children }: { children: React.ReactNode }) {
             tier={space.tier}
             trialStartedAt={space.trialStartedAt}
             trialEndsAt={space.trialEndsAt}
+            subscriptionActive={space.subscriptionActive}
           >
             <SpaceProvider space={space}>
               {children}

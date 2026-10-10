@@ -23,6 +23,9 @@ export type SpaceDTO = {
   // A renewal payment has failed and Stripe is retrying. The space keeps Pro
   // throughout, so this drives a warning, never an access decision.
   subscriptionPastDue: boolean;
+  // Whether a subscription is paying for the space right now. Tier alone
+  // cannot say: a running trial is "pro" without one.
+  subscriptionActive: boolean;
   // The free trial, once per space. Null until it starts and kept after it
   // ends. While trialEndsAt is in the future, tier is "pro" because of it.
   trialStartedAt: Date | null;

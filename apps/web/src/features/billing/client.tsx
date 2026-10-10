@@ -1,17 +1,21 @@
 "use client";
 
 import type { PricesByCurrency } from "@rallly/billing";
-import { CURRENCY_COOKIE_NAME } from "@rallly/billing";
+import { CURRENCY_COOKIE_NAME, pricingData } from "@rallly/billing";
 import { posthog } from "@rallly/posthog/client";
 import Cookies from "js-cookie";
 import React from "react";
 import { create } from "zustand";
+import { getTrialState } from "@/features/billing/trial/utils";
+import { formatMinorUnitAmount } from "@/features/billing/utils";
 import type { SpaceTier } from "@/features/space/schema";
+import { useDateTimeConfig } from "@/lib/datetime/client";
 
 type TierContextValue = {
   tier: SpaceTier;
   trialStartedAt: Date | null;
   trialEndsAt: Date | null;
+  subscriptionActive: boolean;
 };
 
 const TierContext = React.createContext<TierContextValue | null>(null);
@@ -20,16 +24,18 @@ export function TierProvider({
   tier,
   trialStartedAt = null,
   trialEndsAt = null,
+  subscriptionActive = false,
   children,
 }: {
   tier: SpaceTier;
   trialStartedAt?: Date | null;
   trialEndsAt?: Date | null;
+  subscriptionActive?: boolean;
   children: React.ReactNode;
 }) {
   const value = React.useMemo(
-    () => ({ tier, trialStartedAt, trialEndsAt }),
-    [tier, trialStartedAt, trialEndsAt],
+    () => ({ tier, trialStartedAt, trialEndsAt, subscriptionActive }),
+    [tier, trialStartedAt, trialEndsAt, subscriptionActive],
   );
 
   return <TierContext.Provider value={value}>{children}</TierContext.Provider>;
@@ -52,10 +58,35 @@ export function useTier(): SpaceTier {
 /**
  * The space's free trial dates, beside its tier. Both null until the trial
  * starts; kept after it ends, so a space with trialStartedAt has used it.
+ * subscriptionActive says whether something is paying for the space, which
+ * the tier alone cannot: a running trial is pro without a subscription.
  */
 export function useTrial() {
-  const { trialStartedAt, trialEndsAt } = useTierContext();
-  return { trialStartedAt, trialEndsAt };
+  const { trialStartedAt, trialEndsAt, subscriptionActive } = useTierContext();
+  return { trialStartedAt, trialEndsAt, subscriptionActive };
+}
+
+/**
+ * The one answer every trial surface reads: eligible, trial, paying, ended
+ * or none. See getTrialState for the rules.
+ */
+export function useTrialState() {
+  return getTrialState(useTierContext());
+}
+
+/**
+ * Pro's monthly list price in the viewer's number format ("$7"), from the
+ * shared pricing data, so copy such as "{price} a month" never hard-types
+ * the amount. The pay wall shows the per-currency prices; this is the one
+ * line of copy outside it.
+ */
+export function useProMonthlyPrice() {
+  const { locale } = useDateTimeConfig();
+  return formatMinorUnitAmount({
+    amount: pricingData.monthly.amount,
+    currency: pricingData.monthly.currency,
+    locale,
+  });
 }
 
 export function useIsFree() {

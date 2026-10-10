@@ -52,6 +52,7 @@ export function createSpaceDTO({
     memberCount: number;
     seatCount: number;
     subscriptionPastDue?: boolean;
+    subscriptionActive?: boolean;
     trialStartedAt?: Date | null;
     trialEndsAt?: Date | null;
   };
@@ -74,6 +75,7 @@ export function createSpaceDTO({
     showBranding: space.showBranding,
     hideAttribution: space.hideAttribution,
     subscriptionPastDue: space.subscriptionPastDue ?? false,
+    subscriptionActive: space.subscriptionActive ?? false,
     trialStartedAt: space.trialStartedAt ?? null,
     trialEndsAt: space.trialEndsAt ?? null,
   };
