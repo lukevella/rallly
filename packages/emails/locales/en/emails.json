@@ -104,7 +104,6 @@
   "resetPassword_subject": "Reset your password",
   "reviewRequest_ask": "Would you leave a quick review on {siteName}? It takes a couple of minutes, and reviews are how people looking for a scheduling tool decide whether to trust a small, independent one like ours.",
   "reviewRequest_button": "Write a review on {siteName}",
-  "reviewRequest_footer": "You're receiving this because you scheduled a meeting on <domain />. We'll only ask once.",
   "reviewRequest_greeting": "Hi {firstName},",
   "reviewRequest_greetingNoName": "Hi there,",
   "reviewRequest_guidelines": "Reviews must follow the <a>{siteName} community guidelines</a>.",
