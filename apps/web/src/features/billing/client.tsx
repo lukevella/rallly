@@ -96,14 +96,11 @@ export function useIsFree() {
 export type PayWallTrigger = {
   from:
     | "poll-settings"
-    | "manage-poll"
     | "custom-branding"
     | "api-keys"
     | "space-members"
     | "space-collaboration"
     | "billing-settings"
-    | "sidebar"
-    | "invite-dialog"
     | "poll-footer";
   setting?: string;
   action?: string;

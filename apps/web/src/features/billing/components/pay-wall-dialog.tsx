@@ -198,7 +198,6 @@ const proBenefitsList = [
 
 const leadingBenefitByTrigger: Partial<Record<PayWallTrigger["from"], string>> =
   {
-    "invite-dialog": "emailInvites",
     "api-keys": "apiAccess",
     "poll-footer": "removeAttribution",
   };
