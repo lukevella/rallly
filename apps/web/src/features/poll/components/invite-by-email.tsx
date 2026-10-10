@@ -20,11 +20,11 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { Link } from "@/components/link";
 import { LoginLink } from "@/components/login-link";
 import { RegisterLink } from "@/components/register-link";
 import { Spinner } from "@/components/spinner";
-import { showPayWall, useIsFree } from "@/features/billing/client";
-import { ProBadge } from "@/features/billing/components/pro-badge";
+import { useIsFree, useProMonthlyPrice } from "@/features/billing/client";
 import { usePoll } from "@/features/poll/client";
 import type { InviteeRowStatus } from "@/features/poll/components/invitee-list";
 import {
@@ -67,6 +67,11 @@ export function InviteByEmail() {
   );
   const invites = invitesQuery.data ?? [];
   const isOpen = poll.status === "open";
+  const price = useProMonthlyPrice();
+  // Sending is refused server-side unless the space is Pro, so the form is
+  // disabled with the reason in place rather than enabled and failing.
+  const canSend = isOpen && !isFree;
+  const reasonId = canSend ? undefined : "share-dialog-send-reason";
 
   const form = useForm<InviteFormValues>({
     resolver: zodResolver(inviteFormSchema),
@@ -189,10 +194,6 @@ export function InviteByEmail() {
   };
 
   const onValid = ({ email: address }: InviteFormValues) => {
-    if (isFree) {
-      showPayWall({ from: "invite-dialog", pollId: poll.id });
-      return;
-    }
     if (rows.some((row) => row.email.toLowerCase() === address)) {
       const message = t("shareDialogAlreadyInvited", {
         defaultValue: "{email} is already invited",
@@ -250,38 +251,43 @@ export function InviteByEmail() {
                 autoComplete="off"
                 {...passwordManagerIgnoreProps}
                 placeholder="jessie.smith@example.com"
-                disabled={!isOpen}
+                disabled={!canSend}
                 aria-invalid={form.formState.errors.email ? true : undefined}
-                aria-describedby={
-                  isOpen ? undefined : "share-dialog-closed-reason"
-                }
+                aria-describedby={reasonId}
               />
             </InputGroup>
             <Button
               type="submit"
               variant="primary"
-              disabled={!isOpen}
-              aria-describedby={
-                isOpen ? undefined : "share-dialog-closed-reason"
-              }
+              disabled={!canSend}
+              aria-describedby={reasonId}
             >
               <Trans i18nKey="shareDialogSendInvite" defaults="Send invite" />
-              {isFree ? (
-                <ProBadge className="ml-1.5 bg-primary-foreground/20 text-primary-foreground" />
-              ) : null}
             </Button>
           </form>
-          {!isOpen ? (
-            <p
-              id="share-dialog-closed-reason"
-              className="mt-3 text-muted-foreground text-sm"
-            >
-              <Trans
-                i18nKey="shareDialogPollClosed"
-                defaults="Reopen the poll to send invites"
-              />
+          {canSend ? null : (
+            <p id={reasonId} className="mt-3 text-muted-foreground text-sm">
+              {!isOpen ? (
+                <Trans
+                  i18nKey="shareDialogPollClosed"
+                  defaults="Reopen the poll to send invites"
+                />
+              ) : (
+                <Trans
+                  i18nKey="shareDialogProRequired"
+                  defaults="Sending invites is part of Pro. <0>Upgrade to Pro, {price} a month</0>"
+                  values={{ price }}
+                  components={[
+                    <Link
+                      key="billing"
+                      href="/settings/billing"
+                      className="underline hover:text-foreground"
+                    />,
+                  ]}
+                />
+              )}
             </p>
-          ) : null}
+          )}
 
           <AnimatedHeight className="mt-3">
             {invitesQuery.isPending ? (

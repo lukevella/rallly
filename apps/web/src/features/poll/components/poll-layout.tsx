@@ -1,4 +1,5 @@
 "use client";
+import { buttonVariants } from "@rallly/ui";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@rallly/ui/breadcrumb";
-import { BarChart2Icon } from "lucide-react";
+import { BarChart2Icon, Share2Icon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { Link } from "@/components/link";
@@ -15,15 +16,23 @@ import { usePoll } from "@/features/poll/client";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
-import { ShareDialog } from "@/features/poll/components/share-dialog";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
+  const poll = usePoll();
   return (
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <ShareDialog />
+      <Link
+        href={`/poll/${poll.id}/share`}
+        className={buttonVariants({ variant: "primary" })}
+      >
+        <Share2Icon data-icon="inline-start" />
+        <span className="sr-only sm:not-sr-only">
+          <Trans i18nKey="share" defaults="Share" />
+        </span>
+      </Link>
     </div>
   );
 };

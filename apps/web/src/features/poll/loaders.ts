@@ -13,6 +13,7 @@ import {
   listPollComments,
   listPollParticipants,
 } from "@/features/poll/data";
+import { listPollInvites } from "@/features/poll/invite/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
 import {
   filterCommentsForViewer,
@@ -130,4 +131,14 @@ export const loadAdminPoll = cache(async (pollId: string) => {
     comments,
     user,
   };
+});
+
+/**
+ * The invites the host has sent, for the share page. Access is proven by
+ * loadAdminPoll, which the poll layout already ran for this request, so
+ * the cached call adds no read of its own.
+ */
+export const loadAdminPollInvites = cache(async (pollId: string) => {
+  await loadAdminPoll(pollId);
+  return listPollInvites({ pollId });
 });

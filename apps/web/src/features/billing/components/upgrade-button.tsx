@@ -1,5 +1,6 @@
 "use client";
 import type { DisplayedCurrency } from "@rallly/billing";
+import type { ButtonProps } from "@rallly/ui/button";
 import { Button } from "@rallly/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
@@ -14,11 +15,15 @@ export const UpgradeButton = ({
   annual,
   currency,
   className,
+  size = "xl",
+  variant = "primary",
   onClick,
 }: React.PropsWithChildren<{
   annual?: boolean;
   currency?: DisplayedCurrency;
   className?: string;
+  size?: ButtonProps["size"];
+  variant?: ButtonProps["variant"];
   onClick?: () => void;
 }>) => {
   const pathname = usePathname();
@@ -29,9 +34,9 @@ export const UpgradeButton = ({
   return (
     <Button
       type="button"
-      size="xl"
+      size={size}
       className={className}
-      variant="primary"
+      variant={variant}
       loading={upgradeToPro.isExecuting}
       onClick={() => {
         onClick?.();
