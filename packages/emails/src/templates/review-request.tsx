@@ -1,4 +1,4 @@
-import { Head, Hr, Html, Preview } from "@react-email/components";
+import { Head, Html, Preview } from "@react-email/components";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
@@ -109,23 +109,6 @@ async function ReviewRequestEmail({
             })}
           </Text>
           <Signature />
-          <Hr style={{ margin: "16px 0" }} />
-          <Text small light={true}>
-            <Trans
-              t={t}
-              i18n={i18n}
-              ns="emails"
-              i18nKey="reviewRequest_footer"
-              defaults="You're receiving this because you scheduled a meeting on <domain />. We'll only ask once."
-              components={{
-                domain: (
-                  <Link color={chrome.primaryColor} href={chrome.baseUrl}>
-                    {chrome.domain}
-                  </Link>
-                ),
-              }}
-            />
-          </Text>
         </Container>
       </Body>
     </Html>
