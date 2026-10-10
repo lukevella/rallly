@@ -104,7 +104,6 @@
   "resetPassword_subject": "Jelszó visszaállítása",
   "reviewRequest_ask": "Hagynál egy rövid véleményt a(z) {siteName} oldalon? Csak pár percet vesz igénybe és a vélemények segítik azokat, akik időpontfoglaló eszközt keresnek, hogy eldöntsék, bízzanak-e egy kis, független eszközben, mint a miénk.",
   "reviewRequest_button": "Írj értékelést a(z) {siteName} oldalon",
-  "reviewRequest_footer": "Ezt azért kapod, mert időpontot ütemztél itt: <domain />. Csak egyszer kérünk meg erre.",
   "reviewRequest_greeting": "Szia {firstName}!",
   "reviewRequest_greetingNoName": "Szia!",
   "reviewRequest_guidelines": "Az értékeléseknek követniük kell a(z) <a>{siteName} közösségi irányelveit</a>.",
