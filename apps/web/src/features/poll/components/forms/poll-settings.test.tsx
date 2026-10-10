@@ -19,10 +19,12 @@ function TestForm({
   enableComments = false,
   allowTentativeVotes = true,
   hasTentativeVotes = false,
+  sharingSettings = true,
 }: {
   enableComments?: boolean;
   allowTentativeVotes?: boolean;
   hasTentativeVotes?: boolean;
+  sharingSettings?: boolean;
 }) {
   const form = useForm<PollSettingsFormData>({
     defaultValues: {
@@ -35,10 +37,41 @@ function TestForm({
   });
   return (
     <Form {...form}>
-      <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
+      <PollSettingsForm
+        hasTentativeVotes={hasTentativeVotes}
+        sharingSettings={sharingSettings}
+      />
     </Form>
   );
 }
+
+describe("PollSettingsForm sharing settings", () => {
+  it("shows the four sharing switches on the edit form", () => {
+    render(<TestForm />);
+    expect(
+      screen.getByRole("switch", { name: /require email/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("switch", { name: /hide participant names/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("switch", { name: /hide votes/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("switch", { name: /comments/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("leaves them out of the create form, where only the answer set remains", () => {
+    // They are set on the share page instead, once the poll is about to
+    // reach people.
+    render(<TestForm sharingSettings={false} />);
+    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("combobox", { name: /vote options/i }),
+    ).toBeInTheDocument();
+  });
+});
 
 describe("PollSettingsForm comments setting", () => {
   it("shows comments off by default", () => {

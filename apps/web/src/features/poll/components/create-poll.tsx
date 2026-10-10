@@ -280,7 +280,7 @@ export const CreatePoll = ({ nav }: { nav?: React.ReactNode }) => {
 
             <PollOptionsForm />
 
-            <PollSettingsForm />
+            <PollSettingsForm sharingSettings={false} />
           </div>
         </form>
         <div className="pointer-events-none sticky bottom-0 z-20 flex justify-center pt-4 pb-6 lg:pb-16">
