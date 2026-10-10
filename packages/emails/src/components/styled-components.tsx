@@ -4,6 +4,9 @@ import type {
   TextProps,
 } from "@react-email/components";
 import {
+  Column,
+  Img,
+  Row,
   Body as UnstyledBody,
   Button as UnstyledButton,
   Container as UnstyledContainer,
@@ -58,12 +61,12 @@ export const Button = (
         borderRadius: "6px",
         padding: "14px",
         fontFamily,
-        minWidth: "200px",
+        display: "block",
+        width: "100%",
         boxSizing: "border-box",
         textAlign: "center",
-        margin: "0 auto",
         fontSize: "16px",
-        fontWeight: 600,
+        fontWeight: 500,
         color: "white",
       }}
     />
@@ -172,29 +175,42 @@ export const Card = (props: SectionProps) => {
 export const Signature = () => {
   return (
     <Section>
-      <UnstyledText
-        style={{
-          fontSize: 16,
-          margin: 0,
-          fontWeight: 600,
-          color: darkTextColor,
-          fontFamily,
-        }}
-      >
-        Luke Vella
-      </UnstyledText>
-      <UnstyledText
-        style={{ fontSize: 16, margin: 0, color: lightTextColor, fontFamily }}
-      >
-        Founder
-      </UnstyledText>
-      <img
-        src="https://d39ixtfgglw55o.cloudfront.net/images/luke.jpg"
-        alt="Luke Vella"
-        style={{ borderRadius: "50%", marginTop: 16 }}
-        width={48}
-        height={48}
-      />
+      <Row>
+        <Column
+          style={{ width: 48, paddingRight: 12, verticalAlign: "middle" }}
+        >
+          <Img
+            src="https://d39ixtfgglw55o.cloudfront.net/images/luke-2026.jpg"
+            alt="Luke Vella"
+            style={{ borderRadius: "50%" }}
+            width={48}
+            height={48}
+          />
+        </Column>
+        <Column style={{ verticalAlign: "middle" }}>
+          <UnstyledText
+            style={{
+              fontSize: 16,
+              margin: 0,
+              fontWeight: 500,
+              color: darkTextColor,
+              fontFamily,
+            }}
+          >
+            Luke Vella
+          </UnstyledText>
+          <UnstyledText
+            style={{
+              fontSize: 16,
+              margin: 0,
+              color: lightTextColor,
+              fontFamily,
+            }}
+          >
+            Founder
+          </UnstyledText>
+        </Column>
+      </Row>
     </Section>
   );
 };
