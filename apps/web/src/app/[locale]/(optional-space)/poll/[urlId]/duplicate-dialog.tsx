@@ -11,7 +11,12 @@ import {
   DialogTitle,
 } from "@rallly/ui/dialog";
 import { useRouter } from "next/navigation";
+import { useProMonthlyPrice, useTrialState } from "@/features/billing/client";
+import { UpgradeButton } from "@/features/billing/components/upgrade-button";
+import { startTrial } from "@/features/billing/trial/actions";
+import { TrialTerms } from "@/features/billing/trial/components/trial-terms";
 import { Trans } from "@/i18n/client";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 import { DuplicateForm } from "./duplicate-form";
 
@@ -23,6 +28,12 @@ export function DuplicateDialog({
 }: DialogProps & { pollId: string; pollTitle: string }) {
   const duplicate = trpc.polls.duplicate.useMutation();
   const router = useRouter();
+  const trialState = useTrialState();
+  const price = useProMonthlyPrice();
+  // Duplicating is paid. Before a trial the press starts the 14 free days
+  // and then duplicates; after the trial the primary button goes to checkout.
+  const start = useSafeAction(startTrial);
+
   return (
     <Dialog {...props}>
       <DialogContent>
@@ -42,7 +53,14 @@ export function DuplicateDialog({
           defaultValues={{
             title: pollTitle,
           }}
-          onSubmit={(data) => {
+          onSubmit={async (data) => {
+            if (trialState === "eligible") {
+              const result = await start.executeAsync();
+              if (!result?.data) {
+                // Refused; the action's toast said why.
+                return;
+              }
+            }
             duplicate.mutate(
               { pollId, newTitle: data.title },
               {
@@ -53,18 +71,36 @@ export function DuplicateDialog({
             );
           }}
         />
+        <TrialTerms action="duplicate" />
         <DialogFooter>
           <DialogClose render={<Button />}>
             <Trans i18nKey="cancel" />
           </DialogClose>
-          <Button
-            type="submit"
-            loading={duplicate.isPending}
-            variant="primary"
-            form={formName}
-          >
-            <Trans i18nKey="duplicate" />
-          </Button>
+          {trialState === "ended" ? (
+            <UpgradeButton size="default">
+              <Trans
+                i18nKey="upgradeToProPrice"
+                defaults="Upgrade to Pro, {price} a month"
+                values={{ price }}
+              />
+            </UpgradeButton>
+          ) : (
+            <Button
+              type="submit"
+              loading={duplicate.isPending || start.isExecuting}
+              variant="primary"
+              form={formName}
+            >
+              {trialState === "eligible" ? (
+                <Trans
+                  i18nKey="duplicateAndStartTrial"
+                  defaults="Duplicate and start 14 free days"
+                />
+              ) : (
+                <Trans i18nKey="duplicate" />
+              )}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -24,6 +24,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { DateIconInner } from "@/components/date-icon";
+import { useProMonthlyPrice, useTrialState } from "@/features/billing/client";
+import { UpgradeButton } from "@/features/billing/components/upgrade-button";
+import { startTrial } from "@/features/billing/trial/actions";
+import { TrialTerms } from "@/features/billing/trial/components/trial-terms";
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
@@ -34,6 +38,7 @@ import {
 import { Trans } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts } from "@/lib/datetime/format";
+import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 
 const formSchema = z.object({
@@ -216,12 +221,47 @@ export const SchedulePollForm = ({
   );
 };
 
+/**
+ * Who the calendar invite reaches once a date is picked: the responses
+ * that left an email, the same rule the book mutation applies.
+ */
+function CalendarInviteLine() {
+  const { participants } = useParticipants();
+  const withEmail = participants.filter(
+    (participant) => participant.email,
+  ).length;
+
+  return (
+    <p className="text-muted-foreground text-sm">
+      {withEmail > 0 ? (
+        <Trans
+          i18nKey="scheduleCalendarInviteCount"
+          defaults="A calendar invite goes to everyone who left an email when they answered. {count} of {total} left one."
+          values={{ count: withEmail, total: participants.length }}
+        />
+      ) : (
+        <Trans
+          i18nKey="scheduleCalendarInviteNone"
+          defaults="A calendar invite goes to everyone who left an email when they answered. Nobody did on this poll, so you will tell them yourself."
+        />
+      )}
+    </p>
+  );
+}
+
 export function SchedulePollDialog(props: DialogProps) {
   const poll = usePoll();
   const router = useRouter();
+  const trialState = useTrialState();
+  const price = useProMonthlyPrice();
   const scheduleEvent = trpc.polls.book.useMutation({
     onSuccess: () => router.refresh(),
   });
+  // Scheduling is paid. Before a trial the press starts the 14 free days
+  // and then schedules; the terms sit above the buttons. After the trial
+  // the primary button goes to checkout.
+  const start = useSafeAction(startTrial);
+
   return (
     <Dialog {...props}>
       <DialogContent size="2xl">
@@ -238,7 +278,14 @@ export function SchedulePollDialog(props: DialogProps) {
         </DialogHeader>
         <SchedulePollForm
           name="schedule-form"
-          onSubmit={(data) => {
+          onSubmit={async (data) => {
+            if (trialState === "eligible") {
+              const result = await start.executeAsync();
+              if (!result?.data) {
+                // Refused; the action's toast said why.
+                return;
+              }
+            }
             scheduleEvent.mutate({
               pollId: poll.id,
               optionId: data.selectedOptionId,
@@ -247,18 +294,37 @@ export function SchedulePollDialog(props: DialogProps) {
             props.onOpenChange?.(false);
           }}
         />
+        <CalendarInviteLine />
+        <TrialTerms action="schedule" />
         <DialogFooter>
           <DialogClose render={<Button />}>
             <Trans i18nKey="cancel" />
           </DialogClose>
-          <Button
-            loading={scheduleEvent.isPending}
-            type="submit"
-            form="schedule-form"
-            variant="primary"
-          >
-            <Trans i18nKey="schedulePoll" defaults="Schedule" />
-          </Button>
+          {trialState === "ended" ? (
+            <UpgradeButton size="default">
+              <Trans
+                i18nKey="upgradeToProPrice"
+                defaults="Upgrade to Pro, {price} a month"
+                values={{ price }}
+              />
+            </UpgradeButton>
+          ) : (
+            <Button
+              loading={scheduleEvent.isPending || start.isExecuting}
+              type="submit"
+              form="schedule-form"
+              variant="primary"
+            >
+              {trialState === "eligible" ? (
+                <Trans
+                  i18nKey="scheduleAndStartTrial"
+                  defaults="Schedule and start 14 free days"
+                />
+              ) : (
+                <Trans i18nKey="schedulePoll" defaults="Schedule" />
+              )}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

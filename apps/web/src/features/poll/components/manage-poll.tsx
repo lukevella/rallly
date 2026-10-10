@@ -23,8 +23,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { DuplicateDialog } from "@/app/[locale]/(optional-space)/poll/[urlId]/duplicate-dialog";
 import { Link } from "@/components/link";
-import { showPayWall, useIsFree } from "@/features/billing/client";
-import { ProBadge } from "@/features/billing/components/pro-badge";
+import { TrialProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
 import { SchedulePollDialog } from "@/features/poll/components/manage-poll/schedule-poll-dialog";
 import { Trans } from "@/i18n/client";
@@ -77,7 +76,6 @@ const ManagePoll: React.FunctionComponent<{
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
   const scheduleDialog = useDialog();
-  const isFree = useIsFree();
   const { exportToCsv } = useCsvExporter();
 
   return (
@@ -113,23 +111,15 @@ const ManagePoll: React.FunctionComponent<{
           <DropdownMenuSeparator />
           {poll.status === "scheduled" || poll.status === "canceled" ? null : (
             <>
+              {/* Paid, but never a pay wall from here: the dialog carries
+                  the terms and its button starts the 14 free days. */}
               <DropdownMenuItem
                 disabled={!!poll.event}
-                onClick={() => {
-                  if (isFree) {
-                    showPayWall({
-                      from: "manage-poll",
-                      action: "schedule",
-                      pollId: poll.id,
-                    });
-                  } else {
-                    scheduleDialog.trigger();
-                  }
-                }}
+                onClick={() => scheduleDialog.trigger()}
               >
                 <CalendarCheck2Icon />
                 <Trans i18nKey="schedulePoll" defaults="Schedule" />
-                {isFree ? <ProBadge /> : null}
+                <TrialProBadge />
               </DropdownMenuItem>
               <OpenCloseToggle />
             </>
@@ -139,22 +129,10 @@ const ManagePoll: React.FunctionComponent<{
             <DownloadIcon />
             <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              if (isFree) {
-                showPayWall({
-                  from: "manage-poll",
-                  action: "duplicate",
-                  pollId: poll.id,
-                });
-              } else {
-                duplicateDialog.trigger();
-              }
-            }}
-          >
+          <DropdownMenuItem onClick={() => duplicateDialog.trigger()}>
             <CopyIcon />
             <Trans i18nKey="duplicate" defaults="Duplicate" />
-            {isFree ? <ProBadge /> : null}
+            <TrialProBadge />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
