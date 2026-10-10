@@ -1,7 +1,8 @@
 import { prisma } from "@rallly/database";
 import * as z from "zod";
 
-import { createRateLimitMiddleware, publicProcedure, router } from "../trpc";
+import { createRateLimitMiddleware } from "../rate-limit";
+import { publicProcedure, router } from "../trpc";
 
 export const auth = router({
   getLoginMethod: publicProcedure
