@@ -12,10 +12,7 @@ import { appRouter } from "@/trpc/routers";
 
 const handler = async (req: NextRequest) => {
   const session = await getSession();
-  // ipAddress reads x-real-ip, which Vercel sets; self-hosted proxies set
-  // x-forwarded-for.
-  const ip =
-    ipAddress(req) ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const ip = ipAddress(req);
   const ja4Digest = req.headers.get("x-vercel-ja4-digest") ?? undefined;
   const startTime = Date.now();
   const event = createWideEvent({

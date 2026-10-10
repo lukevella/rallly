@@ -49,9 +49,8 @@ export const createRateLimitMiddleware = (
 /**
  * Limits guests per client address. A guest's user id is a cookie, so a
  * per-user limit resets with a cleared cookie; the address does not.
- * Registered users pass through. An unknown address (a self-hosted instance
- * with no proxy headers) is not limited, so unrelated visitors never share
- * one bucket.
+ * Registered users pass through. An unknown address is not limited, so
+ * unrelated visitors never share one bucket.
  */
 export const createGuestIpRateLimitMiddleware = ({
   name,
