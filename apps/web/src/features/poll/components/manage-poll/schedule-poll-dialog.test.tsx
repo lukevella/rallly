@@ -1,3 +1,4 @@
+import { toast } from "@rallly/ui/sonner";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PollProvider } from "@/features/poll/client";
 import type { PollDetails, PollParticipant } from "@/features/poll/types";
@@ -5,6 +6,21 @@ import { render, screen } from "@/test/test-utils";
 import { SchedulePollDialog } from "./schedule-poll-dialog";
 
 const billing = vi.hoisted(() => ({ trialState: "eligible" }));
+
+const trialAction = vi.hoisted(() => ({
+  options: undefined as { onSuccess?: (args: unknown) => void } | undefined,
+}));
+
+const formatDateTime = vi.hoisted(() => vi.fn(() => "October 24"));
+
+vi.mock("@rallly/ui/sonner", () => ({
+  toast: { success: vi.fn() },
+}));
+
+vi.mock("@/lib/datetime/client", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/datetime/client")>()),
+  useDateTime: () => ({ formatDateTime }),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
@@ -31,7 +47,13 @@ vi.mock("@/features/billing/trial/actions", () => ({
 }));
 
 vi.mock("@/lib/safe-action/client", () => ({
-  useSafeAction: () => ({ executeAsync: vi.fn(), isExecuting: false }),
+  useSafeAction: (
+    _action: unknown,
+    options?: { onSuccess?: (args: unknown) => void },
+  ) => {
+    trialAction.options = options;
+    return { executeAsync: vi.fn(), isExecuting: false };
+  },
 }));
 
 vi.mock("@/features/billing/trial/components/trial-terms", () => ({
@@ -129,6 +151,16 @@ describe("SchedulePollDialog", () => {
     expect(
       screen.getByText(/{count} of {total} left one\./),
     ).toBeInTheDocument();
+  });
+
+  it("confirms the start with the product's toast, carrying the end date", () => {
+    renderDialog([]);
+    const endsAt = new Date("2026-10-24T12:00:00Z");
+    trialAction.options?.onSuccess?.({ data: { endsAt } });
+    expect(formatDateTime).toHaveBeenCalledWith(endsAt, "monthDay");
+    expect(toast.success).toHaveBeenCalledWith(
+      expect.stringContaining("Your 14 free days of Pro started, free until"),
+    );
   });
 
   it("says when nobody left an email", () => {

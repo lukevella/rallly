@@ -1,3 +1,4 @@
+import { toast } from "@rallly/ui/sonner";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@/test/test-utils";
@@ -17,6 +18,12 @@ const trialAction = vi.hoisted(() => ({
 vi.mock("@rallly/posthog/client", () => ({
   posthog: { capture: vi.fn() },
 }));
+
+vi.mock("@rallly/ui/sonner", () => ({
+  toast: { success: vi.fn() },
+}));
+
+const formatDateTime = vi.hoisted(() => vi.fn(() => "October 24"));
 
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("created"),
@@ -63,7 +70,7 @@ vi.mock("@/lib/safe-action/client", () => ({
 }));
 
 vi.mock("@/lib/datetime/client", () => ({
-  useDateTime: () => ({ formatDateTime: () => "October 24" }),
+  useDateTime: () => ({ formatDateTime }),
 }));
 
 // The pieces of step two are each tested on their own; stand-ins keep this
@@ -120,10 +127,16 @@ describe("SharePage", () => {
     expect(trialAction.execute).toHaveBeenCalledTimes(1);
     expect(screen.queryByText("invite by email")).not.toBeInTheDocument();
 
+    const endsAt = new Date("2026-10-24T12:00:00Z");
     act(() => {
-      trialAction.options?.onSuccess?.({ data: { endsAt: new Date() } });
+      trialAction.options?.onSuccess?.({ data: { endsAt } });
     });
     expect(screen.getByText("invite by email")).toBeInTheDocument();
+    // The product's own success toast confirms the start, with the end date.
+    expect(formatDateTime).toHaveBeenCalledWith(endsAt, "monthDay");
+    expect(toast.success).toHaveBeenCalledWith(
+      expect.stringContaining("Your 14 free days of Pro started, free until"),
+    );
   });
 
   it("goes to the Free share screen without starting anything, and can cross to Pro", async () => {

@@ -1,3 +1,4 @@
+import { toast } from "@rallly/ui/sonner";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@/test/test-utils";
@@ -9,7 +10,16 @@ const billing = vi.hoisted(() => ({
   showPayWall: vi.fn(),
 }));
 
-const trialAction = vi.hoisted(() => ({ execute: vi.fn() }));
+const trialAction = vi.hoisted(() => ({
+  execute: vi.fn(),
+  options: undefined as { onSuccess?: (args: unknown) => void } | undefined,
+}));
+
+const formatDateTime = vi.hoisted(() => vi.fn(() => "October 24"));
+
+vi.mock("@rallly/ui/sonner", () => ({
+  toast: { success: vi.fn() },
+}));
 
 vi.mock("@/features/billing/client", () => ({
   showPayWall: billing.showPayWall,
@@ -27,11 +37,17 @@ vi.mock("@/features/billing/trial/actions", () => ({
 }));
 
 vi.mock("@/lib/safe-action/client", () => ({
-  useSafeAction: () => ({ execute: trialAction.execute, isExecuting: false }),
+  useSafeAction: (
+    _action: unknown,
+    options?: { onSuccess?: (args: unknown) => void },
+  ) => {
+    trialAction.options = options;
+    return { execute: trialAction.execute, isExecuting: false };
+  },
 }));
 
 vi.mock("@/lib/datetime/client", () => ({
-  useDateTime: () => ({ formatDateTime: () => "October 24" }),
+  useDateTime: () => ({ formatDateTime }),
 }));
 
 vi.mock("@/features/billing/components/upgrade-button", () => ({
@@ -57,6 +73,17 @@ describe("HobbyPlanCard", () => {
     await user.click(screen.getByRole("button", { name: "Upgrade" }));
     expect(trialAction.execute).toHaveBeenCalledTimes(1);
     expect(billing.showPayWall).not.toHaveBeenCalled();
+  });
+
+  it("confirms the start with the product's toast, carrying the end date", () => {
+    billing.trialState = "eligible";
+    render(<HobbyPlanCard />);
+    const endsAt = new Date("2026-10-24T12:00:00Z");
+    trialAction.options?.onSuccess?.({ data: { endsAt } });
+    expect(formatDateTime).toHaveBeenCalledWith(endsAt, "monthDay");
+    expect(toast.success).toHaveBeenCalledWith(
+      expect.stringContaining("Your 14 free days of Pro started, free until"),
+    );
   });
 
   it("reads the end date and offers to keep Pro during the trial", () => {

@@ -2,6 +2,7 @@
 
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
+import { toast } from "@rallly/ui/sonner";
 import {
   showPayWall,
   useProMonthlyPrice,
@@ -11,7 +12,7 @@ import {
 import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import { startTrial } from "@/features/billing/trial/actions";
 import { SpaceTierLabel } from "@/features/space/components/space-tier";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import {
@@ -35,7 +36,20 @@ export function HobbyPlanCard({ className }: { className?: string }) {
   const { trialEndsAt } = useTrial();
   const price = useProMonthlyPrice();
   const { formatDateTime } = useDateTime();
-  const start = useSafeAction(startTrial);
+  const { t } = useTranslation();
+  const start = useSafeAction(startTrial, {
+    onSuccess: ({ data }) => {
+      if (data) {
+        toast.success(
+          t("trialStartedToast", {
+            defaultValue:
+              "Your 14 free days of Pro started, free until {date}.",
+            date: formatDateTime(data.endsAt, "monthDay"),
+          }),
+        );
+      }
+    },
+  });
 
   if (trialState === "trial" && trialEndsAt) {
     return (

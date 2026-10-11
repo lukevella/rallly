@@ -1,8 +1,23 @@
+import { toast } from "@rallly/ui/sonner";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@/test/test-utils";
 import { DuplicateDialog } from "./duplicate-dialog";
 
 const billing = vi.hoisted(() => ({ trialState: "eligible" }));
+
+const trialAction = vi.hoisted(() => ({
+  options: undefined as { onSuccess?: (args: unknown) => void } | undefined,
+}));
+
+const formatDateTime = vi.hoisted(() => vi.fn(() => "October 24"));
+
+vi.mock("@rallly/ui/sonner", () => ({
+  toast: { success: vi.fn() },
+}));
+
+vi.mock("@/lib/datetime/client", () => ({
+  useDateTime: () => ({ formatDateTime }),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
@@ -29,7 +44,13 @@ vi.mock("@/features/billing/trial/actions", () => ({
 }));
 
 vi.mock("@/lib/safe-action/client", () => ({
-  useSafeAction: () => ({ executeAsync: vi.fn(), isExecuting: false }),
+  useSafeAction: (
+    _action: unknown,
+    options?: { onSuccess?: (args: unknown) => void },
+  ) => {
+    trialAction.options = options;
+    return { executeAsync: vi.fn(), isExecuting: false };
+  },
 }));
 
 vi.mock("@/features/billing/trial/components/trial-terms", () => ({
@@ -67,6 +88,16 @@ describe("DuplicateDialog", () => {
     expect(
       screen.getByRole("button", { name: /^duplicate$/i }),
     ).toBeInTheDocument();
+  });
+
+  it("confirms the start with the product's toast, carrying the end date", () => {
+    renderDialog();
+    const endsAt = new Date("2026-10-24T12:00:00Z");
+    trialAction.options?.onSuccess?.({ data: { endsAt } });
+    expect(formatDateTime).toHaveBeenCalledWith(endsAt, "monthDay");
+    expect(toast.success).toHaveBeenCalledWith(
+      expect.stringContaining("Your 14 free days of Pro started, free until"),
+    );
   });
 
   it("goes to checkout after the trial, keeping Cancel", () => {

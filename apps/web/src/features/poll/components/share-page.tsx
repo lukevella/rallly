@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import { toast } from "@rallly/ui/sonner";
 import { EyeIcon, SendIcon, TagIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
@@ -29,7 +30,7 @@ import { InviteEmailPreview } from "@/features/poll/components/invite-email-prev
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import { SharePollSettings } from "@/features/poll/components/share-settings";
 import { useUser } from "@/features/user/client";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 
@@ -374,6 +375,8 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
   const poll = usePoll();
   const { user } = useUser();
   const tier = useTier();
+  const { t } = useTranslation();
+  const { formatDateTime } = useDateTime();
   const searchParams = useSearchParams();
   const created = searchParams.has("created");
 
@@ -388,8 +391,17 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
   );
 
   const start = useSafeAction(startTrial, {
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       posthog?.capture("poll_share:trial_start", { poll_id: poll.id });
+      if (data) {
+        toast.success(
+          t("trialStartedToast", {
+            defaultValue:
+              "Your 14 free days of Pro started, free until {date}.",
+            date: formatDateTime(data.endsAt, "monthDay"),
+          }),
+        );
+      }
       setStep(2);
     },
   });

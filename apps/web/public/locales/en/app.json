@@ -966,6 +966,7 @@
   "trialCardSeeDescription": "Invites, tracking, scheduling.",
   "trialCardSeeTitle": "See what Pro does.",
   "trialEndedOn": "Your 14 free days ended on {date}.",
+  "trialStartedToast": "Your 14 free days of Pro started, free until {date}.",
   "trialTermsDuplicate": "14 free days, no card, ends {date}. After that, {price} a month to keep Pro.",
   "trialTermsDuplicateTitle": "Duplicating is part of Pro.",
   "trialTermsSchedule": "14 free days, no card, ends {date}. After that, {price} a month to keep Pro, or scheduling stops. Your poll and answers stay.",

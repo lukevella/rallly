@@ -19,6 +19,7 @@ import {
   FormLabel,
 } from "@rallly/ui/form";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -35,8 +36,8 @@ import {
   EventDate,
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
-import { Trans } from "@/i18n/client";
-import { useDateTimeConfig } from "@/lib/datetime/client";
+import { Trans, useTranslation } from "@/i18n/client";
+import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts } from "@/lib/datetime/format";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
@@ -254,13 +255,27 @@ export function SchedulePollDialog(props: DialogProps) {
   const router = useRouter();
   const trialState = useTrialState();
   const price = useProMonthlyPrice();
+  const { t } = useTranslation();
+  const { formatDateTime } = useDateTime();
   const scheduleEvent = trpc.polls.book.useMutation({
     onSuccess: () => router.refresh(),
   });
   // Scheduling is paid. Before a trial the press starts the 14 free days
   // and then schedules; the terms sit above the buttons. After the trial
   // the primary button goes to checkout.
-  const start = useSafeAction(startTrial);
+  const start = useSafeAction(startTrial, {
+    onSuccess: ({ data }) => {
+      if (data) {
+        toast.success(
+          t("trialStartedToast", {
+            defaultValue:
+              "Your 14 free days of Pro started, free until {date}.",
+            date: formatDateTime(data.endsAt, "monthDay"),
+          }),
+        );
+      }
+    },
+  });
 
   return (
     <Dialog {...props}>

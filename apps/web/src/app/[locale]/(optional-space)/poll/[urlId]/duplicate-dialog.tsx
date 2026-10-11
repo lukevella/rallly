@@ -10,12 +10,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
+import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
 import { useProMonthlyPrice, useTrialState } from "@/features/billing/client";
 import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import { startTrial } from "@/features/billing/trial/actions";
 import { TrialTerms } from "@/features/billing/trial/components/trial-terms";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
+import { useDateTime } from "@/lib/datetime/client";
 import { useSafeAction } from "@/lib/safe-action/client";
 import { trpc } from "@/trpc/client";
 import { DuplicateForm } from "./duplicate-form";
@@ -30,9 +32,23 @@ export function DuplicateDialog({
   const router = useRouter();
   const trialState = useTrialState();
   const price = useProMonthlyPrice();
+  const { t } = useTranslation();
+  const { formatDateTime } = useDateTime();
   // Duplicating is paid. Before a trial the press starts the 14 free days
   // and then duplicates; after the trial the primary button goes to checkout.
-  const start = useSafeAction(startTrial);
+  const start = useSafeAction(startTrial, {
+    onSuccess: ({ data }) => {
+      if (data) {
+        toast.success(
+          t("trialStartedToast", {
+            defaultValue:
+              "Your 14 free days of Pro started, free until {date}.",
+            date: formatDateTime(data.endsAt, "monthDay"),
+          }),
+        );
+      }
+    },
+  });
 
   return (
     <Dialog {...props}>
