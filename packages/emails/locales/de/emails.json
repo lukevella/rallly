@@ -99,7 +99,6 @@
   "resetPassword_subject": "Passwort zurücksetzen",
   "reviewRequest_ask": "Würdest du eine kurze Bewertung auf {siteName} hinterlassen? Es dauert nur ein paar Minuten, und anhand solcher Bewertungen entscheiden sich Leute, die nach einem Terminplanungs-Tool suchen, ob sie einem kleinen, unabhängigen Anbieter wie uns vertrauen.",
   "reviewRequest_button": "Schreibe eine Bewertung auf {siteName}",
-  "reviewRequest_footer": "Du erhältst dies, weil du ein Meeting auf <domain /> geplant hast. Wir werden nur einmal fragen.",
   "reviewRequest_greeting": "Hallo {firstName},",
   "reviewRequest_greetingNoName": "Hallo,",
   "reviewRequest_guidelines": "Die Bewertungen müssen den <a>{siteName} Community-Richtlinien</a> folgen.",
