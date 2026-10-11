@@ -16,6 +16,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
@@ -28,7 +29,9 @@ import {
 } from "@tanstack/react-table";
 import {
   CircleStopIcon,
+  CopyIcon,
   MoreHorizontalIcon,
+  PencilIcon,
   PlayIcon,
   TrashIcon,
   UsersIcon,
@@ -38,9 +41,13 @@ import React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { DataList } from "@/components/data-list";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
+import { Link } from "@/components/link";
 import { ListViewContent } from "@/components/list-view";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
+import { showPayWall, useIsFree } from "@/features/billing/client";
+import { ProBadge } from "@/features/billing/components/pro-badge";
+import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -140,7 +147,10 @@ function PollRowActions({
 }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
+  const isFree = useIsFree();
   const deletePollDialog = useDialog();
+  const duplicateDialog = useDialog();
   // Refresh server components so server-fetched data that depends on poll
   // status (e.g. the status filter counts) stays in sync with the list.
   const refresh = { onSuccess: () => router.refresh() };
@@ -166,6 +176,35 @@ function PollRowActions({
           <MoreHorizontalIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {status === "scheduled" ? null : (
+            <DropdownMenuItem
+              render={
+                <Link
+                  href={`/poll/${id}/edit${isPollAdminEnabled ? "?from=admin" : ""}`}
+                />
+              }
+            >
+              <PencilIcon />
+              <Trans i18nKey="edit" defaults="Edit" />
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem
+            onClick={() => {
+              if (isFree) {
+                showPayWall({
+                  from: "polls-list",
+                  action: "duplicate",
+                  pollId: id,
+                });
+              } else {
+                duplicateDialog.trigger();
+              }
+            }}
+          >
+            <CopyIcon />
+            <Trans i18nKey="duplicate" defaults="Duplicate" />
+            {isFree ? <ProBadge /> : null}
+          </DropdownMenuItem>
           {status === "open" && (
             <DropdownMenuItem
               onClick={() => {
@@ -196,6 +235,7 @@ function PollRowActions({
               <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
             </DropdownMenuItem>
           )}
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"
             onClick={() => deletePollDialog.trigger()}
@@ -207,6 +247,11 @@ function PollRowActions({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <DuplicateDialog
+        pollId={id}
+        pollTitle={title}
+        {...duplicateDialog.dialogProps}
+      />
       <Dialog {...deletePollDialog.dialogProps}>
         <DialogContent>
           <DialogHeader>

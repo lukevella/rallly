@@ -57,7 +57,8 @@ export type PayWallTrigger = {
     | "sidebar"
     | "invite-dialog"
     | "finalize-dialog"
-    | "poll-footer";
+    | "poll-footer"
+    | "polls-list";
   setting?: string;
   action?: string;
   pollId?: string;
