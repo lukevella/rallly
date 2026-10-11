@@ -53,6 +53,12 @@ export function InviteEmailPreview() {
               values={{ hostName, pollTitle: poll.title }}
             />
           </p>
+          <p className="font-medium">
+            <Trans
+              i18nKey="inviteEmailPreviewHeading"
+              defaults="You're invited"
+            />
+          </p>
           <p>
             <Trans
               i18nKey="inviteEmailPreviewBody"
