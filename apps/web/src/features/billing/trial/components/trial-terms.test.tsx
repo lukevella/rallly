@@ -5,6 +5,7 @@ import { TrialTerms } from "./trial-terms";
 const billing = vi.hoisted(() => ({
   trialState: "eligible",
   trialEndsAt: null as Date | null,
+  hasSpace: true,
 }));
 
 vi.mock("@/features/billing/client", () => ({
@@ -13,8 +14,15 @@ vi.mock("@/features/billing/client", () => ({
     trialStartedAt: null,
     trialEndsAt: billing.trialEndsAt,
     subscriptionActive: false,
+    hasSpace: billing.hasSpace,
   }),
+  useIsFree: () => true,
   useProMonthlyPrice: () => "$7",
+}));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/poll/abc",
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 vi.mock("@/lib/datetime/client", () => ({
@@ -53,6 +61,20 @@ describe("TrialTerms", () => {
     expect(
       screen.getByText("Your 14 free days ended on {date}."),
     ).toBeInTheDocument();
+  });
+
+  it("tells a guest to claim the poll, with no trial words", () => {
+    billing.trialState = "none";
+    billing.hasSpace = false;
+    render(<TrialTerms action="schedule" />);
+    expect(screen.getByText("Scheduling is part of Pro.")).toBeInTheDocument();
+    expect(screen.getByText(/to claim this poll/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "login" })).toHaveAttribute(
+      "href",
+      "/login?redirectTo=%2Fpoll%2Fabc",
+    );
+    expect(screen.queryByText(/14 free days/)).not.toBeInTheDocument();
+    billing.hasSpace = true;
   });
 
   it("shows nothing while the trial runs", () => {

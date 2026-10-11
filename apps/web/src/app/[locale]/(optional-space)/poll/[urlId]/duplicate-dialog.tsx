@@ -1,4 +1,5 @@
 "use client";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -12,7 +13,13 @@ import {
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 import { useRouter } from "next/navigation";
-import { useProMonthlyPrice, useTrialState } from "@/features/billing/client";
+import { LoginLink } from "@/components/login-link";
+import {
+  useIsFree,
+  useProMonthlyPrice,
+  useTrial,
+  useTrialState,
+} from "@/features/billing/client";
 import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import { startTrial } from "@/features/billing/trial/actions";
 import { TrialTerms } from "@/features/billing/trial/components/trial-terms";
@@ -31,9 +38,14 @@ export function DuplicateDialog({
   const duplicate = trpc.polls.duplicate.useMutation();
   const router = useRouter();
   const trialState = useTrialState();
+  const { hasSpace } = useTrial();
+  const isFree = useIsFree();
   const price = useProMonthlyPrice();
   const { t } = useTranslation();
   const { formatDateTime } = useDateTime();
+  // A guest organiser has no space: no trial to start. The box says to
+  // claim the poll and the button opens the login page, back to this poll.
+  const isGuestOnFree = !hasSpace && isFree;
   // Duplicating is paid. Before a trial the press starts the 14 free days
   // and then duplicates; after the trial the primary button goes to checkout.
   const start = useSafeAction(startTrial, {
@@ -94,7 +106,11 @@ export function DuplicateDialog({
           <DialogClose render={<Button />}>
             <Trans i18nKey="cancel" />
           </DialogClose>
-          {trialState === "ended" ? (
+          {isGuestOnFree ? (
+            <LoginLink className={buttonVariants({ variant: "primary" })}>
+              <Trans i18nKey="login" defaults="Login" />
+            </LoginLink>
+          ) : trialState === "ended" ? (
             <UpgradeButton size="default">
               <Trans
                 i18nKey="upgradeToProPrice"

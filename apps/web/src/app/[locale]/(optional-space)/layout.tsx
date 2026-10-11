@@ -57,6 +57,7 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
             trialEndsAt={space?.trialEndsAt}
             subscriptionActive={space?.subscriptionActive}
             pricing={payWallPricing}
+            hasSpace={space !== null}
           >
             {children}
             <PayWall pricing={payWallPricing} />

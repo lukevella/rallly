@@ -17,6 +17,9 @@ type TierContextValue = {
   trialEndsAt: Date | null;
   subscriptionActive: boolean;
   pricing: PayWallPricing | null;
+  // A guest organiser has no space, so no plan to upgrade and no trial to
+  // hold; every trial surface must stay silent for them.
+  hasSpace: boolean;
 };
 
 const TierContext = React.createContext<TierContextValue | null>(null);
@@ -27,6 +30,7 @@ export function TierProvider({
   trialEndsAt = null,
   subscriptionActive = false,
   pricing = null,
+  hasSpace = true,
   children,
 }: {
   tier: SpaceTier;
@@ -36,11 +40,19 @@ export function TierProvider({
   // The pay wall's prices by currency, with the currency to show first; null
   // without billing or when Stripe was unreachable.
   pricing?: PayWallPricing | null;
+  hasSpace?: boolean;
   children: React.ReactNode;
 }) {
   const value = React.useMemo(
-    () => ({ tier, trialStartedAt, trialEndsAt, subscriptionActive, pricing }),
-    [tier, trialStartedAt, trialEndsAt, subscriptionActive, pricing],
+    () => ({
+      tier,
+      trialStartedAt,
+      trialEndsAt,
+      subscriptionActive,
+      pricing,
+      hasSpace,
+    }),
+    [tier, trialStartedAt, trialEndsAt, subscriptionActive, pricing, hasSpace],
   );
 
   return <TierContext.Provider value={value}>{children}</TierContext.Provider>;
@@ -67,16 +79,19 @@ export function useTier(): SpaceTier {
  * the tier alone cannot: a running trial is pro without a subscription.
  */
 export function useTrial() {
-  const { trialStartedAt, trialEndsAt, subscriptionActive } = useTierContext();
-  return { trialStartedAt, trialEndsAt, subscriptionActive };
+  const { trialStartedAt, trialEndsAt, subscriptionActive, hasSpace } =
+    useTierContext();
+  return { trialStartedAt, trialEndsAt, subscriptionActive, hasSpace };
 }
 
 /**
  * The one answer every trial surface reads: eligible, trial, paying, ended
- * or none. See getTrialState for the rules.
+ * or none. See getTrialState for the rules. A viewer without a space (a
+ * guest organiser) gets "none": there is no account to hold a trial.
  */
 export function useTrialState() {
-  return getTrialState(useTierContext());
+  const context = useTierContext();
+  return context.hasSpace ? getTrialState(context) : "none";
 }
 
 /**

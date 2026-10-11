@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -25,7 +25,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { DateIconInner } from "@/components/date-icon";
-import { useProMonthlyPrice, useTrialState } from "@/features/billing/client";
+import { LoginLink } from "@/components/login-link";
+import {
+  useIsFree,
+  useProMonthlyPrice,
+  useTrial,
+  useTrialState,
+} from "@/features/billing/client";
 import { UpgradeButton } from "@/features/billing/components/upgrade-button";
 import { startTrial } from "@/features/billing/trial/actions";
 import { TrialTerms } from "@/features/billing/trial/components/trial-terms";
@@ -254,9 +260,15 @@ export function SchedulePollDialog(props: DialogProps) {
   const poll = usePoll();
   const router = useRouter();
   const trialState = useTrialState();
+  const { hasSpace } = useTrial();
+  const isFree = useIsFree();
   const price = useProMonthlyPrice();
   const { t } = useTranslation();
   const { formatDateTime } = useDateTime();
+  // A guest organiser has no space: no trial to start, nothing to pay for
+  // yet. The box says to claim the poll and the button opens the login
+  // page, which brings her back here.
+  const isGuestOnFree = !hasSpace && isFree;
   const scheduleEvent = trpc.polls.book.useMutation({
     onSuccess: () => router.refresh(),
   });
@@ -315,7 +327,11 @@ export function SchedulePollDialog(props: DialogProps) {
           <DialogClose render={<Button />}>
             <Trans i18nKey="cancel" />
           </DialogClose>
-          {trialState === "ended" ? (
+          {isGuestOnFree ? (
+            <LoginLink className={buttonVariants({ variant: "primary" })}>
+              <Trans i18nKey="login" defaults="Login" />
+            </LoginLink>
+          ) : trialState === "ended" ? (
             <UpgradeButton size="default">
               <Trans
                 i18nKey="upgradeToProPrice"

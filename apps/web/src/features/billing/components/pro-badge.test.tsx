@@ -2,10 +2,12 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@/test/test-utils";
 import { TrialProBadge } from "./pro-badge";
 
-const trialState = vi.hoisted(() => ({ value: "eligible" }));
+const trialState = vi.hoisted(() => ({ value: "eligible", hasSpace: true }));
 
 vi.mock("@/features/billing/client", () => ({
   useTrialState: () => trialState.value,
+  useTrial: () => ({ hasSpace: trialState.hasSpace }),
+  useIsFree: () => true,
 }));
 
 describe("TrialProBadge", () => {
@@ -22,6 +24,15 @@ describe("TrialProBadge", () => {
     trialState.value = "paying";
     rerender(<TrialProBadge />);
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("keeps the plain Pro for a guest organiser, who has no space to hold a trial", () => {
+    trialState.value = "none";
+    trialState.hasSpace = false;
+    render(<TrialProBadge />);
+    expect(screen.getByText("Pro")).toBeInTheDocument();
+    expect(screen.queryByText(/14 days/)).not.toBeInTheDocument();
+    trialState.hasSpace = true;
   });
 
   it("reads Pro once the trial has ended", () => {

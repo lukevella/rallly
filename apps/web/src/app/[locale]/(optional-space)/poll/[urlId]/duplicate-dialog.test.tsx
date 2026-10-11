@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@/test/test-utils";
 import { DuplicateDialog } from "./duplicate-dialog";
 
-const billing = vi.hoisted(() => ({ trialState: "eligible" }));
+const billing = vi.hoisted(() => ({ trialState: "eligible", hasSpace: true }));
 
 const trialAction = vi.hoisted(() => ({
   options: undefined as { onSuccess?: (args: unknown) => void } | undefined,
@@ -36,6 +36,8 @@ vi.mock("@/trpc/client", () => ({
 
 vi.mock("@/features/billing/client", () => ({
   useTrialState: () => billing.trialState,
+  useTrial: () => ({ hasSpace: billing.hasSpace }),
+  useIsFree: () => true,
   useProMonthlyPrice: () => "$7",
 }));
 
@@ -72,6 +74,22 @@ function renderDialog() {
 describe("DuplicateDialog", () => {
   beforeEach(() => {
     billing.trialState = "eligible";
+    billing.hasSpace = true;
+  });
+
+  it("offers a guest the login back to this poll, never the trial", () => {
+    billing.trialState = "none";
+    billing.hasSpace = false;
+    renderDialog();
+    expect(screen.getByRole("link", { name: /login/i })).toHaveAttribute(
+      "href",
+      "/login?redirectTo=%2Fpoll%2Fabc",
+    );
+    expect(screen.queryByText(/14 free days/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /^duplicate/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
   });
 
   it("names the trial in the button before one", () => {
