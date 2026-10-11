@@ -38,6 +38,16 @@ import {
   getPolls,
   hasPollAdminAccess,
 } from "@/features/poll/data";
+import {
+  getActivePollUsage,
+  listActivePolls,
+} from "@/features/poll/limit/data";
+import {
+  ActivePollLimitError,
+  assertActivePollCapacity,
+  checkActivePollCapacity,
+} from "@/features/poll/limit/mutations";
+import { getActivePollTier } from "@/features/poll/limit/utils";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
   getFinalizePlanGate,
@@ -176,8 +186,38 @@ function getPollTier({
   return space ? resolveSpaceTier(space.tier) : activeSpaceTier;
 }
 
+// A guest's polls have no space; a registered organizer's count in the
+// space they create into, the active one.
+async function getActivePollScope(user: { id: string; isGuest: boolean }) {
+  const space = user.isGuest ? null : await getActiveSpaceForUser(user.id);
+
+  if (!user.isGuest && !space) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "No active space found",
+    });
+  }
+
+  return {
+    userId: user.id,
+    spaceId: space?.id ?? null,
+    tier: getActivePollTier(space?.tier ?? null),
+  };
+}
+
 export const polls = router({
   invites,
+  activePollUsage: possiblyPublicProcedure
+    .use(requireUserMiddleware)
+    .query(async ({ ctx }) => {
+      return getActivePollUsage(await getActivePollScope(ctx.user));
+    }),
+  activePolls: possiblyPublicProcedure
+    .use(requireUserMiddleware)
+    .query(async ({ ctx }) => {
+      const { userId, spaceId } = await getActivePollScope(ctx.user);
+      return listActivePolls({ userId, spaceId });
+    }),
   infiniteChronological: spaceProcedure
     .input(
       z.object({
@@ -335,50 +375,69 @@ export const polls = router({
 
       const kind = isTimePoll ? "time" : "date";
 
-      const poll = await prisma.$transaction(async (tx) => {
-        const poll = await tx.poll.create({
-          include: {
-            options: {
-              select: {
-                id: true,
-              },
-            },
-          },
-          data: {
-            id: pollId,
-            title,
-            timeZone,
-            location,
-            conferencing,
-            description,
+      const poll = await prisma
+        .$transaction(async (tx) => {
+          await assertActivePollCapacity(tx, {
             userId: ctx.user.id,
-            kind,
-            options: {
-              createMany: {
-                data: optionsData,
+            spaceId: spaceId ?? null,
+          });
+
+          const poll = await tx.poll.create({
+            include: {
+              options: {
+                select: {
+                  id: true,
+                },
               },
             },
-            hideParticipants: input.hideParticipants,
-            disableComments: input.disableComments,
-            allowTentativeVotes: input.allowTentativeVotes,
-            hideScores: input.hideScores,
-            requireParticipantEmail: input.requireParticipantEmail,
-            spaceId,
-          },
+            data: {
+              id: pollId,
+              title,
+              timeZone,
+              location,
+              conferencing,
+              description,
+              userId: ctx.user.id,
+              kind,
+              options: {
+                createMany: {
+                  data: optionsData,
+                },
+              },
+              hideParticipants: input.hideParticipants,
+              disableComments: input.disableComments,
+              allowTentativeVotes: input.allowTentativeVotes,
+              hideScores: input.hideScores,
+              requireParticipantEmail: input.requireParticipantEmail,
+              spaceId,
+            },
+          });
+
+          await recordPollActivities(tx, [
+            {
+              pollId,
+              type: "poll_created",
+              userId: ctx.user.id,
+              payload: { title },
+            },
+          ]);
+          scheduleWebhookDispatch({ pollId: pollId });
+
+          return poll;
+        })
+        .catch((error) => {
+          if (error instanceof ActivePollLimitError) {
+            return null;
+          }
+          throw error;
         });
 
-        await recordPollActivities(tx, [
-          {
-            pollId,
-            type: "poll_created",
-            userId: ctx.user.id,
-            payload: { title },
-          },
-        ]);
-        scheduleWebhookDispatch({ pollId: pollId });
-
-        return poll;
-      });
+      if (!poll) {
+        return {
+          ok: false as const,
+          error: { code: "ACTIVE_POLL_LIMIT_REACHED" as const },
+        };
+      }
 
       const pollLink = absoluteUrl(`/poll/${pollId}`);
 
@@ -602,6 +661,10 @@ export const polls = router({
             disableComments: true,
             allowTentativeVotes: true,
             requireParticipantEmail: true,
+            status: true,
+            closedReason: true,
+            userId: true,
+            spaceId: true,
           },
         });
 
@@ -635,9 +698,21 @@ export const polls = router({
         // Reopen an auto-closed poll when new future dates are added. Manually
         // closed polls stay closed — that was the organizer's decision. The
         // transition is conditional so concurrent modifies can't both record
-        // a poll_reopened event.
+        // a poll_reopened event. An organizer at the active poll limit keeps
+        // the edit but not the reopen; reopening by hand explains the limit.
         let reopened = false;
-        if (newOptions.some(optionEndsInFuture)) {
+        if (
+          newOptions.some(optionEndsInFuture) &&
+          prior.status === "closed" &&
+          prior.closedReason === "auto" &&
+          prior.userId &&
+          (
+            await checkActivePollCapacity(tx, {
+              userId: prior.userId,
+              spaceId: prior.spaceId,
+            })
+          ).ok
+        ) {
           const { count } = await tx.poll.updateMany({
             where: { id: pollId, status: "closed", closedReason: "auto" },
             data: { status: "open", closedReason: null },
@@ -1534,7 +1609,28 @@ export const polls = router({
         });
       }
 
-      await prisma.$transaction(async (tx) => {
+      const reopened = await prisma.$transaction(async (tx) => {
+        // The slot belongs to the poll's organizer, who may not be the
+        // member reopening it.
+        const target = await tx.poll.findUnique({
+          where: { id: input.pollId },
+          select: { status: true, userId: true, spaceId: true },
+        });
+
+        if (
+          target?.userId &&
+          target.status !== "open" &&
+          target.status !== "scheduled"
+        ) {
+          const capacity = await checkActivePollCapacity(tx, {
+            userId: target.userId,
+            spaceId: target.spaceId,
+          });
+          if (!capacity.ok) {
+            return false;
+          }
+        }
+
         // Conditional transition: only the call that actually flips the
         // status appends a lifecycle event, so repeated or concurrent calls
         // can't record a reopen that didn't happen. Scheduling is final: the
@@ -1561,7 +1657,7 @@ export const polls = router({
               message: "A scheduled poll cannot be reopened",
             });
           }
-          return;
+          return true;
         }
 
         const poll = await tx.poll.findUnique({
@@ -1588,7 +1684,15 @@ export const polls = router({
           },
         ]);
         scheduleWebhookDispatch({ pollId: input.pollId });
+        return true;
       });
+
+      if (!reopened) {
+        return {
+          ok: false as const,
+          error: { code: "ACTIVE_POLL_LIMIT_REACHED" as const },
+        };
+      }
 
       track(ctx.user, {
         event: "poll_reopen",
@@ -1596,6 +1700,8 @@ export const polls = router({
           poll: input.pollId,
         },
       });
+
+      return { ok: true as const };
     }),
   close: possiblyPublicProcedure
     .input(
@@ -1712,6 +1818,14 @@ export const polls = router({
       }
 
       const newPoll = await prisma.$transaction(async (tx) => {
+        const capacity = await checkActivePollCapacity(tx, {
+          userId: ctx.user.id,
+          spaceId: poll.spaceId,
+        });
+        if (!capacity.ok) {
+          return null;
+        }
+
         const newPoll = await tx.poll.create({
           select: {
             id: true,
@@ -1749,6 +1863,13 @@ export const polls = router({
         return newPoll;
       });
 
-      return newPoll;
+      if (!newPoll) {
+        return {
+          ok: false as const,
+          error: { code: "ACTIVE_POLL_LIMIT_REACHED" as const },
+        };
+      }
+
+      return { ok: true as const, data: newPoll };
     }),
 });
