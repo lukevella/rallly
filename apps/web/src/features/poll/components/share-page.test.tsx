@@ -156,8 +156,7 @@ describe("SharePage", () => {
     expect(screen.getByText("sharing settings")).toBeInTheDocument();
   });
 
-  it("is sharing alone on a later visit through the Share button, on both routes", async () => {
-    const user = userEvent.setup();
+  it("is sharing alone on a later visit through the Share button, on both routes", () => {
     visit.created = false;
     billing.tier = "pro";
     billing.trialState = "trial";
@@ -169,11 +168,24 @@ describe("SharePage", () => {
     billing.tier = "hobby";
     billing.trialState = "eligible";
     render(<SharePage hasInvites={false} />);
-    expect(screen.getByText("How should it reach people?")).toBeInTheDocument();
-    await user.click(pickRoute(0));
-    await user.click(screen.getByRole("button", { name: "Continue" }));
     expect(screen.getByText("invite link")).toBeInTheDocument();
     expect(screen.queryByText("sharing settings")).not.toBeInTheDocument();
+  });
+
+  it("asks the choice on the creation visit only: a later visit on an eligible free space opens on the Free screen with its link", async () => {
+    const user = userEvent.setup();
+    visit.created = false;
+    render(<SharePage hasInvites={false} />);
+    expect(screen.queryByRole("radio")).not.toBeInTheDocument();
+    expect(screen.getByText("invite link")).toBeInTheDocument();
+    // The link still crosses to Pro, with the terms on the card first.
+    await user.click(
+      screen.getByRole("button", { name: "Try Pro free for 14 days instead" }),
+    );
+    expect(pickRoute(1)).toBeChecked();
+    expect(
+      screen.getByRole("button", { name: "Continue and start 14 free days" }),
+    ).toBeInTheDocument();
   });
 
   it("asks how the poll should reach people, with no button until a card is picked", () => {

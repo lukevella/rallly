@@ -383,12 +383,13 @@ function FreeShareScreen({
 /**
  * The share page in two steps. Step one is the choice between the two
  * routes and, for Pro, the activation: Continue starts the 14 free days.
- * Step two is the share screen for the route. The page opens on step two
- * whenever the space is Pro (trial, paying or otherwise) or the poll has
- * invites; once on the Pro screen there is no way back, while the Free
- * screen can still cross to Pro. The sharing settings show on the creation
- * visit only (the one Create sends her to); a later visit through the
- * Share button is sharing alone. A closed or scheduled poll never offers
+ * Step two is the share screen for the route. The choice is asked on the
+ * creation visit only (the one Create sends her to); every later visit
+ * opens on step two of the current route: Pro when the space is Pro
+ * (trial, paying or otherwise) or the poll has invites, Free otherwise.
+ * Once on the Pro screen there is no way back, while the Free screen can
+ * still cross to Pro. The sharing settings show on the creation visit
+ * only; a later visit is sharing alone. A closed or scheduled poll never offers
  * the trial: nothing can be sent on it, so it opens on the share screen of
  * its current route and the Free screen does not cross to Pro.
  */
@@ -403,9 +404,10 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
 
   const isGuest = !user || user.isGuest;
   const isOpenPoll = poll.status === "open";
-  // A guest cannot hold a trial, and a closed poll has nothing to send:
-  // neither is asked the question.
-  const opensOnShare = tier === "pro" || hasInvites || isGuest || !isOpenPoll;
+  // The question is asked once, on the creation visit. A guest cannot hold
+  // a trial and a closed poll has nothing to send, so neither is asked.
+  const opensOnShare =
+    !created || tier === "pro" || hasInvites || isGuest || !isOpenPoll;
   const currentRoute: Route = tier === "pro" || hasInvites ? "pro" : "free";
 
   const [step, setStep] = React.useState<1 | 2>(opensOnShare ? 2 : 1);
