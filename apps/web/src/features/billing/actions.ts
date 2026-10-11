@@ -76,8 +76,10 @@ export const upgradeToProAction = authActionClient
       });
     }
 
-    if (space.tier === "pro") {
-      // Already subscribed; the billing page has every plan action.
+    // Already paying; the billing page has every plan action. The tier is
+    // not the test: a space on its free trial is pro without a subscription
+    // and must be able to check out.
+    if (space.subscriptionActive) {
       redirect("/settings/billing");
     }
 
