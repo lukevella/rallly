@@ -1,5 +1,6 @@
 import type { PollConferencing } from "@/features/conferencing/schema";
 import type { VoteType } from "@/features/poll/constants";
+import type { toPollListItems } from "@/features/poll/data";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import type { SpaceTier } from "@/features/space/schema";
 
@@ -67,3 +68,6 @@ export type PollComment = {
   userId: string | null;
   createdAt: Date;
 };
+
+/** A row of the poll lists: the polls page and the open poll limit dialog */
+export type PollListItem = Awaited<ReturnType<typeof toPollListItems>>[number];

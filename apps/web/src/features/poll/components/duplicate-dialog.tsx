@@ -47,7 +47,9 @@ export function DuplicateDialog({
               { pollId, newTitle: data.title },
               {
                 onSuccess: async (res) => {
-                  router.push(`/poll/${res.id}`);
+                  if (res.ok) {
+                    router.push(`/poll/${res.data.id}`);
+                  }
                 },
               },
             );

@@ -230,7 +230,7 @@ export const CreatePoll = ({
               setCreatedPollId(res.data.id);
               setFlash(SHARE_POLL_FLASH_KEY, res.data.id);
               router.push(`/poll/${res.data.id}`);
-            } else {
+            } else if (res.error.code === "INAPPROPRIATE_CONTENT") {
               toast.error(
                 t("inappropriateContent", {
                   defaultValue: "Inappropriate content",

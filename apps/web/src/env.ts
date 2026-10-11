@@ -185,6 +185,13 @@ export const env = createEnv({
      * @default "true"
      */
     EMAIL_QUEUE_SCHEDULER_ENABLED: z.enum(["true", "false"]).default("true"),
+    /**
+     * Cap the number of open polls an organizer can have at once by tier.
+     * Only takes effect where billing is enabled. Off until the limit dialog
+     * ships; turning it back off is the rollback.
+     * @default "false"
+     */
+    OPEN_POLL_LIMIT_ENABLED: z.enum(["true", "false"]).default("false"),
 
     /**
      * Take the app offline for scheduled maintenance. Page traffic is
@@ -341,6 +348,7 @@ export const env = createEnv({
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
     EMAIL_QUEUE_SCHEDULER_ENABLED: process.env.EMAIL_QUEUE_SCHEDULER_ENABLED,
+    OPEN_POLL_LIMIT_ENABLED: process.env.OPEN_POLL_LIMIT_ENABLED,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     MAINTENANCE_BYPASS_TOKEN: process.env.MAINTENANCE_BYPASS_TOKEN,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,

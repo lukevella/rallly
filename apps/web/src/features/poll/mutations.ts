@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { parsePollConferencing } from "@/features/conferencing/data";
 import type { PollConferencing } from "@/features/conferencing/schema";
+import { assertOpenPollCapacity } from "@/features/poll/limit/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
@@ -108,6 +109,8 @@ export const createPoll = async ({
   const kind = options.some((o) => o.duration > 0) ? "time" : "date";
 
   const poll = await prisma.$transaction(async (tx) => {
+    await assertOpenPollCapacity(tx, { userId, spaceId });
+
     const poll = await tx.poll.create({
       data: {
         id: nanoid(),
