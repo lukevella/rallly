@@ -20,19 +20,25 @@ import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
   const poll = usePoll();
+  const pathname = usePathname();
+  const sharePath = `/poll/${poll.id}/share`;
   return (
     <div className="flex items-center gap-x-2">
       <NotificationToggle />
       <ManagePoll />
-      <Link
-        href={`/poll/${poll.id}/share`}
-        className={buttonVariants({ variant: "primary" })}
-      >
-        <Share2Icon data-icon="inline-start" />
-        <span className="sr-only sm:not-sr-only">
-          <Trans i18nKey="share" defaults="Share" />
-        </span>
-      </Link>
+      {/* The button opens the share page, so on that page it has nothing
+          to do and is left out; the breadcrumb is the way back. */}
+      {pathname === sharePath ? null : (
+        <Link
+          href={sharePath}
+          className={buttonVariants({ variant: "primary" })}
+        >
+          <Share2Icon data-icon="inline-start" />
+          <span className="sr-only sm:not-sr-only">
+            <Trans i18nKey="share" defaults="Share" />
+          </span>
+        </Link>
+      )}
     </div>
   );
 };
