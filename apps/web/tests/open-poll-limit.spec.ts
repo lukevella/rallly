@@ -65,7 +65,7 @@ async function makePoll(page: Page) {
   const body = await res.json();
   return body.result.data.json as
     | { ok: true; data: { id: string } }
-    | { ok: false; error: { code: string; usage: unknown; polls: unknown[] } };
+    | { ok: false; error: { code: string; usage: unknown } };
 }
 
 async function reopenPoll(page: Page, pollId: string) {
@@ -75,7 +75,7 @@ async function reopenPoll(page: Page, pollId: string) {
   expect(res.ok()).toBe(true);
   return (await res.json()).result.data.json as
     | { ok: true }
-    | { ok: false; error: { code: string; usage: unknown; polls: unknown[] } };
+    | { ok: false; error: { code: string; usage: unknown } };
 }
 
 function countOpen(userId: string) {
@@ -106,15 +106,13 @@ test.describe("free organizer", () => {
   });
 
   test("is refused a fourth open poll", async () => {
-    const result = await makePoll(page);
-    expect(result).toMatchObject({
+    expect(await makePoll(page)).toMatchObject({
       ok: false,
       error: {
         code: "OPEN_POLL_LIMIT_REACHED",
         usage: { tier: "hobby", limit: 3, openCount: 3 },
       },
     });
-    expect(!result.ok && result.error.polls).toHaveLength(3);
     expect(await countOpen(userId)).toBe(3);
   });
 

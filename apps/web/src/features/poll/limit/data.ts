@@ -2,13 +2,8 @@ import "server-only";
 
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { pollListItemSelect, toPollListItems } from "@/features/poll/data";
 import { isOpenPollLimitEnabled } from "./constants";
-import type {
-  OpenPollLimitDetails,
-  OpenPollTier,
-  OpenPollUsage,
-} from "./types";
+import type { OpenPollTier, OpenPollUsage } from "./types";
 import { getOpenPollLimit } from "./utils";
 
 // The organizer is the tenant: the space only narrows which of their polls
@@ -44,21 +39,4 @@ export async function getOpenPollUsage({
     limit: getOpenPollLimit({ tier, enabled: isOpenPollLimitEnabled }),
     openCount: await countOpenPolls(scope),
   };
-}
-
-export async function listOpenPolls(scope: OpenPollScope) {
-  const polls = await prisma.poll.findMany({
-    where: openPollsWhere(scope),
-    select: pollListItemSelect,
-    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-    take: 50,
-  });
-  return toPollListItems(polls);
-}
-
-export async function getOpenPollLimitDetails({
-  usage,
-  ...scope
-}: OpenPollScope & { usage: OpenPollUsage }): Promise<OpenPollLimitDetails> {
-  return { usage, polls: await listOpenPolls(scope) };
 }
