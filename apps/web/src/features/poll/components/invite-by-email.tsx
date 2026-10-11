@@ -22,8 +22,6 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { LoginLink } from "@/components/login-link";
-import { RegisterLink } from "@/components/register-link";
 import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
@@ -215,158 +213,133 @@ export function InviteByEmail({
 
   return (
     <div className="min-w-0">
-      {isGuest ? (
-        <div className="space-y-2 rounded-lg bg-muted p-3 text-sm">
-          <p className="text-muted-foreground">
-            <Trans
-              i18nKey="shareDialogGuestPrompt"
-              defaults="Create an account to invite people by email. Your invites and their responses stay attached to your account instead of this browser."
-            />
-          </p>
-          <div className="flex gap-2">
-            <RegisterLink className="underline hover:text-foreground">
-              <Trans i18nKey="createAnAccount" defaults="Create an account" />
-            </RegisterLink>
-            <LoginLink className="underline hover:text-foreground">
-              <Trans i18nKey="login" defaults="Login" />
-            </LoginLink>
-          </div>
-        </div>
-      ) : (
-        <>
-          <form
-            onSubmit={form.handleSubmit(onValid, onInvalid)}
-            className="flex min-w-0 gap-2"
-            noValidate
-          >
-            <label htmlFor="share-dialog-email" className="sr-only">
-              <Trans i18nKey="emailAddress" defaults="Email address" />
-            </label>
-            <InputGroup className="min-w-0 flex-1">
-              <InputGroupAddon>
-                <MailIcon />
-              </InputGroupAddon>
-              <InputGroupInput
-                {...form.register("email")}
-                id="share-dialog-email"
-                type="email"
-                inputMode="email"
-                autoComplete="off"
-                {...passwordManagerIgnoreProps}
-                placeholder="jessie.smith@example.com"
-                disabled={!isOpen}
-                aria-invalid={form.formState.errors.email ? true : undefined}
-                aria-describedby={
-                  isOpen ? undefined : "share-dialog-closed-reason"
-                }
-              />
-            </InputGroup>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={!isOpen}
-              aria-describedby={
-                isOpen ? undefined : "share-dialog-closed-reason"
-              }
-            >
-              <Trans i18nKey="shareDialogSendInvite" defaults="Send invite" />
-              {isFree ? (
-                <ProBadge className="ml-1.5 bg-primary-foreground/20 text-primary-foreground" />
-              ) : null}
-            </Button>
-          </form>
-          {!isOpen ? (
-            <p
-              id="share-dialog-closed-reason"
-              className="mt-3 text-muted-foreground text-sm"
-            >
-              <Trans
-                i18nKey="shareDialogPollClosed"
-                defaults="Reopen the poll to send invites"
-              />
-            </p>
+      <form
+        onSubmit={form.handleSubmit(onValid, onInvalid)}
+        className="flex min-w-0 gap-2"
+        noValidate
+      >
+        <label htmlFor="share-dialog-email" className="sr-only">
+          <Trans i18nKey="emailAddress" defaults="Email address" />
+        </label>
+        <InputGroup className="min-w-0 flex-1">
+          <InputGroupAddon>
+            <MailIcon />
+          </InputGroupAddon>
+          <InputGroupInput
+            {...form.register("email")}
+            id="share-dialog-email"
+            type="email"
+            inputMode="email"
+            autoComplete="off"
+            {...passwordManagerIgnoreProps}
+            placeholder="jessie.smith@example.com"
+            disabled={!isOpen}
+            aria-invalid={form.formState.errors.email ? true : undefined}
+            aria-describedby={isOpen ? undefined : "share-dialog-closed-reason"}
+          />
+        </InputGroup>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!isOpen}
+          aria-describedby={isOpen ? undefined : "share-dialog-closed-reason"}
+        >
+          <Trans i18nKey="shareDialogSendInvite" defaults="Send invite" />
+          {isFree ? (
+            <ProBadge className="ml-1.5 bg-primary-foreground/20 text-primary-foreground" />
           ) : null}
+        </Button>
+      </form>
+      {!isOpen ? (
+        <p
+          id="share-dialog-closed-reason"
+          className="mt-3 text-muted-foreground text-sm"
+        >
+          <Trans
+            i18nKey="shareDialogPollClosed"
+            defaults="Reopen the poll to send invites"
+          />
+        </p>
+      ) : null}
 
-          <AnimatedHeight className="mt-3">
-            {invitesQuery.isPending ? (
-              <div className="relative mt-2">
-                <InviteeListPreview />
-                <output
-                  aria-label={t("loading", { defaultValue: "Loading..." })}
-                  className="absolute inset-0 grid place-items-center backdrop-blur-[2px]"
+      <AnimatedHeight className="mt-3">
+        {invitesQuery.isLoading ? (
+          <div className="relative mt-2">
+            <InviteeListPreview />
+            <output
+              aria-label={t("loading", { defaultValue: "Loading..." })}
+              className="absolute inset-0 grid place-items-center backdrop-blur-[2px]"
+            >
+              <Spinner />
+            </output>
+          </div>
+        ) : invitesQuery.isError ? (
+          <div className="relative mt-2">
+            <InviteeListPreview />
+            <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
+              <EmptyStateIcon>
+                <MailIcon />
+              </EmptyStateIcon>
+              <EmptyStateTitle>
+                <Trans
+                  i18nKey="shareDialogInvitesLoadFailed"
+                  defaults="Couldn't load invites"
+                />
+              </EmptyStateTitle>
+              <EmptyStateFooter className="mt-3">
+                <Button
+                  size="sm"
+                  onClick={() => invitesQuery.refetch()}
+                  disabled={invitesQuery.isFetching}
                 >
-                  <Spinner />
-                </output>
-              </div>
-            ) : invitesQuery.isError ? (
-              <div className="relative mt-2">
-                <InviteeListPreview />
-                <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
-                  <EmptyStateIcon>
-                    <MailIcon />
-                  </EmptyStateIcon>
-                  <EmptyStateTitle>
-                    <Trans
-                      i18nKey="shareDialogInvitesLoadFailed"
-                      defaults="Couldn't load invites"
-                    />
-                  </EmptyStateTitle>
-                  <EmptyStateFooter className="mt-3">
-                    <Button
-                      size="sm"
-                      onClick={() => invitesQuery.refetch()}
-                      disabled={invitesQuery.isFetching}
-                    >
-                      <Trans i18nKey="tryAgain" defaults="Try again" />
-                    </Button>
-                  </EmptyStateFooter>
-                </EmptyState>
-              </div>
-            ) : rows.length === 0 ? (
-              <div className="relative mt-2">
-                <InviteeListPreview />
-                <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
-                  <EmptyStateIcon>
-                    <MailIcon />
-                  </EmptyStateIcon>
-                  <EmptyStateTitle>
-                    <Trans
-                      i18nKey="shareDialogNoInvitesTitle"
-                      defaults="No one invited yet"
-                    />
-                  </EmptyStateTitle>
-                  <EmptyStateDescription>
-                    <Trans
-                      i18nKey="shareDialogNoInvitesDescription"
-                      defaults="Enter an address above to send the first invite."
-                    />
-                  </EmptyStateDescription>
-                </EmptyState>
-              </div>
-            ) : (
-              <>
-                <h4 id="share-dialog-invited-heading" className="sr-only">
-                  {countLabel(rows.length)}
-                </h4>
-                <ul
-                  aria-labelledby="share-dialog-invited-heading"
-                  className="-mx-1.5 max-h-72 min-h-0 overflow-y-auto px-1.5"
-                >
-                  {rows.map((row) => (
-                    <InviteeRow
-                      key={row.id}
-                      email={row.email}
-                      status={row.status}
-                      inviteId={row.inviteUrl ? row.id : undefined}
-                      inviteUrl={row.inviteUrl}
-                    />
-                  ))}
-                </ul>
-              </>
-            )}
-          </AnimatedHeight>
-        </>
-      )}
+                  <Trans i18nKey="tryAgain" defaults="Try again" />
+                </Button>
+              </EmptyStateFooter>
+            </EmptyState>
+          </div>
+        ) : rows.length === 0 ? (
+          <div className="relative mt-2">
+            <InviteeListPreview />
+            <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
+              <EmptyStateIcon>
+                <MailIcon />
+              </EmptyStateIcon>
+              <EmptyStateTitle>
+                <Trans
+                  i18nKey="shareDialogNoInvitesTitle"
+                  defaults="No one invited yet"
+                />
+              </EmptyStateTitle>
+              <EmptyStateDescription>
+                <Trans
+                  i18nKey="shareDialogNoInvitesDescription"
+                  defaults="Enter an address above to send the first invite."
+                />
+              </EmptyStateDescription>
+            </EmptyState>
+          </div>
+        ) : (
+          <>
+            <h4 id="share-dialog-invited-heading" className="sr-only">
+              {countLabel(rows.length)}
+            </h4>
+            <ul
+              aria-labelledby="share-dialog-invited-heading"
+              className="-mx-1.5 max-h-72 min-h-0 overflow-y-auto px-1.5"
+            >
+              {rows.map((row) => (
+                <InviteeRow
+                  key={row.id}
+                  email={row.email}
+                  status={row.status}
+                  inviteId={row.inviteUrl ? row.id : undefined}
+                  inviteUrl={row.inviteUrl}
+                />
+              ))}
+            </ul>
+          </>
+        )}
+      </AnimatedHeight>
 
       <p className="sr-only" aria-live="polite">
         {announcement}
