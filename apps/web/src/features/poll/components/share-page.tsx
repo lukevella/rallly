@@ -139,7 +139,9 @@ function ChooseRoute({
       <CardContent className="space-y-4">
         <RadioGroup
           aria-labelledby="share-route-title"
-          value={route ?? undefined}
+          // null rather than undefined: the group is controlled from the first
+          // render, with nothing picked, so Base UI never sees it switch modes.
+          value={route}
           onValueChange={(value) => onRouteChange(value as Route)}
           className="grid gap-3 sm:grid-cols-2"
         >
