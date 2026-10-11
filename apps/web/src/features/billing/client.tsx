@@ -16,6 +16,7 @@ type TierContextValue = {
   trialStartedAt: Date | null;
   trialEndsAt: Date | null;
   subscriptionActive: boolean;
+  pricing: PayWallPricing | null;
 };
 
 const TierContext = React.createContext<TierContextValue | null>(null);
@@ -25,17 +26,21 @@ export function TierProvider({
   trialStartedAt = null,
   trialEndsAt = null,
   subscriptionActive = false,
+  pricing = null,
   children,
 }: {
   tier: SpaceTier;
   trialStartedAt?: Date | null;
   trialEndsAt?: Date | null;
   subscriptionActive?: boolean;
+  // The pay wall's prices by currency, with the currency to show first; null
+  // without billing or when Stripe was unreachable.
+  pricing?: PayWallPricing | null;
   children: React.ReactNode;
 }) {
   const value = React.useMemo(
-    () => ({ tier, trialStartedAt, trialEndsAt, subscriptionActive }),
-    [tier, trialStartedAt, trialEndsAt, subscriptionActive],
+    () => ({ tier, trialStartedAt, trialEndsAt, subscriptionActive, pricing }),
+    [tier, trialStartedAt, trialEndsAt, subscriptionActive, pricing],
   );
 
   return <TierContext.Provider value={value}>{children}</TierContext.Provider>;
@@ -75,18 +80,18 @@ export function useTrialState() {
 }
 
 /**
- * Pro's monthly list price in the viewer's number format ("$7"), from the
- * shared pricing data, so copy such as "{price} a month" never hard-types
- * the amount. The pay wall shows the per-currency prices; this is the one
- * line of copy outside it.
+ * Pro's monthly price in the viewer's currency and number format ("$7",
+ * "7 €"), from the same prices the pay wall shows: the currency the visitor
+ * picked or was detected with, else the built-in list price. Copy such as
+ * "{price} a month" never hard-types the amount.
  */
 export function useProMonthlyPrice() {
   const { locale } = useDateTimeConfig();
-  return formatMinorUnitAmount({
-    amount: pricingData.monthly.amount,
-    currency: pricingData.monthly.currency,
-    locale,
-  });
+  const { pricing } = useTierContext();
+  const currency = pricing?.defaultCurrency ?? pricingData.monthly.currency;
+  const amount =
+    pricing?.prices[currency]?.monthly ?? pricingData.monthly.amount;
+  return formatMinorUnitAmount({ amount, currency, locale });
 }
 
 export function useIsFree() {
