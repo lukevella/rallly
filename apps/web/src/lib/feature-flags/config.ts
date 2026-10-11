@@ -5,7 +5,7 @@ import { isCalendarsEnabled } from "@/features/calendars/constants";
 import { isConferencingEnabled } from "@/features/conferencing/constants";
 import { isEventTypesEnabled } from "@/features/event-types/constants";
 import { isFeedbackEnabled } from "@/features/feedback/constants";
-import { isActivePollLimitEnabled } from "@/features/poll/limit/constants";
+import { isOpenPollLimitEnabled } from "@/features/poll/limit/constants";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { isReviewRequestEnabled } from "@/features/review-request/constants";
 import { isSelfHosted } from "@/lib/constants";
@@ -52,5 +52,5 @@ export const featureFlagConfig: FeatureFlagConfig = {
   reviewRequests: isReviewRequestEnabled,
   // Caps open polls per organizer by tier. Billing only: the ladder sells
   // Pro, and without billing every space already has every paid feature.
-  activePollLimit: isActivePollLimitEnabled,
+  openPollLimit: isOpenPollLimitEnabled,
 };

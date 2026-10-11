@@ -1,30 +1,30 @@
 import { resolveSpaceTier } from "@/features/billing/utils";
 import type { SpaceTier } from "@/features/space/schema";
-import { ACTIVE_POLL_LIMITS } from "./constants";
-import type { ActivePollTier, ActivePollUsage } from "./types";
+import { OPEN_POLL_LIMITS } from "./constants";
+import type { OpenPollTier, OpenPollUsage } from "./types";
 
 /**
  * A poll outside any space belongs to a guest: registered organizers always
  * create into a space, and guest polls only gain one when adopted on sign up.
  */
-export function getActivePollTier(spaceTier: SpaceTier | null): ActivePollTier {
+export function getOpenPollTier(spaceTier: SpaceTier | null): OpenPollTier {
   return spaceTier ? resolveSpaceTier(spaceTier) : "guest";
 }
 
-export function getActivePollLimit({
+export function getOpenPollLimit({
   tier,
   enabled,
 }: {
-  tier: ActivePollTier;
+  tier: OpenPollTier;
   enabled: boolean;
 }) {
-  return enabled ? ACTIVE_POLL_LIMITS[tier] : null;
+  return enabled ? OPEN_POLL_LIMITS[tier] : null;
 }
 
 /**
  * Adopting guest polls on sign up is never blocked, so an organizer can be
  * over the limit, not just at it.
  */
-export function isAtActivePollLimit({ limit, activeCount }: ActivePollUsage) {
-  return limit !== null && activeCount >= limit;
+export function isAtOpenPollLimit({ limit, openCount }: OpenPollUsage) {
+  return limit !== null && openCount >= limit;
 }

@@ -327,6 +327,70 @@ type PollFilters = {
   scope: SpaceContentScope;
 };
 
+// The row the poll lists render: the polls page and the open poll limit
+// dialog read the same shape.
+export const pollListItemSelect = {
+  id: true,
+  title: true,
+  status: true,
+  closedReason: true,
+  timeZone: true,
+  createdAt: true,
+  updatedAt: true,
+  user: {
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    },
+  },
+  _count: {
+    select: {
+      participants: true,
+    },
+  },
+} satisfies Prisma.PollSelect;
+
+export async function toPollListItems(
+  polls: Prisma.PollGetPayload<{ select: typeof pollListItemSelect }>[],
+) {
+  const optionRanges = await prisma.option.groupBy({
+    by: ["pollId"],
+    where: { pollId: { in: polls.map((poll) => poll.id) } },
+    _min: { startTime: true },
+    _max: { startTime: true },
+  });
+  const rangeByPollId = new Map(
+    optionRanges.map((range) => [range.pollId, range]),
+  );
+
+  return polls.map((poll) => {
+    const range = rangeByPollId.get(poll.id);
+    return {
+      id: poll.id,
+      title: poll.title,
+      status: poll.status,
+      closedReason: poll.closedReason,
+      // Null means the poll's times are floating: shown as stored to everyone
+      timeZone: poll.timeZone,
+      createdAt: poll.createdAt,
+      updatedAt: poll.updatedAt,
+      user: poll.user
+        ? {
+            id: poll.user.id,
+            name: poll.user.name,
+            image: poll.user.image,
+          }
+        : null,
+      participantCount: poll._count.participants,
+      dateRange:
+        range?._min.startTime && range._max.startTime
+          ? { start: range._min.startTime, end: range._max.startTime }
+          : null,
+    };
+  });
+}
+
 export const getPolls = async ({
   status,
   q,
@@ -357,68 +421,14 @@ export const getPolls = async ({
     prisma.poll.count({ where }),
     prisma.poll.findMany({
       where,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        closedReason: true,
-        timeZone: true,
-        createdAt: true,
-        updatedAt: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-        _count: {
-          select: {
-            participants: true,
-          },
-        },
-      },
+      select: pollListItemSelect,
       orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
   ]);
 
-  const optionRanges = await prisma.option.groupBy({
-    by: ["pollId"],
-    where: { pollId: { in: polls.map((poll) => poll.id) } },
-    _min: { startTime: true },
-    _max: { startTime: true },
-  });
-  const rangeByPollId = new Map(
-    optionRanges.map((range) => [range.pollId, range]),
-  );
-
-  const transformedPolls = polls.map((poll) => {
-    const range = rangeByPollId.get(poll.id);
-    return {
-      id: poll.id,
-      title: poll.title,
-      status: poll.status,
-      closedReason: poll.closedReason,
-      // Null means the poll's times are floating: shown as stored to everyone
-      timeZone: poll.timeZone,
-      createdAt: poll.createdAt,
-      updatedAt: poll.updatedAt,
-      user: poll.user
-        ? {
-            id: poll.user.id,
-            name: poll.user.name,
-            image: poll.user.image,
-          }
-        : null,
-      participantCount: poll._count.participants,
-      dateRange:
-        range?._min.startTime && range._max.startTime
-          ? { start: range._min.startTime, end: range._max.startTime }
-          : null,
-    };
-  });
+  const transformedPolls = await toPollListItems(polls);
 
   const totalPages = Math.ceil(totalCount / pageSize);
   const hasNextPage = page < totalPages;

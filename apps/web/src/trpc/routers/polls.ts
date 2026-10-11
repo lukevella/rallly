@@ -38,16 +38,12 @@ import {
   getPolls,
   hasPollAdminAccess,
 } from "@/features/poll/data";
+import { getOpenPollLimitDetails } from "@/features/poll/limit/data";
 import {
-  getActivePollUsage,
-  listActivePolls,
-} from "@/features/poll/limit/data";
-import {
-  ActivePollLimitError,
-  assertActivePollCapacity,
-  checkActivePollCapacity,
+  assertOpenPollCapacity,
+  checkOpenPollCapacity,
+  OpenPollLimitError,
 } from "@/features/poll/limit/mutations";
-import { getActivePollTier } from "@/features/poll/limit/utils";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
   getFinalizePlanGate,
@@ -186,38 +182,8 @@ function getPollTier({
   return space ? resolveSpaceTier(space.tier) : activeSpaceTier;
 }
 
-// A guest's polls have no space; a registered organizer's count in the
-// space they create into, the active one.
-async function getActivePollScope(user: { id: string; isGuest: boolean }) {
-  const space = user.isGuest ? null : await getActiveSpaceForUser(user.id);
-
-  if (!user.isGuest && !space) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "No active space found",
-    });
-  }
-
-  return {
-    userId: user.id,
-    spaceId: space?.id ?? null,
-    tier: getActivePollTier(space?.tier ?? null),
-  };
-}
-
 export const polls = router({
   invites,
-  activePollUsage: possiblyPublicProcedure
-    .use(requireUserMiddleware)
-    .query(async ({ ctx }) => {
-      return getActivePollUsage(await getActivePollScope(ctx.user));
-    }),
-  activePolls: possiblyPublicProcedure
-    .use(requireUserMiddleware)
-    .query(async ({ ctx }) => {
-      const { userId, spaceId } = await getActivePollScope(ctx.user);
-      return listActivePolls({ userId, spaceId });
-    }),
   infiniteChronological: spaceProcedure
     .input(
       z.object({
@@ -377,7 +343,7 @@ export const polls = router({
 
       const poll = await prisma
         .$transaction(async (tx) => {
-          await assertActivePollCapacity(tx, {
+          await assertOpenPollCapacity(tx, {
             userId: ctx.user.id,
             spaceId: spaceId ?? null,
           });
@@ -426,16 +392,23 @@ export const polls = router({
           return poll;
         })
         .catch((error) => {
-          if (error instanceof ActivePollLimitError) {
-            return null;
+          if (error instanceof OpenPollLimitError) {
+            return error;
           }
           throw error;
         });
 
-      if (!poll) {
+      if (poll instanceof OpenPollLimitError) {
         return {
           ok: false as const,
-          error: { code: "ACTIVE_POLL_LIMIT_REACHED" as const },
+          error: {
+            code: "OPEN_POLL_LIMIT_REACHED" as const,
+            ...(await getOpenPollLimitDetails({
+              usage: poll.usage,
+              userId: ctx.user.id,
+              spaceId: spaceId ?? null,
+            })),
+          },
         };
       }
 
@@ -707,7 +680,7 @@ export const polls = router({
           prior.closedReason === "auto" &&
           (!prior.userId ||
             (
-              await checkActivePollCapacity(tx, {
+              await checkOpenPollCapacity(tx, {
                 userId: prior.userId,
                 spaceId: prior.spaceId,
               })
@@ -1609,7 +1582,7 @@ export const polls = router({
         });
       }
 
-      const reopened = await prisma.$transaction(async (tx) => {
+      const refusal = await prisma.$transaction(async (tx) => {
         // Row lock before the capacity check's advisory lock, the order
         // modify takes them in, so the two can't deadlock.
         await tx.$queryRaw`SELECT id FROM polls WHERE id = ${input.pollId} FOR UPDATE`;
@@ -1626,12 +1599,16 @@ export const polls = router({
           target.status !== "open" &&
           target.status !== "scheduled"
         ) {
-          const capacity = await checkActivePollCapacity(tx, {
+          const capacity = await checkOpenPollCapacity(tx, {
             userId: target.userId,
             spaceId: target.spaceId,
           });
           if (!capacity.ok) {
-            return false;
+            return {
+              usage: capacity.usage,
+              userId: target.userId,
+              spaceId: target.spaceId,
+            };
           }
         }
 
@@ -1661,7 +1638,7 @@ export const polls = router({
               message: "A scheduled poll cannot be reopened",
             });
           }
-          return true;
+          return null;
         }
 
         const poll = await tx.poll.findUnique({
@@ -1688,13 +1665,18 @@ export const polls = router({
           },
         ]);
         scheduleWebhookDispatch({ pollId: input.pollId });
-        return true;
+        return null;
       });
 
-      if (!reopened) {
+      if (refusal) {
+        // Another member's polls are theirs to list, not the reopener's.
+        const details =
+          refusal.userId === ctx.user.id
+            ? await getOpenPollLimitDetails(refusal)
+            : { usage: refusal.usage, polls: [] };
         return {
           ok: false as const,
-          error: { code: "ACTIVE_POLL_LIMIT_REACHED" as const },
+          error: { code: "OPEN_POLL_LIMIT_REACHED" as const, ...details },
         };
       }
 
@@ -1821,13 +1803,13 @@ export const polls = router({
         });
       }
 
-      const newPoll = await prisma.$transaction(async (tx) => {
-        const capacity = await checkActivePollCapacity(tx, {
+      const result = await prisma.$transaction(async (tx) => {
+        const capacity = await checkOpenPollCapacity(tx, {
           userId: ctx.user.id,
           spaceId: poll.spaceId,
         });
         if (!capacity.ok) {
-          return null;
+          return capacity;
         }
 
         const newPoll = await tx.poll.create({
@@ -1864,16 +1846,23 @@ export const polls = router({
         ]);
         scheduleWebhookDispatch({ pollId: newPoll.id });
 
-        return newPoll;
+        return { ok: true as const, newPoll };
       });
 
-      if (!newPoll) {
+      if (!result.ok) {
         return {
           ok: false as const,
-          error: { code: "ACTIVE_POLL_LIMIT_REACHED" as const },
+          error: {
+            code: "OPEN_POLL_LIMIT_REACHED" as const,
+            ...(await getOpenPollLimitDetails({
+              usage: result.usage,
+              userId: ctx.user.id,
+              spaceId: poll.spaceId,
+            })),
+          },
         };
       }
 
-      return { ok: true as const, data: newPoll };
+      return { ok: true as const, data: result.newPoll };
     }),
 });

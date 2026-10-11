@@ -65,7 +65,7 @@ async function makePoll(page: Page) {
   const body = await res.json();
   return body.result.data.json as
     | { ok: true; data: { id: string } }
-    | { ok: false; error: { code: string } };
+    | { ok: false; error: { code: string; usage: unknown; polls: unknown[] } };
 }
 
 async function reopenPoll(page: Page, pollId: string) {
@@ -75,7 +75,7 @@ async function reopenPoll(page: Page, pollId: string) {
   expect(res.ok()).toBe(true);
   return (await res.json()).result.data.json as
     | { ok: true }
-    | { ok: false; error: { code: string } };
+    | { ok: false; error: { code: string; usage: unknown; polls: unknown[] } };
 }
 
 function countOpen(userId: string) {
@@ -105,11 +105,16 @@ test.describe("free organizer", () => {
     await page.context().close();
   });
 
-  test("is refused a fourth active poll", async () => {
-    expect(await makePoll(page)).toEqual({
+  test("is refused a fourth open poll", async () => {
+    const result = await makePoll(page);
+    expect(result).toMatchObject({
       ok: false,
-      error: { code: "ACTIVE_POLL_LIMIT_REACHED" },
+      error: {
+        code: "OPEN_POLL_LIMIT_REACHED",
+        usage: { tier: "hobby", limit: 3, openCount: 3 },
+      },
     });
+    expect(!result.ok && result.error.polls).toHaveLength(3);
     expect(await countOpen(userId)).toBe(3);
   });
 
@@ -150,9 +155,9 @@ test.describe("free organizer", () => {
       },
     });
 
-    expect(await reopenPoll(page, closedId)).toEqual({
+    expect(await reopenPoll(page, closedId)).toMatchObject({
       ok: false,
-      error: { code: "ACTIVE_POLL_LIMIT_REACHED" },
+      error: { code: "OPEN_POLL_LIMIT_REACHED" },
     });
     expect(
       (await prisma.poll.findUniqueOrThrow({ where: { id: closedId } })).status,
@@ -177,9 +182,12 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
   const pollPage = await newPollPage.create({ name: "Guest poll" });
   await pollPage.closeShareDialog();
 
-  expect(await makePoll(page)).toEqual({
+  expect(await makePoll(page)).toMatchObject({
     ok: false,
-    error: { code: "ACTIVE_POLL_LIMIT_REACHED" },
+    error: {
+      code: "OPEN_POLL_LIMIT_REACHED",
+      usage: { tier: "guest", limit: 1, openCount: 1 },
+    },
   });
 
   await page.getByRole("link", { name: "Login" }).click();

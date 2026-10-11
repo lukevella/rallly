@@ -1,19 +1,15 @@
 import "server-only";
 
 import type { Prisma } from "@rallly/database";
-import { isActivePollLimitEnabled } from "./constants";
-import { countActivePolls } from "./data";
-import type { ActivePollUsage } from "./types";
-import {
-  getActivePollLimit,
-  getActivePollTier,
-  isAtActivePollLimit,
-} from "./utils";
+import { isOpenPollLimitEnabled } from "./constants";
+import { countOpenPolls } from "./data";
+import type { OpenPollUsage } from "./types";
+import { getOpenPollLimit, getOpenPollTier, isAtOpenPollLimit } from "./utils";
 
-export class ActivePollLimitError extends Error {
-  readonly _tag = "ActivePollLimitError";
-  constructor(readonly usage: ActivePollUsage) {
-    super("Active poll limit reached");
+export class OpenPollLimitError extends Error {
+  readonly _tag = "OpenPollLimitError";
+  constructor(readonly usage: OpenPollUsage) {
+    super("Open poll limit reached");
   }
 }
 
@@ -22,11 +18,11 @@ export class ActivePollLimitError extends Error {
  * the transaction that opens the poll: it takes a lock held until that
  * transaction ends, so two concurrent creates can't both see the last slot.
  */
-export async function checkActivePollCapacity(
+export async function checkOpenPollCapacity(
   tx: Prisma.TransactionClient,
   { userId, spaceId }: { userId: string; spaceId: string | null },
-): Promise<{ ok: true } | { ok: false; usage: ActivePollUsage }> {
-  if (!isActivePollLimitEnabled) {
+): Promise<{ ok: true } | { ok: false; usage: OpenPollUsage }> {
+  if (!isOpenPollLimitEnabled) {
     return { ok: true };
   }
 
@@ -36,32 +32,32 @@ export async function checkActivePollCapacity(
         select: { tier: true },
       })
     : null;
-  const tier = getActivePollTier(space?.tier ?? null);
-  const limit = getActivePollLimit({ tier, enabled: true });
+  const tier = getOpenPollTier(space?.tier ?? null);
+  const limit = getOpenPollLimit({ tier, enabled: true });
 
   if (limit === null) {
     return { ok: true };
   }
 
   // $executeRaw because Prisma can't deserialize the void the lock returns.
-  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`active_polls:${userId}:${spaceId ?? ""}`}))`;
+  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`open_polls:${userId}:${spaceId ?? ""}`}))`;
 
-  const usage: ActivePollUsage = {
+  const usage: OpenPollUsage = {
     tier,
     limit,
-    activeCount: await countActivePolls({ db: tx, userId, spaceId }),
+    openCount: await countOpenPolls({ db: tx, userId, spaceId }),
   };
 
-  return isAtActivePollLimit(usage) ? { ok: false, usage } : { ok: true };
+  return isAtOpenPollLimit(usage) ? { ok: false, usage } : { ok: true };
 }
 
 /** Throws so the transaction that would open the poll rolls back. */
-export async function assertActivePollCapacity(
+export async function assertOpenPollCapacity(
   tx: Prisma.TransactionClient,
   scope: { userId: string; spaceId: string | null },
 ) {
-  const capacity = await checkActivePollCapacity(tx, scope);
+  const capacity = await checkOpenPollCapacity(tx, scope);
   if (!capacity.ok) {
-    throw new ActivePollLimitError(capacity.usage);
+    throw new OpenPollLimitError(capacity.usage);
   }
 }

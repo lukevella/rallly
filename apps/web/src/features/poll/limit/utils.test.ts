@@ -1,46 +1,42 @@
 import { describe, expect, it } from "vitest";
-import {
-  getActivePollLimit,
-  getActivePollTier,
-  isAtActivePollLimit,
-} from "./utils";
+import { getOpenPollLimit, getOpenPollTier, isAtOpenPollLimit } from "./utils";
 
-describe("getActivePollLimit", () => {
+describe("getOpenPollLimit", () => {
   it("is 1 for guests, 3 for free and unlimited on Pro", () => {
-    expect(getActivePollLimit({ tier: "guest", enabled: true })).toBe(1);
-    expect(getActivePollLimit({ tier: "hobby", enabled: true })).toBe(3);
-    expect(getActivePollLimit({ tier: "pro", enabled: true })).toBeNull();
+    expect(getOpenPollLimit({ tier: "guest", enabled: true })).toBe(1);
+    expect(getOpenPollLimit({ tier: "hobby", enabled: true })).toBe(3);
+    expect(getOpenPollLimit({ tier: "pro", enabled: true })).toBeNull();
   });
 
   it("is unlimited for every tier while enforcement is off", () => {
     for (const tier of ["guest", "hobby", "pro"] as const) {
-      expect(getActivePollLimit({ tier, enabled: false })).toBeNull();
+      expect(getOpenPollLimit({ tier, enabled: false })).toBeNull();
     }
   });
 });
 
-describe("getActivePollTier", () => {
+describe("getOpenPollTier", () => {
   it("treats a poll outside any space as a guest's", () => {
-    expect(getActivePollTier(null)).toBe("guest");
+    expect(getOpenPollTier(null)).toBe("guest");
   });
 });
 
-describe("isAtActivePollLimit", () => {
+describe("isAtOpenPollLimit", () => {
   it("is reached at the limit and past it", () => {
-    expect(
-      isAtActivePollLimit({ tier: "hobby", limit: 3, activeCount: 2 }),
-    ).toBe(false);
-    expect(
-      isAtActivePollLimit({ tier: "hobby", limit: 3, activeCount: 3 }),
-    ).toBe(true);
-    expect(
-      isAtActivePollLimit({ tier: "hobby", limit: 3, activeCount: 5 }),
-    ).toBe(true);
+    expect(isAtOpenPollLimit({ tier: "hobby", limit: 3, openCount: 2 })).toBe(
+      false,
+    );
+    expect(isAtOpenPollLimit({ tier: "hobby", limit: 3, openCount: 3 })).toBe(
+      true,
+    );
+    expect(isAtOpenPollLimit({ tier: "hobby", limit: 3, openCount: 5 })).toBe(
+      true,
+    );
   });
 
   it("is never reached without a limit", () => {
     expect(
-      isAtActivePollLimit({ tier: "pro", limit: null, activeCount: 1000 }),
+      isAtOpenPollLimit({ tier: "pro", limit: null, openCount: 1000 }),
     ).toBe(false);
   });
 });

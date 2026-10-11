@@ -15,7 +15,7 @@ export interface FeatureFlagConfig {
   webhooks: boolean;
   updateCheck: boolean;
   reviewRequests: boolean;
-  activePollLimit: boolean;
+  openPollLimit: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;

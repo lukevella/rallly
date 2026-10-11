@@ -2,20 +2,25 @@ import "server-only";
 
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
-import { isActivePollLimitEnabled } from "./constants";
-import type { ActivePollTier, ActivePollUsage } from "./types";
-import { getActivePollLimit } from "./utils";
+import { pollListItemSelect, toPollListItems } from "@/features/poll/data";
+import { isOpenPollLimitEnabled } from "./constants";
+import type {
+  OpenPollLimitDetails,
+  OpenPollTier,
+  OpenPollUsage,
+} from "./types";
+import { getOpenPollLimit } from "./utils";
 
 // The organizer is the tenant: the space only narrows which of their polls
 // count, so a caller may pass a poll's own space without a session gate.
-type ActivePollScope = {
+type OpenPollScope = {
   userId: string;
   /** null scopes to a guest's polls, which have no space */
   spaceId: string | null;
 };
 
 // Closed, scheduled, canceled and deleted polls all free a slot.
-const activePollsWhere = ({ userId, spaceId }: ActivePollScope) =>
+const openPollsWhere = ({ userId, spaceId }: OpenPollScope) =>
   ({
     userId,
     spaceId,
@@ -23,29 +28,37 @@ const activePollsWhere = ({ userId, spaceId }: ActivePollScope) =>
     deleted: false,
   }) satisfies Prisma.PollWhereInput;
 
-export function countActivePolls({
+export function countOpenPolls({
   db = prisma,
   ...scope
-}: ActivePollScope & { db?: Prisma.TransactionClient }) {
-  return db.poll.count({ where: activePollsWhere(scope) });
+}: OpenPollScope & { db?: Prisma.TransactionClient }) {
+  return db.poll.count({ where: openPollsWhere(scope) });
 }
 
-export async function getActivePollUsage({
+export async function getOpenPollUsage({
   tier,
   ...scope
-}: ActivePollScope & { tier: ActivePollTier }): Promise<ActivePollUsage> {
+}: OpenPollScope & { tier: OpenPollTier }): Promise<OpenPollUsage> {
   return {
     tier,
-    limit: getActivePollLimit({ tier, enabled: isActivePollLimitEnabled }),
-    activeCount: await countActivePolls(scope),
+    limit: getOpenPollLimit({ tier, enabled: isOpenPollLimitEnabled }),
+    openCount: await countOpenPolls(scope),
   };
 }
 
-export function listActivePolls(scope: ActivePollScope) {
-  return prisma.poll.findMany({
-    where: activePollsWhere(scope),
-    select: { id: true, title: true, createdAt: true },
-    orderBy: { createdAt: "desc" },
+export async function listOpenPolls(scope: OpenPollScope) {
+  const polls = await prisma.poll.findMany({
+    where: openPollsWhere(scope),
+    select: pollListItemSelect,
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
     take: 50,
   });
+  return toPollListItems(polls);
+}
+
+export async function getOpenPollLimitDetails({
+  usage,
+  ...scope
+}: OpenPollScope & { usage: OpenPollUsage }): Promise<OpenPollLimitDetails> {
+  return { usage, polls: await listOpenPolls(scope) };
 }
