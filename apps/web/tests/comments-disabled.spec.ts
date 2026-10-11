@@ -15,7 +15,7 @@ test.describe("comments disabled", () => {
       name: "No Comments Meetup",
       enableComments: true,
     });
-    await pollPage.closeShareDialog();
+    await pollPage.leaveSharePage();
 
     const pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
     expect(pollId).toBeTruthy();
@@ -53,7 +53,7 @@ test.describe("comments disabled", () => {
       name: "Comments Allowed Meetup",
       enableComments: true,
     });
-    await pollPage.closeShareDialog();
+    await pollPage.leaveSharePage();
 
     const pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
     expect(pollId).toBeTruthy();

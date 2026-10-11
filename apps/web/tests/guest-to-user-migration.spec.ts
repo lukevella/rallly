@@ -31,7 +31,7 @@ test.describe.serial(() => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
     const pollPage = await newPollPage.create({ name: "Monthly Meetup" });
-    await pollPage.closeShareDialog();
+    await pollPage.leaveSharePage();
 
     // Step 2: Navigate to registration (redirects to the combined login page)
     await page.click("text=Create an account");
@@ -49,7 +49,7 @@ test.describe.serial(() => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
     const pollPage = await newPollPage.create({ name: "Board Meeting" });
-    await pollPage.closeShareDialog();
+    await pollPage.leaveSharePage();
     await expect(
       page.getByRole("heading", { name: "Board Meeting" }),
     ).toBeVisible();

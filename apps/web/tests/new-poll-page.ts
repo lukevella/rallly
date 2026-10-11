@@ -44,17 +44,24 @@ export class NewPollPage {
     await page.getByText("10", { exact: true }).first().click();
     await page.getByText("15", { exact: true }).first().click();
 
-    if (enableComments) {
-      // Comments are off by default; opt in to the legacy comments setting
-      await page.getByRole("switch", { name: /comments/i }).click();
-    }
-
     await page.getByRole("button", { name: /^create poll$/i }).click();
 
-    // The Share dialog opening on the poll page is the success signal, so
-    // assert it here; callers that need the page behind it close it.
-    await page.waitForURL(/\/poll\/[^/?]+/);
-    await expect(page.getByRole("dialog", { name: "Share" })).toBeVisible();
-    return new PollPage(page);
+    // Landing on the share page is the success signal. A free host is asked
+    // how the poll should reach people first; a Pro host is on the share
+    // screen straight away.
+    await page.waitForURL(/\/poll\/[^/?]+\/share\?created/);
+    const pollPage = new PollPage(page);
+    await pollPage.chooseFreeIfAsked();
+
+    if (enableComments) {
+      // Comments are off by default; the switch lives on the share page's
+      // creation visit, on both routes.
+      await page.getByRole("switch", { name: /comments/i }).click();
+      await expect(
+        page.getByRole("switch", { name: /comments/i }),
+      ).toBeChecked();
+    }
+
+    return pollPage;
   }
 }

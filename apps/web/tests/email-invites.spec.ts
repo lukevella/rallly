@@ -12,9 +12,10 @@ import {
 } from "./test-utils";
 
 /**
- * The Share dialog sends one email invite per submit and lists every invite
- * with its status. Free hosts see the pay wall instead of sending. The
- * emailed link keeps granting the invitee edit access to their response.
+ * The share page sends one email invite per submit and lists every invite
+ * with its status. A free host is asked how the poll should reach people
+ * and cannot send until Pro, which the 14 free days unlock. The emailed
+ * link keeps granting the invitee edit access to their response.
  */
 
 const PRO_HOST = "email-invites-pro@rallly.co";
@@ -85,10 +86,18 @@ async function deleteResponse(page: Page, name: string) {
     .toBe(0);
 }
 
-async function reopenShareDialog(page: Page) {
-  await page.reload();
-  await page.getByRole("button", { name: "Share" }).click();
-  return page.getByRole("dialog", { name: "Share" });
+// The invite list is server data, so a guest's activity only shows once
+// the share page is loaded again.
+async function reopenSharePage(page: Page, pollPath: string) {
+  await page.goto(`${pollPath}/share`);
+  await expect(
+    page.getByRole("heading", { name: "Share your poll" }),
+  ).toBeVisible();
+  return page.getByRole("main");
+}
+
+function pollPathOf(page: Page) {
+  return new URL(page.url()).pathname.replace(/\/share$/, "");
 }
 
 test.describe("Email invites", () => {
@@ -115,8 +124,9 @@ test.describe("Email invites", () => {
     await newPollPage.goto();
     await newPollPage.create({ name: POLL_TITLE });
     await deleteAllMessages();
+    const pollPath = pollPathOf(page);
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
+    const dialog = page.getByRole("main");
     await expect(dialog.getByRole("button", { name: "Copy" })).toBeVisible();
 
     const field = dialog.getByLabel("Email address");
@@ -193,7 +203,7 @@ test.describe("Email invites", () => {
       guest.guestPage.getByRole("heading", { name: POLL_TITLE }),
     ).toBeVisible();
 
-    const openedRow = (await reopenShareDialog(page))
+    const openedRow = (await reopenSharePage(page, pollPath))
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(openedRow.getByText("Opened")).toBeVisible();
@@ -218,29 +228,27 @@ test.describe("Email invites", () => {
     });
     expect(converted.participant?.token).toBe(converted.token);
 
-    const respondedRow = (await reopenShareDialog(page))
+    const respondedRow = (await reopenSharePage(page, pollPath))
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(respondedRow.getByText("Responded")).toBeVisible();
-    await page.keyboard.press("Escape");
 
     // Opening the same link again, with no cookie, edits that response.
     await renameThroughInviteLink(browser as Browser, emailedUrl as string, {
       from: "Invited Guest",
       to: "Renamed Guest",
     });
-    await page.reload();
+    await page.goto(pollPath);
     await expect(page.getByText("Renamed Guest")).toBeVisible();
 
     // Deleting the response reverts the invite to pending: the row goes back
     // to Opened, and the link keeps working because the response released
     // the token it had taken from the invite.
     await deleteResponse(page, "Renamed Guest");
-    const revertedRow = (await reopenShareDialog(page))
+    const revertedRow = (await reopenSharePage(page, pollPath))
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(revertedRow.getByText("Opened")).toBeVisible();
-    await page.keyboard.press("Escape");
 
     const reverted = await prisma.pollInvite.findUniqueOrThrow({
       where: { id: invite.id },
@@ -262,13 +270,13 @@ test.describe("Email invites", () => {
     });
     expect(reconverted.participant?.token).toBe(reconverted.token);
 
-    const respondedAgainRow = (await reopenShareDialog(page))
+    const respondedAgainRow = (await reopenSharePage(page, pollPath))
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(respondedAgainRow.getByText("Responded")).toBeVisible();
   });
 
-  test("creation opens the dialog and leaves the URL clean", async ({
+  test("creation lands on the share page and sending keeps its address", async ({
     page,
   }) => {
     const user = await createUserInDb({
@@ -285,18 +293,20 @@ test.describe("Email invites", () => {
     await newPollPage.goto();
     await newPollPage.create({ name: `${POLL_TITLE} Clean URL` });
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
-    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+    const share = page.getByRole("main");
+    // The creation visit carries the mark that shows the sharing settings.
+    await expect(page).toHaveURL(/\/poll\/[^/?]+\/share\?created$/);
+    await expect(
+      share.getByRole("switch", { name: /require email/i }),
+    ).toBeVisible();
 
-    // Sending an invite refreshes the route; a router sync must not put the
-    // consumed param back on the address bar.
-    const field = dialog.getByLabel("Email address");
+    // Sending an invite refreshes the route; the address must not change.
+    const field = share.getByLabel("Email address");
     await field.fill(INVITEE);
     await field.press("Enter");
-    const row = dialog.getByRole("listitem").filter({ hasText: INVITEE });
+    const row = share.getByRole("listitem").filter({ hasText: INVITEE });
     await expect(row.getByText("Sent")).toBeVisible();
-    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
-    await expect(dialog).toBeVisible();
+    await expect(page).toHaveURL(/\/poll\/[^/?]+\/share\?created$/);
 
     // Removing a pending invite drops the row and stops its token; sending
     // to the same address again reactivates it.
@@ -304,7 +314,7 @@ test.describe("Email invites", () => {
     await page.getByRole("menuitem", { name: "Remove invite" }).click();
     await expect(page.getByText(`Invite for ${INVITEE} removed`)).toBeVisible();
     await expect(row).toBeHidden();
-    await expect(dialog.getByText("No one invited yet")).toBeVisible();
+    await expect(share.getByText("No one invited yet")).toBeVisible();
     const revoked = await prisma.pollInvite.findFirstOrThrow({
       where: { email: INVITEE, poll: { title: `${POLL_TITLE} Clean URL` } },
       select: { id: true, revokedAt: true },
@@ -320,30 +330,76 @@ test.describe("Email invites", () => {
     await field.press("Enter");
     await expect(row.getByText("Sent")).toBeVisible();
 
-    await page.reload();
-    await expect(page.getByRole("button", { name: "Share" })).toBeVisible();
-    await expect(dialog).toBeHidden();
+    // A later visit through the Share button is sharing alone: no settings.
+    await page.goto(pollPathOf(page));
+    await page.getByRole("link", { name: "Share" }).click();
+    await expect(page).toHaveURL(/\/poll\/[^/?]+\/share$/);
+    await expect(
+      page.getByRole("switch", { name: /require email/i }),
+    ).toBeHidden();
+    await expect(row.getByText("Sent")).toBeVisible();
   });
 
-  test("free host sees the pay wall and nothing is sent", async ({ page }) => {
-    await createUserInDb({ email: FREE_HOST, name: "Free Host" });
+  test("free host is asked, sends nothing on Free, and starts the trial on Pro", async ({
+    page,
+  }) => {
+    const user = await createUserInDb({ email: FREE_HOST, name: "Free Host" });
     await loginWithEmail(page, { email: FREE_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: `${POLL_TITLE} Free` });
+    await page.getByLabel(/title|event/i).fill(`${POLL_TITLE} Free`);
+    await page.getByTitle("Next month").click();
+    await page.getByText("5", { exact: true }).first().click();
+    await page.getByRole("button", { name: /^create poll$/i }).click();
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
-    const sendButton = dialog.getByRole("button", { name: /Send invite/ });
-    await expect(sendButton).toBeEnabled();
-    await expect(sendButton.getByText("Pro")).toBeVisible();
+    // Step one: the choice, no button until a card is picked.
+    await page.waitForURL(/\/poll\/[^/?]+\/share\?created/);
+    await expect(
+      page.getByRole("heading", {
+        name: "Poll created. How should it reach people?",
+      }),
+    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /continue/i })).toBeHidden();
 
-    await dialog.getByLabel("Email address").fill(INVITEE);
-    await sendButton.click();
+    // Free: the link, no sending, nothing started.
+    await page.getByRole("radio").first().click();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByRole("button", { name: "Copy" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Send invite" }),
+    ).toBeHidden();
+    expect(
+      await prisma.pollInvite.count({
+        where: { email: INVITEE, poll: { title: `${POLL_TITLE} Free` } },
+      }),
+    ).toBe(0);
 
-    await expect(page.getByText("Select plan:")).toBeVisible();
-    const count = await prisma.pollInvite.count({
-      where: { email: INVITEE, poll: { title: `${POLL_TITLE} Free` } },
+    // Crossing to Pro: the terms are on the card, the press starts the trial.
+    await page
+      .getByRole("button", { name: "Try Pro free for 14 days instead" })
+      .click();
+    await expect(page.getByText("14 days free, no card.")).toBeVisible();
+    await page
+      .getByRole("button", { name: "Continue and start 14 free days" })
+      .click();
+    await expect(page.getByText(/Pro, free until/)).toBeVisible();
+    await expect(
+      page.getByText(/Your 14 free days of Pro started/),
+    ).toBeVisible();
+    const space = await prisma.space.findFirstOrThrow({
+      where: { ownerId: user.id },
+      select: { tier: true, trialStartedAt: true, trialEndsAt: true },
     });
-    expect(count).toBe(0);
+    expect(space.tier).toBe("pro");
+    expect(space.trialStartedAt).not.toBeNull();
+    expect(space.trialEndsAt).not.toBeNull();
+
+    // On the trial, sending works like any Pro host's.
+    const field = page.getByLabel("Email address");
+    await field.fill(INVITEE);
+    await field.press("Enter");
+    await expect(
+      page.getByRole("listitem").filter({ hasText: INVITEE }).getByText("Sent"),
+    ).toBeVisible();
   });
 });

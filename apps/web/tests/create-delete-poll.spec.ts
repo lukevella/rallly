@@ -15,7 +15,7 @@ test.describe.serial(() => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
     const pollPage = await newPollPage.create({ name: "Monthly Meetup" });
-    await pollPage.closeShareDialog();
+    await pollPage.leaveSharePage();
 
     await expect(
       page.getByRole("heading", { name: "Monthly Meetup" }),

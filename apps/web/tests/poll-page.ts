@@ -6,10 +6,32 @@ import { InvitePage } from "./invite-page";
 export class PollPage {
   constructor(public readonly page: Page) {}
 
-  async closeShareDialog() {
-    const dialog = this.page.getByRole("dialog", { name: "Share" });
-    await dialog.getByRole("button", { name: "Close" }).click();
-    await expect(dialog).toBeHidden();
+  private pollPath() {
+    return new URL(this.page.url()).pathname.replace(/\/share$/, "");
+  }
+
+  /**
+   * Step one of the share page asks a free host how the poll should reach
+   * people. Picking Free keeps the poll on the free plan and opens the
+   * share screen; a Pro host never sees the question.
+   */
+  async chooseFreeIfAsked() {
+    const question = this.page.getByRole("heading", {
+      name: /how should it reach people\?/i,
+    });
+    if (await question.isVisible()) {
+      await this.page.getByRole("radio").first().click();
+      await this.page.getByRole("button", { name: "Continue" }).click();
+    }
+    await expect(
+      this.page.getByRole("heading", { name: "Share your poll" }),
+    ).toBeVisible();
+  }
+
+  /** From the share page back to the poll page. */
+  async leaveSharePage() {
+    await this.page.goto(this.pollPath());
+    await expect(this.page.getByRole("link", { name: "Share" })).toBeVisible();
   }
 
   async addComment() {
@@ -24,18 +46,19 @@ export class PollPage {
     await sheet.getByRole("button", { name: "Add comment" }).click();
   }
 
-  async openShareDialog() {
-    const dialog = this.page.getByRole("dialog", { name: "Share" });
-    if (!(await dialog.isVisible())) {
-      await this.page.getByRole("button", { name: "Share" }).click();
+  /** The share page's content, opened through the Share button if needed. */
+  async openSharePage() {
+    if (!this.page.url().includes("/share")) {
+      await this.page.getByRole("link", { name: "Share" }).click();
+      await this.page.waitForURL(/\/share/);
     }
-    await expect(dialog).toBeVisible();
-    return dialog;
+    await this.chooseFreeIfAsked();
+    return this.page.getByRole("main");
   }
 
   async copyInviteLink() {
-    const dialog = await this.openShareDialog();
-    await dialog.getByRole("button", { name: "Copy" }).click();
+    const share = await this.openSharePage();
+    await share.getByRole("button", { name: "Copy" }).click();
     return (await this.page.evaluate(
       "navigator.clipboard.readText()",
     )) as string;
