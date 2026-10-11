@@ -255,14 +255,15 @@ function ChooseRoute({
   );
 }
 
-function ProShareScreen() {
+function ProShareScreen({ showSettings }: { showSettings: boolean }) {
   const poll = usePoll();
   const trialState = useTrialState();
   const { trialEndsAt } = useTrial();
   const { formatDateTime } = useDateTime();
 
-  // One card, in the order she should read it: the switches first, then
-  // the sending, then the plain link.
+  // One card, in the order she should read it: the switches first (on the
+  // creation visit only; later the page is sharing alone, the Edit settings
+  // page has the form), then the sending, then the plain link.
   return (
     <Card>
       <CardHeader>
@@ -291,8 +292,12 @@ function ProShareScreen() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <SharePollSettings />
-        <Separator />
+        {showSettings ? (
+          <>
+            <SharePollSettings />
+            <Separator />
+          </>
+        ) : null}
         <div className="space-y-3">
           <InviteByEmail />
           <InviteEmailPreview />
@@ -312,7 +317,13 @@ function ProShareScreen() {
   );
 }
 
-function FreeShareScreen({ onChoosePro }: { onChoosePro?: () => void }) {
+function FreeShareScreen({
+  showSettings,
+  onChoosePro,
+}: {
+  showSettings: boolean;
+  onChoosePro?: () => void;
+}) {
   const poll = usePoll();
   const trialState = useTrialState();
 
@@ -357,8 +368,12 @@ function FreeShareScreen({ onChoosePro }: { onChoosePro?: () => void }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <SharePollSettings fields={["enableComments"]} />
-        <Separator />
+        {showSettings ? (
+          <>
+            <SharePollSettings fields={["enableComments"]} />
+            <Separator />
+          </>
+        ) : null}
         <InviteLinkRow inviteLink={poll.inviteLink} />
       </CardContent>
     </Card>
@@ -371,7 +386,9 @@ function FreeShareScreen({ onChoosePro }: { onChoosePro?: () => void }) {
  * Step two is the share screen for the route. The page opens on step two
  * whenever the space is Pro (trial, paying or otherwise) or the poll has
  * invites; once on the Pro screen there is no way back, while the Free
- * screen can still cross to Pro.
+ * screen can still cross to Pro. The sharing settings show on the creation
+ * visit only (the one Create sends her to); a later visit through the
+ * Share button is sharing alone.
  */
 export function SharePage({ hasInvites }: { hasInvites: boolean }) {
   const poll = usePoll();
@@ -418,12 +435,13 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
   }, []);
 
   if (step === 2 && route === "pro") {
-    return <ProShareScreen />;
+    return <ProShareScreen showSettings={created} />;
   }
 
   if (step === 2 && route === "free") {
     return (
       <FreeShareScreen
+        showSettings={created}
         onChoosePro={
           isGuest
             ? undefined

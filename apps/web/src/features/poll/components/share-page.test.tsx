@@ -25,8 +25,10 @@ vi.mock("@rallly/ui/sonner", () => ({
 
 const formatDateTime = vi.hoisted(() => vi.fn(() => "October 24"));
 
+const visit = vi.hoisted(() => ({ created: true }));
+
 vi.mock("next/navigation", () => ({
-  useSearchParams: () => new URLSearchParams("created"),
+  useSearchParams: () => new URLSearchParams(visit.created ? "created" : ""),
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
   usePathname: () => "/poll/abc/share",
 }));
@@ -104,7 +106,44 @@ describe("SharePage", () => {
     billing.tier = "hobby";
     billing.trialState = "eligible";
     billing.trialEndsAt = null;
+    visit.created = true;
     trialAction.execute.mockClear();
+  });
+
+  it("shows the sharing settings on the creation visit, on both routes", async () => {
+    const user = userEvent.setup();
+    billing.tier = "pro";
+    billing.trialState = "trial";
+    const { unmount } = render(<SharePage hasInvites={false} />);
+    expect(screen.getByText("sharing settings")).toBeInTheDocument();
+    unmount();
+
+    billing.tier = "hobby";
+    billing.trialState = "eligible";
+    render(<SharePage hasInvites={false} />);
+    await user.click(pickRoute(0));
+    await user.click(screen.getByRole("button", { name: "Continue" }));
+    expect(screen.getByText("sharing settings")).toBeInTheDocument();
+  });
+
+  it("is sharing alone on a later visit through the Share button, on both routes", async () => {
+    const user = userEvent.setup();
+    visit.created = false;
+    billing.tier = "pro";
+    billing.trialState = "trial";
+    const { unmount } = render(<SharePage hasInvites={false} />);
+    expect(screen.getByText("invite by email")).toBeInTheDocument();
+    expect(screen.queryByText("sharing settings")).not.toBeInTheDocument();
+    unmount();
+
+    billing.tier = "hobby";
+    billing.trialState = "eligible";
+    render(<SharePage hasInvites={false} />);
+    expect(screen.getByText("How should it reach people?")).toBeInTheDocument();
+    await user.click(pickRoute(0));
+    await user.click(screen.getByRole("button", { name: "Continue" }));
+    expect(screen.getByText("invite link")).toBeInTheDocument();
+    expect(screen.queryByText("sharing settings")).not.toBeInTheDocument();
   });
 
   it("asks how the poll should reach people, with no button until a card is picked", () => {
