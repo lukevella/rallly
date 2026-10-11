@@ -1610,6 +1610,10 @@ export const polls = router({
       }
 
       const reopened = await prisma.$transaction(async (tx) => {
+        // Row lock before the capacity check's advisory lock, the order
+        // modify takes them in, so the two can't deadlock.
+        await tx.$queryRaw`SELECT id FROM polls WHERE id = ${input.pollId} FOR UPDATE`;
+
         // The slot belongs to the poll's organizer, who may not be the
         // member reopening it.
         const target = await tx.poll.findUnique({
