@@ -81,7 +81,7 @@ describe("DuplicateDialog", () => {
     billing.trialState = "none";
     billing.hasSpace = false;
     renderDialog();
-    expect(screen.getByRole("link", { name: /login/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Log in" })).toHaveAttribute(
       "href",
       "/login?redirectTo=%2Fpoll%2Fabc",
     );

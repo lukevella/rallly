@@ -367,6 +367,7 @@
   "generalSettingsDescription": "Manage your space settings, including name, description, and other general preferences.",
   "goTo": "Go to <b>{page}</b>",
   "guest": "Guest",
+  "guestDialogLogIn": "Log in",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
   "guestPollAlertTitle": "Your administrator rights can be lost if you clear your cookies",
   "hexColor": "Hex color",

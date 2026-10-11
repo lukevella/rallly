@@ -108,7 +108,7 @@ export function DuplicateDialog({
           </DialogClose>
           {isGuestOnFree ? (
             <LoginLink className={buttonVariants({ variant: "primary" })}>
-              <Trans i18nKey="login" defaults="Login" />
+              <Trans i18nKey="guestDialogLogIn" defaults="Log in" />
             </LoginLink>
           ) : trialState === "ended" ? (
             <UpgradeButton size="default">
