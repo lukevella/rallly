@@ -388,7 +388,9 @@ function FreeShareScreen({
  * invites; once on the Pro screen there is no way back, while the Free
  * screen can still cross to Pro. The sharing settings show on the creation
  * visit only (the one Create sends her to); a later visit through the
- * Share button is sharing alone.
+ * Share button is sharing alone. A closed or scheduled poll never offers
+ * the trial: nothing can be sent on it, so it opens on the share screen of
+ * its current route and the Free screen does not cross to Pro.
  */
 export function SharePage({ hasInvites }: { hasInvites: boolean }) {
   const poll = usePoll();
@@ -400,13 +402,15 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
   const created = searchParams.has("created");
 
   const isGuest = !user || user.isGuest;
-  // A guest cannot hold a trial: the link and the comments switch are all
-  // the share page has for them.
-  const opensOnShare = tier === "pro" || hasInvites || isGuest;
+  const isOpenPoll = poll.status === "open";
+  // A guest cannot hold a trial, and a closed poll has nothing to send:
+  // neither is asked the question.
+  const opensOnShare = tier === "pro" || hasInvites || isGuest || !isOpenPoll;
+  const currentRoute: Route = tier === "pro" || hasInvites ? "pro" : "free";
 
   const [step, setStep] = React.useState<1 | 2>(opensOnShare ? 2 : 1);
   const [route, setRoute] = React.useState<Route | null>(
-    opensOnShare ? (isGuest ? "free" : "pro") : null,
+    opensOnShare ? currentRoute : null,
   );
 
   const start = useSafeAction(startTrial, {
@@ -443,7 +447,7 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
       <FreeShareScreen
         showSettings={created}
         onChoosePro={
-          isGuest
+          isGuest || !isOpenPoll
             ? undefined
             : () => {
                 setRoute("pro");

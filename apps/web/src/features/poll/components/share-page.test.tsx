@@ -27,6 +27,8 @@ const formatDateTime = vi.hoisted(() => vi.fn(() => "October 24"));
 
 const visit = vi.hoisted(() => ({ created: true }));
 
+const pollState = vi.hoisted(() => ({ status: "open" }));
+
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(visit.created ? "created" : ""),
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
@@ -38,7 +40,7 @@ vi.mock("@/features/poll/client", () => ({
     id: "abc",
     title: "Team offsite",
     inviteLink: "http://localhost/invite/abc",
-    status: "open",
+    status: pollState.status,
   }),
 }));
 
@@ -107,7 +109,35 @@ describe("SharePage", () => {
     billing.trialState = "eligible";
     billing.trialEndsAt = null;
     visit.created = true;
+    pollState.status = "open";
     trialAction.execute.mockClear();
+  });
+
+  it("never offers the trial on a closed poll: the Free screen, no way to Pro", () => {
+    pollState.status = "closed";
+    render(<SharePage hasInvites={false} />);
+    expect(screen.queryByRole("radio")).not.toBeInTheDocument();
+    expect(screen.getByText("invite link")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", {
+        name: "Try Pro free for 14 days instead",
+      }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/14 days/)).not.toBeInTheDocument();
+    expect(trialAction.execute).not.toHaveBeenCalled();
+  });
+
+  it("opens a closed Pro poll on its share screen, with no trial offer", () => {
+    pollState.status = "scheduled";
+    billing.tier = "pro";
+    billing.trialState = "trial";
+    billing.trialEndsAt = new Date("2026-10-24T12:00:00Z");
+    render(<SharePage hasInvites={false} />);
+    expect(screen.queryByRole("radio")).not.toBeInTheDocument();
+    expect(screen.getByText("invite by email")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /start 14 free days/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("shows the sharing settings on the creation visit, on both routes", async () => {
