@@ -705,13 +705,13 @@ export const polls = router({
           newOptions.some(optionEndsInFuture) &&
           prior.status === "closed" &&
           prior.closedReason === "auto" &&
-          prior.userId &&
-          (
-            await checkActivePollCapacity(tx, {
-              userId: prior.userId,
-              spaceId: prior.spaceId,
-            })
-          ).ok
+          (!prior.userId ||
+            (
+              await checkActivePollCapacity(tx, {
+                userId: prior.userId,
+                spaceId: prior.spaceId,
+              })
+            ).ok)
         ) {
           const { count } = await tx.poll.updateMany({
             where: { id: pollId, status: "closed", closedReason: "auto" },
