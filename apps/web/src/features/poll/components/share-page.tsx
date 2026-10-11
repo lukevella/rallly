@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@rallly/ui/card";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import { Separator } from "@rallly/ui/separator";
 import { toast } from "@rallly/ui/sonner";
 import { EyeIcon, SendIcon, TagIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -260,54 +261,54 @@ function ProShareScreen() {
   const { trialEndsAt } = useTrial();
   const { formatDateTime } = useDateTime();
 
+  // One card, in the order she should read it: the switches first, then
+  // the sending, then the plain link.
   return (
-    <div className="space-y-3 lg:space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <Trans i18nKey="sharePollTitle" defaults="Share your poll" />
-          </CardTitle>
-          <CardDescription>
-            {trialState === "trial" && trialEndsAt ? (
-              <Trans
-                i18nKey="proFreeUntil"
-                defaults="Pro, free until {date}"
-                values={{ date: formatDateTime(trialEndsAt, "monthDay") }}
-              />
-            ) : trialState === "ended" && trialEndsAt ? (
-              <Trans
-                i18nKey="trialEndedOn"
-                defaults="Your 14 free days ended on {date}."
-                values={{ date: formatDateTime(trialEndsAt, "monthDay") }}
-              />
-            ) : (
-              <Trans
-                i18nKey="shareDialogDescription"
-                defaults="Share the invite link, or invite people by email."
-              />
-            )}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <Trans i18nKey="sharePollTitle" defaults="Share your poll" />
+        </CardTitle>
+        <CardDescription>
+          {trialState === "trial" && trialEndsAt ? (
+            <Trans
+              i18nKey="proFreeUntil"
+              defaults="Pro, free until {date}"
+              values={{ date: formatDateTime(trialEndsAt, "monthDay") }}
+            />
+          ) : trialState === "ended" && trialEndsAt ? (
+            <Trans
+              i18nKey="trialEndedOn"
+              defaults="Your 14 free days ended on {date}."
+              values={{ date: formatDateTime(trialEndsAt, "monthDay") }}
+            />
+          ) : (
+            <Trans
+              i18nKey="shareDialogDescription"
+              defaults="Share the invite link, or invite people by email."
+            />
+          )}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <SharePollSettings />
+        <Separator />
+        <div className="space-y-3">
           <InviteByEmail />
           <InviteEmailPreview />
-        </CardContent>
-      </Card>
-      <SharePollSettings />
-      <Card>
-        <CardHeader>
-          <CardTitle>
+        </div>
+        <Separator />
+        <div className="space-y-3">
+          <p className="font-medium text-sm">
             <Trans
               i18nKey="sharePageLinkTitle"
               defaults="Prefer to paste the link yourself?"
             />
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
+          </p>
           <InviteLinkRow inviteLink={poll.inviteLink} />
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -316,52 +317,51 @@ function FreeShareScreen({ onChoosePro }: { onChoosePro?: () => void }) {
   const trialState = useTrialState();
 
   return (
-    <div className="space-y-3 lg:space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <Trans i18nKey="sharePollTitle" defaults="Share your poll" />
-          </CardTitle>
-          <CardDescription>
-            {onChoosePro ? (
-              trialState === "eligible" ? (
-                <Trans
-                  i18nKey="shareFreeTryPro"
-                  defaults="Free. <0>Try Pro free for 14 days instead</0>"
-                  components={[
-                    <button
-                      key="pro"
-                      type="button"
-                      className="underline hover:text-foreground"
-                      onClick={onChoosePro}
-                    />,
-                  ]}
-                />
-              ) : (
-                <Trans
-                  i18nKey="shareFreeSeePro"
-                  defaults="Free. <0>See what Pro does</0>"
-                  components={[
-                    <button
-                      key="pro"
-                      type="button"
-                      className="underline hover:text-foreground"
-                      onClick={onChoosePro}
-                    />,
-                  ]}
-                />
-              )
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <Trans i18nKey="sharePollTitle" defaults="Share your poll" />
+        </CardTitle>
+        <CardDescription>
+          {onChoosePro ? (
+            trialState === "eligible" ? (
+              <Trans
+                i18nKey="shareFreeTryPro"
+                defaults="Free. <0>Try Pro free for 14 days instead</0>"
+                components={[
+                  <button
+                    key="pro"
+                    type="button"
+                    className="underline hover:text-foreground"
+                    onClick={onChoosePro}
+                  />,
+                ]}
+              />
             ) : (
-              <Trans i18nKey="planFree" defaults="Free" />
-            )}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <InviteLinkRow inviteLink={poll.inviteLink} />
-        </CardContent>
-      </Card>
-      <SharePollSettings fields={["enableComments"]} />
-    </div>
+              <Trans
+                i18nKey="shareFreeSeePro"
+                defaults="Free. <0>See what Pro does</0>"
+                components={[
+                  <button
+                    key="pro"
+                    type="button"
+                    className="underline hover:text-foreground"
+                    onClick={onChoosePro}
+                  />,
+                ]}
+              />
+            )
+          ) : (
+            <Trans i18nKey="planFree" defaults="Free" />
+          )}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <SharePollSettings fields={["enableComments"]} />
+        <Separator />
+        <InviteLinkRow inviteLink={poll.inviteLink} />
+      </CardContent>
+    </Card>
   );
 }
 

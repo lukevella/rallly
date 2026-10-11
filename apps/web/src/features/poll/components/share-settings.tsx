@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@rallly/ui/card";
 import {
   Field,
   FieldContent,
@@ -74,7 +73,9 @@ function SettingRow({
 /**
  * The poll's sharing settings, saved as each switch is flipped. The same
  * rows as the settings form, worded from the organiser's side: what she
- * gets, not what participants must do.
+ * gets, not what participants must do. Rendered as rows, not a card, so
+ * they sit inside the share card under its heading: look at these first,
+ * then send.
  */
 export function SharePollSettings({
   fields = [
@@ -174,12 +175,8 @@ export function SharePollSettings({
   };
 
   return (
-    <Card>
-      <CardContent>
-        <FieldGroup variant="divided">
-          {fields.map((field) => rows[field])}
-        </FieldGroup>
-      </CardContent>
-    </Card>
+    <FieldGroup variant="divided">
+      {fields.map((field) => rows[field])}
+    </FieldGroup>
   );
 }
