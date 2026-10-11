@@ -25,9 +25,10 @@ import {
 
 /**
  * The plan card while nothing is paying for the space. One Upgrade button
- * that carries the trial: before a trial it starts the 14 free days, no
- * checkout; during the trial the card reads the end date and offers to keep
- * Pro; after it, Upgrade opens the plan window as it always did.
+ * that carries the trial: before a trial a badge beside it says so and the
+ * press starts the 14 free days, no checkout; during the trial the card
+ * reads the end date and offers to keep Pro; after it, Upgrade opens the
+ * plan window as it always did.
  */
 export function HobbyPlanCard({ className }: { className?: string }) {
   const trialState = useTrialState();
@@ -78,15 +79,6 @@ export function HobbyPlanCard({ className }: { className?: string }) {
           <PlanCardDescription>
             <Trans i18nKey="priceFree" defaults="Free" />
           </PlanCardDescription>
-          {canTry ? (
-            <PlanCardDescription>
-              <Trans
-                i18nKey="billingTrialTerms"
-                defaults="Pro is free for 14 days, no card. After that, {price} a month, or you stay on Hobby. Your polls and answers stay either way."
-                values={{ price }}
-              />
-            </PlanCardDescription>
-          ) : null}
         </PlanCardContent>
         <PlanCardActions>
           {canTry ? (

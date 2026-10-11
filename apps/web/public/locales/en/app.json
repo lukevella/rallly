@@ -96,7 +96,6 @@
   "billingDescription": "Manage your billing information and subscription.",
   "billingSettings": "Billing settings",
   "billingSettingsDescription": "View and manage your space's subscription and billing information.",
-  "billingTrialTerms": "Pro is free for 14 days, no card. After that, {price} a month, or you stay on Hobby. Your polls and answers stay either way.",
   "branding": "Branding",
   "brandingCardDescription": "How this space looks to members and participants",
   "brandingGeneralDescription": "Set the name of your instance",
