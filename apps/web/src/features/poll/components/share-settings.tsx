@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import {
   Field,
   FieldContent,
@@ -90,12 +91,23 @@ export function SharePollSettings({
   const poll = usePoll();
   const update = useUpdatePollMutation();
 
-  const save = (data: {
-    requireParticipantEmail?: boolean;
-    hideParticipants?: boolean;
-    hideScores?: boolean;
-    disableComments?: boolean;
-  }) => update.mutateAsync({ pollId: poll.id, ...data });
+  const save = (
+    setting: ShareSetting,
+    enabled: boolean,
+    data: {
+      requireParticipantEmail?: boolean;
+      hideParticipants?: boolean;
+      hideScores?: boolean;
+      disableComments?: boolean;
+    },
+  ) => {
+    posthog?.capture("poll_share:setting_toggle", {
+      poll_id: poll.id,
+      setting,
+      enabled,
+    });
+    return update.mutateAsync({ pollId: poll.id, ...data });
+  };
 
   const rows: Record<ShareSetting, React.ReactNode> = {
     requireParticipantEmail: (
@@ -116,7 +128,11 @@ export function SharePollSettings({
           />
         }
         value={poll.requireParticipantEmail}
-        onChange={(checked) => save({ requireParticipantEmail: checked })}
+        onChange={(checked) =>
+          save("requireParticipantEmail", checked, {
+            requireParticipantEmail: checked,
+          })
+        }
       />
     ),
     hideParticipants: (
@@ -137,7 +153,9 @@ export function SharePollSettings({
           />
         }
         value={poll.hideParticipants}
-        onChange={(checked) => save({ hideParticipants: checked })}
+        onChange={(checked) =>
+          save("hideParticipants", checked, { hideParticipants: checked })
+        }
       />
     ),
     hideScores: (
@@ -153,7 +171,9 @@ export function SharePollSettings({
           />
         }
         value={poll.hideScores}
-        onChange={(checked) => save({ hideScores: checked })}
+        onChange={(checked) =>
+          save("hideScores", checked, { hideScores: checked })
+        }
       />
     ),
     enableComments: (
@@ -169,7 +189,9 @@ export function SharePollSettings({
           />
         }
         value={!poll.disableComments}
-        onChange={(checked) => save({ disableComments: !checked })}
+        onChange={(checked) =>
+          save("enableComments", checked, { disableComments: !checked })
+        }
       />
     ),
   };

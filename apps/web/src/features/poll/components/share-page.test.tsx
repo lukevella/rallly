@@ -164,6 +164,7 @@ describe("SharePage", () => {
       screen.getByRole("button", { name: "Continue and start 14 free days" }),
     );
     expect(trialAction.execute).toHaveBeenCalledTimes(1);
+    expect(trialAction.execute).toHaveBeenCalledWith({ source: "share" });
     expect(screen.queryByText("invite by email")).not.toBeInTheDocument();
 
     const endsAt = new Date("2026-10-24T12:00:00Z");

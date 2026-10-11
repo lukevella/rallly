@@ -71,7 +71,9 @@ export function DuplicateDialog({
           }}
           onSubmit={async (data) => {
             if (trialState === "eligible") {
-              const result = await start.executeAsync();
+              const result = await start.executeAsync({
+                source: "duplicate",
+              });
               if (!result?.data) {
                 // Refused; the action's toast said why.
                 return;

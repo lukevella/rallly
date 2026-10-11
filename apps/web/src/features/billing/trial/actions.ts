@@ -1,5 +1,6 @@
 "use server";
 
+import * as z from "zod";
 import { isBillingEnabled } from "@/features/billing/constants";
 import type { TrialRefusalReason } from "@/features/billing/trial/mutations";
 import { startSpaceTrial } from "@/features/billing/trial/mutations";
@@ -23,7 +24,14 @@ const refusalMessages: Record<TrialRefusalReason, string> = {
  */
 export const startTrial = authActionClient
   .metadata({ actionName: "start_trial" })
-  .action(async ({ ctx }): Promise<{ endsAt: Date }> => {
+  // Where the press happened, for the PM: the four doors the trial can
+  // open from. It changes nothing about what the action does.
+  .inputSchema(
+    z.object({
+      source: z.enum(["share", "schedule", "duplicate", "billing"]),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }): Promise<{ endsAt: Date }> => {
     // Self-hosted instances are licensed, not billed: every space is pro.
     if (!isBillingEnabled) {
       throw new AppError({
@@ -64,7 +72,10 @@ export const startTrial = authActionClient
 
     track(ctx.user, {
       event: "billing:trial_start",
-      properties: { ends_at: result.endsAt.toISOString() },
+      properties: {
+        ends_at: result.endsAt.toISOString(),
+        source: parsedInput.source,
+      },
       groups: { space: space.id },
     });
 

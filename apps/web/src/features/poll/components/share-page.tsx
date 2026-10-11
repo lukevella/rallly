@@ -466,7 +466,7 @@ export function SharePage({ hasInvites }: { hasInvites: boolean }) {
           route,
         });
         if (route === "pro") {
-          start.execute();
+          start.execute({ source: "share" });
         } else {
           setStep(2);
         }

@@ -295,7 +295,7 @@ export function SchedulePollDialog(props: DialogProps) {
           name="schedule-form"
           onSubmit={async (data) => {
             if (trialState === "eligible") {
-              const result = await start.executeAsync();
+              const result = await start.executeAsync({ source: "schedule" });
               if (!result?.data) {
                 // Refused; the action's toast said why.
                 return;

@@ -71,7 +71,7 @@ describe("HobbyPlanCard", () => {
 
     expect(screen.getByText("Free for 14 days")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Upgrade" }));
-    expect(trialAction.execute).toHaveBeenCalledTimes(1);
+    expect(trialAction.execute).toHaveBeenCalledWith({ source: "billing" });
     expect(billing.showPayWall).not.toHaveBeenCalled();
   });
 

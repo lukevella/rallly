@@ -108,7 +108,7 @@ export function HobbyPlanCard({ className }: { className?: string }) {
             loading={start.isExecuting}
             onClick={() => {
               if (canTry) {
-                start.execute();
+                start.execute({ source: "billing" });
               } else {
                 showPayWall({ from: "billing-settings" });
               }
