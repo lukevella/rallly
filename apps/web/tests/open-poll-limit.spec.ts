@@ -65,7 +65,7 @@ async function makePoll(page: Page) {
   const body = await res.json();
   return body.result.data.json as
     | { ok: true; data: { id: string } }
-    | { ok: false; error: { code: string; usage: unknown; polls: unknown[] } };
+    | { ok: false; error: { code: string; usage: unknown } };
 }
 
 async function reopenPoll(page: Page, pollId: string) {
@@ -75,7 +75,7 @@ async function reopenPoll(page: Page, pollId: string) {
   expect(res.ok()).toBe(true);
   return (await res.json()).result.data.json as
     | { ok: true }
-    | { ok: false; error: { code: string; usage: unknown; polls: unknown[] } };
+    | { ok: false; error: { code: string; usage: unknown } };
 }
 
 function countOpen(userId: string) {
@@ -106,15 +106,13 @@ test.describe("free organizer", () => {
   });
 
   test("is refused a fourth open poll", async () => {
-    const result = await makePoll(page);
-    expect(result).toMatchObject({
+    expect(await makePoll(page)).toMatchObject({
       ok: false,
       error: {
         code: "OPEN_POLL_LIMIT_REACHED",
         usage: { tier: "hobby", limit: 3, openCount: 3 },
       },
     });
-    expect(!result.ok && result.error.polls).toHaveLength(3);
     expect(await countOpen(userId)).toBe(3);
   });
 
@@ -164,6 +162,60 @@ test.describe("free organizer", () => {
     ).toBe("closed");
   });
 
+  test("is shown the limit with the open polls and an upgrade", async () => {
+    await page.goto("/new");
+    const dialog = page.getByRole("dialog", {
+      name: "Open poll limit",
+    });
+    await expect(dialog).toBeVisible();
+    await expect(
+      dialog.getByRole("progressbar", { name: "Open polls" }),
+    ).toHaveAttribute("aria-valuetext", "3 of 3");
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeVisible();
+    await page.screenshot({
+      path: "test-results/open-poll-limit-free.png",
+    });
+
+    await dialog.getByRole("button", { name: "Upgrade" }).click();
+    await expect(
+      page.getByRole("button", { name: "Continue to checkout" }),
+    ).toBeVisible();
+  });
+
+  test("can leave the limit for their polls", async () => {
+    await page.goto("/new");
+    await page
+      .getByRole("dialog", { name: "Open poll limit" })
+      .getByRole("link", { name: "Go to polls" })
+      .click();
+    await expect(page).toHaveURL(/\/polls/);
+    await expect(
+      page.getByRole("dialog", { name: "Open poll limit" }),
+    ).toBeHidden();
+  });
+
+  test("is shown the limit when reopening from the poll page", async () => {
+    const closedId = `limit-${runId}-${userId}-closed-ui`;
+    await prisma.poll.create({
+      data: {
+        id: closedId,
+        title: "Closed poll",
+        userId,
+        spaceId,
+        status: "closed",
+        closedReason: "manual",
+      },
+    });
+
+    await page.goto(`/poll/${closedId}`);
+    await page.getByRole("button", { name: "Manage" }).click();
+    await page.getByRole("menuitem", { name: "Reopen poll" }).click();
+    await expect(
+      page.getByRole("dialog", { name: "Open poll limit" }),
+    ).toBeVisible();
+  });
+
   test("has no limit on Pro", async () => {
     await upgradeSpaceToPro({ spaceId, userId, seats: 1 });
     expect((await makePoll(page)).ok).toBe(true);
@@ -181,6 +233,7 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
   await newPollPage.goto();
   const pollPage = await newPollPage.create({ name: "Guest poll" });
   await pollPage.closeShareDialog();
+  const guestPollUrl = page.url();
 
   expect(await makePoll(page)).toMatchObject({
     ok: false,
@@ -189,6 +242,23 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
       usage: { tier: "guest", limit: 1, openCount: 1 },
     },
   });
+
+  await newPollPage.goto();
+  const dialog = page.getByRole("dialog", {
+    name: "Open poll limit",
+  });
+  await expect(
+    dialog.getByRole("progressbar", { name: "Open polls" }),
+  ).toHaveAttribute("aria-valuetext", "1 of 1");
+  await expect(
+    dialog.getByRole("link", { name: "Log in or sign up" }),
+  ).toBeVisible();
+  await page.screenshot({ path: "test-results/open-poll-limit-guest.png" });
+  await expect(dialog.getByRole("link", { name: "Go to polls" })).toHaveCount(
+    0,
+  );
+  await page.goto(guestPollUrl);
+  await expect(page.getByRole("heading", { name: "Guest poll" })).toBeVisible();
 
   await page.getByRole("link", { name: "Login" }).click();
   await new LoginPage(page).login({ email: user.email });
@@ -205,4 +275,12 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
       },
     }),
   ).toBe(4);
+
+  await new NewPollPage(page).goto();
+  await expect(
+    page
+      .getByRole("dialog", { name: "Open poll limit" })
+      .getByRole("progressbar", { name: "Open polls" }),
+  ).toHaveAttribute("aria-valuetext", "4 of 3");
+  await page.screenshot({ path: "test-results/open-poll-limit-over.png" });
 });

@@ -23,6 +23,10 @@ import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
+import {
+  getOpenPollLimitRefusal,
+  showOpenPollLimit,
+} from "@/features/poll/limit/client";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
@@ -34,7 +38,14 @@ function OpenCloseToggle() {
   // The poll is served from the layout's server props; the refresh is
   // what makes the new status show.
   const openPoll = trpc.polls.reopen.useMutation({
-    onSuccess: () => router.refresh(),
+    onSuccess: (res) => {
+      const refusal = getOpenPollLimitRefusal(res);
+      if (refusal) {
+        showOpenPollLimit("reopen", refusal.usage);
+        return;
+      }
+      router.refresh();
+    },
   });
   const closePoll = trpc.polls.close.useMutation({
     onSuccess: () => router.refresh(),

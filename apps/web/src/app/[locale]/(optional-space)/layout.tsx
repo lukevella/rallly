@@ -5,6 +5,7 @@ import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { loadPayWallPricing } from "@/features/billing/loaders";
 import { resolveSpaceTier } from "@/features/billing/utils";
+import { OpenPollLimitDialog } from "@/features/poll/limit/components/open-poll-limit-dialog";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { UserProvider } from "@/features/user/client";
@@ -54,6 +55,7 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
           <TierProvider tier={tier}>
             {children}
             <PayWall pricing={payWallPricing} />
+            <OpenPollLimitDialog />
           </TierProvider>
         </DeviceDateTimeProvider>
       </UserProvider>

@@ -4,6 +4,7 @@ import { SessionRefresher } from "@/components/session-refresher";
 import { TierProvider } from "@/features/billing/client";
 import { PayWall } from "@/features/billing/components/pay-wall";
 import { loadPayWallPricing } from "@/features/billing/loaders";
+import { OpenPollLimitDialog } from "@/features/poll/limit/components/open-poll-limit-dialog";
 import { SpaceProvider } from "@/features/space/client";
 import { loadActiveSpace } from "@/features/space/loaders";
 import { UserProvider } from "@/features/user/client";
@@ -40,6 +41,7 @@ async function SpaceGate({ children }: { children: React.ReactNode }) {
             <SpaceProvider space={space}>
               {children}
               <PayWall pricing={payWallPricing} />
+              <OpenPollLimitDialog />
             </SpaceProvider>
           </TierProvider>
         </DateTimeProvider>

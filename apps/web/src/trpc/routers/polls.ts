@@ -38,7 +38,6 @@ import {
   getPolls,
   hasPollAdminAccess,
 } from "@/features/poll/data";
-import { getOpenPollLimitDetails } from "@/features/poll/limit/data";
 import {
   assertOpenPollCapacity,
   checkOpenPollCapacity,
@@ -403,11 +402,7 @@ export const polls = router({
           ok: false as const,
           error: {
             code: "OPEN_POLL_LIMIT_REACHED" as const,
-            ...(await getOpenPollLimitDetails({
-              usage: poll.usage,
-              userId: ctx.user.id,
-              spaceId: spaceId ?? null,
-            })),
+            usage: poll.usage,
           },
         };
       }
@@ -1604,11 +1599,7 @@ export const polls = router({
             spaceId: target.spaceId,
           });
           if (!capacity.ok) {
-            return {
-              usage: capacity.usage,
-              userId: target.userId,
-              spaceId: target.spaceId,
-            };
+            return capacity.usage;
           }
         }
 
@@ -1669,14 +1660,9 @@ export const polls = router({
       });
 
       if (refusal) {
-        // Another member's polls are theirs to list, not the reopener's.
-        const details =
-          refusal.userId === ctx.user.id
-            ? await getOpenPollLimitDetails(refusal)
-            : { usage: refusal.usage, polls: [] };
         return {
           ok: false as const,
-          error: { code: "OPEN_POLL_LIMIT_REACHED" as const, ...details },
+          error: { code: "OPEN_POLL_LIMIT_REACHED" as const, usage: refusal },
         };
       }
 
@@ -1854,11 +1840,7 @@ export const polls = router({
           ok: false as const,
           error: {
             code: "OPEN_POLL_LIMIT_REACHED" as const,
-            ...(await getOpenPollLimitDetails({
-              usage: result.usage,
-              userId: ctx.user.id,
-              spaceId: poll.spaceId,
-            })),
+            usage: result.usage,
           },
         };
       }

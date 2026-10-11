@@ -49,6 +49,10 @@ import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
+import {
+  getOpenPollLimitRefusal,
+  showOpenPollLimit,
+} from "@/features/poll/limit/client";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { TimeRange } from "@/lib/datetime/time";
@@ -156,7 +160,17 @@ function PollRowActions({
   const refresh = { onSuccess: () => router.refresh() };
   const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
   const closePoll = trpc.polls.close.useMutation(refresh);
-  const reopenPoll = trpc.polls.reopen.useMutation(refresh);
+  const reopenPoll = trpc.polls.reopen.useMutation({
+    onSuccess: (res) => {
+      const refusal = getOpenPollLimitRefusal(res);
+      if (refusal) {
+        showOpenPollLimit("reopen", refusal.usage);
+        return;
+      }
+      toast.success(t("pollReopened", { defaultValue: "Poll reopened" }));
+      router.refresh();
+    },
+  });
   return (
     <div className="relative z-10 flex items-center gap-x-1">
       <CopyLinkButton href={shortUrl(`/invite/${id}`)} className="size-8" />
@@ -221,16 +235,7 @@ function PollRowActions({
             </DropdownMenuItem>
           )}
           {status === "closed" && (
-            <DropdownMenuItem
-              onClick={() => {
-                toast.promise(reopenPoll.mutateAsync({ pollId: id }), {
-                  loading: <Trans i18nKey="loading" defaults="Loading..." />,
-                  success: (
-                    <Trans i18nKey="pollReopened" defaults="Poll reopened" />
-                  ),
-                });
-              }}
-            >
+            <DropdownMenuItem onClick={() => reopenPoll.mutate({ pollId: id })}>
               <PlayIcon />
               <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
             </DropdownMenuItem>

@@ -26,6 +26,10 @@ import { usePoll } from "@/features/poll/client";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { DeletePollDialog } from "@/features/poll/components/manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "@/features/poll/components/manage-poll/use-csv-exporter";
+import {
+  getOpenPollLimitRefusal,
+  showOpenPollLimit,
+} from "@/features/poll/limit/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
@@ -44,7 +48,14 @@ export function PollAdminMenu() {
   // These pages are server rendered, so a status change shows once they are
   // fetched again.
   const reopenPoll = trpc.polls.reopen.useMutation({
-    onSuccess: () => router.refresh(),
+    onSuccess: (res) => {
+      const refusal = getOpenPollLimitRefusal(res);
+      if (refusal) {
+        showOpenPollLimit("reopen", refusal.usage);
+        return;
+      }
+      router.refresh();
+    },
   });
   const closePoll = trpc.polls.close.useMutation({
     onSuccess: () => router.refresh(),
