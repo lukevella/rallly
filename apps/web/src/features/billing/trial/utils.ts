@@ -21,7 +21,7 @@ export function isTrialRunning(
  * - eligible: free plan, never had a trial, so the 14 days can be offered
  * - trial: the 14 days are running and nothing is paying for the space
  * - paying: a subscription is active, whatever the trial dates say
- * - ended: the trial was used and its end has passed (the daily job may
+ * - ended: the trial was used and its end has passed (the hourly job may
  *   not have run yet, so the stored tier is not consulted)
  * - none: pro without a trial and without a subscription (self-hosted), or
  *   a state the trial has nothing to say about

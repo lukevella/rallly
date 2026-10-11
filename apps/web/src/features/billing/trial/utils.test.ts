@@ -52,7 +52,7 @@ describe("getTrialState", () => {
     ).toBe("paying");
   });
 
-  it("reports ended once the end has passed, even before the daily job", () => {
+  it("reports ended once the end has passed, even before the hourly job", () => {
     expect(
       getTrialState(
         {

@@ -13,7 +13,7 @@
     },
     {
       "path": "/api/house-keeping/end-trials",
-      "schedule": "0 5 * * *"
+      "schedule": "0 * * * *"
     },
     {
       "path": "/api/house-keeping/delete-inactive-polls",
