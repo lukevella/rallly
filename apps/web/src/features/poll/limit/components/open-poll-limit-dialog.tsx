@@ -32,10 +32,10 @@ import { Trans, useTranslation } from "@/i18n/client";
 export function OpenPollLimitDialog() {
   const open = useOpenPollLimitStore((state) => state.open);
   const hide = useOpenPollLimitStore((state) => state.hide);
-  // A refused reopen leaves the organizer on a page that still works, so it
-  // can be dismissed. On /new there is nothing left to do but make room,
-  // register or upgrade, so the only ways out are the dialog's own links.
-  const dismissible = open?.source === "reopen";
+  // A refused reopen or duplicate leaves the organizer on a page that still
+  // works, so it can be dismissed. On /new there is nothing left to do but
+  // make room, register or upgrade, so the only ways out are its own links.
+  const dismissible = open !== null && open.source !== "create";
 
   // The dialog's links close it by leaving the page. Clearing the store on
   // the route change rather than on click keeps it up if that navigation

@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import type { OpenPollUsage } from "./types";
 
-export type OpenPollLimitSource = "create" | "reopen";
+export type OpenPollLimitSource = "create" | "reopen" | "duplicate";
 
 type OpenPollLimitStore = {
   open: {
