@@ -6,10 +6,12 @@ import type { OpenPollUsage } from "./types";
 export type OpenPollLimitSource = "create" | "reopen" | "duplicate";
 
 type OpenPollLimitStore = {
-  open: {
+  isOpen: boolean;
+  /** Kept after closing, so the dialog still has content while it animates out */
+  content: {
     source: OpenPollLimitSource;
     usage: OpenPollUsage;
-    /** The page it was opened on: leaving it closes the dialog */
+    /** The page it was opened on: only that page shows it */
     pathname: string;
   } | null;
   show: (source: OpenPollLimitSource, usage: OpenPollUsage) => void;
@@ -17,10 +19,14 @@ type OpenPollLimitStore = {
 };
 
 export const useOpenPollLimitStore = create<OpenPollLimitStore>((set) => ({
-  open: null,
+  isOpen: false,
+  content: null,
   show: (source, usage) =>
-    set({ open: { source, usage, pathname: window.location.pathname } }),
-  hide: () => set({ open: null }),
+    set({
+      isOpen: true,
+      content: { source, usage, pathname: window.location.pathname },
+    }),
+  hide: () => set({ isOpen: false }),
 }));
 
 /**
