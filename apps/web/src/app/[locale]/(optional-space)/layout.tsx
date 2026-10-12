@@ -7,6 +7,7 @@ import { loadPayWallPricing } from "@/features/billing/loaders";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
+import { loadOnboardingGate } from "@/features/space/loaders";
 import { UserProvider } from "@/features/user/client";
 import { loadUser } from "@/features/user/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -21,6 +22,9 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
   if (!isQuickCreateEnabled) {
     await loadUser();
   }
+
+  // Signed-in accounts finish onboarding before managing or creating polls.
+  await loadOnboardingGate();
 
   const [locale, deviceDateTimeConfig, session, payWallPricing] =
     await Promise.all([

@@ -154,3 +154,91 @@ describe("loadActiveSpace", () => {
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 });
+
+const loadOnboardingGate = async () => {
+  vi.resetModules();
+  const mod = await import("./loaders");
+  return mod.loadOnboardingGate;
+};
+
+describe("loadOnboardingGate", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("lets a guest through without reading spaces", async () => {
+    authenticatedAs({ ...completeUser, isGuest: true });
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).resolves.toBeUndefined();
+    expect(mockRedirect).not.toHaveBeenCalled();
+    expect(mockGetActiveSpaceForUser).not.toHaveBeenCalled();
+  });
+
+  it("lets a signed-out visitor through", async () => {
+    mockGetSessionState.mockResolvedValue({ status: "unauthenticated" });
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).resolves.toBeUndefined();
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+
+  it("lets an onboarded user through", async () => {
+    authenticatedAs(completeUser);
+    mockGetActiveSpaceForUser.mockResolvedValue({ id: "space-1" });
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).resolves.toBeUndefined();
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+
+  // A guest who signs up from their poll is returned to it and would
+  // otherwise never reach /setup.
+  it("redirects a registered user with no space to /setup and back", async () => {
+    authenticatedAs(completeUser);
+    mockGetActiveSpaceForUser.mockResolvedValue(null);
+    mockGetOwnedSpace.mockResolvedValue(null);
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).rejects.toThrow(REDIRECT);
+    expect(mockRedirect).toHaveBeenCalledWith(
+      expect.stringMatching(/^\/setup\?redirectTo=%2Fpolls/),
+    );
+  });
+
+  it("redirects a registered user with no name to /setup", async () => {
+    authenticatedAs({ ...completeUser, name: "" });
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).rejects.toThrow(REDIRECT);
+    expect(mockRedirect).toHaveBeenCalledWith(
+      expect.stringContaining("/setup"),
+    );
+  });
+
+  // /setup bounces an owner straight back, so redirecting would loop.
+  it("lets a user through who owns a space but has none active", async () => {
+    authenticatedAs(completeUser);
+    mockGetActiveSpaceForUser.mockResolvedValue(null);
+    mockGetOwnedSpace.mockResolvedValue({ id: "space-1" });
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).resolves.toBeUndefined();
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+
+  it("throws for a banned user", async () => {
+    authenticatedAs({ ...completeUser, banned: true });
+
+    const gate = await loadOnboardingGate();
+
+    await expect(gate()).rejects.toThrow();
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+});

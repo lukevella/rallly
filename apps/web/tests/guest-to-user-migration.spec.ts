@@ -40,6 +40,15 @@ test.describe.serial(() => {
     // Step 3: Complete registration
     const registerPage = new RegisterPage(page);
     await registerPage.register(testUser);
+
+    // Step 4: Setup returns them to the poll, now adopted into their space
+    await expect(
+      page.getByRole("heading", { name: "Monthly Meetup" }),
+    ).toBeVisible();
+    const urlId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
+    expect(urlId).toBeTruthy();
+    const poll = await prisma.poll.findUnique({ where: { id: urlId } });
+    expect(poll?.spaceId).toBeTruthy();
   });
 
   test("guest user can create a poll and link it to existing user", async ({
