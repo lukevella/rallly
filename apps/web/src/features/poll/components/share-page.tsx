@@ -113,7 +113,9 @@ function ChooseRoute({
 
   return (
     <Card>
-      <CardHeader>
+      {/* No padding under the title: the content's own padding is the gap
+          to the cards. */}
+      <CardHeader className="pb-0 sm:pb-0">
         <CardTitle id="share-route-title">
           {created ? (
             <Trans
