@@ -21,6 +21,7 @@ import { primePayWall, usePayWallStore } from "@/features/billing/client";
 import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import type { OpenPollLimitSource } from "@/features/poll/limit/client";
 import { useOpenPollLimitStore } from "@/features/poll/limit/client";
+import { OPEN_POLL_LIMITS } from "@/features/poll/limit/constants";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { Trans, useTranslation } from "@/i18n/client";
 
@@ -103,10 +104,18 @@ function OpenPollLimitContent({
           <Trans i18nKey="openPollLimitTitle" defaults="Open poll limit" />
         </DialogTitle>
         <DialogDescription>
-          <Trans
-            i18nKey="openPollLimitDescription"
-            defaults="You have hit the limit of open polls for your current tier."
-          />
+          {data.tier === "guest" ? (
+            <Trans
+              i18nKey="openPollLimitGuestDescription"
+              defaults="You've reached the limit of open polls for guests. Close a poll to make room, or log in to get up to {limit}."
+              values={{ limit: OPEN_POLL_LIMITS.hobby }}
+            />
+          ) : (
+            <Trans
+              i18nKey="openPollLimitFreeDescription"
+              defaults="You've reached the limit of open polls for your plan. Close a poll to make room, or upgrade for unlimited open polls."
+            />
+          )}
         </DialogDescription>
       </DialogHeader>
       <OpenPollUsageBar openCount={data.openCount} limit={data.limit} />
