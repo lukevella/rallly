@@ -1,8 +1,10 @@
 import "server-only";
 
 import type { Prisma } from "@rallly/database";
+import { prisma } from "@rallly/database";
+import { track } from "@/lib/posthog";
 import { isOpenPollLimitEnabled } from "./constants";
-import { countOpenPolls } from "./data";
+import { countOpenPolls, getOpenPollUsage } from "./data";
 import type { OpenPollUsage } from "./types";
 import { getOpenPollLimit, getOpenPollTier, isAtOpenPollLimit } from "./utils";
 
@@ -59,5 +61,79 @@ export async function assertOpenPollCapacity(
   const capacity = await checkOpenPollCapacity(tx, scope);
   if (!capacity.ok) {
     throw new OpenPollLimitError(capacity.usage);
+  }
+}
+
+/**
+ * Open polls a guest is about to hand over to an account. Read before the
+ * hand-over, so `reportAdoptionOverLimit` can tell what it added.
+ */
+export function countAdoptableOpenPolls(
+  where: { userId: string; spaceId: null } | { userId: string },
+) {
+  if (!isOpenPollLimitEnabled) {
+    return Promise.resolve(0);
+  }
+  return prisma.poll.count({
+    where: { ...where, status: "open", deleted: false },
+  });
+}
+
+/**
+ * Adopting guest polls is never blocked, so signing in can leave an
+ * organizer over the limit. Reported so the open poll limit's log in
+ * loophole (log out, create as a guest, log back in) can be measured.
+ * Never throws: it runs inside sign in and setup.
+ */
+export async function reportAdoptionOverLimit({
+  userId,
+  spaceId,
+  adoptedOpenCount,
+  source,
+}: {
+  userId: string;
+  spaceId: string;
+  adoptedOpenCount: number;
+  source: "login" | "setup";
+}) {
+  if (!isOpenPollLimitEnabled || adoptedOpenCount === 0) {
+    return;
+  }
+
+  try {
+    const space = await prisma.space.findUnique({
+      where: { id: spaceId },
+      select: { tier: true },
+    });
+    if (!space) {
+      return;
+    }
+
+    const usage = await getOpenPollUsage({
+      userId,
+      spaceId,
+      tier: getOpenPollTier(space.tier),
+    });
+    if (usage.limit === null || usage.openCount <= usage.limit) {
+      return;
+    }
+
+    track(
+      { id: userId, isGuest: false },
+      {
+        event: "poll_limit:adopted_over_limit",
+        properties: {
+          tier: usage.tier,
+          open_count: usage.openCount,
+          limit: usage.limit,
+          adopted_open_count: adoptedOpenCount,
+          over_by: usage.openCount - usage.limit,
+          source,
+        },
+        groups: { space: spaceId },
+      },
+    );
+  } catch {
+    // Reporting only; adoption already succeeded.
   }
 }

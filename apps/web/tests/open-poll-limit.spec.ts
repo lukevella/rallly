@@ -190,9 +190,8 @@ test.describe("free organizer", () => {
       .getByRole("link", { name: "Go to polls" })
       .click();
     await expect(page).toHaveURL(/\/polls/);
-    await expect(
-      page.getByRole("dialog", { name: "Open poll limit reached" }),
-    ).toBeHidden();
+    // Any dialog, titled or not: an empty shell has no accessible name.
+    await expect(page.getByRole("dialog")).toHaveCount(0);
   });
 
   test("is shown the limit when reopening from the poll page", async () => {
