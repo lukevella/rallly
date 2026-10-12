@@ -13,15 +13,17 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { Progress } from "@rallly/ui/progress";
+import { GaugeIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
 import { LoginLink } from "@/components/login-link";
+import { PageIcon } from "@/components/page-icons";
 import { primePayWall, usePayWallStore } from "@/features/billing/client";
 import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
+import { PLAN_NAMES } from "@/features/billing/constants";
 import type { OpenPollLimitSource } from "@/features/poll/limit/client";
 import { useOpenPollLimitStore } from "@/features/poll/limit/client";
-import { OPEN_POLL_LIMITS } from "@/features/poll/limit/constants";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { Trans, useTranslation } from "@/i18n/client";
 
@@ -100,20 +102,28 @@ function OpenPollLimitContent({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>
-          <Trans i18nKey="openPollLimitTitle" defaults="Open poll limit" />
-        </DialogTitle>
-        <DialogDescription>
+        <div className="flex items-center gap-3">
+          <PageIcon size="sm" color="primary">
+            <GaugeIcon />
+          </PageIcon>
+          <DialogTitle>
+            <Trans
+              i18nKey="openPollLimitReachedTitle"
+              defaults="Open poll limit reached"
+            />
+          </DialogTitle>
+        </div>
+        <DialogDescription className="mt-2">
           {data.tier === "guest" ? (
             <Trans
               i18nKey="openPollLimitGuestDescription"
-              defaults="You've reached the limit of open polls for guests. Close a poll to make room, or log in to get up to {limit}."
-              values={{ limit: OPEN_POLL_LIMITS.hobby }}
+              defaults="Guests can have one open poll at a time. Finalize or close polls to make room, or log in to increase your limit."
             />
           ) : (
             <Trans
               i18nKey="openPollLimitFreeDescription"
-              defaults="You've reached the limit of open polls for your plan. Close a poll to make room, or upgrade for unlimited open polls."
+              defaults="{planName} includes up to {limit} open polls at a time. Finalize or close polls to make room, or upgrade for unlimited open polls."
+              values={{ planName: PLAN_NAMES.HOBBY, limit: data.limit }}
             />
           )}
         </DialogDescription>

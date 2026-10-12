@@ -165,7 +165,7 @@ test.describe("free organizer", () => {
   test("is shown the limit with the open polls and an upgrade", async () => {
     await page.goto("/new");
     const dialog = page.getByRole("dialog", {
-      name: "Open poll limit",
+      name: "Open poll limit reached",
     });
     await expect(dialog).toBeVisible();
     await expect(
@@ -186,12 +186,12 @@ test.describe("free organizer", () => {
   test("can leave the limit for their polls", async () => {
     await page.goto("/new");
     await page
-      .getByRole("dialog", { name: "Open poll limit" })
+      .getByRole("dialog", { name: "Open poll limit reached" })
       .getByRole("link", { name: "Go to polls" })
       .click();
     await expect(page).toHaveURL(/\/polls/);
     await expect(
-      page.getByRole("dialog", { name: "Open poll limit" }),
+      page.getByRole("dialog", { name: "Open poll limit reached" }),
     ).toBeHidden();
   });
 
@@ -212,7 +212,7 @@ test.describe("free organizer", () => {
     await page.getByRole("button", { name: "Manage" }).click();
     await page.getByRole("menuitem", { name: "Reopen poll" }).click();
     await expect(
-      page.getByRole("dialog", { name: "Open poll limit" }),
+      page.getByRole("dialog", { name: "Open poll limit reached" }),
     ).toBeVisible();
   });
 
@@ -245,7 +245,7 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
 
   await newPollPage.goto();
   const dialog = page.getByRole("dialog", {
-    name: "Open poll limit",
+    name: "Open poll limit reached",
   });
   await expect(
     dialog.getByRole("progressbar", { name: "Open polls" }),
@@ -279,7 +279,7 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
   await new NewPollPage(page).goto();
   await expect(
     page
-      .getByRole("dialog", { name: "Open poll limit" })
+      .getByRole("dialog", { name: "Open poll limit reached" })
       .getByRole("progressbar", { name: "Open polls" }),
   ).toHaveAttribute("aria-valuetext", "4 of 3");
   await page.screenshot({ path: "test-results/open-poll-limit-over.png" });
