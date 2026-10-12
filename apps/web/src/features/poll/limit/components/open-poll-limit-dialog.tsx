@@ -13,7 +13,7 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { Progress } from "@rallly/ui/progress";
-import { GaugeIcon } from "lucide-react";
+import { BarChart2Icon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
@@ -104,7 +104,7 @@ function OpenPollLimitContent({
       <DialogHeader>
         <div className="flex items-center gap-3">
           <PageIcon size="sm" color="primary">
-            <GaugeIcon />
+            <BarChart2Icon />
           </PageIcon>
           <DialogTitle>
             <Trans
