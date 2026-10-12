@@ -501,7 +501,7 @@ export default async function Page(props: {
                       t={t}
                       ns="pricing"
                       i18nKey="compareOpenPollsDescription"
-                      defaults="Polls collecting votes at the same time. Close a poll to make room for another."
+                      defaults="Polls collecting votes at the same time"
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
