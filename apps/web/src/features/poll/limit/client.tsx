@@ -38,6 +38,14 @@ export const showOpenPollLimit = (
   usage: OpenPollUsage,
 ) => useOpenPollLimitStore.getState().show(source, usage);
 
+/** Closes the dialog if it was opened for this reason. */
+export const hideOpenPollLimit = (source: OpenPollLimitSource) => {
+  const { isOpen, content, hide } = useOpenPollLimitStore.getState();
+  if (isOpen && content?.source === source) {
+    hide();
+  }
+};
+
 /** The refusal a create, reopen or duplicate returned, or null. */
 export function getOpenPollLimitRefusal<E extends { code: string }>(result: {
   ok: boolean;

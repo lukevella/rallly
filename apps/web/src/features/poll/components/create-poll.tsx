@@ -26,7 +26,10 @@ import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
-import { showOpenPollLimit } from "@/features/poll/limit/client";
+import {
+  hideOpenPollLimit,
+  showOpenPollLimit,
+} from "@/features/poll/limit/client";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { isAtOpenPollLimit } from "@/features/poll/limit/utils";
 import { useUser } from "@/features/user/client";
@@ -169,10 +172,26 @@ export const CreatePoll = ({
   // The form persists, so it survives closing a poll to make room. The count
   // is the server's at page load, so the poll created here can't trip it.
   React.useEffect(() => {
-    if (openPollUsage && isAtOpenPollLimit(openPollUsage)) {
+    if (!openPollUsage) {
+      return;
+    }
+    if (isAtOpenPollLimit(openPollUsage)) {
       showOpenPollLimit("create", openPollUsage);
+    } else {
+      hideOpenPollLimit("create");
     }
   }, [openPollUsage]);
+
+  // The client router reuses a page it rendered in the last minute
+  // (staleTimes.dynamic), so a /new loaded before the organizer opened or
+  // closed polls would show the old count. Render it fresh once on arrival.
+  const hasRefreshedUsage = React.useRef(false);
+  React.useEffect(() => {
+    if (openPollUsage && !hasRefreshedUsage.current) {
+      hasRefreshedUsage.current = true;
+      router.refresh();
+    }
+  }, [openPollUsage, router]);
 
   return (
     <Form {...form}>

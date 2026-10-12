@@ -183,6 +183,30 @@ test.describe("free organizer", () => {
     ).toBeVisible();
   });
 
+  test("is shown the limit on a /new the router had cached below it", async () => {
+    // Start one under the limit, so /new renders without the dialog and the
+    // client router keeps that render.
+    await prisma.poll.update({
+      where: { id: pollIds[0] },
+      data: { status: "closed", closedReason: "manual" },
+    });
+    const newPollPage = new NewPollPage(page);
+    await newPollPage.goto();
+    await expect(
+      page.getByRole("dialog", { name: "Open poll limit reached" }),
+    ).toHaveCount(0);
+
+    const pollPage = await newPollPage.create({ name: "Third poll" });
+    await pollPage.closeShareDialog();
+
+    // Back to /new without a full page load: the cached render says 2 of 3.
+    await page.goBack();
+    await expect(page).toHaveURL(/\/new/);
+    await expect(
+      page.getByRole("dialog", { name: "Open poll limit reached" }),
+    ).toBeVisible();
+  });
+
   test("can leave the limit for their polls", async () => {
     await page.goto("/new");
     await page
