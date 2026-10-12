@@ -51,6 +51,7 @@
   "doodleComparisonPaidPlansOnly": "Csak fizetős csomagok",
   "doodleComparisonPolls": "Csoportos szavazások",
   "doodleComparisonPollsDoodle": "1 az ingyenes csomagban",
+  "doodleComparisonPollsRallly": "Korlátlan, legfeljebb {count} nyitott egy időben",
   "doodleComparisonSelfHosting": "Önállóan hosztolható",
   "doodleComparisonTimeZones": "Automatikus időzóna-átváltás",
   "doodleComparisonTitle": "Milyen a Rallly a Doodle-höz képest",
