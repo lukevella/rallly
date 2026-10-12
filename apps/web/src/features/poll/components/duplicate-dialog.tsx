@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { useRouter } from "next/navigation";
 import { DuplicateForm } from "@/features/poll/components/duplicate-form";
+import { showOpenPollLimit } from "@/features/poll/limit/client";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
@@ -49,7 +50,10 @@ export function DuplicateDialog({
                 onSuccess: async (res) => {
                   if (res.ok) {
                     router.push(`/poll/${res.data.id}`);
+                    return;
                   }
+                  props.onOpenChange?.(false);
+                  showOpenPollLimit("duplicate", res.error.usage);
                 },
               },
             );
