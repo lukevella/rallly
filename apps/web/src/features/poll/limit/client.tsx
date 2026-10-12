@@ -6,14 +6,20 @@ import type { OpenPollUsage } from "./types";
 export type OpenPollLimitSource = "create" | "reopen";
 
 type OpenPollLimitStore = {
-  open: { source: OpenPollLimitSource; usage: OpenPollUsage } | null;
+  open: {
+    source: OpenPollLimitSource;
+    usage: OpenPollUsage;
+    /** The page it was opened on: leaving it closes the dialog */
+    pathname: string;
+  } | null;
   show: (source: OpenPollLimitSource, usage: OpenPollUsage) => void;
   hide: () => void;
 };
 
 export const useOpenPollLimitStore = create<OpenPollLimitStore>((set) => ({
   open: null,
-  show: (source, usage) => set({ open: { source, usage } }),
+  show: (source, usage) =>
+    set({ open: { source, usage, pathname: window.location.pathname } }),
   hide: () => set({ open: null }),
 }));
 

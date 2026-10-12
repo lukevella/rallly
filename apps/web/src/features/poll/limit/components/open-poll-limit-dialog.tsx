@@ -38,13 +38,11 @@ export function OpenPollLimitDialog() {
 
   // The dialog's links close it by leaving the page. Clearing the store on
   // the route change rather than on click keeps it up if that navigation
-  // fails or is cancelled.
+  // fails or is cancelled. Each layout mounts its own instance, so the page
+  // it was opened on comes from the store, not from this instance's mount.
   const pathname = usePathname();
-  const openedOn = React.useRef(pathname);
   React.useEffect(() => {
-    if (open === null) {
-      openedOn.current = pathname;
-    } else if (pathname !== openedOn.current) {
+    if (open && pathname !== open.pathname) {
       hide();
     }
   }, [open, pathname, hide]);
