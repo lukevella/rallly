@@ -10,6 +10,7 @@ import {
   ClockIcon,
   CopyIcon,
   EyeOffIcon,
+  ListChecksIcon,
   MailPlusIcon,
   PaletteIcon,
   Settings2Icon,
@@ -56,6 +57,10 @@ import {
   getPricing,
 } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
+import {
+  FREE_OPEN_POLL_LIMIT,
+  isOpenPollLimitEnabled,
+} from "@/lib/open-poll-limit";
 import {
   PlanBenefit,
   PlanBenefitName,
@@ -236,6 +241,19 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                {isOpenPollLimitEnabled ? (
+                  <PlanBenefit icon={<ListChecksIcon />}>
+                    <PlanBenefitName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="freeOpenPollLimit"
+                        defaults="Up to {count} open polls"
+                        values={{ count: FREE_OPEN_POLL_LIMIT }}
+                      />
+                    </PlanBenefitName>
+                  </PlanBenefit>
+                ) : null}
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -315,6 +333,18 @@ export default async function Page(props: {
                 </Link>
               </div>
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+                {isOpenPollLimitEnabled ? (
+                  <PlanBenefit icon={<ListChecksIcon />}>
+                    <PlanBenefitName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="unlimitedOpenPolls"
+                        defaults="Unlimited open polls"
+                      />
+                    </PlanBenefitName>
+                  </PlanBenefit>
+                ) : null}
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -461,42 +491,74 @@ export default async function Page(props: {
                   defaults="Scheduling poll"
                 />
               </CompareTableSection>
-              <tr>
-                <CompareTableFeature>
-                  <CompareTableFeatureName>
+              {isOpenPollLimitEnabled ? (
+                <tr>
+                  <CompareTableFeature>
+                    <CompareTableFeatureName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="compareOpenPolls"
+                        defaults="Open polls"
+                      />
+                    </CompareTableFeatureName>
+                    <CompareTableFeatureDescription>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="compareOpenPollsDescription"
+                        defaults="Polls collecting votes at the same time"
+                      />
+                    </CompareTableFeatureDescription>
+                  </CompareTableFeature>
+                  <CompareTableCell>{FREE_OPEN_POLL_LIMIT}</CompareTableCell>
+                  <CompareTableCell>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="comparePolls"
-                      defaults="Polls"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
                     />
-                  </CompareTableFeatureName>
-                  <CompareTableFeatureDescription>
+                  </CompareTableCell>
+                </tr>
+              ) : (
+                <tr>
+                  <CompareTableFeature>
+                    <CompareTableFeatureName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="comparePolls"
+                        defaults="Polls"
+                      />
+                    </CompareTableFeatureName>
+                    <CompareTableFeatureDescription>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="compareSchedulingPollsDescription"
+                        defaults="Create polls to find the best time to meet"
+                      />
+                    </CompareTableFeatureDescription>
+                  </CompareTableFeature>
+                  <CompareTableCell>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="compareSchedulingPollsDescription"
-                      defaults="Create polls to find the best time to meet"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
                     />
-                  </CompareTableFeatureDescription>
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-              </tr>
+                  </CompareTableCell>
+                  <CompareTableCell>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
+                    />
+                  </CompareTableCell>
+                </tr>
+              )}
               <tr>
                 <CompareTableFeature>
                   <CompareTableFeatureName>
@@ -884,12 +946,22 @@ export default async function Page(props: {
               />
             }
           >
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="canUseFreeAnswer3"
-              defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
-            />
+            {isOpenPollLimitEnabled ? (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="canUseFreeAnswerOpenPollLimit"
+                defaults="Yes. The free plan is not a trial. You can create as many polls as you like, with up to {count} open at a time, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as unlimited open polls, keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+                values={{ count: FREE_OPEN_POLL_LIMIT }}
+              />
+            ) : (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="canUseFreeAnswer3"
+                defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+              />
+            )}
           </FaqItem>
           <FaqItem
             question={
@@ -901,12 +973,22 @@ export default async function Page(props: {
               />
             }
           >
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="pollLimitAnswer"
-              defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
-            />
+            {isOpenPollLimitEnabled ? (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="pollLimitAnswerOpenPollLimit"
+                defaults="There is no limit on the number of polls you can create or the number of people who can vote on them. On the free plan, up to {count} polls can be open and collecting votes at a time; finalize or close one to make room for another. Pro has no limit. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+                values={{ count: FREE_OPEN_POLL_LIMIT }}
+              />
+            ) : (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="pollLimitAnswer"
+                defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+              />
+            )}
           </FaqItem>
           <FaqItem
             question={

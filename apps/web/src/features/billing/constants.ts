@@ -11,3 +11,7 @@ export { PLAN_NAMES } from "@rallly/billing/pricing";
 export const BILLING_FLASH_KEY = "billing";
 
 export const CANCELLATION_COMMENT_MAX_LENGTH = 500;
+
+// How many polls a free organizer can have open at once in a space. Pro has
+// no limit.
+export const FREE_OPEN_POLL_LIMIT = 3;
