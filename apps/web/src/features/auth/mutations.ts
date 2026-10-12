@@ -2,6 +2,10 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
+import {
+  countAdoptableOpenPolls,
+  reportAdoptionOverLimit,
+} from "@/features/poll/limit/mutations";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import { posthog } from "@/lib/posthog";
 
@@ -66,6 +70,10 @@ export const linkAnonymousUser = async (
       );
     }
 
+    const adoptedOpenCount = spaceId
+      ? await countAdoptableOpenPolls({ userId: anonymousUserId })
+      : 0;
+
     await prisma.$transaction(async (tx) => {
       // Transfer space-scoped data from anonymous user to authenticated user
       await Promise.all([
@@ -115,6 +123,16 @@ export const linkAnonymousUser = async (
         }),
       ]);
     });
+
+    // Without a space, setup adopts the polls later and reports then.
+    if (spaceId) {
+      await reportAdoptionOverLimit({
+        userId: authenticatedUserId,
+        spaceId,
+        adoptedOpenCount,
+        source: "login",
+      });
+    }
 
     // Merge user identities in PostHog
     posthog()?.capture({

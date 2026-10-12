@@ -7,7 +7,11 @@ import { revalidatePath } from "next/cache";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { parsePollConferencing } from "@/features/conferencing/data";
 import type { PollConferencing } from "@/features/conferencing/schema";
-import { assertOpenPollCapacity } from "@/features/poll/limit/mutations";
+import {
+  assertOpenPollCapacity,
+  countAdoptableOpenPolls,
+  reportAdoptionOverLimit,
+} from "@/features/poll/limit/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
@@ -272,6 +276,11 @@ export async function adoptOrphanedPolls({
   userId: string;
   spaceId: string;
 }) {
+  const adoptedOpenCount = await countAdoptableOpenPolls({
+    userId,
+    spaceId: null,
+  });
+
   await prisma.poll.updateMany({
     where: {
       userId,
@@ -280,6 +289,13 @@ export async function adoptOrphanedPolls({
     data: {
       spaceId,
     },
+  });
+
+  await reportAdoptionOverLimit({
+    userId,
+    spaceId,
+    adoptedOpenCount,
+    source: "setup",
   });
 }
 
