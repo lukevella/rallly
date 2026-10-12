@@ -36,7 +36,7 @@ export default async function Root(props: {
   return (
     <div className="relative z-10 flex min-h-full flex-col">
       <SiteHeader>
-        <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-5 transition-[padding] duration-200 ease-out group-data-scrolled:py-3 motion-reduce:transition-none sm:px-6">
+        <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-3 sm:px-6">
           <div className="flex grow items-center gap-x-12">
             <LinkBase
               className="relative inline-block h-7 w-32 rounded-sm"
