@@ -13,6 +13,7 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { Progress } from "@rallly/ui/progress";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
 import { LoginLink } from "@/components/login-link";
@@ -35,6 +36,19 @@ export function OpenPollLimitDialog() {
   // register or upgrade, so the only ways out are the dialog's own links.
   const dismissible = open?.source === "reopen";
 
+  // The dialog's links close it by leaving the page. Clearing the store on
+  // the route change rather than on click keeps it up if that navigation
+  // fails or is cancelled.
+  const pathname = usePathname();
+  const openedOn = React.useRef(pathname);
+  React.useEffect(() => {
+    if (open === null) {
+      openedOn.current = pathname;
+    } else if (pathname !== openedOn.current) {
+      hide();
+    }
+  }, [open, pathname, hide]);
+
   return (
     <Dialog
       open={open !== null}
@@ -47,11 +61,7 @@ export function OpenPollLimitDialog() {
     >
       <DialogContent size="md" showCloseButton={dismissible}>
         {open ? (
-          <OpenPollLimitContent
-            source={open.source}
-            usage={open.usage}
-            onDismiss={hide}
-          />
+          <OpenPollLimitContent source={open.source} usage={open.usage} />
         ) : null}
       </DialogContent>
     </Dialog>
@@ -61,11 +71,9 @@ export function OpenPollLimitDialog() {
 function OpenPollLimitContent({
   source,
   usage: data,
-  onDismiss,
 }: {
   source: OpenPollLimitSource;
   usage: OpenPollUsage;
-  onDismiss: () => void;
 }) {
   // The pay wall nests here so it stacks above this dialog and this dialog
   // is still there when the pay wall closes.
@@ -111,7 +119,6 @@ function OpenPollLimitContent({
             className={buttonVariants()}
             onClick={() => {
               posthog?.capture("poll_limit:go_to_polls_click", eventProperties);
-              onDismiss();
             }}
           >
             <Trans i18nKey="goToPolls" defaults="Go to polls" />
@@ -121,7 +128,6 @@ function OpenPollLimitContent({
           usage={data}
           onRegisterClick={() => {
             posthog?.capture("poll_limit:register_click", eventProperties);
-            onDismiss();
           }}
           onUpgradeClick={() => {
             posthog?.capture("poll_limit:upgrade_click", eventProperties);

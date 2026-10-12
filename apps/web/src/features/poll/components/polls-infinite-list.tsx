@@ -160,17 +160,7 @@ function PollRowActions({
   const refresh = { onSuccess: () => router.refresh() };
   const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
   const closePoll = trpc.polls.close.useMutation(refresh);
-  const reopenPoll = trpc.polls.reopen.useMutation({
-    onSuccess: (res) => {
-      const refusal = getOpenPollLimitRefusal(res);
-      if (refusal) {
-        showOpenPollLimit("reopen", refusal.usage);
-        return;
-      }
-      toast.success(t("pollReopened", { defaultValue: "Poll reopened" }));
-      router.refresh();
-    },
-  });
+  const reopenPoll = trpc.polls.reopen.useMutation();
   return (
     <div className="relative z-10 flex items-center gap-x-1">
       <CopyLinkButton href={shortUrl(`/invite/${id}`)} className="size-8" />
@@ -235,7 +225,35 @@ function PollRowActions({
             </DropdownMenuItem>
           )}
           {status === "closed" && (
-            <DropdownMenuItem onClick={() => reopenPoll.mutate({ pollId: id })}>
+            <DropdownMenuItem
+              onClick={() => {
+                const toastId = toast.loading(
+                  <Trans i18nKey="loading" defaults="Loading..." />,
+                );
+                reopenPoll.mutate(
+                  { pollId: id },
+                  {
+                    onSuccess: (res) => {
+                      const refusal = getOpenPollLimitRefusal(res);
+                      if (refusal) {
+                        toast.dismiss(toastId);
+                        showOpenPollLimit("reopen", refusal.usage);
+                        return;
+                      }
+                      toast.success(
+                        <Trans
+                          i18nKey="pollReopened"
+                          defaults="Poll reopened"
+                        />,
+                        { id: toastId },
+                      );
+                      router.refresh();
+                    },
+                    onError: () => toast.dismiss(toastId),
+                  },
+                );
+              }}
+            >
               <PlayIcon />
               <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
             </DropdownMenuItem>
