@@ -41,6 +41,7 @@ import type { SpaceTier } from "@/features/space/schema";
 import { spaceTierSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 import type { PayWallPricing, PayWallTrigger } from "../client";
 import { setCurrencyCookie, usePayWallStore } from "../client";
 import { FREE_OPEN_POLL_LIMIT, PLAN_NAMES } from "../constants";
@@ -206,13 +207,23 @@ const leadingBenefitByTrigger: Partial<Record<PayWallTrigger["from"], string>> =
     "poll-limit": "unlimitedOpenPolls",
   };
 
-// The benefit that triggered the pay wall leads the list.
-function getProBenefits(from: PayWallTrigger["from"] | undefined) {
+// The benefit that triggered the pay wall leads the list. Unlimited open
+// polls is only a benefit while the limit is on.
+function getProBenefits({
+  from,
+  isOpenPollLimitEnabled,
+}: {
+  from: PayWallTrigger["from"] | undefined;
+  isOpenPollLimitEnabled: boolean;
+}) {
+  const benefits = isOpenPollLimitEnabled
+    ? proBenefitsList
+    : proBenefitsList.filter((benefit) => benefit.key !== "unlimitedOpenPolls");
   const leading = from ? leadingBenefitByTrigger[from] : undefined;
-  if (!leading) return proBenefitsList;
+  if (!leading) return benefits;
   return [
-    ...proBenefitsList.filter((benefit) => benefit.key === leading),
-    ...proBenefitsList.filter((benefit) => benefit.key !== leading),
+    ...benefits.filter((benefit) => benefit.key === leading),
+    ...benefits.filter((benefit) => benefit.key !== leading),
   ];
 }
 
@@ -247,7 +258,11 @@ export function PayWallDialog({
   const [selectedPlan, setSelectedPlan] = React.useState<SpaceTier>("pro");
   const [isAnnual, setIsAnnual] = React.useState(true);
   const trigger = usePayWallStore((state) => state.trigger);
-  const proBenefits = getProBenefits(trigger?.from);
+  const isOpenPollLimitEnabled = useFeatureFlag("openPollLimit");
+  const proBenefits = getProBenefits({
+    from: trigger?.from,
+    isOpenPollLimitEnabled,
+  });
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
   const prices = pricing?.prices ?? fallbackPrices;
@@ -479,22 +494,24 @@ export function PayWallDialog({
                       />
                     }
                   />
-                  <KeyBenefitsItem
-                    icon={<ListChecksIcon />}
-                    title={
-                      <Trans
-                        i18nKey="freeOpenPollLimit"
-                        defaults="Up to {count} open polls"
-                        values={{ count: FREE_OPEN_POLL_LIMIT }}
-                      />
-                    }
-                    description={
-                      <Trans
-                        i18nKey="freeOpenPollLimitDescription"
-                        defaults="Close a poll to make room for another"
-                      />
-                    }
-                  />
+                  {isOpenPollLimitEnabled ? (
+                    <KeyBenefitsItem
+                      icon={<ListChecksIcon />}
+                      title={
+                        <Trans
+                          i18nKey="freeOpenPollLimit"
+                          defaults="Up to {count} open polls"
+                          values={{ count: FREE_OPEN_POLL_LIMIT }}
+                        />
+                      }
+                      description={
+                        <Trans
+                          i18nKey="freeOpenPollLimitDescription"
+                          defaults="Finalize or close a poll to make room for another"
+                        />
+                      }
+                    />
+                  ) : null}
                   <KeyBenefitsItem
                     icon={<TimerResetIcon />}
                     title={

@@ -35,7 +35,7 @@ That's a legitimate business choice, and if your company schedules client meetin
 
 That's the gap [Rallly](https://rallly.co) fills. It does one thing: you suggest some times, share a link, and everyone votes on what works. The things Doodle now charges for are free here:
 
-- **Unlimited polls.** Create as many as you need, with up to 3 collecting votes at once.
+- **Free scheduling.** Create a poll, collect votes and finalize the date at no cost.
 - **No ads.** Not for you, not for your participants.
 - **No account required.** Participants vote with just the link, and you can create a poll without signing up.
 - **Unlimited participants.** No caps on how many people can vote.

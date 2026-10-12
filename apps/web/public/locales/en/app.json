@@ -419,7 +419,7 @@
   "forgotPasswordSubmittedMessage": "If an account exists with this email address, we've sent a password reset link to your inbox. Please check your email and follow the link to reset your password.",
   "forgotPasswordTitle": "Forgot password",
   "freeOpenPollLimit": "Up to {count} open polls",
-  "freeOpenPollLimitDescription": "Close a poll to make room for another",
+  "freeOpenPollLimitDescription": "Finalize or close a poll to make room for another",
   "general": "General",
   "generalDescription": "Change the settings of your current space",
   "generalSettings": "General settings",
