@@ -148,9 +148,10 @@ export default async function Page(props: {
                 <CompareTableCell>
                   <Trans
                     t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
+                    ns="home"
+                    i18nKey="doodleComparisonPollsRallly"
+                    defaults="Unlimited, up to {count} open at once"
+                    values={{ count: 3 }}
                   />
                 </CompareTableCell>
                 <CompareTableCell>

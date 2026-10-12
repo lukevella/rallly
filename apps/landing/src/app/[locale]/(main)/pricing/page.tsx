@@ -10,6 +10,7 @@ import {
   ClockIcon,
   CopyIcon,
   EyeOffIcon,
+  ListChecksIcon,
   MailPlusIcon,
   PaletteIcon,
   Settings2Icon,
@@ -79,6 +80,9 @@ import {
   PricingProvider,
   YearlySavingsBadge,
 } from "./pricing-controls";
+
+// Mirrors FREE_OPEN_POLL_LIMIT in apps/web/src/features/billing/constants.ts
+const FREE_OPEN_POLL_LIMIT = 3;
 
 const faqLinkClassName =
   "text-gray-800 underline underline-offset-2 hover:text-gray-600";
@@ -236,6 +240,17 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                <PlanBenefit icon={<ListChecksIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="freeOpenPollLimit"
+                      defaults="Up to {count} open polls"
+                      values={{ count: FREE_OPEN_POLL_LIMIT }}
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -315,6 +330,16 @@ export default async function Page(props: {
                 </Link>
               </div>
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+                <PlanBenefit icon={<ListChecksIcon />}>
+                  <PlanBenefitName>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="unlimitedOpenPolls"
+                      defaults="Unlimited open polls"
+                    />
+                  </PlanBenefitName>
+                </PlanBenefit>
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -467,27 +492,20 @@ export default async function Page(props: {
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="comparePolls"
-                      defaults="Polls"
+                      i18nKey="compareOpenPolls"
+                      defaults="Open polls"
                     />
                   </CompareTableFeatureName>
                   <CompareTableFeatureDescription>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="compareSchedulingPollsDescription"
-                      defaults="Create polls to find the best time to meet"
+                      i18nKey="compareOpenPollsDescription"
+                      defaults="Polls collecting votes at the same time. Close a poll to make room for another."
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
+                <CompareTableCell>{FREE_OPEN_POLL_LIMIT}</CompareTableCell>
                 <CompareTableCell>
                   <Trans
                     t={t}

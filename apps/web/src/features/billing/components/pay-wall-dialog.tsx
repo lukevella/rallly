@@ -26,6 +26,7 @@ import {
   CalendarSearchIcon,
   ClockIcon,
   EyeOffIcon,
+  ListChecksIcon,
   MailPlusIcon,
   PaletteIcon,
   SparklesIcon,
@@ -42,7 +43,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import type { PayWallPricing, PayWallTrigger } from "../client";
 import { setCurrencyCookie, usePayWallStore } from "../client";
-import { PLAN_NAMES } from "../constants";
+import { FREE_OPEN_POLL_LIMIT, PLAN_NAMES } from "../constants";
 
 function KeyBenefits({ children }: { children?: React.ReactNode }) {
   return <ul className="space-y-3">{children}</ul>;
@@ -111,6 +112,19 @@ function PlanRadioGroupItem({
 }
 
 const proBenefitsList = [
+  {
+    key: "unlimitedOpenPolls",
+    icon: <ListChecksIcon />,
+    title: (
+      <Trans i18nKey="unlimitedOpenPolls" defaults="Unlimited open polls" />
+    ),
+    description: (
+      <Trans
+        i18nKey="unlimitedOpenPollsDescription"
+        defaults="Collect votes on as many polls as you need at once"
+      />
+    ),
+  },
   {
     key: "customBranding",
     icon: <PaletteIcon />,
@@ -189,6 +203,7 @@ const leadingBenefitByTrigger: Partial<Record<PayWallTrigger["from"], string>> =
     "invite-dialog": "emailInvites",
     "api-keys": "apiAccess",
     "poll-footer": "removeAttribution",
+    "poll-limit": "unlimitedOpenPolls",
   };
 
 // The benefit that triggered the pay wall leads the list.
@@ -461,6 +476,22 @@ export function PayWallDialog({
                       <Trans
                         i18nKey="basicPollsDescription"
                         defaults="Create simple scheduling polls"
+                      />
+                    }
+                  />
+                  <KeyBenefitsItem
+                    icon={<ListChecksIcon />}
+                    title={
+                      <Trans
+                        i18nKey="freeOpenPollLimit"
+                        defaults="Up to {count} open polls"
+                        values={{ count: FREE_OPEN_POLL_LIMIT }}
+                      />
+                    }
+                    description={
+                      <Trans
+                        i18nKey="freeOpenPollLimitDescription"
+                        defaults="Close a poll to make room for another"
                       />
                     }
                   />
