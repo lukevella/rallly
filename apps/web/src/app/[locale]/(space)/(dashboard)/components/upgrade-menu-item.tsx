@@ -25,8 +25,10 @@ function TrialCard({
   return (
     <SidebarMenuItem>
       <div className="space-y-2 rounded-lg border border-primary/20 bg-primary/5 p-3">
-        <p className="font-medium text-sm">{title}</p>
-        <p className="text-muted-foreground text-xs">{description}</p>
+        <div className="space-y-1">
+          <p className="font-medium text-sm">{title}</p>
+          <p className="text-muted-foreground text-sm">{description}</p>
+        </div>
         {action}
       </div>
     </SidebarMenuItem>
