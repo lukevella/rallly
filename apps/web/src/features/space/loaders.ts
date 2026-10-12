@@ -56,25 +56,9 @@ export const loadActiveSpace = cache(async () => {
     throw new InvalidSessionError();
   }
 
-  // Accounts created through the OTP registration flow start without a
-  // name; /setup collects one before they can use the app. Timezone and
-  // time format are deliberately NOT gated on: both resolve without a
-  // stored value (zone from the per-visit cookie, format from
-  // getLocaleDefaults), and gating on them dragged long-standing accounts
-  // that predate those columns back through onboarding.
-  if (!user.name) {
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/setup",
-        returnUrl: await getPathname(),
-      }),
-    );
-  }
+  const onboarding = await resolveOnboarding(user);
 
-  const space = await getActiveSpaceForUser(user.id);
-
-  if (!space) {
-    // Only send them to onboarding when they genuinely have no space.
+  if (onboarding.status === "ownedSpaceInactive") {
     // A user can resolve to no *active* space while still owning one
     // (their only other memberships are ineffective, or their own
     // membership row is gone) — /setup would bounce them straight back,
@@ -82,10 +66,10 @@ export const loadActiveSpace = cache(async () => {
     // than a thrown AppError: nothing adapts AppError for server
     // components, so it would reach the error boundary as an unexpected
     // error, showing "Something went wrong" and reporting to Sentry.
-    if (await getOwnedSpace(user.id)) {
-      notFound();
-    }
+    notFound();
+  }
 
+  if (onboarding.status === "incomplete") {
     redirect(
       buildSafeRedirectUrl({
         destination: "/setup",
@@ -94,8 +78,69 @@ export const loadActiveSpace = cache(async () => {
     );
   }
 
-  return space;
+  return onboarding.space;
 });
+
+/**
+ * Sends a signed-in account that hasn't finished onboarding through /setup,
+ * then back. For routes that admit guests (poll admin, new poll), where
+ * loadActiveSpace's redirects would be wrong: guests and signed-out visitors
+ * pass through untouched. Without it, an account created from a guest
+ * session lands back on its claimed poll and never reaches /setup, so the
+ * space is never created and the guest polls are never adopted. Uses the
+ * same onboarding rule as loadActiveSpace so the two gates and /setup agree.
+ */
+export const loadOnboardingGate = cache(async () => {
+  const state = await getSessionState();
+
+  if (state.status !== "authenticated" || state.session.user.isGuest) {
+    return;
+  }
+
+  const { user } = state.session;
+
+  if (user.banned) {
+    throw new InvalidSessionError();
+  }
+
+  const onboarding = await resolveOnboarding(user);
+
+  if (onboarding.status === "incomplete") {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/setup",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
+});
+
+/**
+ * Whether the account has finished onboarding. Accounts created through the
+ * OTP registration flow start without a name; /setup collects one before
+ * they can use the app. Timezone and time format are deliberately NOT gated
+ * on: both resolve without a stored value (zone from the per-visit cookie,
+ * format from getLocaleDefaults), and gating on them dragged long-standing
+ * accounts that predate those columns back through onboarding. Only a user
+ * with no space at all is sent to set one up.
+ */
+async function resolveOnboarding(user: { id: string; name: string }) {
+  if (!user.name) {
+    return { status: "incomplete" } as const;
+  }
+
+  const space = await getActiveSpaceForUser(user.id);
+
+  if (space) {
+    return { status: "complete", space } as const;
+  }
+
+  if (await getOwnedSpace(user.id)) {
+    return { status: "ownedSpaceInactive" } as const;
+  }
+
+  return { status: "incomplete" } as const;
+}
 
 /**
  * The visibility scope space-scoped content reads must apply for the
