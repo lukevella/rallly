@@ -41,7 +41,7 @@ export function SiteHeader({
       ref={ref}
       data-scrolled={scrolled || undefined}
       className={cn(
-        "sticky top-0 z-20 border-transparent border-b bg-gray-100 transition-colors data-scrolled:border-gray-200",
+        "group sticky top-0 z-20 border-transparent border-b bg-gray-100 transition-colors data-scrolled:border-gray-200",
         className,
       )}
       {...props}
