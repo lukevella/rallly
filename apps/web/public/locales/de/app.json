@@ -693,7 +693,7 @@
   "openPollLimitUsage": "{openCount} von {limit}",
   "openPolls": "Offene Umfragen",
   "openPollUsageAtLimitHint": "Schließe oder beende eine Umfrage, um eine neue zu erstellen, oder upgrade auf unbegrenzte offene Umfragen.",
-  "openPollUsageButton": "{limit, plural, one {{openCount} von # offene Umfrage} other {{openCount} von # offene Umfragen}}",
+  "openPollUsageButton": "{limit, plural, one {{openCount} von # offenen Umfrage} other {{openCount} von # offenen Umfragen}}",
   "openPollUsageGuestHint": "Gäste können gleichzeitig {limit} offene Umfragen haben. Erstelle ein Konto, um bis zu {freeLimit} zu haben.",
   "openPollUsageHint": "Dein Plan erlaubt bis zu {limit} offene Umfragen gleichzeitig.",
   "opensInNewTab": "(öffnet sich in neuem Tab)",
