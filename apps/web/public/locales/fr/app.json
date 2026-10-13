@@ -1073,8 +1073,6 @@
   "support": "Aide",
   "supportDescription": "Besoin d'aide pour quelque chose?",
   "switchToYearly": "Passer à l'annuel",
-  "switchToYearlyDescription": "Économisez {percent}% en payant annuellement.",
-  "switchToYearlyTitle": "Passer à la facturation annuelle",
   "syncCalendar": "Synchroniser l'agenda",
   "syncCalendarError": "Un problème est survenu lors de la synchronisation de votre calendrier",
   "syncCalendarLoading": "Synchronisation du calendrier…",
