@@ -1073,8 +1073,6 @@
   "support": "Support",
   "supportDescription": "Brauchst du Hilfe mit irgendetwas?",
   "switchToYearly": "Zu jährlich wechseln",
-  "switchToYearlyDescription": "Spare {percent}% bei jährlicher Zahlung.",
-  "switchToYearlyTitle": "Wechsle zur jährlichen Abrechnung",
   "syncCalendar": "Kalender synchronisieren",
   "syncCalendarError": "Es gab ein Problem beim Synchronisieren des Kalenders",
   "syncCalendarLoading": "Kalender wird synchronisiert…",
