@@ -46,8 +46,10 @@ export function ImageCropDialog({
             <Trans i18nKey="imageCropDialogTitle" defaults="Crop image" />
           </DialogTitle>
         </DialogHeader>
-        {/* Mounted per open, so every image starts from a fresh crop */}
+        {/* Keyed by the image's preview URL, so every image starts from a
+        fresh crop, even one picked while the last dialog animates out */}
         <ImageCropper
+          key={imageSrc}
           imageSrc={imageSrc}
           originalFile={originalFile}
           isUploading={isUploading}

@@ -24,7 +24,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar/month-calendar";
-import { isAllDay } from "./utils";
+import { hasMixedOptionTypes, isAllDay } from "./utils";
 import WeekCalendar from "./week-calendar";
 
 const PollOptionsForm = ({
@@ -167,12 +167,21 @@ const PollOptionsForm = ({
           name="options"
           rules={{
             validate: (options) => {
-              return options.length > 0
-                ? true
-                : t("calendarHelp", {
-                    defaultValue:
-                      "You can't create a poll without any options. Add at least one option to continue.",
-                  });
+              if (options.length === 0) {
+                return t("calendarHelp", {
+                  defaultValue:
+                    "You can't create a poll without any options. Add at least one option to continue.",
+                });
+              }
+              // A draft restored from storage can be mixed without passing
+              // through the calendar's onChange, which opens the dialog
+              if (hasMixedOptionTypes(options)) {
+                return t("mixedOptionsError", {
+                  defaultValue:
+                    "A poll can't have both date and time options. Remove one kind to continue.",
+                });
+              }
+              return true;
             },
           }}
           render={({ field }) => (
@@ -185,10 +194,7 @@ const PollOptionsForm = ({
                 }}
                 onChange={(options) => {
                   field.onChange(options);
-                  // All options need to be the same type
-                  if (
-                    options.some((option) => option.type !== options[0].type)
-                  ) {
+                  if (hasMixedOptionTypes(options)) {
                     dateOrTimeRangeDialog.trigger();
                   }
                 }}

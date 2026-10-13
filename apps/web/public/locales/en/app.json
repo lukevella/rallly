@@ -599,6 +599,7 @@
   "minutesAbbreviation": "min",
   "mixedDurations": "Mixed",
   "mixedOptionsDescription": "You can't have both time and date options in the same poll. Which would you like to keep?",
+  "mixedOptionsError": "A poll can't have both date and time options. Remove one kind to continue.",
   "mixedOptionsKeepDates": "Keep date options",
   "mixedOptionsKeepTimes": "Keep time options",
   "mixedOptionsTitle": "Wait a minute… 🤔",
