@@ -363,7 +363,6 @@
   "errorTitle": "Valami hiba történt",
   "errorTryAgain": "Próbáld újra",
   "event": "Esemény",
-  "eventHostDescription": "Te vagy a létrehozója ennek a szavazásnak",
   "eventPageAbout": "Részletek",
   "eventPageGoingCount": "{count, plural, one {#} other {#}} résztvevő",
   "eventRegisterAlreadyResponded": "Ezt az email címet már használták a válaszadásra",
