@@ -12,11 +12,11 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
     return [];
   }
   const providers: ConferencingProvider[] = [];
-  if (process.env.ZOOM_CLIENT_ID && process.env.ZOOM_CLIENT_SECRET) {
-    providers.push("zoom");
-  }
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     providers.push("meet");
+  }
+  if (process.env.ZOOM_CLIENT_ID && process.env.ZOOM_CLIENT_SECRET) {
+    providers.push("zoom");
   }
   if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
     providers.push("teams");
@@ -32,8 +32,8 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
 // authorizes nobody else. Only an unset variable opens the provider to
 // everyone; a set but empty list lets nobody in.
 const providerAllowlists: Record<ConferencingProvider, string | undefined> = {
-  zoom: process.env.ZOOM_ALLOWED_EMAILS,
   meet: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
+  zoom: process.env.ZOOM_ALLOWED_EMAILS,
   teams: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
   webex: process.env.WEBEX_ALLOWED_EMAILS,
 };

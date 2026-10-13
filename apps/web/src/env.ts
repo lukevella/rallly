@@ -122,7 +122,7 @@ export const env = createEnv({
       .enum(["capterra", "g2"])
       .default("capterra"),
     /**
-     * Conferencing integrations (Zoom, Google Meet, Microsoft Teams, Webex).
+     * Conferencing integrations (Google Meet, Zoom, Microsoft Teams, Webex).
      * The flag needs at least one provider's OAuth app configured; see
      * createFinalSchema below.
      */
@@ -135,8 +135,8 @@ export const env = createEnv({
     WEBEX_CLIENT_SECRET: z.string().optional(),
     // Comma separated. While set, only these accounts are offered the
     // provider: an unpublished or unverified OAuth app authorizes no one else.
-    ZOOM_ALLOWED_EMAILS: z.string().optional(),
     GOOGLE_MEET_ALLOWED_EMAILS: z.string().optional(),
+    ZOOM_ALLOWED_EMAILS: z.string().optional(),
     MICROSOFT_TEAMS_ALLOWED_EMAILS: z.string().optional(),
     WEBEX_ALLOWED_EMAILS: z.string().optional(),
 

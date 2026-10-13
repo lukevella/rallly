@@ -9,8 +9,8 @@ export const conferencingProviderIntegrations: Record<
   ConferencingProvider,
   { integrationId: string; oauthProvider: string }
 > = {
-  zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   meet: { integrationId: "google-meet", oauthProvider: "google" },
+  zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   teams: { integrationId: "microsoft-teams", oauthProvider: "microsoft" },
   webex: { integrationId: "webex", oauthProvider: "webex" },
 };
@@ -30,8 +30,8 @@ export function integrationIdToConferencingProvider(
 
 export const conferencingProviderLabels: Record<ConferencingProvider, string> =
   {
-    zoom: "Zoom",
     meet: "Google Meet",
+    zoom: "Zoom",
     teams: "Microsoft Teams",
     webex: "Webex",
   };
