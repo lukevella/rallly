@@ -188,7 +188,7 @@ export function CreateApiKeyButton() {
                       )}
                     />
                   </div>
-                  <DialogFooter className="mt-6">
+                  <DialogFooter>
                     <Button
                       variant="primary"
                       type="submit"

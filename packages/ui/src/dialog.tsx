@@ -49,7 +49,7 @@ function DialogOverlay({
 
 const dialogVariants = cva(
   cn(
-    "data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border border-popover-border bg-popover p-4 shadow-lg outline-none duration-200 data-closed:animate-out data-open:animate-in",
+    "data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded-2xl border border-popover-border bg-popover shadow-lg outline-none duration-200 data-closed:animate-out data-open:animate-in",
   ),
   {
     variants: {
@@ -87,9 +87,14 @@ function DialogContent({
         className={cn(dialogVariants({ size }), className)}
         {...props}
       >
-        {children}
+        <div
+          data-slot="dialog-scroller"
+          className="grid min-h-0 grow gap-4 overflow-y-auto overscroll-contain p-4"
+        >
+          {children}
+        </div>
         {showCloseButton && (
-          <DialogClose className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
+          <DialogClose className="absolute top-4 right-4 z-20 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
             <XIcon />
             <span className="sr-only">Close</span>
           </DialogClose>
@@ -100,7 +105,16 @@ function DialogContent({
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-header" className={cn(className)} {...props} />;
+  return (
+    <div
+      data-slot="dialog-header"
+      className={cn(
+        "dialog-edge:sticky dialog-edge:-top-4 dialog-edge:z-10 dialog-edge:-mx-4 dialog-edge:-mt-4 dialog-edge:bg-popover dialog-edge:px-4 dialog-edge:pt-4 dialog-edge:pr-12 dialog-edge:pb-2",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
@@ -109,6 +123,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="dialog-footer"
       className={cn(
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        "dialog-edge:sticky dialog-edge:-bottom-4 dialog-edge:z-10 dialog-edge:-mx-4 dialog-edge:mt-2 dialog-edge:-mb-4 dialog-edge:border-popover-border dialog-edge:border-t dialog-edge:bg-card dialog-edge:px-4 dialog-edge:py-3",
         className,
       )}
       {...props}

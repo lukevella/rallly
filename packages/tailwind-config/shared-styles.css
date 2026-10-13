@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* A dialog header or footer at the top level of the dialog's scroll area
+ * (directly, or inside a top-level form), where it pins to the edge. */
+@custom-variant dialog-edge (:is(
+    [data-slot="dialog-scroller"],
+    [data-slot="dialog-scroller"] > form
+  )
+  > &);
 
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";

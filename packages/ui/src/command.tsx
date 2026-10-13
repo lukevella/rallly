@@ -44,7 +44,11 @@ const CommandDialog = ({
 }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent showCloseButton={false} size="xl" className="p-0">
+      <DialogContent
+        showCloseButton={false}
+        size="xl"
+        className="*:data-[slot=dialog-scroller]:p-0"
+      >
         {title != null && (
           <DialogTitle className="sr-only">{title}</DialogTitle>
         )}
