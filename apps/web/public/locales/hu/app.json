@@ -1058,8 +1058,6 @@
   "support": "Segítség",
   "supportDescription": "Segítségre van szükséged?",
   "switchToYearly": "Váltás éves előfizetésre",
-  "switchToYearlyDescription": "Spórolj meg {percent}%-ot éves előfizetéssel.",
-  "switchToYearlyTitle": "Éves számlázásra váltás",
   "syncCalendar": "Naptár szinkronizálása",
   "syncCalendarError": "Hiba történt a naptár szinkronizálása során",
   "syncCalendarLoading": "Naptár szinkronizálása…",
