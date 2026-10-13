@@ -285,7 +285,6 @@
   "errorTitle": "Algo salió mal",
   "errorTryAgain": "Inténtalo de nuevo",
   "event": "Evento",
-  "eventHostDescription": "Eres el creador de esta encuesta",
   "eventPageAbout": "Información",
   "eventPageGoingCount": "{count, plural, one {# asistente} other {# asistentes}}",
   "eventRegisterAlreadyResponded": "Este correo electrónico ya se ha usado para responder.",
