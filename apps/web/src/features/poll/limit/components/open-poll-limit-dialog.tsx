@@ -12,12 +12,10 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import { BarChart2Icon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
 import { LoginLink } from "@/components/login-link";
-import { PageIcon } from "@/components/page-icons";
 import { primePayWall, usePayWallStore } from "@/features/billing/client";
 import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import { PLAN_NAMES } from "@/features/billing/constants";
@@ -61,7 +59,7 @@ export function OpenPollLimitDialog() {
         }
       }}
     >
-      <DialogContent size="md" showCloseButton={dismissible}>
+      <DialogContent size="lg" showCloseButton={dismissible}>
         {content ? (
           <OpenPollLimitContent source={content.source} usage={content.usage} />
         ) : null}
@@ -99,18 +97,13 @@ function OpenPollLimitContent({
   return (
     <>
       <DialogHeader>
-        <div className="flex items-center gap-3">
-          <PageIcon size="sm" color="primary">
-            <BarChart2Icon />
-          </PageIcon>
-          <DialogTitle>
-            <Trans
-              i18nKey="openPollLimitReachedTitle"
-              defaults="Open poll limit reached"
-            />
-          </DialogTitle>
-        </div>
-        <DialogDescription className="mt-2">
+        <DialogTitle className="font-semibold text-lg">
+          <Trans
+            i18nKey="openPollLimitReachedTitle"
+            defaults="Open poll limit reached"
+          />
+        </DialogTitle>
+        <DialogDescription className="mt-1">
           {data.tier === "guest" ? (
             <Trans
               i18nKey="openPollLimitGuestDescription"
