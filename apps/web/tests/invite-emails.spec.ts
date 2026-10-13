@@ -398,25 +398,28 @@ test.describe("Booking a poll", () => {
       { email: BOB, status: "tentative", locale: "en" },
     ]);
 
-    // Only the selected address was queued, and the booking sent it.
-    const queued = await prisma.queuedEmail.findMany({
-      where: { batchId: scheduledEventId ?? "" },
-    });
-    expect(
-      queued.map((q) => ({
-        kind: q.kind,
-        subjectId: q.subjectId,
-        status: q.status,
-        attempts: q.attempts,
-      })),
-    ).toEqual([
-      {
-        kind: "scheduled_event_invite",
-        subjectId: invites[0].uid,
-        status: "sent",
-        attempts: 1,
-      },
-    ]);
+    // Only the selected address was queued, and the booking sent it. The
+    // outcome is recorded after the message reaches Mailpit, so poll for it.
+    await expect
+      .poll(async () => {
+        const queued = await prisma.queuedEmail.findMany({
+          where: { batchId: scheduledEventId ?? "" },
+        });
+        return queued.map((q) => ({
+          kind: q.kind,
+          subjectId: q.subjectId,
+          status: q.status,
+          attempts: q.attempts,
+        }));
+      })
+      .toEqual([
+        {
+          kind: "scheduled_event_invite",
+          subjectId: invites[0].uid,
+          status: "sent",
+          attempts: 1,
+        },
+      ]);
 
     // Exactly one participant email went out: none to Bob, none twice.
     const { messages } = await getMessages();
