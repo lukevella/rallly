@@ -39,7 +39,7 @@ export function MutePollForm({
           <BellOffIcon className="size-5 text-muted-foreground" />
         </div>
         <div className="space-y-2">
-          <h1 className="font-bold text-lg">
+          <h1 className="font-semibold text-lg">
             <Trans i18nKey="mutePollDoneTitle" defaults="Poll muted" />
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -72,7 +72,7 @@ export function MutePollForm({
   return (
     <>
       <div className="space-y-2">
-        <h1 className="font-bold text-lg">
+        <h1 className="font-semibold text-lg">
           <Trans i18nKey="mutePollConfirmTitle" defaults="Mute this poll?" />
         </h1>
         <p className="text-muted-foreground text-sm">

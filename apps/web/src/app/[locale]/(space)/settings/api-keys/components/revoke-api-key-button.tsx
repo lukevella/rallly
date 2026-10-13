@@ -82,7 +82,7 @@ export function RevokeApiKeyButton({
                 defaults="Are you sure you want to revoke {name}? This will immediately disable the key."
                 values={{ name: apiKeyName }}
                 components={{
-                  b: <b className="whitespace-nowrap font-bold" />,
+                  b: <b className="whitespace-nowrap font-semibold" />,
                 }}
               />
             </DialogDescription>

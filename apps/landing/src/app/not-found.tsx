@@ -19,7 +19,7 @@ export default function NotFound() {
           <div className="space-y-8">
             <div className="space-y-4">
               <FileSearchIcon className="mb-4 inline-block size-24 text-gray-400" />
-              <div className="mb-2 font-bold text-3xl text-primary">
+              <div className="mb-2 font-semibold text-3xl text-primary">
                 404 not found
               </div>
               <p className="text-gray-600">

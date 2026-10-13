@@ -31,7 +31,7 @@ export default async function UnsubscribePage({
             />
           ) : (
             <>
-              <h1 className="font-bold text-lg">
+              <h1 className="font-semibold text-lg">
                 <Trans
                   t={t}
                   i18n={i18n}
