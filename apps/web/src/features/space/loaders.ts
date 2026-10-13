@@ -1,6 +1,6 @@
 import "server-only";
 
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
 import { getUpcomingEventCount } from "@/features/scheduled-event/data";
@@ -59,14 +59,10 @@ export const loadActiveSpace = cache(async () => {
   const onboarding = await resolveOnboarding(user);
 
   if (onboarding.status === "ownedSpaceInactive") {
-    // A user can resolve to no *active* space while still owning one
-    // (their only other memberships are ineffective, or their own
-    // membership row is gone) — /setup would bounce them straight back,
-    // so render the not-found page instead of looping. notFound() rather
-    // than a thrown AppError: nothing adapts AppError for server
-    // components, so it would reach the error boundary as an unexpected
-    // error, showing "Something went wrong" and reporting to Sentry.
-    notFound();
+    // The owner's own membership is always effective, so this means their
+    // row is gone, which a database trigger forbids. /setup would bounce
+    // them straight back; fail loudly instead of looping.
+    throw new Error("Space owner has no membership row");
   }
 
   if (onboarding.status === "incomplete") {
