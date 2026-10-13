@@ -24,6 +24,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar/month-calendar";
+import { isAllDay } from "./utils";
 import WeekCalendar from "./week-calendar";
 
 const PollOptionsForm = ({
@@ -66,26 +67,7 @@ const PollOptionsForm = ({
 
   const dateOrTimeRangeDialog = useDialog();
 
-  React.useEffect(() => {
-    if (watchOptions.length > 1) {
-      const optionType = watchOptions[0].type;
-      // all options needs to be the same type
-      if (watchOptions.some((option) => option.type !== optionType)) {
-        dateOrTimeRangeDialog.trigger();
-      }
-    }
-  }, [watchOptions, dateOrTimeRangeDialog]);
-
-  // Keep the derived allDay flag in sync: a poll is all-day when every option
-  // is a whole-day date rather than a time slot. Consumed at submit to decide
-  // whether a time zone is attached.
-  const allDay =
-    watchOptions.length > 0 &&
-    watchOptions.every((option) => option.type === "date");
-
-  React.useEffect(() => {
-    setValue("allDay", allDay);
-  }, [allDay, setValue]);
+  const allDay = isAllDay(watchOptions);
 
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
@@ -203,6 +185,12 @@ const PollOptionsForm = ({
                 }}
                 onChange={(options) => {
                   field.onChange(options);
+                  // All options need to be the same type
+                  if (
+                    options.some((option) => option.type !== options[0].type)
+                  ) {
+                    dateOrTimeRangeDialog.trigger();
+                  }
                 }}
                 duration={watchDuration}
                 onChangeDuration={(duration) => {

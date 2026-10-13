@@ -22,6 +22,7 @@ import type { ConferencingOptions } from "@/features/conferencing/components/con
 import { toPollConferencing } from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
+import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
@@ -157,7 +158,6 @@ export const CreatePoll = ({
       allowTentativeVotes: true,
       duration: 60,
       lockTimeZone: false,
-      allDay: false,
     },
   });
 
@@ -241,7 +241,7 @@ export const CreatePoll = ({
               // Fall back to the organizer's zone so a converting poll is always
               // anchored to a concrete zone.
               timeZone:
-                !formData?.lockTimeZone && !formData?.allDay
+                !formData?.lockTimeZone && !isAllDay(formData?.options ?? [])
                   ? formData?.timeZone || user?.timeZone || getBrowserTimeZone()
                   : null,
               hideParticipants: formData?.hideParticipants,
