@@ -33,13 +33,34 @@ export function EditEventTypeDialog({
 }: DialogProps & {
   eventType: EventTypeDTO;
 }) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent size="lg">
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="editEventTypeTitle" defaults="Edit event type" />
+          </DialogTitle>
+        </DialogHeader>
+        {/* Mounted per open, so each edit starts from the event type it was
+        opened for and a cancelled edit leaves nothing behind */}
+        <EditEventTypeForm
+          eventType={eventType}
+          onSaved={() => onOpenChange?.(false)}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function EditEventTypeForm({
+  eventType,
+  onSaved,
+}: {
+  eventType: EventTypeDTO;
+  onSaved: () => void;
+}) {
   const { t } = useTranslation();
   const updateEventType = trpc.eventTypes.update.useMutation();
-
-  const initialValues = React.useMemo(
-    () => eventTypeToFormValues(eventType),
-    [eventType],
-  );
 
   const [showMaxAttendees, setShowMaxAttendees] = React.useState(
     eventType.capacity !== null,
@@ -52,23 +73,8 @@ export function EditEventTypeDialog({
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: initialValues,
+    defaultValues: eventTypeToFormValues(eventType),
   });
-
-  React.useEffect(() => {
-    form.reset(initialValues);
-    setShowMaxAttendees(eventType.capacity !== null);
-    setShowDescription(eventType.description !== null);
-  }, [eventType.capacity, eventType.description, form, initialValues]);
-
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) {
-      form.reset(initialValues);
-      setShowMaxAttendees(eventType.capacity !== null);
-      setShowDescription(eventType.description !== null);
-    }
-    onOpenChange?.(nextOpen);
-  };
 
   const onSubmit = form.handleSubmit(async (values) => {
     const input = eventTypeValuesToInput(values);
@@ -90,45 +96,36 @@ export function EditEventTypeDialog({
       has_max_attendees: input.capacity !== null,
       has_description: input.description !== null,
     });
-    handleOpenChange(false);
+    onSaved();
   });
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent size="lg">
-        <DialogHeader>
-          <DialogTitle>
-            <Trans i18nKey="editEventTypeTitle" defaults="Edit event type" />
-          </DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-5">
-            <EventTypeFormFields
-              form={form}
-              showMaxAttendees={showMaxAttendees}
-              setShowMaxAttendees={setShowMaxAttendees}
-              showDescription={showDescription}
-              setShowDescription={setShowDescription}
-            />
-            <DialogFooter>
-              <DialogClose
-                render={
-                  <Button type="button" disabled={updateEventType.isPending} />
-                }
-              >
-                <Trans i18nKey="cancel" defaults="Cancel" />
-              </DialogClose>
-              <Button
-                type="submit"
-                variant="primary"
-                loading={updateEventType.isPending}
-              >
-                <Trans i18nKey="save" defaults="Save" />
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="space-y-5">
+        <EventTypeFormFields
+          form={form}
+          showMaxAttendees={showMaxAttendees}
+          setShowMaxAttendees={setShowMaxAttendees}
+          showDescription={showDescription}
+          setShowDescription={setShowDescription}
+        />
+        <DialogFooter>
+          <DialogClose
+            render={
+              <Button type="button" disabled={updateEventType.isPending} />
+            }
+          >
+            <Trans i18nKey="cancel" defaults="Cancel" />
+          </DialogClose>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={updateEventType.isPending}
+          >
+            <Trans i18nKey="save" defaults="Save" />
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
   );
 }
