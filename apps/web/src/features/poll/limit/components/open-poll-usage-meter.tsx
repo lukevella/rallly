@@ -86,7 +86,7 @@ export function OpenPollUsageMeter({ usage }: { usage: OpenPollUsage }) {
         <span className="tabular-nums">
           {t("openPollUsageButton", {
             defaultValue:
-              "{limit, plural, one {{openCount}/# open poll} other {{openCount}/# open polls}}",
+              "{limit, plural, one {{openCount} of # open poll} other {{openCount} of # open polls}}",
             openCount: usage.openCount,
             limit: usage.limit,
           })}

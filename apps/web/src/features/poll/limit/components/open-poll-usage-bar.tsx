@@ -16,7 +16,6 @@ export function OpenPollUsageBar({
 }) {
   const { t } = useTranslation();
   const isAtLimit = openCount >= limit;
-  // "3/3" is read as "3 slash 3", so the progress bar announces the words
   const usageText = t("openPollLimitUsage", {
     defaultValue: "{openCount} of {limit}",
     openCount,
@@ -27,17 +26,12 @@ export function OpenPollUsageBar({
       <div className="flex items-baseline justify-between gap-4 text-sm">
         <span className="font-medium">{label}</span>
         <span
-          aria-hidden="true"
           className={cn(
             "text-muted-foreground tabular-nums",
             isAtLimit && "text-destructive",
           )}
         >
-          {t("openPollLimitUsageShort", {
-            defaultValue: "{openCount}/{limit}",
-            openCount,
-            limit,
-          })}
+          {usageText}
         </span>
       </div>
       <Progress

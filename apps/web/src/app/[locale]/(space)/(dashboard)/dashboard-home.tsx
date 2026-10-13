@@ -110,7 +110,7 @@ export async function DashboardHome({
                     i18n={i18n}
                     ns="app"
                     i18nKey="openPollCountOfLimit"
-                    defaults="{openCount}/{limit} open"
+                    defaults="{openCount} of {limit} open"
                     values={{
                       openCount: openPollUsage.openCount,
                       limit: openPollUsage.limit,
