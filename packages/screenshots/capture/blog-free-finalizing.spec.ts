@@ -70,7 +70,7 @@ const participants: {
   {
     name: "David Kim",
     email: "david@example.com",
-    votes: ["ifNeedBe", "yes", "no", "yes"],
+    votes: ["yes", "yes", "no", "yes"],
   },
   {
     name: "Priya Patel",
@@ -138,9 +138,21 @@ async function capture(page: Page, dialog: Locator, name: string) {
   // The dialog eases its width between steps.
   await page.waitForTimeout(600);
   await page.evaluate(() => document.fonts.ready);
-  await dialog.screenshot({
+  const box = await dialog.boundingBox();
+  if (!box) throw new Error("dialog not visible");
+  // One frame size for every step, centred on the dialog, so the images
+  // line up in the post and the dialog keeps room around it.
+  const width = 880;
+  const height = 600;
+  await page.screenshot({
     path: blogImagePath(`free-scheduling/${name}`),
     animations: "disabled",
+    clip: {
+      x: box.x + box.width / 2 - width / 2,
+      y: box.y + box.height / 2 - height / 2,
+      width,
+      height,
+    },
   });
 }
 
