@@ -13,8 +13,8 @@ const voteIconVariants = cva("", {
     type: {
       yes: "text-green-500",
       ifNeedBe: "text-amber-400",
-      no: "text-zinc-500",
-      pending: "text-zinc-300",
+      no: "text-gray-500",
+      pending: "text-gray-300",
     },
   },
   defaultVariants: {

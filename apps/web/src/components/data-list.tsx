@@ -133,7 +133,7 @@ export function DataList<TData>({
           key={group.id}
           className="col-span-full not-first:mt-5 grid grid-cols-subgrid"
         >
-          <h2 className="col-span-full mb-1 flex h-12 items-center gap-2 rounded-lg bg-muted/60 px-4 text-sm">
+          <h2 className="col-span-full mb-1 flex h-12 items-center gap-2 rounded-lg bg-gray-200/60 px-4 text-sm dark:bg-muted/60">
             {group.label}
           </h2>
           <ul

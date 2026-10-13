@@ -93,7 +93,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
       <SidebarInset id="main-content" tabIndex={-1}>
         <PastDueAlert />
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
+          <header className="sticky top-0 z-10 border-b bg-sidebar/90 p-3 backdrop-blur-xs md:hidden">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
               <div className="flex items-center gap-2">
