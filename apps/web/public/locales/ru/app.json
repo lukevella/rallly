@@ -296,7 +296,6 @@
   "errorTitle": "Что-то пошло не так",
   "errorTryAgain": "Попробовать снова",
   "event": "Событие",
-  "eventHostDescription": "Вы создатель этого опроса",
   "eventPageAbout": "О событии",
   "eventPageGoingCount": "{count, plural, one {# придёт} few {# придут} many {# придут} other {# придут}}",
   "eventRegisterAlreadyResponded": "Этот адрес электронной почты уже использовался для ответа",
