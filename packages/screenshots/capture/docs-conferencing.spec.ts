@@ -117,15 +117,23 @@ async function settle(page: Page) {
 }
 
 // The Pro space, so Zoom, Teams and Webex are offered without the pay wall.
-// Its custom branding is switched off for the run and restored after, so the
-// guides show the default theme.
+// Selecting it and switching off its custom branding are both undone after
+// the run, so the guides show the default theme and other captures start
+// from the space they expect.
 const proSpaceId = "space-2";
+const proMembershipId = "sm-2";
 let savedBranding: { primaryColor: string | null; showBranding: boolean };
+let savedLastSelectedAt: Date;
 
 test.beforeAll(async () => {
   await clearConnections();
+  ({ lastSelectedAt: savedLastSelectedAt } =
+    await prisma.spaceMember.findUniqueOrThrow({
+      where: { id: proMembershipId },
+      select: { lastSelectedAt: true },
+    }));
   await prisma.spaceMember.update({
-    where: { id: "sm-2" },
+    where: { id: proMembershipId },
     data: { lastSelectedAt: new Date() },
   });
   savedBranding = await prisma.space.findUniqueOrThrow({
@@ -142,6 +150,10 @@ test.afterAll(async () => {
   await prisma.space.update({
     where: { id: proSpaceId },
     data: savedBranding,
+  });
+  await prisma.spaceMember.update({
+    where: { id: proMembershipId },
+    data: { lastSelectedAt: savedLastSelectedAt },
   });
 });
 
