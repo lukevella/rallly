@@ -98,33 +98,41 @@ function OpenPollLimitContent({
 
   return (
     <>
-      <DialogHeader>
-        <PageIcon size="xl" color="primary">
-          <BarChart2Icon />
-        </PageIcon>
-        <DialogTitle className="mt-4 font-semibold text-lg">
-          <Trans
-            i18nKey="openPollLimitReachedTitle"
-            defaults="Open poll limit reached"
-          />
-        </DialogTitle>
-        <DialogDescription className="mt-1">
-          {data.tier === "guest" ? (
-            <Trans
-              i18nKey="openPollLimitGuestDescription"
-              defaults="Guests can have one open poll at a time. Finalize or close polls to make room, or log in to increase your limit."
-            />
-          ) : (
-            <Trans
-              i18nKey="openPollLimitFreeDescription"
-              defaults="{planName} includes up to {limit} open polls at a time. Finalize or close polls to make room, or upgrade for unlimited open polls."
-              values={{ planName: PLAN_NAMES.HOBBY, limit: data.limit }}
-            />
-          )}
-        </DialogDescription>
-      </DialogHeader>
-      <div className="rounded-xl border p-4">
-        <OpenPollUsageBar openCount={data.openCount} limit={data.limit} />
+      {/* Beside the icon from sm up, the title sits next to the close
+          button, so it keeps clear of it. Stacked, the icon takes that row. */}
+      <div className="flex flex-col items-start gap-4 sm:flex-row">
+        <div className="shrink-0">
+          <PageIcon size="xl" color="primary">
+            <BarChart2Icon />
+          </PageIcon>
+        </div>
+        <div className="grid min-w-0 grow gap-4 sm:pt-1.5">
+          <DialogHeader>
+            <DialogTitle className="font-semibold text-lg sm:in-data-close-button:pr-8">
+              <Trans
+                i18nKey="openPollLimitReachedTitle"
+                defaults="Open poll limit reached"
+              />
+            </DialogTitle>
+            <DialogDescription className="mt-1">
+              {data.tier === "guest" ? (
+                <Trans
+                  i18nKey="openPollLimitGuestDescription"
+                  defaults="Guests can have one open poll at a time. Finalize or close polls to make room, or log in to increase your limit."
+                />
+              ) : (
+                <Trans
+                  i18nKey="openPollLimitFreeDescription"
+                  defaults="{planName} includes up to {limit} open polls at a time. Finalize or close polls to make room, or upgrade for unlimited open polls."
+                  values={{ planName: PLAN_NAMES.HOBBY, limit: data.limit }}
+                />
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="rounded-xl border p-4">
+            <OpenPollUsageBar openCount={data.openCount} limit={data.limit} />
+          </div>
+        </div>
       </div>
       <DialogFooter>
         {data.tier !== "guest" ? (
