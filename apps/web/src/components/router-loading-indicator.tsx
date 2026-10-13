@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { Progress } from "@rallly/ui/progress";
 import * as React from "react";
 
@@ -38,6 +37,14 @@ export const RouterLoadingIndicator = () => {
   return null;
 };
 
+// Fallbacks can hand off across separate commits, so completion waits this
+// long for another fallback to register before finishing the bar.
+const HANDOFF_GRACE_MS = 100;
+const HIDE_DELAY_MS = 500;
+
+const toPercent = (value: number) =>
+  Math.round((Math.atan(value) / (Math.PI / 2)) * 100);
+
 export const RouterLoadingBar = () => {
   const isPending = React.useSyncExternalStore(
     subscribe,
@@ -46,6 +53,8 @@ export const RouterLoadingBar = () => {
   );
   const [isVisible, setIsVisible] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
+  const currentProgress = React.useRef(0);
+  const finishTimeout = React.useRef<NodeJS.Timeout | null>(null);
   const hideTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
   React.useEffect(() => {
@@ -53,50 +62,55 @@ export const RouterLoadingBar = () => {
       return;
     }
 
-    if (hideTimeout.current) {
-      clearTimeout(hideTimeout.current);
-      hideTimeout.current = null;
+    if (finishTimeout.current) {
+      // A fallback handed off to the next one; keep the bar's position
+      clearTimeout(finishTimeout.current);
+      finishTimeout.current = null;
+    } else {
+      if (hideTimeout.current) {
+        clearTimeout(hideTimeout.current);
+        hideTimeout.current = null;
+      }
+      currentProgress.current = 0;
+      setProgress(0);
+      setIsVisible(true);
     }
 
-    setIsVisible(true);
-    setProgress(0);
-
-    // Use a smaller step for slower progress initially
-    let step = 0.5;
-    let currentProgress = 0;
-
     const interval = setInterval(() => {
-      currentProgress += step;
-
-      const calculatedProgress = Math.round(
-        (Math.atan(currentProgress) / (Math.PI / 2)) * 100,
-      );
-
-      setProgress(calculatedProgress);
-
-      if (calculatedProgress >= 70) {
-        step = 0.1;
-      }
+      // Use a smaller step for slower progress after 70%
+      currentProgress.current +=
+        toPercent(currentProgress.current) >= 70 ? 0.1 : 0.5;
+      setProgress(toPercent(currentProgress.current));
     }, 100);
 
     return () => {
       clearInterval(interval);
-      setProgress(100);
-      hideTimeout.current = setTimeout(() => {
-        hideTimeout.current = null;
-        setIsVisible(false);
-        setProgress(0);
-      }, 500);
+      finishTimeout.current = setTimeout(() => {
+        finishTimeout.current = null;
+        setProgress(100);
+        hideTimeout.current = setTimeout(() => {
+          hideTimeout.current = null;
+          setIsVisible(false);
+          setProgress(0);
+        }, HIDE_DELAY_MS);
+      }, HANDOFF_GRACE_MS);
     };
   }, [isPending]);
 
+  React.useEffect(() => {
+    return () => {
+      if (finishTimeout.current) clearTimeout(finishTimeout.current);
+      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    };
+  }, []);
+
+  if (!isVisible) {
+    return null;
+  }
+
+  // Decorative: pages announce loading through their own skeletons
   return (
-    <div
-      className={cn(
-        "fixed top-0 right-0 left-0 z-50 w-full",
-        isVisible ? "opacity-100" : "opacity-0",
-      )}
-    >
+    <div aria-hidden className="fixed top-0 right-0 left-0 z-50 w-full">
       <Progress value={progress} className="h-1 rounded-none" />
     </div>
   );
