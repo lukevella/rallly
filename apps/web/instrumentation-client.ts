@@ -5,6 +5,11 @@
 // Initializes the PostHog browser client (side-effect import).
 import "@rallly/posthog/client";
 import * as Sentry from "@sentry/nextjs";
+import {
+  getChunkRecoveryContext,
+  isModuleFactoryError,
+  reloadOnceForChunkError,
+} from "@/lib/chunk-recovery";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
@@ -26,8 +31,29 @@ Sentry.init({
     "The Internet connection appears to be offline",
   ],
 
+  beforeSend(event, hint) {
+    if (isModuleFactoryError(hint.originalException)) {
+      const context = getChunkRecoveryContext();
+      event.tags = {
+        ...event.tags,
+        chunk_reloaded_recently: context.reloadedRecently,
+      };
+      event.contexts = { ...event.contexts, chunk_recovery: context };
+    }
+    return event;
+  },
+
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 });
+
+// Errors React catches in an error boundary reach the boundary instead; see
+// app/[locale]/error.tsx and app/global-error.tsx.
+window.addEventListener("error", (event) =>
+  reloadOnceForChunkError(event.error),
+);
+window.addEventListener("unhandledrejection", (event) =>
+  reloadOnceForChunkError(event.reason),
+);
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
