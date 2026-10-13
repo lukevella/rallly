@@ -37,7 +37,8 @@
             "pages": [
               "integrations/google-meet",
               "integrations/microsoft-teams",
-              "integrations/webex"
+              "integrations/webex",
+              "integrations/zoom"
             ]
           },
           {
