@@ -285,7 +285,6 @@
   "errorTitle": "Qualcosa è andato storto",
   "errorTryAgain": "Prova di nuovo",
   "event": "Evento",
-  "eventHostDescription": "Sei il creatore di questo sondaggio",
   "eventPageAbout": "Informazioni",
   "eventPageGoingCount": "{count, plural, one {# partecipante} other {# partecipanti}}",
   "eventRegisterAlreadyResponded": "Questa email è già stata usata per rispondere.",
