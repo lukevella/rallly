@@ -364,7 +364,6 @@
   "errorTitle": "Etwas ist schiefgelaufen",
   "errorTryAgain": "Erneut versuchen",
   "event": "Veranstaltung",
-  "eventHostDescription": "Du bist Ersteller*in dieser Umfrage",
   "eventPageAbout": "Über",
   "eventPageGoingCount": "{count, plural, one {# Zusage} other {# Zusagen}}",
   "eventRegisterAlreadyResponded": "Diese E-Mail-Adresse wurde bereits für eine Antwort verwendet",
