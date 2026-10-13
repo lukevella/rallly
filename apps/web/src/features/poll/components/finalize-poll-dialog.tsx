@@ -559,7 +559,13 @@ function SummaryStep({ option }: { option: RankedOption }) {
 
 // Mounted fresh with each open, so the wizard starts at step one with
 // nothing carried over from a previous run.
-function FinalizeWizard({ onClose }: { onClose: () => void }) {
+function FinalizeWizard({
+  onClose,
+  onStepChange,
+}: {
+  onClose: () => void;
+  onStepChange: (step: Step) => void;
+}) {
   const poll = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
@@ -582,29 +588,16 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
   );
   const option = options.find((o) => o.id === optionId);
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
-
-  // A step view per step reached, and the step the host left from if they
-  // close without finalizing, so the wizard's drop-off can be measured.
-  const stepRef = React.useRef(step);
-  React.useEffect(() => {
-    stepRef.current = step;
-    posthog?.capture("poll_finalize:step_view", { step });
-  }, [step]);
-  React.useEffect(
-    () => () => {
-      if (stepRef.current !== "done") {
-        posthog?.capture("poll_finalize:dialog_dismiss", {
-          step: stepRef.current,
-        });
-      }
-    },
-    [],
-  );
+  const goTo = (next: Step) => {
+    posthog?.capture("poll_finalize:step_view", { step: next });
+    onStepChange(next);
+    setStep(next);
+  };
 
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
       setSkippedNotifications(data?.skippedNotifications ?? 0);
-      setStep("done");
+      goTo("done");
       // The page behind the dialog picks up the scheduled status.
       router.refresh();
     },
@@ -641,7 +634,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
           onPick={(id) => {
             setOptionId(id);
             // With nobody to notify, the notify step has nothing to ask.
-            setStep(participants.length > 0 ? "notify" : "summary");
+            goTo(participants.length > 0 ? "notify" : "summary");
           }}
         />
       </div>
@@ -705,7 +698,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
         />
         <DialogFooter>
           <Button
-            onClick={() => setStep(participants.length > 0 ? "notify" : "date")}
+            onClick={() => goTo(participants.length > 0 ? "notify" : "date")}
           >
             <Trans i18nKey="back" defaults="Back" />
           </Button>
@@ -750,10 +743,10 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
         onChange={setNotifyIds}
       />
       <DialogFooter>
-        <Button onClick={() => setStep("date")}>
+        <Button onClick={() => goTo("date")}>
           <Trans i18nKey="back" defaults="Back" />
         </Button>
-        <Button variant="primary" onClick={() => setStep("summary")}>
+        <Button variant="primary" onClick={() => goTo("summary")}>
           <Trans i18nKey="next" defaults="Next" />
         </Button>
       </DialogFooter>
@@ -762,10 +755,29 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 }
 
 export function FinalizePollDialog(props: DialogProps) {
+  // The step the host is on, read when the dialog closes so a close before
+  // finalizing records where they left.
+  const stepRef = React.useRef<Step>("date");
+  const onOpenChange = (open: boolean) => {
+    if (!open) {
+      if (stepRef.current !== "done") {
+        posthog?.capture("poll_finalize:dialog_dismiss", {
+          step: stepRef.current,
+        });
+      }
+      stepRef.current = "date";
+    }
+    props.onOpenChange?.(open);
+  };
   return (
-    <Dialog {...props}>
+    <Dialog {...props} onOpenChange={onOpenChange}>
       <DialogContent className="w-auto sm:max-w-none">
-        <FinalizeWizard onClose={() => props.onOpenChange?.(false)} />
+        <FinalizeWizard
+          onClose={() => onOpenChange(false)}
+          onStepChange={(step) => {
+            stepRef.current = step;
+          }}
+        />
       </DialogContent>
     </Dialog>
   );

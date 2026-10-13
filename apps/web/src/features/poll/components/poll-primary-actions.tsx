@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import { CalendarCheck2Icon } from "lucide-react";
@@ -27,7 +28,14 @@ export function PollPrimaryActions() {
         variant={canFinalize ? "default" : "primary"}
       />
       {canFinalize ? (
-        <Button variant="primary" {...finalizeDialog.triggerProps}>
+        <Button
+          variant="primary"
+          {...finalizeDialog.triggerProps}
+          onClick={() => {
+            posthog?.capture("poll_finalize:dialog_open");
+            finalizeDialog.trigger();
+          }}
+        >
           <CalendarCheck2Icon data-icon="inline-start" />
           <span className="sr-only sm:not-sr-only">
             <Trans i18nKey="finalize" defaults="Finalize" />
