@@ -43,16 +43,21 @@ export default async function Page(props: {
           descriptionClassName="max-w-[600px]"
           announcement={
             <HeroAnnouncement
-              href="/blog/introducing-the-rallly-api"
+              href="/blog/finalizing-polls-is-now-free"
               badge={
-                <Trans t={t} ns="home" i18nKey="apiBlogBadge" defaults="New" />
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="announcementBadge"
+                  defaults="New"
+                />
               }
             >
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="apiAnnouncement"
-                defaults="Introducing the Rallly API"
+                i18nKey="freeFinalizeAnnouncement"
+                defaults="Finalizing polls is now free"
               />
             </HeroAnnouncement>
           }
