@@ -63,6 +63,7 @@
     "calendar-link": "^2.6.0",
     "class-variance-authority": "^0.7.1",
     "cookie": "^0.7.0",
+    "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.13",
     "effect": "4.0.0",
     "es-toolkit": "^1.39.9",
