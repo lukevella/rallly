@@ -1,17 +1,23 @@
 "use client";
 
 import type { VoteType } from "@rallly/database";
-import { VoteIcon as BaseVoteIcon } from "@rallly/ui/vote-icon";
+import {
+  AnimatedVoteIcon,
+  VoteIcon as BaseVoteIcon,
+} from "@rallly/ui/vote-icon";
 import { useTranslation } from "@/i18n/client";
 
 const VoteIcon = ({
   type,
   size = "md",
   className,
+  animated = false,
 }: {
   type?: VoteType;
   size?: "sm" | "md";
   className?: string;
+  /** Morph between shapes when `type` changes, for controls that cycle the vote. */
+  animated?: boolean;
 }) => {
   const { t } = useTranslation();
 
@@ -23,8 +29,10 @@ const VoteIcon = ({
       }[type]
     : t("pending", { defaultValue: "Pending" });
 
+  const Icon = animated ? AnimatedVoteIcon : BaseVoteIcon;
+
   return (
-    <BaseVoteIcon
+    <Icon
       type={type ?? "pending"}
       size={size}
       title={title}

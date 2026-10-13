@@ -95,7 +95,7 @@ export const VoteSelector = React.forwardRef<
       }}
       ref={ref}
     >
-      <VoteIcon type={value} />
+      <VoteIcon type={value} animated />
     </button>
   );
 });
