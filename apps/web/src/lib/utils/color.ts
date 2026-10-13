@@ -71,7 +71,7 @@ export function getForegroundColor(backgroundColor: string): string {
  * Lightens the color for dark backgrounds and darkens it for light backgrounds.
  *
  * @param color - The color to adjust (hex format, e.g., "#084eb2")
- * @param backgroundColor - The background color to ensure contrast against (hex format, e.g., "#ffffff" or "#18181b")
+ * @param backgroundColor - The background color to ensure contrast against (hex format, e.g., "#ffffff" or "#1c1917")
  * @param minContrastRatio - Minimum contrast ratio to achieve (default: 3.0 for UI elements)
  * @returns Adjusted color in hex format
  */

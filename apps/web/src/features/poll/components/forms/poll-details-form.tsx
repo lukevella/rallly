@@ -126,9 +126,7 @@ export const PollDetailsForm = ({
           ) : null}
           {canAddVideoCall ? (
             <DropdownMenu>
-              <DropdownMenuTrigger
-                render={<Button type="button" className="rounded-full" />}
-              >
+              <DropdownMenuTrigger render={<Button type="button" />}>
                 <PlusIcon data-icon="inline-start" />
                 <Trans i18nKey="addVideoCall" defaults="Add video call" />
               </DropdownMenuTrigger>

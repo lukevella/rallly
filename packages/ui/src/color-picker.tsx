@@ -102,7 +102,7 @@ export function ColorPicker({
             />
           }
         >
-          <ColorSwatch className="size-5 rounded-sm border border-black/10" />
+          <ColorSwatch className="size-5 rounded-full border border-black/10" />
         </PopoverTrigger>
         <PopoverContent align="end" className="w-48">
           <ColorArea

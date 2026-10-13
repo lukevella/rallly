@@ -11,7 +11,6 @@ import {
   useDialog,
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
-import type * as React from "react";
 
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -44,13 +43,7 @@ export function useSelectionCount() {
  * Submits an all-no response, confirming first when it would discard
  * selections.
  */
-export function DeclineButton({
-  className,
-  size = "lg",
-}: {
-  className?: string;
-  size?: React.ComponentProps<typeof Button>["size"];
-}) {
+export function DeclineButton({ className }: { className?: string }) {
   const { votingForm, votes, selectedCount } = useSelection();
   const confirmDialog = useDialog();
 
@@ -66,7 +59,6 @@ export function DeclineButton({
     <>
       <Button
         type="button"
-        size={size}
         className={className}
         disabled={votingForm.formState.isSubmitting}
         onClick={() => {
@@ -123,13 +115,7 @@ export function DeclineButton({
  * until at least one option is selected; the gate explains itself in a toast
  * rather than disabling the button, so it stays reachable.
  */
-export function SubmitResponseButton({
-  className,
-  size = "lg",
-}: {
-  className?: string;
-  size?: React.ComponentProps<typeof Button>["size"];
-}) {
+export function SubmitResponseButton({ className }: { className?: string }) {
   const { t } = useTranslation();
   const { votingForm, selectedCount, isNewResponse } = useSelection();
   const isBlocked = isNewResponse && selectedCount === 0;
@@ -138,7 +124,6 @@ export function SubmitResponseButton({
     <Button
       form="voting-form"
       type="submit"
-      size={size}
       variant="primary"
       className={className}
       aria-disabled={isBlocked}

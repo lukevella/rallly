@@ -50,7 +50,10 @@ export function NavUser() {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button className="flex h-auto w-full gap-2 p-2" variant="ghost" />
+            <Button
+              className="flex h-auto w-full gap-2 rounded-lg p-2"
+              variant="ghost"
+            />
           }
         >
           <OptimizedAvatarImage size="lg" src={user.image} name={user.name} />
