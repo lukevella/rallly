@@ -288,7 +288,7 @@ function PollRowActions({
                 defaults="Are you sure you want to delete <b>{title}</b>?"
                 values={{ title }}
                 components={{
-                  b: <b className="font-bold" />,
+                  b: <b className="font-semibold" />,
                 }}
               />
             </DialogDescription>

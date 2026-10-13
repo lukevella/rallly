@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
       <div tw="h-full flex flex-col w-full justify-start">
         <div tw="flex justify-between items-center w-full">
           <Logo height={81} width={370} />
-          <div tw="flex text-gray-800 text-3xl tracking-tight font-bold">
+          <div tw="flex text-gray-800 text-3xl tracking-tight font-semibold">
             <span tw="bg-gray-200 px-6 py-3 rounded-full">Invite</span>
           </div>
         </div>
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
             </div>
           ) : null}
           <div
-            tw="flex mt-3 text-[64px] font-bold w-[1040px] overflow-hidden"
+            tw="flex mt-3 text-[64px] font-semibold w-[1040px] overflow-hidden"
             style={{
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",

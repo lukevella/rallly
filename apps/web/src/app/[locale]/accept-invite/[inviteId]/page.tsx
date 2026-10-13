@@ -59,7 +59,7 @@ export default async function JoinPage({
               size="xl"
             />
           </div>
-          <h1 className="font-bold text-base">
+          <h1 className="font-semibold text-base">
             <Trans
               i18nKey="joinSpace"
               defaults="Join {spaceName}"

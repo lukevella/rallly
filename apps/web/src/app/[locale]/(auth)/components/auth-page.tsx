@@ -7,7 +7,7 @@ export function AuthPageHeader({ children }: { children: React.ReactNode }) {
 }
 
 export function AuthPageTitle({ children }: { children: React.ReactNode }) {
-  return <h1 className="font-bold text-2xl">{children}</h1>;
+  return <h1 className="font-semibold text-2xl">{children}</h1>;
 }
 
 export function AuthPageDescription({
