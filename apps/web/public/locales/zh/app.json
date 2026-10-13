@@ -283,7 +283,6 @@
   "errorTitle": "出了点问题",
   "errorTryAgain": "重试",
   "event": "活动",
-  "eventHostDescription": "您是本次投票的创建者",
   "eventPageAbout": "关于",
   "eventPageGoingCount": "{count, plural, other {# 人参加}}",
   "eventRegisterAlreadyResponded": "此电子邮件已用于回应",
