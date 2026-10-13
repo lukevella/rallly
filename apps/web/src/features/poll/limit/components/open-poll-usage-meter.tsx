@@ -13,7 +13,7 @@ import {
 import React from "react";
 import { LoginLink } from "@/components/login-link";
 import { showPayWall } from "@/features/billing/client";
-import { FREE_OPEN_POLL_LIMIT, PLAN_NAMES } from "@/features/billing/constants";
+import { FREE_OPEN_POLL_LIMIT } from "@/features/billing/constants";
 import { OpenPollUsageBar } from "@/features/poll/limit/components/open-poll-usage-bar";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import {
@@ -92,40 +92,41 @@ export function OpenPollUsageMeter({ usage }: { usage: OpenPollUsage }) {
           })}
         </span>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-96 gap-4">
-        <OpenPollUsageBar
-          openCount={usage.openCount}
-          limit={usage.limit}
-          label={
-            <PopoverTitle render={<span />}>
-              <Trans i18nKey="openPolls" defaults="Open polls" />
-            </PopoverTitle>
-          }
-        />
-        <PopoverDescription>
-          {usage.tier === "guest" ? (
-            <Trans
-              i18nKey="openPollUsageGuestHint"
-              defaults="Guests can have {limit} open poll at a time. Create an account to have up to {freeLimit}."
-              values={{ limit: usage.limit, freeLimit: FREE_OPEN_POLL_LIMIT }}
-            />
-          ) : isAtOpenPollLimit(usage) ? (
-            <Trans
-              i18nKey="openPollUsageAtLimitHint"
-              defaults="You've reached the {limit} open poll limit on your {planName} plan. Finalize or close a poll to create a new one, or upgrade for unlimited open polls."
-              values={{ planName: PLAN_NAMES.HOBBY, limit: usage.limit }}
-            />
-          ) : (
-            <Trans
-              i18nKey="openPollUsageHint"
-              defaults="Your {planName} plan includes {limit} open polls at a time. Finalized and closed polls don't count."
-              values={{ planName: PLAN_NAMES.HOBBY, limit: usage.limit }}
-            />
-          )}
-        </PopoverDescription>
+      <PopoverContent align="end" className="w-80 gap-4">
+        <div className="space-y-2">
+          <OpenPollUsageBar
+            openCount={usage.openCount}
+            limit={usage.limit}
+            label={
+              <PopoverTitle render={<span />}>
+                <Trans i18nKey="openPolls" defaults="Open polls" />
+              </PopoverTitle>
+            }
+          />
+          <PopoverDescription>
+            {usage.tier === "guest" ? (
+              <Trans
+                i18nKey="openPollUsageGuestHint"
+                defaults="Guests can have {limit} open poll at a time. Create an account to have up to {freeLimit}."
+                values={{ limit: usage.limit, freeLimit: FREE_OPEN_POLL_LIMIT }}
+              />
+            ) : isAtOpenPollLimit(usage) ? (
+              <Trans
+                i18nKey="openPollUsageAtLimitHint"
+                defaults="Finalize or close a poll to create a new one, or upgrade for unlimited open polls."
+              />
+            ) : (
+              <Trans
+                i18nKey="openPollUsageHint"
+                defaults="Your plan allows up to {limit} open polls at a time."
+                values={{ limit: usage.limit }}
+              />
+            )}
+          </PopoverDescription>
+        </div>
         {usage.tier === "guest" ? (
           <LoginLink
-            className={cn(buttonVariants({ variant: "primary" }), "self-start")}
+            className={cn(buttonVariants({ size: "sm" }), "self-start")}
             onClick={() => {
               posthog?.capture("poll_limit:register_click", eventProperties);
             }}
@@ -134,7 +135,7 @@ export function OpenPollUsageMeter({ usage }: { usage: OpenPollUsage }) {
           </LoginLink>
         ) : usage.tier === "hobby" ? (
           <Button
-            variant="primary"
+            size="sm"
             className="self-start"
             onClick={() => {
               posthog?.capture("poll_limit:upgrade_click", eventProperties);
