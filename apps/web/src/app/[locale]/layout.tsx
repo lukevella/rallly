@@ -11,6 +11,7 @@ import type React from "react";
 import { Suspense } from "react";
 import { PostHogSessionInit } from "@/app/[locale]/components/posthog-init";
 import type { Params } from "@/app/[locale]/types";
+import { RouterLoadingBar } from "@/components/router-loading-indicator";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
@@ -83,6 +84,7 @@ export default async function Root({
             <InstancePolicyProvider value={instancePolicy}>
               <BrandingProvider value={brandingConfig}>
                 <Toaster />
+                <RouterLoadingBar />
                 <I18nProvider locale={locale} resources={resources}>
                   <TRPCProvider>
                     <LazyMotion features={domAnimation}>
