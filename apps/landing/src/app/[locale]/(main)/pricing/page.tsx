@@ -849,14 +849,14 @@ export default async function Page(props: {
                     <CompareTableLogo label="Google Meet">
                       <GoogleMeetIcon aria-hidden="true" />
                     </CompareTableLogo>
+                    <CompareTableLogo label="Zoom">
+                      <ZoomIcon aria-hidden="true" />
+                    </CompareTableLogo>
                     <CompareTableLogo label="Microsoft Teams">
                       <MicrosoftTeamsIcon aria-hidden="true" />
                     </CompareTableLogo>
                     <CompareTableLogo label="Webex">
                       <WebexIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                    <CompareTableLogo label="Zoom">
-                      <ZoomIcon aria-hidden="true" />
                     </CompareTableLogo>
                   </CompareTableLogos>
                 </CompareTableCell>

@@ -36,9 +36,9 @@
             "group": "Integrations",
             "pages": [
               "integrations/google-meet",
+              "integrations/zoom",
               "integrations/microsoft-teams",
-              "integrations/webex",
-              "integrations/zoom"
+              "integrations/webex"
             ]
           },
           {
