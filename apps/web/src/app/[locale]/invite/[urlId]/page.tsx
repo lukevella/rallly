@@ -12,6 +12,7 @@ import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import { loadInvitePoll, loadPollAvailability } from "@/features/poll/loaders";
+import { loadCanManagePoll } from "@/features/poll/vote/loaders";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
@@ -58,11 +59,13 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     locale,
     deviceDateTimeConfig,
     footerLinks,
+    canManage,
   ] = await Promise.all([
     loadInvitePoll({ pollId: urlId, token }),
     getLocale(),
     getDeviceDateTimeConfig(),
     loadFooterLinks(),
+    loadCanManagePoll(urlId),
   ]);
 
   return (
@@ -86,6 +89,8 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
               <VisibilityProvider>
                 <PollBrandingFromContext />
                 <InvitePage
+                  pollId={poll.id}
+                  canManage={canManage}
                   // Rendered here so the markdown parser stays on the server
                   description={
                     <EventMetaDescription
