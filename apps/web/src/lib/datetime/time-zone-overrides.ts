@@ -26,8 +26,7 @@ export const timeZoneOverrides = [
     utcOffsetMinutes: -360,
   },
   {
-    // Manitoba: permanent UTC-5, announced 2026-09-17, not yet in any IANA
-    // release.
+    // Manitoba: permanent UTC-5, announced 2026-09-17 (IANA 2026e).
     zones: ["America/Winnipeg", "Canada/Central"],
     from: "2026-11-01T02:00",
     substitute: "America/Cancun",
