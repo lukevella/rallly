@@ -285,7 +285,6 @@
   "errorTitle": "Något gick fel",
   "errorTryAgain": "Försök igen",
   "event": "Evenemang",
-  "eventHostDescription": "Du är skaparen av denna enkät",
   "eventPageAbout": "Om",
   "eventPageGoingCount": "{count, plural, one {# deltar} other {# deltar}}",
   "eventRegisterAlreadyResponded": "Denna e-postadress har redan använts för att svara",
