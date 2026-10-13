@@ -87,7 +87,7 @@ export const VoteSelector = React.forwardRef<
         // applies only while pressed, so it collapses the overlay between
         // pointerdown and pointerup: the release lands on the parent and the
         // click never reaches this button.
-        "backdrop-blur-none not-aria-[haspopup]:active:scale-none",
+        "rounded-[min(var(--radius-md),12px)] backdrop-blur-none not-aria-[haspopup]:active:scale-none",
         className,
       )}
       onClick={() => {
