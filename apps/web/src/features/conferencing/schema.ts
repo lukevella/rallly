@@ -3,8 +3,8 @@ import * as z from "zod";
 // Providers Rallly can mint links for. Distinct from the stored-link union
 // below, which also covers links pasted by hand (custom) and phone dial-ins.
 export const conferencingProviderSchema = z.enum([
-  "zoom",
   "meet",
+  "zoom",
   "teams",
   "webex",
 ]);
@@ -15,8 +15,8 @@ export type ConferencingProvider = z.infer<typeof conferencingProviderSchema>;
 // account needed). The link is optional: most organizers announce the tool
 // first and send the link once the time is set.
 export const pollConferencingSchema = z.discriminatedUnion("provider", [
-  z.object({ provider: z.literal("zoom") }),
   z.object({ provider: z.literal("meet") }),
+  z.object({ provider: z.literal("zoom") }),
   z.object({ provider: z.literal("teams") }),
   z.object({ provider: z.literal("webex") }),
   z.object({
@@ -32,7 +32,7 @@ export const disconnectConferencingConnectionSchema = z.object({
 });
 
 const webConferencingSchema = z.object({
-  provider: z.enum(["zoom", "meet", "teams", "webex"]),
+  provider: z.enum(["meet", "zoom", "teams", "webex"]),
   uri: z.url(),
   meetingId: z.string().optional(),
   password: z.string().optional(),
