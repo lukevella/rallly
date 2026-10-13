@@ -857,8 +857,6 @@
   "support": "Podpora",
   "supportDescription": "Potřebujete s něčím pomoci?",
   "switchToYearly": "Přepnout na roční",
-  "switchToYearlyDescription": "Ušetřete {percent}% při ročních platbách.",
-  "switchToYearlyTitle": "Přepnout na roční fakturaci",
   "syncCalendar": "Synchronizovat kalendář",
   "syncCalendarError": "Při synchronizaci kalendáře došlo k problému",
   "syncCalendarLoading": "Synchronizace kalendáře…",
