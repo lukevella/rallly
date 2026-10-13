@@ -6,8 +6,10 @@ import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
@@ -52,6 +54,7 @@ export function FeedbackDialog(props: DialogProps) {
 
             <Form {...form}>
               <form
+                className="grid gap-4"
                 onSubmit={form.handleSubmit((data) => {
                   submitFeedback.mutate(data);
                 })}
@@ -74,14 +77,18 @@ export function FeedbackDialog(props: DialogProps) {
                     </FormItem>
                   )}
                 />
-                <Button
-                  type="submit"
-                  loading={submitFeedback.isPending}
-                  className="mt-6"
-                  variant="primary"
-                >
-                  <Trans i18nKey="sendFeedback" defaults="Send feedback" />
-                </Button>
+                <DialogFooter>
+                  <DialogClose render={<Button />}>
+                    <Trans i18nKey="cancel" defaults="Cancel" />
+                  </DialogClose>
+                  <Button
+                    type="submit"
+                    loading={submitFeedback.isPending}
+                    variant="primary"
+                  >
+                    <Trans i18nKey="sendFeedback" defaults="Send feedback" />
+                  </Button>
+                </DialogFooter>
               </form>
             </Form>
           </>
