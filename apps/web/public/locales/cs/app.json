@@ -319,7 +319,6 @@
   "errorTitle": "Něco se pokazilo",
   "errorTryAgain": "Zkusit znovu",
   "event": "Událost",
-  "eventHostDescription": "Jste tvůrcem tohoto hlasování",
   "eventPageAbout": "O akci",
   "eventPageGoingCount": "{count, plural, one {# účastník} other {# účastníků}}",
   "eventRegisterAlreadyResponded": "Z tohoto e-mailu již bylo reagováno",
