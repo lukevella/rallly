@@ -84,7 +84,13 @@ function PollsEmptyState() {
   );
 }
 
-export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
+export function PollsPage({
+  counts,
+  usageMeter,
+}: {
+  counts: Record<PollStatus, number>;
+  usageMeter: React.ReactNode;
+}) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const { data: space } = useSpace();
@@ -113,6 +119,7 @@ export function PollsPage({ counts }: { counts: Record<PollStatus, number> }) {
             <Trans i18nKey="polls" defaults="Polls" />
           </ListViewTitle>
           <ListViewActions>
+            {usageMeter}
             <Link
               href="/new"
               className={buttonVariants({ variant: "primary" })}

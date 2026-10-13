@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { loadOptionalOpenPollUsage } from "@/features/poll/limit/loaders";
 import { loadPollStatusCounts } from "@/features/poll/loaders";
 import {
   loadActiveSpace,
@@ -10,20 +11,28 @@ import { getTranslation } from "@/i18n/server";
 import { DashboardHome } from "./dashboard-home";
 
 export default async function Page() {
-  const [user, space, pollStatusCounts, upcomingEventCount, hasNoAccounts] =
-    await Promise.all([
-      loadUser(),
-      loadActiveSpace(),
-      loadPollStatusCounts(),
-      loadUpcomingEventCount(),
-      loadUserHasNoAccounts(),
-    ]);
+  const [
+    user,
+    space,
+    pollStatusCounts,
+    openPollUsage,
+    upcomingEventCount,
+    hasNoAccounts,
+  ] = await Promise.all([
+    loadUser(),
+    loadActiveSpace(),
+    loadPollStatusCounts(),
+    loadOptionalOpenPollUsage(),
+    loadUpcomingEventCount(),
+    loadUserHasNoAccounts(),
+  ]);
 
   const ability = defineAbilityForMember({ user: { id: user.id }, space });
 
   return (
     <DashboardHome
       openPollCount={pollStatusCounts.open}
+      openPollUsage={openPollUsage}
       upcomingEventCount={upcomingEventCount}
       memberCount={space.memberCount}
       seatCount={space.seatCount}

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { getOpenPollLimit, getOpenPollTier, isAtOpenPollLimit } from "./utils";
+import {
+  getOpenPollLimit,
+  getOpenPollTier,
+  isAtOpenPollLimit,
+  isNearOpenPollLimit,
+} from "./utils";
 
 describe("getOpenPollLimit", () => {
   it("is 1 for guests, 3 for free and unlimited on Pro", () => {
@@ -37,6 +42,26 @@ describe("isAtOpenPollLimit", () => {
   it("is never reached without a limit", () => {
     expect(
       isAtOpenPollLimit({ tier: "pro", limit: null, openCount: 1000 }),
+    ).toBe(false);
+  });
+});
+
+describe("isNearOpenPollLimit", () => {
+  it("is reached one poll short of the limit", () => {
+    expect(isNearOpenPollLimit({ tier: "hobby", limit: 3, openCount: 1 })).toBe(
+      false,
+    );
+    expect(isNearOpenPollLimit({ tier: "hobby", limit: 3, openCount: 2 })).toBe(
+      true,
+    );
+    expect(isNearOpenPollLimit({ tier: "hobby", limit: 3, openCount: 5 })).toBe(
+      true,
+    );
+  });
+
+  it("is never reached without a limit", () => {
+    expect(
+      isNearOpenPollLimit({ tier: "pro", limit: null, openCount: 1000 }),
     ).toBe(false);
   });
 });

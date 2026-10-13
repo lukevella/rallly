@@ -205,6 +205,7 @@ const leadingBenefitByTrigger: Partial<Record<PayWallTrigger["from"], string>> =
     "api-keys": "apiAccess",
     "poll-footer": "removeAttribution",
     "poll-limit": "unlimitedOpenPolls",
+    "poll-limit-meter": "unlimitedOpenPolls",
   };
 
 // The benefit that triggered the pay wall leads the list. Unlimited open

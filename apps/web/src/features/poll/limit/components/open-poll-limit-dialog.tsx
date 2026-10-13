@@ -1,7 +1,7 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants, cn } from "@rallly/ui";
+import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -12,7 +12,6 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import { Progress } from "@rallly/ui/progress";
 import { BarChart2Icon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -24,8 +23,9 @@ import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import { PLAN_NAMES } from "@/features/billing/constants";
 import type { OpenPollLimitSource } from "@/features/poll/limit/client";
 import { useOpenPollLimitStore } from "@/features/poll/limit/client";
+import { OpenPollUsageBar } from "@/features/poll/limit/components/open-poll-usage-bar";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
-import { Trans, useTranslation } from "@/i18n/client";
+import { Trans } from "@/i18n/client";
 
 /**
  * Single, app-wide instance. Open it from anywhere with
@@ -160,46 +160,6 @@ function OpenPollLimitContent({
         onOpenChange={payWall.dialogProps.onOpenChange}
       />
     </>
-  );
-}
-
-function OpenPollUsageBar({
-  openCount,
-  limit,
-}: {
-  openCount: number;
-  limit: number;
-}) {
-  const { t } = useTranslation();
-  const isAtLimit = openCount >= limit;
-  const usageText = t("openPollLimitUsage", {
-    defaultValue: "{openCount} of {limit}",
-    openCount,
-    limit,
-  });
-  return (
-    <div className="space-y-2">
-      <div className="flex items-baseline justify-between gap-4 text-sm">
-        <span className="font-medium">
-          <Trans i18nKey="openPolls" defaults="Open polls" />
-        </span>
-        <span
-          className={cn(
-            "text-muted-foreground tabular-nums",
-            isAtLimit && "text-destructive",
-          )}
-        >
-          {usageText}
-        </span>
-      </div>
-      <Progress
-        value={Math.min((openCount / limit) * 100, 100)}
-        aria-label={t("openPolls", { defaultValue: "Open polls" })}
-        getAriaValueText={() => usageText}
-        className="h-2"
-        indicatorClassName={cn(isAtLimit && "bg-destructive bg-none")}
-      />
-    </div>
   );
 }
 
