@@ -583,6 +583,24 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
   const option = options.find((o) => o.id === optionId);
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
 
+  // A step view per step reached, and the step the host left from if they
+  // close without finalizing, so the wizard's drop-off can be measured.
+  const stepRef = React.useRef(step);
+  React.useEffect(() => {
+    stepRef.current = step;
+    posthog?.capture("poll_finalize:step_view", { step });
+  }, [step]);
+  React.useEffect(
+    () => () => {
+      if (stepRef.current !== "done") {
+        posthog?.capture("poll_finalize:dialog_dismiss", {
+          step: stepRef.current,
+        });
+      }
+    },
+    [],
+  );
+
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
       setSkippedNotifications(data?.skippedNotifications ?? 0);

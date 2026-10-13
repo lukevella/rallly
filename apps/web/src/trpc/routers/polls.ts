@@ -45,7 +45,9 @@ import {
 } from "@/features/poll/limit/mutations";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
+  getChosenOptionRank,
   getFinalizePlanGate,
+  getFinalizeTiming,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
 import { queueReviewRequest } from "@/features/review-request/mutations";
@@ -1185,6 +1187,7 @@ export const polls = router({
               timeFormat: true,
             },
           },
+          options: { select: { id: true } },
           participants: {
             select: {
               id: true,
@@ -1192,6 +1195,7 @@ export const polls = router({
               email: true,
               locale: true,
               timeZone: true,
+              userId: true,
               user: {
                 select: {
                   email: true,
@@ -1533,6 +1537,8 @@ export const polls = router({
 
         scheduleQueuedEmailDelivery({ batchId: scheduledEvent.id });
 
+        const ownerId = poll.user.id;
+        const ownerEmail = poll.user.email.trim().toLowerCase();
         track(ctx.user, {
           event: "poll_schedule",
           properties: {
@@ -1547,6 +1553,25 @@ export const polls = router({
               optionId: input.optionId,
               notifyParticipantIds: input.notifyParticipantIds,
             }),
+            ...getChosenOptionRank({
+              options: poll.options,
+              participants: poll.participants,
+              optionId: input.optionId,
+            }),
+            ...getFinalizeTiming({
+              start: eventTimes.start,
+              end: eventTimes.end,
+              allDay: eventTimes.allDay,
+              timeZone: eventTimes.timeZone,
+              now: new Date(),
+            }),
+            host_is_participant: poll.participants.some(
+              (p) =>
+                p.userId === ownerId ||
+                p.email?.trim().toLowerCase() === ownerEmail,
+            ),
+            conferencing_type: pollConferencing?.provider ?? "none",
+            has_location: Boolean(poll.location),
           },
           groups: {
             poll: poll.id,
