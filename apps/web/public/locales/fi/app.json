@@ -1022,8 +1022,6 @@
   "support": "Tuki",
   "supportDescription": "Tarvitsetko apua jossain?",
   "switchToYearly": "Vaihda vuosimaksuun",
-  "switchToYearlyDescription": "Säästät {percent} %, kun maksat vuosittain.",
-  "switchToYearlyTitle": "Vaihda vuosilaskutukseen",
   "syncCalendar": "Synkronoi kalenteri",
   "syncCalendarError": "Kalenterisi synkronoinnissa tapahtui virhe",
   "syncCalendarLoading": "Synkronoidaan kalenteria…",
