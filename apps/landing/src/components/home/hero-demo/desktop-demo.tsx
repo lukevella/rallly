@@ -8,14 +8,31 @@ import {
   PlusIcon,
   UserIcon,
 } from "lucide-react";
+import Image from "next/image";
 import * as React from "react";
 import { BrowserChrome } from "./browser-chrome";
 import type { DemoDay } from "./demo-data";
 import { formatDemoParts, getInitials } from "./demo-data";
 import { DemoWindow } from "./demo-frame";
-import type { DemoPreset } from "./demo-presets";
+import type { DemoConferencingProvider, DemoPreset } from "./demo-presets";
 import { VoteCount } from "./vote-count";
 import { VoteIcon } from "./vote-icon";
+
+// Brand names, so they stay untranslated, matching the app.
+const conferencingProviders: Record<
+  DemoConferencingProvider,
+  { label: string; icon: string }
+> = {
+  meet: {
+    label: "Google Meet",
+    icon: "/static/images/conferencing/google-meet.svg",
+  },
+  teams: {
+    label: "Microsoft Teams",
+    icon: "/static/images/conferencing/microsoft-teams.svg",
+  },
+  webex: { label: "Webex", icon: "/static/images/conferencing/webex.svg" },
+};
 
 export const DesktopDemo = ({
   locale,
@@ -67,10 +84,23 @@ export const DesktopDemo = ({
                   <UserIcon className="size-4 text-gray-400" />
                   {preset.organizer}
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPinIcon className="size-4 text-gray-400" />
-                  {preset.location}
-                </div>
+                {preset.location ? (
+                  <div className="flex items-center gap-2">
+                    <MapPinIcon className="size-4 text-gray-400" />
+                    {preset.location}
+                  </div>
+                ) : null}
+                {preset.conferencing ? (
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src={conferencingProviders[preset.conferencing].icon}
+                      width={16}
+                      height={16}
+                      alt=""
+                    />
+                    {conferencingProviders[preset.conferencing].label}
+                  </div>
+                ) : null}
               </div>
               <div>
                 <div className="font-medium text-gray-900 text-sm">

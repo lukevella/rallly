@@ -8,10 +8,15 @@ export type DemoPreset = {
   title: string;
   description: string;
   organizer: string;
-  location: string;
+  location?: string;
+  conferencing?: DemoConferencingProvider;
   spacing: DemoSpacing;
   participants: { name: string; votes: DemoVote[] }[];
 };
+
+// Only providers that are generally available in the app. Zoom stays out until
+// its marketplace review clears.
+export type DemoConferencingProvider = "meet" | "teams" | "webex";
 
 export type DemoPresetName =
   | "default"
@@ -60,10 +65,11 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoAssistantsLocation", {
+      location: t("heroDemoAssistantsRoom", {
         ns: "home",
-        defaultValue: "Meeting room 3 and Zoom",
+        defaultValue: "Meeting room 3",
       }),
+      conferencing: "teams",
       spacing: "consecutive",
       participants: assistantsParticipants,
     };
@@ -84,10 +90,11 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoCommitteeLocation", {
+      location: t("heroDemoCommitteeRoom", {
         ns: "home",
-        defaultValue: "Committee room and Teams",
+        defaultValue: "Committee room",
       }),
+      conferencing: "teams",
       spacing: "weekly",
       participants: committeeParticipants,
     };
@@ -132,10 +139,11 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoThesisDefenseLocation", {
+      location: t("heroDemoThesisDefenseRoom", {
         ns: "home",
-        defaultValue: "Examination room and Zoom",
+        defaultValue: "Examination room",
       }),
+      conferencing: "webex",
       spacing: "consecutive",
       participants: thesisDefenseParticipants,
     };
@@ -156,10 +164,11 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoLegalLocation", {
+      location: t("heroDemoLegalVenue", {
         ns: "home",
-        defaultValue: "Neutral venue and video link",
+        defaultValue: "Neutral venue",
       }),
+      conferencing: "webex",
       spacing: "weekly",
       participants: legalParticipants,
     };
@@ -179,10 +188,7 @@ export function getDemoPreset(
       ns: "home",
       defaultValue: "Organized by Sofia Almeida",
     }),
-    location: t("heroDemoLocation", {
-      ns: "home",
-      defaultValue: "Riverside Community Center",
-    }),
+    conferencing: "meet",
     spacing: "weekly",
     participants: defaultParticipants,
   };
