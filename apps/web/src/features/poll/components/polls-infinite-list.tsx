@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Skeleton } from "@rallly/ui/skeleton";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
@@ -411,6 +412,23 @@ const columns = [
   }),
 ];
 
+function PollsListSkeleton() {
+  return (
+    <div aria-hidden className="py-2">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
+          key={i}
+          className="flex h-12 items-center gap-3 px-8"
+        >
+          <Skeleton className="size-4 rounded-full" />
+          <Skeleton className="h-4 w-48" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function PollsInfiniteList({
   status,
   search,
@@ -422,20 +440,26 @@ export function PollsInfiniteList({
   member?: string;
   emptyState: React.ReactNode;
 }) {
-  const [data, { fetchNextPage, hasNextPage, isFetchingNextPage }] =
-    trpc.polls.infiniteChronological.useSuspenseInfiniteQuery(
-      {
-        status,
-        search,
-        member,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      },
-    );
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status: queryStatus,
+  } = trpc.polls.infiniteChronological.useInfiniteQuery(
+    {
+      status,
+      search,
+      member,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
 
   const polls = React.useMemo(
-    () => data.pages.flatMap((page) => page.polls),
+    () => data?.pages.flatMap((page) => page.polls) ?? [],
     [data],
   );
 
@@ -476,6 +500,24 @@ export function PollsInfiniteList({
       observer.unobserve(loadMoreElement);
     };
   }, [handleLoadMore]);
+
+  if (queryStatus === "pending") {
+    return (
+      <ListViewContent>
+        <PollsListSkeleton />
+      </ListViewContent>
+    );
+  }
+
+  if (queryStatus === "error") {
+    return (
+      <ListViewContent>
+        <div className="py-8 text-center text-red-600">
+          Error loading polls: {error?.message}
+        </div>
+      </ListViewContent>
+    );
+  }
 
   if (polls.length === 0) {
     return <ListViewContent>{emptyState}</ListViewContent>;
