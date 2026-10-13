@@ -15,7 +15,7 @@ const voteIconVariants = cva("transition-[color] duration-200 ease-out-ui", {
       md: "size-5",
     },
     type: {
-      yes: "text-green-600",
+      yes: "text-green-500",
       ifNeedBe: "text-amber-400",
       no: "text-gray-500",
       pending: "text-gray-400 dark:text-gray-500",
@@ -71,17 +71,6 @@ const containers: Record<VoteIconChoice, string> = {
   no: "M10 1L16 1C17.657 1 19 2.343 19 4L19 16C19 17.657 17.657 19 16 19L4 19C2.343 19 1 17.657 1 16L1 4C1 2.343 2.343 1 4 1Z",
 };
 
-/**
- * Each glyph keeps at least 3:1 against its container. White fails on amber,
- * so if need be takes a dark glyph instead of a darker, orange container.
- */
-const glyphFill: Record<VoteIconType, string> = {
-  yes: "fill-white",
-  ifNeedBe: "fill-amber-950",
-  no: "fill-white",
-  pending: "fill-current",
-};
-
 function Glyph({ type }: { type: VoteIconType }) {
   const { d } = glyphs[type];
   return (
@@ -90,7 +79,7 @@ function Glyph({ type }: { type: VoteIconType }) {
         fillRule="evenodd"
         clipRule="evenodd"
         d={d}
-        className={glyphFill[type]}
+        className={type === "pending" ? "fill-current" : "fill-white"}
       />
     </g>
   );
