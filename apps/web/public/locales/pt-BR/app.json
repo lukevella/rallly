@@ -285,7 +285,6 @@
   "errorTitle": "Algo deu errado",
   "errorTryAgain": "Tente novamente",
   "event": "Evento",
-  "eventHostDescription": "Você é o criador desta enquete",
   "eventPageAbout": "Sobre",
   "eventPageGoingCount": "{count, plural, one {# indo} other {# indo}}",
   "eventRegisterAlreadyResponded": "Este e-mail já foi utilizado para responder",
