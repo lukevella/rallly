@@ -4,14 +4,23 @@ import type { DemoSpacing, DemoVote } from "./demo-data";
 // The demo renders one of these presets. The audience pages (/for/*) show a
 // poll that looks like one their reader would actually run, so the screenshot
 // argues the case before the copy does.
+//
+// A preset shows a location or a video call, never both, as most real polls
+// do: showing both makes the hybrid case look like the norm.
 export type DemoPreset = {
   title: string;
   description: string;
   organizer: string;
-  location: string;
   spacing: DemoSpacing;
   participants: { name: string; votes: DemoVote[] }[];
-};
+} & (
+  | { location: string; conferencing?: never }
+  | { conferencing: DemoConferencingProvider; location?: never }
+);
+
+// Limited to the providers most visitors recognize at a glance, and to ones
+// live in the app: Zoom stays out until its marketplace review clears.
+export type DemoConferencingProvider = "meet" | "teams";
 
 export type DemoPresetName =
   | "default"
@@ -60,9 +69,9 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoAssistantsLocation", {
+      location: t("heroDemoAssistantsRoom", {
         ns: "home",
-        defaultValue: "Meeting room 3 and Zoom",
+        defaultValue: "Meeting room 3",
       }),
       spacing: "consecutive",
       participants: assistantsParticipants,
@@ -84,10 +93,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoCommitteeLocation", {
-        ns: "home",
-        defaultValue: "Committee room and Teams",
-      }),
+      conferencing: "teams",
       spacing: "weekly",
       participants: committeeParticipants,
     };
@@ -132,10 +138,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoThesisDefenseLocation", {
-        ns: "home",
-        defaultValue: "Examination room and Zoom",
-      }),
+      conferencing: "meet",
       spacing: "consecutive",
       participants: thesisDefenseParticipants,
     };
@@ -156,10 +159,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoLegalLocation", {
-        ns: "home",
-        defaultValue: "Neutral venue and video link",
-      }),
+      conferencing: "teams",
       spacing: "weekly",
       participants: legalParticipants,
     };
@@ -179,10 +179,7 @@ export function getDemoPreset(
       ns: "home",
       defaultValue: "Organized by Sofia Almeida",
     }),
-    location: t("heroDemoLocation", {
-      ns: "home",
-      defaultValue: "Riverside Community Center",
-    }),
+    conferencing: "meet",
     spacing: "weekly",
     participants: defaultParticipants,
   };

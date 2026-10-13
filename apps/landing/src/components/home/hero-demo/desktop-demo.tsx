@@ -9,13 +9,24 @@ import {
   UserIcon,
 } from "lucide-react";
 import * as React from "react";
+import GoogleMeetIcon from "@/assets/google-meet.svg";
+import MicrosoftTeamsIcon from "@/assets/microsoft-teams.svg";
 import { BrowserChrome } from "./browser-chrome";
 import type { DemoDay } from "./demo-data";
 import { formatDemoParts, getInitials } from "./demo-data";
 import { DemoWindow } from "./demo-frame";
-import type { DemoPreset } from "./demo-presets";
+import type { DemoConferencingProvider, DemoPreset } from "./demo-presets";
 import { VoteCount } from "./vote-count";
 import { VoteIcon } from "./vote-icon";
+
+// Brand names, so they stay untranslated, matching the app.
+const conferencingProviders: Record<
+  DemoConferencingProvider,
+  { label: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> }
+> = {
+  meet: { label: "Google Meet", Icon: GoogleMeetIcon },
+  teams: { label: "Microsoft Teams", Icon: MicrosoftTeamsIcon },
+};
 
 export const DesktopDemo = ({
   locale,
@@ -67,10 +78,17 @@ export const DesktopDemo = ({
                   <UserIcon className="size-4 text-gray-400" />
                   {preset.organizer}
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPinIcon className="size-4 text-gray-400" />
-                  {preset.location}
-                </div>
+                {preset.location ? (
+                  <div className="flex items-center gap-2">
+                    <MapPinIcon className="size-4 text-gray-400" />
+                    {preset.location}
+                  </div>
+                ) : null}
+                {preset.conferencing ? (
+                  <div className="flex items-center gap-2">
+                    <ConferencingProvider provider={preset.conferencing} />
+                  </div>
+                ) : null}
               </div>
               <div>
                 <div className="font-medium text-gray-900 text-sm">
@@ -228,3 +246,17 @@ export const DesktopDemo = ({
     </DemoWindow>
   );
 };
+
+function ConferencingProvider({
+  provider,
+}: {
+  provider: DemoConferencingProvider;
+}) {
+  const { label, Icon } = conferencingProviders[provider];
+  return (
+    <>
+      <Icon width={16} height={16} aria-hidden="true" />
+      {label}
+    </>
+  );
+}
