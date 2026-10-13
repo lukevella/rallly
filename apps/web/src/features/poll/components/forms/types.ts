@@ -16,7 +16,6 @@ export type PollOptionsData = {
   duration: number; // duration of the event in minutes
   timeZone: string;
   lockTimeZone: boolean; // when true, everyone sees the same wall-clock time (no per-viewer conversion)
-  allDay: boolean; // derived: options are whole-day dates rather than time slots
   view: string;
   options: DateTimeOption[];
 };

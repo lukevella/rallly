@@ -23,6 +23,7 @@ import {
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
+import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type {
   NewEventData,
@@ -84,9 +85,6 @@ function getDefaultValues(poll: PollDetails): NewEventData {
     // All-day polls are neutral (lock doesn't apply).
     lockTimeZone:
       !poll.timeZone && poll.options.some((option) => option.duration > 0),
-    allDay:
-      poll.options.length > 0 &&
-      poll.options.every((option) => option.duration === 0),
     duration: poll.options[0]?.duration || 60,
     hideParticipants: poll.hideParticipants,
     hideScores: poll.hideScores,
@@ -112,7 +110,7 @@ function getDateChanges({
   // The submitted frame for the options: null when locked or all-day
   // (floating), else the organizer's zone.
   const timeZone =
-    !data.lockTimeZone && !data.allDay
+    !data.lockTimeZone && !isAllDay(data.options)
       ? data.timeZone || fallbackTimeZone
       : null;
 

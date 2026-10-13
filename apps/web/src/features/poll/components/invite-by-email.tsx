@@ -87,14 +87,6 @@ export function InviteByEmail({
     [invites],
   );
 
-  // An optimistic row lives until the refreshed server list carries it.
-  React.useEffect(() => {
-    setSending((prev) => {
-      const next = prev.filter((address) => !invitedEmails.has(address));
-      return next.length === prev.length ? prev : next;
-    });
-  }, [invitedEmails]);
-
   const rows: Row[] = [
     ...sending
       .filter((address) => !invitedEmails.has(address))
@@ -131,13 +123,19 @@ export function InviteByEmail({
 
   const sendInvite = useMutation(
     mutationOptions(sendPollInviteAction, {
-      onSuccess: (data, input) => {
+      onSuccess: async (data, input) => {
         if (data.ok) {
           announce(
             t("shareDialogInviteSent", {
               defaultValue: "Invite sent to {email}",
               email: input.email,
             }),
+          );
+          // The optimistic row lives until the refreshed server list carries
+          // it. Joins the refetch every successful write already starts.
+          await invitesQuery.refetch({ cancelRefetch: false });
+          setSending((prev) =>
+            prev.filter((address) => address !== input.email),
           );
           return;
         }

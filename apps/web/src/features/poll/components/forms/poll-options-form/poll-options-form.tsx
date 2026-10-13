@@ -24,6 +24,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar/month-calendar";
+import { hasMixedOptionTypes, isAllDay } from "./utils";
 import WeekCalendar from "./week-calendar";
 
 const PollOptionsForm = ({
@@ -66,26 +67,7 @@ const PollOptionsForm = ({
 
   const dateOrTimeRangeDialog = useDialog();
 
-  React.useEffect(() => {
-    if (watchOptions.length > 1) {
-      const optionType = watchOptions[0].type;
-      // all options needs to be the same type
-      if (watchOptions.some((option) => option.type !== optionType)) {
-        dateOrTimeRangeDialog.trigger();
-      }
-    }
-  }, [watchOptions, dateOrTimeRangeDialog]);
-
-  // Keep the derived allDay flag in sync: a poll is all-day when every option
-  // is a whole-day date rather than a time slot. Consumed at submit to decide
-  // whether a time zone is attached.
-  const allDay =
-    watchOptions.length > 0 &&
-    watchOptions.every((option) => option.type === "date");
-
-  React.useEffect(() => {
-    setValue("allDay", allDay);
-  }, [allDay, setValue]);
+  const allDay = isAllDay(watchOptions);
 
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
@@ -185,12 +167,21 @@ const PollOptionsForm = ({
           name="options"
           rules={{
             validate: (options) => {
-              return options.length > 0
-                ? true
-                : t("calendarHelp", {
-                    defaultValue:
-                      "You can't create a poll without any options. Add at least one option to continue.",
-                  });
+              if (options.length === 0) {
+                return t("calendarHelp", {
+                  defaultValue:
+                    "You can't create a poll without any options. Add at least one option to continue.",
+                });
+              }
+              // A draft restored from storage can be mixed without passing
+              // through the calendar's onChange, which opens the dialog
+              if (hasMixedOptionTypes(options)) {
+                return t("mixedOptionsError", {
+                  defaultValue:
+                    "A poll can't have both date and time options. Remove one kind to continue.",
+                });
+              }
+              return true;
             },
           }}
           render={({ field }) => (
@@ -203,6 +194,9 @@ const PollOptionsForm = ({
                 }}
                 onChange={(options) => {
                   field.onChange(options);
+                  if (hasMixedOptionTypes(options)) {
+                    dateOrTimeRangeDialog.trigger();
+                  }
                 }}
                 duration={watchDuration}
                 onChangeDuration={(duration) => {

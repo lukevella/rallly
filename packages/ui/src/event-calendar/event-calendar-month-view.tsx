@@ -1014,9 +1014,9 @@ function EventCalendarMoreIndicator({
   const isDragging = useEventCalendarSelector<unknown, boolean>(
     (state) => state.drag !== null,
   );
-  useEffect(() => {
-    if (isDragging) setOpen(false);
-  }, [isDragging]);
+  if (isDragging && open) {
+    setOpen(false);
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
