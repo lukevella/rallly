@@ -17,7 +17,7 @@
   --primary-foreground: var(--primary-light-foreground, var(--color-white));
   --state-shade: black;
 
-  --button-outline: var(--color-gray-200);
+  --button-outline: rgba(0, 0, 0, 0.1);
   --menu-item-outline: rgba(0, 0, 0, 0.05);
 
   --border: var(--color-gray-200);
