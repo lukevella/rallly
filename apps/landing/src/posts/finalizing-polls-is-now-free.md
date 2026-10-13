@@ -13,7 +13,7 @@ Finalizing used to be a Pro feature. It isn't anymore. Click **Finalize** in the
 
 ![The summary step of the Finalize dialog, showing the chosen date, location and video call before finalizing](/static/images/free-scheduling/finalize-summary.png)
 
-Everyone you select gets an email with a calendar invite, so the event lands in their calendar without anyone copying details by hand. If the poll has a video call, the link is created when you finalize and included in the invite. Google Meet works on every plan. Zoom, Microsoft Teams and Webex are part of Pro.
+Everyone you select gets an email with a calendar invite, so the event lands in their calendar without anyone copying details by hand. If the poll has a video call, the link is created when you finalize and included in the invite. Google Meet works on every plan. Microsoft Teams and Webex are part of Pro.
 
 Finalizing is the step that gets the meeting into people's calendars. With it behind a paywall, the free plan stopped one step short of actually scheduling anything.
 
@@ -23,7 +23,7 @@ What now differs between plans is how many polls you can have open, collecting v
 
 There is still no limit on how many polls you can create, how many people can vote or how many options a poll can have. A poll stops counting as soon as you finalize or close it, and polls close on their own once all their dates have passed. If you organize the occasional dinner or team meeting, you're unlikely to notice the limit at all.
 
-If you're scheduling with lots of groups at once, which tends to be the case when scheduling is part of your job, Pro removes the limit along with the other Pro features like email invites, custom branding and Zoom and Teams links.
+If you're scheduling with lots of groups at once, which tends to be the case when scheduling is part of your job, Pro removes the limit along with the other Pro features like email invites, custom branding and Teams and Webex links.
 
 ## Why the change
 
