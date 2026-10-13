@@ -4,7 +4,6 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
-import { useDialog } from "@rallly/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -34,7 +33,10 @@ import {
   usePoll,
   useRole,
 } from "@/features/poll/client";
-import { SharePollDialog } from "@/features/poll/components/share-dialog";
+import {
+  SharePollDialog,
+  useSharePollDialog,
+} from "@/features/poll/components/share-dialog";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
@@ -203,7 +205,9 @@ function DesktopPollEmptyState() {
   const role = useRole();
   const { canAddNewParticipant } = usePermissions();
   const votingForm = useVotingForm();
-  const shareDialog = useDialog();
+  const { dialog: shareDialog, open: openShareDialog } = useSharePollDialog(
+    poll.id,
+  );
   const canShare = role === "admin";
 
   return (
@@ -247,7 +251,10 @@ function DesktopPollEmptyState() {
           ) : null}
           {canShare ? (
             <>
-              <Button {...shareDialog.triggerProps}>
+              <Button
+                {...shareDialog.triggerProps}
+                onClick={() => openShareDialog("empty_state")}
+              >
                 <Share2Icon data-icon="inline-start" />
                 <Trans i18nKey="share" defaults="Share" />
               </Button>
@@ -256,7 +263,6 @@ function DesktopPollEmptyState() {
                 pollId={poll.id}
                 pollStatus={poll.status}
                 inviteLink={poll.inviteLink}
-                source="empty_state"
               />
             </>
           ) : null}

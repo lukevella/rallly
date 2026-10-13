@@ -23,6 +23,23 @@ import { useFlash } from "@/lib/flash/client";
 
 type ShareSource = "poll_created" | "manual" | "empty_state";
 
+/** Dialog state for SharePollDialog whose `open` records how it was opened. */
+export function useSharePollDialog(pollId: string) {
+  const dialog = useDialog();
+  const isFree = useIsFree();
+
+  const open = (source: ShareSource) => {
+    posthog?.capture("poll_share:dialog_open", {
+      poll_id: pollId,
+      tier: isFree ? "free" : "pro",
+      source,
+    });
+    dialog.trigger();
+  };
+
+  return { dialog, open };
+}
+
 export function ShareDialog({
   pollId,
   pollStatus,
@@ -34,9 +51,8 @@ export function ShareDialog({
   inviteLink: string;
   variant?: "primary" | "default";
 }) {
-  const dialog = useDialog();
+  const { dialog, open } = useSharePollDialog(pollId);
   const sharePollFlash = useFlash(SHARE_POLL_FLASH_KEY);
-  const [source, setSource] = React.useState<ShareSource>("manual");
 
   // The create page flashes the new poll's id so this dialog is the
   // confirmation. The flash is consumed on read, so refresh and back don't
@@ -45,8 +61,7 @@ export function ShareDialog({
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per flash arrival
   React.useEffect(() => {
     if (sharePollFlash !== pollId) return;
-    setSource("poll_created");
-    dialog.trigger();
+    open("poll_created");
   }, [sharePollFlash]);
 
   return (
@@ -54,10 +69,7 @@ export function ShareDialog({
       <Button
         variant={variant}
         {...dialog.triggerProps}
-        onClick={() => {
-          setSource("manual");
-          dialog.trigger();
-        }}
+        onClick={() => open("manual")}
       >
         <Share2Icon data-icon="inline-start" />
         <span className="sr-only sm:not-sr-only">
@@ -69,7 +81,6 @@ export function ShareDialog({
         pollId={pollId}
         pollStatus={pollStatus}
         inviteLink={inviteLink}
-        source={source}
       />
     </>
   );
@@ -79,27 +90,12 @@ export function SharePollDialog({
   pollId,
   pollStatus,
   inviteLink,
-  source,
   ...dialogProps
 }: React.ComponentProps<typeof Dialog> & {
   pollId: string;
   pollStatus: PollStatus;
   inviteLink: string;
-  source: ShareSource;
 }) {
-  const isFree = useIsFree();
-  const isOpen = dialogProps.open;
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: capture once per open
-  React.useEffect(() => {
-    if (!isOpen) return;
-    posthog?.capture("poll_share:dialog_open", {
-      poll_id: pollId,
-      tier: isFree ? "free" : "pro",
-      source,
-    });
-  }, [isOpen]);
-
   return (
     <Dialog {...dialogProps}>
       <DialogContent size="lg" data-testid="invite-participant-dialog">

@@ -92,10 +92,6 @@ function OpenPollLimitContent({
     [data, source],
   );
 
-  React.useEffect(() => {
-    posthog?.capture("poll_limit:wall_view", eventProperties);
-  }, [eventProperties]);
-
   if (data.limit === null) {
     return null;
   }
