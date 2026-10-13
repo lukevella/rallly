@@ -1,5 +1,6 @@
 {
-  "announcementBadge": "New",
+  "apiAnnouncement": "Introducing the Rallly API",
+  "apiBlogBadge": "New",
   "assistantsDescription": "Whether you support one executive or a whole department, find a time that works across a dozen busy calendars without a single follow-up email. Share one link, watch the responses land, and lock in the slot everyone can make. Free, and nobody you invite needs an account.",
   "assistantsFaqBranding": "Can polls carry our company branding?",
   "assistantsFaqBrandingAnswer": "With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to a board or a client looks like it came from your organization. Everything else is free to use.",
@@ -86,7 +87,6 @@
   "faqWhen2meetMobileAnswer": "Yes. Voting on a Rallly poll is a matter of tapping the times that work for you, so it feels natural on a phone. There is no drag-select grid to wrestle with on a small screen.",
   "finalCtaDescription": "Set up your poll in under a minute. No account, no chasing people for replies.",
   "finalCtaTitle": "Ready to find the best time to meet?",
-  "freeFinalizeAnnouncement": "Finalizing polls is now free",
   "freeSchedulingPollAvailabilityPollDescription": "Not sure when everyone is free? Offer a wider range of times and each person answers yes, no, or if need be.",
   "freeSchedulingPollAvailabilityPollTitle": "Availability poll",
   "freeSchedulingPollCalendarPollDescription": "Scheduling an event? Offer whole dates on a calendar and find the day that suits the most people.",
