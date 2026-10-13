@@ -472,7 +472,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <DesktopPollEmptyState />
               )}
               {mode === "new" ? (
-                <div className="border-t p-3">
+                <div className="border-t bg-muted/40 p-3">
                   <VotingFooter />
                 </div>
               ) : null}
