@@ -8,7 +8,7 @@ import { ACCENT } from "./accent";
 import type { CursorStop } from "./demo-cursor";
 import { DemoCursor } from "./demo-cursor";
 import type { Playback } from "./motion";
-import { EASE_OUT, EXIT } from "./motion";
+import { EXIT } from "./motion";
 import { PressButton } from "./press-button";
 
 // A textless mock of the poll creation form: title field and a month
@@ -101,32 +101,30 @@ export const CreateStepDemo = ({ playback }: { playback: Playback }) => {
                   // biome-ignore lint/suspicious/noArrayIndexKey: calendar cells are positional
                   key={index}
                   ref={cellRefs[pickedAt]}
-                  className="h-3.5 rounded bg-gray-100"
-                  initial={false}
-                  animate={
+                  // Color is a CSS transition so it follows the theme's gray
+                  // tokens, which motion cannot interpolate.
+                  className={cn(
+                    "h-3.5 rounded transition-colors ease-[cubic-bezier(0.23,1,0.32,1)]",
                     on
-                      ? {
-                          backgroundColor: "#d1d5db",
-                          scale: instant ? 1 : [0.88, 1],
-                        }
-                      : { backgroundColor: "#f3f4f6", scale: 1 }
-                  }
+                      ? "bg-gray-300 duration-220"
+                      : "bg-gray-100 duration-180",
+                    instant && "duration-0",
+                  )}
+                  style={{
+                    transitionDelay:
+                      on && !instant ? `${pickAt(pickedAt)}s` : undefined,
+                  }}
+                  initial={false}
+                  animate={{ scale: on && !instant ? [0.88, 1] : 1 }}
                   transition={
                     instant
                       ? { duration: 0 }
                       : on
                         ? {
-                            backgroundColor: {
-                              duration: 0.22,
-                              ease: EASE_OUT,
-                              delay: pickAt(pickedAt),
-                            },
-                            scale: {
-                              type: "spring",
-                              duration: 0.44,
-                              bounce: 0.42,
-                              delay: pickAt(pickedAt),
-                            },
+                            type: "spring",
+                            duration: 0.44,
+                            bounce: 0.42,
+                            delay: pickAt(pickedAt),
                           }
                         : EXIT
                   }

@@ -121,7 +121,7 @@ const TOP_OPTIONS = 5;
 
 const medalClassName: Record<number, string> = {
   1: "bg-amber-400",
-  2: "bg-zinc-400",
+  2: "bg-gray-400",
   3: "bg-amber-700",
 };
 

@@ -9,12 +9,15 @@
 @source "../../packages/ui/src/**/*.{ts,tsx}";
 
 :root {
+  /* Hue of the --color-gray-* scale in @theme; change both together */
+  --gray-hue: 286.033;
+
   --radius: 0.625rem;
   --primary: var(--primary-light, var(--color-indigo-600));
   --primary-foreground: var(--primary-light-foreground, var(--color-white));
   --state-shade: black;
 
-  --button-outline: rgba(0, 0, 0, 0.1);
+  --button-outline: var(--color-gray-200);
   --menu-item-outline: rgba(0, 0, 0, 0.05);
 
   --border: var(--color-gray-200);
@@ -31,7 +34,7 @@
   --background: var(--color-white);
   --foreground: var(--color-gray-800);
 
-  --accent: oklch(0.552 0.016 285.938 / 0.1);
+  --accent: color-mix(in oklab, var(--color-gray-500) 10%, transparent);
   --accent-border: var(--color-gray-300);
   --accent-foreground: var(--color-gray-800);
 
@@ -45,7 +48,7 @@
 
   --popover: var(--color-white);
   --popover-foreground: var(--color-gray-800);
-  --popover-accent: oklch(0.552 0.016 285.938 / 0.1);
+  --popover-accent: color-mix(in oklab, var(--color-gray-500) 10%, transparent);
   --popover-border: var(--color-gray-200);
 
   --card: var(--color-white);
@@ -57,7 +60,7 @@
   --sidebar-foreground: var(--color-gray-800);
   --sidebar-border: var(--color-gray-200);
 
-  --sidebar-accent: var(--color-gray-200);
+  --sidebar-accent: var(--color-gray-100);
   --sidebar-accent-foreground: var(--color-gray-800);
 }
 
@@ -77,9 +80,9 @@
   --sidebar-border: var(--color-gray-800);
 
   --sidebar-accent: var(--color-gray-800);
-  --sidebar-accent-foreground: #f9fafb;
+  --sidebar-accent-foreground: var(--color-gray-50);
 
-  --border: oklch(0.32 0.006 286.033);
+  --border: oklch(0.32 0.006 var(--gray-hue));
   --border-muted: var(--color-gray-800);
 
   --input: rgba(255, 255, 255, 0.1);
@@ -103,10 +106,10 @@
   --popover-foreground: var(--color-gray-100);
   --popover-accent: var(--color-gray-700);
 
-  --card: oklch(0.24 0.006 286.033);
+  --card: oklch(0.24 0.006 var(--gray-hue));
   --card-border: var(--color-gray-700);
   --card-foreground: var(--color-white);
-  --card-accent: oklch(0.26 0.006 286.033);
+  --card-accent: oklch(0.26 0.006 var(--gray-hue));
 }
 
 /*
@@ -121,7 +124,7 @@
 }
 
 .dark :where([data-slot="dialog-content"], [data-slot="popover-content"]) {
-  --card: oklch(0.31 0.006 286.033);
+  --card: oklch(0.31 0.006 var(--gray-hue));
 }
 
 @theme inline {
