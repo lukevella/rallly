@@ -55,7 +55,7 @@ export default function ConferencingPage() {
         </SettingsPageDescription>
       </SettingsPageHeader>
       <SettingsPageContent>
-        <PageSection>
+        <PageSection variant="card">
           <PageSectionContent>
             <Suspense fallback={<Spinner />}>
               <ProviderList />

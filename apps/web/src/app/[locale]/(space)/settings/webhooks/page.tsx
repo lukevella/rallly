@@ -84,7 +84,7 @@ async function WebhooksContent() {
 
   return (
     <PageSectionGroup>
-      <PageSection>
+      <PageSection variant="card">
         <PageSectionContent>
           <WebhooksList webhooks={webhooks} />
         </PageSectionContent>

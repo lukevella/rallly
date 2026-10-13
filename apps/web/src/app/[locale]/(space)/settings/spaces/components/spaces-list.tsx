@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { Card } from "@rallly/ui/card";
 import { useDialog } from "@rallly/ui/dialog";
 import {
   DropdownMenu,
@@ -55,28 +54,26 @@ export function SpacesList({ spaces, currentUserId }: SpacesListProps) {
 
   if (spaces.length === 0) {
     return (
-      <Card>
-        <EmptyState>
-          <EmptyStateIcon>
-            <LayersIcon />
-          </EmptyStateIcon>
-          <EmptyStateTitle>
-            <Trans i18nKey="noSpaces" defaults="No spaces found" />
-          </EmptyStateTitle>
-          <EmptyStateDescription>
-            <Trans
-              i18nKey="noSpacesDescription"
-              defaults="You are not a member of any spaces yet"
-            />
-          </EmptyStateDescription>
-        </EmptyState>
-      </Card>
+      <EmptyState>
+        <EmptyStateIcon>
+          <LayersIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="noSpaces" defaults="No spaces found" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="noSpacesDescription"
+            defaults="You are not a member of any spaces yet"
+          />
+        </EmptyStateDescription>
+      </EmptyState>
     );
   }
 
   return (
     <>
-      <StackedList>
+      <StackedList variant="plain">
         {spaces.map((space) => {
           const isOwner = space.ownerId === currentUserId;
           return (

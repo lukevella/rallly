@@ -34,7 +34,7 @@ export default async function Page() {
       </SettingsPageHeader>
       <SettingsPageContent>
         <PageSectionGroup>
-          <PageSection>
+          <PageSection variant="card">
             <SpacesList spaces={spaces} currentUserId={user.id} />
           </PageSection>
         </PageSectionGroup>
