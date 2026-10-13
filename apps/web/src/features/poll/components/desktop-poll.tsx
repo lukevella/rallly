@@ -200,14 +200,32 @@ function TableControls({
   );
 }
 
-function DesktopPollEmptyState() {
+// Only admins see it, and the share dialog reads the space tier, which public
+// poll pages don't provide
+function EmptyStateShareButton() {
   const poll = usePoll();
+  const { dialog, open } = useSharePollDialog(poll.id);
+
+  return (
+    <>
+      <Button {...dialog.triggerProps} onClick={() => open("empty_state")}>
+        <Share2Icon data-icon="inline-start" />
+        <Trans i18nKey="share" defaults="Share" />
+      </Button>
+      <SharePollDialog
+        {...dialog.dialogProps}
+        pollId={poll.id}
+        pollStatus={poll.status}
+        inviteLink={poll.inviteLink}
+      />
+    </>
+  );
+}
+
+function DesktopPollEmptyState() {
   const role = useRole();
   const { canAddNewParticipant } = usePermissions();
   const votingForm = useVotingForm();
-  const { dialog: shareDialog, open: openShareDialog } = useSharePollDialog(
-    poll.id,
-  );
   const canShare = role === "admin";
 
   return (
@@ -249,23 +267,7 @@ function DesktopPollEmptyState() {
               <Trans i18nKey="addResponse" defaults="Add response" />
             </Button>
           ) : null}
-          {canShare ? (
-            <>
-              <Button
-                {...shareDialog.triggerProps}
-                onClick={() => openShareDialog("empty_state")}
-              >
-                <Share2Icon data-icon="inline-start" />
-                <Trans i18nKey="share" defaults="Share" />
-              </Button>
-              <SharePollDialog
-                {...shareDialog.dialogProps}
-                pollId={poll.id}
-                pollStatus={poll.status}
-                inviteLink={poll.inviteLink}
-              />
-            </>
-          ) : null}
+          {canShare ? <EmptyStateShareButton /> : null}
         </EmptyStateFooter>
       ) : null}
     </EmptyState>
