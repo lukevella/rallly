@@ -164,11 +164,6 @@ export function rankOptionsByPopularity<T extends { id: string }>({
       votesByOptionId.get(vote.optionId)?.[vote.type].push(participant.id);
     }
   }
-  const score = (votes: OptionVotes) => [
-    votes.yes.length + votes.ifNeedBe.length,
-    votes.yes.length,
-    votes.ifNeedBe.length,
-  ];
   return options
     .map((option) => ({
       ...option,
@@ -178,14 +173,91 @@ export function rankOptionsByPopularity<T extends { id: string }>({
         no: [],
       },
     }))
-    .sort((a, b) => {
-      const sa = score(a.votes);
-      const sb = score(b.votes);
-      for (let i = 0; i < sa.length; i++) {
-        if (sa[i] !== sb[i]) return sb[i] - sa[i];
-      }
-      return 0;
-    });
+    .sort((a, b) => comparePopularity(a.votes, b.votes));
+}
+
+function comparePopularity(a: OptionVotes, b: OptionVotes) {
+  const score = (votes: OptionVotes) => [
+    votes.yes.length + votes.ifNeedBe.length,
+    votes.yes.length,
+    votes.ifNeedBe.length,
+  ];
+  const sa = score(a);
+  const sb = score(b);
+  for (let i = 0; i < sa.length; i++) {
+    if (sa[i] !== sb[i]) return sb[i] - sa[i];
+  }
+  return 0;
+}
+
+/**
+ * Where the chosen option stood in the finalize list. Tied options share a
+ * rank, so picking one of several joint winners reads as rank 1, tied.
+ */
+export function getChosenOptionRank({
+  options,
+  participants,
+  optionId,
+}: {
+  options: { id: string }[];
+  participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
+  optionId: string;
+}) {
+  const ranked = rankOptionsByPopularity({ options, participants });
+  const chosen = ranked.find((option) => option.id === optionId);
+  if (!chosen) {
+    return {
+      chosen_rank: null,
+      chosen_tied: false,
+      option_count: ranked.length,
+    };
+  }
+  let better = 0;
+  let tied = 0;
+  for (const option of ranked) {
+    if (option.id === optionId) continue;
+    const order = comparePopularity(option.votes, chosen.votes);
+    if (order < 0) better++;
+    if (order === 0) tied++;
+  }
+  return {
+    chosen_rank: better + 1,
+    chosen_tied: tied > 0,
+    option_count: ranked.length,
+  };
+}
+
+const HOUR_MS = 3_600_000;
+// Floating times are stored as wall clock in UTC; the viewer's zone can be
+// up to 14 hours either side.
+const FLOATING_SLACK_MS = 14 * HOUR_MS;
+
+/**
+ * How far ahead of finalize the event starts. A floating time (all day, or a
+ * poll without a zone) only counts as past once it is past in every zone.
+ */
+export function getFinalizeTiming({
+  start,
+  end,
+  allDay,
+  timeZone,
+  now,
+}: {
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  timeZone: string | null;
+  now: Date;
+}) {
+  const floating = allDay || !timeZone;
+  const pastAfter = allDay
+    ? end.getTime() + FLOATING_SLACK_MS
+    : start.getTime() + (floating ? FLOATING_SLACK_MS : 0);
+  return {
+    hours_to_start: Math.round((start.getTime() - now.getTime()) / HOUR_MS),
+    is_past: now.getTime() > pastAfter,
+    floating_time: floating,
+  };
 }
 
 const notifyBuckets = {

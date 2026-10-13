@@ -557,9 +557,18 @@ function SummaryStep({ option }: { option: RankedOption }) {
   );
 }
 
-// Mounted fresh with each open, so the wizard starts at step one with
-// nothing carried over from a previous run.
-function FinalizeWizard({ onClose }: { onClose: () => void }) {
+// Mounted fresh with each open, so the wizard starts with nothing carried
+// over from a previous run. The step lives in the dialog, which reads it
+// when the host closes it.
+function FinalizeWizard({
+  step,
+  onStepChange,
+  onClose,
+}: {
+  step: Step;
+  onStepChange: (step: Step) => void;
+  onClose: () => void;
+}) {
   const poll = usePoll();
   const { participants } = useParticipants();
   const router = useRouter();
@@ -575,18 +584,21 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
     () => rankOptionsByPopularity({ options: poll.options, participants }),
     [poll.options, participants],
   );
-  const [step, setStep] = React.useState<Step>("date");
   const [optionId, setOptionId] = React.useState<string | null>(null);
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
   const option = options.find((o) => o.id === optionId);
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
+  const goTo = (next: Step) => {
+    posthog?.capture("poll_finalize:step_view", { step: next });
+    onStepChange(next);
+  };
 
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
       setSkippedNotifications(data?.skippedNotifications ?? 0);
-      setStep("done");
+      goTo("done");
       // The page behind the dialog picks up the scheduled status.
       router.refresh();
     },
@@ -623,7 +635,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
           onPick={(id) => {
             setOptionId(id);
             // With nobody to notify, the notify step has nothing to ask.
-            setStep(participants.length > 0 ? "notify" : "summary");
+            goTo(participants.length > 0 ? "notify" : "summary");
           }}
         />
       </div>
@@ -687,7 +699,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
         />
         <DialogFooter>
           <Button
-            onClick={() => setStep(participants.length > 0 ? "notify" : "date")}
+            onClick={() => goTo(participants.length > 0 ? "notify" : "date")}
           >
             <Trans i18nKey="back" defaults="Back" />
           </Button>
@@ -732,10 +744,10 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
         onChange={setNotifyIds}
       />
       <DialogFooter>
-        <Button onClick={() => setStep("date")}>
+        <Button onClick={() => goTo("date")}>
           <Trans i18nKey="back" defaults="Back" />
         </Button>
-        <Button variant="primary" onClick={() => setStep("summary")}>
+        <Button variant="primary" onClick={() => goTo("summary")}>
           <Trans i18nKey="next" defaults="Next" />
         </Button>
       </DialogFooter>
@@ -744,10 +756,29 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 }
 
 export function FinalizePollDialog(props: DialogProps) {
+  const [step, setStep] = React.useState<Step>("date");
+  const onOpenChange = (open: boolean) => {
+    if (!open && step !== "done") {
+      posthog?.capture("poll_finalize:dialog_dismiss", { step });
+    }
+    props.onOpenChange?.(open);
+  };
   return (
-    <Dialog {...props}>
+    <Dialog
+      {...props}
+      onOpenChange={onOpenChange}
+      // Reset once the close animation ends, so the closing dialog keeps
+      // showing the step it was on.
+      onOpenChangeComplete={(open) => {
+        if (!open) setStep("date");
+      }}
+    >
       <DialogContent className="w-auto sm:max-w-none">
-        <FinalizeWizard onClose={() => props.onOpenChange?.(false)} />
+        <FinalizeWizard
+          step={step}
+          onStepChange={setStep}
+          onClose={() => onOpenChange(false)}
+        />
       </DialogContent>
     </Dialog>
   );
