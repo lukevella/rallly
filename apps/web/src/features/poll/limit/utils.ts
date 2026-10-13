@@ -28,3 +28,11 @@ export function getOpenPollLimit({
 export function isAtOpenPollLimit({ limit, openCount }: OpenPollUsage) {
   return limit !== null && openCount >= limit;
 }
+
+/**
+ * One poll short of the limit or beyond it: the point where usage is worth
+ * showing. Below that a meter is noise for most free organizers.
+ */
+export function isNearOpenPollLimit({ limit, openCount }: OpenPollUsage) {
+  return limit !== null && openCount >= limit - 1;
+}

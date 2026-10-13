@@ -16,12 +16,14 @@ import {
   PollPageIcon,
   SettingsPageIcon,
 } from "@/components/page-icons";
+import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PasswordSetupAlert } from "./password-setup-alert";
 
 export async function DashboardHome({
   openPollCount,
+  openPollUsage,
   upcomingEventCount,
   memberCount,
   seatCount,
@@ -30,6 +32,8 @@ export async function DashboardHome({
   canManageMembers,
 }: {
   openPollCount: number;
+  /** The organizer's own usage, which replaces the space-wide count while a limit applies */
+  openPollUsage: OpenPollUsage | null;
   upcomingEventCount: number;
   memberCount: number;
   seatCount: number;
@@ -100,14 +104,28 @@ export async function DashboardHome({
                 />
               </TileTitle>
               <TileDescription>
-                <Trans
-                  t={t}
-                  i18n={i18n}
-                  ns="app"
-                  i18nKey="openPollCount"
-                  defaults="{count, plural, other {# open}}"
-                  values={{ count: openPollCount }}
-                />
+                {openPollUsage?.limit != null ? (
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="openPollCountOfLimit"
+                    defaults="{openCount}/{limit} open"
+                    values={{
+                      openCount: openPollUsage.openCount,
+                      limit: openPollUsage.limit,
+                    }}
+                  />
+                ) : (
+                  <Trans
+                    t={t}
+                    i18n={i18n}
+                    ns="app"
+                    i18nKey="openPollCount"
+                    defaults="{count, plural, other {# open}}"
+                    values={{ count: openPollCount }}
+                  />
+                )}
               </TileDescription>
             </Tile>
 
