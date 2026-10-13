@@ -8,11 +8,13 @@ export type DemoPreset = {
   title: string;
   description: string;
   organizer: string;
-  location?: string;
-  conferencing?: DemoConferencingProvider;
   spacing: DemoSpacing;
   participants: { name: string; votes: DemoVote[] }[];
-};
+} & // hybrid case look like the norm. // One or the other, as most real polls have: showing both makes the
+(
+  | { location: string; conferencing?: never }
+  | { conferencing: DemoConferencingProvider; location?: never }
+);
 
 // Limited to the providers most visitors recognize at a glance, and to ones
 // live in the app: Zoom stays out until its marketplace review clears.
@@ -69,7 +71,6 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Meeting room 3",
       }),
-      conferencing: "teams",
       spacing: "consecutive",
       participants: assistantsParticipants,
     };
@@ -89,10 +90,6 @@ export function getDemoPreset(
       organizer: t("heroDemoCommitteeOrganizer", {
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
-      }),
-      location: t("heroDemoCommitteeRoom", {
-        ns: "home",
-        defaultValue: "Committee room",
       }),
       conferencing: "teams",
       spacing: "weekly",
@@ -139,10 +136,6 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      location: t("heroDemoThesisDefenseRoom", {
-        ns: "home",
-        defaultValue: "Examination room",
-      }),
       conferencing: "meet",
       spacing: "consecutive",
       participants: thesisDefenseParticipants,
@@ -163,10 +156,6 @@ export function getDemoPreset(
       organizer: t("heroDemoLegalOrganizer", {
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
-      }),
-      location: t("heroDemoLegalVenue", {
-        ns: "home",
-        defaultValue: "Neutral venue",
       }),
       conferencing: "teams",
       spacing: "weekly",
