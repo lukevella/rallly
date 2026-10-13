@@ -36,7 +36,7 @@ export function WebhooksList({ webhooks }: { webhooks: Webhook[] }) {
   }
 
   return (
-    <StackedList>
+    <StackedList variant="plain">
       {webhooks.map((webhook) => (
         <StackedListItem key={webhook.id}>
           <div className="flex min-w-0 flex-1 items-center gap-4">

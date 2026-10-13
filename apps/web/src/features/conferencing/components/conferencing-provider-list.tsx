@@ -36,12 +36,9 @@ export function ConferencingProviderList({
   );
 
   return (
-    <StackedList>
+    <StackedList variant="plain">
       {providers.map(({ provider, connection }) => (
-        <StackedListItem
-          key={provider}
-          className="gap-x-4 hover:bg-transparent"
-        >
+        <StackedListItem key={provider} className="gap-x-4">
           <span className="shrink-0">
             <ConferencingProviderIcon provider={provider} size={32} />
           </span>
