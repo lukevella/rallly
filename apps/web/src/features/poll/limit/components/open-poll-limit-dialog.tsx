@@ -61,7 +61,7 @@ export function OpenPollLimitDialog() {
         }
       }}
     >
-      <DialogContent size="md" showCloseButton={dismissible}>
+      <DialogContent size="lg" showCloseButton={dismissible}>
         {content ? (
           <OpenPollLimitContent source={content.source} usage={content.usage} />
         ) : null}
@@ -99,18 +99,16 @@ function OpenPollLimitContent({
   return (
     <>
       <DialogHeader>
-        <div className="flex items-center gap-3">
-          <PageIcon size="sm" color="primary">
-            <BarChart2Icon />
-          </PageIcon>
-          <DialogTitle>
-            <Trans
-              i18nKey="openPollLimitReachedTitle"
-              defaults="Open poll limit reached"
-            />
-          </DialogTitle>
-        </div>
-        <DialogDescription className="mt-2">
+        <PageIcon size="xl" color="primary">
+          <BarChart2Icon />
+        </PageIcon>
+        <DialogTitle className="mt-4 font-semibold text-lg">
+          <Trans
+            i18nKey="openPollLimitReachedTitle"
+            defaults="Open poll limit reached"
+          />
+        </DialogTitle>
+        <DialogDescription className="mt-1">
           {data.tier === "guest" ? (
             <Trans
               i18nKey="openPollLimitGuestDescription"
@@ -125,7 +123,9 @@ function OpenPollLimitContent({
           )}
         </DialogDescription>
       </DialogHeader>
-      <OpenPollUsageBar openCount={data.openCount} limit={data.limit} />
+      <div className="rounded-xl border p-4">
+        <OpenPollUsageBar openCount={data.openCount} limit={data.limit} />
+      </div>
       <DialogFooter>
         {data.tier !== "guest" ? (
           <Link

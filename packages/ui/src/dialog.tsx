@@ -85,6 +85,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(dialogVariants({ size }), className)}
+        data-close-button={showCloseButton ? "" : undefined}
         {...props}
       >
         <div
@@ -109,7 +110,9 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-header"
       className={cn(
-        "dialog-edge:sticky dialog-edge:-top-4 dialog-edge:z-10 dialog-edge:-mx-4 dialog-edge:-mt-4 dialog-edge:bg-popover dialog-edge:px-4 dialog-edge:pt-4 dialog-edge:pr-12 dialog-edge:pb-2",
+        "dialog-edge:sticky dialog-edge:-top-4 dialog-edge:z-10 dialog-edge:-mx-4 dialog-edge:-mt-4 dialog-edge:bg-popover dialog-edge:px-4 dialog-edge:pt-4 dialog-edge:pb-2",
+        // Only the first row sits beside the close button.
+        "dialog-edge:in-data-close-button:*:first:pr-8",
         className,
       )}
       {...props}
