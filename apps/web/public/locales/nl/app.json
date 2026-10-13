@@ -285,7 +285,6 @@
   "errorTitle": "Er is iets misgegaan",
   "errorTryAgain": "Opnieuw proberen",
   "event": "Evenement",
-  "eventHostDescription": "Je bent de maker van deze poll",
   "eventPageAbout": "Over",
   "eventPageGoingCount": "{count, plural, one {# gaat} other {# gaan}}",
   "eventRegisterAlreadyResponded": "Dit e-mailadres is al gebruikt om te reageren",
