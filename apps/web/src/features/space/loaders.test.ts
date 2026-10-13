@@ -3,18 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const REDIRECT = "NEXT_REDIRECT";
-const NOT_FOUND = "NEXT_NOT_FOUND";
 
 const mockRedirect = vi.fn((url: string) => {
   throw Object.assign(new Error(REDIRECT), { digest: `${REDIRECT};${url}` });
 });
-const mockNotFound = vi.fn(() => {
-  throw Object.assign(new Error(NOT_FOUND), { digest: NOT_FOUND });
-});
 
 vi.mock("next/navigation", () => ({
   redirect: (url: string) => mockRedirect(url),
-  notFound: () => mockNotFound(),
 }));
 
 const mockGetSessionState = vi.fn();
@@ -75,7 +70,6 @@ describe("loadActiveSpace", () => {
 
     await expect(gate()).resolves.toEqual(space);
     expect(mockRedirect).not.toHaveBeenCalled();
-    expect(mockNotFound).not.toHaveBeenCalled();
   });
 
   it("redirects to /setup when the user owns no space at all", async () => {
@@ -91,17 +85,15 @@ describe("loadActiveSpace", () => {
     );
   });
 
-  // The bug: an owned-but-inaccessible space used to fall through to the
-  // /setup redirect, where onboarding created a second space.
-  it("renders not-found when the user owns a space but none is active", async () => {
+  // /setup bounces an owner straight back, so redirecting there would loop.
+  it("throws when the user owns a space but none is active", async () => {
     authenticatedAs(completeUser);
     mockGetActiveSpaceForUser.mockResolvedValue(null);
     mockGetOwnedSpace.mockResolvedValue({ id: "space-1" });
 
     const gate = await loadGate();
 
-    await expect(gate()).rejects.toThrow(NOT_FOUND);
-    expect(mockNotFound).toHaveBeenCalled();
+    await expect(gate()).rejects.toThrow("Space owner has no membership row");
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 
