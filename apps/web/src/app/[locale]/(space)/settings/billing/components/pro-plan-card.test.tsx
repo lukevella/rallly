@@ -42,12 +42,6 @@ vi.mock("./cancel-plan-dialog", () => ({
   ),
 }));
 
-vi.mock("./switch-to-yearly-dialog", () => ({
-  SwitchToYearlyDialog: ({ children }: { children: React.ReactNode }) => (
-    <Dialog>{children}</Dialog>
-  ),
-}));
-
 const baseProps = {
   amount: 1000,
   currency: "usd",

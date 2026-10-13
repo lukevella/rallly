@@ -2,6 +2,7 @@
 
 import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { posthog } from "@rallly/posthog/client";
+import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { DialogTrigger, useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
@@ -10,6 +11,7 @@ import { TriangleAlertIcon } from "lucide-react";
 import {
   openPaymentMethodUpdateAction,
   resumePlanAction,
+  switchToYearlyAction,
 } from "@/features/billing/actions";
 import { EarlySupporterBadge } from "@/features/billing/components/early-supporter-badge";
 import { SubscriptionStatusBadge } from "@/features/billing/components/subscription-status-badge";
@@ -32,7 +34,6 @@ import {
   PlanCardHeader,
   PlanCardTitle,
 } from "./plan-card";
-import { SwitchToYearlyDialog } from "./switch-to-yearly-dialog";
 
 export function ProPlanCard({
   amount,
@@ -73,10 +74,12 @@ export function ProPlanCard({
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
   const { formatDateTime } = useDateTime();
-  const switchToYearlyDialog = useDialog();
   const cancelPlanDialog = useDialog();
   const openPaymentMethodUpdate = useMutation(
     mutationOptions(openPaymentMethodUpdateAction),
+  );
+  const switchToYearlyMutation = useMutation(
+    mutationOptions(switchToYearlyAction),
   );
   const resumePlan = useMutation(
     mutationOptions(resumePlanAction, {
@@ -93,14 +96,18 @@ export function ProPlanCard({
 
   // Coupons are applied by Stripe at the invoice level, so the stored
   // discount is applied here to show what the customer is actually charged.
+  const applyDiscount = (subtotal: number) => {
+    let discounted = subtotal;
+    if (discountPercentOff) {
+      discounted = Math.round(discounted * (1 - discountPercentOff / 100));
+    }
+    if (discountAmountOff) {
+      discounted = Math.max(0, discounted - discountAmountOff);
+    }
+    return discounted;
+  };
   const subtotal = amount * seats;
-  let total = subtotal;
-  if (discountPercentOff) {
-    total = Math.round(total * (1 - discountPercentOff / 100));
-  }
-  if (discountAmountOff) {
-    total = Math.max(0, total - discountAmountOff);
-  }
+  const total = applyDiscount(subtotal);
   const hasDiscount = total !== subtotal;
   const perMonth = interval === "year" ? Math.round(total / 12) : total;
 
@@ -204,26 +211,28 @@ export function ProPlanCard({
                 </Button>
               ) : null}
               {switchToYearly && !needsPayment ? (
-                <SwitchToYearlyDialog
-                  {...switchToYearlyDialog.dialogProps}
-                  monthlyAmount={switchToYearly.monthlyAmount}
-                  yearlyAmount={switchToYearly.yearlyAmount}
+                <Button
+                  loading={switchToYearlyMutation.isPending}
+                  onClick={() => {
+                    posthog?.capture("space_billing:change_plan_click");
+                    switchToYearlyMutation.mutate();
+                  }}
                 >
-                  <DialogTrigger
-                    render={
-                      <Button
-                        onClick={() => {
-                          posthog?.capture("space_billing:change_plan_click");
-                        }}
-                      />
-                    }
-                  >
+                  <Trans i18nKey="switchToYearly" defaults="Switch to yearly" />
+                  <Badge variant="green">
                     <Trans
-                      i18nKey="switchToYearly"
-                      defaults="Switch to yearly"
+                      i18nKey="switchToYearlySave"
+                      defaults="Save {amount}"
+                      values={{
+                        amount: formatCurrency(
+                          applyDiscount(switchToYearly.monthlyAmount * seats) *
+                            12 -
+                            applyDiscount(switchToYearly.yearlyAmount * seats),
+                        ),
+                      }}
                     />
-                  </DialogTrigger>
-                </SwitchToYearlyDialog>
+                  </Badge>
+                </Button>
               ) : null}
               <ManageSeatsDialog usedSeats={usedSeats} currentSeats={seats}>
                 <DialogTrigger
