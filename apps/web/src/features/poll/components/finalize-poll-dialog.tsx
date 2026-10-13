@@ -606,7 +606,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 
   if (step === "date" || !option) {
     return (
-      <div className={wideStepClassName}>
+      <div data-slot="dialog-step" className={wideStepClassName}>
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="finalizePoll" defaults="Finalize poll" />
@@ -632,7 +632,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 
   if (step === "done") {
     return (
-      <div className={narrowStepClassName}>
+      <div data-slot="dialog-step" className={narrowStepClassName}>
         <div className="flex flex-col items-center gap-4 py-4 text-center">
           <SuccessCheck state="in">
             <SuccessCheckIcon />
@@ -667,7 +667,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 
   if (step === "summary") {
     return (
-      <div className={narrowStepClassName}>
+      <div data-slot="dialog-step" className={narrowStepClassName}>
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="finalizeSummaryTitle" defaults="Summary" />
@@ -714,7 +714,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className={wideStepClassName}>
+    <div data-slot="dialog-step" className={wideStepClassName}>
       <DialogHeader>
         <DialogTitle>
           <Trans i18nKey="notifyParticipants" defaults="Notify participants" />
