@@ -53,7 +53,7 @@
   --card-accent: rgba(0, 0, 0, 0.02);
   --card-foreground: var(--color-gray-800);
 
-  --sidebar: var(--color-gray-100);
+  --sidebar: var(--color-gray-50);
   --sidebar-foreground: var(--color-gray-800);
   --sidebar-border: var(--color-gray-200);
 
@@ -340,6 +340,9 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+  }
+  body:has([data-sidebar="wrapper"]) {
+    @apply bg-sidebar;
   }
   html.light body:has(.page-bg-gray-100) {
     @apply bg-gray-100;

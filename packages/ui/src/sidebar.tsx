@@ -125,6 +125,7 @@ const SidebarProvider = React.forwardRef<
       <SidebarContext.Provider value={contextValue}>
         <TooltipProvider delay={0}>
           <div
+            data-sidebar="wrapper"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH,
@@ -318,7 +319,7 @@ const SidebarInset = React.forwardRef<
     <main
       ref={ref}
       className={cn(
-        "flex w-full flex-1 flex-col bg-background",
+        "flex w-full flex-1 flex-col bg-sidebar",
         "md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-lg md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:shadow-2xs",
         className,
       )}
