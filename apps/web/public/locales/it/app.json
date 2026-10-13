@@ -422,7 +422,7 @@
   "licenseKeyDescription": "Gestisci la licenza dell'istanza",
   "licenseKeyErrorInvalidLicenseKey": "Chiave di licenza non valida",
   "licenseKeyGenericError": "Si è verificato un errore durante la convalida della chiave di licenza",
-  "licenseLimitWarning": "Hai superato i limiti della tua licenza. Esegui l'<a>aggiornamento</a>.",
+  "licenseLimitWarning": "Hai superato i limiti della tua licenza. Esegui l’<a>aggiornamento</a>.",
   "licenseType": "Tipo di licenza",
   "loading": "Caricamento in corso...",
   "location": "Posizione",
