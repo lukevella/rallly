@@ -4,14 +4,16 @@ import type { DemoSpacing, DemoVote } from "./demo-data";
 // The demo renders one of these presets. The audience pages (/for/*) show a
 // poll that looks like one their reader would actually run, so the screenshot
 // argues the case before the copy does.
+//
+// A preset shows a location or a video call, never both, as most real polls
+// do: showing both makes the hybrid case look like the norm.
 export type DemoPreset = {
   title: string;
   description: string;
   organizer: string;
   spacing: DemoSpacing;
   participants: { name: string; votes: DemoVote[] }[];
-} & // hybrid case look like the norm. // One or the other, as most real polls have: showing both makes the
-(
+} & (
   | { location: string; conferencing?: never }
   | { conferencing: DemoConferencingProvider; location?: never }
 );
