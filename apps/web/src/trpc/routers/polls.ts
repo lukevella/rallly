@@ -1570,7 +1570,7 @@ export const polls = router({
                 p.userId === ownerId ||
                 p.email?.trim().toLowerCase() === ownerEmail,
             ),
-            conferencing_type: pollConferencing?.provider ?? "none",
+            conferencing_type: conferencing?.provider ?? "none",
             has_location: Boolean(poll.location),
           },
           groups: {
