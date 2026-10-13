@@ -93,7 +93,7 @@ export default async function Image(props: {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        backgroundColor: "#fafaf9",
+        backgroundColor: "#fafafa",
       }}
     >
       <div
@@ -124,7 +124,7 @@ export default async function Image(props: {
             style={{
               fontSize: 64,
               fontWeight: 700,
-              color: "#292524",
+              color: "#27272a",
               letterSpacing: "-0.025em",
               lineHeight: 1.2,
             }}
@@ -136,7 +136,7 @@ export default async function Image(props: {
               marginTop: 24,
               maxWidth: 960,
               fontSize: 30,
-              color: "#78716c",
+              color: "#71717a",
               lineHeight: 1.5,
             }}
           >
