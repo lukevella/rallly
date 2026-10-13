@@ -318,6 +318,9 @@ importers:
       cookie:
         specifier: ^0.7.0
         version: 0.7.2
+      copy-to-clipboard:
+        specifier: ^3.3.3
+        version: 3.3.3
       dayjs:
         specifier: ^1.11.13
         version: 1.11.19

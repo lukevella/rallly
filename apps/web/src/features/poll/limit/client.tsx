@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { create } from "zustand";
 import type { OpenPollUsage } from "./types";
 
@@ -21,11 +22,18 @@ type OpenPollLimitStore = {
 export const useOpenPollLimitStore = create<OpenPollLimitStore>((set) => ({
   isOpen: false,
   content: null,
-  show: (source, usage) =>
+  show: (source, usage) => {
+    posthog?.capture("poll_limit:wall_view", {
+      tier: usage.tier,
+      open_count: usage.openCount,
+      limit: usage.limit,
+      source,
+    });
     set({
       isOpen: true,
       content: { source, usage, pathname: window.location.pathname },
-    }),
+    });
+  },
   hide: () => set({ isOpen: false }),
 }));
 

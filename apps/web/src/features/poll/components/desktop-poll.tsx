@@ -4,7 +4,6 @@ import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { Card, CardHeader, CardTitle } from "@rallly/ui/card";
-import { useDialog } from "@rallly/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ArrowLeftIcon,
@@ -34,7 +33,10 @@ import {
   usePoll,
   useRole,
 } from "@/features/poll/client";
-import { SharePollDialog } from "@/features/poll/components/share-dialog";
+import {
+  SharePollDialog,
+  useSharePollDialog,
+} from "@/features/poll/components/share-dialog";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
@@ -198,12 +200,32 @@ function TableControls({
   );
 }
 
-function DesktopPollEmptyState() {
+// Only admins see it, and the share dialog reads the space tier, which public
+// poll pages don't provide
+function EmptyStateShareButton() {
   const poll = usePoll();
+  const { dialog, open } = useSharePollDialog(poll.id);
+
+  return (
+    <>
+      <Button {...dialog.triggerProps} onClick={() => open("empty_state")}>
+        <Share2Icon data-icon="inline-start" />
+        <Trans i18nKey="share" defaults="Share" />
+      </Button>
+      <SharePollDialog
+        {...dialog.dialogProps}
+        pollId={poll.id}
+        pollStatus={poll.status}
+        inviteLink={poll.inviteLink}
+      />
+    </>
+  );
+}
+
+function DesktopPollEmptyState() {
   const role = useRole();
   const { canAddNewParticipant } = usePermissions();
   const votingForm = useVotingForm();
-  const shareDialog = useDialog();
   const canShare = role === "admin";
 
   return (
@@ -245,21 +267,7 @@ function DesktopPollEmptyState() {
               <Trans i18nKey="addResponse" defaults="Add response" />
             </Button>
           ) : null}
-          {canShare ? (
-            <>
-              <Button {...shareDialog.triggerProps}>
-                <Share2Icon data-icon="inline-start" />
-                <Trans i18nKey="share" defaults="Share" />
-              </Button>
-              <SharePollDialog
-                {...shareDialog.dialogProps}
-                pollId={poll.id}
-                pollStatus={poll.status}
-                inviteLink={poll.inviteLink}
-                source="empty_state"
-              />
-            </>
-          ) : null}
+          {canShare ? <EmptyStateShareButton /> : null}
         </EmptyStateFooter>
       ) : null}
     </EmptyState>
