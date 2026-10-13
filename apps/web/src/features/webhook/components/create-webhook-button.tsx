@@ -205,7 +205,7 @@ export function CreateWebhookButton() {
                       )}
                     />
                   </div>
-                  <DialogFooter className="mt-6">
+                  <DialogFooter>
                     <DialogClose render={<Button />}>
                       <Trans i18nKey="cancel" defaults="Cancel" />
                     </DialogClose>

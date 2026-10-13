@@ -313,7 +313,7 @@ export function PayWallDialog({
     >
       <DialogContent
         size="4xl"
-        className="overflow-hidden p-0 lg:min-h-[500px]"
+        className="*:data-[slot=dialog-scroller]:p-0 lg:min-h-[min(500px,calc(100dvh-2rem))]"
       >
         <Tabs
           value={selectedPlan}
