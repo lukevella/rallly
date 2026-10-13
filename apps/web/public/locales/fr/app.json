@@ -364,7 +364,6 @@
   "errorTitle": "Un problème est survenu",
   "errorTryAgain": "Réessayer",
   "event": "Événement",
-  "eventHostDescription": "Vous êtes le créateur de ce sondage",
   "eventPageAbout": "À propos",
   "eventPageGoingCount": "{count, plural, one {# participant} other {# participants}}",
   "eventRegisterAlreadyResponded": "Cet e-mail a déjà été utilisé pour répondre",
