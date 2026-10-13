@@ -557,14 +557,17 @@ function SummaryStep({ option }: { option: RankedOption }) {
   );
 }
 
-// Mounted fresh with each open, so the wizard starts at step one with
-// nothing carried over from a previous run.
+// Mounted fresh with each open, so the wizard starts with nothing carried
+// over from a previous run. The step lives in the dialog, which reads it
+// when the host closes it.
 function FinalizeWizard({
-  onClose,
+  step,
   onStepChange,
+  onClose,
 }: {
-  onClose: () => void;
+  step: Step;
   onStepChange: (step: Step) => void;
+  onClose: () => void;
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
@@ -581,7 +584,6 @@ function FinalizeWizard({
     () => rankOptionsByPopularity({ options: poll.options, participants }),
     [poll.options, participants],
   );
-  const [step, setStep] = React.useState<Step>("date");
   const [optionId, setOptionId] = React.useState<string | null>(null);
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
@@ -591,7 +593,6 @@ function FinalizeWizard({
   const goTo = (next: Step) => {
     posthog?.capture("poll_finalize:step_view", { step: next });
     onStepChange(next);
-    setStep(next);
   };
 
   const finalize = trpc.polls.book.useMutation({
@@ -755,28 +756,28 @@ function FinalizeWizard({
 }
 
 export function FinalizePollDialog(props: DialogProps) {
-  // The step the host is on, read when the dialog closes so a close before
-  // finalizing records where they left.
-  const stepRef = React.useRef<Step>("date");
+  const [step, setStep] = React.useState<Step>("date");
   const onOpenChange = (open: boolean) => {
-    if (!open) {
-      if (stepRef.current !== "done") {
-        posthog?.capture("poll_finalize:dialog_dismiss", {
-          step: stepRef.current,
-        });
-      }
-      stepRef.current = "date";
+    if (!open && step !== "done") {
+      posthog?.capture("poll_finalize:dialog_dismiss", { step });
     }
     props.onOpenChange?.(open);
   };
   return (
-    <Dialog {...props} onOpenChange={onOpenChange}>
+    <Dialog
+      {...props}
+      onOpenChange={onOpenChange}
+      // Reset once the close animation ends, so the closing dialog keeps
+      // showing the step it was on.
+      onOpenChangeComplete={(open) => {
+        if (!open) setStep("date");
+      }}
+    >
       <DialogContent className="w-auto sm:max-w-none">
         <FinalizeWizard
+          step={step}
+          onStepChange={setStep}
           onClose={() => onOpenChange(false)}
-          onStepChange={(step) => {
-            stepRef.current = step;
-          }}
         />
       </DialogContent>
     </Dialog>
