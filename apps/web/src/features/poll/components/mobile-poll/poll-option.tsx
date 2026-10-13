@@ -56,8 +56,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
         editable &&
           (allowTentativeVotes
-            ? "grid-cols-[0rem_1fr_3.5rem_8.875rem]"
-            : "grid-cols-[0rem_1fr_3.5rem_6.125rem]"),
+            ? "grid-cols-[0rem_1fr_3.5rem_9.375rem]"
+            : "grid-cols-[0rem_1fr_3.5rem_6.625rem]"),
         showVote && "grid-cols-[1.875rem_1fr_3.5rem_0rem]",
         !editable && !showVote && "grid-cols-[0rem_1fr_3.5rem_0rem]",
       )}
