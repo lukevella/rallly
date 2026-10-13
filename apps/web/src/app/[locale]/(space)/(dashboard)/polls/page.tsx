@@ -4,24 +4,15 @@ import { loadPollStatusCounts } from "@/features/poll/loaders";
 import { getTranslation } from "@/i18n/server";
 import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
 import { PollsPage } from "./polls-page";
-import { searchParamsSchema } from "./schema";
 
-export default async function Page(props: {
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParams = await props.searchParams;
-  const { status, q, member } = searchParamsSchema.parse(searchParams);
-
+export default async function Page() {
   const helpers = await createPrivateSSRHelper();
 
+  // The polls list itself is fetched on the client so switching filters shows
+  // a skeleton instead of holding the previous list until the server responds.
   const [counts] = await Promise.all([
     loadPollStatusCounts(),
     helpers.spaces.listMembers.prefetch(),
-    helpers.polls.infiniteChronological.prefetchInfinite({
-      status,
-      search: q,
-      member,
-    }),
   ]);
 
   return (
