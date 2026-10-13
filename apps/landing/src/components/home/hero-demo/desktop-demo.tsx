@@ -8,8 +8,9 @@ import {
   PlusIcon,
   UserIcon,
 } from "lucide-react";
-import Image from "next/image";
 import * as React from "react";
+import GoogleMeetIcon from "@/assets/google-meet.svg";
+import MicrosoftTeamsIcon from "@/assets/microsoft-teams.svg";
 import { BrowserChrome } from "./browser-chrome";
 import type { DemoDay } from "./demo-data";
 import { formatDemoParts, getInitials } from "./demo-data";
@@ -21,17 +22,10 @@ import { VoteIcon } from "./vote-icon";
 // Brand names, so they stay untranslated, matching the app.
 const conferencingProviders: Record<
   DemoConferencingProvider,
-  { label: string; icon: string }
+  { label: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> }
 > = {
-  meet: {
-    label: "Google Meet",
-    icon: "/static/images/conferencing/google-meet.svg",
-  },
-  teams: {
-    label: "Microsoft Teams",
-    icon: "/static/images/conferencing/microsoft-teams.svg",
-  },
-  webex: { label: "Webex", icon: "/static/images/conferencing/webex.svg" },
+  meet: { label: "Google Meet", Icon: GoogleMeetIcon },
+  teams: { label: "Microsoft Teams", Icon: MicrosoftTeamsIcon },
 };
 
 export const DesktopDemo = ({
@@ -92,13 +86,7 @@ export const DesktopDemo = ({
                 ) : null}
                 {preset.conferencing ? (
                   <div className="flex items-center gap-2">
-                    <Image
-                      src={conferencingProviders[preset.conferencing].icon}
-                      width={16}
-                      height={16}
-                      alt=""
-                    />
-                    {conferencingProviders[preset.conferencing].label}
+                    <ConferencingProvider provider={preset.conferencing} />
                   </div>
                 ) : null}
               </div>
@@ -258,3 +246,17 @@ export const DesktopDemo = ({
     </DemoWindow>
   );
 };
+
+function ConferencingProvider({
+  provider,
+}: {
+  provider: DemoConferencingProvider;
+}) {
+  const { label, Icon } = conferencingProviders[provider];
+  return (
+    <>
+      <Icon width={16} height={16} aria-hidden="true" />
+      {label}
+    </>
+  );
+}

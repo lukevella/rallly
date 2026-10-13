@@ -14,9 +14,9 @@ export type DemoPreset = {
   participants: { name: string; votes: DemoVote[] }[];
 };
 
-// Only providers that are generally available in the app. Zoom stays out until
-// its marketplace review clears.
-export type DemoConferencingProvider = "meet" | "teams" | "webex";
+// Limited to the providers most visitors recognize at a glance, and to ones
+// live in the app: Zoom stays out until its marketplace review clears.
+export type DemoConferencingProvider = "meet" | "teams";
 
 export type DemoPresetName =
   | "default"
@@ -143,7 +143,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Examination room",
       }),
-      conferencing: "webex",
+      conferencing: "meet",
       spacing: "consecutive",
       participants: thesisDefenseParticipants,
     };
@@ -168,7 +168,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Neutral venue",
       }),
-      conferencing: "webex",
+      conferencing: "teams",
       spacing: "weekly",
       participants: legalParticipants,
     };
