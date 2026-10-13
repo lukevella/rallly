@@ -9,11 +9,17 @@ Rallly's free plan now covers the whole job of scheduling something, from creati
 
 ## Finalize on every plan
 
-Finalizing used to be a Pro feature. It isn't anymore. Click **Finalize** in the poll header, pick a date from the list of options ranked by popularity, choose who to notify and confirm.
+Finalizing used to be a Pro feature. It isn't anymore. Click **Finalize** in the poll header and you'll see the options ranked by popularity, with a breakdown of who can make each one. Pick the date that works best.
 
-![The summary step of the Finalize dialog, showing the chosen date, location and video call before finalizing](/static/images/free-scheduling/finalize-summary.png)
+![The first step of the Finalize dialog, listing four dates ranked by how many participants can make them](/static/images/free-scheduling/finalize-results.png)
+
+Next, choose who to notify. Everyone who left an email address is selected, and you can untick anyone you'd rather tell yourself.
+
+![The Notify participants step, with five participants selected and how each of them voted on the chosen date](/static/images/free-scheduling/finalize-notify.png)
 
 Everyone you select gets an email with a calendar invite, so the event lands in their calendar without anyone copying details by hand. If the poll has a video call, the link is created when you finalize and included in the invite. Google Meet works on every plan. Microsoft Teams and Webex are part of Pro.
+
+![The Summary step, showing the chosen date and a Google Meet video call before finalizing](/static/images/free-scheduling/finalize-summary.png)
 
 Finalizing is the step that gets the meeting into people's calendars. With it behind a paywall, the free plan stopped one step short of actually scheduling anything.
 
