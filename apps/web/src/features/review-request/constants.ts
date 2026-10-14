@@ -8,9 +8,8 @@ export const isReviewRequestEnabled = !isSelfHosted;
 // finalize click, short enough that the booking is still fresh
 export const reviewRequestEmailDelayMs = 60 * 60_000;
 
-// Consumers review on Trustpilot; business users on one B2B site at a time,
-// because splitting a few reviews a week across sites leaves each too thin for
-// its badges. REVIEW_REQUEST_BUSINESS_SITE picks the B2B site.
+// Consumers review on Trustpilot; business users are split evenly across the
+// B2B sites
 export const reviewSites = {
   trustpilot: {
     name: "Trustpilot",
@@ -25,7 +24,8 @@ export const reviewSites = {
   },
   g2: {
     name: "G2",
-    url: "https://www.g2.com/products/rallly/review_modalities/new?utm_source=rallly&utm_medium=email&utm_campaign=review-request",
+    // G2's vendor review link, so reviews are attributed to our invitation
+    url: "https://www.g2.com/contributor/cloud-2e719343-1982-403e-8985-699b7a393863",
   },
 } as const;
 

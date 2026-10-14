@@ -66,7 +66,7 @@ async function ReviewRequestEmail({
           <Text>
             {t("reviewRequest_intro", {
               defaultValue:
-                "I saw you just scheduled another meeting with Rallly. I hope it saved you some back-and-forth.",
+                "I saw you just scheduled a meeting with Rallly. I hope it saved you some back-and-forth.",
             })}
           </Text>
           <Text>
