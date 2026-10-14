@@ -18,9 +18,8 @@ export type DemoPreset = {
   | { conferencing: DemoConferencingProvider; location?: never }
 );
 
-// Limited to the providers most visitors recognize at a glance, and to ones
-// live in the app: Zoom stays out until its marketplace review clears.
-export type DemoConferencingProvider = "meet" | "teams";
+// Limited to the providers most visitors recognize at a glance.
+export type DemoConferencingProvider = "meet" | "teams" | "zoom";
 
 export type DemoPresetName =
   | "default"
@@ -138,7 +137,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      conferencing: "meet",
+      conferencing: "zoom",
       spacing: "consecutive",
       participants: thesisDefenseParticipants,
     };
@@ -159,7 +158,7 @@ export function getDemoPreset(
         ns: "home",
         defaultValue: "Organized by Sofia Almeida",
       }),
-      conferencing: "teams",
+      conferencing: "zoom",
       spacing: "weekly",
       participants: legalParticipants,
     };
