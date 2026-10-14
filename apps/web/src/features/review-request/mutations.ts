@@ -96,8 +96,8 @@ const failWith = (message: string) => () => new QueuedEmailFailed({ message });
 
 /**
  * Sends the review request email queued by `queueReviewRequest`. The subject
- * is the user. The site is picked at send time, so a change to
- * REVIEW_REQUEST_BUSINESS_SITE applies to emails already queued.
+ * is the user. The site is picked at send time, so a change to the routing
+ * applies to emails already queued.
  */
 export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
   function* ({ subjectId }: { id: string; subjectId: string }) {
@@ -112,10 +112,7 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
       return yield* new QueuedEmailSkipped({ reason: "User is banned" });
     }
 
-    const site = pickReviewSite({
-      email: user.email,
-      businessSite: env.REVIEW_REQUEST_BUSINESS_SITE,
-    });
+    const site = pickReviewSite({ userId: subjectId, email: user.email });
     const branding = yield* Effect.tryPromise({
       try: () => getInstanceBranding(),
       catch: failWith("Failed to load branding"),

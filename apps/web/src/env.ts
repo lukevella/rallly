@@ -115,13 +115,6 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string().optional(),
 
     /**
-     * Review site the post-finalize review request sends business users to.
-     * Users on a free mail provider are sent to Trustpilot instead.
-     */
-    REVIEW_REQUEST_BUSINESS_SITE: z
-      .enum(["capterra", "g2"])
-      .default("capterra"),
-    /**
      * Conferencing integrations (Google Meet, Zoom, Microsoft Teams, Webex).
      * The flag needs at least one provider's OAuth app configured; see
      * createFinalSchema below.
@@ -325,7 +318,6 @@ export const env = createEnv({
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    REVIEW_REQUEST_BUSINESS_SITE: process.env.REVIEW_REQUEST_BUSINESS_SITE,
     CONFERENCING_ENABLED: process.env.CONFERENCING_ENABLED,
     ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID,
     ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET,

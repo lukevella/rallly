@@ -1,8 +1,13 @@
-import type { BusinessReviewSite, ReviewSite } from "./constants";
-import { consumerEmailDomains, reviewSites } from "./constants";
+import type { ReviewSite } from "./constants";
+import {
+  businessReviewSites,
+  consumerEmailDomains,
+  reviewSites,
+} from "./constants";
 
-// One finalized poll can be a fluke; a second one means Rallly worked for them
-const minFinalizedPolls = 2;
+// A finalized poll with a group behind it means Rallly worked for them.
+// Waiting for a second one asked a fifth as many people.
+const minFinalizedPolls = 1;
 // Filters out solo tests: the poll worked for a group
 const minParticipants = 3;
 
@@ -20,20 +25,35 @@ export function isEligibleForReviewRequest({
 }
 
 /**
- * Consumers are pointed to Trustpilot, everyone else to the business review
- * site, judged by whether the address is on a free mail provider.
+ * Consumers are pointed to Trustpilot, judged by whether the address is on a
+ * free mail provider. Everyone else is split evenly across the business review
+ * sites by user id, so a retried email points to the same site.
  */
 export function pickReviewSite({
+  userId,
   email,
-  businessSite,
 }: {
+  userId: string;
   email: string;
-  businessSite: BusinessReviewSite;
-}) {
+}): ReviewSite {
   const domain = email.trim().toLowerCase().split("@").pop();
-  return domain && consumerEmailDomains.has(domain)
-    ? ("trustpilot" as const)
-    : businessSite;
+  if (domain && consumerEmailDomains.has(domain)) {
+    return "trustpilot";
+  }
+  return (
+    businessReviewSites[hashString(userId) % businessReviewSites.length] ??
+    businessReviewSites[0]
+  );
+}
+
+// FNV-1a: stable across runtimes, spreads ids evenly
+function hashString(value: string) {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return hash >>> 0;
 }
 
 /**
