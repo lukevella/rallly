@@ -240,7 +240,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/scheduling-for/sports-clubs" }),
     title: t("sportsClubsMetaTitle", {
       ns: "home",
-      defaultValue: "Scheduling for Sports Clubs and Teams",
+      defaultValue: "Team Availability Poll for Sports Clubs",
     }),
     description: t("sportsClubsMetaDescription", {
       ns: "home",

@@ -1,5 +1,5 @@
 ---
-title: "Is Doodle still free? What the free plan includes in 2026"
+title: "Is Doodle still free? Free plan limits in 2026"
 date: "2026-09-01"
 updated: "2026-10-14"
 category: Guides

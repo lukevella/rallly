@@ -285,7 +285,6 @@
   "errorTitle": "Coś poszło nie tak",
   "errorTryAgain": "Spróbuj ponownie",
   "event": "Wydarzenie",
-  "eventHostDescription": "Jesteś twórcą tej ankiety",
   "eventPageAbout": "Informacje",
   "eventPageGoingCount": "{count, plural, one {# uczestnik} few {# uczestnicy} many {# uczestników} other {# uczestników}}",
   "eventRegisterAlreadyResponded": "Ten adres e-mail został już użyty do odpowiedzi",

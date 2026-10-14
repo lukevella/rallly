@@ -285,7 +285,6 @@
   "errorTitle": "Noget gik galt",
   "errorTryAgain": "Prøv igen",
   "event": "Begivenhed",
-  "eventHostDescription": "Du er opretteren af denne afstemning",
   "eventPageAbout": "Om",
   "eventPageGoingCount": "{count, plural, one {# stemme} other {# stemmer}}",
   "eventRegisterAlreadyResponded": "Denne e-mail er allerede blevet brugt til at besvare",

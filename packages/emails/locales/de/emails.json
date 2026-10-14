@@ -102,7 +102,6 @@
   "reviewRequest_greeting": "Hallo {firstName},",
   "reviewRequest_greetingNoName": "Hallo,",
   "reviewRequest_guidelines": "Die Bewertungen müssen den <a>{siteName} Community-Richtlinien</a> folgen.",
-  "reviewRequest_intro": "Ich habe gesehen, dass du gerade ein weiteres Meeting mit Rallly geplant hast. Ich hoffe, das hat dir einiges an Hin und Her erspart.",
   "reviewRequest_preview": "Würdest du eine kurze Bewertung für Rallly auf {siteName} hinterlassen?",
   "reviewRequest_reply": "Gut, schlecht oder irgendwo dazwischen, eine ehrliche Bewertung hilft. Und wenn dir irgendetwas an Rallly nicht gefällt, antworte einfach. Ich lese jede Antwort.",
   "reviewRequest_subject": "Ein kleiner Gefallen?",

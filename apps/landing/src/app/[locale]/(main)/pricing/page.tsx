@@ -1209,7 +1209,10 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, ["common", "pricing"]);
   return {
     alternates: getAlternates({ locale, path: "/pricing" }),
-    title: t("pricing", { ns: "common", defaultValue: "Pricing" }),
+    title: t("pricingMetaTitle", {
+      ns: "pricing",
+      defaultValue: "Pricing: Free and Pro Plans",
+    }),
     description: t("pricingDescription", {
       ns: "pricing",
     }),
