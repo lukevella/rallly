@@ -115,7 +115,7 @@ That's the gap [Rallly](https://rallly.co) fills. It does one thing: you suggest
 
 On Rallly, participants vote with just the link and never need an account. Everyone sees the options in their own time zone, and finalizing the date and notifying everyone is free.
 
-To be equally transparent about our limits: on Rallly's free plan, you can create as many polls as you like, but up to 3 can be open and collecting votes at a time. Finalize or close one and you can open another. If you create a poll without signing up, the limit is 1. Free polls are deleted once all their dates are at least 30 days in the past and nobody has edited, voted or commented in the last 30 days.
+To be equally transparent about our limits: on Rallly's free plan, you can create as many polls as you like, but up to 3 can be open and collecting votes at a time. Finalize or close one and you can open another. Without signing up, you can have 1 open poll at a time, and the same applies: finalize or close it to open another. Free polls are deleted once all their dates are at least 30 days in the past and nobody has edited, voted or commented in the last 30 days.
 
 Rallly is also [open source](https://github.com/lukevella/rallly), so you can inspect exactly how it works and even host it on your own server.
 
