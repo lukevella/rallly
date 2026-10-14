@@ -3,12 +3,12 @@ title: "Is Doodle still free? Free plan limits in 2026"
 date: "2026-09-01"
 updated: "2026-10-14"
 category: Guides
-excerpt: Doodle's free plan now allows one group poll with 10 time slots, and shows ads to everyone. Here's what's free in 2026, what Doodle costs, and what changed.
+excerpt: Doodle's free plan now allows one group poll with 10 time slots, and shows ads. Here's what's free in 2026, what Doodle costs, and what changed.
 ---
 
 _Last updated: 14 October 2026_
 
-Short answer: yes, Doodle still has a free plan, but it now allows just **one group poll with up to 10 time slots**. You and everyone you invite see ads, and reminders and deadlines are paid features. If you're asking this question, you've probably noticed that the free plan doesn't do what it used to. You're not imagining it.
+Short answer: yes, Doodle still has a free plan, but it now allows just **one group poll with up to 10 time slots**. You and the people you invite see ads, and reminders and deadlines are paid features. If you're asking this question, you've probably noticed that the free plan doesn't do what it used to. You're not imagining it.
 
 ## What Doodle's free plan includes in 2026
 
@@ -34,7 +34,7 @@ The pricing page doesn't tell the whole story. Doodle's help centre has a [free 
 <tr><td>Booking pages</td><td>1</td><td>Unlimited</td></tr>
 <tr><td>1:1 meetings</td><td>1</td><td>Unlimited</td></tr>
 <tr><td>Sign up sheet sessions</td><td>20</td><td>Unlimited</td></tr>
-<tr><td>Ads</td><td>Shown to you and your participants</td><td>None</td></tr>
+<tr><td>Ads</td><td>Shown to you and your participants, unless they have a paid Doodle account</td><td>None</td></tr>
 <tr><td>Reminders and deadlines</td><td>No</td><td>Yes</td></tr>
 <tr><td>Hide participant details</td><td>No</td><td>Yes</td></tr>
 <tr><td>Video calls</td><td>Google Meet and Zoom</td><td>Adds Microsoft Teams and Webex</td></tr>
@@ -62,7 +62,7 @@ Doodle's advertised prices are per seat and assume you pay for a year upfront. P
 </table>
 </div>
 
-For a team, that adds up quickly. On yearly billing, Team costs $384 a year for 2 people, $960 for 5 and $1,920 for 10. Doodle notes that prices vary by location, so check the pricing page for your own currency.
+For a team, that adds up quickly. On yearly billing, Team starts at $384 a year for the 2 seat minimum, and every extra person adds to the bill. Doodle notes that prices vary by location and team size, so check the pricing page for your own numbers.
 
 ## What changed
 
@@ -85,13 +85,13 @@ If you've found conflicting answers to this question, part of the reason is that
 - The help centre's [free vs. Professional comparison](https://help.doodle.com/en/articles/10448913-doodle-free-and-doodle-professional-differences-at-a-glance), dated July 2026, says free polls are limited to 10 time slots.
 - An older [group poll FAQ](https://help.doodle.com/en/articles/10295132-group-poll-troubleshooting-and-faq) in the same help centre still says 20.
 
-The pricing page and the July 2026 help article are the most recent, so those are the numbers we've used above.
+The pricing page is where Doodle sells its plans, and the help centre comparison is the only page that lists every limit side by side, so those are the numbers we've used above. The blog article is a marketing roundup, not a plan description.
 
 ## Is Doodle's free plan enough for you?
 
-It depends on how often you schedule. The free plan works if you need one meeting at a time, with no more than 10 options to choose from, and you don't mind your participants seeing ads.
+It depends on how often you schedule. The free plan works if one poll is all you need, with no more than 10 options to choose from, and you don't mind your participants seeing ads.
 
-It stops working if you run a few polls at once, like a committee meeting and a social event in the same week. It also stops working if you want to offer more than 10 dates, if you need to send reminders to people who haven't voted, or if you're sharing the poll with clients and would rather they didn't see ads.
+It stops working if you need more than one poll, like a committee meeting and a social event in the same month. It also stops working if you want to offer more than 10 dates, if you need to send reminders to people who haven't voted, or if you're sharing the poll with clients and would rather they didn't see ads.
 
 That's a legitimate business choice, and if your company schedules client meetings all day, Doodle's paid plans may serve you well. But if you're the person who occasionally needs to find a time for a book club, a committee, a rehearsal, or a team catch up, you're no longer who Doodle is building for.
 
@@ -115,7 +115,7 @@ That's the gap [Rallly](https://rallly.co) fills. It does one thing: you suggest
 
 On Rallly, participants vote with just the link and never need an account. Everyone sees the options in their own time zone, and finalizing the date and notifying everyone is free.
 
-To be equally transparent about our limits: on Rallly's free plan, you can create as many polls as you like, but up to 3 can be open and collecting votes at a time. Finalize or close one and you can open another. If you create a poll without signing up, the limit is 1. Free polls are deleted once all their dates have passed and there's been no activity for 30 days.
+To be equally transparent about our limits: on Rallly's free plan, you can create as many polls as you like, but up to 3 can be open and collecting votes at a time. Finalize or close one and you can open another. If you create a poll without signing up, the limit is 1. Free polls are deleted once all their dates are at least 30 days in the past and nobody has edited, voted or commented in the last 30 days.
 
 Rallly is also [open source](https://github.com/lukevella/rallly), so you can inspect exactly how it works and even host it on your own server.
 
@@ -139,7 +139,7 @@ Ten, according to Doodle's help centre. Doodle Pro allows up to 1,000.
 
 ### Does Doodle's free plan have ads?
 
-Yes. Both organizers and participants see ads on the free plan. Removing them requires a paid plan.
+Yes. On the free plan, ads are shown to the organizer and to participants who don't have a paid Doodle account. Removing them requires a paid plan.
 
 ### How much does Doodle Pro cost?
 
@@ -155,6 +155,6 @@ Yes. [Rallly](https://rallly.co) is a free, open source scheduling poll with no 
 
 ## The bottom line
 
-Doodle is still free, but only for one poll with 10 options and ads for everyone involved. If that covers what you need, it's a fine choice. If it doesn't, you don't need to pay just to find a time that works.
+Doodle is still free, but only for one poll with 10 options, and with ads. If that covers what you need, it's a fine choice. If it doesn't, you don't need to pay just to find a time that works.
 
 [Create a poll](https://app.rallly.co/new) right now. It takes about a minute, and nobody has to sign up for anything.
