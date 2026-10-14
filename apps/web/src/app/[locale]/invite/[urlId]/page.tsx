@@ -94,7 +94,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
                   // Rendered here so the markdown parser stays on the server
                   description={
                     <EventMetaDescription
-                      className="mt-4"
+                      className="mt-1 text-muted-foreground"
                       content={poll.description}
                     />
                   }
