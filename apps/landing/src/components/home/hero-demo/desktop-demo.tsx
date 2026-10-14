@@ -11,6 +11,7 @@ import {
 import * as React from "react";
 import GoogleMeetIcon from "@/assets/google-meet.svg";
 import MicrosoftTeamsIcon from "@/assets/microsoft-teams.svg";
+import ZoomIcon from "@/assets/zoom.svg";
 import { BrowserChrome } from "./browser-chrome";
 import type { DemoDay } from "./demo-data";
 import { formatDemoParts, getInitials } from "./demo-data";
@@ -26,6 +27,7 @@ const conferencingProviders: Record<
 > = {
   meet: { label: "Google Meet", Icon: GoogleMeetIcon },
   teams: { label: "Microsoft Teams", Icon: MicrosoftTeamsIcon },
+  zoom: { label: "Zoom", Icon: ZoomIcon },
 };
 
 export const DesktopDemo = ({
