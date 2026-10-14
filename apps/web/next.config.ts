@@ -138,11 +138,20 @@ const nextConfig: NextConfig = {
       },
       // Static assets load from the asset prefix host, and browsers zero the
       // cross-origin Resource Timing fields chunk-recovery reports to Sentry
-      // unless the response opts in.
-      {
-        source: "/_next/static/:path*",
-        headers: [{ key: "Timing-Allow-Origin", value: "*" }],
-      },
+      // unless the response opts in for the app's own origin.
+      ...(process.env.NEXT_PUBLIC_BASE_URL
+        ? [
+            {
+              source: "/_next/static/:path*",
+              headers: [
+                {
+                  key: "Timing-Allow-Origin",
+                  value: new URL(process.env.NEXT_PUBLIC_BASE_URL).origin,
+                },
+              ],
+            },
+          ]
+        : []),
       // Browser-cache the manifest and root icons; without this they default to
       // `max-age=0, must-revalidate` and are revalidated on every page load.
       {
