@@ -1,6 +1,7 @@
 ---
 title: "Is Doodle still free? What the free plan includes in 2026"
 date: "2026-09-01"
+updated: "2026-10-14"
 category: Guides
 excerpt: Doodle's free plan now allows one group poll with 10 time slots, and shows ads to everyone. Here's what's free in 2026, what Doodle costs, and what changed.
 ---
