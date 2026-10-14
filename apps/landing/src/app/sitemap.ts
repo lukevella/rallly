@@ -15,7 +15,7 @@ const seoPages = [
 ];
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = getAllPosts(["slug"]);
+  const posts = getAllPosts(["slug", "date", "updated"]);
 
   return [
     {
@@ -55,6 +55,11 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
     {
+      url: absoluteUrl("/security"),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: absoluteUrl("/blog"),
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -65,7 +70,7 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...posts.map((post) => ({
       url: absoluteUrl(`/blog/${post.slug}`),
-      lastModified: new Date(), // TODO: Update posts to include a lastModified date
+      lastModified: new Date(post.updated ?? post.date),
       changeFrequency: "yearly" as const,
       priority: 0.7,
     })),

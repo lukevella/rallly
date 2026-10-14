@@ -1,5 +1,6 @@
 "use cache";
 
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { cacheLife } from "next/cache";
 import { LegalPageLayout } from "@/components/legal-page-layout";
 import { Section } from "@/components/section";
@@ -492,6 +493,8 @@ export default async function PrivacyPolicy() {
 export async function generateMetadata() {
   cacheLife("max");
   return {
+    // English only, so every locale prefix points at the English URL
+    alternates: { canonical: absoluteUrl("/privacy-policy") },
     title: "Privacy Policy",
     description: "The privacy policy for Rallly.",
   };

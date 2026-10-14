@@ -1,5 +1,6 @@
 "use cache";
 
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { LegalPageLayout } from "@/components/legal-page-layout";
@@ -297,6 +298,8 @@ export default async function TermsOfUse() {
 export async function generateMetadata(): Promise<Metadata> {
   cacheLife("max");
   return {
+    // English only, so every locale prefix points at the English URL
+    alternates: { canonical: absoluteUrl("/terms-of-use") },
     title: "Terms of Use",
     description: "The terms of use for Rallly.",
   };

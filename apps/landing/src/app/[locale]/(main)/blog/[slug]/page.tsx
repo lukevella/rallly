@@ -10,6 +10,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { Trans } from "react-i18next/TransWithoutContext";
 import DateFormatter from "@/components/blog/date-formatter";
 import { Cta } from "@/components/home/cta";
+import { JsonLd } from "@/components/json-ld";
 import { Section } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
@@ -69,13 +70,7 @@ export default async function Page(props: {
 
   return (
     <div className="divide-y">
-      <script
-        type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD has to be inlined, and escaping < keeps post content from closing the script tag
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c"),
-        }}
-      />
+      <JsonLd data={articleSchema} />
       <Section>
         <nav className="flex items-center gap-2 text-sm">
           <LinkBase href="/blog" className="text-gray-500 hover:text-gray-800">
@@ -227,7 +222,13 @@ export async function generateMetadata(props: {
   return {
     title: post.title,
     description: post.excerpt,
+    // Posts are English only, so every locale prefix points at the English URL
+    alternates: {
+      canonical: absoluteUrl(`/blog/${post.slug}`),
+    },
     openGraph: {
+      type: "article",
+      publishedTime: post.date,
       title: post.title,
       description: post.excerpt,
       url: absoluteUrl(`/blog/${post.slug}`),

@@ -1,5 +1,6 @@
 "use cache";
 
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import DateFormatter from "@/components/blog/date-formatter";
@@ -518,6 +519,8 @@ export default async function DataProcessingAgreement() {
 export async function generateMetadata(): Promise<Metadata> {
   cacheLife("max");
   return {
+    // English only, so every locale prefix points at the English URL
+    alternates: { canonical: absoluteUrl("/dpa") },
     title: "Data Processing Agreement",
     description:
       "The GDPR Article 28 Data Processing Agreement for the hosted Rallly service, including technical and organizational measures and the subprocessor list.",
