@@ -1,6 +1,7 @@
 "use cache";
 
 import { buttonVariants, cn } from "@rallly/ui";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   ActivityIcon,
   ArrowRightIcon,
@@ -431,6 +432,8 @@ export default async function Security(props: {
 export async function generateMetadata() {
   cacheLife("max");
   return {
+    // English only, so every locale prefix points at the English URL
+    alternates: { canonical: absoluteUrl("/security") },
     title: "Security and Data Protection",
     description:
       "How Rallly runs its service, where your data lives, and what we commit to.",
