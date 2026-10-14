@@ -1,5 +1,6 @@
 "use cache";
 
+import { Grid3x3Icon, MousePointerClickIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { Trans } from "react-i18next/TransWithoutContext";
@@ -11,6 +12,12 @@ import {
   CompareTableFeature,
   CompareTableHead,
 } from "@/components/compare-table";
+import {
+  ContentGrid,
+  ContentGridDescription,
+  ContentGridItem,
+  ContentGridTitle,
+} from "@/components/content-grid";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { FaqItem, FaqSection } from "@/components/home/faq";
@@ -61,7 +68,7 @@ export default async function Page(props: {
           description={t("when2meetAlternativeDescription", {
             ns: "home",
             defaultValue:
-              "Rallly does everything you use When2meet for, without the clunky parts. Participants vote with a tap instead of dragging over a grid, you get notified when responses come in, and all your polls live in one place. Free, no ads, and no account needed to vote.",
+              "When2meet asks everyone to paint their free time onto a grid. Rallly turns that around: you propose a few times, participants tap yes, no, or if need be, and the best time shows at a glance. You get an email when someone responds, and you can finalize with a calendar invite. Free, no ads, and no account needed to vote.",
           })}
         >
           <HeroDemo locale={locale} />
@@ -81,6 +88,68 @@ export default async function Page(props: {
         </Stats>
       </Section>
       <HowItWorks locale={locale} />
+      <Section>
+        <SectionHeading>
+          <SectionTitle>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="when2meetGridVsTapTitle"
+              defaults="Painting a grid vs tapping a time"
+            />
+          </SectionTitle>
+          <SectionDescription>
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="when2meetGridVsTapDescription"
+              defaults="Both tools find a time a group can meet. The difference is in what you ask participants to do."
+            />
+          </SectionDescription>
+        </SectionHeading>
+        <SectionContent>
+          <ContentGrid className="lg:grid-cols-2">
+            <ContentGridItem>
+              <ContentGridTitle>
+                <Grid3x3Icon />
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="when2meetGridVsTapWhen2meetTitle"
+                  defaults="How When2meet works"
+                />
+              </ContentGridTitle>
+              <ContentGridDescription>
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="when2meetGridVsTapWhen2meetDescription"
+                  defaults="You name an event, pick the dates and a time range, and share the link. Each person signs in with a name, then clicks and drags across a grid of time slots to mark when they are free. The cells where the most people overlap turn darker, and you read the result off the grid. Nobody is told when a response comes in, and the event has no final time, only the shading."
+                />
+              </ContentGridDescription>
+            </ContentGridItem>
+            <ContentGridItem>
+              <ContentGridTitle>
+                <MousePointerClickIcon />
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="when2meetGridVsTapRalllyTitle"
+                  defaults="How Rallly works"
+                />
+              </ContentGridTitle>
+              <ContentGridDescription>
+                <Trans
+                  t={t}
+                  ns="home"
+                  i18nKey="when2meetGridVsTapRalllyDescription"
+                  defaults="You propose the dates or times that could work and share the link. Each person taps yes, no, or if need be on each option, which takes seconds on a phone. You see the votes line up as they arrive and get an email for each response. When you are ready, you finalize a time and everyone gets a calendar invite."
+                />
+              </ContentGridDescription>
+            </ContentGridItem>
+          </ContentGrid>
+        </SectionContent>
+      </Section>
       <Section>
         <SectionHeading>
           <SectionTitle>
@@ -205,7 +274,7 @@ export default async function Page(props: {
                     t={t}
                     ns="home"
                     i18nKey="when2meetComparisonComments"
-                    defaults="Comments from participants"
+                    defaults="Optional comments from participants"
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
@@ -265,6 +334,14 @@ export default async function Page(props: {
               </tr>
             </tbody>
           </CompareTable>
+          <p className="mt-4 text-gray-500 text-sm">
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="when2meetComparisonCheckedOn"
+              defaults="When2meet details checked on when2meet.com on 14 October 2026."
+            />
+          </p>
         </SectionContent>
       </Section>
       <SocialProof locale={locale} />
@@ -311,7 +388,41 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="faqWhen2meetDifferenceAnswer"
-              defaults="When2meet asks everyone to paint their availability on a grid, which can be fiddly, especially on a phone. Rallly keeps it simple: you suggest times, participants vote with a tap, and you get notified as responses come in. Participants can leave comments, and when the votes are in you can confirm a final time so everyone knows what was decided."
+              defaults="When2meet asks everyone to paint their availability on a grid, which can be fiddly, especially on a phone. Rallly keeps it simple: you suggest times, participants vote with a tap, and you get notified as responses come in. You can turn on comments so participants can explain their answers, and when the votes are in you finalize a time so everyone knows what was decided."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqWhen2meetAds"
+                defaults="Does When2meet show ads?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqWhen2meetAdsAnswer"
+              defaults="Yes. When2meet runs Google ads on its pages, so organizers and participants both see them (checked on 14 October 2026). Rallly shows no ads on any plan, free or paid."
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="faqWhen2meetSwitch"
+                defaults="How do I move an existing When2meet event to Rallly?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="faqWhen2meetSwitchAnswer"
+              defaults="There is no import, but you do not need one. Create a Rallly poll with the same dates or times, which takes about a minute, and send the new link to your group. Anyone who already answered on When2meet can tap their times again without creating an account."
             />
           </FaqItem>
           <FaqItem
@@ -524,13 +635,14 @@ export async function generateMetadata(props: {
     title: {
       absolute: t("when2meetAlternativeMetaTitle", {
         ns: "home",
-        defaultValue: "Best Free When2meet Alternative | Rallly",
+        defaultValue:
+          "When2meet Alternative: Free Meeting Poll, No Ads | Rallly",
       }),
     },
     description: t("when2meetAlternativeMetaDescription", {
       ns: "home",
       defaultValue:
-        "Rallly is a free When2meet alternative with a clean interface, great mobile support, response notifications, and no ads. No account needed to vote.",
+        "A free, ad free When2meet alternative that works on your phone. Propose times, participants tap to vote, then finalize with a calendar invite. No account needed.",
     }),
   };
 }

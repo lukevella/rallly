@@ -151,7 +151,7 @@ Not at the moment. Doodle paused its iOS and Android apps in June 2025 while it 
 
 ### Is there a free alternative to Doodle?
 
-Yes. [Rallly](https://rallly.co) is a free, open source scheduling poll with no ads. You can create as many polls as you like, with up to 3 open at a time, and participants vote without an account.
+Yes. [Rallly](https://rallly.co) is a free, open source scheduling poll with no ads. You can create as many polls as you like, with up to 3 open at a time, and participants vote without an account. If you are weighing it against When2meet instead, see how Rallly compares as a [When2meet alternative](https://rallly.co/when2meet-alternative).
 
 ## The bottom line
 

@@ -1,6 +1,7 @@
 ---
 title: Introducing the Rallly API
 date: "2026-09-15"
+updated: "2026-10-14"
 category: Product
 excerpt: Create polls, read results and close them from your own tools. The API is available now for Pro spaces on Rallly Cloud.
 ---
@@ -46,4 +47,6 @@ The [API reference](https://support.rallly.co/api-reference/introduction) has ev
 
 ## What comes next
 
-Polling for results works, but it is not how most integrations want to run. Webhooks for poll events are planned so your system hears about a new response or a closed poll as it happens. There is no date for that yet. If you build something on the API, I would like to hear what you are building and what gets in the way, at [feedback@rallly.co](mailto:feedback@rallly.co).
+_Update, 14 October 2026: webhooks have shipped. Pro spaces can subscribe to poll and participant events from the space settings. See the [webhooks reference](https://support.rallly.co/api-reference/webhooks)._
+
+Polling for results works, but it is not how most integrations want to run. Webhooks for poll events were planned so your system hears about a new response or a closed poll as it happens. If you build something on the API, I would like to hear what you are building and what gets in the way, at [feedback@rallly.co](mailto:feedback@rallly.co).

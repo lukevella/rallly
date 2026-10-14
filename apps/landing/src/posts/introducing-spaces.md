@@ -1,6 +1,7 @@
 ---
 title: Introducing Spaces
 date: "2025-08-21"
+updated: "2026-10-14"
 category: Product
 excerpt: Centralized billing, member management, and seamless collaboration in one place.
 ---
@@ -33,6 +34,8 @@ When you create a Space, you become the Space owner with full control over:
 - **Access Control** - Manage who can create, edit, and finalize polls
 
 All members of a Pro Space automatically get access to Pro features without needing individual subscriptions - including poll finalization, calendar invites, extended poll life, and priority support.
+
+_Update, 14 October 2026: finalizing polls and calendar invites are now free on every plan. See [Finalizing polls is now free](/blog/finalizing-polls-is-now-free) for what changed._
 
 ## Perfect for Growing Teams
 

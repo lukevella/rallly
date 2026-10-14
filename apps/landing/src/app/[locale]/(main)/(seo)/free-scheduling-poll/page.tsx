@@ -347,6 +347,35 @@ export default async function Page(props: {
               defaults="A meeting poll asks people to choose between a few proposed times, while an availability poll collects when everyone is free before you decide. Rallly handles both. Offer a shortlist when you already have one, or a broad set of options when you want to see the group's availability first."
             />
           </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
+                i18nKey="freeSchedulingPollFaqWhen2meet"
+                defaults="Is this like When2meet or Doodle?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="freeSchedulingPollFaqWhen2meetAnswer"
+              defaults="It solves the same problem. Compared with When2meet, participants tap the times that work instead of painting a grid, and there are no ads. Compared with Doodle, there is no one poll limit on the free plan. See how Rallly compares as a <0>When2meet alternative</0> or a <1>Doodle alternative</1>."
+              components={[
+                <LinkBase
+                  key="when2meet"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/when2meet-alternative"
+                />,
+                <LinkBase
+                  key="doodle"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/best-doodle-alternative"
+                />,
+              ]}
+            />
+          </FaqItem>
         </FaqSection>
         <Section className="sm:py-24">
           <Cta

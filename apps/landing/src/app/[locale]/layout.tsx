@@ -34,10 +34,7 @@ export default async function Root(props: {
   const translations = i18n.store.data;
 
   return (
-    <html
-      lang={i18n.resolvedLanguage}
-      className={cn(sans.className, display.variable)}
-    >
+    <html lang={locale} className={cn(sans.className, display.variable)}>
       <body>
         <LazyMotion features={domAnimation}>
           <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
