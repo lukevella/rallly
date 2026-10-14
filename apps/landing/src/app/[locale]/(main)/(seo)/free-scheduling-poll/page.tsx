@@ -46,6 +46,7 @@ export default async function Page(props: {
         <Hero
           title={t("freeSchedulingPollTitle", {
             ns: "home",
+            defaultValue: "Create a free scheduling poll",
           })}
           description={t("freeSchedulingPollDescription", {
             ns: "home",
@@ -398,7 +399,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/free-scheduling-poll" }),
     title: t("freeSchedulingPollMetaTitle", {
       ns: "home",
-      defaultValue: "Create a Free Scheduling Poll Instantly",
+      defaultValue: "Free Scheduling Poll: No Signup Needed",
     }),
     description: t("freeSchedulingPollMetaDescription", {
       ns: "home",
