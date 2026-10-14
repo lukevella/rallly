@@ -33,14 +33,49 @@ export default async function Page(props: {
     "category",
     "excerpt",
     "content",
+    "updated",
   ]);
 
   if (!post) {
     notFound();
   }
 
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: ogImageUrl(post),
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    url,
+    mainEntityOfPage: url,
+    author: {
+      "@type": "Person",
+      name: "Luke Vella",
+      url: "https://twitter.com/imlukevella",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Rallly",
+      url: absoluteUrl(),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/android-chrome-512x512.png"),
+      },
+    },
+  };
+
   return (
     <div className="divide-y">
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD has to be inlined, and escaping < keeps post content from closing the script tag
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c"),
+        }}
+      />
       <Section>
         <nav className="flex items-center gap-2 text-sm">
           <LinkBase href="/blog" className="text-gray-500 hover:text-gray-800">
@@ -158,6 +193,13 @@ export default async function Page(props: {
   );
 }
 
+function ogImageUrl(post: { title?: string; excerpt?: string }) {
+  return absoluteUrl("/api/og-image", {
+    title: post.title,
+    excerpt: post.excerpt,
+  });
+}
+
 export async function generateStaticParams() {
   const posts = getAllPosts(["slug"]);
   return posts.map((post) => ({
@@ -191,10 +233,7 @@ export async function generateMetadata(props: {
       url: absoluteUrl(`/blog/${post.slug}`),
       images: [
         {
-          url: absoluteUrl("/api/og-image", {
-            title: post.title,
-            excerpt: post.excerpt,
-          }),
+          url: ogImageUrl(post),
           width: 1200,
           height: 630,
           alt: post.title,
