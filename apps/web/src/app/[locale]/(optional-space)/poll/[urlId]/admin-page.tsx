@@ -30,7 +30,10 @@ export function AdminPage({
       <GuestPollAlert />
       <EventCard
         description={
-          <EventMetaDescription className="mt-4" content={poll.description} />
+          <EventMetaDescription
+            className="mt-1 text-muted-foreground"
+            content={poll.description}
+          />
         }
       />
       <VotingForm>

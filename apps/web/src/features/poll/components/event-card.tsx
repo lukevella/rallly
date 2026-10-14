@@ -24,7 +24,10 @@ function IconDescriptionList({
 }: React.HTMLAttributes<HTMLDListElement>) {
   return (
     <dl
-      className={cn("flex flex-wrap items-center gap-4 text-xs", className)}
+      className={cn(
+        "flex flex-wrap items-center gap-4 text-muted-foreground text-sm",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -83,9 +86,9 @@ export function EventDetails({
           </p>
         </div>
       ) : null}
-      <EventMetaTitle>{poll.title}</EventMetaTitle>
+      <EventMetaTitle className="text-lg">{poll.title}</EventMetaTitle>
       {description}
-      <EventMetaList className="mt-4">
+      <EventMetaList className="mt-3">
         {poll.user ? (
           <EventMetaItem>
             <User2Icon />
@@ -120,9 +123,9 @@ export function EventCard({ description }: { description: React.ReactNode }) {
   return (
     <Card>
       <RandomGradientBar />
-      <CardContent>
+      <CardContent className="p-4 sm:p-5">
         <EventDetails description={description} />
-        <h2 className="mt-4 mb-1.5 text-muted-foreground text-xs">
+        <h2 className="mt-3 mb-1.5 font-medium text-sm">
           <Trans i18nKey="responseOptions" defaults="Response options" />
         </h2>
         <IconDescriptionList aria-label="Response options">
