@@ -107,7 +107,6 @@
   "reviewRequest_greeting": "Szia {firstName}!",
   "reviewRequest_greetingNoName": "Szia!",
   "reviewRequest_guidelines": "Az értékeléseknek követniük kell a(z) <a>{siteName} közösségi irányelveit</a>.",
-  "reviewRequest_intro": "Láttam, hogy éppen egy újabb találkozót ütemeztél a Rallly-val. Remélem, hogy ez spórolt neked időt az egyeztetési folyamatban.",
   "reviewRequest_preview": "Írnál egy rövid értékelést a Rallly-ról a(z) {siteName} oldalon?",
   "reviewRequest_reply": "Jó, rossz, vagy valahol a kettő között, bármilyen vélemény segít. És ha valami akadályozza a Rallly használatát, csak írj válasz levelet. Minden választ elolvasok.",
   "reviewRequest_subject": "Kérhetek egy kis szívességet?",
