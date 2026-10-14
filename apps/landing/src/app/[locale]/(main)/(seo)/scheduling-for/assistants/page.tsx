@@ -243,7 +243,7 @@ export async function generateMetadata(props: {
     }),
     title: t("assistantsMetaTitle", {
       ns: "home",
-      defaultValue: "Scheduling for Assistants",
+      defaultValue: "Meeting Scheduler for Executive Assistants",
     }),
     description: t("assistantsMetaDescription", {
       ns: "home",

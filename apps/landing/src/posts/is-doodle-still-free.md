@@ -1,5 +1,5 @@
 ---
-title: "Is Doodle still free?"
+title: "Is Doodle still free? Free plan limits in 2026"
 date: "2026-09-01"
 category: Guides
 excerpt: Doodle still has a free plan, but it's smaller than it used to be. Here's exactly what the free plan includes in 2026, what moved behind the paywall, and what to use if you just need a scheduling poll.

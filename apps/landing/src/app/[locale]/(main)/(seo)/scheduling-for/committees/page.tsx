@@ -264,7 +264,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/scheduling-for/committees" }),
     title: t("committeesMetaTitle", {
       ns: "home",
-      defaultValue: "Scheduling for Committees and Boards",
+      defaultValue: "Board & Committee Meeting Scheduling Poll",
     }),
     description: t("committeesMetaDescription", {
       ns: "home",
