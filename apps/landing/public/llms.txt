@@ -47,12 +47,12 @@ Rallly is mostly used by people who schedule meetings for groups that don't shar
 ## Privacy and security
 
 - No ads, no advertising trackers, data is never sold
-- Data is hosted in the United States; a GDPR Article 28 Data Processing Agreement is published at https://rallly.co/dpa
+- Service data is hosted in the United States; product analytics are processed in the European Union. A GDPR Article 28 Data Processing Agreement is published at https://rallly.co/dpa
 - Details: https://rallly.co/security
 
 ## Self-hosting
 
-Rallly is open source under AGPLv3 and runs with Docker. Self-hosted instances include every paid feature; licenses set the number of seats. Docs: https://support.rallly.co/self-hosting
+Rallly is open source under AGPLv3 and runs with Docker. Self-hosted instances include the Pro features without a subscription; the license sets the number of seats, and white labeling is an Enterprise license add-on. Docs: https://support.rallly.co/self-hosting
 
 ## Links
 
