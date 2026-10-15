@@ -6,9 +6,11 @@ import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
 import { sendLicenseKeyEmail } from "@rallly/emails/templates/license-key";
 import * as Sentry from "@sentry/nextjs";
-import { after } from "next/server";
+import { Effect } from "effect";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
+import { subscriptionFeedbackEmailDelayMs } from "@/features/billing/constants";
+import { getSubscriptionFeedbackRecipient } from "@/features/billing/data";
 import {
   cancellationReasonSchema,
   customerMetadataSchema,
@@ -20,6 +22,11 @@ import {
   isSubscriptionActive,
   toDate,
 } from "@/features/billing/webhook/utils";
+import { queueEmails } from "@/features/email-queue/mutations";
+import {
+  QueuedEmailFailed,
+  QueuedEmailSkipped,
+} from "@/features/email-queue/service";
 import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { spaceExists } from "@/features/space/data";
@@ -302,6 +309,22 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       },
     });
 
+    if (isActive) {
+      // Stripe can deliver the same event more than once
+      const alreadyQueued = await tx.queuedEmail.count({
+        where: { kind: "subscription_feedback", batchId: subscription.id },
+      });
+      if (alreadyQueued === 0) {
+        await queueEmails(tx, {
+          kind: "subscription_feedback",
+          userId,
+          batchId: subscription.id,
+          subjectIds: [subscription.id],
+          sendAfter: new Date(Date.now() + subscriptionFeedbackEmailDelayMs),
+        });
+      }
+    }
+
     return syncSpaceTier(tx, spaceId);
   });
 
@@ -327,30 +350,6 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       space: spaceId,
     },
   });
-
-  if (isActive) {
-    after(async () => {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { email: true, name: true },
-      });
-
-      if (user) {
-        await sendRawEmail({
-          to: user.email,
-          from: { name: "Luke from Rallly", address: env.SUPPORT_EMAIL },
-          subject: "Thanks for subscribing to Rallly Pro",
-          text: [
-            "Hey there,",
-            "Thanks so much for subscribing to Rallly Pro! I really appreciate your support.",
-            "I'd love to learn more about how you're using Rallly. What kind of events are you scheduling? Are there any features you wish Rallly had?",
-            "Just hit reply and let me know. I read every response and it helps shape what we build next.",
-            "Luke\nFounder, Rallly",
-          ].join("\n\n"),
-        });
-      }
-    });
-  }
 }
 
 async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
@@ -657,3 +656,53 @@ export async function handleStripeWebhookEvent(event: Stripe.Event) {
 
   return { handled: true };
 }
+
+const failWith = (message: string) => () => new QueuedEmailFailed({ message });
+
+/**
+ * Sends the founder's feedback request queued when a subscription starts.
+ * The subject is the subscription, so one cancelled before the send gets no
+ * email.
+ */
+export const sendSubscriptionFeedbackEmail = Effect.fn(
+  "billing.sendSubscriptionFeedbackEmail",
+)(function* ({ subjectId }: { id: string; subjectId: string }) {
+  const subscription = yield* Effect.tryPromise({
+    try: () => getSubscriptionFeedbackRecipient(subjectId),
+    catch: failWith("Failed to load the subscription"),
+  });
+  if (!subscription?.active) {
+    return yield* new QueuedEmailSkipped({
+      reason: "Subscription no longer active",
+    });
+  }
+  const { user } = subscription;
+  if (user.deletedAt) {
+    return yield* new QueuedEmailSkipped({ reason: "User no longer exists" });
+  }
+  if (user.banned) {
+    return yield* new QueuedEmailSkipped({ reason: "User is banned" });
+  }
+
+  // The mailer logs and swallows transport failures, so its result is what
+  // tells a sent email from a failed one.
+  const sent = yield* Effect.tryPromise({
+    try: () =>
+      sendRawEmail({
+        to: user.email,
+        from: { name: "Luke from Rallly", address: env.SUPPORT_EMAIL },
+        subject: "Thanks for subscribing to Rallly Pro",
+        text: [
+          "Hey there,",
+          "Thanks so much for subscribing to Rallly Pro! I really appreciate your support.",
+          "I'd love to learn more about how you're using Rallly. What kind of events are you scheduling? Are there any features you wish Rallly had?",
+          "Just hit reply and let me know. I read every response and it helps shape what we build next.",
+          "Luke\nFounder, Rallly",
+        ].join("\n\n"),
+      }),
+    catch: failWith("Failed to send the subscription feedback email"),
+  });
+  if (!sent) {
+    return yield* new QueuedEmailFailed({ message: "Transport failed" });
+  }
+});

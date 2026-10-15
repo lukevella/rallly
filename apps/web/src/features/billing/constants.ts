@@ -10,6 +10,10 @@ export { PLAN_NAMES } from "@rallly/billing/pricing";
 // Flash set by /api/stripe/return after a portal flow; value is the flow name.
 export const BILLING_FLASH_KEY = "billing";
 
+// Long enough that the founder's note doesn't arrive alongside the Stripe
+// receipt and read as part of it
+export const subscriptionFeedbackEmailDelayMs = 30 * 60_000;
+
 export const CANCELLATION_COMMENT_MAX_LENGTH = 500;
 
 // How many polls a free organizer can have open at once in a space. Pro has

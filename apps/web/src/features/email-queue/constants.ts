@@ -1,6 +1,7 @@
 export const QUEUED_EMAIL_KINDS = [
   "scheduled_event_invite",
   "review_request",
+  "subscription_feedback",
 ] as const;
 
 /**

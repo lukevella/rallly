@@ -1,6 +1,7 @@
 enum QueuedEmailKind {
   scheduled_event_invite
   review_request
+  subscription_feedback
 
   @@map("queued_email_kind")
 }
