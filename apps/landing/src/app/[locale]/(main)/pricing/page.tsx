@@ -982,7 +982,7 @@ export default async function Page(props: {
                 t={t}
                 ns="pricing"
                 i18nKey="pollLimitAnswerOpenPollLimit"
-                defaults="There is no limit on the number of polls you can create or the number of people who can vote on them. On the free plan, up to {count} polls can be open and collecting votes at a time; finalize or close one to make room for another. Pro has no limit. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+                defaults="There is no limit on the number of polls you can create or the number of people who can vote on them. On the free plan, up to {count} polls can be open and collecting votes at a time; finalize or close one to make room for another. Pro has no limit. On the free plan, polls are deleted once all their dates are more than 30 days in the past and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
                 values={{ count: FREE_OPEN_POLL_LIMIT }}
               />
             ) : (
@@ -990,7 +990,7 @@ export default async function Page(props: {
                 t={t}
                 ns="pricing"
                 i18nKey="pollLimitAnswer"
-                defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+                defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates are more than 30 days in the past and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
               />
             )}
           </FaqItem>
@@ -1025,7 +1025,7 @@ export default async function Page(props: {
               t={t}
               ns="pricing"
               i18nKey="whenPollInactiveAnswer"
-              defaults="Polls become inactive when all date options are in the past AND there has been no activity for over 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
+              defaults="Polls become inactive when all date options are more than 30 days in the past and there has been no activity for 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
             />
           </FaqItem>
           <FaqItem

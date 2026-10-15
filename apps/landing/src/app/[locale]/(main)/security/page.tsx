@@ -326,8 +326,10 @@ export default async function Security(props: {
           and your account at any time. Account deletion starts a 7 day recovery
           window, after which your data is permanently erased and remaining
           backup copies expire on our database provider&apos;s retention
-          schedule. Inactive polls are automatically scheduled for deletion with
-          a 30 day grace period and advance notice. On request, we delete an
+          schedule. On the free plan, a poll is deleted automatically once all
+          its dates are more than 30 days in the past and there has been no
+          activity on it for 30 days, then permanently erased 7 days later.
+          Polls in a Pro space are kept. On request, we delete an
           organization&apos;s data and confirm deletion in writing.
         </FaqItem>
         <FaqItem question="Do you hold SOC 2 or ISO 27001 certification?">

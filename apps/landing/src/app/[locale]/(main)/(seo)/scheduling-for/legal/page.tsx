@@ -161,7 +161,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="legalFaqBrandingAnswer"
-              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to another firm or a client looks like it came from your practice. Everything else is free to use."
+              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to another firm or a client looks like it came from your practice."
               components={[
                 <LinkBase
                   key="pricing"
