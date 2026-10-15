@@ -37,7 +37,6 @@
   "planFreeDescription": "Para usuários eventuais",
   "planProDescription": "Para usuários avançados e profissionais",
   "pollLimit": "Existe um limite de quantas enquetes eu posso criar?",
-  "pollLimitAnswer": "Não. Não há limite para o número de enquetes que você pode criar nem para o número de pessoas que podem votar nelas, em nenhum plano. No plano gratuito, as enquetes são excluídas depois que todas as suas datas passam e ficam 30 dias sem atividade, e alguns recursos, como identidade visual personalizada e configurações avançadas, estão disponíveis apenas em um plano pago. Veja a tabela comparativa acima para a lista completa.",
   "pricingDescription": "Comece grátis. Nenhum login é necessário.",
   "pricingFinalCtaDescription": "Crie sua primeira enquete em menos de um minuto. Atualize quando precisar de mais.",
   "pricingFinalCtaTitle": "Comece agora de forma gratuita",
@@ -50,7 +49,6 @@
   "teamCollaborationDescription": "Convide seu time para gerenciar as enquetes em conjunto",
   "thirtyDayPollRetention": "Retenção de enquetes por 30 dias",
   "whenPollInactive": "Quando uma enquete fica inativa?",
-  "whenPollInactiveAnswer": "As enquetes ficam inativas quando todas as opções de data estão no passado E não houve atividade por mais de 30 dias. Atividade inclui novos votos, comentários ou alterações na enquete. Enquetes inativas são automaticamente excluídas se você não tiver uma assinatura paga.",
   "whyUpgrade": "Por que devo fazer o upgrade?",
   "whyUpgradeAnswer2": "Atualizar para um plano pago faz sentido se você usar o Rallly com frequência ou usá-lo para trabalhar. A atual taxa de assinatura é uma taxa especial para usuários antecipados e aumentará no futuro. Ao atualizar agora, você terá acesso antecipado a novas ferramentas de agendamento de alta qualidade à medida que forem lançadas e garantirá sua taxa de assinatura atual, para que você não seja afetado por futuros aumentos de preços.",
   "yearlySavePercent": "Economize {percent}%"
