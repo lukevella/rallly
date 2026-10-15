@@ -30,12 +30,10 @@ const AI_REQUEST_TIMEOUT_MS = 30_000;
 async function moderateContentWithAI(text: string): Promise<ModerationResult> {
   try {
     const result = await generateText({
-      model: openai("gpt-4.1"),
+      model: openai("gpt-6-luna"),
+      providerOptions: { openai: { reasoningEffort: "none" } },
       abortSignal: AbortSignal.timeout(AI_REQUEST_TIMEOUT_MS),
-      messages: [
-        {
-          role: "system",
-          content: `You are a content moderator for a scheduling and polling application. Users create polls about any topic — finding meeting times, making group decisions, voting on proposals, etc. Content may be in any language.
+      system: `You are a content moderator for a scheduling and polling application. Users create polls about any topic — finding meeting times, making group decisions, voting on proposals, etc. Content may be in any language.
 
 Respond with one of two verdicts:
 - FLAGGED: Content is clearly abusive and harmful to the platform. Use this for:
@@ -55,9 +53,7 @@ When in doubt, choose SAFE.
 Respond in exactly this format:
 VERDICT
 Brief explanation of why this verdict was chosen.`,
-        },
-        { role: "user", content: text },
-      ],
+      messages: [{ role: "user", content: text }],
     });
 
     const lines = result.text.trim().split("\n");
