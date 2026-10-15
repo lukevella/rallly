@@ -115,19 +115,16 @@ function faqPageSchema(children: React.ReactNode) {
 export async function FaqSection({
   locale,
   title,
-  structuredData = true,
   children,
 }: {
   locale: string;
   title: React.ReactNode;
-  /** Emits FAQPage JSON-LD. Only one FAQ section per page should set it. */
-  structuredData?: boolean;
   children: React.ReactNode;
 }) {
   const { t, i18n } = await getTranslation<"home">(locale, "home");
   return (
     <SectionSplit>
-      {structuredData ? <JsonLd data={faqPageSchema(children)} /> : null}
+      <JsonLd data={faqPageSchema(children)} />
       <SectionHeading>
         <SectionTitle>{title}</SectionTitle>
         <SectionDescription>
