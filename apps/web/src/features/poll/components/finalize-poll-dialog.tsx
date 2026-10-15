@@ -517,7 +517,12 @@ function SummaryStep({ option }: { option: RankedOption }) {
   const conferencing = poll.conferencing;
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4">
-      <PickedDate option={option} />
+      <div className="min-w-0">
+        <div className="break-words font-semibold">{poll.title}</div>
+        <div className="text-muted-foreground text-sm">
+          <PickedDate option={option} />
+        </div>
+      </div>
       {poll.location ? (
         <DetailRow icon={<MapPinIcon />}>{poll.location}</DetailRow>
       ) : null}
