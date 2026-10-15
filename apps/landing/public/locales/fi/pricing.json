@@ -53,8 +53,6 @@
   "planFreeDescription": "Tavallisille käyttäjille",
   "planProDescription": "Tehokäyttäjille ja ammattilaisille",
   "pollLimit": "Onko luotavien kyselyiden määrää rajoitettu?",
-  "pollLimitAnswer": "Ei. Missään tilauksessa ei ole rajoitettu luotavien kyselyiden määrää eikä niissä äänestävien henkilöiden määrää. Ilmaisessa tilauksessa kyselyt poistetaan, kun kaikki niiden päivämäärät ovat menneet ja toimintaa ei ole ollut 30 päivään, ja jotkin ominaisuudet, kuten oma ilme ja kyselyiden lisäasetukset, ovat käytettävissä vain maksullisessa tilauksessa. Täydellinen luettelo löytyy yllä olevasta vertailutaulukosta.",
-  "pollLimitAnswerOpenPollLimit": "Ei. Missään tilauksessa ei ole rajoitusta luotavien kyselyjen määrälle tai niiden äänestykseen osallistuvien henkilöiden määrälle. Ilmaisessa tilauksessa enintään {count} kyselyä voi olla avoinna ja kerätä ääniä samanaikaisesti; viimeistele tai sulje yksi, jotta voit avata toisen. Pro-tilauksessa ei ole rajoitusta. Ilmaisen tilauksen kyselyt poistetaan, kun kaikki niiden päivämäärät ovat menneet ja viimeisestä toiminnasta on kulunut 30 päivää, ja jotkin ominaisuudet, kuten oma ilme ja kehittyneet kyselyasetukset, ovat saatavilla vain maksullisessa tilauksessa. Katso yllä oleva vertailutaulukko täydellistä luetteloa varten.",
   "pricingDescription": "Aloita ilmaiseksi. Kirjautumista ei tarvita.",
   "pricingFinalCtaDescription": "Luo ensimmäinen kyselysi alle minuutissa. Päivitä, kun tarvitset lisää.",
   "pricingFinalCtaTitle": "Aloita ilmaiseksi",
@@ -71,7 +69,6 @@
   "webhooks": "Webhookit",
   "webhooksDescription": "Ilmoita omille järjestelmillesi, kun kyselyt tai vastaukset muuttuvat. <a>Lue webhook-dokumentaatio</a>",
   "whenPollInactive": "Milloin kyselystä tulee toimeton?",
-  "whenPollInactiveAnswer": "Äänestykset muuttuvat ei-aktiivisiksi, kun kaikki päivämäärävaihtoehdot ovat menneet ja kyselyssä ei ole ollut toimintaa yli 30 päivään. Toiminnalla tarkoitetaan uusia ääniä, kommentteja tai muutoksia kyselyyn. Ei-aktiiviset kyselyt poistetaan automaattisesti, jos sinulla ei ole maksullista tilausta.",
   "whyUpgrade": "Miksi minun kannattaa vaihtaa maksulliseen sopimukseen?",
   "whyUpgradeAnswer2": "Maksulliseen sopimukseen vaihtaminen on järkevää, jos käytät Ralllyä usein tai työn yhteydessä. Tällä hetkellä tilausmaksu on erityinen varhaisille tilaajille ja se nousee tulevaisuudessa. Kun vaihdat sopimuksesi nyt, saat varhaisen pääsyn uusiin, laadukkaisiin aikataulutyökaluihin heti kun ne julkaistaan ja lukitset tilausmaksusi, jolloin tulevat hinnankorotukset eivät kosketa sinua.",
   "yearlySavePercent": "Säästä {percent} %"
