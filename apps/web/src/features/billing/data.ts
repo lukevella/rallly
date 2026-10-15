@@ -75,3 +75,16 @@ export async function getPaymentMethods(userId: string) {
     };
   });
 }
+
+/** What the subscription feedback email needs to know when it is sent. */
+export async function getSubscriptionFeedbackRecipient(subscriptionId: string) {
+  return prisma.subscription.findUnique({
+    where: { id: subscriptionId },
+    select: {
+      active: true,
+      user: {
+        select: { email: true, banned: true, deletedAt: true },
+      },
+    },
+  });
+}

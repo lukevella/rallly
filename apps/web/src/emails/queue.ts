@@ -4,6 +4,7 @@ import { createLogger } from "@rallly/logger";
 import { Effect, Layer } from "effect";
 import { after } from "next/server";
 import { env } from "@/env";
+import { sendSubscriptionFeedbackEmail } from "@/features/billing/webhook/mutations";
 import {
   QUEUED_EMAIL_BATCH_SIZE,
   QUEUED_EMAIL_IMMEDIATE_BATCH_SIZE,
@@ -30,6 +31,7 @@ const queuedEmailLayer = Layer.mergeAll(
     QueuedEmailHandlers.of({
       scheduled_event_invite: sendScheduledEventInviteEmail,
       review_request: sendReviewRequest,
+      subscription_feedback: sendSubscriptionFeedbackEmail,
     }),
   ),
   SendRateLimiter.layer,

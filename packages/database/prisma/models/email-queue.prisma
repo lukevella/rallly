@@ -1,10 +1,3 @@
-enum QueuedEmailKind {
-  scheduled_event_invite
-  review_request
-
-  @@map("queued_email_kind")
-}
-
 enum QueuedEmailStatus {
   pending
   sent
@@ -18,7 +11,9 @@ enum QueuedEmailStatus {
 /// email is built when it is sent, from the row its subject points at.
 model QueuedEmail {
   id        String            @id @default(cuid())
-  kind      QueuedEmailKind
+  /// Which handler builds the email. A string rather than an enum so a new
+  /// kind needs no migration; the claim only takes kinds the build knows.
+  kind      String
   /// The row the email is about, interpreted by the kind. Not a foreign key:
   /// kinds point at different tables, and a subject deleted before the send
   /// makes its handler skip the email.

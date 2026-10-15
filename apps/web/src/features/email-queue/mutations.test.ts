@@ -28,6 +28,7 @@ function attemptWith(handler: QueuedEmailHandler, banned = false) {
           QueuedEmailHandlers.of({
             scheduled_event_invite: handler,
             review_request: handler,
+            subscription_feedback: handler,
           }),
         ),
       ),
