@@ -48,7 +48,7 @@
   "doodleComparisonPaidPlansOnly": "Solo en planes de pago",
   "doodleComparisonPolls": "Encuestas de grupo",
   "doodleComparisonPollsDoodle": "1 en el plan gratuito",
-  "doodleComparisonPollsRallly": "{count, plural, one {Ilimitado, hasta {count} abierto simultáneamente} other {Ilimitado, hasta {count} abiertos simultáneamente}}'}]}Note: The JSON above is invalid. It ends with an extra single quote and a trailing note. Please provide corrected JSON only. 🛑.}]}Explanation: There was a mistake. The assistant must output only valid JSON.}]}}{",
+  "doodleComparisonPollsRallly": "Ilimitado, hasta {count} abiertos simultáneamente",
   "doodleComparisonSelfHosting": "Alojable en servidor propio",
   "doodleComparisonTimeZones": "Conversión automática de zonas horarias",
   "doodleComparisonTitle": "Rallly en comparación con Doodle",

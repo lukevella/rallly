@@ -48,7 +48,7 @@
   "doodleComparisonPaidPlansOnly": "Nur kostenpflichtige Pläne",
   "doodleComparisonPolls": "Gruppenabstimmungen",
   "doodleComparisonPollsDoodle": "1 im kostenlosen Plan",
-  "doodleComparisonPollsRallly": "Unbegrenzt, höchstens {count} gleichzeitig offen},{",
+  "doodleComparisonPollsRallly": "Unbegrenzt, höchstens {count} gleichzeitig offen",
   "doodleComparisonSelfHosting": "Selfhosting möglich",
   "doodleComparisonTimeZones": "Automatische Zeitzonen-Konvertierung",
   "doodleComparisonTitle": "Wie Rallly im Vergleich zu Doodle abschneidet",
