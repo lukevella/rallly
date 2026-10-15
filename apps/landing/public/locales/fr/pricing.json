@@ -53,8 +53,6 @@
   "planFreeDescription": "Pour les utilisateurs occasionnels",
   "planProDescription": "Pour les utilisateurs avancés et les professionnels",
   "pollLimit": "Y a-t-il une limite au nombre de sondages que je peux créer ?",
-  "pollLimitAnswer": "Non. Le nombre de sondages que vous pouvez créer et le nombre de personnes qui peuvent y voter ne sont limités sur aucune offre. Avec l'offre gratuite, les sondages sont supprimés une fois toutes leurs dates passées et après 30 jours sans activité, et certaines fonctionnalités comme la personnalisation de l'identité visuelle et les paramètres avancés ne sont disponibles qu'avec une offre payante. Consultez le tableau comparatif ci-dessus pour la liste complète.",
-  "pollLimitAnswerOpenPollLimit": "Il n'y a aucune limite au nombre de Sondages que vous pouvez créer ni au nombre de personnes qui peuvent y voter. Sur l'offre gratuite, jusqu'à {count} Sondages peuvent être ouverts et recueillir des votes en même temps ; finalisez ou fermez-en un pour en ouvrir un autre. L'offre Pro n'a pas de limite. Avec l'offre gratuite, les Sondages sont supprimés une fois que toutes leurs dates sont passées et qu'il n'y a eu aucune activité pendant 30 jours, et certaines fonctionnalités, comme la personnalisation de l'identité visuelle et les paramètres avancés des Sondages, ne sont disponibles que dans une offre payante. Consultez le tableau comparatif ci-dessus pour la liste complète.",
   "pricingDescription": "Commencez gratuitement. Pas de connexion requise.",
   "pricingFinalCtaDescription": "Créez votre premier sondage en moins d'une minute. Passez à un plan supérieur lorsque vous avez besoin de plus.",
   "pricingFinalCtaTitle": "Commencez gratuitement",
@@ -71,7 +69,6 @@
   "webhooks": "Webhooks",
   "webhooksDescription": "Avertissez vos propres systèmes lorsque les sondages et les réponses changent. <a>Lire la documentation des webhooks</a>",
   "whenPollInactive": "Quand un sondage est-il devenu inactif ?",
-  "whenPollInactiveAnswer": "Les sondages deviennent inactifs lorsque toutes les options de date sont passées ET qu'aucune activité n'a eu lieu pendant plus de 30 jours. L'activité comprend les nouveaux votes, les commentaires ou les modifications apportées au sondage. Les sondages inactifs sont automatiquement supprimés si vous n'avez pas d'abonnement payant.",
   "whyUpgrade": "Pourquoi devrais-je mettre à niveau ?",
   "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous bénéficierez d'un accès anticipé aux nouveaux outils de planification de haute qualité dès leur sortie et vous verrouillerez votre tarif d'abonnement, de sorte que vous ne serez pas affecté par de futures augmentations de prix.",
   "yearlySavePercent": "Économisez {percent} %"
