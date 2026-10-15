@@ -173,9 +173,8 @@ for (const theme of ["light", "dark"] as const) {
       await page.waitForLoadState("networkidle");
       await page.screenshot({ path: image("review-results") });
 
-      await page.getByRole("button", { name: "Manage" }).click();
-      await page.getByRole("menuitem", { name: "Schedule" }).click();
-      const dialog = page.getByRole("dialog", { name: "Schedule" });
+      await page.getByRole("button", { name: "Finalize" }).click();
+      const dialog = page.getByRole("dialog", { name: "Finalize poll" });
       await expect(dialog).toBeVisible();
       await page.waitForTimeout(1500);
       await page.screenshot({ path: image("finalize") });
@@ -185,17 +184,22 @@ for (const theme of ["light", "dark"] as const) {
       await loginWithEmail(page, { email: organizer.email });
       await page.goto(`/poll/${pollId}/edit-options`);
 
-      // The smallest div holding both the header and the footer is the card.
+      // The calendar is one of the edit form's cards; the sticky save bar
+      // would float over it.
       const card = page
-        .locator("div")
-        .filter({ has: page.getByRole("heading", { name: "Calendar" }) })
-        .filter({ has: page.getByText("Lock time zone") })
-        .last();
+        .locator("#edit-poll > div")
+        .filter({ hasText: "Lock time zone" });
       await card.waitFor();
       await page.getByText("Add time option").first().waitFor();
+      await page.addStyleTag({
+        content: "#edit-poll > .sticky { visibility: hidden; }",
+      });
 
       const captureCard = async (name: string) => {
         await page.waitForLoadState("networkidle");
+        // The app scrolls an inner container, so a full-page shot stops at
+        // the viewport: centre the card in it instead.
+        await card.evaluate((el) => el.scrollIntoView({ block: "center" }));
         const box = await card.boundingBox();
         if (!box) {
           throw new Error("Calendar card not visible");
@@ -211,7 +215,6 @@ for (const theme of ["light", "dark"] as const) {
         }
         await page.screenshot({
           path: image(name),
-          fullPage: true,
           clip: {
             x: box.x + box.width / 2 - width / 2,
             y: Math.max(0, box.y + box.height / 2 - height / 2),
