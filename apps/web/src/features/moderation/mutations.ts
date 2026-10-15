@@ -30,7 +30,8 @@ const AI_REQUEST_TIMEOUT_MS = 30_000;
 async function moderateContentWithAI(text: string): Promise<ModerationResult> {
   try {
     const result = await generateText({
-      model: openai("gpt-4.1"),
+      model: openai("gpt-6-luna"),
+      providerOptions: { openai: { reasoningEffort: "none" } },
       abortSignal: AbortSignal.timeout(AI_REQUEST_TIMEOUT_MS),
       messages: [
         {
