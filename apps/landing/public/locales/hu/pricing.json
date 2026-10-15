@@ -49,7 +49,6 @@
   "planFreeDescription": "Hétköznapi felhasználóknak",
   "planProDescription": "Elkötelezett és professzionális felhasználóknak",
   "pollLimit": "Van korlát arra, hogy hány szavazást hozhatok létre?",
-  "pollLimitAnswer": "Nincs. Egyik csomagban sincs korlátozva a létrehozható szavazások száma, sem az, hogy hányan szavazhatnak rájuk. Az ingyenes csomagban a szavazások törlődnek, miután minden időpontjuk elmúlt, és 30 napig nem volt rajtuk aktivitás; egyes funkciók pedig, például az egyedi arculat és a haladó szavazási beállítások, csak a fizetős csomagban érhetők el. A teljes listát a fenti összehasonlító táblázatban találja.",
   "pricingDescription": "Vágj bele ingyen. Bejelentkezés nem szükséges.",
   "pricingFinalCtaDescription": "Hozd létre az első szavazásod egy pillanat alatt. Bővíts csomagot, amikor szükséged van rá.",
   "pricingFinalCtaTitle": "Kezdj hozzá ingyen",
@@ -64,7 +63,6 @@
   "webhooks": "Webhookok",
   "webhooksDescription": "Értesítsd saját rendszered, amikor szavazások és válaszok megváltoznak. <a>Olvasd el a webhook dokumentációt</a>",
   "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
-  "whenPollInactiveAnswer": "Szavazások inaktívvá válnak, ha az összes dátum lehetőség múltbéli ÉS több mint 30 napja nem volt aktivitás. Az aktivitás magában foglalja az új szavazatokat, hozzászólásokat vagy a szavazás megváltoztatását. Az inaktív szavazások automatikusan törlődnek, ha nincs fizetős előfizetésed.",
   "whyUpgrade": "Miért fizessek elő?",
   "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések.",
   "yearlySavePercent": "{percent}% megtakarítás"
