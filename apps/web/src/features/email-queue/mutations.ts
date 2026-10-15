@@ -19,6 +19,7 @@ import {
 import { listPurgeableQueuedEmailIds, listQueuedEmails } from "./data";
 import { QueuedEmailHandlers, SendRateLimiter } from "./service";
 import type { QueuedEmailKind } from "./types";
+import { isQueuedEmailKind } from "./utils";
 
 const logger = createLogger("email-queue");
 
@@ -146,7 +147,7 @@ export const claimQueuedEmails = Effect.fn("emailQueue.claimQueuedEmails")(
         WHERE id IN (
           SELECT id FROM queued_emails
           WHERE status = 'pending'
-            AND kind::text = ANY(${[...QUEUED_EMAIL_KINDS]})
+            AND kind = ANY(${[...QUEUED_EMAIL_KINDS]})
             AND attempts < ${MAX_QUEUED_EMAIL_ATTEMPTS}
             AND (send_after IS NULL OR send_after <= ${now})
             AND (claimed_at IS NULL OR claimed_at < ${staleBefore})
@@ -188,6 +189,14 @@ export const attemptQueuedEmail = Effect.fn("emailQueue.attemptQueuedEmail")(
         ok: false,
         skip: true,
         reason: "Queued by a banned account",
+      } satisfies QueuedEmailAttempt as QueuedEmailAttempt;
+    }
+    // The claim only takes known kinds, so this guards the type, not the data
+    if (!isQueuedEmailKind(email.kind)) {
+      return {
+        ok: false,
+        skip: false,
+        error: `Unknown kind: ${email.kind}`,
       } satisfies QueuedEmailAttempt as QueuedEmailAttempt;
     }
     const handlers = yield* QueuedEmailHandlers;
