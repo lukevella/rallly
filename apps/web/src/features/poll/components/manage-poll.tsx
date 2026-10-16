@@ -8,10 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import {
-  ChevronDownIcon,
   CircleStopIcon,
   CopyIcon,
   DownloadIcon,
+  MoreHorizontalIcon,
   PencilIcon,
   PlayIcon,
   TrashIcon,
@@ -27,7 +27,7 @@ import {
   getOpenPollLimitRefusal,
   showOpenPollLimit,
 } from "@/features/poll/limit/client";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { DeletePollDialog } from "./manage-poll/delete-poll-dialog";
 import { useCsvExporter } from "./manage-poll/use-csv-exporter";
@@ -80,6 +80,7 @@ const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ disabled }) => {
   const poll = usePoll();
+  const { t } = useTranslation();
 
   const [showDeletePollDialog, setShowDeletePollDialog] = React.useState(false);
   const duplicateDialog = useDialog();
@@ -94,12 +95,16 @@ const ManagePoll: React.FunctionComponent<{
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger
-          render={<Button variant="ghost" disabled={disabled} />}
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={t("manage", { defaultValue: "Manage" })}
+              disabled={disabled}
+            />
+          }
         >
-          <span>
-            <Trans i18nKey="manage" />
-          </span>
-          <ChevronDownIcon data-icon="inline-end" />
+          <MoreHorizontalIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {canEdit ? (
