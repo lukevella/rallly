@@ -143,7 +143,7 @@ const MobilePoll: React.FunctionComponent = () => {
               </SelectContent>
             </Select>
           ) : (
-            <div className="flex h-9 grow items-center px-1">
+            <div className="flex min-h-9 grow items-center px-1">
               <Participant>
                 <YouAvatar />
                 <ParticipantName>

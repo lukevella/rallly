@@ -154,7 +154,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
         open={isNewParticipantModalOpen}
         onOpenChange={setIsNewParticipantModalOpen}
       >
-        <DialogContent size="sm">
+        <DialogContent size="sm" fullScreenOnMobile>
           <NewParticipantForm
             votes={normalizeVotes(optionIds, form.watch("votes"))}
             onSubmit={(newParticipant) => {
