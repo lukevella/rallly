@@ -366,6 +366,11 @@
    * the token lands on body, where scaling it cannot feed back into rem. */
   html {
     @apply h-full font-sans text-gray-700;
+    /* Preflight hides the native tap highlight, which leaves links and other
+     * tappable elements with no press feedback on touch devices (hover:
+     * never fires there). Restore a subtle one; components with their own
+     * active: styles opt out. */
+    -webkit-tap-highlight-color: var(--accent);
   }
   *,
   ::before,

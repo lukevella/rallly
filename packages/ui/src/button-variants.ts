@@ -4,7 +4,7 @@ import { cn } from "./lib/utils";
 
 export const buttonVariants = cva(
   cn(
-    "group inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full font-normal tracking-tight transition-[background-color,color,transform] ease-out disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-90",
+    "group inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full font-normal tracking-tight transition-[background-color,color,transform] ease-out [-webkit-tap-highlight-color:transparent] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:opacity-90",
   ),
   {
     variants: {
@@ -14,12 +14,12 @@ export const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive-hover not-aria-[haspopup]:active:scale-[.98] active:bg-destructive-active motion-reduce:active:scale-100",
         default:
-          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent not-aria-[haspopup]:active:scale-[.98] data-popup-open:bg-accent motion-reduce:active:scale-100 dark:bg-foreground/5",
+          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent not-aria-[haspopup]:active:scale-[.98] active:bg-accent data-popup-open:bg-accent motion-reduce:active:scale-100 dark:bg-foreground/5",
         ghost:
-          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent not-aria-[haspopup]:active:scale-[.98] data-popup-open:bg-accent motion-reduce:active:scale-100 [&>svg]:opacity-75",
+          "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent not-aria-[haspopup]:active:scale-[.98] active:bg-accent data-popup-open:bg-accent motion-reduce:active:scale-100 [&>svg]:opacity-75",
         actionBar:
-          "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 not-aria-[haspopup]:active:scale-[.98] data-popup-open:bg-action-bar-foreground/20 motion-reduce:active:scale-100",
-        link: "border-transparent text-primary underline-offset-4 hover:underline",
+          "border-transparent bg-action-bar text-action-bar-foreground hover:bg-action-bar-foreground/10 not-aria-[haspopup]:active:scale-[.98] active:bg-action-bar-foreground/20 data-popup-open:bg-action-bar-foreground/20 motion-reduce:active:scale-100",
+        link: "border-transparent text-primary underline-offset-4 hover:underline active:opacity-70",
       },
       size: {
         default:
