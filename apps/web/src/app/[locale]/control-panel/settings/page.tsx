@@ -16,7 +16,7 @@ import {
 import { getInstanceSettings } from "@/features/instance-settings/data";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { Trans } from "@/i18n/client";
-import { isSelfHosted } from "@/lib/constants";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { FooterLinksField } from "./footer-links-field";
 import { InstanceSettingsForm } from "./instance-settings-form";
 
@@ -69,7 +69,7 @@ export default async function InstanceSettingsPage() {
               <InstanceSettingsForm defaultValue={instanceSettings} />
             </PageSectionContent>
           </PageSection>
-          {isSelfHosted ? (
+          {isFeatureEnabled("customFooterLinks") ? (
             <PageSection variant="card">
               <PageSectionHeader>
                 <PageSectionTitle>
