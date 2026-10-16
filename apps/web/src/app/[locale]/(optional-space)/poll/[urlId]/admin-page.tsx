@@ -26,7 +26,7 @@ export function AdminPage({
     manageableSpace.id === poll.spaceId;
 
   return (
-    <div className="space-y-3 lg:space-y-4">
+    <div className="flex flex-1 flex-col gap-3 lg:gap-4">
       <GuestPollAlert />
       <EventCard
         description={

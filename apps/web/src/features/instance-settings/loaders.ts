@@ -55,3 +55,16 @@ export const loadFooterLinks = cache(async () => {
 
   return footerLinks;
 });
+
+/**
+ * Footer links for the invite and admin poll pages. Cloud's policy links are
+ * left off these pages for now, since the comments pill covers them on
+ * mobile; self-hosted operators' links still show.
+ */
+export const loadPollFooterLinks = cache(async () => {
+  if (!isFeatureEnabled("customFooterLinks")) {
+    return [];
+  }
+
+  return loadFooterLinks();
+});

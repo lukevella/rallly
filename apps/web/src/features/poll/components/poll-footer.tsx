@@ -17,7 +17,9 @@ const LOGO_MASK = "url(/static/logo.svg) center / contain no-repeat";
  *
  * Attribution and footer links are independent. Attribution can be hidden per
  * instance or per space; the instance's footer links carry legal disclosures
- * and are shown regardless.
+ * and are shown regardless. The links take `mt-auto`, so a page that renders
+ * this in a flex column pins them to the bottom of the viewport when its
+ * content is short.
  */
 export function PollFooter({
   footerLinks = [],
@@ -39,22 +41,30 @@ export function PollFooter({
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 py-3 text-center text-muted-foreground text-sm">
-      <InstanceFooterLinks links={footerLinks} />
-      {isAttributionHidden ? null : attributionAction ? (
-        <span className={cn(pillClassName, "gap-1.5 pr-2")}>
-          <PoweredByLink className="inline-flex h-full items-center gap-2" />
-          {attributionAction}
-        </span>
-      ) : (
-        <PoweredByLink
-          className={cn(
-            pillClassName,
-            "transition-[background-color,transform] ease-out hover:bg-gray-50 active:scale-[.98] motion-reduce:active:scale-100 dark:hover:bg-[color-mix(in_oklab,var(--color-gray-800),var(--color-gray-700)_25%)]",
+    <>
+      {isAttributionHidden ? null : (
+        <div className="flex justify-center py-3">
+          {attributionAction ? (
+            <span className={cn(pillClassName, "gap-1.5 pr-2")}>
+              <PoweredByLink className="inline-flex h-full items-center gap-2" />
+              {attributionAction}
+            </span>
+          ) : (
+            <PoweredByLink
+              className={cn(
+                pillClassName,
+                "transition-[background-color,transform] ease-out hover:bg-gray-50 active:scale-[.98] motion-reduce:active:scale-100 dark:hover:bg-[color-mix(in_oklab,var(--color-gray-800),var(--color-gray-700)_25%)]",
+              )}
+            />
           )}
-        />
+        </div>
       )}
-    </div>
+      {footerLinks.length > 0 ? (
+        <footer className="mt-auto pt-8 pb-3">
+          <InstanceFooterLinks links={footerLinks} />
+        </footer>
+      ) : null}
+    </>
   );
 }
 

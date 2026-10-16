@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { loadFooterLinks } from "@/features/instance-settings/loaders";
+import { loadPollFooterLinks } from "@/features/instance-settings/loaders";
 import { loadOptionalActiveSpace } from "@/features/space/loaders";
 import { AdminPageLoader } from "./admin-page-loader";
 
@@ -8,7 +8,7 @@ import { AdminPageLoader } from "./admin-page-loader";
 // boundary they can be loaded from.
 async function AdminPageWithFooterLinks() {
   const [footerLinks, activeSpace] = await Promise.all([
-    loadFooterLinks(),
+    loadPollFooterLinks(),
     loadOptionalActiveSpace(),
   ]);
 

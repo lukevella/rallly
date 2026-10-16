@@ -12,12 +12,12 @@ export function InstanceFooterLinks({
   }
 
   return (
-    <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+    <nav className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
       {links.map((link) => (
         <a
           key={`${link.href}:${link.label}`}
           href={link.href}
-          className="text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
+          className="text-muted-foreground text-xs underline-offset-4 hover:text-foreground hover:underline"
           rel="noreferrer"
         >
           {link.label}

@@ -21,7 +21,7 @@ export function PollPageShell({
 
   return (
     <div
-      className="page-bg-gray-100 relative h-dvh overflow-auto dark:bg-gray-900"
+      className="page-bg-gray-100 relative flex h-dvh flex-col overflow-auto dark:bg-gray-900"
       onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 0)}
     >
       <div
@@ -35,8 +35,14 @@ export function PollPageShell({
           <div className="flex shrink-0 items-center gap-x-2">{actions}</div>
         </div>
       </div>
-      <main id="main-content" tabIndex={-1} className="p-3">
-        <div className="mx-auto max-w-4xl space-y-3">{children}</div>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex flex-1 flex-col p-3"
+      >
+        <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-3">
+          {children}
+        </div>
       </main>
     </div>
   );

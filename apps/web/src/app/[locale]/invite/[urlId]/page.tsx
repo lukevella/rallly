@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
-import { loadFooterLinks } from "@/features/instance-settings/loaders";
+import {
+  loadFooterLinks,
+  loadPollFooterLinks,
+} from "@/features/instance-settings/loaders";
 import { PollProvider } from "@/features/poll/client";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
@@ -64,7 +67,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     loadInvitePoll({ pollId: urlId, token }),
     getLocale(),
     getDeviceDateTimeConfig(),
-    loadFooterLinks(),
+    loadPollFooterLinks(),
     loadCanManagePoll(urlId),
   ]);
 
