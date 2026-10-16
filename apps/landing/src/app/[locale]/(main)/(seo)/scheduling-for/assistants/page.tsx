@@ -248,7 +248,7 @@ export async function generateMetadata(props: {
     description: t("assistantsMetaDescription", {
       ns: "home",
       defaultValue:
-        "Rallly is a free scheduling tool for executive, administrative and personal assistants. Coordinate meetings across busy calendars and time zones with one link. No account needed to respond.",
+        "Rallly is a free scheduling tool for executive assistants. Coordinate busy calendars across time zones with one link. No account needed to respond.",
     }),
   };
 }

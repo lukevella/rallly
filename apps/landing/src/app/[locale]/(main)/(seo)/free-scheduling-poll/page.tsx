@@ -404,7 +404,7 @@ export async function generateMetadata(props: {
     description: t("freeSchedulingPollMetaDescription", {
       ns: "home",
       defaultValue:
-        "Create a free scheduling poll in seconds. Propose times, share a link, and see when everyone is free. Works as a meeting poll, availability poll, or calendar poll.",
+        "Create a free scheduling poll in seconds. Propose times, share a link, and see when everyone is free. Works as a meeting, availability or calendar poll.",
     }),
   };
 }
