@@ -16,6 +16,7 @@ export interface FeatureFlagConfig {
   updateCheck: boolean;
   reviewRequests: boolean;
   openPollLimit: boolean;
+  customFooterLinks: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;

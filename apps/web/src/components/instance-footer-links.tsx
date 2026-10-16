@@ -1,12 +1,6 @@
 /**
- * Footer links configured by a self-hosted instance administrator, typically
- * legal disclosures such as an Impressum or privacy policy.
- *
- * Labels are admin-typed and therefore not localised — the linked documents
- * are themselves single-language, so a German Datenschutzerklärung stays
- * labelled in German for an English-speaking visitor.
- *
- * Hrefs are validated on write and again on read (see instance-settings/data.ts).
+ * Footer links carrying legal disclosures such as an Impressum or privacy
+ * policy. See `loadFooterLinks` for where they come from.
  */
 export function InstanceFooterLinks({
   links,

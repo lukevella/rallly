@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { isSelfHosted } from "@/lib/constants";
+import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { getInstanceSettings } from "./data";
 import { getUpdateStatus } from "./service";
@@ -24,15 +24,31 @@ export const loadUpdateStatus = cache(async () => {
  * Footer links for the login and invite page footers.
  *
  * Deliberately not routed through the branding config: these carry legal
- * disclosures (Impressum, privacy policy) that self-hosted instances are
- * required to make reachable, so they are not gated behind the white label
- * add-on the way the rest of the branding settings are.
+ * disclosures (Impressum, privacy policy) that instances are required to make
+ * reachable, so they are not gated behind the white label add-on the way the
+ * rest of the branding settings are.
  *
- * Cloud has its own static links (RAL-1563) and never reads this column.
+ * Cloud links Rallly's own policies, labelled per locale. Self-hosted serves
+ * whatever the operator configured, labels as typed.
  */
 export const loadFooterLinks = cache(async () => {
-  if (!isSelfHosted) {
-    return [];
+  if (!isFeatureEnabled("customFooterLinks")) {
+    const { t } = await getTranslation();
+
+    return [
+      {
+        label: t("privacyPolicy", { defaultValue: "Privacy policy" }),
+        href: "https://rallly.co/privacy-policy",
+      },
+      {
+        label: t("termsOfUse", { defaultValue: "Terms of use" }),
+        href: "https://rallly.co/terms-of-use",
+      },
+      {
+        label: t("cookiePolicy", { defaultValue: "Cookie policy" }),
+        href: "https://rallly.co/cookie-policy",
+      },
+    ];
   }
 
   const { footerLinks } = await getInstanceSettings();
