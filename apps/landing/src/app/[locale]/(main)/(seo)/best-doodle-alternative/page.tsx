@@ -488,10 +488,13 @@ export async function generateMetadata(props: {
     title: {
       absolute: t("doodleAlternativeMetaTitle", {
         ns: "home",
+        defaultValue: "Best Free Doodle Poll Alternative | Rallly",
       }),
     },
     description: t("doodleAlternativeMetaDescription", {
       ns: "home",
+      defaultValue:
+        "Doodle's free plan allows one group poll. Rallly is a free Doodle poll alternative with no ads, and participants vote without an account.",
     }),
   };
 }

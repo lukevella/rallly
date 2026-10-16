@@ -252,7 +252,7 @@ export async function generateMetadata(props: {
     description: t("legalMetaDescription", {
       ns: "home",
       defaultValue:
-        "Rallly is a free scheduling tool for mediations, hearings and client conferences. Find a date that works for both sides with one link. No account needed to respond.",
+        "A free scheduling tool for mediations, hearings and client conferences. Find a date both sides can make with one link. No account needed to respond.",
     }),
   };
 }
