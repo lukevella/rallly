@@ -5,7 +5,6 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { XIcon } from "lucide-react";
 import React from "react";
-import { buttonVariants } from "./button-variants";
 import { cn } from "./lib/utils";
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
@@ -50,7 +49,7 @@ function DialogOverlay({
 
 const dialogVariants = cva(
   cn(
-    "data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 relative my-auto flex w-full shrink-0 flex-col overflow-hidden rounded-2xl border border-popover-border bg-popover shadow-lg outline-none duration-200 data-closed:animate-out data-open:animate-in",
+    "data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded-2xl border border-popover-border bg-popover shadow-lg outline-none duration-200 data-closed:animate-out data-open:animate-in",
   ),
   {
     variants: {
@@ -75,64 +74,33 @@ function DialogContent({
   children,
   showCloseButton = true,
   size = "md",
-  fullScreenOnMobile = false,
   ...props
 }: DialogPrimitive.Popup.Props &
   VariantProps<typeof dialogVariants> & {
     showCloseButton?: boolean;
-    /**
-     * Below the `sm` breakpoint the dialog fills the viewport and a short
-     * dialog's footer sits on the bottom edge. Use for form dialogs, not
-     * confirmations.
-     */
-    fullScreenOnMobile?: boolean;
   }) {
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
-      {/* A dialog taller than the screen scrolls as one card inside the
-          viewport rather than scrolling its own content. */}
-      <DialogPrimitive.Viewport
-        data-slot="dialog-viewport"
-        className={cn(
-          "fixed inset-0 z-50 flex flex-col items-center overflow-y-auto overscroll-contain p-4",
-          fullScreenOnMobile && "max-sm:p-0",
-        )}
+      <DialogPrimitive.Popup
+        data-slot="dialog-content"
+        className={cn(dialogVariants({ size }), className)}
+        data-close-button={showCloseButton ? "" : undefined}
+        {...props}
       >
-        <DialogPrimitive.Popup
-          data-slot="dialog-content"
-          className={cn(
-            dialogVariants({ size }),
-            fullScreenOnMobile &&
-              "max-sm:my-0 max-sm:min-h-dvh max-sm:rounded-none max-sm:border-0",
-            className,
-          )}
-          data-close-button={showCloseButton ? "" : undefined}
-          {...props}
+        <div
+          data-slot="dialog-scroller"
+          className="grid min-h-0 grow gap-4 overflow-y-auto overscroll-contain p-4"
         >
-          <div
-            data-slot="dialog-scroller"
-            className={cn(
-              "grid gap-4 p-4",
-              fullScreenOnMobile &&
-                "max-sm:flex max-sm:grow max-sm:flex-col max-sm:*:data-[slot=dialog-footer]:mt-auto! max-sm:*:data-[slot=dialog-footer]:pb-[max(0.75rem,env(safe-area-inset-bottom))]!",
-            )}
-          >
-            {children}
-          </div>
-          {showCloseButton && (
-            <DialogClose
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "absolute top-2 right-2 z-20 max-sm:top-1 max-sm:right-1 max-sm:size-10",
-              )}
-            >
-              <XIcon />
-              <span className="sr-only">Close</span>
-            </DialogClose>
-          )}
-        </DialogPrimitive.Popup>
-      </DialogPrimitive.Viewport>
+          {children}
+        </div>
+        {showCloseButton && (
+          <DialogClose className="absolute top-4 right-4 z-20 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+        )}
+      </DialogPrimitive.Popup>
     </DialogPortal>
   );
 }
@@ -142,9 +110,9 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-header"
       className={cn(
-        "dialog-edge:pb-2",
+        "dialog-edge:sticky dialog-edge:-top-4 dialog-edge:z-10 dialog-edge:-mx-4 dialog-edge:-mt-4 dialog-edge:bg-popover dialog-edge:px-4 dialog-edge:pt-4 dialog-edge:pb-2",
         // Only the first row sits beside the close button.
-        "dialog-edge:in-data-close-button:*:first:pr-10",
+        "dialog-edge:in-data-close-button:*:first:pr-8",
         className,
       )}
       {...props}
@@ -158,7 +126,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="dialog-footer"
       className={cn(
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        "dialog-edge:-mx-4 dialog-edge:mt-2 dialog-edge:-mb-4 dialog-edge:border-popover-border dialog-edge:border-t dialog-edge:bg-card dialog-edge:px-4 dialog-edge:py-3",
+        "dialog-edge:sticky dialog-edge:-bottom-4 dialog-edge:z-10 dialog-edge:-mx-4 dialog-edge:mt-2 dialog-edge:-mb-4 dialog-edge:border-popover-border dialog-edge:border-t dialog-edge:bg-card dialog-edge:px-4 dialog-edge:py-3",
         className,
       )}
       {...props}

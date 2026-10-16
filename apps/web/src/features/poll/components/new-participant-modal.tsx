@@ -253,9 +253,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   return (
     <>
-      {/* The vote that opened this dialog already says what it is for. The
-          title stays in the DOM to name the dialog via aria-labelledby. */}
-      <DialogHeader className="max-sm:hidden">
+      <DialogHeader>
         <DialogTitle>
           <Trans i18nKey="newParticipant" defaults="New participant" />
         </DialogTitle>
@@ -434,12 +432,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         </form>
       </Form>
       <DialogFooter>
-        <Button
-          type="button"
-          variant="ghost"
-          className="max-sm:hidden"
-          onClick={props.onCancel}
-        >
+        <Button type="button" variant="ghost" onClick={props.onCancel}>
           {t("back")}
         </Button>
         <Button

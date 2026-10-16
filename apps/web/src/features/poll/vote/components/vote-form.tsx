@@ -286,7 +286,7 @@ export function VoteForm({
         open={isNewParticipantOpen}
         onOpenChange={setIsNewParticipantOpen}
       >
-        <DialogContent size="sm" fullScreenOnMobile>
+        <DialogContent size="sm">
           <NewParticipantForm
             pollId={pollId}
             requireParticipantEmail={requireParticipantEmail}

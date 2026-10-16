@@ -22,14 +22,13 @@ export const buttonVariants = cva(
         link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
-        // Below sm the default sizes grow to a 44px touch target.
         default:
-          "h-9 gap-1.5 px-4 text-sm has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 max-sm:h-11 max-sm:gap-2 max-sm:px-5 max-sm:text-base max-sm:has-data-[icon=inline-end]:pr-3.5 max-sm:has-data-[icon=inline-start]:pl-3.5",
+          "h-9 gap-1.5 px-4 text-sm has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
         xs: "h-6 gap-1 px-2.5 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-7 gap-1.5 px-3 text-sm has-data-[icon=inline-end]:pr-1.75 has-data-[icon=inline-start]:pl-1.75 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-10 gap-1.5 px-4.5 text-sm has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         xl: "h-12 gap-2 px-5.5 text-base has-data-[icon=inline-end]:pr-3.75 has-data-[icon=inline-start]:pl-3.75 [&_svg:not([class*='size-'])]:size-4.5",
-        icon: "size-9 max-sm:size-11",
+        icon: "size-9",
         "icon-xs": "size-6 [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-7",
         "icon-lg": "size-10",
