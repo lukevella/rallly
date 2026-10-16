@@ -53,7 +53,4 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // Caps open polls per organizer by tier. Billing only: the ladder sells
   // Pro, and without billing every space already has every paid feature.
   openPollLimit: isOpenPollLimitEnabled,
-  // Operators publish their own legal notices. Cloud links Rallly's policies
-  // from source so a wrong URL goes through review, not a database row.
-  customFooterLinks: isSelfHosted,
 };
