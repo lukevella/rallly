@@ -77,7 +77,8 @@ export const proxy = async (req: NextRequest) => {
 // `/v1` is the public API on the API host: next.config rewrites it to
 // `/api/v1`, and that rewrite only runs when this proxy does not claim the
 // request first. Without the exclusion the locale rewrite sends it to the
-// not-found route.
+// not-found route. `/z1tk88rw` is the Sentry tunnel (`tunnelRoute` in
+// next.config.ts) and is excluded for the same reason.
 export const config = {
-  matcher: ["/((?!api|v1|_next/static|_next/image|static|.*\\.).*)"],
+  matcher: ["/((?!api|v1|z1tk88rw|_next/static|_next/image|static|.*\\.).*)"],
 };
