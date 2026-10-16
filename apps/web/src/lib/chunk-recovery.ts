@@ -1,10 +1,13 @@
 // Turbopack throws this when a chunk has registered but lacks a module the
 // page expects. WebKit browsers hit it since static assets moved to a separate
-// host, and a fresh load usually works, so recover by reloading once and send
-// Sentry what the browser actually received for each chunk.
+// host. Failures stick to a visitor across deploys and a plain reload fails
+// the same way from cache, which points to a bad cached copy of an immutable
+// chunk. So recover by refetching every static asset past the cache, then
+// reloading once, and send Sentry what the browser received for each chunk.
 
 const RELOAD_KEY = "rallly:chunk-reload-at";
 const RELOAD_COOLDOWN_MS = 5 * 60 * 1000;
+const REFETCH_TIMEOUT_MS = 3000;
 
 export function isModuleFactoryError(error: unknown) {
   const message =
@@ -83,5 +86,39 @@ export function reloadOnceForChunkError(error: unknown) {
   }
   // Let Sentry hand its event to the transport first; it uses keepalive, so
   // the request survives the navigation.
-  setTimeout(() => window.location.reload(), 0);
+  setTimeout(() => {
+    void refetchStaticAssets(
+      staticAssetUrls(performance.getEntriesByType("resource")),
+    ).finally(() => window.location.reload());
+  }, 0);
+}
+
+export function staticAssetUrls(entries: Pick<PerformanceEntry, "name">[]) {
+  return [
+    ...new Set(
+      entries
+        .map((entry) => entry.name)
+        .filter((name) => name.includes("/_next/static/")),
+    ),
+  ];
+}
+
+// cache: "reload" skips the HTTP cache and stores the fresh response, which
+// overwrites a bad copy. Chunk script tags carry no crossorigin attribute, so
+// the request mirrors theirs (no-cors, credentials included) to hit the same
+// cache entry.
+async function refetchStaticAssets(urls: string[]) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REFETCH_TIMEOUT_MS);
+  await Promise.allSettled(
+    urls.map((url) =>
+      fetch(url, {
+        cache: "reload",
+        mode: "no-cors",
+        credentials: "include",
+        signal: controller.signal,
+      }),
+    ),
+  );
+  clearTimeout(timeout);
 }

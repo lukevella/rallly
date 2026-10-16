@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   isModuleFactoryError,
   reloadOnceForChunkError,
+  staticAssetUrls,
   summarizeStaticAssets,
 } from "./chunk-recovery";
 
@@ -56,39 +57,80 @@ describe("summarizeStaticAssets", () => {
   });
 });
 
+describe("staticAssetUrls", () => {
+  it("keeps each Next static asset once", () => {
+    const chunk =
+      "https://static.rallly.co/_next/static/immutable/chunks/2dixsi-13gzup.js";
+    expect(
+      staticAssetUrls([
+        { name: chunk },
+        { name: chunk },
+        { name: "https://b.rallly.co/decide" },
+      ]),
+    ).toEqual([chunk]);
+  });
+});
+
 describe("reloadOnceForChunkError", () => {
   const reload = vi.fn();
+  const fetch = vi.fn();
+  const chunk =
+    "https://static.rallly.co/_next/static/immutable/chunks/2dixsi-13gzup.js";
 
   beforeEach(() => {
     vi.useFakeTimers();
     vi.stubGlobal("location", { ...window.location, reload });
+    vi.stubGlobal("fetch", fetch.mockResolvedValue(new Response()));
+    vi.spyOn(performance, "getEntriesByType").mockReturnValue([
+      { name: chunk } as PerformanceEntry,
+    ]);
     window.sessionStorage.clear();
   });
 
   afterEach(() => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
     reload.mockReset();
+    fetch.mockReset();
   });
 
-  it("reloads once and not again within the cooldown", () => {
+  it("refetches static assets past the cache before reloading", async () => {
     reloadOnceForChunkError(factoryError);
-    reloadOnceForChunkError(factoryError);
-    vi.runAllTimers();
+    await vi.runAllTimersAsync();
+    expect(fetch).toHaveBeenCalledWith(
+      chunk,
+      expect.objectContaining({ cache: "reload", mode: "no-cors" }),
+    );
     expect(reload).toHaveBeenCalledTimes(1);
   });
 
-  it("reloads again after the cooldown", () => {
+  it("still reloads when a refetch fails", async () => {
+    fetch.mockRejectedValue(new TypeError("Load failed"));
     reloadOnceForChunkError(factoryError);
-    vi.advanceTimersByTime(5 * 60 * 1000 + 1);
+    await vi.runAllTimersAsync();
+    expect(reload).toHaveBeenCalledTimes(1);
+  });
+
+  it("reloads once and not again within the cooldown", async () => {
     reloadOnceForChunkError(factoryError);
-    vi.runAllTimers();
+    reloadOnceForChunkError(factoryError);
+    await vi.runAllTimersAsync();
+    expect(reload).toHaveBeenCalledTimes(1);
+  });
+
+  it("reloads again after the cooldown", async () => {
+    reloadOnceForChunkError(factoryError);
+    await vi.advanceTimersByTimeAsync(5 * 60 * 1000 + 1);
+    reloadOnceForChunkError(factoryError);
+    await vi.runAllTimersAsync();
     expect(reload).toHaveBeenCalledTimes(2);
   });
 
-  it("does not reload for other errors", () => {
+  it("does not reload for other errors", async () => {
     reloadOnceForChunkError(new Error("boom"));
-    vi.runAllTimers();
+    await vi.runAllTimersAsync();
     expect(reload).not.toHaveBeenCalled();
+    expect(fetch).not.toHaveBeenCalled();
   });
 });
