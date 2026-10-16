@@ -19,6 +19,7 @@ import {
 import { getStripe } from "@/features/billing/service";
 import {
   getSubscriptionDetails,
+  isActivationEvent,
   isSubscriptionActive,
   toDate,
 } from "@/features/billing/webhook/utils";
@@ -67,6 +68,51 @@ async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
   }
 
   return tier;
+}
+
+async function queueSubscriptionFeedbackEmail(
+  tx: Prisma.TransactionClient,
+  { userId, subscriptionId }: { userId: string; subscriptionId: string },
+) {
+  // Stripe can deliver the same event more than once
+  const alreadyQueued = await tx.queuedEmail.count({
+    where: { kind: "subscription_feedback", batchId: subscriptionId },
+  });
+  if (alreadyQueued === 0) {
+    await queueEmails(tx, {
+      kind: "subscription_feedback",
+      userId,
+      batchId: subscriptionId,
+      subjectIds: [subscriptionId],
+      sendAfter: new Date(Date.now() + subscriptionFeedbackEmailDelayMs),
+    });
+  }
+}
+
+function captureSubscriptionCreate({
+  userId,
+  spaceId,
+  interval,
+  tier,
+}: {
+  userId: string;
+  spaceId: string;
+  interval: string;
+  tier: string;
+}) {
+  posthog()?.capture({
+    distinctId: userId,
+    event: "subscription_create",
+    properties: {
+      interval,
+      $set: {
+        tier,
+      },
+    },
+    groups: {
+      space: spaceId,
+    },
+  });
 }
 
 async function createOrUpdatePaymentMethod(
@@ -229,6 +275,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
+  const activated = isActivationEvent(event);
   const {
     priceId,
     currency,
@@ -309,20 +356,11 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
       },
     });
 
-    if (isActive) {
-      // Stripe can deliver the same event more than once
-      const alreadyQueued = await tx.queuedEmail.count({
-        where: { kind: "subscription_feedback", batchId: subscription.id },
+    if (activated) {
+      await queueSubscriptionFeedbackEmail(tx, {
+        userId,
+        subscriptionId: subscription.id,
       });
-      if (alreadyQueued === 0) {
-        await queueEmails(tx, {
-          kind: "subscription_feedback",
-          userId,
-          batchId: subscription.id,
-          subjectIds: [subscription.id],
-          sendAfter: new Date(Date.now() + subscriptionFeedbackEmailDelayMs),
-        });
-      }
     }
 
     return syncSpaceTier(tx, spaceId);
@@ -337,19 +375,9 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     },
   });
 
-  posthog()?.capture({
-    distinctId: userId,
-    event: "subscription_create",
-    properties: {
-      interval,
-      $set: {
-        tier,
-      },
-    },
-    groups: {
-      space: spaceId,
-    },
-  });
+  if (activated) {
+    captureSubscriptionCreate({ userId, spaceId, interval, tier });
+  }
 }
 
 async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
@@ -459,6 +487,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
+  const activated = isActivationEvent(event);
   const {
     priceId,
     currency,
@@ -533,6 +562,13 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       },
     });
 
+    if (activated) {
+      await queueSubscriptionFeedbackEmail(tx, {
+        userId,
+        subscriptionId: subscription.id,
+      });
+    }
+
     return syncSpaceTier(tx, spaceId);
   });
 
@@ -559,6 +595,10 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       space: spaceId,
     },
   });
+
+  if (activated) {
+    captureSubscriptionCreate({ userId, spaceId, interval, tier });
+  }
 }
 
 async function onPaymentMethodAttached(event: Stripe.Event) {
