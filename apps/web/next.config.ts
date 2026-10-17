@@ -5,7 +5,7 @@
 
 import path from "node:path";
 import createBundleAnalyzer from "@next/bundle-analyzer";
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
 const withBundleAnalyzer = createBundleAnalyzer({
@@ -188,9 +188,6 @@ const sentryWebpackPluginOptions = {
   // drop them. A fixed path rather than `true` because the proxy matcher in
   // src/proxy.ts must exclude it, and `true` picks a new path every build.
   tunnelRoute: "/z1tk88rw",
-
-  // Hides source maps from generated client bundles
-  hideSourceMaps: true,
 };
 
 const withBundleAnalyzerConfig = withBundleAnalyzer(nextConfig);
