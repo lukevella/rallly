@@ -38,6 +38,9 @@ Sentry.init({
     "Load failed",
     "The network connection was lost",
     "The Internet connection appears to be offline",
+    // Thrown by Safari and DuckDuckGo extension content scripts on iOS, not by
+    // the app. Replays show the page rendering normally around it.
+    "Invalid call to runtime.sendMessage",
   ],
 
   beforeSend(event, hint) {
