@@ -1,6 +1,7 @@
 ---
 title: Rallly 3.0 Self-Hosting
 date: "2023-09-13"
+updated: "2026-10-17"
 category: Self-hosting
 excerpt: An exciting announcement for self-hosters.
 ---
@@ -15,7 +16,9 @@ For information on how to self-host your own instance of Rallly, check out the [
 
 ## Pricing
 
-This update is [available for free](https://support.rallly.co/self-hosting/pricing) and allows users to enjoy all the features available here on their own self-hosted instance. If you are willing and able, there is an option to pay a one-time fee which will help support further development of this project.
+_Update, October 2026: self-hosting pricing has changed since this post. Rallly is still open source and free to self-host for a single user. Instances with more than one user need a license key, a one-time purchase priced by the number of users. See the [licensing docs](https://support.rallly.co/self-hosting/licensing) for current tiers._
+
+At launch, this update was available for free and allowed users to enjoy all the features available here on their own self-hosted instance, with an optional one-time fee to support further development of this project.
 
 ## Upgrading from 2.x
 
