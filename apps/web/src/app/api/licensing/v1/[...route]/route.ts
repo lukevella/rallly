@@ -65,9 +65,14 @@ if (env.LICENSE_API_AUTH_TOKEN) {
 
 app.post(
   "/licenses/actions/validate-key",
+  zValidator("json", validateLicenseKeyInputSchema),
   rateLimiter({
+    // rateLimiter's context is not typed with the validator's output, so
+    // reparse the body the validator above already accepted.
     keyGenerator: async (c) => {
-      const { key, fingerprint } = await c.req.json();
+      const { key, fingerprint } = validateLicenseKeyInputSchema.parse(
+        await c.req.json(),
+      );
       return `validate-license-key:${key}:${fingerprint}`;
     },
     windowMs: 60 * 1000,
@@ -78,7 +83,6 @@ app.post(
         })
       : undefined,
   }),
-  zValidator("json", validateLicenseKeyInputSchema),
   async (c) => {
     const { key, fingerprint } = c.req.valid("json");
 
