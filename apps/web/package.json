@@ -44,7 +44,7 @@
     "@rallly/ui": "workspace:*",
     "@rallly/utils": "workspace:*",
     "@scalar/hono-api-reference": "^0.9.30",
-    "@sentry/nextjs": "^10.38.0",
+    "@sentry/nextjs": "^11.8.0",
     "@svgr/webpack": "^8.1.0",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tailwindcss/postcss": "^4.1.18",
