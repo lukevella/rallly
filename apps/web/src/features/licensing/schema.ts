@@ -51,9 +51,17 @@ export type CreateLicenseResponse = z.infer<typeof createLicenseResponseSchema>;
 // Validate License Key
 // =========================
 
+// The public endpoint feeds these into a Redis rate limit key and Postgres
+// text columns, which cap key size and reject NUL bytes.
+const boundedText = (max: number) =>
+  z
+    .string()
+    .max(max)
+    .refine((value) => !value.includes("\0"), "Must not contain NUL bytes");
+
 export const validateLicenseKeyInputSchema = z.object({
-  key: z.string(),
-  fingerprint: z.string().optional(),
+  key: boundedText(64),
+  fingerprint: boundedText(256).optional(),
 });
 export type ValidateLicenseInputKeySchema = z.infer<
   typeof validateLicenseKeyInputSchema
