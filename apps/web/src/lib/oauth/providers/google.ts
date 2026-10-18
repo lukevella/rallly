@@ -1,6 +1,6 @@
 import "server-only";
 
-import { google } from "googleapis";
+import { auth, oauth2 as googleOAuth2 } from "@googleapis/oauth2";
 import type { OAuth2ClientConfig } from "../oauth2";
 import {
   createAuthorizationUrl,
@@ -88,7 +88,7 @@ export class GoogleOAuthClient implements OAuthClient {
 
   async getUserInfo(tokens: OAuthTokens): Promise<UserInfo> {
     try {
-      const oauth2Client = new google.auth.OAuth2({
+      const oauth2Client = new auth.OAuth2({
         clientId: this.clientId,
         clientSecret: this.clientSecret,
       });
@@ -97,7 +97,7 @@ export class GoogleOAuthClient implements OAuthClient {
         refresh_token: tokens.refreshToken,
       });
 
-      const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
+      const oauth2 = googleOAuth2({ version: "v2", auth: oauth2Client });
       const { data: userInfo } = await oauth2.userinfo.get();
 
       if (!userInfo.id || !userInfo.email) {
