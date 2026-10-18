@@ -47,7 +47,10 @@ export function installChunkRegistrationLog() {
     ) => {
       const push = target.push;
       target.push = function (this: unknown, ...entries: unknown[]) {
-        for (const entry of entries) record(entry);
+        // Logging must never stop a chunk from registering.
+        try {
+          for (const entry of entries) record(entry);
+        } catch {}
         return push.apply(this, entries);
       };
     };
