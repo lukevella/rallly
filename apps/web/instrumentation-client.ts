@@ -10,6 +10,7 @@ import {
   isModuleFactoryError,
   reloadOnceForChunkError,
 } from "@/lib/chunk-recovery";
+import { getChunkRegistrationContext } from "@/lib/chunk-registration-log";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
@@ -50,7 +51,17 @@ Sentry.init({
         ...event.tags,
         chunk_reloaded_recently: context.reloadedRecently,
       };
-      event.contexts = { ...event.contexts, chunk_recovery: context };
+      event.contexts = {
+        ...event.contexts,
+        chunk_recovery: context,
+        chunk_registrations: getChunkRegistrationContext(
+          String(
+            hint.originalException instanceof Error
+              ? hint.originalException.message
+              : hint.originalException,
+          ),
+        ),
+      };
     }
     return event;
   },

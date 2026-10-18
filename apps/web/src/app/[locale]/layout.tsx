@@ -19,6 +19,7 @@ import { InstancePolicyProvider } from "@/features/instance-policy/client";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
+import { chunkRegistrationLogScript } from "@/lib/chunk-registration-log";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
@@ -78,6 +79,12 @@ export default async function Root({
       suppressHydrationWarning={true}
       style={brandingStyles}
     >
+      <head>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static diagnostics script with no user input
+          dangerouslySetInnerHTML={{ __html: chunkRegistrationLogScript }}
+        />
+      </head>
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
