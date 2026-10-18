@@ -1,7 +1,7 @@
 import "server-only";
 
-import type { calendar_v3 } from "googleapis";
-import { google } from "googleapis";
+import type { calendar_v3 } from "@googleapis/calendar";
+import { auth, calendar } from "@googleapis/calendar";
 import * as z from "zod";
 import { env } from "@/env";
 import type { CalendarInfo, CalendarService } from "@/features/calendars/types";
@@ -15,7 +15,7 @@ export class GoogleCalendarService implements CalendarService {
   constructor(params: {
     credentials: z.infer<typeof GoogleCalendarService.credentialsSchema>;
   }) {
-    const oauth2Client = new google.auth.OAuth2({
+    const oauth2Client = new auth.OAuth2({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     });
@@ -25,7 +25,7 @@ export class GoogleCalendarService implements CalendarService {
       refresh_token: params.credentials.refreshToken,
     });
 
-    this.client = google.calendar({
+    this.client = calendar({
       version: "v3",
       auth: oauth2Client,
     });
