@@ -12,6 +12,8 @@ import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client/i18n-provider";
 import { getTranslation } from "@/i18n/server";
 
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
   return Object.keys(languages).map((locale) => ({ locale }));
 }
