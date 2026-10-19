@@ -1,11 +1,25 @@
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import {
   getIanaIdAliases,
   normalizeLegacyIanaId,
   toRuntimeCanonicalIanaId,
 } from "@/lib/utils/timezone-schema";
 
+/**
+ * Engines without `Intl.supportedValuesOf` (Chrome < 99, Safari < 15.4 and
+ * forks built on them) get the curated set plus their own zone, instead of a
+ * throw at module scope that takes down every page importing the picker.
+ */
 export function getAllTimezoneIds(): string[] {
-  return Intl.supportedValuesOf("timeZone");
+  if (typeof Intl.supportedValuesOf === "function") {
+    return Intl.supportedValuesOf("timeZone");
+  }
+  const ids = new Set(curatedTimezoneIds);
+  const ownZone = getBrowserTimeZone();
+  if (ownZone) {
+    ids.add(ownZone);
+  }
+  return Array.from(ids);
 }
 
 export function getCityFromTimezoneId(id: string): string {
