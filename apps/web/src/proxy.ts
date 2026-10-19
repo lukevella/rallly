@@ -45,6 +45,11 @@ async function handleMaintenance(req: NextRequest) {
   return NextResponse.redirect(new URL(MAINTENANCE_PATH, nextUrl));
 }
 
+// Email link scanners (Safe Links and similar) send HEAD to every link in an
+// invite or notification email, in bursts. Rendering these pages for them
+// opens a database connection per request for a response with no body.
+const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+(?:\/vote)?\/?$/;
+
 export const proxy = async (req: NextRequest) => {
   const { nextUrl } = req;
   const newUrl = nextUrl.clone();
@@ -57,6 +62,10 @@ export const proxy = async (req: NextRequest) => {
     }
   } else if (pathname === MAINTENANCE_PATH) {
     return NextResponse.redirect(new URL("/", nextUrl));
+  }
+
+  if (req.method === "HEAD" && EMAIL_LINK_PATH.test(pathname)) {
+    return new NextResponse(null, { status: 200 });
   }
 
   const locale = getLocaleFromRequest(req);
