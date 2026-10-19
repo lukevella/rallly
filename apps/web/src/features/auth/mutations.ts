@@ -44,18 +44,6 @@ export const linkAnonymousUser = async (
       select: { email: true },
     });
 
-    if (authenticatedUser?.email) {
-      await prisma.scheduledEventInvite.updateMany({
-        where: {
-          inviteeId: anonymousUserId,
-          inviteeEmail: authenticatedUser.email,
-        },
-        data: {
-          inviteeId: authenticatedUserId,
-        },
-      });
-    }
-
     spaceId = await getActiveSpaceForUser({
       userId: authenticatedUserId,
     });
@@ -83,6 +71,20 @@ export const linkAnonymousUser = async (
     // timeout rolled back merges whose commit landed late, and the guest was
     // then deleted with everything still on it.
     await prisma.$transaction([
+      ...(authenticatedUser?.email
+        ? [
+            prisma.scheduledEventInvite.updateMany({
+              where: {
+                inviteeId: anonymousUserId,
+                inviteeEmail: authenticatedUser.email,
+              },
+              data: {
+                inviteeId: authenticatedUserId,
+              },
+            }),
+          ]
+        : []),
+
       // Transfer polls
       prisma.poll.updateMany({
         where: {
