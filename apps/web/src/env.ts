@@ -116,10 +116,10 @@ export const env = createEnv({
 
     /**
      * Conferencing integrations (Google Meet, Zoom, Microsoft Teams, Webex).
-     * The flag needs at least one provider's OAuth app configured; see
-     * createFinalSchema below.
+     * CONFERENCING_PROVIDERS lists the ones turned on by integration id; each
+     * is offered once its OAuth app below is set too.
      */
-    CONFERENCING_ENABLED: z.enum(["true", "false"]).default("false"),
+    CONFERENCING_PROVIDERS: z.string().optional(),
     ZOOM_CLIENT_ID: z.string().optional(),
     ZOOM_CLIENT_SECRET: z.string().optional(),
     // Signs Zoom's event notifications, including app deauthorization.
@@ -312,7 +312,7 @@ export const env = createEnv({
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    CONFERENCING_ENABLED: process.env.CONFERENCING_ENABLED,
+    CONFERENCING_PROVIDERS: process.env.CONFERENCING_PROVIDERS,
     ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID,
     ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET,
     ZOOM_WEBHOOK_SECRET_TOKEN: process.env.ZOOM_WEBHOOK_SECRET_TOKEN,
@@ -364,6 +364,24 @@ export const env = createEnv({
           path: [env.ZOOM_CLIENT_ID ? "ZOOM_CLIENT_SECRET" : "ZOOM_CLIENT_ID"],
           message:
             "ZOOM_CLIENT_ID and ZOOM_CLIENT_SECRET must be set together.",
+        });
+      }
+
+      const conferencingIds = [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+      ];
+      const unknownConferencing = (env.CONFERENCING_PROVIDERS ?? "")
+        .split(",")
+        .map((entry) => entry.trim().toLowerCase())
+        .filter((entry) => entry && !conferencingIds.includes(entry));
+      if (unknownConferencing.length > 0) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["CONFERENCING_PROVIDERS"],
+          message: `CONFERENCING_PROVIDERS has unknown values: ${unknownConferencing.join(", ")}. Use a comma separated list of ${conferencingIds.join(", ")}.`,
         });
       }
 
