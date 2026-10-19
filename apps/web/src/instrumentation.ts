@@ -12,6 +12,20 @@ export async function register() {
 
     await import("../sentry.server.config");
 
+    // Conferencing is optional, so a switch with no provider behind it must
+    // not stop the server; organizers can still paste their own link.
+    const { getAvailableConferencingProviders, isConferencingEnabled } =
+      await import("@/features/conferencing/constants");
+    if (
+      isConferencingEnabled &&
+      getAvailableConferencingProviders().length === 0
+    ) {
+      const { createLogger } = await import("@rallly/logger");
+      createLogger("conferencing").warn(
+        "CONFERENCING_ENABLED is set but no provider is configured, so none is offered. Set the OAuth app variables for Zoom, Google Meet, Microsoft Teams or Webex.",
+      );
+    }
+
     // On Vercel the house-keeping cron runs the email queue; everywhere else
     // (dev, the self-hosted image) a long-lived server runs it itself. Never
     // during a build, which must not touch the database.

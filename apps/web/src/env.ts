@@ -377,30 +377,5 @@ export const env = createEnv({
             "WEBEX_CLIENT_ID and WEBEX_CLIENT_SECRET must be set together.",
         });
       }
-
-      // A flag that is on with nothing behind it would render an empty
-      // settings page; fail loudly at boot instead of hiding the feature.
-      const hasZoom = Boolean(env.ZOOM_CLIENT_ID && env.ZOOM_CLIENT_SECRET);
-      const hasGoogle = Boolean(
-        env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET,
-      );
-      const hasMicrosoft = Boolean(
-        env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET,
-      );
-      const hasWebex = Boolean(env.WEBEX_CLIENT_ID && env.WEBEX_CLIENT_SECRET);
-      if (
-        env.CONFERENCING_ENABLED === "true" &&
-        !hasZoom &&
-        !hasGoogle &&
-        !hasMicrosoft &&
-        !hasWebex
-      ) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["CONFERENCING_ENABLED"],
-          message:
-            "CONFERENCING_ENABLED is set but no conferencing provider is configured. Set ZOOM_CLIENT_ID and ZOOM_CLIENT_SECRET for Zoom, GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET for Google Meet, MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET for Microsoft Teams, or WEBEX_CLIENT_ID and WEBEX_CLIENT_SECRET for Webex, or turn the flag off.",
-        });
-      }
     }),
 });
