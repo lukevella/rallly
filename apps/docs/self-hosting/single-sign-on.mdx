@@ -60,7 +60,7 @@ Once the claims are present, a Microsoft sign-in whose address Microsoft does no
 </Accordion>
 
 <Accordion title="Using the same registration for Microsoft Teams">
-With `CONFERENCING_ENABLED=true` (see [Video Conferencing](/self-hosting/conferencing)), the Microsoft registration also powers the [Microsoft Teams integration](/integrations/microsoft-teams); there are no separate Teams variables. Add the redirect URI:
+With `microsoft-teams` in `CONFERENCING_PROVIDERS` (see [Video Conferencing](/self-hosting/conferencing)), the Microsoft registration also powers the [Microsoft Teams integration](/integrations/microsoft-teams); there are no separate Teams variables. Add the redirect URI:
 
 ```
 https://<YOUR_DOMAIN>/api/integrations/callback/microsoft-teams

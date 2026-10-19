@@ -12,17 +12,19 @@ export async function register() {
 
     await import("../sentry.server.config");
 
-    // Conferencing is optional, so a switch with no provider behind it must
-    // not stop the server; organizers can still paste their own link.
-    const { getAvailableConferencingProviders, isConferencingEnabled } =
+    // Conferencing is optional, so a provider turned on without its OAuth
+    // app must not stop the server; it is simply not offered.
+    const { enabledConferencingProviders, getConfiguredConferencingProviders } =
       await import("@/features/conferencing/constants");
-    if (
-      isConferencingEnabled &&
-      getAvailableConferencingProviders().length === 0
-    ) {
+    const configured = getConfiguredConferencingProviders();
+    const unconfigured = enabledConferencingProviders.filter(
+      (provider) => !configured.includes(provider),
+    );
+    if (unconfigured.length > 0) {
       const { createLogger } = await import("@rallly/logger");
       createLogger("conferencing").warn(
-        "CONFERENCING_ENABLED is set but no provider is configured, so none is offered. Set the OAuth app variables for Zoom, Google Meet, Microsoft Teams or Webex.",
+        { providers: unconfigured },
+        "CONFERENCING_PROVIDERS lists providers without OAuth app credentials, so they are not offered.",
       );
     }
 

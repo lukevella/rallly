@@ -8,7 +8,7 @@ description: Let organizers add Google Meet, Zoom, Microsoft Teams and Webex lin
 
 With conferencing enabled, organizers connect a Google Meet, Zoom, Microsoft Teams or Webex account in **Settings** > **Conferencing**. When they finalize a poll, Rallly creates the meeting on that account and puts the join link in the event, the calendar invite and the confirmation emails. See the [integration guides](/integrations/google-meet) for what organizers see.
 
-Each provider needs an OAuth app that you register with the provider yourself. Rallly cannot ship one for you, because the redirect URI of an OAuth app is tied to your instance's domain. You can enable any combination of providers; on a self-hosted instance every provider is available on every plan.
+Each provider needs an OAuth app that you register with the provider yourself. Rallly cannot ship one for you, because the redirect URI of an OAuth app is tied to your instance's domain. You turn on each provider separately; on a self-hosted instance every provider is available on every plan.
 
 ## Enable conferencing
 
@@ -17,22 +17,22 @@ Each provider needs an OAuth app that you register with the provider yourself. R
     Follow the setup for each provider you want below. Google Meet and Microsoft Teams reuse the app you may already have for [Single Sign-On](/self-hosting/single-sign-on).
   </Step>
   <Step title="Set the variables">
-    Add `CONFERENCING_ENABLED=true` and the provider's variables to your `.env`.
+    Add the provider's variables to your `.env`, and list it in `CONFERENCING_PROVIDERS`, for example `CONFERENCING_PROVIDERS=google-meet,zoom`.
   </Step>
   <Step title="Restart">
     Run `./rallly.sh restart`. **Conferencing** appears in **Settings** for every user.
   </Step>
 </Steps>
 
-<ParamField path="CONFERENCING_ENABLED" default="false">
-  Turns on **Add video call** on the poll form, where organizers can always paste their own link. Each provider whose OAuth app variables are set is offered there and in **Settings** > **Conferencing**. If no provider is configured, Rallly logs a warning at startup and the Conferencing page says so.
+<ParamField path="CONFERENCING_PROVIDERS">
+  A comma separated list of the providers organizers can use: `google-meet`, `zoom`, `microsoft-teams`, `webex`. A listed provider is offered once its OAuth app variables are set; Google and Microsoft credentials used for sign in never turn on Meet or Teams by themselves. An unknown value stops Rallly from starting. A listed provider without credentials is not offered, Rallly logs a warning at startup, and the Conferencing page says no provider is set up. Organizers can always paste their own video call link, whatever this lists.
 </ParamField>
 
 Every redirect URI below starts with your instance's public address, written as `https://<YOUR_DOMAIN>`. It must match exactly, including the scheme and without a trailing slash.
 
 ## Google Meet
 
-Google Meet uses the same Google OAuth app as Google sign in and Google Calendar. If `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are already set, Google Meet is offered as soon as you set `CONFERENCING_ENABLED=true`, so finish the steps below first.
+Google Meet uses the same Google OAuth app as Google sign in and Google Calendar. Setting the Google variables for sign in does not turn on Google Meet: finish the steps below, then add `google-meet` to `CONFERENCING_PROVIDERS`.
 
 <Accordion title="Setup">
 1. In the [Google Cloud console](https://console.cloud.google.com/), open the project that holds your OAuth client, or create one.
@@ -108,7 +108,7 @@ https://<YOUR_DOMAIN>/api/integrations/zoom/deauthorize
 
 ## Microsoft Teams
 
-Microsoft Teams uses the same Microsoft Entra ID registration as Microsoft sign in, with an extra redirect URI and Graph permissions. If `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` are already set, Teams is offered as soon as you set `CONFERENCING_ENABLED=true`, so finish the steps below first.
+Microsoft Teams uses the same Microsoft Entra ID registration as Microsoft sign in, with an extra redirect URI and Graph permissions. Setting the Microsoft variables for sign in does not turn on Teams: finish the steps below, then add `microsoft-teams` to `CONFERENCING_PROVIDERS`.
 
 <Accordion title="Setup">
 1. Register an application in the [Microsoft Entra admin center](https://entra.microsoft.com/), or open your existing one. See [Single Sign-On](/self-hosting/single-sign-on#microsoft) for sign in.
@@ -164,11 +164,11 @@ https://<YOUR_DOMAIN>/api/integrations/callback/webex
 
 ## Troubleshooting
 
-**Rallly does not start after adding Zoom or Webex.** Only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
+**Rallly does not start after enabling conferencing.** `CONFERENCING_PROVIDERS` has a value that is not a provider, or only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
 
-**Conferencing does not appear in Settings.** `CONFERENCING_ENABLED` is not `true`. Restart after editing `.env`.
+**Conferencing does not appear in Settings.** `CONFERENCING_PROVIDERS` is unset or empty. Restart after editing `.env`.
 
-**Conferencing says no video call providers are set up.** `CONFERENCING_ENABLED` is `true` but no provider's variables are set. Add them as described above and restart.
+**Conferencing says no video call providers are set up, or a provider is missing.** A provider in `CONFERENCING_PROVIDERS` has no credentials. The startup warning in `./rallly.sh logs web` names it; add its variables as described above and restart.
 
 **The provider says the redirect URI does not match** (`redirect_uri_mismatch` on Google). The URI registered with the provider differs from the one Rallly sends. Compare it character by character with the URI above, including `https`, your exact domain and the provider name at the end.
 

@@ -4,7 +4,7 @@ import {
   syncCalendars,
 } from "@/features/calendars/mutations";
 import {
-  isConferencingEnabled,
+  enabledConferencingProviders,
   MICROSOFT_TEAMS_SCOPES,
   WEBEX_SCOPES,
 } from "@/features/conferencing/constants";
@@ -117,7 +117,7 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "google-meet": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("meet") ||
           !env.GOOGLE_CLIENT_ID ||
           !env.GOOGLE_CLIENT_SECRET
         ) {
@@ -140,7 +140,7 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "zoom": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("zoom") ||
           !env.ZOOM_CLIENT_ID ||
           !env.ZOOM_CLIENT_SECRET
         ) {
@@ -159,7 +159,7 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "webex": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("webex") ||
           !env.WEBEX_CLIENT_ID ||
           !env.WEBEX_CLIENT_SECRET
         ) {
@@ -178,7 +178,7 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "microsoft-teams": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("teams") ||
           !env.MICROSOFT_CLIENT_ID ||
           !env.MICROSOFT_CLIENT_SECRET
         ) {
