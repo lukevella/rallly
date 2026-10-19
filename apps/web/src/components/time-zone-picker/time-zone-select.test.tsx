@@ -1,5 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { toRuntimeCanonicalIanaId } from "@/lib/utils/timezone-schema";
 import { render, screen, within } from "@/test/test-utils";
 
@@ -227,5 +228,22 @@ describe("stored value round trip", () => {
     await user.click(option);
 
     expect(onValueChange).toHaveBeenCalledWith("Asia/Kolkata");
+  });
+});
+
+describe("getAllTimezoneIds without Intl.supportedValuesOf", () => {
+  it("falls back to the curated set plus the runtime zone", () => {
+    const original = Intl.supportedValuesOf;
+    // @ts-expect-error simulating an engine that predates the API
+    delete Intl.supportedValuesOf;
+    try {
+      const ids = getAllTimezoneIds();
+      expect(ids).toEqual(
+        expect.arrayContaining(Array.from(curatedTimezoneIds)),
+      );
+      expect(ids).toContain(getBrowserTimeZone());
+    } finally {
+      Intl.supportedValuesOf = original;
+    }
   });
 });
