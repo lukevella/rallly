@@ -60,7 +60,8 @@
               "self-hosting/introduction",
               "self-hosting/installation/docker",
               "self-hosting/configuration",
-              "self-hosting/single-sign-on"
+              "self-hosting/single-sign-on",
+              "self-hosting/conferencing"
             ]
           },
           {
