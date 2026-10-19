@@ -23,7 +23,7 @@ import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
-// The page exists for a user only while some provider is offered to them.
+// The page exists only while the instance offers some provider.
 async function AvailabilityGate() {
   const providers = await loadAvailableConferencingProviders();
   if (providers.length === 0) {

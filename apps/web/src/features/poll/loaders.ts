@@ -246,8 +246,5 @@ export const loadPollConferencingOptions = cache(async (pollId: string) => {
   const { poll } = await loadAdminPoll(pollId);
   const owner = poll.userId ? await getUser(poll.userId) : null;
   const host = owner && !owner.isGuest ? owner : null;
-  return loadConferencingOptions({
-    userId: host?.id ?? null,
-    email: host?.email ?? null,
-  });
+  return loadConferencingOptions({ userId: host?.id ?? null });
 });

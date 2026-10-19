@@ -7,7 +7,6 @@ import {
   getConferencingUri,
   getMicrosoftTeamsAuthority,
   getWebexMeetingWindow,
-  isEmailAllowlisted,
   isTeamsMeetingRefusal,
   meetSpaceResponseSchema,
   meetSpaceToConferencing,
@@ -357,28 +356,5 @@ describe("createZoomUrlValidationResponse", () => {
         .update("qgg8vlvZRS6UYooatFL8Aw")
         .digest("hex"),
     });
-  });
-});
-
-describe("isEmailAllowlisted", () => {
-  const allowlist = "reviewer@zoom.example, Team@Rallly.co";
-
-  it("matches a listed address regardless of case and spacing", () => {
-    expect(isEmailAllowlisted({ email: "team@rallly.co", allowlist })).toBe(
-      true,
-    );
-    expect(
-      isEmailAllowlisted({ email: "Reviewer@Zoom.example", allowlist }),
-    ).toBe(true);
-  });
-
-  it("rejects an address that is not listed", () => {
-    expect(
-      isEmailAllowlisted({ email: "someone@example.com", allowlist }),
-    ).toBe(false);
-  });
-
-  it("rejects a missing address", () => {
-    expect(isEmailAllowlisted({ email: null, allowlist })).toBe(false);
   });
 });
