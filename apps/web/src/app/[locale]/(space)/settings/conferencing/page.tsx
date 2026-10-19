@@ -83,17 +83,24 @@ async function ProviderList() {
   const providers = conferencingProviderSchema.options.filter(
     (provider) => available.includes(provider) || connected.has(provider),
   );
-  if (providers.length === 0) {
-    return <ConferencingEmptyState isAdmin={user.role === "admin"} />;
+  const list =
+    providers.length > 0 ? (
+      <ConferencingProviderList
+        providers={providers.map((provider) => ({
+          provider,
+          connection: connected.get(provider) ?? null,
+        }))}
+      />
+    ) : null;
+  if (available.length === 0) {
+    return (
+      <>
+        <ConferencingEmptyState isAdmin={user.role === "admin"} />
+        {list}
+      </>
+    );
   }
-  return (
-    <ConferencingProviderList
-      providers={providers.map((provider) => ({
-        provider,
-        connection: connected.get(provider) ?? null,
-      }))}
-    />
-  );
+  return list;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
