@@ -198,8 +198,29 @@ export const authLib = betterAuth({
         const { t } = await getTranslation();
         return t("guest");
       },
-      onLinkAccount: async ({ anonymousUser, newUser }) => {
-        await linkAnonymousUser(newUser.user.id, anonymousUser.user.id);
+      // The plugin deletes the guest after onLinkAccount whether or not the
+      // merge worked, and the delete cascades to the guest's polls. Deletion
+      // happens below instead, only once the merge has committed; a guest
+      // whose merge failed keeps its content for support to reassign.
+      disableDeleteAnonymousUser: true,
+      onLinkAccount: async ({ anonymousUser, newUser, ctx }) => {
+        if (newUser.user.id === anonymousUser.user.id) return;
+
+        const { merged } = await linkAnonymousUser(
+          newUser.user.id,
+          anonymousUser.user.id,
+        );
+
+        if (!merged || newUser.user.isAnonymous) return;
+
+        try {
+          await ctx.context.internalAdapter.deleteUser(anonymousUser.user.id);
+        } catch (error) {
+          logger.error(
+            { anonymousUserId: anonymousUser.user.id, error },
+            "Failed to delete anonymous user after linking",
+          );
+        }
       },
     }),
     lastLoginMethod({
