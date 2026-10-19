@@ -148,6 +148,7 @@ model PollActivity {
   @@index([pollId, participantId])
   @@index([pollId, optionId])
   @@index([pollId, inviteId])
+  @@index([userId])
   @@map("poll_activities")
 }
 

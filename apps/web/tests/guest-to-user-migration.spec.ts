@@ -62,6 +62,11 @@ test.describe.serial(() => {
     await expect(
       page.getByRole("heading", { name: "Board Meeting" }),
     ).toBeVisible();
+    const guestPollId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
+    const guestPoll = await prisma.poll.findUnique({
+      where: { id: guestPollId },
+    });
+    expect(guestPoll?.userId).toBeTruthy();
 
     // Step 2: Navigate to registration
     await page.getByRole("link", { name: "Login" }).click();
@@ -85,5 +90,11 @@ test.describe.serial(() => {
       prisma.user.findUnique({ where: { email: testUser.email } }),
     ]);
     expect(poll?.userId).toBe(user?.id);
+
+    // The guest is removed only once its content has moved
+    const guest = await prisma.user.findUnique({
+      where: { id: guestPoll?.userId ?? "" },
+    });
+    expect(guest).toBeNull();
   });
 });
