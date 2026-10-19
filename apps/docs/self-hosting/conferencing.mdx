@@ -20,12 +20,12 @@ Each provider needs an OAuth app that you register with the provider yourself. R
     Add `CONFERENCING_ENABLED=true` and the provider's variables to your `.env`.
   </Step>
   <Step title="Restart">
-    Run `./rallly.sh restart`. **Conferencing** appears in **Settings** for every user once a provider is configured.
+    Run `./rallly.sh restart`. **Conferencing** appears in **Settings** for every user.
   </Step>
 </Steps>
 
 <ParamField path="CONFERENCING_ENABLED" default="false">
-  Turns on **Add video call** on the poll form, where organizers can always paste their own link. Each provider whose OAuth app variables are set is offered there and in **Settings** > **Conferencing**. If no provider is configured, Rallly logs a warning at startup and offers none.
+  Turns on **Add video call** on the poll form, where organizers can always paste their own link. Each provider whose OAuth app variables are set is offered there and in **Settings** > **Conferencing**. If no provider is configured, Rallly logs a warning at startup and the Conferencing page says so.
 </ParamField>
 
 Every redirect URI below starts with your instance's public address, written as `https://<YOUR_DOMAIN>`. It must match exactly, including the scheme and without a trailing slash.
@@ -166,7 +166,9 @@ https://<YOUR_DOMAIN>/api/integrations/callback/webex
 
 **Rallly does not start after adding Zoom or Webex.** Only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
 
-**Conferencing does not appear in Settings.** `CONFERENCING_ENABLED` is not `true`, or no provider's variables are set. Restart after editing `.env`.
+**Conferencing does not appear in Settings.** `CONFERENCING_ENABLED` is not `true`. Restart after editing `.env`.
+
+**Conferencing says no video call providers are set up.** `CONFERENCING_ENABLED` is `true` but no provider's variables are set. Add them as described above and restart.
 
 **The provider says the redirect URI does not match** (`redirect_uri_mismatch` on Google). The URI registered with the provider differs from the one Rallly sends. Compare it character by character with the URI above, including `https`, your exact domain and the provider name at the end.
 

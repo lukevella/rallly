@@ -3,6 +3,9 @@ import type { ConferencingProvider } from "./schema";
 export const isConferencingEnabled =
   process.env.CONFERENCING_ENABLED === "true";
 
+export const CONFERENCING_SETUP_DOCS_URL =
+  "https://support.rallly.co/self-hosting/conferencing";
+
 // A provider is offered when its OAuth app is configured; Google Meet reuses
 // the Google OAuth app the calendars integration already needs, and Microsoft
 // Teams the Microsoft app sign in uses. Webex has an integration of its own.
