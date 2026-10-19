@@ -20,12 +20,12 @@ Each provider needs an OAuth app that you register with the provider yourself. R
     Add `CONFERENCING_ENABLED=true` and the provider's variables to your `.env`.
   </Step>
   <Step title="Restart">
-    Run `./rallly.sh restart`. **Conferencing** appears in **Settings** for every user.
+    Run `./rallly.sh restart`. **Conferencing** appears in **Settings** for every user once a provider is configured.
   </Step>
 </Steps>
 
 <ParamField path="CONFERENCING_ENABLED" default="false">
-  Turns on the Conferencing settings page and the **Add video call** options on the poll form. A provider is offered once its OAuth app variables are set. If this is `true` and no provider is configured, Rallly refuses to start.
+  Turns on **Add video call** on the poll form, where organizers can always paste their own link. Each provider whose OAuth app variables are set is offered there and in **Settings** > **Conferencing**. If no provider is configured, Rallly logs a warning at startup and offers none.
 </ParamField>
 
 Every redirect URI below starts with your instance's public address, written as `https://<YOUR_DOMAIN>`. It must match exactly, including the scheme and without a trailing slash.
@@ -164,7 +164,7 @@ https://<YOUR_DOMAIN>/api/integrations/callback/webex
 
 ## Troubleshooting
 
-**Rallly does not start after enabling conferencing.** `CONFERENCING_ENABLED` is `true` but no provider is configured, or only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
+**Rallly does not start after adding Zoom or Webex.** Only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
 
 **Conferencing does not appear in Settings.** `CONFERENCING_ENABLED` is not `true`, or no provider's variables are set. Restart after editing `.env`.
 
