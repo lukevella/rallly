@@ -126,12 +126,6 @@ export const env = createEnv({
     ZOOM_WEBHOOK_SECRET_TOKEN: z.string().optional(),
     WEBEX_CLIENT_ID: z.string().optional(),
     WEBEX_CLIENT_SECRET: z.string().optional(),
-    // Comma separated. While set, only these accounts are offered the
-    // provider: an unpublished or unverified OAuth app authorizes no one else.
-    GOOGLE_MEET_ALLOWED_EMAILS: z.string().optional(),
-    ZOOM_ALLOWED_EMAILS: z.string().optional(),
-    MICROSOFT_TEAMS_ALLOWED_EMAILS: z.string().optional(),
-    WEBEX_ALLOWED_EMAILS: z.string().optional(),
 
     /**
      * Microsoft app registration, shared by sign in and Microsoft Teams.
@@ -322,12 +316,8 @@ export const env = createEnv({
     ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID,
     ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET,
     ZOOM_WEBHOOK_SECRET_TOKEN: process.env.ZOOM_WEBHOOK_SECRET_TOKEN,
-    ZOOM_ALLOWED_EMAILS: process.env.ZOOM_ALLOWED_EMAILS,
     WEBEX_CLIENT_ID: process.env.WEBEX_CLIENT_ID,
     WEBEX_CLIENT_SECRET: process.env.WEBEX_CLIENT_SECRET,
-    WEBEX_ALLOWED_EMAILS: process.env.WEBEX_ALLOWED_EMAILS,
-    GOOGLE_MEET_ALLOWED_EMAILS: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
-    MICROSOFT_TEAMS_ALLOWED_EMAILS: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
     MICROSOFT_TENANT_ID: process.env.MICROSOFT_TENANT_ID,
     MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
     MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,

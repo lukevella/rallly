@@ -1,5 +1,4 @@
 import type { ConferencingProvider } from "./schema";
-import { isEmailAllowlisted } from "./utils";
 
 export const isConferencingEnabled =
   process.env.CONFERENCING_ENABLED === "true";
@@ -25,40 +24,6 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
     providers.push("webex");
   }
   return providers;
-}
-
-// While a provider's allowlist is set, only the listed accounts are offered
-// it, for a provider whose OAuth app is not yet published or verified and so
-// authorizes nobody else. Only an unset variable opens the provider to
-// everyone; a set but empty list lets nobody in.
-const providerAllowlists: Record<ConferencingProvider, string | undefined> = {
-  meet: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
-  zoom: process.env.ZOOM_ALLOWED_EMAILS,
-  teams: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
-  webex: process.env.WEBEX_ALLOWED_EMAILS,
-};
-
-export function isConferencingProviderAllowedFor({
-  provider,
-  email,
-}: {
-  provider: ConferencingProvider;
-  email: string | null;
-}) {
-  const allowlist = providerAllowlists[provider];
-  return allowlist === undefined || isEmailAllowlisted({ email, allowlist });
-}
-
-// What this user is offered. Conferencing settings exist for a user only
-// while this is non empty.
-export function getAvailableConferencingProvidersFor({
-  email,
-}: {
-  email: string | null;
-}) {
-  return getAvailableConferencingProviders().filter((provider) =>
-    isConferencingProviderAllowedFor({ provider, email }),
-  );
 }
 
 // `offline_access` is what makes Microsoft issue a refresh token.

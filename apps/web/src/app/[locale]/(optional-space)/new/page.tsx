@@ -33,10 +33,7 @@ export default async function Page() {
   }
 
   const [conferencing, openPollUsage] = await Promise.all([
-    loadConferencingOptions({
-      userId,
-      email: user?.email ?? null,
-    }),
+    loadConferencingOptions({ userId }),
     loadOptionalOpenPollUsage(),
   ]);
 
