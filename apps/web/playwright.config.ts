@@ -49,9 +49,10 @@ export default defineConfig({
       __NEXT_PROCESSED_ENV: "true",
     },
   },
-  reporter: [
-    [ci ? "github" : "list"],
-    ["html", { open: !ci ? "on-failure" : "never" }],
-  ],
+  // CI runs sharded; the integration-tests job merges the blob reports
+  // into one HTML report.
+  reporter: ci
+    ? [["github"], ["blob"]]
+    : [["list"], ["html", { open: "on-failure" }]],
   workers: 1,
 });
