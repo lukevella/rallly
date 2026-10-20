@@ -191,7 +191,7 @@ export const upgradeToProAction = authActionClient
       event: "billing:checkout_start",
       properties: {
         interval: period === "yearly" ? "year" : "month",
-        currency,
+        currency: checkoutSession.currency ?? currency,
         nonprofit_discount: Boolean(nonprofitGrantedAt),
       },
       groups: {
