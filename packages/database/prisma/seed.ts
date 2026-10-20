@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
+import { buildPollHistory } from "./seed/activity";
 import {
   eventTypes,
   polls,
@@ -95,9 +96,20 @@ async function main() {
   let participantCount = 0;
   let voteCount = 0;
   let commentCount = 0;
+  let pollInviteCount = 0;
+  let activityCount = 0;
 
-  for (const poll of polls) {
+  for (const [pollIndex, poll] of polls.entries()) {
     const pollId = nextId();
+    const optionIds = poll.options.map(() => nextId());
+    const participantIds = poll.participants.map(() => nextId());
+    const history = buildPollHistory({
+      index: pollIndex,
+      poll,
+      optionIds,
+      participantIds,
+      nextId,
+    });
 
     const kind = poll.options.some((opt) => opt.duration > 0) ? "time" : "date";
 
@@ -119,14 +131,11 @@ async function main() {
         disableComments: poll.disableComments ?? !poll.comments?.length,
         requireParticipantEmail: poll.requireParticipantEmail,
         kind,
+        createdAt: history.createdAt,
       },
     });
 
     // Options
-    const optionIds: string[] = [];
-    for (let i = 0; i < poll.options.length; i++) {
-      optionIds.push(nextId());
-    }
     await prisma.option.createMany({
       data: poll.options.map((opt, i) => ({
         id: optionIds[i],
@@ -138,8 +147,8 @@ async function main() {
     optionCount += poll.options.length;
 
     // Participants + votes
-    for (const part of poll.participants) {
-      const participantId = nextId();
+    for (const [participantIndex, part] of poll.participants.entries()) {
+      const participantId = participantIds[participantIndex];
       await prisma.participant.create({
         data: {
           id: participantId,
@@ -149,6 +158,7 @@ async function main() {
           note: part.note,
           userId: part.userId,
           token: randomUUID().replace(/-/g, ""),
+          createdAt: history.participantCreatedAt[participantIndex],
         },
       });
       participantCount++;
@@ -166,6 +176,21 @@ async function main() {
       voteCount += part.votes.length;
     }
 
+    // Invites + activity history
+    await prisma.pollInvite.createMany({
+      data: history.invites.map((invite) => ({ ...invite, pollId })),
+    });
+    pollInviteCount += history.invites.length;
+
+    await prisma.pollActivity.createMany({
+      data: history.activities.map((activity) => ({
+        id: nextId(),
+        pollId,
+        ...activity,
+      })),
+    });
+    activityCount += history.activities.length;
+
     // Comments
     if (poll.comments?.length) {
       await prisma.comment.createMany({
@@ -182,7 +207,7 @@ async function main() {
   }
 
   console.info(
-    `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments`,
+    `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments, ${pollInviteCount} invites, ${activityCount} activity entries`,
   );
 
   // 7. Event types
