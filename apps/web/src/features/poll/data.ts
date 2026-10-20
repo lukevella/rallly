@@ -372,11 +372,6 @@ export const getPolls = async ({
             image: true,
           },
         },
-        _count: {
-          select: {
-            participants: true,
-          },
-        },
       },
       orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
       skip: (page - 1) * pageSize,
@@ -384,14 +379,27 @@ export const getPolls = async ({
     }),
   ]);
 
-  const optionRanges = await prisma.option.groupBy({
-    by: ["pollId"],
-    where: { pollId: { in: polls.map((poll) => poll.id) } },
-    _min: { startTime: true },
-    _max: { startTime: true },
-  });
+  const pollIds = polls.map((poll) => poll.id);
+  // Counted per page: a relation _count compiles to a GROUP BY over the
+  // whole participants table, joined after the fact
+  const [optionRanges, participantCounts] = await Promise.all([
+    prisma.option.groupBy({
+      by: ["pollId"],
+      where: { pollId: { in: pollIds } },
+      _min: { startTime: true },
+      _max: { startTime: true },
+    }),
+    prisma.participant.groupBy({
+      by: ["pollId"],
+      where: { pollId: { in: pollIds } },
+      _count: { _all: true },
+    }),
+  ]);
   const rangeByPollId = new Map(
     optionRanges.map((range) => [range.pollId, range]),
+  );
+  const participantCountByPollId = new Map(
+    participantCounts.map((row) => [row.pollId, row._count._all]),
   );
 
   const transformedPolls = polls.map((poll) => {
@@ -412,7 +420,7 @@ export const getPolls = async ({
             image: poll.user.image,
           }
         : null,
-      participantCount: poll._count.participants,
+      participantCount: participantCountByPollId.get(poll.id) ?? 0,
       dateRange:
         range?._min.startTime && range._max.startTime
           ? { start: range._min.startTime, end: range._max.startTime }
