@@ -5,6 +5,7 @@ vi.mock("server-only", () => ({}));
 const mockFindMany = vi.fn();
 const mockCount = vi.fn();
 const mockOptionGroupBy = vi.fn();
+const mockParticipantGroupBy = vi.fn();
 
 vi.mock("@rallly/database", () => ({
   prisma: {
@@ -14,6 +15,9 @@ vi.mock("@rallly/database", () => ({
     },
     option: {
       groupBy: (...args: unknown[]) => mockOptionGroupBy(...args),
+    },
+    participant: {
+      groupBy: (...args: unknown[]) => mockParticipantGroupBy(...args),
     },
     $transaction: (operations: Promise<unknown>[]) => Promise.all(operations),
   },
@@ -116,7 +120,7 @@ describe("getPolls", () => {
     vi.clearAllMocks();
   });
 
-  const makeListedPoll = (id: string, participants: number) => ({
+  const makeListedPoll = (id: string) => ({
     id,
     title: `Poll ${id}`,
     status: "open",
@@ -125,7 +129,6 @@ describe("getPolls", () => {
     createdAt: new Date("2025-01-10T12:00:00Z"),
     updatedAt: new Date("2025-01-11T12:00:00Z"),
     user: null,
-    _count: { participants },
   });
 
   it("returns each poll's participant count and option date range", async () => {
@@ -133,11 +136,15 @@ describe("getPolls", () => {
     const end = new Date("2025-02-07T15:00:00Z");
     mockCount.mockResolvedValue(2);
     mockFindMany.mockResolvedValue([
-      makeListedPoll("p1", 3),
-      makeListedPoll("p2", 0),
+      makeListedPoll("p1"),
+      makeListedPoll("p2"),
     ]);
     mockOptionGroupBy.mockResolvedValue([
       { pollId: "p1", _min: { startTime: start }, _max: { startTime: end } },
+    ]);
+    // A poll with no participants has no group
+    mockParticipantGroupBy.mockResolvedValue([
+      { pollId: "p1", _count: { _all: 3 } },
     ]);
 
     const result = await getPolls({ scope: { spaceId } });
@@ -148,6 +155,12 @@ describe("getPolls", () => {
       _min: { startTime: true },
       _max: { startTime: true },
     });
+    expect(mockParticipantGroupBy).toHaveBeenCalledWith({
+      by: ["pollId"],
+      where: { pollId: { in: ["p1", "p2"] } },
+      _count: { _all: true },
+    });
+    expect(mockFindMany.mock.calls[0]?.[0].select).not.toHaveProperty("_count");
     expect(result.polls[0]).toMatchObject({
       id: "p1",
       participantCount: 3,
