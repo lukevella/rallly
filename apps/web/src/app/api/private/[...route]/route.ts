@@ -20,6 +20,10 @@ import {
   listPolls,
 } from "@/features/poll/data";
 import { closePoll, createPoll, deletePoll } from "@/features/poll/mutations";
+import {
+  hasPastPollOptions,
+  PAST_POLL_OPTIONS_MESSAGE,
+} from "@/features/poll/utils";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import type { SlotGeneratorInput } from "@/lib/datetime/slot-generator";
 import {
@@ -272,6 +276,10 @@ app.post(
     },
   }),
   validator("json", createPollInputSchema),
+  /**
+   * Builds a poll from dates or time slots and rejects expired options before
+   * passing the validated schedule to the poll mutation.
+   */
   async (c) => {
     const input = c.req.valid("json");
     const { spaceId, spaceOwnerId } = c.get("apiAuth");
@@ -408,6 +416,17 @@ app.post(
         startTime: new Date(`${date}T00:00:00.000Z`),
         duration: 0,
       }));
+      if (
+        hasPastPollOptions({
+          options,
+          now: new Date(),
+        })
+      ) {
+        return c.json(
+          apiError("VALIDATION_ERROR", PAST_POLL_OPTIONS_MESSAGE),
+          400,
+        );
+      }
 
       const poll = await createPoll({
         userId: organizerUserId,
@@ -478,6 +497,19 @@ app.post(
           "TOO_MANY_OPTIONS",
           `Too many options generated (${options.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
         ),
+        400,
+      );
+    }
+
+    if (
+      hasPastPollOptions({
+        options,
+        now: new Date(),
+        timeZone,
+      })
+    ) {
+      return c.json(
+        apiError("VALIDATION_ERROR", PAST_POLL_OPTIONS_MESSAGE),
         400,
       );
     }

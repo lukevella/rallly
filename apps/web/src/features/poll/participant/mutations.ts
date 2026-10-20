@@ -9,7 +9,7 @@ import {
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
-import { generateAccessToken } from "@/features/poll/utils";
+import { generateAccessToken, isPollOptionPast } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
@@ -18,7 +18,8 @@ type WriteRefusal =
   | "closed"
   | "full"
   | "optionFull"
-  | "tentativeVotesNotAllowed";
+  | "tentativeVotesNotAllowed"
+  | "optionPassed";
 
 /**
  * A participant write refused for a known, expected reason (poll closed, option
@@ -42,7 +43,11 @@ class WriteRefusedError extends Error {
  */
 async function lockOpenPoll(tx: Prisma.TransactionClient, pollId: string) {
   const [poll] = await tx.$queryRaw<
-    { status: string; deleted: boolean; allow_tentative_votes: boolean }[]
+    {
+      status: string;
+      deleted: boolean;
+      allow_tentative_votes: boolean;
+    }[]
   >`
     SELECT status, deleted, allow_tentative_votes
     FROM polls WHERE id = ${pollId} FOR UPDATE
@@ -62,11 +67,6 @@ async function lockOpenPoll(tx: Prisma.TransactionClient, pollId: string) {
   return { allowTentativeVotes: poll.allow_tentative_votes };
 }
 
-/**
- * Rejects a tentative vote when the poll forbids them. Run against the votes
- * that survive stale-option filtering, so a leftover `ifNeedBe` for a deleted
- * option can't reject an otherwise valid response.
- */
 function assertTentativeVotesAllowed(
   allowTentativeVotes: boolean,
   votes: { type: VoteType }[],
@@ -88,28 +88,64 @@ async function assertParticipantInPoll(
 ) {
   const participant = await tx.participant.findFirst({
     where: { id: participantId, pollId },
-    select: { id: true },
+    select: {
+      id: true,
+      timeZone: true,
+      votes: { select: { optionId: true, type: true } },
+    },
   });
 
   if (!participant) {
     throw new WriteRefusedError("notFound");
   }
+
+  return participant;
 }
 
-/**
- * The ids of the poll's current options, read under the poll row lock so a
- * submitted response can be filtered down to options that still exist (one
- * deleted since the form loaded is silently dropped rather than rejected).
- */
 async function listValidOptionIds(
   tx: Prisma.TransactionClient,
   pollId: string,
 ) {
   const options = await tx.option.findMany({
     where: { pollId },
-    select: { id: true },
+    select: { id: true, startTime: true, duration: true },
   });
-  return new Set(options.map((option) => option.id));
+  return new Map(options.map((option) => [option.id, option]));
+}
+
+/**
+ * Refuses new or changed positive votes for expired options while preserving
+ * unchanged historical votes and allowing participants to remove old votes.
+ */
+function assertNoNewPastVotes({
+  votes,
+  options,
+  previousVotes = [],
+  timeZone,
+}: {
+  votes: { optionId: string; type: VoteType }[];
+  options: Map<string, { id: string; startTime: Date; duration: number }>;
+  previousVotes?: { optionId: string; type: VoteType }[];
+  timeZone?: string | null;
+}) {
+  const previousVoteByOption = new Map(
+    previousVotes.map((vote) => [vote.optionId, vote.type]),
+  );
+  const now = new Date();
+
+  if (
+    votes.some(({ optionId, type }) => {
+      const option = options.get(optionId);
+      return (
+        option &&
+        type !== "no" &&
+        previousVoteByOption.get(optionId) !== type &&
+        isPollOptionPast({ option, now, timeZone })
+      );
+    })
+  ) {
+    throw new WriteRefusedError("optionPassed");
+  }
 }
 
 /**
@@ -210,13 +246,6 @@ export type AddParticipantResult =
     }
   | { ok: false; reason: WriteRefusal };
 
-/**
- * Adds a participant and their votes to a poll. Runs in one transaction under
- * the poll row lock, dropping votes for options deleted since the form loaded
- * and enforcing the tentative-votes setting, each option's "yes" cap, and the
- * poll's participant limit. Returns a typed refusal (poll not found/closed,
- * option or poll full, tentative votes not allowed) instead of throwing.
- */
 export async function addParticipant({
   pollId,
   userId,
@@ -254,12 +283,17 @@ export async function addParticipant({
   try {
     const result = await prisma.$transaction(async (tx) => {
       const { allowTentativeVotes } = await lockOpenPoll(tx, pollId);
-
       const validOptionIds = await listValidOptionIds(tx, pollId);
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
+
       assertTentativeVotesAllowed(allowTentativeVotes, validVotes);
+      assertNoNewPastVotes({
+        votes: validVotes,
+        options: validOptionIds,
+        timeZone,
+      });
       await assertYesVoteCapacity(tx, pollId, validVotes);
 
       // Counted under the lock so two responses cannot both pass at the cap.
@@ -369,12 +403,6 @@ export type EditParticipantResult =
   | { ok: true }
   | { ok: false; reason: WriteRefusal };
 
-/**
- * Replaces a participant's votes. Runs under the poll row lock with the same
- * validation as {@link addParticipant}; a "yes" the participant already held is
- * grandfathered so editing an unrelated option can't be blocked by that option
- * sitting at its cap. Returns a typed refusal instead of throwing.
- */
 export async function updateParticipantVotes({
   participantId,
   pollId,
@@ -389,28 +417,33 @@ export async function updateParticipantVotes({
   try {
     await prisma.$transaction(async (tx) => {
       const { allowTentativeVotes } = await lockOpenPoll(tx, pollId);
-      await assertParticipantInPoll(tx, participantId, pollId);
-
-      const previousYesVotes = await tx.vote.findMany({
-        where: { participantId, pollId, type: "yes" },
-        select: { optionId: true },
-      });
-      const grandfatheredYesOptionIds = new Set(
-        previousYesVotes.map((vote) => vote.optionId),
+      const previousParticipant = await assertParticipantInPoll(
+        tx,
+        participantId,
+        pollId,
       );
 
       const validOptionIds = await listValidOptionIds(tx, pollId);
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
+
       assertTentativeVotesAllowed(allowTentativeVotes, validVotes);
-      await tx.vote.deleteMany({ where: { participantId } });
-      await assertYesVoteCapacity(
-        tx,
-        pollId,
-        validVotes,
-        grandfatheredYesOptionIds,
+      assertNoNewPastVotes({
+        votes: validVotes,
+        options: validOptionIds,
+        previousVotes: previousParticipant.votes,
+        timeZone: previousParticipant.timeZone,
+      });
+
+      const previousYesOptionIds = new Set(
+        previousParticipant.votes
+          .filter((vote) => vote.type === "yes")
+          .map((vote) => vote.optionId),
       );
+      await assertYesVoteCapacity(tx, pollId, validVotes, previousYesOptionIds);
+
+      await tx.vote.deleteMany({ where: { participantId } });
 
       await tx.vote.createMany({
         data: validVotes.map(({ optionId, type }) => ({
@@ -424,7 +457,7 @@ export async function updateParticipantVotes({
       // Bump `updatedAt` so it reflects this vote change; the poll cleanup
       // job uses it to detect recent activity. An empty `data: {}` update is
       // a no-op for `@updatedAt`, so set it explicitly.
-      const participant = await tx.participant.update({
+      const updatedParticipant = await tx.participant.update({
         where: { id: participantId },
         data: { updatedAt: new Date() },
         select: { name: true },
@@ -436,7 +469,7 @@ export async function updateParticipantVotes({
           type: "response_updated",
           userId: actorUserId,
           participantId,
-          payload: { name: participant.name },
+          payload: { name: updatedParticipant.name },
         },
       ]);
       scheduleWebhookDispatch({ pollId: pollId });
@@ -450,10 +483,6 @@ export async function updateParticipantVotes({
   return { ok: true };
 }
 
-/**
- * Renames a participant's response, recording a `response_updated` activity.
- * Runs under the poll row lock; returns a typed refusal instead of throwing.
- */
 export async function renameParticipant({
   participantId,
   pollId,
@@ -496,11 +525,6 @@ export async function renameParticipant({
   return { ok: true };
 }
 
-/**
- * Deletes a participant's response, recording a `response_deleted` activity that
- * snapshots the removed name and votes before they are gone. Runs under the poll
- * row lock; returns a typed refusal instead of throwing.
- */
 export async function deleteParticipant({
   participantId,
   pollId,

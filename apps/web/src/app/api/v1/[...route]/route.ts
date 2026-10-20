@@ -23,7 +23,11 @@ import {
   listPolls,
 } from "@/features/poll/data";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
-import { toAvailabilitySpans } from "@/features/poll/utils";
+import {
+  hasPastPollOptions,
+  PAST_POLL_OPTIONS_MESSAGE,
+  toAvailabilitySpans,
+} from "@/features/poll/utils";
 import { getSpaceMemberByEmail } from "@/features/space/member/data";
 import type { SpaceTier } from "@/features/space/schema";
 import type { AuthorizedSpaceId } from "@/features/space/types";
@@ -371,7 +375,7 @@ app.post(
     tags: ["Polls"],
     summary: "Create a poll",
     description: [
-      "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. The request mirrors the response: `kind` chooses what participants vote on, and `options` takes the same shape the poll returns, so a poll can be recreated from the body of a `GET`. A poll has at most 100 options.",
+      "Creates a poll and responds with `201 Created` and the full poll, exactly as `GET /polls/:pollId` returns it. Share `inviteUrl` with participants. The request mirrors the response: `kind` chooses what participants vote on, and `options` takes the same shape the poll returns. Polls with past options cannot be recreated from a `GET` response. A poll has at most 100 options.",
       "",
       "## Date poll",
       "",
@@ -466,6 +470,10 @@ app.post(
     },
   }),
   validator("json", createPollInputSchema, validationHook),
+  /**
+   * Validates date and time options before creating a poll through the public
+   * API, returning a validation response when any option has passed.
+   */
   async (c) => {
     const input = c.req.valid("json");
     const { spaceId, spaceOwnerId } = c.get("apiAuth");
@@ -616,6 +624,17 @@ app.post(
         startTime: new Date(`${date}T00:00:00.000Z`),
         duration: 0,
       }));
+      if (
+        hasPastPollOptions({
+          options,
+          now: new Date(),
+        })
+      ) {
+        return c.json(
+          apiError("VALIDATION_ERROR", PAST_POLL_OPTIONS_MESSAGE),
+          400,
+        );
+      }
 
       const poll = await createPoll({
         userId: organizerUserId,
@@ -685,6 +704,19 @@ app.post(
           "TOO_MANY_OPTIONS",
           `Too many options generated (${options.length}). Maximum allowed is ${MAX_POLL_OPTIONS}.`,
         ),
+        400,
+      );
+    }
+
+    if (
+      hasPastPollOptions({
+        options,
+        now: new Date(),
+        timeZone,
+      })
+    ) {
+      return c.json(
+        apiError("VALIDATION_ERROR", PAST_POLL_OPTIONS_MESSAGE),
         400,
       );
     }

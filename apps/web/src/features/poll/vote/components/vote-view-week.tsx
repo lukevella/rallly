@@ -157,6 +157,7 @@ export function VoteViewWeek({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
@@ -300,7 +301,7 @@ export function VoteViewWeek({
                       participantCount={participantCount}
                       hasSavedResponse={response !== null}
                       allowTentativeVotes={poll.allowTentativeVotes}
-                      canVote={canVote}
+                      canVote={canVote && !pastOptionIds.has(result.optionId)}
                     />
                   ))}
                 </ul>

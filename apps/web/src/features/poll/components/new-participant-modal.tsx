@@ -61,6 +61,7 @@ interface NewParticipantModalProps {
   /** These fall back to the poll in context on the legacy surfaces. */
   pollId?: string;
   requireParticipantEmail?: boolean;
+  validateVotes?: () => boolean;
   onSubmit?: (data: { id: string }) => void;
   onCancel?: () => void;
 }
@@ -128,6 +129,10 @@ const VoteSummary = ({
   );
 };
 
+/**
+ * Collects participant details and submits a new response after revalidating
+ * votes, surfacing server refusals inline without losing the form state.
+ */
 export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { t } = useTranslation();
   const poll = usePollOrNull();
@@ -166,6 +171,10 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
       case "notFound":
         return t("newParticipantFormErrorPollFull", {
           defaultValue: "This poll is no longer accepting responses.",
+        });
+      case "optionPassed":
+        return t("pollOptionAlreadyPassed", {
+          defaultValue: "You can't vote for an option that has passed.",
         });
       case "tooManyRequests":
         return t("newParticipantFormErrorTooManyRequests", {
@@ -280,6 +289,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           onSubmit={handleSubmit(async (data) => {
             if (!pollId) {
               throw new Error("NewParticipantForm needs a pollId");
+            }
+            if (props.validateVotes && !props.validateVotes()) {
+              return;
             }
             const session = await createGuestIfNeeded();
             if (!session.ok) {

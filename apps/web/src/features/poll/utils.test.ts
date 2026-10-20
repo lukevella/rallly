@@ -5,6 +5,9 @@ import {
   filterParticipantsByVote,
   getChosenOptionRank,
   getFinalizeTiming,
+  hasPastPollOptions,
+  isPollFormOptionPast,
+  isPollOptionPast,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   resolveNotifyParticipantIds,
@@ -12,6 +15,116 @@ import {
   toAvailabilitySpans,
   withholdAggregateScores,
 } from "./utils";
+
+describe("isPollOptionPast", () => {
+  const now = new Date("2026-10-29T01:00:00Z");
+
+  it("uses the viewer's calendar date for all-day options", () => {
+    const option = { startTime: new Date("2026-10-28T00:00:00Z"), duration: 0 };
+
+    expect(isPollOptionPast({ option, now, timeZone: "UTC" })).toBe(true);
+    expect(
+      isPollOptionPast({ option, now, timeZone: "America/Los_Angeles" }),
+    ).toBe(false);
+  });
+
+  it("keeps an all-day option votable for its full calendar date", () => {
+    const option = { startTime: new Date("2026-10-29T00:00:00Z"), duration: 0 };
+
+    expect(isPollOptionPast({ option, now, timeZone: "UTC" })).toBe(false);
+  });
+
+  it("considers a time option past once its start time is reached", () => {
+    const option = {
+      startTime: new Date("2026-10-29T00:30:00Z"),
+      duration: 120,
+    };
+
+    expect(
+      isPollOptionPast({
+        option,
+        now: new Date("2026-10-29T00:29:59.999Z"),
+        timeZone: "UTC",
+      }),
+    ).toBe(false);
+    expect(isPollOptionPast({ option, now, timeZone: "UTC" })).toBe(true);
+  });
+});
+
+describe("isPollFormOptionPast", () => {
+  it("uses the supplied timezone for floating date options", () => {
+    const option = { type: "date" as const, date: "2026-10-28" };
+    const now = new Date("2026-10-29T01:00:00Z");
+
+    expect(isPollFormOptionPast({ option, now, timeZone: "UTC" })).toBe(true);
+    expect(
+      isPollFormOptionPast({
+        option,
+        now,
+        timeZone: "America/Los_Angeles",
+      }),
+    ).toBe(false);
+  });
+
+  it("compares a time option in its selected timezone", () => {
+    const option = {
+      type: "timeSlot" as const,
+      start: "2026-10-29T08:30:00",
+      end: "2026-10-29T09:30:00",
+    };
+
+    expect(
+      isPollFormOptionPast({
+        option,
+        now: new Date("2026-10-29T12:29:59.999Z"),
+        timeZone: "America/New_York",
+      }),
+    ).toBe(false);
+    expect(
+      isPollFormOptionPast({
+        option,
+        now: new Date("2026-10-29T12:30:00Z"),
+        timeZone: "America/New_York",
+      }),
+    ).toBe(true);
+  });
+});
+
+describe("hasPastPollOptions", () => {
+  it("finds all-day and timed options that have passed", () => {
+    const now = new Date("2026-10-29T12:00:00Z");
+
+    expect(
+      hasPastPollOptions({
+        options: [
+          { startTime: new Date("2026-10-28T00:00:00Z"), duration: 0 },
+          { startTime: new Date("2026-10-29T11:30:00Z"), duration: 60 },
+        ],
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe(true);
+    expect(
+      hasPastPollOptions({
+        options: [
+          { startTime: new Date("2026-10-29T12:30:00Z"), duration: 60 },
+        ],
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe(false);
+    expect(
+      hasPastPollOptions({
+        options: [
+          { startTime: new Date("2026-10-29T12:30:00Z"), duration: 60 },
+          { startTime: new Date("2026-10-28T00:00:00Z"), duration: 0 },
+        ],
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe(true);
+  });
+});
 
 const participant = (
   id: string,

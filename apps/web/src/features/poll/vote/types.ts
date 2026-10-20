@@ -22,6 +22,7 @@ export type VoteResult = {
 export type VoteResponse = {
   participantId: string;
   name: string;
+  timeZone: string | null;
   image: string | null;
   votes: { optionId: string; type: VoteType }[];
 };
@@ -81,6 +82,7 @@ export type VoteViewProps = {
   participantCount: number | null;
   response: VoteResponse | null;
   canVote: boolean;
+  pastOptionIds: Set<string>;
 };
 
 /** Which voting view is on screen. */

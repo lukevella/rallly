@@ -12,6 +12,7 @@ import {
 import { Form } from "@rallly/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { toast } from "@rallly/ui/sonner";
+import { TRPCClientError } from "@trpc/client";
 import { ArrowLeftIcon, CheckIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -36,9 +37,14 @@ import {
 } from "@/features/poll/limit/client";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { isAtOpenPollLimit } from "@/features/poll/limit/utils";
+import {
+  isPollFormOptionPast,
+  PAST_POLL_OPTIONS_MESSAGE,
+} from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useCurrentTime } from "@/lib/datetime/use-current-time";
 import { setFlash } from "@/lib/flash/client";
 import { createSessionStorage } from "@/lib/session-storage";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
@@ -85,12 +91,27 @@ const GuestModeBadge = () => {
   );
 };
 
+/**
+ * Keeps poll creation disabled and explains why while any selected option
+ * falls in the past according to the poll's effective time zone.
+ */
 const CreatePollActions = ({
   createdPollId,
 }: {
   createdPollId: string | null;
 }) => {
   const form = useFormContext<NewEventData>();
+  const { user } = useUser();
+  const options = form.watch("options") || [];
+  const allDay = isAllDay(options);
+  const timeZone =
+    form.watch("lockTimeZone") && !allDay
+      ? "UTC"
+      : form.watch("timeZone") || user?.timeZone || getBrowserTimeZone();
+  const now = useCurrentTime();
+  const hasPastOption =
+    now !== null &&
+    options.some((option) => isPollFormOptionPast({ option, now, timeZone }));
 
   if (createdPollId) {
     return (
@@ -102,23 +123,37 @@ const CreatePollActions = ({
   }
 
   return (
-    <Button
-      className="rounded-full px-4"
-      form="create-poll"
-      loading={form.formState.isSubmitting}
-      type="submit"
-      variant="primary"
-    >
-      {form.formState.isSubmitting ? (
-        <Trans i18nKey="createPollFooterCreating" defaults="Creating…" />
-      ) : (
-        <Trans i18nKey="createPoll" defaults="Create poll" />
-      )}
-    </Button>
+    <div className="flex flex-col items-end gap-1">
+      {hasPastOption ? (
+        <span className="text-destructive text-xs" role="alert">
+          <Trans
+            i18nKey="weekCalendarPastOptionWarning"
+            defaults="You can't choose a date or time in the past."
+          />
+        </span>
+      ) : null}
+      <Button
+        className="rounded-full px-4"
+        form="create-poll"
+        disabled={hasPastOption}
+        loading={form.formState.isSubmitting}
+        type="submit"
+        variant="primary"
+      >
+        {form.formState.isSubmitting ? (
+          <Trans i18nKey="createPollFooterCreating" defaults="Creating…" />
+        ) : (
+          <Trans i18nKey="createPoll" defaults="Create poll" />
+        )}
+      </Button>
+    </div>
   );
 };
 
-/** The form that creates a poll, aggregate results setting included. */
+/**
+ * Renders the poll creation flow and rechecks options immediately before
+ * submitting, since an option can pass while the form remains open.
+ */
 export const CreatePoll = ({
   nav,
   conferencing,
@@ -256,7 +291,31 @@ export const CreatePoll = ({
         <form
           id="create-poll"
           onSubmit={form.handleSubmit(async (formData) => {
-            const title = required(formData?.title.trim());
+            const title = required(formData.title.trim());
+            const options = required(formData.options);
+            const allDay = isAllDay(options);
+            const timeZone =
+              formData.lockTimeZone && !allDay
+                ? "UTC"
+                : formData.timeZone || user?.timeZone || getBrowserTimeZone();
+
+            if (
+              options.some((option) =>
+                isPollFormOptionPast({
+                  option,
+                  now: new Date(),
+                  timeZone,
+                }),
+              )
+            ) {
+              toast.error(
+                t("weekCalendarPastOptionWarning", {
+                  defaultValue: "You can't choose a date or time in the past.",
+                }),
+              );
+              return;
+            }
+
             const session = await createGuestIfNeeded();
             if (!session.ok) {
               toast.error(
@@ -271,31 +330,45 @@ export const CreatePoll = ({
               );
               return;
             }
-            const res = await makePoll.mutateAsync({
-              title: title,
-              location: formData?.location?.trim(),
-              conferencing: toPollConferencing(formData),
-              description: formData?.description?.trim(),
-              // Attach a time zone (times convert per viewer) unless the organizer
-              // locked it to a single wall-clock time or the poll is all-day.
-              // Fall back to the organizer's zone so a converting poll is always
-              // anchored to a concrete zone.
-              timeZone:
-                !formData?.lockTimeZone && !isAllDay(formData?.options ?? [])
-                  ? formData?.timeZone || user?.timeZone || getBrowserTimeZone()
-                  : null,
-              hideParticipants: formData?.hideParticipants,
-              aggregateResultsOnly: formData?.aggregateResultsOnly,
-              disableComments: !formData?.enableComments,
-              hideScores: formData?.hideScores,
-              allowTentativeVotes: formData?.allowTentativeVotes,
-              requireParticipantEmail: formData?.requireParticipantEmail,
-              options: required(formData?.options).map((option) => ({
-                startDate: option.type === "date" ? option.date : option.start,
-                endDate: option.type === "timeSlot" ? option.end : undefined,
-                maxParticipants: option.maxParticipants ?? null,
-              })),
-            });
+            let res: Awaited<ReturnType<typeof makePoll.mutateAsync>>;
+            try {
+              res = await makePoll.mutateAsync({
+                title,
+                location: formData.location.trim(),
+                conferencing: toPollConferencing(formData),
+                description: formData.description.trim(),
+                // Send a zone to validate floating date options against the
+                // organizer's calendar. Locked time polls are interpreted as UTC.
+                timeZone: formData.lockTimeZone && !allDay ? null : timeZone,
+                hideParticipants: formData.hideParticipants,
+                aggregateResultsOnly: formData?.aggregateResultsOnly,
+                disableComments: !formData.enableComments,
+                hideScores: formData.hideScores,
+                allowTentativeVotes: formData.allowTentativeVotes,
+                requireParticipantEmail: formData.requireParticipantEmail,
+                options: options.map((option) => ({
+                  startDate:
+                    option.type === "date" ? option.date : option.start,
+                  endDate: option.type === "timeSlot" ? option.end : undefined,
+                  maxParticipants: option.maxParticipants ?? null,
+                })),
+              });
+            } catch (error) {
+              if (
+                error instanceof TRPCClientError &&
+                error.data?.code === "BAD_REQUEST" &&
+                error.message === PAST_POLL_OPTIONS_MESSAGE
+              ) {
+                toast.error(
+                  t("weekCalendarPastOptionWarning", {
+                    defaultValue:
+                      "You can't choose a date or time in the past.",
+                  }),
+                );
+                return;
+              }
+              throw error;
+            }
 
             if (res.ok) {
               // The persist hook re-saves on every render, so clearing storage

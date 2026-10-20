@@ -62,6 +62,7 @@ const poll: PollDetails = {
       id: "option-1",
       startTime: new Date("2026-11-01T00:00:00Z"),
       duration: 0,
+      maxParticipants: null,
     },
   ],
   user: null,
@@ -146,6 +147,7 @@ describe("usePollScores", () => {
               dow: "Sun",
               month: "Nov",
               year: "2026",
+              maxParticipants: null,
             },
           ]}
         />

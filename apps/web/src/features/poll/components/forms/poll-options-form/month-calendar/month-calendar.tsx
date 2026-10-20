@@ -30,11 +30,13 @@ import {
 } from "@/components/empty-state";
 import { useHeadlessDatePicker } from "@/components/headless-date-picker";
 import type { NewEventData } from "@/features/poll/components/forms/types";
+import { isPollFormOptionPast } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { Duration } from "@/lib/datetime/duration";
 import { formatDateParts } from "@/lib/datetime/format";
+import { useCurrentTime } from "@/lib/datetime/use-current-time";
 import {
   addMinutesToWallTime,
   wallTimeDiffInMinutes,
@@ -45,7 +47,11 @@ import {
   getBrowserTimeZone,
 } from "@/lib/utils/date-time-utils";
 import type { DateTimeOption, DateTimePickerProps } from "../types";
-import { formatDateWithoutTime, removeAllOptionsForDay } from "../utils";
+import {
+  formatDateWithoutTime,
+  getNextAvailableTimeSlotStart,
+  removeAllOptionsForDay,
+} from "../utils";
 import TimePicker from "./time-picker";
 
 /**
@@ -111,12 +117,13 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChange,
   duration,
   onChangeDuration,
-  timeZone,
+  timeZone: pollTimeZone,
 }) => {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
   const { user } = useUser();
   const defaultTimeZone = user?.timeZone || getBrowserTimeZone();
+  const now = useCurrentTime();
   // Time-based options are the default. With no options yet the selected
   // duration drives the mode (0 = all-day) so the first selection creates the
   // right kind of option; once options exist their type is the source of truth.
@@ -126,6 +133,55 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       : duration !== 0;
 
   const form = useFormContext<NewEventData>();
+  const timeZone =
+    isTimedEvent && form.watch("lockTimeZone")
+      ? "UTC"
+      : pollTimeZone || defaultTimeZone;
+
+  const getDayOption = (day: Date, checkedAt = now): DateTimeOption | null => {
+    const date = formatDateWithoutTime(day);
+    if (!isTimedEvent) {
+      const option: DateTimeOption = { type: "date", date };
+      return checkedAt !== null &&
+        isPollFormOptionPast({ option, now: checkedAt, timeZone })
+        ? null
+        : option;
+    }
+
+    let start = middayOf(date);
+    if (
+      checkedAt !== null &&
+      isPollFormOptionPast({
+        option: {
+          type: "timeSlot",
+          start,
+          end: addMinutesToWallTime(start, slotDuration),
+        },
+        now: checkedAt,
+        timeZone,
+      })
+    ) {
+      const nextStart = getNextAvailableTimeSlotStart({
+        date,
+        now: checkedAt,
+        timeZone,
+      });
+      if (!nextStart) {
+        return null;
+      }
+      start = nextStart;
+    }
+
+    const option: DateTimeOption = {
+      type: "timeSlot",
+      start,
+      end: addMinutesToWallTime(start, slotDuration),
+    };
+    return checkedAt !== null &&
+      isPollFormOptionPast({ option, now: checkedAt, timeZone })
+      ? null
+      : option;
+  };
 
   // Durations currently in use across the timed options. When they all share a
   // single value the radio group selects it; differing values show as "Mixed".
@@ -321,6 +377,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               </div>
               <div className="grid grow grid-cols-7 overflow-hidden rounded-lg border shadow-xs">
                 {datepicker.days.map((day, i) => {
+                  const isPast = getDayOption(day.date) === null;
                   return (
                     <div
                       // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
@@ -332,6 +389,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                     >
                       <button
                         type="button"
+                        disabled={isPast && !day.selected}
                         onClick={() => {
                           if (
                             datepicker.selection.some((selectedDate) =>
@@ -340,20 +398,19 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                           ) {
                             onChange(removeAllOptionsForDay(options, day.date));
                           } else {
-                            const selectedDate = dayjs(day.date)
-                              .set("hour", 12)
-                              .toDate();
-                            const date = formatDateWithoutTime(selectedDate);
-                            const newOption: DateTimeOption = !isTimedEvent
-                              ? { type: "date", date }
-                              : {
-                                  type: "timeSlot",
-                                  start: middayOf(date),
-                                  end: addMinutesToWallTime(
-                                    middayOf(date),
-                                    slotDuration,
-                                  ),
-                                };
+                            const newOption = getDayOption(
+                              day.date,
+                              new Date(),
+                            );
+                            if (!newOption) {
+                              return;
+                            }
+                            const selectedDate =
+                              newOption.type === "timeSlot"
+                                ? navigationDateOf(newOption.start)
+                                : navigationDateOf(
+                                    `${newOption.date}T12:00:00`,
+                                  );
 
                             if (
                               options.length === 0 &&
@@ -377,11 +434,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                         className={cn(
                           "group relative flex h-full w-full items-start justify-end rounded-none px-2.5 py-1.5 font-medium text-sm tracking-tight focus:z-10 focus:rounded-sm",
                           {
-                            "bg-muted text-muted-foreground opacity-50":
-                              day.isPast,
+                            "bg-muted text-muted-foreground opacity-50": isPast,
                             "text-rose-500": day.today && !day.selected,
                             "bg-muted/50 text-muted-foreground":
-                              day.outOfMonth && !day.isPast,
+                              day.outOfMonth && !isPast,
                             "text-foreground": day.selected,
                           },
                         )}
@@ -450,10 +506,21 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             if (option.type === "date") {
                               throw new Error("Expected timeSlot but got date");
                             }
+                            const isPast =
+                              now !== null &&
+                              isPollFormOptionPast({
+                                option,
+                                now,
+                                timeZone,
+                              });
                             return (
                               <div
                                 key={index}
-                                className="flex items-center space-x-3"
+                                className={`flex items-center space-x-3 ${
+                                  isPast
+                                    ? "rounded-lg border-red-300 bg-red-500/10 p-2 text-red-700!"
+                                    : ""
+                                }`}
                               >
                                 <TimePicker
                                   value={option.start}

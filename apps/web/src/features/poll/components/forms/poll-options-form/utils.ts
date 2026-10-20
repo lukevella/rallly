@@ -1,4 +1,10 @@
-import { addMinutesToWallTime, wallTimeExists } from "@/lib/datetime/wall-time";
+import { getCalendarDate } from "@/lib/datetime/utils";
+import {
+  addMinutesToWallTime,
+  instantToWallTime,
+  wallTimeExists,
+  wallTimeToInstant,
+} from "@/lib/datetime/wall-time";
 import { dayjs } from "@/lib/dayjs";
 import type { DateTimeOption } from "./types";
 
@@ -28,6 +34,46 @@ export const removeAllOptionsForDay = (
 
 const TIME_STEP_MINUTES = 15;
 const DAY_MINUTES = 24 * 60;
+
+/**
+ * Finds the next future, selectable 15-minute start on `date` in the poll's
+ * zone. Returns null when the date is not today or no time remains that day.
+ */
+export function getNextAvailableTimeSlotStart({
+  date,
+  now,
+  timeZone,
+}: {
+  date: string;
+  now: Date;
+  timeZone: string;
+}) {
+  if (getCalendarDate(now, timeZone) !== date) {
+    return null;
+  }
+
+  const wallNow = instantToWallTime(now, timeZone);
+  const currentMinutes =
+    Number(wallNow.slice(11, 13)) * 60 + Number(wallNow.slice(14, 16));
+  const firstCandidate =
+    Math.floor(currentMinutes / TIME_STEP_MINUTES) * TIME_STEP_MINUTES +
+    TIME_STEP_MINUTES;
+
+  for (
+    let minutes = firstCandidate;
+    minutes < DAY_MINUTES;
+    minutes += TIME_STEP_MINUTES
+  ) {
+    const candidate = addMinutesToWallTime(`${date}T00:00:00`, minutes);
+    if (
+      wallTimeExists(candidate, timeZone) &&
+      wallTimeToInstant(candidate, timeZone).getTime() > now.getTime()
+    ) {
+      return candidate;
+    }
+  }
+  return null;
+}
 
 /**
  * Wall-clock times a time picker offers, in 15 minute steps: the day of

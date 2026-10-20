@@ -14,6 +14,7 @@ import {
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import type { VoteType } from "@/features/poll/constants";
 import { getVoteTypes } from "@/features/poll/constants";
+import { isPollOptionPast } from "@/features/poll/utils";
 import type { VotePageView, VoteResult } from "@/features/poll/vote/types";
 import type { SpaceTier } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
@@ -211,6 +212,7 @@ export function VoteForm({
   results,
   response,
   canVote,
+  timeZone,
   children,
 }: {
   pollId: string;
@@ -219,6 +221,7 @@ export function VoteForm({
   results: VotePageView["results"];
   response: VotePageView["response"];
   canVote: boolean;
+  timeZone: string | null;
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -232,6 +235,34 @@ export function VoteForm({
     defaultValues: { mode, votes: emptyVotes(results) },
     resolver: zodResolver(schema),
   });
+
+  /** Rejects newly added or changed positive votes on options that have passed. */
+  const validateVotes = (votes: VoteFormValues["votes"]) => {
+    const previousVotes = new Map(
+      (response?.votes ?? []).map((vote) => [vote.optionId, vote.type]),
+    );
+    const now = new Date();
+    const hasNewPastVote = results.some((result, index) => {
+      const type = votes[index]?.type;
+      return (
+        type &&
+        type !== "no" &&
+        previousVotes.get(result.optionId) !== type &&
+        isPollOptionPast({ option: result, now, timeZone })
+      );
+    });
+
+    if (hasNewPastVote) {
+      toast.error(
+        t("pollOptionAlreadyPassed", {
+          defaultValue: "You can't vote for an option that has passed.",
+        }),
+      );
+      return false;
+    }
+
+    return true;
+  };
 
   // The page re-renders from the loader after every write, so the form
   // follows the response appearing or disappearing: deleting one puts the
@@ -261,6 +292,10 @@ export function VoteForm({
       <form
         id="vote-form"
         onSubmit={form.handleSubmit(async (data) => {
+          if (!validateVotes(data.votes)) {
+            return;
+          }
+
           if (!response) {
             // Plain properties, not groups, to match poll_response_submit:
             // guest events are personless and PostHog drops their groups.
@@ -291,9 +326,14 @@ export function VoteForm({
                   ? t("pollClosedDescription", {
                       defaultValue: "No more responses are being accepted.",
                     })
-                  : t("actionErrorInternalServerError", {
-                      defaultValue: "An internal server error occurred",
-                    }),
+                  : result.reason === "optionPassed"
+                    ? t("pollOptionAlreadyPassed", {
+                        defaultValue:
+                          "You can't vote for an option that has passed.",
+                      })
+                    : t("actionErrorInternalServerError", {
+                        defaultValue: "An internal server error occurred",
+                      }),
             );
             return;
           }
@@ -310,6 +350,7 @@ export function VoteForm({
             pollId={pollId}
             requireParticipantEmail={requireParticipantEmail}
             votes={normalizeVotes(optionIds, form.watch("votes"))}
+            validateVotes={() => validateVotes(form.getValues("votes"))}
             onSubmit={() => {
               form.reset({ mode: "view", votes: emptyVotes(results) });
             }}

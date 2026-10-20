@@ -5,9 +5,18 @@ import type {
   PollDetails,
   PollParticipant,
 } from "@/features/poll/types";
+import type { SpaceTier } from "@/features/space/schema";
+import {
+  getCalendarDate,
+  normalizeTimeZone,
+  toISODate,
+} from "@/lib/datetime/utils";
+import { wallTimeToInstant } from "@/lib/datetime/wall-time";
 
-// Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
-// floor documented on Participant.token and PollInvite.token.
+/**
+ * Generates a URL-safe alphanumeric token at the minimum length accepted by
+ * `Participant.token` and `PollInvite.token`.
+ */
 export const generateAccessToken = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   32,
@@ -22,6 +31,7 @@ export function isLegacyEditToken(token: string) {
   return token.startsWith("Fe26.2*");
 }
 
+/** Filters participants to those with the requested vote on an option. */
 export function filterParticipantsByVote<
   T extends { votes: { optionId: string; type: VoteType }[] },
 >(participants: T[], optionId: string, voteType: VoteType): T[] {
@@ -107,6 +117,74 @@ export function filterCommentsForViewer({
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
+
+/** Error message shared by poll creation guards across app and API routes. */
+export const PAST_POLL_OPTIONS_MESSAGE = "Poll options must be in the future.";
+
+/**
+ * Whether an option has passed for a viewer.
+ *
+ * Timed options expire at their start instant; floating all-day options expire
+ * only after the viewer's calendar date has advanced in their time zone.
+ */
+export function isPollOptionPast({
+  option,
+  now,
+  timeZone,
+}: {
+  option: { startTime: Date; duration: number };
+  now: Date;
+  timeZone?: string | null;
+}) {
+  if (option.duration === 0) {
+    const today = getCalendarDate(now, normalizeTimeZone(timeZone) ?? "UTC");
+    return toISODate(option.startTime) < today;
+  }
+
+  return option.startTime.getTime() <= now.getTime();
+}
+
+/** Returns whether any option in a poll has passed for the given viewer. */
+export function hasPastPollOptions({
+  options,
+  now,
+  timeZone,
+}: {
+  options: { startTime: Date; duration: number }[];
+  now: Date;
+  timeZone?: string | null;
+}) {
+  return options.some((option) => isPollOptionPast({ option, now, timeZone }));
+}
+
+/**
+ * Checks an option in its form representation, converting wall-clock times
+ * with the selected zone and comparing date-only options as floating dates.
+ */
+export function isPollFormOptionPast({
+  option,
+  now,
+  timeZone,
+}: {
+  option:
+    | { type: "date"; date: string }
+    | { type: "timeSlot"; start: string; end: string };
+  now: Date;
+  timeZone: string;
+}) {
+  if (option.type === "date") {
+    return isPollOptionPast({
+      option: {
+        startTime: new Date(`${option.date}T00:00:00Z`),
+        duration: 0,
+      },
+      now,
+      timeZone,
+    });
+  }
+
+  return wallTimeToInstant(option.start, timeZone).getTime() <= now.getTime();
+}
 
 export type AvailabilitySpan = {
   start: string;

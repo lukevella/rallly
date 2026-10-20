@@ -63,6 +63,7 @@ const poll: PollDetails = {
       id: "option-1",
       startTime: new Date("2026-11-02T00:00:00Z"),
       duration: 0,
+      maxParticipants: null,
     },
   ],
   user: null,

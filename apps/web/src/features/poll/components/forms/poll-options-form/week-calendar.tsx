@@ -17,11 +17,14 @@ import {
   useEventCalendarNavigation,
 } from "@rallly/ui/event-calendar";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import { createBreakpoint } from "react-use";
+import type { NewEventData } from "@/features/poll/components/forms/types";
+import { isPollFormOptionPast } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
+import { useCurrentTime } from "@/lib/datetime/use-current-time";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
-
 import DateNavigationToolbar from "./date-navigation-toolbar";
 import type { DateTimePickerProps, TimeOption } from "./types";
 import {
@@ -60,6 +63,9 @@ function CalendarToolbar() {
   );
 }
 
+/**
+ * Edits timed poll options and rejects creating or moving a slot before now.
+ */
 const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   options,
   onNavigate,
@@ -70,9 +76,29 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   timeZone: pollTimeZone,
 }) => {
   const { t } = useTranslation();
-  const { weekStart, timeZone } = useDateTimeConfig();
-  const viewerTimeZone = timeZone ?? getBrowserTimeZone();
+  const { weekStart, timeZone: configuredTimeZone } = useDateTimeConfig();
+  const viewerTimeZone = configuredTimeZone ?? getBrowserTimeZone();
   const { formatDateTime, formatDateTimeRange } = useDateTime();
+  const form = useFormContext<NewEventData>();
+  const timeZone =
+    pollTimeZone ??
+    (form.watch("lockTimeZone")
+      ? "UTC"
+      : (viewerTimeZone ?? getBrowserTimeZone()));
+  const now = useCurrentTime();
+
+  /** Checks a wall-clock slot against now using the poll's selected zone. */
+  const isPast = (time: Date, checkedAt = now) =>
+    checkedAt !== null &&
+    isPollFormOptionPast({
+      option: {
+        type: "timeSlot",
+        start: dateToFloating(time),
+        end: dateToFloating(time),
+      },
+      now: checkedAt,
+      timeZone,
+    });
 
   // The grid runs on floating time; today, the now line and the shared
   // navigation date come from the viewer's own clock.
@@ -158,10 +184,14 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     }
   }, []);
 
+  /** Adds a dragged slot only when its start is still in the future. */
   const handleSelectSlot = (slot: EventCalendarSlotDraft) => {
     // The all-day lane is a timed picker's dead zone: it would commit
     // midnight-to-midnight garbage slots. rbc hid this row entirely.
     if (slot.allDay) {
+      return;
+    }
+    if (isPast(slot.start, new Date())) {
       return;
     }
     const candidate = slotToTimeOption(slot.start, slot.end);
@@ -177,11 +207,15 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     }
   };
 
+  /** Adds the default-duration slot for a clicked future calendar time. */
   const handleSlotClick = (slot: EventCalendarSlotInfo) => {
     if (slot.allDay) {
       return;
     }
     const start = slot.date;
+    if (isPast(start, new Date())) {
+      return;
+    }
     const end = new Date(start.getTime() + (duration || 60) * 60 * 1000);
     const candidate = slotToTimeOption(start, end);
     if (!isAvailable(candidate)) {
@@ -205,6 +239,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     }
   };
 
+  /** Rejects moving or resizing a slot into the past or onto a duplicate. */
   const handleEventUpdate = (
     update: EventCalendarProposedUpdate,
   ): EventCalendarUpdateResult => {
@@ -217,6 +252,10 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     );
     const newOption = slotToTimeOption(update.start, update.end);
     if (!isAvailable(newOption)) {
+      return false;
+    }
+
+    if (isPast(update.start, new Date())) {
       return false;
     }
 
@@ -316,18 +355,34 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         renderEvent={({ occurrence }) => {
           const start = occurrence.start;
           const end = occurrence.end;
+
+          const optionIsPast = isPast(start);
           return (
             // A poll option is a PROPOSED time, not a confirmed event: a dotted
             // outline over a soft accent tint reads as "tentative". Kept visually
             // distinct from ReUI's dashed drag/resize ghost (which is fainter and
             // dashed, not dotted). Color flows from --ec-event-color.
-            <div>
+            <div
+              className={`${
+                optionIsPast
+                  ? "h-full border-red-300 bg-red-500/10 text-red-700"
+                  : ""
+              }`}
+            >
               <div>
                 <div>
                   {formatDateTimeRange(start, end, "time", {
                     timeZone: FLOATING_TIME_ZONE,
                   })}
                 </div>
+                {optionIsPast && (
+                  <div className="font-medium text-[10px] text-red-600 leading-tight">
+                    <Trans
+                      i18nKey="weekCalendarPastOptionWarning"
+                      defaults="You can't choose a date or time in the past."
+                    />
+                  </div>
+                )}
               </div>
             </div>
           );

@@ -43,6 +43,8 @@ import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
   getChosenOptionRank,
   getFinalizeTiming,
+  hasPastPollOptions,
+  PAST_POLL_OPTIONS_MESSAGE,
   resolveNotifyParticipantIds,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
@@ -219,6 +221,10 @@ export const polls = router({
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
     .use(guestPollCreationIpLimit)
+    /**
+     * Creates a poll after enforcing space access, connected conferencing,
+     * and future-only options on the server.
+     */
     .mutation(async ({ ctx, input }) => {
       const activeSpace = ctx.user.isGuest
         ? null
@@ -307,6 +313,19 @@ export const polls = router({
           : 0,
         maxParticipants: option.maxParticipants ?? null,
       }));
+
+      if (
+        hasPastPollOptions({
+          options: optionsData,
+          now: new Date(),
+          timeZone: input.timeZone,
+        })
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: PAST_POLL_OPTIONS_MESSAGE,
+        });
+      }
 
       const kind = isTimePoll ? "time" : "date";
 
