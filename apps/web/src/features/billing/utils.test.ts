@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   formatMinorUnitAmount,
   isEarlySupporter,
-  isStripeCurrencyConflictError,
+  isStripeInvalidRequestError,
   resolvePriceSet,
 } from "./utils";
 
@@ -123,30 +123,21 @@ describe("formatMinorUnitAmount", () => {
   });
 });
 
-describe("isStripeCurrencyConflictError", () => {
-  it("matches an invalid request on the currency param", () => {
+describe("isStripeInvalidRequestError", () => {
+  it("matches the error Stripe returns for a currency conflict", () => {
     expect(
-      isStripeCurrencyConflictError({
+      isStripeInvalidRequestError({
         rawType: "invalid_request_error",
-        param: "currency",
+        code: null,
+        param: null,
+        message: "You cannot combine currencies on a single customer.",
       }),
     ).toBe(true);
   });
 
-  it("ignores other invalid requests and other errors", () => {
-    expect(
-      isStripeCurrencyConflictError({
-        rawType: "invalid_request_error",
-        param: "line_items",
-      }),
-    ).toBe(false);
-    expect(
-      isStripeCurrencyConflictError({
-        rawType: "api_error",
-        param: "currency",
-      }),
-    ).toBe(false);
-    expect(isStripeCurrencyConflictError(new Error("boom"))).toBe(false);
-    expect(isStripeCurrencyConflictError(null)).toBe(false);
+  it("ignores other errors", () => {
+    expect(isStripeInvalidRequestError({ rawType: "api_error" })).toBe(false);
+    expect(isStripeInvalidRequestError(new Error("boom"))).toBe(false);
+    expect(isStripeInvalidRequestError(null)).toBe(false);
   });
 });
