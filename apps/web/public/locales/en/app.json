@@ -862,6 +862,7 @@
   "pollsListActions": "Actions",
   "pollsListDates": "Dates",
   "pollsListOrganizer": "Organizer",
+  "pollsListStatus": "Status",
   "pollsListStatusFilter": "Filter by status",
   "pollStatusCanceled": "Canceled",
   "pollStatusClosed": "Closed",

@@ -93,52 +93,50 @@ function PollDateRange({
   );
 }
 
-function PollTitleLink({
-  id,
-  title,
+function PollTitleLink({ id, title }: { id: string; title: string }) {
+  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
+  return (
+    <HoverPrefetchLink
+      className="min-w-0 truncate text-sm outline-none after:absolute after:inset-0"
+      href={isPollAdminEnabled ? `/polls/${id}` : absoluteUrl(`/poll/${id}`)}
+    >
+      {title}
+    </HoverPrefetchLink>
+  );
+}
+
+function PollStatusCell({
   status,
   closedReason,
 }: {
-  id: string;
-  title: string;
   status: PollStatus;
   closedReason: PollClosedReason | null;
 }) {
-  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
-  return (
-    <div className="flex min-w-0 items-center gap-2">
-      <HoverPrefetchLink
-        className="min-w-0 truncate text-sm outline-none after:absolute after:inset-0"
-        href={isPollAdminEnabled ? `/polls/${id}` : absoluteUrl(`/poll/${id}`)}
-      >
-        {title}
-      </HoverPrefetchLink>
-      {status === "closed" && closedReason === "auto" ? (
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <span className="relative z-10 inline-flex shrink-0 cursor-help" />
-            }
-          >
-            <PollStatusBadge status={status}>
-              <Trans
-                i18nKey="pollAutoClosedBadge"
-                defaults="Automatically closed"
-              />
-            </PollStatusBadge>
-          </TooltipTrigger>
-          <TooltipContent>
+  if (status === "closed" && closedReason === "auto") {
+    return (
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <span className="relative z-10 inline-flex shrink-0 cursor-help" />
+          }
+        >
+          <PollStatusBadge status={status}>
             <Trans
-              i18nKey="pollAutoClosedTooltip"
-              defaults="This poll was closed automatically because all of its dates have passed. You can reopen it at any time."
+              i18nKey="pollAutoClosedBadge"
+              defaults="Automatically closed"
             />
-          </TooltipContent>
-        </Tooltip>
-      ) : (
-        <PollStatusBadge status={status} />
-      )}
-    </div>
-  );
+          </PollStatusBadge>
+        </TooltipTrigger>
+        <TooltipContent>
+          <Trans
+            i18nKey="pollAutoClosedTooltip"
+            defaults="This poll was closed automatically because all of its dates have passed. You can reopen it at any time."
+          />
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+  return <PollStatusBadge status={status} />;
 }
 
 function PollRowActions({
@@ -331,10 +329,14 @@ const columns = [
   columnHelper.accessor("title", {
     header: () => <Trans i18nKey="title" defaults="Title" />,
     cell: ({ row }) => (
-      <PollTitleLink
-        id={row.original.id}
-        title={row.original.title}
-        status={row.original.status}
+      <PollTitleLink id={row.original.id} title={row.original.title} />
+    ),
+  }),
+  columnHelper.accessor("status", {
+    header: () => <Trans i18nKey="pollsListStatus" defaults="Status" />,
+    cell: ({ getValue, row }) => (
+      <PollStatusCell
+        status={getValue()}
         closedReason={row.original.closedReason}
       />
     ),
@@ -416,7 +418,7 @@ function PollsListSkeleton() {
           className="flex h-12 items-center gap-3 px-8"
         >
           <Skeleton className="h-4 w-48" />
-          <Skeleton className="size-2 rounded-full sm:h-6 sm:w-20" />
+          <Skeleton className="ml-auto size-2 rounded-full sm:h-6 sm:w-20" />
         </div>
       ))}
     </div>
@@ -521,7 +523,7 @@ export function PollsInfiniteList({
     <ListViewContent>
       <DataList
         table={table}
-        className="grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto]"
+        className="grid-cols-[minmax(0,1fr)_auto_auto] sm:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto] md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto_auto]"
       />
       {hasNextPage && (
         <div ref={loadMoreRef} className="flex justify-center py-4">
