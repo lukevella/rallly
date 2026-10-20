@@ -28,17 +28,11 @@ export function isStripeResourceMissingError(error: unknown) {
   return isStripeErrorCode(error, "resource_missing");
 }
 
-/**
- * Stripe refuses a checkout currency that conflicts with something the
- * customer still has open in another currency (an active subscription, a
- * balance, a customer discount).
- */
-export function isStripeCurrencyConflictError(error: unknown) {
+export function isStripeInvalidRequestError(error: unknown) {
   return (
     typeof error === "object" &&
     error !== null &&
-    (error as { rawType?: unknown }).rawType === "invalid_request_error" &&
-    (error as { param?: unknown }).param === "currency"
+    (error as { rawType?: unknown }).rawType === "invalid_request_error"
   );
 }
 

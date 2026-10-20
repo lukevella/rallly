@@ -27,7 +27,7 @@ import { getStripe } from "@/features/billing/service";
 import {
   canChangeBillingInterval,
   isEarlySupporter,
-  isStripeCurrencyConflictError,
+  isStripeInvalidRequestError,
   resolvePriceSet,
 } from "@/features/billing/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
@@ -166,11 +166,14 @@ export const upgradeToProAction = authActionClient
         },
       });
 
-    // A customer with something still open in another currency (e.g. a
-    // subscription for another space) must stay in that currency.
+    // Stripe refuses a currency that conflicts with anything the customer
+    // still has open in another one (e.g. a subscription for another space),
+    // with no code or param to match on.
+    // Retrying without the hint lets Stripe pick the customer's currency; an
+    // unrelated invalid request fails again and is thrown.
     const checkoutSession = await createCheckoutSession(currency).catch(
       (error: unknown) => {
-        if (currency && isStripeCurrencyConflictError(error)) {
+        if (currency && isStripeInvalidRequestError(error)) {
           return createCheckoutSession();
         }
         throw error;
