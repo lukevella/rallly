@@ -15,7 +15,7 @@
     "db:deploy": "pnpm --filter @rallly/database exec prisma migrate deploy",
     "db:generate": "pnpm --filter @rallly/database exec prisma generate",
     "db:migrate": "pnpm --filter @rallly/database exec prisma migrate dev",
-    "db:reset": "pnpm --filter @rallly/database exec prisma migrate reset",
+    "db:reset": "pnpm --filter @rallly/database exec prisma migrate reset && pnpm db:seed",
     "db:seed": "pnpm --filter @rallly/database exec prisma db seed",
     "db:push": "pnpm --filter @rallly/database exec prisma db push",
     "db:format": "pnpm --filter @rallly/database exec prisma format",

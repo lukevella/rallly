@@ -7,7 +7,7 @@
     "db:push": "prisma db push --skip-generate",
     "db:deploy": "prisma migrate deploy",
     "db:migrate": "prisma migrate dev --skip-generate",
-    "db:reset": "prisma migrate reset",
+    "db:reset": "prisma migrate reset && prisma db seed",
     "db:seed": "tsx prisma/seed.ts",
     "type-check": "tsc --pretty --noEmit"
   },
