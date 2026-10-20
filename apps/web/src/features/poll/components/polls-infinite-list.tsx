@@ -15,12 +15,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Skeleton } from "@rallly/ui/skeleton";
@@ -33,7 +28,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  CircleDotIcon,
+  CirclePlayIcon,
+  CircleStopIcon,
   CopyIcon,
   MoreHorizontalIcon,
   PencilIcon,
@@ -52,11 +48,7 @@ import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
-import {
-  PollStatusBadge,
-  PollStatusDot,
-  PollStatusLabel,
-} from "@/features/poll/components/poll-status-badge";
+import { PollStatusBadge } from "@/features/poll/components/poll-status-badge";
 import {
   getOpenPollLimitRefusal,
   showOpenPollLimit,
@@ -248,34 +240,18 @@ function PollRowActions({
             <Trans i18nKey="duplicate" defaults="Duplicate" />
             {isFree ? <ProBadge /> : null}
           </DropdownMenuItem>
-          {status === "open" || status === "closed" ? (
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <CircleDotIcon />
-                <Trans i18nKey="status" defaults="Status" />
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup
-                  value={status}
-                  onValueChange={(value) => {
-                    if (value === status) return;
-                    if (value === "closed") {
-                      closeAction();
-                    } else {
-                      reopenAction();
-                    }
-                  }}
-                >
-                  {(["open", "closed"] as const).map((value) => (
-                    <DropdownMenuRadioItem key={value} value={value}>
-                      <PollStatusDot status={value} />
-                      <PollStatusLabel status={value} />
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-          ) : null}
+          {status === "open" && (
+            <DropdownMenuItem onClick={closeAction}>
+              <CircleStopIcon />
+              <Trans i18nKey="pollMarkAsClosed" defaults="Mark as closed" />
+            </DropdownMenuItem>
+          )}
+          {status === "closed" && (
+            <DropdownMenuItem onClick={reopenAction}>
+              <CirclePlayIcon />
+              <Trans i18nKey="pollMarkAsOpen" defaults="Mark as open" />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"

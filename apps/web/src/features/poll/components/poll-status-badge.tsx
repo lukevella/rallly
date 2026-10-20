@@ -11,7 +11,7 @@ const dotClassName: Record<PollStatus, string> = {
   canceled: "bg-rose-500",
 };
 
-export function PollStatusDot({ status }: { status: PollStatus }) {
+function PollStatusDot({ status }: { status: PollStatus }) {
   return (
     <span
       aria-hidden
@@ -20,7 +20,7 @@ export function PollStatusDot({ status }: { status: PollStatus }) {
   );
 }
 
-export function PollStatusLabel({ status }: { status: PollStatus }) {
+function PollStatusLabel({ status }: { status: PollStatus }) {
   switch (status) {
     case "open":
       return <Trans i18nKey="pollStatusOpen" defaults="Open" />;
