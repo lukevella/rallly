@@ -1,5 +1,6 @@
 "use server";
 
+import type { Stripe } from "@rallly/billing";
 import { displayedCurrencies, getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { refresh } from "next/cache";
@@ -27,6 +28,7 @@ import { getStripe } from "@/features/billing/service";
 import {
   canChangeBillingInterval,
   isEarlySupporter,
+  resolveCheckoutCurrency,
   resolvePriceSet,
 } from "@/features/billing/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
@@ -89,8 +91,12 @@ export const upgradeToProAction = authActionClient
     const stripe = getStripe();
 
     let customerId = ctx.user.customerId;
+    let customerCurrency: string | null = null;
 
-    if (!customerId) {
+    if (customerId) {
+      const customer = await stripe.customers.retrieve(customerId);
+      customerCurrency = customer.deleted ? null : (customer.currency ?? null);
+    } else {
       const customer = await stripe.customers.create(
         {
           email: ctx.user.email,
@@ -115,7 +121,15 @@ export const upgradeToProAction = authActionClient
       nonprofitGrantedAt ? await ensureNonprofitCoupon() : null,
     );
 
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const checkoutCurrency = resolveCheckoutCurrency({
+      requestedCurrency: currency,
+      customerCurrency,
+    });
+
+    // adaptive_pricing is missing from the pinned stripe-node types.
+    const sessionParams: Stripe.Checkout.SessionCreateParams & {
+      adaptive_pricing: { enabled: boolean };
+    } = {
       success_url: absoluteUrl(returnPath ?? "/settings/billing"),
       cancel_url: absoluteUrl(returnPath ?? "/settings/billing"),
       customer: customerId,
@@ -124,9 +138,13 @@ export const upgradeToProAction = authActionClient
         address: "auto",
       },
       mode: "subscription",
-      // No currency hint: the pay wall price is indicative. Stripe picks the
-      // currency from the customer's billing history or their location, and
-      // rejects any hint that disagrees with a customer's existing currency.
+      // Pin the pay wall currency so checkout, subscription and invoices all
+      // match it. A customer who already has a currency keeps it: Stripe
+      // rejects a hint that disagrees with it.
+      currency: checkoutCurrency,
+      // Adaptive Pricing would present a converted local amount (CHF) while
+      // the subscription and invoices stay in the price currency (USD).
+      adaptive_pricing: { enabled: false },
       ...discount.session,
       billing_address_collection: "auto",
       tax_id_collection: {
@@ -161,7 +179,10 @@ export const upgradeToProAction = authActionClient
           ...discount.recovery,
         },
       },
-    });
+    };
+
+    const checkoutSession =
+      await stripe.checkout.sessions.create(sessionParams);
 
     if (!checkoutSession.url) {
       throw new AppError({
