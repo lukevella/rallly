@@ -1,6 +1,5 @@
 "use server";
 
-import type { Stripe } from "@rallly/billing";
 import { displayedCurrencies, getProPricing } from "@rallly/billing";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { refresh } from "next/cache";
@@ -126,10 +125,7 @@ export const upgradeToProAction = authActionClient
       customerCurrency,
     });
 
-    // adaptive_pricing is missing from the pinned stripe-node types.
-    const sessionParams: Stripe.Checkout.SessionCreateParams & {
-      adaptive_pricing: { enabled: boolean };
-    } = {
+    const checkoutSession = await stripe.checkout.sessions.create({
       success_url: absoluteUrl(returnPath ?? "/settings/billing"),
       cancel_url: absoluteUrl(returnPath ?? "/settings/billing"),
       customer: customerId,
@@ -138,13 +134,11 @@ export const upgradeToProAction = authActionClient
         address: "auto",
       },
       mode: "subscription",
-      // Pin the pay wall currency so checkout, subscription and invoices all
-      // match it. A customer who already has a currency keeps it: Stripe
-      // rejects a hint that disagrees with it.
+      // Pin the pay wall currency so the subscription and invoices match it.
+      // Adaptive Pricing may still present a local amount, with this currency
+      // as the alternative. A customer who already has a currency keeps it:
+      // Stripe rejects a hint that disagrees with it.
       currency: checkoutCurrency,
-      // Adaptive Pricing would present a converted local amount (CHF) while
-      // the subscription and invoices stay in the price currency (USD).
-      adaptive_pricing: { enabled: false },
       ...discount.session,
       billing_address_collection: "auto",
       tax_id_collection: {
@@ -179,10 +173,7 @@ export const upgradeToProAction = authActionClient
           ...discount.recovery,
         },
       },
-    };
-
-    const checkoutSession =
-      await stripe.checkout.sessions.create(sessionParams);
+    });
 
     if (!checkoutSession.url) {
       throw new AppError({
