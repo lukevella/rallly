@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   formatMinorUnitAmount,
   isEarlySupporter,
-  resolveCheckoutCurrency,
+  isStripeCurrencyConflictError,
   resolvePriceSet,
 } from "./utils";
 
@@ -123,27 +123,30 @@ describe("formatMinorUnitAmount", () => {
   });
 });
 
-describe("resolveCheckoutCurrency", () => {
-  it("pins the requested currency for a customer with no currency yet", () => {
+describe("isStripeCurrencyConflictError", () => {
+  it("matches an invalid request on the currency param", () => {
     expect(
-      resolveCheckoutCurrency({
-        requestedCurrency: "eur",
-        customerCurrency: null,
+      isStripeCurrencyConflictError({
+        rawType: "invalid_request_error",
+        param: "currency",
       }),
-    ).toBe("eur");
-    expect(resolveCheckoutCurrency({ requestedCurrency: "eur" })).toBe("eur");
+    ).toBe(true);
   });
 
-  it("omits the hint for a customer who already has a currency", () => {
+  it("ignores other invalid requests and other errors", () => {
     expect(
-      resolveCheckoutCurrency({
-        requestedCurrency: "eur",
-        customerCurrency: "usd",
+      isStripeCurrencyConflictError({
+        rawType: "invalid_request_error",
+        param: "line_items",
       }),
-    ).toBeUndefined();
-  });
-
-  it("omits the hint when none was requested", () => {
-    expect(resolveCheckoutCurrency({ customerCurrency: null })).toBeUndefined();
+    ).toBe(false);
+    expect(
+      isStripeCurrencyConflictError({
+        rawType: "api_error",
+        param: "currency",
+      }),
+    ).toBe(false);
+    expect(isStripeCurrencyConflictError(new Error("boom"))).toBe(false);
+    expect(isStripeCurrencyConflictError(null)).toBe(false);
   });
 });

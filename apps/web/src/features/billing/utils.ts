@@ -29,18 +29,17 @@ export function isStripeResourceMissingError(error: unknown) {
 }
 
 /**
- * The currency to pin a checkout session to. Stripe rejects a hint that
- * disagrees with a customer's existing currency, so a customer who has
- * already been billed keeps theirs and gets no hint.
+ * Stripe refuses a checkout currency that conflicts with something the
+ * customer still has open in another currency (an active subscription, a
+ * balance, a customer discount).
  */
-export function resolveCheckoutCurrency({
-  requestedCurrency,
-  customerCurrency,
-}: {
-  requestedCurrency?: string;
-  customerCurrency?: string | null;
-}) {
-  return customerCurrency ? undefined : requestedCurrency;
+export function isStripeCurrencyConflictError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { rawType?: unknown }).rawType === "invalid_request_error" &&
+    (error as { param?: unknown }).param === "currency"
+  );
 }
 
 type PricingLike = Pick<PricingData, "monthly" | "yearly" | "earlySupporter">;
