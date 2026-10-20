@@ -1,7 +1,6 @@
-import { randomUUID } from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
-import { buildPollHistory } from "./seed/activity";
+import { buildPollHistory, generateAccessToken } from "./seed/activity";
 import {
   eventTypes,
   polls,
@@ -111,11 +110,15 @@ async function main() {
     const pollId = nextId();
     const optionIds = poll.options.map(() => nextId());
     const participantIds = poll.participants.map(() => nextId());
+    const participantTokens = poll.participants.map(() =>
+      generateAccessToken(),
+    );
     const history = buildPollHistory({
       index: pollIndex,
       poll,
       optionIds,
       participantIds,
+      participantTokens,
       nextId,
     });
 
@@ -165,7 +168,7 @@ async function main() {
           email: part.email,
           note: part.note,
           userId: part.userId,
-          token: randomUUID().replace(/-/g, ""),
+          token: participantTokens[participantIndex],
           createdAt: history.participantCreatedAt[participantIndex],
         },
       });

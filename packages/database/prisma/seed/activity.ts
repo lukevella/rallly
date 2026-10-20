@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import type { Prisma } from "../../generated/prisma/client";
 import type { PollDef } from "./data";
 
@@ -5,6 +6,11 @@ import type { PollDef } from "./data";
 // invited, when each response arrived, and the edits and status changes in
 // between. Everything is derived from the poll definition and a per-poll
 // random stream, so reseeding produces the same history relative to today.
+
+// 32 alphanumeric characters, the floor on Participant.token and PollInvite.token.
+export function generateAccessToken() {
+  return randomUUID().replace(/-/g, "");
+}
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
@@ -53,6 +59,7 @@ export function buildPollHistory({
   poll,
   optionIds,
   participantIds,
+  participantTokens,
   nextId,
   now = new Date(),
 }: {
@@ -60,6 +67,7 @@ export function buildPollHistory({
   poll: PollDef;
   optionIds: string[];
   participantIds: string[];
+  participantTokens: string[];
   nextId: () => string;
   now?: Date;
 }) {
@@ -114,7 +122,8 @@ export function buildPollHistory({
       invites.push({
         id: nextId(),
         email: participant.email,
-        token: `${nextId()}-token`,
+        // A response made through an invite takes the invite's token.
+        token: participantTokens[i] ?? generateAccessToken(),
         participantId: participantIds[i],
         openedAt: new Date((responseTimes[i] ?? invitedAt) - 4 * MINUTE),
         createdAt: new Date(invitedAt),
@@ -138,7 +147,7 @@ export function buildPollHistory({
         invites.push({
           id: nextId(),
           email,
-          token: `${nextId()}-token`,
+          token: generateAccessToken(),
           openedAt: opened
             ? new Date(between(invitedAt + HOUR, end))
             : undefined,
