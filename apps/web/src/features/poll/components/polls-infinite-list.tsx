@@ -252,7 +252,7 @@ function PollRowActions({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <CircleDotIcon />
-                <Trans i18nKey="pollMarkAs" defaults="Mark as" />
+                <Trans i18nKey="status" defaults="Status" />
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
                 <DropdownMenuRadioGroup
