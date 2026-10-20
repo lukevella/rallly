@@ -217,7 +217,6 @@ export const listSpacesForUser = cache(async (userId: string) => {
           showBranding: true,
           hideAttribution: true,
           shared: true,
-          _count: { select: { members: true } },
           subscriptions: {
             where: { active: true },
             select: { quantity: true },
@@ -229,14 +228,26 @@ export const listSpacesForUser = cache(async (userId: string) => {
     },
   });
 
-  const policy = await getInstancePolicy();
+  // Counted for these spaces only: a relation _count over more than one
+  // space compiles to a GROUP BY over the whole space_members table
+  const [memberCounts, policy] = await Promise.all([
+    prisma.spaceMember.groupBy({
+      by: ["spaceId"],
+      where: { spaceId: { in: result.map(({ space }) => space.id) } },
+      _count: { _all: true },
+    }),
+    getInstancePolicy(),
+  ]);
+  const memberCountBySpaceId = new Map(
+    memberCounts.map((row) => [row.spaceId, row._count._all]),
+  );
 
   return result.map((spaceMember) =>
     createSpaceDTO({
       space: {
         ...spaceMember.space,
         role: spaceMember.role,
-        memberCount: spaceMember.space._count.members,
+        memberCount: memberCountBySpaceId.get(spaceMember.space.id) ?? 0,
         seatCount: spaceMember.space.subscriptions[0]?.quantity ?? 1,
       },
       policy,
