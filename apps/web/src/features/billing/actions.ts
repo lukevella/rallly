@@ -27,7 +27,7 @@ import { getStripe } from "@/features/billing/service";
 import {
   canChangeBillingInterval,
   isEarlySupporter,
-  resolveCheckoutCurrency,
+  isStripeCurrencyConflictError,
   resolvePriceSet,
 } from "@/features/billing/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
@@ -90,12 +90,8 @@ export const upgradeToProAction = authActionClient
     const stripe = getStripe();
 
     let customerId = ctx.user.customerId;
-    let customerCurrency: string | null = null;
 
-    if (customerId) {
-      const customer = await stripe.customers.retrieve(customerId);
-      customerCurrency = customer.deleted ? null : (customer.currency ?? null);
-    } else {
+    if (!customerId) {
       const customer = await stripe.customers.create(
         {
           email: ctx.user.email,
@@ -120,60 +116,66 @@ export const upgradeToProAction = authActionClient
       nonprofitGrantedAt ? await ensureNonprofitCoupon() : null,
     );
 
-    const checkoutCurrency = resolveCheckoutCurrency({
-      requestedCurrency: currency,
-      customerCurrency,
-    });
-
-    const checkoutSession = await stripe.checkout.sessions.create({
-      success_url: absoluteUrl(returnPath ?? "/settings/billing"),
-      cancel_url: absoluteUrl(returnPath ?? "/settings/billing"),
-      customer: customerId,
-      customer_update: {
-        name: "auto",
-        address: "auto",
-      },
-      mode: "subscription",
-      // Pin the pay wall currency so the subscription and invoices match it.
-      // Adaptive Pricing may still present a local amount, with this currency
-      // as the alternative. A customer who already has a currency keeps it:
-      // Stripe rejects a hint that disagrees with it.
-      currency: checkoutCurrency,
-      ...discount.session,
-      billing_address_collection: "auto",
-      tax_id_collection: {
-        enabled: true,
-      },
-      metadata: {
-        userId: ctx.user.id,
-        spaceId: space.id,
-      } satisfies SubscriptionCheckoutMetadata,
-      subscription_data: {
+    const createCheckoutSession = (checkoutCurrency?: string) =>
+      stripe.checkout.sessions.create({
+        success_url: absoluteUrl(returnPath ?? "/settings/billing"),
+        cancel_url: absoluteUrl(returnPath ?? "/settings/billing"),
+        customer: customerId,
+        customer_update: {
+          name: "auto",
+          address: "auto",
+        },
+        mode: "subscription",
+        // Pin the pay wall currency so the subscription and invoices match it.
+        // Adaptive Pricing may still present a local amount, with this currency
+        // as the alternative.
+        currency: checkoutCurrency,
+        ...discount.session,
+        billing_address_collection: "auto",
+        tax_id_collection: {
+          enabled: true,
+        },
         metadata: {
           userId: ctx.user.id,
           spaceId: space.id,
-        } satisfies SubscriptionMetadata,
-      },
-      line_items: [
-        {
-          price:
-            period === "yearly"
-              ? proPricingData.yearly.id
-              : proPricingData.monthly.id,
-          quantity: 1,
+        } satisfies SubscriptionCheckoutMetadata,
+        subscription_data: {
+          metadata: {
+            userId: ctx.user.id,
+            spaceId: space.id,
+          } satisfies SubscriptionMetadata,
         },
-      ],
-      automatic_tax: {
-        enabled: true,
-      },
-      expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes
-      after_expiration: {
-        recovery: {
+        line_items: [
+          {
+            price:
+              period === "yearly"
+                ? proPricingData.yearly.id
+                : proPricingData.monthly.id,
+            quantity: 1,
+          },
+        ],
+        automatic_tax: {
           enabled: true,
-          ...discount.recovery,
         },
+        expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes
+        after_expiration: {
+          recovery: {
+            enabled: true,
+            ...discount.recovery,
+          },
+        },
+      });
+
+    // A customer with something still open in another currency (e.g. a
+    // subscription for another space) must stay in that currency.
+    const checkoutSession = await createCheckoutSession(currency).catch(
+      (error: unknown) => {
+        if (currency && isStripeCurrencyConflictError(error)) {
+          return createCheckoutSession();
+        }
+        throw error;
       },
-    });
+    );
 
     if (!checkoutSession.url) {
       throw new AppError({
