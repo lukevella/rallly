@@ -140,48 +140,19 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Resolved Playwright version: $version"
 
-  # Builds once so each shard only installs and starts the server.
-  integration-build:
-    name: Integration build
+  # Each shard builds for itself: a separate build job adds a whole setup
+  # cycle to the critical path, which costs more than the build. The Turbo
+  # remote cache turns the build into a download when apps/web is unchanged.
+  integration-shard:
+    name: Integration tests (${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ubuntu-latest
     needs: playwright-version
-    # Same image as the shards, so the absolute paths baked into .next match.
-    container:
-      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
-    env:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
-      DIRECT_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rallly
-      CI: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/pnpm-install
-
-      - name: Generate Prisma Client
-        run: pnpm db:generate
-
-      - name: Create production build
-        run: pnpm turbo build:test --filter=@rallly/web
-
-      # A tarball keeps the hidden .next directory (upload-artifact skips
-      # hidden paths) and uploads as one file instead of thousands.
-      - name: Pack build
-        run: tar --exclude=apps/web/.next/cache -cf next-build.tar apps/web/.next
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: next-build
-          path: next-build.tar
-          retention-days: 1
-
-  integration-shard:
-    name: Integration tests (${{ matrix.shard }}/4)
-    runs-on: ubuntu-latest
-    needs: [playwright-version, integration-build]
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        # Shards split by test count in file order, not by time; 6 keeps the
+        # slowest shard near a sixth of the suite.
+        shard: [1, 2, 3, 4, 5, 6]
     # Uses the Playwright image (browsers preinstalled); tag must stay v<version>-noble.
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
@@ -223,19 +194,18 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm db:generate
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: next-build
-
-      - name: Unpack build
-        run: tar -xf next-build.tar && rm next-build.tar
+      - name: Create production build
+        run: pnpm turbo build:test --filter=@rallly/web
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
       - name: Setup database
         run: pnpm db:deploy
 
       - name: Run tests
         # Run directly, not via turbo, so the job env reaches the test process.
-        run: pnpm --filter @rallly/web test:integration --shard=${{ matrix.shard }}/4
+        run: pnpm --filter @rallly/web test:integration --shard=${{ matrix.shard }}/${{ strategy.job-total }}
 
       - name: Upload blob report
         if: ${{ !cancelled() }}
@@ -252,9 +222,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [playwright-version, integration-shard]
     if: ${{ !cancelled() }}
-    container:
-      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - uses: actions/download-artifact@v4
         with:
           path: all-blob-reports
