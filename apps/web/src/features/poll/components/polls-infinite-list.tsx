@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -16,7 +15,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
 import { Skeleton } from "@rallly/ui/skeleton";
@@ -29,11 +33,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  CircleStopIcon,
+  CircleDotIcon,
   CopyIcon,
   MoreHorizontalIcon,
   PencilIcon,
-  PlayIcon,
   TrashIcon,
   UsersIcon,
 } from "lucide-react";
@@ -49,7 +52,11 @@ import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
-import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
+import {
+  PollStatusBadge,
+  PollStatusDot,
+  PollStatusLabel,
+} from "@/features/poll/components/poll-status-badge";
 import {
   getOpenPollLimitRefusal,
   showOpenPollLimit,
@@ -114,21 +121,20 @@ function PollTitleLink({
       >
         {title}
       </HoverPrefetchLink>
-      {status === "closed" && closedReason === "auto" && (
+      {status === "closed" && closedReason === "auto" ? (
         <Tooltip>
           <TooltipTrigger
             render={
-              <Badge
-                size="sm"
-                className="relative z-10 hidden shrink-0 cursor-help sm:inline-flex"
-              >
-                <Trans
-                  i18nKey="pollAutoClosedBadge"
-                  defaults="Automatically closed"
-                />
-              </Badge>
+              <span className="relative z-10 inline-flex shrink-0 cursor-help" />
             }
-          />
+          >
+            <PollStatusBadge status={status}>
+              <Trans
+                i18nKey="pollAutoClosedBadge"
+                defaults="Automatically closed"
+              />
+            </PollStatusBadge>
+          </TooltipTrigger>
           <TooltipContent>
             <Trans
               i18nKey="pollAutoClosedTooltip"
@@ -136,6 +142,8 @@ function PollTitleLink({
             />
           </TooltipContent>
         </Tooltip>
+      ) : (
+        <PollStatusBadge status={status} />
       )}
     </div>
   );
@@ -162,6 +170,36 @@ function PollRowActions({
   const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
   const closePoll = trpc.polls.close.useMutation(refresh);
   const reopenPoll = trpc.polls.reopen.useMutation();
+  const closeAction = () => {
+    toast.promise(closePoll.mutateAsync({ pollId: id }), {
+      loading: <Trans i18nKey="loading" defaults="Loading..." />,
+      success: <Trans i18nKey="pollClosed" defaults="Poll closed" />,
+    });
+  };
+  const reopenAction = () => {
+    const toastId = toast.loading(
+      <Trans i18nKey="loading" defaults="Loading..." />,
+    );
+    reopenPoll.mutate(
+      { pollId: id },
+      {
+        onSuccess: (res) => {
+          const refusal = getOpenPollLimitRefusal(res);
+          if (refusal) {
+            toast.dismiss(toastId);
+            showOpenPollLimit("reopen", refusal.usage);
+            return;
+          }
+          toast.success(
+            <Trans i18nKey="pollReopened" defaults="Poll reopened" />,
+            { id: toastId },
+          );
+          router.refresh();
+        },
+        onError: () => toast.dismiss(toastId),
+      },
+    );
+  };
   return (
     <div className="relative z-10 flex items-center gap-x-1">
       <CopyLinkButton href={shortUrl(`/invite/${id}`)} className="size-8" />
@@ -210,55 +248,34 @@ function PollRowActions({
             <Trans i18nKey="duplicate" defaults="Duplicate" />
             {isFree ? <ProBadge /> : null}
           </DropdownMenuItem>
-          {status === "open" && (
-            <DropdownMenuItem
-              onClick={() => {
-                toast.promise(closePoll.mutateAsync({ pollId: id }), {
-                  loading: <Trans i18nKey="loading" defaults="Loading..." />,
-                  success: (
-                    <Trans i18nKey="pollClosed" defaults="Poll closed" />
-                  ),
-                });
-              }}
-            >
-              <CircleStopIcon />
-              <Trans i18nKey="closePoll" defaults="Close" />
-            </DropdownMenuItem>
-          )}
-          {status === "closed" && (
-            <DropdownMenuItem
-              onClick={() => {
-                const toastId = toast.loading(
-                  <Trans i18nKey="loading" defaults="Loading..." />,
-                );
-                reopenPoll.mutate(
-                  { pollId: id },
-                  {
-                    onSuccess: (res) => {
-                      const refusal = getOpenPollLimitRefusal(res);
-                      if (refusal) {
-                        toast.dismiss(toastId);
-                        showOpenPollLimit("reopen", refusal.usage);
-                        return;
-                      }
-                      toast.success(
-                        <Trans
-                          i18nKey="pollReopened"
-                          defaults="Poll reopened"
-                        />,
-                        { id: toastId },
-                      );
-                      router.refresh();
-                    },
-                    onError: () => toast.dismiss(toastId),
-                  },
-                );
-              }}
-            >
-              <PlayIcon />
-              <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
-            </DropdownMenuItem>
-          )}
+          {status === "open" || status === "closed" ? (
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <CircleDotIcon />
+                <Trans i18nKey="pollMarkAs" defaults="Mark as" />
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuRadioGroup
+                  value={status}
+                  onValueChange={(value) => {
+                    if (value === status) return;
+                    if (value === "closed") {
+                      closeAction();
+                    } else {
+                      reopenAction();
+                    }
+                  }}
+                >
+                  {(["open", "closed"] as const).map((value) => (
+                    <DropdownMenuRadioItem key={value} value={value}>
+                      <PollStatusDot status={value} />
+                      <PollStatusLabel status={value} />
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          ) : null}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"
@@ -328,12 +345,6 @@ function PollRowActions({
 const columnHelper = createColumnHelper<PollRow>();
 
 const columns = [
-  columnHelper.accessor("status", {
-    header: () => <Trans i18nKey="pollsListStatus" defaults="Status" />,
-    cell: ({ getValue }) => (
-      <PollStatusIcon status={getValue()} showTooltip={false} />
-    ),
-  }),
   columnHelper.accessor("title", {
     header: () => <Trans i18nKey="title" defaults="Title" />,
     cell: ({ row }) => (
@@ -421,8 +432,8 @@ function PollsListSkeleton() {
           key={i}
           className="flex h-12 items-center gap-3 px-8"
         >
-          <Skeleton className="size-4 rounded-full" />
           <Skeleton className="h-4 w-48" />
+          <Skeleton className="size-2 rounded-full sm:h-6 sm:w-20" />
         </div>
       ))}
     </div>
@@ -527,7 +538,7 @@ export function PollsInfiniteList({
     <ListViewContent>
       <DataList
         table={table}
-        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] md:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
+        className="grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto]"
       />
       {hasNextPage && (
         <div ref={loadMoreRef} className="flex justify-center py-4">
