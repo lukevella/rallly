@@ -58,7 +58,7 @@ pnpm build:test           # Build for testing
 pnpm db:migrate           # Run database migrations
 pnpm db:push              # Push schema changes
 pnpm db:deploy            # Deploy migrations (production)
-pnpm db:seed              # Seed the database (db:reset runs this automatically)
+pnpm db:seed              # Seed an empty database (db:reset seeds after resetting)
 
 # Testing
 pnpm test:unit            # Run unit tests (Vitest)
