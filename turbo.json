@@ -8,7 +8,12 @@
     },
     "build:test": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*", "!tests/**/*"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!tests/**",
+        "!playwright*.config.ts",
+        "!**/*.md"
+      ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "test": {
