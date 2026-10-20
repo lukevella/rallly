@@ -22,7 +22,15 @@ function nextId() {
   return `seed-${(++idCounter).toString().padStart(4, "0")}`;
 }
 
+class DatabaseNotEmptyError extends Error {}
+
 async function main() {
+  if (await prisma.user.findFirst({ select: { id: true } })) {
+    throw new DatabaseNotEmptyError(
+      "The database already has data. Run `pnpm db:reset` to reset and seed it.",
+    );
+  }
+
   // 1. Users
   await prisma.user.createMany({ data: users.map((u) => ({ ...u })) });
   console.info(`✓ ${users.length} users`);
@@ -229,7 +237,10 @@ async function main() {
 }
 
 main()
-  .catch((e) => console.error(e))
+  .catch((e) => {
+    console.error(e instanceof DatabaseNotEmptyError ? e.message : e);
+    process.exitCode = 1;
+  })
   .finally(async () => {
     await prisma.$disconnect();
   });
