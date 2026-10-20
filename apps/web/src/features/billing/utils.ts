@@ -28,6 +28,21 @@ export function isStripeResourceMissingError(error: unknown) {
   return isStripeErrorCode(error, "resource_missing");
 }
 
+/**
+ * The currency to pin a checkout session to. Stripe rejects a hint that
+ * disagrees with a customer's existing currency, so a customer who has
+ * already been billed keeps theirs and gets no hint.
+ */
+export function resolveCheckoutCurrency({
+  requestedCurrency,
+  customerCurrency,
+}: {
+  requestedCurrency?: string;
+  customerCurrency?: string | null;
+}) {
+  return customerCurrency ? undefined : requestedCurrency;
+}
+
 type PricingLike = Pick<PricingData, "monthly" | "yearly" | "earlySupporter">;
 
 /**

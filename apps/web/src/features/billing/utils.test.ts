@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   formatMinorUnitAmount,
   isEarlySupporter,
+  resolveCheckoutCurrency,
   resolvePriceSet,
 } from "./utils";
 
@@ -119,5 +120,30 @@ describe("formatMinorUnitAmount", () => {
     expect(
       formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
     ).toBe("¥5,600");
+  });
+});
+
+describe("resolveCheckoutCurrency", () => {
+  it("pins the requested currency for a customer with no currency yet", () => {
+    expect(
+      resolveCheckoutCurrency({
+        requestedCurrency: "eur",
+        customerCurrency: null,
+      }),
+    ).toBe("eur");
+    expect(resolveCheckoutCurrency({ requestedCurrency: "eur" })).toBe("eur");
+  });
+
+  it("omits the hint for a customer who already has a currency", () => {
+    expect(
+      resolveCheckoutCurrency({
+        requestedCurrency: "eur",
+        customerCurrency: "usd",
+      }),
+    ).toBeUndefined();
+  });
+
+  it("omits the hint when none was requested", () => {
+    expect(resolveCheckoutCurrency({ customerCurrency: null })).toBeUndefined();
   });
 });
