@@ -28,11 +28,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  CirclePlayIcon,
   CircleStopIcon,
   CopyIcon,
   MoreHorizontalIcon,
   PencilIcon,
+  PlayIcon,
   TrashIcon,
   UsersIcon,
 } from "lucide-react";
@@ -162,36 +162,6 @@ function PollRowActions({
   const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
   const closePoll = trpc.polls.close.useMutation(refresh);
   const reopenPoll = trpc.polls.reopen.useMutation();
-  const closeAction = () => {
-    toast.promise(closePoll.mutateAsync({ pollId: id }), {
-      loading: <Trans i18nKey="loading" defaults="Loading..." />,
-      success: <Trans i18nKey="pollClosed" defaults="Poll closed" />,
-    });
-  };
-  const reopenAction = () => {
-    const toastId = toast.loading(
-      <Trans i18nKey="loading" defaults="Loading..." />,
-    );
-    reopenPoll.mutate(
-      { pollId: id },
-      {
-        onSuccess: (res) => {
-          const refusal = getOpenPollLimitRefusal(res);
-          if (refusal) {
-            toast.dismiss(toastId);
-            showOpenPollLimit("reopen", refusal.usage);
-            return;
-          }
-          toast.success(
-            <Trans i18nKey="pollReopened" defaults="Poll reopened" />,
-            { id: toastId },
-          );
-          router.refresh();
-        },
-        onError: () => toast.dismiss(toastId),
-      },
-    );
-  };
   return (
     <div className="relative z-10 flex items-center gap-x-1">
       <CopyLinkButton href={shortUrl(`/invite/${id}`)} className="size-8" />
@@ -241,15 +211,52 @@ function PollRowActions({
             {isFree ? <ProBadge /> : null}
           </DropdownMenuItem>
           {status === "open" && (
-            <DropdownMenuItem onClick={closeAction}>
+            <DropdownMenuItem
+              onClick={() => {
+                toast.promise(closePoll.mutateAsync({ pollId: id }), {
+                  loading: <Trans i18nKey="loading" defaults="Loading..." />,
+                  success: (
+                    <Trans i18nKey="pollClosed" defaults="Poll closed" />
+                  ),
+                });
+              }}
+            >
               <CircleStopIcon />
-              <Trans i18nKey="pollMarkAsClosed" defaults="Mark as closed" />
+              <Trans i18nKey="closePoll" defaults="Close" />
             </DropdownMenuItem>
           )}
           {status === "closed" && (
-            <DropdownMenuItem onClick={reopenAction}>
-              <CirclePlayIcon />
-              <Trans i18nKey="pollMarkAsOpen" defaults="Mark as open" />
+            <DropdownMenuItem
+              onClick={() => {
+                const toastId = toast.loading(
+                  <Trans i18nKey="loading" defaults="Loading..." />,
+                );
+                reopenPoll.mutate(
+                  { pollId: id },
+                  {
+                    onSuccess: (res) => {
+                      const refusal = getOpenPollLimitRefusal(res);
+                      if (refusal) {
+                        toast.dismiss(toastId);
+                        showOpenPollLimit("reopen", refusal.usage);
+                        return;
+                      }
+                      toast.success(
+                        <Trans
+                          i18nKey="pollReopened"
+                          defaults="Poll reopened"
+                        />,
+                        { id: toastId },
+                      );
+                      router.refresh();
+                    },
+                    onError: () => toast.dismiss(toastId),
+                  },
+                );
+              }}
+            >
+              <PlayIcon />
+              <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
