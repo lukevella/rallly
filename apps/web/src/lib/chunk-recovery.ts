@@ -104,18 +104,25 @@ export function staticAssetUrls(entries: Pick<PerformanceEntry, "name">[]) {
 }
 
 // cache: "reload" skips the HTTP cache and stores the fresh response, which
-// overwrites a bad copy. Chunk script tags carry no crossorigin attribute, so
-// the request mirrors theirs (no-cors, credentials included) to hit the same
-// cache entry.
+// overwrites a bad copy. The request mirrors the chunk script tags to hit the
+// same cache entry: crossorigin="anonymous" (cors, same-origin credentials)
+// when an asset host is set, no attribute (no-cors, credentials included)
+// otherwise. See crossOrigin in next.config.ts.
+function refetchRequestMode(): Pick<RequestInit, "mode" | "credentials"> {
+  return process.env.NEXT_PUBLIC_ASSET_PREFIX
+    ? { mode: "cors", credentials: "same-origin" }
+    : { mode: "no-cors", credentials: "include" };
+}
+
 async function refetchStaticAssets(urls: string[]) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REFETCH_TIMEOUT_MS);
+  const requestMode = refetchRequestMode();
   await Promise.allSettled(
     urls.map((url) =>
       fetch(url, {
         cache: "reload",
-        mode: "no-cors",
-        credentials: "include",
+        ...requestMode,
         signal: controller.signal,
       }),
     ),

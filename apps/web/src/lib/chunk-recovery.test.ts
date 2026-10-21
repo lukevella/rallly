@@ -90,19 +90,39 @@ describe("reloadOnceForChunkError", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
     vi.restoreAllMocks();
     reload.mockReset();
     fetch.mockReset();
   });
 
   it("refetches static assets past the cache before reloading", async () => {
+    vi.stubEnv("NEXT_PUBLIC_ASSET_PREFIX", "");
     reloadOnceForChunkError(factoryError);
     await vi.runAllTimersAsync();
     expect(fetch).toHaveBeenCalledWith(
       chunk,
-      expect.objectContaining({ cache: "reload", mode: "no-cors" }),
+      expect.objectContaining({
+        cache: "reload",
+        mode: "no-cors",
+        credentials: "include",
+      }),
     );
     expect(reload).toHaveBeenCalledTimes(1);
+  });
+
+  it("refetches in CORS mode when chunks come from an asset host", async () => {
+    vi.stubEnv("NEXT_PUBLIC_ASSET_PREFIX", "https://static.rallly.co");
+    reloadOnceForChunkError(factoryError);
+    await vi.runAllTimersAsync();
+    expect(fetch).toHaveBeenCalledWith(
+      chunk,
+      expect.objectContaining({
+        cache: "reload",
+        mode: "cors",
+        credentials: "same-origin",
+      }),
+    );
   });
 
   it("still reloads when a refetch fails", async () => {
