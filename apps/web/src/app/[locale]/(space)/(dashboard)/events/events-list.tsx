@@ -11,17 +11,12 @@ import {
 import { UsersIcon } from "lucide-react";
 import React from "react";
 import { DataList } from "@/components/data-list";
-import { ListViewContent } from "@/components/list-view";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Spinner } from "@/components/spinner";
 import { EventConferencingSummary } from "@/features/conferencing/components/event-conferencing-summary";
 import type { Conferencing } from "@/features/conferencing/schema";
 import { EventTimeRange } from "@/features/scheduled-event/components/event-date-time";
 import { ScheduledEventRowActions } from "@/features/scheduled-event/components/scheduled-event-row";
-import type {
-  ScheduledEventStatus,
-  Status,
-} from "@/features/scheduled-event/schema";
+import type { ScheduledEventStatus } from "@/features/scheduled-event/schema";
 import { Trans } from "@/i18n/client";
 import { CalendarDate } from "@/lib/datetime/calendar-date";
 import { useDateTimeConfig } from "@/lib/datetime/client";
@@ -30,10 +25,8 @@ import {
   calendarDateToUTCMidnight,
   getCalendarDate,
 } from "@/lib/datetime/utils";
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
-import { trpc } from "@/trpc/client";
 
-type EventRow = {
+export type EventRow = {
   id: string;
   title: string;
   status: ScheduledEventStatus;
@@ -42,7 +35,7 @@ type EventRow = {
   allDay: boolean;
   timeZone: string | null;
   conferencing: Conferencing | null;
-  invites: { id: string }[];
+  attendeeCount: number;
   createdBy: { name: string; image?: string };
 };
 
@@ -93,7 +86,7 @@ const columns = [
       ) : null;
     },
   }),
-  columnHelper.accessor((event) => event.invites.length, {
+  columnHelper.accessor("attendeeCount", {
     id: "attendees",
     header: () => <Trans i18nKey="eventsListAttendees" defaults="Attendees" />,
     meta: {
@@ -182,7 +175,7 @@ function groupByDay(events: EventRow[], viewerTimeZone: string) {
   return { sorted, dayKeyById };
 }
 
-function EventsListSkeleton() {
+export function EventsListSkeleton() {
   return (
     <div aria-hidden className="py-2">
       {Array.from({ length: 6 }).map((_, i) => (
@@ -199,44 +192,16 @@ function EventsListSkeleton() {
   );
 }
 
-export function EventsInfiniteList({
-  status,
-  search,
-  member,
+export function EventsList({
+  events,
   emptyState,
 }: {
-  status?: Status;
-  search?: string;
-  member?: string;
+  events: EventRow[];
   emptyState: React.ReactNode;
 }) {
-  // Classifying upcoming/past depends on the viewer's clock and zone, so this
-  // list is fetched on the client only (never server-prefetched).
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status: queryStatus,
-  } = trpc.events.infiniteList.useInfiniteQuery(
-    {
-      status,
-      search,
-      member,
-      timeZone: getBrowserTimeZone(),
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
-
-  const events = React.useMemo(
-    () => data?.pages.flatMap((page) => page.events) ?? [],
-    [data],
-  );
-
-  const viewerTimeZone = useDateTimeConfig().timeZone ?? getBrowserTimeZone();
+  // UTC until the provider has detected the browser zone, so the server and
+  // first client render group the same way.
+  const viewerTimeZone = useDateTimeConfig().timeZone ?? "UTC";
   const { sorted, dayKeyById } = React.useMemo(
     () => groupByDay(events, viewerTimeZone),
     [events, viewerTimeZone],
@@ -249,97 +214,34 @@ export function EventsInfiniteList({
     getRowId: (event) => event.id,
   });
 
-  const loadMoreRef = React.useRef<HTMLDivElement>(null);
-
-  const handleLoadMore = React.useCallback(async () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      await fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  React.useEffect(() => {
-    const loadMoreElement = loadMoreRef.current;
-    if (!loadMoreElement) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          handleLoadMore();
-        }
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    observer.observe(loadMoreElement);
-
-    return () => {
-      observer.unobserve(loadMoreElement);
-    };
-  }, [handleLoadMore]);
-
-  if (queryStatus === "pending") {
-    return (
-      <ListViewContent>
-        <EventsListSkeleton />
-      </ListViewContent>
-    );
-  }
-
-  if (queryStatus === "error") {
-    return (
-      <ListViewContent>
-        <div className="py-8 text-center text-red-600">
-          Error loading events: {error?.message}
-        </div>
-      </ListViewContent>
-    );
-  }
-
   if (events.length === 0) {
-    return <ListViewContent>{emptyState}</ListViewContent>;
+    return emptyState;
   }
 
   return (
-    <ListViewContent>
-      <DataList
-        table={table}
-        getGroup={(event) => {
-          const key = dayKeyById.get(event.id) ?? "";
-          return {
-            id: key,
-            label: (
-              <>
-                <CalendarDate
-                  value={calendarDateToUTCMidnight(key)}
-                  preset="weekday"
-                  className="font-medium text-foreground"
-                />
-                <CalendarDate
-                  value={calendarDateToUTCMidnight(key)}
-                  preset="dateLong"
-                  className="text-muted-foreground"
-                />
-              </>
-            ),
-          };
-        }}
-        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] lg:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
-      />
-      {hasNextPage && (
-        <div ref={loadMoreRef} className="flex justify-center py-4">
-          {isFetchingNextPage && (
-            <div className="flex items-center gap-2">
-              <Spinner />
-              <span className="text-muted-foreground text-sm">
-                <Trans i18nKey="loading" defaults="Loading..." />
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-    </ListViewContent>
+    <DataList
+      table={table}
+      getGroup={(event) => {
+        const key = dayKeyById.get(event.id) ?? "";
+        return {
+          id: key,
+          label: (
+            <>
+              <CalendarDate
+                value={calendarDateToUTCMidnight(key)}
+                preset="weekday"
+                className="font-medium text-foreground"
+              />
+              <CalendarDate
+                value={calendarDateToUTCMidnight(key)}
+                preset="dateLong"
+                className="text-muted-foreground"
+              />
+            </>
+          ),
+        };
+      }}
+      className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] lg:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
+    />
   );
 }

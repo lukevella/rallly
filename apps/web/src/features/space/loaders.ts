@@ -3,7 +3,11 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import { getUpcomingEventCount } from "@/features/scheduled-event/data";
+import {
+  getEventsChronological,
+  getUpcomingEventCount,
+} from "@/features/scheduled-event/data";
+import type { Status } from "@/features/scheduled-event/schema";
 import {
   getActiveSpaceForUser,
   getOwnedSpace,
@@ -176,20 +180,56 @@ export const loadOptionalActiveSpace = cache(async () => {
  * imports scheduled-event, so a scheduled-event → space/user loader would
  * close a feature import cycle; space → scheduled-event is a forward edge.
  */
-export const loadUpcomingEventCount = cache(async () => {
-  const [user, scope, deviceTimeZone] = await Promise.all([
+// Upcoming and past are measured against the viewer's present, so the device
+// zone wins; the stored preference is a fallback for devices whose zone
+// cookie hasn't been set yet. The session zone override never applies.
+const loadViewerTimeZone = cache(async () => {
+  const [user, deviceTimeZone] = await Promise.all([
     loadUser(),
-    loadActiveSpaceContentScope(),
     getDeviceTimeZone(),
   ]);
+  return deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
+});
 
-  // Upcoming is measured against the viewer's present, so the device zone
-  // wins; the stored preference is a fallback for devices whose zone cookie
-  // hasn't been set yet.
-  const timeZone = deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
+export const loadUpcomingEventCount = cache(async () => {
+  const [scope, timeZone] = await Promise.all([
+    loadActiveSpaceContentScope(),
+    loadViewerTimeZone(),
+  ]);
 
   return getUpcomingEventCount({ scope, timeZone });
 });
+
+export const loadEvents = cache(
+  async ({
+    status,
+    q,
+    member,
+    page,
+    pageSize,
+  }: {
+    status: Status;
+    q?: string;
+    member?: string;
+    page: number;
+    pageSize: number;
+  }) => {
+    const [scope, timeZone] = await Promise.all([
+      loadActiveSpaceContentScope(),
+      loadViewerTimeZone(),
+    ]);
+
+    return getEventsChronological({
+      status,
+      search: q,
+      member,
+      page,
+      pageSize,
+      scope,
+      timeZone,
+    });
+  },
+);
 
 /**
  * Seat usage for the signed-in user's active space. Session scoped —

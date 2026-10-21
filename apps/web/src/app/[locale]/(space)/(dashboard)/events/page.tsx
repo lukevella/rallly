@@ -1,20 +1,57 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
+import { loadActiveSpace, loadEvents } from "@/features/space/loaders";
+import { loadSpaceMembers } from "@/features/space/member/loaders";
 import { getTranslation } from "@/i18n/server";
-import { createPrivateSSRHelper } from "@/trpc/server/create-ssr-helper";
-import { EventsPage } from "./events-page";
+import { EventsList } from "./events-list";
+import { EventsEmptyState, EventsPage } from "./events-page";
+import { eventsSearchParamsSchema } from "./schema";
 
-export default async function Page() {
-  const helpers = await createPrivateSSRHelper();
+export default async function Page(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const [space, searchParams] = await Promise.all([
+    loadActiveSpace(),
+    props.searchParams,
+  ]);
+  const { status, q, member, page, pageSize } =
+    eventsSearchParamsSchema.parse(searchParams);
+  // Ignore a member URL param when the filter is hidden — a bookmarked
+  // ?member= URL would otherwise show an empty list with no visible
+  // control to clear it.
+  const visibleMember = space.shared ? member : undefined;
 
-  // The events list itself is fetched on the client: upcoming/past depends on
-  // the viewer's clock and zone, which the server doesn't know.
-  await helpers.spaces.listMembers.prefetch();
+  const [members, result] = await Promise.all([
+    loadSpaceMembers(),
+    loadEvents({ status, q, member: visibleMember, page, pageSize }),
+  ]);
 
   return (
-    <HydrationBoundary state={dehydrate(helpers.queryClient)}>
-      <EventsPage />
-    </HydrationBoundary>
+    <EventsPage
+      members={members.map(({ userId, name, image }) => ({
+        userId,
+        name,
+        image,
+      }))}
+      list={
+        <EventsList
+          events={result.events.map((event) => ({
+            id: event.id,
+            title: event.title,
+            status: event.status,
+            start: event.start,
+            end: event.end,
+            allDay: event.allDay,
+            timeZone: event.timeZone,
+            conferencing: event.conferencing,
+            createdBy: event.createdBy,
+            attendeeCount: event.invites.length,
+          }))}
+          emptyState={<EventsEmptyState status={status} />}
+        />
+      }
+      page={page}
+      hasNextPage={result.hasNextPage}
+    />
   );
 }
 
