@@ -352,6 +352,10 @@ export async function deleteInactivePolls() {
   return markedDeleted;
 }
 
+const AUTO_CLOSE_POLLS_BATCH_SIZE = 500;
+// Well inside the house-keeping route's maxDuration.
+const AUTO_CLOSE_POLLS_BUDGET_MS = 120_000;
+
 /**
  * Closes polls whose options have all ended — i.e. no option ends in the
  * future, where an option ends at start_time + duration (all-day options, with
@@ -363,42 +367,74 @@ export async function deleteInactivePolls() {
  * `updated_at`, so closing a poll doesn't reset the inactivity clock that
  * delete-inactive-polls keys off. RETURNING feeds the activity writes, which
  * commit in the same transaction as the closes.
+ *
+ * Works in batches, each its own short transaction, so a backlog of tens of
+ * thousands of polls never holds one transaction past its timeout (which
+ * rolls back every close and leaves the backlog to grow) or past the webhook
+ * fan-out's overlap window. Stops starting batches after `budgetMs`; any
+ * remainder is picked up by the next run.
  */
-export async function autoClosePolls() {
-  return prisma.$transaction(
-    async (tx) => {
-      const closed = await tx.$queryRaw<{ id: string }[]>`
-      UPDATE polls p
-      SET status = 'closed', closed_reason = 'auto'
-      WHERE p.status = 'open'
-        AND p.deleted = false
-        AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
-        AND NOT EXISTS (
-          SELECT 1 FROM options o
-          WHERE o.poll_id = p.id
-            AND o.start_time + (CASE WHEN o.duration_minutes = 0
-                  THEN interval '24 hours'
-                  ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+export async function autoClosePolls({
+  batchSize = AUTO_CLOSE_POLLS_BATCH_SIZE,
+  budgetMs = AUTO_CLOSE_POLLS_BUDGET_MS,
+}: {
+  batchSize?: number;
+  budgetMs?: number;
+} = {}) {
+  const startedAt = Date.now();
+  let totalClosed = 0;
+
+  while (Date.now() - startedAt < budgetMs) {
+    const closed = await prisma.$transaction(
+      async (tx) => {
+        const rows = await tx.$queryRaw<{ id: string }[]>`
+        WITH due AS (
+          SELECT p.id FROM polls p
+          WHERE p.status = 'open'
+            AND p.deleted = false
+            AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
+            AND NOT EXISTS (
+              SELECT 1 FROM options o
+              WHERE o.poll_id = p.id
+                AND o.start_time + (CASE WHEN o.duration_minutes = 0
+                      THEN interval '24 hours'
+                      ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+            )
+          LIMIT ${batchSize}
+          FOR UPDATE OF p SKIP LOCKED
         )
-      RETURNING p.id
-    `;
+        UPDATE polls p
+        SET status = 'closed', closed_reason = 'auto'
+        FROM due
+        WHERE p.id = due.id
+        RETURNING p.id
+      `;
 
-      await recordPollActivities(
-        tx,
-        closed.map(({ id }) => ({
-          pollId: id,
-          type: "poll_closed" as const,
-          userId: null,
-          payload: { reason: "auto" as const },
-        })),
-      );
+        await recordPollActivities(
+          tx,
+          rows.map(({ id }) => ({
+            pollId: id,
+            type: "poll_closed" as const,
+            userId: null,
+            payload: { reason: "auto" as const },
+          })),
+        );
 
-      return closed.length;
-    },
-    // The UPDATE scans every open poll's options, which can outlast Prisma's
-    // 5s default on large instances or after cron downtime.
-    { timeout: 30_000 },
-  );
+        return rows.length;
+      },
+      // Finding due polls scans every open poll's options, which can outlast
+      // Prisma's 5s default on a cold database even when few are due.
+      { timeout: 30_000 },
+    );
+
+    totalClosed += closed;
+
+    if (closed < batchSize) {
+      break;
+    }
+  }
+
+  return totalClosed;
 }
 
 const REMOVE_DELETED_POLLS_BATCH_SIZE = 100;
