@@ -17,6 +17,40 @@ const forwardedResponseHeaders = ["X-Sentry-Rate-Limits", "Retry-After"];
 // worth buffering.
 const maxBodyBytes = 5 * 1024 * 1024;
 
+/**
+ * Reads the request body, giving up as soon as it passes the limit so a body
+ * without a Content-Length can't be buffered past it either.
+ */
+async function readBody(request: Request) {
+  if (!request.body) {
+    return new Uint8Array();
+  }
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    size += value.byteLength;
+    if (size > maxBodyBytes) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return body;
+}
+
 export default {
   async fetch(request: Request) {
     if (request.method === "OPTIONS") {
@@ -35,12 +69,12 @@ export default {
       return new Response(null, { status: 413, headers: corsHeaders });
     }
 
-    const body = await request.arrayBuffer();
-    if (body.byteLength > maxBodyBytes) {
+    const body = await readBody(request);
+    if (!body) {
       return new Response(null, { status: 413, headers: corsHeaders });
     }
 
-    const upstream = resolveUpstream(new Uint8Array(body));
+    const upstream = resolveUpstream(body);
     if (!upstream) {
       return new Response(null, { status: 400, headers: corsHeaders });
     }
