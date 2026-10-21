@@ -1,7 +1,6 @@
 "use cache";
 
-import type { PriceAmounts } from "@rallly/billing";
-import { PLAN_NAMES, yearlySavingsPercent } from "@rallly/billing";
+import { PLAN_NAMES } from "@rallly/billing";
 import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
@@ -83,7 +82,6 @@ import {
   PricingControls,
   PricingControlsDivider,
   PricingProvider,
-  YearlySavingsBadge,
 } from "./pricing-controls";
 
 const faqLinkClassName =
@@ -103,21 +101,6 @@ export default async function Page(props: {
     getMonthlyVoterCount(),
     getPricing(),
   ]);
-  const savingsLabels = Object.fromEntries(
-    Object.entries(prices).map(
-      ([currency, amounts]: [string, PriceAmounts]) => [
-        currency,
-        <Trans
-          key={currency}
-          t={t}
-          ns="pricing"
-          i18nKey="yearlySavePercent"
-          defaults="Save {percent}%"
-          values={{ percent: yearlySavingsPercent(amounts) }}
-        />,
-      ],
-    ),
-  );
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -184,7 +167,13 @@ export default async function Page(props: {
                     variant="pill"
                     className="bg-lime-300 font-semibold text-lime-900"
                   >
-                    <YearlySavingsBadge labels={savingsLabels} />
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="yearlySaveUpTo"
+                      defaults="Save up to {percent}%"
+                      values={{ percent: 40 }}
+                    />
                   </Badge>
                 }
               />
