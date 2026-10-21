@@ -14,6 +14,7 @@ export function FilterPills<T extends string>({
   value,
   options,
   label,
+  startTransition = React.startTransition,
 }: {
   param: string;
   value: T;
@@ -22,6 +23,8 @@ export function FilterPills<T extends string>({
     label: React.ReactNode;
   }[];
   label: string;
+  // Lets the page observe the navigation, e.g. to show a loading state.
+  startTransition?: React.TransitionStartFunction;
 }) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -49,7 +52,7 @@ export function FilterPills<T extends string>({
             scroll={false}
             onNavigate={(e) => {
               e.preventDefault();
-              React.startTransition(() => {
+              startTransition(() => {
                 setSelectedValue(option.value);
                 router.replace(href, { scroll: false });
               });

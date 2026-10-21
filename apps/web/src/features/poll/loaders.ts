@@ -12,11 +12,13 @@ import {
   getPollDetails,
   getPollResults,
   getPollStatusCounts,
+  getPolls,
   listParticipantIdsByToken,
   listPollComments,
   listPollParticipants,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import type { PollStatus } from "@/features/poll/schema";
 import {
   filterCommentsForViewer,
   maskParticipantsForViewer,
@@ -24,6 +26,25 @@ import {
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
+
+export const loadPolls = cache(
+  async ({
+    status,
+    q,
+    member,
+    page,
+    pageSize,
+  }: {
+    status: PollStatus;
+    q?: string;
+    member?: string;
+    page: number;
+    pageSize: number;
+  }) => {
+    const scope = await loadActiveSpaceContentScope();
+    return getPolls({ status, q, member, page, pageSize, scope });
+  },
+);
 
 export const loadPollStatusCounts = cache(async () => {
   const scope = await loadActiveSpaceContentScope();
