@@ -158,15 +158,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        source: "/static/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=604800, stale-while-revalidate=86400",
-          },
-        ],
-      },
     ];
   },
   devIndicators:
