@@ -70,6 +70,5 @@
   "webhooksDescription": "Meddela dina egna system när förfrågningar och svar ändras. <a>Läs webhookdokumentationen</a>",
   "whenPollInactive": "När blir en förfrågan inaktiv?",
   "whyUpgrade": "Varför ska jag uppgradera?",
-  "whyUpgradeAnswer2": "Att uppgradera till ett abonnemang är vettigt om du använder Rallly ofta eller använder det i arbetet. Den nuvarande abonnemangsavgiften är anpassad för tidiga användare och kommer att öka i framtiden. Genom att uppgradera nu får du tidig tillgång till nya, högkvalitativa schemaläggningsverktyg när de släpps och låser din abonnemanskostnad så att du inte påverkas av framtida prishöjningar.",
-  "yearlySavePercent": "Spara {percent} %"
+  "whyUpgradeAnswer2": "Att uppgradera till ett abonnemang är vettigt om du använder Rallly ofta eller använder det i arbetet. Den nuvarande abonnemangsavgiften är anpassad för tidiga användare och kommer att öka i framtiden. Genom att uppgradera nu får du tidig tillgång till nya, högkvalitativa schemaläggningsverktyg när de släpps och låser din abonnemanskostnad så att du inte påverkas av framtida prishöjningar."
 }
