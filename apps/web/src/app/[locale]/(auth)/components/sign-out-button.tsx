@@ -11,6 +11,7 @@ export function SignOutButton() {
   return (
     <Button
       size="xl"
+      shape="rounded"
       loading={isSigningOut}
       onClick={() => {
         setIsSigningOut(true);

@@ -53,7 +53,11 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
               without consulting the server. A document navigation always
               sends the current cookies. */}
           <a
-            className={buttonVariants({ variant: "primary", size: "xl" })}
+            className={buttonVariants({
+              variant: "primary",
+              size: "xl",
+              shape: "rounded",
+            })}
             href={validateRedirectUrl(redirectTo) ?? "/"}
           >
             <Trans
