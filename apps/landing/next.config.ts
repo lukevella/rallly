@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
   // chunks, which stops the page from hydrating. The asset host must send
   // Access-Control-Allow-Origin on every response, or no browser will run
   // the scripts.
-  crossOrigin: "anonymous",
+  crossOrigin: process.env.NEXT_PUBLIC_ASSET_PREFIX ? "anonymous" : undefined,
   transpilePackages: [
     "@rallly/ui",
     "@rallly/tailwind-config",
