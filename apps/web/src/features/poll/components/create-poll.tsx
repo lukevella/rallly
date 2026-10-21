@@ -230,7 +230,20 @@ export const CreatePoll = ({
           id="create-poll"
           onSubmit={form.handleSubmit(async (formData) => {
             const title = required(formData?.title.trim());
-            await createGuestIfNeeded();
+            const session = await createGuestIfNeeded();
+            if (!session.ok) {
+              toast.error(
+                session.reason === "tooManyRequests"
+                  ? t("actionErrorTooManyRequests", {
+                      defaultValue: "You are making too many requests",
+                    })
+                  : t("guestSessionUnavailableError", {
+                      defaultValue:
+                        "We couldn't start a session for you. Check that cookies are enabled and try again.",
+                    }),
+              );
+              return;
+            }
             const res = await makePoll.mutateAsync({
               title: title,
               location: formData?.location?.trim(),
