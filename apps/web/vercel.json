@@ -9,7 +9,7 @@
   "crons": [
     {
       "path": "/api/house-keeping/auto-close-polls",
-      "schedule": "30 5 * * *"
+      "schedule": "15 * * * *"
     },
     {
       "path": "/api/house-keeping/delete-inactive-polls",
