@@ -412,6 +412,16 @@ export async function autoClosePolls({
 
     const closed = await prisma.$transaction(
       async (tx) => {
+        // FOR UPDATE conflicts with the KEY SHARE lock an option insert takes
+        // on its poll, so this waits out in-flight inserts and the UPDATE's
+        // fresh snapshot sees them. Ordered so overlapping runs can't deadlock.
+        await tx.$queryRaw`
+          SELECT p.id FROM polls p
+          WHERE p.id = ANY(${ids})
+          ORDER BY p.id
+          FOR UPDATE
+        `;
+
         const rows = await tx.$queryRaw<{ id: string }[]>`
         UPDATE polls p
         SET status = 'closed', closed_reason = 'auto'
