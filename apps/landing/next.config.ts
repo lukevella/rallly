@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
   // Serves /_next/static from a CDN-cached host to keep the immutable
   // bundles off Vercel's bandwidth bill. Unset outside production.
   assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
+  // Loads chunks from that host as CORS requests instead of opaque no-cors
+  // ones. Since the move, WebKit has kept broken cached copies of the opaque
+  // chunks, which stops the page from hydrating. The asset host must send
+  // Access-Control-Allow-Origin on every response, or no browser will run
+  // the scripts.
+  crossOrigin: process.env.NEXT_PUBLIC_ASSET_PREFIX ? "anonymous" : undefined,
   transpilePackages: [
     "@rallly/ui",
     "@rallly/tailwind-config",
