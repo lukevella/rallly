@@ -1091,31 +1091,16 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="faqNonprofit"
-                defaults="Do you offer discounts for nonprofits?"
+                i18nKey="faqDiscounts"
+                defaults="Do you offer discounts for nonprofits or schools?"
               />
             }
           >
             <Trans
               t={t}
               ns="home"
-              i18nKey="faqNonprofitAnswer"
-              defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. <1>Create a free account</1>, then email us at <0>support@rallly.co</0> from the same email address to request the discount. If you can, include a document showing your nonprofit status, such as a tax exemption letter or charity registration certificate."
-              components={[
-                <a
-                  key="email"
-                  className={faqLinkClassName}
-                  href="mailto:support@rallly.co"
-                />,
-                <a
-                  key="signup"
-                  className={faqLinkClassName}
-                  href={linkToApp("/", {
-                    ref: "pricing",
-                    cta: "pricing_faq_nonprofit",
-                  })}
-                />,
-              ]}
+              i18nKey="faqDiscountsAnswer"
+              defaults="No. Rallly is priced to be affordable for small teams and organizations on tight budgets, so instead of offering discounts to some customers, we keep the price low for everyone. Charities, schools and community groups are also welcome to use the free plan for as long as they like."
             />
           </FaqItem>
           <FaqItem
