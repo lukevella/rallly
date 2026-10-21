@@ -16,6 +16,12 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
   dsn: SENTRY_DSN,
+  // Release health sessions (one envelope per page load) and client reports
+  // (stats on events the SDK dropped) were most of the tunnel's requests and
+  // nothing reads them. Errors and traces are unaffected.
+  integrations: (defaults) =>
+    defaults.filter((integration) => integration.name !== "BrowserSession"),
+  sendClientReports: false,
   // Don't send personal identifiable information (PII) to Sentry. Every
   // category defaults to on, so each one that can carry PII is off here.
   dataCollection: {
