@@ -21,6 +21,7 @@ const Button = ({
   children,
   variant,
   size,
+  shape,
   ...props
 }: ButtonPrimitive.Props &
   VariantProps<typeof buttonVariants> & { loading?: boolean }) => {
@@ -29,7 +30,7 @@ const Button = ({
     <ButtonPrimitive
       className={cn(
         "group",
-        buttonVariants({ variant, size }),
+        buttonVariants({ variant, size, shape }),
         {
           "pointer-events-none": loading,
           "[&_svg:not([data-slot=spinner])]:hidden": loading && isIconButton,

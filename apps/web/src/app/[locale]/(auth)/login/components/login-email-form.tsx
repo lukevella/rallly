@@ -295,6 +295,7 @@ export function LoginWithEmailForm({
         <div>
           <Button
             size="xl"
+            shape="rounded"
             loading={form.formState.isSubmitting}
             type="submit"
             className="relative w-full"
