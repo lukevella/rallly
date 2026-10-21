@@ -435,6 +435,7 @@
   "guest": "Guest",
   "guestPollAlertDescription": "<0>Create an account</0> or <1>login</1> to claim this poll.",
   "guestPollAlertTitle": "Your administrator rights can be lost if you clear your cookies",
+  "guestSessionUnavailableError": "We couldn't start a session for you. Check that cookies are enabled and try again.",
   "hexColor": "Hex color",
   "hiddenParticipantName": "Participant #{number}",
   "hideAttribution": "Hide attribution",
