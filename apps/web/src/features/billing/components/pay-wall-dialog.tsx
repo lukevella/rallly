@@ -1,6 +1,10 @@
 "use client";
 
-import { isDisplayedCurrency, pricingData } from "@rallly/billing/pricing";
+import {
+  formatMinorUnitAmount,
+  isDisplayedCurrency,
+  pricingData,
+} from "@rallly/billing/pricing";
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import {
@@ -280,23 +284,12 @@ export function PayWallDialog({
     setSelectedPlan(spaceTierSchema.parse(value));
   };
 
-  const currencyFormatter = React.useMemo(
-    () =>
-      new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: currency.toUpperCase(),
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      }),
-    [locale, currency],
-  );
-
-  const getProPrice = () => {
-    if (isAnnual) {
-      return currencyFormatter.format(amounts.yearly / 12 / 100);
-    }
-    return currencyFormatter.format(amounts.monthly / 100);
-  };
+  const getProPrice = () =>
+    formatMinorUnitAmount({
+      amount: isAnnual ? Math.round(amounts.yearly / 12) : amounts.monthly,
+      currency,
+      locale,
+    });
 
   return (
     <Dialog
@@ -414,12 +407,16 @@ export function PayWallDialog({
                         defaults="{yearlyPrice} per year, save {savings}."
                         i18nKey="yearlyBillingDescription"
                         values={{
-                          yearlyPrice: currencyFormatter.format(
-                            amounts.yearly / 100,
-                          ),
-                          savings: currencyFormatter.format(
-                            (amounts.monthly * 12 - amounts.yearly) / 100,
-                          ),
+                          yearlyPrice: formatMinorUnitAmount({
+                            amount: amounts.yearly,
+                            currency,
+                            locale,
+                          }),
+                          savings: formatMinorUnitAmount({
+                            amount: amounts.monthly * 12 - amounts.yearly,
+                            currency,
+                            locale,
+                          }),
                         }}
                       />
                     </div>
@@ -459,7 +456,12 @@ export function PayWallDialog({
                 </TabsContent>
               )}
               {selectedPlan === "hobby" && (
-                <Button disabled={true} size="xl" className="w-full">
+                <Button
+                  disabled={true}
+                  size="xl"
+                  shape="rounded"
+                  className="w-full"
+                >
                   <Trans i18nKey="currentPlan" defaults="Current plan" />
                 </Button>
               )}

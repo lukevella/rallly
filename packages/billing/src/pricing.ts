@@ -98,3 +98,32 @@ export function getCountryCurrency(
   }
   return available.includes("usd") ? "usd" : available[0];
 }
+
+export function formatMinorUnitAmount({
+  amount,
+  currency,
+  locale,
+}: {
+  amount: number;
+  currency: string;
+  locale: string;
+}) {
+  const code = currency.toUpperCase();
+  // Stripe amounts are in the currency's minor unit, which Intl knows: two
+  // fraction digits for most currencies, none for JPY and friends.
+  const minorUnitDigits =
+    new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: code,
+    }).resolvedOptions().maximumFractionDigits ?? 2;
+  const scale = 10 ** minorUnitDigits;
+  // Whole amounts drop the fraction ("$10", not "$10.00"); any other amount
+  // shows every minor digit ("€5.50", not "€5.5").
+  const fractionDigits = amount % scale === 0 ? 0 : minorUnitDigits;
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: code,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(amount / scale);
+}
