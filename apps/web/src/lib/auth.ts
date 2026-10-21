@@ -287,7 +287,9 @@ export const authLib = betterAuth({
   ],
   socialProviders: {
     google:
-      env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+      env.GOOGLE_LOGIN_ENABLED !== "false" &&
+      env.GOOGLE_CLIENT_ID &&
+      env.GOOGLE_CLIENT_SECRET
         ? {
             clientId: env.GOOGLE_CLIENT_ID,
             clientSecret: env.GOOGLE_CLIENT_SECRET,
@@ -295,7 +297,9 @@ export const authLib = betterAuth({
           }
         : undefined,
     microsoft:
-      env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET
+      env.MICROSOFT_LOGIN_ENABLED !== "false" &&
+      env.MICROSOFT_CLIENT_ID &&
+      env.MICROSOFT_CLIENT_SECRET
         ? {
             tenantId: env.MICROSOFT_TENANT_ID,
             clientId: env.MICROSOFT_CLIENT_ID,

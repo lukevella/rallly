@@ -51,7 +51,7 @@ Google Meet uses the same Google OAuth app as Google sign in and Google Calendar
 https://<YOUR_DOMAIN>/api/integrations/callback/google-meet
 ```
 
-Keep the existing `/api/auth/callback/google` URI if you use Google sign in.
+Keep the existing `/api/auth/callback/google` URI if you use Google sign in. To use the client for Google Meet only, set `GOOGLE_LOGIN_ENABLED=false` so the Google sign in button is hidden.
 </Accordion>
 
 <ParamField path="GOOGLE_CLIENT_ID">
@@ -108,7 +108,7 @@ https://<YOUR_DOMAIN>/api/integrations/zoom/deauthorize
 
 ## Microsoft Teams
 
-Microsoft Teams uses the same Microsoft Entra ID registration as Microsoft sign in, with an extra redirect URI and Graph permissions. Setting the Microsoft variables for sign in does not turn on Teams: finish the steps below, then add `microsoft-teams` to `CONFERENCING_PROVIDERS`.
+Microsoft Teams uses the same Microsoft Entra ID registration as Microsoft sign in, with an extra redirect URI and Graph permissions. Setting the Microsoft variables for sign in does not turn on Teams: finish the steps below, then add `microsoft-teams` to `CONFERENCING_PROVIDERS`. To use the registration for Teams only, set `MICROSOFT_LOGIN_ENABLED=false` so the Microsoft sign in button is hidden.
 
 <Accordion title="Setup">
 1. Register an application in the [Microsoft Entra admin center](https://entra.microsoft.com/), or open your existing one. See [Single Sign-On](/self-hosting/single-sign-on#microsoft) for sign in.
