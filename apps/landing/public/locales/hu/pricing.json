@@ -64,6 +64,5 @@
   "webhooksDescription": "Értesítsd saját rendszered, amikor szavazások és válaszok megváltoznak. <a>Olvasd el a webhook dokumentációt</a>",
   "whenPollInactive": "Mikor lesz egy szavazás inaktív?",
   "whyUpgrade": "Miért fizessek elő?",
-  "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések.",
-  "yearlySavePercent": "{percent}% megtakarítás"
+  "whyUpgradeAnswer2": "Akkor érdemes előfizetned, ha a Rallly-t gyakran vagy munka miatt használod. A jelenlegi előfizetési ár speciális bevezető ár és a jövőben emelkedni fog. Ha most előfizetsz, korai hozzáférést kapsz új, minőségi ütemező eszközökhöz megjelenéskor és a jelenlegi előfizetési árat megőrizve, nem fognak érinteni a jövőbeni áremelések."
 }
