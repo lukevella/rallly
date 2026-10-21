@@ -71,5 +71,5 @@
   "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
   "whyUpgrade": "Warum sollte ich upgraden?",
   "whyUpgradeAnswer2": "Ein Upgrade auf einen kostenpflichtigen Plan lohnt sich, wenn du Rallly häufig nutzt oder beruflich einsetzt. Der aktuelle Preis ist ein spezieller Frühbucher-Tarif, der in Zukunft steigen wird. Wenn du jetzt ein Upgrade machst, erhältst du frühzeitigen Zugang zu neuen, hochwertigen Planungstools und sicherst dir den aktuellen Preis – zukünftige Preiserhöhungen betreffen dich dann nicht.",
-  "yearlySavePercent": "Spare {percent} %"
+  "yearlySaveUpTo": "Spare bis zu {percent}%"
 }

@@ -70,6 +70,5 @@
   "webhooksDescription": "Notifica i tuoi sistemi quando i sondaggi e le risposte cambiano. <a>Leggi la documentazione sui webhook</a>",
   "whenPollInactive": "Quando un sondaggio diventa inattivo?",
   "whyUpgrade": "Perché dovrei aggiornare?",
-  "whyUpgradeAnswer2": "L'aggiornamento a un piano a pagamento ha senso se si utilizza Rallly spesso o per lavoro. Il piano di abbonamento attuale è un piano speciale per i primi utilizzatori e aumenterà in futuro. Aggiornando il piano ora, otterrai accesso anticipato a nuovi strumenti di programmazione di alta qualità appena verranno rilasciati, e bloccherai il prezzo del piano di abbonamento in modo che non subisca eventuali aumenti futuri.",
-  "yearlySavePercent": "Risparmia il {percent}%"
+  "whyUpgradeAnswer2": "L'aggiornamento a un piano a pagamento ha senso se si utilizza Rallly spesso o per lavoro. Il piano di abbonamento attuale è un piano speciale per i primi utilizzatori e aumenterà in futuro. Aggiornando il piano ora, otterrai accesso anticipato a nuovi strumenti di programmazione di alta qualità appena verranno rilasciati, e bloccherai il prezzo del piano di abbonamento in modo che non subisca eventuali aumenti futuri."
 }

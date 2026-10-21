@@ -70,6 +70,5 @@
   "webhooksDescription": "Avertissez vos propres systèmes lorsque les sondages et les réponses changent. <a>Lire la documentation des webhooks</a>",
   "whenPollInactive": "Quand un sondage est-il devenu inactif ?",
   "whyUpgrade": "Pourquoi devrais-je mettre à niveau ?",
-  "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous bénéficierez d'un accès anticipé aux nouveaux outils de planification de haute qualité dès leur sortie et vous verrouillerez votre tarif d'abonnement, de sorte que vous ne serez pas affecté par de futures augmentations de prix.",
-  "yearlySavePercent": "Économisez {percent} %"
+  "whyUpgradeAnswer2": "La mise à niveau vers une offre payante est logique si vous utilisez Rallly souvent ou si vous l’utilisez au travail. Le taux d'abonnement actuel est un taux spécial de pré-adoption et augmentera à l'avenir. En mettant à niveau maintenant, vous bénéficierez d'un accès anticipé aux nouveaux outils de planification de haute qualité dès leur sortie et vous verrouillerez votre tarif d'abonnement, de sorte que vous ne serez pas affecté par de futures augmentations de prix."
 }
