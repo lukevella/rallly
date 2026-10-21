@@ -72,7 +72,11 @@ export async function QuickCreateWidget() {
         <div>
           <Link
             href="/new"
-            className={buttonVariants({ size: "xl", className: "w-full" })}
+            className={buttonVariants({
+              size: "xl",
+              shape: "rounded",
+              className: "w-full",
+            })}
           >
             <PlusIcon data-icon="inline-start" />
             <Trans

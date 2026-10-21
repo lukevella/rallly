@@ -25,6 +25,7 @@ export function LoginWithOIDC({
       }}
       className="relative w-full"
       size="xl"
+      shape="rounded"
     >
       {name}
       {isLastUsed ? <LastUsedBadge /> : null}
