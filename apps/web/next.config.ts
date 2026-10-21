@@ -33,6 +33,13 @@ const nextConfig: NextConfig = {
   // bundles off Vercel's bandwidth bill. Unset everywhere else.
   assetPrefix:
     process.env.NEXT_PUBLIC_ASSET_PREFIX ?? process.env.NEXT_PUBLIC_BASE_URL,
+  // Loads chunks from that host as CORS requests instead of opaque no-cors
+  // ones. Since the move, WebKit has kept broken cached copies of the opaque
+  // chunks, which stops the page from hydrating. The asset host must send
+  // Access-Control-Allow-Origin on every response, or no browser will run
+  // the scripts. Without a prefix the chunks come from the base URL, which
+  // sends no such header, so an instance opened on another host would break.
+  crossOrigin: process.env.NEXT_PUBLIC_ASSET_PREFIX ? "anonymous" : undefined,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
