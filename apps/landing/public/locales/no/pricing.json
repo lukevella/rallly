@@ -70,6 +70,5 @@
   "webhooksDescription": "Varsle dine systemer når avstemninger og svar endres. <a>Les webhook-dokumentasjonen</a>",
   "whenPollInactive": "Når blir en avstemning inaktiv?",
   "whyUpgrade": "Hvorfor bør jeg oppgradere?",
-  "whyUpgradeAnswer2": "Oppgradering til en betalt plan gir mening hvis du bruker Rallly ofte eller på jobb. Dagens abonnementspris er en spesiell tidligpris og vil økes i fremtiden. Ved å oppgradere nå, vil du få tidlig tilgang til nye planleggingsverktøy av høy kvalitet så fort de gis ut, og abonnementsprisen din låses, slik at du ikke påvirkes av fremtidige prisøkninger.",
-  "yearlySavePercent": "Spar {percent} %"
+  "whyUpgradeAnswer2": "Oppgradering til en betalt plan gir mening hvis du bruker Rallly ofte eller på jobb. Dagens abonnementspris er en spesiell tidligpris og vil økes i fremtiden. Ved å oppgradere nå, vil du få tidlig tilgang til nye planleggingsverktøy av høy kvalitet så fort de gis ut, og abonnementsprisen din låses, slik at du ikke påvirkes av fremtidige prisøkninger."
 }
