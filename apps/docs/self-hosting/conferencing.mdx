@@ -164,14 +164,26 @@ https://<YOUR_DOMAIN>/api/integrations/callback/webex
 
 ## Troubleshooting
 
-**Rallly does not start after enabling conferencing.** `CONFERENCING_PROVIDERS` has a value that is not a provider, or only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
+<Accordion title="Rallly does not start after enabling conferencing">
+`CONFERENCING_PROVIDERS` has a value that is not a provider, or only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
+</Accordion>
 
-**Conferencing does not appear in Settings.** `CONFERENCING_PROVIDERS` is unset or empty. Restart after editing `.env`.
+<Accordion title="Conferencing does not appear in Settings">
+`CONFERENCING_PROVIDERS` is unset or empty. Restart after editing `.env`.
+</Accordion>
 
-**Conferencing says no video call providers are set up, or a provider is missing.** A provider in `CONFERENCING_PROVIDERS` has no credentials. The startup warning in `./rallly.sh logs web` names it; add its variables as described above and restart.
+<Accordion title="Conferencing says no video call providers are set up, or a provider is missing">
+A provider in `CONFERENCING_PROVIDERS` has no credentials. The startup warning in `./rallly.sh logs web` names it; add its variables as described above and restart.
+</Accordion>
 
-**The provider says the redirect URI does not match** (`redirect_uri_mismatch` on Google). The URI registered with the provider differs from the one Rallly sends. Compare it character by character with the URI above, including `https`, your exact domain and the provider name at the end.
+<Accordion title="The provider says the redirect URI does not match">
+The URI registered with the provider differs from the one Rallly sends (Google reports this as `redirect_uri_mismatch`). Compare it character by character with the URI above, including `https`, your exact domain and the provider name at the end.
+</Accordion>
 
-**Google shows an "unverified app" warning.** Your consent screen is External and Google has not verified the `meetings.space.created` scope. Users can continue past the warning, or you can make the app Internal or submit it for verification.
+<Accordion title='Google shows an "unverified app" warning'>
+Your consent screen is External and Google has not verified the `meetings.space.created` scope. Users can continue past the warning, or you can make the app Internal or submit it for verification.
+</Accordion>
 
-**Connecting works but finalizing fails.** The provider refused to create the meeting. For Google Meet, check that the Google Meet REST API is enabled. For Teams, the account needs a Teams license. Disconnecting and reconnecting the account in Conferencing settings refreshes its tokens.
+<Accordion title="Connecting works but finalizing fails">
+The provider refused to create the meeting. For Google Meet, check that the Google Meet REST API is enabled. For Teams, the account needs a Teams license. Disconnecting and reconnecting the account in Conferencing settings refreshes its tokens.
+</Accordion>
