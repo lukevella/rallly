@@ -113,6 +113,8 @@ export const env = createEnv({
      */
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
+    // Set to "false" to keep the Google app for Calendar and Meet only.
+    GOOGLE_LOGIN_ENABLED: z.enum(["true", "false"]).default("true"),
 
     /**
      * Conferencing integrations (Google Meet, Zoom, Microsoft Teams, Webex).
@@ -133,6 +135,8 @@ export const env = createEnv({
     MICROSOFT_TENANT_ID: z.string().optional().default("common"),
     MICROSOFT_CLIENT_ID: z.string().optional(),
     MICROSOFT_CLIENT_SECRET: z.string().optional(),
+    // Set to "false" to keep the Microsoft registration for Teams only.
+    MICROSOFT_LOGIN_ENABLED: z.enum(["true", "false"]).default("true"),
 
     /**
      * App name
@@ -312,6 +316,7 @@ export const env = createEnv({
     LICENSE_API_AUTH_TOKEN: process.env.LICENSE_API_AUTH_TOKEN,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_LOGIN_ENABLED: process.env.GOOGLE_LOGIN_ENABLED,
     CONFERENCING_PROVIDERS: process.env.CONFERENCING_PROVIDERS,
     ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID,
     ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET,
@@ -321,6 +326,7 @@ export const env = createEnv({
     MICROSOFT_TENANT_ID: process.env.MICROSOFT_TENANT_ID,
     MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
     MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
+    MICROSOFT_LOGIN_ENABLED: process.env.MICROSOFT_LOGIN_ENABLED,
     PRIMARY_COLOR: process.env.PRIMARY_COLOR,
     PRIMARY_COLOR_DARK: process.env.PRIMARY_COLOR_DARK,
     LOGO_URL: process.env.LOGO_URL,

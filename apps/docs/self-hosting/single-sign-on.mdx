@@ -34,6 +34,10 @@ https://<YOUR_DOMAIN>/api/auth/callback/google
   The client secret of your Google application.
 </ParamField>
 
+<ParamField path="GOOGLE_LOGIN_ENABLED" default="true">
+  Google sign in is offered when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Set to `false` to hide it and keep the Google app for [Google Meet](/self-hosting/conferencing#google-meet) and Google Calendar only.
+</ParamField>
+
 ## Microsoft
 
 <Accordion title="Setup">
@@ -79,6 +83,10 @@ Under **API permissions**, add the delegated Microsoft Graph permissions `Online
 
 <ParamField path="MICROSOFT_CLIENT_SECRET">
   The client secret of your Microsoft application.
+</ParamField>
+
+<ParamField path="MICROSOFT_LOGIN_ENABLED" default="true">
+  Microsoft sign in is offered when `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` are set. Set to `false` to hide it and keep the registration for [Microsoft Teams](/self-hosting/conferencing#microsoft-teams) only.
 </ParamField>
 
 ## OpenID Connect (OIDC)
