@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  formatMinorUnitAmount,
   isEarlySupporter,
   isStripeInvalidRequestError,
   resolvePriceSet,
@@ -100,26 +99,6 @@ describe("resolvePriceSet", () => {
         pricing: { ...pricing, earlySupporter: undefined },
       }),
     ).toEqual({ monthly: pricing.monthly, yearly: pricing.yearly });
-  });
-});
-
-describe("formatMinorUnitAmount", () => {
-  it("formats minor units as a localized currency string", () => {
-    expect(
-      formatMinorUnitAmount({ amount: 5600, currency: "usd", locale: "en" }),
-    ).toBe("$56");
-  });
-
-  it("keeps cents when the amount needs them", () => {
-    expect(
-      formatMinorUnitAmount({ amount: 467, currency: "usd", locale: "en" }),
-    ).toBe("$4.67");
-  });
-
-  it("does not scale zero decimal currencies", () => {
-    expect(
-      formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
-    ).toBe("¥5,600");
   });
 });
 

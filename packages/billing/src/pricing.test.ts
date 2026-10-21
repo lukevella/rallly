@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getCountryCurrency, yearlySavingsPercent } from "./pricing";
+import {
+  formatMinorUnitAmount,
+  getCountryCurrency,
+  yearlySavingsPercent,
+} from "./pricing";
 
 describe("yearlySavingsPercent", () => {
   it("rounds the saving of yearly against twelve months to a whole percent", () => {
@@ -36,5 +40,31 @@ describe("getCountryCurrency", () => {
   it("only returns a currency Stripe actually offers", () => {
     expect(getCountryCurrency("GB", ["usd", "eur"])).toBe("usd");
     expect(getCountryCurrency("US", ["eur", "gbp"])).toBe("eur");
+  });
+});
+
+describe("formatMinorUnitAmount", () => {
+  it("formats minor units as a localized currency string", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 5600, currency: "usd", locale: "en" }),
+    ).toBe("$56");
+  });
+
+  it("keeps cents when the amount needs them", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 467, currency: "usd", locale: "en" }),
+    ).toBe("$4.67");
+  });
+
+  it("keeps the trailing zero of a partial amount", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 550, currency: "eur", locale: "en" }),
+    ).toBe("€5.50");
+  });
+
+  it("does not scale zero decimal currencies", () => {
+    expect(
+      formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
+    ).toBe("¥5,600");
   });
 });
