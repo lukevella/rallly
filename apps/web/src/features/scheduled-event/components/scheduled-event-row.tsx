@@ -23,6 +23,7 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { CalendarPlusIcon, MoreHorizontalIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { AddToCalendarMenuItems } from "@/features/calendars/components/add-to-calendar-menu-items";
 import { isScheduledEventEnabled } from "@/features/scheduled-event/constants";
@@ -39,9 +40,12 @@ export function ScheduledEventRowActions({
 }) {
   const { t } = useTranslation();
   const dialog = useDialog();
+  const router = useRouter();
   const cancelEvent = trpc.events.cancel.useMutation({
     onSuccess: () => {
       dialog.dismiss();
+      // The events list is server rendered, so refresh it.
+      router.refresh();
     },
   });
 
