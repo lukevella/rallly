@@ -16,9 +16,6 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  // Routes browser events through a first-party host (apps/sentry-tunnel) so
-  // ad blockers don't drop them. Unset, events go straight to the DSN.
-  tunnel: process.env.NEXT_PUBLIC_SENTRY_TUNNEL,
   // Release health sessions (one envelope per page load) and client reports
   // (stats on events the SDK dropped) were most of the tunnel's requests and
   // nothing reads them. Errors and traces are unaffected.
