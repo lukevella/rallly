@@ -1,16 +1,24 @@
-import { useParticipants } from "@/features/poll/client";
-import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { useParticipants, usePoll } from "@/features/poll/client";
+import { createOptionsContextValue } from "@/features/poll/components/poll-context";
 import { useTranslation } from "@/i18n/client";
+import { useDateTimeConfig } from "@/lib/datetime/client";
 import { dayjs } from "@/lib/dayjs";
 
 export const useCsvExporter = () => {
-  const { poll } = usePoll();
-  const { options } = useOptions();
+  const poll = usePoll();
   const { t } = useTranslation();
   const { participants } = useParticipants();
+  const { locale, timeZone: viewerTimeZone, timeFormat } = useDateTimeConfig();
 
   return {
     exportToCsv: () => {
+      const { options } = createOptionsContextValue({
+        pollOptions: poll.options,
+        pollTimeZone: poll.timeZone,
+        locale,
+        timeZone: viewerTimeZone,
+        timeFormat,
+      });
       // Excel only recognises a naive "YYYY-MM-DD HH:mm:ss" value (no "T", no
       // offset) as a date, so the timezone lives in the header, not the cell.
       // Use the IANA zone name rather than a fixed offset so the label stays
