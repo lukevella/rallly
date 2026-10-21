@@ -19,6 +19,12 @@ Sentry.init({
   // Routes browser events through a first-party host (apps/sentry-tunnel) so
   // ad blockers don't drop them. Unset, events go straight to the DSN.
   tunnel: process.env.NEXT_PUBLIC_SENTRY_TUNNEL,
+  // Release health sessions (one envelope per page load) and client reports
+  // (stats on events the SDK dropped) were most of the tunnel's requests and
+  // nothing reads them. Errors and traces are unaffected.
+  integrations: (defaults) =>
+    defaults.filter((integration) => integration.name !== "BrowserSession"),
+  sendClientReports: false,
   // Don't send personal identifiable information (PII) to Sentry. Every
   // category defaults to on, so each one that can carry PII is off here.
   dataCollection: {
