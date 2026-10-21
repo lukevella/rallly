@@ -68,6 +68,5 @@
   "webhooksDescription": "Notifica a tus sistemas cuando cambien las encuestas y las respuestas. <a>Consulta la documentación de webhooks</a>",
   "whenPollInactive": "¿Cuándo una encuesta se vuelve inactiva?",
   "whyUpgrade": "¿Por qué debería mejorar a un plan de pago?",
-  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso anticipado a nuevas herramientas de programación de alta calidad a medida que se publiquen y fijarás tu tarifa de suscripción para que no te veas afectado por futuros aumentos de precios.",
-  "yearlySavePercent": "Ahorra {percent} %"
+  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso anticipado a nuevas herramientas de programación de alta calidad a medida que se publiquen y fijarás tu tarifa de suscripción para que no te veas afectado por futuros aumentos de precios."
 }
