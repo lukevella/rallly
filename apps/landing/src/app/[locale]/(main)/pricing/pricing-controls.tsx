@@ -183,15 +183,6 @@ export function PricingControlsDivider() {
   );
 }
 
-export function YearlySavingsBadge({
-  labels,
-}: {
-  labels: Record<string, React.ReactNode>;
-}) {
-  const { currency } = usePricing();
-  return labels[currency] ?? null;
-}
-
 export function PlanPrice() {
   const { interval, currency, prices, locale } = usePricing();
   const amounts = prices[currency];
