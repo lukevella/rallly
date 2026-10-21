@@ -172,6 +172,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           defaultValue:
             "We couldn't verify your session. Please refresh the page and try again.",
         });
+      case "sessionUnavailable":
+        return t("guestSessionUnavailableError", {
+          defaultValue:
+            "We couldn't start a session for you. Check that cookies are enabled and try again.",
+        });
       default:
         return t("newParticipantFormSubmitError", {
           defaultValue:
@@ -271,7 +276,13 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             if (!pollId) {
               throw new Error("NewParticipantForm needs a pollId");
             }
-            await createGuestIfNeeded();
+            const session = await createGuestIfNeeded();
+            if (!session.ok) {
+              setError("root", {
+                message: getSubmitErrorMessage(session.reason),
+              });
+              return;
+            }
             const result = await addParticipant.execute({
               name: data.name,
               votes: props.votes,
