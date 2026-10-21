@@ -1,7 +1,6 @@
 import "server-only";
 
-import type { Prisma } from "@rallly/database";
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { revalidatePath } from "next/cache";
 import { recordPollActivities } from "@/features/activity/mutations";
@@ -368,11 +367,14 @@ const AUTO_CLOSE_POLLS_BUDGET_MS = 120_000;
  * delete-inactive-polls keys off. RETURNING feeds the activity writes, which
  * commit in the same transaction as the closes.
  *
- * Works in batches, each its own short transaction, so a backlog of tens of
- * thousands of polls never holds one transaction past its timeout (which
- * rolls back every close and leaves the backlog to grow) or past the webhook
- * fan-out's overlap window. Stops starting batches after `budgetMs`; any
- * remainder is picked up by the next run.
+ * Finding due polls probes the options of every open poll. That usually
+ * takes seconds, but on a cold compute, or the first run after a mass close
+ * leaves hint bits to set, it has taken close to a minute, so the scan runs
+ * once, outside any transaction. The closes then go in batches by primary key, each its own
+ * short transaction that re-checks the condition, so a poll reopened or given
+ * a new option since the scan stays open. Short transactions also keep each
+ * batch inside the webhook fan-out's overlap window. Stops starting batches
+ * after `budgetMs`; any remainder is picked up by the next run.
  */
 export async function autoClosePolls({
   batchSize = AUTO_CLOSE_POLLS_BATCH_SIZE,
@@ -384,29 +386,36 @@ export async function autoClosePolls({
   const startedAt = Date.now();
   let totalClosed = 0;
 
-  while (Date.now() - startedAt < budgetMs) {
+  const isDue = Prisma.sql`
+    p.status = 'open'
+    AND p.deleted = false
+    AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
+    AND NOT EXISTS (
+      SELECT 1 FROM options o
+      WHERE o.poll_id = p.id
+        AND o.start_time + (CASE WHEN o.duration_minutes = 0
+              THEN interval '24 hours'
+              ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+    )
+  `;
+
+  const due = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT p.id FROM polls p WHERE ${isDue}
+  `;
+
+  for (let i = 0; i < due.length; i += batchSize) {
+    if (Date.now() - startedAt >= budgetMs) {
+      break;
+    }
+
+    const ids = due.slice(i, i + batchSize).map(({ id }) => id);
+
     const closed = await prisma.$transaction(
       async (tx) => {
         const rows = await tx.$queryRaw<{ id: string }[]>`
-        WITH due AS (
-          SELECT p.id FROM polls p
-          WHERE p.status = 'open'
-            AND p.deleted = false
-            AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
-            AND NOT EXISTS (
-              SELECT 1 FROM options o
-              WHERE o.poll_id = p.id
-                AND o.start_time + (CASE WHEN o.duration_minutes = 0
-                      THEN interval '24 hours'
-                      ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
-            )
-          LIMIT ${batchSize}
-          FOR UPDATE OF p SKIP LOCKED
-        )
         UPDATE polls p
         SET status = 'closed', closed_reason = 'auto'
-        FROM due
-        WHERE p.id = due.id
+        WHERE p.id = ANY(${ids}) AND ${isDue}
         RETURNING p.id
       `;
 
@@ -422,16 +431,10 @@ export async function autoClosePolls({
 
         return rows.length;
       },
-      // Finding due polls scans every open poll's options, which can outlast
-      // Prisma's 5s default on a cold database even when few are due.
       { timeout: 30_000 },
     );
 
     totalClosed += closed;
-
-    if (closed < batchSize) {
-      break;
-    }
   }
 
   return totalClosed;
