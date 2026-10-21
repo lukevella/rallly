@@ -1,6 +1,14 @@
 import { cn } from "@rallly/ui";
 import { env } from "@/env";
-import { LOGO_VIEWBOX } from "@/features/branding/constants";
+import {
+  DefaultLogo,
+  DefaultWordmark,
+} from "@/features/branding/components/default-logo";
+import {
+  DEFAULT_LOGO_URL,
+  DEFAULT_LOGO_URL_DARK,
+  LOGO_VIEWBOX,
+} from "@/features/branding/constants";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
 
 const sizes = {
@@ -20,6 +28,21 @@ export const Logo = async ({
   size?: keyof typeof sizes | "fit";
 }) => {
   const { logo } = await getInstanceBrandingConfig();
+
+  // The default logo is inlined; only a custom one is fetched as an image
+  if (logo.light === DEFAULT_LOGO_URL && logo.dark === DEFAULT_LOGO_URL_DARK) {
+    if (size === "fit") {
+      return <DefaultLogo className={className} />;
+    }
+    return (
+      <div
+        className={cn("inline-block", className)}
+        style={{ height: sizes[size].height }}
+      >
+        <DefaultWordmark className="h-full w-auto" />
+      </div>
+    );
+  }
 
   if (size === "fit") {
     return (
