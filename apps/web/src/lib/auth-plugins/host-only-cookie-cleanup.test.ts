@@ -21,10 +21,12 @@ async function runHandler({
   path,
   cookieHeader,
   responseSetCookie,
+  flag = "router",
 }: {
   path: string;
   cookieHeader?: string;
   responseSetCookie?: string;
+  flag?: string;
 }) {
   // biome-ignore lint/style/noNonNullAssertion: the plugin always defines this hook
   const { handler } = hostOnlyCookieCleanup.hooks!.after![0];
@@ -45,6 +47,7 @@ async function runHandler({
       responseHeaders,
     },
     returnHeaders: true,
+    _flag: flag,
   } as never)) as { headers: Headers };
 
   return result.headers.getSetCookie();
@@ -78,6 +81,16 @@ describe("hostOnlyCookieCleanup", () => {
     });
 
     expect(cookies).toHaveLength(2);
+  });
+
+  it("does nothing on direct auth.api calls, where nextCookies would let the deletion replace the real cookie", async () => {
+    const cookies = await runHandler({
+      path: "/update-user",
+      flag: "json",
+      responseSetCookie: `${SESSION_TOKEN}=new.token; Max-Age=5184000; Domain=.rallly.test; Path=/; HttpOnly; Secure; SameSite=Lax`,
+    });
+
+    expect(cookies).toEqual([]);
   });
 
   it("always clears host-only cookies on sign-out", async () => {

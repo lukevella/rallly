@@ -20,6 +20,13 @@ export const hostOnlyCookieCleanup: BetterAuthPlugin = {
       {
         matcher: () => !!env.NEXT_PUBLIC_COOKIE_DOMAIN,
         handler: createAuthMiddleware(async (ctx) => {
+          // Only on requests through the HTTP handler. Direct auth.api
+          // calls (server actions) reach the browser via nextCookies, which
+          // collapses Set-Cookie into a name-keyed map: our host-only
+          // deletion would replace the real domain cookie of the same name,
+          // so updateUser's fresh session_data never lands and the cookie
+          // cache serves the old user until it expires.
+          if (!("_flag" in ctx) || ctx._flag !== "router") return;
           // /sign-out always cleans up. For every other path, clean up
           // when a real session token landed in the response — covers
           // sign-in, sign-up, OAuth callbacks, OTP verify, and periodic
