@@ -1,9 +1,9 @@
 import * as z from "zod";
 import { pollStatusSchema } from "@/features/poll/schema";
 
-export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 50;
 
-export const pageSchema = z.coerce.number().default(1);
+export const pageSchema = z.coerce.number().int().min(1).catch(1);
 
 export const querySchema = z
   .string()

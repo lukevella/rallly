@@ -10,36 +10,45 @@ import {
 } from "@rallly/ui/select";
 import { UsersIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useOptimistic, useTransition } from "react";
+import type React from "react";
+import { startTransition, useOptimistic, useTransition } from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Trans } from "@/i18n/client";
 
 interface MemberSelectorProps {
   members: { userId: string; name: string; image?: string }[];
   className?: string;
+  // Lets the page observe the navigation, e.g. to show a loading state.
+  startTransition?: React.TransitionStartFunction;
 }
 
-export function MemberSelector({ members, className }: MemberSelectorProps) {
+export function MemberSelector({
+  members,
+  className,
+  startTransition: startNavigation = startTransition,
+}: MemberSelectorProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startLocalTransition] = useTransition();
 
   const currentMember = searchParams.get("member") || "all";
   const [optimisticMember, setOptimisticMember] = useOptimistic(currentMember);
 
   const handleMemberChange = (memberId: string) => {
-    startTransition(() => {
-      // Optimistically update the UI within the transition
-      setOptimisticMember(memberId);
+    startLocalTransition(() => {
+      startNavigation(() => {
+        // Optimistically update the UI within the transition
+        setOptimisticMember(memberId);
 
-      const params = new URLSearchParams(searchParams);
-      if (memberId === "all") {
-        params.delete("member"); // Remove member param for "all"
-      } else {
-        params.set("member", memberId);
-      }
-      params.delete("page"); // Reset pagination when changing member
-      router.push(`?${params.toString()}`);
+        const params = new URLSearchParams(searchParams);
+        if (memberId === "all") {
+          params.delete("member"); // Remove member param for "all"
+        } else {
+          params.set("member", memberId);
+        }
+        params.delete("page"); // Reset pagination when changing member
+        router.push(`?${params.toString()}`);
+      });
     });
   };
 

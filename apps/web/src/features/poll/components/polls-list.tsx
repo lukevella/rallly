@@ -38,14 +38,12 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import type React from "react";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { DataList } from "@/components/data-list";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { Link } from "@/components/link";
-import { ListViewContent } from "@/components/list-view";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
-import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
@@ -156,8 +154,7 @@ function PollRowActions({
   const isFree = useIsFree();
   const deletePollDialog = useDialog();
   const duplicateDialog = useDialog();
-  // Refresh server components so server-fetched data that depends on poll
-  // status (e.g. the status filter counts) stays in sync with the list.
+  // The list and the status counts are server rendered, so refresh them.
   const refresh = { onSuccess: () => router.refresh() };
   const deletePoll = trpc.polls.markAsDeleted.useMutation(refresh);
   const closePoll = trpc.polls.close.useMutation(refresh);
@@ -412,7 +409,7 @@ const columns = [
   }),
 ];
 
-function PollsListSkeleton() {
+export function PollsListSkeleton() {
   return (
     <div aria-hidden className="py-2">
       {Array.from({ length: 6 }).map((_, i) => (
@@ -429,40 +426,13 @@ function PollsListSkeleton() {
   );
 }
 
-export function PollsInfiniteList({
-  status,
-  search,
-  member,
+export function PollsList({
+  polls,
   emptyState,
 }: {
-  status?: PollStatus;
-  search?: string;
-  member?: string;
+  polls: PollRow[];
   emptyState: React.ReactNode;
 }) {
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status: queryStatus,
-  } = trpc.polls.infiniteChronological.useInfiniteQuery(
-    {
-      status,
-      search,
-      member,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
-
-  const polls = React.useMemo(
-    () => data?.pages.flatMap((page) => page.polls) ?? [],
-    [data],
-  );
-
   const table = useReactTable({
     data: polls,
     columns,
@@ -470,77 +440,14 @@ export function PollsInfiniteList({
     getRowId: (poll) => poll.id,
   });
 
-  const loadMoreRef = React.useRef<HTMLDivElement>(null);
-
-  const handleLoadMore = React.useCallback(async () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      await fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  React.useEffect(() => {
-    const loadMoreElement = loadMoreRef.current;
-    if (!loadMoreElement) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          handleLoadMore();
-        }
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    observer.observe(loadMoreElement);
-
-    return () => {
-      observer.unobserve(loadMoreElement);
-    };
-  }, [handleLoadMore]);
-
-  if (queryStatus === "pending") {
-    return (
-      <ListViewContent>
-        <PollsListSkeleton />
-      </ListViewContent>
-    );
-  }
-
-  if (queryStatus === "error") {
-    return (
-      <ListViewContent>
-        <div className="py-8 text-center text-red-600">
-          Error loading polls: {error?.message}
-        </div>
-      </ListViewContent>
-    );
-  }
-
   if (polls.length === 0) {
-    return <ListViewContent>{emptyState}</ListViewContent>;
+    return emptyState;
   }
 
   return (
-    <ListViewContent>
-      <DataList
-        table={table}
-        className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] md:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
-      />
-      {hasNextPage && (
-        <div ref={loadMoreRef} className="flex justify-center py-4">
-          {isFetchingNextPage && (
-            <div className="flex items-center gap-2">
-              <Spinner />
-              <span className="text-muted-foreground text-sm">
-                <Trans i18nKey="loading" defaults="Loading..." />
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-    </ListViewContent>
+    <DataList
+      table={table}
+      className="grid-cols-[auto_minmax(0,1fr)_auto] sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] md:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto_auto]"
+    />
   );
 }

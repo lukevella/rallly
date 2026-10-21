@@ -15,9 +15,12 @@ import { Trans } from "@/i18n/client";
 export function SearchInput({
   placeholder,
   className,
+  startTransition: startNavigation = React.startTransition,
 }: {
   placeholder: string;
   className?: string;
+  // Lets the page observe the navigation, e.g. to show a loading state.
+  startTransition?: React.TransitionStartFunction;
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -49,7 +52,9 @@ export function SearchInput({
 
     setIsDebouncing(false);
     startTransition(() => {
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      startNavigation(() => {
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      });
     });
   };
 

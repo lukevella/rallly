@@ -33,11 +33,7 @@ import { EmailBudgetStore } from "@/features/email-budget/service";
 import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
-import {
-  canUserManagePoll,
-  getPolls,
-  hasPollAdminAccess,
-} from "@/features/poll/data";
+import { canUserManagePoll, hasPollAdminAccess } from "@/features/poll/data";
 import {
   assertOpenPollCapacity,
   checkOpenPollCapacity,
@@ -185,43 +181,6 @@ function getPollTier({
 
 export const polls = router({
   invites,
-  infiniteChronological: spaceProcedure
-    .input(
-      z.object({
-        status: z.enum(["open", "closed", "scheduled", "canceled"]).optional(),
-        search: z.string().optional(),
-        member: z.string().optional(),
-        cursor: z.number().optional().default(1),
-        limit: z.number().default(20),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const { cursor: page, limit: pageSize, status, search, member } = input;
-
-      const result = await getPolls({
-        status,
-        q: search,
-        member,
-        page,
-        pageSize,
-        scope: ctx.contentScope,
-      });
-
-      let nextCursor: number | undefined;
-      if (result.hasNextPage) {
-        nextCursor = page + 1;
-      }
-
-      return {
-        polls: result.polls.map((poll) => ({
-          ...poll,
-          inviteLink: shortUrl(`/invite/${poll.id}`),
-        })),
-        nextCursor,
-        hasNextPage: result.hasNextPage,
-        total: result.total,
-      };
-    }),
   make: possiblyPublicProcedure
     .input(
       z.object({
