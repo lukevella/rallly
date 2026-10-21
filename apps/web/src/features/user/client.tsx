@@ -81,6 +81,14 @@ export function useUser() {
         try {
           const { error } = await authClient.signIn.anonymous();
           result = toGuestSessionResult(error);
+          if (result.ok) {
+            // A browser that blocks cookies drops Set-Cookie and still
+            // reports success, so only reading the session back proves it.
+            const { data: session } = await authClient.getSession();
+            if (!session?.user) {
+              result = { ok: false, reason: "sessionUnavailable" };
+            }
+          }
         } catch {
           result = { ok: false, reason: "sessionUnavailable" };
         }
