@@ -183,11 +183,6 @@ const sentryWebpackPluginOptions = {
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
-
-  // Routes browser events through a same-origin rewrite so ad blockers don't
-  // drop them. A fixed path rather than `true` because the proxy matcher in
-  // src/proxy.ts must exclude it, and `true` picks a new path every build.
-  tunnelRoute: "/z1tk88rw",
 };
 
 const withBundleAnalyzerConfig = withBundleAnalyzer(nextConfig);

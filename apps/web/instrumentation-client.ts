@@ -16,6 +16,9 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
   dsn: SENTRY_DSN,
+  // Routes browser events through a first-party host (apps/sentry-tunnel) so
+  // ad blockers don't drop them. Unset, events go straight to the DSN.
+  tunnel: process.env.NEXT_PUBLIC_SENTRY_TUNNEL,
   // Don't send personal identifiable information (PII) to Sentry. Every
   // category defaults to on, so each one that can carry PII is off here.
   dataCollection: {

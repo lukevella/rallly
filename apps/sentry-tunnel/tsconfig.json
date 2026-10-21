@@ -1,0 +1,10 @@
+{
+  "extends": "@rallly/tsconfig/node.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "lib": ["es2022", "dom"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["**/*.ts"]
+}
