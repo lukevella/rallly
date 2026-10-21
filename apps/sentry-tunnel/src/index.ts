@@ -12,6 +12,11 @@ const corsHeaders = {
 
 const forwardedResponseHeaders = ["X-Sentry-Rate-Limits", "Retry-After"];
 
+// Browser envelopes carry errors and transactions only (no replays or
+// attachments), which Sentry caps at 1 MB each, so anything larger is not
+// worth buffering.
+const maxBodyBytes = 5 * 1024 * 1024;
+
 export default {
   async fetch(request: Request) {
     if (request.method === "OPTIONS") {
@@ -25,7 +30,16 @@ export default {
       });
     }
 
+    const contentLength = Number(request.headers.get("Content-Length"));
+    if (contentLength > maxBodyBytes) {
+      return new Response(null, { status: 413, headers: corsHeaders });
+    }
+
     const body = await request.arrayBuffer();
+    if (body.byteLength > maxBodyBytes) {
+      return new Response(null, { status: 413, headers: corsHeaders });
+    }
+
     const upstream = resolveUpstream(new Uint8Array(body));
     if (!upstream) {
       return new Response(null, { status: 400, headers: corsHeaders });
@@ -40,11 +54,16 @@ export default {
       upstreamHeaders.set("Content-Encoding", contentEncoding);
     }
 
-    const response = await fetch(upstream, {
-      method: "POST",
-      headers: upstreamHeaders,
-      body,
-    });
+    let response: Response;
+    try {
+      response = await fetch(upstream, {
+        method: "POST",
+        headers: upstreamHeaders,
+        body,
+      });
+    } catch {
+      return new Response(null, { status: 502, headers: corsHeaders });
+    }
 
     const headers = new Headers(corsHeaders);
     for (const name of forwardedResponseHeaders) {
