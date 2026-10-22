@@ -1,4 +1,4 @@
-import { ActivityIcon, CalendarIcon, InboxIcon } from "lucide-react";
+import { CalendarIcon, InboxIcon } from "lucide-react";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -7,7 +7,6 @@ import {
 } from "@/components/empty-state";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import { PollProvider } from "@/features/poll/client";
-import { EventCard } from "@/features/poll/components/event-card";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollTopDates } from "@/features/poll/components/poll-top-dates";
 import {
@@ -21,6 +20,7 @@ import {
 import { Trans } from "@/i18n/client";
 import { OverviewLayout } from "./components/overview-layout";
 import { OverviewSection } from "./components/overview-section";
+import { PollDescriptionCard } from "./components/poll-description-card";
 import { RecentResponsesList } from "./components/recent-responses-list";
 
 function OverviewCard({ children }: { children: React.ReactNode }) {
@@ -46,25 +46,13 @@ export default async function Page({
       loadPollActivity(pollId),
     ],
   );
-  // The event card reads the full poll from the poll provider.
+  // The description card reads the full poll from the poll provider.
   const adminPoll = await loadAdminPoll(pollId);
-
-  const eventCard = (
-    <EventCard
-      // Rendered here so the markdown parser stays on the server
-      description={
-        <EventMetaDescription
-          className="mt-1 text-muted-foreground"
-          content={adminPoll.poll.description}
-        />
-      }
-    />
-  );
-  // Polls created before activity was recorded have no poll created event,
-  // so the card heads the thread on its own.
-  const hasPollCreated = activity.some(
-    ({ event }) => event.type === "poll_created",
-  );
+  // The description card stands in for the poll created event, as a pull
+  // request's description does. Oldest first, like a conversation.
+  const thread = activity
+    .filter(({ event }) => event.type !== "poll_created")
+    .reverse();
 
   return (
     <OverviewLayout
@@ -75,27 +63,19 @@ export default async function Page({
           comments={adminPoll.comments}
           viewerRole="admin"
         >
-          {hasPollCreated ? null : <div className="mb-6">{eventCard}</div>}
-          {activity.length > 0 ? (
-            // The thread reads like a conversation, oldest first.
-            <PollActivityList
-              activity={[...activity].reverse()}
-              timeZone={poll.timeZone}
-              pollCreatedDetails={eventCard}
-            />
-          ) : (
-            <EmptyState className="py-10">
-              <EmptyStateIcon>
-                <ActivityIcon />
-              </EmptyStateIcon>
-              <EmptyStateTitle>
-                <Trans
-                  i18nKey="pollOverviewNoActivity"
-                  defaults="No activity yet"
-                />
-              </EmptyStateTitle>
-            </EmptyState>
-          )}
+          <PollDescriptionCard
+            // Rendered here so the markdown parser stays on the server
+            description={
+              <EventMetaDescription
+                className="text-muted-foreground"
+                content={adminPoll.poll.description}
+              />
+            }
+            hasActivity={thread.length > 0}
+          />
+          {thread.length > 0 ? (
+            <PollActivityList activity={thread} timeZone={poll.timeZone} />
+          ) : null}
         </PollProvider>
       }
       cards={
