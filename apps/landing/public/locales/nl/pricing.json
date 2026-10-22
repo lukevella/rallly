@@ -53,6 +53,8 @@
   "planFreeDescription": "Voor gewone gebruikers",
   "planProDescription": "Voor geavanceerde gebruikers en professionals",
   "pollLimit": "Is er een limiet aan het aantal polls dat ik kan maken?",
+  "pollLimitAnswer": "Nee. Er is bij geen enkel abonnement een limiet aan het aantal polls dat je kunt maken of het aantal mensen dat erop kan stemmen. Bij het gratis abonnement worden polls verwijderd zodra al hun datums meer dan 30 dagen geleden zijn en er 30 dagen geen activiteit is geweest. Sommige functies, zoals een eigen huisstijl en geavanceerde pollinstellingen, zijn alleen beschikbaar bij een betaald abonnement. Zie de bovenstaande vergelijkingstabel voor de volledige lijst.",
+  "pollLimitAnswerOpenPollLimit": "Er is geen limiet aan het aantal polls dat je kunt maken of het aantal mensen dat erop kan stemmen. Bij het gratis abonnement kunnen er maximaal {count} polls tegelijk openstaan en stemmen verzamelen. Rond er één af of sluit er één om ruimte te maken voor een andere. Pro heeft geen limiet. Bij het gratis abonnement worden polls verwijderd zodra al hun datums meer dan 30 dagen geleden zijn en er 30 dagen geen activiteit is geweest. Sommige functies, zoals een eigen huisstijl en geavanceerde pollinstellingen, zijn alleen beschikbaar bij een betaald abonnement. Zie de bovenstaande vergelijkingstabel voor de volledige lijst.",
   "pricingDescription": "Ga gratis aan de slag. Inloggen is niet vereist.",
   "pricingFinalCtaDescription": "Maak je eerste poll in minder dan een minuut. Upgrade wanneer je meer nodig hebt.",
   "pricingFinalCtaTitle": "Gratis aan de slag",
@@ -69,6 +71,8 @@
   "webhooks": "Webhooks",
   "webhooksDescription": "Stel je eigen systemen op de hoogte wanneer Polls en reacties wijzigen. <a>Lees de webhook-documentatie</a>",
   "whenPollInactive": "Wanneer krijgt een poll de status \"inactief\"?",
+  "whenPollInactiveAnswer": "Polls worden inactief wanneer alle datumopties meer dan 30 dagen geleden zijn en er 30 dagen geen activiteit is geweest. Activiteit omvat nieuwe stemmen, opmerkingen of wijzigingen aan de poll. Inactieve polls worden automatisch verwijderd als je geen betaald abonnement hebt.",
   "whyUpgrade": "Waarom zou ik upgraden?",
-  "whyUpgradeAnswer2": "Upgraden naar een betaald abonnement is zinvol als je Rallly vaak gebruikt of het voor je werk gebruikt. Het huidige abonnementstarief is speciaal voor early adopters en zal in de toekomst stijgen. Door nu te upgraden krijg je vroegtijdige toegang tot nieuwe planningshulpmiddelen van hoge kwaliteit zodra ze worden uitgebracht en kun je je abonnement vastzetten zodat je niet wordt beïnvloed door toekomstige prijsstijgingen."
+  "whyUpgradeAnswer2": "Upgraden naar een betaald abonnement is zinvol als je Rallly vaak gebruikt of het voor je werk gebruikt. Het huidige abonnementstarief is speciaal voor early adopters en zal in de toekomst stijgen. Door nu te upgraden krijg je vroegtijdige toegang tot nieuwe planningshulpmiddelen van hoge kwaliteit zodra ze worden uitgebracht en kun je je abonnement vastzetten zodat je niet wordt beïnvloed door toekomstige prijsstijgingen.",
+  "yearlySaveUpTo": "Bespaar tot {percent}%"
 }
