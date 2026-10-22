@@ -19,9 +19,12 @@ import { Trans } from "@/i18n/client";
 import { OverviewLayout } from "./components/overview-layout";
 import { OverviewSection } from "./components/overview-section";
 
+// Card copy is text-xs. The responses list sets text-sm on its rows for the
+// Participants page, so the override reaches into it until section 6 gives
+// this card its own list.
 function OverviewCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-card-border bg-card p-4">
+    <div className="rounded-xl border border-card-border bg-card p-3 text-xs [&_.text-sm]:text-xs">
       {children}
     </div>
   );
@@ -84,7 +87,6 @@ export default async function Page({
                   options={topOptions.options}
                   participantCount={topOptions.participantCount}
                   timeZone={poll.timeZone}
-                  className="-mx-3.5"
                 />
               ) : (
                 <EmptyState className="py-10">
@@ -128,7 +130,7 @@ export default async function Page({
                   participants={participants.slice(0, 5)}
                   pollOpen={poll.status === "open"}
                   compact
-                  className="-mx-4 px-0 py-0"
+                  className="-mx-3 px-0 py-0"
                 />
               ) : (
                 <EmptyState className="py-10">

@@ -1,6 +1,6 @@
 /**
  * Overview's thread with cards beside it. The page scrolls as one; on large
- * screens the cards stick below the poll header (6rem) while the thread
+ * screens the cards stick below the poll header (3.5rem) while the thread
  * scrolls past. Below that the cards stack under the thread.
  */
 export function OverviewLayout({
@@ -15,7 +15,7 @@ export function OverviewLayout({
       <div className="py-4">
         <div className="mx-auto w-full max-w-[680px]">{thread}</div>
       </div>
-      <aside className="space-y-3 py-4 lg:sticky lg:top-24 lg:self-start">
+      <aside className="space-y-3 py-4 lg:sticky lg:top-14 lg:self-start">
         {cards}
       </aside>
     </div>

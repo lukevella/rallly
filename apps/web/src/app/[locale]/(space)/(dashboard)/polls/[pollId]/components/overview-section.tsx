@@ -15,15 +15,15 @@ export function OverviewSection({
 }>) {
   return (
     <section className="space-y-2">
-      <div className="flex h-9 items-center justify-between gap-4">
-        <h2 className="font-medium text-sm">{title}</h2>
+      <div className="flex h-7 items-center justify-between gap-4">
+        <h2 className="font-medium">{title}</h2>
         {viewAllHref ? (
           <Link
             href={viewAllHref}
             className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
+              buttonVariants({ variant: "ghost", size: "xs" }),
               // Inset the badge by the same gap it has above and below
-              count !== undefined && "pr-1 pl-2.5",
+              count !== undefined && "pr-0.5 pl-2",
             )}
           >
             <Trans i18nKey="pollOverviewViewAll" defaults="View all" />

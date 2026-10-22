@@ -78,10 +78,11 @@ export default function Layout({
     // Grows with its content (no min-h-0) so the sticky header has the whole
     // page to stick within; the dashboard wrapper does the scrolling.
     <div className="flex flex-1 flex-col">
-      {/* Fixed height (h-14 + h-10 = 6rem): Overview's cards stick at top-24
-          to sit just below it. */}
-      <header className="sticky top-0 z-10 shrink-0 bg-sidebar">
-        <div className="flex h-14 items-center gap-2 px-4">
+      {/* One h-14 row from md up, with the tabs between the title and the
+          actions; Overview's cards stick at top-14 to sit just below it.
+          Below md the tabs wrap onto a second row. */}
+      <header className="sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-4">
+        <div className="flex h-14 min-w-0 flex-1 items-center gap-2">
           <Link
             href="/polls"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
@@ -91,19 +92,17 @@ export default function Layout({
               <Trans i18nKey="back" defaults="Back" />
             </span>
           </Link>
-          <div className="flex min-w-0 flex-1 items-center gap-2">
-            <Suspense fallback={<Skeleton className="h-5 w-40" />}>
-              <PollPageTitle params={params} />
-            </Suspense>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <Suspense>
-              <PollHeaderActions params={params} />
-            </Suspense>
-          </div>
+          <Suspense fallback={<Skeleton className="h-5 w-40" />}>
+            <PollPageTitle params={params} />
+          </Suspense>
         </div>
-        <div className="flex h-10 items-center px-4">
+        <div className="order-last flex h-10 w-full items-center md:order-none md:h-14 md:w-auto">
           <PollShellTabs />
+        </div>
+        <div className="flex h-14 shrink-0 items-center gap-2">
+          <Suspense>
+            <PollHeaderActions params={params} />
+          </Suspense>
         </div>
       </header>
       <div className="flex flex-1 flex-col">{children}</div>
