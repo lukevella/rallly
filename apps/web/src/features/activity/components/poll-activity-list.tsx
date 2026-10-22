@@ -39,6 +39,7 @@ import {
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
+import { RelativeTime } from "@/lib/datetime/relative-time";
 import { Time } from "@/lib/datetime/time";
 
 type ActivityRow = {
@@ -536,7 +537,7 @@ function ActivityDescription({
 
 /**
  * `compact` is the secondary timeline under a headline card: smaller icons,
- * xs text, and the time on the same line as the event. Events about a
+ * xs text, and a relative time right aligned on the event's line. Events about a
  * response show the participant's avatar in place of an icon;
  * `participantImages` supplies photos by participant id where they have one.
  */
@@ -633,14 +634,13 @@ export function PollActivityList({
                   )}
                 >
                   {compact ? (
-                    <p className="text-xs leading-6">
-                      {description}{" "}
-                      <Time
+                    <div className="flex items-baseline gap-3 text-xs leading-6">
+                      <p className="min-w-0 flex-1">{description}</p>
+                      <RelativeTime
                         value={createdAt}
-                        preset="datetime"
-                        className="text-muted-foreground"
+                        className="shrink-0 text-muted-foreground"
                       />
-                    </p>
+                    </div>
                   ) : (
                     <>
                       <p className="text-sm leading-5">{description}</p>
