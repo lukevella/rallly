@@ -127,6 +127,7 @@ export default async function Page({
                   pollId={pollId}
                   participants={participants.slice(0, 5)}
                   pollOpen={poll.status === "open"}
+                  compact
                   className="-mx-4 px-0 py-0"
                 />
               ) : (
