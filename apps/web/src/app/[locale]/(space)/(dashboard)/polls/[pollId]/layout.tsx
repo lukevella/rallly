@@ -7,7 +7,7 @@ import { Link } from "@/components/link";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
-import { PollStatusBadge } from "@/features/poll/components/poll-status-badge";
+import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -24,7 +24,7 @@ async function PollPageTitle({
   return (
     <>
       <h1 className="truncate font-semibold text-foreground">{poll.title}</h1>
-      <PollStatusBadge status={poll.status} />
+      <PollStatusIcon status={poll.status} />
     </>
   );
 }
@@ -78,10 +78,11 @@ export default function Layout({
     // Grows with its content (no min-h-0) so the sticky header has the whole
     // page to stick within; the dashboard wrapper does the scrolling.
     <div className="flex flex-1 flex-col">
-      {/* One h-14 row from md up, with the tabs between the title and the
-          actions; Overview's cards stick at top-14 to sit just below it.
-          Below md the tabs wrap onto a second row. */}
-      <header className="sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-4">
+      {/* One h-14 row from md up: title, tabs centred, actions. Equal 1fr
+          side columns keep the tabs at the true centre whatever the title or
+          actions widths. Overview's cards stick at top-14 to sit just below
+          it. Below md the tabs wrap onto a second row. */}
+      <header className="sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-4 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
         <div className="flex h-14 min-w-0 flex-1 items-center gap-2">
           <Link
             href="/polls"
@@ -99,7 +100,7 @@ export default function Layout({
         <div className="order-last flex h-10 w-full items-center md:order-none md:h-14 md:w-auto">
           <PollShellTabs />
         </div>
-        <div className="flex h-14 shrink-0 items-center gap-2">
+        <div className="flex h-14 shrink-0 items-center gap-2 md:justify-self-end">
           <Suspense>
             <PollHeaderActions params={params} />
           </Suspense>
