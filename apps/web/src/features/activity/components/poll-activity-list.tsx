@@ -700,7 +700,7 @@ function EntryItem({
       />
       <div className={cn("min-w-0 flex-1", !compact && "space-y-1 pt-1.5")}>
         {compact ? (
-          <div className="flex items-baseline gap-3 pt-1 text-sm leading-6">
+          <div className="flex min-h-8 items-center gap-3 text-sm leading-6">
             <p className="min-w-0 flex-1">{entry.description}</p>
             {votes ? <VoteSummary counts={votes} /> : null}
             <RelativeTime
@@ -834,7 +834,7 @@ function GroupItem({
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-3 pt-1 text-sm leading-6">
+        <div className="flex min-h-8 items-center gap-3 text-sm leading-6">
           <button
             type="button"
             aria-expanded={expanded}
