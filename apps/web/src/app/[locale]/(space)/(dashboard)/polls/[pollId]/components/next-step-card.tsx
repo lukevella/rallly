@@ -244,7 +244,7 @@ export function NextStepCard({
   })();
 
   return (
-    <div className="overflow-hidden rounded-[18px] border border-card-border bg-card text-sm">
+    <div className="overflow-hidden rounded-[18px] border border-card-border bg-card text-sm shadow-black/5 shadow-lg">
       <button
         type="button"
         disabled={!deciding}
@@ -294,7 +294,7 @@ export function NextStepCard({
           // One grid for every row (subgrid), so dates share a column sized to
           // the longest and every bar starts at the same point and fills the
           // rest of the width.
-          className="grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 border-card-border border-t px-2 py-3"
+          className="max-h-[40svh] grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 overflow-y-auto border-card-border border-t px-2 py-3"
         >
           {options.map((option) => (
             // biome-ignore lint/a11y/noLabelWithoutControl: the radio inside is the control

@@ -105,10 +105,15 @@ export default async function Page({
               className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
             />
           </div>
-          <NextStepCard
-            options={rankedOptions}
-            participantCount={results.participantCount}
-          />
+          {/* Pinned to the bottom of the viewport while the thread scrolls,
+              so the decision stays in reach; it settles into place at the
+              end of the thread */}
+          <div className="sticky bottom-4 z-10">
+            <NextStepCard
+              options={rankedOptions}
+              participantCount={results.participantCount}
+            />
+          </div>
         </PollProvider>
       }
       cards={
