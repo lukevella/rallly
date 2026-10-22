@@ -1,23 +1,35 @@
 import { cn } from "@rallly/ui";
+import {
+  CircleCheckIcon,
+  CircleIcon,
+  CircleStopIcon,
+  CircleXIcon,
+} from "lucide-react";
 import type * as React from "react";
 
 import type { PollStatus } from "@/features/poll/schema";
 import { Trans } from "@/i18n/client";
 
-const dotClassName: Record<PollStatus, string> = {
-  open: "bg-blue-500",
-  closed: "bg-gray-400 dark:bg-gray-500",
-  scheduled: "bg-green-500",
-  canceled: "bg-rose-500",
-};
-
-function PollStatusDot({ status }: { status: PollStatus }) {
-  return (
-    <span
-      aria-hidden
-      className={cn("size-2 shrink-0 rounded-full", dotClassName[status])}
-    />
-  );
+// Each status has its own shape so the badge never relies on colour alone,
+// which matters below sm where the label is visually hidden.
+function PollStatusShape({ status }: { status: PollStatus }) {
+  switch (status) {
+    case "open":
+      return <CircleIcon aria-hidden className="size-3.5 text-blue-500" />;
+    case "closed":
+      return (
+        <CircleStopIcon
+          aria-hidden
+          className="size-3.5 text-gray-400 dark:text-gray-500"
+        />
+      );
+    case "scheduled":
+      return (
+        <CircleCheckIcon aria-hidden className="size-3.5 text-green-500" />
+      );
+    case "canceled":
+      return <CircleXIcon aria-hidden className="size-3.5 text-rose-500" />;
+  }
 }
 
 function PollStatusLabel({ status }: { status: PollStatus }) {
@@ -49,7 +61,7 @@ export function PollStatusBadge({
         className,
       )}
     >
-      <PollStatusDot status={status} />
+      <PollStatusShape status={status} />
       <span className="sr-only sm:not-sr-only">
         {children ?? <PollStatusLabel status={status} />}
       </span>
