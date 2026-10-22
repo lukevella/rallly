@@ -116,6 +116,14 @@ export default async function Page({
             <NextStepCard
               options={rankedOptions}
               participantCount={results.participantCount}
+              invites={
+                invites.length > 0
+                  ? {
+                      pending: invites.filter((invite) => !invite.responded)
+                        .length,
+                    }
+                  : null
+              }
             />
           </div>
         </PollProvider>

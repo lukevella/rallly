@@ -135,10 +135,13 @@ function PopularityDonut({
 export function NextStepCard({
   options,
   participantCount,
+  invites,
 }: {
   /** Every option, most popular first. */
   options: RankedOption[];
   participantCount: number;
+  /** How many invitees are still to respond, when email invites were sent. */
+  invites: { pending: number } | null;
 }) {
   const poll = usePoll();
   const finalizeDialog = useDialog();
@@ -257,7 +260,7 @@ export function NextStepCard({
         </span>
         <span className="min-w-0 flex-1">
           <span className="block font-medium">{summary.title}</span>
-          <span className="block text-muted-foreground text-xs">
+          <span className="mt-1 block text-muted-foreground text-xs">
             {poll.status === "closed" && poll.closedReason !== "auto" ? (
               <>
                 <Trans
@@ -268,13 +271,27 @@ export function NextStepCard({
               </>
             ) : null}
             <Trans
-              i18nKey="pollNextStepCounts"
-              defaults="{responses, plural, one {# response} other {# responses}} · {options, plural, one {# option} other {# options}}"
-              values={{
-                responses: participantCount,
-                options: options.length,
-              }}
+              i18nKey="pollNextStepResponses"
+              defaults="{count, plural, one {# response} other {# responses}}"
+              values={{ count: participantCount }}
             />
+            {invites ? (
+              <>
+                {" · "}
+                {invites.pending > 0 ? (
+                  <Trans
+                    i18nKey="pollNextStepInviteesPending"
+                    defaults="{count, plural, one {# invitee hasn't responded} other {# invitees haven't responded}}"
+                    values={{ count: invites.pending }}
+                  />
+                ) : (
+                  <Trans
+                    i18nKey="pollNextStepInviteesDone"
+                    defaults="Everyone invited has responded"
+                  />
+                )}
+              </>
+            ) : null}
           </span>
         </span>
         {deciding ? (
