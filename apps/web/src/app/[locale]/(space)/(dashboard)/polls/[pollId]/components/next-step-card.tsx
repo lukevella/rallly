@@ -252,7 +252,7 @@ export function NextStepCard({
         onClick={() => setExpanded((value) => !value)}
         className="flex w-full items-center gap-3 p-4 text-left outline-none focus-visible:bg-accent enabled:hover:bg-accent/50"
       >
-        <span className="flex size-8 shrink-0 items-center justify-center [&_svg]:size-6">
+        <span className="flex size-8 shrink-0 items-center justify-center [&_svg]:size-7">
           {summary.icon}
         </span>
         <span className="min-w-0 flex-1">
