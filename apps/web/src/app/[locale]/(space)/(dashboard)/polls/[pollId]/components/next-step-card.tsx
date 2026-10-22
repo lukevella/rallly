@@ -303,7 +303,7 @@ export function NextStepCard({
               className="col-span-full grid cursor-pointer grid-cols-subgrid items-center rounded-md px-2 py-3 hover:bg-accent/50"
             >
               <RadioGroupItem value={option.id} />
-              <span className="truncate text-xs">
+              <span className="truncate">
                 <SlotLabel slot={option} timeZone={poll.timeZone} />
               </span>
               <VoteBar
@@ -311,7 +311,7 @@ export function NextStepCard({
                 ifNeedBe={count(option, "ifNeedBe")}
                 total={participantCount}
               />
-              <span className="text-right text-muted-foreground text-xs tabular-nums">
+              <span className="text-right text-muted-foreground tabular-nums">
                 {count(option, "yes") + count(option, "ifNeedBe")}/
                 {participantCount}
               </span>
