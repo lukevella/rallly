@@ -43,7 +43,7 @@ export default async function Page({
             defaults="Most popular dates"
           />
         }
-        viewAllHref={`/polls/${pollId}/dates`}
+        viewAllHref={`/polls/${pollId}/results`}
         count={results.options.length}
       >
         {topOptions.options.length > 0 ? (
@@ -78,7 +78,7 @@ export default async function Page({
           />
         }
         viewAllHref={
-          participants.length > 0 ? `/polls/${pollId}/responses` : undefined
+          participants.length > 0 ? `/polls/${pollId}/participants` : undefined
         }
         count={participants.length}
       >

@@ -7,7 +7,7 @@ import { Trans } from "@/i18n/client";
 
 export function PollShellTabs() {
   const pathname = usePathname();
-  const basePath = pathname.replace(/\/(responses|dates|activity)$/, "");
+  const basePath = pathname.replace(/\/(participants|results)$/, "");
 
   const tabs = [
     {
@@ -15,16 +15,12 @@ export function PollShellTabs() {
       label: <Trans i18nKey="overview" defaults="Overview" />,
     },
     {
-      href: `${basePath}/responses`,
-      label: <Trans i18nKey="responses" defaults="Responses" />,
+      href: `${basePath}/participants`,
+      label: <Trans i18nKey="participants" defaults="Participants" />,
     },
     {
-      href: `${basePath}/dates`,
-      label: <Trans i18nKey="dates" defaults="Dates" />,
-    },
-    {
-      href: `${basePath}/activity`,
-      label: <Trans i18nKey="activity" defaults="Activity" />,
+      href: `${basePath}/results`,
+      label: <Trans i18nKey="results" defaults="Results" />,
     },
   ];
 
