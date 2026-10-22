@@ -74,6 +74,7 @@ export default async function Page({
             />
             <div className="min-w-0 flex-1">
               <EventCard
+                accentBar={false}
                 // Rendered here so the markdown parser stays on the server
                 description={
                   <EventMetaDescription

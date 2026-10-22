@@ -118,11 +118,18 @@ export function EventDetails({
   );
 }
 
-export function EventCard({ description }: { description: React.ReactNode }) {
+/** `accentBar` is off where the card sits in a timeline (Poll Admin). */
+export function EventCard({
+  description,
+  accentBar = true,
+}: {
+  description: React.ReactNode;
+  accentBar?: boolean;
+}) {
   const poll = usePoll();
   return (
     <Card>
-      <RandomGradientBar />
+      {accentBar ? <RandomGradientBar /> : null}
       <CardContent className="p-4 sm:p-5">
         <EventDetails description={description} />
         <h2 className="mt-3 mb-1.5 font-medium text-sm">
