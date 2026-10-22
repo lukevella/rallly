@@ -292,25 +292,27 @@ export function NextStepCard({
         <RadioGroup
           value={selected?.id}
           onValueChange={(value) => setSelectedId(value as string)}
-          className="gap-0 border-card-border border-t px-2 py-2"
+          // One grid for every row (subgrid), so dates share a column sized to
+          // the longest and every bar starts at the same point and fills the
+          // rest of the width.
+          className="grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-3 gap-y-0 border-card-border border-t px-2 py-2"
         >
           {options.map((option) => (
             // biome-ignore lint/a11y/noLabelWithoutControl: the radio inside is the control
             <label
               key={option.id}
-              className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 hover:bg-accent/50"
+              className="col-span-full grid cursor-pointer grid-cols-subgrid items-center rounded-md px-2 py-2 hover:bg-accent/50"
             >
               <RadioGroupItem value={option.id} />
-              <span className="min-w-0 flex-1 truncate">
+              <span className="truncate text-xs">
                 <SlotLabel slot={option} timeZone={poll.timeZone} />
               </span>
               <VoteBar
-                className="w-24 shrink-0"
                 yes={count(option, "yes")}
                 ifNeedBe={count(option, "ifNeedBe")}
                 total={participantCount}
               />
-              <span className="w-10 shrink-0 text-right text-muted-foreground text-xs tabular-nums">
+              <span className="text-right text-muted-foreground text-xs tabular-nums">
                 {count(option, "yes") + count(option, "ifNeedBe")}/
                 {participantCount}
               </span>
@@ -321,7 +323,6 @@ export function NextStepCard({
       {deciding && selected ? (
         <div className="border-card-border border-t bg-muted/40 px-4 py-3">
           <Button
-            variant="primary"
             shape="rounded"
             onClick={() => {
               posthog?.capture("poll_finalize:dialog_open");
@@ -345,10 +346,7 @@ export function NextStepCard({
       ) : null}
       {poll.status === "scheduled" ? (
         <div className="border-card-border border-t bg-muted/40 px-4 py-3">
-          <Link
-            href="/events"
-            className={buttonVariants({ variant: "primary", shape: "rounded" })}
-          >
+          <Link href="/events" className={buttonVariants({ shape: "rounded" })}>
             <Trans i18nKey="pollNextStepGoToEvent" defaults="Go to event" />
           </Link>
         </div>
