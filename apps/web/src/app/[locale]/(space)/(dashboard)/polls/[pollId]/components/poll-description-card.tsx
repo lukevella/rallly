@@ -29,14 +29,12 @@ import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import { EventDate } from "@/features/scheduled-event/components/event-date-time";
 import { Trans, useTranslation } from "@/i18n/client";
 import { Duration } from "@/lib/datetime/duration";
-import { RelativeTime } from "@/lib/datetime/relative-time";
 
 /**
  * The head of the Overview thread, written for the host like a pull
- * request's description: who created the poll and when, what it is about,
- * the facts that tell it apart from similarly named polls, and the host's
- * actions on it. The organizer and response legend are left to the
- * participant's event card.
+ * request's description: what the poll is about, the facts that tell it
+ * apart from similarly named polls, and the host's actions on it. Who created
+ * it is the thread's first item.
  */
 export function PollDescriptionCard({
   description,
@@ -49,7 +47,6 @@ export function PollDescriptionCard({
   const poll = usePoll();
   const { t } = useTranslation();
   const share = useSharePollDialog(poll.id);
-  const name = poll.user?.name;
   const first = options[0];
   const last = options[options.length - 1];
   const allDay = options.every((option) => option.duration === 0);
@@ -63,25 +60,6 @@ export function PollDescriptionCard({
   return (
     <>
       <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-        <div className="flex flex-wrap items-baseline gap-x-1.5 border-card-border border-b bg-muted/50 px-4 py-2 text-sm">
-          {name ? (
-            <Trans
-              i18nKey="pollDescriptionCardCreatedBy"
-              defaults="<b>{name}</b> created this poll"
-              values={{ name }}
-              components={{ b: <b className="font-medium" /> }}
-            />
-          ) : (
-            <Trans
-              i18nKey="pollDescriptionCardCreated"
-              defaults="Poll created"
-            />
-          )}
-          <RelativeTime
-            value={poll.createdAt}
-            className="text-muted-foreground text-xs"
-          />
-        </div>
         <div className="space-y-3 px-4 py-3">
           <div className="space-y-1">
             <h2 className="font-semibold text-base">{poll.title}</h2>

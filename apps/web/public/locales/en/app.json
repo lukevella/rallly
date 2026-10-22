@@ -826,8 +826,6 @@
   "pollDeletedDescription": "It may have been deleted by its creator or removed after a period of inactivity.",
   "pollDeletedTitle": "This poll has been deleted",
   "pollDeleteError": "Failed to delete poll",
-  "pollDescriptionCardCreated": "Poll created",
-  "pollDescriptionCardCreatedBy": "<b>{name}</b> created this poll",
   "pollDescriptionCardInviteParticipants": "Invite participants",
   "pollDescriptionCardOptionsInRange": "({count, plural, one {# option} other {# options}})",
   "pollNotificationsDescription": "Get notified by email when there is activity on your polls",
