@@ -209,6 +209,7 @@ export default async function Page(props: {
                     cta: "pricing_free",
                   })}
                   className={buttonVariants({
+                    shape: "rounded",
                     className: "w-full",
                   })}
                 >
@@ -311,6 +312,7 @@ export default async function Page(props: {
                   })}
                   className={buttonVariants({
                     variant: "primary",
+                    shape: "rounded",
                     className: "w-full",
                   })}
                 >
