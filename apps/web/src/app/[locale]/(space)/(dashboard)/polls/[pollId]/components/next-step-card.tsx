@@ -102,7 +102,7 @@ function PopularityDonut({
         r={radius}
         fill="none"
         strokeWidth="3"
-        className="stroke-gray-500"
+        className="stroke-gray-400 dark:stroke-gray-500"
       />
       <circle
         cx="12"
