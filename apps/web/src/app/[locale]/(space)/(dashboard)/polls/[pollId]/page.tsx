@@ -5,8 +5,10 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import { PollProvider } from "@/features/poll/client";
+import { EventCard } from "@/features/poll/components/event-card";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollTopDates } from "@/features/poll/components/poll-top-dates";
 import {
@@ -20,7 +22,6 @@ import {
 import { Trans } from "@/i18n/client";
 import { OverviewLayout } from "./components/overview-layout";
 import { OverviewSection } from "./components/overview-section";
-import { PollDescriptionCard } from "./components/poll-description-card";
 import { RecentResponsesList } from "./components/recent-responses-list";
 
 function OverviewCard({ children }: { children: React.ReactNode }) {
@@ -46,9 +47,9 @@ export default async function Page({
       loadPollActivity(pollId),
     ],
   );
-  // The description card reads the full poll from the poll provider.
+  // The event card reads the full poll from the poll provider.
   const adminPoll = await loadAdminPoll(pollId);
-  // The description card stands in for the poll created event, as a pull
+  // The event card stands in for the poll created event, as a pull
   // request's description does. Oldest first, like a conversation.
   const thread = activity
     .filter(({ event }) => event.type !== "poll_created")
@@ -63,15 +64,26 @@ export default async function Page({
           comments={adminPoll.comments}
           viewerRole="admin"
         >
-          <PollDescriptionCard
-            // Rendered here so the markdown parser stays on the server
-            description={
-              <EventMetaDescription
-                className="text-muted-foreground"
-                content={adminPoll.poll.description}
+          {/* The event card participants see on the invite page, with the
+              organizer's avatar beside it as a pull request's author is */}
+          <div className="flex gap-3">
+            <OptimizedAvatarImage
+              size="lg"
+              name={adminPoll.poll.user?.name ?? "?"}
+              src={adminPoll.poll.user?.image ?? undefined}
+            />
+            <div className="min-w-0 flex-1">
+              <EventCard
+                // Rendered here so the markdown parser stays on the server
+                description={
+                  <EventMetaDescription
+                    className="mt-1 text-muted-foreground"
+                    content={adminPoll.poll.description}
+                  />
+                }
               />
-            }
-          />
+            </div>
+          </div>
           {thread.length > 0 ? (
             // Indented past the avatar so the timeline stems from under the
             // card, as a pull request's commits do from its description.
