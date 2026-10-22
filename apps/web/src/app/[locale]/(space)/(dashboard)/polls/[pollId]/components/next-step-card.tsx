@@ -23,7 +23,7 @@ import {
   EventDate,
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 type Slot = { startTime: Date; duration: number };
 
@@ -66,6 +66,66 @@ function SlotLabel({
 
 const count = (option: RankedOption, type: VoteType) =>
   option.votes.find((vote) => vote.type === type)?.count ?? 0;
+
+/**
+ * How much of the group can make an option: green for yes, then amber for if
+ * need be, around a ring of every participant.
+ */
+function PopularityDonut({
+  yes,
+  ifNeedBe,
+  total,
+}: {
+  yes: number;
+  ifNeedBe: number;
+  total: number;
+}) {
+  const { t } = useTranslation();
+  const radius = 10;
+  const circumference = 2 * Math.PI * radius;
+  const arc = (value: number) =>
+    total > 0 ? (value / total) * circumference : 0;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      role="img"
+      aria-label={t("pollNextStepAvailability", {
+        defaultValue: "{available} of {total} available",
+        available: yes + ifNeedBe,
+        total,
+      })}
+      className="-rotate-90"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r={radius}
+        fill="none"
+        strokeWidth="3"
+        className="stroke-muted"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r={radius}
+        fill="none"
+        strokeWidth="3"
+        strokeDasharray={`${arc(yes)} ${circumference}`}
+        className="stroke-green-500"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r={radius}
+        fill="none"
+        strokeWidth="3"
+        strokeDasharray={`${arc(ifNeedBe)} ${circumference}`}
+        strokeDashoffset={-arc(yes)}
+        className="stroke-amber-400"
+      />
+    </svg>
+  );
+}
 
 /**
  * Where the thread ends, like a pull request's merge box: a header that
@@ -146,7 +206,11 @@ export function NextStepCard({
     }
     return {
       icon: leading ? (
-        <CircleCheckIcon className="text-green-500" />
+        <PopularityDonut
+          yes={count(leading, "yes")}
+          ifNeedBe={count(leading, "ifNeedBe")}
+          total={participantCount}
+        />
       ) : (
         <CircleDashedIcon className="text-amber-500" />
       ),
@@ -258,6 +322,7 @@ export function NextStepCard({
         <div className="border-card-border border-t bg-muted/40 px-4 py-3">
           <Button
             variant="primary"
+            shape="rounded"
             onClick={() => {
               posthog?.capture("poll_finalize:dialog_open");
               finalizeDialog.trigger();
@@ -282,7 +347,7 @@ export function NextStepCard({
         <div className="border-card-border border-t bg-muted/40 px-4 py-3">
           <Link
             href="/events"
-            className={buttonVariants({ variant: "primary" })}
+            className={buttonVariants({ variant: "primary", shape: "rounded" })}
           >
             <Trans i18nKey="pollNextStepGoToEvent" defaults="Go to event" />
           </Link>

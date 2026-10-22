@@ -829,6 +829,7 @@
   "pollDescriptionCardInviteParticipants": "Invite participants",
   "pollDescriptionCardOptionsInRange": "({count, plural, one {# option} other {# options}})",
   "pollNextStepAllPassed": "Every option has passed",
+  "pollNextStepAvailability": "{available} of {total} available",
   "pollNextStepCanceled": "This poll was canceled",
   "pollNextStepClosed": "Responses are closed",
   "pollNextStepCounts": "{responses, plural, one {# response} other {# responses}} · {options, plural, one {# option} other {# options}}",
