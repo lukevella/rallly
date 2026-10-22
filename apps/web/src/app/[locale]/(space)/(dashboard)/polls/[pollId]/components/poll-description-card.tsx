@@ -73,13 +73,6 @@ export function PollDescriptionCard({
                     />
                   </>
                 ) : null}{" "}
-                <span className="text-muted-foreground">
-                  <Trans
-                    i18nKey="pollDescriptionCardOptionsInRange"
-                    defaults="({count, plural, one {# option} other {# options}})"
-                    values={{ count: options.length }}
-                  />
-                </span>
               </span>
             </EventMetaItem>
           ) : null}

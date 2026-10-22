@@ -832,7 +832,6 @@
   "pollDeletedTitle": "This poll has been deleted",
   "pollDeleteError": "Failed to delete poll",
   "pollDescriptionCardInviteParticipants": "Invite participants",
-  "pollDescriptionCardOptionsInRange": "({count, plural, one {# option} other {# options}})",
   "pollNextStepAllPassed": "Every option has passed",
   "pollNextStepAvailability": "{available} of {total} available",
   "pollNextStepCanceled": "This poll was canceled",
