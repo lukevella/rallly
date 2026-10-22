@@ -34,7 +34,7 @@ export function PageShellHeader({
         "sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-6 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
         // A fade under the header, so content dissolves as it scrolls beneath
         // rather than being cut off at a hard edge
-        "after:pointer-events-none after:absolute after:inset-x-0 after:top-full after:h-6 after:bg-linear-to-b after:from-sidebar after:to-sidebar/0 after:content-['']",
+        "after:scroll-fade-in after:pointer-events-none after:absolute after:inset-x-0 after:top-full after:h-6 after:bg-linear-to-b after:from-sidebar after:to-sidebar/0 after:content-['']",
         className,
       )}
     >

@@ -95,7 +95,7 @@ export default async function Layout({
       <SidebarInset id="main-content" tabIndex={-1} className="h-svh min-w-0">
         <LicenseLimitWarning />
         <PastDueAlert />
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-none">
           <div className="flex min-h-0 flex-1 flex-col">{children}</div>
         </div>
       </SidebarInset>
