@@ -1,4 +1,4 @@
-import { CalendarIcon, InboxIcon } from "lucide-react";
+import { InboxIcon } from "lucide-react";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -8,16 +8,16 @@ import {
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import { PollProvider } from "@/features/poll/client";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
-import { PollTopDates } from "@/features/poll/components/poll-top-dates";
 import {
   loadAdminPoll,
   loadPoll,
   loadPollActivity,
+  loadPollInvites,
   loadPollParticipants,
   loadPollResults,
-  loadPollTopOptions,
 } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
+import { InviteesCard } from "./components/invitees-card";
 import { NextStepCard } from "./components/next-step-card";
 import { OverviewLayout } from "./components/overview-layout";
 import { OverviewSection } from "./components/overview-section";
@@ -30,15 +30,13 @@ export default async function Page({
   params: Promise<{ pollId: string }>;
 }) {
   const { pollId } = await params;
-  const [poll, participants, results, topOptions, activity] = await Promise.all(
-    [
-      loadPoll(pollId),
-      loadPollParticipants(pollId),
-      loadPollResults(pollId),
-      loadPollTopOptions(pollId, 3),
-      loadPollActivity(pollId),
-    ],
-  );
+  const [poll, participants, results, activity, invites] = await Promise.all([
+    loadPoll(pollId),
+    loadPollParticipants(pollId),
+    loadPollResults(pollId),
+    loadPollActivity(pollId),
+    loadPollInvites(pollId),
+  ]);
   // The description card reads the full poll from the poll provider.
   const adminPoll = await loadAdminPoll(pollId);
   // Oldest first, like a conversation, so poll created leads the thread.
@@ -115,42 +113,14 @@ export default async function Page({
       }
       cards={
         <>
-          <OverviewSection
-            title={
-              <Trans
-                i18nKey="pollOverviewPopularDates"
-                defaults="Most popular dates"
-              />
-            }
-            viewAllHref={`/polls/${pollId}/results`}
-            count={results.options.length}
+          <PollProvider
+            poll={adminPoll.poll}
+            participants={adminPoll.participants}
+            comments={adminPoll.comments}
+            viewerRole="admin"
           >
-            {topOptions.options.length > 0 ? (
-              <PollTopDates
-                options={topOptions.options}
-                participantCount={topOptions.participantCount}
-                timeZone={poll.timeZone}
-              />
-            ) : (
-              <EmptyState className="py-10">
-                <EmptyStateIcon>
-                  <CalendarIcon />
-                </EmptyStateIcon>
-                <EmptyStateTitle>
-                  <Trans
-                    i18nKey="pollOverviewNoVotes"
-                    defaults="No votes yet"
-                  />
-                </EmptyStateTitle>
-                <EmptyStateDescription>
-                  <Trans
-                    i18nKey="pollOverviewNoPopularDates"
-                    defaults="Popular dates will show up here once participants vote."
-                  />
-                </EmptyStateDescription>
-              </EmptyState>
-            )}
-          </OverviewSection>
+            <InviteesCard invites={invites} />
+          </PollProvider>
           <OverviewSection
             title={<Trans i18nKey="participants" defaults="Participants" />}
             viewAllHref={

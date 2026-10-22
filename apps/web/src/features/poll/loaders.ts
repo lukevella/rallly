@@ -17,6 +17,7 @@ import {
   listPollComments,
   listPollParticipants,
 } from "@/features/poll/data";
+import { listPollInvites } from "@/features/poll/invite/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
 import type { PollStatus } from "@/features/poll/schema";
 import {
@@ -123,24 +124,19 @@ export const loadPollResults = cache(async (pollId: string) => {
 });
 
 /**
- * The poll's most popular options, best first. Options nobody can attend are
- * left out, so a poll without votes has none.
+ * The poll's email invites for the admin page, newest first. loadPoll proves
+ * the poll is in the viewer's space; tokens stay on the server.
  */
-export const loadPollTopOptions = cache(
-  async (pollId: string, limit: number) => {
-    const results = await loadPollResults(pollId);
-    return {
-      participantCount: results.participantCount,
-      options: results.options
-        .filter((option) => option.score > 0)
-        .sort(
-          (a, b) =>
-            b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
-        )
-        .slice(0, limit),
-    };
-  },
-);
+export const loadPollInvites = cache(async (pollId: string) => {
+  await loadPoll(pollId);
+  const invites = await listPollInvites({ pollId });
+  return invites.map(({ id, email, openedAt, participantId }) => ({
+    id,
+    email,
+    opened: openedAt !== null,
+    responded: participantId !== null,
+  }));
+});
 
 export const loadPollActivity = cache(
   async (pollId: string, limit?: number) => {
