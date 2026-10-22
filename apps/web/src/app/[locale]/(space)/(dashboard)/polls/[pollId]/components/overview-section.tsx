@@ -14,8 +14,8 @@ export function OverviewSection({
   count?: number;
 }>) {
   return (
-    <section className="space-y-2">
-      <div className="flex h-7 items-center justify-between gap-4">
+    <section className="space-y-1">
+      <div className="flex h-6 items-center justify-between gap-4">
         <h2 className="font-medium">{title}</h2>
         {viewAllHref ? (
           <Link
