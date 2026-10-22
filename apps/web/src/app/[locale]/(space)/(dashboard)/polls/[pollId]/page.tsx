@@ -6,7 +6,6 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
-import { PollResponsesList } from "@/features/poll/components/poll-responses-list";
 import { PollTopDates } from "@/features/poll/components/poll-top-dates";
 import {
   loadPoll,
@@ -18,13 +17,11 @@ import {
 import { Trans } from "@/i18n/client";
 import { OverviewLayout } from "./components/overview-layout";
 import { OverviewSection } from "./components/overview-section";
+import { RecentResponsesList } from "./components/recent-responses-list";
 
-// Card copy is text-xs. The responses list sets text-sm on its rows for the
-// Participants page, so the override reaches into it until section 6 gives
-// this card its own list.
 function OverviewCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-card-border bg-card p-3 text-xs [&_.text-sm]:text-xs">
+    <div className="rounded-xl border border-card-border bg-card p-3 text-xs">
       {children}
     </div>
   );
@@ -125,12 +122,9 @@ export default async function Page({
               count={participants.length}
             >
               {participants.length > 0 ? (
-                <PollResponsesList
+                <RecentResponsesList
                   pollId={pollId}
-                  participants={participants.slice(0, 5)}
-                  pollOpen={poll.status === "open"}
-                  compact
-                  className="-mx-3 px-0 py-0"
+                  responses={participants.slice(0, 5)}
                 />
               ) : (
                 <EmptyState className="py-10">
