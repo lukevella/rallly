@@ -18,6 +18,7 @@ import {
   loadPollTopOptions,
 } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
+import { NextStepCard } from "./components/next-step-card";
 import { OverviewLayout } from "./components/overview-layout";
 import { OverviewSection } from "./components/overview-section";
 import { PollDescriptionCard } from "./components/poll-description-card";
@@ -52,6 +53,12 @@ export default async function Page({
     firstOrganizerChange?.type === "poll_organizer_changed"
       ? firstOrganizerChange.payload.from.name
       : adminPoll.poll.user?.name;
+
+  // Ranked best first; options sharing the top score are tied for the lead.
+  const leading = topOptions.options[0];
+  const tiedCount = leading
+    ? results.options.filter((option) => option.score === leading.score).length
+    : 0;
 
   return (
     <OverviewLayout
@@ -92,6 +99,21 @@ export default async function Page({
               />
             </div>
           ) : null}
+          {/* The thread ends in the next step, as a pull request ends in its
+              merge box, joined to the activity by the same rail */}
+          <div className="pl-4">
+            <div
+              aria-hidden
+              className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
+            />
+          </div>
+          <div className="rounded-xl border border-card-border bg-card px-4 py-3 text-sm">
+            <NextStepCard
+              leading={leading ?? null}
+              tiedCount={tiedCount}
+              responseCount={participants.length}
+            />
+          </div>
         </PollProvider>
       }
       cards={
