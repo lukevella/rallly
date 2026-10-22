@@ -35,7 +35,7 @@
   "duplicatePolls": "复制投票",
   "duplicatePollsDescription": "基于现有投票创建新投票",
   "emailInvites": "邮件邀请",
-  "emailInvitesDescription": "通过个人邀请链接跟踪谁已打开并回复了邀请意见",
+  "emailInvitesDescription": "通过个人邀请链接跟踪谁已打开并回复了邀请",
   "faq": "常见问题",
   "freeOpenPollLimit": "最多开放 {count} 个投票",
   "getPro": "升级到 Pro",
