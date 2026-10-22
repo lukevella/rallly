@@ -53,6 +53,8 @@
   "planFreeDescription": "Til alle brugere",
   "planProDescription": "Til superbrugere og professionelle",
   "pollLimit": "Er der en grænse for, hvor mange afstemninger jeg kan oprette?",
+  "pollLimitAnswer": "Nej. Der er ingen grænse for, hvor mange afstemninger du kan oprette, eller hvor mange personer der kan stemme i dem, uanset abonnement. På det gratis abonnement slettes afstemninger, når alle deres datoer ligger mere end 30 dage tilbage, og der ikke har været aktivitet i 30 dage. Nogle funktioner, såsom tilpasset branding og avancerede indstillinger for afstemninger, er kun tilgængelige på et betalt abonnement. Se sammenligningstabellen ovenfor for den fulde liste.",
+  "pollLimitAnswerOpenPollLimit": "Der er ingen grænse for, hvor mange afstemninger du kan oprette, eller hvor mange personer der kan stemme i dem. På det gratis abonnement kan op til {count} afstemninger være åbne og indsamle stemmer ad gangen. Afslut eller luk en afstemning for at gøre plads til en ny. Pro har ingen grænse. På det gratis abonnement slettes afstemninger, når alle deres datoer ligger mere end 30 dage tilbage, og der ikke har været aktivitet i 30 dage. Nogle funktioner, såsom tilpasset branding og avancerede indstillinger for afstemninger, er kun tilgængelige på et betalt abonnement. Se sammenligningstabellen ovenfor for den fulde liste.",
   "pricingDescription": "Kom i gang gratis. Kræver ikke login.",
   "pricingFinalCtaDescription": "Opret din første afstemning på under et minut. Opgrader, når du har brug for mere. ",
   "pricingFinalCtaTitle": "Kom i gang gratis",
@@ -69,6 +71,8 @@
   "webhooks": "Webhooks",
   "webhooksDescription": "Underret dine systemer, når afstemninger og svar ændres. <a>Læs webhook-dokumentationen</a>",
   "whenPollInactive": "Hvornår bliver en afstemning inaktiv?",
+  "whenPollInactiveAnswer": "Afstemninger bliver inaktive, når alle datoindstillinger ligger mere end 30 dage tilbage, og der ikke har været aktivitet i 30 dage. Aktivitet omfatter nye stemmer, kommentarer eller ændringer af afstemningen. Inaktive afstemninger slettes automatisk, hvis du ikke har et betalt abonnement.",
   "whyUpgrade": "Hvorfor opgradere?",
-  "whyUpgradeAnswer2": "Opgradering til et betalt abonnement giver mening, hvis du bruger Rallly ofte eller bruger det til arbejde. Den nuværende abonnementssats er en særlig pris og vil stige i fremtiden. Ved at opgradere nu får du tidlig adgang til nye planlægningsværktøjer af høj kvalitet, efterhånden som de bliver frigivet, og låser din abonnementspris fast, så du ikke bliver påvirket af fremtidige prisstigninger."
+  "whyUpgradeAnswer2": "Opgradering til et betalt abonnement giver mening, hvis du bruger Rallly ofte eller bruger det til arbejde. Den nuværende abonnementssats er en særlig pris og vil stige i fremtiden. Ved at opgradere nu får du tidlig adgang til nye planlægningsværktøjer af høj kvalitet, efterhånden som de bliver frigivet, og låser din abonnementspris fast, så du ikke bliver påvirket af fremtidige prisstigninger.",
+  "yearlySaveUpTo": "Spar op til {percent} %"
 }
