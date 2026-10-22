@@ -52,7 +52,7 @@
     "portless": "^0.15.6",
     "prettier": "^3.5.3",
     "prisma": "^7.8.0",
-    "turbo": "^2.6.3",
+    "turbo": "^2.11.10",
     "typescript": "^6.0.3",
     "vitest": "^4.1.11"
   },
@@ -62,10 +62,5 @@
   "engines": {
     "node": "24"
   },
-  "pnpm": {
-    "overrides": {
-      "next@16.3.0": "16.4.2"
-    }
-  },
-  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
+  "packageManager": "pnpm@12.14.0+sha512.c18ba6d87993d3d164cb5e8948f32b2c06ee854487e06cd8d86781342fb3e5bb4634367034711e86802baa9c37bea906ce1929ad08d70884c97d801df13389a6"
 }
