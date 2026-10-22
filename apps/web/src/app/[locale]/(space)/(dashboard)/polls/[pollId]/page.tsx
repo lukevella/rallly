@@ -1,10 +1,3 @@
-import { InboxIcon } from "lucide-react";
-import {
-  EmptyState,
-  EmptyStateDescription,
-  EmptyStateIcon,
-  EmptyStateTitle,
-} from "@/components/empty-state";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import { PollProvider } from "@/features/poll/client";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
@@ -16,13 +9,8 @@ import {
   loadPollParticipants,
   loadPollResults,
 } from "@/features/poll/loaders";
-import { Trans } from "@/i18n/client";
-import { InviteesCard } from "./components/invitees-card";
 import { NextStepCard } from "./components/next-step-card";
-import { OverviewLayout } from "./components/overview-layout";
-import { OverviewSection } from "./components/overview-section";
 import { PollDescriptionCard } from "./components/poll-description-card";
-import { RecentResponsesList } from "./components/recent-responses-list";
 
 export default async function Page({
   params,
@@ -59,8 +47,9 @@ export default async function Page({
   );
 
   return (
-    <OverviewLayout
-      thread={
+    // One centred column: the poll, its activity, then the next step
+    <div className="px-6 py-6">
+      <div className="mx-auto w-full max-w-[680px]">
         <PollProvider
           poll={adminPoll.poll}
           participants={adminPoll.participants}
@@ -127,53 +116,7 @@ export default async function Page({
             />
           </div>
         </PollProvider>
-      }
-      cards={
-        <>
-          <PollProvider
-            poll={adminPoll.poll}
-            participants={adminPoll.participants}
-            comments={adminPoll.comments}
-            viewerRole="admin"
-          >
-            <InviteesCard invites={invites} />
-          </PollProvider>
-          <OverviewSection
-            title={<Trans i18nKey="participants" defaults="Participants" />}
-            viewAllHref={
-              participants.length > 0
-                ? `/polls/${pollId}/participants`
-                : undefined
-            }
-            count={participants.length}
-          >
-            {participants.length > 0 ? (
-              <RecentResponsesList
-                pollId={pollId}
-                responses={participants.slice(0, 5)}
-              />
-            ) : (
-              <EmptyState className="py-10">
-                <EmptyStateIcon>
-                  <InboxIcon />
-                </EmptyStateIcon>
-                <EmptyStateTitle>
-                  <Trans
-                    i18nKey="pollOverviewNoResponses"
-                    defaults="No responses yet"
-                  />
-                </EmptyStateTitle>
-                <EmptyStateDescription>
-                  <Trans
-                    i18nKey="pollOverviewNoResponsesDescription"
-                    defaults="Responses will show up here once participants vote."
-                  />
-                </EmptyStateDescription>
-              </EmptyState>
-            )}
-          </OverviewSection>
-        </>
-      }
-    />
+      </div>
+    </div>
   );
 }
