@@ -21,7 +21,7 @@ export function RecentResponsesList({
       {responses.map((response) => (
         <li
           key={response.id}
-          className="relative flex h-8 items-center gap-2 rounded-md px-1.5 hover:bg-accent has-[a:focus-visible]:bg-accent"
+          className="relative flex h-9 items-center gap-2.5 rounded-md px-1.5 hover:bg-accent has-[a:focus-visible]:bg-accent"
         >
           <OptimizedAvatarImage
             size="sm"

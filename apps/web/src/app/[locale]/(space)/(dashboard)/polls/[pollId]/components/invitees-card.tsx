@@ -30,8 +30,8 @@ export function InviteesCard({ invites }: { invites: Invite[] }) {
   const canInvite = poll.status === "open";
 
   return (
-    <section className="rounded-[18px] border border-card-border bg-card px-3.5 pt-2.5 pb-3.5 text-xs">
-      <div className="mb-2 flex h-6 items-center justify-between gap-4">
+    <section className="rounded-[18px] border border-card-border bg-card p-5 text-xs">
+      <div className="mb-3 flex h-6 items-center justify-between gap-4">
         <h2 className="font-medium">
           <Trans i18nKey="invitees" defaults="Invitees" />
         </h2>
@@ -49,7 +49,7 @@ export function InviteesCard({ invites }: { invites: Invite[] }) {
         <>
           <div
             aria-hidden
-            className="mb-2 h-1.5 overflow-hidden rounded-sm bg-gray-400 dark:bg-gray-500"
+            className="mb-3 h-1.5 overflow-hidden rounded-sm bg-gray-400 dark:bg-gray-500"
           >
             <div
               className="h-full bg-green-500"
@@ -59,7 +59,7 @@ export function InviteesCard({ invites }: { invites: Invite[] }) {
           {pending.length > 0 ? (
             <ul>
               {pending.slice(0, MAX_PENDING).map((invite) => (
-                <li key={invite.id} className="flex h-8 items-center gap-2">
+                <li key={invite.id} className="flex h-9 items-center gap-2.5">
                   {invite.opened ? (
                     <MailOpenIcon
                       aria-hidden
@@ -84,7 +84,7 @@ export function InviteesCard({ invites }: { invites: Invite[] }) {
                 </li>
               ))}
               {pending.length > MAX_PENDING ? (
-                <li className="flex h-8 items-center text-muted-foreground">
+                <li className="flex h-9 items-center text-muted-foreground">
                   <Trans
                     i18nKey="inviteesCardMore"
                     defaults="+{count} more"
@@ -114,7 +114,7 @@ export function InviteesCard({ invites }: { invites: Invite[] }) {
         <Button
           size="sm"
           shape="rounded"
-          className="mt-2"
+          className="mt-3"
           onClick={() => share.open("manual")}
         >
           <UserPlusIcon data-icon="inline-start" />

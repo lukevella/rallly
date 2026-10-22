@@ -80,10 +80,10 @@ export default async function Page({
           {thread.length > 0 ? (
             // Indented so the timeline stems from under the card, as a pull
             // request's commits do from its description.
-            <div className="px-4">
+            <div className="px-5">
               <div
                 aria-hidden
-                className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
+                className="ml-7 h-6 w-px -translate-x-1/2 bg-border"
               />
               <PollActivityList
                 activity={thread}
@@ -102,7 +102,7 @@ export default async function Page({
           <div className="pl-4">
             <div
               aria-hidden
-              className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
+              className="ml-7 h-6 w-px -translate-x-1/2 bg-border"
             />
           </div>
           {/* Pinned to the bottom of the viewport while the thread scrolls,

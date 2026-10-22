@@ -30,7 +30,7 @@ export function PageShellHeader({
   return (
     <header
       className={cn(
-        "sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-4 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
+        "sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-6 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
         className,
       )}
     >

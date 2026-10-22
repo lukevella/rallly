@@ -596,14 +596,11 @@ function entriesOf(
   ];
 }
 
-function Rail({ compact }: { compact: boolean }) {
+function Rail() {
   return (
     <div
       aria-hidden
-      className={cn(
-        "absolute bottom-1 w-px -translate-x-1/2 bg-border group-last:hidden",
-        compact ? "top-7 left-3" : "top-9 left-4",
-      )}
+      className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
     />
   );
 }
@@ -620,7 +617,7 @@ function EntryIcon({
   const { Icon, tone, participant } = entry;
   return participant ? (
     <OptimizedAvatarImage
-      size={compact ? "sm" : "md"}
+      size="md"
       name={participant.name}
       src={participantImages?.[participant.id] ?? undefined}
     />
@@ -628,11 +625,11 @@ function EntryIcon({
     <div
       className={cn(
         "flex shrink-0 items-center justify-center rounded-full",
-        compact ? "size-6" : "size-8",
+        "size-8",
         toneClassName[tone],
       )}
     >
-      <Icon aria-hidden className={compact ? "size-3.5" : "size-4"} />
+      <Icon aria-hidden className="size-4" />
     </div>
   );
 }
@@ -647,9 +644,14 @@ function EntryItem({
   participantImages?: Record<string, string | null>;
 }) {
   return (
-    <li className="group relative flex gap-3 pb-6 last:pb-0">
+    <li
+      className={cn(
+        "group relative flex gap-3 last:pb-0",
+        compact ? "pb-8" : "pb-6",
+      )}
+    >
       {/* The rail joining this event's icon to the next one */}
-      <Rail compact={compact} />
+      <Rail />
       <EntryIcon
         entry={entry}
         compact={compact}
@@ -657,7 +659,7 @@ function EntryItem({
       />
       <div className={cn("min-w-0 flex-1", !compact && "space-y-1 pt-1.5")}>
         {compact ? (
-          <div className="flex items-baseline gap-3 text-sm leading-6">
+          <div className="flex items-baseline gap-3 pt-1 text-sm leading-6">
             <p className="min-w-0 flex-1">{entry.description}</p>
             <RelativeTime
               value={entry.createdAt}
@@ -781,28 +783,28 @@ function GroupItem({
   );
   const Icon = iconByType[type];
   return (
-    <li className="group relative flex gap-3 pb-6 last:pb-0">
-      <Rail compact />
+    <li className="group relative flex gap-3 pb-8 last:pb-0">
+      <Rail />
       {/* The first person stands for the group in the icon column, which
           keeps every row's text aligned; the rest appear when expanded */}
       {people[0] ? (
         <OptimizedAvatarImage
-          size="sm"
+          size="md"
           name={people[0].name}
           src={participantImages?.[people[0].id] ?? undefined}
         />
       ) : (
         <div
           className={cn(
-            "flex size-6 shrink-0 items-center justify-center rounded-full",
+            "flex size-8 shrink-0 items-center justify-center rounded-full",
             toneClassName[toneByType[type]],
           )}
         >
-          <Icon aria-hidden className="size-3.5" />
+          <Icon aria-hidden className="size-4" />
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-3 text-sm leading-6">
+        <div className="flex items-baseline gap-3 pt-1 text-sm leading-6">
           <button
             type="button"
             aria-expanded={expanded}

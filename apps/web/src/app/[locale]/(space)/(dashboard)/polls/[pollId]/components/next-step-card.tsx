@@ -250,7 +250,7 @@ export function NextStepCard({
         disabled={!deciding}
         aria-expanded={deciding ? expanded : undefined}
         onClick={() => setExpanded((value) => !value)}
-        className="flex w-full items-center gap-3 p-4 text-left outline-none focus-visible:bg-accent enabled:hover:bg-accent/50"
+        className="flex w-full items-center gap-4 p-5 text-left outline-none focus-visible:bg-accent enabled:hover:bg-accent/50"
       >
         <span className="flex size-8 shrink-0 items-center justify-center [&_svg]:size-8">
           {summary.icon}
@@ -294,13 +294,13 @@ export function NextStepCard({
           // One grid for every row (subgrid), so dates share a column sized to
           // the longest and every bar starts at the same point and fills the
           // rest of the width.
-          className="max-h-[40svh] grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 overflow-y-auto border-card-border border-t px-2 py-3"
+          className="max-h-[40svh] grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 overflow-y-auto border-card-border border-t px-3 py-3"
         >
           {options.map((option) => (
             // biome-ignore lint/a11y/noLabelWithoutControl: the radio inside is the control
             <label
               key={option.id}
-              className="col-span-full grid cursor-pointer grid-cols-subgrid items-center rounded-md px-2 py-2.5 hover:bg-accent/50"
+              className="col-span-full grid cursor-pointer grid-cols-subgrid items-center rounded-md px-2 py-3 hover:bg-accent/50"
             >
               <RadioGroupItem value={option.id} />
               <span className="truncate text-xs">
@@ -320,7 +320,7 @@ export function NextStepCard({
         </RadioGroup>
       ) : null}
       {deciding && selected ? (
-        <div className="border-card-border border-t bg-muted/40 px-4 py-3">
+        <div className="border-card-border border-t bg-muted/40 px-5 py-4">
           <Button
             shape="rounded"
             onClick={() => {
@@ -343,7 +343,7 @@ export function NextStepCard({
         </div>
       ) : null}
       {poll.status === "scheduled" ? (
-        <div className="border-card-border border-t bg-muted/40 px-4 py-3">
+        <div className="border-card-border border-t bg-muted/40 px-5 py-4">
           <Link href="/events" className={buttonVariants({ shape: "rounded" })}>
             <Trans i18nKey="pollNextStepGoToEvent" defaults="Go to event" />
           </Link>

@@ -44,12 +44,12 @@ export function PollDescriptionCard({
 
   return (
     <div className="overflow-hidden rounded-[18px] border border-card-border bg-card">
-      <div className="space-y-3 px-4 py-3">
+      <div className="space-y-4 p-5">
         <div className="space-y-1">
           <h2 className="font-semibold text-base">{poll.title}</h2>
           {poll.description ? description : null}
         </div>
-        <EventMetaList>
+        <EventMetaList className="space-y-2.5">
           {first && last ? (
             <EventMetaItem>
               <CalendarDaysIcon />
