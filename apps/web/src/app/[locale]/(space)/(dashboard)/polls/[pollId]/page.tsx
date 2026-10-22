@@ -47,7 +47,11 @@ export default async function Page({
     <OverviewLayout
       thread={
         activity.length > 0 ? (
-          <PollActivityList activity={activity} timeZone={poll.timeZone} />
+          // The thread reads like a conversation, oldest first.
+          <PollActivityList
+            activity={[...activity].reverse()}
+            timeZone={poll.timeZone}
+          />
         ) : (
           <EmptyState className="py-10">
             <EmptyStateIcon>
