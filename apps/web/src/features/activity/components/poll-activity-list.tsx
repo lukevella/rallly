@@ -596,10 +596,7 @@ export function PollActivityList({
             return (
               <li
                 key={key}
-                className={cn(
-                  "group relative flex last:pb-0",
-                  compact ? "gap-2.5 pb-4" : "gap-3 pb-6",
-                )}
+                className="group relative flex gap-3 pb-6 last:pb-0"
               >
                 {/* The rail joining this event's icon to the next one */}
                 <div
@@ -632,11 +629,11 @@ export function PollActivityList({
                 <div
                   className={cn(
                     "min-w-0 flex-1",
-                    compact ? "pt-1" : "space-y-1 pt-1.5",
+                    !compact && "space-y-1 pt-1.5",
                   )}
                 >
                   {compact ? (
-                    <p className="text-xs leading-4">
+                    <p className="text-xs leading-6">
                       {description}{" "}
                       <Time
                         value={createdAt}
