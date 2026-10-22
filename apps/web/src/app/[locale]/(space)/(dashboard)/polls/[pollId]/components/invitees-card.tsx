@@ -30,7 +30,7 @@ export function InviteesCard({ invites }: { invites: Invite[] }) {
   const canInvite = poll.status === "open";
 
   return (
-    <section className="rounded-[18px] border border-card-border bg-card p-5 text-xs">
+    <section className="rounded-[18px] border border-card-border bg-card p-5 text-sm">
       <div className="mb-3 flex h-6 items-center justify-between gap-4">
         <h2 className="font-medium">
           <Trans i18nKey="invitees" defaults="Invitees" />

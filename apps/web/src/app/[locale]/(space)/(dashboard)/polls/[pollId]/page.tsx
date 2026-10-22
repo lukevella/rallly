@@ -102,7 +102,7 @@ export default async function Page({
           ) : null}
           {/* The thread ends in the next step, as a pull request ends in its
               merge box, joined to the activity by the same rail */}
-          <div className="pl-4">
+          <div className="pl-5">
             <div
               aria-hidden
               className="ml-7 h-6 w-px -translate-x-1/2 bg-border"
