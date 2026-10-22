@@ -11,11 +11,17 @@ import {
   CircleDashedIcon,
   CircleIcon,
   CircleXIcon,
+  CopyIcon,
+  UserPlusIcon,
 } from "lucide-react";
 import * as React from "react";
 import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
+import {
+  SharePollDialog,
+  useSharePollDialog,
+} from "@/features/poll/components/share-dialog";
 import { VoteBar } from "@/features/poll/components/vote-bar";
 import type { VoteType } from "@/features/poll/constants";
 import {
@@ -23,6 +29,7 @@ import {
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useCopyInviteLink } from "./poll-host-actions";
 
 type Slot = { startTime: Date; duration: number };
 
@@ -145,6 +152,8 @@ export function NextStepCard({
 }) {
   const poll = usePoll();
   const finalizeDialog = useDialog();
+  const share = useSharePollDialog(poll.id);
+  const copyInviteLink = useCopyInviteLink();
   const [expanded, setExpanded] = React.useState(false);
   const top = options[0];
   const leading = top && top.score > 0 ? top : undefined;
@@ -336,32 +345,61 @@ export function NextStepCard({
           ))}
         </RadioGroup>
       ) : null}
-      {deciding && selected ? (
-        <div className="border-card-border border-t bg-muted/40 px-5 py-4">
-          <Button
-            shape="rounded"
-            onClick={() => {
-              posthog?.capture("poll_finalize:dialog_open");
-              finalizeDialog.trigger();
-            }}
-          >
-            <Trans
-              i18nKey="pollNextStepFinalizeDate"
-              defaults="Finalize <date></date>"
-              components={{
-                date: <SlotLabel slot={selected} timeZone={poll.timeZone} />,
-              }}
-            />
-          </Button>
-          <FinalizePollDialog
-            {...finalizeDialog.dialogProps}
-            optionId={selected.id}
+      {poll.status === "open" || poll.status === "closed" ? (
+        <div className="flex flex-wrap items-center gap-2 border-card-border border-t bg-muted/40 px-5 py-4">
+          {deciding && selected ? (
+            <>
+              <Button
+                shape="pill"
+                onClick={() => {
+                  posthog?.capture("poll_finalize:dialog_open");
+                  finalizeDialog.trigger();
+                }}
+              >
+                <Trans
+                  i18nKey="pollNextStepFinalizeDate"
+                  defaults="Finalize <date></date>"
+                  components={{
+                    date: (
+                      <SlotLabel slot={selected} timeZone={poll.timeZone} />
+                    ),
+                  }}
+                />
+              </Button>
+              <FinalizePollDialog
+                {...finalizeDialog.dialogProps}
+                optionId={selected.id}
+              />
+            </>
+          ) : null}
+          <div className="ml-auto flex items-center gap-1">
+            <Button variant="ghost" shape="pill" onClick={copyInviteLink}>
+              <CopyIcon />
+              <Trans i18nKey="copyLink" defaults="Copy link" />
+            </Button>
+            <Button
+              variant="ghost"
+              shape="pill"
+              onClick={() => share.open("manual")}
+            >
+              <UserPlusIcon />
+              <Trans
+                i18nKey="pollDescriptionCardInviteParticipants"
+                defaults="Invite participants"
+              />
+            </Button>
+          </div>
+          <SharePollDialog
+            {...share.dialog.dialogProps}
+            pollId={poll.id}
+            pollStatus={poll.status}
+            inviteLink={poll.inviteLink}
           />
         </div>
       ) : null}
       {poll.status === "scheduled" ? (
         <div className="border-card-border border-t bg-muted/40 px-5 py-4">
-          <Link href="/events" className={buttonVariants({ shape: "rounded" })}>
+          <Link href="/events" className={buttonVariants({ shape: "pill" })}>
             <Trans i18nKey="pollNextStepGoToEvent" defaults="Go to event" />
           </Link>
         </div>

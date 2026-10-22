@@ -15,6 +15,17 @@ import {
 } from "@/features/poll/components/share-dialog";
 import { useTranslation } from "@/i18n/client";
 
+export function useCopyInviteLink() {
+  const poll = usePoll();
+  const { t } = useTranslation();
+  return () => {
+    // Only claims success when the copy actually went through
+    if (!copy(poll.inviteLink)) return;
+    posthog?.capture("poll_share:invite_link_copy", { poll_id: poll.id });
+    toast.success(t("linkCopied", { defaultValue: "Link copied" }));
+  };
+}
+
 /**
  * The host's everyday actions in the page header, as icon buttons. Each is
  * named for assistive tech by aria-label and for everyone else by a tooltip.
@@ -23,6 +34,7 @@ export function PollHostActions() {
   const poll = usePoll();
   const { t } = useTranslation();
   const share = useSharePollDialog(poll.id);
+  const copyInviteLink = useCopyInviteLink();
   const editLabel = t("edit", { defaultValue: "Edit" });
   const copyLabel = t("copyLink", { defaultValue: "Copy link" });
   const inviteLabel = t("pollDescriptionCardInviteParticipants", {
@@ -54,14 +66,7 @@ export function PollHostActions() {
               variant="ghost"
               size="icon"
               aria-label={copyLabel}
-              onClick={() => {
-                // Only claims success when the copy actually went through
-                if (!copy(poll.inviteLink)) return;
-                posthog?.capture("poll_share:invite_link_copy", {
-                  poll_id: poll.id,
-                });
-                toast.success(t("linkCopied", { defaultValue: "Link copied" }));
-              }}
+              onClick={copyInviteLink}
             />
           }
         >

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import {
   CalendarDaysIcon,
   ClockIcon,
@@ -16,6 +17,27 @@ import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import { EventDate } from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
 import { Duration } from "@/lib/datetime/duration";
+
+// The card's tint says where the poll stands: blue while collecting
+// responses, gray once closed, green when scheduled, rose when canceled.
+const statusTint = {
+  open: {
+    frame: "from-blue-500/50 via-blue-500/15",
+    wash: "from-blue-500/[0.07]",
+  },
+  closed: {
+    frame: "from-gray-500/40 via-gray-500/10",
+    wash: "from-gray-500/[0.06]",
+  },
+  scheduled: {
+    frame: "from-green-500/50 via-green-500/15",
+    wash: "from-green-500/[0.07]",
+  },
+  canceled: {
+    frame: "from-rose-500/50 via-rose-500/15",
+    wash: "from-rose-500/[0.07]",
+  },
+} as const;
 
 /**
  * The head of the Overview thread, written for the host like a pull
@@ -42,11 +64,22 @@ export function PollDescriptionCard({
       ? first.duration
       : null;
 
+  const tint = statusTint[poll.status];
+
   return (
-    // A touch of the space's primary colour sets the poll apart as the event:
-    // a 1px gradient frame (padding over a gradient) around a soft wash.
-    <div className="rounded-[18px] bg-linear-to-br from-primary/50 via-primary/15 to-card-border p-px">
-      <div className="space-y-4 rounded-[17px] bg-card bg-linear-to-br from-primary/[0.07] via-card to-card p-5">
+    // A 1px gradient frame (padding over a gradient) around a soft wash.
+    <div
+      className={cn(
+        "rounded-[18px] bg-linear-to-br to-card-border p-px",
+        tint.frame,
+      )}
+    >
+      <div
+        className={cn(
+          "space-y-4 rounded-[17px] bg-card bg-linear-to-br via-card to-card p-5",
+          tint.wash,
+        )}
+      >
         <div className="space-y-1">
           <h2 className="font-semibold text-base">{poll.title}</h2>
           {poll.description ? description : null}
