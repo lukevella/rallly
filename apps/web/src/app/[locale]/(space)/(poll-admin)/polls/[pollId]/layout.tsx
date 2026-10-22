@@ -1,21 +1,13 @@
 import { buttonVariants } from "@rallly/ui";
 import { Skeleton } from "@rallly/ui/skeleton";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/components/link";
-import {
-  ListView,
-  ListViewActions,
-  ListViewContent,
-  ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
-  ListViewToolbar,
-} from "@/components/list-view";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
+import { PollStatusBadge } from "@/features/poll/components/poll-status-badge";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -29,7 +21,12 @@ async function PollPageTitle({
 }) {
   const { pollId } = await params;
   const poll = await loadPoll(pollId);
-  return poll.title;
+  return (
+    <>
+      <h1 className="truncate font-semibold text-foreground">{poll.title}</h1>
+      <PollStatusBadge status={poll.status} />
+    </>
+  );
 }
 
 async function PollHeaderActions({
@@ -49,8 +46,19 @@ async function PollHeaderActions({
       comments={comments}
       viewerRole="admin"
     >
-      <PollAdminMenu />
+      {poll.status === "scheduled" ? null : (
+        <Link
+          href={`/poll/${poll.id}/edit?from=admin`}
+          className={buttonVariants({ variant: "ghost", size: "icon" })}
+        >
+          <PencilIcon className="size-4" />
+          <span className="sr-only">
+            <Trans i18nKey="edit" defaults="Edit" />
+          </span>
+        </Link>
+      )}
       <PollPrimaryActions />
+      <PollAdminMenu showEdit={false} />
     </PollProvider>
   );
 }
@@ -67,9 +75,9 @@ export default function Layout({
   }
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewTitleBar className="md:pl-4">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <header className="shrink-0">
+        <div className="flex h-14 items-center gap-2 px-4">
           <Link
             href="/polls"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
@@ -79,23 +87,23 @@ export default function Layout({
               <Trans i18nKey="back" defaults="Back" />
             </span>
           </Link>
-          <ListViewTitle>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
             <Suspense fallback={<Skeleton className="h-5 w-40" />}>
               <PollPageTitle params={params} />
             </Suspense>
-          </ListViewTitle>
-          <ListViewActions>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
             <Suspense>
               <PollHeaderActions params={params} />
             </Suspense>
-          </ListViewActions>
-        </ListViewTitleBar>
-        <ListViewToolbar>
+          </div>
+        </div>
+        <div className="px-4 pb-2">
           <PollShellTabs />
-        </ListViewToolbar>
-      </ListViewHeader>
-      <ListViewContent>{children}</ListViewContent>
+        </div>
+      </header>
+      <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
       <PollDetailSheet />
-    </ListView>
+    </div>
   );
 }

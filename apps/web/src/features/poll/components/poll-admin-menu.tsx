@@ -36,8 +36,9 @@ import { trpc } from "@/trpc/client";
 /**
  * The poll admin header's overflow menu. Reads the poll from the legacy
  * poll context because the CSV export needs every response's votes.
+ * `showEdit` is off where the header shows its own edit button.
  */
-export function PollAdminMenu() {
+export function PollAdminMenu({ showEdit = true }: { showEdit?: boolean }) {
   const poll = usePoll();
   const { t } = useTranslation();
   const router = useRouter();
@@ -76,7 +77,7 @@ export function PollAdminMenu() {
           <MoreHorizontalIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {poll.status === "scheduled" ? null : (
+          {!showEdit || poll.status === "scheduled" ? null : (
             <>
               <DropdownMenuItem
                 render={<Link href={`/poll/${poll.id}/edit?from=admin`} />}
