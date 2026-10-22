@@ -80,7 +80,7 @@ export default async function Page({
           {thread.length > 0 ? (
             // Indented so the timeline stems from under the card, as a pull
             // request's commits do from its description.
-            <div className="pl-4">
+            <div className="px-4">
               <div
                 aria-hidden
                 className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
