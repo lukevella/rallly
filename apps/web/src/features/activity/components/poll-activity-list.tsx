@@ -639,6 +639,7 @@ function Rail() {
   return (
     <div
       aria-hidden
+      data-rail
       className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
     />
   );
@@ -907,6 +908,7 @@ export function PollActivityList({
   participantImages,
   participantVotes,
   pollCreatorName,
+  continues = false,
   className,
 }: {
   activity: ActivityRow[];
@@ -917,11 +919,23 @@ export function PollActivityList({
   participantVotes?: Record<string, VoteCounts>;
   /** Names who created the poll; the event itself records only an id. */
   pollCreatorName?: string;
+  /**
+   * Something follows the list on the same rail (Overview's finalize card),
+   * so the last item's rail runs on to the bottom instead of stopping.
+   */
+  continues?: boolean;
   className?: string;
 }) {
   const context = { timeZone, pollCreatorName };
   return (
-    <ol className={cn("flex flex-col", className)}>
+    <ol
+      className={cn(
+        "flex flex-col",
+        continues &&
+          "[&>li:last-child>[data-rail]]:bottom-0 [&>li:last-child>[data-rail]]:block",
+        className,
+      )}
+    >
       {compact
         ? groupActivity(activity).map((item) =>
             item.kind === "group" ? (
