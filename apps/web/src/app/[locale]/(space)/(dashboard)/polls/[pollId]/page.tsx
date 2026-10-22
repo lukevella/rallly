@@ -108,12 +108,7 @@ export default async function Page({
           </OverviewCard>
           <OverviewCard>
             <OverviewSection
-              title={
-                <Trans
-                  i18nKey="pollOverviewRecentResponses"
-                  defaults="Recent responses"
-                />
-              }
+              title={<Trans i18nKey="participants" defaults="Participants" />}
               viewAllHref={
                 participants.length > 0
                   ? `/polls/${pollId}/participants`
