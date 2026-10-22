@@ -6,7 +6,6 @@ import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
 import {
-  CalendarCheck2Icon,
   ChevronRightIcon,
   CircleCheckIcon,
   CircleDashedIcon,
@@ -329,7 +328,6 @@ export function NextStepCard({
               finalizeDialog.trigger();
             }}
           >
-            <CalendarCheck2Icon data-icon="inline-start" />
             <Trans
               i18nKey="pollNextStepFinalizeDate"
               defaults="Finalize <date></date>"
