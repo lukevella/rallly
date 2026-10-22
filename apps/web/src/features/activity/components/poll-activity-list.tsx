@@ -533,13 +533,19 @@ function ActivityDescription({
   }
 }
 
+/**
+ * `compact` is the secondary timeline under a headline card: smaller icons,
+ * xs text, and the time on the same line as the event.
+ */
 export function PollActivityList({
   activity,
   timeZone,
+  compact = false,
   className,
 }: {
   activity: ActivityRow[];
   timeZone: string | null;
+  compact?: boolean;
   className?: string;
 }) {
   return (
@@ -575,29 +581,62 @@ export function PollActivityList({
         })
         .map(({ key, createdAt, Icon, tone, description, note }) => {
           return (
-            <li key={key} className="group relative flex gap-3 pb-6 last:pb-0">
+            <li
+              key={key}
+              className={cn(
+                "group relative flex last:pb-0",
+                compact ? "gap-2.5 pb-4" : "gap-3 pb-6",
+              )}
+            >
               {/* The rail joining this event's icon to the next one */}
               <div
                 aria-hidden
-                className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
+                className={cn(
+                  "absolute bottom-1 w-px -translate-x-1/2 bg-border group-last:hidden",
+                  compact ? "top-7 left-3" : "top-9 left-4",
+                )}
               />
               <div
                 className={cn(
-                  "flex size-8 shrink-0 items-center justify-center rounded-full",
+                  "flex shrink-0 items-center justify-center rounded-full",
+                  compact ? "size-6" : "size-8",
                   toneClassName[tone],
                 )}
               >
-                <Icon aria-hidden className="size-4" />
+                <Icon aria-hidden className={compact ? "size-3.5" : "size-4"} />
               </div>
-              <div className="min-w-0 flex-1 space-y-1 pt-1.5">
-                <p className="text-sm leading-5">{description}</p>
-                <Time
-                  value={createdAt}
-                  preset="datetime"
-                  className="block text-muted-foreground text-xs"
-                />
+              <div
+                className={cn(
+                  "min-w-0 flex-1",
+                  compact ? "pt-1" : "space-y-1 pt-1.5",
+                )}
+              >
+                {compact ? (
+                  <p className="text-xs leading-4">
+                    {description}{" "}
+                    <Time
+                      value={createdAt}
+                      preset="datetime"
+                      className="text-muted-foreground"
+                    />
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-sm leading-5">{description}</p>
+                    <Time
+                      value={createdAt}
+                      preset="datetime"
+                      className="block text-muted-foreground text-xs"
+                    />
+                  </>
+                )}
                 {note ? (
-                  <p className="mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2 text-sm">
+                  <p
+                    className={cn(
+                      "mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2",
+                      compact ? "text-xs" : "text-sm",
+                    )}
+                  >
                     {note}
                   </p>
                 ) : null}

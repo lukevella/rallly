@@ -71,10 +71,22 @@ export default async function Page({
                 content={adminPoll.poll.description}
               />
             }
-            hasActivity={thread.length > 0}
           />
           {thread.length > 0 ? (
-            <PollActivityList activity={thread} timeZone={poll.timeZone} />
+            // Indented past the avatar so the timeline stems from under the
+            // card, as a pull request's commits do from its description.
+            <div className="pl-13">
+              <div
+                aria-hidden
+                className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
+              />
+              <PollActivityList
+                activity={thread}
+                timeZone={poll.timeZone}
+                compact
+                className="pl-3"
+              />
+            </div>
           ) : null}
         </PollProvider>
       }

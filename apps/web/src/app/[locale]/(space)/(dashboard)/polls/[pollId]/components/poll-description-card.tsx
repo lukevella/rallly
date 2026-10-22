@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { MapPinIcon } from "lucide-react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
@@ -16,14 +15,12 @@ import { Time } from "@/lib/datetime/time";
 /**
  * The head of the Overview thread, like a pull request's description: a
  * header saying who created the poll and when, then what it is about. The
- * rail beside it runs on into the activity below.
+ * activity stems from under it, indented and quieter.
  */
 export function PollDescriptionCard({
   description,
-  hasActivity,
 }: {
   description: React.ReactNode;
-  hasActivity: boolean;
 }) {
   const poll = usePoll();
   const name = poll.user?.name;
@@ -32,16 +29,10 @@ export function PollDescriptionCard({
   );
 
   return (
-    <div className={cn("relative flex gap-3", hasActivity && "pb-6")}>
-      {hasActivity ? (
-        <div
-          aria-hidden
-          className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border"
-        />
-      ) : null}
+    <div className="flex gap-3">
       <div className="shrink-0">
         <OptimizedAvatarImage
-          size="md"
+          size="lg"
           name={name ?? "?"}
           src={poll.user?.image ?? undefined}
         />
