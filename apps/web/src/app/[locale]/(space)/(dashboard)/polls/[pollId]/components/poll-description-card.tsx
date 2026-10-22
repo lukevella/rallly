@@ -43,8 +43,10 @@ export function PollDescriptionCard({
       : null;
 
   return (
-    <div className="overflow-hidden rounded-[18px] border border-card-border bg-card">
-      <div className="space-y-4 p-5">
+    // A touch of the space's primary colour sets the poll apart as the event:
+    // a 1px gradient frame (padding over a gradient) around a soft wash.
+    <div className="rounded-[18px] bg-linear-to-br from-primary/50 via-primary/15 to-card-border p-px">
+      <div className="space-y-4 rounded-[17px] bg-card bg-linear-to-br from-primary/[0.07] via-card to-card p-5">
         <div className="space-y-1">
           <h2 className="font-semibold text-base">{poll.title}</h2>
           {poll.description ? description : null}
