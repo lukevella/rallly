@@ -53,6 +53,8 @@
   "planFreeDescription": "Für gelegentliche Nutzer",
   "planProDescription": "Für Poweruser und Profis",
   "pollLimit": "Gibt es eine Begrenzung, wie viele Umfragen ich erstellen kann?",
+  "pollLimitAnswer": "Nein. Es gibt in keinem Tarif eine Begrenzung für die Anzahl der Umfragen, die du erstellen kannst, oder für die Anzahl der Personen, die daran abstimmen können. Im kostenlosen Tarif werden Umfragen gelöscht, sobald alle ihre Termine mehr als 30 Tage zurückliegen und 30 Tage lang keine Aktivität stattgefunden hat. Einige Funktionen wie individuelles Branding und erweiterte Umfrageeinstellungen sind nur in einem kostenpflichtigen Tarif verfügbar. Die vollständige Liste findest du in der Vergleichstabelle oben.",
+  "pollLimitAnswerOpenPollLimit": "Es gibt keine Begrenzung für die Anzahl der Umfragen, die du erstellen kannst, oder für die Anzahl der Personen, die daran abstimmen können. Im kostenlosen Tarif können bis zu {count} Umfragen gleichzeitig geöffnet sein und Stimmen sammeln. Schließe eine Umfrage ab oder beende sie, um Platz für eine weitere zu schaffen. Im Pro-Tarif gibt es keine Begrenzung. Im kostenlosen Tarif werden Umfragen gelöscht, sobald alle ihre Termine mehr als 30 Tage zurückliegen und 30 Tage lang keine Aktivität stattgefunden hat. Einige Funktionen wie individuelles Branding und erweiterte Umfrageeinstellungen sind nur in einem kostenpflichtigen Tarif verfügbar. Die vollständige Liste findest du in der Vergleichstabelle oben.",
   "pricingDescription": "Starte kostenlos. Keine Anmeldung erforderlich.",
   "pricingFinalCtaDescription": "Erstelle deine erste Umfrage in weniger als einer Minute. Steige um, wenn du mehr brauchst.",
   "pricingFinalCtaTitle": "Starte kostenlos",
@@ -69,6 +71,7 @@
   "webhooks": "Webhooks",
   "webhooksDescription": "Benachrichtige deine Systeme, wenn sich Umfragen und Antworten ändern. <a>Lies die Webhook-Dokumentation</a>",
   "whenPollInactive": "Wann wird eine Umfrage inaktiv?",
+  "whenPollInactiveAnswer": "Umfragen werden inaktiv, wenn alle Datumsoptionen mehr als 30 Tage zurückliegen und 30 Tage lang keine Aktivität stattgefunden hat. Zur Aktivität zählen neue Stimmen, Kommentare oder Änderungen an der Umfrage. Inaktive Umfragen werden automatisch gelöscht, wenn du kein kostenpflichtiges Abonnement hast.",
   "whyUpgrade": "Warum sollte ich upgraden?",
   "whyUpgradeAnswer2": "Ein Upgrade auf einen kostenpflichtigen Plan lohnt sich, wenn du Rallly häufig nutzt oder beruflich einsetzt. Der aktuelle Preis ist ein spezieller Frühbucher-Tarif, der in Zukunft steigen wird. Wenn du jetzt ein Upgrade machst, erhältst du frühzeitigen Zugang zu neuen, hochwertigen Planungstools und sicherst dir den aktuellen Preis – zukünftige Preiserhöhungen betreffen dich dann nicht.",
   "yearlySaveUpTo": "Spare bis zu {percent}%"

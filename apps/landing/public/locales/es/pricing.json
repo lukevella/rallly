@@ -10,6 +10,7 @@
   "cancelSubscriptionAnswer": "Puedes cancelar tu suscripción en cualquier momento dirigiéndote a tu <a>configuración de facturación</a>. Una vez que canceles tu suscripción, tendrás acceso a tu plan de pago hasta el final de tu período de facturación. Después, serás degradado a un plan gratuito.",
   "canUseFree": "¿Puedo usar Rallly de forma gratuita?",
   "canUseFreeAnswer3": "Sí. El plan gratuito no es una prueba. Puedes crear todas las encuestas que quieras, invitar a tantos participantes como quieras y usarlo durante el tiempo que quieras, sin pagar ni añadir una tarjeta. Los planes de pago añaden funciones extra, como conservar las encuestas indefinidamente y personalizar la identidad visual, pero nunca se te pedirá pagar para seguir usando lo básico.",
+  "canUseFreeAnswerOpenPollLimit": "Sí. El plan gratuito no es una prueba. Puedes crear todas las encuestas que quieras, con hasta {count} abiertas a la vez, invitar a tantos participantes como quieras y usarlo durante el tiempo que quieras sin pagar ni añadir una tarjeta. Los planes de pago añaden funciones adicionales, como encuestas abiertas ilimitadas, conservar las encuestas indefinidamente y personalizar la identidad visual, pero nunca se te pedirá pagar para seguir usando las funciones básicas.",
   "compareFeature": "Función",
   "compareOpenPolls": "Encuestas abiertas",
   "compareOpenPollsDescription": "Encuestas que recopilan votos al mismo tiempo",
@@ -36,6 +37,7 @@
   "emailInvites": "Invitaciones por correo",
   "emailInvitesDescription": "Sigue quién abrió y respondió con enlaces de invitación personales",
   "faq": "Preguntas frecuentes",
+  "freeOpenPollLimit": "Hasta {count} encuestas abiertas",
   "getPro": "Obtener Pro",
   "howToUpgrade": "¿Cómo puedo cambiar a un plan de pago?",
   "howToUpgradeAnswer": "Para mejorar, puedes ir a tu <a>configuración de facturación</a> y hacer clic en <b>Mejorar</b>.",
@@ -51,6 +53,8 @@
   "planFreeDescription": "Para usuarios ocasionales",
   "planProDescription": "Para usuarios avanzados y profesionales",
   "pollLimit": "¿Hay un límite de encuestas que puedo crear?",
+  "pollLimitAnswer": "No. No hay límite en el número de encuestas que puedes crear ni en el número de personas que pueden votarlas, en ningún plan. En el plan gratuito, las encuestas se eliminan una vez que todas sus fechas han quedado más de 30 días atrás y no ha habido actividad durante 30 días. Algunas funciones, como la personalización de la identidad visual y los ajustes avanzados de las encuestas, solo están disponibles en un plan de pago. Consulta la tabla comparativa de arriba para ver la lista completa.",
+  "pollLimitAnswerOpenPollLimit": "No hay límite en el número de encuestas que puedes crear ni en el número de personas que pueden votarlas. En el plan gratuito, puede haber hasta {count} encuestas abiertas y recopilando votos a la vez; finaliza o cierra una para dejar sitio a otra. Pro no tiene límite. En el plan gratuito, las encuestas se eliminan una vez que todas sus fechas han quedado más de 30 días atrás y no ha habido actividad durante 30 días. Algunas funciones, como la personalización de la identidad visual y los ajustes avanzados de las encuestas, solo están disponibles en un plan de pago. Consulta la tabla comparativa de arriba para ver la lista completa.",
   "pricingDescription": "Comienza a utilizarlo gratis. No se necesita iniciar sesión.",
   "pricingFinalCtaDescription": "Crea tu primera encuesta en menos de un minuto. Actualiza cuando necesites más.",
   "pricingFinalCtaTitle": "Empieza de manera gratuita",
@@ -67,6 +71,8 @@
   "webhooks": "Webhooks",
   "webhooksDescription": "Notifica a tus sistemas cuando cambien las encuestas y las respuestas. <a>Consulta la documentación de webhooks</a>",
   "whenPollInactive": "¿Cuándo una encuesta se vuelve inactiva?",
+  "whenPollInactiveAnswer": "Las encuestas se vuelven inactivas cuando todas las opciones de fecha han quedado más de 30 días atrás y no ha habido actividad durante 30 días. La actividad incluye nuevos votos, comentarios o cambios en la encuesta. Las encuestas inactivas se eliminan automáticamente si no tienes una suscripción de pago.",
   "whyUpgrade": "¿Por qué debería mejorar a un plan de pago?",
-  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso anticipado a nuevas herramientas de programación de alta calidad a medida que se publiquen y fijarás tu tarifa de suscripción para que no te veas afectado por futuros aumentos de precios."
+  "whyUpgradeAnswer2": "Mejorar a un plan de pago tiene sentido si usas Rallly a menudo o lo usas para trabajar. La tasa de suscripción actual es una tasa especial de adopción temprana y se incrementará en el futuro. Actualizando ahora, obtendrás acceso anticipado a nuevas herramientas de programación de alta calidad a medida que se publiquen y fijarás tu tarifa de suscripción para que no te veas afectado por futuros aumentos de precios.",
+  "yearlySaveUpTo": "Ahorra hasta un {percent} %"
 }
