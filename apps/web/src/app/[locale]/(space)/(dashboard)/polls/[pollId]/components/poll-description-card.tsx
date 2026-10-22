@@ -43,7 +43,7 @@ export function PollDescriptionCard({
       : null;
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-card-border bg-card">
+    <div className="overflow-hidden rounded-[20px] border border-card-border bg-card">
       <div className="space-y-3 px-4 py-3">
         <div className="space-y-1">
           <h2 className="font-semibold text-base">{poll.title}</h2>
