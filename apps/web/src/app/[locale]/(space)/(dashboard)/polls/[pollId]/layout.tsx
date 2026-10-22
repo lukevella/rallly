@@ -1,6 +1,6 @@
 import { buttonVariants } from "@rallly/ui";
 import { Skeleton } from "@rallly/ui/skeleton";
-import { ArrowLeftIcon, PencilIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/components/link";
@@ -55,17 +55,6 @@ async function PollHeaderActions({
       comments={comments}
       viewerRole="admin"
     >
-      {poll.status === "scheduled" ? null : (
-        <Link
-          href={`/poll/${poll.id}/edit?from=admin`}
-          className={buttonVariants({ variant: "ghost", size: "icon" })}
-        >
-          <PencilIcon className="size-4" />
-          <span className="sr-only">
-            <Trans i18nKey="edit" defaults="Edit" />
-          </span>
-        </Link>
-      )}
       <PollPrimaryActions />
       <PollAdminMenu showEdit={false} />
     </PollProvider>

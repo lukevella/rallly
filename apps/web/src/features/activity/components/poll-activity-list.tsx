@@ -537,7 +537,7 @@ function ActivityDescription({
 
 /**
  * `compact` is the secondary timeline under a headline card: smaller icons,
- * xs text, and a relative time right aligned on the event's line. Events about a
+ * and a relative time right aligned on the event's line. Events about a
  * response show the participant's avatar in place of an icon;
  * `participantImages` supplies photos by participant id where they have one.
  */
@@ -634,7 +634,7 @@ export function PollActivityList({
                   )}
                 >
                   {compact ? (
-                    <div className="flex items-baseline gap-3 text-xs leading-6">
+                    <div className="flex items-baseline gap-3 text-sm leading-6">
                       <p className="min-w-0 flex-1">{description}</p>
                       <RelativeTime
                         value={createdAt}
@@ -655,7 +655,7 @@ export function PollActivityList({
                     <p
                       className={cn(
                         "mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2",
-                        compact ? "text-xs" : "text-sm",
+                        "text-sm",
                       )}
                     >
                       {note}
