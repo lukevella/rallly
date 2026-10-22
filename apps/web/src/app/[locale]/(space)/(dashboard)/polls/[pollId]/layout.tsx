@@ -4,6 +4,15 @@ import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/components/link";
+import {
+  PageShell,
+  PageShellContent,
+  PageShellHeader,
+  PageShellHeaderCenter,
+  PageShellHeaderEnd,
+  PageShellHeaderStart,
+  PageShellTitle,
+} from "@/components/page-shell";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
@@ -23,7 +32,7 @@ async function PollPageTitle({
   const poll = await loadPoll(pollId);
   return (
     <>
-      <h1 className="truncate font-semibold text-foreground">{poll.title}</h1>
+      <PageShellTitle>{poll.title}</PageShellTitle>
       <PollStatusIcon status={poll.status} />
     </>
   );
@@ -75,15 +84,9 @@ export default function Layout({
   }
 
   return (
-    // Grows with its content (no min-h-0) so the sticky header has the whole
-    // page to stick within; the dashboard wrapper does the scrolling.
-    <div className="flex flex-1 flex-col">
-      {/* One h-14 row from md up: title, tabs centred, actions. Equal 1fr
-          side columns keep the tabs at the true centre whatever the title or
-          actions widths. Overview's cards stick at top-14 to sit just below
-          it. Below md the tabs wrap onto a second row. */}
-      <header className="sticky top-0 z-10 flex shrink-0 flex-wrap items-center gap-x-2 bg-sidebar px-4 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-        <div className="flex h-14 min-w-0 flex-1 items-center gap-2">
+    <PageShell>
+      <PageShellHeader>
+        <PageShellHeaderStart>
           <Link
             href="/polls"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
@@ -96,18 +99,18 @@ export default function Layout({
           <Suspense fallback={<Skeleton className="h-5 w-40" />}>
             <PollPageTitle params={params} />
           </Suspense>
-        </div>
-        <div className="order-last flex h-10 w-full items-center md:order-none md:h-14 md:w-auto">
+        </PageShellHeaderStart>
+        <PageShellHeaderCenter>
           <PollShellTabs />
-        </div>
-        <div className="flex h-14 shrink-0 items-center gap-2 md:justify-self-end">
+        </PageShellHeaderCenter>
+        <PageShellHeaderEnd>
           <Suspense>
             <PollHeaderActions params={params} />
           </Suspense>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col">{children}</div>
+        </PageShellHeaderEnd>
+      </PageShellHeader>
+      <PageShellContent>{children}</PageShellContent>
       <PollDetailSheet />
-    </div>
+    </PageShell>
   );
 }
