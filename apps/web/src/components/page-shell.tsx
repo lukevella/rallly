@@ -1,5 +1,6 @@
 import { cn } from "@rallly/ui";
 import { SidebarTrigger } from "@rallly/ui/sidebar";
+import { Skeleton } from "@rallly/ui/skeleton";
 
 /**
  * The page shell every dashboard page is moving to: a sticky h-14 header
@@ -77,7 +78,7 @@ export function PageShellHeaderEnd({
   return (
     <div
       className={cn(
-        "flex h-14 shrink-0 items-center gap-2 md:justify-self-end",
+        "flex h-14 shrink-0 items-center gap-2 md:col-start-3 md:justify-self-end",
         className,
       )}
     >
@@ -99,11 +100,54 @@ export function PageShellTitle({
   );
 }
 
+/**
+ * Filters and search for a list page, under the header. It scrolls with the
+ * content rather than sticking, so the header stays one row tall.
+ */
+export function PageShellToolbar({
+  children,
+  className,
+}: React.PropsWithChildren<{ className?: string }>) {
+  return (
+    <div
+      className={cn(
+        "flex flex-wrap items-center gap-x-2 gap-y-4 px-6 pt-2 pb-3",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function PageShellContent({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return (
     <div className={cn("flex flex-1 flex-col", className)}>{children}</div>
+  );
+}
+
+/** A page in the shell while it loads: the same header, placeholder rows. */
+export function PageShellSkeleton() {
+  return (
+    <PageShell>
+      <PageShellHeader>
+        <PageShellHeaderStart>
+          <Skeleton className="h-5 w-32" />
+        </PageShellHeaderStart>
+      </PageShellHeader>
+      <PageShellContent className="space-y-8 px-6 pt-4 pb-8">
+        <Skeleton className="h-8 w-1/2" />
+        {[0, 1, 2].map((group) => (
+          <div key={group} className="space-y-4">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-1/2" />
+          </div>
+        ))}
+      </PageShellContent>
+    </PageShell>
   );
 }

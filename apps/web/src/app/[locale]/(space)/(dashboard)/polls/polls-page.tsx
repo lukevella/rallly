@@ -14,16 +14,16 @@ import {
 } from "@/components/empty-state";
 import { FilterPills } from "@/components/filter-pills";
 import { Link } from "@/components/link";
-import {
-  ListView,
-  ListViewActions,
-  ListViewContent,
-  ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
-  ListViewToolbar,
-} from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
+import {
+  PageShell,
+  PageShellContent,
+  PageShellHeader,
+  PageShellHeaderEnd,
+  PageShellHeaderStart,
+  PageShellTitle,
+  PageShellToolbar,
+} from "@/components/page-shell";
 import { SearchInput } from "@/components/search-input";
 import { PollsListSkeleton } from "@/features/poll/components/polls-list";
 import { useSpace } from "@/features/space/client";
@@ -181,67 +181,64 @@ export function PollsPage({
   );
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewTitleBar>
-          <ListViewTitle>
+    <PageShell>
+      <PageShellHeader>
+        <PageShellHeaderStart>
+          <PageShellTitle>
             <Trans i18nKey="polls" defaults="Polls" />
-          </ListViewTitle>
-          <ListViewActions>
-            {usageMeter}
-            <Link
-              href="/new"
-              className={buttonVariants({ variant: "primary" })}
-            >
-              <PlusIcon data-icon="inline-start" />
-              <Trans i18nKey="createPoll" defaults="Create poll" />
-            </Link>
-          </ListViewActions>
-        </ListViewTitleBar>
-        <ListViewToolbar>
-          <FilterPills
-            param="status"
-            value={status}
-            label={t("pollsListStatusFilter", {
-              defaultValue: "Filter by status",
+          </PageShellTitle>
+        </PageShellHeaderStart>
+        <PageShellHeaderEnd>
+          {usageMeter}
+          <Link href="/new" className={buttonVariants({ variant: "primary" })}>
+            <PlusIcon data-icon="inline-start" />
+            <Trans i18nKey="createPoll" defaults="Create poll" />
+          </Link>
+        </PageShellHeaderEnd>
+      </PageShellHeader>
+      <PageShellToolbar>
+        <FilterPills
+          param="status"
+          value={status}
+          label={t("pollsListStatusFilter", {
+            defaultValue: "Filter by status",
+          })}
+          options={[
+            {
+              value: "open",
+              label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
+            },
+            {
+              value: "closed",
+              label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
+            },
+            {
+              value: "scheduled",
+              label: (
+                <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
+              ),
+            },
+          ]}
+          startTransition={startNavigation}
+        />
+        <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
+          <SearchInput
+            className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
+            placeholder={t("searchPollsPlaceholder", {
+              defaultValue: "Search polls by title...",
             })}
-            options={[
-              {
-                value: "open",
-                label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
-              },
-              {
-                value: "closed",
-                label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
-              },
-              {
-                value: "scheduled",
-                label: (
-                  <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
-                ),
-              },
-            ]}
             startTransition={startNavigation}
           />
-          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
-            <SearchInput
-              className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
-              placeholder={t("searchPollsPlaceholder", {
-                defaultValue: "Search polls by title...",
-              })}
+          {showMemberFilter ? (
+            <MemberSelector
+              members={members}
+              className="min-w-0 sm:min-w-40"
               startTransition={startNavigation}
             />
-            {showMemberFilter ? (
-              <MemberSelector
-                members={members}
-                className="min-w-0 sm:min-w-40"
-                startTransition={startNavigation}
-              />
-            ) : null}
-          </div>
-        </ListViewToolbar>
-      </ListViewHeader>
-      <ListViewContent>
+          ) : null}
+        </div>
+      </PageShellToolbar>
+      <PageShellContent>
         {isNavigating ? <PollsListSkeleton /> : list}
         {isNavigating ? null : (
           <PollsPagination
@@ -250,7 +247,7 @@ export function PollsPage({
             startTransition={startNavigation}
           />
         )}
-      </ListViewContent>
-    </ListView>
+      </PageShellContent>
+    </PageShell>
   );
 }

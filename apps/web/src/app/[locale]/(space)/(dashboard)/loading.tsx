@@ -1,11 +1,11 @@
-import { PageSkeleton } from "@/components/page-layout";
+import { PageShellSkeleton } from "@/components/page-shell";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 
 export default function Loading() {
   return (
     <>
       <RouterLoadingIndicator />
-      <PageSkeleton />
+      <PageShellSkeleton />
     </>
   );
 }
