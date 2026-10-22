@@ -244,7 +244,7 @@ export function NextStepCard({
   })();
 
   return (
-    <div className="overflow-hidden rounded-xl border border-card-border bg-card text-sm">
+    <div className="overflow-hidden rounded-3xl border border-card-border bg-card text-sm">
       <button
         type="button"
         disabled={!deciding}
