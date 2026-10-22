@@ -1,17 +1,24 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
-import { CalendarCheck2Icon, UserPlusIcon } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@rallly/ui/radio-group";
+import {
+  CalendarCheck2Icon,
+  ChevronRightIcon,
+  CircleCheckIcon,
+  CircleDashedIcon,
+  CircleIcon,
+  CircleXIcon,
+} from "lucide-react";
+import * as React from "react";
 import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
-import {
-  SharePollDialog,
-  useSharePollDialog,
-} from "@/features/poll/components/share-dialog";
+import { VoteBar } from "@/features/poll/components/vote-bar";
+import type { VoteType } from "@/features/poll/constants";
 import {
   EventDate,
   EventTimeRange,
@@ -19,6 +26,12 @@ import {
 import { Trans } from "@/i18n/client";
 
 type Slot = { startTime: Date; duration: number };
+
+type RankedOption = Slot & {
+  id: string;
+  score: number;
+  votes: { type: VoteType; count: number }[];
+};
 
 function SlotLabel({
   slot,
@@ -51,73 +64,60 @@ function SlotLabel({
   );
 }
 
+const count = (option: RankedOption, type: VoteType) =>
+  option.votes.find((vote) => vote.type === type)?.count ?? 0;
+
 /**
- * The single most useful thing the host can do with the poll right now,
- * chosen by its state. Finalize lives here rather than in the header.
+ * Where the thread ends, like a pull request's merge box: a header that
+ * summarizes the poll's state and, while it is still deciding, expands to
+ * every option ranked by popularity. One call to action finalizes the
+ * selected option, the most popular by default.
  */
 export function NextStepCard({
-  leading,
-  tiedCount,
-  responseCount,
+  options,
+  participantCount,
 }: {
-  /** The top ranked option, if anyone is available for any option. */
-  leading: Slot | null;
-  /** How many options share the top score (1 when there is a clear lead). */
-  tiedCount: number;
-  responseCount: number;
+  /** Every option, most popular first. */
+  options: RankedOption[];
+  participantCount: number;
 }) {
   const poll = usePoll();
-  const share = useSharePollDialog(poll.id);
   const finalizeDialog = useDialog();
-  const canFinalize = poll.status === "open" || poll.status === "closed";
+  const [expanded, setExpanded] = React.useState(false);
+  const top = options[0];
+  const leading = top && top.score > 0 ? top : undefined;
+  const tiedCount = leading
+    ? options.filter((option) => option.score === leading.score).length
+    : 0;
+  const [selectedId, setSelectedId] = React.useState(top?.id);
+  const selected =
+    options.find((option) => option.id === selectedId) ?? options[0];
+  const deciding =
+    (poll.status === "open" ||
+      (poll.status === "closed" && poll.closedReason !== "auto")) &&
+    options.length > 0;
 
-  const finalize = (
-    <Button
-      size="sm"
-      variant={leading ? "primary" : "default"}
-      onClick={() => {
-        posthog?.capture("poll_finalize:dialog_open");
-        finalizeDialog.trigger();
-      }}
-    >
-      <CalendarCheck2Icon data-icon="inline-start" />
-      <Trans i18nKey="finalize" defaults="Finalize" />
-    </Button>
-  );
-
-  const invite = (
-    <Button size="sm" variant="primary" onClick={() => share.open("manual")}>
-      <UserPlusIcon data-icon="inline-start" />
-      <Trans
-        i18nKey="pollDescriptionCardInviteParticipants"
-        defaults="Invite participants"
-      />
-    </Button>
-  );
-
-  const body = (() => {
+  const summary = (() => {
     switch (poll.status) {
       case "canceled":
-        return (
-          <p className="text-muted-foreground">
+        return {
+          icon: <CircleXIcon className="text-rose-500" />,
+          title: (
             <Trans
               i18nKey="pollNextStepCanceled"
-              defaults="This poll was canceled."
+              defaults="This poll was canceled"
             />
-          </p>
-        );
+          ),
+        };
       case "scheduled":
-        return (
-          <>
-            <div className="space-y-0.5">
-              <p className="text-muted-foreground">
-                <Trans
-                  i18nKey="pollNextStepScheduled"
-                  defaults="Scheduled for"
-                />
-              </p>
-              {poll.event ? (
-                <p className="font-medium">
+        return {
+          icon: <CircleCheckIcon className="text-green-500" />,
+          title: poll.event ? (
+            <Trans
+              i18nKey="pollNextStepScheduledFor"
+              defaults="Scheduled for <date></date>"
+              components={{
+                date: (
                   <SlotLabel
                     slot={{
                       startTime: poll.event.start,
@@ -125,105 +125,168 @@ export function NextStepCard({
                     }}
                     timeZone={poll.timeZone}
                   />
-                </p>
-              ) : null}
-            </div>
-            <div>
-              <Link
-                href="/events"
-                className={buttonVariants({ size: "sm", variant: "primary" })}
-              >
-                <Trans i18nKey="pollNextStepGoToEvent" defaults="Go to event" />
-              </Link>
-            </div>
-          </>
-        );
-      case "closed":
-        if (poll.closedReason === "auto") {
-          return (
-            <p className="text-muted-foreground">
-              <Trans
-                i18nKey="pollNextStepAllPassed"
-                defaults="Every option has passed."
-              />
-            </p>
-          );
-        }
-        break;
+                ),
+              }}
+            />
+          ) : (
+            <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
+          ),
+        };
     }
-
-    return (
-      <>
-        <div className="space-y-0.5">
-          {poll.status === "closed" ? (
-            <p className="text-muted-foreground">
-              <Trans
-                i18nKey="pollNextStepClosed"
-                defaults="Responses are closed."
-              />
-            </p>
-          ) : null}
-          {leading ? (
-            <>
-              <p className="text-muted-foreground">
-                {tiedCount > 1 ? (
-                  <Trans
-                    i18nKey="pollNextStepTied"
-                    defaults="{count} options are tied for the lead"
-                    values={{ count: tiedCount }}
-                  />
-                ) : (
-                  <Trans
-                    i18nKey="pollNextStepLeading"
-                    defaults="Leading option"
-                  />
-                )}
-              </p>
-              <p className="font-medium">
-                <SlotLabel slot={leading} timeZone={poll.timeZone} />
-              </p>
-            </>
-          ) : responseCount > 0 ? (
-            <p className="text-muted-foreground">
-              <Trans
-                i18nKey="pollNextStepNobodyAvailable"
-                defaults="Nobody is available for any option yet."
-              />
-            </p>
-          ) : (
-            <p className="text-muted-foreground">
-              <Trans
-                i18nKey="pollNextStepNoResponses"
-                defaults="Nobody has responded yet."
-              />
-            </p>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {leading ? (
-            finalize
-          ) : (
-            <>
-              {poll.status === "open" ? invite : null}
-              {canFinalize ? finalize : null}
-            </>
-          )}
-        </div>
-      </>
-    );
+    if (poll.status === "closed" && poll.closedReason === "auto") {
+      return {
+        icon: <CircleIcon className="text-muted-foreground" />,
+        title: (
+          <Trans
+            i18nKey="pollNextStepAllPassed"
+            defaults="Every option has passed"
+          />
+        ),
+      };
+    }
+    return {
+      icon: leading ? (
+        <CircleCheckIcon className="text-green-500" />
+      ) : (
+        <CircleDashedIcon className="text-amber-500" />
+      ),
+      title: leading ? (
+        tiedCount > 1 ? (
+          <Trans
+            i18nKey="pollNextStepTied"
+            defaults="{count} options are tied for the lead"
+            values={{ count: tiedCount }}
+          />
+        ) : (
+          <Trans
+            i18nKey="pollNextStepMostPopular"
+            defaults="<date></date> is the most popular"
+            components={{
+              date: <SlotLabel slot={leading} timeZone={poll.timeZone} />,
+            }}
+          />
+        )
+      ) : participantCount > 0 ? (
+        <Trans
+          i18nKey="pollNextStepNobodyAvailable"
+          defaults="Nobody is available for any option yet"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollNextStepNoResponses"
+          defaults="Waiting for responses"
+        />
+      ),
+    };
   })();
 
   return (
-    <div className="space-y-3">
-      {body}
-      <SharePollDialog
-        {...share.dialog.dialogProps}
-        pollId={poll.id}
-        pollStatus={poll.status}
-        inviteLink={poll.inviteLink}
-      />
-      {canFinalize ? (
-        <FinalizePollDialog {...finalizeDialog.dialogProps} />
+    <div className="overflow-hidden rounded-xl border border-card-border bg-card text-sm">
+      <button
+        type="button"
+        disabled={!deciding}
+        aria-expanded={deciding ? expanded : undefined}
+        onClick={() => setExpanded((value) => !value)}
+        className="flex w-full items-center gap-3 px-4 py-3 text-left outline-none focus-visible:bg-accent enabled:hover:bg-accent/50"
+      >
+        <span className="flex size-8 shrink-0 items-center justify-center [&_svg]:size-6">
+          {summary.icon}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-medium">{summary.title}</span>
+          <span className="block text-muted-foreground text-xs">
+            {poll.status === "closed" && poll.closedReason !== "auto" ? (
+              <>
+                <Trans
+                  i18nKey="pollNextStepClosed"
+                  defaults="Responses are closed"
+                />
+                {" · "}
+              </>
+            ) : null}
+            <Trans
+              i18nKey="pollNextStepCounts"
+              defaults="{responses, plural, one {# response} other {# responses}} · {options, plural, one {# option} other {# options}}"
+              values={{
+                responses: participantCount,
+                options: options.length,
+              }}
+            />
+          </span>
+        </span>
+        {deciding ? (
+          <ChevronRightIcon
+            aria-hidden
+            className={cn(
+              "size-4 shrink-0 text-muted-foreground transition-transform",
+              expanded && "rotate-90",
+            )}
+          />
+        ) : null}
+      </button>
+      {deciding && expanded ? (
+        <RadioGroup
+          value={selected?.id}
+          onValueChange={(value) => setSelectedId(value as string)}
+          className="gap-0 border-card-border border-t px-2 py-2"
+        >
+          {options.map((option) => (
+            // biome-ignore lint/a11y/noLabelWithoutControl: the radio inside is the control
+            <label
+              key={option.id}
+              className="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2 hover:bg-accent/50"
+            >
+              <RadioGroupItem value={option.id} />
+              <span className="min-w-0 flex-1 truncate">
+                <SlotLabel slot={option} timeZone={poll.timeZone} />
+              </span>
+              <VoteBar
+                className="w-24 shrink-0"
+                yes={count(option, "yes")}
+                ifNeedBe={count(option, "ifNeedBe")}
+                total={participantCount}
+              />
+              <span className="w-10 shrink-0 text-right text-muted-foreground text-xs tabular-nums">
+                {count(option, "yes") + count(option, "ifNeedBe")}/
+                {participantCount}
+              </span>
+            </label>
+          ))}
+        </RadioGroup>
+      ) : null}
+      {deciding && selected ? (
+        <div className="border-card-border border-t bg-muted/40 px-4 py-3">
+          <Button
+            variant="primary"
+            onClick={() => {
+              posthog?.capture("poll_finalize:dialog_open");
+              finalizeDialog.trigger();
+            }}
+          >
+            <CalendarCheck2Icon data-icon="inline-start" />
+            <Trans
+              i18nKey="pollNextStepFinalizeDate"
+              defaults="Finalize <date></date>"
+              components={{
+                date: <SlotLabel slot={selected} timeZone={poll.timeZone} />,
+              }}
+            />
+          </Button>
+          <FinalizePollDialog
+            {...finalizeDialog.dialogProps}
+            optionId={selected.id}
+          />
+        </div>
+      ) : null}
+      {poll.status === "scheduled" ? (
+        <div className="border-card-border border-t bg-muted/40 px-4 py-3">
+          <Link
+            href="/events"
+            className={buttonVariants({ variant: "primary" })}
+          >
+            <Trans i18nKey="pollNextStepGoToEvent" defaults="Go to event" />
+          </Link>
+        </div>
       ) : null}
     </div>
   );

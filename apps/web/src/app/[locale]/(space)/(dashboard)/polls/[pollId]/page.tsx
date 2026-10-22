@@ -54,11 +54,11 @@ export default async function Page({
       ? firstOrganizerChange.payload.from.name
       : adminPoll.poll.user?.name;
 
-  // Ranked best first; options sharing the top score are tied for the lead.
-  const leading = topOptions.options[0];
-  const tiedCount = leading
-    ? results.options.filter((option) => option.score === leading.score).length
-    : 0;
+  // Most popular first; ties keep date order.
+  const rankedOptions = [...results.options].sort(
+    (a, b) =>
+      b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
+  );
 
   return (
     <OverviewLayout
@@ -107,13 +107,10 @@ export default async function Page({
               className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
             />
           </div>
-          <div className="rounded-xl border border-card-border bg-card px-4 py-3 text-sm">
-            <NextStepCard
-              leading={leading ?? null}
-              tiedCount={tiedCount}
-              responseCount={participants.length}
-            />
-          </div>
+          <NextStepCard
+            options={rankedOptions}
+            participantCount={results.participantCount}
+          />
         </PollProvider>
       }
       cards={

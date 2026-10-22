@@ -562,10 +562,12 @@ function SummaryStep({ option }: { option: RankedOption }) {
 // when the host closes it.
 function FinalizeWizard({
   step,
+  initialOptionId,
   onStepChange,
   onClose,
 }: {
   step: Step;
+  initialOptionId?: string;
   onStepChange: (step: Step) => void;
   onClose: () => void;
 }) {
@@ -584,7 +586,9 @@ function FinalizeWizard({
     () => rankOptionsByPopularity({ options: poll.options, participants }),
     [poll.options, participants],
   );
-  const [optionId, setOptionId] = React.useState<string | null>(null);
+  const [optionId, setOptionId] = React.useState<string | null>(
+    initialOptionId ?? null,
+  );
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
@@ -755,8 +759,21 @@ function FinalizeWizard({
   );
 }
 
-export function FinalizePollDialog(props: DialogProps) {
-  const [step, setStep] = React.useState<Step>("date");
+/**
+ * `optionId` opens the wizard with that date already picked, past the date
+ * step; the host can still go back and pick another.
+ */
+export function FinalizePollDialog({
+  optionId,
+  ...props
+}: DialogProps & { optionId?: string }) {
+  const { participants } = useParticipants();
+  // Null until the host moves, so each open starts where `optionId` says.
+  // With nobody to notify, a picked date goes straight to the summary.
+  const [movedTo, setStep] = React.useState<Step | null>(null);
+  const step =
+    movedTo ??
+    (optionId ? (participants.length > 0 ? "notify" : "summary") : "date");
   const onOpenChange = (open: boolean) => {
     if (!open && step !== "done") {
       posthog?.capture("poll_finalize:dialog_dismiss", { step });
@@ -770,12 +787,13 @@ export function FinalizePollDialog(props: DialogProps) {
       // Reset once the close animation ends, so the closing dialog keeps
       // showing the step it was on.
       onOpenChangeComplete={(open) => {
-        if (!open) setStep("date");
+        if (!open) setStep(null);
       }}
     >
       <DialogContent className="w-auto sm:max-w-none">
         <FinalizeWizard
           step={step}
+          initialOptionId={optionId}
           onStepChange={setStep}
           onClose={() => onOpenChange(false)}
         />
