@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { VoteIcon } from "@rallly/ui/vote-icon";
 import type { LucideIcon } from "lucide-react";
 import {
   AlignLeftIcon,
@@ -45,7 +46,7 @@ import {
   EventDate,
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
 import { Time } from "@/lib/datetime/time";
 
@@ -553,7 +554,39 @@ type Entry = {
   description: React.ReactNode;
   note?: string;
   participant?: { id: string; name: string };
+  /** Show the participant's vote summary beside the event. */
+  showVotes?: boolean;
 };
+
+export type VoteCounts = { yes: number; ifNeedBe: number; no: number };
+
+/** How a response voted, as counts beside each vote's icon. */
+function VoteSummary({ counts }: { counts: VoteCounts }) {
+  const { t } = useTranslation();
+  const items = [
+    {
+      type: "yes",
+      label: t("yes", { defaultValue: "Yes" }),
+      count: counts.yes,
+    },
+    {
+      type: "ifNeedBe",
+      label: t("ifNeedBe", { defaultValue: "If need be" }),
+      count: counts.ifNeedBe,
+    },
+    { type: "no", label: t("no", { defaultValue: "No" }), count: counts.no },
+  ] as const;
+  return (
+    <span className="inline-flex shrink-0 items-center gap-2.5 text-muted-foreground tabular-nums">
+      {items.map((item) => (
+        <span key={item.type} className="inline-flex items-center gap-1">
+          <VoteIcon type={item.type} size="md" title={item.label} />
+          {item.count}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 function entriesOf(
   { id, createdAt, event }: ActivityRow,
@@ -592,6 +625,8 @@ function entriesOf(
         event.type === "response_deleted"
           ? { id: event.participantId, name: event.payload.name }
           : undefined,
+      showVotes:
+        event.type === "response_created" || event.type === "response_updated",
     },
   ];
 }
@@ -638,11 +673,17 @@ function EntryItem({
   entry,
   compact,
   participantImages,
+  participantVotes,
 }: {
   entry: Entry;
   compact: boolean;
   participantImages?: Record<string, string | null>;
+  participantVotes?: Record<string, VoteCounts>;
 }) {
+  const votes =
+    entry.showVotes && entry.participant
+      ? participantVotes?.[entry.participant.id]
+      : undefined;
   return (
     <li
       className={cn(
@@ -661,6 +702,7 @@ function EntryItem({
         {compact ? (
           <div className="flex items-baseline gap-3 pt-1 text-sm leading-6">
             <p className="min-w-0 flex-1">{entry.description}</p>
+            {votes ? <VoteSummary counts={votes} /> : null}
             <RelativeTime
               value={entry.createdAt}
               className="shrink-0 text-muted-foreground"
@@ -742,22 +784,6 @@ function GroupDescription({
           components={{ b }}
         />
       );
-    case "response_created":
-      return count === 2 ? (
-        <Trans
-          i18nKey="pollActivityGroupRespondedTwo"
-          defaults="<b>{first}</b> and <b>{second}</b> responded"
-          values={{ first, second }}
-          components={{ b }}
-        />
-      ) : (
-        <Trans
-          i18nKey="pollActivityGroupResponded"
-          defaults="<b>{first}</b>, <b>{second}</b> and {count, plural, one {# other} other {# others}} responded"
-          values={{ first, second, count: count - 2 }}
-          components={{ b }}
-        />
-      );
   }
 }
 
@@ -770,11 +796,13 @@ function GroupItem({
   rows,
   timeZone,
   participantImages,
+  participantVotes,
 }: {
   type: GroupableActivityType;
   rows: ActivityRow[];
   timeZone: string | null;
   participantImages?: Record<string, string | null>;
+  participantVotes?: Record<string, VoteCounts>;
 }) {
   const [expanded, setExpanded] = React.useState(false);
   const latest = rows[rows.length - 1];
@@ -841,6 +869,7 @@ function GroupItem({
                   entry={entry}
                   compact
                   participantImages={participantImages}
+                  participantVotes={participantVotes}
                 />
               ))}
           </ol>
@@ -862,6 +891,7 @@ export function PollActivityList({
   timeZone,
   compact = false,
   participantImages,
+  participantVotes,
   pollCreatorName,
   className,
 }: {
@@ -869,6 +899,8 @@ export function PollActivityList({
   timeZone: string | null;
   compact?: boolean;
   participantImages?: Record<string, string | null>;
+  /** Each response's vote counts by participant id, shown beside it. */
+  participantVotes?: Record<string, VoteCounts>;
   /** Names who created the poll; the event itself records only an id. */
   pollCreatorName?: string;
   className?: string;
@@ -885,6 +917,7 @@ export function PollActivityList({
                 rows={item.rows}
                 timeZone={timeZone}
                 participantImages={participantImages}
+                participantVotes={participantVotes}
               />
             ) : (
               entriesOf(item.row, context).map((entry) => (
@@ -893,6 +926,7 @@ export function PollActivityList({
                   entry={entry}
                   compact
                   participantImages={participantImages}
+                  participantVotes={participantVotes}
                 />
               ))
             ),
@@ -905,6 +939,7 @@ export function PollActivityList({
                 entry={entry}
                 compact={false}
                 participantImages={participantImages}
+                participantVotes={participantVotes}
               />
             ))}
     </ol>

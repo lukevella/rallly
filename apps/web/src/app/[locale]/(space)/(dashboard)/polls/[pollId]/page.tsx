@@ -93,6 +93,9 @@ export default async function Page({
                 participantImages={Object.fromEntries(
                   participants.map(({ id, image }) => [id, image]),
                 )}
+                participantVotes={Object.fromEntries(
+                  participants.map(({ id, voteCounts }) => [id, voteCounts]),
+                )}
                 className="pl-3"
               />
             </div>

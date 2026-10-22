@@ -78,14 +78,22 @@ const getEditUrl = ({ pollId, token }: { pollId: string; token: string }) =>
 
 export const loadPollParticipants = cache(async (pollId: string) => {
   const participants = await loadParticipantRows(pollId);
-  return participants.map(({ id, name, note, image, createdAt, token }) => ({
-    id,
-    name,
-    note,
-    image,
-    createdAt,
-    editUrl: getEditUrl({ pollId, token }),
-  }));
+  return participants.map(
+    ({ id, name, note, image, createdAt, token, votes }) => ({
+      id,
+      name,
+      note,
+      image,
+      createdAt,
+      editUrl: getEditUrl({ pollId, token }),
+      // A summary rather than the votes themselves, so lists stay light
+      voteCounts: {
+        yes: votes.filter((vote) => vote.type === "yes").length,
+        ifNeedBe: votes.filter((vote) => vote.type === "ifNeedBe").length,
+        no: votes.filter((vote) => vote.type === "no").length,
+      },
+    }),
+  );
 });
 
 /**

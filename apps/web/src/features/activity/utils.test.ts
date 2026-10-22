@@ -196,30 +196,7 @@ describe("groupActivity", () => {
     expect(item?.kind).toBe("single");
   });
 
-  it("merges responses that interleave with other groupable events", () => {
-    expect(
-      shape(
-        groupActivity([
-          responded("08:00", "Ben"),
-          invited("08:30", "a@x.com"),
-          responded("09:00", "Cara"),
-          invited("09:30", "b@x.com"),
-        ]),
-      ),
-    ).toEqual(["response_created×2", "invite_sent×2"]);
-  });
-
-  it("orders groups by their latest event", () => {
-    const items = groupActivity([
-      invited("08:00", "a@x.com"),
-      responded("08:30", "Ben"),
-      invited("09:00", "b@x.com"),
-      responded("08:45", "Cara"),
-    ]);
-    expect(shape(items)).toEqual(["response_created×2", "invite_sent×2"]);
-  });
-
-  it("keeps a response with a note on its own row", () => {
+  it("never groups responses, so each one keeps its own row", () => {
     expect(
       shape(
         groupActivity([
@@ -228,35 +205,63 @@ describe("groupActivity", () => {
           responded("08:20", "Cara"),
         ]),
       ),
-    ).toEqual(["response_created", "response_created×2"]);
+    ).toEqual(["response_created", "response_created", "response_created"]);
+  });
+
+  it("merges invites around responses that sit between them", () => {
+    expect(
+      shape(
+        groupActivity([
+          invited("08:00", "a@x.com"),
+          responded("08:30", "Ben"),
+          invited("09:00", "b@x.com"),
+        ]),
+      ),
+    ).toEqual(["response_created", "invite_sent×2"]);
+  });
+
+  it("orders groups by their latest event", () => {
+    const reminded = (time: string, email: string) =>
+      row(time, {
+        type: "invite_reminded",
+        userId: "u1",
+        inviteId: email,
+        payload: { email },
+      });
+    expect(
+      shape(
+        groupActivity([
+          invited("08:00", "a@x.com"),
+          reminded("08:30", "c@x.com"),
+          invited("09:00", "b@x.com"),
+          reminded("08:45", "d@x.com"),
+        ]),
+      ),
+    ).toEqual(["invite_reminded×2", "invite_sent×2"]);
   });
 
   it("starts a new group after a gap of more than 12 hours", () => {
     expect(
       shape(
         groupActivity([
-          responded("00:00", "Ben"),
-          responded("01:00", "Cara"),
-          row("13:01", {
-            type: "response_created",
-            participantId: "Dan",
-            payload: { name: "Dan" },
-          }),
-          responded("13:30", "Eve"),
+          invited("00:00", "a@x.com"),
+          invited("01:00", "b@x.com"),
+          invited("13:01", "c@x.com"),
+          invited("13:30", "d@x.com"),
         ]),
       ),
-    ).toEqual(["response_created×2", "response_created×2"]);
+    ).toEqual(["invite_sent×2", "invite_sent×2"]);
   });
 
   it("never merges across a poll lifecycle event", () => {
     expect(
       shape(
         groupActivity([
-          responded("08:00", "Ben"),
+          invited("08:00", "a@x.com"),
           closed("08:30"),
-          responded("09:00", "Cara"),
+          invited("09:00", "b@x.com"),
         ]),
       ),
-    ).toEqual(["response_created", "poll_closed", "response_created"]);
+    ).toEqual(["invite_sent", "poll_closed", "invite_sent"]);
   });
 });

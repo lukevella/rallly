@@ -92,7 +92,6 @@ export type ActivityRow = {
 const groupableTypes = [
   "invite_sent",
   "invite_reminded",
-  "response_created",
   "response_updated",
   "response_deleted",
 ] as const;
@@ -119,9 +118,9 @@ const BUCKET_GAP_MS = 12 * 60 * 60 * 1000;
  * Folds a poll's activity, oldest first, into the rows a feed shows. Invite
  * opens are left out: the invitee list already says who opened. Within a
  * bucket (a run with no lifecycle event and no gap over 12 hours) events of
- * the same groupable kind merge into one item, placed at its latest event. A
- * response with a note stays on its own so the note is never hidden, and
- * lifecycle events always stand alone and end the bucket.
+ * the same groupable kind merge into one item, placed at its latest event.
+ * New responses are never grouped: each is news the host wants to see on
+ * its own. Lifecycle events always stand alone and end the bucket.
  */
 export function groupActivity(rows: ActivityRow[]): ActivityItem[] {
   const items: ActivityItem[] = [];
@@ -133,10 +132,7 @@ export function groupActivity(rows: ActivityRow[]): ActivityItem[] {
     const pieces: { at: number; item: ActivityItem }[] = [];
     for (const row of bucket) {
       const { type } = row.event;
-      if (
-        isGroupable(type) &&
-        !(row.event.type === "response_created" && row.event.payload.note)
-      ) {
+      if (isGroupable(type)) {
         const list = byType.get(type) ?? [];
         list.push(row);
         byType.set(type, list);
@@ -175,7 +171,9 @@ export function groupActivity(rows: ActivityRow[]): ActivityItem[] {
       flush();
     }
     lastTime = time;
-    if (isGroupable(type)) {
+    if (isGroupable(type) || type === "response_created") {
+      // New responses join the bucket as singles, so invites around them
+      // still merge
       bucket.push(row);
     } else {
       flush();
