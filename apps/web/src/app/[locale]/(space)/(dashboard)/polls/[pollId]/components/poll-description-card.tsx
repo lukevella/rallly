@@ -15,7 +15,6 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 import { Link } from "@/components/link";
-import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
 import { usePoll } from "@/features/poll/client";
 import {
@@ -36,7 +35,7 @@ import { RelativeTime } from "@/lib/datetime/relative-time";
  * The head of the Overview thread, written for the host like a pull
  * request's description: who created the poll and when, what it is about,
  * the facts that tell it apart from similarly named polls, and the host's
- * actions on it. The title, organizer and response legend are left to the
+ * actions on it. The organizer and response legend are left to the
  * participant's event card.
  */
 export function PollDescriptionCard({
@@ -62,15 +61,8 @@ export function PollDescriptionCard({
       : null;
 
   return (
-    <div className="flex gap-3">
-      <div className="shrink-0">
-        <OptimizedAvatarImage
-          size="lg"
-          name={name ?? "?"}
-          src={poll.user?.image ?? undefined}
-        />
-      </div>
-      <div className="min-w-0 flex-1 overflow-hidden rounded-xl border border-card-border bg-card">
+    <>
+      <div className="overflow-hidden rounded-xl border border-card-border bg-card">
         <div className="flex flex-wrap items-baseline gap-x-1.5 border-card-border border-b bg-muted/50 px-4 py-2 text-sm">
           {name ? (
             <Trans
@@ -91,7 +83,10 @@ export function PollDescriptionCard({
           />
         </div>
         <div className="space-y-3 px-4 py-3">
-          {poll.description ? description : null}
+          <div className="space-y-1">
+            <h2 className="font-semibold text-base">{poll.title}</h2>
+            {poll.description ? description : null}
+          </div>
           <EventMetaList>
             {first && last ? (
               <EventMetaItem>
@@ -195,6 +190,6 @@ export function PollDescriptionCard({
         pollStatus={poll.status}
         inviteLink={poll.inviteLink}
       />
-    </div>
+    </>
   );
 }

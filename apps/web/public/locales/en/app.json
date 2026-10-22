@@ -802,6 +802,7 @@
   "pollActivityPollClosed": "Poll closed",
   "pollActivityPollClosedAuto": "Poll closed automatically",
   "pollActivityPollCreated": "Poll created",
+  "pollActivityPollCreatedBy": "Poll created by <b>{name}</b>",
   "pollActivityPollDeleted": "Poll deleted",
   "pollActivityPollReopened": "Poll reopened",
   "pollActivityPollScheduled": "Poll scheduled",

@@ -40,11 +40,18 @@ export default async function Page({
   );
   // The description card reads the full poll from the poll provider.
   const adminPoll = await loadAdminPoll(pollId);
-  // The description card stands in for the poll created event, as a pull
-  // request's description does. Oldest first, like a conversation.
-  const thread = activity
-    .filter(({ event }) => event.type !== "poll_created")
-    .reverse();
+  // Oldest first, like a conversation, so poll created leads the thread.
+  const thread = [...activity].reverse();
+  // The poll created event records only the creator's id. The poll's user is
+  // the creator unless the organizer has since changed, in which case the
+  // first change names who it was taken from.
+  const firstOrganizerChange = thread.find(
+    ({ event }) => event.type === "poll_organizer_changed",
+  )?.event;
+  const pollCreatorName =
+    firstOrganizerChange?.type === "poll_organizer_changed"
+      ? firstOrganizerChange.payload.from.name
+      : adminPoll.poll.user?.name;
 
   return (
     <OverviewLayout
@@ -66,9 +73,9 @@ export default async function Page({
             options={results.options}
           />
           {thread.length > 0 ? (
-            // Indented past the avatar so the timeline stems from under the
-            // card, as a pull request's commits do from its description.
-            <div className="pl-13">
+            // Indented so the timeline stems from under the card, as a pull
+            // request's commits do from its description.
+            <div className="pl-4">
               <div
                 aria-hidden
                 className="ml-6 h-4 w-px -translate-x-1/2 bg-border"
@@ -77,6 +84,7 @@ export default async function Page({
                 activity={thread}
                 timeZone={poll.timeZone}
                 compact
+                pollCreatorName={pollCreatorName}
                 participantImages={Object.fromEntries(
                   participants.map(({ id, image }) => [id, image]),
                 )}

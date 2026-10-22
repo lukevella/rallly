@@ -343,14 +343,23 @@ function ChangeDescription({ change }: { change: PollChange }) {
 function ActivityDescription({
   event,
   timeZone,
+  pollCreatorName,
 }: {
   event: PollActivityEvent;
   timeZone: string | null;
+  pollCreatorName?: string;
 }) {
   const b = <b className="font-medium" />;
   switch (event.type) {
     case "poll_created":
-      return (
+      return pollCreatorName ? (
+        <Trans
+          i18nKey="pollActivityPollCreatedBy"
+          defaults="Poll created by <b>{name}</b>"
+          values={{ name: pollCreatorName }}
+          components={{ b }}
+        />
+      ) : (
         <Trans i18nKey="pollActivityPollCreated" defaults="Poll created" />
       );
     case "poll_updated":
@@ -546,12 +555,15 @@ export function PollActivityList({
   timeZone,
   compact = false,
   participantImages,
+  pollCreatorName,
   className,
 }: {
   activity: ActivityRow[];
   timeZone: string | null;
   compact?: boolean;
   participantImages?: Record<string, string | null>;
+  /** Names who created the poll; the event itself records only an id. */
+  pollCreatorName?: string;
   className?: string;
 }) {
   return (
@@ -577,7 +589,11 @@ export function PollActivityList({
               Icon: iconByType[event.type],
               tone: toneByType[event.type],
               description: (
-                <ActivityDescription event={event} timeZone={timeZone} />
+                <ActivityDescription
+                  event={event}
+                  timeZone={timeZone}
+                  pollCreatorName={pollCreatorName}
+                />
               ),
               note:
                 event.type === "response_created"
