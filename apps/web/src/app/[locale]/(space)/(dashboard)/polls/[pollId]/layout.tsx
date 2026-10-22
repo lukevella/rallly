@@ -75,8 +75,12 @@ export default function Layout({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <header className="shrink-0">
+    // Grows with its content (no min-h-0) so the sticky header has the whole
+    // page to stick within; the dashboard wrapper does the scrolling.
+    <div className="flex flex-1 flex-col">
+      {/* Fixed height (h-14 + h-10 = 6rem): Overview's cards stick at top-24
+          to sit just below it. */}
+      <header className="sticky top-0 z-10 shrink-0 bg-sidebar">
         <div className="flex h-14 items-center gap-2 px-4">
           <Link
             href="/polls"
@@ -98,11 +102,11 @@ export default function Layout({
             </Suspense>
           </div>
         </div>
-        <div className="px-4 pb-2">
+        <div className="flex h-10 items-center px-4">
           <PollShellTabs />
         </div>
       </header>
-      <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+      <div className="flex flex-1 flex-col">{children}</div>
       <PollDetailSheet />
     </div>
   );
