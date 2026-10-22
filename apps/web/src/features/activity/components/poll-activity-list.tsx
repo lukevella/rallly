@@ -677,7 +677,9 @@ function EntryItem({
           </>
         )}
         {entry.note ? (
-          <blockquote className="mt-1 whitespace-pre-wrap border-border border-l-2 pl-3 text-muted-foreground text-sm">
+          // A speech bubble from the participant: its squared top-left
+          // corner points back at their avatar
+          <blockquote className="mt-2 inline-block max-w-full whitespace-pre-wrap rounded-2xl rounded-tl-sm border border-card-border bg-card px-3 py-2 text-sm">
             {entry.note}
           </blockquote>
         ) : null}
