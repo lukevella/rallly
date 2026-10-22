@@ -19,6 +19,7 @@ import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { PollHostActions } from "./components/poll-host-actions";
 import { PollDetailSheet } from "./poll-detail-sheet";
 import { PollShellTabs } from "./poll-shell-tabs";
 
@@ -54,6 +55,7 @@ async function PollHeaderActions({
       comments={comments}
       viewerRole="admin"
     >
+      <PollHostActions />
       <PollAdminMenu showEdit={false} />
     </PollProvider>
   );

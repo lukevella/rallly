@@ -295,13 +295,13 @@ export function NextStepCard({
           // One grid for every row (subgrid), so dates share a column sized to
           // the longest and every bar starts at the same point and fills the
           // rest of the width.
-          className="grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-3 gap-y-0 border-card-border border-t px-2 py-2"
+          className="grid-cols-[auto_auto_minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 border-card-border border-t px-2 py-3"
         >
           {options.map((option) => (
             // biome-ignore lint/a11y/noLabelWithoutControl: the radio inside is the control
             <label
               key={option.id}
-              className="col-span-full grid cursor-pointer grid-cols-subgrid items-center rounded-md px-2 py-2 hover:bg-accent/50"
+              className="col-span-full grid cursor-pointer grid-cols-subgrid items-center rounded-md px-2 py-2.5 hover:bg-accent/50"
             >
               <RadioGroupItem value={option.id} />
               <span className="truncate text-xs">
