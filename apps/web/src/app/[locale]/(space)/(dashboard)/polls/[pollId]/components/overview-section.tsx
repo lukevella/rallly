@@ -14,7 +14,7 @@ export function OverviewSection({
   count?: number;
 }>) {
   return (
-    <section className="rounded-[20px] border border-card-border bg-card px-3.5 pt-2.5 pb-3.5 text-xs">
+    <section className="rounded-[18px] border border-card-border bg-card px-3.5 pt-2.5 pb-3.5 text-xs">
       <div className="mb-2 flex h-6 items-center justify-between gap-4">
         <h2 className="font-medium">{title}</h2>
         {viewAllHref ? (
