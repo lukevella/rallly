@@ -6,8 +6,12 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
+import { PollProvider } from "@/features/poll/client";
+import { EventCard } from "@/features/poll/components/event-card";
+import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollTopDates } from "@/features/poll/components/poll-top-dates";
 import {
+  loadAdminPoll,
   loadPoll,
   loadPollActivity,
   loadPollParticipants,
@@ -42,29 +46,57 @@ export default async function Page({
       loadPollActivity(pollId),
     ],
   );
+  // The event card reads the full poll from the poll provider.
+  const adminPoll = await loadAdminPoll(pollId);
+
+  const eventCard = (
+    <EventCard
+      // Rendered here so the markdown parser stays on the server
+      description={
+        <EventMetaDescription
+          className="mt-1 text-muted-foreground"
+          content={adminPoll.poll.description}
+        />
+      }
+    />
+  );
+  // Polls created before activity was recorded have no poll created event,
+  // so the card heads the thread on its own.
+  const hasPollCreated = activity.some(
+    ({ event }) => event.type === "poll_created",
+  );
 
   return (
     <OverviewLayout
       thread={
-        activity.length > 0 ? (
-          // The thread reads like a conversation, oldest first.
-          <PollActivityList
-            activity={[...activity].reverse()}
-            timeZone={poll.timeZone}
-          />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <ActivityIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans
-                i18nKey="pollOverviewNoActivity"
-                defaults="No activity yet"
-              />
-            </EmptyStateTitle>
-          </EmptyState>
-        )
+        <PollProvider
+          poll={adminPoll.poll}
+          participants={adminPoll.participants}
+          comments={adminPoll.comments}
+          viewerRole="admin"
+        >
+          {hasPollCreated ? null : <div className="mb-6">{eventCard}</div>}
+          {activity.length > 0 ? (
+            // The thread reads like a conversation, oldest first.
+            <PollActivityList
+              activity={[...activity].reverse()}
+              timeZone={poll.timeZone}
+              pollCreatedDetails={eventCard}
+            />
+          ) : (
+            <EmptyState className="py-10">
+              <EmptyStateIcon>
+                <ActivityIcon />
+              </EmptyStateIcon>
+              <EmptyStateTitle>
+                <Trans
+                  i18nKey="pollOverviewNoActivity"
+                  defaults="No activity yet"
+                />
+              </EmptyStateTitle>
+            </EmptyState>
+          )}
+        </PollProvider>
       }
       cards={
         <>

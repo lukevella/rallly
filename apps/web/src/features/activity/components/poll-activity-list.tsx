@@ -533,13 +533,19 @@ function ActivityDescription({
   }
 }
 
+/**
+ * `pollCreatedDetails` renders under the poll created event, so a thread can
+ * open with the poll it is about.
+ */
 export function PollActivityList({
   activity,
   timeZone,
+  pollCreatedDetails,
   className,
 }: {
   activity: ActivityRow[];
   timeZone: string | null;
+  pollCreatedDetails?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -555,6 +561,7 @@ export function PollActivityList({
               tone: toneOfChange(change),
               description: <ChangeDescription change={change} />,
               note: undefined,
+              details: undefined,
             }));
           }
           return [
@@ -570,10 +577,12 @@ export function PollActivityList({
                 event.type === "response_created"
                   ? event.payload.note
                   : undefined,
+              details:
+                event.type === "poll_created" ? pollCreatedDetails : undefined,
             },
           ];
         })
-        .map(({ key, createdAt, Icon, tone, description, note }) => {
+        .map(({ key, createdAt, Icon, tone, description, note, details }) => {
           return (
             <li key={key} className="group relative flex gap-3 pb-6 last:pb-0">
               {/* The rail joining this event's icon to the next one */}
@@ -601,6 +610,7 @@ export function PollActivityList({
                     {note}
                   </p>
                 ) : null}
+                {details ? <div className="mt-2">{details}</div> : null}
               </div>
             </li>
           );
