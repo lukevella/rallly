@@ -13,6 +13,7 @@ import {
   CalendarPlusIcon,
   ChevronRightIcon,
   CircleStopIcon,
+  DotIcon,
   GlobeIcon,
   ListChecksIcon,
   MailIcon,
@@ -578,12 +579,15 @@ function VoteSummary({ counts }: { counts: VoteCounts }) {
   ] as const;
   return (
     <span className="inline-flex shrink-0 items-center gap-2.5 text-muted-foreground tabular-nums">
-      {items.map((item) => (
-        <span key={item.type} className="inline-flex items-center gap-1">
-          <VoteIcon type={item.type} size="md" title={item.label} />
-          {item.count}
-        </span>
-      ))}
+      {items
+        // A type nobody picked adds nothing to the summary
+        .filter((item) => item.count > 0)
+        .map((item) => (
+          <span key={item.type} className="inline-flex items-center gap-1">
+            <VoteIcon type={item.type} size="md" title={item.label} />
+            {item.count}
+          </span>
+        ))}
     </span>
   );
 }
@@ -701,8 +705,18 @@ function EntryItem({
       <div className={cn("min-w-0 flex-1", !compact && "space-y-1 pt-1.5")}>
         {compact ? (
           <div className="flex min-h-8 items-center gap-3 text-sm leading-6">
-            <p className="min-w-0 flex-1">{entry.description}</p>
-            {votes ? <VoteSummary counts={votes} /> : null}
+            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-1">
+              <p className="min-w-0">{entry.description}</p>
+              {votes ? (
+                <>
+                  <DotIcon
+                    aria-hidden
+                    className="size-4 shrink-0 text-muted-foreground"
+                  />
+                  <VoteSummary counts={votes} />
+                </>
+              ) : null}
+            </div>
             <RelativeTime
               value={entry.createdAt}
               className="shrink-0 text-muted-foreground"
