@@ -53,6 +53,8 @@
   "planFreeDescription": "Per utenti occasionali",
   "planProDescription": "Per utenti con esigenze maggiori e professionisti",
   "pollLimit": "C'è un limite al numero di sondaggi che posso creare?",
+  "pollLimitAnswer": "No. Non c'è alcun limite al numero di sondaggi che puoi creare né al numero di persone che possono votarli, indipendentemente dal piano. Con il piano gratuito, i sondaggi vengono eliminati quando tutte le loro date risalgono a più di 30 giorni fa e non c'è stata attività per 30 giorni. Alcune funzionalità, come la personalizzazione del marchio e le impostazioni avanzate dei sondaggi, sono disponibili solo con un piano a pagamento. Consulta la tabella comparativa qui sopra per l'elenco completo.",
+  "pollLimitAnswerOpenPollLimit": "Non c'è alcun limite al numero di sondaggi che puoi creare né al numero di persone che possono votarli. Con il piano gratuito, possono essere aperti e raccogliere voti contemporaneamente fino a {count} sondaggi; finalizzane o chiudine uno per fare spazio a un altro. Il piano Pro non prevede limiti. Con il piano gratuito, i sondaggi vengono eliminati quando tutte le loro date risalgono a più di 30 giorni fa e non c'è stata attività per 30 giorni. Alcune funzionalità, come la personalizzazione del marchio e le impostazioni avanzate dei sondaggi, sono disponibili solo con un piano a pagamento. Consulta la tabella comparativa qui sopra per l'elenco completo.",
   "pricingDescription": "Inizia gratuitamente. Nessun login richiesto.",
   "pricingFinalCtaDescription": "Crea il tuo primo sondaggio in meno di un minuto. Passa a un piano superiore quando ti serve di più.",
   "pricingFinalCtaTitle": "Inizia gratis",
@@ -69,6 +71,8 @@
   "webhooks": "Webhook",
   "webhooksDescription": "Notifica i tuoi sistemi quando i sondaggi e le risposte cambiano. <a>Leggi la documentazione sui webhook</a>",
   "whenPollInactive": "Quando un sondaggio diventa inattivo?",
+  "whenPollInactiveAnswer": "I sondaggi diventano inattivi quando tutte le opzioni di data risalgono a più di 30 giorni fa e non c'è stata attività per 30 giorni. Per attività si intendono nuovi voti, commenti o modifiche al sondaggio. I sondaggi inattivi vengono eliminati automaticamente se non hai un abbonamento a pagamento.",
   "whyUpgrade": "Perché dovrei aggiornare?",
-  "whyUpgradeAnswer2": "L'aggiornamento a un piano a pagamento ha senso se si utilizza Rallly spesso o per lavoro. Il piano di abbonamento attuale è un piano speciale per i primi utilizzatori e aumenterà in futuro. Aggiornando il piano ora, otterrai accesso anticipato a nuovi strumenti di programmazione di alta qualità appena verranno rilasciati, e bloccherai il prezzo del piano di abbonamento in modo che non subisca eventuali aumenti futuri."
+  "whyUpgradeAnswer2": "L'aggiornamento a un piano a pagamento ha senso se si utilizza Rallly spesso o per lavoro. Il piano di abbonamento attuale è un piano speciale per i primi utilizzatori e aumenterà in futuro. Aggiornando il piano ora, otterrai accesso anticipato a nuovi strumenti di programmazione di alta qualità appena verranno rilasciati, e bloccherai il prezzo del piano di abbonamento in modo che non subisca eventuali aumenti futuri.",
+  "yearlySaveUpTo": "Risparmia fino al {percent}%"
 }
