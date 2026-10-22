@@ -8,7 +8,6 @@ import {
   PageShell,
   PageShellContent,
   PageShellHeader,
-  PageShellHeaderCenter,
   PageShellHeaderEnd,
   PageShellHeaderStart,
   PageShellTitle,
@@ -21,7 +20,6 @@ import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PollHostActions } from "./components/poll-host-actions";
 import { PollDetailSheet } from "./poll-detail-sheet";
-import { PollShellTabs } from "./poll-shell-tabs";
 
 async function PollPageTitle({
   params,
@@ -89,9 +87,6 @@ export default function Layout({
             <PollPageTitle params={params} />
           </Suspense>
         </PageShellHeaderStart>
-        <PageShellHeaderCenter>
-          <PollShellTabs />
-        </PageShellHeaderCenter>
         <PageShellHeaderEnd>
           <Suspense>
             <PollHeaderActions params={params} />
