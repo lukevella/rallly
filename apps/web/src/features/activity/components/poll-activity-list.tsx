@@ -30,6 +30,7 @@ import {
   VenetianMaskIcon,
   VideoIcon,
 } from "lucide-react";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import type { PollActivityEvent, PollChange } from "@/features/activity/schema";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
@@ -535,17 +536,21 @@ function ActivityDescription({
 
 /**
  * `compact` is the secondary timeline under a headline card: smaller icons,
- * xs text, and the time on the same line as the event.
+ * xs text, and the time on the same line as the event. Events about a
+ * response show the participant's avatar in place of an icon;
+ * `participantImages` supplies photos by participant id where they have one.
  */
 export function PollActivityList({
   activity,
   timeZone,
   compact = false,
+  participantImages,
   className,
 }: {
   activity: ActivityRow[];
   timeZone: string | null;
   compact?: boolean;
+  participantImages?: Record<string, string | null>;
   className?: string;
 }) {
   return (
@@ -561,6 +566,7 @@ export function PollActivityList({
               tone: toneOfChange(change),
               description: <ChangeDescription change={change} />,
               note: undefined,
+              participant: undefined,
             }));
           }
           return [
@@ -576,74 +582,93 @@ export function PollActivityList({
                 event.type === "response_created"
                   ? event.payload.note
                   : undefined,
+              participant:
+                event.type === "response_created" ||
+                event.type === "response_updated" ||
+                event.type === "response_deleted"
+                  ? { id: event.participantId, name: event.payload.name }
+                  : undefined,
             },
           ];
         })
-        .map(({ key, createdAt, Icon, tone, description, note }) => {
-          return (
-            <li
-              key={key}
-              className={cn(
-                "group relative flex last:pb-0",
-                compact ? "gap-2.5 pb-4" : "gap-3 pb-6",
-              )}
-            >
-              {/* The rail joining this event's icon to the next one */}
-              <div
-                aria-hidden
+        .map(
+          ({ key, createdAt, Icon, tone, description, note, participant }) => {
+            return (
+              <li
+                key={key}
                 className={cn(
-                  "absolute bottom-1 w-px -translate-x-1/2 bg-border group-last:hidden",
-                  compact ? "top-7 left-3" : "top-9 left-4",
-                )}
-              />
-              <div
-                className={cn(
-                  "flex shrink-0 items-center justify-center rounded-full",
-                  compact ? "size-6" : "size-8",
-                  toneClassName[tone],
+                  "group relative flex last:pb-0",
+                  compact ? "gap-2.5 pb-4" : "gap-3 pb-6",
                 )}
               >
-                <Icon aria-hidden className={compact ? "size-3.5" : "size-4"} />
-              </div>
-              <div
-                className={cn(
-                  "min-w-0 flex-1",
-                  compact ? "pt-1" : "space-y-1 pt-1.5",
-                )}
-              >
-                {compact ? (
-                  <p className="text-xs leading-4">
-                    {description}{" "}
-                    <Time
-                      value={createdAt}
-                      preset="datetime"
-                      className="text-muted-foreground"
-                    />
-                  </p>
+                {/* The rail joining this event's icon to the next one */}
+                <div
+                  aria-hidden
+                  className={cn(
+                    "absolute bottom-1 w-px -translate-x-1/2 bg-border group-last:hidden",
+                    compact ? "top-7 left-3" : "top-9 left-4",
+                  )}
+                />
+                {participant ? (
+                  <OptimizedAvatarImage
+                    size={compact ? "sm" : "md"}
+                    name={participant.name}
+                    src={participantImages?.[participant.id] ?? undefined}
+                  />
                 ) : (
-                  <>
-                    <p className="text-sm leading-5">{description}</p>
-                    <Time
-                      value={createdAt}
-                      preset="datetime"
-                      className="block text-muted-foreground text-xs"
-                    />
-                  </>
-                )}
-                {note ? (
-                  <p
+                  <div
                     className={cn(
-                      "mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2",
-                      compact ? "text-xs" : "text-sm",
+                      "flex shrink-0 items-center justify-center rounded-full",
+                      compact ? "size-6" : "size-8",
+                      toneClassName[tone],
                     )}
                   >
-                    {note}
-                  </p>
-                ) : null}
-              </div>
-            </li>
-          );
-        })}
+                    <Icon
+                      aria-hidden
+                      className={compact ? "size-3.5" : "size-4"}
+                    />
+                  </div>
+                )}
+                <div
+                  className={cn(
+                    "min-w-0 flex-1",
+                    compact ? "pt-1" : "space-y-1 pt-1.5",
+                  )}
+                >
+                  {compact ? (
+                    <p className="text-xs leading-4">
+                      {description}{" "}
+                      <Time
+                        value={createdAt}
+                        preset="datetime"
+                        className="text-muted-foreground"
+                      />
+                    </p>
+                  ) : (
+                    <>
+                      <p className="text-sm leading-5">{description}</p>
+                      <Time
+                        value={createdAt}
+                        preset="datetime"
+                        className="block text-muted-foreground text-xs"
+                      />
+                    </>
+                  )}
+                  {note ? (
+                    <p
+                      className={cn(
+                        "mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2",
+                        compact ? "text-xs" : "text-sm",
+                      )}
+                    >
+                      {note}
+                    </p>
+                  ) : null}
+                </div>
+              </li>
+            );
+          },
+        )}
     </ol>
   );
 }

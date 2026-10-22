@@ -97,6 +97,9 @@ export default async function Page({
                 activity={thread}
                 timeZone={poll.timeZone}
                 compact
+                participantImages={Object.fromEntries(
+                  participants.map(({ id, image }) => [id, image]),
+                )}
                 className="pl-3"
               />
             </div>
