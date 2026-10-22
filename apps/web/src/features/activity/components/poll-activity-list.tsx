@@ -783,18 +783,14 @@ function GroupItem({
   return (
     <li className="group relative flex gap-3 pb-6 last:pb-0">
       <Rail compact />
-      {people.length > 0 ? (
-        <div className="flex shrink-0 -space-x-2">
-          {people.slice(0, 3).map((person) => (
-            <OptimizedAvatarImage
-              key={person.id}
-              size="sm"
-              name={person.name}
-              src={participantImages?.[person.id] ?? undefined}
-              className="ring-2 ring-sidebar"
-            />
-          ))}
-        </div>
+      {/* The first person stands for the group in the icon column, which
+          keeps every row's text aligned; the rest appear when expanded */}
+      {people[0] ? (
+        <OptimizedAvatarImage
+          size="sm"
+          name={people[0].name}
+          src={participantImages?.[people[0].id] ?? undefined}
+        />
       ) : (
         <div
           className={cn(
