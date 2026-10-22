@@ -250,7 +250,7 @@ export function NextStepCard({
         disabled={!deciding}
         aria-expanded={deciding ? expanded : undefined}
         onClick={() => setExpanded((value) => !value)}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left outline-none focus-visible:bg-accent enabled:hover:bg-accent/50"
+        className="flex w-full items-center gap-3 p-4 text-left outline-none focus-visible:bg-accent enabled:hover:bg-accent/50"
       >
         <span className="flex size-8 shrink-0 items-center justify-center [&_svg]:size-6">
           {summary.icon}
