@@ -10,6 +10,7 @@ import {
   CalendarCheckIcon,
   CalendarMinusIcon,
   CalendarPlusIcon,
+  ChevronRightIcon,
   CircleStopIcon,
   GlobeIcon,
   ListChecksIcon,
@@ -30,8 +31,14 @@ import {
   VenetianMaskIcon,
   VideoIcon,
 } from "lucide-react";
+import * as React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import type { PollActivityEvent, PollChange } from "@/features/activity/schema";
+import type {
+  ActivityRow,
+  GroupableActivityType,
+} from "@/features/activity/utils";
+import { groupActivity } from "@/features/activity/utils";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import {
@@ -41,12 +48,6 @@ import {
 import { Trans } from "@/i18n/client";
 import { RelativeTime } from "@/lib/datetime/relative-time";
 import { Time } from "@/lib/datetime/time";
-
-type ActivityRow = {
-  id: string;
-  createdAt: Date;
-  event: PollActivityEvent;
-};
 
 const iconByType: Record<PollActivityEvent["type"], LucideIcon> = {
   poll_created: PlusIcon,
@@ -544,11 +545,317 @@ function ActivityDescription({
   }
 }
 
+type Entry = {
+  key: string;
+  createdAt: Date;
+  Icon: LucideIcon;
+  tone: keyof typeof toneClassName;
+  description: React.ReactNode;
+  note?: string;
+  participant?: { id: string; name: string };
+};
+
+function entriesOf(
+  { id, createdAt, event }: ActivityRow,
+  {
+    timeZone,
+    pollCreatorName,
+  }: { timeZone: string | null; pollCreatorName?: string },
+): Entry[] {
+  // An itemized edit shows one line per field it changed.
+  if (event.type === "poll_updated" && event.payload.changes?.length) {
+    return event.payload.changes.map((change, index) => ({
+      key: `${id}:${index}`,
+      createdAt,
+      Icon: iconByChange[change.field],
+      tone: toneOfChange(change),
+      description: <ChangeDescription change={change} />,
+    }));
+  }
+  return [
+    {
+      key: id,
+      createdAt,
+      Icon: iconByType[event.type],
+      tone: toneByType[event.type],
+      description: (
+        <ActivityDescription
+          event={event}
+          timeZone={timeZone}
+          pollCreatorName={pollCreatorName}
+        />
+      ),
+      note: event.type === "response_created" ? event.payload.note : undefined,
+      participant:
+        event.type === "response_created" ||
+        event.type === "response_updated" ||
+        event.type === "response_deleted"
+          ? { id: event.participantId, name: event.payload.name }
+          : undefined,
+    },
+  ];
+}
+
+function Rail({ compact }: { compact: boolean }) {
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "absolute bottom-1 w-px -translate-x-1/2 bg-border group-last:hidden",
+        compact ? "top-7 left-3" : "top-9 left-4",
+      )}
+    />
+  );
+}
+
+function EntryIcon({
+  entry,
+  compact,
+  participantImages,
+}: {
+  entry: Entry;
+  compact: boolean;
+  participantImages?: Record<string, string | null>;
+}) {
+  const { Icon, tone, participant } = entry;
+  return participant ? (
+    <OptimizedAvatarImage
+      size={compact ? "sm" : "md"}
+      name={participant.name}
+      src={participantImages?.[participant.id] ?? undefined}
+    />
+  ) : (
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-full",
+        compact ? "size-6" : "size-8",
+        toneClassName[tone],
+      )}
+    >
+      <Icon aria-hidden className={compact ? "size-3.5" : "size-4"} />
+    </div>
+  );
+}
+
+function EntryItem({
+  entry,
+  compact,
+  participantImages,
+}: {
+  entry: Entry;
+  compact: boolean;
+  participantImages?: Record<string, string | null>;
+}) {
+  return (
+    <li className="group relative flex gap-3 pb-6 last:pb-0">
+      {/* The rail joining this event's icon to the next one */}
+      <Rail compact={compact} />
+      <EntryIcon
+        entry={entry}
+        compact={compact}
+        participantImages={participantImages}
+      />
+      <div className={cn("min-w-0 flex-1", !compact && "space-y-1 pt-1.5")}>
+        {compact ? (
+          <div className="flex items-baseline gap-3 text-sm leading-6">
+            <p className="min-w-0 flex-1">{entry.description}</p>
+            <RelativeTime
+              value={entry.createdAt}
+              className="shrink-0 text-muted-foreground"
+            />
+          </div>
+        ) : (
+          <>
+            <p className="text-sm leading-5">{entry.description}</p>
+            <Time
+              value={entry.createdAt}
+              preset="datetime"
+              className="block text-muted-foreground text-xs"
+            />
+          </>
+        )}
+        {entry.note ? (
+          <p className="mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2 text-sm">
+            {entry.note}
+          </p>
+        ) : null}
+      </div>
+    </li>
+  );
+}
+
+const nameOf = (row: ActivityRow) =>
+  "name" in row.event.payload ? String(row.event.payload.name) : "";
+
+function GroupDescription({
+  type,
+  rows,
+}: {
+  type: GroupableActivityType;
+  rows: ActivityRow[];
+}) {
+  const b = <b className="font-medium" />;
+  const count = rows.length;
+  const [first, second] = rows.map(nameOf);
+  switch (type) {
+    case "invite_sent":
+      return (
+        <Trans
+          i18nKey="pollActivityGroupInvitesSent"
+          defaults="Invites sent to {count} people"
+          values={{ count }}
+        />
+      );
+    case "invite_reminded":
+      return (
+        <Trans
+          i18nKey="pollActivityGroupReminded"
+          defaults="Reminders sent to {count} people"
+          values={{ count }}
+        />
+      );
+    case "response_deleted":
+      return (
+        <Trans
+          i18nKey="pollActivityGroupResponsesDeleted"
+          defaults="{count} responses deleted"
+          values={{ count }}
+        />
+      );
+    case "response_updated":
+      return count === 2 ? (
+        <Trans
+          i18nKey="pollActivityGroupUpdatedTwo"
+          defaults="<b>{first}</b> and <b>{second}</b> updated their responses"
+          values={{ first, second }}
+          components={{ b }}
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityGroupUpdated"
+          defaults="<b>{first}</b>, <b>{second}</b> and {count, plural, one {# other} other {# others}} updated their responses"
+          values={{ first, second, count: count - 2 }}
+          components={{ b }}
+        />
+      );
+    case "response_created":
+      return count === 2 ? (
+        <Trans
+          i18nKey="pollActivityGroupRespondedTwo"
+          defaults="<b>{first}</b> and <b>{second}</b> responded"
+          values={{ first, second }}
+          components={{ b }}
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityGroupResponded"
+          defaults="<b>{first}</b>, <b>{second}</b> and {count, plural, one {# other} other {# others}} responded"
+          values={{ first, second, count: count - 2 }}
+          components={{ b }}
+        />
+      );
+  }
+}
+
+/**
+ * A run of like events as one row that expands in place into the events it
+ * stands for.
+ */
+function GroupItem({
+  type,
+  rows,
+  timeZone,
+  participantImages,
+}: {
+  type: GroupableActivityType;
+  rows: ActivityRow[];
+  timeZone: string | null;
+  participantImages?: Record<string, string | null>;
+}) {
+  const [expanded, setExpanded] = React.useState(false);
+  const latest = rows[rows.length - 1];
+  const people = rows.flatMap((row) =>
+    "participantId" in row.event
+      ? [{ id: row.event.participantId, name: nameOf(row) }]
+      : [],
+  );
+  const Icon = iconByType[type];
+  return (
+    <li className="group relative flex gap-3 pb-6 last:pb-0">
+      <Rail compact />
+      {people.length > 0 ? (
+        <div className="flex shrink-0 -space-x-2">
+          {people.slice(0, 3).map((person) => (
+            <OptimizedAvatarImage
+              key={person.id}
+              size="sm"
+              name={person.name}
+              src={participantImages?.[person.id] ?? undefined}
+              className="ring-2 ring-sidebar"
+            />
+          ))}
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "flex size-6 shrink-0 items-center justify-center rounded-full",
+            toneClassName[toneByType[type]],
+          )}
+        >
+          <Icon aria-hidden className="size-3.5" />
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-3 text-sm leading-6">
+          <button
+            type="button"
+            aria-expanded={expanded}
+            onClick={() => setExpanded((value) => !value)}
+            className="flex min-w-0 flex-1 items-baseline gap-1 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <span className="min-w-0">
+              <GroupDescription type={type} rows={rows} />
+            </span>
+            <ChevronRightIcon
+              aria-hidden
+              className={cn(
+                "size-3.5 shrink-0 self-center text-muted-foreground transition-transform",
+                expanded && "rotate-90",
+              )}
+            />
+          </button>
+          {latest ? (
+            <RelativeTime
+              value={latest.createdAt}
+              className="shrink-0 text-muted-foreground"
+            />
+          ) : null}
+        </div>
+        {expanded ? (
+          <ol className="mt-3 flex flex-col">
+            {rows
+              .flatMap((row) => entriesOf(row, { timeZone }))
+              .map((entry) => (
+                <EntryItem
+                  key={entry.key}
+                  entry={entry}
+                  compact
+                  participantImages={participantImages}
+                />
+              ))}
+          </ol>
+        ) : null}
+      </div>
+    </li>
+  );
+}
+
 /**
  * `compact` is the secondary timeline under a headline card: smaller icons,
- * and a relative time right aligned on the event's line. Events about a
- * response show the participant's avatar in place of an icon;
- * `participantImages` supplies photos by participant id where they have one.
+ * a relative time right aligned on the event's line, and runs of like events
+ * grouped (see groupActivity). Events about a response show the participant's
+ * avatar in place of an icon; `participantImages` supplies photos by
+ * participant id where they have one.
  */
 export function PollActivityList({
   activity,
@@ -566,122 +873,40 @@ export function PollActivityList({
   pollCreatorName?: string;
   className?: string;
 }) {
+  const context = { timeZone, pollCreatorName };
   return (
     <ol className={cn("flex flex-col", className)}>
-      {activity
-        .flatMap(({ id, createdAt, event }) => {
-          // An itemized edit shows one line per field it changed.
-          if (event.type === "poll_updated" && event.payload.changes?.length) {
-            return event.payload.changes.map((change, index) => ({
-              key: `${id}:${index}`,
-              createdAt,
-              Icon: iconByChange[change.field],
-              tone: toneOfChange(change),
-              description: <ChangeDescription change={change} />,
-              note: undefined,
-              participant: undefined,
-            }));
-          }
-          return [
-            {
-              key: id,
-              createdAt,
-              Icon: iconByType[event.type],
-              tone: toneByType[event.type],
-              description: (
-                <ActivityDescription
-                  event={event}
-                  timeZone={timeZone}
-                  pollCreatorName={pollCreatorName}
+      {compact
+        ? groupActivity(activity).map((item) =>
+            item.kind === "group" ? (
+              <GroupItem
+                key={item.rows[0]?.id}
+                type={item.type}
+                rows={item.rows}
+                timeZone={timeZone}
+                participantImages={participantImages}
+              />
+            ) : (
+              entriesOf(item.row, context).map((entry) => (
+                <EntryItem
+                  key={entry.key}
+                  entry={entry}
+                  compact
+                  participantImages={participantImages}
                 />
-              ),
-              note:
-                event.type === "response_created"
-                  ? event.payload.note
-                  : undefined,
-              participant:
-                event.type === "response_created" ||
-                event.type === "response_updated" ||
-                event.type === "response_deleted"
-                  ? { id: event.participantId, name: event.payload.name }
-                  : undefined,
-            },
-          ];
-        })
-        .map(
-          ({ key, createdAt, Icon, tone, description, note, participant }) => {
-            return (
-              <li
-                key={key}
-                className="group relative flex gap-3 pb-6 last:pb-0"
-              >
-                {/* The rail joining this event's icon to the next one */}
-                <div
-                  aria-hidden
-                  className={cn(
-                    "absolute bottom-1 w-px -translate-x-1/2 bg-border group-last:hidden",
-                    compact ? "top-7 left-3" : "top-9 left-4",
-                  )}
-                />
-                {participant ? (
-                  <OptimizedAvatarImage
-                    size={compact ? "sm" : "md"}
-                    name={participant.name}
-                    src={participantImages?.[participant.id] ?? undefined}
-                  />
-                ) : (
-                  <div
-                    className={cn(
-                      "flex shrink-0 items-center justify-center rounded-full",
-                      compact ? "size-6" : "size-8",
-                      toneClassName[tone],
-                    )}
-                  >
-                    <Icon
-                      aria-hidden
-                      className={compact ? "size-3.5" : "size-4"}
-                    />
-                  </div>
-                )}
-                <div
-                  className={cn(
-                    "min-w-0 flex-1",
-                    !compact && "space-y-1 pt-1.5",
-                  )}
-                >
-                  {compact ? (
-                    <div className="flex items-baseline gap-3 text-sm leading-6">
-                      <p className="min-w-0 flex-1">{description}</p>
-                      <RelativeTime
-                        value={createdAt}
-                        className="shrink-0 text-muted-foreground"
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-sm leading-5">{description}</p>
-                      <Time
-                        value={createdAt}
-                        preset="datetime"
-                        className="block text-muted-foreground text-xs"
-                      />
-                    </>
-                  )}
-                  {note ? (
-                    <p
-                      className={cn(
-                        "mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2",
-                        "text-sm",
-                      )}
-                    >
-                      {note}
-                    </p>
-                  ) : null}
-                </div>
-              </li>
-            );
-          },
-        )}
+              ))
+            ),
+          )
+        : activity
+            .flatMap((row) => entriesOf(row, context))
+            .map((entry) => (
+              <EntryItem
+                key={entry.key}
+                entry={entry}
+                compact={false}
+                participantImages={participantImages}
+              />
+            ))}
     </ol>
   );
 }
