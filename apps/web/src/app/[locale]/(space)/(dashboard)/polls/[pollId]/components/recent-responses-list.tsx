@@ -16,7 +16,8 @@ export function RecentResponsesList({
   }[];
 }) {
   return (
-    <ul>
+    // Pulled out by the rows' own padding so avatars align with the card title
+    <ul className="-mx-1.5">
       {responses.map((response) => (
         <li
           key={response.id}
