@@ -675,9 +675,9 @@ function EntryItem({
           </>
         )}
         {entry.note ? (
-          <p className="mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2 text-sm">
+          <blockquote className="mt-1 whitespace-pre-wrap border-border border-l-2 pl-3 text-muted-foreground text-sm">
             {entry.note}
-          </p>
+          </blockquote>
         ) : null}
       </div>
     </li>
