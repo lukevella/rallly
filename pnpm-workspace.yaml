@@ -2,8 +2,25 @@ packages:
   - apps/*
   - packages/*
 
-onlyBuiltDependencies:
-  - '@prisma/client'
+engineStrict: true
+
+publicHoistPattern:
+  - '*import-in-the-middle*'
+  - '*require-in-the-middle*'
+
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': false
+  '@swc/core': false
+  core-js: false
+  esbuild: false
+  keytar: false
+  prisma: false
+  puppeteer: false
+  sharp: false
+
+overrides:
+  next@16.3.0: 16.4.2
 
 # @hookform/resolvers imports zod/v4/core without declaring zod as a peer,
 # relying on pnpm's hoisted fallback which can flip to zod@3 on re-resolution
