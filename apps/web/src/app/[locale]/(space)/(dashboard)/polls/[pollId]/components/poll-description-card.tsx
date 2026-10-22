@@ -92,12 +92,6 @@ export function PollDescriptionCard({
               <EventMetaItem>
                 <CalendarDaysIcon />
                 <span>
-                  <Trans
-                    i18nKey="pollDescriptionCardOptionCount"
-                    defaults="{count, plural, one {# option} other {# options}}"
-                    values={{ count: options.length }}
-                  />
-                  {" · "}
                   <EventDate
                     value={first.startTime}
                     allDay={allDay}
@@ -114,7 +108,14 @@ export function PollDescriptionCard({
                         preset="weekdayMonthDayShort"
                       />
                     </>
-                  ) : null}
+                  ) : null}{" "}
+                  <span className="text-muted-foreground">
+                    <Trans
+                      i18nKey="pollDescriptionCardOptionsInRange"
+                      defaults="({count, plural, one {# option} other {# options}})"
+                      values={{ count: options.length }}
+                    />
+                  </span>
                 </span>
               </EventMetaItem>
             ) : null}

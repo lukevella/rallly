@@ -829,7 +829,7 @@
   "pollDescriptionCardCreated": "Poll created",
   "pollDescriptionCardCreatedBy": "<b>{name}</b> created this poll",
   "pollDescriptionCardInviteParticipants": "Invite participants",
-  "pollDescriptionCardOptionCount": "{count, plural, one {# option} other {# options}}",
+  "pollDescriptionCardOptionsInRange": "({count, plural, one {# option} other {# options}})",
   "pollNotificationsDescription": "Get notified by email when there is activity on your polls",
   "pollOptionsListOption": "Option",
   "pollOptionsListValue": "Value",

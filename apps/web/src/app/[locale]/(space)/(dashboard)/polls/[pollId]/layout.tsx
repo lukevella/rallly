@@ -15,7 +15,6 @@ import {
 } from "@/components/page-shell";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
-import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
@@ -45,8 +44,8 @@ async function PollHeaderActions({
 }) {
   const { pollId } = await params;
   await loadPoll(pollId);
-  // The finalize dialog and CSV export read the whole poll, votes included,
-  // from the poll provider.
+  // The CSV export reads the whole poll, votes included, from the poll
+  // provider.
   const { poll, participants, comments } = await loadAdminPoll(pollId);
   return (
     <PollProvider
@@ -55,7 +54,6 @@ async function PollHeaderActions({
       comments={comments}
       viewerRole="admin"
     >
-      <PollPrimaryActions />
       <PollAdminMenu showEdit={false} />
     </PollProvider>
   );
