@@ -10,7 +10,7 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "nanoid": "^5.0.9"
+    "nanoid": "^5.1.16"
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",

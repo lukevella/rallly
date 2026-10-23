@@ -21,7 +21,6 @@
     "pg": "^8.17.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0",
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^24.1.0",
     "@types/pg": "^8.11.0",
