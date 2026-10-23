@@ -30,9 +30,13 @@ test("a restored draft with mixed options keeps the time slots", async ({
   });
   await page.goto("/new");
 
+  // One day card, for the January 11 time slot; the January 10 date is gone.
   await expect(
     page.getByRole("button", { name: "Add time option" }),
   ).toHaveCount(1);
+  await expect(page.locator("div").filter({ hasText: /^Jan11$/ })).toHaveCount(
+    1,
+  );
 });
 
 test.describe("mixed date and time options", () => {
