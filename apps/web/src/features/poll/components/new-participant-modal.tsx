@@ -342,6 +342,12 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                     {...field}
                   />
                 </FormControl>
+                <FormDescription>
+                  <Trans
+                    i18nKey="newParticipantFormEmailDescription"
+                    defaults="We'll email you a link to change your response, and the organizer can let you know the final time."
+                  />
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
