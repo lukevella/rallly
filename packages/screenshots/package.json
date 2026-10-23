@@ -10,7 +10,7 @@
     "@rallly/utils": "workspace:*",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.4",
-    "nanoid": "^5.0.9"
+    "nanoid": "^5.1.16"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0"
