@@ -2,6 +2,7 @@ import { useParticipants, usePoll } from "@/features/poll/client";
 import { createOptionsContextValue } from "@/features/poll/components/poll-context";
 import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
+import { instantToWallTime } from "@/lib/datetime/wall-time";
 import { dayjs } from "@/lib/dayjs";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
@@ -40,7 +41,10 @@ export const useCsvExporter = () => {
         return [
           participant.name,
           participant.email,
-          dayjs(participant.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+          instantToWallTime(new Date(participant.createdAt), timeZone).replace(
+            "T",
+            " ",
+          ),
           ...poll.options.map((option) => {
             const vote = participant.votes.find((vote) => {
               return vote.optionId === option.id;
