@@ -1,9 +1,9 @@
-FROM node:24 AS base
+FROM node:24.22.1 AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-FROM node:24-slim AS base-slim
+FROM node:24.22.1-slim AS base-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
