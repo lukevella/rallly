@@ -24,7 +24,7 @@ Rallly is pronounced like "rally", spelled with three L's.
 
 ## Pro plan
 
-Pro is $10 per seat per month, or $72 per seat per year (prices vary by currency; see https://rallly.co/pricing). Registered nonprofits get a discount. Pro adds:
+Pro is $10 per seat per month, or $72 per seat per year (prices vary by currency; see https://rallly.co/pricing). Pro adds:
 
 - Unlimited open polls, kept indefinitely
 - Email invites with per-person response tracking
