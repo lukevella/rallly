@@ -14,9 +14,10 @@ import { getChunkRegistrationContext } from "@/lib/chunk-registration-log";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-// An error whose stack has no frame in our bundles came from a script
+// An error whose every frame is a URL outside our bundles came from a script
 // injected by an extension or in-app browser (inline in the page, or served
-// from a path we don't own). Errors without a stack are kept.
+// from a path we don't own). A stack without frames, or with any frame of
+// unknown origin (no filename, `<anonymous>`, native code), is kept.
 function isForeignError(event: Sentry.ErrorEvent) {
   const frames =
     event.exception?.values?.flatMap(
@@ -24,7 +25,10 @@ function isForeignError(event: Sentry.ErrorEvent) {
     ) ?? [];
   return (
     frames.length > 0 &&
-    !frames.some((frame) => frame.filename?.includes("/_next/"))
+    frames.every((frame) => {
+      const filename = frame.filename?.trim() ?? "";
+      return /^https?:\/\//.test(filename) && !filename.includes("/_next/");
+    })
   );
 }
 
