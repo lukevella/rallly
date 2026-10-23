@@ -11,6 +11,10 @@ import {
   reloadOnceForChunkError,
 } from "@/lib/chunk-recovery";
 import { getChunkRegistrationContext } from "@/lib/chunk-registration-log";
+import { installTranslationDomGuard } from "@/lib/translation-dom-guard";
+
+// Runs before React hydrates, so every DOM update React makes is covered.
+installTranslationDomGuard();
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
