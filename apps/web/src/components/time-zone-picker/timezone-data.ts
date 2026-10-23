@@ -1,4 +1,4 @@
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+import { detectBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import {
   getIanaIdAliases,
   normalizeLegacyIanaId,
@@ -15,7 +15,7 @@ export function getAllTimezoneIds(): string[] {
     return Intl.supportedValuesOf("timeZone");
   }
   const ids = new Set(curatedTimezoneIds);
-  const ownZone = getBrowserTimeZone();
+  const ownZone = detectBrowserTimeZone();
   if (ownZone) {
     ids.add(ownZone);
   }

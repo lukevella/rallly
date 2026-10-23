@@ -2,9 +2,19 @@ import type {
   DateTimeOption,
   TimeOption,
 } from "@/features/poll/components/forms/poll-options-form/types";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 
+/**
+ * The device's zone, or undefined when the engine reports one Intl itself
+ * rejects (some devices report "Etc/Unknown").
+ */
+export function detectBrowserTimeZone() {
+  return normalizeTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+}
+
+/** The device's zone, falling back to UTC when it can't be detected. */
 export function getBrowserTimeZone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return detectBrowserTimeZone() ?? "UTC";
 }
 
 export const encodeDateOption = (option: DateTimeOption) => {
