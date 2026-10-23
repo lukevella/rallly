@@ -22,7 +22,10 @@ import type { ConferencingOptions } from "@/features/conferencing/components/con
 import { toPollConferencing } from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
-import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
+import {
+  hasMixedOptionTypes,
+  isAllDay,
+} from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
@@ -161,9 +164,27 @@ export const CreatePoll = ({
     },
   });
 
+  // Drafts saved before mixed changes were held back can mix date and time
+  // options, which the calendar can't render. Keep the time slots, matching
+  // how the calendar classified the list. Must be stable: the persist hook
+  // restores the draft again whenever this callback changes.
+  const { setValue } = form;
+  const handleDataRestored = React.useCallback(
+    (data: Partial<NewEventData>) => {
+      if (data.options && hasMixedOptionTypes(data.options)) {
+        setValue(
+          "options",
+          data.options.filter((option) => option.type === "timeSlot"),
+        );
+      }
+    },
+    [setValue],
+  );
+
   const { clear } = useFormPersist("new-poll", {
     watch: form.watch,
     setValue: form.setValue,
+    onDataRestored: handleDataRestored,
   });
 
   const makePoll = trpc.polls.make.useMutation();
