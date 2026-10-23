@@ -14,6 +14,24 @@ import { getChunkRegistrationContext } from "@/lib/chunk-registration-log";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
+// An error whose every frame is a URL outside our bundles came from a script
+// injected by an extension or in-app browser (inline in the page, or served
+// from a path we don't own). A stack without frames, or with any frame of
+// unknown origin (no filename, `<anonymous>`, native code), is kept.
+function isForeignError(event: Sentry.ErrorEvent) {
+  const frames =
+    event.exception?.values?.flatMap(
+      (exception) => exception.stacktrace?.frames ?? [],
+    ) ?? [];
+  return (
+    frames.length > 0 &&
+    frames.every((frame) => {
+      const filename = frame.filename?.trim() ?? "";
+      return /^https?:\/\//.test(filename) && !filename.includes("/_next/");
+    })
+  );
+}
+
 Sentry.init({
   dsn: SENTRY_DSN,
   // Release health sessions (one envelope per page load) and client reports
@@ -48,9 +66,30 @@ Sentry.init({
     // Thrown by Safari and DuckDuckGo extension content scripts on iOS, not by
     // the app. Replays show the page rendering normally around it.
     "Invalid call to runtime.sendMessage",
+    "network error",
+    // Globals and bridges injected by in-app browsers, WebViews and
+    // extensions (Firefox iOS reader mode, Zalo, Android and iOS WebView
+    // bridges, MetaMask, Outlook SafeLinks scanner).
+    "__firefox__",
+    "zaloJSV2",
+    "SCDynimacBridge",
+    "Java object is gone",
+    "WKWebView API client did not respond",
+    "MetaMask",
+    "Object Not Found Matching Id",
+    /Can't find variable: [A-Z0-9]{32}/,
+    // Rejections without an error object carry nothing to act on.
+    "Event `CustomEvent` (type=unhandledrejection) captured as promise rejection",
+    "Object captured as promise rejection with keys: [object has no keys]",
+    // Expected auth outcomes from tRPC queries, not bugs.
+    "Login is required",
+    "This method requires a user",
   ],
 
   beforeSend(event, hint) {
+    if (isForeignError(event)) {
+      return null;
+    }
     if (isModuleFactoryError(hint.originalException)) {
       const context = getChunkRecoveryContext();
       event.tags = {
