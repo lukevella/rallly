@@ -96,3 +96,29 @@ describe("RichTextEditor link validation (isAllowedUri)", () => {
     }
   });
 });
+
+describe("RichTextEditor DOM input", () => {
+  it("reads typed text back into the document", () => {
+    // Typing goes through prosemirror-view's DOM observer, which parses the
+    // edited DOM with its own prosemirror-model. A second copy of that package
+    // in the lockfile makes this throw "Can not convert ... to a Fragment".
+    // Markdown content matters: an HTML load warms the schema's cached parser
+    // from @tiptap/pm's copy and hides the mismatch.
+    const element = document.createElement("div");
+    document.body.append(element);
+    const editor = new Editor({
+      element,
+      extensions: [...baseExtensions],
+      content: "**Lab tour,** please confirm",
+      contentType: "markdown",
+    });
+    const text = editor.view.dom.querySelector("p")?.lastChild;
+    if (!text) throw new Error("missing text node");
+    text.textContent = " please confirm today";
+    // @ts-expect-error domObserver is internal to prosemirror-view
+    editor.view.domObserver.flush();
+    expect(editor.getText()).toBe("Lab tour, please confirm today");
+    editor.destroy();
+    element.remove();
+  });
+});
