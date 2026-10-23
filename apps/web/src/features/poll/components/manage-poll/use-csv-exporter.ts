@@ -3,6 +3,7 @@ import { createOptionsContextValue } from "@/features/poll/components/poll-conte
 import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { dayjs } from "@/lib/dayjs";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 export const useCsvExporter = () => {
   const poll = usePoll();
@@ -23,7 +24,7 @@ export const useCsvExporter = () => {
       // offset) as a date, so the timezone lives in the header, not the cell.
       // Use the IANA zone name rather than a fixed offset so the label stays
       // correct for rows on either side of a DST change.
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const timeZone = getBrowserTimeZone();
       const header = [
         t("name"),
         t("email"),
