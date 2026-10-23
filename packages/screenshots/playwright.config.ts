@@ -15,7 +15,10 @@ export default defineConfig({
     baseURL,
   },
   webServer: {
-    command: `NEXT_PUBLIC_BASE_URL=${baseURL} NEXT_PUBLIC_COOKIE_DOMAIN= RATE_LIMIT_ENABLED=false HIDE_DEV_INDICATOR=true pnpm --filter @rallly/web exec next dev --port ${PORT}`,
+    // Every conferencing provider is on, as in production, so the docs show
+    // the full video call menu. Webex falls back to a placeholder app because
+    // the dev .env carries no Webex credentials and nothing here calls it.
+    command: `NEXT_PUBLIC_BASE_URL=${baseURL} NEXT_PUBLIC_COOKIE_DOMAIN= RATE_LIMIT_ENABLED=false HIDE_DEV_INDICATOR=true CONFERENCING_PROVIDERS=google-meet,zoom,microsoft-teams,webex WEBEX_CLIENT_ID=\${WEBEX_CLIENT_ID:-screenshots} WEBEX_CLIENT_SECRET=\${WEBEX_CLIENT_SECRET:-screenshots} pnpm --filter @rallly/web exec next dev --port ${PORT}`,
     url: baseURL,
     reuseExistingServer: true,
     timeout: 120000,

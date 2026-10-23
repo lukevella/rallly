@@ -124,9 +124,17 @@ const proSpaceId = "space-2";
 const proMembershipId = "sm-2";
 let savedBranding: { primaryColor: string | null; showBranding: boolean };
 let savedLastSelectedAt: Date;
+// The poll form's calendar starts on Monday whatever the shared dev user
+// was last set to.
+let savedWeekStart: number | null;
 
 test.beforeAll(async () => {
   await clearConnections();
+  ({ weekStart: savedWeekStart } = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+    select: { weekStart: true },
+  }));
+  await prisma.user.update({ where: { id: userId }, data: { weekStart: 1 } });
   ({ lastSelectedAt: savedLastSelectedAt } =
     await prisma.spaceMember.findUniqueOrThrow({
       where: { id: proMembershipId },
@@ -147,6 +155,10 @@ test.beforeAll(async () => {
 });
 test.afterAll(async () => {
   await clearConnections();
+  await prisma.user.update({
+    where: { id: userId },
+    data: { weekStart: savedWeekStart },
+  });
   await prisma.space.update({
     where: { id: proSpaceId },
     data: savedBranding,
