@@ -70,8 +70,14 @@ export const actionClient = createSafeActionClient({
       return "UNAUTHORIZED" as const;
     }
 
-    if (error instanceof AppError && error.code === "SERVICE_UNAVAILABLE") {
-      // Maintenance mode — expected, not reported to Sentry
+    if (
+      error instanceof AppError &&
+      // Maintenance mode, a signed out user, or a record deleted
+      // concurrently: expected, not reported to Sentry
+      (error.code === "SERVICE_UNAVAILABLE" ||
+        error.code === "UNAUTHORIZED" ||
+        error.code === "NOT_FOUND")
+    ) {
       return error.code;
     }
 
