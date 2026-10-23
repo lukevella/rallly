@@ -28,7 +28,29 @@ async function settledBox(locator: Locator) {
   return box;
 }
 
+// The Pro space, so billing shows a subscription. Selecting it is undone
+// after the run so other captures start from the space they expect.
+const proMembershipId = "sm-2";
+let savedLastSelectedAt: Date;
+// The seeded owner's avatar is a real photo; the members list shows
+// initials instead.
+let savedImage: string | null;
+
 test.beforeAll(async () => {
+  ({ image: savedImage } = await prisma.user.findUniqueOrThrow({
+    where: { id: "user-1" },
+    select: { image: true },
+  }));
+  await prisma.user.update({ where: { id: "user-1" }, data: { image: null } });
+  ({ lastSelectedAt: savedLastSelectedAt } =
+    await prisma.spaceMember.findUniqueOrThrow({
+      where: { id: proMembershipId },
+      select: { lastSelectedAt: true },
+    }));
+  await prisma.spaceMember.update({
+    where: { id: proMembershipId },
+    data: { lastSelectedAt: new Date() },
+  });
   await prisma.poll.delete({ where: { id: pollId } }).catch(() => {});
   await prisma.poll.create({
     data: {
@@ -46,6 +68,14 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
+  await prisma.user.update({
+    where: { id: "user-1" },
+    data: { image: savedImage },
+  });
+  await prisma.spaceMember.update({
+    where: { id: proMembershipId },
+    data: { lastSelectedAt: savedLastSelectedAt },
+  });
   await prisma.poll.delete({ where: { id: pollId } }).catch(() => {});
 });
 
@@ -78,6 +108,22 @@ test("spaces and poll admin screenshots", async ({ page }) => {
       width: seatsBox.width + 80,
       height: seatsBox.height + 80,
     },
+  });
+
+  await page.goto("/settings/general");
+  const collaboration = page
+    .getByText("How members work together in this space")
+    .locator("xpath=ancestor::*[contains(@class, 'rounded')][1]");
+  await collaboration.waitFor();
+  await page.waitForLoadState("networkidle");
+  // The app scrolls an inner container, so the section is brought into the
+  // viewport before its box is read.
+  await collaboration.evaluate((el) => el.scrollIntoView({ block: "center" }));
+  const collaborationBox = await collaboration.boundingBox();
+  if (!collaborationBox) throw new Error("collaboration section not visible");
+  await page.screenshot({
+    path: docsImagePath("spaces/collaboration-settings"),
+    clip: collaborationBox,
   });
 
   await page.goto(`/poll/${pollId}`);
