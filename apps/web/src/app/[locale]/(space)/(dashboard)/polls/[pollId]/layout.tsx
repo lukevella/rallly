@@ -5,22 +5,21 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/components/link";
 import {
-  ListView,
-  ListViewActions,
-  ListViewContent,
-  ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
-  ListViewToolbar,
-} from "@/components/list-view";
+  PageShell,
+  PageShellContent,
+  PageShellHeader,
+  PageShellHeaderEnd,
+  PageShellHeaderStart,
+  PageShellTitle,
+} from "@/components/page-shell";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
-import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
+import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { PollHostActions } from "./components/poll-host-actions";
 import { PollDetailSheet } from "./poll-detail-sheet";
-import { PollShellTabs } from "./poll-shell-tabs";
 
 async function PollPageTitle({
   params,
@@ -29,7 +28,12 @@ async function PollPageTitle({
 }) {
   const { pollId } = await params;
   const poll = await loadPoll(pollId);
-  return poll.title;
+  return (
+    <>
+      <PageShellTitle>{poll.title}</PageShellTitle>
+      <PollStatusIcon status={poll.status} />
+    </>
+  );
 }
 
 async function PollHeaderActions({
@@ -39,8 +43,8 @@ async function PollHeaderActions({
 }) {
   const { pollId } = await params;
   await loadPoll(pollId);
-  // The finalize dialog and CSV export read the whole poll, votes included,
-  // from the poll provider.
+  // The CSV export reads the whole poll, votes included, from the poll
+  // provider.
   const { poll, participants, comments } = await loadAdminPoll(pollId);
   return (
     <PollProvider
@@ -49,8 +53,8 @@ async function PollHeaderActions({
       comments={comments}
       viewerRole="admin"
     >
-      <PollAdminMenu />
-      <PollPrimaryActions />
+      <PollHostActions />
+      <PollAdminMenu showEdit={false} />
     </PollProvider>
   );
 }
@@ -67,9 +71,9 @@ export default function Layout({
   }
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewTitleBar className="md:pl-4">
+    <PageShell>
+      <PageShellHeader>
+        <PageShellHeaderStart>
           <Link
             href="/polls"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
@@ -79,23 +83,18 @@ export default function Layout({
               <Trans i18nKey="back" defaults="Back" />
             </span>
           </Link>
-          <ListViewTitle>
-            <Suspense fallback={<Skeleton className="h-5 w-40" />}>
-              <PollPageTitle params={params} />
-            </Suspense>
-          </ListViewTitle>
-          <ListViewActions>
-            <Suspense>
-              <PollHeaderActions params={params} />
-            </Suspense>
-          </ListViewActions>
-        </ListViewTitleBar>
-        <ListViewToolbar>
-          <PollShellTabs />
-        </ListViewToolbar>
-      </ListViewHeader>
-      <ListViewContent>{children}</ListViewContent>
+          <Suspense fallback={<Skeleton className="h-5 w-40" />}>
+            <PollPageTitle params={params} />
+          </Suspense>
+        </PageShellHeaderStart>
+        <PageShellHeaderEnd>
+          <Suspense>
+            <PollHeaderActions params={params} />
+          </Suspense>
+        </PageShellHeaderEnd>
+      </PageShellHeader>
+      <PageShellContent>{children}</PageShellContent>
       <PollDetailSheet />
-    </ListView>
+    </PageShell>
   );
 }

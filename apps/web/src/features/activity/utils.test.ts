@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getPollChanges } from "./utils";
+import type { PollActivityEvent } from "./schema";
+import { getPollChanges, groupActivity } from "./utils";
 
 const prior = {
   title: "Team lunch",
@@ -120,5 +121,147 @@ describe("getPollChanges", () => {
         },
       }),
     ).toEqual([]);
+  });
+});
+
+const at = (iso: string) => new Date(`2026-10-10T${iso}:00.000Z`);
+let nextId = 0;
+const row = (time: string, event: PollActivityEvent) => ({
+  id: `a${nextId++}`,
+  createdAt: at(time),
+  event,
+});
+const created = (time: string) =>
+  row(time, {
+    type: "poll_created",
+    userId: "u1",
+    payload: { title: "Hike" },
+  });
+const invited = (time: string, email: string) =>
+  row(time, {
+    type: "invite_sent",
+    userId: "u1",
+    inviteId: email,
+    payload: { email },
+  });
+const opened = (time: string, email: string) =>
+  row(time, { type: "invite_opened", inviteId: email, payload: { email } });
+const responded = (time: string, name: string, note?: string) =>
+  row(time, {
+    type: "response_created",
+    participantId: name,
+    payload: note ? { name, note } : { name },
+  });
+const closed = (time: string) =>
+  row(time, {
+    type: "poll_closed",
+    userId: "u1",
+    payload: { reason: "manual" },
+  });
+
+const shape = (items: ReturnType<typeof groupActivity>) =>
+  items.map((item) =>
+    item.kind === "single"
+      ? item.row.event.type
+      : `${item.type}×${item.rows.length}`,
+  );
+
+describe("groupActivity", () => {
+  it("merges a run of invites into one group", () => {
+    expect(
+      shape(
+        groupActivity([
+          created("05:50"),
+          invited("06:14", "a@x.com"),
+          invited("06:14", "b@x.com"),
+          invited("06:15", "c@x.com"),
+        ]),
+      ),
+    ).toEqual(["poll_created", "invite_sent×3"]);
+  });
+
+  it("leaves invite opens out of the feed", () => {
+    expect(
+      shape(
+        groupActivity([
+          invited("06:14", "a@x.com"),
+          opened("07:00", "a@x.com"),
+        ]),
+      ),
+    ).toEqual(["invite_sent"]);
+  });
+
+  it("keeps a lone event as a single row", () => {
+    const [item] = groupActivity([responded("08:00", "Ben")]);
+    expect(item?.kind).toBe("single");
+  });
+
+  it("never groups responses, so each one keeps its own row", () => {
+    expect(
+      shape(
+        groupActivity([
+          responded("08:00", "Ben"),
+          responded("08:10", "Priya", "Mornings only"),
+          responded("08:20", "Cara"),
+        ]),
+      ),
+    ).toEqual(["response_created", "response_created", "response_created"]);
+  });
+
+  it("merges invites around responses that sit between them", () => {
+    expect(
+      shape(
+        groupActivity([
+          invited("08:00", "a@x.com"),
+          responded("08:30", "Ben"),
+          invited("09:00", "b@x.com"),
+        ]),
+      ),
+    ).toEqual(["response_created", "invite_sent×2"]);
+  });
+
+  it("orders groups by their latest event", () => {
+    const reminded = (time: string, email: string) =>
+      row(time, {
+        type: "invite_reminded",
+        userId: "u1",
+        inviteId: email,
+        payload: { email },
+      });
+    expect(
+      shape(
+        groupActivity([
+          invited("08:00", "a@x.com"),
+          reminded("08:30", "c@x.com"),
+          invited("09:00", "b@x.com"),
+          reminded("08:45", "d@x.com"),
+        ]),
+      ),
+    ).toEqual(["invite_reminded×2", "invite_sent×2"]);
+  });
+
+  it("starts a new group after a gap of more than 12 hours", () => {
+    expect(
+      shape(
+        groupActivity([
+          invited("00:00", "a@x.com"),
+          invited("01:00", "b@x.com"),
+          invited("13:01", "c@x.com"),
+          invited("13:30", "d@x.com"),
+        ]),
+      ),
+    ).toEqual(["invite_sent×2", "invite_sent×2"]);
+  });
+
+  it("never merges across a poll lifecycle event", () => {
+    expect(
+      shape(
+        groupActivity([
+          invited("08:00", "a@x.com"),
+          closed("08:30"),
+          invited("09:00", "b@x.com"),
+        ]),
+      ),
+    ).toEqual(["invite_sent", "poll_closed", "invite_sent"]);
   });
 });

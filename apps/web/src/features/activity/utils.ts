@@ -1,5 +1,5 @@
 import type { PollConferencing } from "@/features/conferencing/schema";
-import type { PollChange } from "./schema";
+import type { PollActivityEvent, PollChange } from "./schema";
 
 type ChangeAction = "added" | "changed" | "removed";
 
@@ -81,4 +81,105 @@ export function getPollChanges({
   }
 
   return changes;
+}
+
+export type ActivityRow = {
+  id: string;
+  createdAt: Date;
+  event: PollActivityEvent;
+};
+
+const groupableTypes = [
+  "invite_sent",
+  "invite_reminded",
+  "response_updated",
+  "response_deleted",
+] as const;
+
+export type GroupableActivityType = (typeof groupableTypes)[number];
+
+export type ActivityItem =
+  | { kind: "single"; row: ActivityRow }
+  | {
+      kind: "group";
+      type: GroupableActivityType;
+      /** Oldest first; always two or more. */
+      rows: ActivityRow[];
+    };
+
+const isGroupable = (
+  type: PollActivityEvent["type"],
+): type is GroupableActivityType =>
+  (groupableTypes as readonly string[]).includes(type);
+
+const BUCKET_GAP_MS = 12 * 60 * 60 * 1000;
+
+/**
+ * Folds a poll's activity, oldest first, into the rows a feed shows. Invite
+ * opens are left out: the invitee list already says who opened. Within a
+ * bucket (a run with no lifecycle event and no gap over 12 hours) events of
+ * the same groupable kind merge into one item, placed at its latest event.
+ * New responses are never grouped: each is news the host wants to see on
+ * its own. Lifecycle events always stand alone and end the bucket.
+ */
+export function groupActivity(rows: ActivityRow[]): ActivityItem[] {
+  const items: ActivityItem[] = [];
+  let bucket: ActivityRow[] = [];
+  let lastTime: number | null = null;
+
+  const flush = () => {
+    const byType = new Map<GroupableActivityType, ActivityRow[]>();
+    const pieces: { at: number; item: ActivityItem }[] = [];
+    for (const row of bucket) {
+      const { type } = row.event;
+      if (isGroupable(type)) {
+        const list = byType.get(type) ?? [];
+        list.push(row);
+        byType.set(type, list);
+      } else {
+        pieces.push({
+          at: row.createdAt.getTime(),
+          item: { kind: "single", row },
+        });
+      }
+    }
+    for (const [type, list] of byType) {
+      const sorted = [...list].sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+      );
+      const latest = sorted[sorted.length - 1];
+      if (!latest) continue;
+      pieces.push({
+        at: latest.createdAt.getTime(),
+        item:
+          sorted.length > 1
+            ? { kind: "group", type, rows: sorted }
+            : { kind: "single", row: latest },
+      });
+    }
+    // Stable, so pieces at the same moment keep their insertion order
+    pieces.sort((a, b) => a.at - b.at);
+    items.push(...pieces.map(({ item }) => item));
+    bucket = [];
+  };
+
+  for (const row of rows) {
+    const { type } = row.event;
+    if (type === "invite_opened") continue;
+    const time = row.createdAt.getTime();
+    if (lastTime !== null && time - lastTime > BUCKET_GAP_MS) {
+      flush();
+    }
+    lastTime = time;
+    if (isGroupable(type) || type === "response_created") {
+      // New responses join the bucket as singles, so invites around them
+      // still merge
+      bucket.push(row);
+    } else {
+      flush();
+      items.push({ kind: "single", row });
+    }
+  }
+  flush();
+  return items;
 }

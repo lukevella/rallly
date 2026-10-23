@@ -13,7 +13,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
-import { ListViewActions } from "@/components/list-view";
+import { PageShellHeaderEnd } from "@/components/page-shell";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -64,7 +64,7 @@ export async function MembersPageActions() {
   const availableSeats = Math.max(seatUsage.total - seatUsage.used, 0);
 
   return (
-    <ListViewActions>
+    <PageShellHeaderEnd>
       <p className="mr-2 hidden text-muted-foreground text-sm sm:block">
         <Trans
           i18nKey="seatsAvailable"
@@ -76,7 +76,7 @@ export async function MembersPageActions() {
         disabled={availableSeats <= 0}
         canCreateInvite={memberAbility.can("create", "SpaceMemberInvite")}
       />
-    </ListViewActions>
+    </PageShellHeaderEnd>
   );
 }
 

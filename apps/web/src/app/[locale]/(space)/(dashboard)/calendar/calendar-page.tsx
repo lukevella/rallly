@@ -1,25 +1,25 @@
 "use client";
 
 import {
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderContent,
-  PageTitle,
-} from "@/components/page-layout";
+  PageShell,
+  PageShellContent,
+  PageShellHeader,
+  PageShellHeaderStart,
+  PageShellTitle,
+} from "@/components/page-shell";
 import { Trans } from "@/i18n/client";
 
 export function CalendarPage() {
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageTitle>
+    <PageShell>
+      <PageShellHeader>
+        <PageShellHeaderStart>
+          <PageShellTitle>
             <Trans i18nKey="calendar" defaults="Calendar" />
-          </PageTitle>
-        </PageHeaderContent>
-      </PageHeader>
-      <PageContent />
-    </PageContainer>
+          </PageShellTitle>
+        </PageShellHeaderStart>
+      </PageShellHeader>
+      <PageShellContent />
+    </PageShell>
   );
 }

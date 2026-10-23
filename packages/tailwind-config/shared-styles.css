@@ -476,3 +476,24 @@
     stroke-dashoffset: 0;
   }
 }
+
+/* Fades an element in over the first 24px of its scroll container's scroll,
+ * e.g. a shadow under a sticky header that should only show once content
+ * passes beneath it. Without scroll-driven animations it stays hidden. */
+@keyframes scroll-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility scroll-fade-in {
+  opacity: 0;
+  @supports (animation-timeline: scroll()) {
+    animation: scroll-fade-in linear both;
+    animation-timeline: scroll();
+    animation-range: 0 24px;
+  }
+}

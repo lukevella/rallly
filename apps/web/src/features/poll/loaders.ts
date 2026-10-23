@@ -17,6 +17,7 @@ import {
   listPollComments,
   listPollParticipants,
 } from "@/features/poll/data";
+import { listPollInvites } from "@/features/poll/invite/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
 import type { PollStatus } from "@/features/poll/schema";
 import {
@@ -77,14 +78,22 @@ const getEditUrl = ({ pollId, token }: { pollId: string; token: string }) =>
 
 export const loadPollParticipants = cache(async (pollId: string) => {
   const participants = await loadParticipantRows(pollId);
-  return participants.map(({ id, name, note, image, createdAt, token }) => ({
-    id,
-    name,
-    note,
-    image,
-    createdAt,
-    editUrl: getEditUrl({ pollId, token }),
-  }));
+  return participants.map(
+    ({ id, name, note, image, createdAt, token, votes }) => ({
+      id,
+      name,
+      note,
+      image,
+      createdAt,
+      editUrl: getEditUrl({ pollId, token }),
+      // A summary rather than the votes themselves, so lists stay light
+      voteCounts: {
+        yes: votes.filter((vote) => vote.type === "yes").length,
+        ifNeedBe: votes.filter((vote) => vote.type === "ifNeedBe").length,
+        no: votes.filter((vote) => vote.type === "no").length,
+      },
+    }),
+  );
 });
 
 /**
@@ -123,24 +132,19 @@ export const loadPollResults = cache(async (pollId: string) => {
 });
 
 /**
- * The poll's most popular options, best first. Options nobody can attend are
- * left out, so a poll without votes has none.
+ * The poll's email invites for the admin page, newest first. loadPoll proves
+ * the poll is in the viewer's space; tokens stay on the server.
  */
-export const loadPollTopOptions = cache(
-  async (pollId: string, limit: number) => {
-    const results = await loadPollResults(pollId);
-    return {
-      participantCount: results.participantCount,
-      options: results.options
-        .filter((option) => option.score > 0)
-        .sort(
-          (a, b) =>
-            b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
-        )
-        .slice(0, limit),
-    };
-  },
-);
+export const loadPollInvites = cache(async (pollId: string) => {
+  await loadPoll(pollId);
+  const invites = await listPollInvites({ pollId });
+  return invites.map(({ id, email, openedAt, participantId }) => ({
+    id,
+    email,
+    opened: openedAt !== null,
+    responded: participantId !== null,
+  }));
+});
 
 export const loadPollActivity = cache(
   async (pollId: string, limit?: number) => {

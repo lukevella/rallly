@@ -98,12 +98,12 @@ export function PollResponseDetail({
       className="space-y-8"
       header={
         <Link
-          href={`/polls/${pollId}/responses`}
+          href={`/polls/${pollId}/participants`}
           scroll={false}
           className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground md:hidden"
         >
           <ArrowLeftIcon className="size-4" />
-          <Trans i18nKey="responses" defaults="Responses" />
+          <Trans i18nKey="participants" defaults="Participants" />
         </Link>
       }
     >
@@ -131,7 +131,7 @@ export function PollResponseDetail({
           participantName={response.name}
           editUrl={response.editUrl}
           pollOpen={pollOpen}
-          onDelete={() => router.replace(`/polls/${pollId}/responses`)}
+          onDelete={() => router.replace(`/polls/${pollId}/participants`)}
         />
       </div>
       {response.note ? (

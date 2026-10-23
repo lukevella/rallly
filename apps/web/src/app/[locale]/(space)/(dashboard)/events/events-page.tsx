@@ -13,15 +13,15 @@ import {
 } from "@/components/empty-state";
 import { FilterPills } from "@/components/filter-pills";
 import { Link } from "@/components/link";
-import {
-  ListView,
-  ListViewContent,
-  ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
-  ListViewToolbar,
-} from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
+import {
+  PageShell,
+  PageShellContent,
+  PageShellHeader,
+  PageShellHeaderStart,
+  PageShellTitle,
+  PageShellToolbar,
+} from "@/components/page-shell";
 import { RefreshOnFocus } from "@/components/refresh-on-focus";
 import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
@@ -193,56 +193,56 @@ export function EventsPage({
   );
 
   return (
-    <ListView>
+    <PageShell>
       <RefreshOnFocus />
-      <ListViewHeader>
-        <ListViewTitleBar>
-          <ListViewTitle>
+      <PageShellHeader>
+        <PageShellHeaderStart>
+          <PageShellTitle>
             <Trans i18nKey="events" defaults="Events" />
-          </ListViewTitle>
-        </ListViewTitleBar>
-        <ListViewToolbar>
-          <FilterPills
-            param="status"
-            value={status}
-            label={t("eventsListStatusFilter", {
-              defaultValue: "Filter by status",
+          </PageShellTitle>
+        </PageShellHeaderStart>
+      </PageShellHeader>
+      <PageShellToolbar>
+        <FilterPills
+          param="status"
+          value={status}
+          label={t("eventsListStatusFilter", {
+            defaultValue: "Filter by status",
+          })}
+          options={[
+            {
+              value: "upcoming",
+              label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
+            },
+            {
+              value: "past",
+              label: <Trans i18nKey="past" defaults="Past" />,
+            },
+            {
+              value: "canceled",
+              label: <Trans i18nKey="canceled" defaults="Canceled" />,
+            },
+          ]}
+          startTransition={startNavigation}
+        />
+        <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
+          <SearchInput
+            className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
+            placeholder={t("searchEventsPlaceholder", {
+              defaultValue: "Search events by title...",
             })}
-            options={[
-              {
-                value: "upcoming",
-                label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
-              },
-              {
-                value: "past",
-                label: <Trans i18nKey="past" defaults="Past" />,
-              },
-              {
-                value: "canceled",
-                label: <Trans i18nKey="canceled" defaults="Canceled" />,
-              },
-            ]}
             startTransition={startNavigation}
           />
-          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
-            <SearchInput
-              className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
-              placeholder={t("searchEventsPlaceholder", {
-                defaultValue: "Search events by title...",
-              })}
+          {showMemberFilter ? (
+            <MemberSelector
+              members={members}
+              className="min-w-0 sm:min-w-40"
               startTransition={startNavigation}
             />
-            {showMemberFilter ? (
-              <MemberSelector
-                members={members}
-                className="min-w-0 sm:min-w-40"
-                startTransition={startNavigation}
-              />
-            ) : null}
-          </div>
-        </ListViewToolbar>
-      </ListViewHeader>
-      <ListViewContent>
+          ) : null}
+        </div>
+      </PageShellToolbar>
+      <PageShellContent>
         {isNavigating ? <EventsListSkeleton /> : list}
         {isNavigating ? null : (
           <EventsPagination
@@ -251,7 +251,7 @@ export function EventsPage({
             startTransition={startNavigation}
           />
         )}
-      </ListViewContent>
-    </ListView>
+      </PageShellContent>
+    </PageShell>
   );
 }

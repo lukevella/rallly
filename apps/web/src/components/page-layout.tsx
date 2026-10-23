@@ -2,7 +2,6 @@
 
 import { cn } from "@rallly/ui";
 import { SidebarTrigger } from "@rallly/ui/sidebar";
-import { Skeleton } from "@rallly/ui/skeleton";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 
@@ -84,38 +83,6 @@ export function PageContent({
 }) {
   return (
     <div className={cn("mt-4 md:mt-6 md:grow", className)}>{children}</div>
-  );
-}
-
-export function PageSkeleton() {
-  return (
-    <PageContainer>
-      <PageHeader>
-        <PageTitle>
-          <Skeleton className="h-6 w-32" />
-        </PageTitle>
-      </PageHeader>
-      <PageContent>
-        <div className="space-y-8">
-          <Skeleton className="h-8 w-1/2" />
-          <div className="space-y-4">
-            <Skeleton className="h-7 w-full" />
-            <Skeleton className="h-7 w-full" />
-            <Skeleton className="h-7 w-1/2" />
-          </div>
-          <div className="space-y-4">
-            <Skeleton className="h-7 w-full" />
-            <Skeleton className="h-7 w-full" />
-            <Skeleton className="h-7 w-1/2" />
-          </div>
-          <div className="space-y-4">
-            <Skeleton className="h-7 w-full" />
-            <Skeleton className="h-7 w-full" />
-            <Skeleton className="h-7 w-1/2" />
-          </div>
-        </div>
-      </PageContent>
-    </PageContainer>
   );
 }
 

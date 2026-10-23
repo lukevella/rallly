@@ -65,7 +65,7 @@ export function PollResponsesList({
             />
             <div className="min-w-0">
               <Link
-                href={`/polls/${pollId}/responses?responseId=${row.original.id}`}
+                href={`/polls/${pollId}/participants?responseId=${row.original.id}`}
                 aria-current={
                   row.original.id === selectedId ? "page" : undefined
                 }

@@ -1,0 +1,147 @@
+"use client";
+
+import { cn } from "@rallly/ui";
+import {
+  CalendarDaysIcon,
+  ClockIcon,
+  GlobeIcon,
+  MapPinIcon,
+} from "lucide-react";
+import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
+import { usePoll } from "@/features/poll/client";
+import {
+  EventMetaItem,
+  EventMetaList,
+} from "@/features/poll/components/event-meta";
+import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
+import { EventDate } from "@/features/scheduled-event/components/event-date-time";
+import { Trans } from "@/i18n/client";
+import { Duration } from "@/lib/datetime/duration";
+
+// The card's tint says where the poll stands: blue while collecting
+// responses, gray once closed, green when scheduled, rose when canceled.
+const statusTint = {
+  open: {
+    frame: "from-blue-500/50 via-blue-500/15",
+    wash: "from-blue-500/[0.07]",
+  },
+  closed: {
+    frame: "from-gray-500/40 via-gray-500/10",
+    wash: "from-gray-500/[0.06]",
+  },
+  scheduled: {
+    frame: "from-green-500/50 via-green-500/15",
+    wash: "from-green-500/[0.07]",
+  },
+  canceled: {
+    frame: "from-rose-500/50 via-rose-500/15",
+    wash: "from-rose-500/[0.07]",
+  },
+} as const;
+
+/**
+ * The head of the Overview thread, written for the host like a pull
+ * request's description: what the poll is about, the facts that tell it
+ * apart from similarly named polls. Who created it is the thread's first item;
+ * the host's actions are in the page header.
+ */
+export function PollDescriptionCard({
+  description,
+  options,
+}: {
+  description: React.ReactNode;
+  /** The poll's options, earliest first. */
+  options: { startTime: Date; duration: number }[];
+}) {
+  const poll = usePoll();
+  const first = options[0];
+  const last = options[options.length - 1];
+  const allDay = options.every((option) => option.duration === 0);
+  // One length for every option reads as the event's length; mixed lengths
+  // say nothing useful in one line, so they are left out.
+  const duration =
+    first && options.every((option) => option.duration === first.duration)
+      ? first.duration
+      : null;
+
+  const tint = statusTint[poll.status];
+
+  return (
+    // A 1px gradient frame (padding over a gradient) around a soft wash.
+    <div
+      className={cn(
+        "rounded-[18px] bg-linear-to-br to-card-border p-px",
+        tint.frame,
+      )}
+    >
+      <div
+        className={cn(
+          "space-y-4 rounded-[17px] bg-card bg-linear-to-br via-card to-card p-5",
+          tint.wash,
+        )}
+      >
+        <div className="space-y-1">
+          <h2 className="font-semibold text-base">{poll.title}</h2>
+          {poll.description ? description : null}
+        </div>
+        <EventMetaList className="space-y-2.5">
+          {first && last ? (
+            <EventMetaItem>
+              <CalendarDaysIcon />
+              <span>
+                <EventDate
+                  value={first.startTime}
+                  allDay={allDay}
+                  timeZone={poll.timeZone}
+                  preset="weekdayMonthDayShort"
+                />
+                {options.length > 1 ? (
+                  <>
+                    {" – "}
+                    <EventDate
+                      value={last.startTime}
+                      allDay={allDay}
+                      timeZone={poll.timeZone}
+                      preset="weekdayMonthDayShort"
+                    />
+                  </>
+                ) : null}{" "}
+              </span>
+            </EventMetaItem>
+          ) : null}
+          {allDay ? (
+            <EventMetaItem>
+              <ClockIcon />
+              <Trans i18nKey="allDay" defaults="All day" />
+            </EventMetaItem>
+          ) : duration ? (
+            <EventMetaItem>
+              <ClockIcon />
+              <Duration minutes={duration} />
+            </EventMetaItem>
+          ) : null}
+          {poll.location ? (
+            <EventMetaItem>
+              <MapPinIcon />
+              <TruncatedLinkify>{poll.location}</TruncatedLinkify>
+            </EventMetaItem>
+          ) : null}
+          {poll.conferencing ? (
+            <EventMetaItem>
+              <PollConferencingSummary
+                conferencing={poll.conferencing}
+                meetingUri={poll.event?.conferencingUri}
+              />
+            </EventMetaItem>
+          ) : null}
+          {poll.timeZone && !allDay ? (
+            <EventMetaItem>
+              <GlobeIcon />
+              {poll.timeZone}
+            </EventMetaItem>
+          ) : null}
+        </EventMetaList>
+      </div>
+    </div>
+  );
+}

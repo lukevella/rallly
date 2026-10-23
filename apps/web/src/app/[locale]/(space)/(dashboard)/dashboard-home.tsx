@@ -2,13 +2,6 @@ import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import {
-  ListView,
-  ListViewContent,
-  ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
-} from "@/components/list-view";
-import {
   BillingPageIcon,
   CreatePageIcon,
   EventPageIcon,
@@ -16,6 +9,13 @@ import {
   PollPageIcon,
   SettingsPageIcon,
 } from "@/components/page-icons";
+import {
+  PageShell,
+  PageShellContent,
+  PageShellHeader,
+  PageShellHeaderStart,
+  PageShellTitle,
+} from "@/components/page-shell";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -44,15 +44,15 @@ export async function DashboardHome({
   const { t, i18n } = await getTranslation();
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewTitleBar>
-          <ListViewTitle>
+    <PageShell>
+      <PageShellHeader>
+        <PageShellHeaderStart>
+          <PageShellTitle>
             <Trans t={t} i18n={i18n} ns="app" i18nKey="home" defaults="Home" />
-          </ListViewTitle>
-        </ListViewTitleBar>
-      </ListViewHeader>
-      <ListViewContent className="space-y-8 px-4 pt-4 pb-8 md:pl-6">
+          </PageShellTitle>
+        </PageShellHeaderStart>
+      </PageShellHeader>
+      <PageShellContent className="space-y-8 px-6 pt-4 pb-8">
         {hasNoAccounts && isFeatureEnabled("emailLogin") ? (
           <PasswordSetupAlert />
         ) : null}
@@ -228,7 +228,7 @@ export async function DashboardHome({
             ) : null}
           </TileGrid>
         </div>
-      </ListViewContent>
-    </ListView>
+      </PageShellContent>
+    </PageShell>
   );
 }

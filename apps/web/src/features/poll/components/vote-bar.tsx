@@ -28,7 +28,7 @@ export function VoteBar({
         total,
       })}
       className={cn(
-        "flex h-1.5 overflow-hidden rounded-sm bg-muted",
+        "flex h-1.5 overflow-hidden rounded-sm bg-gray-400 dark:bg-gray-500",
         className,
       )}
     >

@@ -1,22 +1,16 @@
-import { ActivityIcon, CalendarIcon, InboxIcon } from "lucide-react";
-import {
-  EmptyState,
-  EmptyStateDescription,
-  EmptyStateIcon,
-  EmptyStateTitle,
-} from "@/components/empty-state";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
-import { PollResponsesList } from "@/features/poll/components/poll-responses-list";
-import { PollTopDates } from "@/features/poll/components/poll-top-dates";
+import { PollProvider } from "@/features/poll/client";
+import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import {
+  loadAdminPoll,
   loadPoll,
   loadPollActivity,
+  loadPollInvites,
   loadPollParticipants,
   loadPollResults,
-  loadPollTopOptions,
 } from "@/features/poll/loaders";
-import { Trans } from "@/i18n/client";
-import { OverviewSection } from "./components/overview-section";
+import { NextStepCard } from "./components/next-step-card";
+import { PollDescriptionCard } from "./components/poll-description-card";
 
 export default async function Page({
   params,
@@ -24,120 +18,105 @@ export default async function Page({
   params: Promise<{ pollId: string }>;
 }) {
   const { pollId } = await params;
-  const [poll, participants, results, topOptions, activity] = await Promise.all(
-    [
-      loadPoll(pollId),
-      loadPollParticipants(pollId),
-      loadPollResults(pollId),
-      loadPollTopOptions(pollId, 3),
-      loadPollActivity(pollId, 5),
-    ],
+  const [poll, participants, results, activity, invites] = await Promise.all([
+    loadPoll(pollId),
+    loadPollParticipants(pollId),
+    loadPollResults(pollId),
+    loadPollActivity(pollId),
+    loadPollInvites(pollId),
+  ]);
+  // The description card reads the full poll from the poll provider.
+  const adminPoll = await loadAdminPoll(pollId);
+  // Oldest first, like a conversation, so poll created leads the thread.
+  const thread = [...activity].reverse();
+  // The poll created event records only the creator's id. The poll's user is
+  // the creator unless the organizer has since changed, in which case the
+  // first change names who it was taken from.
+  const firstOrganizerChange = thread.find(
+    ({ event }) => event.type === "poll_organizer_changed",
+  )?.event;
+  const pollCreatorName =
+    firstOrganizerChange?.type === "poll_organizer_changed"
+      ? firstOrganizerChange.payload.from.name
+      : adminPoll.poll.user?.name;
+
+  // Most popular first; ties keep date order.
+  const rankedOptions = [...results.options].sort(
+    (a, b) =>
+      b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
   );
 
   return (
-    <div className="space-y-8 px-7.5 pt-4 pb-8">
-      <OverviewSection
-        title={
-          <Trans
-            i18nKey="pollOverviewPopularDates"
-            defaults="Most popular dates"
-          />
-        }
-        viewAllHref={`/polls/${pollId}/dates`}
-        count={results.options.length}
-      >
-        {topOptions.options.length > 0 ? (
-          <PollTopDates
-            options={topOptions.options}
-            participantCount={topOptions.participantCount}
-            timeZone={poll.timeZone}
-            className="-mx-3.5"
-          />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <CalendarIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans i18nKey="pollOverviewNoVotes" defaults="No votes yet" />
-            </EmptyStateTitle>
-            <EmptyStateDescription>
-              <Trans
-                i18nKey="pollOverviewNoPopularDates"
-                defaults="Popular dates will show up here once participants vote."
+    // One centred column: the poll, its activity, then the next step
+    <div className="px-6 py-6">
+      <div className="mx-auto w-full max-w-[680px]">
+        <PollProvider
+          poll={adminPoll.poll}
+          participants={adminPoll.participants}
+          comments={adminPoll.comments}
+          viewerRole="admin"
+        >
+          <PollDescriptionCard
+            // Rendered here so the markdown parser stays on the server
+            description={
+              <EventMetaDescription
+                className="text-muted-foreground"
+                content={adminPoll.poll.description}
               />
-            </EmptyStateDescription>
-          </EmptyState>
-        )}
-      </OverviewSection>
-      <OverviewSection
-        title={
-          <Trans
-            i18nKey="pollOverviewRecentResponses"
-            defaults="Recent responses"
+            }
+            options={results.options}
           />
-        }
-        viewAllHref={
-          participants.length > 0 ? `/polls/${pollId}/responses` : undefined
-        }
-        count={participants.length}
-      >
-        {participants.length > 0 ? (
-          <PollResponsesList
-            pollId={pollId}
-            participants={participants.slice(0, 5)}
-            pollOpen={poll.status === "open"}
-            className="-mx-4 px-0 py-0"
-          />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <InboxIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans
-                i18nKey="pollOverviewNoResponses"
-                defaults="No responses yet"
+          {thread.length > 0 ? (
+            // Indented so the timeline stems from under the card, as a pull
+            // request's commits do from its description.
+            <div className="px-5">
+              <div
+                aria-hidden
+                className="ml-7 h-6 w-px -translate-x-1/2 bg-border"
               />
-            </EmptyStateTitle>
-            <EmptyStateDescription>
-              <Trans
-                i18nKey="pollOverviewNoResponsesDescription"
-                defaults="Responses will show up here once participants vote."
+              <PollActivityList
+                activity={thread}
+                timeZone={poll.timeZone}
+                compact
+                continues
+                pollCreatorName={pollCreatorName}
+                participantImages={Object.fromEntries(
+                  participants.map(({ id, image }) => [id, image]),
+                )}
+                participantVotes={Object.fromEntries(
+                  participants.map(({ id, voteCounts }) => [id, voteCounts]),
+                )}
+                className="pl-3"
               />
-            </EmptyStateDescription>
-          </EmptyState>
-        )}
-      </OverviewSection>
-      <OverviewSection
-        title={
-          <Trans
-            i18nKey="pollOverviewRecentActivity"
-            defaults="Recent activity"
-          />
-        }
-        viewAllHref={`/polls/${pollId}/activity`}
-      >
-        {activity.length > 0 ? (
-          <PollActivityList
-            activity={activity}
-            timeZone={poll.timeZone}
-            className="pt-2"
-          />
-        ) : (
-          <EmptyState className="py-10">
-            <EmptyStateIcon>
-              <ActivityIcon />
-            </EmptyStateIcon>
-            <EmptyStateTitle>
-              <Trans
-                i18nKey="pollOverviewNoActivity"
-                defaults="No activity yet"
-              />
-            </EmptyStateTitle>
-          </EmptyState>
-        )}
-      </OverviewSection>
+            </div>
+          ) : null}
+          {/* The thread ends in the next step, as a pull request ends in its
+              merge box, joined to the activity by the same rail */}
+          <div className="pl-5">
+            <div
+              aria-hidden
+              className="ml-7 h-6 w-px -translate-x-1/2 bg-border"
+            />
+          </div>
+          {/* Pinned to the bottom of the viewport while the thread scrolls,
+              so the decision stays in reach; it settles into place at the
+              end of the thread */}
+          <div className="sticky bottom-4 z-10">
+            <NextStepCard
+              options={rankedOptions}
+              participantCount={results.participantCount}
+              invites={
+                invites.length > 0
+                  ? {
+                      pending: invites.filter((invite) => !invite.responded)
+                        .length,
+                    }
+                  : null
+              }
+            />
+          </div>
+        </PollProvider>
+      </div>
     </div>
   );
 }
