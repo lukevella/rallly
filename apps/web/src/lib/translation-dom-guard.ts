@@ -9,6 +9,15 @@ const INSTALLED = Symbol.for("rallly.translationDomGuard");
 
 type GuardedPrototype = typeof Node.prototype & { [INSTALLED]?: true };
 
+// A text node a translator detached, or wrapped while leaving it under
+// `parent`. Anything else keeps the native NotFoundError.
+function isTranslatedText(parent: Node, node: Node) {
+  return (
+    node.nodeType === Node.TEXT_NODE &&
+    (node.parentNode === null || parent.contains(node))
+  );
+}
+
 // The direct child of `parent` that contains `node`, when a wrapper was
 // inserted between them.
 function childContaining(parent: Node, node: Node) {
@@ -34,12 +43,12 @@ export function installTranslationDomGuard() {
     this: Node,
     child: T,
   ): T {
-    if (child.parentNode === this) {
+    if (child.parentNode === this || !isTranslatedText(this, child)) {
       return originalRemoveChild.call(this, child) as T;
     }
     // Wrapped in a <font> that is still under this parent: remove it from
     // where it is. Already detached by the translator: nothing to remove.
-    if (child.parentNode && this.contains(child)) {
+    if (child.parentNode) {
       return originalRemoveChild.call(child.parentNode, child) as T;
     }
     return child;
@@ -51,7 +60,7 @@ export function installTranslationDomGuard() {
     node: T,
     child: Node | null,
   ): T {
-    if (!child || child.parentNode === this) {
+    if (!child || child.parentNode === this || !isTranslatedText(this, child)) {
       return originalInsertBefore.call(this, node, child) as T;
     }
     // The reference node is wrapped: insert before its wrapper. It was
