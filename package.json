@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.64.1",
     "@shadcn/lint": "^0.1.0",
     "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
