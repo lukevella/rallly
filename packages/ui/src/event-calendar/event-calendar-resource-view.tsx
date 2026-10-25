@@ -5,7 +5,7 @@
 
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { addDays } from "date-fns";
+import { addDays, addMinutes } from "date-fns";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { cn } from "../lib/utils";
@@ -29,15 +29,13 @@ import {
   EventCalendarEvent,
 } from "./event-calendar-event";
 import {
-  atWallMinutes,
   flattenResources,
   getDayKey,
-  MINUTES_PER_DAY,
+  getDayTotalMinutes,
   packTimedSegments,
   resolveOffDay,
   snapMinutes,
   toZoned,
-  wallMinutesOfDay,
   zonedStartOfDay,
 } from "./event-calendar-lib";
 import {
@@ -484,7 +482,7 @@ function EventCalendarResourceColumn({
 
   const timeZone = settings.timeZone;
   const dayStart = zonedStartOfDay(day, timeZone);
-  const totalMinutes = MINUTES_PER_DAY;
+  const totalMinutes = getDayTotalMinutes(day, timeZone);
   const boundsStartMin = startHour * 60;
   const boundsEndMin = Math.min(endHour * 60, totalMinutes);
   const boundsMinutes = Math.max(60, boundsEndMin - boundsStartMin);
@@ -522,11 +520,11 @@ function EventCalendarResourceColumn({
         drag.proposedResourceId ?? drag.occurrence.event.resourceId;
       if (targetResourceId !== resource.id) return null;
       const from = Math.max(
-        wallMinutesOfDay(drag.proposedStart, dayStart, settings.timeZone),
+        (drag.proposedStart.getTime() - dayStart.getTime()) / 60000,
         boundsStartMin,
       );
       const to = Math.min(
-        wallMinutesOfDay(drag.proposedEnd, dayStart, settings.timeZone),
+        (drag.proposedEnd.getTime() - dayStart.getTime()) / 60000,
         boundsEndMin,
       );
       if (to <= from) return null;
@@ -564,11 +562,11 @@ function EventCalendarResourceColumn({
         return null;
       }
       const from = Math.max(
-        wallMinutesOfDay(draft.start, dayStart, settings.timeZone),
+        (draft.start.getTime() - dayStart.getTime()) / 60000,
         boundsStartMin,
       );
       const to = Math.min(
-        wallMinutesOfDay(draft.end, dayStart, settings.timeZone),
+        (draft.end.getTime() - dayStart.getTime()) / 60000,
         boundsEndMin,
       );
       return to > from ? [from, to] : null;
@@ -628,12 +626,8 @@ function EventCalendarResourceColumn({
         );
         settings.onSlotClick?.(
           {
-            date: atWallMinutes(dayStart, clamped, timeZone),
-            end: atWallMinutes(
-              dayStart,
-              clamped + settings.slotDuration,
-              timeZone,
-            ),
+            date: addMinutes(dayStart, clamped),
+            end: addMinutes(dayStart, clamped + settings.slotDuration),
             allDay: false,
             view: "resource",
             resourceId: resource.id,

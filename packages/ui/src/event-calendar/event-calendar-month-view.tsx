@@ -42,7 +42,6 @@ import {
   getRangeKey,
   resolveOffDay,
   toZoned,
-  wallMinutesOfDay,
   zonedStartOfDay,
 } from "./event-calendar-lib";
 import type {
@@ -694,11 +693,7 @@ function EventCalendarMonthCell({
       )
         return null;
       return {
-        min: wallMinutesOfDay(
-          drag.proposedStart,
-          drag.proposedStart,
-          settings.timeZone,
-        ),
+        min: (drag.proposedStart.getTime() - dropDayMs) / 60000,
         valid: drag.valid,
         color: drag.occurrence.event.color,
       };

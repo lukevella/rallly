@@ -3,18 +3,11 @@
 
 "use client";
 
-import { addDays, differenceInCalendarDays } from "date-fns";
+import { addDays, addMinutes, differenceInCalendarDays } from "date-fns";
 import { useCallback, useMemo } from "react";
 import type { EventCalendarInstance } from "./event-calendar";
 import { useEventCalendar, useEventCalendarViewConfig } from "./event-calendar";
-import {
-  atWallMinutes,
-  MINUTES_PER_DAY,
-  snapMinutes,
-  toZoned,
-  wallMinutesOfDay,
-  zonedStartOfDay,
-} from "./event-calendar-lib";
+import { snapMinutes, toZoned, zonedStartOfDay } from "./event-calendar-lib";
 import type {
   EventCalendarProposedUpdate,
   EventCalendarSegment,
@@ -355,11 +348,10 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
     if (kind === "move" && occurrence && surface.columns.length > 0 && !isBar) {
       const col = findColumn(surface, startX);
       if (col) {
-        const startMin = wallMinutesOfDay(
-          occurrence.start,
-          occurrence.start,
-          timeZone,
-        );
+        const startMin =
+          (occurrence.start.getTime() -
+            zonedStartOfDay(occurrence.start, timeZone).getTime()) /
+          60000;
         grabOffsetMin = pointerMinutes(surface, col, startY) - startMin;
       }
     }
@@ -403,9 +395,10 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
         col.boundsEndMin,
         Math.max(anchorMin, curMin, lo + snap),
       );
+      const dayStart = zonedStartOfDay(col.day, timeZone);
       return {
-        start: atWallMinutes(col.day, lo, timeZone),
-        end: atWallMinutes(col.day, hi, timeZone),
+        start: addMinutes(dayStart, lo),
+        end: addMinutes(dayStart, hi),
         allDay: false,
         resourceId: col.resourceId,
       };
@@ -454,11 +447,10 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
       }
       // bar edge resize: day granularity
       if (kind === "resize-start") {
-        const start = atWallMinutes(
-          targetDay,
-          wallMinutesOfDay(occurrence.start, occurrence.start, timeZone),
-          timeZone,
-        );
+        const time =
+          occurrence.start.getTime() -
+          zonedStartOfDay(occurrence.start, timeZone).getTime();
+        const start = new Date(targetDay.getTime() + time);
         if (start >= occurrence.end) return null;
         return {
           start,
@@ -469,10 +461,11 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
       }
       const time = occurrence.allDay
         ? 0
-        : wallMinutesOfDay(occurrence.end, occurrence.end, timeZone);
+        : occurrence.end.getTime() -
+          zonedStartOfDay(occurrence.end, timeZone).getTime();
       const end = occurrence.allDay
         ? addDays(targetDay, 1)
-        : atWallMinutes(targetDay, time > 0 ? time : MINUTES_PER_DAY, timeZone);
+        : new Date(addDays(targetDay, time > 0 ? 0 : 1).getTime() + time);
       if (end <= occurrence.start) return null;
       return {
         start: occurrence.start,
@@ -490,16 +483,15 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
 
     if (kind === "move") {
       const newStartMin = snapMinutes(rawMin - grabOffsetMin, snap);
-      const durationMin =
-        wallMinutesOfDay(occurrence.end, occurrence.start, timeZone) -
-        wallMinutesOfDay(occurrence.start, occurrence.start, timeZone);
+      const durationMin = Math.round(durationMs / 60000);
       const clamped = Math.min(
         Math.max(newStartMin, col.boundsStartMin),
         col.boundsEndMin - durationMin,
       );
+      const start = addMinutes(dayStart, clamped);
       return {
-        start: atWallMinutes(dayStart, clamped, timeZone),
-        end: atWallMinutes(dayStart, clamped + durationMin, timeZone),
+        start,
+        end: new Date(start.getTime() + durationMs),
         allDay: false,
         resourceId: col.resourceId,
       };
@@ -511,18 +503,18 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
     // a 23:30 pointer in the start day's column would apply 1410 minutes to
     // the end's next-day anchor and jump the end a full day late (and a
     // midnight-ending event computes occEndMin 0 against its own day).
-    const occStartMinInCol = wallMinutesOfDay(
-      occurrence.start,
-      dayStart,
-      timeZone,
+    const occStartMinInCol = Math.round(
+      (occurrence.start.getTime() - dayStart.getTime()) / 60000,
     );
-    const occEndMinInCol = wallMinutesOfDay(occurrence.end, dayStart, timeZone);
+    const occEndMinInCol = Math.round(
+      (occurrence.end.getTime() - dayStart.getTime()) / 60000,
+    );
     if (kind === "resize-start") {
       const clamped = Math.min(
         Math.max(min, col.boundsStartMin),
         Math.min(occEndMinInCol - snap, col.boundsEndMin),
       );
-      const start = atWallMinutes(dayStart, clamped, timeZone);
+      const start = addMinutes(dayStart, clamped);
       if (start >= occurrence.end) return null;
       return { start, end: occurrence.end, allDay: false };
     }
@@ -530,7 +522,7 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
       Math.min(min, col.boundsEndMin),
       Math.max(occStartMinInCol + snap, col.boundsStartMin),
     );
-    const end = atWallMinutes(dayStart, clamped, timeZone);
+    const end = addMinutes(dayStart, clamped);
     if (end <= occurrence.start) return null;
     return { start: occurrence.start, end, allDay: false };
   };

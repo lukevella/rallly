@@ -5,7 +5,7 @@
 
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { addDays, format } from "date-fns";
+import { addDays, addMinutes, differenceInMinutes, format } from "date-fns";
 import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "../lib/utils";
@@ -30,14 +30,11 @@ import {
   EventCalendarEvent,
 } from "./event-calendar-event";
 import {
-  atWallMinutes,
   getDayKey,
-  getGutterReferenceDay,
+  getDayTotalMinutes,
   getRangeKey,
-  MINUTES_PER_DAY,
   resolveOffDay,
   toZoned,
-  wallMinutesOfDay,
   zonedStartOfDay,
 } from "./event-calendar-lib";
 import type {
@@ -778,8 +775,7 @@ function EventCalendarTimeGutter({
 }) {
   const settings = useEventCalendarSettings();
   const viewConfig = useEventCalendarViewConfig();
-  const referenceDay =
-    getGutterReferenceDay(days, settings.timeZone) ?? new Date();
+  const referenceDay = days[0] ?? new Date();
   const labelFormat =
     interval % 60 === 0
       ? settings.i18n.formats.timeGutter
@@ -793,7 +789,10 @@ function EventCalendarTimeGutter({
       )}
     >
       {slots.map((minutes) => {
-        const time = atWallMinutes(referenceDay, minutes, settings.timeZone);
+        const time = addMinutes(
+          zonedStartOfDay(referenceDay, settings.timeZone),
+          minutes,
+        );
         // Always consult renderTimeGutterSlot (a consumer may label the first
         // slot); only the DEFAULT label is suppressed at the day-start edge.
         const label =
@@ -906,7 +905,7 @@ function EventCalendarDayColumn({
   const timeZone = settings.timeZone;
   const dayStart = zonedStartOfDay(day, timeZone);
   const dayEnd = addDays(toZoned(dayStart, timeZone), 1);
-  const totalMinutes = MINUTES_PER_DAY;
+  const totalMinutes = getDayTotalMinutes(day, timeZone);
   const boundsStartMin = startHour * 60;
   const boundsEndMin = Math.min(endHour * 60, totalMinutes);
   const boundsMinutes = Math.max(60, boundsEndMin - boundsStartMin);
@@ -915,11 +914,11 @@ function EventCalendarDayColumn({
   const windowFor = (start: Date, end: Date): [number, number] | null => {
     if (start >= dayEnd || end <= dayStart) return null;
     const from = Math.max(
-      wallMinutesOfDay(start > dayStart ? start : dayStart, dayStart, timeZone),
+      differenceInMinutes(start > dayStart ? start : dayStart, dayStart),
       boundsStartMin,
     );
     const to = Math.min(
-      wallMinutesOfDay(end < dayEnd ? end : dayEnd, dayStart, timeZone),
+      differenceInMinutes(end < dayEnd ? end : dayEnd, dayStart),
       boundsEndMin,
     );
     return to > from ? [from, to] : null;
@@ -998,8 +997,8 @@ function EventCalendarDayColumn({
       boundsEndMin - settings.slotDuration,
     );
     return {
-      date: atWallMinutes(dayStart, clamped, timeZone),
-      end: atWallMinutes(dayStart, clamped + settings.slotDuration, timeZone),
+      date: addMinutes(dayStart, clamped),
+      end: addMinutes(dayStart, clamped + settings.slotDuration),
     };
   };
 
@@ -1199,7 +1198,8 @@ function EventCalendarNowIndicator({
   );
   if (todayIndex === -1) return null;
 
-  const minutes = wallMinutesOfDay(now, now, timeZone);
+  const dayStart = zonedStartOfDay(now, timeZone);
+  const minutes = differenceInMinutes(now, dayStart);
   if (minutes < startHour * 60 || minutes > endHour * 60) return null;
   const top = minutes / 60 - startHour;
 

@@ -44,89 +44,13 @@ function getDayKey(date: Date, timeZone: string): string {
   return format(toZoned(date, timeZone), "yyyy-MM-dd");
 }
 
-/**
- * Time-grid rows are wall-clock times, so every day has 1440 of them, DST
- * transition days included: the 10:00 row reads 10:00 on every column.
- */
-const MINUTES_PER_DAY = 24 * 60;
-
-/**
- * What the display zone's clocks read at `date`, in minutes past midnight of
- * `day`'s calendar date (1440 or more once `date` is on a later day).
- */
-function wallMinutesOfDay(date: Date, day: Date, timeZone: string): number {
-  const zoned = toZoned(date, timeZone);
-  return (
-    differenceInCalendarDays(zoned, toZoned(day, timeZone)) * MINUTES_PER_DAY +
-    zoned.getHours() * 60 +
-    zoned.getMinutes()
-  );
-}
-
-/** Clock fields of `date` in `timeZone`, encoded as if they were UTC. */
-function wallClockAt(date: number, timeZone: string): number {
-  const zoned = toZoned(new Date(date), timeZone);
-  return Date.UTC(
-    zoned.getFullYear(),
-    zoned.getMonth(),
-    zoned.getDate(),
-    zoned.getHours(),
-    zoned.getMinutes(),
-    zoned.getSeconds(),
-    zoned.getMilliseconds(),
-  );
-}
-
-/**
- * The instant the display zone's clocks read `minutes` past midnight on
- * `day`'s calendar date. A time skipped by a forward transition lands after
- * it (02:30 becomes 03:30); a repeated time resolves to its first occurrence.
- *
- * Built from offsets rather than TZDate's field constructor, which resolves
- * the fields through the system zone and drops an hour when they fall in one
- * of the system zone's own skipped hours.
- */
-function atWallMinutes(day: Date, minutes: number, timeZone: string): TZDate {
-  const zoned = toZoned(day, timeZone);
-  const wall = Date.UTC(
-    zoned.getFullYear(),
-    zoned.getMonth(),
-    zoned.getDate(),
-    0,
-    minutes,
-  );
-  const dayMs = MINUTES_PER_DAY * 60_000;
-  const offsetAt = (instant: number) =>
-    wallClockAt(instant, timeZone) - instant;
-  const earlier = wall - offsetAt(wall - dayMs);
-  const later = wall - offsetAt(wall + dayMs);
-  const exact = [earlier, later].filter(
-    (instant) => wallClockAt(instant, timeZone) === wall,
-  );
-  return toZoned(
-    new Date(exact.length > 0 ? Math.min(...exact) : earlier),
+/** Day length in minutes; 1380/1500 on DST transition days - never assume 1440. */
+function getDayTotalMinutes(dayStart: Date, timeZone: string): number {
+  const next = zonedStartOfDay(
+    addDays(toZoned(dayStart, timeZone), 1),
     timeZone,
   );
-}
-
-/**
- * The day the time gutter reads its labels from: the first with no clock
- * change, so the label of every row is a time that exists.
- */
-function getGutterReferenceDay(
-  days: Date[],
-  timeZone: string,
-): Date | undefined {
-  return (
-    days.find((day) => {
-      const start = zonedStartOfDay(day, timeZone);
-      const next = zonedStartOfDay(
-        addDays(toZoned(start, timeZone), 1),
-        timeZone,
-      );
-      return differenceInMinutes(next, start) === MINUTES_PER_DAY;
-    }) ?? days[0]
-  );
+  return differenceInMinutes(next, dayStart);
 }
 
 function snapMinutes(minutes: number, snap: number): number {
@@ -270,15 +194,12 @@ function segmentOccurrence<TData>(
         continuesAfter: !isEnd,
         startMin: occurrence.allDay
           ? undefined
-          : wallMinutesOfDay(segStart, cursor, timeZone),
+          : differenceInMinutes(segStart, cursor),
         endMin: occurrence.allDay
           ? undefined
           : Math.max(
-              Math.min(
-                wallMinutesOfDay(segEnd, cursor, timeZone),
-                MINUTES_PER_DAY,
-              ),
-              wallMinutesOfDay(segStart, cursor, timeZone),
+              differenceInMinutes(segEnd, cursor),
+              differenceInMinutes(segStart, cursor),
             ),
       });
     }
@@ -679,18 +600,16 @@ function resolveOffDay(
 }
 
 export {
-  atWallMinutes,
   buildEventIndex,
   defaultEventOrder,
   eventsOverlap,
   flattenResources,
   getDayKey,
-  getGutterReferenceDay,
+  getDayTotalMinutes,
   getRangeKey,
   getViewDateRange,
   isBarOccurrence,
   MIN_PACK_SLOT,
-  MINUTES_PER_DAY,
   packTimedSegments,
   packWeekRowLanes,
   rangesIntersect,
@@ -700,7 +619,6 @@ export {
   spansMultipleDays,
   stepDate,
   toZoned,
-  wallMinutesOfDay,
   zonedStartOfDay,
 };
 export type {
