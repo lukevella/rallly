@@ -420,8 +420,7 @@ export async function deleteParticipant({
       // Hard delete: votes cascade, the invite's SetNull FK reverts it to
       // pending, and the response frees the token it took from that invite
       // so the next response through the same link can take it again. The
-      // activity row above is the historical record. A pending invite means
-      // the host waits on that invitee again.
+      // activity row above is the historical record.
       await tx.participant.delete({ where: { id: participantId } });
 
       if (snapshot.invite) {

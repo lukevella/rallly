@@ -21,14 +21,8 @@ class InviteClaimedElsewhere extends Error {}
  * is about to commit. Callers lock before they touch invite rows, so the
  * lock order is always poll first, then invite.
  */
-async function lockPollReadyToDecide(
-  tx: Prisma.TransactionClient,
-  pollId: string,
-) {
-  const [poll] = await tx.$queryRaw<{ ready_to_decide: boolean }[]>`
-    SELECT ready_to_decide FROM polls WHERE id = ${pollId} FOR UPDATE
-  `;
-  return poll?.ready_to_decide ?? false;
+async function lockPollRow(tx: Prisma.TransactionClient, pollId: string) {
+  await tx.$queryRaw`SELECT 1 FROM polls WHERE id = ${pollId} FOR UPDATE`;
 }
 
 function countPendingPollInvites(tx: Prisma.TransactionClient, pollId: string) {
@@ -37,19 +31,27 @@ function countPendingPollInvites(tx: Prisma.TransactionClient, pollId: string) {
   });
 }
 
+async function markPollReady(tx: Prisma.TransactionClient, pollId: string) {
+  await tx.poll.updateMany({
+    where: { id: pollId, readyToDecide: false },
+    data: { readyToDecide: true },
+  });
+}
+
 /**
  * A pending invite means the host is waiting on someone again, so a poll
  * that was ready to decide goes back to collecting. The caller holds the
- * poll row lock.
+ * poll row lock. Returns whether the flag changed.
  */
 export async function markPollCollecting(
   tx: Prisma.TransactionClient,
   pollId: string,
 ) {
-  await tx.poll.updateMany({
+  const { count } = await tx.poll.updateMany({
     where: { id: pollId, readyToDecide: true },
     data: { readyToDecide: false },
   });
+  return count > 0;
 }
 
 /**
@@ -70,14 +72,9 @@ export async function markPollReadyIfInvitesAnswered(
     where: { pollId, participantId: { not: null }, revokedAt: null },
   });
 
-  if (responded === 0) {
-    return;
+  if (responded > 0) {
+    await markPollReady(tx, pollId);
   }
-
-  await tx.poll.updateMany({
-    where: { id: pollId, readyToDecide: false },
-    data: { readyToDecide: true },
-  });
 }
 
 export type SendPollInviteResult =
@@ -192,7 +189,7 @@ export async function sendPollInvite({
   };
   try {
     sent = await prisma.$transaction(async (tx) => {
-      const wasReadyToDecide = await lockPollReadyToDecide(tx, pollId);
+      await lockPollRow(tx, pollId);
 
       let row: { id: string; email: string };
       if (existing) {
@@ -224,7 +221,7 @@ export async function sendPollInvite({
         },
       ]);
 
-      await markPollCollecting(tx, pollId);
+      const wasReadyToDecide = await markPollCollecting(tx, pollId);
 
       return { invite: row, wasReadyToDecide };
     });
@@ -270,7 +267,7 @@ export async function sendPollInvite({
     // unless another invite is now pending.
     try {
       await prisma.$transaction(async (tx) => {
-        await lockPollReadyToDecide(tx, pollId);
+        await lockPollRow(tx, pollId);
         await tx.pollActivity.deleteMany({
           where: {
             pollId,
@@ -294,11 +291,7 @@ export async function sendPollInvite({
           wasReadyToDecide &&
           (await countPendingPollInvites(tx, pollId)) === 0
         ) {
-          await tx.poll.update({
-            where: { id: pollId },
-            data: { readyToDecide: true },
-            select: { id: true },
-          });
+          await markPollReady(tx, pollId);
         }
       });
     } catch (rollbackError) {
@@ -422,7 +415,7 @@ export async function revokePollInvite({
   userId: string;
 }): Promise<RevokePollInviteResult> {
   return prisma.$transaction(async (tx) => {
-    await lockPollReadyToDecide(tx, pollId);
+    await lockPollRow(tx, pollId);
 
     const invite = await tx.pollInvite.findFirst({
       where: { id: inviteId, pollId, revokedAt: null },

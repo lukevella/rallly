@@ -86,9 +86,9 @@ async function deleteResponse(page: Page, name: string) {
     .toBe(0);
 }
 
-async function isReadyToDecide() {
+async function isReadyToDecide(title = POLL_TITLE) {
   const { readyToDecide } = await prisma.poll.findFirstOrThrow({
-    where: { title: POLL_TITLE },
+    where: { title },
     select: { readyToDecide: true },
   });
   return readyToDecide;
@@ -222,7 +222,7 @@ test.describe("Email invites", () => {
     await new InvitePage(guest.guestPage).addParticipant("Invited Guest");
     await guest.close();
     // The only invitee has responded, so the host has no one to wait for.
-    await expect.poll(isReadyToDecide).toBe(true);
+    await expect.poll(() => isReadyToDecide()).toBe(true);
     const converted = await prisma.pollInvite.findUniqueOrThrow({
       where: { id: invite.id },
       select: { token: true, participant: { select: { token: true } } },
@@ -273,7 +273,7 @@ test.describe("Email invites", () => {
       select: { token: true, participant: { select: { token: true } } },
     });
     expect(reconverted.participant?.token).toBe(reconverted.token);
-    await expect.poll(isReadyToDecide).toBe(true);
+    await expect.poll(() => isReadyToDecide()).toBe(true);
 
     const finalDialog = await reopenShareDialog(page);
     const respondedAgainRow = finalDialog
@@ -297,7 +297,7 @@ test.describe("Email invites", () => {
       .click();
     await page.getByRole("menuitem", { name: "Remove invite" }).click();
     await expect(pendingRow).toBeHidden();
-    await expect.poll(isReadyToDecide).toBe(true);
+    await expect.poll(() => isReadyToDecide()).toBe(true);
   });
 
   test("creation opens the dialog and leaves the URL clean", async ({
@@ -343,11 +343,7 @@ test.describe("Email invites", () => {
     });
     expect(revoked.revokedAt).not.toBeNull();
     // No invitee has responded, so removing the only invite changes nothing.
-    const cleanUrlPoll = await prisma.poll.findFirstOrThrow({
-      where: { title: `${POLL_TITLE} Clean URL` },
-      select: { readyToDecide: true },
-    });
-    expect(cleanUrlPoll.readyToDecide).toBe(false);
+    expect(await isReadyToDecide(`${POLL_TITLE} Clean URL`)).toBe(false);
     expect(
       await prisma.pollActivity.count({
         where: { inviteId: revoked.id, type: "invite_revoked" },
