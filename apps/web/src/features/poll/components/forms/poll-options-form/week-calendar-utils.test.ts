@@ -9,8 +9,9 @@ import {
   instantToFloating,
   isDuplicate,
   optionsToEvents,
-  slotExistsIn,
+  skippedMinuteRanges,
   slotToTimeOption,
+  startExistsIn,
 } from "./week-calendar-utils";
 
 const d = floatingToDate;
@@ -80,29 +81,41 @@ describe("instantToFloating / floatingToInstant", () => {
   });
 });
 
-describe("slotExistsIn", () => {
-  const springForward = {
-    type: "timeSlot",
-    start: "2027-03-14T02:00:00",
-    end: "2027-03-14T03:00:00",
-  } as const;
+describe("startExistsIn", () => {
+  const slot = (start: string, end: string) =>
+    ({ type: "timeSlot", start, end }) as const;
 
   it("rejects a slot that starts in a skipped hour of the poll's zone", () => {
-    expect(slotExistsIn(springForward, "America/Chicago")).toBe(false);
+    expect(
+      startExistsIn(
+        slot("2027-03-14T02:00:00", "2027-03-14T03:00:00"),
+        "America/Chicago",
+      ),
+    ).toBe(false);
   });
 
-  it("accepts the same slot in a poll zone without that change", () => {
-    expect(slotExistsIn(springForward, "Asia/Kathmandu")).toBe(true);
+  it("accepts a slot that runs into the skipped hour", () => {
+    expect(
+      startExistsIn(
+        slot("2027-03-14T01:30:00", "2027-03-14T02:30:00"),
+        "America/Chicago",
+      ),
+    ).toBe(true);
+  });
+
+  it("accepts the same start in a poll zone without that change", () => {
+    expect(
+      startExistsIn(
+        slot("2027-03-14T02:00:00", "2027-03-14T03:00:00"),
+        "Asia/Kathmandu",
+      ),
+    ).toBe(true);
   });
 
   it("accepts a slot in the repeated fall back hour", () => {
     expect(
-      slotExistsIn(
-        {
-          type: "timeSlot",
-          start: "2026-11-01T01:00:00",
-          end: "2026-11-01T02:00:00",
-        },
+      startExistsIn(
+        slot("2026-11-01T01:00:00", "2026-11-01T02:00:00"),
         "America/Chicago",
       ),
     ).toBe(true);
@@ -145,5 +158,25 @@ describe("durationMinutes / cap", () => {
   });
   it("cap is 24h", () => {
     expect(DURATION_CAP_MINUTES).toBe(1440);
+  });
+});
+
+describe("skippedMinuteRanges", () => {
+  it("finds the hour Chicago skips when it springs forward", () => {
+    expect(skippedMinuteRanges("2027-03-14", "America/Chicago")).toEqual([
+      [120, 180],
+    ]);
+  });
+
+  it("finds a half hour change", () => {
+    expect(skippedMinuteRanges("2026-10-04", "Australia/Lord_Howe")).toEqual([
+      [120, 150],
+    ]);
+  });
+
+  it("is empty when clocks fall back or don't change", () => {
+    expect(skippedMinuteRanges("2026-11-01", "America/Chicago")).toEqual([]);
+    expect(skippedMinuteRanges("2027-03-15", "America/Chicago")).toEqual([]);
+    expect(skippedMinuteRanges("2027-03-14", "Asia/Kathmandu")).toEqual([]);
   });
 });
