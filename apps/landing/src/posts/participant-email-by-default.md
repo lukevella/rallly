@@ -15,8 +15,8 @@ Participants lose out too. Without an email there's no link to come back to, so 
 
 ## What changes
 
-- **Require email** is on by default for every new poll, on every plan.
-- Participants see a short note under the email field explaining what they get for leaving one.
+- **Require email** is on by default for new polls you create in Rallly, on every plan. Polls created through the API keep their current default.
+- Participants can click **Why?** next to the email field to see what they get for leaving one.
 - Existing polls keep their current setting.
 
 If you'd rather let people respond with just their name, for a quick poll in a group chat for example, turn off **Require email** under **Settings** when you create or edit the poll.
