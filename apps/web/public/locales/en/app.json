@@ -861,6 +861,7 @@
   "pollResponsesListEmpty": "No responses",
   "pollResponsesListEmptyDescription": "Responses will show up here once participants vote.",
   "pollResponsesListNote": "Note",
+  "pollSettingsAdvanced": "Advanced",
   "polls": "Polls",
   "pollsListActions": "Actions",
   "pollsListDates": "Dates",

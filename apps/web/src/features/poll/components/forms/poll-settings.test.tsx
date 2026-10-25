@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
-import { render, screen } from "@/test/test-utils";
+import { render, screen, within } from "@/test/test-utils";
 
 vi.mock("@rallly/posthog/client", () => ({
   posthog: { capture: vi.fn() },
@@ -70,6 +70,19 @@ describe("PollSettingsForm require email setting on a free space", () => {
     await user.click(emailSwitch);
     expect(emailSwitch).not.toBeChecked();
     expect(billing.showPayWall).not.toHaveBeenCalled();
+  });
+
+  it("labels the advanced section as Pro instead of each setting", () => {
+    render(<TestForm />);
+    const advanced = screen.getByRole("group", { name: /advanced/i });
+    expect(advanced).toHaveTextContent(/pro/i);
+    expect(screen.getAllByText(/^pro$/i)).toHaveLength(1);
+    expect(
+      within(advanced).getByRole("switch", { name: /hide participant names/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(advanced).getByRole("switch", { name: /hide votes/i }),
+    ).toBeInTheDocument();
   });
 
   it("keeps hide participant names behind the pay wall", async () => {
