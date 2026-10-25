@@ -7,6 +7,8 @@ import { MAX_PARTICIPANTS } from "@/features/poll/constants";
 import {
   attachParticipantToInvite,
   findPendingPollInvite,
+  markPollCollecting,
+  markPollReadyIfInvitesAnswered,
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
 import { generateAccessToken } from "@/features/poll/utils";
@@ -252,6 +254,7 @@ export async function addParticipant({
           inviteId: invite.id,
           participantId: participant.id,
         });
+        await markPollReadyIfInvitesAnswered(tx, pollId);
       }
 
       const { poll, ...participantFields } = participant;
@@ -399,6 +402,7 @@ export async function deleteParticipant({
         where: { id: participantId, pollId },
         select: {
           name: true,
+          invite: { select: { id: true } },
           votes: {
             select: {
               optionId: true,
@@ -416,8 +420,13 @@ export async function deleteParticipant({
       // Hard delete: votes cascade, the invite's SetNull FK reverts it to
       // pending, and the response frees the token it took from that invite
       // so the next response through the same link can take it again. The
-      // activity row above is the historical record.
+      // activity row above is the historical record. A pending invite means
+      // the host waits on that invitee again.
       await tx.participant.delete({ where: { id: participantId } });
+
+      if (snapshot.invite) {
+        await markPollCollecting(tx, pollId);
+      }
 
       await recordPollActivities(tx, [
         {

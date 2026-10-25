@@ -21,6 +21,7 @@ const PRO_HOST = "email-invites-pro@rallly.co";
 const FREE_HOST = "email-invites-free@rallly.co";
 const CLEAN_URL_HOST = "email-invites-clean-url@rallly.co";
 const INVITEE = "email-invitee@rallly.co";
+const SECOND_INVITEE = "second-invitee@rallly.co";
 const POLL_TITLE = "Email Invites Poll";
 
 test.describe.configure({ mode: "serial" });
@@ -83,6 +84,14 @@ async function deleteResponse(page: Page, name: string) {
       }),
     )
     .toBe(0);
+}
+
+async function isReadyToDecide() {
+  const { readyToDecide } = await prisma.poll.findFirstOrThrow({
+    where: { title: POLL_TITLE },
+    select: { readyToDecide: true },
+  });
+  return readyToDecide;
 }
 
 async function reopenShareDialog(page: Page) {
@@ -212,6 +221,8 @@ test.describe("Email invites", () => {
     // and the response takes the invite's token as its own.
     await new InvitePage(guest.guestPage).addParticipant("Invited Guest");
     await guest.close();
+    // The only invitee has responded, so the host has no one to wait for.
+    await expect.poll(isReadyToDecide).toBe(true);
     const converted = await prisma.pollInvite.findUniqueOrThrow({
       where: { id: invite.id },
       select: { token: true, participant: { select: { token: true } } },
@@ -249,6 +260,7 @@ test.describe("Email invites", () => {
     expect(reverted.participantId).toBeNull();
     expect(reverted.revokedAt).toBeNull();
     expect(reverted.token).toBe(converted.token);
+    expect(await isReadyToDecide()).toBe(false);
 
     // Responding through the same link a second time converts it again and
     // takes the token back.
@@ -261,11 +273,31 @@ test.describe("Email invites", () => {
       select: { token: true, participant: { select: { token: true } } },
     });
     expect(reconverted.participant?.token).toBe(reconverted.token);
+    await expect.poll(isReadyToDecide).toBe(true);
 
-    const respondedAgainRow = (await reopenShareDialog(page))
+    const finalDialog = await reopenShareDialog(page);
+    const respondedAgainRow = finalDialog
       .getByRole("listitem")
       .filter({ hasText: INVITEE });
     await expect(respondedAgainRow.getByText("Responded")).toBeVisible();
+
+    // A new invite puts the poll back to collecting. Removing it leaves
+    // only answered invites, so the poll is ready to decide again.
+    const finalField = finalDialog.getByLabel("Email address");
+    await finalField.fill(SECOND_INVITEE);
+    await finalField.press("Enter");
+    const pendingRow = finalDialog
+      .getByRole("listitem")
+      .filter({ hasText: SECOND_INVITEE });
+    await expect(pendingRow.getByText("Sent")).toBeVisible();
+    expect(await isReadyToDecide()).toBe(false);
+
+    await pendingRow
+      .getByRole("button", { name: `Options for ${SECOND_INVITEE}` })
+      .click();
+    await page.getByRole("menuitem", { name: "Remove invite" }).click();
+    await expect(pendingRow).toBeHidden();
+    await expect.poll(isReadyToDecide).toBe(true);
   });
 
   test("creation opens the dialog and leaves the URL clean", async ({
@@ -310,6 +342,12 @@ test.describe("Email invites", () => {
       select: { id: true, revokedAt: true },
     });
     expect(revoked.revokedAt).not.toBeNull();
+    // No invitee has responded, so removing the only invite changes nothing.
+    const cleanUrlPoll = await prisma.poll.findFirstOrThrow({
+      where: { title: `${POLL_TITLE} Clean URL` },
+      select: { readyToDecide: true },
+    });
+    expect(cleanUrlPoll.readyToDecide).toBe(false);
     expect(
       await prisma.pollActivity.count({
         where: { inviteId: revoked.id, type: "invite_revoked" },

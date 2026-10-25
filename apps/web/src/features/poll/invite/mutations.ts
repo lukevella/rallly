@@ -15,6 +15,71 @@ const logger = createLogger("poll/invite/mutations");
 
 class InviteClaimedElsewhere extends Error {}
 
+/**
+ * Takes the poll row lock that every response write also takes, so the
+ * readyToDecide checks below see every pending invite another transaction
+ * is about to commit. Callers lock before they touch invite rows, so the
+ * lock order is always poll first, then invite.
+ */
+async function lockPollReadyToDecide(
+  tx: Prisma.TransactionClient,
+  pollId: string,
+) {
+  const [poll] = await tx.$queryRaw<{ ready_to_decide: boolean }[]>`
+    SELECT ready_to_decide FROM polls WHERE id = ${pollId} FOR UPDATE
+  `;
+  return poll?.ready_to_decide ?? false;
+}
+
+function countPendingPollInvites(tx: Prisma.TransactionClient, pollId: string) {
+  return tx.pollInvite.count({
+    where: { pollId, participantId: null, revokedAt: null },
+  });
+}
+
+/**
+ * A pending invite means the host is waiting on someone again, so a poll
+ * that was ready to decide goes back to collecting. The caller holds the
+ * poll row lock.
+ */
+export async function markPollCollecting(
+  tx: Prisma.TransactionClient,
+  pollId: string,
+) {
+  await tx.poll.updateMany({
+    where: { id: pollId, readyToDecide: true },
+    data: { readyToDecide: false },
+  });
+}
+
+/**
+ * Once every active invite has a response, the host has no one left to wait
+ * for. A poll with no responded invite keeps its flag, so a poll without an
+ * invite list only changes when the host changes it. The caller holds the
+ * poll row lock.
+ */
+export async function markPollReadyIfInvitesAnswered(
+  tx: Prisma.TransactionClient,
+  pollId: string,
+) {
+  if ((await countPendingPollInvites(tx, pollId)) > 0) {
+    return;
+  }
+
+  const responded = await tx.pollInvite.count({
+    where: { pollId, participantId: { not: null }, revokedAt: null },
+  });
+
+  if (responded === 0) {
+    return;
+  }
+
+  await tx.poll.updateMany({
+    where: { id: pollId, readyToDecide: false },
+    data: { readyToDecide: true },
+  });
+}
+
 export type SendPollInviteResult =
   | { ok: true; invite: { id: string; email: string } }
   | {
@@ -121,9 +186,14 @@ export async function sendPollInvite({
   // so the rollback below must only touch events from this attempt.
   const attemptStartedAt = new Date();
 
-  let invite: { id: string; email: string };
+  let sent: {
+    invite: { id: string; email: string };
+    wasReadyToDecide: boolean;
+  };
   try {
-    invite = await prisma.$transaction(async (tx) => {
+    sent = await prisma.$transaction(async (tx) => {
+      const wasReadyToDecide = await lockPollReadyToDecide(tx, pollId);
+
       let row: { id: string; email: string };
       if (existing) {
         // A revoked row is reactivated with a fresh token so a leaked old
@@ -154,7 +224,9 @@ export async function sendPollInvite({
         },
       ]);
 
-      return row;
+      await markPollCollecting(tx, pollId);
+
+      return { invite: row, wasReadyToDecide };
     });
   } catch (error) {
     // A concurrent send for the same poll/email either claimed the revoked
@@ -168,6 +240,8 @@ export async function sendPollInvite({
     }
     throw error;
   }
+
+  const { invite, wasReadyToDecide } = sent;
 
   try {
     await sendPollInviteEmail({
@@ -191,9 +265,12 @@ export async function sendPollInvite({
       "Failed to send poll invite email",
     );
     // Undo the row and its activity so the list never shows an invite that
-    // was never delivered. A reactivated row goes back to revoked.
+    // was never delivered. A reactivated row goes back to revoked, and a
+    // poll this send moved back to collecting is ready to decide again
+    // unless another invite is now pending.
     try {
       await prisma.$transaction(async (tx) => {
+        await lockPollReadyToDecide(tx, pollId);
         await tx.pollActivity.deleteMany({
           where: {
             pollId,
@@ -212,6 +289,16 @@ export async function sendPollInvite({
           });
         } else {
           await tx.pollInvite.deleteMany({ where: { id: invite.id, token } });
+        }
+        if (
+          wasReadyToDecide &&
+          (await countPendingPollInvites(tx, pollId)) === 0
+        ) {
+          await tx.poll.update({
+            where: { id: pollId },
+            data: { readyToDecide: true },
+            select: { id: true },
+          });
         }
       });
     } catch (rollbackError) {
@@ -322,7 +409,8 @@ export type RevokePollInviteResult =
  * re-invite reactivates it with a fresh token. A converted invite belongs
  * to the response, so it is refused here; the host removes the response
  * instead. The claim on `revokedAt IS NULL` serialises concurrent removes
- * so the activity event is written once.
+ * so the activity event is written once. Removing the last pending invite
+ * makes the poll ready to decide when the other invitees have responded.
  */
 export async function revokePollInvite({
   pollId,
@@ -334,6 +422,8 @@ export async function revokePollInvite({
   userId: string;
 }): Promise<RevokePollInviteResult> {
   return prisma.$transaction(async (tx) => {
+    await lockPollReadyToDecide(tx, pollId);
+
     const invite = await tx.pollInvite.findFirst({
       where: { id: inviteId, pollId, revokedAt: null },
       select: { id: true, email: true, participantId: true },
@@ -365,6 +455,8 @@ export async function revokePollInvite({
         payload: { email: invite.email },
       },
     ]);
+
+    await markPollReadyIfInvitesAnswered(tx, pollId);
 
     return { ok: true };
   });
