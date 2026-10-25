@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
@@ -152,8 +151,8 @@ function InviteResponseDonut({
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - Math.min(value, 1))}
-          className={cn(readyToDecide ? "stroke-green-500" : "stroke-gray-400")}
+          strokeDashoffset={circumference * (1 - value)}
+          className={readyToDecide ? "stroke-green-500" : "stroke-gray-400"}
         />
       ) : null}
     </svg>
