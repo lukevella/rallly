@@ -5,7 +5,12 @@ import type { AuthorizedSpaceId } from "@/features/space/types";
 // environment on import. Stub the env with nothing set.
 vi.mock("@/env", () => ({ env: {} }));
 
-import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";
+import {
+  closePoll,
+  deleteInactivePolls,
+  setPollMuted,
+  setPollReadyToDecide,
+} from "./mutations";
 
 const { mockUpdateMany, mockFindFirst, mockUpdate, mockActivityCreateMany } =
   vi.hoisted(() => ({
@@ -304,6 +309,38 @@ describe("setPollMuted", () => {
       pollId: "p1",
       userId: "not-the-owner",
       muted: true,
+    });
+
+    expect(result).toEqual({ ok: false, reason: "notFound" });
+  });
+});
+
+describe("setPollReadyToDecide", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("sets the flag and excludes deleted polls", async () => {
+    mockUpdateMany.mockResolvedValue({ count: 1 });
+
+    const result = await setPollReadyToDecide({
+      pollId: "p1",
+      readyToDecide: true,
+    });
+
+    expect(mockUpdateMany).toHaveBeenCalledWith({
+      where: { id: "p1", deleted: false },
+      data: { readyToDecide: true },
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("returns notFound when the poll is gone", async () => {
+    mockUpdateMany.mockResolvedValue({ count: 0 });
+
+    const result = await setPollReadyToDecide({
+      pollId: "p1",
+      readyToDecide: false,
     });
 
     expect(result).toEqual({ ok: false, reason: "notFound" });

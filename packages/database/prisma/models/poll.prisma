@@ -60,6 +60,9 @@ model Poll {
   /// are kept and stay visible.
   allowTentativeVotes     Boolean           @default(true) @map("allow_tentative_votes")
   muted                   Boolean           @default(false)
+  /// The host's own "done collecting, now choosing" marker. Independent of
+  /// status: it only decides which admin page opens first.
+  readyToDecide           Boolean           @default(false) @map("ready_to_decide")
 
   user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)

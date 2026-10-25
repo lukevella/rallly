@@ -1,4 +1,5 @@
 import { ActivityIcon, CalendarIcon, InboxIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -20,10 +21,12 @@ import { OverviewSection } from "./components/overview-section";
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ pollId: string }>;
+  searchParams: Promise<{ view?: string }>;
 }) {
-  const { pollId } = await params;
+  const [{ pollId }, { view }] = await Promise.all([params, searchParams]);
   const [poll, participants, results, topOptions, activity] = await Promise.all(
     [
       loadPoll(pollId),
@@ -34,6 +37,10 @@ export default async function Page({
     ],
   );
 
+  if (poll.readyToDecide && view !== "overview") {
+    redirect(`/polls/${pollId}/results`);
+  }
+
   return (
     <div className="space-y-8 px-7.5 pt-4 pb-8">
       <OverviewSection
@@ -43,7 +50,7 @@ export default async function Page({
             defaults="Most popular dates"
           />
         }
-        viewAllHref={`/polls/${pollId}/dates`}
+        viewAllHref={`/polls/${pollId}/results`}
         count={results.options.length}
       >
         {topOptions.options.length > 0 ? (

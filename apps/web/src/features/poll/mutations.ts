@@ -237,6 +237,28 @@ export const setPollMuted = async ({
   return { ok: true as const };
 };
 
+/**
+ * The caller proves the user can manage the poll; this only flips the flag.
+ */
+export const setPollReadyToDecide = async ({
+  pollId,
+  readyToDecide,
+}: {
+  pollId: string;
+  readyToDecide: boolean;
+}) => {
+  const { count } = await prisma.poll.updateMany({
+    where: { id: pollId, deleted: false },
+    data: { readyToDecide },
+  });
+
+  if (count === 0) {
+    return { ok: false as const, reason: "notFound" as const };
+  }
+
+  return { ok: true as const };
+};
+
 export const deletePoll = async (
   pollId: string,
   spaceId: AuthorizedSpaceId,

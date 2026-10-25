@@ -38,7 +38,7 @@ async function PollHeaderActions({
   params: Promise<{ pollId: string }>;
 }) {
   const { pollId } = await params;
-  await loadPoll(pollId);
+  const { readyToDecide } = await loadPoll(pollId);
   // The finalize dialog and CSV export read the whole poll, votes included,
   // from the poll provider.
   const { poll, participants, comments } = await loadAdminPoll(pollId);
@@ -50,7 +50,7 @@ async function PollHeaderActions({
       viewerRole="admin"
     >
       <PollAdminMenu />
-      <PollPrimaryActions />
+      <PollPrimaryActions readyToDecide={readyToDecide} />
     </PollProvider>
   );
 }

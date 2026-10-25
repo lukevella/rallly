@@ -39,3 +39,8 @@ export const setPollMutedSchema = z.object({
   pollId: z.string(),
   muted: z.boolean(),
 });
+
+export const setPollReadyToDecideSchema = z.object({
+  pollId: z.string(),
+  readyToDecide: z.boolean(),
+});

@@ -7,11 +7,14 @@ import { Trans } from "@/i18n/client";
 
 export function PollShellTabs() {
   const pathname = usePathname();
-  const basePath = pathname.replace(/\/(responses|dates|activity)$/, "");
+  const basePath = pathname.replace(/\/(responses|results|activity)$/, "");
 
   const tabs = [
     {
       href: basePath,
+      // The poll page opens Results while the poll is ready to decide, so
+      // the tab asks for the overview by name.
+      linkHref: `${basePath}?view=overview`,
       label: <Trans i18nKey="overview" defaults="Overview" />,
     },
     {
@@ -19,8 +22,8 @@ export function PollShellTabs() {
       label: <Trans i18nKey="responses" defaults="Responses" />,
     },
     {
-      href: `${basePath}/dates`,
-      label: <Trans i18nKey="dates" defaults="Dates" />,
+      href: `${basePath}/results`,
+      label: <Trans i18nKey="results" defaults="Results" />,
     },
     {
       href: `${basePath}/activity`,
@@ -35,7 +38,7 @@ export function PollShellTabs() {
         return (
           <Link
             key={tab.href}
-            href={tab.href}
+            href={tab.linkHref ?? tab.href}
             aria-current={isActive ? "page" : undefined}
             className={pillVariants({ selected: isActive })}
           >
