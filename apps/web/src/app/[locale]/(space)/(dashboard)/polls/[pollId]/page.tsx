@@ -27,19 +27,18 @@ export default async function Page({
   searchParams: Promise<{ view?: string }>;
 }) {
   const [{ pollId }, { view }] = await Promise.all([params, searchParams]);
-  const [poll, participants, results, topOptions, activity] = await Promise.all(
-    [
-      loadPoll(pollId),
-      loadPollParticipants(pollId),
-      loadPollResults(pollId),
-      loadPollTopOptions(pollId, 3),
-      loadPollActivity(pollId, 5),
-    ],
-  );
+  const poll = await loadPoll(pollId);
 
   if (poll.readyToDecide && view !== "overview") {
     redirect(`/polls/${pollId}/results`);
   }
+
+  const [participants, results, topOptions, activity] = await Promise.all([
+    loadPollParticipants(pollId),
+    loadPollResults(pollId),
+    loadPollTopOptions(pollId, 3),
+    loadPollActivity(pollId, 5),
+  ]);
 
   return (
     <div className="space-y-8 px-7.5 pt-4 pb-8">

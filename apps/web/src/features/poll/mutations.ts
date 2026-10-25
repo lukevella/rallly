@@ -237,9 +237,7 @@ export const setPollMuted = async ({
   return { ok: true as const };
 };
 
-/**
- * The caller proves the user can manage the poll; this only flips the flag.
- */
+// The caller proves the user can manage the poll.
 export const setPollReadyToDecide = async ({
   pollId,
   readyToDecide,
