@@ -551,7 +551,9 @@ export const polls = router({
         };
       }
 
-      let requireEmailChanged = false;
+      // Set inside the transaction: once it commits, a concurrent edit can
+      // change the setting before any later read.
+      let savedRequireEmail: boolean | undefined;
 
       await prisma.$transaction(async (tx) => {
         const newOptions =
@@ -771,9 +773,11 @@ export const polls = router({
           },
         });
 
-        requireEmailChanged = changes.some(
+        savedRequireEmail = changes.some(
           (change) => change.field === "requireParticipantEmail",
-        );
+        )
+          ? input.requireParticipantEmail
+          : undefined;
 
         await recordPollActivities(tx, [
           ...(deletedOptions.length > 0
@@ -936,12 +940,12 @@ export const polls = router({
         });
       }
 
-      if (requireEmailChanged) {
+      if (savedRequireEmail !== undefined) {
         track(ctx.user, {
           event: "poll_settings:require_email_change",
           properties: {
             poll_id: pollId,
-            value: updatedPoll.requireParticipantEmail,
+            value: savedRequireEmail,
             tier: updatedPoll.space?.tier,
           },
           groups: {
