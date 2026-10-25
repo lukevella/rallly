@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { posthog } from "@rallly/posthog/client";
 import { Dialog, DialogContent } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 import * as React from "react";
@@ -14,6 +15,7 @@ import { NewParticipantForm } from "@/features/poll/components/new-participant-m
 import type { VoteType } from "@/features/poll/constants";
 import { getVoteTypes } from "@/features/poll/constants";
 import type { VotePageView, VoteResult } from "@/features/poll/vote/types";
+import type { SpaceTier } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
 
 const schema = z.object({
@@ -201,6 +203,7 @@ const emptyVotes = (results: VotePageView["results"]) =>
  */
 export function VoteForm({
   pollId,
+  tier,
   requireParticipantEmail,
   results,
   response,
@@ -208,6 +211,7 @@ export function VoteForm({
   children,
 }: {
   pollId: string;
+  tier: SpaceTier | undefined;
   requireParticipantEmail: boolean;
   results: VotePageView["results"];
   response: VotePageView["response"];
@@ -255,6 +259,13 @@ export function VoteForm({
         id="vote-form"
         onSubmit={form.handleSubmit(async (data) => {
           if (!response) {
+            // Plain properties, not groups, to match poll_response_submit:
+            // guest events are personless and PostHog drops their groups.
+            posthog?.capture("poll_response:form_open", {
+              poll_id: pollId,
+              require_email: requireParticipantEmail,
+              tier,
+            });
             setIsNewParticipantOpen(true);
             return;
           }

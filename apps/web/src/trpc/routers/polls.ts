@@ -418,6 +418,9 @@ export const polls = router({
           title: poll.title,
           kind,
           source: "web",
+          // A property as well as the group: guest events are personless and
+          // PostHog drops their group associations.
+          pollId: poll.id,
           optionCount: poll.options.length,
           hasLocation: !!location,
           hasConferencing: !!conferencing,
@@ -547,6 +550,8 @@ export const polls = router({
           error: { code: "INAPPROPRIATE_CONTENT" as const },
         };
       }
+
+      let requireEmailChanged = false;
 
       await prisma.$transaction(async (tx) => {
         const newOptions =
@@ -766,6 +771,10 @@ export const polls = router({
           },
         });
 
+        requireEmailChanged = changes.some(
+          (change) => change.field === "requireParticipantEmail",
+        );
+
         await recordPollActivities(tx, [
           ...(deletedOptions.length > 0
             ? [
@@ -834,6 +843,7 @@ export const polls = router({
           hideScores: true,
           timeZone: true,
           muted: true,
+          space: { select: { tier: true } },
           _count: {
             select: {
               participants: true,
@@ -919,6 +929,20 @@ export const polls = router({
             hide_participants: !!updatedPoll.hideParticipants,
             hide_scores: !!updatedPoll.hideScores,
             require_participant_email: !!updatedPoll.requireParticipantEmail,
+          },
+          groups: {
+            poll: pollId,
+          },
+        });
+      }
+
+      if (requireEmailChanged) {
+        track(ctx.user, {
+          event: "poll_settings:require_email_change",
+          properties: {
+            poll_id: pollId,
+            value: updatedPoll.requireParticipantEmail,
+            tier: updatedPoll.space?.tier,
           },
           groups: {
             poll: pollId,
