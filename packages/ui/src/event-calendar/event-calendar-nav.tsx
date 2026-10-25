@@ -131,7 +131,7 @@ function EventCalendarNavToday({
   // display-zone "today", like every other today derivation in the calendar
   // (a system-zone new Date() can name a different day than Today opens)
   const defaultTooltip = format(
-    toZoned(new Date(), settings.timeZone),
+    toZoned(settings.getNow(), settings.timeZone),
     settings.i18n.formats.dayTitle,
     { locale: settings.locale },
   );

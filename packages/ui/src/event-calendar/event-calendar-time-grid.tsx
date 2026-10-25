@@ -45,10 +45,12 @@ import type {
 } from "./event-calendar-types";
 
 /** Current time, refreshed on an interval and on tab focus. */
-function useNow(intervalMs = 30_000): Date {
-  const [now, setNow] = useState(() => new Date());
+function useNow(getNow: () => Date, intervalMs = 30_000): Date {
+  const [now, setNow] = useState(getNow);
   useEffect(() => {
-    const tick = () => setNow(new Date());
+    const tick = () => setNow(getNow());
+    // A new clock (e.g. the viewer's zone changed) applies immediately.
+    tick();
     const id = setInterval(tick, intervalMs);
     document.addEventListener("visibilitychange", tick);
     window.addEventListener("focus", tick);
@@ -57,7 +59,7 @@ function useNow(intervalMs = 30_000): Date {
       document.removeEventListener("visibilitychange", tick);
       window.removeEventListener("focus", tick);
     };
-  }, [intervalMs]);
+  }, [getNow, intervalMs]);
   return now;
 }
 
@@ -1186,7 +1188,7 @@ function EventCalendarNowIndicator({
 }): ReactNode {
   const settings = useEventCalendarSettings();
   const viewConfig = useEventCalendarViewConfig();
-  const now = useNow(viewConfig.nowIndicatorInterval);
+  const now = useNow(settings.getNow, viewConfig.nowIndicatorInterval);
 
   const timeZone = settings.timeZone;
   const todayKey = getDayKey(now, timeZone);
