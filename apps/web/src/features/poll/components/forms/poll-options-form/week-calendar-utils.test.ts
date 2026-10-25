@@ -9,6 +9,7 @@ import {
   instantToFloating,
   isDuplicate,
   optionsToEvents,
+  skippedMinuteRanges,
   slotExistsIn,
   slotToTimeOption,
 } from "./week-calendar-utils";
@@ -145,5 +146,25 @@ describe("durationMinutes / cap", () => {
   });
   it("cap is 24h", () => {
     expect(DURATION_CAP_MINUTES).toBe(1440);
+  });
+});
+
+describe("skippedMinuteRanges", () => {
+  it("finds the hour Chicago skips when it springs forward", () => {
+    expect(skippedMinuteRanges("2027-03-14", "America/Chicago")).toEqual([
+      [120, 180],
+    ]);
+  });
+
+  it("finds a half hour change", () => {
+    expect(skippedMinuteRanges("2026-10-04", "Australia/Lord_Howe")).toEqual([
+      [120, 150],
+    ]);
+  });
+
+  it("is empty when clocks fall back or don't change", () => {
+    expect(skippedMinuteRanges("2026-11-01", "America/Chicago")).toEqual([]);
+    expect(skippedMinuteRanges("2027-03-15", "America/Chicago")).toEqual([]);
+    expect(skippedMinuteRanges("2027-03-14", "Asia/Kathmandu")).toEqual([]);
   });
 });

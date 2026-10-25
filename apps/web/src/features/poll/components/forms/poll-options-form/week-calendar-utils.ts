@@ -1,5 +1,6 @@
 import type { CalendarEvent } from "@rallly/ui/event-calendar";
 import {
+  addMinutesToWallTime,
   instantToWallTime,
   wallTimeExists,
   wallTimeToInstant,
@@ -83,4 +84,34 @@ export function isDuplicate(
 
 export function durationMinutes(start: Date, end: Date): number {
   return Math.round((end.getTime() - start.getTime()) / 60_000);
+}
+
+const SKIP_STEP_MINUTES = 15;
+
+/**
+ * Minute ranges [start, end) of `date` (YYYY-MM-DD) that clocks in `timeZone`
+ * skip when they spring forward. Empty on every other day.
+ */
+export function skippedMinuteRanges(date: string, timeZone: string) {
+  const midnight = `${date}T00:00:00`;
+  const nextMidnight = addMinutesToWallTime(midnight, DURATION_CAP_MINUTES);
+  const dayLength =
+    wallTimeToInstant(nextMidnight, timeZone).getTime() -
+    wallTimeToInstant(midnight, timeZone).getTime();
+  if (dayLength >= DURATION_CAP_MINUTES * 60_000) {
+    return [];
+  }
+  const ranges: Array<[number, number]> = [];
+  for (let m = 0; m < DURATION_CAP_MINUTES; m += SKIP_STEP_MINUTES) {
+    if (wallTimeExists(addMinutesToWallTime(midnight, m), timeZone)) {
+      continue;
+    }
+    const last = ranges.at(-1);
+    if (last && last[1] === m) {
+      last[1] = m + SKIP_STEP_MINUTES;
+    } else {
+      ranges.push([m, m + SKIP_STEP_MINUTES]);
+    }
+  }
+  return ranges;
 }
