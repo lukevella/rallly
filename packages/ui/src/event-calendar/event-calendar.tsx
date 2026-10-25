@@ -767,6 +767,7 @@ function createEventCalendarStore<TData>(
   ] as const;
   const SETTINGS_KEYS = [
     "timeZone",
+    "getNow",
     "locale",
     "weekStartsOn",
     "views",
