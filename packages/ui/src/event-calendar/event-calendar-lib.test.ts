@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import {
   atWallMinutes,
@@ -87,5 +87,25 @@ describe("time grid wall clock in America/Chicago", () => {
       timeZone,
     );
     expect(segment).toMatchObject({ startMin: 600, endMin: 660 });
+  });
+});
+
+describe("a floating UTC grid under a system zone with DST", () => {
+  const originalTimeZone = process.env.TZ;
+  afterEach(() => {
+    process.env.TZ = originalTimeZone;
+  });
+
+  it("maps every row of the system zone's transition days to its own time", () => {
+    process.env.TZ = "America/Chicago";
+    expect(new Date(2027, 2, 15).getTimezoneOffset()).toBe(300);
+    for (const date of ["2027-03-14", "2026-11-01"]) {
+      const day = zonedStartOfDay(new Date(`${date}T12:00:00Z`), "UTC");
+      for (let minutes = 0; minutes < 24 * 60; minutes += 30) {
+        expect(atWallMinutes(day, minutes, "UTC").getTime()).toBe(
+          day.getTime() + minutes * 60_000,
+        );
+      }
+    }
   });
 });

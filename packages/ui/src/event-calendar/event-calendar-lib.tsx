@@ -63,19 +63,48 @@ function wallMinutesOfDay(date: Date, day: Date, timeZone: string): number {
   );
 }
 
+/** Clock fields of `date` in `timeZone`, encoded as if they were UTC. */
+function wallClockAt(date: number, timeZone: string): number {
+  const zoned = toZoned(new Date(date), timeZone);
+  return Date.UTC(
+    zoned.getFullYear(),
+    zoned.getMonth(),
+    zoned.getDate(),
+    zoned.getHours(),
+    zoned.getMinutes(),
+    zoned.getSeconds(),
+    zoned.getMilliseconds(),
+  );
+}
+
 /**
  * The instant the display zone's clocks read `minutes` past midnight on
  * `day`'s calendar date. A time skipped by a forward transition lands after
  * it (02:30 becomes 03:30); a repeated time resolves to its first occurrence.
+ *
+ * Built from offsets rather than TZDate's field constructor, which resolves
+ * the fields through the system zone and drops an hour when they fall in one
+ * of the system zone's own skipped hours.
  */
 function atWallMinutes(day: Date, minutes: number, timeZone: string): TZDate {
   const zoned = toZoned(day, timeZone);
-  return new TZDate(
+  const wall = Date.UTC(
     zoned.getFullYear(),
     zoned.getMonth(),
     zoned.getDate(),
     0,
     minutes,
+  );
+  const dayMs = MINUTES_PER_DAY * 60_000;
+  const offsetAt = (instant: number) =>
+    wallClockAt(instant, timeZone) - instant;
+  const earlier = wall - offsetAt(wall - dayMs);
+  const later = wall - offsetAt(wall + dayMs);
+  const exact = [earlier, later].filter(
+    (instant) => wallClockAt(instant, timeZone) === wall,
+  );
+  return toZoned(
+    new Date(exact.length > 0 ? Math.min(...exact) : earlier),
     timeZone,
   );
 }

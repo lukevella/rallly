@@ -134,6 +134,12 @@ interface UseEventCalendarStateOptions<TData = unknown>
   loading?: boolean;
   views?: CalendarView[];
   timeZone?: string;
+  /**
+   * The instant the calendar treats as now, for today and the now line.
+   * A calendar showing floating times in a fixed frame passes the viewer's
+   * wall clock expressed in that frame. @default () => new Date()
+   */
+  getNow?: () => Date;
   locale?: Locale;
   weekStartsOn?: WeekStartsOn;
   dayStartHour?: number;
@@ -182,6 +188,7 @@ interface EventCalendarActivationConfig {
 interface EventCalendarSettings<TData = unknown>
   extends EventCalendarCallbacks<TData> {
   timeZone: string;
+  getNow: () => Date;
   locale?: Locale;
   weekStartsOn: WeekStartsOn;
   views: CalendarView[];
@@ -296,6 +303,7 @@ function resolveSettings<TData>(
     ...rest,
     timeZone:
       options.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
+    getNow: options.getNow ?? (() => new Date()),
     locale: options.locale,
     weekStartsOn: options.weekStartsOn ?? 0,
     // the resource view only makes sense with resources configured
@@ -355,7 +363,7 @@ function createEventCalendarStore<TData>(
 
   const internal = {
     view: resolveView(initial.defaultView ?? "month"),
-    date: initial.defaultDate ?? new Date(),
+    date: initial.defaultDate ?? settings.getNow(),
     dayCount: initial.defaultDayCount ?? 3,
     events: initial.defaultEvents ?? [],
     selection: initial.defaultSelection ?? EMPTY_SELECTION,
@@ -568,7 +576,7 @@ function createEventCalendarStore<TData>(
       );
     },
     today() {
-      setField("date", new Date());
+      setField("date", settings.getNow());
     },
     goTo(date) {
       setField("date", date);
@@ -932,7 +940,7 @@ function useEventCalendarNavigation(): {
     },
   );
   useEventCalendarSettingsVersion(instance);
-  const now = new Date();
+  const now = settings.getNow();
   return {
     date: slice.date,
     title: settings.i18n.functions.formatTitle(slice.view, {
@@ -1038,7 +1046,7 @@ function useEventCalendarDay<TData = unknown>(
   const dayStart = zonedStartOfDay(day, timeZone);
   return {
     segments: bucket,
-    isToday: getDayKey(new Date(), timeZone) === dayKey,
+    isToday: getDayKey(instance.settings.getNow(), timeZone) === dayKey,
     isOutside: dayStart < activeRange.start || dayStart >= activeRange.end,
   };
 }
@@ -1563,6 +1571,7 @@ const OPTION_KEYS: Array<keyof UseEventCalendarStateOptions> = [
   "loading",
   "views",
   "timeZone",
+  "getNow",
   "locale",
   "weekStartsOn",
   "dayStartHour",

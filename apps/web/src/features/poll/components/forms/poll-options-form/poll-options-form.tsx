@@ -64,6 +64,7 @@ const PollOptionsForm = ({
   const watchOptions = watch("options", []);
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");
+  const watchLockTimeZone = watch("lockTimeZone");
 
   const dateOrTimeRangeDialog = useDialog();
 
@@ -199,6 +200,11 @@ const PollOptionsForm = ({
                   }
                 }}
                 duration={watchDuration}
+                timeZone={
+                  watchLockTimeZone
+                    ? undefined
+                    : watchTimeZone || defaultTimeZone
+                }
                 onChangeDuration={(duration) => {
                   setValue("duration", duration);
                 }}

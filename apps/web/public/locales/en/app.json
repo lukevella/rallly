@@ -1205,6 +1205,7 @@
   "webhookTestEventRespondedWith": "Endpoint responded {status}",
   "webhookTestEventSending": "Sending test event",
   "webhookUrl": "URL",
+  "weekCalendarSkippedTime": "That time is skipped when the clocks change in {timeZone}",
   "weekView": "Week view",
   "whiteLabelAddon": "White Label Add-on",
   "whiteLabelAddonDescription": "This add-on allows you to brand Rallly with your own logo and colors.",
