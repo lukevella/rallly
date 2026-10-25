@@ -33,18 +33,26 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { Duration } from "@/lib/datetime/duration";
 import { formatDateParts } from "@/lib/datetime/format";
+import {
+  addMinutesToWallTime,
+  wallTimeDiffInMinutes,
+} from "@/lib/datetime/wall-time";
 import { dayjs } from "@/lib/dayjs";
 import {
   expectTimeOption,
   getBrowserTimeZone,
 } from "@/lib/utils/date-time-utils";
 import type { DateTimeOption, DateTimePickerProps } from "../types";
-import {
-  formatDateWithoutTime,
-  formatDateWithoutTz,
-  removeAllOptionsForDay,
-} from "../utils";
+import { formatDateWithoutTime, removeAllOptionsForDay } from "../utils";
 import TimePicker from "./time-picker";
+
+// Options are floating wall-clock strings, so times are computed on the
+// strings themselves and never pass through the browser's zone.
+const middayOf = (date: string) => `${date}T12:00:00`;
+
+/** Local noon of the option's calendar date, for navigating the date picker. */
+const navigationDateOf = (wallTime: string) =>
+  new Date(middayOf(wallTime.slice(0, 10)));
 
 const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   options,
@@ -53,6 +61,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChange,
   duration,
   onChangeDuration,
+  timeZone,
 }) => {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
@@ -72,7 +81,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   // single value the radio group selects it; differing values show as "Mixed".
   const optionDurations = options.flatMap((option) =>
     option.type === "timeSlot"
-      ? [dayjs(option.end).diff(option.start, "minute")]
+      ? [wallTimeDiffInMinutes(option.start, option.end)]
       : [],
   );
   const uniformDuration =
@@ -126,16 +135,12 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     // existing start time (defaulting all-day options to midday).
     onChange(
       options.map<DateTimeOption>((option) => {
-        const startDate =
-          option.type === "timeSlot"
-            ? new Date(option.start)
-            : new Date(`${option.date}T12:00:00`);
+        const start =
+          option.type === "timeSlot" ? option.start : middayOf(option.date);
         return {
           type: "timeSlot",
-          start: formatDateWithoutTz(startDate),
-          end: formatDateWithoutTz(
-            dayjs(startDate).add(minutes, "minutes").toDate(),
-          ),
+          start,
+          end: addMinutesToWallTime(start, minutes),
         };
       }),
     );
@@ -267,18 +272,15 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             const selectedDate = dayjs(day.date)
                               .set("hour", 12)
                               .toDate();
+                            const date = formatDateWithoutTime(selectedDate);
                             const newOption: DateTimeOption = !isTimedEvent
-                              ? {
-                                  type: "date",
-                                  date: formatDateWithoutTime(selectedDate),
-                                }
+                              ? { type: "date", date }
                               : {
                                   type: "timeSlot",
-                                  start: formatDateWithoutTz(selectedDate),
-                                  end: formatDateWithoutTz(
-                                    dayjs(selectedDate)
-                                      .add(slotDuration, "minutes")
-                                      .toDate(),
+                                  start: middayOf(date),
+                                  end: addMinutesToWallTime(
+                                    middayOf(date),
+                                    slotDuration,
                                   ),
                                 };
 
@@ -377,53 +379,51 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                             if (option.type === "date") {
                               throw new Error("Expected timeSlot but got date");
                             }
-                            const startDate = new Date(option.start);
                             return (
                               <div
                                 key={index}
                                 className="flex items-center space-x-3"
                               >
                                 <TimePicker
-                                  value={startDate}
+                                  value={option.start}
+                                  timeZone={timeZone}
                                   onChange={(newStart) => {
-                                    const newEnd = dayjs(newStart).add(
-                                      slotDuration,
-                                      "minutes",
-                                    );
-
                                     // replace enter with updated start time
                                     onChange([
                                       ...options.slice(0, index),
                                       {
                                         ...option,
-                                        start: formatDateWithoutTz(newStart),
-                                        end: formatDateWithoutTz(
-                                          newEnd.toDate(),
+                                        start: newStart,
+                                        end: addMinutesToWallTime(
+                                          newStart,
+                                          slotDuration,
                                         ),
                                       },
                                       ...options.slice(index + 1),
                                     ]);
-                                    onNavigate(newStart);
-                                    onChangeDuration(
-                                      newEnd.diff(newStart, "minutes"),
-                                    );
+                                    onNavigate(navigationDateOf(newStart));
+                                    onChangeDuration(slotDuration);
                                   }}
                                 />
                                 <TimePicker
-                                  value={new Date(option.end)}
-                                  after={startDate}
+                                  value={option.end}
+                                  after={option.start}
+                                  timeZone={timeZone}
                                   onChange={(newEnd) => {
                                     onChange([
                                       ...options.slice(0, index),
                                       {
                                         ...option,
-                                        end: formatDateWithoutTz(newEnd),
+                                        end: newEnd,
                                       },
                                       ...options.slice(index + 1),
                                     ]);
-                                    onNavigate(newEnd);
+                                    onNavigate(navigationDateOf(newEnd));
                                     onChangeDuration(
-                                      dayjs(newEnd).diff(startDate, "minutes"),
+                                      wallTimeDiffInMinutes(
+                                        option.start,
+                                        newEnd,
+                                      ),
                                     );
                                   }}
                                 />
@@ -453,24 +453,22 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                     .option,
                                 );
 
-                                const startTime = dayjs(lastOption.end).isSame(
-                                  lastOption.start,
-                                  "day",
-                                )
-                                  ? // if the end time of the previous option is on the same day as the start time, use the end time
-                                    lastOption.end
-                                  : // otherwise use the start time
-                                    lastOption.start;
+                                const startTime =
+                                  lastOption.end.slice(0, 10) ===
+                                  lastOption.start.slice(0, 10)
+                                    ? // if the end time of the previous option is on the same day as the start time, use the end time
+                                      lastOption.end
+                                    : // otherwise use the start time
+                                      lastOption.start;
 
                                 onChange([
                                   ...options,
                                   {
                                     type: "timeSlot",
                                     start: startTime,
-                                    end: formatDateWithoutTz(
-                                      dayjs(new Date(startTime))
-                                        .add(slotDuration, "minutes")
-                                        .toDate(),
+                                    end: addMinutesToWallTime(
+                                      startTime,
+                                      slotDuration,
                                     ),
                                   },
                                 ]);
@@ -525,9 +523,10 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                           newOptions.push({
                                             type: "timeSlot",
                                             start: start,
-                                            end: dayjs(start)
-                                              .add(slotDuration, "minutes")
-                                              .format("YYYY-MM-DDTHH:mm"),
+                                            end: addMinutesToWallTime(
+                                              start,
+                                              slotDuration,
+                                            ),
                                           });
                                         });
                                       },

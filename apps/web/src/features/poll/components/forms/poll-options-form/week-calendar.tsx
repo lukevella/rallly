@@ -16,10 +16,9 @@ import {
   EventCalendarWeekView,
   useEventCalendarNavigation,
 } from "@rallly/ui/event-calendar";
-import { toast } from "@rallly/ui/sonner";
 import React from "react";
 import { createBreakpoint } from "react-use";
-import { useTranslation } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
@@ -27,6 +26,7 @@ import DateNavigationToolbar from "./date-navigation-toolbar";
 import type { DateTimePickerProps, TimeOption } from "./types";
 import {
   DURATION_CAP_MINUTES,
+  dateToFloating,
   durationMinutes,
   FLOATING_TIME_ZONE,
   floatingToDate,
@@ -34,8 +34,9 @@ import {
   instantToFloating,
   isDuplicate,
   optionsToEvents,
-  slotExistsIn,
+  skippedMinuteRanges,
   slotToTimeOption,
+  startExistsIn,
 } from "./week-calendar-utils";
 
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
@@ -86,21 +87,13 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   const handleNavigate = (next: Date) =>
     onNavigate(floatingToInstant(next, viewerTimeZone));
 
-  // A slot whose start or end is skipped when the poll's clocks spring
-  // forward would silently shift on save, so it can't be picked at all.
+  // A slot starting in the hour the poll's clocks skip when they spring
+  // forward would silently shift on save, so it can't be picked. The skipped
+  // hour is drawn as a disabled band that takes the pointer itself.
   const isAvailable = (option: TimeOption) =>
-    !pollTimeZone || slotExistsIn(option, pollTimeZone);
+    !pollTimeZone || startExistsIn(option, pollTimeZone);
   const isAvailableSlot = (start: Date, end: Date) =>
     isAvailable(slotToTimeOption(start, end));
-  const rejectSkippedTime = () => {
-    toast.error(
-      t("weekCalendarSkippedTime", {
-        defaultValue:
-          "That time is skipped when the clocks change in {timeZone}",
-        timeZone: pollTimeZone,
-      }),
-    );
-  };
 
   const apiRef = React.useRef<EventCalendarApi | null>(null);
   const hasScrolledRef = React.useRef(false);
@@ -173,7 +166,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     }
     const candidate = slotToTimeOption(slot.start, slot.end);
     if (!isAvailable(candidate)) {
-      rejectSkippedTime();
       return;
     }
     const diff = durationMinutes(slot.start, slot.end);
@@ -193,7 +185,6 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     const end = new Date(start.getTime() + (duration || 60) * 60 * 1000);
     const candidate = slotToTimeOption(start, end);
     if (!isAvailable(candidate)) {
-      rejectSkippedTime();
       return;
     }
     if (!isDuplicate(options, candidate)) {
@@ -287,6 +278,33 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           // our Intl formatter instead. Suppress the day-start label (hour 0),
           // matching the default's top-edge suppression.
           hour === 0 && minute === 0 ? null : formatTime(time)
+        }
+        renderDayColumnBackground={({ day, boundsStartMin }) =>
+          pollTimeZone
+            ? skippedMinuteRanges(
+                dateToFloating(day).slice(0, 10),
+                pollTimeZone,
+              ).map(([start, end]) => (
+                <div
+                  key={start}
+                  className="pointer-events-auto absolute inset-x-0 cursor-not-allowed overflow-hidden border-y border-dashed bg-[repeating-linear-gradient(135deg,transparent_0_6px,var(--color-border)_6px_7px)] bg-muted px-1.5 py-0.5 text-muted-foreground text-xs"
+                  style={{
+                    top: `calc(var(--ec-hour-height) * ${(start - boundsStartMin) / 60})`,
+                    height: `calc(var(--ec-hour-height) * ${(end - start) / 60})`,
+                  }}
+                  title={t("weekCalendarClocksGoForwardHelp", {
+                    defaultValue:
+                      "Clocks in {timeZone} skip this time when they go forward",
+                    timeZone: pollTimeZone,
+                  })}
+                >
+                  <Trans
+                    i18nKey="weekCalendarClocksGoForward"
+                    defaults="Clocks go forward"
+                  />
+                </div>
+              ))
+            : null
         }
         onSelectSlot={handleSelectSlot}
         onSlotClick={handleSlotClick}
