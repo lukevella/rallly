@@ -44,13 +44,60 @@ function getDayKey(date: Date, timeZone: string): string {
   return format(toZoned(date, timeZone), "yyyy-MM-dd");
 }
 
-/** Day length in minutes; 1380/1500 on DST transition days - never assume 1440. */
-function getDayTotalMinutes(dayStart: Date, timeZone: string): number {
-  const next = zonedStartOfDay(
-    addDays(toZoned(dayStart, timeZone), 1),
+/**
+ * Time-grid rows are wall-clock times, so every day has 1440 of them, DST
+ * transition days included: the 10:00 row reads 10:00 on every column.
+ */
+const MINUTES_PER_DAY = 24 * 60;
+
+/**
+ * What the display zone's clocks read at `date`, in minutes past midnight of
+ * `day`'s calendar date (1440 or more once `date` is on a later day).
+ */
+function wallMinutesOfDay(date: Date, day: Date, timeZone: string): number {
+  const zoned = toZoned(date, timeZone);
+  return (
+    differenceInCalendarDays(zoned, toZoned(day, timeZone)) * MINUTES_PER_DAY +
+    zoned.getHours() * 60 +
+    zoned.getMinutes()
+  );
+}
+
+/**
+ * The instant the display zone's clocks read `minutes` past midnight on
+ * `day`'s calendar date. A time skipped by a forward transition lands after
+ * it (02:30 becomes 03:30); a repeated time resolves to its first occurrence.
+ */
+function atWallMinutes(day: Date, minutes: number, timeZone: string): TZDate {
+  const zoned = toZoned(day, timeZone);
+  return new TZDate(
+    zoned.getFullYear(),
+    zoned.getMonth(),
+    zoned.getDate(),
+    0,
+    minutes,
     timeZone,
   );
-  return differenceInMinutes(next, dayStart);
+}
+
+/**
+ * The day the time gutter reads its labels from: the first with no clock
+ * change, so the label of every row is a time that exists.
+ */
+function getGutterReferenceDay(
+  days: Date[],
+  timeZone: string,
+): Date | undefined {
+  return (
+    days.find((day) => {
+      const start = zonedStartOfDay(day, timeZone);
+      const next = zonedStartOfDay(
+        addDays(toZoned(start, timeZone), 1),
+        timeZone,
+      );
+      return differenceInMinutes(next, start) === MINUTES_PER_DAY;
+    }) ?? days[0]
+  );
 }
 
 function snapMinutes(minutes: number, snap: number): number {
@@ -194,12 +241,15 @@ function segmentOccurrence<TData>(
         continuesAfter: !isEnd,
         startMin: occurrence.allDay
           ? undefined
-          : differenceInMinutes(segStart, cursor),
+          : wallMinutesOfDay(segStart, cursor, timeZone),
         endMin: occurrence.allDay
           ? undefined
           : Math.max(
-              differenceInMinutes(segEnd, cursor),
-              differenceInMinutes(segStart, cursor),
+              Math.min(
+                wallMinutesOfDay(segEnd, cursor, timeZone),
+                MINUTES_PER_DAY,
+              ),
+              wallMinutesOfDay(segStart, cursor, timeZone),
             ),
       });
     }
@@ -600,16 +650,18 @@ function resolveOffDay(
 }
 
 export {
+  atWallMinutes,
   buildEventIndex,
   defaultEventOrder,
   eventsOverlap,
   flattenResources,
   getDayKey,
-  getDayTotalMinutes,
+  getGutterReferenceDay,
   getRangeKey,
   getViewDateRange,
   isBarOccurrence,
   MIN_PACK_SLOT,
+  MINUTES_PER_DAY,
   packTimedSegments,
   packWeekRowLanes,
   rangesIntersect,
@@ -619,6 +671,7 @@ export {
   spansMultipleDays,
   stepDate,
   toZoned,
+  wallMinutesOfDay,
   zonedStartOfDay,
 };
 export type {
