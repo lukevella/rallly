@@ -364,6 +364,7 @@ export const getPolls = async ({
         status: true,
         closedReason: true,
         timeZone: true,
+        readyToDecide: true,
         createdAt: true,
         updatedAt: true,
         user: {
@@ -383,7 +384,7 @@ export const getPolls = async ({
   const pollIds = polls.map((poll) => poll.id);
   // Counted per page: a relation _count compiles to a GROUP BY over the
   // whole participants table, joined after the fact
-  const [optionRanges, participantCounts] = await Promise.all([
+  const [optionRanges, participantCounts, inviteCounts] = await Promise.all([
     prisma.option.groupBy({
       by: ["pollId"],
       where: { pollId: { in: pollIds } },
@@ -395,6 +396,13 @@ export const getPolls = async ({
       where: { pollId: { in: pollIds } },
       _count: { _all: true },
     }),
+    // Counting participantId counts the non null rows: the invites with a
+    // response
+    prisma.pollInvite.groupBy({
+      by: ["pollId"],
+      where: { pollId: { in: pollIds }, revokedAt: null },
+      _count: { _all: true, participantId: true },
+    }),
   ]);
   const rangeByPollId = new Map(
     optionRanges.map((range) => [range.pollId, range]),
@@ -402,9 +410,13 @@ export const getPolls = async ({
   const participantCountByPollId = new Map(
     participantCounts.map((row) => [row.pollId, row._count._all]),
   );
+  const inviteCountsByPollId = new Map(
+    inviteCounts.map((row) => [row.pollId, row._count]),
+  );
 
   const transformedPolls = polls.map((poll) => {
     const range = rangeByPollId.get(poll.id);
+    const invites = inviteCountsByPollId.get(poll.id);
     return {
       id: poll.id,
       title: poll.title,
@@ -412,6 +424,7 @@ export const getPolls = async ({
       closedReason: poll.closedReason,
       // Null means the poll's times are floating: shown as stored to everyone
       timeZone: poll.timeZone,
+      readyToDecide: poll.readyToDecide,
       createdAt: poll.createdAt,
       updatedAt: poll.updatedAt,
       user: poll.user
@@ -422,6 +435,8 @@ export const getPolls = async ({
           }
         : null,
       participantCount: participantCountByPollId.get(poll.id) ?? 0,
+      inviteCount: invites?._all ?? 0,
+      respondedInviteCount: invites?.participantId ?? 0,
       dateRange:
         range?._min.startTime && range._max.startTime
           ? { start: range._min.startTime, end: range._max.startTime }

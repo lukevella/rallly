@@ -862,6 +862,8 @@
   "polls": "Polls",
   "pollsListActions": "Actions",
   "pollsListDates": "Dates",
+  "pollsListInviteResponses": "{inviteCount, plural, one {{respondedInviteCount} of # invitee responded} other {{respondedInviteCount} of # invitees responded}}",
+  "pollsListNoInvites": "No email invites",
   "pollsListOrganizer": "Organizer",
   "pollsListStatus": "Status",
   "pollsListStatusFilter": "Filter by status",

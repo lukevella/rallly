@@ -6,6 +6,7 @@ const mockFindMany = vi.fn();
 const mockCount = vi.fn();
 const mockOptionGroupBy = vi.fn();
 const mockParticipantGroupBy = vi.fn();
+const mockInviteGroupBy = vi.fn();
 
 vi.mock("@rallly/database", () => ({
   prisma: {
@@ -18,6 +19,9 @@ vi.mock("@rallly/database", () => ({
     },
     participant: {
       groupBy: (...args: unknown[]) => mockParticipantGroupBy(...args),
+    },
+    pollInvite: {
+      groupBy: (...args: unknown[]) => mockInviteGroupBy(...args),
     },
     $transaction: (operations: Promise<unknown>[]) => Promise.all(operations),
   },
@@ -126,6 +130,7 @@ describe("getPolls", () => {
     status: "open",
     closedReason: null,
     timeZone: "Europe/London",
+    readyToDecide: false,
     createdAt: new Date("2025-01-10T12:00:00Z"),
     updatedAt: new Date("2025-01-11T12:00:00Z"),
     user: null,
@@ -146,6 +151,10 @@ describe("getPolls", () => {
     mockParticipantGroupBy.mockResolvedValue([
       { pollId: "p1", _count: { _all: 3 } },
     ]);
+    // A poll with no invites has no group
+    mockInviteGroupBy.mockResolvedValue([
+      { pollId: "p1", _count: { _all: 4, participantId: 1 } },
+    ]);
 
     const result = await getPolls({ scope: { spaceId } });
 
@@ -160,10 +169,18 @@ describe("getPolls", () => {
       where: { pollId: { in: ["p1", "p2"] } },
       _count: { _all: true },
     });
+    expect(mockInviteGroupBy).toHaveBeenCalledWith({
+      by: ["pollId"],
+      where: { pollId: { in: ["p1", "p2"] }, revokedAt: null },
+      _count: { _all: true, participantId: true },
+    });
     expect(mockFindMany.mock.calls[0]?.[0].select).not.toHaveProperty("_count");
     expect(result.polls[0]).toMatchObject({
       id: "p1",
       participantCount: 3,
+      inviteCount: 4,
+      respondedInviteCount: 1,
+      readyToDecide: false,
       timeZone: "Europe/London",
       dateRange: { start, end },
     });
@@ -171,6 +188,8 @@ describe("getPolls", () => {
     expect(result.polls[1]).toMatchObject({
       id: "p2",
       participantCount: 0,
+      inviteCount: 0,
+      respondedInviteCount: 0,
       dateRange: null,
     });
   });

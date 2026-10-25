@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import {
@@ -65,7 +66,10 @@ type PollRow = {
   status: PollStatus;
   closedReason: PollClosedReason | null;
   timeZone: string | null;
+  readyToDecide: boolean;
   participantCount: number;
+  inviteCount: number;
+  respondedInviteCount: number;
   dateRange: { start: DateInput; end: DateInput } | null;
   user: { name: string; image: string | null } | null;
 };
@@ -92,20 +96,97 @@ function PollDateRange({
   );
 }
 
+/**
+ * Grey while the host collects responses, filling as email invitees respond.
+ * An empty ring means no one has been invited by email. Solid green once the
+ * host marks the poll ready to decide.
+ */
+function InviteResponseDonut({
+  readyToDecide,
+  inviteCount,
+  respondedInviteCount,
+}: {
+  readyToDecide: boolean;
+  inviteCount: number;
+  respondedInviteCount: number;
+}) {
+  const { t } = useTranslation();
+  const radius = 6;
+  const circumference = 2 * Math.PI * radius;
+  const value = readyToDecide
+    ? 1
+    : inviteCount > 0
+      ? respondedInviteCount / inviteCount
+      : 0;
+  const label = readyToDecide
+    ? t("readyToDecide", { defaultValue: "Ready to decide" })
+    : inviteCount > 0
+      ? t("pollsListInviteResponses", {
+          defaultValue:
+            "{inviteCount, plural, one {{respondedInviteCount} of # invitee responded} other {{respondedInviteCount} of # invitees responded}}",
+          inviteCount,
+          respondedInviteCount,
+        })
+      : t("pollsListNoInvites", { defaultValue: "No email invites" });
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      className="size-4 shrink-0 -rotate-90"
+      role="img"
+      aria-label={label}
+    >
+      <circle
+        cx="8"
+        cy="8"
+        r={radius}
+        fill="none"
+        strokeWidth="2.5"
+        className="stroke-gray-100 dark:stroke-gray-800"
+      />
+      {value > 0 ? (
+        <circle
+          cx="8"
+          cy="8"
+          r={radius}
+          fill="none"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference * (1 - Math.min(value, 1))}
+          className={cn(readyToDecide ? "stroke-green-500" : "stroke-gray-400")}
+        />
+      ) : null}
+    </svg>
+  );
+}
+
 function PollTitleLink({
   id,
   title,
   status,
   closedReason,
+  readyToDecide,
+  inviteCount,
+  respondedInviteCount,
 }: {
   id: string;
   title: string;
   status: PollStatus;
   closedReason: PollClosedReason | null;
+  readyToDecide: boolean;
+  inviteCount: number;
+  respondedInviteCount: number;
 }) {
   const isPollAdminEnabled = useFeatureFlag("pollAdmin");
   return (
     <div className="flex min-w-0 items-center gap-2">
+      {isPollAdminEnabled && status === "open" ? (
+        <InviteResponseDonut
+          readyToDecide={readyToDecide}
+          inviteCount={inviteCount}
+          respondedInviteCount={respondedInviteCount}
+        />
+      ) : null}
       <HoverPrefetchLink
         className="min-w-0 truncate text-sm outline-none after:absolute after:inset-0"
         href={isPollAdminEnabled ? `/polls/${id}` : absoluteUrl(`/poll/${id}`)}
@@ -339,6 +420,9 @@ const columns = [
         title={row.original.title}
         status={row.original.status}
         closedReason={row.original.closedReason}
+        readyToDecide={row.original.readyToDecide}
+        inviteCount={row.original.inviteCount}
+        respondedInviteCount={row.original.respondedInviteCount}
       />
     ),
   }),
