@@ -937,7 +937,7 @@
   "reopenPoll": "Reopen poll",
   "requiredField": "Required",
   "requiredString": "“{name}” is required",
-  "requireParticipantEmailDescription": "Participants must enter an email so you can notify them and they can edit their response.",
+  "requireParticipantEmailDescription": "Participants must provide an email address to respond.",
   "requireParticipantEmailTitle": "Require email",
   "reset": "Reset",
   "resetPasswordButton": "Reset password",

@@ -101,7 +101,7 @@ export const PollSettingsForm = ({
                   <FieldDescription>
                     <Trans
                       i18nKey="requireParticipantEmailDescription"
-                      defaults="Participants must enter an email so you can notify them and they can edit their response."
+                      defaults="Participants must provide an email address to respond."
                     />
                   </FieldDescription>
                 </FieldContent>
