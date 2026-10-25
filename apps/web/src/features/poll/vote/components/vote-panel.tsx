@@ -97,6 +97,7 @@ export function VotePanel({
     <UserProvider user={user}>
       <VoteForm
         pollId={poll.id}
+        tier={poll.space?.tier}
         requireParticipantEmail={requireParticipantEmail}
         results={results}
         response={response}

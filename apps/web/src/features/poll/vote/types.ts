@@ -1,6 +1,7 @@
 import type { PollConferencing } from "@/features/conferencing/schema";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
+import type { SpaceTier } from "@/features/space/schema";
 
 /** One option with its tally. `score` is null when the poll hides scores. */
 export type VoteResult = {
@@ -41,6 +42,7 @@ export type VotePageView = {
     space: {
       name: string;
       image: string | null;
+      tier: SpaceTier;
       showBranding: boolean;
       hideAttribution: boolean;
       primaryColor: string | null;

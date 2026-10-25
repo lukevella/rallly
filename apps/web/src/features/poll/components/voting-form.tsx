@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { posthog } from "@rallly/posthog/client";
 import { Dialog, DialogContent } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 import React from "react";
@@ -77,7 +78,8 @@ export const useVotingForm = () => {
 };
 
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
-  const { options } = usePoll();
+  const poll = usePoll();
+  const { options } = poll;
   const { t } = useTranslation();
   const updateParticipantVotes = useUpdateParticipantVotes();
   const token = useEditToken();
@@ -146,6 +148,13 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
             });
           } else {
             // new participant
+            // Plain properties, not groups, to match poll_response_submit:
+            // guest events are personless and PostHog drops their groups.
+            posthog?.capture("poll_response:form_open", {
+              poll_id: poll.id,
+              require_email: poll.requireParticipantEmail,
+              tier: poll.space?.tier,
+            });
             setIsNewParticipantModalOpen(true);
           }
         })}
