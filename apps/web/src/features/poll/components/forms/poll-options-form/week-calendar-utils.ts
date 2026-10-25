@@ -29,10 +29,12 @@ export const instantToFloating = (date: Date, timeZone: string) =>
 export const floatingToInstant = (date: Date, timeZone: string) =>
   wallTimeToInstant(dateToFloating(date), timeZone);
 
-/** Whether both ends of the slot are times clocks in `timeZone` actually read. */
-export const slotExistsIn = (option: TimeOption, timeZone: string) =>
-  wallTimeExists(option.start, timeZone) &&
-  wallTimeExists(option.end, timeZone);
+/**
+ * Whether the slot starts at a time clocks in `timeZone` actually read. Only
+ * the start matters: a slot may run across the hour the clocks skip.
+ */
+export const startExistsIn = (option: TimeOption, timeZone: string) =>
+  wallTimeExists(option.start, timeZone);
 
 export function eventId(option: DateTimeOption): string {
   return option.type === "date"

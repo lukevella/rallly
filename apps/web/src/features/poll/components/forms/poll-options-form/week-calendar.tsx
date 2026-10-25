@@ -35,8 +35,8 @@ import {
   isDuplicate,
   optionsToEvents,
   skippedMinuteRanges,
-  slotExistsIn,
   slotToTimeOption,
+  startExistsIn,
 } from "./week-calendar-utils";
 
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
@@ -87,11 +87,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   const handleNavigate = (next: Date) =>
     onNavigate(floatingToInstant(next, viewerTimeZone));
 
-  // A slot whose start or end is skipped when the poll's clocks spring
-  // forward would silently shift on save, so it can't be picked at all. The
-  // skipped hour is drawn as a disabled band that takes the pointer itself.
+  // A slot starting in the hour the poll's clocks skip when they spring
+  // forward would silently shift on save, so it can't be picked. The skipped
+  // hour is drawn as a disabled band that takes the pointer itself.
   const isAvailable = (option: TimeOption) =>
-    !pollTimeZone || slotExistsIn(option, pollTimeZone);
+    !pollTimeZone || startExistsIn(option, pollTimeZone);
   const isAvailableSlot = (start: Date, end: Date) =>
     isAvailable(slotToTimeOption(start, end));
 

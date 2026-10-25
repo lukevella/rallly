@@ -31,8 +31,9 @@ const DAY_MINUTES = 24 * 60;
 
 /**
  * Wall-clock times a time picker offers, in 15 minute steps: the day of
- * `value`, or the 24 hours after `after`. Times the poll's zone skips when its
- * clocks spring forward are left out; `value` itself always stays.
+ * `value`, or the 24 hours after `after`. Start times the poll's zone skips
+ * when its clocks spring forward are left out; end times may fall in that
+ * hour, and `value` itself always stays.
  */
 export function getTimeOptions({
   value,
@@ -54,8 +55,10 @@ export function getTimeOptions({
       options.push(addMinutesToWallTime(midnight, m));
     }
   }
+  if (after || !timeZone) {
+    return options;
+  }
   return options.filter(
-    (option) =>
-      option === value || !timeZone || wallTimeExists(option, timeZone),
+    (option) => option === value || wallTimeExists(option, timeZone),
   );
 }

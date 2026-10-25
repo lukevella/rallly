@@ -54,6 +54,16 @@ describe("getTimeOptions", () => {
     ).toContain("2027-03-14T02:30:00");
   });
 
+  it("offers end times inside the skipped hour", () => {
+    expect(
+      getTimeOptions({
+        value: "2027-03-14T02:30:00",
+        after: "2027-03-14T01:30:00",
+        timeZone: "America/Chicago",
+      }),
+    ).toContain("2027-03-14T02:30:00");
+  });
+
   it("offers the 24 hours after a start, past midnight", () => {
     const options = getTimeOptions({
       value: "2026-11-03T23:30:00",
