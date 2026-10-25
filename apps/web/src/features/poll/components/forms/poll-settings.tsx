@@ -97,28 +97,18 @@ export const PollSettingsForm = ({
                       i18nKey="requireParticipantEmailTitle"
                       defaults="Require email"
                     />
-                    {isFree ? <ProBadge /> : null}
                   </FieldLabel>
                   <FieldDescription>
                     <Trans
                       i18nKey="requireParticipantEmailDescription"
-                      defaults="Participants must provide an email address to respond."
+                      defaults="Participants must enter an email so you can notify them and they can edit their response."
                     />
                   </FieldDescription>
                 </FieldContent>
                 <Switch
                   id="require-participant-email"
                   checked={!!field.value}
-                  onCheckedChange={(checked) => {
-                    if (checked && isFree) {
-                      showPayWall({
-                        from: "poll-settings",
-                        setting: "requireParticipantEmail",
-                      });
-                    } else {
-                      field.onChange(checked);
-                    }
-                  }}
+                  onCheckedChange={field.onChange}
                 />
               </Field>
             )}

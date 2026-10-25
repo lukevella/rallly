@@ -1,7 +1,7 @@
 import { Form } from "@rallly/ui/form";
 import userEvent from "@testing-library/user-event";
 import { useForm } from "react-hook-form";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
 import { render, screen } from "@/test/test-utils";
@@ -10,25 +10,29 @@ vi.mock("@rallly/posthog/client", () => ({
   posthog: { capture: vi.fn() },
 }));
 
+const billing = vi.hoisted(() => ({ isFree: false, showPayWall: vi.fn() }));
+
 vi.mock("@/features/billing/client", () => ({
-  useIsFree: () => false,
-  showPayWall: vi.fn(),
+  useIsFree: () => billing.isFree,
+  showPayWall: billing.showPayWall,
 }));
 
 function TestForm({
   enableComments = false,
   allowTentativeVotes = true,
   hasTentativeVotes = false,
+  requireParticipantEmail = false,
 }: {
   enableComments?: boolean;
   allowTentativeVotes?: boolean;
   hasTentativeVotes?: boolean;
+  requireParticipantEmail?: boolean;
 }) {
   const form = useForm<PollSettingsFormData>({
     defaultValues: {
       enableComments,
       allowTentativeVotes,
-      requireParticipantEmail: false,
+      requireParticipantEmail,
       hideParticipants: false,
       hideScores: false,
     },
@@ -39,6 +43,46 @@ function TestForm({
     </Form>
   );
 }
+
+describe("PollSettingsForm require email setting on a free space", () => {
+  beforeEach(() => {
+    billing.isFree = true;
+    billing.showPayWall.mockClear();
+  });
+
+  afterEach(() => {
+    billing.isFree = false;
+  });
+
+  it("switches on without the pay wall", async () => {
+    const user = userEvent.setup();
+    render(<TestForm />);
+    const emailSwitch = screen.getByRole("switch", { name: /require email/i });
+    await user.click(emailSwitch);
+    expect(emailSwitch).toBeChecked();
+    expect(billing.showPayWall).not.toHaveBeenCalled();
+  });
+
+  it("switches off without the pay wall", async () => {
+    const user = userEvent.setup();
+    render(<TestForm requireParticipantEmail={true} />);
+    const emailSwitch = screen.getByRole("switch", { name: /require email/i });
+    await user.click(emailSwitch);
+    expect(emailSwitch).not.toBeChecked();
+    expect(billing.showPayWall).not.toHaveBeenCalled();
+  });
+
+  it("keeps hide participant names behind the pay wall", async () => {
+    const user = userEvent.setup();
+    render(<TestForm />);
+    await user.click(
+      screen.getByRole("switch", { name: /hide participant names/i }),
+    );
+    expect(billing.showPayWall).toHaveBeenCalledWith(
+      expect.objectContaining({ setting: "hideParticipants" }),
+    );
+  });
+});
 
 describe("PollSettingsForm comments setting", () => {
   it("shows comments off by default", () => {
