@@ -203,7 +203,7 @@ function EventCalendarMonthView({
                 view: "month",
                 isToday:
                   getDayKey(day, settings.timeZone) ===
-                  getDayKey(new Date(), settings.timeZone),
+                  getDayKey(settings.getNow(), settings.timeZone),
               }) ?? (
                 <>
                   <span className="@max-[36rem]:hidden">
