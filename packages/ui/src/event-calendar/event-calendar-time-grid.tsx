@@ -47,11 +47,10 @@ import type {
 /** Current time, refreshed on an interval and on tab focus. */
 function useNow(getNow: () => Date, intervalMs = 30_000): Date {
   const [now, setNow] = useState(getNow);
-  // Settings are re-resolved on every render; read the latest clock on tick.
-  const getNowRef = useRef(getNow);
-  getNowRef.current = getNow;
   useEffect(() => {
-    const tick = () => setNow(getNowRef.current());
+    const tick = () => setNow(getNow());
+    // A new clock (e.g. the viewer's zone changed) applies immediately.
+    tick();
     const id = setInterval(tick, intervalMs);
     document.addEventListener("visibilitychange", tick);
     window.addEventListener("focus", tick);
@@ -60,7 +59,7 @@ function useNow(getNow: () => Date, intervalMs = 30_000): Date {
       document.removeEventListener("visibilitychange", tick);
       window.removeEventListener("focus", tick);
     };
-  }, [intervalMs]);
+  }, [getNow, intervalMs]);
   return now;
 }
 

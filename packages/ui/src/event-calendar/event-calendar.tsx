@@ -303,7 +303,7 @@ function resolveSettings<TData>(
     ...rest,
     timeZone:
       options.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-    getNow: options.getNow ?? (() => new Date()),
+    getNow: options.getNow ?? systemNow,
     locale: options.locale,
     weekStartsOn: options.weekStartsOn ?? 0,
     // the resource view only makes sense with resources configured
@@ -326,6 +326,9 @@ function resolveSettings<TData>(
     activation: options.activation,
   };
 }
+
+// Stable, so an unset getNow never reads as a changed setting.
+const systemNow = () => new Date();
 
 const warned = new Set<string>();
 function warnOnce(key: string, message: string) {
