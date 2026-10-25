@@ -663,8 +663,8 @@ export default async function Page(props: {
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="advancedPollSettingsDescription"
-                      defaults="Require participant emails, hide participant names, and hide votes"
+                      i18nKey="advancedPollSettingsPrivacyDescription"
+                      defaults="Hide participant names and hide votes"
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
