@@ -5,7 +5,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.64.1",
     "cheerio": "^1.0.0-rc.12"
   },
   "devDependencies": {
