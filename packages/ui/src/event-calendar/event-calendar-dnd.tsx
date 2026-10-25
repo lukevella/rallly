@@ -490,15 +490,16 @@ function beginGesture<TData>(config: BeginGestureConfig<TData>) {
 
     if (kind === "move") {
       const newStartMin = snapMinutes(rawMin - grabOffsetMin, snap);
-      const durationMin = Math.round(durationMs / 60000);
+      const durationMin =
+        wallMinutesOfDay(occurrence.end, occurrence.start, timeZone) -
+        wallMinutesOfDay(occurrence.start, occurrence.start, timeZone);
       const clamped = Math.min(
         Math.max(newStartMin, col.boundsStartMin),
         col.boundsEndMin - durationMin,
       );
-      const start = atWallMinutes(dayStart, clamped, timeZone);
       return {
-        start,
-        end: new Date(start.getTime() + durationMs),
+        start: atWallMinutes(dayStart, clamped, timeZone),
+        end: atWallMinutes(dayStart, clamped + durationMin, timeZone),
         allDay: false,
         resourceId: col.resourceId,
       };
