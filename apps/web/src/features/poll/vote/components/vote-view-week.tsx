@@ -158,7 +158,7 @@ export function VoteViewWeek({
   canVote,
 }: VoteViewProps) {
   const { t } = useTranslation();
-  const { locale } = useDateTimeConfig();
+  const { locale, timeZone: viewerTimeZone } = useDateTimeConfig();
   const { formatDateTime, formatDateTimeRange } = useDateTime();
   const [hideEmptyDays, setHideEmptyDays] = React.useState(false);
   const [weekIndex, setWeekIndex] = React.useState(0);
@@ -176,9 +176,10 @@ export function VoteViewWeek({
   }, [response]);
 
   const { weekStart } = getLocaleDefaults(locale);
-  // The calendar date an option falls on, in the zone it is read in, so a
-  // late-evening slot groups under its own day rather than the next one.
-  const keyZone = readZone ?? getBrowserTimeZone();
+  // The calendar date an option falls on, in the zone its time is shown in
+  // (the viewer's chosen zone), so a late-evening slot groups under its own
+  // day rather than the next one.
+  const keyZone = readZone ?? viewerTimeZone ?? getBrowserTimeZone();
   const weeks = React.useMemo(
     () =>
       buildWeeks(results, weekStart, (value) =>
