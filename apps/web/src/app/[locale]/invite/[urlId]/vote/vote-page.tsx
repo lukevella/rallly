@@ -1,7 +1,7 @@
 import { Card } from "@rallly/ui/card";
 import { Spinner } from "@/components/spinner";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { OidcSignInPrompt } from "@/features/poll/components/oidc-sign-in-prompt";
+import { OidcSignInPrompt } from "@/features/auth/components/oidc-sign-in-prompt";
 import { EventSidebar } from "@/features/poll/invite/components/event-sidebar";
 import { ManagePollButton } from "@/features/poll/vote/components/manage-poll-button";
 import { VotePageFooter } from "@/features/poll/vote/components/vote-page-footer";
