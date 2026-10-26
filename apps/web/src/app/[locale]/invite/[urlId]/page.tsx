@@ -14,6 +14,7 @@ import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-ope
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import {
   loadInvitePoll,
+  loadOidcIdentity,
   loadOidcVoting,
   loadPollAvailability,
 } from "@/features/poll/loaders";
@@ -73,7 +74,10 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     loadCanManagePoll(urlId),
   ]);
 
-  const oidcVoting = await loadOidcVoting();
+  const [oidcVoting, oidcIdentity] = await Promise.all([
+    loadOidcVoting(),
+    loadOidcIdentity(),
+  ]);
 
   return (
     <>
@@ -92,6 +96,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
             linkedParticipantIds={linkedParticipantIds}
             viewerRole="participant"
             oidcVoting={oidcVoting}
+            oidcIdentity={oidcIdentity}
           >
             <LegacyPollContextProvider>
               <VisibilityProvider>

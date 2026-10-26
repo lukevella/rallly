@@ -1,7 +1,7 @@
 import type { PollConferencing } from "@/features/conferencing/schema";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
-import type { OidcVotingState } from "@/features/poll/types";
+import type { OidcIdentity, OidcVotingState } from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
 
 /** One option with its tally. `score` is null when the poll hides scores. */
@@ -63,6 +63,7 @@ export type VotePageView = {
   /** False once the poll is closed or scheduled, or until an OIDC sign-in. */
   canVote: boolean;
   oidcVoting: OidcVotingState;
+  oidcIdentity: OidcIdentity | null;
 };
 
 /**

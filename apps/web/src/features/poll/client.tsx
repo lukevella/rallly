@@ -2,6 +2,7 @@
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
 import type {
+  OidcIdentity,
   OidcVotingState,
   PollComment,
   PollDetails,
@@ -28,6 +29,8 @@ type PollContextValue = {
    * and email, so the form shows them read-only.
    */
   oidcVoting: OidcVotingState;
+  /** What the IdP asserted, shown read-only while the identity is locked. */
+  oidcIdentity: OidcIdentity | null;
 };
 
 const PollContext = React.createContext<PollContextValue | null>(null);
@@ -46,10 +49,15 @@ export function PollProvider({
   linkedParticipantIds = [],
   viewerRole,
   oidcVoting = "off",
+  oidcIdentity = null,
   children,
-}: Omit<PollContextValue, "linkedParticipantIds" | "oidcVoting"> & {
+}: Omit<
+  PollContextValue,
+  "linkedParticipantIds" | "oidcVoting" | "oidcIdentity"
+> & {
   linkedParticipantIds?: string[];
   oidcVoting?: PollContextValue["oidcVoting"];
+  oidcIdentity?: PollContextValue["oidcIdentity"];
   children: React.ReactNode;
 }) {
   const value = React.useMemo(
@@ -60,6 +68,7 @@ export function PollProvider({
       linkedParticipantIds,
       viewerRole,
       oidcVoting,
+      oidcIdentity,
     }),
     [
       poll,
@@ -68,6 +77,7 @@ export function PollProvider({
       linkedParticipantIds,
       viewerRole,
       oidcVoting,
+      oidcIdentity,
     ],
   );
 
@@ -85,6 +95,9 @@ export const useRole = () => useRequiredContext(PollContext).viewerRole;
 /** "off" when no provider is mounted, like `usePollOrNull`. */
 export const useOidcVoting = () =>
   React.useContext(PollContext)?.oidcVoting ?? "off";
+
+export const useOidcIdentity = () =>
+  React.useContext(PollContext)?.oidcIdentity ?? null;
 
 export const useComments = () => useRequiredContext(PollContext).comments;
 

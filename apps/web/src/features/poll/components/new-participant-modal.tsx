@@ -29,13 +29,18 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
 import { Link } from "@/components/link";
-import { useOidcVoting, usePollOrNull } from "@/features/poll/client";
+import {
+  useOidcIdentity,
+  useOidcVoting,
+  usePollOrNull,
+} from "@/features/poll/client";
 import {
   useAddParticipant,
   useEditToken,
 } from "@/features/poll/components/mutations";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { MAX_RESPONSE_NOTE_LENGTH } from "@/features/poll/schema";
+import type { OidcIdentity } from "@/features/poll/types";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
@@ -63,6 +68,8 @@ interface NewParticipantModalProps {
   requireParticipantEmail?: boolean;
   /** Falls back to the poll in context, like the two props above. */
   identityLocked?: boolean;
+  /** The IdP identity the locked form shows; falls back to the context. */
+  oidcIdentity?: OidcIdentity | null;
   onSubmit?: (data: { id: string }) => void;
   onCancel?: () => void;
 }
@@ -142,17 +149,23 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const isLoggedIn = user && !user.isGuest;
   const lockedByContext = useOidcVoting() === "identityLocked";
   const identityLocked = props.identityLocked ?? lockedByContext;
+  const contextIdentity = useOidcIdentity();
+  const oidcIdentity = props.oidcIdentity ?? contextIdentity;
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       requireEmail: isEmailRequired,
       note: "",
-      ...(isLoggedIn
-        ? { name: user.name, email: user.email ?? "" }
-        : {
-            name: "",
-            email: "",
-          }),
+      // A locked response is recorded under the IdP identity, so that is what
+      // the read-only fields show, never the editable profile.
+      ...(identityLocked
+        ? { name: oidcIdentity?.name ?? "", email: oidcIdentity?.email ?? "" }
+        : isLoggedIn
+          ? { name: user.name, email: user.email ?? "" }
+          : {
+              name: "",
+              email: "",
+            }),
     },
   });
 

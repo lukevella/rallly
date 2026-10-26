@@ -19,7 +19,8 @@ import {
   listPollParticipants,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
-import { hasOidcLogin } from "@/features/poll/participant/data";
+import { getOidcLogin, hasOidcLogin } from "@/features/poll/participant/data";
+import { readOidcIdentity } from "@/features/poll/participant/utils";
 import type { PollStatus } from "@/features/poll/schema";
 import {
   filterCommentsForViewer,
@@ -45,6 +46,26 @@ export const loadOidcVoting = cache(async () => {
   return user && !user.isGuest && (await hasOidcLogin(user.id))
     ? ("identityLocked" as const)
     : ("signInRequired" as const);
+});
+
+/**
+ * The name and email the IdP asserted for the viewer, which is what their
+ * response will be recorded under. Null unless voting is identity locked.
+ */
+export const loadOidcIdentity = cache(async () => {
+  if ((await loadOidcVoting()) !== "identityLocked") {
+    return null;
+  }
+
+  const user = await loadOptionalActor();
+  const login = user ? await getOidcLogin(user.id) : null;
+
+  return login
+    ? readOidcIdentity(login.id_token, {
+        name: env.OIDC_NAME_CLAIM_PATH,
+        email: env.OIDC_EMAIL_CLAIM_PATH,
+      })
+    : null;
 });
 
 export const loadPolls = cache(

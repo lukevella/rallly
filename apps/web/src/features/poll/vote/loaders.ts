@@ -7,7 +7,7 @@ import {
   getPollDetails,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
-import { loadOidcVoting } from "@/features/poll/loaders";
+import { loadOidcIdentity, loadOidcVoting } from "@/features/poll/loaders";
 import {
   countParticipants,
   getOptionScores,
@@ -60,7 +60,10 @@ export const loadVotePage = cache(
       countParticipants({ pollId }),
     ]);
 
-    const oidcVoting = await loadOidcVoting();
+    const [oidcVoting, oidcIdentity] = await Promise.all([
+      loadOidcVoting(),
+      loadOidcIdentity(),
+    ]);
 
     // hideScores reveals the tally only once the viewer has responded.
     const scoresVisible = !poll.hideScores || response !== null;
@@ -112,6 +115,7 @@ export const loadVotePage = cache(
       response,
       canVote: poll.status === "open" && oidcVoting !== "signInRequired",
       oidcVoting,
+      oidcIdentity,
     };
   },
 );

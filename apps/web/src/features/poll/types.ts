@@ -10,6 +10,8 @@ export type PollUnavailableReason = "deleted" | "removed";
  * is, "signInRequired" closes it until they sign in through OIDC, and
  * "identityLocked" records their response under the IdP name and email.
  */
+export type { OidcIdentity } from "@/features/poll/participant/utils";
+
 export type OidcVotingState = "off" | "signInRequired" | "identityLocked";
 
 export type PollDetails = {

@@ -14,6 +14,7 @@ import {
 import { NewParticipantForm } from "@/features/poll/components/new-participant-modal";
 import type { VoteType } from "@/features/poll/constants";
 import { getVoteTypes } from "@/features/poll/constants";
+import type { OidcIdentity } from "@/features/poll/types";
 import type { VotePageView, VoteResult } from "@/features/poll/vote/types";
 import type { SpaceTier } from "@/features/space/schema";
 import { useTranslation } from "@/i18n/client";
@@ -209,6 +210,7 @@ export function VoteForm({
   response,
   canVote,
   identityLocked,
+  oidcIdentity,
   children,
 }: {
   pollId: string;
@@ -219,6 +221,8 @@ export function VoteForm({
   canVote: boolean;
   /** The response is recorded under the IdP identity, so it is not editable. */
   identityLocked: boolean;
+  /** What the IdP asserted, shown read-only while the identity is locked. */
+  oidcIdentity: OidcIdentity | null;
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -310,6 +314,7 @@ export function VoteForm({
             pollId={pollId}
             requireParticipantEmail={requireParticipantEmail}
             identityLocked={identityLocked}
+            oidcIdentity={oidcIdentity}
             votes={normalizeVotes(optionIds, form.watch("votes"))}
             onSubmit={() => {
               form.reset({ mode: "view", votes: emptyVotes(results) });
