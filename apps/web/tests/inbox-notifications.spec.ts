@@ -14,11 +14,14 @@ import { createUserInDb, loginWithEmail } from "./test-utils";
 
 const OWNER_EMAIL = "inbox-owner@rallly.co";
 const POLL_TITLE = "Inbox Poll";
+const OTHER_OWNER_EMAIL = "inbox-other-owner@rallly.co";
 
 test.describe.configure({ mode: "serial" });
 
 async function cleanup() {
-  await prisma.user.deleteMany({ where: { email: OWNER_EMAIL } });
+  await prisma.user.deleteMany({
+    where: { email: { in: [OWNER_EMAIL, OTHER_OWNER_EMAIL] } },
+  });
 }
 
 async function asGuest(
@@ -240,12 +243,63 @@ test.describe("Inbox notifications", () => {
     });
     expect(count).toBe(25);
 
+    // Past the unread cutoff by age: only the unread one goes.
+    const owner = await prisma.user.findUniqueOrThrow({
+      where: { email: OWNER_EMAIL },
+    });
+    const yearAgo = new Date(Date.now() - 400 * 24 * 60 * 60 * 1000);
+    const recently = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+    for (const readAt of [recently, null]) {
+      await prisma.pollActivity.create({
+        data: {
+          pollId,
+          type: "response_created",
+          participantId: `old-${readAt ? "read" : "unread"}`,
+          payload: { name: "Old Voter" },
+          createdAt: yearAgo,
+          inboxNotifications: {
+            create: { userId: owner.id, createdAt: yearAgo, readAt },
+          },
+        },
+      });
+    }
+
     const response = await request.get(
       "/api/house-keeping/prune-inbox-notifications",
       { headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` } },
     );
     expect(response.ok()).toBe(true);
-    expect(await inboxCount(pollId)).toBe(2);
+    expect(await inboxCount(pollId)).toBe(3);
+    expect(
+      await prisma.inboxNotification.count({
+        where: { activity: { participantId: "old-read" } },
+      }),
+    ).toBe(1);
+  });
+
+  test("losing access to the poll's space hides its entries", async () => {
+    const poll = await prisma.poll.findUniqueOrThrow({ where: { id: pollId } });
+    // A space the organizer is not a member of, as after losing access.
+    const other = await createUserInDb({
+      email: OTHER_OWNER_EMAIL,
+      name: "Other Owner",
+    });
+    const otherSpace = await prisma.space.findFirstOrThrow({
+      where: { ownerId: other.id },
+    });
+    await prisma.poll.update({
+      where: { id: pollId },
+      data: { spaceId: otherSpace.id },
+    });
+
+    await openInbox(page);
+    await expect(page.getByText("No notifications yet")).toBeVisible();
+    await page.keyboard.press("Escape");
+
+    await prisma.poll.update({
+      where: { id: pollId },
+      data: { spaceId: poll.spaceId },
+    });
   });
 
   test("the inbox works on a phone", async ({ browser }) => {

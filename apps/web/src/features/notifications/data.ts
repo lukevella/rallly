@@ -159,7 +159,8 @@ export async function getPollMuteTarget({
  * A page of the user's inbox, newest first, with the unread total. Muting a
  * poll or turning an in-app preference off hides its entries, past ones
  * included. Only polls the user still organizes are shown: an entry about a
- * poll that was deleted or changed hands is no longer theirs to act on.
+ * poll that was deleted, changed hands or sits in a space they can no longer
+ * access is no longer theirs to act on.
  */
 export async function listInboxNotifications({
   userId,
@@ -177,7 +178,19 @@ export async function listInboxNotifications({
     userId,
     activity: {
       type: { in: getInboxActivityTypes(prefs) },
-      poll: { userId, deleted: false, muted: false },
+      poll: {
+        userId,
+        deleted: false,
+        muted: false,
+        // The same membership rule the entry was created under: losing
+        // access to the space (e.g. a downgrade) hides its polls again.
+        OR: [
+          { spaceId: null },
+          {
+            space: { members: { some: effectiveSpaceMemberWhere({ userId }) } },
+          },
+        ],
+      },
     },
   } satisfies Prisma.InboxNotificationWhereInput;
 

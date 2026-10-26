@@ -162,6 +162,7 @@ export async function pruneInboxNotifications() {
       OR: [
         { readAt: { lt: new Date(now - INBOX_READ_RETENTION_DAYS * DAY_MS) } },
         {
+          readAt: null,
           createdAt: {
             lt: new Date(now - INBOX_UNREAD_RETENTION_DAYS * DAY_MS),
           },
