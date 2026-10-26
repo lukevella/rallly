@@ -188,6 +188,13 @@ export const pollActivitySchema = z.discriminatedUnion("type", [
     }),
   }),
   z.object({
+    type: z.literal("comment_added"),
+    ...actor,
+    // Only the author's name: the comment itself can be deleted, and the
+    // log should not keep content its author removed.
+    payload: z.object({ name: z.string() }),
+  }),
+  z.object({
     type: z.literal("options_added"),
     ...actor,
     payload: optionsSnapshotSchema,

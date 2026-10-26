@@ -9,3 +9,23 @@ model UserNotificationPreferences {
 
   @@map("user_notification_preferences")
 }
+
+/// Per-user read state on top of the poll activity log: one row per activity
+/// that notified the user in-app. Fanned out when the event happens, so
+/// recipient rules (guest creators, membership) are applied by the same check
+/// the email uses; muting and preferences are applied again on read
+model InboxNotification {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  activityId String    @map("activity_id")
+  readAt     DateTime? @map("read_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity PollActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, activityId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([activityId])
+  @@map("inbox_notifications")
+}

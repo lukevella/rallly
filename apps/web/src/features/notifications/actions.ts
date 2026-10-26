@@ -3,10 +3,12 @@
 import { refresh } from "next/cache";
 
 import {
+  markInboxNotificationsRead,
   unsubscribeWithToken,
   updateNotificationPreference,
 } from "@/features/notifications/mutations";
 import {
+  markInboxNotificationReadSchema,
   unsubscribeWithTokenSchema,
   updateNotificationPreferenceSchema,
 } from "@/features/notifications/schema";
@@ -20,6 +22,7 @@ export const updateNotificationPreferenceAction = authActionClient
     await updateNotificationPreference({
       userId: ctx.user.id,
       eventType: parsedInput.eventType,
+      channel: parsedInput.channel,
       enabled: parsedInput.enabled,
     });
 
@@ -27,6 +30,7 @@ export const updateNotificationPreferenceAction = authActionClient
       event: "notification_preference_update",
       properties: {
         eventType: parsedInput.eventType,
+        channel: parsedInput.channel,
         enabled: parsedInput.enabled,
       },
     });
@@ -59,4 +63,22 @@ export const unsubscribeWithTokenAction = actionClient
     refresh();
 
     return result;
+  });
+
+export const markInboxNotificationReadAction = authActionClient
+  .metadata({ actionName: "mark_inbox_notification_read" })
+  .inputSchema(markInboxNotificationReadSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    await markInboxNotificationsRead({
+      userId: ctx.user.id,
+      notificationId: parsedInput.notificationId,
+    });
+  });
+
+export const markAllInboxNotificationsReadAction = authActionClient
+  .metadata({ actionName: "mark_all_inbox_notifications_read" })
+  .action(async ({ ctx }) => {
+    await markInboxNotificationsRead({ userId: ctx.user.id });
+
+    track(ctx.user, { event: "inbox:notifications_mark_read" });
   });

@@ -23,7 +23,7 @@ vi.mock("@rallly/database", () => {
       update: mockUpdate,
     },
     pollActivity: {
-      createMany: mockActivityCreateMany,
+      createManyAndReturn: mockActivityCreateMany,
     },
   };
   return {
@@ -252,6 +252,7 @@ describe("closePoll", () => {
     await closePoll({ pollId: "p1", spaceId, userId: "u1" });
 
     expect(mockActivityCreateMany).toHaveBeenCalledWith({
+      select: { id: true },
       data: [
         expect.objectContaining({
           pollId: "p1",

@@ -3,20 +3,29 @@ import "server-only";
 import { Prisma, prisma } from "@rallly/database";
 import { env } from "@/env";
 
-import { defaultNotificationPreferences } from "./constants";
-import type { ActivityEventType } from "./schema";
+import {
+  defaultNotificationPreferences,
+  INBOX_READ_RETENTION_DAYS,
+  INBOX_UNREAD_RETENTION_DAYS,
+} from "./constants";
+import { getNotificationRecipient } from "./data";
+import type { ActivityEventType, NotificationChannel } from "./schema";
+import { getNotificationPreferenceKey } from "./schema";
 import { parseUnsubscribeToken } from "./utils";
 
 export async function updateNotificationPreference({
   userId,
   eventType,
+  channel,
   enabled,
 }: {
   userId: string;
   eventType: ActivityEventType;
+  channel: NotificationChannel;
   enabled: boolean;
 }) {
-  const patch = JSON.stringify({ [eventType]: enabled });
+  const key = getNotificationPreferenceKey(eventType, channel);
+  const patch = JSON.stringify({ [key]: enabled });
 
   // The merge happens in the database (jsonb ||) so concurrent toggles of
   // different keys can't clobber each other the way a read-merge-replace
@@ -37,7 +46,7 @@ export async function updateNotificationPreference({
     await prisma.userNotificationPreferences.create({
       data: {
         userId,
-        prefs: { ...defaultNotificationPreferences, [eventType]: enabled },
+        prefs: { ...defaultNotificationPreferences, [key]: enabled },
       },
     });
   } catch (e) {
@@ -88,4 +97,77 @@ export async function unsubscribeWithToken({ token }: { token: string }) {
       return { ok: true as const, target };
     }
   }
+}
+
+/**
+ * Puts a poll event in its organizer's inbox, unless the same recipient rules
+ * the email follows (muting, preferences, membership) say they should not
+ * hear about it. Returns the skip reason so the caller can trace it.
+ */
+export async function createInboxNotification({
+  activityId,
+  pollId,
+  type,
+  excludeUserId,
+}: {
+  /** The activity log entry the event was recorded as. */
+  activityId: string;
+  pollId: string;
+  type: ActivityEventType;
+  excludeUserId: string;
+}) {
+  const result = await getNotificationRecipient({
+    pollId,
+    type,
+    channel: "inApp",
+    excludeUserId,
+  });
+
+  if (!result.ok) {
+    return result;
+  }
+
+  await prisma.inboxNotification.create({
+    data: { userId: result.recipient.id, activityId },
+  });
+
+  return { ok: true as const };
+}
+
+/** Marks one entry, or every entry when no id is given, as read. */
+export async function markInboxNotificationsRead({
+  userId,
+  notificationId,
+}: {
+  userId: string;
+  notificationId?: string;
+}) {
+  await prisma.inboxNotification.updateMany({
+    where: {
+      userId,
+      readAt: null,
+      ...(notificationId && { id: notificationId }),
+    },
+    data: { readAt: new Date() },
+  });
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Deletes entries past retention. Returns how many were removed. */
+export async function pruneInboxNotifications() {
+  const now = Date.now();
+  const { count } = await prisma.inboxNotification.deleteMany({
+    where: {
+      OR: [
+        { readAt: { lt: new Date(now - INBOX_READ_RETENTION_DAYS * DAY_MS) } },
+        {
+          createdAt: {
+            lt: new Date(now - INBOX_UNREAD_RETENTION_DAYS * DAY_MS),
+          },
+        },
+      ],
+    },
+  });
+  return count;
 }

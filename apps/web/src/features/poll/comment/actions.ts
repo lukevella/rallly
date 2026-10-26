@@ -7,6 +7,7 @@ import { after } from "next/server";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
 import { getNotificationRecipient } from "@/features/notifications/data";
+import { createInboxNotification } from "@/features/notifications/mutations";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import { getComment } from "@/features/poll/comment/data";
 import { addComment, deleteComment } from "@/features/poll/comment/mutations";
@@ -41,6 +42,7 @@ async function sendNewCommentNotificationEmail({
     const result = await getNotificationRecipient({
       pollId,
       type: "poll.comment.added",
+      channel: "email",
       excludeUserId,
     });
 
@@ -118,6 +120,17 @@ export const addCommentAction = anyUserActionClient
         authorName: comment.authorName,
         content: comment.content,
         excludeUserId: ctx.user.id,
+      }),
+    );
+
+    after(() =>
+      createInboxNotification({
+        activityId: result.activityId,
+        pollId,
+        type: "poll.comment.added",
+        excludeUserId: ctx.user.id,
+      }).catch((error) => {
+        logger.error({ error, pollId }, "Failed to create inbox notification");
       }),
     );
 

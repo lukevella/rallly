@@ -16,16 +16,20 @@ export type PollActivityWrite = { pollId: string } & PollActivityEvent;
  * The log is also the webhook outbox. Delivery is not triggered here: this
  * feature is below the webhook feature in the graph, so the mutation that
  * owns the transaction schedules the dispatch once it commits.
+ *
+ * Returns the new rows' ids for consumers that hang state off an event (the
+ * in-app inbox).
  */
 export async function recordPollActivities(
   tx: Prisma.TransactionClient,
   activities: PollActivityWrite[],
 ) {
   if (activities.length === 0) {
-    return;
+    return [];
   }
 
-  await tx.pollActivity.createMany({
+  return tx.pollActivity.createManyAndReturn({
+    select: { id: true },
     data: activities.map(({ pollId, ...event }) => {
       const parsed = pollActivitySchema.parse(event);
       return {

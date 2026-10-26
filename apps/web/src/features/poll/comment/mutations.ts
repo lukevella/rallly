@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { recordPollActivities } from "@/features/activity/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
 import { MAX_COMMENT_AUTHOR_NAME_LENGTH } from "@/features/poll/schema";
 
@@ -21,6 +22,7 @@ export type AddCommentResult =
         authorName: string;
         poll: { id: string; title: string };
       };
+      activityId: string;
     }
   | { ok: false; reason: CommentRefusal };
 
@@ -65,7 +67,7 @@ export async function addComment({
   }
 
   try {
-    const comment = await prisma.$transaction(async (tx) => {
+    const { comment, activityId } = await prisma.$transaction(async (tx) => {
       // Locked so the host's delete or comments-off transition, which
       // updates the same row, cannot commit between this check and the
       // insert.
@@ -86,7 +88,7 @@ export async function addComment({
         throw new CommentRefusedError("disabled");
       }
 
-      return tx.comment.create({
+      const comment = await tx.comment.create({
         data: {
           content,
           pollId,
@@ -100,11 +102,22 @@ export async function addComment({
           poll: { select: { id: true, title: true } },
         },
       });
+
+      const [activity] = await recordPollActivities(tx, [
+        {
+          pollId,
+          type: "comment_added",
+          userId,
+          payload: { name: comment.authorName },
+        },
+      ]);
+
+      return { comment, activityId: activity.id };
     });
 
     revalidatePollPages();
 
-    return { ok: true, comment };
+    return { ok: true, comment, activityId };
   } catch (error) {
     if (error instanceof CommentRefusedError) {
       return { ok: false, reason: error.reason };

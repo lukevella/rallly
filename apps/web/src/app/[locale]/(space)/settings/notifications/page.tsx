@@ -23,8 +23,8 @@ export default async function Page() {
         </SettingsPageTitle>
         <SettingsPageDescription>
           <Trans
-            i18nKey="notificationsDescription"
-            defaults="Choose which email notifications you receive"
+            i18nKey="notificationsChannelsDescription"
+            defaults="Choose how you are notified about activity on your polls"
           />
         </SettingsPageDescription>
       </SettingsPageHeader>

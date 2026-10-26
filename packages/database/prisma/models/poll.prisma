@@ -142,7 +142,8 @@ model PollActivity {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  poll               Poll                @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  inboxNotifications InboxNotification[]
 
   @@index([pollId, createdAt(sort: Desc)])
   @@index([pollId, participantId])

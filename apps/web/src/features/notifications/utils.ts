@@ -1,4 +1,15 @@
+import { parsePollActivity } from "@/features/activity/schema";
 import { createSignature, verifySignature } from "@/lib/signature";
+import {
+  defaultNotificationPreferences,
+  inboxActivityTypes,
+} from "./constants";
+import type { NotificationPreferences } from "./schema";
+import {
+  activityEventTypes,
+  getNotificationPreferenceKey,
+  notificationPreferencesSchema,
+} from "./schema";
 
 const SIGNING_CONTEXT = "unsubscribe";
 
@@ -77,4 +88,45 @@ export function parseUnsubscribeToken({
     // Malformed payload: fall through
   }
   return null;
+}
+
+export function parseNotificationPreferences(
+  prefs: unknown,
+): NotificationPreferences {
+  const parsed = notificationPreferencesSchema.safeParse(prefs);
+  return {
+    ...defaultNotificationPreferences,
+    ...(parsed.success ? parsed.data : {}),
+  };
+}
+
+/** The activity types the user has asked to see in their inbox. */
+export function getInboxActivityTypes(prefs: NotificationPreferences) {
+  return activityEventTypes
+    .filter((type) => prefs[getNotificationPreferenceKey(type, "inApp")])
+    .map((type) => inboxActivityTypes[type]);
+}
+
+/**
+ * The event an inbox entry's activity notified about, or null when this
+ * version of the vocabulary can't render it.
+ */
+export function toInboxEvent(
+  activity: Parameters<typeof parsePollActivity>[0],
+) {
+  const event = parsePollActivity(activity);
+  switch (event?.type) {
+    case "response_created":
+      return {
+        type: "poll.response.submitted" as const,
+        actorName: event.payload.name,
+      };
+    case "comment_added":
+      return {
+        type: "poll.comment.added" as const,
+        actorName: event.payload.name,
+      };
+    default:
+      return null;
+  }
 }

@@ -1,19 +1,20 @@
 import "server-only";
 
+import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 
-import { defaultNotificationPreferences } from "./constants";
-import type { ActivityEventType, NotificationPreferences } from "./schema";
-import { notificationPreferencesSchema } from "./schema";
-
-function parsePrefs(prefs: unknown): NotificationPreferences {
-  const parsed = notificationPreferencesSchema.safeParse(prefs);
-  return {
-    ...defaultNotificationPreferences,
-    ...(parsed.success ? parsed.data : {}),
-  };
-}
+import type {
+  ActivityEventType,
+  NotificationChannel,
+  NotificationPreferences,
+} from "./schema";
+import { getNotificationPreferenceKey } from "./schema";
+import {
+  getInboxActivityTypes,
+  parseNotificationPreferences,
+  toInboxEvent,
+} from "./utils";
 
 export async function getNotificationPreferences(
   userId: string,
@@ -23,7 +24,7 @@ export async function getNotificationPreferences(
     select: { prefs: true },
   });
 
-  return parsePrefs(row?.prefs);
+  return parseNotificationPreferences(row?.prefs);
 }
 
 type NotificationRecipient = {
@@ -49,10 +50,12 @@ export type NotificationSkipReason =
 export async function getNotificationRecipient({
   pollId,
   type,
+  channel,
   excludeUserId,
 }: {
   pollId: string;
   type: ActivityEventType;
+  channel: NotificationChannel;
   excludeUserId: string;
 }): Promise<
   | { ok: true; recipient: NotificationRecipient }
@@ -117,9 +120,11 @@ export async function getNotificationRecipient({
     return { ok: false, reason: "not_effective_member" };
   }
 
-  const prefs = parsePrefs(creator.notificationPreferences?.prefs);
+  const prefs = parseNotificationPreferences(
+    creator.notificationPreferences?.prefs,
+  );
 
-  if (!prefs[type]) {
+  if (!prefs[getNotificationPreferenceKey(type, channel)]) {
     return { ok: false, reason: "preference_off" };
   }
 
@@ -148,4 +153,68 @@ export async function getPollMuteTarget({
     where: { id: pollId, userId, deleted: false },
     select: { id: true, title: true, muted: true },
   });
+}
+
+/**
+ * A page of the user's inbox, newest first, with the unread total. Muting a
+ * poll or turning an in-app preference off hides its entries, past ones
+ * included. Only polls the user still organizes are shown: an entry about a
+ * poll that was deleted or changed hands is no longer theirs to act on.
+ */
+export async function listInboxNotifications({
+  userId,
+  limit,
+  cursor,
+}: {
+  userId: string;
+  limit: number;
+  /** The last id of the previous page. */
+  cursor?: string;
+}) {
+  const prefs = await getNotificationPreferences(userId);
+
+  const where = {
+    userId,
+    activity: {
+      type: { in: getInboxActivityTypes(prefs) },
+      poll: { userId, deleted: false, muted: false },
+    },
+  } satisfies Prisma.InboxNotificationWhereInput;
+
+  const [rows, unreadCount] = await Promise.all([
+    prisma.inboxNotification.findMany({
+      where,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: limit + 1,
+      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+      select: {
+        id: true,
+        readAt: true,
+        createdAt: true,
+        activity: {
+          select: {
+            type: true,
+            userId: true,
+            participantId: true,
+            inviteId: true,
+            optionId: true,
+            payload: true,
+            poll: { select: { id: true, title: true } },
+          },
+        },
+      },
+    }),
+    prisma.inboxNotification.count({ where: { ...where, readAt: null } }),
+  ]);
+
+  const page = rows.slice(0, limit);
+
+  return {
+    unreadCount,
+    nextCursor: rows.length > limit ? page[page.length - 1]?.id : undefined,
+    notifications: page.flatMap(({ activity, ...row }) => {
+      const event = toInboxEvent(activity);
+      return event ? [{ ...row, ...event, poll: activity.poll }] : [];
+    }),
+  };
 }

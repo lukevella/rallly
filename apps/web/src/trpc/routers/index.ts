@@ -4,6 +4,7 @@ import { billing } from "./billing";
 import { calendars } from "./calendars";
 import { eventTypes } from "./event-types";
 import { events } from "./events";
+import { notifications } from "./notifications";
 import { polls } from "./polls";
 import { spaces } from "./spaces";
 
@@ -13,6 +14,7 @@ export const appRouter = mergeRouters(
     billing,
     eventTypes,
     events,
+    notifications,
     polls,
     spaces,
     calendars,

@@ -8,6 +8,7 @@ import {
   cancelUserSubscriptions,
   deleteStripeCustomer,
 } from "@/features/billing/mutations";
+import { pruneInboxNotifications } from "@/features/notifications/mutations";
 import {
   autoClosePolls,
   deleteInactivePolls,
@@ -92,6 +93,24 @@ app.get("/remove-deleted-polls", async (c) => {
     summary: {
       deleted: {
         polls: totalDeletedPolls,
+      },
+    },
+  });
+});
+
+app.get("/prune-inbox-notifications", async (c) => {
+  const deleted = await pruneInboxNotifications();
+
+  logger.info(
+    { task: "prune-inbox-notifications", deleted },
+    "Pruned inbox notifications past retention",
+  );
+
+  return c.json({
+    success: true,
+    summary: {
+      deleted: {
+        inboxNotifications: deleted,
       },
     },
   });

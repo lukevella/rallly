@@ -62,6 +62,7 @@ const iconByType: Record<PollActivityEvent["type"], LucideIcon> = {
   response_created: UserPlusIcon,
   response_updated: UserPenIcon,
   response_deleted: UserMinusIcon,
+  comment_added: MessageCircleIcon,
   option_added: CalendarPlusIcon,
   option_deleted: CalendarMinusIcon,
   options_added: CalendarPlusIcon,
@@ -98,6 +99,7 @@ const toneByType: Record<
   response_created: "added",
   response_updated: "changed",
   response_deleted: "removed",
+  comment_added: "added",
   option_added: "added",
   option_deleted: "removed",
   options_added: "added",
@@ -468,6 +470,15 @@ function ActivityDescription({
         <Trans
           i18nKey="pollActivityResponseDeleted"
           defaults="Response from <b>{name}</b> deleted"
+          values={{ name: event.payload.name }}
+          components={{ b }}
+        />
+      );
+    case "comment_added":
+      return (
+        <Trans
+          i18nKey="pollActivityCommentAdded"
+          defaults="<b>{name}</b> commented"
           values={{ name: event.payload.name }}
           components={{ b }}
         />

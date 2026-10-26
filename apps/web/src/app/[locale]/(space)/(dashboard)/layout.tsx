@@ -18,6 +18,7 @@ import { PastDueAlert } from "@/features/billing/components/past-due-alert";
 import { UpdateIndicator } from "@/features/instance-settings/components/update-indicator";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import { CommandMenu } from "@/features/navigation/components/command-menu";
+import { InboxPopover } from "@/features/notifications/components/inbox-popover";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { listSpacesForUser } from "@/features/space/data";
 import { NavUser } from "@/features/user/components/nav-user";
@@ -43,15 +44,20 @@ export default async function Layout({
       <CommandMenu />
       <Sidebar>
         <SidebarHeader>
-          <SpaceDropdown
-            spaces={spaces.map((space) => ({
-              id: space.id,
-              name: space.name,
-              image: space.image,
-              tier: space.tier,
-              role: space.role,
-            }))}
-          />
+          <div className="flex items-center gap-1">
+            <div className="min-w-0 flex-1">
+              <SpaceDropdown
+                spaces={spaces.map((space) => ({
+                  id: space.id,
+                  name: space.name,
+                  image: space.image,
+                  tier: space.tier,
+                  role: space.role,
+                }))}
+              />
+            </div>
+            <InboxPopover />
+          </div>
         </SidebarHeader>
         <SidebarContent>
           <SpaceSidebarMenu />

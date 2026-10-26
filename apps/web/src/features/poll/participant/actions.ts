@@ -12,6 +12,7 @@ import { resolveSpaceTier } from "@/features/billing/utils";
 import { chargeEmailBudget } from "@/features/email-budget/mutations";
 import { EmailBudgetStore } from "@/features/email-budget/service";
 import { getNotificationRecipient } from "@/features/notifications/data";
+import { createInboxNotification } from "@/features/notifications/mutations";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
   getParticipant,
@@ -127,6 +128,7 @@ async function sendNewResponseNotificationEmail({
     const result = await getNotificationRecipient({
       pollId,
       type: "poll.response.submitted",
+      channel: "email",
       excludeUserId,
     });
 
@@ -244,6 +246,17 @@ export const addParticipantAction = anyUserActionClient
         participantEmail: participant.email,
         note: participant.note,
         excludeUserId: ctx.user.id,
+      }),
+    );
+
+    after(() =>
+      createInboxNotification({
+        activityId: result.activityId,
+        pollId,
+        type: "poll.response.submitted",
+        excludeUserId: ctx.user.id,
+      }).catch((error) => {
+        logger.error({ error, pollId }, "Failed to create inbox notification");
       }),
     );
 

@@ -125,6 +125,7 @@ export type AddParticipantResult =
       editToken: string;
       viaInvite: boolean;
       totalResponses: number;
+      activityId: string;
     }
   | { ok: false; reason: WriteRefusal };
 
@@ -233,7 +234,7 @@ export async function addParticipant({
         },
       });
 
-      await recordPollActivities(tx, [
+      const [activity] = await recordPollActivities(tx, [
         {
           pollId,
           type: "response_created",
@@ -262,6 +263,7 @@ export async function addParticipant({
         editToken,
         viaInvite: invite !== null,
         totalResponses: participantCount + 1,
+        activityId: activity.id,
       };
     });
 

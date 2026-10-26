@@ -49,6 +49,10 @@ const IGNORED_RELATIONS = new Map([
     "Per-user settings, meaningless once the account is gone.",
   ],
   [
+    "inboxNotifications",
+    "In-app copies of poll activity addressed to the account. Only registered users receive them (guest creators are skipped as recipients), so a guest never has one.",
+  ],
+  [
     "queuedEmails",
     "Delivery state for emails the account's actions queued, sent within minutes and carrying no user-authored content. Once the account is gone, what it queued should not go out.",
   ],
