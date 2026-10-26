@@ -6,6 +6,7 @@ import {
   getFinalizePlanGate,
   getFinalizeTiming,
   maskParticipantsForViewer,
+  placeOptionsByPopularity,
   rankOptionsByPopularity,
   summarizeNotifySelection,
   toAvailabilitySpans,
@@ -350,6 +351,42 @@ describe("getFinalizeTiming", () => {
         now,
       }).is_past,
     ).toBe(true);
+  });
+});
+
+describe("placeOptionsByPopularity", () => {
+  const options = [{ id: "a" }, { id: "b" }, { id: "c" }, { id: "d" }];
+  const vote = (optionId: string, type: "yes" | "ifNeedBe" | "no") => ({
+    optionId,
+    type,
+  });
+
+  it("shares a place between options tied on yes and if need be", () => {
+    const participants = [
+      {
+        id: "p1",
+        votes: [vote("a", "yes"), vote("b", "yes"), vote("c", "ifNeedBe")],
+      },
+      {
+        id: "p2",
+        votes: [vote("a", "yes"), vote("b", "yes"), vote("c", "yes")],
+      },
+    ];
+
+    const placed = placeOptionsByPopularity({ options, participants });
+
+    expect(placed.map((o) => [o.id, o.place, o.available])).toEqual([
+      ["a", 1, 2],
+      ["b", 1, 2],
+      ["c", 3, 2],
+      ["d", null, 0],
+    ]);
+  });
+
+  it("gives no place when nobody can attend", () => {
+    const participants = [{ id: "p1", votes: [vote("a", "no")] }];
+    const placed = placeOptionsByPopularity({ options, participants });
+    expect(placed.every((o) => o.place === null)).toBe(true);
   });
 });
 

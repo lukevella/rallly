@@ -6,6 +6,7 @@ import { Spinner } from "@/components/spinner";
 import { EventCard } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { PollPageShell } from "@/features/poll/components/poll-page-shell";
+import { PollResultsSummary } from "@/features/poll/components/poll-results-summary";
 import { ResponsiveResults } from "@/features/poll/components/responsive-results";
 import { VotingForm } from "@/features/poll/components/voting-form";
 import { FloatingComments } from "@/features/poll/invite/components/floating-comments";
@@ -46,6 +47,7 @@ export function InvitePage({
   const content = (
     <>
       <EventCard description={description} />
+      <PollResultsSummary />
       <VotingForm>
         <ResponsiveResults />
         <FloatingComments />
