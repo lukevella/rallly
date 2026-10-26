@@ -113,6 +113,7 @@ function toPollResponseBody(poll: {
   requireParticipantEmail: boolean;
   hideParticipants: boolean;
   hideScores: boolean;
+  aggregateResultsOnly: boolean;
   disableComments: boolean;
   allowTentativeVotes: boolean;
   participantCount: number;
@@ -147,6 +148,7 @@ function toPollResponseBody(poll: {
       requireEmail: poll.requireParticipantEmail,
       hideParticipants: poll.hideParticipants,
       hideScores: poll.hideScores,
+      aggregateResultsOnly: poll.aggregateResultsOnly ?? false,
       disableComments: poll.disableComments,
       allowTentativeVotes: poll.allowTentativeVotes,
       participantCount: poll.participantCount,
@@ -578,6 +580,7 @@ app.post(
             requireParticipantEmail: input.requireEmail,
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
+            aggregateResultsOnly: input.aggregateResultsOnly,
             disableComments: poll.disableComments,
             allowTentativeVotes: poll.allowTentativeVotes,
             isGuest: false,
@@ -618,6 +621,7 @@ app.post(
         requireParticipantEmail: input.requireEmail,
         hideParticipants: input.hideParticipants,
         hideScores: input.hideScores,
+        aggregateResultsOnly: input.aggregateResultsOnly,
         disableComments: input.disableComments,
         allowTentativeVotes: input.allowTentativeVotes,
         options,
@@ -690,6 +694,7 @@ app.post(
       requireParticipantEmail: input.requireEmail,
       hideParticipants: input.hideParticipants,
       hideScores: input.hideScores,
+      aggregateResultsOnly: input.aggregateResultsOnly,
       disableComments: input.disableComments,
       allowTentativeVotes: input.allowTentativeVotes,
       options,
@@ -953,6 +958,16 @@ app.get(
       );
     }
 
+    if (data.aggregateResultsOnly) {
+      return c.json(
+        apiError(
+          "INDIVIDUAL_RESPONSES_DISABLED",
+          "This poll only exposes aggregate results.",
+        ),
+        403,
+      );
+    }
+
     return c.json(
       getPollParticipantsSuccessResponseSchema.parse({
         data: data.participants.map((participant) =>
@@ -1014,6 +1029,16 @@ app.get(
           "Poll not found or does not belong to this space.",
         ),
         404,
+      );
+    }
+
+    if (poll.aggregateResultsOnly) {
+      return c.json(
+        apiError(
+          "INDIVIDUAL_RESPONSES_DISABLED",
+          "This poll only exposes aggregate results.",
+        ),
+        403,
       );
     }
 

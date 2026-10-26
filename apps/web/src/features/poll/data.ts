@@ -46,6 +46,7 @@ export async function getPoll({
       title: true,
       status: true,
       timeZone: true,
+      aggregateResultsOnly: true,
     },
   });
 }
@@ -183,10 +184,7 @@ export async function getPollParticipants({
     select: {
       id: true,
       kind: true,
-      participants: {
-        select: apiParticipantSelect,
-        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
-      },
+      aggregateResultsOnly: true,
     },
   });
 
@@ -194,10 +192,19 @@ export async function getPollParticipants({
     return null;
   }
 
+  const participants = poll.aggregateResultsOnly
+    ? []
+    : await prisma.participant.findMany({
+        where: { pollId },
+        select: apiParticipantSelect,
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      });
+
   return {
     pollId: poll.id,
     kind: poll.kind,
-    participants: poll.participants,
+    aggregateResultsOnly: poll.aggregateResultsOnly,
+    participants,
   };
 }
 
@@ -225,10 +232,7 @@ export async function getPollParticipant({
     select: {
       id: true,
       kind: true,
-      participants: {
-        where: { id: participantId },
-        select: apiParticipantSelect,
-      },
+      aggregateResultsOnly: true,
     },
   });
 
@@ -236,9 +240,20 @@ export async function getPollParticipant({
     return { poll: null, participant: null };
   }
 
+  const participant = poll.aggregateResultsOnly
+    ? null
+    : await prisma.participant.findFirst({
+        where: { pollId, id: participantId },
+        select: apiParticipantSelect,
+      });
+
   return {
-    poll: { id: poll.id, kind: poll.kind },
-    participant: poll.participants[0] ?? null,
+    poll: {
+      id: poll.id,
+      kind: poll.kind,
+      aggregateResultsOnly: poll.aggregateResultsOnly,
+    },
+    participant,
   };
 }
 
@@ -274,6 +289,7 @@ export async function listPolls({
       requireParticipantEmail: true,
       hideParticipants: true,
       hideScores: true,
+      aggregateResultsOnly: true,
       disableComments: true,
       allowTentativeVotes: true,
       user: {
@@ -629,6 +645,7 @@ export async function getPollWithOptions({
       requireParticipantEmail: true,
       hideParticipants: true,
       hideScores: true,
+      aggregateResultsOnly: true,
       disableComments: true,
       allowTentativeVotes: true,
       user: {
@@ -732,6 +749,7 @@ export async function getPollDetails({
       status: true,
       closedReason: true,
       hideParticipants: true,
+      aggregateResultsOnly: true,
       disableComments: true,
       allowTentativeVotes: true,
       hideScores: true,
@@ -773,6 +791,33 @@ export async function getPollDetails({
     return null;
   }
 
+  const aggregateResultsPromise = poll.aggregateResultsOnly
+    ? Promise.all([
+        prisma.vote.groupBy({
+          by: ["optionId", "type"],
+          where: { pollId },
+          _count: true,
+        }),
+        prisma.participant.count({ where: { pollId } }),
+      ])
+    : Promise.resolve([[], 0] as const);
+  const [aggregateVoteRows, aggregateParticipantCount] =
+    await aggregateResultsPromise;
+  const aggregateVotesByOption = new Map<
+    string,
+    { yes: number; ifNeedBe: number; no: number; skip: number }
+  >();
+  for (const row of aggregateVoteRows) {
+    const counts = aggregateVotesByOption.get(row.optionId) ?? {
+      yes: 0,
+      ifNeedBe: 0,
+      no: 0,
+      skip: 0,
+    };
+    counts[row.type] = row._count;
+    aggregateVotesByOption.set(row.optionId, counts);
+  }
+
   const { spaceBrandingAllowed, spaceAttributionConfigurable } =
     await getInstancePolicy();
   const brandingActive = poll.space
@@ -799,6 +844,18 @@ export async function getPollDetails({
 
   return {
     ...pollFields,
+    aggregateParticipantCount,
+    aggregateVotes: poll.aggregateResultsOnly
+      ? poll.options.map((option) => ({
+          optionId: option.id,
+          ...(aggregateVotesByOption.get(option.id) ?? {
+            yes: 0,
+            ifNeedBe: 0,
+            no: 0,
+            skip: 0,
+          }),
+        }))
+      : [],
     conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
     space: space

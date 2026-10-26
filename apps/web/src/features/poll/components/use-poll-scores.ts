@@ -18,22 +18,32 @@ export function usePollScores() {
       { yes: number; ifNeedBe: number; no: number; skip: number }
     >();
     for (const option of poll.options) {
-      scores.set(option.id, { yes: 0, ifNeedBe: 0, no: 0, skip: 0 });
+      const aggregate = poll.aggregateResultsOnly
+        ? poll.aggregateVotes?.find((result) => result.optionId === option.id)
+        : undefined;
+      scores.set(option.id, {
+        yes: aggregate?.yes ?? 0,
+        ifNeedBe: aggregate?.ifNeedBe ?? 0,
+        no: aggregate?.no ?? 0,
+        skip: aggregate?.skip ?? 0,
+      });
     }
-    for (const participant of participants) {
-      for (const vote of participant.votes) {
-        const score = scores.get(vote.optionId);
-        if (!score) {
-          continue;
-        }
-        if (vote.type === "yes") {
-          score.yes += 1;
-        } else if (vote.type === "ifNeedBe") {
-          score.ifNeedBe += 1;
-        } else if (vote.type === "no") {
-          score.no += 1;
-        } else {
-          score.skip += 1;
+    if (!poll.aggregateResultsOnly) {
+      for (const participant of participants) {
+        for (const vote of participant.votes) {
+          const score = scores.get(vote.optionId);
+          if (!score) {
+            continue;
+          }
+          if (vote.type === "yes") {
+            score.yes += 1;
+          } else if (vote.type === "ifNeedBe") {
+            score.ifNeedBe += 1;
+          } else if (vote.type === "no") {
+            score.no += 1;
+          } else {
+            score.skip += 1;
+          }
         }
       }
     }

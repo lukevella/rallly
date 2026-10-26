@@ -46,34 +46,38 @@ export function maskParticipantsForViewer({
   participants,
   viewer,
   hideParticipants,
+  aggregateResultsOnly = false,
 }: {
   participants: RawParticipant[];
   viewer: { userId: string | null; linkedParticipantIds: string[] };
   hideParticipants: boolean;
+  aggregateResultsOnly?: boolean;
 }): PollParticipant[] {
   const linkedIds = new Set(viewer.linkedParticipantIds);
   const isOwn = (participant: { id: string; userId: string | null }) =>
     linkedIds.has(participant.id) ||
     (!!viewer.userId && participant.userId === viewer.userId);
 
-  return participants.map(({ token: _token, ...participant }) => {
-    if (isOwn(participant)) {
-      return { ...participant, hidden: false, editUrl: null };
-    }
-    if (hideParticipants) {
-      return {
-        ...participant,
-        userId: null,
-        name: "",
-        email: null,
-        image: null,
-        note: null,
-        hidden: true,
-        editUrl: null,
-      };
-    }
-    return { ...participant, note: null, hidden: false, editUrl: null };
-  });
+  return participants
+    .filter((participant) => !aggregateResultsOnly || isOwn(participant))
+    .map(({ token: _token, ...participant }) => {
+      if (isOwn(participant)) {
+        return { ...participant, hidden: false, editUrl: null };
+      }
+      if (hideParticipants) {
+        return {
+          ...participant,
+          userId: null,
+          name: "",
+          email: null,
+          image: null,
+          note: null,
+          hidden: true,
+          editUrl: null,
+        };
+      }
+      return { ...participant, note: null, hidden: false, editUrl: null };
+    });
 }
 
 /**

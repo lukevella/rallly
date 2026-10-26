@@ -89,7 +89,9 @@ export const usePermissions = () => {
   const { user } = useUser();
 
   return {
-    canAddNewParticipant: poll.status === "open",
+    canAddNewParticipant:
+      poll.status === "open" &&
+      !(poll.aggregateResultsOnly && viewerRole === "admin"),
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
         return false;

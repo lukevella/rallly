@@ -19,10 +19,12 @@ function TestForm({
   enableComments = false,
   allowTentativeVotes = true,
   hasTentativeVotes = false,
+  hasResponses = false,
 }: {
   enableComments?: boolean;
   allowTentativeVotes?: boolean;
   hasTentativeVotes?: boolean;
+  hasResponses?: boolean;
 }) {
   const form = useForm<PollSettingsFormData>({
     defaultValues: {
@@ -31,11 +33,15 @@ function TestForm({
       requireParticipantEmail: false,
       hideParticipants: false,
       hideScores: false,
+      aggregateResultsOnly: false,
     },
   });
   return (
     <Form {...form}>
-      <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
+      <PollSettingsForm
+        hasTentativeVotes={hasTentativeVotes}
+        hasResponses={hasResponses}
+      />
     </Form>
   );
 }
@@ -92,6 +98,29 @@ describe("PollSettingsForm vote options lock", () => {
     expect(
       screen.getByRole("combobox", { name: /vote options/i }),
     ).not.toBeDisabled();
+  });
+
+  describe("PollSettingsForm aggregate results setting", () => {
+    it("is free and can be enabled before responses arrive", async () => {
+      const user = userEvent.setup();
+      render(<TestForm />);
+      const setting = screen.getByRole("switch", {
+        name: /show aggregate results only/i,
+      });
+      expect(setting).not.toBeDisabled();
+      await user.click(setting);
+      expect(setting).toBeChecked();
+    });
+
+    it("locks after the first response", () => {
+      render(<TestForm hasResponses />);
+      expect(
+        screen.getByRole("switch", { name: /show aggregate results only/i }),
+      ).toBeDisabled();
+      expect(
+        screen.getByText(/locked after the first response/i),
+      ).toBeInTheDocument();
+    });
   });
 
   it("locks the answer set once a response uses the tentative vote", () => {

@@ -45,6 +45,18 @@ export const PollContextProvider: React.FunctionComponent<{
 
   const getScore = React.useCallback(
     (optionId: string) => {
+      if (poll.aggregateResultsOnly) {
+        const aggregate = poll.aggregateVotes?.find(
+          (result) => result.optionId === optionId,
+        );
+        return {
+          yes: aggregate?.yes ?? 0,
+          ifNeedBe: aggregate?.ifNeedBe ?? 0,
+          no: aggregate?.no ?? 0,
+          skip: aggregate?.skip ?? 0,
+        };
+      }
+
       return (participants ?? []).reduce(
         (acc, curr) => {
           curr.votes.forEach((vote) => {
@@ -66,7 +78,7 @@ export const PollContextProvider: React.FunctionComponent<{
         { yes: 0, ifNeedBe: 0, no: 0, skip: 0 },
       );
     },
-    [participants],
+    [participants, poll.aggregateResultsOnly, poll.aggregateVotes],
   );
 
   const contextValue = React.useMemo<PollContextValue>(() => {

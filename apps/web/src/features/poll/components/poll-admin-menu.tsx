@@ -76,10 +76,12 @@ export function PollAdminMenu() {
               <DropdownMenuSeparator />
             </>
           )}
-          <DropdownMenuItem onClick={exportToCsv}>
-            <DownloadIcon />
-            <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
-          </DropdownMenuItem>
+          {poll.aggregateResultsOnly ? null : (
+            <DropdownMenuItem onClick={exportToCsv}>
+              <DownloadIcon />
+              <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => {
               if (isFree) {

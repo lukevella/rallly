@@ -15,6 +15,15 @@ export type PollDetails = {
   status: PollStatus;
   closedReason: PollClosedReason | null;
   hideParticipants: boolean;
+  aggregateResultsOnly?: boolean;
+  aggregateParticipantCount?: number;
+  aggregateVotes?: {
+    optionId: string;
+    yes: number;
+    ifNeedBe: number;
+    no: number;
+    skip: number;
+  }[];
   disableComments: boolean;
   allowTentativeVotes: boolean;
   hideScores: boolean;

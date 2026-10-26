@@ -42,10 +42,17 @@ async function ResponseDetail({
             <SearchXIcon />
           </EmptyStateIcon>
           <EmptyStateTitle>
-            <Trans
-              i18nKey="pollResponseDetailNotFound"
-              defaults="This response no longer exists"
-            />
+            {poll.aggregateResultsOnly ? (
+              <Trans
+                i18nKey="aggregateResponsesHiddenTitle"
+                defaults="Individual responses are hidden"
+              />
+            ) : (
+              <Trans
+                i18nKey="pollResponseDetailNotFound"
+                defaults="This response no longer exists"
+              />
+            )}
           </EmptyStateTitle>
         </EmptyState>
       </PollResponseDetailCard>
@@ -91,6 +98,7 @@ export default async function Page({
         pollId={pollId}
         participants={participants}
         pollOpen={poll.status === "open"}
+        aggregateResultsOnly={poll.aggregateResultsOnly}
       />
     );
   }
@@ -110,6 +118,7 @@ export default async function Page({
           pollOpen={poll.status === "open"}
           selectedId={responseId}
           compact
+          aggregateResultsOnly={poll.aggregateResultsOnly}
         />
       </div>
       <div

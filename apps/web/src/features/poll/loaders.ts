@@ -55,6 +55,10 @@ const getEditUrl = ({ pollId, token }: { pollId: string; token: string }) =>
   shortUrl(getPollInvitePath({ pollId, token }));
 
 export const loadPollParticipants = cache(async (pollId: string) => {
+  const poll = await loadPoll(pollId);
+  if (poll.aggregateResultsOnly) {
+    return [];
+  }
   const participants = await loadParticipantRows(pollId);
   return participants.map(({ id, name, note, image, createdAt, token }) => ({
     id,
@@ -72,6 +76,10 @@ export const loadPollParticipants = cache(async (pollId: string) => {
  */
 export const loadOptionalPollResponse = cache(
   async (pollId: string, participantId: string) => {
+    const poll = await loadPoll(pollId);
+    if (poll.aggregateResultsOnly) {
+      return null;
+    }
     const participants = await loadParticipantRows(pollId);
     const participant = participants.find(({ id }) => id === participantId);
 
@@ -123,20 +131,36 @@ export const loadPollTopOptions = cache(
 
 export const loadPollActivity = cache(
   async (pollId: string, limit?: number) => {
-    const [scope] = await Promise.all([
+    const [scope, poll] = await Promise.all([
       loadActiveSpaceContentScope(),
       loadPoll(pollId),
     ]);
-    return listPollActivity({ pollId, spaceId: scope.spaceId, limit });
+    const activity = await listPollActivity({
+      pollId,
+      spaceId: scope.spaceId,
+      limit,
+    });
+    if (poll.aggregateResultsOnly) {
+      return activity.filter(
+        ({ event }) =>
+          event.type !== "response_created" &&
+          event.type !== "response_updated" &&
+          event.type !== "response_deleted",
+      );
+    }
+    return activity;
   },
 );
 
 export const loadPollResponseActivity = cache(
   async (pollId: string, participantId: string) => {
-    const [scope] = await Promise.all([
+    const [scope, poll] = await Promise.all([
       loadActiveSpaceContentScope(),
       loadPoll(pollId),
     ]);
+    if (poll.aggregateResultsOnly) {
+      return [];
+    }
     return listPollActivity({
       pollId,
       spaceId: scope.spaceId,
@@ -189,6 +213,7 @@ export const loadInvitePoll = cache(
         participants,
         viewer,
         hideParticipants: poll.hideParticipants,
+        aggregateResultsOnly: poll.aggregateResultsOnly,
       }),
       comments: filterCommentsForViewer({
         comments,
@@ -221,7 +246,9 @@ export const loadAdminPoll = cache(async (pollId: string) => {
   }
 
   const [participants, comments] = await Promise.all([
-    listPollParticipants({ pollId }),
+    poll.aggregateResultsOnly
+      ? Promise.resolve([])
+      : listPollParticipants({ pollId }),
     listPollComments({ pollId }),
   ]);
 

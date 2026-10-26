@@ -25,6 +25,7 @@ export type CreatePollParams = {
   requireParticipantEmail?: boolean;
   hideParticipants?: boolean;
   hideScores?: boolean;
+  aggregateResultsOnly?: boolean;
   disableComments?: boolean;
   allowTentativeVotes?: boolean;
   options: PollOption[];
@@ -47,6 +48,7 @@ const pollResponseSelect = {
   requireParticipantEmail: true,
   hideParticipants: true,
   hideScores: true,
+  aggregateResultsOnly: true,
   disableComments: true,
   allowTentativeVotes: true,
   user: {
@@ -100,6 +102,7 @@ export const createPoll = async ({
   requireParticipantEmail,
   hideParticipants,
   hideScores,
+  aggregateResultsOnly,
   disableComments,
   allowTentativeVotes,
   options,
@@ -119,6 +122,7 @@ export const createPoll = async ({
         requireParticipantEmail,
         hideParticipants,
         hideScores,
+        aggregateResultsOnly,
         disableComments,
         allowTentativeVotes,
         userId,

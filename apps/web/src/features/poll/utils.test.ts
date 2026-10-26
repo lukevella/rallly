@@ -81,6 +81,20 @@ describe("maskParticipantsForViewer", () => {
     });
     expect(result[1].votes).toEqual([{ optionId: "opt-1", type: "yes" }]);
   });
+
+  it("returns only the viewer's responses when aggregate results are enabled", () => {
+    const result = maskParticipantsForViewer({
+      participants: [
+        participant("a", { userId: "user-1" }),
+        participant("b", { userId: "user-2" }),
+      ],
+      viewer: { userId: "user-1", linkedParticipantIds: [] },
+      hideParticipants: false,
+      aggregateResultsOnly: true,
+    });
+
+    expect(result.map(({ id }) => id)).toEqual(["a"]);
+  });
 });
 
 describe("filterCommentsForViewer", () => {

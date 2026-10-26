@@ -78,15 +78,22 @@ export default async function Page({
           />
         }
         viewAllHref={
-          participants.length > 0 ? `/polls/${pollId}/responses` : undefined
+          participants.length > 0 && !poll.aggregateResultsOnly
+            ? `/polls/${pollId}/responses`
+            : undefined
         }
-        count={participants.length}
+        count={
+          poll.aggregateResultsOnly
+            ? results.participantCount
+            : participants.length
+        }
       >
         {participants.length > 0 ? (
           <PollResponsesList
             pollId={pollId}
             participants={participants.slice(0, 5)}
             pollOpen={poll.status === "open"}
+            aggregateResultsOnly={poll.aggregateResultsOnly}
             className="-mx-4 px-0 py-0"
           />
         ) : (

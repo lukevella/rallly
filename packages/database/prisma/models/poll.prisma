@@ -52,6 +52,7 @@ model Poll {
   scheduledEventId        String?           @map("scheduled_event_id")
   hideParticipants        Boolean           @default(false) @map("hide_participants")
   hideScores              Boolean           @default(false) @map("hide_scores")
+  aggregateResultsOnly    Boolean           @default(false) @map("aggregate_results_only")
   disableComments         Boolean           @default(true) @map("disable_comments")
   requireParticipantEmail Boolean           @default(false) @map("require_participant_email")
   /// Whether participants may cast the tentative "if need be" vote. Positive

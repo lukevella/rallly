@@ -63,6 +63,7 @@ function VoteOptionLabel({ types }: { types: VoteType[] }) {
 export const PollSettingsForm = ({
   children,
   hasTentativeVotes = false,
+  hasResponses = false,
 }: React.PropsWithChildren<{
   /**
    * True when responses already use the tentative vote. Those votes stay
@@ -70,6 +71,7 @@ export const PollSettingsForm = ({
    * rule is enforced in the modify mutation.
    */
   hasTentativeVotes?: boolean;
+  hasResponses?: boolean;
 }>) => {
   const form = useFormContext<PollSettingsFormData>();
   const isFree = useIsFree();
@@ -196,6 +198,44 @@ export const PollSettingsForm = ({
                       field.onChange(checked);
                     }
                   }}
+                />
+              </Field>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="aggregateResultsOnly"
+            render={({ field }) => (
+              <Field orientation="horizontal">
+                <SettingIcon>
+                  <BarChart2Icon />
+                </SettingIcon>
+                <FieldContent>
+                  <FieldLabel htmlFor="aggregate-results-only">
+                    <Trans
+                      i18nKey="aggregateResultsOnlyTitle"
+                      defaults="Show aggregate results only"
+                    />
+                  </FieldLabel>
+                  <FieldDescription>
+                    {hasResponses ? (
+                      <Trans
+                        i18nKey="aggregateResultsOnlyLockedDescription"
+                        defaults="Locked after the first response to protect individual answers."
+                      />
+                    ) : (
+                      <Trans
+                        i18nKey="aggregateResultsOnlyDescription"
+                        defaults="Hide each response from everyone and show vote totals by option instead."
+                      />
+                    )}
+                  </FieldDescription>
+                </FieldContent>
+                <Switch
+                  id="aggregate-results-only"
+                  checked={!!field.value}
+                  disabled={hasResponses}
+                  onCheckedChange={field.onChange}
                 />
               </Field>
             )}

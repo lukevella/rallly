@@ -213,6 +213,7 @@ export const polls = router({
           .optional(),
         hideParticipants: z.boolean().optional(),
         hideScores: z.boolean().optional(),
+        aggregateResultsOnly: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         allowTentativeVotes: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
@@ -342,6 +343,7 @@ export const polls = router({
             },
             hideParticipants: input.hideParticipants,
             disableComments: input.disableComments,
+            aggregateResultsOnly: input.aggregateResultsOnly,
             allowTentativeVotes: input.allowTentativeVotes,
             hideScores: input.hideScores,
             requireParticipantEmail: input.requireParticipantEmail,
@@ -422,6 +424,7 @@ export const polls = router({
           allowTentativeVotes: poll.allowTentativeVotes,
           hideParticipants: poll.hideParticipants,
           hideScores: poll.hideScores,
+          aggregateResultsOnly: poll.aggregateResultsOnly,
           requireParticipantEmail: poll.requireParticipantEmail,
           isGuest: ctx.user.isGuest,
         },
@@ -452,6 +455,7 @@ export const polls = router({
         optionsToAdd: z.string().array().optional(),
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
+        aggregateResultsOnly: z.boolean().optional(),
         allowTentativeVotes: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
@@ -581,6 +585,7 @@ export const polls = router({
             timeZone: true,
             hideParticipants: true,
             hideScores: true,
+            aggregateResultsOnly: true,
             disableComments: true,
             allowTentativeVotes: true,
             requireParticipantEmail: true,
@@ -610,6 +615,23 @@ export const polls = router({
               code: "BAD_REQUEST",
               message:
                 "Tentative votes cannot be turned off once participants have used them",
+            });
+          }
+        }
+
+        if (
+          input.aggregateResultsOnly !== undefined &&
+          input.aggregateResultsOnly !== prior.aggregateResultsOnly
+        ) {
+          const participantCount = await tx.participant.count({
+            where: { pollId },
+          });
+
+          if (participantCount > 0) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message:
+                "Aggregate results cannot be changed once participants have responded",
             });
           }
         }
@@ -691,6 +713,7 @@ export const polls = router({
             // single source of truth for whether options are timezone-bound.
             timeZone: kind === "time" ? input.timeZone : null,
             hideScores: input.hideScores,
+            aggregateResultsOnly: input.aggregateResultsOnly,
             hideParticipants: input.hideParticipants,
             disableComments: input.disableComments,
             allowTentativeVotes: input.allowTentativeVotes,
@@ -726,6 +749,7 @@ export const polls = router({
             timeZone: prior.timeZone,
             hideParticipants: prior.hideParticipants,
             hideScores: prior.hideScores,
+            aggregateResultsOnly: prior.aggregateResultsOnly,
             disableComments: prior.disableComments,
             allowTentativeVotes: prior.allowTentativeVotes,
             requireParticipantEmail: prior.requireParticipantEmail,
@@ -738,6 +762,7 @@ export const polls = router({
             timeZone: nextTimeZone,
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
+            aggregateResultsOnly: input.aggregateResultsOnly,
             disableComments: input.disableComments,
             allowTentativeVotes: input.allowTentativeVotes,
             requireParticipantEmail: input.requireParticipantEmail,
@@ -810,6 +835,7 @@ export const polls = router({
           requireParticipantEmail: true,
           hideParticipants: true,
           hideScores: true,
+          aggregateResultsOnly: true,
           timeZone: true,
           muted: true,
           _count: {
@@ -859,6 +885,7 @@ export const polls = router({
         input.disableComments !== undefined ||
         input.allowTentativeVotes !== undefined ||
         input.hideScores !== undefined ||
+        input.aggregateResultsOnly !== undefined ||
         input.requireParticipantEmail !== undefined;
 
       if (hasDetailsUpdate) {
@@ -896,6 +923,7 @@ export const polls = router({
             allow_tentative_votes: !!updatedPoll.allowTentativeVotes,
             hide_participants: !!updatedPoll.hideParticipants,
             hide_scores: !!updatedPoll.hideScores,
+            aggregate_results_only: !!updatedPoll.aggregateResultsOnly,
             require_participant_email: !!updatedPoll.requireParticipantEmail,
           },
           groups: {
@@ -974,6 +1002,7 @@ export const polls = router({
           disableComments: true,
           allowTentativeVotes: true,
           hideScores: true,
+          aggregateResultsOnly: true,
           requireParticipantEmail: true,
           options: {
             select: {
@@ -1646,6 +1675,7 @@ export const polls = router({
           timeZone: true,
           hideParticipants: true,
           hideScores: true,
+          aggregateResultsOnly: true,
           requireParticipantEmail: true,
           disableComments: true,
           allowTentativeVotes: true,
@@ -1692,6 +1722,7 @@ export const polls = router({
             description: poll.description,
             hideParticipants: poll.hideParticipants,
             hideScores: poll.hideScores,
+            aggregateResultsOnly: poll.aggregateResultsOnly,
             disableComments: poll.disableComments,
             allowTentativeVotes: poll.allowTentativeVotes,
             kind: poll.kind,

@@ -112,6 +112,7 @@ export type AddParticipantResult =
         id: string;
         title: string;
         allowTentativeVotes: boolean;
+        aggregateResultsOnly: boolean;
         space: {
           id: string;
           tier: SpaceTier;
@@ -216,6 +217,7 @@ export async function addParticipant({
               id: true,
               title: true,
               allowTentativeVotes: true,
+              aggregateResultsOnly: true,
               space: {
                 select: {
                   id: true,
