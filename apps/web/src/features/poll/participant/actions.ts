@@ -20,8 +20,9 @@ import {
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
 import {
-  getOidcAccount,
+  getOidcLogin,
   hasOidcAccount,
+  hasOidcLogin,
 } from "@/features/poll/participant/data";
 import {
   addParticipant,
@@ -138,7 +139,7 @@ async function isOidcViewerForVoting(user: Actor | null) {
     return true;
   }
 
-  return !!user && !user.isGuest && (await hasOidcAccount(user.id));
+  return !!user && !user.isGuest && (await hasOidcLogin(user.id));
 }
 
 async function sendNewResponseNotificationEmail({
@@ -223,12 +224,12 @@ export const addParticipantAction = anyUserActionClient
     const locale = await getLocale();
 
     const requireOidc = requireOidcToVote();
-    const oidcAccount = requireOidc ? await getOidcAccount(ctx.user.id) : null;
+    const oidcLogin = requireOidc ? await getOidcLogin(ctx.user.id) : null;
     const identity = resolveVoterIdentity({
       requireOidc,
       user: ctx.user,
-      oidcIdentity: oidcAccount
-        ? readOidcIdentity(oidcAccount.id_token, {
+      oidcIdentity: oidcLogin
+        ? readOidcIdentity(oidcLogin.id_token, {
             name: env.OIDC_NAME_CLAIM_PATH,
             email: env.OIDC_EMAIL_CLAIM_PATH,
           })

@@ -19,7 +19,7 @@ import {
   listPollParticipants,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
-import { hasOidcAccount } from "@/features/poll/participant/data";
+import { hasOidcLogin } from "@/features/poll/participant/data";
 import type { PollStatus } from "@/features/poll/schema";
 import {
   filterCommentsForViewer,
@@ -31,7 +31,7 @@ import { getSession } from "@/lib/auth";
 
 /**
  * How `REQUIRE_OIDC_TO_VOTE` applies to this viewer: voting is closed until
- * they hold an OIDC-linked account, after which their response carries the
+ * they have signed in through OIDC, after which their response carries the
  * IdP identity.
  */
 export async function loadOidcVoting(
@@ -41,7 +41,7 @@ export async function loadOidcVoting(
     return "off" as const;
   }
 
-  return user && !user.isGuest && (await hasOidcAccount(user.id))
+  return user && !user.isGuest && (await hasOidcLogin(user.id))
     ? ("identityLocked" as const)
     : ("signInRequired" as const);
 }
