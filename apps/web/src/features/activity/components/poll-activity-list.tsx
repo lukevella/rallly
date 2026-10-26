@@ -338,6 +338,11 @@ function ChangeDescription({ change }: { change: PollChange }) {
   }
 }
 
+/**
+ * The one-line summary of an activity event. `poll_closed` events carry a
+ * reason that picks the wording: "deadline" (the closing time passed),
+ * "auto" (every date ended) or none (an organizer closed it by hand).
+ */
 function ActivityDescription({
   event,
   timeZone,
