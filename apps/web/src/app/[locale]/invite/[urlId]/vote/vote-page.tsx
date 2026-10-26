@@ -7,6 +7,7 @@ import { VotePageFooter } from "@/features/poll/vote/components/vote-page-footer
 import { VotePanel } from "@/features/poll/vote/components/vote-panel";
 import type { VotePageView } from "@/features/poll/vote/types";
 import type { UserDTO } from "@/features/user/schema";
+import { OidcSignInPrompt } from "../oidc-sign-in-prompt";
 
 /**
  * Participant view as one card centered on a page that never scrolls: the
@@ -24,6 +25,7 @@ export function VotePage({
   user,
   spaceBrandingAllowed,
   instanceBranding,
+  oidcProviderName,
 }: {
   view: VotePageView;
   footerLinks: { label: string; href: string }[];
@@ -34,6 +36,7 @@ export function VotePage({
   user: UserDTO | null;
   spaceBrandingAllowed: boolean;
   instanceBranding: { appName: string; logoIcon?: string };
+  oidcProviderName: string;
 }) {
   return (
     // Below lg the page itself scrolls and the card gives up its frame,
@@ -66,6 +69,14 @@ export function VotePage({
               />
             </aside>
             <section className="flex flex-1 flex-col lg:min-h-0 lg:border-l">
+              {view.oidcVoting === "signInRequired" ? (
+                <div className="shrink-0 border-b p-4">
+                  <OidcSignInPrompt
+                    providerName={oidcProviderName}
+                    redirectTo={`/invite/${view.poll.id}/vote`}
+                  />
+                </div>
+              ) : null}
               <VotePanel
                 {...view}
                 requireParticipantEmail={requireParticipantEmail}

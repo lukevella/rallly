@@ -5,6 +5,13 @@ import type { SpaceTier } from "@/features/space/schema";
 
 export type PollUnavailableReason = "deleted" | "removed";
 
+/**
+ * How `REQUIRE_OIDC_TO_VOTE` applies to the viewer: "off" leaves voting as it
+ * is, "signInRequired" closes it until they sign in through OIDC, and
+ * "identityLocked" records their response under the IdP name and email.
+ */
+export type OidcVotingState = "off" | "signInRequired" | "identityLocked";
+
 export type PollDetails = {
   id: string;
   title: string;

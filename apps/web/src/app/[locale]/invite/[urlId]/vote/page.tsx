@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
+import { env } from "@/env";
 import { loadInstanceBranding } from "@/features/branding/loaders";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
@@ -105,6 +106,7 @@ async function VotePageContent({ params, searchParams }: PageProps) {
           user={session?.user ?? null}
           spaceBrandingAllowed={instancePolicy.spaceBrandingAllowed}
           instanceBranding={instanceBranding}
+          oidcProviderName={env.OIDC_NAME}
         />
       </DeviceDateTimeProvider>
     </>

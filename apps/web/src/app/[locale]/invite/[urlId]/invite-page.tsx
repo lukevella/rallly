@@ -3,6 +3,7 @@ import { buttonVariants } from "@rallly/ui";
 import { ArrowUpRightIcon, EyeIcon } from "lucide-react";
 import { Link } from "@/components/link";
 import { Spinner } from "@/components/spinner";
+import { useOidcVoting } from "@/features/poll/client";
 import { EventCard } from "@/features/poll/components/event-card";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { PollPageShell } from "@/features/poll/components/poll-page-shell";
@@ -11,6 +12,7 @@ import { VotingForm } from "@/features/poll/components/voting-form";
 import { FloatingComments } from "@/features/poll/invite/components/floating-comments";
 import { Trans } from "@/i18n/client";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
+import { OidcSignInPrompt } from "./oidc-sign-in-prompt";
 
 /**
  * The voting grid depends on two things the server cannot know: the
@@ -31,13 +33,16 @@ export function InvitePage({
   description,
   footerLinks,
   canManage,
+  oidcProviderName,
 }: {
   pollId: string;
+  oidcProviderName: string;
   description: React.ReactNode;
   footerLinks: { label: string; href: string }[];
   canManage: boolean;
 }) {
   const hydrated = useHydrated();
+  const oidcVoting = useOidcVoting();
 
   if (!hydrated) {
     return <InvitePageLoading />;
@@ -46,6 +51,12 @@ export function InvitePage({
   const content = (
     <>
       <EventCard description={description} />
+      {oidcVoting === "signInRequired" ? (
+        <OidcSignInPrompt
+          providerName={oidcProviderName}
+          redirectTo={`/invite/${pollId}`}
+        />
+      ) : null}
       <VotingForm>
         <ResponsiveResults />
         <FloatingComments />

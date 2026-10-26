@@ -19,6 +19,7 @@ import {
   listParticipantIdsByToken,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import { hasOidcAccount } from "@/features/poll/participant/data";
 import {
   addParticipant,
   deleteParticipant,
@@ -31,6 +32,7 @@ import {
   renameParticipantSchema,
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
+import { resolveVoterIdentity } from "@/features/poll/participant/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
@@ -192,18 +194,32 @@ export const addParticipantAction = anyUserActionClient
   .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(addParticipantSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const { pollId, votes, name, email, note, timeZone, token } = parsedInput;
+    const { pollId, votes, note, timeZone, token } = parsedInput;
 
     ctx.event.pollId = pollId;
     await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);
     const locale = await getLocale();
+
+    const requireOidc = env.REQUIRE_OIDC_TO_VOTE === "true";
+    const identity = resolveVoterIdentity({
+      requireOidc,
+      user: ctx.user,
+      hasOidcAccount: requireOidc && (await hasOidcAccount(ctx.user.id)),
+      input: parsedInput,
+    });
+
+    if (!identity.ok) {
+      return identity;
+    }
+
+    const { name, email } = identity;
 
     const result = await addParticipant({
       pollId,
       userId: ctx.user.id,
       locale,
       name,
-      email,
+      email: email ?? undefined,
       note,
       timeZone,
       token,

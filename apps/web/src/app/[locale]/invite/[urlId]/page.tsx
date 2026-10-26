@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
+import { env } from "@/env";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PollProvider } from "@/features/poll/client";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
@@ -11,7 +12,11 @@ import { LegacyPollContextProvider } from "@/features/poll/components/poll-conte
 import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
-import { loadInvitePoll, loadPollAvailability } from "@/features/poll/loaders";
+import {
+  loadInvitePoll,
+  loadOidcVoting,
+  loadPollAvailability,
+} from "@/features/poll/loaders";
 import { loadCanManagePoll } from "@/features/poll/vote/loaders";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -68,6 +73,8 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     loadCanManagePoll(urlId),
   ]);
 
+  const oidcVoting = await loadOidcVoting(user);
+
   return (
     <>
       <SessionRefresher />
@@ -84,6 +91,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
             comments={comments}
             linkedParticipantIds={linkedParticipantIds}
             viewerRole="participant"
+            oidcVoting={oidcVoting}
           >
             <LegacyPollContextProvider>
               <VisibilityProvider>
@@ -91,6 +99,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
                 <InvitePage
                   pollId={poll.id}
                   canManage={canManage}
+                  oidcProviderName={env.OIDC_NAME}
                   // Rendered here so the markdown parser stays on the server
                   description={
                     <EventMetaDescription

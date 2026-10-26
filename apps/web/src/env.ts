@@ -35,6 +35,11 @@ export const env = createEnv({
     OIDC_NAME_CLAIM_PATH: z.string().default("name"),
     OIDC_PICTURE_CLAIM_PATH: z.string().default("picture"),
     /**
+     * When "true", only users signed in through OIDC can submit a response;
+     * their IdP name and email are recorded on it.
+     */
+    REQUIRE_OIDC_TO_VOTE: z.enum(["true", "false"]).default("false"),
+    /**
      * Email Provider
      * Choose which service provider to use for sending emails.
      * Make sure to configure the corresponding environment variables.
@@ -276,6 +281,7 @@ export const env = createEnv({
     OIDC_EMAIL_CLAIM_PATH: process.env.OIDC_EMAIL_CLAIM_PATH,
     OIDC_NAME_CLAIM_PATH: process.env.OIDC_NAME_CLAIM_PATH,
     OIDC_PICTURE_CLAIM_PATH: process.env.OIDC_PICTURE_CLAIM_PATH,
+    REQUIRE_OIDC_TO_VOTE: process.env.REQUIRE_OIDC_TO_VOTE,
     EMAIL_PROVIDER: process.env.EMAIL_PROVIDER,
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_USER: process.env.SMTP_USER,

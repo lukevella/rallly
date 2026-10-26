@@ -25,9 +25,10 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   testDir: "./tests",
-  // Smoke specs run against the production Docker image via
-  // playwright.smoke.config.ts, not the dev/test server.
-  testIgnore: "**/smoke/**",
+  // Smoke and OIDC specs run against a docker compose stack via
+  // playwright.smoke.config.ts / playwright.oidc.config.ts, not the dev/test
+  // server.
+  testIgnore: ["**/smoke/**", "**/oidc/**"],
   webServer: {
     // Local runs clear .next first: Turbopack's persistent dev cache
     // (default on since Next 16.1) is shared across dev sessions, and a

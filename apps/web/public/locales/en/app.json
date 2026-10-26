@@ -1219,5 +1219,7 @@
   "you": "You",
   "youAreSignedInAs": "You're signed in as",
   "yourApiKey": "Your API key",
-  "yourName": "Your name…"
+  "yourName": "Your name…",
+  "newParticipantFormErrorAuthRequired": "Sign in with your organization account to vote.",
+  "oidcSignInToVote": "Sign in with your organization account to vote on this poll."
 }

@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { IfCloudHosted } from "@/components/environment";
 import { Link } from "@/components/link";
-import { usePollOrNull } from "@/features/poll/client";
+import { useOidcVoting, usePollOrNull } from "@/features/poll/client";
 import {
   useAddParticipant,
   useEditToken,
@@ -61,6 +61,8 @@ interface NewParticipantModalProps {
   /** These fall back to the poll in context on the legacy surfaces. */
   pollId?: string;
   requireParticipantEmail?: boolean;
+  /** Falls back to the poll in context, like the two props above. */
+  identityLocked?: boolean;
   onSubmit?: (data: { id: string }) => void;
   onCancel?: () => void;
 }
@@ -138,6 +140,8 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const { timeZone } = useDateTimeConfig();
   const { user, createGuestIfNeeded } = useUser();
   const isLoggedIn = user && !user.isGuest;
+  const lockedByContext = useOidcVoting() === "identityLocked";
+  const identityLocked = props.identityLocked ?? lockedByContext;
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -166,6 +170,10 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorTooManyRequests", {
           defaultValue:
             "You have made too many attempts. Please wait a while and try again.",
+        });
+      case "authRequired":
+        return t("newParticipantFormErrorAuthRequired", {
+          defaultValue: "Sign in with your organization account to vote.",
         });
       case "unauthorized":
         return t("newParticipantFormErrorUnauthorized", {
@@ -313,7 +321,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                     className="w-full"
                     {...passwordManagerIgnoreProps}
                     autoFocus={true}
-                    disabled={formState.isSubmitting}
+                    disabled={formState.isSubmitting || identityLocked}
                     placeholder={t("namePlaceholder")}
                     {...field}
                   />
@@ -337,7 +345,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                   <Input
                     className="w-full"
                     {...passwordManagerIgnoreProps}
-                    disabled={formState.isSubmitting}
+                    disabled={formState.isSubmitting || identityLocked}
                     placeholder={t("emailPlaceholder")}
                     {...field}
                   />

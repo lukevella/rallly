@@ -3,6 +3,7 @@ import "server-only";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
+import { env } from "@/env";
 import { listPollActivity } from "@/features/activity/data";
 import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
@@ -18,6 +19,7 @@ import {
   listPollParticipants,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import { hasOidcAccount } from "@/features/poll/participant/data";
 import type { PollStatus } from "@/features/poll/schema";
 import {
   filterCommentsForViewer,
@@ -26,6 +28,23 @@ import {
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
+
+/**
+ * How `REQUIRE_OIDC_TO_VOTE` applies to this viewer: voting is closed until
+ * they hold an OIDC-linked account, after which their response carries the
+ * IdP identity.
+ */
+export async function loadOidcVoting(
+  user: { id: string; isGuest: boolean } | null,
+) {
+  if (env.REQUIRE_OIDC_TO_VOTE !== "true") {
+    return "off" as const;
+  }
+
+  return user && !user.isGuest && (await hasOidcAccount(user.id))
+    ? ("identityLocked" as const)
+    : ("signInRequired" as const);
+}
 
 export const loadPolls = cache(
   async ({

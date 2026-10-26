@@ -2,6 +2,7 @@
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
 import type {
+  OidcVotingState,
   PollComment,
   PollDetails,
   PollParticipant,
@@ -20,6 +21,13 @@ type PollContextValue = {
   linkedParticipantIds: string[];
   /** Which surface the page is: the host's admin page or the invite page. */
   viewerRole: "admin" | "participant";
+  /**
+   * Resolved on the server from `REQUIRE_OIDC_TO_VOTE` and the viewer's
+   * session: "signInRequired" hides voting until the viewer signs in through
+   * OIDC, "identityLocked" means the response is recorded under the IdP name
+   * and email, so the form shows them read-only.
+   */
+  oidcVoting: OidcVotingState;
 };
 
 const PollContext = React.createContext<PollContextValue | null>(null);
@@ -37,14 +45,30 @@ export function PollProvider({
   comments,
   linkedParticipantIds = [],
   viewerRole,
+  oidcVoting = "off",
   children,
-}: Omit<PollContextValue, "linkedParticipantIds"> & {
+}: Omit<PollContextValue, "linkedParticipantIds" | "oidcVoting"> & {
   linkedParticipantIds?: string[];
+  oidcVoting?: PollContextValue["oidcVoting"];
   children: React.ReactNode;
 }) {
   const value = React.useMemo(
-    () => ({ poll, participants, comments, linkedParticipantIds, viewerRole }),
-    [poll, participants, comments, linkedParticipantIds, viewerRole],
+    () => ({
+      poll,
+      participants,
+      comments,
+      linkedParticipantIds,
+      viewerRole,
+      oidcVoting,
+    }),
+    [
+      poll,
+      participants,
+      comments,
+      linkedParticipantIds,
+      viewerRole,
+      oidcVoting,
+    ],
   );
 
   return <PollContext.Provider value={value}>{children}</PollContext.Provider>;
@@ -57,6 +81,10 @@ export const usePoll = () => useRequiredContext(PollContext).poll;
 export const usePollOrNull = () => React.useContext(PollContext)?.poll ?? null;
 
 export const useRole = () => useRequiredContext(PollContext).viewerRole;
+
+/** "off" when no provider is mounted, like `usePollOrNull`. */
+export const useOidcVoting = () =>
+  React.useContext(PollContext)?.oidcVoting ?? "off";
 
 export const useComments = () => useRequiredContext(PollContext).comments;
 
@@ -84,12 +112,13 @@ export const useParticipants = () => {
 };
 
 export const usePermissions = () => {
-  const { poll, participants, linkedParticipantIds, viewerRole } =
+  const { poll, participants, linkedParticipantIds, viewerRole, oidcVoting } =
     useRequiredContext(PollContext);
   const { user } = useUser();
 
   return {
-    canAddNewParticipant: poll.status === "open",
+    canAddNewParticipant:
+      poll.status === "open" && oidcVoting !== "signInRequired",
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
         return false;

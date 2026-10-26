@@ -49,6 +49,7 @@ export function VotePanel({
   participantCount,
   response,
   canVote,
+  oidcVoting,
   requireParticipantEmail,
   user,
 }: VotePageView & {
@@ -102,6 +103,7 @@ export function VotePanel({
         results={results}
         response={response}
         canVote={canVote}
+        identityLocked={oidcVoting === "identityLocked"}
       >
         <VoteOutcome poll={poll}>
           <div className="flex min-h-0 flex-1 flex-col">
