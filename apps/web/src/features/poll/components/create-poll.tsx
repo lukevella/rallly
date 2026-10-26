@@ -40,8 +40,11 @@ import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
 import { setFlash } from "@/lib/flash/client";
+import { createSessionStorage } from "@/lib/session-storage";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
+
+const draftStorage = createSessionStorage();
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
@@ -182,6 +185,7 @@ export const CreatePoll = ({
   );
 
   const { clear } = useFormPersist("new-poll", {
+    storage: draftStorage,
     watch: form.watch,
     setValue: form.setValue,
     onDataRestored: handleDataRestored,
