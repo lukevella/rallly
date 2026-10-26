@@ -35,7 +35,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useMount } from "react-use";
 import * as z from "zod";
-import { usePoll } from "@/features/poll/client";
+import { useOidcVoting, usePoll } from "@/features/poll/client";
 import {
   useDeleteParticipant,
   useEditToken,
@@ -68,6 +68,8 @@ export const ParticipantDropdown = ({
 }) => {
   const [isChangeNameModalVisible, setIsChangeNameModalVisible] =
     React.useState(false);
+  // Under REQUIRE_OIDC_TO_VOTE the recorded name is the IdP's, so it is fixed.
+  const canChangeName = useOidcVoting() === "off";
   const [isDeleteParticipantModalVisible, setIsDeleteParticipantModalVisible] =
     React.useState(false);
 
@@ -97,10 +99,12 @@ export const ParticipantDropdown = ({
             <PencilIcon />
             <Trans i18nKey="editVotes" defaults="Edit votes" />
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
-            <TagIcon />
-            <Trans i18nKey="changeName" defaults="Change name" />
-          </DropdownMenuItem>
+          {canChangeName ? (
+            <DropdownMenuItem onClick={() => setIsChangeNameModalVisible(true)}>
+              <TagIcon />
+              <Trans i18nKey="changeName" defaults="Change name" />
+            </DropdownMenuItem>
+          ) : null}
           {participant.editUrl ? (
             <CopyEditLinkMenuItem
               editUrl={participant.editUrl}

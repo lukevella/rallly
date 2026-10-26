@@ -79,11 +79,13 @@ export function VotePanelFooter({
   results,
   response,
   canVote,
+  canChangeName,
 }: {
   poll: VotePageView["poll"];
   results: VotePageView["results"];
   response: VotePageView["response"];
   canVote: boolean;
+  canChangeName: boolean;
 }) {
   const { t } = useTranslation();
   const form = useVoteForm();
@@ -130,10 +132,12 @@ export function VotePanelFooter({
                 }
               />
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => changeNameDialog.trigger()}>
-                  <TagIcon />
-                  <Trans i18nKey="changeName" defaults="Change name" />
-                </DropdownMenuItem>
+                {canChangeName ? (
+                  <DropdownMenuItem onClick={() => changeNameDialog.trigger()}>
+                    <TagIcon />
+                    <Trans i18nKey="changeName" defaults="Change name" />
+                  </DropdownMenuItem>
+                ) : null}
                 {/* Removing the response entirely is rarer than changing it
                     to a no, so it sits in the menu rather than beside Edit. */}
                 <DropdownMenuItem

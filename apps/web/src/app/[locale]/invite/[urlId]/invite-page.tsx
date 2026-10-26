@@ -5,6 +5,7 @@ import { Link } from "@/components/link";
 import { Spinner } from "@/components/spinner";
 import { useOidcVoting } from "@/features/poll/client";
 import { EventCard } from "@/features/poll/components/event-card";
+import { OidcSignInPrompt } from "@/features/poll/components/oidc-sign-in-prompt";
 import { PollFooter } from "@/features/poll/components/poll-footer";
 import { PollPageShell } from "@/features/poll/components/poll-page-shell";
 import { ResponsiveResults } from "@/features/poll/components/responsive-results";
@@ -12,7 +13,6 @@ import { VotingForm } from "@/features/poll/components/voting-form";
 import { FloatingComments } from "@/features/poll/invite/components/floating-comments";
 import { Trans } from "@/i18n/client";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
-import { OidcSignInPrompt } from "./oidc-sign-in-prompt";
 
 /**
  * The voting grid depends on two things the server cannot know: the

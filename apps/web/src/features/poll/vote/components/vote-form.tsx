@@ -286,9 +286,14 @@ export function VoteForm({
                 ? t("pollClosedDescription", {
                     defaultValue: "No more responses are being accepted.",
                   })
-                : t("actionErrorInternalServerError", {
-                    defaultValue: "An internal server error occurred",
-                  }),
+                : result.reason === "authRequired"
+                  ? t("newParticipantFormErrorAuthRequired", {
+                      defaultValue:
+                        "Sign in with your organization account to vote.",
+                    })
+                  : t("actionErrorInternalServerError", {
+                      defaultValue: "An internal server error occurred",
+                    }),
             );
             return;
           }

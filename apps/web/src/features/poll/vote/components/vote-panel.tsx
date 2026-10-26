@@ -135,6 +135,8 @@ export function VotePanel({
               results={results}
               response={response}
               canVote={canVote}
+              // Under REQUIRE_OIDC_TO_VOTE the recorded name is the IdP's.
+              canChangeName={oidcVoting === "off"}
             />
           </div>
         </VoteOutcome>

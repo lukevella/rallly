@@ -1,13 +1,13 @@
 import { Card } from "@rallly/ui/card";
 import { Spinner } from "@/components/spinner";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { OidcSignInPrompt } from "@/features/poll/components/oidc-sign-in-prompt";
 import { EventSidebar } from "@/features/poll/invite/components/event-sidebar";
 import { ManagePollButton } from "@/features/poll/vote/components/manage-poll-button";
 import { VotePageFooter } from "@/features/poll/vote/components/vote-page-footer";
 import { VotePanel } from "@/features/poll/vote/components/vote-panel";
 import type { VotePageView } from "@/features/poll/vote/types";
 import type { UserDTO } from "@/features/user/schema";
-import { OidcSignInPrompt } from "../oidc-sign-in-prompt";
 
 /**
  * Participant view as one card centered on a page that never scrolls: the

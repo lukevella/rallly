@@ -19,7 +19,10 @@ import {
   listParticipantIdsByToken,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
-import { hasOidcAccount } from "@/features/poll/participant/data";
+import {
+  getOidcAccount,
+  hasOidcAccount,
+} from "@/features/poll/participant/data";
 import {
   addParticipant,
   deleteParticipant,
@@ -32,7 +35,10 @@ import {
   renameParticipantSchema,
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
-import { resolveVoterIdentity } from "@/features/poll/participant/utils";
+import {
+  readOidcIdentity,
+  resolveVoterIdentity,
+} from "@/features/poll/participant/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
@@ -119,6 +125,22 @@ async function authorizeParticipantEdit({
   return { ok: true as const, participant, actor };
 }
 
+const requireOidcToVote = () => env.REQUIRE_OIDC_TO_VOTE === "true";
+
+/**
+ * With `REQUIRE_OIDC_TO_VOTE` on, voting is closed to anyone who has not
+ * signed in through OIDC, and that holds for changing a response as much as
+ * for creating one: an emailed edit token must not reopen it. Poll admins get
+ * no exception, matching what the page shows them.
+ */
+async function isOidcViewerForVoting(user: Actor | null) {
+  if (!requireOidcToVote()) {
+    return true;
+  }
+
+  return !!user && !user.isGuest && (await hasOidcAccount(user.id));
+}
+
 async function sendNewResponseNotificationEmail({
   pollId,
   pollTitle,
@@ -200,11 +222,17 @@ export const addParticipantAction = anyUserActionClient
     await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);
     const locale = await getLocale();
 
-    const requireOidc = env.REQUIRE_OIDC_TO_VOTE === "true";
+    const requireOidc = requireOidcToVote();
+    const oidcAccount = requireOidc ? await getOidcAccount(ctx.user.id) : null;
     const identity = resolveVoterIdentity({
       requireOidc,
       user: ctx.user,
-      hasOidcAccount: requireOidc && (await hasOidcAccount(ctx.user.id)),
+      oidcIdentity: oidcAccount
+        ? readOidcIdentity(oidcAccount.id_token, {
+            name: env.OIDC_NAME_CLAIM_PATH,
+            email: env.OIDC_EMAIL_CLAIM_PATH,
+          })
+        : null,
       input: parsedInput,
     });
 
@@ -317,6 +345,10 @@ export const updateParticipantVotesAction = optionalUserActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { participantId, votes, token } = parsedInput;
 
+    if (!(await isOidcViewerForVoting(ctx.user))) {
+      return { ok: false as const, reason: "authRequired" as const };
+    }
+
     const authorization = await authorizeParticipantEdit({
       participantId,
       token,
@@ -363,6 +395,16 @@ export const renameParticipantAction = optionalUserActionClient
     }
 
     const { participant, actor } = authorization;
+
+    // The recorded name is the one the IdP asserted; renaming would let it
+    // drift from that identity.
+    if (
+      requireOidcToVote() &&
+      participant.userId &&
+      (await hasOidcAccount(participant.userId))
+    ) {
+      return { ok: false as const, reason: "identityLocked" as const };
+    }
 
     return renameParticipant({
       participantId,
