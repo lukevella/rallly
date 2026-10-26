@@ -34,6 +34,14 @@ type VoteFormValues = z.infer<typeof schema>;
 
 export const useVoteForm = () => useFormContext<VoteFormValues>();
 
+const PastOptionsContext = React.createContext<Set<string>>(new Set());
+
+/**
+ * The options that have passed and can no longer be voted on. Every view
+ * locks these, and the footer blocks submitting once nothing else is left.
+ */
+export const usePastOptions = () => React.useContext(PastOptionsContext);
+
 /**
  * Writes one option's vote. Separate from `useVote` so a view that handles
  * clicks above its cells can set a vote without subscribing to one option.
@@ -41,15 +49,22 @@ export const useVoteForm = () => useFormContext<VoteFormValues>();
  * `type` may be a function of the current vote, so a caller that cycles does
  * not have to close over the votes: a stale closure would freeze the cycle
  * after one step.
+ *
+ * A past option is ignored here, whichever view the click came from: the
+ * server refuses a change to it.
  */
 export function useSetVote() {
   const form = useVoteForm();
+  const pastOptionIds = usePastOptions();
 
   return React.useCallback(
     (
       optionId: string,
       type: VoteType | ((current: VoteType | undefined) => VoteType),
     ) => {
+      if (pastOptionIds.has(optionId)) {
+        return;
+      }
       const next = [...form.getValues("votes")];
       const at = next.findIndex((vote) => vote?.optionId === optionId);
       const resolved =
@@ -64,7 +79,7 @@ export function useSetVote() {
       }
       form.setValue("votes", next, { shouldDirty: true });
     },
-    [form],
+    [form, pastOptionIds],
   );
 }
 
@@ -79,6 +94,7 @@ export function useVote(optionId: string) {
   const mode = form.watch("mode");
   const index = votes.findIndex((vote) => vote?.optionId === optionId);
   const set = useSetVote();
+  const pastOptionIds = usePastOptions();
 
   const setVote = React.useCallback(
     (type: VoteType) => set(optionId, type),
@@ -90,6 +106,8 @@ export function useVote(optionId: string) {
     setVote,
     /** True while the viewer is composing, false when reviewing a saved one. */
     isEditing: mode !== "view",
+    /** True once the option has passed: its vote is shown but locked. */
+    isPast: pastOptionIds.has(optionId),
   };
 }
 
@@ -208,6 +226,7 @@ export function VoteForm({
   results,
   response,
   canVote,
+  pastOptionIds,
   children,
 }: {
   pollId: string;
@@ -216,6 +235,8 @@ export function VoteForm({
   results: VotePageView["results"];
   response: VotePageView["response"];
   canVote: boolean;
+  /** Options that have passed, by the viewer's clock. */
+  pastOptionIds: Set<string>;
   children: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -255,61 +276,68 @@ export function VoteForm({
 
   return (
     <FormProvider {...form}>
-      <form
-        id="vote-form"
-        onSubmit={form.handleSubmit(async (data) => {
-          if (!response) {
-            // Plain properties, not groups, to match poll_response_submit:
-            // guest events are personless and PostHog drops their groups.
-            posthog?.capture("poll_response:form_open", {
-              poll_id: pollId,
-              require_email: requireParticipantEmail,
-              tier,
+      <PastOptionsContext.Provider value={pastOptionIds}>
+        <form
+          id="vote-form"
+          onSubmit={form.handleSubmit(async (data) => {
+            if (!response) {
+              // Plain properties, not groups, to match poll_response_submit:
+              // guest events are personless and PostHog drops their groups.
+              posthog?.capture("poll_response:form_open", {
+                poll_id: pollId,
+                require_email: requireParticipantEmail,
+                tier,
+              });
+              setIsNewParticipantOpen(true);
+              return;
+            }
+
+            const result = await updateVotes.execute({
+              participantId: response.participantId,
+              votes: normalizeVotes(optionIds, data.votes),
+              token,
             });
-            setIsNewParticipantOpen(true);
-            return;
-          }
 
-          const result = await updateVotes.execute({
-            participantId: response.participantId,
-            votes: normalizeVotes(optionIds, data.votes),
-            token,
-          });
+            if (!result.ok) {
+              // Stay in edit mode so the selection is not lost.
+              toast.error(
+                result.reason === "closed"
+                  ? t("pollClosedDescription", {
+                      defaultValue: "No more responses are being accepted.",
+                    })
+                  : result.reason === "pastOption"
+                    ? t("pastOptionVoteError", {
+                        defaultValue:
+                          "Some of these dates have already passed and can no longer be voted on. Refresh the page and try again.",
+                      })
+                    : t("actionErrorInternalServerError", {
+                        defaultValue: "An internal server error occurred",
+                      }),
+              );
+              return;
+            }
 
-          if (!result.ok) {
-            // Stay in edit mode so the selection is not lost.
-            toast.error(
-              result.reason === "closed"
-                ? t("pollClosedDescription", {
-                    defaultValue: "No more responses are being accepted.",
-                  })
-                : t("actionErrorInternalServerError", {
-                    defaultValue: "An internal server error occurred",
-                  }),
-            );
-            return;
-          }
-
-          form.reset({ mode: "view", votes: emptyVotes(results) });
-        })}
-      />
-      <Dialog
-        open={isNewParticipantOpen}
-        onOpenChange={setIsNewParticipantOpen}
-      >
-        <DialogContent size="sm">
-          <NewParticipantForm
-            pollId={pollId}
-            requireParticipantEmail={requireParticipantEmail}
-            votes={normalizeVotes(optionIds, form.watch("votes"))}
-            onSubmit={() => {
-              form.reset({ mode: "view", votes: emptyVotes(results) });
-            }}
-            onCancel={() => setIsNewParticipantOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
-      {children}
+            form.reset({ mode: "view", votes: emptyVotes(results) });
+          })}
+        />
+        <Dialog
+          open={isNewParticipantOpen}
+          onOpenChange={setIsNewParticipantOpen}
+        >
+          <DialogContent size="sm">
+            <NewParticipantForm
+              pollId={pollId}
+              requireParticipantEmail={requireParticipantEmail}
+              votes={normalizeVotes(optionIds, form.watch("votes"))}
+              onSubmit={() => {
+                form.reset({ mode: "view", votes: emptyVotes(results) });
+              }}
+              onCancel={() => setIsNewParticipantOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+        {children}
+      </PastOptionsContext.Provider>
     </FormProvider>
   );
 }

@@ -4,6 +4,7 @@ import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollComment, PollParticipant } from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
+import { getCalendarDate, toISODate } from "@/lib/datetime/utils";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -347,4 +348,50 @@ export function getFinalizePlanGate({
     return "conferencing";
   }
   return null;
+}
+
+// An all-day date is stored as UTC midnight, but it is still that date
+// somewhere on Earth until UTC-12 reaches the next midnight: 24h + 12h.
+const ALL_DAY_GRACE_MS = 36 * 60 * 60_000;
+
+/**
+ * Whether an option has already been and gone, by the server's clock.
+ *
+ * A time slot is past once it has ended. An all-day date has no zone, so the
+ * server cannot know the voter's calendar; it counts as past only once that
+ * date is over everywhere. The client's `isOptionPastForViewer` uses the
+ * viewer's zone and so may lock a date a little earlier than this rejects it.
+ */
+export function isOptionPast(
+  option: { startTime: Date; duration: number },
+  now: Date,
+) {
+  const end =
+    option.duration > 0
+      ? option.startTime.getTime() + option.duration * 60_000
+      : option.startTime.getTime() + ALL_DAY_GRACE_MS;
+  return end < now.getTime();
+}
+
+/**
+ * Whether an option has already been and gone, from the viewer's clock.
+ *
+ * A time slot is past once it has ended. An all-day date is a floating
+ * calendar date stored as UTC midnight (RFC 5545), so it is past only once
+ * the viewer's own calendar date has moved on — comparing its instant to
+ * now would retire today's date for everyone west of UTC. Never later than
+ * `isOptionPast`, so the client locks a date before the server refuses it.
+ */
+export function isOptionPastForViewer(
+  option: { startTime: Date; duration: number },
+  now: Date,
+  timeZone: string,
+) {
+  if (option.duration > 0) {
+    return (
+      new Date(option.startTime).getTime() + option.duration * 60_000 <
+      now.getTime()
+    );
+  }
+  return toISODate(option.startTime) < getCalendarDate(now, timeZone);
 }

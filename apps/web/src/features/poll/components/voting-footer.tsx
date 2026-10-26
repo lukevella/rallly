@@ -12,11 +12,17 @@ import {
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 
+import {
+  usePastOptionIds,
+  usePoll,
+} from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 
 function useSelection() {
   const votingForm = useVotingForm();
+  const { optionIds } = usePoll();
+  const pastOptionIds = usePastOptionIds();
   const selectedParticipantId = votingForm.watch("participantId");
   const votes = votingForm.watch("votes");
   const yesCount = votes.filter((vote) => vote?.type === "yes").length;
@@ -26,10 +32,15 @@ function useSelection() {
   return {
     votingForm,
     votes,
+    pastOptionIds,
     yesCount,
     ifNeedBeCount,
     selectedCount: yesCount + ifNeedBeCount,
     isNewResponse: !selectedParticipantId,
+    // Nothing left to answer: every vote control is locked.
+    allOptionsPast:
+      optionIds.length > 0 &&
+      optionIds.every((optionId) => pastOptionIds.has(optionId)),
   };
 }
 
@@ -44,13 +55,19 @@ export function useSelectionCount() {
  * selections.
  */
 export function DeclineButton({ className }: { className?: string }) {
-  const { votingForm, votes, selectedCount } = useSelection();
+  const { votingForm, votes, pastOptionIds, selectedCount, allOptionsPast } =
+    useSelection();
   const confirmDialog = useDialog();
 
   const submitAllNo = () => {
+    // Past options keep their answer: the server refuses a change to them.
     votingForm.setValue(
       "votes",
-      votes.map((vote) => (vote ? { ...vote, type: "no" as const } : vote)),
+      votes.map((vote) =>
+        vote && !pastOptionIds.has(vote.optionId)
+          ? { ...vote, type: "no" as const }
+          : vote,
+      ),
     );
     document.querySelector<HTMLFormElement>("#voting-form")?.requestSubmit();
   };
@@ -60,7 +77,7 @@ export function DeclineButton({ className }: { className?: string }) {
       <Button
         type="button"
         className={className}
-        disabled={votingForm.formState.isSubmitting}
+        disabled={votingForm.formState.isSubmitting || allOptionsPast}
         onClick={() => {
           if (selectedCount > 0) {
             confirmDialog.trigger();
@@ -112,13 +129,15 @@ export function DeclineButton({ className }: { className?: string }) {
 
 /**
  * Continue (new response) or Save (existing one). A new response is gated
- * until at least one option is selected; the gate explains itself in a toast
- * rather than disabling the button, so it stays reachable.
+ * until at least one option is selected, and any response once every option
+ * has passed; the gate explains itself in a toast rather than disabling the
+ * button, so it stays reachable.
  */
 export function SubmitResponseButton({ className }: { className?: string }) {
   const { t } = useTranslation();
-  const { votingForm, selectedCount, isNewResponse } = useSelection();
-  const isBlocked = isNewResponse && selectedCount === 0;
+  const { votingForm, selectedCount, isNewResponse, allOptionsPast } =
+    useSelection();
+  const isBlocked = allOptionsPast || (isNewResponse && selectedCount === 0);
 
   return (
     <Button
@@ -132,9 +151,11 @@ export function SubmitResponseButton({ className }: { className?: string }) {
         if (isBlocked) {
           event.preventDefault();
           toast(
-            t("selectAtLeastOneOptionOrDecline", {
-              defaultValue: "Select at least one option, or decline",
-            }),
+            allOptionsPast
+              ? t("allDatesPast", { defaultValue: "Every date has passed" })
+              : t("selectAtLeastOneOptionOrDecline", {
+                  defaultValue: "Select at least one option, or decline",
+                }),
           );
         }
       }}

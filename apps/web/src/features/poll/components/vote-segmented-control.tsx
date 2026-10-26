@@ -17,6 +17,7 @@ export const VoteSegmentedControl = ({
   onChange,
   optionLabel,
   allowTentativeVotes = true,
+  disabled,
   className,
 }: {
   value?: VoteType;
@@ -24,6 +25,8 @@ export const VoteSegmentedControl = ({
   className?: string;
   /** When false only yes and no are offered. */
   allowTentativeVotes?: boolean;
+  /** Locks the vote, e.g. on an option that has already passed. */
+  disabled?: boolean;
   /**
    * Accessible description of the option being voted on (e.g. "Tue 30 Jun
    * 2026, 1:00 PM – 2:00 PM") so screen readers can tie the vote to its
@@ -45,7 +48,8 @@ export const VoteSegmentedControl = ({
       data-testid="vote-selector"
       aria-label={optionLabel}
       // Touch-sized below sm; from there it matches a default button.
-      className={cn("h-11 sm:h-9", className)}
+      className={cn("h-11 data-disabled:opacity-50 sm:h-9", className)}
+      disabled={disabled}
       value={value ?? null}
       onValueChange={(newValue) => {
         if (newValue) {
@@ -58,7 +62,7 @@ export const VoteSegmentedControl = ({
           key={type}
           value={type}
           aria-label={voteLabels[type]}
-          className="w-11 sm:w-9 data-unchecked:[&_svg]:text-gray-400 dark:data-unchecked:[&_svg]:text-gray-600"
+          className="w-11 data-disabled:cursor-not-allowed sm:w-9 data-unchecked:[&_svg]:text-gray-400 dark:data-unchecked:[&_svg]:text-gray-600"
         >
           <VoteIcon type={type} />
         </SegmentedControlItem>

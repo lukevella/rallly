@@ -749,6 +749,7 @@
   "pastDueAlertTitle": "Payment failed",
   "pastEventsEmptyStateDescription": "Past events will show up here.",
   "pastEventsEmptyStateTitle": "No past events",
+  "pastOptionVoteError": "Some of these dates have already passed and can no longer be voted on. Refresh the page and try again.",
   "paymentAndBilling": "Payment and billing",
   "paymentAndBillingDescription": "How you pay and what appears on your invoices.",
   "paymentMethodExpires": "Expires {month}/{year}",

@@ -31,6 +31,8 @@ export interface PollOptionProps {
   optionLabel: string;
   /** When false the segmented control offers yes and no only. */
   allowTentativeVotes?: boolean;
+  /** Locks the vote while editing, e.g. on an option that has passed. */
+  disabled?: boolean;
 }
 
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
@@ -44,6 +46,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   yesScore,
   ifNeedBeScore,
   allowTentativeVotes = true,
+  disabled,
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
@@ -117,6 +120,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             onChange={onChange}
             optionLabel={optionLabel}
             allowTentativeVotes={allowTentativeVotes}
+            disabled={disabled}
           />
         </m.div>
       ) : null}

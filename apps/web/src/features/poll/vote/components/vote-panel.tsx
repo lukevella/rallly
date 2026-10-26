@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { isOptionPastForViewer } from "@/features/poll/utils";
 import { VoteEmptyState } from "@/features/poll/vote/components/vote-empty-state";
 import { VoteForm } from "@/features/poll/vote/components/vote-form";
 import { VoteOutcome } from "@/features/poll/vote/components/vote-outcome";
@@ -16,26 +17,7 @@ import type {
 import { UserProvider } from "@/features/user/client";
 import type { UserDTO } from "@/features/user/schema";
 import { useHydrated } from "@/lib/datetime/use-hydrated";
-import { getCalendarDate, toISODate } from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
-
-/**
- * Whether an option has already been and gone, from the viewer's clock.
- *
- * A time slot is past once it has ended. An all-day date is a floating
- * calendar date stored as UTC midnight (RFC 5545), so it is past only once
- * the viewer's own calendar date has moved on — comparing its instant to
- * now would retire today's date for everyone west of UTC.
- */
-function pastPredicate(isTimeSlot: boolean) {
-  if (isTimeSlot) {
-    const now = Date.now();
-    return (result: VoteResult) =>
-      result.startTime.getTime() + result.duration * 60_000 < now;
-  }
-  const today = getCalendarDate(new Date(), getBrowserTimeZone());
-  return (result: VoteResult) => toISODate(result.startTime) < today;
-}
 
 /**
  * The voting panel: a header, the results table as the scroll area, and a
@@ -75,8 +57,15 @@ export function VotePanel({
 
   // Safe to read the clock here: the panel renders only after hydration, so
   // this never runs during a server render.
-  const isPast = pastPredicate(isTimeSlot);
-  const pastCount = results.filter(isPast).length;
+  const now = new Date();
+  const timeZone = getBrowserTimeZone();
+  const pastOptionIds = new Set(
+    results
+      .filter((result) => isOptionPastForViewer(result, now, timeZone))
+      .map((result) => result.optionId),
+  );
+  const isPast = (result: VoteResult) => pastOptionIds.has(result.optionId);
+  const pastCount = pastOptionIds.size;
   // Only the displayed options are filtered. The form still holds a vote for
   // every option, so hiding one never drops it from the saved response.
   const visibleResults =
@@ -102,6 +91,7 @@ export function VotePanel({
         results={results}
         response={response}
         canVote={canVote}
+        pastOptionIds={pastOptionIds}
       >
         <VoteOutcome poll={poll}>
           <div className="flex min-h-0 flex-1 flex-col">

@@ -5,6 +5,8 @@ import {
   getChosenOptionRank,
   getFinalizePlanGate,
   getFinalizeTiming,
+  isOptionPast,
+  isOptionPastForViewer,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
@@ -495,5 +497,78 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+describe("isOptionPast", () => {
+  const now = new Date("2026-10-26T12:00:00Z");
+
+  it("treats a time slot as past once it has ended", () => {
+    expect(
+      isOptionPast(
+        { startTime: new Date("2026-10-26T10:00:00Z"), duration: 60 },
+        now,
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps a time slot that is still running", () => {
+    expect(
+      isOptionPast(
+        { startTime: new Date("2026-10-26T11:30:00Z"), duration: 60 },
+        now,
+      ),
+    ).toBe(false);
+  });
+
+  it("keeps an all-day date while it is still that date somewhere", () => {
+    expect(
+      isOptionPast(
+        { startTime: new Date("2026-10-25T00:00:00Z"), duration: 0 },
+        new Date("2026-10-26T11:59:00Z"),
+      ),
+    ).toBe(false);
+  });
+
+  it("treats an all-day date as past once it is over everywhere", () => {
+    expect(
+      isOptionPast(
+        { startTime: new Date("2026-10-24T00:00:00Z"), duration: 0 },
+        now,
+      ),
+    ).toBe(true);
+  });
+});
+
+describe("isOptionPastForViewer", () => {
+  it("treats a time slot as past once it has ended", () => {
+    expect(
+      isOptionPastForViewer(
+        { startTime: new Date("2026-10-26T10:00:00Z"), duration: 60 },
+        new Date("2026-10-26T12:00:00Z"),
+        "Europe/Paris",
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps today's all-day date for a viewer west of UTC", () => {
+    // 02:00 UTC on the 26th is still the 25th in New York.
+    expect(
+      isOptionPastForViewer(
+        { startTime: new Date("2026-10-25T00:00:00Z"), duration: 0 },
+        new Date("2026-10-26T02:00:00Z"),
+        "America/New_York",
+      ),
+    ).toBe(false);
+  });
+
+  it("treats an all-day date as past once the viewer's date moved on", () => {
+    expect(
+      isOptionPastForViewer(
+        { startTime: new Date("2026-10-25T00:00:00Z"), duration: 0 },
+        new Date("2026-10-26T02:00:00Z"),
+        "Europe/Paris",
+      ),
+    ).toBe(true);
   });
 });

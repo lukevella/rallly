@@ -65,7 +65,7 @@ function VoteCell({
   savedVote?: VoteType;
   canVote: boolean;
 }) {
-  const { value, setVote, isEditing } = useVote(optionId);
+  const { value, setVote, isEditing, isPast } = useVote(optionId);
 
   if (!canVote || !isEditing) {
     return savedVote !== undefined ? <VoteLabel type={savedVote} /> : null;
@@ -76,6 +76,7 @@ function VoteCell({
       onChange={setVote}
       optionLabel={optionLabel}
       allowTentativeVotes={allowTentativeVotes}
+      disabled={isPast}
     />
   );
 }

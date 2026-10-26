@@ -10,7 +10,11 @@ import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
-import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import {
+  useOptions,
+  usePastOptionIds,
+  usePoll,
+} from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -36,6 +40,7 @@ const ParticipantRowForm = ({
 
   const { optionIds, poll } = usePoll();
   const { options } = useOptions();
+  const pastOptionIds = usePastOptionIds();
   const form = useVotingForm();
 
   React.useEffect(() => {
@@ -134,6 +139,7 @@ const ParticipantRowForm = ({
                     }
                     value={field.value?.type}
                     allowTentativeVotes={poll.allowTentativeVotes}
+                    disabled={pastOptionIds.has(optionId)}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
                     }}

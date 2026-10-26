@@ -4,16 +4,19 @@ import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
 import { useParticipants } from "@/features/poll/client";
 import type { PollDetails } from "@/features/poll/types";
+import { isOptionPastForViewer } from "@/features/poll/utils";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
   formatDateParts,
   formatDateTime,
   formatDuration,
 } from "@/lib/datetime/format";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/lib/utils/date-time-utils";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type PollContextValue = {
   poll: PollDetails;
@@ -96,6 +99,34 @@ export const PollContextProvider: React.FunctionComponent<{
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>
   );
 };
+
+/**
+ * The options that have passed and can no longer be voted on, by the
+ * viewer's clock. Empty until hydration: the server render cannot know the
+ * viewer's clock or zone, and a lock that differed between the two renders
+ * would not hydrate. Read once per render of the poll, so a slot that ends
+ * while the page is open stays unlocked until the next refresh; the server
+ * refuses the vote either way.
+ */
+export function usePastOptionIds() {
+  const { poll } = usePoll();
+  const hydrated = useHydrated();
+
+  return React.useMemo(() => {
+    const pastOptionIds = new Set<string>();
+    if (!hydrated) {
+      return pastOptionIds;
+    }
+    const now = new Date();
+    const timeZone = getBrowserTimeZone();
+    for (const option of poll.options) {
+      if (isOptionPastForViewer(option, now, timeZone)) {
+        pastOptionIds.add(option.id);
+      }
+    }
+    return pastOptionIds;
+  }, [hydrated, poll.options]);
+}
 
 type OptionsContextValue =
   | {

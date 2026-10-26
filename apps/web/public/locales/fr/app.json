@@ -740,6 +740,7 @@
   "pastDueAlertTitle": "Échec du paiement",
   "pastEventsEmptyStateDescription": "Les événements passés apparaîtront ici.",
   "pastEventsEmptyStateTitle": "Aucun événement passé",
+  "pastOptionVoteError": "Certaines de ces dates sont déjà passées et ne peuvent plus recevoir de vote. Actualisez la page et réessayez.",
   "paymentAndBilling": "Paiement et facturation",
   "paymentAndBillingDescription": "Comment vous payez et ce qui apparaît sur vos factures.",
   "paymentMethodExpires": "Expire le {month}/{year}",

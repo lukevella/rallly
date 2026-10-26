@@ -9,11 +9,16 @@ import {
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
-import { generateAccessToken } from "@/features/poll/utils";
+import { generateAccessToken, isOptionPast } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
-type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
+type WriteRefusal =
+  | "notFound"
+  | "closed"
+  | "full"
+  | "tentativeVotesNotAllowed"
+  | "pastOption";
 
 class WriteRefusedError extends Error {
   constructor(public readonly reason: WriteRefusal) {
@@ -81,15 +86,48 @@ async function assertParticipantInPoll(
   }
 }
 
-async function listValidOptionIds(
+/**
+ * Splits the poll's options into those a response may still vote on and
+ * those that have passed. The clock is the server's, never the caller's, so
+ * a client cannot reopen a past date by lying about the time.
+ */
+async function listPollOptions(
   tx: Prisma.TransactionClient,
   pollId: string,
+  now = new Date(),
 ) {
   const options = await tx.option.findMany({
     where: { pollId },
-    select: { id: true },
+    select: { id: true, startTime: true, duration: true },
   });
-  return new Set(options.map((option) => option.id));
+  const openOptionIds = new Set<string>();
+  const pastOptionIds = new Set<string>();
+  for (const option of options) {
+    (isOptionPast(option, now) ? pastOptionIds : openOptionIds).add(option.id);
+  }
+  return { openOptionIds, pastOptionIds };
+}
+
+/**
+ * Refuses a write that would change the answer on a past option. The client
+ * sends a vote for every option, "no" for those left untouched, so a vote
+ * that matches what is stored (or "no" where nothing is) is not a change.
+ * The client already locks past options; this is the guard behind it.
+ */
+function assertNoPastVoteChange(
+  votes: { optionId: string; type: VoteType }[],
+  pastOptionIds: Set<string>,
+  storedVotes: Map<string, VoteType> = new Map(),
+) {
+  const changesPastVote = votes.some(
+    ({ optionId, type }) =>
+      pastOptionIds.has(optionId) &&
+      type !== (storedVotes.get(optionId) ?? "no"),
+  );
+
+  if (changesPastVote) {
+    throw new WriteRefusedError("pastOption");
+  }
 }
 
 function refusal(error: unknown) {
@@ -164,12 +202,16 @@ export async function addParticipant({
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-      const validOptionIds = await listValidOptionIds(tx, pollId);
+      const { openOptionIds, pastOptionIds } = await listPollOptions(
+        tx,
+        pollId,
+      );
       const validVotes = votes.filter(({ optionId }) =>
-        validOptionIds.has(optionId),
+        openOptionIds.has(optionId),
       );
 
       await lockOpenPoll(tx, pollId, validVotes);
+      assertNoPastVoteChange(votes, pastOptionIds);
 
       // Counted under the lock so two responses cannot both pass at the cap.
       const participantCount = await tx.participant.count({
@@ -293,11 +335,30 @@ export async function updateParticipantVotes({
       await lockOpenPoll(tx, pollId, votes);
       await assertParticipantInPoll(tx, participantId, pollId);
 
-      await tx.vote.deleteMany({ where: { participantId } });
+      const { openOptionIds, pastOptionIds } = await listPollOptions(
+        tx,
+        pollId,
+      );
 
-      const validOptionIds = await listValidOptionIds(tx, pollId);
+      const pastVotes = await tx.vote.findMany({
+        where: { participantId, optionId: { in: [...pastOptionIds] } },
+        select: { optionId: true, type: true },
+      });
+      assertNoPastVoteChange(
+        votes,
+        pastOptionIds,
+        new Map(pastVotes.map(({ optionId, type }) => [optionId, type])),
+      );
+
+      // Votes on past options are frozen: only the still-open ones are
+      // replaced, so editing a response never drops what was said about a
+      // date before it passed.
+      await tx.vote.deleteMany({
+        where: { participantId, optionId: { in: [...openOptionIds] } },
+      });
+
       const validVotes = votes.filter(({ optionId }) =>
-        validOptionIds.has(optionId),
+        openOptionIds.has(optionId),
       );
 
       await tx.vote.createMany({

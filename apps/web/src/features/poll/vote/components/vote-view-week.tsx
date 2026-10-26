@@ -98,7 +98,7 @@ function TimeOption({
   canVote: boolean;
 }) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
-  const { value, setVote, isEditing } = useVote(result.optionId);
+  const { value, setVote, isEditing, isPast } = useVote(result.optionId);
   const shown = isEditing ? value : savedVote;
   const end = new Date(result.startTime.getTime() + result.duration * 60_000);
 
@@ -133,6 +133,7 @@ function TimeOption({
             onChange={setVote}
             optionLabel={label}
             allowTentativeVotes={allowTentativeVotes}
+            disabled={isPast}
             className="w-full"
           />
         ) : (

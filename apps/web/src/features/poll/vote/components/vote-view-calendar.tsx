@@ -7,6 +7,7 @@ import VoteIcon from "@/features/poll/components/vote-icon";
 import type { VoteType } from "@/features/poll/constants";
 import {
   nextVoteType,
+  usePastOptions,
   useSetVote,
   useVote,
   useVoteForm,
@@ -109,8 +110,14 @@ function OptionDayContent({
  */
 function DayCell({ day, modifiers, className, ...props }: MonthGridDayProps) {
   const ctx = React.useContext(DayContextValue);
+  const pastOptionIds = usePastOptions();
   const result = ctx?.byDate.get(toISODate(day.date));
-  const interactive = result !== undefined && (ctx?.canVote ?? false);
+  // A past day keeps its vote and tally but reads as inert; the click is
+  // dropped by `useSetVote` either way.
+  const interactive =
+    result !== undefined &&
+    (ctx?.canVote ?? false) &&
+    !pastOptionIds.has(result.optionId);
 
   return (
     <button

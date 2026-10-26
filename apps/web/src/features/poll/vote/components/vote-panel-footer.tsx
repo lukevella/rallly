@@ -23,7 +23,10 @@ import {
   DeleteParticipantModal,
 } from "@/features/poll/components/participant-dropdown";
 import VoteIcon from "@/features/poll/components/vote-icon";
-import { useVoteForm } from "@/features/poll/vote/components/vote-form";
+import {
+  usePastOptions,
+  useVoteForm,
+} from "@/features/poll/vote/components/vote-form";
 import type { VotePageView } from "@/features/poll/vote/types";
 import { Trans, useTranslation } from "@/i18n/client";
 
@@ -92,6 +95,7 @@ export function VotePanelFooter({
   const deleteDialog = useDialog();
   const mode = form.watch("mode");
   const votes = form.watch("votes");
+  const pastOptionIds = usePastOptions();
 
   if (response && mode === "view") {
     return (
@@ -185,7 +189,11 @@ export function VotePanelFooter({
     (vote) => vote?.type === "ifNeedBe",
   ).length;
   const selectedCount = yesCount + ifNeedBeCount;
-  const isBlocked = !response && selectedCount === 0;
+  // Nothing left to answer: every vote control is locked.
+  const allOptionsPast =
+    results.length > 0 &&
+    results.every((result) => pastOptionIds.has(result.optionId));
+  const isBlocked = allOptionsPast || (!response && selectedCount === 0);
 
   const submitAllNo = () => {
     form.setValue(
@@ -228,7 +236,7 @@ export function VotePanelFooter({
         ) : (
           <Button
             type="button"
-            disabled={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || allOptionsPast}
             onClick={() => {
               if (selectedCount > 0) {
                 confirmDialog.trigger();
@@ -250,9 +258,11 @@ export function VotePanelFooter({
             if (isBlocked) {
               event.preventDefault();
               toast(
-                t("selectAtLeastOneOptionOrDecline", {
-                  defaultValue: "Select at least one option, or decline",
-                }),
+                allOptionsPast
+                  ? t("allDatesPast", { defaultValue: "Every date has passed" })
+                  : t("selectAtLeastOneOptionOrDecline", {
+                      defaultValue: "Select at least one option, or decline",
+                    }),
               );
             }
           }}
