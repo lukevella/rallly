@@ -175,6 +175,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorAuthRequired", {
           defaultValue: "Sign in with your organization account to vote.",
         });
+      case "identityIncomplete":
+        return t("newParticipantFormErrorIdentityIncomplete", {
+          defaultValue:
+            "Your organization account did not provide a name and email, so you can't vote.",
+        });
       case "unauthorized":
         return t("newParticipantFormErrorUnauthorized", {
           defaultValue:

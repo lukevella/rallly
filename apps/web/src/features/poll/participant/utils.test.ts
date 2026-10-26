@@ -9,7 +9,7 @@ describe("resolveVoterIdentity", () => {
     expect(
       resolveVoterIdentity({
         requireOidc: false,
-        user: { isGuest: true, ...idp },
+        user: { isGuest: true },
         oidcIdentity: null,
         input: typed,
       }),
@@ -20,7 +20,7 @@ describe("resolveVoterIdentity", () => {
     expect(
       resolveVoterIdentity({
         requireOidc: true,
-        user: { isGuest: true, name: "Guest", email: "guest@x.test" },
+        user: { isGuest: true },
         oidcIdentity: null,
         input: typed,
       }),
@@ -31,7 +31,7 @@ describe("resolveVoterIdentity", () => {
     expect(
       resolveVoterIdentity({
         requireOidc: true,
-        user: { isGuest: false, ...idp },
+        user: { isGuest: false },
         oidcIdentity: null,
         input: typed,
       }),
@@ -42,11 +42,28 @@ describe("resolveVoterIdentity", () => {
     expect(
       resolveVoterIdentity({
         requireOidc: true,
-        user: { isGuest: false, name: "Edited", email: "edited@x.test" },
+        user: { isGuest: false },
         oidcIdentity: idp,
         input: typed,
       }),
     ).toEqual({ ok: true, ...idp });
+  });
+});
+
+describe("resolveVoterIdentity with an incomplete IdP identity", () => {
+  it.each([
+    { name: null, email: "a@idp.test" },
+    { name: "Alice", email: null },
+    { name: null, email: null },
+  ])("refuses %j rather than using profile fields", (oidcIdentity) => {
+    expect(
+      resolveVoterIdentity({
+        requireOidc: true,
+        user: { isGuest: false },
+        oidcIdentity,
+        input: typed,
+      }),
+    ).toEqual({ ok: false, reason: "identityIncomplete" });
   });
 });
 

@@ -60,7 +60,7 @@ export const loadVotePage = cache(
       countParticipants({ pollId }),
     ]);
 
-    const oidcVoting = await loadOidcVoting(session?.user ?? null);
+    const oidcVoting = await loadOidcVoting();
 
     // hideScores reveals the tally only once the viewer has responded.
     const scoresVisible = !poll.hideScores || response !== null;

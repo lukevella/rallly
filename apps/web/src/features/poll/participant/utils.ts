@@ -1,13 +1,13 @@
 type VoterInput = { name: string; email?: string | null };
 
-type VoterUser = { isGuest: boolean; name: string; email: string };
+type VoterUser = { isGuest: boolean };
 
 /** What the IdP asserted about the user; a claim the IdP omitted is null. */
 export type OidcIdentity = { name: string | null; email: string | null };
 
 export type VoterIdentityResult =
   | { ok: true; name: string; email: string | null }
-  | { ok: false; reason: "authRequired" };
+  | { ok: false; reason: "authRequired" | "identityIncomplete" };
 
 function readClaim(claims: Record<string, unknown>, path: string) {
   let curr: unknown = claims;
@@ -55,7 +55,8 @@ export function readOidcIdentity(
  * user holding a linked OIDC account may vote, and the response carries the
  * identity the IdP asserted rather than whatever the form submitted. Guest
  * sessions are free to mint, so they never count as an authenticated voter.
- * A claim the IdP did not put in its id token falls back to the profile value.
+ * An IdP that did not assert both a name and an email is refused: the
+ * profile values are editable, so they cannot stand in for them.
  */
 export function resolveVoterIdentity({
   requireOidc,
@@ -76,9 +77,9 @@ export function resolveVoterIdentity({
     return { ok: false, reason: "authRequired" };
   }
 
-  return {
-    ok: true,
-    name: oidcIdentity.name ?? user.name,
-    email: oidcIdentity.email ?? user.email,
-  };
+  if (!oidcIdentity.name || !oidcIdentity.email) {
+    return { ok: false, reason: "identityIncomplete" };
+  }
+
+  return { ok: true, name: oidcIdentity.name, email: oidcIdentity.email };
 }

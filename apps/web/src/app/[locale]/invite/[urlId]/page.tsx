@@ -73,7 +73,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     loadCanManagePoll(urlId),
   ]);
 
-  const oidcVoting = await loadOidcVoting(user);
+  const oidcVoting = await loadOidcVoting();
 
   return (
     <>

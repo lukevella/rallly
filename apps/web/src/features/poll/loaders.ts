@@ -27,6 +27,7 @@ import {
 } from "@/features/poll/utils";
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
 import { getUser } from "@/features/user/data";
+import { loadOptionalActor } from "@/features/user/loaders";
 import { getSession } from "@/lib/auth";
 
 /**
@@ -34,17 +35,17 @@ import { getSession } from "@/lib/auth";
  * they have signed in through OIDC, after which their response carries the
  * IdP identity.
  */
-export async function loadOidcVoting(
-  user: { id: string; isGuest: boolean } | null,
-) {
+export const loadOidcVoting = cache(async () => {
   if (env.REQUIRE_OIDC_TO_VOTE !== "true") {
     return "off" as const;
   }
 
+  const user = await loadOptionalActor();
+
   return user && !user.isGuest && (await hasOidcLogin(user.id))
     ? ("identityLocked" as const)
     : ("signInRequired" as const);
-}
+});
 
 export const loadPolls = cache(
   async ({

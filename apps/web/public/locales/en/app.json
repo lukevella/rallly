@@ -1221,5 +1221,6 @@
   "yourApiKey": "Your API key",
   "yourName": "Your name…",
   "newParticipantFormErrorAuthRequired": "Sign in with your organization account to vote.",
+  "newParticipantFormErrorIdentityIncomplete": "Your organization account did not provide a name and email, so you can't vote.",
   "oidcSignInToVote": "Sign in with your organization account to vote on this poll."
 }
