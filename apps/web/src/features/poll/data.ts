@@ -15,7 +15,7 @@ import type {
   PollDetails,
   PollUnavailableReason,
 } from "@/features/poll/types";
-import { isLegacyEditToken } from "@/features/poll/utils";
+import { applyClosesAt, isLegacyEditToken } from "@/features/poll/utils";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type {
   AuthorizedSpaceId,
@@ -362,6 +362,7 @@ export const getPolls = async ({
         title: true,
         status: true,
         closedReason: true,
+        closesAt: true,
         timeZone: true,
         createdAt: true,
         updatedAt: true,
@@ -404,11 +405,12 @@ export const getPolls = async ({
 
   const transformedPolls = polls.map((poll) => {
     const range = rangeByPollId.get(poll.id);
+    const { status, closedReason } = applyClosesAt(poll);
     return {
       id: poll.id,
       title: poll.title,
-      status: poll.status,
-      closedReason: poll.closedReason,
+      status,
+      closedReason,
       // Null means the poll's times are floating: shown as stored to everyone
       timeZone: poll.timeZone,
       createdAt: poll.createdAt,
@@ -567,7 +569,7 @@ export async function getParticipant({
       id: true,
       pollId: true,
       userId: true,
-      poll: { select: { status: true, deleted: true } },
+      poll: { select: { status: true, closesAt: true, deleted: true } },
     },
   });
 }
@@ -739,6 +741,7 @@ export async function getPollDetails({
       createdAt: true,
       status: true,
       closedReason: true,
+      closesAt: true,
       hideParticipants: true,
       disableComments: true,
       allowTentativeVotes: true,
@@ -806,7 +809,7 @@ export async function getPollDetails({
       : null;
 
   return {
-    ...pollFields,
+    ...applyClosesAt(pollFields),
     conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
     space: space

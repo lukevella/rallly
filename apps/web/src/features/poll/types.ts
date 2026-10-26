@@ -14,6 +14,8 @@ export type PollDetails = {
   createdAt: Date;
   status: PollStatus;
   closedReason: PollClosedReason | null;
+  /** When the poll stops accepting responses; null when it has no deadline. */
+  closesAt: Date | null;
   hideParticipants: boolean;
   disableComments: boolean;
   allowTentativeVotes: boolean;

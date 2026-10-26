@@ -5,15 +5,26 @@ import type { AuthorizedSpaceId } from "@/features/space/types";
 // environment on import. Stub the env with nothing set.
 vi.mock("@/env", () => ({ env: {} }));
 
-import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";
+import {
+  closePoll,
+  closePollsPastDeadline,
+  deleteInactivePolls,
+  setPollMuted,
+} from "./mutations";
 
-const { mockUpdateMany, mockFindFirst, mockUpdate, mockActivityCreateMany } =
-  vi.hoisted(() => ({
-    mockUpdateMany: vi.fn(),
-    mockFindFirst: vi.fn(),
-    mockUpdate: vi.fn(),
-    mockActivityCreateMany: vi.fn(),
-  }));
+const {
+  mockUpdateMany,
+  mockFindFirst,
+  mockUpdate,
+  mockActivityCreateMany,
+  mockQueryRaw,
+} = vi.hoisted(() => ({
+  mockUpdateMany: vi.fn(),
+  mockFindFirst: vi.fn(),
+  mockUpdate: vi.fn(),
+  mockActivityCreateMany: vi.fn(),
+  mockQueryRaw: vi.fn(),
+}));
 
 vi.mock("@rallly/database", () => {
   const client = {
@@ -25,6 +36,7 @@ vi.mock("@rallly/database", () => {
     pollActivity: {
       createMany: mockActivityCreateMany,
     },
+    $queryRaw: mockQueryRaw,
   };
   return {
     prisma: {
@@ -163,6 +175,38 @@ describe("deleteInactivePolls", () => {
         data: { deleted: true, deletedAt: NOW },
       }),
     );
+  });
+});
+
+describe("closePollsPastDeadline", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("records a system poll_closed event with the deadline reason for each closed poll", async () => {
+    mockQueryRaw.mockResolvedValue([{ id: "p1" }, { id: "p2" }]);
+
+    const closed = await closePollsPastDeadline();
+
+    expect(closed).toBe(2);
+    expect(mockActivityCreateMany).toHaveBeenCalledWith({
+      data: expect.arrayContaining([
+        expect.objectContaining({
+          pollId: "p1",
+          type: "poll_closed",
+          userId: null,
+          payload: { reason: "deadline" },
+        }),
+        expect.objectContaining({ pollId: "p2" }),
+      ]),
+    });
+  });
+
+  it("records nothing when no poll reached its closing time", async () => {
+    mockQueryRaw.mockResolvedValue([]);
+
+    expect(await closePollsPastDeadline()).toBe(0);
+    expect(mockActivityCreateMany).not.toHaveBeenCalled();
   });
 });
 

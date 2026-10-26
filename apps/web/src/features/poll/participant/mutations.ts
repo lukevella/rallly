@@ -9,7 +9,8 @@ import {
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
-import { generateAccessToken } from "@/features/poll/utils";
+import type { PollStatus } from "@/features/poll/schema";
+import { generateAccessToken, isPollOpen } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
@@ -36,9 +37,14 @@ async function lockOpenPoll(
   votes: { type: VoteType }[],
 ) {
   const [poll] = await tx.$queryRaw<
-    { status: string; deleted: boolean; allow_tentative_votes: boolean }[]
+    {
+      status: PollStatus;
+      closes_at: Date | null;
+      deleted: boolean;
+      allow_tentative_votes: boolean;
+    }[]
   >`
-    SELECT status, deleted, allow_tentative_votes
+    SELECT status, closes_at, deleted, allow_tentative_votes
     FROM polls WHERE id = ${pollId} FOR UPDATE
   `;
 
@@ -48,8 +54,9 @@ async function lockOpenPoll(
 
   // The voting window is the organizer's control, so it has to hold here
   // and not only in the client, which hides the form via
-  // `canAddNewParticipant` and `canEditParticipant`.
-  if (poll.status !== "open") {
+  // `canAddNewParticipant` and `canEditParticipant`. A closing time that has
+  // passed counts even if the close task has not caught up with it yet.
+  if (!isPollOpen({ status: poll.status, closesAt: poll.closes_at })) {
     throw new WriteRefusedError("closed");
   }
 

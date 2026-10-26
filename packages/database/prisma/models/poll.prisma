@@ -25,6 +25,7 @@ enum PollKind {
 enum PollClosedReason {
   auto
   manual
+  deadline
 
   @@map("poll_closed_reason")
 }
@@ -34,7 +35,12 @@ model Poll {
   createdAt               DateTime          @default(now()) @map("created_at")
   updatedAt               DateTime          @updatedAt @map("updated_at")
   deadline                DateTime?
-  title                   String
+  /// When the poll stops accepting responses. Enforced on every write and
+  /// persisted as status closed / closedReason deadline by the
+  /// close-polls-past-deadline task. Separate from the legacy, unused
+  /// `deadline` column, whose old values must not close polls.
+  closesAt                DateTime?         @map("closes_at")
+  title                    String
   description             String?
   location                String?
   /// What the organizer asked for: a provider to mint a link with at
@@ -74,6 +80,7 @@ model Poll {
 
   @@index([spaceId])
   @@index([userId])
+  @@index([closesAt])
   @@map("polls")
 }
 

@@ -453,6 +453,39 @@ export async function autoClosePolls({
 const REMOVE_DELETED_POLLS_BATCH_SIZE = 100;
 
 /**
+ * Persists the closing time: open polls past their `closes_at` become closed
+ * with reason "deadline". Writes are already refused from the closing time
+ * on (see `applyClosesAt`), so this only keeps stored status, lists and
+ * webhooks in step. Raw SQL for the same reason as autoClosePolls: it must
+ * not touch `updated_at`, which delete-inactive-polls keys off.
+ */
+export async function closePollsPastDeadline() {
+  return prisma.$transaction(async (tx) => {
+    const closed = await tx.$queryRaw<{ id: string }[]>`
+      UPDATE polls
+      SET status = 'closed', closed_reason = 'deadline'
+      WHERE status = 'open'
+        AND deleted = false
+        AND closes_at IS NOT NULL
+        AND closes_at <= (now() AT TIME ZONE 'UTC')
+      RETURNING id
+    `;
+
+    await recordPollActivities(
+      tx,
+      closed.map(({ id }) => ({
+        pollId: id,
+        type: "poll_closed" as const,
+        userId: null,
+        payload: { reason: "deadline" as const },
+      })),
+    );
+
+    return closed.length;
+  });
+}
+
+/**
  * Remove polls and corresponding data that have been marked deleted for more than 7 days.
  */
 export async function removeDeletedPolls() {

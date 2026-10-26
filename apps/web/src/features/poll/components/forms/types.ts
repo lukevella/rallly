@@ -26,6 +26,9 @@ export type PollSettingsFormData = {
   hideScores: boolean;
   enableComments: boolean;
   allowTentativeVotes: boolean;
+  /** `YYYY-MM-DD` and `HH:mm` in the browser's zone; both empty for none. */
+  closesAtDate?: string;
+  closesAtTime?: string;
 };
 
 export type NewEventData = PollDetailsData &

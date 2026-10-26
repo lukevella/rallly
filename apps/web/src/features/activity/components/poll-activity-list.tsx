@@ -359,6 +359,14 @@ function ActivityDescription({
         />
       );
     case "poll_closed":
+      if (event.payload.reason === "deadline") {
+        return (
+          <Trans
+            i18nKey="pollActivityPollClosedDeadline"
+            defaults="Poll closed at its closing time"
+          />
+        );
+      }
       return event.payload.reason === "auto" ? (
         <Trans
           i18nKey="pollActivityPollClosedAuto"

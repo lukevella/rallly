@@ -2,7 +2,7 @@ import * as z from "zod";
 import { pollConferencingSchema } from "@/features/conferencing/schema";
 
 /** Why a poll closed: the organizer, or every option having passed. */
-export const pollClosedReasonSchema = z.enum(["auto", "manual"]);
+export const pollClosedReasonSchema = z.enum(["auto", "manual", "deadline"]);
 
 export type PollClosedReason = z.infer<typeof pollClosedReasonSchema>;
 

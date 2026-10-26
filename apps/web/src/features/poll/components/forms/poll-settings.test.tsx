@@ -115,3 +115,24 @@ describe("PollSettingsForm vote options lock", () => {
     expect(screen.getByText(/locked/i)).toBeInTheDocument();
   });
 });
+
+describe("PollSettingsForm closing time", () => {
+  it("offers no remove button until a value is entered", () => {
+    render(<TestForm />);
+    expect(
+      screen.queryByRole("button", { name: /remove/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("lets a partly entered closing time be cleared", async () => {
+    const user = userEvent.setup();
+    render(<TestForm />);
+    const time = screen.getByLabelText(/^time$/i);
+    await user.type(time, "10:30");
+    await user.click(screen.getByRole("button", { name: /remove/i }));
+    expect(time).toHaveValue("");
+    expect(
+      screen.queryByRole("button", { name: /remove/i }),
+    ).not.toBeInTheDocument();
+  });
+});

@@ -20,6 +20,7 @@ import useFormPersist from "react-hook-form-persist";
 import { Link } from "@/components/link";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
 import { toPollConferencing } from "@/features/conferencing/components/conferencing-field";
+import { useResolveClosesAt } from "@/features/poll/client";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
 import {
@@ -127,6 +128,7 @@ export const CreatePoll = ({
   const { t } = useTranslation();
   const router = useRouter();
   const { user, createGuestIfNeeded } = useUser();
+  const resolveClosesAt = useResolveClosesAt();
   const isLoggedIn = !!user && !user.isGuest;
   const [createdPollId, setCreatedPollId] = React.useState<string | null>(null);
   // There is no CSS selector for "sticky element is stuck": a sentinel after
@@ -159,6 +161,8 @@ export const CreatePoll = ({
       hideParticipants: false,
       enableComments: false,
       allowTentativeVotes: true,
+      closesAtDate: "",
+      closesAtTime: "",
       duration: 60,
       lockTimeZone: false,
     },
@@ -251,6 +255,14 @@ export const CreatePoll = ({
           id="create-poll"
           onSubmit={form.handleSubmit(async (formData) => {
             const title = required(formData?.title.trim());
+            const resolved = resolveClosesAt(
+              formData?.closesAtDate,
+              formData?.closesAtTime,
+            );
+            if (!resolved.ok) {
+              return;
+            }
+            const { closesAt } = resolved;
             const session = await createGuestIfNeeded();
             if (!session.ok) {
               toast.error(
@@ -283,6 +295,7 @@ export const CreatePoll = ({
               hideScores: formData?.hideScores,
               allowTentativeVotes: formData?.allowTentativeVotes,
               requireParticipantEmail: formData?.requireParticipantEmail,
+              closesAt,
               options: required(formData?.options).map((option) => ({
                 startDate: option.type === "date" ? option.date : option.start,
                 endDate: option.type === "timeSlot" ? option.end : undefined,

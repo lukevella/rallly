@@ -1,15 +1,128 @@
 import { describe, expect, it } from "vitest";
 import {
+  applyClosesAt,
+  closesAtFromField,
+  closesAtToField,
   filterCommentsForViewer,
   filterParticipantsByVote,
   getChosenOptionRank,
   getFinalizePlanGate,
+  hasPassedClosesAt,
+  isPollOpen,
   getFinalizeTiming,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
   toAvailabilitySpans,
 } from "./utils";
+
+describe("applyClosesAt", () => {
+  const now = new Date("2026-06-01T12:00:00Z");
+  const base = {
+    status: "open" as const,
+    closedReason: null,
+    closesAt: new Date("2026-06-01T11:59:00Z"),
+  };
+
+  it("reads an open poll past its closing time as closed by its deadline", () => {
+    expect(applyClosesAt(base, now)).toMatchObject({
+      status: "closed",
+      closedReason: "deadline",
+    });
+  });
+
+  it("closes at the exact closing time", () => {
+    expect(applyClosesAt({ ...base, closesAt: now }, now).status).toBe(
+      "closed",
+    );
+  });
+
+  it("leaves a poll whose closing time is ahead open", () => {
+    const poll = { ...base, closesAt: new Date("2026-06-01T12:00:01Z") };
+    expect(applyClosesAt(poll, now)).toBe(poll);
+  });
+
+  it("leaves a poll with no closing time open", () => {
+    const poll = { ...base, closesAt: null };
+    expect(applyClosesAt(poll, now)).toBe(poll);
+  });
+
+  it("keeps the reason of a poll that is already closed", () => {
+    const poll = {
+      ...base,
+      status: "closed" as const,
+      closedReason: "manual" as const,
+    };
+    expect(applyClosesAt(poll, now)).toBe(poll);
+  });
+
+  it("does not touch a scheduled poll", () => {
+    const poll = { ...base, status: "scheduled" as const };
+    expect(applyClosesAt(poll, now)).toBe(poll);
+  });
+});
+
+describe("closesAtFromField", () => {
+  it("needs both a date and a time", () => {
+    expect(closesAtFromField("2026-06-01", "", "UTC")).toBeUndefined();
+    expect(closesAtFromField("", "10:00", "UTC")).toBeUndefined();
+    expect(closesAtFromField("", "", "UTC")).toBeUndefined();
+  });
+
+  it("reads the fields in the given zone", () => {
+    expect(closesAtFromField("2026-06-01", "10:00", "UTC")).toEqual(
+      new Date("2026-06-01T10:00:00Z"),
+    );
+    expect(closesAtFromField("2026-06-01", "10:00", "Europe/Paris")).toEqual(
+      new Date("2026-06-01T08:00:00Z"),
+    );
+  });
+
+  it("round trips through closesAtToField", () => {
+    const instant = new Date("2026-06-01T08:00:00Z");
+    const { closesAtDate, closesAtTime } = closesAtToField(
+      instant,
+      "Europe/Paris",
+    );
+    expect(closesAtDate).toBe("2026-06-01");
+    expect(closesAtTime).toBe("10:00");
+    expect(closesAtToField(null, "UTC")).toEqual({
+      closesAtDate: "",
+      closesAtTime: "",
+    });
+  });
+});
+
+describe("hasPassedClosesAt", () => {
+  it("is false without a closing time", () => {
+    expect(hasPassedClosesAt(null)).toBe(false);
+  });
+});
+
+describe("isPollOpen", () => {
+  const now = new Date("2026-06-01T12:00:00Z");
+
+  it("is open while the closing time is ahead or absent", () => {
+    expect(isPollOpen({ status: "open", closesAt: null }, now)).toBe(true);
+    expect(
+      isPollOpen(
+        { status: "open", closesAt: new Date("2026-06-01T12:00:01Z") },
+        now,
+      ),
+    ).toBe(true);
+  });
+
+  it("is closed once the closing time has passed, before the close task runs", () => {
+    expect(isPollOpen({ status: "open", closesAt: now }, now)).toBe(false);
+  });
+
+  it("is closed whenever the stored status is not open", () => {
+    expect(isPollOpen({ status: "closed", closesAt: null }, now)).toBe(false);
+    expect(isPollOpen({ status: "scheduled", closesAt: null }, now)).toBe(
+      false,
+    );
+  });
+});
 
 const participant = (
   id: string,

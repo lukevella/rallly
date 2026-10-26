@@ -2,8 +2,76 @@ import { customAlphabet } from "nanoid";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
+import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import type { PollComment, PollParticipant } from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
+import { instantToWallTime, wallTimeToInstant } from "@/lib/datetime/wall-time";
+
+/**
+ * The instant the closing-time date (`YYYY-MM-DD`) and time (`HH:mm`) fields
+ * stand for in the organizer's zone, or undefined when either is empty or
+ * they are not a valid date.
+ */
+export function closesAtFromField(
+  date: string | undefined,
+  time: string | undefined,
+  timeZone: string,
+) {
+  if (!date || !time) {
+    return undefined;
+  }
+
+  const instant = wallTimeToInstant(`${date}T${time}`, timeZone);
+  return Number.isNaN(instant.getTime()) ? undefined : instant;
+}
+
+/** The closing-time date and time fields for a stored instant. */
+export function closesAtToField(closesAt: Date | null, timeZone: string) {
+  if (!closesAt) {
+    return { closesAtDate: "", closesAtTime: "" };
+  }
+
+  const wallTime = instantToWallTime(closesAt, timeZone);
+  return {
+    closesAtDate: wallTime.slice(0, 10),
+    closesAtTime: wallTime.slice(11, 16),
+  };
+}
+
+/** Whether the closing time has passed, whatever the stored status says. */
+export function hasPassedClosesAt(
+  closesAt: Date | null | undefined,
+  now = new Date(),
+) {
+  return !!closesAt && closesAt.getTime() <= now.getTime();
+}
+
+/**
+ * The poll as it stands at `now`: an open poll past its closing time reads as
+ * closed by its deadline, so reads and writes agree between the closing time
+ * and the next run of the close-polls-past-deadline task.
+ */
+export function applyClosesAt<
+  T extends {
+    status: PollStatus;
+    closedReason: PollClosedReason | null;
+    closesAt: Date | null;
+  },
+>(poll: T, now = new Date()): T {
+  if (poll.status !== "open" || !hasPassedClosesAt(poll.closesAt, now)) {
+    return poll;
+  }
+
+  return { ...poll, status: "closed", closedReason: "deadline" };
+}
+
+/** Whether the poll still accepts responses, counting a passed closing time. */
+export function isPollOpen(
+  poll: { status: PollStatus; closesAt: Date | null },
+  now = new Date(),
+) {
+  return poll.status === "open" && !hasPassedClosesAt(poll.closesAt, now);
+}
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.

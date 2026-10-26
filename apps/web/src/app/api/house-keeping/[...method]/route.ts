@@ -10,6 +10,7 @@ import {
 } from "@/features/billing/mutations";
 import {
   autoClosePolls,
+  closePollsPastDeadline,
   deleteInactivePolls,
   removeDeletedPolls,
 } from "@/features/poll/mutations";
@@ -70,6 +71,25 @@ app.get("/auto-close-polls", async (c) => {
     { task: "auto-close-polls", closed },
     "Closed polls with all options ended",
   );
+
+  return c.json({
+    success: true,
+    summary: {
+      closed,
+    },
+  });
+});
+
+app.get("/close-polls-past-deadline", async (c) => {
+  const closed = await closePollsPastDeadline();
+
+  // Runs every minute and most runs find nothing.
+  if (closed > 0) {
+    logger.info(
+      { task: "close-polls-past-deadline", closed },
+      "Closed polls that reached their closing time",
+    );
+  }
 
   return c.json({
     success: true,

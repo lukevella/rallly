@@ -1,6 +1,7 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
+import { Button } from "@rallly/ui/button";
 import { Card, CardContent, CardTitle } from "@rallly/ui/card";
 import {
   Field,
@@ -10,6 +11,7 @@ import {
   FieldLabel,
 } from "@rallly/ui/field";
 import { FormField } from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
 import {
   Select,
   SelectContent,
@@ -21,6 +23,7 @@ import { Switch } from "@rallly/ui/switch";
 import { VoteIcon } from "@rallly/ui/vote-icon";
 import {
   BarChart2Icon,
+  CalendarClockIcon,
   ListChecksIcon,
   MailIcon,
   MessageCircleIcon,
@@ -32,7 +35,7 @@ import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
 import type { VoteType } from "@/features/poll/constants";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 
 /**
  * Each answer as its icon plus its name, so the choice shows exactly what a
@@ -57,6 +60,103 @@ function VoteOptionLabel({ types }: { types: VoteType[] }) {
         </span>
       ))}
     </span>
+  );
+}
+
+/**
+ * The closing time as separate date and time inputs. A native datetime-local
+ * input reports an empty value until both parts are filled, so a half-typed
+ * value would be silently dropped and could not be cleared; two inputs let
+ * the form require both or neither.
+ */
+function ClosesAtField() {
+  const form = useFormContext<PollSettingsFormData>();
+  const { t } = useTranslation();
+  const [date, time] = form.watch(["closesAtDate", "closesAtTime"]);
+  const incomplete = t("closesAtIncomplete", {
+    defaultValue: "Enter both a date and a time",
+  });
+  const error =
+    form.formState.errors.closesAtDate?.message ||
+    form.formState.errors.closesAtTime?.message;
+
+  return (
+    <Field orientation="responsive" className="@md/field-group:gap-2 gap-4">
+      <SettingIcon>
+        <CalendarClockIcon />
+      </SettingIcon>
+      <FieldContent>
+        <FieldLabel htmlFor="closes-at-date">
+          <Trans i18nKey="closesAtTitle" defaults="Closing time" />
+        </FieldLabel>
+        <FieldDescription>
+          <Trans
+            i18nKey="closesAtDescription"
+            defaults="Stop accepting responses at this date and time, in your time zone."
+          />
+        </FieldDescription>
+        {error ? (
+          <FieldDescription className="text-destructive" role="alert">
+            {error}
+          </FieldDescription>
+        ) : null}
+      </FieldContent>
+      <div className="flex items-center gap-x-2">
+        <FormField
+          control={form.control}
+          name="closesAtDate"
+          rules={{
+            deps: ["closesAtTime"],
+            validate: (value, values) =>
+              !!value === !!values.closesAtTime || incomplete,
+          }}
+          render={({ field }) => (
+            <Input
+              id="closes-at-date"
+              type="date"
+              className="w-38 shrink-0"
+              aria-label={t("closesAtDate", { defaultValue: "Date" })}
+              value={field.value ?? ""}
+              onChange={(event) => field.onChange(event.target.value)}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="closesAtTime"
+          rules={{
+            deps: ["closesAtDate"],
+            validate: (value, values) =>
+              !!value === !!values.closesAtDate || incomplete,
+          }}
+          render={({ field }) => (
+            <Input
+              id="closes-at-time"
+              type="time"
+              className="w-26 shrink-0"
+              aria-label={t("closesAtTime", { defaultValue: "Time" })}
+              value={field.value ?? ""}
+              onChange={(event) => field.onChange(event.target.value)}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
+        {date || time ? (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              form.setValue("closesAtDate", "", { shouldDirty: true });
+              form.setValue("closesAtTime", "", { shouldDirty: true });
+              form.clearErrors(["closesAtDate", "closesAtTime"]);
+            }}
+          >
+            <Trans i18nKey="remove" defaults="Remove" />
+          </Button>
+        ) : null}
+      </div>
+    </Field>
   );
 }
 
@@ -323,6 +423,7 @@ export const PollSettingsForm = ({
               );
             }}
           />
+          <ClosesAtField />
         </FieldGroup>
       </CardContent>
       {children}

@@ -109,6 +109,11 @@ export function PollOutcome({
                 i18nKey="pollAutoClosedDescription"
                 defaults="This poll was closed automatically because all of its dates have passed. No more responses are being accepted."
               />
+            ) : poll.closedReason === "deadline" ? (
+              <Trans
+                i18nKey="pollDeadlineClosedDescription"
+                defaults="This poll reached its closing time. No more responses are being accepted."
+              />
             ) : (
               <Trans
                 i18nKey="pollClosedDescription"

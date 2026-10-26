@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@rallly/ui/sonner";
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
 import type {
@@ -6,8 +7,38 @@ import type {
   PollDetails,
   PollParticipant,
 } from "@/features/poll/types";
+import { closesAtFromField, hasPassedClosesAt } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { useTranslation } from "@/i18n/client";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+
+/**
+ * Reads the closing-time date and time fields as the organizer's browser
+ * zone sees them. Returns `{ ok: false }` after toasting when the time is in
+ * the past, so a form can stop its submit; `closesAt` is undefined when the
+ * fields are empty.
+ */
+export function useResolveClosesAt() {
+  const { t } = useTranslation();
+
+  return React.useCallback(
+    (date: string | undefined, time: string | undefined) => {
+      const closesAt = closesAtFromField(date, time, getBrowserTimeZone());
+
+      if (closesAt && hasPassedClosesAt(closesAt)) {
+        toast.error(
+          t("closesAtInPast", {
+            defaultValue: "The closing time must be in the future",
+          }),
+        );
+        return { ok: false as const };
+      }
+
+      return { ok: true as const, closesAt };
+    },
+    [t],
+  );
+}
 
 type PollContextValue = {
   poll: PollDetails;

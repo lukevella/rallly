@@ -41,8 +41,10 @@ import {
 } from "@/features/poll/limit/mutations";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
+  applyClosesAt,
   getChosenOptionRank,
   getFinalizePlanGate,
+  hasPassedClosesAt,
   getFinalizeTiming,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
@@ -80,6 +82,11 @@ import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
+
+// An invalid Date already fails z.date(), so only the past needs a check.
+const closesAtSchema = z.date().refine((value) => !hasPassedClosesAt(value), {
+  message: "The closing time must be in the future",
+});
 
 // A guest's id is a cookie, so the hourly per-user limit resets with a
 // cleared cookie. Only about 700 guests create 4 or more polls in a month,
@@ -199,6 +206,7 @@ export const polls = router({
         disableComments: z.boolean().optional(),
         allowTentativeVotes: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
+        closesAt: closesAtSchema.optional(),
         options: z
           .object({
             startDate: z.string(),
@@ -335,6 +343,7 @@ export const polls = router({
               allowTentativeVotes: input.allowTentativeVotes,
               hideScores: input.hideScores,
               requireParticipantEmail: input.requireParticipantEmail,
+            closesAt: input.closesAt,
               spaceId,
             },
           });
@@ -464,6 +473,8 @@ export const polls = router({
         allowTentativeVotes: z.boolean().optional(),
         hideScores: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
+        // Omitted leaves it unchanged; null removes it.
+        closesAt: closesAtSchema.nullable().optional(),
       }),
     )
     .use(requireUserMiddleware)
@@ -656,6 +667,17 @@ export const polls = router({
           reopened = count === 1;
         }
 
+        // Moving or removing the closing time of a poll the deadline closed
+        // reopens it: the organizer changed the deadline, so the lock is no
+        // longer what they asked for. The input is null or in the future here.
+        if (input.closesAt !== undefined) {
+          const { count } = await tx.poll.updateMany({
+            where: { id: pollId, status: "closed", closedReason: "deadline" },
+            data: { status: "open", closedReason: null },
+          });
+          reopened = reopened || count === 1;
+        }
+
         // Snapshot before the delete: option_deleted events carry the dates
         // they removed, since the rows are gone once the activity renders.
         const deletedOptions =
@@ -724,6 +746,7 @@ export const polls = router({
             disableComments: input.disableComments,
             allowTentativeVotes: input.allowTentativeVotes,
             requireParticipantEmail: input.requireParticipantEmail,
+            closesAt: input.closesAt,
             kind,
           },
         });
@@ -1020,6 +1043,7 @@ export const polls = router({
           createdAt: true,
           status: true,
           closedReason: true,
+          closesAt: true,
           hideParticipants: true,
           disableComments: true,
           allowTentativeVotes: true,
@@ -1114,7 +1138,7 @@ export const polls = router({
       const { scheduledEvent: _scheduledEvent, ...pollFields } = res;
 
       return {
-        ...pollFields,
+        ...applyClosesAt(pollFields),
         space: res.space
           ? {
               ...res.space,
@@ -1590,6 +1614,18 @@ export const polls = router({
       }
 
       const refusal = await prisma.$transaction(async (tx) => {
+        // A closing time already behind us would shut the poll again at once,
+        // so reopening drops it. Also covers a poll the close task has not
+        // reached yet, which is closed to voters but still open in storage.
+        await tx.poll.updateMany({
+          where: {
+            id: input.pollId,
+            status: { not: "scheduled" },
+            closesAt: { lte: new Date() },
+          },
+          data: { closesAt: null },
+        });
+
         // Row lock before the capacity check's advisory lock, the order
         // modify takes them in, so the two can't deadlock.
         await tx.$queryRaw`SELECT id FROM polls WHERE id = ${input.pollId} FOR UPDATE`;

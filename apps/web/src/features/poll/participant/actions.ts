@@ -31,6 +31,7 @@ import {
   renameParticipantSchema,
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
+import { isPollOpen } from "@/features/poll/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
@@ -87,7 +88,7 @@ async function authorizeParticipantEdit({
     });
   }
 
-  if (participant.poll.status !== "open") {
+  if (!isPollOpen(participant.poll)) {
     return { ok: false as const, reason: "closed" as const };
   }
 

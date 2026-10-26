@@ -19,11 +19,21 @@ describe("pollActivitySchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts a poll closed by its deadline", () => {
+    const result = pollActivitySchema.safeParse({
+      type: "poll_closed",
+      userId: null,
+      payload: { reason: "deadline" },
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it("rejects an unknown closed reason", () => {
     const result = pollActivitySchema.safeParse({
       type: "poll_closed",
       userId: "u1",
-      payload: { reason: "deadline" },
+      payload: { reason: "expired" },
     });
 
     expect(result.success).toBe(false);

@@ -9,7 +9,7 @@ import { recordPollActivities } from "@/features/activity/mutations";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { MAX_POLL_INVITES_PER_DAY } from "@/features/poll/invite/constants";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
-import { generateAccessToken } from "@/features/poll/utils";
+import { generateAccessToken, isPollOpen } from "@/features/poll/utils";
 
 const logger = createLogger("poll/invite/mutations");
 
@@ -44,6 +44,7 @@ export async function sendPollInvite({
       select: {
         title: true,
         status: true,
+        closesAt: true,
         space: {
           select: {
             tier: true,
@@ -65,7 +66,7 @@ export async function sendPollInvite({
     return { ok: false, reason: "notFound" };
   }
 
-  if (poll.status !== "open") {
+  if (!isPollOpen(poll)) {
     return { ok: false, reason: "pollClosed" };
   }
 
