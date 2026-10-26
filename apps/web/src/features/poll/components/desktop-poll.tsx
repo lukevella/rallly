@@ -442,6 +442,7 @@ const DesktopPoll: React.FunctionComponent = () => {
                                     createdAt: participant.createdAt,
                                     image: participant.image,
                                     votes: participant.votes,
+                                    hidden: participant.hidden,
                                   }}
                                   editMode={
                                     votingForm.watch("mode") === "edit" &&

@@ -17,11 +17,13 @@ import { NotificationToggle } from "@/features/poll/components/notification-togg
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { PollPageShell } from "@/features/poll/components/poll-page-shell";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
+import { RevealParticipantsToggle } from "@/features/poll/components/reveal-participants-toggle";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
   return (
     <>
+      <RevealParticipantsToggle />
       <NotificationToggle />
       <ManagePoll />
       <PollPrimaryActions />

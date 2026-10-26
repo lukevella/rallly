@@ -40,6 +40,7 @@ describe("maskParticipantsForViewer", () => {
       ],
       viewer: { userId: "user-1", linkedParticipantIds: ["c"] },
       hideParticipants: false,
+      participantsRevealed: false,
     });
 
     expect(result.map((p) => p.note)).toEqual(["Note a", null, "Note c"]);
@@ -50,6 +51,7 @@ describe("maskParticipantsForViewer", () => {
       participants: [participant("a")],
       viewer: { userId: null, linkedParticipantIds: [] },
       hideParticipants: false,
+      participantsRevealed: false,
     });
 
     expect(result).not.toHaveProperty("token");
@@ -65,6 +67,7 @@ describe("maskParticipantsForViewer", () => {
       ],
       viewer: { userId: "user-1", linkedParticipantIds: [] },
       hideParticipants: true,
+      participantsRevealed: false,
     });
 
     expect(result[0]).toMatchObject({
@@ -82,6 +85,25 @@ describe("maskParticipantsForViewer", () => {
       hidden: true,
     });
     expect(result[1].votes).toEqual([{ optionId: "opt-1", type: "yes" }]);
+  });
+
+  it("shows identities once the host has revealed them", () => {
+    const result = maskParticipantsForViewer({
+      participants: [
+        participant("a", { userId: "user-1" }),
+        participant("b", { userId: "user-2" }),
+      ],
+      viewer: { userId: "user-1", linkedParticipantIds: [] },
+      hideParticipants: true,
+      participantsRevealed: true,
+    });
+
+    expect(result[1]).toMatchObject({
+      name: "Name b",
+      email: "b@example.com",
+      userId: "user-2",
+      hidden: false,
+    });
   });
 });
 
@@ -109,6 +131,7 @@ describe("filterCommentsForViewer", () => {
         comments,
         viewerUserId: null,
         hideParticipants: false,
+        participantsRevealed: false,
       }),
     ).toHaveLength(2);
   });
@@ -119,6 +142,7 @@ describe("filterCommentsForViewer", () => {
         comments,
         viewerUserId: null,
         hideParticipants: true,
+        participantsRevealed: false,
       }),
     ).toEqual([]);
   });
@@ -129,8 +153,20 @@ describe("filterCommentsForViewer", () => {
         comments,
         viewerUserId: "user-2",
         hideParticipants: true,
+        participantsRevealed: false,
       }).map((c) => c.id),
     ).toEqual(["2"]);
+  });
+
+  it("returns every comment once the host has revealed identities", () => {
+    expect(
+      filterCommentsForViewer({
+        comments,
+        viewerUserId: null,
+        hideParticipants: true,
+        participantsRevealed: true,
+      }),
+    ).toHaveLength(2);
   });
 });
 

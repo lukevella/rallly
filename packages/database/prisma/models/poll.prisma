@@ -52,6 +52,10 @@ model Poll {
   scheduledEventId        String?           @map("scheduled_event_id")
   hideParticipants        Boolean           @default(false) @map("hide_participants")
   hideScores              Boolean           @default(false) @map("hide_scores")
+  /// Host-controlled reveal for hideParticipants: identities (and the notes
+  /// tied to them) stay masked to other participants until the host flips
+  /// this. Vote tallies are never gated by this — only who cast them.
+  participantsRevealed    Boolean           @default(false) @map("participants_revealed")
   disableComments         Boolean           @default(true) @map("disable_comments")
   requireParticipantEmail Boolean           @default(false) @map("require_participant_email")
   /// Whether participants may cast the tentative "if need be" vote. Positive

@@ -4,7 +4,7 @@ import type { VoteType } from "@rallly/database";
 import { cn } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, VenetianMaskIcon } from "lucide-react";
 import type * as React from "react";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -34,6 +34,7 @@ export interface ParticipantRowProps {
     createdAt: Date;
     image?: string | null;
     votes: Vote[];
+    hidden?: boolean;
   };
   className?: string;
   editMode?: boolean;
@@ -49,6 +50,7 @@ export const ParticipantRowView: React.FunctionComponent<{
   className?: string;
   isYou?: boolean;
   participantId: string;
+  hidden?: boolean;
 }> = ({
   name,
   image,
@@ -58,6 +60,7 @@ export const ParticipantRowView: React.FunctionComponent<{
   className,
   isYou,
   participantId,
+  hidden,
 }) => {
   return (
     <tr
@@ -75,6 +78,11 @@ export const ParticipantRowView: React.FunctionComponent<{
               size="sm"
               name={name}
               src={image ?? undefined}
+              icon={
+                hidden ? (
+                  <VenetianMaskIcon className="size-4 shrink-0 text-muted-foreground" />
+                ) : undefined
+              }
             />
             <ParticipantName>{name}</ParticipantName>
           </Participant>
@@ -144,6 +152,7 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
         return getVote(participant.id, optionId);
       })}
       participantId={participant.id}
+      hidden={participant.hidden}
       note={
         // The server only includes notes the viewer may see (host or author).
         participant.note ? (

@@ -11,11 +11,14 @@ export function OptimizedAvatarImage({
   className,
   src,
   name,
+  icon,
 }: {
   size: "sm" | "md" | "lg" | "xl";
   src?: string;
   name: string;
   className?: string;
+  /** Overrides the initials/photo with a fixed icon, e.g. for a masked identity. */
+  icon?: React.ReactNode;
 }) {
   const initials = name
     .trim()
@@ -26,7 +29,7 @@ export function OptimizedAvatarImage({
     .replace(/[^\p{L}]/gu, "")
     .toUpperCase();
 
-  const hasInitials = /^\p{L}+$/u.test(initials);
+  const hasInitials = !icon && /^\p{L}+$/u.test(initials);
   // The border belongs to a photo. Keyed on load status rather than on src
   // so a missing or failed image falls back to the edgeless tinted disc.
   const [imageLoaded, setImageLoaded] = React.useState(false);
@@ -38,7 +41,7 @@ export function OptimizedAvatarImage({
       bordered={imageLoaded || !hasInitials}
     >
       <AvatarImage
-        src={src ? resolveStorageUrl(src) : undefined}
+        src={!icon && src ? resolveStorageUrl(src) : undefined}
         alt={name}
         onLoadingStatusChange={(status) => setImageLoaded(status === "loaded")}
       />
@@ -46,7 +49,9 @@ export function OptimizedAvatarImage({
         className={cn("shrink-0")}
         seed={hasInitials ? name.trim() : undefined}
       >
-        {hasInitials ? (
+        {icon ? (
+          icon
+        ) : hasInitials ? (
           initials
         ) : (
           <UserIcon className="size-4 shrink-0 text-muted-foreground" />

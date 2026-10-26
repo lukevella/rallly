@@ -18,6 +18,8 @@ export type PollDetails = {
   disableComments: boolean;
   allowTentativeVotes: boolean;
   hideScores: boolean;
+  /** Whether the host has revealed participant identities (see hideParticipants). */
+  participantsRevealed: boolean;
   requireParticipantEmail: boolean;
   muted: boolean;
   timeZone: string | null;

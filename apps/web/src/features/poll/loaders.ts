@@ -210,11 +210,13 @@ export const loadInvitePoll = cache(
         participants,
         viewer,
         hideParticipants: poll.hideParticipants,
+        participantsRevealed: poll.participantsRevealed,
       }),
       comments: filterCommentsForViewer({
         comments,
         viewerUserId: viewer.userId,
         hideParticipants: poll.hideParticipants,
+        participantsRevealed: poll.participantsRevealed,
       }),
       linkedParticipantIds,
       user,

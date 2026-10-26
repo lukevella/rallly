@@ -40,16 +40,19 @@ type RawParticipant = Omit<PollParticipant, "hidden" | "editUrl"> & {
  * the host and their author only, so they survive only on the viewer's own
  * responses: the ones their session created, or the one the emailed link
  * they opened names. With hidden participants, everyone else's identity is
- * withheld while their votes still count.
+ * withheld while their votes still count — unless the host has revealed
+ * identities (`participantsRevealed`), which only the host controls.
  */
 export function maskParticipantsForViewer({
   participants,
   viewer,
   hideParticipants,
+  participantsRevealed,
 }: {
   participants: RawParticipant[];
   viewer: { userId: string | null; linkedParticipantIds: string[] };
   hideParticipants: boolean;
+  participantsRevealed: boolean;
 }): PollParticipant[] {
   const linkedIds = new Set(viewer.linkedParticipantIds);
   const isOwn = (participant: { id: string; userId: string | null }) =>
@@ -60,7 +63,7 @@ export function maskParticipantsForViewer({
     if (isOwn(participant)) {
       return { ...participant, hidden: false, editUrl: null };
     }
-    if (hideParticipants) {
+    if (hideParticipants && !participantsRevealed) {
       return {
         ...participant,
         userId: null,
@@ -79,17 +82,21 @@ export function maskParticipantsForViewer({
 /**
  * With hidden participants, a viewer who is not the host sees only their
  * own comments; the author names would otherwise reveal who responded.
+ * Once the host reveals identities (`participantsRevealed`), comments show
+ * normally too.
  */
 export function filterCommentsForViewer({
   comments,
   viewerUserId,
   hideParticipants,
+  participantsRevealed,
 }: {
   comments: PollComment[];
   viewerUserId: string | null;
   hideParticipants: boolean;
+  participantsRevealed: boolean;
 }): PollComment[] {
-  if (!hideParticipants) {
+  if (!hideParticipants || participantsRevealed) {
     return comments;
   }
   if (!viewerUserId) {

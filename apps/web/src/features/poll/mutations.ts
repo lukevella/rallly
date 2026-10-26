@@ -237,6 +237,36 @@ export const setPollMuted = async ({
   return { ok: true as const };
 };
 
+/**
+ * Host-controlled reveal for hideParticipants. Identities stay masked to
+ * other participants until the host flips this; vote tallies are never
+ * gated by it.
+ */
+export const setParticipantsRevealed = async ({
+  pollId,
+  userId,
+  participantsRevealed,
+}: {
+  pollId: string;
+  userId: string;
+  participantsRevealed: boolean;
+}) => {
+  const { count } = await prisma.poll.updateMany({
+    where: {
+      id: pollId,
+      userId,
+      deletedAt: null,
+    },
+    data: { participantsRevealed },
+  });
+
+  if (count === 0) {
+    return { ok: false as const, reason: "notFound" as const };
+  }
+
+  return { ok: true as const };
+};
+
 export const deletePoll = async (
   pollId: string,
   spaceId: AuthorizedSpaceId,

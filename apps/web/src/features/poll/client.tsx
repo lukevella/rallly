@@ -65,17 +65,14 @@ export const useParticipants = () => {
   const { participants: rawParticipants } = useRequiredContext(PollContext);
 
   const participants = React.useMemo(() => {
-    return rawParticipants.map((participant, index) => {
+    return rawParticipants.map((participant) => {
       if (!participant.hidden) {
         return participant;
       }
 
       return {
         ...participant,
-        name: t("hiddenParticipantName", {
-          defaultValue: "Participant #{number}",
-          number: rawParticipants.length - index,
-        }),
+        name: t("hiddenParticipantName", { defaultValue: "Anonymous" }),
       };
     });
   }, [rawParticipants, t]);
