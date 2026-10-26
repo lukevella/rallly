@@ -52,5 +52,5 @@ export const unsubscribeWithTokenSchema = z.object({
 });
 
 export const markInboxNotificationReadSchema = z.object({
-  notificationId: z.string(),
+  notificationId: z.string().min(1),
 });

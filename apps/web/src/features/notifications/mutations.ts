@@ -146,7 +146,7 @@ export async function markInboxNotificationsRead({
     where: {
       userId,
       readAt: null,
-      ...(notificationId && { id: notificationId }),
+      ...(notificationId !== undefined && { id: notificationId }),
     },
     data: { readAt: new Date() },
   });

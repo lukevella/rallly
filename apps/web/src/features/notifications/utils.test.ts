@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { createSignature } from "@/lib/signature";
-import { getNotificationPreferenceKey } from "./schema";
+import {
+  getNotificationPreferenceKey,
+  markInboxNotificationReadSchema,
+} from "./schema";
 import type { UnsubscribeTarget } from "./utils";
 import {
   createUnsubscribeToken,
@@ -146,5 +149,14 @@ describe("inbox", () => {
     expect(
       toInboxEvent({ ...row, type: "from_a_newer_deploy", payload: {} }),
     ).toBeNull();
+  });
+});
+
+describe("mark inbox notification read", () => {
+  // An empty id must not fall through to "mark every entry read".
+  it("rejects an empty id", () => {
+    expect(
+      markInboxNotificationReadSchema.safeParse({ notificationId: "" }).success,
+    ).toBe(false);
   });
 });
