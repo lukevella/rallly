@@ -42,6 +42,14 @@ export function createSessionStorage(): Storage {
     getItem: (key) => resolve().getItem(key),
     key: (index) => resolve().key(index),
     removeItem: (key) => resolve().removeItem(key),
-    setItem: (key, value) => resolve().setItem(key, value),
+    setItem: (key, value) => {
+      try {
+        resolve().setItem(key, value);
+      } catch {
+        // setItem can throw QuotaExceededError even when reading is allowed
+        storage = createMemoryStorage();
+        storage.setItem(key, value);
+      }
+    },
   };
 }

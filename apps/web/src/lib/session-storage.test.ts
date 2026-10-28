@@ -23,4 +23,14 @@ describe("createSessionStorage", () => {
     storage.removeItem("draft");
     expect(storage.getItem("draft")).toBeNull();
   });
+
+  it("falls back to memory when writing to sessionStorage throws", () => {
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("Quota exceeded", "QuotaExceededError");
+    });
+    const storage = createSessionStorage();
+    storage.setItem("draft", "value");
+    expect(storage.getItem("draft")).toBe("value");
+    expect(window.sessionStorage.getItem("draft")).toBeNull();
+  });
 });
