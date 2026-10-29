@@ -351,9 +351,6 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
         spaceId,
       },
-      include: {
-        space: true,
-      },
     });
 
     if (activated) {
