@@ -42,7 +42,6 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
   getChosenOptionRank,
-  getFinalizePlanGate,
   getFinalizeTiming,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
@@ -1266,22 +1265,6 @@ export const polls = router({
       const pollConferencing = parsePollConferencing(poll.conferencing, {
         pollId: poll.id,
       });
-
-      // Finalizing and notifying are free; a Zoom, Teams or Webex meeting is what
-      // the plan pays for.
-      const planGate = getFinalizePlanGate({
-        tier: getPollTier({
-          space: poll.space,
-          activeSpaceTier: ctx.space.tier,
-        }),
-        conferencing: pollConferencing,
-      });
-      if (planGate) {
-        throw new TRPCError({
-          code: "PAYMENT_REQUIRED",
-          message: "Creating a video meeting requires a paid plan",
-        });
-      }
 
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and

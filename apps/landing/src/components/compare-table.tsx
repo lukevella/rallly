@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { CircleCheckIcon, XIcon } from "lucide-react";
 import type * as React from "react";
 
@@ -134,40 +133,5 @@ export function CompareTableDash({ label }: { label: string }) {
       <XIcon className="size-4 text-gray-400" aria-hidden="true" />
       <span className="sr-only">{label}</span>
     </>
-  );
-}
-
-export function CompareTableLogos({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div className={cn("flex items-center gap-x-2", className)} {...props} />
-  );
-}
-
-export function CompareTableLogo({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger
-        delay={0}
-        render={
-          <button
-            type="button"
-            aria-label={label}
-            className="inline-flex rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-primary [&_svg]:size-5"
-          />
-        }
-      >
-        {children}
-      </TooltipTrigger>
-      <TooltipContent side="top">{label}</TooltipContent>
-    </Tooltip>
   );
 }
