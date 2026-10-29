@@ -5,7 +5,6 @@ import { sendReviewRequestEmail } from "@rallly/emails/templates/review-request"
 import { createLogger } from "@rallly/logger";
 import { Effect } from "effect";
 import { getInstanceBranding } from "@/emails/branding";
-import { env } from "@/env";
 import { queueEmails } from "@/features/email-queue/mutations";
 import {
   QueuedEmailFailed,
@@ -13,7 +12,11 @@ import {
 } from "@/features/email-queue/service";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { track } from "@/lib/posthog";
-import { reviewRequestEmailDelayMs, reviewSites } from "./constants";
+import {
+  reviewRequestEmailDelayMs,
+  reviewRequestSender,
+  reviewSites,
+} from "./constants";
 import { countFinalizedPolls, getReviewRequestRecipient } from "./data";
 import {
   getFirstName,
@@ -126,8 +129,7 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
           to: user.email,
           locale: user.locale ?? undefined,
           branding,
-          // Replies go to a person: the email invites them.
-          replyTo: env.SUPPORT_EMAIL,
+          from: reviewRequestSender,
           props: {
             firstName: getFirstName(user.name),
             siteName: reviewSites[site].name,
