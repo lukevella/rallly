@@ -76,6 +76,10 @@ function OpenCloseToggle() {
   }
 }
 
+/**
+ * The host's poll menu. Response exports are left out of an aggregate
+ * results poll, which keeps individual responses from its host.
+ */
 const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ disabled }) => {
@@ -124,10 +128,12 @@ const ManagePoll: React.FunctionComponent<{
               <DropdownMenuSeparator />
             </>
           ) : null}
-          <DropdownMenuItem onClick={exportToCsv}>
-            <DownloadIcon />
-            <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
-          </DropdownMenuItem>
+          {poll.aggregateResultsOnly ? null : (
+            <DropdownMenuItem onClick={exportToCsv}>
+              <DownloadIcon />
+              <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => {
               if (isFree) {

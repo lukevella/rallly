@@ -118,6 +118,7 @@ const CreatePollActions = ({
   );
 };
 
+/** The form that creates a poll, aggregate results setting included. */
 export const CreatePoll = ({
   nav,
   conferencing,
@@ -160,6 +161,7 @@ export const CreatePoll = ({
       options: [],
       hideScores: false,
       hideParticipants: false,
+      aggregateResultsOnly: false,
       enableComments: false,
       allowTentativeVotes: true,
       duration: 60,
@@ -283,6 +285,7 @@ export const CreatePoll = ({
                   ? formData?.timeZone || user?.timeZone || getBrowserTimeZone()
                   : null,
               hideParticipants: formData?.hideParticipants,
+              aggregateResultsOnly: formData?.aggregateResultsOnly,
               disableComments: !formData?.enableComments,
               hideScores: formData?.hideScores,
               allowTentativeVotes: formData?.allowTentativeVotes,

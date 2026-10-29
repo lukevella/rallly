@@ -71,6 +71,10 @@ const app = new Hono<Env>().basePath("/api/private");
 
 loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
+/**
+ * Encodes a poll for the private API's poll responses, including whether it
+ * only exposes aggregate results.
+ */
 function toPollResponseBody(poll: {
   id: string;
   title: string;
@@ -78,6 +82,7 @@ function toPollResponseBody(poll: {
   location: string | null;
   timeZone: string | null;
   status: string;
+  aggregateResultsOnly: boolean;
   createdAt: Date;
   user: { name: string; image: string | null } | null;
   options: { id: string; startTime: Date; duration: number }[];
@@ -90,6 +95,7 @@ function toPollResponseBody(poll: {
       location: poll.location,
       timezone: poll.timeZone,
       status: poll.status,
+      aggregateResultsOnly: poll.aggregateResultsOnly ?? false,
       createdAt: poll.createdAt.toISOString(),
       user: poll.user
         ? {
@@ -322,6 +328,7 @@ app.post(
       );
     }
 
+    /** Reports the created poll, with the settings it was created with. */
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
       const kind = poll.options.some((o) => o.duration > 0) ? "time" : "date";
 
@@ -358,6 +365,7 @@ app.post(
             requireParticipantEmail: input.requireEmail,
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
+            aggregateResultsOnly: input.aggregateResultsOnly,
             disableComments: poll.disableComments,
             allowTentativeVotes: poll.allowTentativeVotes,
             isGuest: false,
@@ -409,6 +417,7 @@ app.post(
         requireParticipantEmail: input.requireEmail,
         hideParticipants: input.hideParticipants,
         hideScores: input.hideScores,
+        aggregateResultsOnly: input.aggregateResultsOnly,
         disableComments: input.disableComments,
         allowTentativeVotes: input.allowTentativeVotes,
         options,
@@ -482,6 +491,7 @@ app.post(
       requireParticipantEmail: input.requireEmail,
       hideParticipants: input.hideParticipants,
       hideScores: input.hideScores,
+      aggregateResultsOnly: input.aggregateResultsOnly,
       disableComments: input.disableComments,
       allowTentativeVotes: input.allowTentativeVotes,
       options,
@@ -604,6 +614,7 @@ app.get(
         location: true,
         timeZone: true,
         status: true,
+        aggregateResultsOnly: true,
         createdAt: true,
         user: {
           select: {
@@ -826,6 +837,16 @@ app.get(
           "Poll not found or does not belong to this space.",
         ),
         404,
+      );
+    }
+
+    if (data.aggregateResultsOnly) {
+      return c.json(
+        apiError(
+          "INDIVIDUAL_RESPONSES_DISABLED",
+          "This poll only exposes aggregate results.",
+        ),
+        403,
       );
     }
 

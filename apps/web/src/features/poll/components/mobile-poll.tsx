@@ -32,6 +32,10 @@ import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import GroupedOptions from "./mobile-poll/grouped-options";
 
+/**
+ * The poll as a list of options on narrow screens, with the selected
+ * response's votes and, for an aggregate results poll, totals only.
+ */
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 
@@ -43,7 +47,9 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const votingForm = useVotingForm();
 
-  const selectedParticipantId = votingForm.watch("participantId");
+  const { canEditParticipant, canAddNewParticipant } = usePermissions();
+  const mode = votingForm.watch("mode");
+  const { selectedParticipantId } = votingForm;
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
@@ -52,9 +58,7 @@ const MobilePoll: React.FunctionComponent = () => {
       )
     : undefined;
 
-  const { canEditParticipant, canAddNewParticipant } = usePermissions();
-
-  const isEditing = votingForm.watch("mode") !== "view";
+  const isEditing = mode !== "view";
 
   // True while the sticky footer is pinned to the viewport (floating over
   // the option list) rather than resting at the card's end. Tracked via a

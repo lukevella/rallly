@@ -40,6 +40,8 @@ import { ConferencingProviderIcon } from "@/features/conferencing/components/con
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
+import { VoteBar } from "@/features/poll/components/vote-bar";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
 import type { VoteType } from "@/features/poll/constants";
@@ -103,9 +105,32 @@ function OptionTimeCell({ option }: { option: RankedOption }) {
   );
 }
 
-function OptionVotesCell({ votes }: { votes: OptionVotes }) {
+/**
+ * An option's vote bar in the finalize ranking. An aggregate results poll
+ * draws it from the per-option totals, since the host has no responses to
+ * count or name.
+ */
+function OptionVotesCell({
+  optionId,
+  votes,
+}: {
+  optionId: string;
+  votes: OptionVotes;
+}) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
+  if (poll.aggregateResultsOnly) {
+    const { yes, ifNeedBe } = getScore(optionId);
+    return (
+      <VoteBar
+        className="relative z-10 w-32"
+        yes={yes}
+        ifNeedBe={ifNeedBe}
+        total={poll.aggregateParticipantCount ?? 0}
+      />
+    );
+  }
   return (
     <div className="relative z-10 flex w-32">
       <VoteSummaryProgressBar
@@ -142,6 +167,10 @@ function RankMedal({ rank }: { rank: number }) {
   );
 }
 
+/**
+ * The first finalize step: options ranked by availability, with their
+ * totals, to pick the date from.
+ */
 function PickDateStep({
   options,
   onPick,
@@ -177,7 +206,7 @@ function PickDateStep({
               </DataListCell>
             ) : null}
             <DataListCell className="hidden sm:flex">
-              <OptionVotesCell votes={option.votes} />
+              <OptionVotesCell optionId={option.id} votes={option.votes} />
             </DataListCell>
             <DataListCell>
               <div className="relative z-10">
@@ -341,6 +370,10 @@ function VoteShortcut({
   );
 }
 
+/**
+ * Who to email the chosen date to, grouped by their vote on it. Only
+ * participants with an email can be selected.
+ */
 function NotifyStep({
   optionId,
   selectedIds,
@@ -461,6 +494,50 @@ function NotifyStep({
 
 type Step = "date" | "notify" | "summary" | "done";
 
+/**
+ * The notify step of an aggregate results poll. The host holds totals and
+ * no responses, so instead of a list to pick from there is one choice:
+ * email every participant who left an address, or no one.
+ */
+function AggregateNotifyStep({
+  notifyAll,
+  onChange,
+}: {
+  notifyAll: boolean;
+  onChange: (notifyAll: boolean) => void;
+}) {
+  const poll = usePoll();
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-card-border bg-card p-4">
+      <Checkbox
+        id="notify-all-participants"
+        checked={notifyAll}
+        onCheckedChange={(checked) => {
+          posthog?.capture("poll_finalize:notify_all_click", {
+            selected: checked,
+          });
+          onChange(checked);
+        }}
+      />
+      <div className="grid gap-1">
+        <Label htmlFor="notify-all-participants" className="text-sm">
+          <Trans
+            i18nKey="notifyAllParticipants"
+            defaults="{count, plural, one {Notify the participant} other {Notify all # participants}}"
+            values={{ count: poll.aggregateParticipantCount ?? 0 }}
+          />
+        </Label>
+        <p className="text-muted-foreground text-sm">
+          <Trans
+            i18nKey="notifyAllParticipantsDescription"
+            defaults="Responses are anonymous, so everyone who left an email address gets the invite."
+          />
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // Each step sets its own width and the dialog eases between them. The wide
 // steps match a 2xl dialog's content box; the success step is narrower.
 const wideStepClassName = "grid w-[calc(100vw-4rem)] gap-4 sm:w-[40rem]";
@@ -557,9 +634,12 @@ function SummaryStep({ option }: { option: RankedOption }) {
   );
 }
 
-// Mounted fresh with each open, so the wizard starts with nothing carried
-// over from a previous run. The step lives in the dialog, which reads it
-// when the host closes it.
+/**
+ * The finalize steps: pick a date, choose who to notify, confirm. Mounted
+ * fresh with each open, so the wizard starts with nothing carried over from
+ * a previous run. The step lives in the dialog, which reads it when the
+ * host closes it.
+ */
 function FinalizeWizard({
   step,
   onStepChange,
@@ -571,6 +651,7 @@ function FinalizeWizard({
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
   const router = useRouter();
   // The pay wall nests inside the wizard so it stacks above it and the
   // wizard survives it; the app-wide instance would sit underneath.
@@ -581,13 +662,26 @@ function FinalizeWizard({
     payWall.trigger();
   };
   const options = React.useMemo(
-    () => rankOptionsByPopularity({ options: poll.options, participants }),
-    [poll.options, participants],
+    () =>
+      rankOptionsByPopularity({
+        options: poll.options,
+        participants,
+        getScore,
+      }),
+    [poll.options, participants, getScore],
   );
   const [optionId, setOptionId] = React.useState<string | null>(null);
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
+  // Aggregate results only: the host's single choice in place of notifyIds.
+  const [notifyAll, setNotifyAll] = React.useState(true);
+  const isAggregate = !!poll.aggregateResultsOnly;
+  // An aggregate results host has totals and no responses, so the count of
+  // responses decides whether there is anyone to notify.
+  const hasRespondents = isAggregate
+    ? (poll.aggregateParticipantCount ?? 0) > 0
+    : participants.length > 0;
   const option = options.find((o) => o.id === optionId);
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
   const goTo = (next: Step) => {
@@ -635,7 +729,7 @@ function FinalizeWizard({
           onPick={(id) => {
             setOptionId(id);
             // With nobody to notify, the notify step has nothing to ask.
-            goTo(participants.length > 0 ? "notify" : "summary");
+            goTo(hasRespondents ? "notify" : "summary");
           }}
         />
       </div>
@@ -698,9 +792,7 @@ function FinalizeWizard({
           onOpenChange={payWall.dialogProps.onOpenChange}
         />
         <DialogFooter>
-          <Button
-            onClick={() => goTo(participants.length > 0 ? "notify" : "date")}
-          >
+          <Button onClick={() => goTo(hasRespondents ? "notify" : "date")}>
             <Trans i18nKey="back" defaults="Back" />
           </Button>
           <Button
@@ -710,15 +802,28 @@ function FinalizeWizard({
               finalize.mutate({
                 pollId: poll.id,
                 optionId: option.id,
-                notifyParticipantIds: Array.from(notifyIds),
+                notifyParticipantIds: isAggregate ? [] : Array.from(notifyIds),
+                notifyAllParticipants:
+                  isAggregate && hasRespondents && notifyAll,
               });
             }}
           >
-            <Trans
-              i18nKey="finalizeAndNotify"
-              defaults="{count, plural, =0 {Finalize} one {Finalize and notify # participant} other {Finalize and notify # participants}}"
-              values={{ count: notifyIds.size }}
-            />
+            {isAggregate ? (
+              hasRespondents && notifyAll ? (
+                <Trans
+                  i18nKey="finalizeAndNotifyAll"
+                  defaults="Finalize and notify participants"
+                />
+              ) : (
+                <Trans i18nKey="finalize" defaults="Finalize" />
+              )
+            ) : (
+              <Trans
+                i18nKey="finalizeAndNotify"
+                defaults="{count, plural, =0 {Finalize} one {Finalize and notify # participant} other {Finalize and notify # participants}}"
+                values={{ count: notifyIds.size }}
+              />
+            )}
           </Button>
         </DialogFooter>
       </div>
@@ -738,11 +843,15 @@ function FinalizeWizard({
           />
         </DialogDescription>
       </DialogHeader>
-      <NotifyStep
-        optionId={option.id}
-        selectedIds={notifyIds}
-        onChange={setNotifyIds}
-      />
+      {isAggregate ? (
+        <AggregateNotifyStep notifyAll={notifyAll} onChange={setNotifyAll} />
+      ) : (
+        <NotifyStep
+          optionId={option.id}
+          selectedIds={notifyIds}
+          onChange={setNotifyIds}
+        />
+      )}
       <DialogFooter>
         <Button onClick={() => goTo("date")}>
           <Trans i18nKey="back" defaults="Back" />

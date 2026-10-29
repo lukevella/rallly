@@ -43,6 +43,7 @@ export function PollResponsesList({
   pollOpen,
   selectedId,
   compact = false,
+  aggregateResultsOnly = false,
   className,
 }: {
   pollId: string;
@@ -50,6 +51,11 @@ export function PollResponsesList({
   pollOpen: boolean;
   selectedId?: string;
   compact?: boolean;
+  /**
+   * The poll withholds individual responses, so an empty list says they are
+   * hidden rather than that nobody has responded.
+   */
+  aggregateResultsOnly?: boolean;
   className?: string;
 }) {
   const columns = React.useMemo(
@@ -138,13 +144,27 @@ export function PollResponsesList({
           <InboxIcon />
         </EmptyStateIcon>
         <EmptyStateTitle>
-          <Trans i18nKey="pollResponsesListEmpty" defaults="No responses" />
+          {aggregateResultsOnly ? (
+            <Trans
+              i18nKey="aggregateResponsesHiddenTitle"
+              defaults="Individual responses are hidden"
+            />
+          ) : (
+            <Trans i18nKey="pollResponsesListEmpty" defaults="No responses" />
+          )}
         </EmptyStateTitle>
         <EmptyStateDescription>
-          <Trans
-            i18nKey="pollResponsesListEmptyDescription"
-            defaults="Responses will show up here once participants vote."
-          />
+          {aggregateResultsOnly ? (
+            <Trans
+              i18nKey="aggregateResponsesHiddenDescription"
+              defaults="This poll is set to show vote totals by option only."
+            />
+          ) : (
+            <Trans
+              i18nKey="pollResponsesListEmptyDescription"
+              defaults="Responses will show up here once participants vote."
+            />
+          )}
         </EmptyStateDescription>
       </EmptyState>
     );

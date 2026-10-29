@@ -216,6 +216,26 @@ describe("buildWebhookPayload", () => {
     });
   });
 
+  it.each([
+    "response_created",
+    "response_updated",
+    "response_deleted",
+  ] as const)("does not expose %s for aggregate-only polls", (type) => {
+    expect(
+      buildWebhookPayload({
+        activity: {
+          id: "act_12",
+          type,
+          participantId: "part_1",
+          optionId: null,
+          payload: { name: "Jessie", votes: [] },
+          createdAt,
+        },
+        poll: { ...poll, aggregateResultsOnly: true },
+      }),
+    ).toBeNull();
+  });
+
   it("returns null when a response row lost its participant ref", () => {
     expect(
       buildWebhookPayload({

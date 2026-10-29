@@ -248,16 +248,20 @@ export const addParticipantAction = anyUserActionClient
       });
     }
 
-    after(() =>
-      sendNewResponseNotificationEmail({
-        pollId,
-        pollTitle: poll.title,
-        participantName: participant.name,
-        participantEmail: participant.email,
-        note: participant.note,
-        excludeUserId: ctx.user.id,
-      }),
-    );
+    // The new response email names the respondent, which an aggregate
+    // results poll keeps from its host.
+    if (!poll.aggregateResultsOnly) {
+      after(() =>
+        sendNewResponseNotificationEmail({
+          pollId,
+          pollTitle: poll.title,
+          participantName: participant.name,
+          participantEmail: participant.email,
+          note: participant.note,
+          excludeUserId: ctx.user.id,
+        }),
+      );
+    }
 
     const voteCounts = votes.reduce(
       (acc, { type }) => {

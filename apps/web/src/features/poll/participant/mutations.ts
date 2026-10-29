@@ -113,6 +113,7 @@ export type AddParticipantResult =
         userId: string | null;
         title: string;
         allowTentativeVotes: boolean;
+        aggregateResultsOnly: boolean;
         space: {
           id: string;
           tier: SpaceTier;
@@ -128,6 +129,11 @@ export type AddParticipantResult =
     }
   | { ok: false; reason: WriteRefusal };
 
+/**
+ * Adds a response to an open poll, under the poll's row lock so it never
+ * lands after the aggregate results setting changes. Refuses closed or
+ * missing polls with a reason.
+ */
 export async function addParticipant({
   pollId,
   userId,
@@ -218,6 +224,7 @@ export async function addParticipant({
               userId: true,
               title: true,
               allowTentativeVotes: true,
+              aggregateResultsOnly: true,
               space: {
                 select: {
                   id: true,

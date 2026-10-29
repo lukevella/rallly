@@ -24,6 +24,7 @@ export type PollSettingsFormData = {
   requireParticipantEmail: boolean;
   hideParticipants: boolean;
   hideScores: boolean;
+  aggregateResultsOnly: boolean;
   enableComments: boolean;
   allowTentativeVotes: boolean;
 };

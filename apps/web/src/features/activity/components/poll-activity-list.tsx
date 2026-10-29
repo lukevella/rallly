@@ -165,12 +165,17 @@ const iconByChange: Record<PollChange["field"], LucideIcon> = {
   timeZone: GlobeIcon,
   hideParticipants: VenetianMaskIcon,
   hideScores: BarChart2Icon,
+  aggregateResultsOnly: BarChart2Icon,
   disableComments: MessageCircleIcon,
   allowTentativeVotes: ListChecksIcon,
   requireParticipantEmail: MailIcon,
   settings: Settings2Icon,
 };
 
+/**
+ * The tint of a change in the activity list: whether participants gained
+ * something, lost something, or saw it change.
+ */
 function toneOfChange(change: PollChange): keyof typeof toneClassName {
   if ("action" in change) {
     return change.action === "added"
@@ -184,6 +189,7 @@ function toneOfChange(change: PollChange): keyof typeof toneClassName {
     // requiring an email takes something away.
     case "hideParticipants":
     case "hideScores":
+    case "aggregateResultsOnly":
     case "disableComments":
     case "requireParticipantEmail":
       return change.from ? "added" : "removed";
@@ -199,6 +205,7 @@ const conferencingName = (conferencing: PollConferencing) =>
     ? conferencing.label
     : conferencingProviderLabels[conferencing.provider];
 
+/** One poll change as a sentence: what changed, from what to what. */
 function ChangeDescription({ change }: { change: PollChange }) {
   const b = <b className="font-medium" />;
   switch (change.field) {
@@ -291,6 +298,18 @@ function ChangeDescription({ change }: { change: PollChange }) {
         <Trans i18nKey="pollActivityVotesShown" defaults="Votes shown" />
       ) : (
         <Trans i18nKey="pollActivityVotesHidden" defaults="Votes hidden" />
+      );
+    case "aggregateResultsOnly":
+      return change.from ? (
+        <Trans
+          i18nKey="pollActivityIndividualResponsesShown"
+          defaults="Individual responses shown"
+        />
+      ) : (
+        <Trans
+          i18nKey="pollActivityAggregateResultsOnly"
+          defaults="Aggregate results only"
+        />
       );
     case "disableComments":
       return change.from ? (

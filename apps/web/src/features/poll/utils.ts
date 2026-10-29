@@ -1,6 +1,10 @@
 import { customAlphabet } from "nanoid";
 import type { VoteType } from "@/features/poll/constants";
-import type { PollComment, PollParticipant } from "@/features/poll/types";
+import type {
+  PollComment,
+  PollDetails,
+  PollParticipant,
+} from "@/features/poll/types";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -37,40 +41,46 @@ type RawParticipant = Omit<PollParticipant, "hidden" | "editUrl"> & {
  * the host and their author only, so they survive only on the viewer's own
  * responses: the ones their session created, or the one the emailed link
  * they opened names. With hidden participants, everyone else's identity is
- * withheld while their votes still count.
+ * withheld while their votes still count. With aggregate results only,
+ * everyone else's response is dropped: the viewer keeps their own answers
+ * and reads the rest as totals.
  */
 export function maskParticipantsForViewer({
   participants,
   viewer,
   hideParticipants,
+  aggregateResultsOnly = false,
 }: {
   participants: RawParticipant[];
   viewer: { userId: string | null; linkedParticipantIds: string[] };
   hideParticipants: boolean;
+  aggregateResultsOnly?: boolean;
 }): PollParticipant[] {
   const linkedIds = new Set(viewer.linkedParticipantIds);
   const isOwn = (participant: { id: string; userId: string | null }) =>
     linkedIds.has(participant.id) ||
     (!!viewer.userId && participant.userId === viewer.userId);
 
-  return participants.map(({ token: _token, ...participant }) => {
-    if (isOwn(participant)) {
-      return { ...participant, hidden: false, editUrl: null };
-    }
-    if (hideParticipants) {
-      return {
-        ...participant,
-        userId: null,
-        name: "",
-        email: null,
-        image: null,
-        note: null,
-        hidden: true,
-        editUrl: null,
-      };
-    }
-    return { ...participant, note: null, hidden: false, editUrl: null };
-  });
+  return participants
+    .filter((participant) => !aggregateResultsOnly || isOwn(participant))
+    .map(({ token: _token, ...participant }) => {
+      if (isOwn(participant)) {
+        return { ...participant, hidden: false, editUrl: null };
+      }
+      if (hideParticipants) {
+        return {
+          ...participant,
+          userId: null,
+          name: "",
+          email: null,
+          image: null,
+          note: null,
+          hidden: true,
+          editUrl: null,
+        };
+      }
+      return { ...participant, note: null, hidden: false, editUrl: null };
+    });
 }
 
 /**
@@ -145,13 +155,18 @@ export type OptionVotes = {
 /**
  * Options in the order a host picks from: most available first, with a
  * firm yes outranking an ifNeedBe at the same total. Ties keep option order.
+ *
+ * @param getScore - Totals per option that replace the participant count,
+ * for an aggregate results poll whose host holds totals and no responses.
  */
 export function rankOptionsByPopularity<T extends { id: string }>({
   options,
   participants,
+  getScore,
 }: {
   options: T[];
   participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
+  getScore?: (optionId: string) => { yes: number; ifNeedBe: number };
 }): (T & { votes: OptionVotes })[] {
   const votesByOptionId = new Map<string, OptionVotes>(
     options.map((option) => [option.id, { yes: [], ifNeedBe: [], no: [] }]),
@@ -170,14 +185,38 @@ export function rankOptionsByPopularity<T extends { id: string }>({
         no: [],
       },
     }))
-    .sort((a, b) => comparePopularity(a.votes, b.votes));
+    .sort((a, b) =>
+      comparePopularity(scoreOf(a, getScore), scoreOf(b, getScore)),
+    );
 }
 
-function comparePopularity(a: OptionVotes, b: OptionVotes) {
-  const score = (votes: OptionVotes) => [
-    votes.yes.length + votes.ifNeedBe.length,
-    votes.yes.length,
-    votes.ifNeedBe.length,
+type PopularityScore = { yes: number; ifNeedBe: number };
+
+/**
+ * An option's totals: the aggregate totals when given, otherwise counted
+ * from the option's votes.
+ */
+function scoreOf(
+  option: { id: string; votes: OptionVotes },
+  getScore?: (optionId: string) => PopularityScore,
+): PopularityScore {
+  return (
+    getScore?.(option.id) ?? {
+      yes: option.votes.yes.length,
+      ifNeedBe: option.votes.ifNeedBe.length,
+    }
+  );
+}
+
+/**
+ * Sort order of two options: more available first, then more firm yeses.
+ * Negative when `a` ranks ahead of `b`, zero when they tie.
+ */
+function comparePopularity(a: PopularityScore, b: PopularityScore) {
+  const score = ({ yes, ifNeedBe }: PopularityScore) => [
+    yes + ifNeedBe,
+    yes,
+    ifNeedBe,
   ];
   const sa = score(a);
   const sb = score(b);
@@ -195,12 +234,15 @@ export function getChosenOptionRank({
   options,
   participants,
   optionId,
+  getScore,
 }: {
   options: { id: string }[];
   participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
   optionId: string;
+  /** Aggregate totals per option, as for {@link rankOptionsByPopularity}. */
+  getScore?: (optionId: string) => PopularityScore;
 }) {
-  const ranked = rankOptionsByPopularity({ options, participants });
+  const ranked = rankOptionsByPopularity({ options, participants, getScore });
   const chosen = ranked.find((option) => option.id === optionId);
   if (!chosen) {
     return {
@@ -213,7 +255,10 @@ export function getChosenOptionRank({
   let tied = 0;
   for (const option of ranked) {
     if (option.id === optionId) continue;
-    const order = comparePopularity(option.votes, chosen.votes);
+    const order = comparePopularity(
+      scoreOf(option, getScore),
+      scoreOf(chosen, getScore),
+    );
     if (order < 0) better++;
     if (order === 0) tied++;
   }
@@ -320,4 +365,60 @@ export function summarizeNotifySelection({
   // The dialog starts with everyone who has an email selected.
   summary.notify_selection_changed = selected !== eligible;
   return summary;
+}
+
+/**
+ * The participants a booking emails. An aggregate results host never sees
+ * who responded, so their choice is all or none: explicit ids are ignored,
+ * otherwise a known id (such as the host's own) would single out that
+ * respondent's address. Elsewhere the host's per-participant selection
+ * stands. Participants without an email cannot be notified either way.
+ */
+export function resolveNotifyParticipantIds({
+  participants,
+  notifyParticipantIds,
+  notifyAllParticipants,
+  aggregateResultsOnly,
+}: {
+  participants: { id: string; email: string | null }[];
+  notifyParticipantIds: string[];
+  notifyAllParticipants: boolean;
+  aggregateResultsOnly: boolean;
+}) {
+  const selected = new Set(aggregateResultsOnly ? [] : notifyParticipantIds);
+  return participants
+    .filter(
+      (participant) =>
+        !!participant.email &&
+        (notifyAllParticipants || selected.has(participant.id)),
+    )
+    .map((participant) => participant.id);
+}
+
+/**
+ * A hidden tally stays on the server: with hideScores, an aggregate results
+ * poll sends its per-option totals only to a viewer who has responded, as
+ * the vote page does. A non-aggregate poll is returned unchanged; its scores
+ * are derived from participants, which are filtered separately.
+ */
+export function withholdAggregateScores({
+  poll,
+  viewerHasResponded,
+}: {
+  poll: PollDetails;
+  viewerHasResponded: boolean;
+}): PollDetails {
+  if (!poll.aggregateResultsOnly || !poll.hideScores || viewerHasResponded) {
+    return poll;
+  }
+  return {
+    ...poll,
+    aggregateVotes: poll.aggregateVotes?.map(({ optionId }) => ({
+      optionId,
+      yes: 0,
+      ifNeedBe: 0,
+      no: 0,
+      skip: 0,
+    })),
+  };
 }

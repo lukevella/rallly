@@ -31,8 +31,8 @@ import type {
 } from "@/features/poll/components/forms/types";
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
 import type { PollDetails } from "@/features/poll/types";
-import { filterParticipantsByVote } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import {
@@ -57,6 +57,7 @@ const encodeStoredOption = (
     : `${start}/${addMinutesToWallTime(start, option.duration)}`;
 };
 
+/** The edit form's starting values, read from the poll as saved. */
 function getDefaultValues(poll: PollDetails): NewEventData {
   const firstDate = toPollWallTime(
     poll.options[0]?.startTime ?? new Date(),
@@ -88,6 +89,7 @@ function getDefaultValues(poll: PollDetails): NewEventData {
     duration: poll.options[0]?.duration || 60,
     hideParticipants: poll.hideParticipants,
     hideScores: poll.hideScores,
+    aggregateResultsOnly: poll.aggregateResultsOnly ?? false,
     enableComments: !poll.disableComments,
     allowTentativeVotes: poll.allowTentativeVotes,
     requireParticipantEmail: poll.requireParticipantEmail,
@@ -161,6 +163,7 @@ const detailFields = [
 const settingFields = [
   "hideParticipants",
   "hideScores",
+  "aggregateResultsOnly",
   "enableComments",
   "allowTentativeVotes",
   "requireParticipantEmail",
@@ -179,6 +182,7 @@ export function EditPoll({
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
   const { user } = useUser();
   const { t } = useTranslation();
   const router = useRouter();
@@ -186,13 +190,16 @@ export function EditPoll({
   const update = useUpdatePollMutation();
 
   // The answer set is locked once a response uses the tentative vote, so
-  // those votes stay re-saveable by their owner.
-  const hasTentativeVotes = participants.some((participant) =>
-    participant.votes.some((vote) => vote.type === "ifNeedBe"),
+  // those votes stay re-saveable by their owner. Both checks read the
+  // totals, the only votes an aggregate results host holds.
+  const hasTentativeVotes = poll.options.some(
+    (option) => getScore(option.id).ifNeedBe > 0,
   );
-  const hasVotes = participants.some(
-    (participant) => participant.votes.length > 0,
-  );
+  // Whether any vote was cast, to warn before deleting voted dates.
+  const hasVotes = poll.options.some((option) => {
+    const { yes, ifNeedBe, no, skip } = getScore(option.id);
+    return yes + ifNeedBe + no + skip > 0;
+  });
 
   const [defaultValues] = React.useState(() => getDefaultValues(poll));
   const form = useForm<NewEventData>({ defaultValues });
@@ -229,6 +236,7 @@ export function EditPoll({
     if (settingsChanged) {
       input.hideParticipants = data.hideParticipants;
       input.hideScores = data.hideScores;
+      input.aggregateResultsOnly = data.aggregateResultsOnly;
       input.disableComments = !data.enableComments;
       input.allowTentativeVotes = data.allowTentativeVotes;
       input.requireParticipantEmail = data.requireParticipantEmail;
@@ -249,9 +257,10 @@ export function EditPoll({
       });
     };
 
+    // Read from the totals, so the warning also fires on an aggregate
+    // results poll, whose host holds no responses.
     const deletesVotedOptions = dateChanges?.optionsToDelete.some(
-      (option) =>
-        filterParticipantsByVote(participants, option.id, "yes").length > 0,
+      (option) => getScore(option.id).yes > 0,
     );
 
     if (deletesVotedOptions) {
@@ -294,7 +303,14 @@ export function EditPoll({
           </CardContent>
         </Card>
         <PollOptionsForm disableTimeZoneChange={hasVotes} />
-        <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
+        <PollSettingsForm
+          hasTentativeVotes={hasTentativeVotes}
+          hasResponses={
+            poll.aggregateResultsOnly
+              ? (poll.aggregateParticipantCount ?? 0) > 0
+              : participants.length > 0
+          }
+        />
         <div className="sticky bottom-0 z-20 flex justify-center pt-2 pb-6">
           <div className="flex w-full max-w-md items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
             <p className="min-w-0 truncate text-muted-foreground text-sm">

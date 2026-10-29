@@ -99,6 +99,10 @@ function toOptionResponse(
   };
 }
 
+/**
+ * Encodes a poll for the v1 API's poll responses, including whether it
+ * only exposes aggregate results.
+ */
 function toPollResponseBody(poll: {
   id: string;
   title: string;
@@ -113,6 +117,7 @@ function toPollResponseBody(poll: {
   requireParticipantEmail: boolean;
   hideParticipants: boolean;
   hideScores: boolean;
+  aggregateResultsOnly: boolean;
   disableComments: boolean;
   allowTentativeVotes: boolean;
   participantCount: number;
@@ -147,6 +152,7 @@ function toPollResponseBody(poll: {
       requireEmail: poll.requireParticipantEmail,
       hideParticipants: poll.hideParticipants,
       hideScores: poll.hideScores,
+      aggregateResultsOnly: poll.aggregateResultsOnly ?? false,
       disableComments: poll.disableComments,
       allowTentativeVotes: poll.allowTentativeVotes,
       participantCount: poll.participantCount,
@@ -540,6 +546,7 @@ app.post(
       );
     }
 
+    /** Reports the created poll, with the settings it was created with. */
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
       const kind = poll.options.some((o) => o.duration > 0) ? "time" : "date";
 
@@ -578,6 +585,7 @@ app.post(
             requireParticipantEmail: input.requireEmail,
             hideParticipants: input.hideParticipants,
             hideScores: input.hideScores,
+            aggregateResultsOnly: input.aggregateResultsOnly,
             disableComments: poll.disableComments,
             allowTentativeVotes: poll.allowTentativeVotes,
             isGuest: false,
@@ -618,6 +626,7 @@ app.post(
         requireParticipantEmail: input.requireEmail,
         hideParticipants: input.hideParticipants,
         hideScores: input.hideScores,
+        aggregateResultsOnly: input.aggregateResultsOnly,
         disableComments: input.disableComments,
         allowTentativeVotes: input.allowTentativeVotes,
         options,
@@ -690,6 +699,7 @@ app.post(
       requireParticipantEmail: input.requireEmail,
       hideParticipants: input.hideParticipants,
       hideScores: input.hideScores,
+      aggregateResultsOnly: input.aggregateResultsOnly,
       disableComments: input.disableComments,
       allowTentativeVotes: input.allowTentativeVotes,
       options,
@@ -911,6 +921,8 @@ app.get(
     description: [
       "Lists every participant of a poll in one response, oldest response first, each with their availability. The poll must belong to the space associated with the API key.",
       "",
+      "Polls with aggregateResultsOnly enabled return 403 (INDIVIDUAL_RESPONSES_DISABLED).",
+      "",
       "For aggregate counts per option use the results endpoint.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
@@ -924,7 +936,11 @@ app.get(
         },
       },
       401: unauthorizedResponse,
-      403: spaceNotProResponse,
+      403: {
+        ...spaceNotProResponse,
+        description:
+          "Space is not on the Pro plan (`SPACE_NOT_PRO`) or individual responses are disabled (`INDIVIDUAL_RESPONSES_DISABLED`)",
+      },
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
       404: {
@@ -953,6 +969,16 @@ app.get(
       );
     }
 
+    if (data.aggregateResultsOnly) {
+      return c.json(
+        apiError(
+          "INDIVIDUAL_RESPONSES_DISABLED",
+          "This poll only exposes aggregate results.",
+        ),
+        403,
+      );
+    }
+
     return c.json(
       getPollParticipantsSuccessResponseSchema.parse({
         data: data.participants.map((participant) =>
@@ -971,7 +997,7 @@ app.get(
     tags: ["Polls"],
     summary: "Get a poll participant",
     description:
-      "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook.",
+      "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook. Polls with aggregateResultsOnly enabled return 403 (INDIVIDUAL_RESPONSES_DISABLED).",
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
@@ -983,7 +1009,11 @@ app.get(
         },
       },
       401: unauthorizedResponse,
-      403: spaceNotProResponse,
+      403: {
+        ...spaceNotProResponse,
+        description:
+          "Space is not on the Pro plan (`SPACE_NOT_PRO`) or individual responses are disabled (`INDIVIDUAL_RESPONSES_DISABLED`)",
+      },
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
       404: {
@@ -1014,6 +1044,16 @@ app.get(
           "Poll not found or does not belong to this space.",
         ),
         404,
+      );
+    }
+
+    if (poll.aggregateResultsOnly) {
+      return c.json(
+        apiError(
+          "INDIVIDUAL_RESPONSES_DISABLED",
+          "This poll only exposes aggregate results.",
+        ),
+        403,
       );
     }
 
