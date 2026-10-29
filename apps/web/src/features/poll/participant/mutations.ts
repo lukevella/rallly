@@ -35,11 +35,7 @@ class WriteRefusedError extends Error {
  * transaction: their writers do not take this lock, and a response that
  * lands during a ban is removed with the poll anyway.
  */
-async function lockOpenPoll(
-  tx: Prisma.TransactionClient,
-  pollId: string,
-  votes: { type: VoteType }[],
-) {
+async function lockOpenPoll(tx: Prisma.TransactionClient, pollId: string) {
   const [poll] = await tx.$queryRaw<
     { status: string; deleted: boolean; allow_tentative_votes: boolean }[]
   >`
@@ -58,10 +54,19 @@ async function lockOpenPoll(
     throw new WriteRefusedError("closed");
   }
 
-  if (
-    !poll.allow_tentative_votes &&
-    votes.some((vote) => vote.type === "ifNeedBe")
-  ) {
+  return { allowTentativeVotes: poll.allow_tentative_votes };
+}
+
+/**
+ * Rejects a tentative vote when the poll forbids them. Run against the votes
+ * that survive stale-option filtering, so a leftover `ifNeedBe` for a deleted
+ * option can't reject an otherwise valid response.
+ */
+function assertTentativeVotesAllowed(
+  allowTentativeVotes: boolean,
+  votes: { type: VoteType }[],
+) {
+  if (!allowTentativeVotes && votes.some((vote) => vote.type === "ifNeedBe")) {
     throw new WriteRefusedError("tentativeVotesNotAllowed");
   }
 }
@@ -223,12 +228,13 @@ export async function addParticipant({
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-      await lockOpenPoll(tx, pollId, votes);
+      const { allowTentativeVotes } = await lockOpenPoll(tx, pollId);
 
       const validOptionIds = await listValidOptionIds(tx, pollId);
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
+      assertTentativeVotesAllowed(allowTentativeVotes, validVotes);
       await assertYesVoteCapacity(tx, pollId, validVotes);
 
       // Counted under the lock so two responses cannot both pass at the cap.
@@ -351,7 +357,7 @@ export async function updateParticipantVotes({
 }): Promise<EditParticipantResult> {
   try {
     await prisma.$transaction(async (tx) => {
-      await lockOpenPoll(tx, pollId, votes);
+      const { allowTentativeVotes } = await lockOpenPoll(tx, pollId);
       await assertParticipantInPoll(tx, participantId, pollId);
 
       const previousYesVotes = await tx.vote.findMany({
@@ -366,6 +372,7 @@ export async function updateParticipantVotes({
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
+      assertTentativeVotesAllowed(allowTentativeVotes, validVotes);
       await tx.vote.deleteMany({ where: { participantId } });
       await assertYesVoteCapacity(
         tx,
@@ -425,7 +432,7 @@ export async function renameParticipant({
 }): Promise<EditParticipantResult> {
   try {
     await prisma.$transaction(async (tx) => {
-      await lockOpenPoll(tx, pollId, []);
+      await lockOpenPoll(tx, pollId);
       await assertParticipantInPoll(tx, participantId, pollId);
 
       await tx.participant.update({
@@ -465,7 +472,7 @@ export async function deleteParticipant({
 }): Promise<EditParticipantResult> {
   try {
     await prisma.$transaction(async (tx) => {
-      await lockOpenPoll(tx, pollId, []);
+      await lockOpenPoll(tx, pollId);
 
       // Snapshot before the delete: the activity payload is the historical
       // record of the removed response, so it carries the name and votes.

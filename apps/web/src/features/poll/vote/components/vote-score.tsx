@@ -85,11 +85,12 @@ export function VoteScore({
   }
 
   return (
-    <div className={className}>
+    <div>
       <VoteProgress
         score={live.score}
         participantCount={live.participantCount}
         allowTentativeVotes={allowTentativeVotes}
+        className={className}
       />
       {maxParticipants !== null ? (
         <CapacityLabel

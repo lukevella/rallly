@@ -55,6 +55,7 @@ function OptionParticipantLimit({
   value: number | undefined;
   onChange: (value: number | undefined) => void;
 }) {
+  const { t } = useTranslation();
   const inputId = React.useId();
 
   return (
@@ -62,6 +63,9 @@ function OptionParticipantLimit({
       <UsersIcon size={24} />
       <Input
         id={inputId}
+        aria-label={t("optionParticipantLimitLabel", {
+          defaultValue: "Maximum participants for this option",
+        })}
         type="number"
         min={1}
         max={2_147_483_647}

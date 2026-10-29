@@ -78,12 +78,14 @@ function getDefaultValues(poll: PollDetails): NewEventData {
       return option.duration > 0
         ? {
             type: "timeSlot",
+            id: option.id,
             start,
             end: addMinutesToWallTime(start, option.duration),
             maxParticipants,
           }
         : {
             type: "date",
+            id: option.id,
             date: start.slice(0, 10),
             maxParticipants,
           };
@@ -158,9 +160,17 @@ function getDateChanges({
   const optionsToUpdate = frameChanged
     ? []
     : optionsWithLimits.flatMap(({ option, maxParticipants }) => {
+        // A capacity-only edit keeps the option's id and encoded key. Match the
+        // stored row by id so two options that share an encoded start/duration
+        // can't misroute the update to the wrong row; require the key to still
+        // match so a moved option is handled as delete + add, not an update.
+        if (!option.id) {
+          return [];
+        }
         const encoded = encodeDateOption(option);
         const existingOption = poll.options.find(
           (pollOption) =>
+            pollOption.id === option.id &&
             encodeStoredOption(pollOption, poll.timeZone) === encoded,
         );
 

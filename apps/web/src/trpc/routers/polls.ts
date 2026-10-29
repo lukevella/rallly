@@ -204,7 +204,13 @@ export const polls = router({
           .object({
             startDate: z.string(),
             endDate: z.string().optional(),
-            maxParticipants: z.number().int().min(1).nullable().optional(),
+            maxParticipants: z
+              .number()
+              .int()
+              .min(1)
+              .max(2_147_483_647)
+              .nullable()
+              .optional(),
           })
           .array()
           .min(1),
@@ -467,14 +473,25 @@ export const polls = router({
           .object({
             startDate: z.string(),
             endDate: z.string().optional(),
-            maxParticipants: z.number().int().min(1).nullable().optional(),
+            maxParticipants: z
+              .number()
+              .int()
+              .min(1)
+              .max(2_147_483_647)
+              .nullable()
+              .optional(),
           })
           .array()
           .optional(),
         optionsToUpdate: z
           .object({
             id: z.string(),
-            maxParticipants: z.number().int().min(1).nullable(),
+            maxParticipants: z
+              .number()
+              .int()
+              .min(1)
+              .max(2_147_483_647)
+              .nullable(),
           })
           .array()
           .optional(),
@@ -726,7 +743,7 @@ export const polls = router({
         }
 
         if (updatedOptions.length > 0) {
-          await Promise.all(
+          const results = await Promise.all(
             updatedOptions.map(({ id, maxParticipants }) =>
               tx.option.updateMany({
                 where: { pollId, id },
@@ -734,6 +751,15 @@ export const polls = router({
               }),
             ),
           );
+          // A zero count means the option was removed between load and save
+          // (e.g. a concurrent edit by another admin). Roll the whole
+          // transaction back rather than silently dropping the change.
+          if (results.some(({ count }) => count === 0)) {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "An option was removed. Reload the poll and try again.",
+            });
+          }
         }
 
         const addedOptions =
@@ -1843,6 +1869,7 @@ export const polls = router({
             select: {
               startTime: true,
               duration: true,
+              maxParticipants: true,
             },
           },
         },
