@@ -243,7 +243,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         option.type === "timeSlot" &&
         option.start === oldOption.start &&
         option.end === oldOption.end
-          ? { ...newOption, maxParticipants: option.maxParticipants }
+          ? {
+              ...newOption,
+              id: option.id,
+              maxParticipants: option.maxParticipants,
+            }
           : option,
       ),
     );
