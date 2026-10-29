@@ -9,8 +9,6 @@ import { Input } from "@rallly/ui/input";
 import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { showPayWall, useIsFree } from "@/features/billing/client";
-import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
 import {
   ConferencingField,
@@ -31,7 +29,6 @@ export const PollDetailsForm = ({
 }) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
-  const isFree = useIsFree();
 
   const { requiredString } = useFormValidation();
   const { register } = form;
@@ -124,11 +121,26 @@ export const PollDetailsForm = ({
               <Trans i18nKey="addLocation" defaults="Add location" />
             </Button>
           ) : null}
-          {canAddVideoCall ? (
+          {canAddVideoCall && conferencing.available.length === 0 ? (
+            // With no provider offered the menu would hold one item, so the
+            // button adds the pasted link directly. The button unmounts, so
+            // focus moves to the call's name once that field renders.
+            <Button
+              type="button"
+              className="rounded-full"
+              onClick={() => {
+                form.setValue("conferencingProvider", "custom", {
+                  shouldDirty: true,
+                });
+                requestAnimationFrame(() => form.setFocus("conferencingLabel"));
+              }}
+            >
+              <PlusIcon data-icon="inline-start" />
+              <Trans i18nKey="addVideoCall" defaults="Add video call" />
+            </Button>
+          ) : canAddVideoCall ? (
             <DropdownMenu>
-              <DropdownMenuTrigger
-                render={<Button type="button" className="rounded-full" />}
-              >
+              <DropdownMenuTrigger render={<Button type="button" />}>
                 <PlusIcon data-icon="inline-start" />
                 <Trans i18nKey="addVideoCall" defaults="Add video call" />
               </DropdownMenuTrigger>
@@ -136,20 +148,6 @@ export const PollDetailsForm = ({
                 <ConferencingProviderMenuItems
                   available={conferencing.available}
                   connected={conferencing.connected}
-                  upsell={
-                    isFree
-                      ? {
-                          badge: <ProBadge />,
-                          onSelect: (provider) => {
-                            showPayWall({
-                              from: "poll-details-form",
-                              action: "conferencing",
-                              setting: provider,
-                            });
-                          },
-                        }
-                      : undefined
-                  }
                 />
               </DropdownMenuContent>
             </DropdownMenu>

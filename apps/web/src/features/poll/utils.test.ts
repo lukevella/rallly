@@ -3,7 +3,8 @@ import type { PollDetails } from "./types";
 import {
   filterCommentsForViewer,
   filterParticipantsByVote,
-  getFinalizePlanGate,
+  getChosenOptionRank,
+  getFinalizeTiming,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   resolveNotifyParticipantIds,
@@ -318,58 +319,99 @@ describe("rankOptionsByPopularity", () => {
   });
 });
 
-describe("getFinalizePlanGate", () => {
-  it("lets a pro space notify and mint a meeting", () => {
+describe("getChosenOptionRank", () => {
+  const options = [{ id: "a" }, { id: "b" }, { id: "c" }];
+  const participants = [
+    {
+      id: "p1",
+      votes: [
+        { optionId: "a", type: "yes" as const },
+        { optionId: "b", type: "yes" as const },
+        { optionId: "c", type: "no" as const },
+      ],
+    },
+  ];
+
+  it("ranks a joint winner first and tied", () => {
     expect(
-      getFinalizePlanGate({
-        tier: "pro",
-        conferencing: { provider: "meet" },
-      }),
-    ).toBeNull();
+      getChosenOptionRank({ options, participants, optionId: "b" }),
+    ).toEqual({ chosen_rank: 1, chosen_tied: true, option_count: 3 });
   });
 
-  it("lets a free space finalize silently without a provider link", () => {
+  it("ranks an option below the winners after all of them", () => {
     expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: null,
-      }),
-    ).toBeNull();
-    expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: { provider: "custom" },
-      }),
-    ).toBeNull();
+      getChosenOptionRank({ options, participants, optionId: "c" }),
+    ).toEqual({ chosen_rank: 3, chosen_tied: false, option_count: 3 });
   });
 
-  it("lets a free space notify participants", () => {
+  it("returns no rank for an option that is not in the poll", () => {
     expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: null,
+      getChosenOptionRank({ options, participants, optionId: "gone" }),
+    ).toEqual({ chosen_rank: null, chosen_tied: false, option_count: 3 });
+  });
+});
+
+describe("getFinalizeTiming", () => {
+  const now = new Date("2026-10-13T12:00:00Z");
+
+  it("counts hours ahead for a zoned time", () => {
+    expect(
+      getFinalizeTiming({
+        start: new Date("2026-10-14T12:00:00Z"),
+        end: new Date("2026-10-14T13:00:00Z"),
+        allDay: false,
+        timeZone: "Europe/London",
+        now,
       }),
-    ).toBeNull();
+    ).toEqual({ hours_to_start: 24, is_past: false, floating_time: false });
   });
 
-  it("gates Zoom, Teams and Webex links on a free space", () => {
-    for (const provider of ["zoom", "teams", "webex"] as const) {
-      expect(
-        getFinalizePlanGate({
-          tier: "hobby",
-          conferencing: { provider },
-        }),
-      ).toBe("conferencing");
-    }
+  it("marks a zoned time past as soon as it starts", () => {
+    expect(
+      getFinalizeTiming({
+        start: new Date("2026-10-13T11:00:00Z"),
+        end: new Date("2026-10-13T12:00:00Z"),
+        allDay: false,
+        timeZone: "Europe/London",
+        now,
+      }).is_past,
+    ).toBe(true);
   });
 
-  it("lets a free space mint a Google Meet link", () => {
+  it("keeps a floating time open until it has passed in every zone", () => {
+    const timing = getFinalizeTiming({
+      start: new Date("2026-10-13T11:00:00Z"),
+      end: new Date("2026-10-13T12:00:00Z"),
+      allDay: false,
+      timeZone: null,
+      now,
+    });
+    expect(timing.is_past).toBe(false);
+    expect(timing.floating_time).toBe(true);
+  });
+
+  it("treats today's all-day date as not past", () => {
     expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: { provider: "meet" },
-      }),
-    ).toBeNull();
+      getFinalizeTiming({
+        start: new Date("2026-10-13T00:00:00Z"),
+        end: new Date("2026-10-14T00:00:00Z"),
+        allDay: true,
+        timeZone: null,
+        now,
+      }).is_past,
+    ).toBe(false);
+  });
+
+  it("treats an all-day date that ended everywhere as past", () => {
+    expect(
+      getFinalizeTiming({
+        start: new Date("2026-10-11T00:00:00Z"),
+        end: new Date("2026-10-12T00:00:00Z"),
+        allDay: true,
+        timeZone: null,
+        now,
+      }).is_past,
+    ).toBe(true);
   });
 });
 

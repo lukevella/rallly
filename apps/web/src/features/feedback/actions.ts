@@ -9,7 +9,7 @@ import { feedbackSchema } from "./schema";
 
 export const submitFeedbackAction = authActionClient
   .metadata({ actionName: "submit_feedback" })
-  .use(createRateLimitMiddleware(5, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 5, duration: "1 h", by: "user" }))
   .inputSchema(feedbackSchema)
   .action(async ({ ctx, parsedInput }) => {
     await submitFeedback({

@@ -117,29 +117,16 @@ export function SetupForm({
       timeFormat: defaultTimeFormat ?? getLocaleDefaults(locale).timeFormat,
       spaceType: "personal" as const,
       organizationName: "",
-      industry: null,
+      industry: inferIndustry({ email, organizationName: "" }) ?? null,
       jobTitle: null,
     },
   });
 
   const spaceType = form.watch("spaceType");
-  const organizationName = form.watch("organizationName");
 
   // The inferred value is a prefill, not an answer: once the user touches the
   // field it stops moving, and what gets stored is whatever they confirmed.
   const industryTouched = React.useRef(false);
-  const setIndustryValue = form.setValue;
-
-  React.useEffect(() => {
-    if (industryTouched.current) {
-      return;
-    }
-
-    setIndustryValue(
-      "industry",
-      inferIndustry({ email, organizationName }) ?? null,
-    );
-  }, [email, organizationName, setIndustryValue]);
 
   return (
     <Form {...form}>
@@ -318,6 +305,18 @@ export function SetupForm({
                     <Input
                       {...field}
                       {...passwordManagerIgnoreProps}
+                      onChange={(event) => {
+                        field.onChange(event);
+                        if (!industryTouched.current) {
+                          form.setValue(
+                            "industry",
+                            inferIndustry({
+                              email,
+                              organizationName: event.target.value,
+                            }) ?? null,
+                          );
+                        }
+                      }}
                       autoFocus={true}
                       placeholder={t("organizationNamePlaceholder", {
                         defaultValue: "e.g. Acme Corp",

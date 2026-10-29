@@ -12,7 +12,7 @@ import { appRouter } from "@/trpc/routers";
 
 const handler = async (req: NextRequest) => {
   const session = await getSession();
-  const ip = ipAddress(req) ?? "127.0.0.1";
+  const ip = ipAddress(req);
   const ja4Digest = req.headers.get("x-vercel-ja4-digest") ?? undefined;
   const startTime = Date.now();
   const event = createWideEvent({
@@ -41,12 +41,13 @@ const handler = async (req: NextRequest) => {
       createContext: async () => {
         const locale = await getLocale();
 
-        const identifier = session?.user?.id ?? ja4Digest ?? ip;
+        const identifier = session?.user?.id ?? ja4Digest ?? ip ?? "127.0.0.1";
 
         return {
           user: session?.user,
           locale,
           identifier,
+          ip,
           event,
         } satisfies TRPCContext;
       },

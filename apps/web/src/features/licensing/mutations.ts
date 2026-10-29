@@ -200,7 +200,7 @@ const licenseCheckoutProducts: Record<
 > = {
   plus: { lookupKey: "plus", type: "PLUS", seats: 5 },
   organization: {
-    lookupKey: "early-organization",
+    lookupKey: "organization",
     type: "ORGANIZATION",
     seats: 50,
   },

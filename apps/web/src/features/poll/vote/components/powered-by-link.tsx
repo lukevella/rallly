@@ -1,6 +1,7 @@
 "use client";
 import { posthog } from "@rallly/posthog/client";
 import { Link } from "@/components/link";
+import LogoWordmark from "@/features/branding/assets/logo.svg";
 import { DEFAULT_APP_NAME } from "@/features/branding/constants";
 import { Trans } from "@/i18n/client";
 
@@ -28,11 +29,7 @@ export function PoweredByLink({
       }}
     >
       <Trans i18nKey="poweredBy" defaults="Powered by" />
-      {/* The wordmark is masked so it inherits the pill's text color in both themes */}
-      <span
-        aria-hidden="true"
-        className="h-3.5 w-[75px] bg-foreground [mask:url(/static/logo.svg)_no-repeat_center/contain]"
-      />
+      <LogoWordmark aria-hidden="true" className="h-3.5 w-auto" />
       <span className="sr-only"> {DEFAULT_APP_NAME}</span>
     </Link>
   );

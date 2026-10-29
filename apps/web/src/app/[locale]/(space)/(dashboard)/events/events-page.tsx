@@ -1,8 +1,10 @@
 "use client";
 
+import { buttonVariants } from "@rallly/ui";
+import { Button } from "@rallly/ui/button";
 import { CalendarIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import type React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 import {
   EmptyState,
   EmptyStateDescription,
@@ -10,23 +12,25 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { FilterPills } from "@/components/filter-pills";
+import { Link } from "@/components/link";
 import {
   ListView,
+  ListViewContent,
   ListViewHeader,
   ListViewTitle,
   ListViewTitleBar,
   ListViewToolbar,
 } from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
+import { RefreshOnFocus } from "@/components/refresh-on-focus";
 import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
-import { EventsInfiniteList } from "./events-infinite-list";
+import { EventsListSkeleton } from "./events-list";
 import { eventsSearchParamsSchema } from "./schema";
 
-function EventsEmptyState({ status }: { status: Status }) {
+export function EventsEmptyState({ status }: { status: Status }) {
   const contentByStatus: Record<
     Status,
     { title: React.ReactNode; description: React.ReactNode }
@@ -99,25 +103,98 @@ function EventsEmptyState({ status }: { status: Status }) {
   );
 }
 
-export function EventsPage() {
+function EventsPagination({
+  page,
+  hasNextPage,
+  startTransition,
+}: {
+  page: number;
+  hasNextPage: boolean;
+  startTransition: React.TransitionStartFunction;
+}) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  if (page === 1 && !hasNextPage) {
+    return null;
+  }
+
+  const hrefFor = (target: number) => {
+    const params = new URLSearchParams(searchParams);
+    if (target === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(target));
+    }
+    return `?${params.toString()}`;
+  };
+
+  const pageLink = (target: number, label: React.ReactNode) => {
+    const href = hrefFor(target);
+    return (
+      <Link
+        href={href}
+        scroll={false}
+        onNavigate={(e) => {
+          e.preventDefault();
+          startTransition(() => {
+            router.push(href, { scroll: false });
+          });
+        }}
+        className={buttonVariants()}
+      >
+        {label}
+      </Link>
+    );
+  };
+
+  const previousLabel = <Trans i18nKey="previous" defaults="Previous" />;
+  const nextLabel = <Trans i18nKey="next" defaults="Next" />;
+
+  return (
+    <nav className="flex items-center justify-end gap-2 px-4 py-4">
+      {page > 1 ? (
+        pageLink(page - 1, previousLabel)
+      ) : (
+        <Button disabled>{previousLabel}</Button>
+      )}
+      {hasNextPage ? (
+        pageLink(page + 1, nextLabel)
+      ) : (
+        <Button disabled>{nextLabel}</Button>
+      )}
+    </nav>
+  );
+}
+
+export function EventsPage({
+  members,
+  list,
+  page,
+  hasNextPage,
+}: {
+  members: { userId: string; name: string; image?: string }[];
+  list: React.ReactNode;
+  page: number;
+  hasNextPage: boolean;
+}) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  // Filter and page changes are server navigations that hold the current
+  // list until the new one is rendered, so show a skeleton while pending.
+  const [isNavigating, startNavigation] = React.useTransition();
   const { data: space } = useSpace();
-  const [{ data: members }] = trpc.spaces.listMembers.useSuspenseQuery();
   // Filtering by member is pointless when the space restricts this member
   // to their own events.
   const showMemberFilter = space.shared;
 
-  const { status, q, member } = eventsSearchParamsSchema.parse(
+  const { status } = eventsSearchParamsSchema.parse(
     Object.fromEntries(searchParams.entries()),
   );
-  // Ignore a member URL param when the filter is hidden — a bookmarked
-  // ?member= URL would otherwise show an empty list with no visible
-  // control to clear it.
-  const visibleMember = showMemberFilter ? member : undefined;
 
   return (
     <ListView>
+      <RefreshOnFocus />
       <ListViewHeader>
         <ListViewTitleBar>
           <ListViewTitle>
@@ -145,6 +222,7 @@ export function EventsPage() {
                 label: <Trans i18nKey="canceled" defaults="Canceled" />,
               },
             ]}
+            startTransition={startNavigation}
           />
           <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
             <SearchInput
@@ -152,22 +230,28 @@ export function EventsPage() {
               placeholder={t("searchEventsPlaceholder", {
                 defaultValue: "Search events by title...",
               })}
+              startTransition={startNavigation}
             />
             {showMemberFilter ? (
               <MemberSelector
                 members={members}
                 className="min-w-0 sm:min-w-40"
+                startTransition={startNavigation}
               />
             ) : null}
           </div>
         </ListViewToolbar>
       </ListViewHeader>
-      <EventsInfiniteList
-        status={status}
-        search={q}
-        member={visibleMember}
-        emptyState={<EventsEmptyState status={status} />}
-      />
+      <ListViewContent>
+        {isNavigating ? <EventsListSkeleton /> : list}
+        {isNavigating ? null : (
+          <EventsPagination
+            page={page}
+            hasNextPage={hasNextPage}
+            startTransition={startNavigation}
+          />
+        )}
+      </ListViewContent>
     </ListView>
   );
 }

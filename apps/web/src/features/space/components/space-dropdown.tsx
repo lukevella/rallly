@@ -65,7 +65,7 @@ export function SpaceDropdown({
         <DropdownMenuTrigger
           render={
             <Button
-              className={cn("flex h-auto w-full gap-2.5 p-2", {
+              className={cn("flex h-auto w-full gap-2.5 rounded-lg p-2", {
                 "pointer-events-none": isSwitching,
               })}
               variant="ghost"

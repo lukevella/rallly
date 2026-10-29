@@ -1,6 +1,7 @@
 "use client";
 
 import type { PricesByCurrency } from "@rallly/billing";
+import { formatMinorUnitAmount } from "@rallly/billing/pricing";
 import { cn } from "@rallly/ui";
 import { NumberTicker } from "@rallly/ui/number-ticker";
 import {
@@ -182,15 +183,6 @@ export function PricingControlsDivider() {
   );
 }
 
-export function YearlySavingsBadge({
-  labels,
-}: {
-  labels: Record<string, React.ReactNode>;
-}) {
-  const { currency } = usePricing();
-  return labels[currency] ?? null;
-}
-
 export function PlanPrice() {
   const { interval, currency, prices, locale } = usePricing();
   const amounts = prices[currency];
@@ -199,12 +191,7 @@ export function PlanPrice() {
   // price like 8.33 would render as 8.
   const format = React.useCallback(
     (minorUnits: number) =>
-      new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: currency.toUpperCase(),
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      }).format(minorUnits / 100),
+      formatMinorUnitAmount({ amount: minorUnits, currency, locale }),
     [locale, currency],
   );
 

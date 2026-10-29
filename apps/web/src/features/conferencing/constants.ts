@@ -1,22 +1,35 @@
 import type { ConferencingProvider } from "./schema";
-import { isEmailAllowlisted } from "./utils";
+import { integrationIdToConferencingProvider } from "./utils";
 
-export const isConferencingEnabled =
-  process.env.CONFERENCING_ENABLED === "true";
+// The providers the operator turned on, by integration id
+// (`CONFERENCING_PROVIDERS=google-meet,zoom`). Each maps onto a future
+// Control Panel toggle. env.ts rejects unknown ids at boot.
+export const enabledConferencingProviders: ConferencingProvider[] = (
+  process.env.CONFERENCING_PROVIDERS ?? ""
+)
+  .split(",")
+  .flatMap((entry) => {
+    const provider = integrationIdToConferencingProvider(
+      entry.trim().toLowerCase(),
+    );
+    return provider ? [provider] : [];
+  });
 
-// A provider is offered when its OAuth app is configured; Google Meet reuses
-// the Google OAuth app the calendars integration already needs, and Microsoft
-// Teams the Microsoft app sign in uses. Webex has an integration of its own.
-export function getAvailableConferencingProviders(): ConferencingProvider[] {
-  if (!isConferencingEnabled) {
-    return [];
-  }
+export const isConferencingEnabled = enabledConferencingProviders.length > 0;
+
+export const CONFERENCING_SETUP_DOCS_URL =
+  "https://support.rallly.co/self-hosting/conferencing";
+
+// Providers whose OAuth app is configured. Google Meet reuses the Google
+// OAuth app the calendars integration already needs, and Microsoft Teams the
+// Microsoft app sign in uses. Webex has an integration of its own.
+export function getConfiguredConferencingProviders(): ConferencingProvider[] {
   const providers: ConferencingProvider[] = [];
-  if (process.env.ZOOM_CLIENT_ID && process.env.ZOOM_CLIENT_SECRET) {
-    providers.push("zoom");
-  }
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     providers.push("meet");
+  }
+  if (process.env.ZOOM_CLIENT_ID && process.env.ZOOM_CLIENT_SECRET) {
+    providers.push("zoom");
   }
   if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
     providers.push("teams");
@@ -27,37 +40,13 @@ export function getAvailableConferencingProviders(): ConferencingProvider[] {
   return providers;
 }
 
-// While a provider's allowlist is set, only the listed accounts are offered
-// it, for a provider whose OAuth app is not yet published or verified and so
-// authorizes nobody else. Only an unset variable opens the provider to
-// everyone; a set but empty list lets nobody in.
-const providerAllowlists: Record<ConferencingProvider, string | undefined> = {
-  zoom: process.env.ZOOM_ALLOWED_EMAILS,
-  meet: process.env.GOOGLE_MEET_ALLOWED_EMAILS,
-  teams: process.env.MICROSOFT_TEAMS_ALLOWED_EMAILS,
-  webex: process.env.WEBEX_ALLOWED_EMAILS,
-};
-
-export function isConferencingProviderAllowedFor({
-  provider,
-  email,
-}: {
-  provider: ConferencingProvider;
-  email: string | null;
-}) {
-  const allowlist = providerAllowlists[provider];
-  return allowlist === undefined || isEmailAllowlisted({ email, allowlist });
-}
-
-// What this user is offered. Conferencing settings exist for a user only
-// while this is non empty.
-export function getAvailableConferencingProvidersFor({
-  email,
-}: {
-  email: string | null;
-}) {
-  return getAvailableConferencingProviders().filter((provider) =>
-    isConferencingProviderAllowedFor({ provider, email }),
+// A provider is offered when the operator turned it on and its OAuth app is
+// configured. Shared credentials alone (Google or Microsoft sign in) never
+// turn on Meet or Teams.
+export function getAvailableConferencingProviders(): ConferencingProvider[] {
+  const configured = getConfiguredConferencingProviders();
+  return enabledConferencingProviders.filter((provider) =>
+    configured.includes(provider),
   );
 }
 

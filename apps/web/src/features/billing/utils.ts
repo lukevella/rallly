@@ -28,6 +28,14 @@ export function isStripeResourceMissingError(error: unknown) {
   return isStripeErrorCode(error, "resource_missing");
 }
 
+export function isStripeInvalidRequestError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { rawType?: unknown }).rawType === "invalid_request_error"
+  );
+}
+
 type PricingLike = Pick<PricingData, "monthly" | "yearly" | "earlySupporter">;
 
 /**
@@ -60,32 +68,6 @@ export function resolvePriceSet({
     return pricing.earlySupporter;
   }
   return { monthly: pricing.monthly, yearly: pricing.yearly };
-}
-
-export function formatMinorUnitAmount({
-  amount,
-  currency,
-  locale,
-}: {
-  amount: number;
-  currency: string;
-  locale: string;
-}) {
-  const code = currency.toUpperCase();
-  // Stripe amounts are in the currency's minor unit, which Intl knows: two
-  // fraction digits for most currencies, none for JPY and friends.
-  const minorUnitDigits =
-    new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: code,
-    }).resolvedOptions().maximumFractionDigits ?? 2;
-  // Whole amounts render without trailing zeros ("$10", not "$10.00").
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: code,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: minorUnitDigits,
-  }).format(amount / 10 ** minorUnitDigits);
 }
 
 /**

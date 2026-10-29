@@ -285,7 +285,6 @@
   "errorTitle": "Noe gikk galt",
   "errorTryAgain": "Prøv igjen",
   "event": "Arrangement",
-  "eventHostDescription": "Du er oppretteren av denne avstemningen",
   "eventPageAbout": "Om",
   "eventPageGoingCount": "{count, plural, one {1 deltaker} other {# deltakere}}",
   "eventRegisterAlreadyResponded": "Denne e-posten er allerede brukt til å svare",

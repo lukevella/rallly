@@ -5,6 +5,8 @@ import React from "react";
 import type { UserAbility } from "@/features/user/ability";
 import { defineAbilityFor } from "@/features/user/ability";
 import type { UserDTO } from "@/features/user/schema";
+import type { GuestSessionResult } from "@/features/user/utils";
+import { toGuestSessionResult } from "@/features/user/utils";
 import { authClient } from "@/lib/auth-client";
 import { useLocale } from "@/lib/locale/client";
 import { isOwner } from "@/lib/utils/permissions";
@@ -72,11 +74,27 @@ export function useUser() {
   return React.useMemo(() => {
     return {
       user: user ?? undefined,
-      createGuestIfNeeded: async () => {
-        if (!user) {
-          await authClient.signIn.anonymous();
-          router.refresh();
+      createGuestIfNeeded: async (): Promise<GuestSessionResult> => {
+        if (user) return { ok: true };
+
+        let result: GuestSessionResult;
+        try {
+          const { error } = await authClient.signIn.anonymous();
+          result = toGuestSessionResult(error);
+          if (result.ok) {
+            // A browser that blocks cookies drops Set-Cookie and still
+            // reports success, so only reading the session back proves it.
+            const { data: session } = await authClient.getSession();
+            if (!session?.user) {
+              result = { ok: false, reason: "sessionUnavailable" };
+            }
+          }
+        } catch {
+          result = { ok: false, reason: "sessionUnavailable" };
         }
+
+        if (result.ok) router.refresh();
+        return result;
       },
       getAbility: (): UserAbility => defineAbilityFor(user ?? undefined),
       ownsObject: (resource: { userId?: string | null }) => {

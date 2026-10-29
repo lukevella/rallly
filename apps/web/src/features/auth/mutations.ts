@@ -2,6 +2,10 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import { createLogger } from "@rallly/logger";
 import * as Sentry from "@sentry/nextjs";
+import {
+  countAdoptableOpenPolls,
+  reportAdoptionOverLimit,
+} from "@/features/poll/limit/mutations";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import { posthog } from "@/lib/posthog";
 
@@ -25,6 +29,9 @@ export const linkAnonymousUser = async (
   authenticatedUserId: string,
   anonymousUserId: string,
 ) => {
+  let spaceId: string | undefined;
+  let adoptedOpenCount = 0;
+
   try {
     // Claim event registrations made with the account's own email. A
     // registration's email is its identity (the host's record), so it must
@@ -37,19 +44,7 @@ export const linkAnonymousUser = async (
       select: { email: true },
     });
 
-    if (authenticatedUser?.email) {
-      await prisma.scheduledEventInvite.updateMany({
-        where: {
-          inviteeId: anonymousUserId,
-          inviteeEmail: authenticatedUser.email,
-        },
-        data: {
-          inviteeId: authenticatedUserId,
-        },
-      });
-    }
-
-    const spaceId = await getActiveSpaceForUser({
+    spaceId = await getActiveSpaceForUser({
       userId: authenticatedUserId,
     });
 
@@ -58,63 +53,98 @@ export const linkAnonymousUser = async (
       // been through /setup yet (setup creates the space and adopts these
       // orphaned polls), or when the user's only memberships are
       // ineffective (non-owner rows in hobby spaces). Transfer ownership
-      // anyway — the anonymous user is deleted right after linking and
-      // polls cascade with it — and leave spaceId null.
+      // anyway — the anonymous user is deleted once this returns merged
+      // and polls cascade with it — and leave spaceId null.
       logger.info(
         { userId: authenticatedUserId },
         "User has no effective space; migrating guest content without a space",
       );
     }
 
-    await prisma.$transaction(async (tx) => {
-      // Transfer space-scoped data from anonymous user to authenticated user
-      await Promise.all([
-        // Transfer polls
-        tx.poll.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-            ...(spaceId ? { spaceId } : {}),
-          },
-        }),
+    if (spaceId) {
+      adoptedOpenCount = await countAdoptableOpenPolls({
+        userId: anonymousUserId,
+      });
+    }
 
-        // Transfer participants
-        tx.participant.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
+    // A batch, not an interactive transaction: the interactive form's 5s
+    // timeout rolled back merges whose commit landed late, and the guest was
+    // then deleted with everything still on it.
+    await prisma.$transaction([
+      ...(authenticatedUser?.email
+        ? [
+            prisma.scheduledEventInvite.updateMany({
+              where: {
+                inviteeId: anonymousUserId,
+                inviteeEmail: authenticatedUser.email,
+              },
+              data: {
+                inviteeId: authenticatedUserId,
+              },
+            }),
+          ]
+        : []),
 
-        // Transfer comments
-        tx.comment.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
+      // Transfer polls
+      prisma.poll.updateMany({
+        where: {
+          userId: anonymousUserId,
+        },
+        data: {
+          userId: authenticatedUserId,
+          ...(spaceId ? { spaceId } : {}),
+        },
+      }),
 
-        // Transfer poll activity actor refs. They are soft references (no
-        // FK), so nothing else migrates them; without this the guest's
-        // events would point at the anonymous user forever, which is
-        // deleted after linking. Account deletion leaves refs inert on
-        // purpose — linking is the opposite case: the person still exists.
-        tx.pollActivity.updateMany({
-          where: {
-            userId: anonymousUserId,
-          },
-          data: {
-            userId: authenticatedUserId,
-          },
-        }),
-      ]);
-    });
+      // Transfer participants
+      prisma.participant.updateMany({
+        where: {
+          userId: anonymousUserId,
+        },
+        data: {
+          userId: authenticatedUserId,
+        },
+      }),
+
+      // Transfer comments
+      prisma.comment.updateMany({
+        where: {
+          userId: anonymousUserId,
+        },
+        data: {
+          userId: authenticatedUserId,
+        },
+      }),
+
+      // Transfer poll activity actor refs. They are soft references (no
+      // FK), so nothing else migrates them; without this the guest's
+      // events would point at the anonymous user forever, which is
+      // deleted after linking. Account deletion leaves refs inert on
+      // purpose — linking is the opposite case: the person still exists.
+      prisma.pollActivity.updateMany({
+        where: {
+          userId: anonymousUserId,
+        },
+        data: {
+          userId: authenticatedUserId,
+        },
+      }),
+    ]);
+  } catch (error) {
+    Sentry.captureException(error);
+    return { merged: false };
+  }
+
+  try {
+    // Without a space, setup adopts the polls later and reports then.
+    if (spaceId) {
+      await reportAdoptionOverLimit({
+        userId: authenticatedUserId,
+        spaceId,
+        adoptedOpenCount,
+        source: "login",
+      });
+    }
 
     // Merge user identities in PostHog
     posthog()?.capture({
@@ -125,4 +155,6 @@ export const linkAnonymousUser = async (
   } catch (error) {
     Sentry.captureException(error);
   }
+
+  return { merged: true };
 };

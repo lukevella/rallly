@@ -6,19 +6,28 @@ import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
 import { sendLicenseKeyEmail } from "@rallly/emails/templates/license-key";
 import * as Sentry from "@sentry/nextjs";
-import { after } from "next/server";
+import { Effect } from "effect";
 import { getInstanceBranding } from "@/emails/branding";
 import { env } from "@/env";
+import { subscriptionFeedbackEmailDelayMs } from "@/features/billing/constants";
+import { getSubscriptionFeedbackRecipient } from "@/features/billing/data";
 import {
+  cancellationReasonSchema,
   customerMetadataSchema,
   subscriptionMetadataSchema,
 } from "@/features/billing/schema";
 import { getStripe } from "@/features/billing/service";
 import {
   getSubscriptionDetails,
+  isActivationEvent,
   isSubscriptionActive,
   toDate,
 } from "@/features/billing/webhook/utils";
+import { queueEmails } from "@/features/email-queue/mutations";
+import {
+  QueuedEmailFailed,
+  QueuedEmailSkipped,
+} from "@/features/email-queue/service";
 import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { spaceExists } from "@/features/space/data";
@@ -59,6 +68,51 @@ async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
   }
 
   return tier;
+}
+
+async function queueSubscriptionFeedbackEmail(
+  tx: Prisma.TransactionClient,
+  { userId, subscriptionId }: { userId: string; subscriptionId: string },
+) {
+  // Stripe can deliver the same event more than once
+  const alreadyQueued = await tx.queuedEmail.count({
+    where: { kind: "subscription_feedback", batchId: subscriptionId },
+  });
+  if (alreadyQueued === 0) {
+    await queueEmails(tx, {
+      kind: "subscription_feedback",
+      userId,
+      batchId: subscriptionId,
+      subjectIds: [subscriptionId],
+      sendAfter: new Date(Date.now() + subscriptionFeedbackEmailDelayMs),
+    });
+  }
+}
+
+function captureSubscriptionCreate({
+  userId,
+  spaceId,
+  interval,
+  tier,
+}: {
+  userId: string;
+  spaceId: string;
+  interval: string;
+  tier: string;
+}) {
+  posthog()?.capture({
+    distinctId: userId,
+    event: "subscription_create",
+    properties: {
+      interval,
+      $set: {
+        tier,
+      },
+    },
+    groups: {
+      space: spaceId,
+    },
+  });
 }
 
 async function createOrUpdatePaymentMethod(
@@ -221,6 +275,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
+  const activated = isActivationEvent(event);
   const {
     priceId,
     currency,
@@ -296,10 +351,14 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
         spaceId,
       },
-      include: {
-        space: true,
-      },
     });
+
+    if (activated) {
+      await queueSubscriptionFeedbackEmail(tx, {
+        userId,
+        subscriptionId: subscription.id,
+      });
+    }
 
     return syncSpaceTier(tx, spaceId);
   });
@@ -313,48 +372,14 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     },
   });
 
-  posthog()?.capture({
-    distinctId: userId,
-    event: "subscription_create",
-    properties: {
-      interval,
-      $set: {
-        tier,
-      },
-    },
-    groups: {
-      space: spaceId,
-    },
-  });
-
-  if (isActive) {
-    after(async () => {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { email: true, name: true },
-      });
-
-      if (user) {
-        await sendRawEmail({
-          to: user.email,
-          from: { name: "Luke from Rallly", address: env.SUPPORT_EMAIL },
-          subject: "Thanks for subscribing to Rallly Pro",
-          text: [
-            "Hey there,",
-            "Thanks so much for subscribing to Rallly Pro! I really appreciate your support.",
-            "I'd love to learn more about how you're using Rallly. What kind of events are you scheduling? Are there any features you wish Rallly had?",
-            "Just hit reply and let me know. I read every response and it helps shape what we build next.",
-            "Luke\nFounder, Rallly",
-          ].join("\n\n"),
-        });
-      }
-    });
+  if (activated) {
+    captureSubscriptionCreate({ userId, spaceId, interval, tier });
   }
 }
 
 async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
   const stripe = getStripe();
-  const subscription = await stripe.subscriptions.retrieve(
+  const subscription = await getExpandedSubscription(
     (event.data.object as Stripe.Subscription).id,
   );
 
@@ -406,10 +431,39 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
     },
   });
 
+  // Analytics only: malformed price data must not make Stripe retry an event
+  // whose cleanup has already run.
+  let details: {
+    interval: string | null;
+    amount: number | null;
+    currency: string | null;
+  };
+  try {
+    details = getSubscriptionDetails(subscription);
+  } catch {
+    details = { interval: null, amount: null, currency: null };
+  }
+  const cancelReason = cancellationReasonSchema.safeParse(
+    subscription.metadata.cancelReason,
+  );
+  const endedAt = subscription.ended_at ?? event.created;
+
   posthog()?.capture({
     distinctId: userId,
     event: "subscription_cancel",
     properties: {
+      // null when cancelled outside the app: dunning, the account deletion
+      // reaper, or the Stripe dashboard.
+      reason: cancelReason.success ? cancelReason.data : null,
+      comment: subscription.cancellation_details?.comment ?? null,
+      stripe_feedback: subscription.cancellation_details?.feedback ?? null,
+      // cancellation_requested, payment_failed or payment_disputed
+      stripe_reason: subscription.cancellation_details?.reason ?? null,
+      tenure_days: Math.floor((endedAt - subscription.start_date) / 86400),
+      interval: details.interval,
+      amount: details.amount,
+      currency: details.currency,
+      seats: subscription.items.data[0]?.quantity ?? null,
       $set: {
         tier,
       },
@@ -430,6 +484,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   );
 
   const isActive = isSubscriptionActive(subscription);
+  const activated = isActivationEvent(event);
   const {
     priceId,
     currency,
@@ -504,6 +559,13 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       },
     });
 
+    if (activated) {
+      await queueSubscriptionFeedbackEmail(tx, {
+        userId,
+        subscriptionId: subscription.id,
+      });
+    }
+
     return syncSpaceTier(tx, spaceId);
   });
 
@@ -530,6 +592,10 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       space: spaceId,
     },
   });
+
+  if (activated) {
+    captureSubscriptionCreate({ userId, spaceId, interval, tier });
+  }
 }
 
 async function onPaymentMethodAttached(event: Stripe.Event) {
@@ -627,3 +693,53 @@ export async function handleStripeWebhookEvent(event: Stripe.Event) {
 
   return { handled: true };
 }
+
+const failWith = (message: string) => () => new QueuedEmailFailed({ message });
+
+/**
+ * Sends the founder's feedback request queued when a subscription starts.
+ * The subject is the subscription, so one cancelled before the send gets no
+ * email.
+ */
+export const sendSubscriptionFeedbackEmail = Effect.fn(
+  "billing.sendSubscriptionFeedbackEmail",
+)(function* ({ subjectId }: { id: string; subjectId: string }) {
+  const subscription = yield* Effect.tryPromise({
+    try: () => getSubscriptionFeedbackRecipient(subjectId),
+    catch: failWith("Failed to load the subscription"),
+  });
+  if (!subscription?.active) {
+    return yield* new QueuedEmailSkipped({
+      reason: "Subscription no longer active",
+    });
+  }
+  const { user } = subscription;
+  if (user.deletedAt) {
+    return yield* new QueuedEmailSkipped({ reason: "User no longer exists" });
+  }
+  if (user.banned) {
+    return yield* new QueuedEmailSkipped({ reason: "User is banned" });
+  }
+
+  // The mailer logs and swallows transport failures, so its result is what
+  // tells a sent email from a failed one.
+  const sent = yield* Effect.tryPromise({
+    try: () =>
+      sendRawEmail({
+        to: user.email,
+        from: { name: "Luke from Rallly", address: env.SUPPORT_EMAIL },
+        subject: "Thanks for subscribing to Rallly Pro",
+        text: [
+          "Hey there,",
+          "Thanks so much for subscribing to Rallly Pro! I really appreciate your support.",
+          "I'd love to learn more about how you're using Rallly. What kind of events are you scheduling? Are there any features you wish Rallly had?",
+          "Just hit reply and let me know. I read every response and it helps shape what we build next.",
+          "Luke\nFounder, Rallly",
+        ].join("\n\n"),
+      }),
+    catch: failWith("Failed to send the subscription feedback email"),
+  });
+  if (!sent) {
+    return yield* new QueuedEmailFailed({ message: "Transport failed" });
+  }
+});

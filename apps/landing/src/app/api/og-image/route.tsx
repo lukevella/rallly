@@ -37,12 +37,12 @@ export async function GET(req: NextRequest) {
               src="https://rallly.co/static/images/logo-color.svg"
               height={64}
             />
-            <div tw="flex text-gray-800 text-3xl tracking-tight font-bold">
+            <div tw="flex text-gray-800 text-3xl tracking-tight font-semibold">
               <span tw="bg-gray-200 px-6 py-3 rounded-full">Blog</span>
             </div>
           </div>
         </div>
-        <h2 tw="flex flex-col text-7xl leading-tight font-bold tracking-tight text-gray-900 text-left">
+        <h2 tw="flex flex-col text-7xl leading-tight font-semibold tracking-tight text-gray-900 text-left">
           <span>{title}</span>
         </h2>
         {excerpt ? (

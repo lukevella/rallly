@@ -11,3 +11,17 @@ export async function countFinalizedPolls(userId: string) {
     where: { scheduledEvent: { userId } },
   });
 }
+
+/** What the review request email needs to know about its recipient. */
+export async function getReviewRequestRecipient(userId: string) {
+  return prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      email: true,
+      name: true,
+      locale: true,
+      banned: true,
+      deletedAt: true,
+    },
+  });
+}

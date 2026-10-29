@@ -203,7 +203,7 @@ function EventCalendarMonthView({
                 view: "month",
                 isToday:
                   getDayKey(day, settings.timeZone) ===
-                  getDayKey(new Date(), settings.timeZone),
+                  getDayKey(settings.getNow(), settings.timeZone),
               }) ?? (
                 <>
                   <span className="@max-[36rem]:hidden">
@@ -1014,9 +1014,9 @@ function EventCalendarMoreIndicator({
   const isDragging = useEventCalendarSelector<unknown, boolean>(
     (state) => state.drag !== null,
   );
-  useEffect(() => {
-    if (isDragging) setOpen(false);
-  }, [isDragging]);
+  if (isDragging && open) {
+    setOpen(false);
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

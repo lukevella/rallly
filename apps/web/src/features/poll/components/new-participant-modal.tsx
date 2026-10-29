@@ -93,7 +93,7 @@ const VoteSummary = ({
     >
       {availableCount > 0 ? (
         <span className="flex items-center gap-1.5 text-foreground text-sm">
-          <VoteIcon type="yes" className="size-4" />
+          <VoteIcon type="yes" />
           <Trans
             i18nKey="voteSummaryAvailable"
             defaults="{availableCount} of {total} available"
@@ -102,7 +102,7 @@ const VoteSummary = ({
         </span>
       ) : ifNeedBeCount === 0 ? (
         <span className="flex items-center gap-1.5 text-foreground text-sm">
-          <VoteIcon type="no" className="size-4" />
+          <VoteIcon type="no" />
           <Trans
             i18nKey="voteSummaryNotAvailable"
             defaults="You're not available"
@@ -115,7 +115,7 @@ const VoteSummary = ({
             <span aria-hidden="true" className="h-4 w-px bg-input" />
           ) : null}
           <span className="flex items-center gap-1.5 text-foreground text-sm">
-            <VoteIcon type="ifNeedBe" className="size-4" />
+            <VoteIcon type="ifNeedBe" />
             <Trans
               i18nKey="voteSummaryIfNeedBe"
               defaults="{count} if need be"
@@ -171,6 +171,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorUnauthorized", {
           defaultValue:
             "We couldn't verify your session. Please refresh the page and try again.",
+        });
+      case "sessionUnavailable":
+        return t("guestSessionUnavailableError", {
+          defaultValue:
+            "We couldn't start a session for you. Check that cookies are enabled and try again.",
         });
       default:
         return t("newParticipantFormSubmitError", {
@@ -271,7 +276,13 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             if (!pollId) {
               throw new Error("NewParticipantForm needs a pollId");
             }
-            await createGuestIfNeeded();
+            const session = await createGuestIfNeeded();
+            if (!session.ok) {
+              setError("root", {
+                message: getSubmitErrorMessage(session.reason),
+              });
+              return;
+            }
             const result = await addParticipant.execute({
               name: data.name,
               votes: props.votes,

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  formatMinorUnitAmount,
   isEarlySupporter,
+  isStripeInvalidRequestError,
   resolvePriceSet,
 } from "./utils";
 
@@ -102,22 +102,21 @@ describe("resolvePriceSet", () => {
   });
 });
 
-describe("formatMinorUnitAmount", () => {
-  it("formats minor units as a localized currency string", () => {
+describe("isStripeInvalidRequestError", () => {
+  it("matches the error Stripe returns for a currency conflict", () => {
     expect(
-      formatMinorUnitAmount({ amount: 5600, currency: "usd", locale: "en" }),
-    ).toBe("$56");
+      isStripeInvalidRequestError({
+        rawType: "invalid_request_error",
+        code: null,
+        param: null,
+        message: "You cannot combine currencies on a single customer.",
+      }),
+    ).toBe(true);
   });
 
-  it("keeps cents when the amount needs them", () => {
-    expect(
-      formatMinorUnitAmount({ amount: 467, currency: "usd", locale: "en" }),
-    ).toBe("$4.67");
-  });
-
-  it("does not scale zero decimal currencies", () => {
-    expect(
-      formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
-    ).toBe("¥5,600");
+  it("ignores other errors", () => {
+    expect(isStripeInvalidRequestError({ rawType: "api_error" })).toBe(false);
+    expect(isStripeInvalidRequestError(new Error("boom"))).toBe(false);
+    expect(isStripeInvalidRequestError(null)).toBe(false);
   });
 });

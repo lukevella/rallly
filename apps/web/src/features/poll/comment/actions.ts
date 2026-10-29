@@ -92,7 +92,7 @@ async function sendNewCommentNotificationEmail({
 
 export const addCommentAction = anyUserActionClient
   .metadata({ actionName: "add_comment" })
-  .use(createRateLimitMiddleware(10, "1 m"))
+  .use(createRateLimitMiddleware({ requests: 10, duration: "1 m", by: "user" }))
   .inputSchema(addCommentSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { pollId, authorName, content } = parsedInput;

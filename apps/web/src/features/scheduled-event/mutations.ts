@@ -2,12 +2,14 @@ import "server-only";
 
 import type { ScheduledEventInviteStatus } from "@rallly/database";
 import { Prisma, prisma } from "@rallly/database";
+import { sendEventCanceledEmail } from "@rallly/emails/templates/event-canceled";
 import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized-participant";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { Effect } from "effect";
 import { updateTag } from "next/cache";
-import { getSpaceBranding } from "@/emails/branding";
+import { after } from "next/server";
+import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { toEmailConferencing } from "@/emails/conferencing";
 import { parseConferencing } from "@/features/conferencing/data";
 import { getConferencingUri } from "@/features/conferencing/utils";
@@ -215,3 +217,99 @@ export const sendScheduledEventInviteEmail = Effect.fn(
     });
   }
 });
+
+/**
+ * Tells every attendee who hasn't declined that the event is canceled, once
+ * the response is out. Call after the cancellation has committed: the email
+ * carries the event as it is now, with the bumped sequence.
+ */
+export async function sendScheduledEventCanceledEmails({
+  eventId,
+  organizer,
+}: {
+  eventId: string;
+  organizer: { name: string; email: string };
+}) {
+  const event = await prisma.scheduledEvent.findUniqueOrThrow({
+    where: { id: eventId },
+    include: { invites: true },
+  });
+
+  const location = parseLocation(event.location, {
+    scheduledEventId: event.id,
+  });
+  const conferencing = parseConferencing(event.conferencing, {
+    scheduledEventId: event.id,
+  });
+  const locationText = location ? formatLocationText(location) : undefined;
+  const conferencingUri = conferencing
+    ? getConferencingUri(conferencing)
+    : undefined;
+
+  const ics = createIcsEvent({
+    uid: event.uid,
+    sequence: event.sequence,
+    title: event.title,
+    description:
+      [event.description, conferencingUri].filter(Boolean).join("\n\n") ||
+      undefined,
+    location: locationText ?? conferencingUri,
+    start: event.start,
+    end: event.end,
+    allDay: event.allDay,
+    timeZone: event.timeZone ?? undefined,
+    organizer,
+    attendees: event.invites.map((invite) => ({
+      name: invite.inviteeName,
+      email: invite.inviteeEmail,
+    })),
+    method: "cancel",
+    status: "CANCELLED",
+  });
+
+  if (ics.error || !ics.value) {
+    throw new Error(
+      `Failed to generate cancellation ICS: ${ics.error?.message ?? "empty"}`,
+    );
+  }
+  const icsContent = ics.value;
+
+  for (const invite of event.invites) {
+    if (invite.status === "declined") {
+      continue;
+    }
+
+    const { date, time } = formatEventDateTime({
+      start: event.start,
+      end: event.end,
+      allDay: event.allDay,
+      timeZone: event.timeZone,
+      inviteeTimeZone: invite.inviteeTimeZone,
+      locale: invite.inviteeLocale ?? undefined,
+    });
+
+    after(async () =>
+      sendEventCanceledEmail({
+        to: invite.inviteeEmail,
+        locale: invite.inviteeLocale ?? undefined,
+        branding: await getInstanceBranding(),
+        icalEvent: {
+          filename: "cancel.ics",
+          method: "cancel",
+          content: icsContent,
+        },
+        props: {
+          title: event.title,
+          hostName: organizer.name,
+          date,
+          time,
+          location: locationText,
+          // The meeting may no longer exist, so its link is dropped.
+          conferencing: conferencing
+            ? { ...toEmailConferencing(conferencing), url: undefined }
+            : undefined,
+        },
+      }),
+    );
+  }
+}

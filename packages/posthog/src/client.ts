@@ -1,17 +1,45 @@
 "use client";
-import posthog from "posthog-js";
+// The slim build leaves out every extension (replay, surveys, flags,
+// exception capture, history autocapture), roughly halving the SDK. Browser
+// errors go to Sentry, and trackHistoryPageviews below replaces the one
+// extension we used.
+import posthog from "posthog-js/dist/module.slim";
 import type React from "react";
 
 import { getPostHogInitOptions } from "./client-config";
-import {
-  isAbortError,
-  isInjectedExtensionException,
-  isResizeObserverLoopError,
-  isUnsymbolicatedMinifiedException,
-} from "./utils";
 
 let initialized = false;
 let syncedDistinctId: string | null | undefined;
+let lastPathname: string | undefined;
+
+/**
+ * Captures a $pageview when a client-side navigation changes the path, which
+ * is what capture_pageview: "history_change" does through the history
+ * autocapture extension in the full build.
+ */
+function trackHistoryPageviews() {
+  lastPathname = window.location.pathname;
+
+  const capture = (navigationType: string) => {
+    const { pathname } = window.location;
+    if (pathname === lastPathname) return;
+    lastPathname = pathname;
+    // Runs inside the router's own history call, so analytics must never
+    // throw back into navigation
+    try {
+      posthog.capture("$pageview", { navigation_type: navigationType });
+    } catch {}
+  };
+
+  for (const method of ["pushState", "replaceState"] as const) {
+    const original = window.history[method];
+    window.history[method] = function (...args) {
+      original.apply(this, args);
+      capture(method);
+    };
+  }
+  window.addEventListener("popstate", () => capture("popstate"));
+}
 
 function syncIdentity(distinctId: string | null | undefined) {
   syncedDistinctId = distinctId;
@@ -66,28 +94,17 @@ export function initPostHog({
     debug: false,
     api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
     ui_host: process.env.NEXT_PUBLIC_POSTHOG_UI_HOST,
-    capture_pageview: "history_change",
+    capture_pageview: true,
     capture_pageleave: true,
     enable_heatmaps: false,
     autocapture: false,
     capture_performance: {
       web_vitals: false,
     },
-    before_send: (event) => {
-      if (
-        event?.event === "$exception" &&
-        (isInjectedExtensionException(event) ||
-          isAbortError(event) ||
-          isResizeObserverLoopError(event) ||
-          isUnsymbolicatedMinifiedException(event))
-      ) {
-        return null;
-      }
-      return event;
-    },
     ...getPostHogInitOptions(),
   });
 
+  trackHistoryPageviews();
   syncIdentity(distinctId);
 }
 

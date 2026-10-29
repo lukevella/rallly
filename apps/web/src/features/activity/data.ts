@@ -1,7 +1,7 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
-import type { AuthorizedSpaceId } from "@/features/space/types";
+import type { AuthorizedSpaceId } from "@/lib/tenant-scope";
 import { parsePollActivity } from "./schema";
 
 /**

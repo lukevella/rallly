@@ -1,56 +1,10 @@
 import { prisma } from "@rallly/database";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
-import { fromDBRole } from "@/features/space/utils";
 import { identifyGroup, track } from "@/lib/posthog";
 import { privateProcedure, router, spaceProcedure } from "../trpc";
 
 export const spaces = router({
-  // ── Queries ──────────────────────────────────────────────────────────
-  listMembers: spaceProcedure.query(async ({ ctx }) => {
-    const [members, totalCount] = await Promise.all([
-      prisma.spaceMember.findMany({
-        where: {
-          spaceId: ctx.space.id,
-        },
-        select: {
-          id: true,
-          userId: true,
-          role: true,
-          spaceId: true,
-          user: {
-            select: {
-              name: true,
-              email: true,
-              image: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "asc",
-        },
-      }),
-      prisma.spaceMember.count({
-        where: {
-          spaceId: ctx.space.id,
-        },
-      }),
-    ]);
-
-    return {
-      total: totalCount,
-      data: members.map((member) => ({
-        id: member.id,
-        userId: member.userId,
-        spaceId: member.spaceId,
-        name: member.user.name,
-        email: member.user.email,
-        image: member.user.image ?? undefined,
-        role: fromDBRole(member.role),
-        isOwner: member.userId === ctx.space.ownerId,
-      })),
-    };
-  }),
   // ── Mutations ────────────────────────────────────────────────────────
   leave: spaceProcedure.mutation(async ({ ctx }) => {
     if (ctx.space.ownerId === ctx.user.id) {

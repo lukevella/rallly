@@ -1,0 +1,189 @@
+---
+icon: video
+title: Video Conferencing
+description: Let organizers add Google Meet, Zoom, Microsoft Teams and Webex links to their polls.
+---
+
+<Note>Available from v4.16.0 and later.</Note>
+
+With conferencing enabled, organizers connect a Google Meet, Zoom, Microsoft Teams or Webex account in **Settings** > **Conferencing**. When they finalize a poll, Rallly creates the meeting on that account and puts the join link in the event, the calendar invite and the confirmation emails. See the [integration guides](/integrations/google-meet) for what organizers see.
+
+Each provider needs an OAuth app that you register with the provider yourself. Rallly cannot ship one for you, because the redirect URI of an OAuth app is tied to your instance's domain. You turn on each provider separately; on a self-hosted instance every provider is available on every plan.
+
+## Enable conferencing
+
+<Steps>
+  <Step title="Register an OAuth app">
+    Follow the setup for each provider you want below. Google Meet and Microsoft Teams reuse the app you may already have for [Single Sign-On](/self-hosting/single-sign-on).
+  </Step>
+  <Step title="Set the variables">
+    Add the provider's variables to your `.env`, and list it in `CONFERENCING_PROVIDERS`, for example `CONFERENCING_PROVIDERS=google-meet,zoom`.
+  </Step>
+  <Step title="Restart">
+    Run `./rallly.sh restart`. **Conferencing** appears in **Settings** for every user.
+  </Step>
+</Steps>
+
+<ParamField path="CONFERENCING_PROVIDERS">
+  A comma separated list of the providers organizers can use: `google-meet`, `zoom`, `microsoft-teams`, `webex`. A listed provider is offered once its OAuth app variables are set; Google and Microsoft credentials used for sign in never turn on Meet or Teams by themselves. An unknown value stops Rallly from starting. A listed provider without credentials is not offered, Rallly logs a warning at startup, and the Conferencing page says no provider is set up. Organizers can always paste their own video call link, whatever this lists.
+</ParamField>
+
+Every redirect URI below starts with your instance's public address, written as `https://<YOUR_DOMAIN>`. It must match exactly, including the scheme and without a trailing slash.
+
+## Google Meet
+
+Google Meet uses the same Google OAuth app as Google sign in and Google Calendar. Setting the Google variables for sign in does not turn on Google Meet: finish the steps below, then add `google-meet` to `CONFERENCING_PROVIDERS`.
+
+<Accordion title="Setup">
+1. In the [Google Cloud console](https://console.cloud.google.com/), open the project that holds your OAuth client, or create one.
+
+2. Under **APIs & Services** > **Library**, enable the **Google Meet REST API**.
+
+3. Under **Google Auth Platform** > **Data Access**, add the scope `https://www.googleapis.com/auth/meetings.space.created`. Rallly also asks for `userinfo.email` and `userinfo.profile`.
+
+4. Under **Google Auth Platform** > **Audience**, choose who can connect:
+   - **Internal** if everyone using your instance is in your Google Workspace organization. Google does not review internal apps and shows no warning.
+   - **External** otherwise. `meetings.space.created` is a sensitive scope, so until Google verifies your app, users see an "unverified app" warning and the app is limited to 100 users. While the app is in **Testing**, only the test users you list can connect.
+
+5. Under **Google Auth Platform** > **Clients**, open your Web application client (or create one) and add this to **Authorized redirect URIs**:
+
+```
+https://<YOUR_DOMAIN>/api/integrations/callback/google-meet
+```
+
+Keep the existing `/api/auth/callback/google` URI if you use Google sign in. To use the client for Google Meet only, set `GOOGLE_LOGIN_ENABLED=false` so the Google sign in button is hidden.
+</Accordion>
+
+<ParamField path="GOOGLE_CLIENT_ID">
+  The client ID of your Google OAuth app. Shared with Google sign in and Google Calendar.
+</ParamField>
+
+<ParamField path="GOOGLE_CLIENT_SECRET">
+  The client secret of your Google OAuth app.
+</ParamField>
+
+## Zoom
+
+<Accordion title="Setup">
+1. Sign in to the [Zoom App Marketplace](https://marketplace.zoom.us/) with an account on your organization's Zoom account and choose **Develop** > **Build App**. Create a **General App** that is **User managed**. Building the app here does not list it on the Marketplace.
+
+2. Under **Basic Information**, set the **OAuth Redirect URL** and add the same address to the **OAuth Allow List**:
+
+```
+https://<YOUR_DOMAIN>/api/integrations/callback/zoom
+```
+
+3. Under **Scopes**, add `meeting:write:meeting` and `user:read:user`.
+
+4. Copy the **Client ID** and **Client Secret** from **Basic Information**.
+
+You do not need to publish the app. An unpublished app stays private to the Zoom account it was built on, and every user on that account can connect it, which covers an organization on a single Zoom account. Organizers on other Zoom accounts cannot connect it unless the app is published, which requires Zoom's review.
+</Accordion>
+
+<Accordion title="Deauthorization notices (optional)">
+When someone removes the app from their Zoom account, Zoom can tell Rallly so the connection disappears from their settings. Zoom only sends this notice for apps published on the Marketplace. With an unpublished app, someone who removes it in Zoom also needs to disconnect Zoom in **Settings** > **Conferencing**; until then the connection stays listed but no longer works.
+
+1. Under **Features** > **Access**, turn on **Event Subscription** and add the endpoint:
+
+```
+https://<YOUR_DOMAIN>/api/integrations/zoom/deauthorize
+```
+
+2. Subscribe to the **App Deauthorized** event.
+
+3. Copy the **Secret Token** into `ZOOM_WEBHOOK_SECRET_TOKEN` and restart before Zoom validates the endpoint.
+</Accordion>
+
+<ParamField path="ZOOM_CLIENT_ID">
+  The client ID of your Zoom app. Set together with `ZOOM_CLIENT_SECRET`, or Rallly refuses to start.
+</ParamField>
+
+<ParamField path="ZOOM_CLIENT_SECRET">
+  The client secret of your Zoom app.
+</ParamField>
+
+<ParamField path="ZOOM_WEBHOOK_SECRET_TOKEN">
+  The secret token of the app's event subscription. Only needed for deauthorization notices.
+</ParamField>
+
+## Microsoft Teams
+
+Microsoft Teams uses the same Microsoft Entra ID registration as Microsoft sign in, with an extra redirect URI and Graph permissions. Setting the Microsoft variables for sign in does not turn on Teams: finish the steps below, then add `microsoft-teams` to `CONFERENCING_PROVIDERS`. To use the registration for Teams only, set `MICROSOFT_LOGIN_ENABLED=false` so the Microsoft sign in button is hidden.
+
+<Accordion title="Setup">
+1. Register an application in the [Microsoft Entra admin center](https://entra.microsoft.com/), or open your existing one. See [Single Sign-On](/self-hosting/single-sign-on#microsoft) for sign in.
+
+2. Under **Authentication**, add a **Web** redirect URI:
+
+```
+https://<YOUR_DOMAIN>/api/integrations/callback/microsoft-teams
+```
+
+3. Under **API permissions**, add the delegated Microsoft Graph permissions `OnlineMeetings.ReadWrite`, `User.Read` and `offline_access`. If your organization does not let users consent to apps, choose **Grant admin consent**.
+
+Teams meetings can only be created for work or school accounts with a Teams license. With `MICROSOFT_TENANT_ID` set to `common` or `consumers`, Teams connects through the `organizations` endpoint; with a tenant ID it connects through that tenant.
+
+Administrators of other organizations can approve the app for their whole organization by opening `https://<YOUR_DOMAIN>/api/integrations/admin-consent/microsoft-teams`. See [Admin approval](/integrations/microsoft-teams#admin-approval).
+</Accordion>
+
+<ParamField path="MICROSOFT_CLIENT_ID">
+  The client ID of your Microsoft registration. Shared with Microsoft sign in.
+</ParamField>
+
+<ParamField path="MICROSOFT_CLIENT_SECRET">
+  The client secret of your Microsoft registration.
+</ParamField>
+
+<ParamField path="MICROSOFT_TENANT_ID" default="common">
+  The tenant of your Microsoft registration.
+</ParamField>
+
+## Webex
+
+<Accordion title="Setup">
+1. Sign in to the [Webex Developer Portal](https://developer.webex.com/) and choose **My Webex Apps** > **Create a New App** > **Integration**.
+
+2. Set the **Redirect URI**:
+
+```
+https://<YOUR_DOMAIN>/api/integrations/callback/webex
+```
+
+3. Select the scopes `meeting:schedules_write` and `spark:people_read`.
+
+4. Save, then copy the **Client ID** and **Client Secret**. Webex shows the secret only once.
+</Accordion>
+
+<ParamField path="WEBEX_CLIENT_ID">
+  The client ID of your Webex integration. Set together with `WEBEX_CLIENT_SECRET`, or Rallly refuses to start.
+</ParamField>
+
+<ParamField path="WEBEX_CLIENT_SECRET">
+  The client secret of your Webex integration.
+</ParamField>
+
+## Troubleshooting
+
+<Accordion title="Rallly does not start after enabling conferencing">
+`CONFERENCING_PROVIDERS` has a value that is not a provider, or only one of `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (or the Webex pair) is set. Run `./rallly.sh logs web` to see which.
+</Accordion>
+
+<Accordion title="Conferencing does not appear in Settings">
+`CONFERENCING_PROVIDERS` is unset or empty. Restart after editing `.env`.
+</Accordion>
+
+<Accordion title="Conferencing says no video call providers are set up, or a provider is missing">
+A provider in `CONFERENCING_PROVIDERS` has no credentials. The startup warning in `./rallly.sh logs web` names it; add its variables as described above and restart.
+</Accordion>
+
+<Accordion title="The provider says the redirect URI does not match">
+The URI registered with the provider differs from the one Rallly sends (Google reports this as `redirect_uri_mismatch`). Compare it character by character with the URI above, including `https`, your exact domain and the provider name at the end.
+</Accordion>
+
+<Accordion title='Google shows an "unverified app" warning'>
+Your consent screen is External and Google has not verified the `meetings.space.created` scope. Users can continue past the warning, or you can make the app Internal or submit it for verification.
+</Accordion>
+
+<Accordion title="Connecting works but finalizing fails">
+The provider refused to create the meeting. For Google Meet, check that the Google Meet REST API is enabled. For Teams, the account needs a Teams license. Disconnecting and reconnecting the account in Conferencing settings refreshes its tokens.
+</Accordion>

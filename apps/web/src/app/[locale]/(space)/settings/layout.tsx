@@ -16,22 +16,16 @@ import {
 } from "@rallly/ui/sidebar";
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
 import type React from "react";
-import { Suspense } from "react";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import { PastDueAlert } from "@/features/billing/components/past-due-alert";
-import { loadAvailableConferencingProviders } from "@/features/conferencing/loaders";
 import { NavUser } from "@/features/user/components/nav-user";
 import { Trans } from "@/i18n/client";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import {
   AccountSidebarMenu,
   DeveloperSidebarMenu,
   SpaceSidebarMenu,
 } from "./components/sidebar";
-
-async function AccountMenu() {
-  const providers = await loadAvailableConferencingProviders();
-  return <AccountSidebarMenu showConferencing={providers.length > 0} />;
-}
 
 export default function Layout({ children }: { children?: React.ReactNode }) {
   return (
@@ -69,11 +63,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
               <Trans i18nKey="account" defaults="Account" />
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <Suspense
-                fallback={<AccountSidebarMenu showConferencing={false} />}
-              >
-                <AccountMenu />
-              </Suspense>
+              <AccountSidebarMenu
+                showConferencing={isFeatureEnabled("conferencing")}
+              />
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroup>
@@ -93,7 +85,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
       <SidebarInset id="main-content" tabIndex={-1}>
         <PastDueAlert />
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 border-b bg-background/90 p-3 backdrop-blur-xs md:hidden">
+          <header className="sticky top-0 z-10 border-b bg-sidebar/90 p-3 backdrop-blur-xs md:hidden">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
               <div className="flex items-center gap-2">

@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { groupBy } from "lodash";
 import type * as React from "react";
 
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
@@ -21,10 +20,19 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
   group,
   groupClassName,
 }) => {
-  const grouped = groupBy(options, group);
+  const grouped = new Map<string, ParsedDateTimeOpton[]>();
+  for (const option of options) {
+    const key = group(option);
+    const list = grouped.get(key);
+    if (list) {
+      list.push(option);
+    } else {
+      grouped.set(key, [option]);
+    }
+  }
   return (
     <div className="select-none divide-y">
-      {Object.entries(grouped).map(([day, options]) => {
+      {Array.from(grouped, ([day, options]) => {
         return (
           <div key={day}>
             <div

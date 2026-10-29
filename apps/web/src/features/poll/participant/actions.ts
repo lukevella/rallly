@@ -4,9 +4,13 @@ import { sendNewParticipantEmail } from "@rallly/emails/templates/new-participan
 import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/new-participant-confirmation";
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
+import { Effect } from "effect";
 import { after } from "next/server";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { env } from "@/env";
+import { resolveSpaceTier } from "@/features/billing/utils";
+import { chargeEmailBudget } from "@/features/email-budget/mutations";
+import { EmailBudgetStore } from "@/features/email-budget/service";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
@@ -28,8 +32,10 @@ import {
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
 import { getLocale } from "@/i18n/server/get-locale";
+import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
+import { createRateLimitGuard } from "@/lib/rate-limit";
 import {
   anyUserActionClient,
   createRateLimitMiddleware,
@@ -37,6 +43,14 @@ import {
 } from "@/lib/safe-action/server";
 
 const logger = createLogger("participants");
+
+// Guest sessions are free to mint, so a per-user limit would reset with a new
+// session, and it would also refuse a host entering responses for others.
+// The per-IP and per-poll limits hold regardless of session.
+// The IP limit is loose because offices, schools and mobile carriers put many
+// people behind one address. The largest poll in 90 days took 295 responses
+// in total, p99 is 23, so the per-poll cap does not touch real use.
+const pollResponseGuard = createRateLimitGuard(200, "1 h");
 
 type Actor = { id: string; isGuest: boolean };
 
@@ -175,10 +189,13 @@ async function sendNewResponseNotificationEmail({
 
 export const addParticipantAction = anyUserActionClient
   .metadata({ actionName: "add_participant" })
-  .use(createRateLimitMiddleware(10, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(addParticipantSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { pollId, votes, name, email, note, timeZone, token } = parsedInput;
+
+    ctx.event.pollId = pollId;
+    await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);
     const locale = await getLocale();
 
     const result = await addParticipant({
@@ -200,8 +217,22 @@ export const addParticipantAction = anyUserActionClient
     const { participant, poll, editToken, viaInvite, totalResponses } = result;
 
     if (email) {
-      after(async () =>
-        sendNewParticipantConfirmationEmail({
+      after(async () => {
+        // Sent to an address the responder typed, so it is charged to the
+        // poll owner: a host cannot use their poll to mail strangers.
+        const { allowed } = await runtime.runPromise(
+          chargeEmailBudget({
+            ownerId: poll.userId,
+            tier: resolveSpaceTier(poll.space?.tier ?? "hobby"),
+            pollId: poll.id,
+            kind: "participant_confirmation",
+            recipients: 1,
+          }).pipe(Effect.provide(EmailBudgetStore.layer)),
+        );
+        if (allowed === 0) {
+          return;
+        }
+        await sendNewParticipantConfirmationEmail({
           to: email,
           locale,
           branding: poll.space
@@ -213,8 +244,8 @@ export const addParticipantAction = anyUserActionClient
               getPollInvitePath({ pollId: poll.id, token: editToken }),
             ),
           },
-        }),
-      );
+        });
+      });
     }
 
     // The new response email names the respondent, which an aggregate
@@ -269,6 +300,7 @@ export const addParticipantAction = anyUserActionClient
 
 export const updateParticipantVotesAction = optionalUserActionClient
   .metadata({ actionName: "update_participant_votes" })
+  .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(updateParticipantVotesSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { participantId, votes, token } = parsedInput;

@@ -81,6 +81,7 @@ export const loadVotePage = cache(
           ? {
               name: poll.space.name,
               image: poll.space.image,
+              tier: poll.space.tier,
               showBranding: poll.space.showBranding,
               hideAttribution: poll.space.hideAttribution,
               primaryColor: poll.space.primaryColor,

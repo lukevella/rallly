@@ -11,6 +11,7 @@ import { Link } from "@/components/link";
 import { DefaultLogo } from "@/features/branding/components/default-logo";
 import { Trans } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
+import { reloadOnceForChunkError } from "@/lib/chunk-recovery";
 import { githubRepoUrl } from "@/lib/constants";
 import { INVALID_SESSION } from "@/lib/errors/invalid-session-error";
 
@@ -28,6 +29,7 @@ export default function LocaleErrorBoundary({
   React.useEffect(() => {
     if (!isInvalidSession) {
       Sentry.captureException(error);
+      reloadOnceForChunkError(error);
     }
   }, [error, isInvalidSession]);
 

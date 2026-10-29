@@ -1,6 +1,6 @@
-import { randomUUID } from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
+import { buildPollHistory, generateAccessToken } from "./seed/activity";
 import {
   eventTypes,
   polls,
@@ -21,7 +21,15 @@ function nextId() {
   return `seed-${(++idCounter).toString().padStart(4, "0")}`;
 }
 
+class DatabaseNotEmptyError extends Error {}
+
 async function main() {
+  if (await prisma.user.findFirst({ select: { id: true } })) {
+    throw new DatabaseNotEmptyError(
+      "The database already has data. Run `pnpm db:reset` to reset and seed it.",
+    );
+  }
+
   // 1. Users
   await prisma.user.createMany({ data: users.map((u) => ({ ...u })) });
   console.info(`✓ ${users.length} users`);
@@ -95,9 +103,24 @@ async function main() {
   let participantCount = 0;
   let voteCount = 0;
   let commentCount = 0;
+  let pollInviteCount = 0;
+  let activityCount = 0;
 
-  for (const poll of polls) {
+  for (const [pollIndex, poll] of polls.entries()) {
     const pollId = nextId();
+    const optionIds = poll.options.map(() => nextId());
+    const participantIds = poll.participants.map(() => nextId());
+    const participantTokens = poll.participants.map(() =>
+      generateAccessToken(),
+    );
+    const history = buildPollHistory({
+      index: pollIndex,
+      poll,
+      optionIds,
+      participantIds,
+      participantTokens,
+      nextId,
+    });
 
     const kind = poll.options.some((opt) => opt.duration > 0) ? "time" : "date";
 
@@ -119,14 +142,11 @@ async function main() {
         disableComments: poll.disableComments ?? !poll.comments?.length,
         requireParticipantEmail: poll.requireParticipantEmail,
         kind,
+        createdAt: history.createdAt,
       },
     });
 
     // Options
-    const optionIds: string[] = [];
-    for (let i = 0; i < poll.options.length; i++) {
-      optionIds.push(nextId());
-    }
     await prisma.option.createMany({
       data: poll.options.map((opt, i) => ({
         id: optionIds[i],
@@ -138,8 +158,8 @@ async function main() {
     optionCount += poll.options.length;
 
     // Participants + votes
-    for (const part of poll.participants) {
-      const participantId = nextId();
+    for (const [participantIndex, part] of poll.participants.entries()) {
+      const participantId = participantIds[participantIndex];
       await prisma.participant.create({
         data: {
           id: participantId,
@@ -148,7 +168,8 @@ async function main() {
           email: part.email,
           note: part.note,
           userId: part.userId,
-          token: randomUUID().replace(/-/g, ""),
+          token: participantTokens[participantIndex],
+          createdAt: history.participantCreatedAt[participantIndex],
         },
       });
       participantCount++;
@@ -166,6 +187,21 @@ async function main() {
       voteCount += part.votes.length;
     }
 
+    // Invites + activity history
+    await prisma.pollInvite.createMany({
+      data: history.invites.map((invite) => ({ ...invite, pollId })),
+    });
+    pollInviteCount += history.invites.length;
+
+    await prisma.pollActivity.createMany({
+      data: history.activities.map((activity) => ({
+        id: nextId(),
+        pollId,
+        ...activity,
+      })),
+    });
+    activityCount += history.activities.length;
+
     // Comments
     if (poll.comments?.length) {
       await prisma.comment.createMany({
@@ -182,7 +218,7 @@ async function main() {
   }
 
   console.info(
-    `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments`,
+    `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments, ${pollInviteCount} invites, ${activityCount} activity entries`,
   );
 
   // 7. Event types
@@ -204,7 +240,10 @@ async function main() {
 }
 
 main()
-  .catch((e) => console.error(e))
+  .catch((e) => {
+    console.error(e instanceof DatabaseNotEmptyError ? e.message : e);
+    process.exitCode = 1;
+  })
   .finally(async () => {
     await prisma.$disconnect();
   });

@@ -42,19 +42,27 @@ const fallbackPricing: PricesByCurrency = {
   },
 };
 
+// Errors are caught inside the cache scope: an error thrown out of "use cache"
+// fails the prerender even when the caller catches it. A failure keeps the
+// fallback for minutes rather than hours, so Stripe is retried soon.
 const getStripePricing = async (secretKey: string) => {
   "use cache";
-  cacheLife("hours");
-  const { currencies } = await getProPricing({
-    stripe: createStripeClient({ secretKey }),
-  });
-  if (Object.keys(currencies).length === 0) {
-    throw new Error("Stripe prices carry none of the displayed currencies");
+  try {
+    const { currencies } = await getProPricing({
+      stripe: createStripeClient({ secretKey }),
+    });
+    if (Object.keys(currencies).length === 0) {
+      throw new Error("Stripe prices carry none of the displayed currencies");
+    }
+    cacheLife("hours");
+    return currencies;
+  } catch (error) {
+    console.error("Failed to load prices from Stripe", error);
+    cacheLife("minutes");
+    return fallbackPricing;
   }
-  return currencies;
 };
 
-// A failed Stripe call is not cached, so the fallback only lasts for that request.
 export const getPricing = async (): Promise<PricesByCurrency> => {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) {
@@ -63,10 +71,5 @@ export const getPricing = async (): Promise<PricesByCurrency> => {
     );
     return fallbackPricing;
   }
-  try {
-    return await getStripePricing(secretKey);
-  } catch (error) {
-    console.error("Failed to load prices from Stripe", error);
-    return fallbackPricing;
-  }
+  return getStripePricing(secretKey);
 };

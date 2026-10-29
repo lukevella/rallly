@@ -1,5 +1,6 @@
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { OIDCAutoSignIn } from "@/app/[locale]/(auth)/login/components/oidc-auto-sign-in";
 import { env } from "@/env";
@@ -9,6 +10,7 @@ import { SSOProvider } from "@/features/auth/components/sso-provider";
 import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
 import { authLib, getSessionState } from "@/lib/auth";
+import { LAST_LOGIN_METHOD_COOKIE_NAME } from "@/lib/auth-config";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { AlreadyLoggedIn } from "../components/already-logged-in";
 import {
@@ -22,13 +24,15 @@ import { AuthErrors } from "./components/auth-errors";
 import { LoginWithEmailForm } from "./components/login-email-form";
 
 async function loadData() {
-  const [isRegistrationEnabled, { t, i18n }] = await Promise.all([
+  const [isRegistrationEnabled, { t, i18n }, cookieStore] = await Promise.all([
     getRegistrationEnabled(),
     getTranslation(),
+    cookies(),
   ]);
 
   return {
     isRegistrationEnabled,
+    lastLoginMethod: cookieStore.get(LAST_LOGIN_METHOD_COOKIE_NAME)?.value,
     t,
     i18n,
   };
@@ -54,7 +58,7 @@ export default async function LoginPage(props: {
     return <AlreadyLoggedIn redirectTo={searchParams?.redirectTo} />;
   }
 
-  const { isRegistrationEnabled, t, i18n } = await loadData();
+  const { isRegistrationEnabled, lastLoginMethod, t, i18n } = await loadData();
   const isEmailLoginEnabled = isFeatureEnabled("emailLogin");
 
   const hasGoogleProvider = !!authLib.options.socialProviders.google;
@@ -66,6 +70,16 @@ export default async function LoginPage(props: {
   const hasSocialLogin = hasGoogleProvider || hasMicrosoftProvider;
 
   const hasAlternateLoginMethods = hasSocialLogin || hasOidc;
+
+  // With a single method on offer there is nothing to choose between.
+  const loginMethodCount = [
+    isEmailLoginEnabled,
+    hasOidc,
+    hasGoogleProvider,
+    hasMicrosoftProvider,
+  ].filter(Boolean).length;
+  const isLastUsed = (method: string) =>
+    loginMethodCount > 1 && lastLoginMethod === method;
 
   const hasError = !!searchParams?.error;
 
@@ -120,7 +134,10 @@ export default async function LoginPage(props: {
       </AuthPageHeader>
       <AuthPageContent>
         {isEmailLoginEnabled && (
-          <LoginWithEmailForm isRegistrationEnabled={isRegistrationEnabled} />
+          <LoginWithEmailForm
+            isRegistrationEnabled={isRegistrationEnabled}
+            isLastUsed={isLastUsed("email")}
+          />
         )}
         {isEmailLoginEnabled && hasAlternateLoginMethods ? <OrDivider /> : null}
         <div className="grid gap-3">
@@ -128,6 +145,7 @@ export default async function LoginPage(props: {
             <LoginWithOIDC
               name={env.OIDC_NAME}
               redirectTo={searchParams?.redirectTo}
+              isLastUsed={isLastUsed("oidc")}
             />
           ) : null}
           {hasGoogleProvider ? (
@@ -135,6 +153,7 @@ export default async function LoginPage(props: {
               providerId="google"
               name="Google"
               redirectTo={searchParams?.redirectTo}
+              isLastUsed={isLastUsed("google")}
             />
           ) : null}
           {hasMicrosoftProvider ? (
@@ -142,6 +161,7 @@ export default async function LoginPage(props: {
               providerId="microsoft"
               name="Microsoft"
               redirectTo={searchParams?.redirectTo}
+              isLastUsed={isLastUsed("microsoft")}
             />
           ) : null}
         </div>

@@ -21,7 +21,7 @@ import {
 } from "@/features/billing/loaders";
 import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
-import { loadUser } from "@/features/user/loaders";
+import { loadOptionalUser, loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -63,10 +63,13 @@ export default async function BillingSettingsPage() {
     );
   }
 
-  const [overview, seatUsage, paymentMethods] = await Promise.all([
+  // Database fresh: the session snapshot can predate the customer ID the
+  // checkout webhook writes.
+  const [overview, seatUsage, paymentMethods, billingUser] = await Promise.all([
     loadSubscriptionOverview(),
     loadSeatUsage(),
     loadPaymentMethods(),
+    loadOptionalUser(),
   ]);
 
   return (
@@ -105,7 +108,7 @@ export default async function BillingSettingsPage() {
             <HobbyPlanCard />
           )}
           <BillingFlashAlert />
-          {overview?.subscription.active ? (
+          {overview && billingUser?.customerId ? (
             <PaymentAndBillingCard paymentMethods={paymentMethods} />
           ) : null}
           <SupportCard />

@@ -86,7 +86,7 @@ async function ApiKeysContent() {
   return (
     <PageSectionGroup>
       <ApiUsageLimits />
-      <PageSection>
+      <PageSection variant="card">
         <PageSectionContent>
           <ApiKeysList apiKeys={apiKeys} />
         </PageSectionContent>

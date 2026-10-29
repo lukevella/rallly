@@ -84,7 +84,7 @@ export function CreateSpaceDialog(props: DialogProps) {
                 </FormItem>
               )}
             />
-            <DialogFooter className="mt-4">
+            <DialogFooter>
               <Button
                 loading={form.formState.isSubmitting}
                 type="submit"

@@ -30,6 +30,10 @@ import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
+import {
+  FREE_OPEN_POLL_LIMIT,
+  isOpenPollLimitEnabled,
+} from "@/lib/open-poll-limit";
 
 export default async function Page(props: {
   params: Promise<{ locale: string }>;
@@ -146,12 +150,22 @@ export default async function Page(props: {
                   />
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
+                  {isOpenPollLimitEnabled ? (
+                    <Trans
+                      t={t}
+                      ns="home"
+                      i18nKey="doodleComparisonPollsRallly"
+                      defaults="Unlimited, up to {count} open at once"
+                      values={{ count: FREE_OPEN_POLL_LIMIT }}
+                    />
+                  ) : (
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
+                    />
+                  )}
                 </CompareTableCell>
                 <CompareTableCell>
                   <Trans
@@ -474,10 +488,13 @@ export async function generateMetadata(props: {
     title: {
       absolute: t("doodleAlternativeMetaTitle", {
         ns: "home",
+        defaultValue: "Best Free Doodle Poll Alternative | Rallly",
       }),
     },
     description: t("doodleAlternativeMetaDescription", {
       ns: "home",
+      defaultValue:
+        "Doodle's free plan allows one group poll. Rallly is a free Doodle poll alternative with no ads, and participants vote without an account.",
     }),
   };
 }

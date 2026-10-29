@@ -5,12 +5,14 @@ import { Suspense } from "react";
 import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { PollProvider } from "@/features/poll/client";
+import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import { loadInvitePoll, loadPollAvailability } from "@/features/poll/loaders";
+import { loadCanManagePoll } from "@/features/poll/vote/loaders";
 import { UserProvider } from "@/features/user/client";
 import { getLocale } from "@/i18n/server/get-locale";
 import { DeviceDateTimeProvider } from "@/lib/datetime/device";
@@ -57,11 +59,13 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     locale,
     deviceDateTimeConfig,
     footerLinks,
+    canManage,
   ] = await Promise.all([
     loadInvitePoll({ pollId: urlId, token }),
     getLocale(),
     getDeviceDateTimeConfig(),
     loadFooterLinks(),
+    loadCanManagePoll(urlId),
   ]);
 
   return (
@@ -84,7 +88,18 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
             <LegacyPollContextProvider>
               <VisibilityProvider>
                 <PollBrandingFromContext />
-                <InvitePage footerLinks={footerLinks} />
+                <InvitePage
+                  pollId={poll.id}
+                  canManage={canManage}
+                  // Rendered here so the markdown parser stays on the server
+                  description={
+                    <EventMetaDescription
+                      className="mt-1 text-muted-foreground"
+                      content={poll.description}
+                    />
+                  }
+                  footerLinks={footerLinks}
+                />
               </VisibilityProvider>
             </LegacyPollContextProvider>
           </PollProvider>

@@ -5,7 +5,7 @@
 
 import path from "node:path";
 import createBundleAnalyzer from "@next/bundle-analyzer";
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
 const withBundleAnalyzer = createBundleAnalyzer({
@@ -29,7 +29,17 @@ const nextConfig: NextConfig = {
     "@rallly/posthog",
     "@rallly/emails",
   ],
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_URL,
+  // Cloud serves /_next/static from a CDN-cached host to keep the immutable
+  // bundles off Vercel's bandwidth bill. Unset everywhere else.
+  assetPrefix:
+    process.env.NEXT_PUBLIC_ASSET_PREFIX ?? process.env.NEXT_PUBLIC_BASE_URL,
+  // Loads chunks from that host as CORS requests instead of opaque no-cors
+  // ones. Since the move, WebKit has kept broken cached copies of the opaque
+  // chunks, which stops the page from hydrating. The asset host must send
+  // Access-Control-Allow-Origin on every response, or no browser will run
+  // the scripts. Without a prefix the chunks come from the base URL, which
+  // sends no such header, so an instance opened on another host would break.
+  crossOrigin: process.env.NEXT_PUBLIC_ASSET_PREFIX ? "anonymous" : undefined,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -155,6 +165,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
   devIndicators:
@@ -181,14 +200,10 @@ const sentryWebpackPluginOptions = {
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
 
-  // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  // tunnelRoute: "/monitoring",
-
-  // Hides source maps from generated client bundles
-  hideSourceMaps: true,
+  // Routes browser events through a same-origin rewrite so ad blockers don't
+  // drop them. A fixed path rather than `true` because the proxy matcher in
+  // src/proxy.ts must exclude it, and `true` picks a new path every build.
+  tunnelRoute: "/z1tk88rw",
 };
 
 const withBundleAnalyzerConfig = withBundleAnalyzer(nextConfig);

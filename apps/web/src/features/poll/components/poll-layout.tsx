@@ -15,16 +15,17 @@ import { usePoll } from "@/features/poll/client";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
+import { PollPageShell } from "@/features/poll/components/poll-page-shell";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { Trans } from "@/i18n/client";
 
 const AdminControls = () => {
   return (
-    <div className="flex items-center gap-x-2">
+    <>
       <NotificationToggle />
       <ManagePoll />
       <PollPrimaryActions />
-    </div>
+    </>
   );
 };
 
@@ -33,48 +34,41 @@ const Layout = ({ children }: React.PropsWithChildren) => {
   const pollLink = `/poll/${poll.id}`;
   const pathname = usePathname();
   return (
-    <div className="page-bg-gray-100 relative h-dvh overflow-auto dark:bg-gray-900">
-      <div className="sticky top-0 z-40 border-b bg-gray-100/90 p-3 backdrop-blur-lg sm:flex-row dark:bg-gray-900/90">
-        <div className="flex justify-between">
-          <div className="flex min-w-0 items-center gap-x-2.5">
-            <Breadcrumb className="min-w-0">
-              <BreadcrumbList className="flex-nowrap">
-                <BreadcrumbItem className="shrink-0">
-                  <BreadcrumbLink
-                    className="flex items-center gap-x-2"
-                    render={<Link href="/polls" />}
-                  >
-                    <BarChart2Icon className="size-4" />
-                    <Trans i18nKey="polls" defaults="Polls" />
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="shrink-0" />
-                <BreadcrumbItem className="min-w-0">
-                  {pathname === pollLink ? (
-                    <BreadcrumbPage className="truncate">
-                      {poll.title}
-                    </BreadcrumbPage>
-                  ) : (
-                    <BreadcrumbLink
-                      className="truncate"
-                      render={<Link href={pollLink} />}
-                    >
-                      {poll.title}
-                    </BreadcrumbLink>
-                  )}
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-          <div>
-            <AdminControls />
-          </div>
-        </div>
-      </div>
-      <main id="main-content" tabIndex={-1} className="p-3">
-        <div className="mx-auto max-w-4xl space-y-3">{children}</div>
-      </main>
-    </div>
+    <PollPageShell
+      header={
+        <Breadcrumb className="min-w-0">
+          <BreadcrumbList className="flex-nowrap">
+            <BreadcrumbItem className="shrink-0">
+              <BreadcrumbLink
+                className="flex items-center gap-x-2"
+                render={<Link href="/polls" />}
+              >
+                <BarChart2Icon className="size-4" />
+                <Trans i18nKey="polls" defaults="Polls" />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="shrink-0" />
+            <BreadcrumbItem className="min-w-0">
+              {pathname === pollLink ? (
+                <BreadcrumbPage className="truncate">
+                  {poll.title}
+                </BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink
+                  className="truncate"
+                  render={<Link href={pollLink} />}
+                >
+                  {poll.title}
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      }
+      actions={<AdminControls />}
+    >
+      {children}
+    </PollPageShell>
   );
 };
 

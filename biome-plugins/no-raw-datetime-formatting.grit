@@ -4,7 +4,8 @@
 // detection (timezone-schema, date-time-utils), zone abbreviations (timezone-utils), tests
 // (which format independently of the app to act as an oracle, matching the
 // tests exemption in the biome.json overrides), repo scripts (tooling that
-// renders no user-facing UI), and files still pending migration. Shrink it
+// renders no user-facing UI), screenshot capture scripts (which seed
+// fixtures in a fixed zone), and files still pending migration. Shrink it
 // as RAL-1247 proceeds.
 // packages/ui and apps/landing are exempt entirely: lib/datetime is an
 // apps/web app-layer concept, and neither a shared UI package nor another
@@ -27,6 +28,7 @@ or {
     r".*/src/features/poll/components/manage-poll/use-csv-exporter\.ts",
     r".*/tests/.*",
     r".*/scripts/.*",
+    r".*/packages/screenshots/.*",
     r".*/packages/ui/.*",
     r".*/apps/landing/.*"
   },

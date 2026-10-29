@@ -96,7 +96,7 @@ export function CreateEventTypeDialog({ open, onOpenChange }: DialogProps) {
               showDescription={showDescription}
               setShowDescription={setShowDescription}
             />
-            <DialogFooter className="pt-2">
+            <DialogFooter>
               <DialogClose
                 render={
                   <Button type="button" disabled={createEventType.isPending} />

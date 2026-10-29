@@ -115,3 +115,15 @@ export function addMinutesToWallTime(wallTime: string, minutes: number) {
     .toISOString()
     .slice(0, 19);
 }
+
+/**
+ * Whether clocks in `timeZone` ever read `wallTime`. False for a time skipped
+ * by a forward transition (02:30 on a spring-forward day).
+ */
+export function wallTimeExists(wallTime: string, timeZone: string) {
+  const instant = wallTimeToInstant(wallTime, timeZone);
+  return (
+    !Number.isNaN(instant.getTime()) &&
+    wallTimeDiffInMinutes(wallTime, instantToWallTime(instant, timeZone)) === 0
+  );
+}

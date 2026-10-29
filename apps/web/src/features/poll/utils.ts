@@ -1,13 +1,10 @@
 import { customAlphabet } from "nanoid";
-import type { PollConferencing } from "@/features/conferencing/schema";
-import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
 import type {
   PollComment,
   PollDetails,
   PollParticipant,
 } from "@/features/poll/types";
-import type { SpaceTier } from "@/features/space/schema";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -179,13 +176,6 @@ export function rankOptionsByPopularity<T extends { id: string }>({
       votesByOptionId.get(vote.optionId)?.[vote.type].push(participant.id);
     }
   }
-  const score = (option: T & { votes: OptionVotes }) => {
-    const { yes, ifNeedBe } = getScore?.(option.id) ?? {
-      yes: option.votes.yes.length,
-      ifNeedBe: option.votes.ifNeedBe.length,
-    };
-    return [yes + ifNeedBe, yes, ifNeedBe];
-  };
   return options
     .map((option) => ({
       ...option,
@@ -195,14 +185,121 @@ export function rankOptionsByPopularity<T extends { id: string }>({
         no: [],
       },
     }))
-    .sort((a, b) => {
-      const sa = score(a);
-      const sb = score(b);
-      for (let i = 0; i < sa.length; i++) {
-        if (sa[i] !== sb[i]) return sb[i] - sa[i];
-      }
-      return 0;
-    });
+    .sort((a, b) =>
+      comparePopularity(scoreOf(a, getScore), scoreOf(b, getScore)),
+    );
+}
+
+type PopularityScore = { yes: number; ifNeedBe: number };
+
+/**
+ * An option's totals: the aggregate totals when given, otherwise counted
+ * from the option's votes.
+ */
+function scoreOf(
+  option: { id: string; votes: OptionVotes },
+  getScore?: (optionId: string) => PopularityScore,
+): PopularityScore {
+  return (
+    getScore?.(option.id) ?? {
+      yes: option.votes.yes.length,
+      ifNeedBe: option.votes.ifNeedBe.length,
+    }
+  );
+}
+
+/**
+ * Sort order of two options: more available first, then more firm yeses.
+ * Negative when `a` ranks ahead of `b`, zero when they tie.
+ */
+function comparePopularity(a: PopularityScore, b: PopularityScore) {
+  const score = ({ yes, ifNeedBe }: PopularityScore) => [
+    yes + ifNeedBe,
+    yes,
+    ifNeedBe,
+  ];
+  const sa = score(a);
+  const sb = score(b);
+  for (let i = 0; i < sa.length; i++) {
+    if (sa[i] !== sb[i]) return sb[i] - sa[i];
+  }
+  return 0;
+}
+
+/**
+ * Where the chosen option stood in the finalize list. Tied options share a
+ * rank, so picking one of several joint winners reads as rank 1, tied.
+ */
+export function getChosenOptionRank({
+  options,
+  participants,
+  optionId,
+  getScore,
+}: {
+  options: { id: string }[];
+  participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
+  optionId: string;
+  /** Aggregate totals per option, as for {@link rankOptionsByPopularity}. */
+  getScore?: (optionId: string) => PopularityScore;
+}) {
+  const ranked = rankOptionsByPopularity({ options, participants, getScore });
+  const chosen = ranked.find((option) => option.id === optionId);
+  if (!chosen) {
+    return {
+      chosen_rank: null,
+      chosen_tied: false,
+      option_count: ranked.length,
+    };
+  }
+  let better = 0;
+  let tied = 0;
+  for (const option of ranked) {
+    if (option.id === optionId) continue;
+    const order = comparePopularity(
+      scoreOf(option, getScore),
+      scoreOf(chosen, getScore),
+    );
+    if (order < 0) better++;
+    if (order === 0) tied++;
+  }
+  return {
+    chosen_rank: better + 1,
+    chosen_tied: tied > 0,
+    option_count: ranked.length,
+  };
+}
+
+const HOUR_MS = 3_600_000;
+// Floating times are stored as wall clock in UTC; the viewer's zone can be
+// up to 14 hours either side.
+const FLOATING_SLACK_MS = 14 * HOUR_MS;
+
+/**
+ * How far ahead of finalize the event starts. A floating time (all day, or a
+ * poll without a zone) only counts as past once it is past in every zone.
+ */
+export function getFinalizeTiming({
+  start,
+  end,
+  allDay,
+  timeZone,
+  now,
+}: {
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  timeZone: string | null;
+  now: Date;
+}) {
+  const floating = allDay || !timeZone;
+  const pastAfter = allDay
+    ? end.getTime() + FLOATING_SLACK_MS
+    : start.getTime() + (floating ? FLOATING_SLACK_MS : 0);
+  return {
+    hours_to_start: Math.round((start.getTime() - now.getTime()) / HOUR_MS),
+    is_past: now.getTime() > pastAfter,
+    floating_time: floating,
+  };
 }
 
 const notifyBuckets = {
@@ -270,8 +367,6 @@ export function summarizeNotifySelection({
   return summary;
 }
 
-export type FinalizePlanGate = "conferencing";
-
 /**
  * The participants a booking emails. Selecting everyone is the only choice
  * an aggregate results host can make, since they never see who responded;
@@ -323,26 +418,4 @@ export function withholdAggregateScores({
       skip: 0,
     })),
   };
-}
-
-/**
- * Finalizing and notifying participants are free. What a free space cannot
- * do at finalize is mint a meeting with a Pro provider.
- */
-export function getFinalizePlanGate({
-  tier,
-  conferencing,
-}: {
-  tier: SpaceTier;
-  conferencing: { provider: PollConferencing["provider"] } | null;
-}): FinalizePlanGate | null {
-  if (tier === "pro") return null;
-  if (
-    conferencing &&
-    conferencing.provider !== "custom" &&
-    isProConferencingProvider(conferencing.provider)
-  ) {
-    return "conferencing";
-  }
-  return null;
 }

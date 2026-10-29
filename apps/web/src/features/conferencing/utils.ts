@@ -9,8 +9,8 @@ export const conferencingProviderIntegrations: Record<
   ConferencingProvider,
   { integrationId: string; oauthProvider: string }
 > = {
-  zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   meet: { integrationId: "google-meet", oauthProvider: "google" },
+  zoom: { integrationId: "zoom", oauthProvider: "zoom" },
   teams: { integrationId: "microsoft-teams", oauthProvider: "microsoft" },
   webex: { integrationId: "webex", oauthProvider: "webex" },
 };
@@ -30,25 +30,11 @@ export function integrationIdToConferencingProvider(
 
 export const conferencingProviderLabels: Record<ConferencingProvider, string> =
   {
-    zoom: "Zoom",
     meet: "Google Meet",
+    zoom: "Zoom",
     teams: "Microsoft Teams",
     webex: "Webex",
   };
-
-// Which providers a paid plan unlocks. Google Meet stays free: a Gmail
-// organizer is the referral engine and rarely converts, so gating Meet
-// protects nothing. Zoom, Teams and Webex are the tools people have through
-// an employer, which is where the upsell lands.
-const proConferencingProviders: ReadonlySet<ConferencingProvider> = new Set([
-  "zoom",
-  "teams",
-  "webex",
-]);
-
-export function isProConferencingProvider(provider: ConferencingProvider) {
-  return proConferencingProviders.has(provider);
-}
 
 export const zoomMeetingResponseSchema = z.object({
   id: z.number(),
@@ -320,21 +306,4 @@ export async function createZoomUrlValidationResponse({
     ),
   );
   return { plainToken, encryptedToken };
-}
-
-// A comma separated list of addresses, matched case insensitively.
-export function isEmailAllowlisted({
-  email,
-  allowlist,
-}: {
-  email: string | null;
-  allowlist: string;
-}) {
-  if (!email) {
-    return false;
-  }
-  const normalized = email.trim().toLowerCase();
-  return allowlist
-    .split(",")
-    .some((entry) => entry.trim().toLowerCase() === normalized);
 }

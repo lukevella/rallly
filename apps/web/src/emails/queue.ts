@@ -4,6 +4,7 @@ import { createLogger } from "@rallly/logger";
 import { Effect, Layer } from "effect";
 import { after } from "next/server";
 import { env } from "@/env";
+import { sendSubscriptionFeedbackEmail } from "@/features/billing/webhook/mutations";
 import {
   QUEUED_EMAIL_BATCH_SIZE,
   QUEUED_EMAIL_IMMEDIATE_BATCH_SIZE,
@@ -13,6 +14,7 @@ import {
   QueuedEmailHandlers,
   SendRateLimiter,
 } from "@/features/email-queue/service";
+import { sendReviewRequest } from "@/features/review-request/mutations";
 import { sendScheduledEventInviteEmail } from "@/features/scheduled-event/mutations";
 import { runtime } from "@/lib/effect/runtime";
 
@@ -28,6 +30,8 @@ const queuedEmailLayer = Layer.mergeAll(
     QueuedEmailHandlers,
     QueuedEmailHandlers.of({
       scheduled_event_invite: sendScheduledEventInviteEmail,
+      review_request: sendReviewRequest,
+      subscription_feedback: sendSubscriptionFeedbackEmail,
     }),
   ),
   SendRateLimiter.layer,

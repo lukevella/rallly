@@ -3,7 +3,8 @@
 import Cookies from "js-cookie";
 import React from "react";
 import { TIME_ZONE_COOKIE_NAME } from "@/lib/datetime/constants";
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
+import { detectBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type TimeZoneChange = {
   previousTimeZone: string;
@@ -37,10 +38,12 @@ export function TimeZoneSync({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const currentTimeZone = getBrowserTimeZone();
-      const previousTimeZone = Cookies.get(TIME_ZONE_COOKIE_NAME);
+      const currentTimeZone = detectBrowserTimeZone();
+      const previousTimeZone = normalizeTimeZone(
+        Cookies.get(TIME_ZONE_COOKIE_NAME),
+      );
 
-      if (previousTimeZone === currentTimeZone) {
+      if (!currentTimeZone || previousTimeZone === currentTimeZone) {
         return;
       }
 

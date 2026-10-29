@@ -3,11 +3,11 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import {
-  EventMetaDescription,
   EventMetaItem,
   EventMetaList,
   EventMetaTitle,
 } from "@/features/poll/components/event-meta";
+import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import { PoweredByLink } from "@/features/poll/vote/components/powered-by-link";
 import { SpaceIcon } from "@/features/space/components/space-icon";

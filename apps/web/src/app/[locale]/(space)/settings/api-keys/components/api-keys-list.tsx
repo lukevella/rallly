@@ -39,7 +39,7 @@ export function ApiKeysList({ apiKeys }: { apiKeys: ApiKey[] }) {
   }
 
   return (
-    <StackedList>
+    <StackedList variant="plain">
       {apiKeys.map((apiKey) => (
         <StackedListItem key={apiKey.id}>
           <div className="flex flex-1 items-center gap-4">

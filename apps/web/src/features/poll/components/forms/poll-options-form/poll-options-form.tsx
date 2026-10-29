@@ -24,6 +24,8 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { NewEventData } from "../types";
 import MonthCalendar from "./month-calendar/month-calendar";
+import type { DateTimeOption } from "./types";
+import { hasMixedOptionTypes, isAllDay } from "./utils";
 import WeekCalendar from "./week-calendar";
 
 const PollOptionsForm = ({
@@ -63,29 +65,17 @@ const PollOptionsForm = ({
   const watchOptions = watch("options", []);
   const watchDuration = watch("duration");
   const watchTimeZone = watch("timeZone");
+  const watchLockTimeZone = watch("lockTimeZone");
 
   const dateOrTimeRangeDialog = useDialog();
+  // A change that would mix date and time options waits here until the user
+  // picks a kind, so the form never holds a mixed list. Dismissing the dialog
+  // discards the change.
+  const [pendingMixedOptions, setPendingMixedOptions] = React.useState<
+    DateTimeOption[]
+  >([]);
 
-  React.useEffect(() => {
-    if (watchOptions.length > 1) {
-      const optionType = watchOptions[0].type;
-      // all options needs to be the same type
-      if (watchOptions.some((option) => option.type !== optionType)) {
-        dateOrTimeRangeDialog.trigger();
-      }
-    }
-  }, [watchOptions, dateOrTimeRangeDialog]);
-
-  // Keep the derived allDay flag in sync: a poll is all-day when every option
-  // is a whole-day date rather than a time slot. Consumed at submit to decide
-  // whether a time zone is attached.
-  const allDay =
-    watchOptions.length > 0 &&
-    watchOptions.every((option) => option.type === "date");
-
-  React.useEffect(() => {
-    setValue("allDay", allDay);
-  }, [allDay, setValue]);
+  const allDay = isAllDay(watchOptions);
 
   const watchNavigationDate = watch("navigationDate");
   const navigationDate = new Date(watchNavigationDate ?? Date.now());
@@ -147,7 +137,9 @@ const PollOptionsForm = ({
               onClick={() => {
                 setValue(
                   "options",
-                  watchOptions.filter((option) => option.type === "date"),
+                  pendingMixedOptions.filter(
+                    (option) => option.type === "date",
+                  ),
                 );
                 setValue("timeZone", "");
                 dateOrTimeRangeDialog.dismiss();
@@ -162,7 +154,9 @@ const PollOptionsForm = ({
               onClick={() => {
                 setValue(
                   "options",
-                  watchOptions.filter((option) => option.type === "timeSlot"),
+                  pendingMixedOptions.filter(
+                    (option) => option.type === "timeSlot",
+                  ),
                 );
                 if (!watchTimeZone) {
                   setValue("timeZone", defaultTimeZone);
@@ -185,12 +179,21 @@ const PollOptionsForm = ({
           name="options"
           rules={{
             validate: (options) => {
-              return options.length > 0
-                ? true
-                : t("calendarHelp", {
-                    defaultValue:
-                      "You can't create a poll without any options. Add at least one option to continue.",
-                  });
+              if (options.length === 0) {
+                return t("calendarHelp", {
+                  defaultValue:
+                    "You can't create a poll without any options. Add at least one option to continue.",
+                });
+              }
+              // A draft restored from storage can be mixed without passing
+              // through the calendar's onChange, which opens the dialog
+              if (hasMixedOptionTypes(options)) {
+                return t("mixedOptionsError", {
+                  defaultValue:
+                    "A poll can't have both date and time options. Remove one kind to continue.",
+                });
+              }
+              return true;
             },
           }}
           render={({ field }) => (
@@ -202,9 +205,19 @@ const PollOptionsForm = ({
                   setValue("navigationDate", date.toISOString());
                 }}
                 onChange={(options) => {
+                  if (hasMixedOptionTypes(options)) {
+                    setPendingMixedOptions(options);
+                    dateOrTimeRangeDialog.trigger();
+                    return;
+                  }
                   field.onChange(options);
                 }}
                 duration={watchDuration}
+                timeZone={
+                  watchLockTimeZone
+                    ? undefined
+                    : watchTimeZone || defaultTimeZone
+                }
                 onChangeDuration={(duration) => {
                   setValue("duration", duration);
                 }}

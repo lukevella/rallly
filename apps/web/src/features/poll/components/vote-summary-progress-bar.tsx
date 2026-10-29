@@ -73,7 +73,7 @@ export const VoteSummaryProgressBar = (props: {
         <TooltipTrigger
           render={
             <div
-              className="h-full bg-transparent opacity-75 hover:opacity-100"
+              className="h-full bg-gray-500 opacity-75 hover:opacity-100"
               style={{
                 width: `${(props.no.length / props.total) * 100}%`,
               }}

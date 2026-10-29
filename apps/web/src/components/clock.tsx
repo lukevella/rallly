@@ -79,7 +79,7 @@ const ClockPreferences = ({ children }: { children: React.ReactElement }) => {
             />
           </DialogDescription>
         </DialogHeader>
-        <div className="grid h-24 items-center justify-center rounded-md bg-muted font-bold text-2xl">
+        <div className="grid h-24 items-center justify-center rounded-md bg-muted font-semibold text-2xl">
           <Clock />
         </div>
         <TimePreferences />

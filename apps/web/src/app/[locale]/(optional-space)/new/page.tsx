@@ -14,6 +14,7 @@ import { BrandStyle } from "@/features/branding/components/brand-style";
 import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { CreatePoll } from "@/features/poll/components/create-poll";
+import { loadOptionalOpenPollUsage } from "@/features/poll/limit/loaders";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { isSpaceBrandingActive } from "@/features/space/utils";
 import { Trans } from "@/i18n/client";
@@ -31,10 +32,10 @@ export default async function Page() {
     redirect("/setup");
   }
 
-  const conferencing = await loadConferencingOptions({
-    userId,
-    email: user?.email ?? null,
-  });
+  const [conferencing, openPollUsage] = await Promise.all([
+    loadConferencingOptions({ userId }),
+    loadOptionalOpenPollUsage(),
+  ]);
 
   const primaryColor =
     space?.primaryColor &&
@@ -50,6 +51,7 @@ export default async function Page() {
       {primaryColor ? <BrandStyle primaryColor={primaryColor} /> : null}
       <CreatePoll
         conferencing={conferencing}
+        openPollUsage={openPollUsage}
         nav={
           <Breadcrumb>
             <BreadcrumbList>

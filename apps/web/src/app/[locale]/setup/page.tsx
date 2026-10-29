@@ -47,7 +47,7 @@ export default async function SetupPage(props: {
       >
         <article className="m-auto w-full max-w-sm space-y-8">
           <header>
-            <h1 className="font-bold text-2xl">
+            <h1 className="font-semibold text-2xl">
               <Trans
                 i18nKey="setupAccountTitle"
                 defaults="Set up your account"

@@ -6,9 +6,10 @@ import { cn } from "./lib/utils";
 
 function Progress({
   className,
+  indicatorClassName,
   value,
   ...props
-}: ProgressPrimitive.Root.Props) {
+}: ProgressPrimitive.Root.Props & { indicatorClassName?: string }) {
   return (
     <ProgressPrimitive.Root
       data-slot="progress"
@@ -25,7 +26,10 @@ function Progress({
       >
         <ProgressPrimitive.Indicator
           data-slot="progress-indicator"
-          className="h-full bg-linear-to-r from-primary/50 to-primary transition-all"
+          className={cn(
+            "h-full bg-linear-to-r from-primary/50 to-primary transition-all",
+            indicatorClassName,
+          )}
         />
       </ProgressPrimitive.Track>
     </ProgressPrimitive.Root>

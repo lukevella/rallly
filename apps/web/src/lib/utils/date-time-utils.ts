@@ -2,10 +2,19 @@ import type {
   DateTimeOption,
   TimeOption,
 } from "@/features/poll/components/forms/poll-options-form/types";
-import { dayjs } from "@/lib/dayjs";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 
+/**
+ * The device's zone, or undefined when the engine reports one Intl itself
+ * rejects (some devices report "Etc/Unknown").
+ */
+export function detectBrowserTimeZone() {
+  return normalizeTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+}
+
+/** The device's zone, falling back to UTC when it can't be detected. */
 export function getBrowserTimeZone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return detectBrowserTimeZone() ?? "UTC";
 }
 
 export const encodeDateOption = (option: DateTimeOption) => {
@@ -42,18 +51,6 @@ export const getOptionDateTimeLabel = (option: ParsedDateTimeOpton) => {
   return option.type === "timeSlot"
     ? `${date}, ${option.startTime} – ${option.endTime}`
     : date;
-};
-
-export const removeAllOptionsForDay = (
-  options: DateTimeOption[],
-  date: Date,
-) => {
-  return options.filter((option) => {
-    return !dayjs(date).isSame(
-      option.type === "date" ? option.date : option.start,
-      "day",
-    );
-  });
 };
 
 export const expectTimeOption = (d: DateTimeOption): TimeOption => {

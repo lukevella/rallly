@@ -20,4 +20,6 @@ export interface DateTimePickerProps {
   duration: number;
   onChangeDuration: (duration: number) => void;
   scrollToTime?: Date;
+  /** The poll's zone, when its times convert; undefined for floating polls. */
+  timeZone?: string;
 }

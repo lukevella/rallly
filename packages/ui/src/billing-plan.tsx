@@ -23,7 +23,7 @@ export const BillingPlanHeader = ({
 };
 
 export const BillingPlanTitle = ({ children }: React.PropsWithChildren) => {
-  return <h3 className="font-bold">{children}</h3>;
+  return <h3 className="font-semibold">{children}</h3>;
 };
 
 export const BillingPlanDescription = ({
@@ -37,7 +37,7 @@ export const BillingPlanPrice = ({
 }: React.PropsWithChildren<{ discount?: React.ReactNode }>) => {
   return (
     <div className="flex items-center gap-4">
-      <span className="font-bold text-3xl">{children}</span>
+      <span className="font-semibold text-3xl">{children}</span>
     </div>
   );
 };

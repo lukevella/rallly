@@ -11,6 +11,7 @@ import type React from "react";
 import { Suspense } from "react";
 import { PostHogSessionInit } from "@/app/[locale]/components/posthog-init";
 import type { Params } from "@/app/[locale]/types";
+import { RouterLoadingBar } from "@/components/router-loading-indicator";
 import { SkipNavLink } from "@/components/skip-nav-link";
 import { BrandingProvider } from "@/features/branding/client";
 import { getInstanceBrandingConfig } from "@/features/branding/data";
@@ -18,6 +19,7 @@ import { InstancePolicyProvider } from "@/features/instance-policy/client";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
+import { chunkRegistrationLogScript } from "@/lib/chunk-registration-log";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
 import { featureFlagConfig } from "@/lib/feature-flags/config";
@@ -77,12 +79,19 @@ export default async function Root({
       suppressHydrationWarning={true}
       style={brandingStyles}
     >
+      <head>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static diagnostics script with no user input
+          dangerouslySetInnerHTML={{ __html: chunkRegistrationLogScript }}
+        />
+      </head>
       <body>
         <ThemeProvider>
           <FeatureFlagsProvider value={featureFlagConfig}>
             <InstancePolicyProvider value={instancePolicy}>
               <BrandingProvider value={brandingConfig}>
                 <Toaster />
+                <RouterLoadingBar />
                 <I18nProvider locale={locale} resources={resources}>
                   <TRPCProvider>
                     <LazyMotion features={domAnimation}>

@@ -1,9 +1,13 @@
 import "server-only";
 
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import { getUpcomingEventCount } from "@/features/scheduled-event/data";
+import {
+  getEventsChronological,
+  getUpcomingEventCount,
+} from "@/features/scheduled-event/data";
+import type { Status } from "@/features/scheduled-event/schema";
 import {
   getActiveSpaceForUser,
   getOwnedSpace,
@@ -56,46 +60,87 @@ export const loadActiveSpace = cache(async () => {
     throw new InvalidSessionError();
   }
 
-  // Accounts created through the OTP registration flow start without a
-  // name; /setup collects one before they can use the app. Timezone and
-  // time format are deliberately NOT gated on: both resolve without a
-  // stored value (zone from the per-visit cookie, format from
-  // getLocaleDefaults), and gating on them dragged long-standing accounts
-  // that predate those columns back through onboarding.
-  if (!user.name) {
+  const onboarding = await resolveOnboarding(user);
+
+  if (onboarding.status === "ownedSpaceInactive") {
+    // The owner's own membership is always effective, so this means their
+    // row is gone, which a database trigger forbids. /setup would bounce
+    // them straight back; fail loudly instead of looping.
+    throw new Error("Space owner has no membership row");
+  }
+
+  if (onboarding.status === "incomplete") {
     redirect(
       buildSafeRedirectUrl({
         destination: "/setup",
         returnUrl: await getPathname(),
       }),
     );
+  }
+
+  return onboarding.space;
+});
+
+/**
+ * Sends a signed-in account that hasn't finished onboarding through /setup,
+ * then back. For routes that admit guests (poll admin, new poll), where
+ * loadActiveSpace's redirects would be wrong: guests and signed-out visitors
+ * pass through untouched. Without it, an account created from a guest
+ * session lands back on its claimed poll and never reaches /setup, so the
+ * space is never created and the guest polls are never adopted. Uses the
+ * same onboarding rule as loadActiveSpace so the two gates and /setup agree.
+ */
+export const loadOnboardingGate = cache(async () => {
+  const state = await getSessionState();
+
+  if (state.status !== "authenticated" || state.session.user.isGuest) {
+    return;
+  }
+
+  const { user } = state.session;
+
+  if (user.banned) {
+    throw new InvalidSessionError();
+  }
+
+  const onboarding = await resolveOnboarding(user);
+
+  if (onboarding.status === "incomplete") {
+    redirect(
+      buildSafeRedirectUrl({
+        destination: "/setup",
+        returnUrl: await getPathname(),
+      }),
+    );
+  }
+});
+
+/**
+ * Whether the account has finished onboarding. Accounts created through the
+ * OTP registration flow start without a name; /setup collects one before
+ * they can use the app. Timezone and time format are deliberately NOT gated
+ * on: both resolve without a stored value (zone from the per-visit cookie,
+ * format from getLocaleDefaults), and gating on them dragged long-standing
+ * accounts that predate those columns back through onboarding. Only a user
+ * with no space at all is sent to set one up.
+ */
+async function resolveOnboarding(user: { id: string; name: string }) {
+  if (!user.name) {
+    return { status: "incomplete" } as const;
   }
 
   const space = await getActiveSpaceForUser(user.id);
 
-  if (!space) {
-    // Only send them to onboarding when they genuinely have no space.
-    // A user can resolve to no *active* space while still owning one
-    // (their only other memberships are ineffective, or their own
-    // membership row is gone) — /setup would bounce them straight back,
-    // so render the not-found page instead of looping. notFound() rather
-    // than a thrown AppError: nothing adapts AppError for server
-    // components, so it would reach the error boundary as an unexpected
-    // error, showing "Something went wrong" and reporting to Sentry.
-    if (await getOwnedSpace(user.id)) {
-      notFound();
-    }
-
-    redirect(
-      buildSafeRedirectUrl({
-        destination: "/setup",
-        returnUrl: await getPathname(),
-      }),
-    );
+  if (space) {
+    return { status: "complete", space } as const;
   }
 
-  return space;
-});
+  if (await getOwnedSpace(user.id)) {
+    return { status: "ownedSpaceInactive" } as const;
+  }
+
+  return { status: "incomplete" } as const;
+}
 
 /**
  * The visibility scope space-scoped content reads must apply for the
@@ -135,20 +180,56 @@ export const loadOptionalActiveSpace = cache(async () => {
  * imports scheduled-event, so a scheduled-event → space/user loader would
  * close a feature import cycle; space → scheduled-event is a forward edge.
  */
-export const loadUpcomingEventCount = cache(async () => {
-  const [user, scope, deviceTimeZone] = await Promise.all([
+// Upcoming and past are measured against the viewer's present, so the device
+// zone wins; the stored preference is a fallback for devices whose zone
+// cookie hasn't been set yet. The session zone override never applies.
+const loadViewerTimeZone = cache(async () => {
+  const [user, deviceTimeZone] = await Promise.all([
     loadUser(),
-    loadActiveSpaceContentScope(),
     getDeviceTimeZone(),
   ]);
+  return deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
+});
 
-  // Upcoming is measured against the viewer's present, so the device zone
-  // wins; the stored preference is a fallback for devices whose zone cookie
-  // hasn't been set yet.
-  const timeZone = deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
+export const loadUpcomingEventCount = cache(async () => {
+  const [scope, timeZone] = await Promise.all([
+    loadActiveSpaceContentScope(),
+    loadViewerTimeZone(),
+  ]);
 
   return getUpcomingEventCount({ scope, timeZone });
 });
+
+export const loadEvents = cache(
+  async ({
+    status,
+    q,
+    member,
+    page,
+    pageSize,
+  }: {
+    status: Status;
+    q?: string;
+    member?: string;
+    page: number;
+    pageSize: number;
+  }) => {
+    const [scope, timeZone] = await Promise.all([
+      loadActiveSpaceContentScope(),
+      loadViewerTimeZone(),
+    ]);
+
+    return getEventsChronological({
+      status,
+      search: q,
+      member,
+      page,
+      pageSize,
+      scope,
+      timeZone,
+    });
+  },
+);
 
 /**
  * Seat usage for the signed-in user's active space. Session scoped —

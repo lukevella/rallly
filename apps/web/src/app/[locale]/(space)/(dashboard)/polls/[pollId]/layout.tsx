@@ -15,7 +15,6 @@ import {
 } from "@/components/list-view";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
-import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { loadAdminPoll, loadPoll } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
@@ -41,7 +40,7 @@ async function PollHeaderActions({
   const { pollId } = await params;
   await loadPoll(pollId);
   // The finalize dialog and CSV export read the whole poll, votes included,
-  // from the poll context the legacy admin page provides.
+  // from the poll provider.
   const { poll, participants, comments } = await loadAdminPoll(pollId);
   return (
     <PollProvider
@@ -50,10 +49,8 @@ async function PollHeaderActions({
       comments={comments}
       viewerRole="admin"
     >
-      <LegacyPollContextProvider>
-        <PollAdminMenu />
-        <PollPrimaryActions />
-      </LegacyPollContextProvider>
+      <PollAdminMenu />
+      <PollPrimaryActions />
     </PollProvider>
   );
 }

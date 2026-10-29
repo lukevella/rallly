@@ -2,3 +2,6 @@
 // (e.g. the orphaned-guest cleanup) can't drift. The cleanup window must
 // stay >= this value or its liveness guarantee breaks.
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 60; // 60 days
+
+export const LAST_LOGIN_METHOD_COOKIE_NAME =
+  "better-auth.last_used_login_method";

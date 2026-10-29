@@ -4,6 +4,7 @@ import { sendNewPollEmail } from "@rallly/emails/templates/new-poll";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { TRPCError } from "@trpc/server";
+import { Effect } from "effect";
 import { after } from "next/server";
 import * as z from "zod";
 import { getInstanceBranding } from "@/emails/branding";
@@ -27,21 +28,25 @@ import {
   getConferencingUri,
   moderatedLinkText,
 } from "@/features/conferencing/utils";
+import { chargeEmailBudget } from "@/features/email-budget/mutations";
+import { EmailBudgetStore } from "@/features/email-budget/service";
 import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
+import { canUserManagePoll, hasPollAdminAccess } from "@/features/poll/data";
 import {
-  canUserManagePoll,
-  getPolls,
-  hasPollAdminAccess,
-} from "@/features/poll/data";
+  assertOpenPollCapacity,
+  checkOpenPollCapacity,
+  OpenPollLimitError,
+} from "@/features/poll/limit/mutations";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
-  getFinalizePlanGate,
+  getChosenOptionRank,
+  getFinalizeTiming,
   resolveNotifyParticipantIds,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
-import { claimReviewRequest } from "@/features/review-request/mutations";
+import { queueReviewRequest } from "@/features/review-request/mutations";
 import { formatEventDateTime } from "@/features/scheduled-event/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import type { SpaceTier } from "@/features/space/schema";
@@ -54,11 +59,15 @@ import {
   wallTimeDiffInMinutes,
   wallTimeToInstant,
 } from "@/lib/datetime/wall-time";
+import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { createIcsEvent } from "@/lib/utils/ics";
 import {
+  createGuestIpRateLimitMiddleware,
   createRateLimitMiddleware,
+} from "../rate-limit";
+import {
   possiblyPublicProcedure,
   privateProcedure,
   publicProcedure,
@@ -71,6 +80,16 @@ import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
+
+// A guest's id is a cookie, so the hourly per-user limit resets with a
+// cleared cookie. Only about 700 guests create 4 or more polls in a month,
+// so a daily cap of 20 per address touches nobody real and leaves room for
+// offices and campuses where many guests share one address.
+const guestPollCreationIpLimit = createGuestIpRateLimitMiddleware({
+  name: "create_poll",
+  requests: 20,
+  duration: "1 d",
+});
 
 // Mirrors the auto-close-polls house-keeping task: an option ends at
 // start + duration, with all-day options (duration 0) treated as 24h.
@@ -162,43 +181,6 @@ function getPollTier({
 
 export const polls = router({
   invites,
-  infiniteChronological: spaceProcedure
-    .input(
-      z.object({
-        status: z.enum(["open", "closed", "scheduled", "canceled"]).optional(),
-        search: z.string().optional(),
-        member: z.string().optional(),
-        cursor: z.number().optional().default(1),
-        limit: z.number().default(20),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const { cursor: page, limit: pageSize, status, search, member } = input;
-
-      const result = await getPolls({
-        status,
-        q: search,
-        member,
-        page,
-        pageSize,
-        scope: ctx.contentScope,
-      });
-
-      let nextCursor: number | undefined;
-      if (result.hasNextPage) {
-        nextCursor = page + 1;
-      }
-
-      return {
-        polls: result.polls.map((poll) => ({
-          ...poll,
-          inviteLink: shortUrl(`/invite/${poll.id}`),
-        })),
-        nextCursor,
-        hasNextPage: result.hasNextPage,
-        total: result.total,
-      };
-    }),
   make: possiblyPublicProcedure
     .input(
       z.object({
@@ -229,6 +211,7 @@ export const polls = router({
     )
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
+    .use(guestPollCreationIpLimit)
     .mutation(async ({ ctx, input }) => {
       const activeSpace = ctx.user.isGuest
         ? null
@@ -319,51 +302,73 @@ export const polls = router({
 
       const kind = isTimePoll ? "time" : "date";
 
-      const poll = await prisma.$transaction(async (tx) => {
-        const poll = await tx.poll.create({
-          include: {
-            options: {
-              select: {
-                id: true,
-              },
-            },
-          },
-          data: {
-            id: pollId,
-            title,
-            timeZone,
-            location,
-            conferencing,
-            description,
+      const poll = await prisma
+        .$transaction(async (tx) => {
+          await assertOpenPollCapacity(tx, {
             userId: ctx.user.id,
-            kind,
-            options: {
-              createMany: {
-                data: optionsData,
+            spaceId: spaceId ?? null,
+          });
+
+          const poll = await tx.poll.create({
+            include: {
+              options: {
+                select: {
+                  id: true,
+                },
               },
             },
-            hideParticipants: input.hideParticipants,
-            disableComments: input.disableComments,
-            aggregateResultsOnly: input.aggregateResultsOnly,
-            allowTentativeVotes: input.allowTentativeVotes,
-            hideScores: input.hideScores,
-            requireParticipantEmail: input.requireParticipantEmail,
-            spaceId,
-          },
+            data: {
+              id: pollId,
+              title,
+              timeZone,
+              location,
+              conferencing,
+              description,
+              userId: ctx.user.id,
+              kind,
+              options: {
+                createMany: {
+                  data: optionsData,
+                },
+              },
+              hideParticipants: input.hideParticipants,
+              disableComments: input.disableComments,
+              aggregateResultsOnly: input.aggregateResultsOnly,
+              allowTentativeVotes: input.allowTentativeVotes,
+              hideScores: input.hideScores,
+              requireParticipantEmail: input.requireParticipantEmail,
+              spaceId,
+            },
+          });
+
+          await recordPollActivities(tx, [
+            {
+              pollId,
+              type: "poll_created",
+              userId: ctx.user.id,
+              payload: { title },
+            },
+          ]);
+          scheduleWebhookDispatch({ pollId: pollId });
+
+          return poll;
+        })
+        .catch((error) => {
+          if (error instanceof OpenPollLimitError) {
+            return error;
+          }
+          throw error;
         });
 
-        await recordPollActivities(tx, [
-          {
-            pollId,
-            type: "poll_created",
-            userId: ctx.user.id,
-            payload: { title },
+      if (poll instanceof OpenPollLimitError) {
+        return {
+          ok: false as const,
+          error: {
+            code: "OPEN_POLL_LIMIT_REACHED" as const,
+            usage: poll.usage,
           },
-        ]);
-        scheduleWebhookDispatch({ pollId: pollId });
-
-        return poll;
-      });
+        };
+      }
 
       const pollLink = absoluteUrl(`/poll/${pollId}`);
 
@@ -415,6 +420,9 @@ export const polls = router({
           title: poll.title,
           kind,
           source: "web",
+          // A property as well as the group: guest events are personless and
+          // PostHog drops their group associations.
+          pollId: poll.id,
           optionCount: poll.options.length,
           hasLocation: !!location,
           hasConferencing: !!conferencing,
@@ -547,6 +555,10 @@ export const polls = router({
         };
       }
 
+      // Set inside the transaction: once it commits, a concurrent edit can
+      // change the setting before any later read.
+      let savedRequireEmail: boolean | undefined;
+
       await prisma.$transaction(async (tx) => {
         const newOptions =
           input.optionsToAdd?.map((optionValue) => {
@@ -590,6 +602,10 @@ export const polls = router({
             disableComments: true,
             allowTentativeVotes: true,
             requireParticipantEmail: true,
+            status: true,
+            closedReason: true,
+            userId: true,
+            spaceId: true,
           },
         });
 
@@ -640,9 +656,21 @@ export const polls = router({
         // Reopen an auto-closed poll when new future dates are added. Manually
         // closed polls stay closed — that was the organizer's decision. The
         // transition is conditional so concurrent modifies can't both record
-        // a poll_reopened event.
+        // a poll_reopened event. An organizer at the active poll limit keeps
+        // the edit but not the reopen; reopening by hand explains the limit.
         let reopened = false;
-        if (newOptions.some(optionEndsInFuture)) {
+        if (
+          newOptions.some(optionEndsInFuture) &&
+          prior.status === "closed" &&
+          prior.closedReason === "auto" &&
+          (!prior.userId ||
+            (
+              await checkOpenPollCapacity(tx, {
+                userId: prior.userId,
+                spaceId: prior.spaceId,
+              })
+            ).ok)
+        ) {
           const { count } = await tx.poll.updateMany({
             where: { id: pollId, status: "closed", closedReason: "auto" },
             data: { status: "open", closedReason: null },
@@ -770,6 +798,12 @@ export const polls = router({
           },
         });
 
+        savedRequireEmail = changes.some(
+          (change) => change.field === "requireParticipantEmail",
+        )
+          ? input.requireParticipantEmail
+          : undefined;
+
         await recordPollActivities(tx, [
           ...(deletedOptions.length > 0
             ? [
@@ -839,6 +873,7 @@ export const polls = router({
           aggregateResultsOnly: true,
           timeZone: true,
           muted: true,
+          space: { select: { tier: true } },
           _count: {
             select: {
               participants: true,
@@ -926,6 +961,20 @@ export const polls = router({
             hide_scores: !!updatedPoll.hideScores,
             aggregate_results_only: !!updatedPoll.aggregateResultsOnly,
             require_participant_email: !!updatedPoll.requireParticipantEmail,
+          },
+          groups: {
+            poll: pollId,
+          },
+        });
+      }
+
+      if (savedRequireEmail !== undefined) {
+        track(ctx.user, {
+          event: "poll_settings:require_email_change",
+          properties: {
+            poll_id: pollId,
+            value: savedRequireEmail,
+            tier: updatedPoll.space?.tier,
           },
           groups: {
             poll: pollId,
@@ -1158,6 +1207,7 @@ export const polls = router({
               timeFormat: true,
             },
           },
+          options: { select: { id: true } },
           participants: {
             select: {
               id: true,
@@ -1165,6 +1215,7 @@ export const polls = router({
               email: true,
               locale: true,
               timeZone: true,
+              userId: true,
               user: {
                 select: {
                   email: true,
@@ -1248,22 +1299,6 @@ export const polls = router({
       const pollConferencing = parsePollConferencing(poll.conferencing, {
         pollId: poll.id,
       });
-
-      // Finalizing and notifying are free; a Zoom, Teams or Webex meeting is what
-      // the plan pays for.
-      const planGate = getFinalizePlanGate({
-        tier: getPollTier({
-          space: poll.space,
-          activeSpaceTier: ctx.space.tier,
-        }),
-        conferencing: pollConferencing,
-      });
-      if (planGate) {
-        throw new TRPCError({
-          code: "PAYMENT_REQUIRED",
-          message: "Creating a video meeting requires a paid plan",
-        });
-      }
 
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and
@@ -1376,9 +1411,26 @@ export const polls = router({
         });
       }
       const inviteData = Array.from(invitesByEmail.values());
-      const notifyInviteUids = Array.from(invitesByEmail)
+      const selectedInviteUids = Array.from(invitesByEmail)
         .filter(([key]) => notifyEmails.has(key))
         .map(([, invite]) => invite.uid);
+
+      // Spent before the event is written, so the queue only ever holds
+      // emails the budget allowed. The schedule goes ahead either way; the
+      // host is told who was not emailed.
+      const budget = await runtime.runPromise(
+        chargeEmailBudget({
+          ownerId: poll.user.id,
+          tier: getPollTier({
+            space: poll.space,
+            activeSpaceTier: ctx.space.tier,
+          }),
+          pollId: poll.id,
+          kind: "scheduled_event_invite",
+          recipients: selectedInviteUids.length,
+        }).pipe(Effect.provide(EmailBudgetStore.layer)),
+      );
+      const notifyInviteUids = selectedInviteUids.slice(0, budget.allowed);
 
       const scheduledEvent = await prisma.$transaction(async (tx) => {
         // create scheduled event
@@ -1499,6 +1551,8 @@ export const polls = router({
 
         scheduleQueuedEmailDelivery({ batchId: scheduledEvent.id });
 
+        const ownerId = poll.user.id;
+        const ownerEmail = poll.user.email.trim().toLowerCase();
         track(ctx.user, {
           event: "poll_schedule",
           properties: {
@@ -1507,24 +1561,43 @@ export const polls = router({
               (Date.now() - poll.createdAt.getTime()) / 86_400_000,
             ),
             participant_count: poll.participants.length,
+            notify_budget_skipped_count: budget.skipped,
             ...summarizeNotifySelection({
               participants: poll.participants,
               optionId: input.optionId,
               notifyParticipantIds: Array.from(notifyIds),
             }),
+            ...getChosenOptionRank({
+              options: poll.options,
+              participants: poll.participants,
+              optionId: input.optionId,
+            }),
+            ...getFinalizeTiming({
+              start: eventTimes.start,
+              end: eventTimes.end,
+              allDay: eventTimes.allDay,
+              timeZone: eventTimes.timeZone,
+              now: new Date(),
+            }),
+            host_is_participant: poll.participants.some(
+              (p) =>
+                p.userId === ownerId ||
+                p.email?.trim().toLowerCase() === ownerEmail,
+            ),
+            conferencing_type: conferencing?.provider ?? "none",
+            has_location: Boolean(poll.location),
           },
           groups: {
             poll: poll.id,
           },
         });
 
-        const reviewSite = await claimReviewRequest({
+        await queueReviewRequest({
           userId: ctx.user.id,
-          email: ctx.user.email,
           participantCount: poll.participants.length,
         });
 
-        return { reviewSite };
+        return { skippedNotifications: budget.skipped };
       }
     }),
   reopen: privateProcedure
@@ -1543,7 +1616,32 @@ export const polls = router({
         });
       }
 
-      await prisma.$transaction(async (tx) => {
+      const refusal = await prisma.$transaction(async (tx) => {
+        // Row lock before the capacity check's advisory lock, the order
+        // modify takes them in, so the two can't deadlock.
+        await tx.$queryRaw`SELECT id FROM polls WHERE id = ${input.pollId} FOR UPDATE`;
+
+        // The slot belongs to the poll's organizer, who may not be the
+        // member reopening it.
+        const target = await tx.poll.findUnique({
+          where: { id: input.pollId },
+          select: { status: true, userId: true, spaceId: true },
+        });
+
+        if (
+          target?.userId &&
+          target.status !== "open" &&
+          target.status !== "scheduled"
+        ) {
+          const capacity = await checkOpenPollCapacity(tx, {
+            userId: target.userId,
+            spaceId: target.spaceId,
+          });
+          if (!capacity.ok) {
+            return capacity.usage;
+          }
+        }
+
         // Conditional transition: only the call that actually flips the
         // status appends a lifecycle event, so repeated or concurrent calls
         // can't record a reopen that didn't happen. Scheduling is final: the
@@ -1570,7 +1668,7 @@ export const polls = router({
               message: "A scheduled poll cannot be reopened",
             });
           }
-          return;
+          return null;
         }
 
         const poll = await tx.poll.findUnique({
@@ -1597,7 +1695,15 @@ export const polls = router({
           },
         ]);
         scheduleWebhookDispatch({ pollId: input.pollId });
+        return null;
       });
+
+      if (refusal) {
+        return {
+          ok: false as const,
+          error: { code: "OPEN_POLL_LIMIT_REACHED" as const, usage: refusal },
+        };
+      }
 
       track(ctx.user, {
         event: "poll_reopen",
@@ -1605,6 +1711,8 @@ export const polls = router({
           poll: input.pollId,
         },
       });
+
+      return { ok: true as const };
     }),
   close: possiblyPublicProcedure
     .input(
@@ -1721,7 +1829,15 @@ export const polls = router({
         });
       }
 
-      const newPoll = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx) => {
+        const capacity = await checkOpenPollCapacity(tx, {
+          userId: ctx.user.id,
+          spaceId: poll.spaceId,
+        });
+        if (!capacity.ok) {
+          return capacity;
+        }
+
         const newPoll = await tx.poll.create({
           select: {
             id: true,
@@ -1757,9 +1873,19 @@ export const polls = router({
         ]);
         scheduleWebhookDispatch({ pollId: newPoll.id });
 
-        return newPoll;
+        return { ok: true as const, newPoll };
       });
 
-      return newPoll;
+      if (!result.ok) {
+        return {
+          ok: false as const,
+          error: {
+            code: "OPEN_POLL_LIMIT_REACHED" as const,
+            usage: result.usage,
+          },
+        };
+      }
+
+      return { ok: true as const, data: result.newPoll };
     }),
 });

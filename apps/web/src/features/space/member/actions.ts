@@ -19,6 +19,8 @@ import {
   inviteMemberSchema,
   removeMemberSchema,
 } from "@/features/space/member/schema";
+import { getDeviceTimeZone } from "@/lib/datetime/server";
+import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
@@ -184,9 +186,43 @@ export const removeMemberAction = authActionClient
       });
     }
 
-    const { removedUserId, memberCount } = await removeMember({
+    let content: { reassignToUserId: string } | { delete: true };
+
+    if ("reassignTo" in parsedInput.content) {
+      const recipient = await getMember(parsedInput.content.reassignTo);
+
+      if (
+        !recipient ||
+        recipient.spaceId !== space.id ||
+        recipient.id === member.id
+      ) {
+        throw new AppError({
+          code: "NOT_FOUND",
+          message: "The recipient must be a member of this space",
+        });
+      }
+
+      content = { reassignToUserId: recipient.userId };
+    } else {
+      content = { delete: true };
+    }
+
+    const result = await removeMember({
       memberId: parsedInput.memberId,
+      actor: { id: ctx.user.id, name: ctx.user.name, email: ctx.user.email },
+      content,
+      now: new Date(),
+      timeZone:
+        (await getDeviceTimeZone()) ??
+        normalizeTimeZone(ctx.user.timeZone) ??
+        "UTC",
     });
+
+    if (!result.ok) {
+      return result;
+    }
+
+    const { removedUserId, memberCount } = result;
 
     identifyGroup({
       groupType: "space",
@@ -201,11 +237,14 @@ export const removeMemberAction = authActionClient
       properties: {
         member_count: memberCount,
         deleted_member_user_id: removedUserId,
+        content_outcome: "delete" in content ? "delete" : "reassign",
       },
       groups: {
         space: member.spaceId,
       },
     });
+
+    return result;
   });
 
 export const changeMemberRoleAction = authActionClient

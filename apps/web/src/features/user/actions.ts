@@ -85,7 +85,7 @@ export const updateLocalizationAction = authActionClient
 // verify step handles via its own "email already in use" error.
 export const checkEmailAvailabilityAction = authActionClient
   .metadata({ actionName: "check_email_availability" })
-  .use(createRateLimitMiddleware(10, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 10, duration: "1 h", by: "user" }))
   .inputSchema(
     z.object({
       email: z.email(),
@@ -107,7 +107,7 @@ export const checkEmailAvailabilityAction = authActionClient
 
 export const getAvatarUploadUrlAction = authActionClient
   .metadata({ actionName: "get_avatar_upload_url" })
-  .use(createRateLimitMiddleware(10, "1 h"))
+  .use(createRateLimitMiddleware({ requests: 10, duration: "1 h", by: "user" }))
   .inputSchema(
     z.object({
       fileType: z.enum(avatarAssetProfile.accept),

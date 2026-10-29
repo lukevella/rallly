@@ -8,7 +8,6 @@ import { PollConferencingSummary } from "@/features/conferencing/components/poll
 import { useInstancePolicy } from "@/features/instance-policy/client";
 import { usePoll } from "@/features/poll/client";
 import {
-  EventMetaDescription,
   EventMetaItem,
   EventMetaList,
   EventMetaTitle,
@@ -25,7 +24,10 @@ function IconDescriptionList({
 }: React.HTMLAttributes<HTMLDListElement>) {
   return (
     <dl
-      className={cn("flex flex-wrap items-center gap-4 text-xs", className)}
+      className={cn(
+        "flex flex-wrap items-center gap-4 text-muted-foreground text-sm",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -53,7 +55,11 @@ function IconDescription({
  * location. `EventCard` frames it as a standalone card with the response
  * legend; the vote page places it in the sidebar of the merged card.
  */
-export function EventDetails() {
+export function EventDetails({
+  description,
+}: {
+  description: React.ReactNode;
+}) {
   const poll = usePoll();
   const branding = useBranding();
   const { spaceBrandingAllowed } = useInstancePolicy();
@@ -80,9 +86,9 @@ export function EventDetails() {
           </p>
         </div>
       ) : null}
-      <EventMetaTitle>{poll.title}</EventMetaTitle>
-      <EventMetaDescription className="mt-4" content={poll.description} />
-      <EventMetaList className="mt-4">
+      <EventMetaTitle className="text-lg">{poll.title}</EventMetaTitle>
+      {description}
+      <EventMetaList className="mt-3">
         {poll.user ? (
           <EventMetaItem>
             <User2Icon />
@@ -112,14 +118,14 @@ export function EventDetails() {
   );
 }
 
-export function EventCard() {
+export function EventCard({ description }: { description: React.ReactNode }) {
   const poll = usePoll();
   return (
     <Card>
       <RandomGradientBar />
-      <CardContent>
-        <EventDetails />
-        <h2 className="mt-4 mb-1.5 text-muted-foreground text-xs">
+      <CardContent className="p-4 sm:p-5">
+        <EventDetails description={description} />
+        <h2 className="mt-3 mb-1.5 font-medium text-sm">
           <Trans i18nKey="responseOptions" defaults="Response options" />
         </h2>
         <IconDescriptionList aria-label="Response options">

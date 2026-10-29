@@ -49,7 +49,7 @@ function DialogOverlay({
 
 const dialogVariants = cva(
   cn(
-    "data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border border-popover-border bg-popover p-4 shadow-lg outline-none duration-200 data-closed:animate-out data-open:animate-in",
+    "data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 relative my-auto flex w-full shrink-0 flex-col overflow-hidden rounded-2xl border border-popover-border bg-popover shadow-lg outline-none duration-200 data-closed:animate-out data-open:animate-in",
   ),
   {
     variants: {
@@ -82,25 +82,46 @@ function DialogContent({
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
-      <DialogPrimitive.Popup
-        data-slot="dialog-content"
-        className={cn(dialogVariants({ size }), className)}
-        {...props}
+      {/* A dialog taller than the screen scrolls as one card inside the
+          viewport rather than scrolling its own content. */}
+      <DialogPrimitive.Viewport
+        data-slot="dialog-viewport"
+        className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto overscroll-contain p-4"
       >
-        {children}
-        {showCloseButton && (
-          <DialogClose className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
-            <XIcon />
-            <span className="sr-only">Close</span>
-          </DialogClose>
-        )}
-      </DialogPrimitive.Popup>
+        <DialogPrimitive.Popup
+          data-slot="dialog-content"
+          className={cn(dialogVariants({ size }), className)}
+          data-close-button={showCloseButton ? "" : undefined}
+          {...props}
+        >
+          <div data-slot="dialog-scroller" className="grid gap-4 p-4">
+            {children}
+          </div>
+          {showCloseButton && (
+            <DialogClose className="absolute top-4 right-4 z-20 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
+              <XIcon />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          )}
+        </DialogPrimitive.Popup>
+      </DialogPrimitive.Viewport>
     </DialogPortal>
   );
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-header" className={cn(className)} {...props} />;
+  return (
+    <div
+      data-slot="dialog-header"
+      className={cn(
+        "dialog-edge:pb-2",
+        // Only the first row sits beside the close button.
+        "dialog-edge:in-data-close-button:*:first:pr-8",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
@@ -109,6 +130,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="dialog-footer"
       className={cn(
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        "dialog-edge:-mx-4 dialog-edge:mt-2 dialog-edge:-mb-4 dialog-edge:border-popover-border dialog-edge:border-t dialog-edge:bg-card dialog-edge:px-4 dialog-edge:py-3",
         className,
       )}
       {...props}

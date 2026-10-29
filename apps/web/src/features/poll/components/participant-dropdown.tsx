@@ -28,13 +28,13 @@ import {
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
 import { toast } from "@rallly/ui/sonner";
+import copy from "copy-to-clipboard";
 import { LinkIcon, PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useCopyToClipboard, useMount } from "react-use";
+import { useMount } from "react-use";
 import * as z from "zod";
-
 import { usePoll } from "@/features/poll/client";
 import {
   useDeleteParticipant,
@@ -147,13 +147,9 @@ const CopyEditLinkMenuItem = ({
 }) => {
   const poll = usePoll();
   const { t } = useTranslation();
-  const [state, copyToClipboard] = useCopyToClipboard();
 
-  // react-use records a failed copy as `error` and a successful one as
-  // `value`; the toast only claims success in the second case.
-  React.useEffect(() => {
-    if (state.error) {
-      console.error(`Unable to copy value: ${state.error.message}`);
+  const copyEditLink = () => {
+    if (!copy(editUrl)) {
       toast.error(
         t("participantEditLinkCopyFailed", {
           defaultValue: "Couldn't copy the edit link. Try again.",
@@ -161,21 +157,19 @@ const CopyEditLinkMenuItem = ({
       );
       return;
     }
-    if (state.value) {
-      toast(
-        t("participantEditLinkCopied", {
-          defaultValue: "Edit link for {name} copied",
-          name: participantName,
-        }),
-      );
-      posthog?.capture("poll_page:participant_edit_link_copy", {
-        poll_id: poll.id,
-      });
-    }
-  }, [state, participantName, poll.id, t]);
+    toast(
+      t("participantEditLinkCopied", {
+        defaultValue: "Edit link for {name} copied",
+        name: participantName,
+      }),
+    );
+    posthog?.capture("poll_page:participant_edit_link_copy", {
+      poll_id: poll.id,
+    });
+  };
 
   return (
-    <DropdownMenuItem onClick={() => copyToClipboard(editUrl)}>
+    <DropdownMenuItem onClick={copyEditLink}>
       <LinkIcon />
       <Trans i18nKey="copyEditLink" defaults="Copy edit link" />
     </DropdownMenuItem>

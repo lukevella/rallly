@@ -4,13 +4,11 @@ import {
   syncCalendars,
 } from "@/features/calendars/mutations";
 import {
-  isConferencingEnabled,
-  isConferencingProviderAllowedFor,
+  enabledConferencingProviders,
   MICROSOFT_TEAMS_SCOPES,
   WEBEX_SCOPES,
 } from "@/features/conferencing/constants";
 import { createConferencingConnection } from "@/features/conferencing/mutations";
-import type { ConferencingProvider } from "@/features/conferencing/schema";
 import { checkTeamsCanHostMeetings } from "@/features/conferencing/service";
 import { getMicrosoftTeamsAuthority } from "@/features/conferencing/utils";
 import { saveOAuthCredentials } from "@/features/credentials/mutations";
@@ -37,14 +35,6 @@ async function requireSessionUserId() {
     throw new Error("User not found");
   }
   return session.user.id;
-}
-
-async function isAllowedForSession(provider: ConferencingProvider) {
-  const session = await getSession();
-  return isConferencingProviderAllowedFor({
-    provider,
-    email: session?.user.email ?? null,
-  });
 }
 
 function conferencingOnConnect({
@@ -78,7 +68,7 @@ function conferencingOnConnect({
 
 const { handler } = OAuthIntegration<Integration>({
   basePath: "/api/integrations",
-  getIntegration: async ({ integrationId, callbackUrl, flow }) => {
+  getIntegration: async ({ integrationId, callbackUrl }) => {
     switch (integrationId) {
       case "google-calendar": {
         if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -127,10 +117,9 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "google-meet": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("meet") ||
           !env.GOOGLE_CLIENT_ID ||
-          !env.GOOGLE_CLIENT_SECRET ||
-          !(await isAllowedForSession("meet"))
+          !env.GOOGLE_CLIENT_SECRET
         ) {
           return null;
         }
@@ -151,10 +140,9 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "zoom": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("zoom") ||
           !env.ZOOM_CLIENT_ID ||
-          !env.ZOOM_CLIENT_SECRET ||
-          !(await isAllowedForSession("zoom"))
+          !env.ZOOM_CLIENT_SECRET
         ) {
           return null;
         }
@@ -171,10 +159,9 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "webex": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("webex") ||
           !env.WEBEX_CLIENT_ID ||
-          !env.WEBEX_CLIENT_SECRET ||
-          !(await isAllowedForSession("webex"))
+          !env.WEBEX_CLIENT_SECRET
         ) {
           return null;
         }
@@ -191,13 +178,9 @@ const { handler } = OAuthIntegration<Integration>({
       }
       case "microsoft-teams": {
         if (
-          !isConferencingEnabled ||
+          !enabledConferencingProviders.includes("teams") ||
           !env.MICROSOFT_CLIENT_ID ||
-          !env.MICROSOFT_CLIENT_SECRET ||
-          // The rollout allowlist limits who connects. Approving the app for
-          // an organization connects no one, and the administrator doing it
-          // is rarely on the list or signed in to Rallly.
-          (flow === "connect" && !(await isAllowedForSession("teams")))
+          !env.MICROSOFT_CLIENT_SECRET
         ) {
           return null;
         }

@@ -1,16 +1,17 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import type { PollOptionsData } from "@/features/poll/components/forms/types";
 import { Trans } from "@/i18n/client";
 
 /** How many dates or times the poll form currently has selected. */
 export const SelectedOptionsCount = () => {
   const form = useFormContext<PollOptionsData>();
-  const optionCount = form.watch("options").length;
-  const allDay = form.watch("allDay");
+  const options = form.watch("options");
+  const optionCount = options.length;
 
-  if (allDay) {
+  if (isAllDay(options)) {
     return (
       <Trans
         i18nKey="createPollFooterDatesSelected"

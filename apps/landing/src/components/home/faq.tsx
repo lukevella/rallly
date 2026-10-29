@@ -1,6 +1,7 @@
 import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Trans } from "react-i18next/TransWithoutContext";
+import { JsonLd } from "@/components/json-ld";
 import {
   SectionContent,
   SectionDescription,
@@ -55,6 +56,62 @@ export function Faq({
   );
 }
 
+type TransProps = {
+  t: (key: string, options: Record<string, unknown>) => string;
+  ns?: string;
+  i18nKey: string;
+  defaults?: string;
+  values?: Record<string, unknown>;
+};
+
+/**
+ * Reads the text a FAQ question or answer renders, so structured data always
+ * matches the visible copy in the page's language.
+ */
+function toPlainText(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(toPlainText).join("");
+  }
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+  if (node.type === Trans) {
+    const { t, ns, i18nKey, defaults, values } = node.props as TransProps;
+    return t(i18nKey, { ns, defaultValue: defaults, ...values }).replace(
+      /<\/?[\w-]+\s*\/?>/g,
+      "",
+    );
+  }
+  return toPlainText((node.props as { children?: React.ReactNode }).children);
+}
+
+function faqPageSchema(children: React.ReactNode) {
+  const mainEntity = React.Children.toArray(children).flatMap((child) => {
+    if (!React.isValidElement<React.ComponentProps<typeof FaqItem>>(child)) {
+      return [];
+    }
+    const name = toPlainText(child.props.question).replace(/\s+/g, " ").trim();
+    const text = toPlainText(child.props.children).replace(/\s+/g, " ").trim();
+    return name && text
+      ? [
+          {
+            "@type": "Question",
+            name,
+            acceptedAnswer: { "@type": "Answer", text },
+          },
+        ]
+      : [];
+  });
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity,
+  };
+}
+
 export async function FaqSection({
   locale,
   title,
@@ -67,6 +124,7 @@ export async function FaqSection({
   const { t, i18n } = await getTranslation<"home">(locale, "home");
   return (
     <SectionSplit>
+      <JsonLd data={faqPageSchema(children)} />
       <SectionHeading>
         <SectionTitle>{title}</SectionTitle>
         <SectionDescription>

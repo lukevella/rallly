@@ -7,8 +7,10 @@ import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@rallly/ui/dialog";
@@ -262,7 +264,10 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
           />
           <FormMessage />
         </div>
-        <div className="mt-4 flex">
+        <DialogFooter>
+          <DialogClose render={<Button />}>
+            <Trans i18nKey="cancel" defaults="Cancel" />
+          </DialogClose>
           <Button
             variant="primary"
             loading={inviteMember.isPending}
@@ -270,7 +275,7 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
           >
             <Trans i18nKey="inviteMemberFormSubmit" defaults="Send invite" />
           </Button>
-        </div>
+        </DialogFooter>
       </form>
     </Form>
   );

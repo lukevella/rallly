@@ -230,6 +230,10 @@ export async function deleteOrphanedAnonymousUsers() {
     const batch = await prisma.user.findMany({
       where: orphanedAnonymousFilter,
       select: { id: true },
+      // Without an order Prisma sorts by id, and the planner walks the whole
+      // users primary key expecting orphans to be common. Ordering on
+      // last_seen_at scans only the idle anonymous range of its index.
+      orderBy: { lastSeenAt: "asc" },
       take: Math.min(
         DELETE_ORPHANED_ANONYMOUS_USERS_BATCH_SIZE,
         DELETE_ORPHANED_ANONYMOUS_USERS_MAX_PER_RUN - deleted,

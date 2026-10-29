@@ -2,9 +2,9 @@
 
 import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
+import copy from "copy-to-clipboard";
 import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
 import React from "react";
-import { useCopyToClipboard } from "react-use";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
@@ -20,20 +20,16 @@ export function InviteLinkRow({
 }) {
   const { t } = useTranslation();
   const [didCopy, setDidCopy] = React.useState(false);
-  const [state, copyToClipboard] = useCopyToClipboard();
 
-  // react-use records a failed copy as `error` and a successful one as
-  // `value`; the button only claims success in the second case.
-  React.useEffect(() => {
-    if (state.error) {
-      console.error(`Unable to copy value: ${state.error.message}`);
+  // The button only claims success when the copy actually went through
+  const copyInviteLink = () => {
+    if (!copy(inviteLink)) {
+      console.error("Unable to copy invite link");
       return;
     }
-    if (state.value) {
-      setDidCopy(true);
-      posthog?.capture("poll_share:invite_link_copy", { poll_id: pollId });
-    }
-  }, [state, pollId]);
+    setDidCopy(true);
+    posthog?.capture("poll_share:invite_link_copy", { poll_id: pollId });
+  };
 
   React.useEffect(() => {
     if (!didCopy) return;
@@ -58,7 +54,7 @@ export function InviteLinkRow({
       <Button
         variant="ghost"
         className="shrink-0 text-primary"
-        onClick={() => copyToClipboard(inviteLink)}
+        onClick={copyInviteLink}
       >
         {didCopy ? (
           <CheckIcon data-icon="inline-start" />

@@ -60,7 +60,7 @@
                     "properties": {
                       "provider": {
                         "type": "string",
-                        "const": "zoom"
+                        "const": "meet"
                       }
                     },
                     "required": [
@@ -72,7 +72,7 @@
                     "properties": {
                       "provider": {
                         "type": "string",
-                        "const": "meet"
+                        "const": "zoom"
                       }
                     },
                     "required": [
@@ -131,7 +131,7 @@
                 "type": "null"
               }
             ],
-            "description": "The video call for the event, or `null`. A `zoom`, `meet`, `teams` or `webex` entry has no link until the poll is finalized; a `custom` entry carries the organizer's label and, when given, the link.",
+            "description": "The video call for the event, or `null`. A `meet`, `zoom`, `teams` or `webex` entry has no link until the poll is finalized; a `custom` entry carries the organizer's label and, when given, the link.",
             "example": {
               "provider": "zoom"
             }
@@ -427,7 +427,7 @@
             "maxLength": 255
           },
           "conferencing": {
-            "description": "The video call for the event. `zoom`, `meet`, `teams` and `webex` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
+            "description": "The video call for the event. `meet`, `zoom`, `teams` and `webex` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
             "examples": [
               {
                 "provider": "zoom"
@@ -444,7 +444,7 @@
                 "properties": {
                   "provider": {
                     "type": "string",
-                    "const": "zoom"
+                    "const": "meet"
                   }
                 },
                 "required": [
@@ -456,7 +456,7 @@
                 "properties": {
                   "provider": {
                     "type": "string",
-                    "const": "meet"
+                    "const": "zoom"
                   }
                 },
                 "required": [
@@ -617,7 +617,7 @@
             "maxLength": 255
           },
           "conferencing": {
-            "description": "The video call for the event. `zoom`, `meet`, `teams` and `webex` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
+            "description": "The video call for the event. `meet`, `zoom`, `teams` and `webex` need the organizer to have connected that account in their Conferencing settings; the meeting link is created when the poll is finalized. `custom` names any call, with an optional link participants join with.",
             "examples": [
               {
                 "provider": "zoom"
@@ -634,7 +634,7 @@
                 "properties": {
                   "provider": {
                     "type": "string",
-                    "const": "zoom"
+                    "const": "meet"
                   }
                 },
                 "required": [
@@ -646,7 +646,7 @@
                 "properties": {
                   "provider": {
                     "type": "string",
-                    "const": "meet"
+                    "const": "zoom"
                   }
                 },
                 "required": [

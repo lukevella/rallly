@@ -1,12 +1,16 @@
 import "server-only";
 
-import type { Prisma } from "@rallly/database";
-import { prisma } from "@rallly/database";
+import { Prisma, prisma } from "@rallly/database";
 import { nanoid } from "@rallly/utils/nanoid";
 import { revalidatePath } from "next/cache";
 import { recordPollActivities } from "@/features/activity/mutations";
 import { parsePollConferencing } from "@/features/conferencing/data";
 import type { PollConferencing } from "@/features/conferencing/schema";
+import {
+  assertOpenPollCapacity,
+  countAdoptableOpenPolls,
+  reportAdoptionOverLimit,
+} from "@/features/poll/limit/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
@@ -111,6 +115,8 @@ export const createPoll = async ({
   const kind = options.some((o) => o.duration > 0) ? "time" : "date";
 
   const poll = await prisma.$transaction(async (tx) => {
+    await assertOpenPollCapacity(tx, { userId, spaceId });
+
     const poll = await tx.poll.create({
       data: {
         id: nanoid(),
@@ -273,6 +279,11 @@ export async function adoptOrphanedPolls({
   userId: string;
   spaceId: string;
 }) {
+  const adoptedOpenCount = await countAdoptableOpenPolls({
+    userId,
+    spaceId: null,
+  });
+
   await prisma.poll.updateMany({
     where: {
       userId,
@@ -281,6 +292,13 @@ export async function adoptOrphanedPolls({
     data: {
       spaceId,
     },
+  });
+
+  await reportAdoptionOverLimit({
+    userId,
+    spaceId,
+    adoptedOpenCount,
+    source: "setup",
   });
 }
 
@@ -337,6 +355,10 @@ export async function deleteInactivePolls() {
   return markedDeleted;
 }
 
+const AUTO_CLOSE_POLLS_BATCH_SIZE = 500;
+// Well inside the house-keeping route's maxDuration.
+const AUTO_CLOSE_POLLS_BUDGET_MS = 120_000;
+
 /**
  * Closes polls whose options have all ended — i.e. no option ends in the
  * future, where an option ends at start_time + duration (all-day options, with
@@ -348,42 +370,88 @@ export async function deleteInactivePolls() {
  * `updated_at`, so closing a poll doesn't reset the inactivity clock that
  * delete-inactive-polls keys off. RETURNING feeds the activity writes, which
  * commit in the same transaction as the closes.
+ *
+ * Finding due polls probes the options of every open poll. That usually
+ * takes seconds, but on a cold compute, or the first run after a mass close
+ * leaves hint bits to set, it has taken close to a minute, so the scan runs
+ * once, outside any transaction. The closes then go in batches by primary key, each its own
+ * short transaction that re-checks the condition, so a poll reopened or given
+ * a new option since the scan stays open. Short transactions also keep each
+ * batch inside the webhook fan-out's overlap window. Stops starting batches
+ * after `budgetMs`; any remainder is picked up by the next run.
  */
-export async function autoClosePolls() {
-  return prisma.$transaction(
-    async (tx) => {
-      const closed = await tx.$queryRaw<{ id: string }[]>`
-      UPDATE polls p
-      SET status = 'closed', closed_reason = 'auto'
-      WHERE p.status = 'open'
-        AND p.deleted = false
-        AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
-        AND NOT EXISTS (
-          SELECT 1 FROM options o
-          WHERE o.poll_id = p.id
-            AND o.start_time + (CASE WHEN o.duration_minutes = 0
-                  THEN interval '24 hours'
-                  ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
-        )
-      RETURNING p.id
-    `;
+export async function autoClosePolls({
+  batchSize = AUTO_CLOSE_POLLS_BATCH_SIZE,
+  budgetMs = AUTO_CLOSE_POLLS_BUDGET_MS,
+}: {
+  batchSize?: number;
+  budgetMs?: number;
+} = {}) {
+  const startedAt = Date.now();
+  let totalClosed = 0;
 
-      await recordPollActivities(
-        tx,
-        closed.map(({ id }) => ({
-          pollId: id,
-          type: "poll_closed" as const,
-          userId: null,
-          payload: { reason: "auto" as const },
-        })),
-      );
+  const isDue = Prisma.sql`
+    p.status = 'open'
+    AND p.deleted = false
+    AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
+    AND NOT EXISTS (
+      SELECT 1 FROM options o
+      WHERE o.poll_id = p.id
+        AND o.start_time + (CASE WHEN o.duration_minutes = 0
+              THEN interval '24 hours'
+              ELSE make_interval(mins => o.duration_minutes) END) > (now() AT TIME ZONE 'UTC')
+    )
+  `;
 
-      return closed.length;
-    },
-    // The UPDATE scans every open poll's options, which can outlast Prisma's
-    // 5s default on large instances or after cron downtime.
-    { timeout: 30_000 },
-  );
+  const due = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT p.id FROM polls p WHERE ${isDue}
+  `;
+
+  for (let i = 0; i < due.length; i += batchSize) {
+    if (Date.now() - startedAt >= budgetMs) {
+      break;
+    }
+
+    const ids = due.slice(i, i + batchSize).map(({ id }) => id);
+
+    const closed = await prisma.$transaction(
+      async (tx) => {
+        // FOR UPDATE conflicts with the KEY SHARE lock an option insert takes
+        // on its poll, so this waits out in-flight inserts and the UPDATE's
+        // fresh snapshot sees them. Ordered so overlapping runs can't deadlock.
+        await tx.$queryRaw`
+          SELECT p.id FROM polls p
+          WHERE p.id = ANY(${ids})
+          ORDER BY p.id
+          FOR UPDATE
+        `;
+
+        const rows = await tx.$queryRaw<{ id: string }[]>`
+        UPDATE polls p
+        SET status = 'closed', closed_reason = 'auto'
+        WHERE p.id = ANY(${ids}) AND ${isDue}
+        RETURNING p.id
+      `;
+
+        await recordPollActivities(
+          tx,
+          rows.map(({ id }) => ({
+            pollId: id,
+            type: "poll_closed" as const,
+            userId: null,
+            payload: { reason: "auto" as const },
+          })),
+        );
+
+        return rows.length;
+      },
+      { timeout: 30_000 },
+    );
+
+    totalClosed += closed;
+  }
+
+  return totalClosed;
 }
 
 const REMOVE_DELETED_POLLS_BATCH_SIZE = 100;

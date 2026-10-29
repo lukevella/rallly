@@ -2,6 +2,7 @@
 
 import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { Checkbox } from "@rallly/ui/checkbox";
 import type { DialogProps } from "@rallly/ui/dialog";
@@ -17,7 +18,13 @@ import {
 import { Label } from "@rallly/ui/label";
 import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
-import { CalendarIcon, MapPinIcon, StarIcon, VideoIcon } from "lucide-react";
+import {
+  AlertTriangleIcon,
+  CalendarIcon,
+  MapPinIcon,
+  StarIcon,
+  VideoIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import {
@@ -42,8 +49,6 @@ import { VOTE_TYPES } from "@/features/poll/constants";
 import type { PollParticipant } from "@/features/poll/types";
 import type { OptionVotes } from "@/features/poll/utils";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
-import { ReviewRequestCard } from "@/features/review-request/components/review-request-card";
-import type { ReviewSite } from "@/features/review-request/constants";
 import {
   EventDate,
   EventTimeRange,
@@ -141,7 +146,7 @@ const TOP_OPTIONS = 5;
 
 const medalClassName: Record<number, string> = {
   1: "bg-amber-400",
-  2: "bg-zinc-400",
+  2: "bg-gray-400",
   3: "bg-amber-700",
 };
 
@@ -621,9 +626,18 @@ function SummaryStep({ option }: { option: RankedOption }) {
   );
 }
 
-// Mounted fresh with each open, so the wizard starts at step one with
-// nothing carried over from a previous run.
-function FinalizeWizard({ onClose }: { onClose: () => void }) {
+// Mounted fresh with each open, so the wizard starts with nothing carried
+// over from a previous run. The step lives in the dialog, which reads it
+// when the host closes it.
+function FinalizeWizard({
+  step,
+  onStepChange,
+  onClose,
+}: {
+  step: Step;
+  onStepChange: (step: Step) => void;
+  onClose: () => void;
+}) {
   const poll = usePoll();
   const { participants } = useParticipants();
   const { getScore } = usePollScores();
@@ -645,7 +659,6 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
       }),
     [poll.options, participants, getScore],
   );
-  const [step, setStep] = React.useState<Step>("date");
   const [optionId, setOptionId] = React.useState<string | null>(null);
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
@@ -659,12 +672,16 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
     ? (poll.aggregateParticipantCount ?? 0) > 0
     : participants.length > 0;
   const option = options.find((o) => o.id === optionId);
-  const [reviewSite, setReviewSite] = React.useState<ReviewSite | null>(null);
+  const [skippedNotifications, setSkippedNotifications] = React.useState(0);
+  const goTo = (next: Step) => {
+    posthog?.capture("poll_finalize:step_view", { step: next });
+    onStepChange(next);
+  };
 
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
-      setReviewSite(data?.reviewSite ?? null);
-      setStep("done");
+      setSkippedNotifications(data?.skippedNotifications ?? 0);
+      goTo("done");
       // The page behind the dialog picks up the scheduled status.
       router.refresh();
     },
@@ -684,7 +701,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 
   if (step === "date" || !option) {
     return (
-      <div className={wideStepClassName}>
+      <div data-slot="dialog-step" className={wideStepClassName}>
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="finalizePoll" defaults="Finalize poll" />
@@ -701,7 +718,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
           onPick={(id) => {
             setOptionId(id);
             // With nobody to notify, the notify step has nothing to ask.
-            setStep(hasRespondents ? "notify" : "summary");
+            goTo(hasRespondents ? "notify" : "summary");
           }}
         />
       </div>
@@ -710,7 +727,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 
   if (step === "done") {
     return (
-      <div className={narrowStepClassName}>
+      <div data-slot="dialog-step" className={narrowStepClassName}>
         <div className="flex flex-col items-center gap-4 py-4 text-center">
           <SuccessCheck state="in">
             <SuccessCheckIcon />
@@ -724,7 +741,18 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
             </DialogDescription>
           </DialogHeader>
         </div>
-        {reviewSite ? <ReviewRequestCard site={reviewSite} /> : null}
+        {skippedNotifications > 0 ? (
+          <Alert variant="warning">
+            <AlertTriangleIcon />
+            <AlertDescription>
+              <Trans
+                i18nKey="finalizeNotifyBudgetSkipped"
+                defaults="{count, plural, one {# participant wasn't emailed} other {# participants weren't emailed}} because this account reached its daily email limit. Share the poll link with them instead."
+                values={{ count: skippedNotifications }}
+              />
+            </AlertDescription>
+          </Alert>
+        ) : null}
         <Button className="w-full" onClick={onClose}>
           <Trans i18nKey="backToPoll" defaults="Back to poll" />
         </Button>
@@ -734,7 +762,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 
   if (step === "summary") {
     return (
-      <div className={narrowStepClassName}>
+      <div data-slot="dialog-step" className={narrowStepClassName}>
         <DialogHeader>
           <DialogTitle>
             <Trans i18nKey="finalizeSummaryTitle" defaults="Summary" />
@@ -753,7 +781,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
           onOpenChange={payWall.dialogProps.onOpenChange}
         />
         <DialogFooter>
-          <Button onClick={() => setStep(hasRespondents ? "notify" : "date")}>
+          <Button onClick={() => goTo(hasRespondents ? "notify" : "date")}>
             <Trans i18nKey="back" defaults="Back" />
           </Button>
           <Button
@@ -792,7 +820,7 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className={wideStepClassName}>
+    <div data-slot="dialog-step" className={wideStepClassName}>
       <DialogHeader>
         <DialogTitle>
           <Trans i18nKey="notifyParticipants" defaults="Notify participants" />
@@ -814,10 +842,10 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
         />
       )}
       <DialogFooter>
-        <Button onClick={() => setStep("date")}>
+        <Button onClick={() => goTo("date")}>
           <Trans i18nKey="back" defaults="Back" />
         </Button>
-        <Button variant="primary" onClick={() => setStep("summary")}>
+        <Button variant="primary" onClick={() => goTo("summary")}>
           <Trans i18nKey="next" defaults="Next" />
         </Button>
       </DialogFooter>
@@ -826,10 +854,29 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
 }
 
 export function FinalizePollDialog(props: DialogProps) {
+  const [step, setStep] = React.useState<Step>("date");
+  const onOpenChange = (open: boolean) => {
+    if (!open && step !== "done") {
+      posthog?.capture("poll_finalize:dialog_dismiss", { step });
+    }
+    props.onOpenChange?.(open);
+  };
   return (
-    <Dialog {...props}>
+    <Dialog
+      {...props}
+      onOpenChange={onOpenChange}
+      // Reset once the close animation ends, so the closing dialog keeps
+      // showing the step it was on.
+      onOpenChangeComplete={(open) => {
+        if (!open) setStep("date");
+      }}
+    >
       <DialogContent className="w-auto sm:max-w-none">
-        <FinalizeWizard onClose={() => props.onOpenChange?.(false)} />
+        <FinalizeWizard
+          step={step}
+          onStepChange={setStep}
+          onClose={() => onOpenChange(false)}
+        />
       </DialogContent>
     </Dialog>
   );

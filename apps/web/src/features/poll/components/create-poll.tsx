@@ -22,16 +22,29 @@ import type { ConferencingOptions } from "@/features/conferencing/components/con
 import { toPollConferencing } from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
+import {
+  hasMixedOptionTypes,
+  isAllDay,
+} from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
+import {
+  hideOpenPollLimit,
+  showOpenPollLimit,
+} from "@/features/poll/limit/client";
+import type { OpenPollUsage } from "@/features/poll/limit/types";
+import { isAtOpenPollLimit } from "@/features/poll/limit/utils";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
 import { setFlash } from "@/lib/flash/client";
+import { createSessionStorage } from "@/lib/session-storage";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
+
+const draftStorage = createSessionStorage();
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
@@ -108,9 +121,11 @@ const CreatePollActions = ({
 export const CreatePoll = ({
   nav,
   conferencing,
+  openPollUsage,
 }: {
   nav?: React.ReactNode;
   conferencing?: ConferencingOptions | null;
+  openPollUsage?: OpenPollUsage | null;
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -150,16 +165,59 @@ export const CreatePoll = ({
       allowTentativeVotes: true,
       duration: 60,
       lockTimeZone: false,
-      allDay: false,
     },
   });
 
+  // Drafts saved before mixed changes were held back can mix date and time
+  // options, which the calendar can't render. Keep the time slots, matching
+  // how the calendar classified the list. Must be stable: the persist hook
+  // restores the draft again whenever this callback changes.
+  const { setValue } = form;
+  const handleDataRestored = React.useCallback(
+    (data: Partial<NewEventData>) => {
+      if (data.options && hasMixedOptionTypes(data.options)) {
+        setValue(
+          "options",
+          data.options.filter((option) => option.type === "timeSlot"),
+        );
+      }
+    },
+    [setValue],
+  );
+
   const { clear } = useFormPersist("new-poll", {
+    storage: draftStorage,
     watch: form.watch,
     setValue: form.setValue,
+    onDataRestored: handleDataRestored,
   });
 
   const makePoll = trpc.polls.make.useMutation();
+
+  // Explain the limit before the organizer fills in a form they can't submit.
+  // The form persists, so it survives closing a poll to make room. The count
+  // is the server's at page load, so the poll created here can't trip it.
+  React.useEffect(() => {
+    if (!openPollUsage) {
+      return;
+    }
+    if (isAtOpenPollLimit(openPollUsage)) {
+      showOpenPollLimit("create", openPollUsage);
+    } else {
+      hideOpenPollLimit("create");
+    }
+  }, [openPollUsage]);
+
+  // The client router reuses a page it rendered in the last minute
+  // (staleTimes.dynamic), so a /new loaded before the organizer opened or
+  // closed polls would show the old count. Render it fresh once on arrival.
+  const hasRefreshedUsage = React.useRef(false);
+  React.useEffect(() => {
+    if (openPollUsage && !hasRefreshedUsage.current) {
+      hasRefreshedUsage.current = true;
+      router.refresh();
+    }
+  }, [openPollUsage, router]);
 
   return (
     <Form {...form}>
@@ -198,7 +256,20 @@ export const CreatePoll = ({
           id="create-poll"
           onSubmit={form.handleSubmit(async (formData) => {
             const title = required(formData?.title.trim());
-            await createGuestIfNeeded();
+            const session = await createGuestIfNeeded();
+            if (!session.ok) {
+              toast.error(
+                session.reason === "tooManyRequests"
+                  ? t("actionErrorTooManyRequests", {
+                      defaultValue: "You are making too many requests",
+                    })
+                  : t("guestSessionUnavailableError", {
+                      defaultValue:
+                        "We couldn't start a session for you. Check that cookies are enabled and try again.",
+                    }),
+              );
+              return;
+            }
             const res = await makePoll.mutateAsync({
               title: title,
               location: formData?.location?.trim(),
@@ -209,7 +280,7 @@ export const CreatePoll = ({
               // Fall back to the organizer's zone so a converting poll is always
               // anchored to a concrete zone.
               timeZone:
-                !formData?.lockTimeZone && !formData?.allDay
+                !formData?.lockTimeZone && !isAllDay(formData?.options ?? [])
                   ? formData?.timeZone || user?.timeZone || getBrowserTimeZone()
                   : null,
               hideParticipants: formData?.hideParticipants,
@@ -232,6 +303,8 @@ export const CreatePoll = ({
               setCreatedPollId(res.data.id);
               setFlash(SHARE_POLL_FLASH_KEY, res.data.id);
               router.push(`/poll/${res.data.id}`);
+            } else if (res.error.code === "OPEN_POLL_LIMIT_REACHED") {
+              showOpenPollLimit("create", res.error.usage);
             } else {
               toast.error(
                 t("inappropriateContent", {

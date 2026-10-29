@@ -154,7 +154,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="sportsClubsFaqBrandingAnswer"
-              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send out looks like it came from the club. Everything else is free to use."
+              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send out looks like it came from the club."
               components={[
                 <LinkBase
                   key="pricing"
@@ -240,7 +240,7 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/scheduling-for/sports-clubs" }),
     title: t("sportsClubsMetaTitle", {
       ns: "home",
-      defaultValue: "Scheduling for Sports Clubs and Teams",
+      defaultValue: "Team Availability Poll for Sports Clubs",
     }),
     description: t("sportsClubsMetaDescription", {
       ns: "home",

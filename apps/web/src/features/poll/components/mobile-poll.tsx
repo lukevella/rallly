@@ -13,7 +13,6 @@ import { MoreHorizontalIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import * as React from "react";
-import smoothscroll from "smoothscroll-polyfill";
 
 import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -32,10 +31,6 @@ import { YouAvatar } from "@/features/poll/components/you-avatar";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import GroupedOptions from "./mobile-poll/grouped-options";
-
-if (typeof window !== "undefined") {
-  smoothscroll.polyfill();
-}
 
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();

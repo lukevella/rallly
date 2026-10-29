@@ -14,8 +14,8 @@
     "./locales/*": "./locales/en/*.json"
   },
   "dependencies": {
-    "@aws-sdk/client-sesv2": "^3.501.0",
-    "@aws-sdk/credential-provider-node": "^3.501.0",
+    "@aws-sdk/client-sesv2": "^3.1155.0",
+    "@aws-sdk/credential-provider-node": "^3.972.88",
     "@rallly/logger": "workspace:*",
     "@rallly/utils": "workspace:*",
     "@react-email/components": "^1.0.12",
@@ -23,7 +23,7 @@
     "i18next": "^26.3.0",
     "i18next-icu": "^2.4.3",
     "i18next-resources-to-backend": "^1.2.1",
-    "nodemailer": "^10.0.1",
+    "nodemailer": "^10.2.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-i18next": "^17.0.8"

@@ -1,7 +1,6 @@
 "use cache";
 
-import type { PriceAmounts } from "@rallly/billing";
-import { PLAN_NAMES, yearlySavingsPercent } from "@rallly/billing";
+import { PLAN_NAMES } from "@rallly/billing";
 import { buttonVariants } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import {
@@ -10,6 +9,7 @@ import {
   ClockIcon,
   CopyIcon,
   EyeOffIcon,
+  ListChecksIcon,
   MailPlusIcon,
   PaletteIcon,
   Settings2Icon,
@@ -20,9 +20,6 @@ import {
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-import GoogleMeetIcon from "@/assets/google-meet.svg";
-import MicrosoftTeamsIcon from "@/assets/microsoft-teams.svg";
-import WebexIcon from "@/assets/webex.svg";
 import {
   CompareTable,
   CompareTableCell,
@@ -33,8 +30,6 @@ import {
   CompareTableFeatureName,
   CompareTableHead,
   CompareTableHeader,
-  CompareTableLogo,
-  CompareTableLogos,
   CompareTableSection,
 } from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
@@ -57,6 +52,10 @@ import {
 } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
 import {
+  FREE_OPEN_POLL_LIMIT,
+  isOpenPollLimitEnabled,
+} from "@/lib/open-poll-limit";
+import {
   PlanBenefit,
   PlanBenefitName,
   PlanBenefits,
@@ -77,7 +76,6 @@ import {
   PricingControls,
   PricingControlsDivider,
   PricingProvider,
-  YearlySavingsBadge,
 } from "./pricing-controls";
 
 const faqLinkClassName =
@@ -97,21 +95,6 @@ export default async function Page(props: {
     getMonthlyVoterCount(),
     getPricing(),
   ]);
-  const savingsLabels = Object.fromEntries(
-    Object.entries(prices).map(
-      ([currency, amounts]: [string, PriceAmounts]) => [
-        currency,
-        <Trans
-          key={currency}
-          t={t}
-          ns="pricing"
-          i18nKey="yearlySavePercent"
-          defaults="Save {percent}%"
-          values={{ percent: yearlySavingsPercent(amounts) }}
-        />,
-      ],
-    ),
-  );
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -178,7 +161,13 @@ export default async function Page(props: {
                     variant="pill"
                     className="bg-lime-300 font-semibold text-lime-900"
                   >
-                    <YearlySavingsBadge labels={savingsLabels} />
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="yearlySaveUpTo"
+                      defaults="Save up to {percent}%"
+                      values={{ percent: 40 }}
+                    />
                   </Badge>
                 }
               />
@@ -214,6 +203,7 @@ export default async function Page(props: {
                     cta: "pricing_free",
                   })}
                   className={buttonVariants({
+                    shape: "rounded",
                     className: "w-full",
                   })}
                 >
@@ -236,6 +226,19 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                {isOpenPollLimitEnabled ? (
+                  <PlanBenefit icon={<ListChecksIcon />}>
+                    <PlanBenefitName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="freeOpenPollLimit"
+                        defaults="Up to {count} open polls"
+                        values={{ count: FREE_OPEN_POLL_LIMIT }}
+                      />
+                    </PlanBenefitName>
+                  </PlanBenefit>
+                ) : null}
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -303,6 +306,7 @@ export default async function Page(props: {
                   })}
                   className={buttonVariants({
                     variant: "primary",
+                    shape: "rounded",
                     className: "w-full",
                   })}
                 >
@@ -315,6 +319,18 @@ export default async function Page(props: {
                 </Link>
               </div>
               <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+                {isOpenPollLimitEnabled ? (
+                  <PlanBenefit icon={<ListChecksIcon />}>
+                    <PlanBenefitName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="unlimitedOpenPolls"
+                        defaults="Unlimited open polls"
+                      />
+                    </PlanBenefitName>
+                  </PlanBenefit>
+                ) : null}
                 <PlanBenefit icon={<ClockIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -461,42 +477,74 @@ export default async function Page(props: {
                   defaults="Scheduling poll"
                 />
               </CompareTableSection>
-              <tr>
-                <CompareTableFeature>
-                  <CompareTableFeatureName>
+              {isOpenPollLimitEnabled ? (
+                <tr>
+                  <CompareTableFeature>
+                    <CompareTableFeatureName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="compareOpenPolls"
+                        defaults="Open polls"
+                      />
+                    </CompareTableFeatureName>
+                    <CompareTableFeatureDescription>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="compareOpenPollsDescription"
+                        defaults="Polls collecting votes at the same time"
+                      />
+                    </CompareTableFeatureDescription>
+                  </CompareTableFeature>
+                  <CompareTableCell>{FREE_OPEN_POLL_LIMIT}</CompareTableCell>
+                  <CompareTableCell>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="comparePolls"
-                      defaults="Polls"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
                     />
-                  </CompareTableFeatureName>
-                  <CompareTableFeatureDescription>
+                  </CompareTableCell>
+                </tr>
+              ) : (
+                <tr>
+                  <CompareTableFeature>
+                    <CompareTableFeatureName>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="comparePolls"
+                        defaults="Polls"
+                      />
+                    </CompareTableFeatureName>
+                    <CompareTableFeatureDescription>
+                      <Trans
+                        t={t}
+                        ns="pricing"
+                        i18nKey="compareSchedulingPollsDescription"
+                        defaults="Create polls to find the best time to meet"
+                      />
+                    </CompareTableFeatureDescription>
+                  </CompareTableFeature>
+                  <CompareTableCell>
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="compareSchedulingPollsDescription"
-                      defaults="Create polls to find the best time to meet"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
                     />
-                  </CompareTableFeatureDescription>
-                </CompareTableFeature>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-                <CompareTableCell>
-                  <Trans
-                    t={t}
-                    ns="pricing"
-                    i18nKey="compareUnlimited"
-                    defaults="Unlimited"
-                  />
-                </CompareTableCell>
-              </tr>
+                  </CompareTableCell>
+                  <CompareTableCell>
+                    <Trans
+                      t={t}
+                      ns="pricing"
+                      i18nKey="compareUnlimited"
+                      defaults="Unlimited"
+                    />
+                  </CompareTableCell>
+                </tr>
+              )}
               <tr>
                 <CompareTableFeature>
                   <CompareTableFeatureName>
@@ -775,24 +823,10 @@ export default async function Page(props: {
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <CompareTableLogos>
-                    <CompareTableLogo label="Google Meet">
-                      <GoogleMeetIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                  </CompareTableLogos>
+                  <CompareTableCheck label={included} />
                 </CompareTableCell>
                 <CompareTableCell>
-                  <CompareTableLogos>
-                    <CompareTableLogo label="Google Meet">
-                      <GoogleMeetIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                    <CompareTableLogo label="Microsoft Teams">
-                      <MicrosoftTeamsIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                    <CompareTableLogo label="Webex">
-                      <WebexIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                  </CompareTableLogos>
+                  <CompareTableCheck label={included} />
                 </CompareTableCell>
               </tr>
               <tr>
@@ -884,12 +918,22 @@ export default async function Page(props: {
               />
             }
           >
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="canUseFreeAnswer3"
-              defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
-            />
+            {isOpenPollLimitEnabled ? (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="canUseFreeAnswerOpenPollLimit"
+                defaults="Yes. The free plan is not a trial. You can create as many polls as you like, with up to {count} open at a time, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as unlimited open polls, keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+                values={{ count: FREE_OPEN_POLL_LIMIT }}
+              />
+            ) : (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="canUseFreeAnswer3"
+                defaults="Yes. The free plan is not a trial. You can create as many polls as you like, invite as many participants as you like, and use it for as long as you like without paying or adding a card. Paid plans add extra features such as keeping polls indefinitely and custom branding, but you will never be asked to pay to keep using the basics."
+              />
+            )}
           </FaqItem>
           <FaqItem
             question={
@@ -901,12 +945,22 @@ export default async function Page(props: {
               />
             }
           >
-            <Trans
-              t={t}
-              ns="pricing"
-              i18nKey="pollLimitAnswer"
-              defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates have passed and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
-            />
+            {isOpenPollLimitEnabled ? (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="pollLimitAnswerOpenPollLimit"
+                defaults="There is no limit on the number of polls you can create or the number of people who can vote on them. On the free plan, up to {count} polls can be open and collecting votes at a time; finalize or close one to make room for another. Pro has no limit. On the free plan, polls are deleted once all their dates are more than 30 days in the past and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+                values={{ count: FREE_OPEN_POLL_LIMIT }}
+              />
+            ) : (
+              <Trans
+                t={t}
+                ns="pricing"
+                i18nKey="pollLimitAnswer"
+                defaults="No. There is no limit on the number of polls you can create or the number of people who can vote on them, on any plan. On the free plan, polls are deleted once all their dates are more than 30 days in the past and there has been no activity for 30 days, and some features such as custom branding and advanced poll settings are only available on a paid plan. See the comparison table above for the full list."
+              />
+            )}
           </FaqItem>
           <FaqItem
             question={
@@ -939,7 +993,7 @@ export default async function Page(props: {
               t={t}
               ns="pricing"
               i18nKey="whenPollInactiveAnswer"
-              defaults="Polls become inactive when all date options are in the past AND there has been no activity for over 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
+              defaults="Polls become inactive when all date options are more than 30 days in the past and there has been no activity for 30 days. Activity includes new votes, comments, or changes to the poll. Inactive polls are automatically deleted if you do not have a paid subscription."
             />
           </FaqItem>
           <FaqItem
@@ -1005,31 +1059,16 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
-                i18nKey="faqNonprofit"
-                defaults="Do you offer discounts for nonprofits?"
+                i18nKey="faqDiscounts"
+                defaults="Do you offer discounts for nonprofits or schools?"
               />
             }
           >
             <Trans
               t={t}
               ns="home"
-              i18nKey="faqNonprofitAnswer"
-              defaults="Yes. We offer discounted Rallly Pro subscriptions for registered nonprofits. <1>Create a free account</1>, then email us at <0>support@rallly.co</0> from the same email address to request the discount. If you can, include a document showing your nonprofit status, such as a tax exemption letter or charity registration certificate."
-              components={[
-                <a
-                  key="email"
-                  className={faqLinkClassName}
-                  href="mailto:support@rallly.co"
-                />,
-                <a
-                  key="signup"
-                  className={faqLinkClassName}
-                  href={linkToApp("/", {
-                    ref: "pricing",
-                    cta: "pricing_faq_nonprofit",
-                  })}
-                />,
-              ]}
+              i18nKey="faqDiscountsAnswer"
+              defaults="No. Rallly is priced to be affordable for small teams and organizations on tight budgets, so instead of offering discounts to some customers, we keep the price low for everyone. Charities, schools and community groups are also welcome to use the free plan for as long as they like."
             />
           </FaqItem>
           <FaqItem
@@ -1123,7 +1162,10 @@ export async function generateMetadata(props: {
   const { t } = await getTranslation(locale, ["common", "pricing"]);
   return {
     alternates: getAlternates({ locale, path: "/pricing" }),
-    title: t("pricing", { ns: "common", defaultValue: "Pricing" }),
+    title: t("pricingMetaTitle", {
+      ns: "pricing",
+      defaultValue: "Pricing: Free and Pro Plans",
+    }),
     description: t("pricingDescription", {
       ns: "pricing",
     }),

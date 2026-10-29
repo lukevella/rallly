@@ -3,6 +3,7 @@ import {
   addMinutesToWallTime,
   instantToWallTime,
   wallTimeDiffInMinutes,
+  wallTimeExists,
   wallTimeToInstant,
 } from "./wall-time";
 
@@ -121,5 +122,26 @@ describe("addMinutesToWallTime", () => {
     expect(addMinutesToWallTime("2025-01-15T23:30:00", 60)).toBe(
       "2025-01-16T00:30:00",
     );
+  });
+});
+
+describe("wallTimeExists", () => {
+  it("rejects a time skipped by spring forward", () => {
+    expect(wallTimeExists("2027-03-14T02:30:00", "America/Chicago")).toBe(
+      false,
+    );
+    expect(wallTimeExists("2027-03-14T03:00:00", "America/Chicago")).toBe(true);
+  });
+
+  it("accepts a time repeated by fall back", () => {
+    expect(wallTimeExists("2026-11-01T01:30:00", "America/Chicago")).toBe(true);
+  });
+
+  it("accepts every time in a zone without DST", () => {
+    expect(wallTimeExists("2027-03-14T02:30:00", "Asia/Kathmandu")).toBe(true);
+  });
+
+  it("rejects unparseable input", () => {
+    expect(wallTimeExists("nope", "UTC")).toBe(false);
   });
 });

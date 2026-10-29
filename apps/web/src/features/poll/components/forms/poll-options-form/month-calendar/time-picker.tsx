@@ -11,13 +11,19 @@ import { useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { Duration } from "@/lib/datetime/duration";
 import { formatDateTime } from "@/lib/datetime/format";
-import { dayjs } from "@/lib/dayjs";
+import { wallTimeDiffInMinutes } from "@/lib/datetime/wall-time";
+import { getTimeOptions } from "../utils";
+import { FLOATING_TIME_ZONE, floatingToDate } from "../week-calendar-utils";
 
 export interface TimePickerProps {
-  value?: Date;
-  after?: Date;
+  /** Floating wall-clock time, YYYY-MM-DDTHH:mm:ss. */
+  value?: string;
+  /** When set, offers the 24 hours after this time instead of `value`'s day. */
+  after?: string;
+  /** The poll's zone; times its clocks skip aren't offered. */
+  timeZone?: string;
   className?: string;
-  onChange?: (value: Date) => void;
+  onChange?: (value: string) => void;
 }
 
 const TimePicker: React.FunctionComponent<TimePickerProps> = ({
@@ -25,47 +31,48 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
   onChange,
   className,
   after,
+  timeZone,
 }) => {
   const { locale, timeFormat } = useDateTimeConfig();
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
 
-  // The form works in naive local times, so options format in the system zone.
-  const formatTime = (time: string | Date) =>
-    formatDateTime(new Date(time), { preset: "time", locale, timeFormat });
+  const formatTime = (time: string) =>
+    formatDateTime(floatingToDate(time), {
+      preset: "time",
+      locale,
+      timeFormat,
+      timeZone: FLOATING_TIME_ZONE,
+    });
 
-  const getOptions = React.useCallback(() => {
-    if (!open) {
-      return [dayjs(value).toISOString()];
-    }
-    let cursor = after
-      ? dayjs(after).add(15, "minutes")
-      : dayjs(value).startOf("day");
+  const options = React.useMemo(
+    () =>
+      value
+        ? open
+          ? getTimeOptions({ value, after, timeZone })
+          : [value]
+        : [],
+    [after, open, timeZone, value],
+  );
 
-    const res: string[] = [];
-
-    if (after) {
-      let cursor = dayjs(after).add(15, "minutes");
-      while (cursor.diff(after, "hours") < 24) {
-        res.push(cursor.toISOString());
-        cursor = cursor.add(15, "minutes");
-      }
-    } else {
-      cursor = dayjs(value).startOf("day");
-      while (cursor.isSame(value, "day")) {
-        res.push(cursor.toISOString());
-        cursor = cursor.add(15, "minutes");
-      }
-    }
-    return res;
-  }, [after, open, value]);
+  const renderOption = (option: string) => (
+    <div className="flex items-center gap-2">
+      <span>{formatTime(option)}</span>
+      {after ? (
+        <Duration
+          className="text-muted-foreground text-sm"
+          minutes={wallTimeDiffInMinutes(after, option)}
+        />
+      ) : null}
+    </div>
+  );
 
   return (
     <Select
-      value={value?.toISOString()}
+      value={value}
       onValueChange={(newValue) => {
         if (newValue) {
-          onChange?.(new Date(newValue));
+          onChange?.(newValue);
         }
       }}
       open={open}
@@ -78,52 +85,18 @@ const TimePicker: React.FunctionComponent<TimePickerProps> = ({
           })}
         >
           {(selected: string | null | undefined) =>
-            selected ? (
-              <div className="flex items-center gap-2">
-                <span>{formatTime(selected)}</span>
-                {after ? (
-                  <Duration
-                    className="text-muted-foreground text-sm"
-                    minutes={dayjs(selected).diff(after, "minute")}
-                  />
-                ) : null}
-              </div>
-            ) : (
-              t("timePickerSelectTime", { defaultValue: "Select time" })
-            )
+            selected
+              ? renderOption(selected)
+              : t("timePickerSelectTime", { defaultValue: "Select time" })
           }
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {open ? (
-          getOptions().map((option) => {
-            return (
-              <SelectItem key={option} value={dayjs(option).toISOString()}>
-                <div className="flex items-center gap-2">
-                  <span>{formatTime(option)}</span>
-                  {after ? (
-                    <Duration
-                      className="text-muted-foreground text-sm"
-                      minutes={dayjs(option).diff(after, "minute")}
-                    />
-                  ) : null}
-                </div>
-              </SelectItem>
-            );
-          })
-        ) : (
-          <SelectItem value={dayjs(value).toISOString()}>
-            <div className="flex items-center gap-2">
-              <span>{formatTime(dayjs(value).toDate())}</span>
-              {after ? (
-                <Duration
-                  className="text-muted-foreground text-sm"
-                  minutes={dayjs(value).diff(after, "minute")}
-                />
-              ) : null}
-            </div>
+        {options.map((option) => (
+          <SelectItem key={option} value={option}>
+            {renderOption(option)}
           </SelectItem>
-        )}
+        ))}
       </SelectContent>
     </Select>
   );

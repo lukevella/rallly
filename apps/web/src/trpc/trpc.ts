@@ -1,6 +1,5 @@
 import { prisma } from "@rallly/database";
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
+import { TRPCError } from "@trpc/server";
 import { isQuickCreateEnabled } from "@/features/quick-create/constants";
 import { getActiveSpaceForUser } from "@/features/space/data";
 import { createSpaceContentScope } from "@/features/space/utils";
@@ -8,22 +7,7 @@ import { createUserDTO } from "@/features/user/data";
 import { signOut } from "@/lib/auth";
 import { AppError } from "@/lib/errors/app-error";
 import { isMaintenanceActiveForRequest } from "@/lib/maintenance-server";
-import { createRatelimit } from "@/lib/rate-limit";
-import type { TRPCContext } from "./context";
-
-const t = initTRPC.context<TRPCContext>().create({
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        appError:
-          error.cause instanceof AppError ? error.cause.code : undefined,
-      },
-    };
-  },
-});
+import { t } from "./init";
 
 export const router = t.router;
 
@@ -182,47 +166,5 @@ export const spaceOwnerProcedure = spaceProcedure.use(async ({ ctx, next }) => {
 
   return next();
 });
-
-export const createRateLimitMiddleware = (
-  name: string,
-  requests: number,
-  duration: "1 m" | "1 h",
-) => {
-  const ratelimit = createRatelimit(requests, duration);
-
-  return middleware(async ({ ctx, next }) => {
-    if (ctx.event) {
-      ctx.event.rateLimiter = ratelimit?.name ?? "none";
-    }
-
-    if (!ratelimit) {
-      return next();
-    }
-
-    if (!ctx.identifier) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to get identifier",
-      });
-    }
-
-    const { success, remainingPoints } = await ratelimit.limit(
-      `${name}:${ctx.identifier}`,
-    );
-
-    if (ctx.event) {
-      ctx.event.rateLimiterRemainingPoints = remainingPoints;
-    }
-
-    if (!success) {
-      throw new TRPCError({
-        code: "TOO_MANY_REQUESTS",
-        message: "Too many requests",
-      });
-    }
-
-    return next();
-  });
-};
 
 export const mergeRouters = t.mergeRouters;

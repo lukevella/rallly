@@ -15,6 +15,14 @@ Sentry.init({
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
 
-  // Don't send personal identifiable information (PII) to Sentry.
-  sendDefaultPii: false,
+  // Don't send personal identifiable information (PII) to Sentry. Every
+  // category defaults to on, so each one that can carry PII is off here.
+  dataCollection: {
+    userInfo: false,
+    cookies: false,
+    httpBodies: [],
+    databaseQueryData: false,
+    genAI: { inputs: false, outputs: false },
+    stackFrameVariables: false,
+  },
 });

@@ -100,6 +100,12 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
 
 See the [Single Sign-On guide](/self-hosting/single-sign-on) for setup instructions and the full list of variables.
 
+## Video Conferencing
+
+Google Meet, Zoom, Microsoft Teams and Webex links on polls are turned on per provider with `CONFERENCING_PROVIDERS` and an OAuth app for each. See the [Video Conferencing guide](/self-hosting/conferencing) for setup instructions and the full list of variables.
+
+<Note>Available from v4.16.0 and later.</Note>
+
 ## Branding
 
 Customise the look of your instance. These settings can also be changed from the Control Panel, where a saved value takes precedence over the environment variable. See [White Labeling](/self-hosting/white-labeling) for details.
@@ -140,6 +146,10 @@ Customise the look of your instance. These settings can also be changed from the
 
 <ParamField path="RALLLY_IMAGE" default="lukevella/rallly:4">
   Override the Rallly Docker image. Pin a major version (e.g. `lukevella/rallly:4`) to avoid pulling in breaking changes. See the [releases](https://github.com/lukevella/rallly/releases) for available versions.
+</ParamField>
+
+<ParamField path="RATE_LIMIT_ENABLED" default="true">
+  Limits how often one visitor can perform actions such as submitting responses. Counts are kept in memory and reset when the container restarts. Rallly reads the visitor's address from the `X-Real-IP` header, so if you run your own reverse proxy, make sure it sets that header. The bundled proxy does. Set to `false` to turn the limits off.
 </ParamField>
 
 ### External reverse proxy

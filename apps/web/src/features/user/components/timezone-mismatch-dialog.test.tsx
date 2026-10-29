@@ -10,6 +10,7 @@ import { TimeZoneMismatchDialog } from "./timezone-mismatch-dialog";
 let mockTimeZone = "America/New_York";
 vi.mock("@/lib/utils/date-time-utils", () => ({
   getBrowserTimeZone: () => mockTimeZone,
+  detectBrowserTimeZone: () => mockTimeZone,
 }));
 
 const { mockMutate } = vi.hoisted(() => ({ mockMutate: vi.fn() }));

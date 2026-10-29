@@ -1,4 +1,4 @@
-import type { PostHogConfig } from "posthog-js";
+import type { PostHogConfig } from "posthog-js/dist/module.slim";
 
 /**
  * Persistence options for the browser client. The anonymous id lives in a

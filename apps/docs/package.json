@@ -10,6 +10,6 @@
     "@rallly/tsconfig": "workspace:*"
   },
   "dependencies": {
-    "mint": "^4.2.884"
+    "mint": "^4.2.1095"
   }
 }

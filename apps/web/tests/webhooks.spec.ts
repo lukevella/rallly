@@ -440,7 +440,7 @@ test.describe("Webhook delivery", () => {
   test("advances through a backlog larger than one page at a single timestamp", async ({
     request,
   }) => {
-    // autoClosePolls records every closed poll in one transaction, so they
+    // autoClosePolls records each batch of closes in one transaction, so they
     // share a createdAt; a page boundary inside that run must not stick.
     const webhook = await createWebhook();
     const createdAt = secondsAgo(60);

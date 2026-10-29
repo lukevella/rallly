@@ -161,7 +161,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="legalFaqBrandingAnswer"
-              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to another firm or a client looks like it came from your practice. Everything else is free to use."
+              defaults="With <0>Rallly Pro</0> you can add your own logo and colours and remove Rallly attribution, so a poll you send to another firm or a client looks like it came from your practice."
               components={[
                 <LinkBase
                   key="pricing"
@@ -247,12 +247,12 @@ export async function generateMetadata(props: {
     alternates: getAlternates({ locale, path: "/scheduling-for/legal" }),
     title: t("legalMetaTitle", {
       ns: "home",
-      defaultValue: "Scheduling for Law Firms and Mediators",
+      defaultValue: "Mediation & Hearing Scheduling for Law Firms",
     }),
     description: t("legalMetaDescription", {
       ns: "home",
       defaultValue:
-        "Rallly is a free scheduling tool for mediations, hearings and client conferences. Find a date that works for both sides with one link. No account needed to respond.",
+        "A free scheduling tool for mediations, hearings and client conferences. Find a date both sides can make with one link. No account needed to respond.",
     }),
   };
 }

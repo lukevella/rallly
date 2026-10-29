@@ -78,7 +78,7 @@ function EventCalendarAgendaView({
 
   const isToday = (day: Date) =>
     getDayKey(day, settings.timeZone) ===
-    getDayKey(new Date(), settings.timeZone);
+    getDayKey(settings.getNow(), settings.timeZone);
 
   const native = viewConfig.scrollbars === "native";
 

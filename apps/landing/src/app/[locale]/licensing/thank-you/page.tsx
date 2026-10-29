@@ -21,7 +21,7 @@ export default async function LicensingThankYouPage(props: {
           </LinkBase>
         </div>
         <div className="space-y-4">
-          <h1 className="font-bold text-2xl tracking-tight">
+          <h1 className="font-semibold text-2xl tracking-tight">
             <Trans
               t={t}
               i18nKey="licensingThankYouTitle"

@@ -237,6 +237,9 @@ app.get("/send-queued-emails", async (c) => {
   // sends one batch, so a large fan-out goes out at that rate.
   const summary = await runQueuedEmailDelivery({});
 
+  // Some handlers capture events, such as the review request send.
+  await flushPostHog();
+
   // Runs every minute and most runs find nothing.
   if (summary.attempted > 0 || summary.abandoned > 0 || summary.purged > 0) {
     logger.info(

@@ -11,6 +11,7 @@ import {
 } from "@/components/settings-layout";
 import { Spinner } from "@/components/spinner";
 import { ConferencingConnectionFlash } from "@/features/conferencing/components/conferencing-connection-flash";
+import { ConferencingEmptyState } from "@/features/conferencing/components/conferencing-empty-state";
 import { ConferencingProviderList } from "@/features/conferencing/components/conferencing-provider-list";
 import {
   loadAvailableConferencingProviders,
@@ -19,18 +20,10 @@ import {
 import type { ConferencingProvider } from "@/features/conferencing/schema";
 import { conferencingProviderSchema } from "@/features/conferencing/schema";
 import { integrationIdToConferencingProvider } from "@/features/conferencing/utils";
+import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
-
-// The page exists for a user only while some provider is offered to them.
-async function AvailabilityGate() {
-  const providers = await loadAvailableConferencingProviders();
-  if (providers.length === 0) {
-    notFound();
-  }
-  return null;
-}
 
 export default function ConferencingPage() {
   if (!isFeatureEnabled("conferencing")) {
@@ -39,9 +32,6 @@ export default function ConferencingPage() {
 
   return (
     <SettingsPage>
-      <Suspense fallback={null}>
-        <AvailabilityGate />
-      </Suspense>
       <ConferencingConnectionFlash />
       <SettingsPageHeader>
         <SettingsPageTitle>
@@ -55,7 +45,7 @@ export default function ConferencingPage() {
         </SettingsPageDescription>
       </SettingsPageHeader>
       <SettingsPageContent>
-        <PageSection>
+        <PageSection variant="card">
           <PageSectionContent>
             <Suspense fallback={<Spinner />}>
               <ProviderList />
@@ -68,9 +58,10 @@ export default function ConferencingPage() {
 }
 
 async function ProviderList() {
-  const [available, connections] = await Promise.all([
+  const [available, connections, user] = await Promise.all([
     loadAvailableConferencingProviders(),
     loadConferencingConnections(),
+    loadUser(),
   ]);
   // The stored provider is the OAuth provider ("google"); the form and icons
   // speak in conferencing providers, which the integration id identifies.
@@ -92,14 +83,24 @@ async function ProviderList() {
   const providers = conferencingProviderSchema.options.filter(
     (provider) => available.includes(provider) || connected.has(provider),
   );
-  return (
-    <ConferencingProviderList
-      providers={providers.map((provider) => ({
-        provider,
-        connection: connected.get(provider) ?? null,
-      }))}
-    />
-  );
+  const list =
+    providers.length > 0 ? (
+      <ConferencingProviderList
+        providers={providers.map((provider) => ({
+          provider,
+          connection: connected.get(provider) ?? null,
+        }))}
+      />
+    ) : null;
+  if (available.length === 0) {
+    return (
+      <>
+        <ConferencingEmptyState isAdmin={user.role === "admin"} />
+        {list}
+      </>
+    );
+  }
+  return list;
 }
 
 export async function generateMetadata(): Promise<Metadata> {

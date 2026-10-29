@@ -55,6 +55,7 @@ export function CustomBrandingSection({
   const hexColor = color.toString("hex");
   const isDefault =
     hexColor.toLowerCase() === DEFAULT_PRIMARY_COLOR.toLowerCase();
+  const isDirty = hexColor.toLowerCase() !== currentColor.toLowerCase();
 
   const updateShowBranding = useMutation(
     mutationOptions(updateSpaceShowBrandingAction),
@@ -155,8 +156,10 @@ export function CustomBrandingSection({
                   value={color}
                   onChange={setColor}
                   disabled={disabled}
+                  isDirty={isDirty}
                   isSaving={updateSpace.isPending}
                   onSave={handleSave}
+                  saveBadge={space.tier !== "pro" ? <ProBadge /> : null}
                   onReset={handleReset}
                   showReset={!isDefault}
                   aria-labelledby="primary-color-label"

@@ -40,9 +40,20 @@ export const billingReturnFlowSchema = z.enum([
   "seats",
   "interval",
   "payment_method",
-  "cancel",
 ]);
 export type BillingReturnFlow = z.infer<typeof billingReturnFlowSchema>;
+
+// Finer than Stripe's fixed feedback list: Stripe has one "unused" bucket for
+// both a finished one-off event and a subscriber who never got value.
+export const cancellationReasonSchema = z.enum([
+  "one_off_event",
+  "not_using",
+  "too_expensive",
+  "missing_features",
+  "switched_service",
+  "other",
+]);
+export type CancellationReason = z.infer<typeof cancellationReasonSchema>;
 
 // Stripe's `card` object as stored on PaymentMethod.data. Parsed rather than
 // cast: the row is written from whatever Stripe sent at the time.

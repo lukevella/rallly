@@ -1,9 +1,9 @@
 import * as z from "zod";
 import { pollStatusSchema } from "@/features/poll/schema";
 
-export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 50;
 
-export const pageSchema = z.coerce.number().default(1);
+export const pageSchema = z.coerce.number().int().min(1).catch(1);
 
 export const querySchema = z
   .string()
@@ -17,13 +17,10 @@ export const statusSchema = pollStatusSchema
 
 export const pageSizeSchema = z.coerce
   .number()
-  .optional()
-  .transform((val) => {
-    if (!val) return DEFAULT_PAGE_SIZE;
-    return Number.isNaN(val) || val < 1
-      ? DEFAULT_PAGE_SIZE
-      : Math.min(val, 100);
-  });
+  .int()
+  .min(1)
+  .transform((val) => Math.min(val, 100))
+  .catch(DEFAULT_PAGE_SIZE);
 
 export const memberSchema = z
   .string()

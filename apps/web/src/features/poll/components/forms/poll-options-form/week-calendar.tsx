@@ -18,6 +18,7 @@ import {
 } from "@rallly/ui/event-calendar";
 import React from "react";
 import { createBreakpoint } from "react-use";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
@@ -25,10 +26,17 @@ import DateNavigationToolbar from "./date-navigation-toolbar";
 import type { DateTimePickerProps, TimeOption } from "./types";
 import {
   DURATION_CAP_MINUTES,
+  dateToFloating,
   durationMinutes,
+  FLOATING_TIME_ZONE,
+  floatingToDate,
+  floatingToInstant,
+  instantToFloating,
   isDuplicate,
   optionsToEvents,
+  skippedMinuteRanges,
   slotToTimeOption,
+  startExistsIn,
 } from "./week-calendar-utils";
 
 const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
@@ -39,13 +47,6 @@ const useDevice = createBreakpoint({ desktop: 720, mobile: 360 });
 const WeekViewNoAllDay = () => <EventCalendarWeekView showAllDay={false} />;
 const DayViewNoAllDay = () => <EventCalendarDayView showAllDay={false} />;
 const VIEW_COMPONENTS = { week: WeekViewNoAllDay, day: DayViewNoAllDay };
-
-// ReUI's grid needs a fixed IANA zone to lay out days/hours. The poll form
-// stores naive wall-clock strings with no zone of their own, so this zone is
-// used purely as a rendering frame — every option <-> event conversion still
-// goes through the Task 4 helpers (formatDateWithoutTz), never a real zone
-// conversion of stored values.
-const RENDER_TIME_ZONE = getBrowserTimeZone();
 
 function CalendarToolbar() {
   const { title, next, prev, today } = useEventCalendarNavigation();
@@ -66,9 +67,33 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   onChange,
   duration = 60,
   onChangeDuration,
+  timeZone: pollTimeZone,
 }) => {
-  const { weekStart } = useDateTimeConfig();
+  const { t } = useTranslation();
+  const { weekStart, timeZone } = useDateTimeConfig();
+  const viewerTimeZone = timeZone ?? getBrowserTimeZone();
   const { formatDateTime, formatDateTimeRange } = useDateTime();
+
+  // The grid runs on floating time; today, the now line and the shared
+  // navigation date come from the viewer's own clock.
+  const getNow = React.useCallback(
+    () => instantToFloating(new Date(), viewerTimeZone),
+    [viewerTimeZone],
+  );
+  const floatingDate = React.useMemo(
+    () => (date ? instantToFloating(date, viewerTimeZone) : undefined),
+    [date, viewerTimeZone],
+  );
+  const handleNavigate = (next: Date) =>
+    onNavigate(floatingToInstant(next, viewerTimeZone));
+
+  // A slot starting in the hour the poll's clocks skip when they spring
+  // forward would silently shift on save, so it can't be picked. The skipped
+  // hour is drawn as a disabled band that takes the pointer itself.
+  const isAvailable = (option: TimeOption) =>
+    !pollTimeZone || startExistsIn(option, pollTimeZone);
+  const isAvailableSlot = (start: Date, end: Date) =>
+    isAvailable(slotToTimeOption(start, end));
 
   const apiRef = React.useRef<EventCalendarApi | null>(null);
   const hasScrolledRef = React.useRef(false);
@@ -80,7 +105,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
   // The form works in naive local times; format in the render-frame zone.
   const formatTime = React.useCallback(
     (time: Date) =>
-      formatDateTime(time, "time", { timeZone: RENDER_TIME_ZONE }),
+      formatDateTime(time, "time", { timeZone: FLOATING_TIME_ZONE }),
     [formatDateTime],
   );
 
@@ -96,14 +121,14 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
             ctx.activeRange.end,
             "date",
             {
-              timeZone: RENDER_TIME_ZONE,
+              timeZone: FLOATING_TIME_ZONE,
             },
           ),
         formatEventTime: (start: Date, _end: Date, allDay: boolean) =>
           allDay ? "" : formatTime(start),
         formatDayRange: (range: { start: Date; end: Date }) =>
           formatDateTimeRange(range.start, range.end, "monthDay", {
-            timeZone: RENDER_TIME_ZONE,
+            timeZone: FLOATING_TIME_ZONE,
           }),
       },
     }),
@@ -129,7 +154,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       undefined,
     );
     if (earliestSlot) {
-      apiRef.current?.scrollToTime(new Date(earliestSlot.start));
+      apiRef.current?.scrollToTime(floatingToDate(earliestSlot.start));
     }
   }, []);
 
@@ -140,6 +165,9 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       return;
     }
     const candidate = slotToTimeOption(slot.start, slot.end);
+    if (!isAvailable(candidate)) {
+      return;
+    }
     const diff = durationMinutes(slot.start, slot.end);
     if (diff < DURATION_CAP_MINUTES) {
       onChangeDuration(diff);
@@ -156,6 +184,9 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
     const start = slot.date;
     const end = new Date(start.getTime() + (duration || 60) * 60 * 1000);
     const candidate = slotToTimeOption(start, end);
+    if (!isAvailable(candidate)) {
+      return;
+    }
     if (!isDuplicate(options, candidate)) {
       onChange([...options, candidate]);
     }
@@ -186,6 +217,9 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       update.occurrence.end,
     );
     const newOption = slotToTimeOption(update.start, update.end);
+    if (!isAvailable(newOption)) {
+      return false;
+    }
 
     const duplicatesAnother = options.some(
       (option) =>
@@ -224,11 +258,16 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         className="absolute inset-0"
         apiRef={apiRef}
         events={events}
-        date={date}
-        onDateChange={onNavigate}
+        date={floatingDate}
+        onDateChange={handleNavigate}
         defaultView={defaultView}
         views={["week", "day"]}
-        timeZone={RENDER_TIME_ZONE}
+        timeZone={FLOATING_TIME_ZONE}
+        getNow={getNow}
+        canSelectSlot={(slot) =>
+          slot.allDay || isAvailableSlot(slot.start, slot.end)
+        }
+        canDropEvent={(update) => isAvailableSlot(update.start, update.end)}
         weekStartsOn={weekStart as 0 | 1 | 2 | 3 | 4 | 5 | 6}
         slotDuration={15}
         snapDuration={30}
@@ -239,6 +278,33 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           // our Intl formatter instead. Suppress the day-start label (hour 0),
           // matching the default's top-edge suppression.
           hour === 0 && minute === 0 ? null : formatTime(time)
+        }
+        renderDayColumnBackground={({ day, boundsStartMin }) =>
+          pollTimeZone
+            ? skippedMinuteRanges(
+                dateToFloating(day).slice(0, 10),
+                pollTimeZone,
+              ).map(([start, end]) => (
+                <div
+                  key={start}
+                  className="pointer-events-auto absolute inset-x-0 cursor-not-allowed overflow-hidden border-y border-dashed bg-[repeating-linear-gradient(135deg,transparent_0_6px,var(--color-border)_6px_7px)] bg-muted px-1.5 py-0.5 text-muted-foreground text-xs"
+                  style={{
+                    top: `calc(var(--ec-hour-height) * ${(start - boundsStartMin) / 60})`,
+                    height: `calc(var(--ec-hour-height) * ${(end - start) / 60})`,
+                  }}
+                  title={t("weekCalendarClocksGoForwardHelp", {
+                    defaultValue:
+                      "Clocks in {timeZone} skip this time when they go forward",
+                    timeZone: pollTimeZone,
+                  })}
+                >
+                  <Trans
+                    i18nKey="weekCalendarClocksGoForward"
+                    defaults="Clocks go forward"
+                  />
+                </div>
+              ))
+            : null
         }
         onSelectSlot={handleSelectSlot}
         onSlotClick={handleSlotClick}
@@ -256,7 +322,7 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
               <div>
                 <div>
                   {formatDateTimeRange(start, end, "time", {
-                    timeZone: RENDER_TIME_ZONE,
+                    timeZone: FLOATING_TIME_ZONE,
                   })}
                 </div>
               </div>

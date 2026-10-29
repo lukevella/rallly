@@ -56,7 +56,7 @@ This guide builds a workflow that receives a Rallly event, checks that it really
 
     A request that fails any check stops the workflow with an error, and the node outputs the verified event body as the item. Everything after this node can trust `$json.type` and `$json.data`.
 
-    On self-hosted n8n, `require("crypto")` needs the built-in module allowed: set `NODE_FUNCTION_ALLOW_BUILTIN=crypto` in n8n's environment. n8n Cloud allows it already.
+    If you run n8n on your own server, `require("crypto")` needs the built-in module allowed: set `NODE_FUNCTION_ALLOW_BUILTIN=crypto` in n8n's environment. n8n Cloud allows it already.
   </Step>
 
   <Step title="Branch on the event type">

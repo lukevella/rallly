@@ -12,14 +12,13 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { toast } from "@rallly/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
+import copy from "copy-to-clipboard";
 import {
   LinkIcon,
   MailIcon,
   MoreHorizontalIcon,
   Trash2Icon,
 } from "lucide-react";
-import React from "react";
-import { useCopyToClipboard } from "react-use";
 import { Spinner } from "@/components/spinner";
 import { usePoll } from "@/features/poll/client";
 import { revokePollInviteAction } from "@/features/poll/invite/actions";
@@ -81,7 +80,6 @@ function InviteeRowMenu({
 }) {
   const poll = usePoll();
   const { t } = useTranslation();
-  const [state, copyToClipboard] = useCopyToClipboard();
 
   // The success handler refetches the list, which is what drops the row.
   const revoke = useMutation(
@@ -110,11 +108,8 @@ function InviteeRowMenu({
     }),
   );
 
-  // react-use records a failed copy as `error` and a successful one as
-  // `value`; the toast only claims success in the second case.
-  React.useEffect(() => {
-    if (state.error) {
-      console.error(`Unable to copy value: ${state.error.message}`);
+  const copyInviteUrl = () => {
+    if (!copy(inviteUrl)) {
       toast.error(
         t("shareDialogCopyFailed", {
           defaultValue: "Couldn't copy the link. Try again.",
@@ -122,19 +117,17 @@ function InviteeRowMenu({
       );
       return;
     }
-    if (state.value) {
-      toast(
-        t("shareDialogPersonalLinkCopied", {
-          defaultValue: "Personal link for {email} copied",
-          email,
-        }),
-      );
-      posthog?.capture("poll_share:invitee_link_copy", {
-        poll_id: poll.id,
-        status,
-      });
-    }
-  }, [state, email, status, poll.id, t]);
+    toast(
+      t("shareDialogPersonalLinkCopied", {
+        defaultValue: "Personal link for {email} copied",
+        email,
+      }),
+    );
+    posthog?.capture("poll_share:invitee_link_copy", {
+      poll_id: poll.id,
+      status,
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -154,7 +147,7 @@ function InviteeRowMenu({
         <MoreHorizontalIcon className="text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => copyToClipboard(inviteUrl)}>
+        <DropdownMenuItem onClick={copyInviteUrl}>
           <LinkIcon />
           <Trans
             i18nKey="shareDialogCopyPersonalLink"

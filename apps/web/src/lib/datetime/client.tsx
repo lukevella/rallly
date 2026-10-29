@@ -11,7 +11,7 @@ import {
 import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
 import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+import { detectBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type DateTimeConfig = {
   locale: string;
@@ -41,7 +41,7 @@ export function DateTimeProvider({
   const [browserTimeZone, setBrowserTimeZone] = React.useState<string>();
 
   React.useEffect(() => {
-    setBrowserTimeZone(getBrowserTimeZone());
+    setBrowserTimeZone(detectBrowserTimeZone());
   }, []);
 
   const value = React.useMemo(

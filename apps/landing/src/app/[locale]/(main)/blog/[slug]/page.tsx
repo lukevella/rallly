@@ -10,6 +10,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { Trans } from "react-i18next/TransWithoutContext";
 import DateFormatter from "@/components/blog/date-formatter";
 import { Cta } from "@/components/home/cta";
+import { JsonLd } from "@/components/json-ld";
 import { Section } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
@@ -33,14 +34,43 @@ export default async function Page(props: {
     "category",
     "excerpt",
     "content",
+    "updated",
   ]);
 
   if (!post) {
     notFound();
   }
 
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: ogImageUrl(post),
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    url,
+    mainEntityOfPage: url,
+    author: {
+      "@type": "Person",
+      name: "Luke Vella",
+      url: "https://twitter.com/imlukevella",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Rallly",
+      url: absoluteUrl(),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/android-chrome-512x512.png"),
+      },
+    },
+  };
+
   return (
     <div className="divide-y">
+      <JsonLd data={articleSchema} />
       <Section>
         <nav className="flex items-center gap-2 text-sm">
           <LinkBase href="/blog" className="text-gray-500 hover:text-gray-800">
@@ -65,7 +95,7 @@ export default async function Page(props: {
           {post.title}
         </h1>
         <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-          <aside className="lg:sticky lg:top-[calc(var(--site-header-height,61px)+0.75rem)] lg:order-2 lg:w-56 lg:shrink-0">
+          <aside className="lg:sticky lg:top-[calc(var(--site-header-height,61px)+2rem)] lg:order-2 lg:w-56 lg:shrink-0">
             <dl className="flex flex-wrap gap-x-12 gap-y-6 lg:flex-col">
               <div>
                 <dt className="text-gray-500 text-sm">
@@ -158,6 +188,13 @@ export default async function Page(props: {
   );
 }
 
+function ogImageUrl(post: { title?: string; excerpt?: string }) {
+  return absoluteUrl("/api/og-image", {
+    title: post.title,
+    excerpt: post.excerpt,
+  });
+}
+
 export async function generateStaticParams() {
   const posts = getAllPosts(["slug"]);
   return posts.map((post) => ({
@@ -185,16 +222,19 @@ export async function generateMetadata(props: {
   return {
     title: post.title,
     description: post.excerpt,
+    // Posts are English only, so every locale prefix points at the English URL
+    alternates: {
+      canonical: absoluteUrl(`/blog/${post.slug}`),
+    },
     openGraph: {
+      type: "article",
+      publishedTime: post.date,
       title: post.title,
       description: post.excerpt,
       url: absoluteUrl(`/blog/${post.slug}`),
       images: [
         {
-          url: absoluteUrl("/api/og-image", {
-            title: post.title,
-            excerpt: post.excerpt,
-          }),
+          url: ogImageUrl(post),
           width: 1200,
           height: 630,
           alt: post.title,

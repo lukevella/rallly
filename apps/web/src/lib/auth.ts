@@ -43,7 +43,10 @@ import {
   parseRefParam,
   REF_COOKIE_NAME,
 } from "@/lib/acquisition";
-import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
+import {
+  LAST_LOGIN_METHOD_COOKIE_NAME,
+  SESSION_TTL_SECONDS,
+} from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { redis } from "@/lib/kv";
 import {
@@ -195,12 +198,41 @@ export const authLib = betterAuth({
         const { t } = await getTranslation();
         return t("guest");
       },
-      onLinkAccount: async ({ anonymousUser, newUser }) => {
-        await linkAnonymousUser(newUser.user.id, anonymousUser.user.id);
+      // The plugin deletes the guest after onLinkAccount whether or not the
+      // merge worked, and the delete cascades to the guest's polls. Deletion
+      // happens below instead, only once the merge has committed; a guest
+      // whose merge failed keeps its content for support to reassign.
+      disableDeleteAnonymousUser: true,
+      onLinkAccount: async ({ anonymousUser, newUser, ctx }) => {
+        if (newUser.user.id === anonymousUser.user.id) return;
+
+        const { merged } = await linkAnonymousUser(
+          newUser.user.id,
+          anonymousUser.user.id,
+        );
+
+        if (!merged || newUser.user.isAnonymous) return;
+
+        try {
+          await ctx.context.internalAdapter.deleteUser(anonymousUser.user.id);
+        } catch (error) {
+          logger.error(
+            { anonymousUserId: anonymousUser.user.id, error },
+            "Failed to delete anonymous user after linking",
+          );
+        }
       },
     }),
     lastLoginMethod({
       storeInDatabase: true,
+      cookieName: LAST_LOGIN_METHOD_COOKIE_NAME,
+      // The default resolver only knows password sign-in as "email"; both
+      // OTP verification paths are the same email login to the user.
+      customResolveMethod: (ctx) =>
+        ctx.path === "/sign-in/email-otp" ||
+        ctx.path === "/email-otp/verify-email"
+          ? "email"
+          : null,
     }),
     emailOTP({
       // The "sign-in" OTP type creates an account for an unknown address; the
@@ -255,7 +287,9 @@ export const authLib = betterAuth({
   ],
   socialProviders: {
     google:
-      env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+      env.GOOGLE_LOGIN_ENABLED !== "false" &&
+      env.GOOGLE_CLIENT_ID &&
+      env.GOOGLE_CLIENT_SECRET
         ? {
             clientId: env.GOOGLE_CLIENT_ID,
             clientSecret: env.GOOGLE_CLIENT_SECRET,
@@ -263,7 +297,9 @@ export const authLib = betterAuth({
           }
         : undefined,
     microsoft:
-      env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET
+      env.MICROSOFT_LOGIN_ENABLED !== "false" &&
+      env.MICROSOFT_CLIENT_ID &&
+      env.MICROSOFT_CLIENT_SECRET
         ? {
             tenantId: env.MICROSOFT_TENANT_ID,
             clientId: env.MICROSOFT_CLIENT_ID,

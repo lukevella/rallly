@@ -132,7 +132,7 @@ export const deleteWebhookAction = authActionClient
 export const sendWebhookTestEventAction = authActionClient
   .metadata({ actionName: "send_webhook_test_event" })
   .inputSchema(sendWebhookTestEventSchema)
-  .use(createRateLimitMiddleware(10, "1 m"))
+  .use(createRateLimitMiddleware({ requests: 10, duration: "1 m", by: "user" }))
   .action(async ({ ctx, parsedInput }) => {
     const { space } = await requireWebhookAccess();
 

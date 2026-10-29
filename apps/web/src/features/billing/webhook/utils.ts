@@ -13,6 +13,31 @@ export function isSubscriptionActive(subscription: Stripe.Subscription) {
   );
 }
 
+/**
+ * Whether this event is the moment the subscription first became paid. A
+ * subscription whose first payment needs confirmation (3D Secure, delayed
+ * methods) is created `incomplete` and turns active in a later update event, so
+ * reading the status from the event payload rather than a refetch makes exactly
+ * one of the two events report the start.
+ */
+export function isActivationEvent(event: Stripe.Event) {
+  if (event.type === "customer.subscription.created") {
+    return isSubscriptionActive(event.data.object);
+  }
+
+  if (event.type === "customer.subscription.updated") {
+    const previous = event.data.previous_attributes as
+      | Partial<Stripe.Subscription>
+      | undefined;
+    return (
+      previous?.status === "incomplete" &&
+      isSubscriptionActive(event.data.object)
+    );
+  }
+
+  return false;
+}
+
 export function getSubscriptionDetails(subscription: Stripe.Subscription) {
   const subscriptionItem = subscription.items.data[0];
 

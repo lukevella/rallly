@@ -1,7 +1,7 @@
 import "server-only";
 
+import { auth as googleAuth, meet as googleMeet } from "@googleapis/meet";
 import { createLogger } from "@rallly/logger";
-import { google } from "googleapis";
 import { env } from "@/env";
 import { loadCredential } from "@/features/credentials/data";
 import { updateOAuthCredentialTokens } from "@/features/credentials/mutations";
@@ -524,7 +524,7 @@ async function deleteTeamsCheckMeeting({
 async function createMeetSpace(
   credentials: OAuthCredentials,
 ): Promise<Conferencing> {
-  const auth = new google.auth.OAuth2({
+  const auth = new googleAuth.OAuth2({
     clientId: env.GOOGLE_CLIENT_ID,
     clientSecret: env.GOOGLE_CLIENT_SECRET,
   });
@@ -533,7 +533,7 @@ async function createMeetSpace(
     refresh_token: credentials.refreshToken,
   });
 
-  const meet = google.meet({ version: "v2", auth });
+  const meet = googleMeet({ version: "v2", auth });
   const { data } = await meet.spaces.create({ requestBody: {} });
 
   return meetSpaceToConferencing(meetSpaceResponseSchema.parse(data));

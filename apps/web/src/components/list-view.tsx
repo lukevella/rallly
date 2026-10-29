@@ -18,9 +18,7 @@ export function ListViewHeader({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return (
-    <div className={cn("shrink-0 bg-background", className)}>{children}</div>
-  );
+  return <div className={cn("shrink-0", className)}>{children}</div>;
 }
 
 export function ListViewTitleBar({

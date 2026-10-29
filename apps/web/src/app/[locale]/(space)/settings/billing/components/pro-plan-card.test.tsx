@@ -13,7 +13,7 @@ vi.mock("@rallly/posthog/client", () => ({
 vi.mock("@/features/billing/actions", () => ({
   switchToYearlyAction: vi.fn(),
   openBillingDetailsAction: vi.fn(),
-  openCancelPlanAction: vi.fn(),
+  cancelPlanAction: vi.fn(),
   openPaymentMethodUpdateAction: vi.fn(),
   resumePlanAction: vi.fn(),
 }));
@@ -36,8 +36,8 @@ vi.mock("./manage-seats-dialog", () => ({
   ),
 }));
 
-vi.mock("./switch-to-yearly-dialog", () => ({
-  SwitchToYearlyDialog: ({ children }: { children: React.ReactNode }) => (
+vi.mock("./cancel-plan-dialog", () => ({
+  CancelPlanDialog: ({ children }: { children: React.ReactNode }) => (
     <Dialog>{children}</Dialog>
   ),
 }));

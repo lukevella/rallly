@@ -62,8 +62,9 @@ model User {
   // the taxonomy can change without a migration; validation lives in
   // features/user/schema.ts.
   jobTitle          String?     @map("job_title")
-  // When the user was asked in-app for a review on a third-party site. The
-  // ask shows once per user, so a set value means never ask again.
+  // When the user was asked for a review on a third-party site, by the
+  // review request email or a one-off campaign. Asked once per user, so a set
+  // value means never ask again.
   reviewRequestedAt DateTime?   @map("review_requested_at")
 
   comments                Comment[]

@@ -114,6 +114,11 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
         return t("actionErrorTooManyRequests", {
           defaultValue: "You are making too many requests",
         });
+      case "sessionUnavailable":
+        return t("guestSessionUnavailableError", {
+          defaultValue:
+            "We couldn't start a session for you. Check that cookies are enabled and try again.",
+        });
       default:
         return t("actionErrorInternalServerError", {
           defaultValue: "An internal server error occurred",
@@ -125,7 +130,11 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
     <form
       className="w-full"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
-        await createGuestIfNeeded();
+        const session = await createGuestIfNeeded();
+        if (!session.ok) {
+          toast.error(getCommentErrorMessage(session.reason));
+          return;
+        }
         const result = await addComment.execute({
           authorName,
           content,

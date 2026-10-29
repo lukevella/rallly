@@ -1,5 +1,4 @@
 import { cn } from "@rallly/ui";
-import { MarkdownDescription } from "@rallly/ui/markdown-description";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 
 export function EventMetaTitle({
@@ -16,24 +15,6 @@ export function EventMetaTitle({
   );
 }
 
-export function EventMetaDescription({
-  className,
-  content,
-}: {
-  className?: string;
-  content?: string | null;
-}) {
-  if (!content) {
-    return null;
-  }
-  return (
-    <MarkdownDescription
-      content={content}
-      className={cn(className, "min-w-0 opacity-90")}
-    />
-  );
-}
-
 export function EventMetaList({
   className,
   children,
@@ -41,7 +22,7 @@ export function EventMetaList({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <ul className={cn(className, "space-y-2")}>{children}</ul>;
+  return <ul className={cn("space-y-1.5", className)}>{children}</ul>;
 }
 
 export function EventMetaItem({
@@ -57,7 +38,7 @@ export function EventMetaItem({
         className,
         // The icon holds its column and the text wraps beside it rather
         // than under it, so a long location stays legible.
-        "flex items-start gap-1.5 text-sm [&>*:not(svg)]:min-w-0 [&_svg]:mt-0.5 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
+        "flex items-start gap-2 text-muted-foreground text-sm [&>*:not(svg)]:min-w-0 [&_svg]:mt-0.5 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-gray-400",
       )}
     >
       {children}

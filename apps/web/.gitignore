@@ -5,6 +5,7 @@ node_modules
 
 # playwright
 /playwright-report
+/blob-report
 /test-results
 # Sentry Config File
 .env.sentry-build-plugin
