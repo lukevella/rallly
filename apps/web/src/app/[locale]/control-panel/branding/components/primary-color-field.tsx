@@ -30,6 +30,7 @@ export function PrimaryColorField({
   );
   const [color, setColor] = React.useState(() => parseColor(defaultValue));
   const hexColor = color.toString("hex");
+  const isDirty = hexColor.toLowerCase() !== defaultValue.toLowerCase();
 
   const handleSave = () => {
     updateBranding.mutate(
@@ -44,6 +45,7 @@ export function PrimaryColorField({
       value={color}
       onChange={setColor}
       disabled={disabled}
+      isDirty={isDirty}
       isSaving={updateBranding.isPending}
       onSave={handleSave}
       aria-labelledby={labelledBy}

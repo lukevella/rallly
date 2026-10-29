@@ -3,12 +3,14 @@
 import { Button } from "@rallly/ui/button";
 import type { Color } from "@rallly/ui/color-picker";
 import { ColorPicker } from "@rallly/ui/color-picker";
+import type React from "react";
 import { Trans, useTranslation } from "@/i18n/client";
 
 /**
- * Color swatch that opens a picker popover with save and optional
- * reset-to-default actions in its footer (pass `onReset` to show the
- * reset button; `showReset` enables it).
+ * Color swatch that opens a picker popover, with save and optional
+ * reset-to-default actions beside it. Save shows while `isDirty`; reset
+ * shows when `onReset` is passed and `showReset` is true. `saveBadge`
+ * renders inside the save button, e.g. a plan badge.
  *
  * The wrapper div matters: react-aria's ColorPicker renders no element of
  * its own, so without it the swatch trigger would be a direct child of
@@ -17,8 +19,10 @@ import { Trans, useTranslation } from "@/i18n/client";
 export function ColorPickerWithSaveButton({
   value,
   onChange,
+  isDirty,
   isSaving,
   onSave,
+  saveBadge,
   onReset,
   showReset = false,
   disabled = false,
@@ -26,8 +30,10 @@ export function ColorPickerWithSaveButton({
 }: {
   value: Color;
   onChange: (color: Color) => void;
+  isDirty: boolean;
   isSaving: boolean;
   onSave: () => void;
+  saveBadge?: React.ReactNode;
   onReset?: () => void;
   showReset?: boolean;
   disabled?: boolean;
@@ -36,7 +42,29 @@ export function ColorPickerWithSaveButton({
   const { t } = useTranslation();
 
   return (
-    <div>
+    <div className="flex items-center gap-2">
+      {onReset && showReset ? (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onReset}
+          disabled={disabled || isSaving}
+        >
+          <Trans i18nKey="reset" defaults="Reset" />
+        </Button>
+      ) : null}
+      {isDirty ? (
+        <Button
+          size="sm"
+          variant="default"
+          onClick={onSave}
+          loading={isSaving}
+          disabled={disabled || isSaving}
+        >
+          <Trans i18nKey="save" defaults="Save" />
+          {saveBadge}
+        </Button>
+      ) : null}
       <ColorPicker
         value={value}
         onChange={onChange}
@@ -44,33 +72,6 @@ export function ColorPickerWithSaveButton({
         aria-labelledby={labelledBy}
         aria-label={t("chooseColor", { defaultValue: "Choose color" })}
         hexInputLabel={t("hexColor", { defaultValue: "Hex color" })}
-        footer={
-          <div className="flex justify-end gap-2">
-            {onReset ? (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={onReset}
-                disabled={!showReset || disabled || isSaving}
-              >
-                <Trans i18nKey="reset" defaults="Reset" />
-              </Button>
-            ) : null}
-            {/* Not gated on isDirty: the hex field only commits on blur, so a
-              typed color hasn't reached `value` yet when the user clicks —
-              the click's mousedown commits it, then the handler saves. */}
-            <Button
-              size="sm"
-              variant="default"
-              className="flex-1"
-              onClick={onSave}
-              loading={isSaving}
-              disabled={disabled || isSaving}
-            >
-              <Trans i18nKey="save" defaults="Save" />
-            </Button>
-          </div>
-        }
       />
     </div>
   );
