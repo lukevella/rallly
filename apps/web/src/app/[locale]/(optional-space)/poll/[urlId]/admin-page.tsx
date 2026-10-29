@@ -5,6 +5,7 @@ import { CommentsSheet } from "@/features/poll/components/comments-sheet";
 import { EventCard } from "@/features/poll/components/event-card";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { PollFooter } from "@/features/poll/components/poll-footer";
+import { PollResultsSummary } from "@/features/poll/components/poll-results-summary";
 import { ResponsiveResults } from "@/features/poll/components/responsive-results";
 import { VotingForm } from "@/features/poll/components/voting-form";
 import { RemoveAttributionPopover } from "@/features/space/components/remove-attribution-popover";
@@ -36,6 +37,7 @@ export function AdminPage({
           />
         }
       />
+      <PollResultsSummary />
       <VotingForm>
         <ResponsiveResults />
       </VotingForm>
