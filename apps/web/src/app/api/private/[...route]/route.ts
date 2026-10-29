@@ -328,6 +328,7 @@ app.post(
       );
     }
 
+    /** Reports the created poll, with the settings it was created with. */
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
       const kind = poll.options.some((o) => o.duration > 0) ? "time" : "date";
 

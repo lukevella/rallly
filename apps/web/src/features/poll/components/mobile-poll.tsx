@@ -32,6 +32,10 @@ import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import GroupedOptions from "./mobile-poll/grouped-options";
 
+/**
+ * The poll as a list of options on narrow screens, with the selected
+ * response's votes and, for an aggregate results poll, totals only.
+ */
 const MobilePoll: React.FunctionComponent = () => {
   const pollContext = usePoll();
 

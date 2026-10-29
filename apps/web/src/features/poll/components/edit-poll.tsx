@@ -57,6 +57,7 @@ const encodeStoredOption = (
     : `${start}/${addMinutesToWallTime(start, option.duration)}`;
 };
 
+/** The edit form's starting values, read from the poll as saved. */
 function getDefaultValues(poll: PollDetails): NewEventData {
   const firstDate = toPollWallTime(
     poll.options[0]?.startTime ?? new Date(),

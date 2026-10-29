@@ -37,6 +37,7 @@ export const usePoll = () => {
   return context;
 };
 
+/** Provides the poll's options and their scores to the poll views. */
 export const PollContextProvider: React.FunctionComponent<{
   poll: PollDetails;
   children?: React.ReactNode;

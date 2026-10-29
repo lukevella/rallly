@@ -167,6 +167,10 @@ function RankMedal({ rank }: { rank: number }) {
   );
 }
 
+/**
+ * The first finalize step: options ranked by availability, with their
+ * totals, to pick the date from.
+ */
 function PickDateStep({
   options,
   onPick,
@@ -366,6 +370,10 @@ function VoteShortcut({
   );
 }
 
+/**
+ * Who to email the chosen date to, grouped by their vote on it. Only
+ * participants with an email can be selected.
+ */
 function NotifyStep({
   optionId,
   selectedIds,
@@ -626,9 +634,12 @@ function SummaryStep({ option }: { option: RankedOption }) {
   );
 }
 
-// Mounted fresh with each open, so the wizard starts with nothing carried
-// over from a previous run. The step lives in the dialog, which reads it
-// when the host closes it.
+/**
+ * The finalize steps: pick a date, choose who to notify, confirm. Mounted
+ * fresh with each open, so the wizard starts with nothing carried over from
+ * a previous run. The step lives in the dialog, which reads it when the
+ * host closes it.
+ */
 function FinalizeWizard({
   step,
   onStepChange,

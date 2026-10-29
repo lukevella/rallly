@@ -116,6 +116,10 @@ export const usePermissions = () => {
     canAddNewParticipant:
       poll.status === "open" &&
       !(poll.aggregateResultsOnly && viewerRole === "admin"),
+    /**
+     * Whether the viewer may change the response: their own, or any as the
+     * host of a poll that shows responses, and only while the poll is open.
+     */
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
         return false;

@@ -96,6 +96,10 @@ const toPollResponse = <
   participantCount: _count.participants,
 });
 
+/**
+ * Creates a poll with its options and settings, aggregate results only
+ * included, and records its creation.
+ */
 export const createPoll = async ({
   userId,
   title,

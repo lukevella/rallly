@@ -22,6 +22,10 @@ import {
 } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 
+/**
+ * The selected response beside the list, or a prompt to pick one. An
+ * aggregate results poll has no response to open.
+ */
 async function ResponseDetail({
   pollId,
   responseId,

@@ -34,6 +34,10 @@ export interface PollOptionProps {
   allowTentativeVotes?: boolean;
 }
 
+/**
+ * One option on narrow screens: the selected response's vote, the score
+ * and, unless the poll is aggregate results only, who voted for it.
+ */
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
   children,
   selectedParticipantId,

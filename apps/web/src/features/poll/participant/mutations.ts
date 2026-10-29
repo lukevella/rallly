@@ -129,6 +129,11 @@ export type AddParticipantResult =
     }
   | { ok: false; reason: WriteRefusal };
 
+/**
+ * Adds a response to an open poll, under the poll's row lock so it never
+ * lands after the aggregate results setting changes. Refuses closed or
+ * missing polls with a reason.
+ */
 export async function addParticipant({
   pollId,
   userId,

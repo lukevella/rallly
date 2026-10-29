@@ -60,6 +60,10 @@ function VoteOptionLabel({ types }: { types: VoteType[] }) {
   );
 }
 
+/**
+ * The poll's settings fields. Aggregate results only can be changed until
+ * the poll has a response.
+ */
 export const PollSettingsForm = ({
   children,
   hasTentativeVotes = false,

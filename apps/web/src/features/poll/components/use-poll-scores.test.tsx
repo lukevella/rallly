@@ -19,6 +19,7 @@ import { usePollScores } from "./use-poll-scores";
 const viewer = vi.hoisted(() => ({ userId: "" }));
 
 vi.mock("@/features/user/client", () => ({
+  /** The signed-in user the test sets in `viewer`, or none. */
   useUser: () => ({
     user: viewer.userId ? { id: viewer.userId } : undefined,
   }),

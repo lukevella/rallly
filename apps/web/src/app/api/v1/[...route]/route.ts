@@ -99,6 +99,10 @@ function toOptionResponse(
   };
 }
 
+/**
+ * Encodes a poll for the v1 API's poll responses, including whether it
+ * only exposes aggregate results.
+ */
 function toPollResponseBody(poll: {
   id: string;
   title: string;
@@ -542,6 +546,7 @@ app.post(
       );
     }
 
+    /** Reports the created poll, with the settings it was created with. */
     const trackPollCreated = (poll: Awaited<ReturnType<typeof createPoll>>) => {
       const kind = poll.options.some((o) => o.duration > 0) ? "time" : "date";
 

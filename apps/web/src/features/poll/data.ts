@@ -27,6 +27,7 @@ import {
 } from "@/features/space/utils";
 import { decryptToken } from "@/lib/session";
 
+/** A poll of the space in scope, with its settings, or null. */
 export async function getPoll({
   pollId,
   scope,
@@ -270,6 +271,10 @@ export async function getPollParticipant({
   };
 }
 
+/**
+ * A page of the space's polls, newest first, optionally of one status.
+ * Returns the cursor of the next page when there is one.
+ */
 export async function listPolls({
   spaceId,
   status,
@@ -639,6 +644,7 @@ export async function listParticipantIdsByToken({
   return participant ? [participant.id] : [];
 }
 
+/** A poll of the space with its options and settings, or null. */
 export async function getPollWithOptions({
   pollId,
   spaceId,

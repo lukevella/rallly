@@ -274,6 +274,10 @@ function DesktopPollEmptyState() {
   );
 }
 
+/**
+ * The poll as a table of responses by option on wide screens. An aggregate
+ * results poll shows totals per option and the viewer's own response only.
+ */
 const DesktopPoll: React.FunctionComponent = () => {
   const poll = usePoll();
 

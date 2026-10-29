@@ -118,6 +118,7 @@ const CreatePollActions = ({
   );
 };
 
+/** The form that creates a poll, aggregate results setting included. */
 export const CreatePoll = ({
   nav,
   conferencing,

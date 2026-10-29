@@ -305,6 +305,7 @@ describe("rankOptionsByPopularity", () => {
     const ranked = rankOptionsByPopularity({
       options,
       participants: [],
+      /** Aggregate totals stand in for the missing responses. */
       getScore: (optionId) => scores.get(optionId) ?? { yes: 0, ifNeedBe: 0 },
     });
 

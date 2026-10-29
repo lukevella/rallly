@@ -76,6 +76,10 @@ function OpenCloseToggle() {
   }
 }
 
+/**
+ * The host's poll menu. Response exports are left out of an aggregate
+ * results poll, which keeps individual responses from its host.
+ */
 const ManagePoll: React.FunctionComponent<{
   disabled?: boolean;
 }> = ({ disabled }) => {

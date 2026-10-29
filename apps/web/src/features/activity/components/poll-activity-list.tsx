@@ -172,6 +172,10 @@ const iconByChange: Record<PollChange["field"], LucideIcon> = {
   settings: Settings2Icon,
 };
 
+/**
+ * The tint of a change in the activity list: whether participants gained
+ * something, lost something, or saw it change.
+ */
 function toneOfChange(change: PollChange): keyof typeof toneClassName {
   if ("action" in change) {
     return change.action === "added"
@@ -201,6 +205,7 @@ const conferencingName = (conferencing: PollConferencing) =>
     ? conferencing.label
     : conferencingProviderLabels[conferencing.provider];
 
+/** One poll change as a sentence: what changed, from what to what. */
 function ChangeDescription({ change }: { change: PollChange }) {
   const b = <b className="font-medium" />;
   switch (change.field) {
