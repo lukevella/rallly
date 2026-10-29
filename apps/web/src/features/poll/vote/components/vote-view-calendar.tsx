@@ -97,6 +97,8 @@ function OptionDayContent({
         participantCount={ctx?.participantCount ?? null}
         hasSavedResponse={ctx?.hasSavedResponse ?? false}
         allowTentativeVotes={ctx?.allowTentativeVotes ?? true}
+        maxParticipants={result.maxParticipants}
+        capacityReached={result.capacityReached}
         className="w-full"
       />
     </>
@@ -204,10 +206,14 @@ export function VoteViewCalendar({
         return;
       }
       setVote(result.optionId, (current) =>
-        nextVoteType(current, poll.allowTentativeVotes),
+        nextVoteType(
+          current,
+          poll.allowTentativeVotes,
+          !result.capacityReached || savedVotes.get(result.optionId) === "yes",
+        ),
       );
     },
-    [byDate, canVote, form, setVote, poll.allowTentativeVotes],
+    [byDate, canVote, form, savedVotes, setVote, poll.allowTentativeVotes],
   );
 
   const ctx = React.useMemo(

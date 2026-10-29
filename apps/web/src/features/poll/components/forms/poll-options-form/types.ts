@@ -1,12 +1,16 @@
 export type DateOption = {
   type: "date";
   date: string;
+  /** Max number of "yes" votes this option accepts. Unset means no limit. */
+  maxParticipants?: number;
 };
 
 export type TimeOption = {
   type: "timeSlot";
   start: string;
   end: string;
+  /** Max number of "yes" votes this option accepts. Unset means no limit. */
+  maxParticipants?: number;
 };
 
 export type DateTimeOption = DateOption | TimeOption;

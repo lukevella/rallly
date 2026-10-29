@@ -156,6 +156,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
 
   const getSubmitErrorMessage = (reason: string) => {
     switch (reason) {
+      case "optionFull":
+        return t("participantOptionFull", {
+          defaultValue:
+            "One or more of the time slots have reached their limit for yes votes.",
+        });
       case "full":
       case "closed":
       case "notFound":

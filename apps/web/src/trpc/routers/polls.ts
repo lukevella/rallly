@@ -204,6 +204,7 @@ export const polls = router({
           .object({
             startDate: z.string(),
             endDate: z.string().optional(),
+            maxParticipants: z.number().int().min(1).nullable().optional(),
           })
           .array()
           .min(1),
@@ -298,6 +299,7 @@ export const polls = router({
         duration: option.endDate
           ? wallTimeDiffInMinutes(option.startDate, option.endDate)
           : 0,
+        maxParticipants: option.maxParticipants ?? null,
       }));
 
       const kind = isTimePoll ? "time" : "date";
@@ -461,7 +463,21 @@ export const polls = router({
           .transform(collapseNewlines)
           .optional(),
         optionsToDelete: z.string().array().optional(),
-        optionsToAdd: z.string().array().optional(),
+        optionsToAdd: z
+          .object({
+            startDate: z.string(),
+            endDate: z.string().optional(),
+            maxParticipants: z.number().int().min(1).nullable().optional(),
+          })
+          .array()
+          .optional(),
+        optionsToUpdate: z
+          .object({
+            id: z.string(),
+            maxParticipants: z.number().int().min(1).nullable(),
+          })
+          .array()
+          .optional(),
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         aggregateResultsOnly: z.boolean().optional(),
@@ -561,23 +577,28 @@ export const polls = router({
 
       await prisma.$transaction(async (tx) => {
         const newOptions =
-          input.optionsToAdd?.map((optionValue) => {
-            const [start, end] = optionValue.split("/");
+          input.optionsToAdd?.map((option) => {
+            const start = option.startDate;
+            const end = option.endDate;
 
             if (end) {
               return {
                 startTime: wallTimeToInstant(start, input.timeZone ?? "UTC"),
                 duration: wallTimeDiffInMinutes(start, end),
                 pollId,
-              };
-            } else {
-              return {
-                startTime: wallTimeToInstant(start, "UTC"),
-                duration: 0,
-                pollId,
+                maxParticipants: option.maxParticipants ?? null,
               };
             }
+
+            return {
+              startTime: wallTimeToInstant(start, "UTC"),
+              duration: 0,
+              pollId,
+              maxParticipants: option.maxParticipants ?? null,
+            };
           }) ?? [];
+
+        const updatedOptions = input.optionsToUpdate ?? [];
 
         // Lock the poll row for the rest of the transaction. Concurrent edits
         // then queue, so each reads the values the previous one committed and
@@ -702,6 +723,17 @@ export const polls = router({
               },
             },
           });
+        }
+
+        if (updatedOptions.length > 0) {
+          await Promise.all(
+            updatedOptions.map(({ id, maxParticipants }) =>
+              tx.option.updateMany({
+                where: { pollId, id },
+                data: { maxParticipants },
+              }),
+            ),
+          );
         }
 
         const addedOptions =

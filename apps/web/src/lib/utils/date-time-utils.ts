@@ -30,6 +30,7 @@ export interface ParsedDateOption {
   dow: string;
   month: string;
   year: string;
+  maxParticipants: number | null;
 }
 
 export interface ParsedTimeSlotOption {
@@ -42,6 +43,7 @@ export interface ParsedTimeSlotOption {
   endTime: string;
   duration: string;
   year: string;
+  maxParticipants: number | null;
 }
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;

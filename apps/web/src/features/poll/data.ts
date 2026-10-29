@@ -76,6 +76,7 @@ export async function getPollResults({
             id: true,
             startTime: true,
             duration: true,
+            maxParticipants: true,
           },
           orderBy: {
             startTime: "asc",
@@ -128,6 +129,7 @@ export async function getPollResults({
       id: option.id,
       startTime: option.startTime,
       duration: option.duration,
+      maxParticipants: option.maxParticipants,
       votes,
       score,
     };
@@ -171,7 +173,9 @@ const apiParticipantSelect = {
   votes: {
     select: {
       type: true,
-      option: { select: { startTime: true, duration: true } },
+      option: {
+        select: { startTime: true, duration: true, maxParticipants: true },
+      },
     },
   },
 } satisfies Prisma.ParticipantSelect;
@@ -323,6 +327,7 @@ export async function listPolls({
           id: true,
           startTime: true,
           duration: true,
+          maxParticipants: true,
         },
         orderBy: {
           startTime: "asc",
@@ -688,6 +693,7 @@ export async function getPollWithOptions({
           id: true,
           startTime: true,
           duration: true,
+          maxParticipants: true,
         },
         orderBy: {
           startTime: "asc",
@@ -786,7 +792,12 @@ export async function getPollDetails({
       spaceId: true,
       deleted: true,
       options: {
-        select: { id: true, startTime: true, duration: true },
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+          maxParticipants: true,
+        },
         orderBy: { startTime: "asc" },
       },
       user: { select: { id: true, name: true, image: true, banned: true } },

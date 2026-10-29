@@ -5,7 +5,7 @@ import {
   wallTimeExists,
   wallTimeToInstant,
 } from "@/lib/datetime/wall-time";
-import type { DateTimeOption, TimeOption } from "./types";
+import type { DateOption, DateTimeOption, TimeOption } from "./types";
 
 export const DURATION_CAP_MINUTES = 60 * 24;
 
@@ -43,7 +43,7 @@ export function eventId(option: DateTimeOption): string {
 }
 
 export function optionsToEvents(options: DateTimeOption[]): CalendarEvent[] {
-  return options.map((option) => {
+  return options.flatMap((option) => {
     if (option.type === "date") {
       // An exclusive end at the next floating midnight, never zero-length.
       const start = floatingToDate(`${option.date}T00:00:00`);

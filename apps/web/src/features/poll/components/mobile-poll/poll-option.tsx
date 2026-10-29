@@ -32,6 +32,8 @@ export interface PollOptionProps {
   optionLabel: string;
   /** When false the segmented control offers yes and no only. */
   allowTentativeVotes?: boolean;
+  yesDisabled: boolean;
+  maxParticipants: number | null;
 }
 
 /**
@@ -49,6 +51,8 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   yesScore,
   ifNeedBeScore,
   allowTentativeVotes = true,
+  yesDisabled = false,
+  maxParticipants = null,
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
@@ -75,7 +79,22 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       >
         {showVote ? <VoteIcon type={vote} /> : null}
       </span>
-      {children}
+      <div className="min-w-0">
+        {children}
+        {maxParticipants !== null ? (
+          <span className="text-muted-foreground text-xs">
+            {yesScore >= maxParticipants ? (
+              <Trans i18nKey="optionCapacityFull" defaults="Full" />
+            ) : (
+              <Trans
+                i18nKey="optionCapacityCount"
+                defaults="{count} of {max} yes votes"
+                values={{ count: yesScore, max: maxParticipants }}
+              />
+            )}
+          </span>
+        ) : null}
+      </div>
       <IfScoresVisible>
         {/* No responses to expand on an aggregate results poll: totals only. */}
         {poll.aggregateResultsOnly ? (
@@ -133,6 +152,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             onChange={onChange}
             optionLabel={optionLabel}
             allowTentativeVotes={allowTentativeVotes}
+            yesDisabled={yesDisabled}
           />
         </m.div>
       ) : null}

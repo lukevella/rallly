@@ -26,6 +26,12 @@ type PollContextValue = {
     skip: number;
   };
   getVote: (participantId: string, optionId: string) => VoteType | undefined;
+  /**
+   * Whether the option's yes limit is met, so a new yes would be refused.
+   * The participant being edited keeps a yes they already hold, since it is
+   * part of the count.
+   */
+  isYesFull: (optionId: string, participantId?: string) => boolean;
 };
 
 export const PollContext = React.createContext<PollContextValue | null>(null);
@@ -105,6 +111,25 @@ export const PollContextProvider: React.FunctionComponent<{
         return vote?.type;
       },
       getScore,
+      isYesFull: (optionId, participantId) => {
+        const maxParticipants = poll.options.find(
+          (option) => option.id === optionId,
+        )?.maxParticipants;
+        if (maxParticipants == null) {
+          return false;
+        }
+        if (
+          participantId &&
+          participants
+            .find((participant) => participant.id === participantId)
+            ?.votes.some(
+              (vote) => vote.optionId === optionId && vote.type === "yes",
+            )
+        ) {
+          return false;
+        }
+        return getScore(optionId).yes >= maxParticipants;
+      },
     };
   }, [getScore, participants, poll]);
 
@@ -140,7 +165,12 @@ export function createOptionsContextValue({
   timeZone,
   timeFormat,
 }: {
-  pollOptions: { id: string; startTime: Date; duration: number }[];
+  pollOptions: {
+    id: string;
+    startTime: Date;
+    duration: number;
+    maxParticipants: number | null;
+  }[];
   /**
    * The poll's zone: set means options are fixed instants shown in the
    * viewer's zone; null means floating times shown as stored.
@@ -192,6 +222,7 @@ export function createOptionsContextValue({
           day: parts.day,
           dow: parts.weekday,
           year: parts.year,
+          maxParticipants: option.maxParticipants,
         } satisfies ParsedTimeSlotOption;
       }),
     };
@@ -213,6 +244,7 @@ export function createOptionsContextValue({
           day: parts.day,
           dow: parts.weekday,
           year: parts.year,
+          maxParticipants: option.maxParticipants,
         } satisfies ParsedDateOption;
       }),
     };

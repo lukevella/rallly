@@ -13,7 +13,12 @@ import { generateAccessToken } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
-type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
+type WriteRefusal =
+  | "notFound"
+  | "closed"
+  | "full"
+  | "optionFull"
+  | "tentativeVotesNotAllowed";
 
 class WriteRefusedError extends Error {
   constructor(public readonly reason: WriteRefusal) {
@@ -90,6 +95,54 @@ async function listValidOptionIds(
     select: { id: true },
   });
   return new Set(options.map((option) => option.id));
+}
+
+async function assertYesVoteCapacity(
+  tx: Prisma.TransactionClient,
+  pollId: string,
+  votes: { optionId: string; type: VoteType }[],
+  grandfatheredYesOptionIds: Set<string> = new Set(),
+) {
+  const optionIds = [
+    ...new Set(
+      votes.filter((vote) => vote.type === "yes").map((vote) => vote.optionId),
+    ),
+  ];
+
+  if (optionIds.length === 0) {
+    return;
+  }
+
+  const [options, yesCounts] = await Promise.all([
+    tx.option.findMany({
+      where: {
+        pollId,
+        id: { in: optionIds },
+        maxParticipants: { not: null },
+      },
+      select: { id: true, maxParticipants: true },
+    }),
+    tx.vote.groupBy({
+      by: ["optionId"],
+      where: { pollId, optionId: { in: optionIds }, type: "yes" },
+      _count: { _all: true },
+    }),
+  ]);
+  const yesCountByOption = new Map(
+    yesCounts.map((row) => [row.optionId, row._count._all]),
+  );
+
+  for (const option of options) {
+    const limit = option.maxParticipants;
+    // A yes the participant already held still fits even at the cap: editing
+    // an unrelated option must not strand an existing response.
+    if (!limit || grandfatheredYesOptionIds.has(option.id)) {
+      continue;
+    }
+    if ((yesCountByOption.get(option.id) ?? 0) >= limit) {
+      throw new WriteRefusedError("optionFull");
+    }
+  }
 }
 
 function refusal(error: unknown) {
@@ -170,12 +223,13 @@ export async function addParticipant({
 
   try {
     const result = await prisma.$transaction(async (tx) => {
+      await lockOpenPoll(tx, pollId, votes);
+
       const validOptionIds = await listValidOptionIds(tx, pollId);
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
-
-      await lockOpenPoll(tx, pollId, validVotes);
+      await assertYesVoteCapacity(tx, pollId, validVotes);
 
       // Counted under the lock so two responses cannot both pass at the cap.
       const participantCount = await tx.participant.count({
@@ -300,11 +354,24 @@ export async function updateParticipantVotes({
       await lockOpenPoll(tx, pollId, votes);
       await assertParticipantInPoll(tx, participantId, pollId);
 
-      await tx.vote.deleteMany({ where: { participantId } });
+      const previousYesVotes = await tx.vote.findMany({
+        where: { participantId, pollId, type: "yes" },
+        select: { optionId: true },
+      });
+      const grandfatheredYesOptionIds = new Set(
+        previousYesVotes.map((vote) => vote.optionId),
+      );
 
       const validOptionIds = await listValidOptionIds(tx, pollId);
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
+      );
+      await tx.vote.deleteMany({ where: { participantId } });
+      await assertYesVoteCapacity(
+        tx,
+        pollId,
+        validVotes,
+        grandfatheredYesOptionIds,
       );
 
       await tx.vote.createMany({

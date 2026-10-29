@@ -154,11 +154,12 @@ model PollActivity {
 }
 
 model Option {
-  id        String   @id @default(cuid())
-  startTime DateTime @map("start_time") @db.Timestamp(0)
-  duration  Int      @default(0) @map("duration_minutes")
-  pollId    String   @map("poll_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id              String   @id @default(cuid())
+  startTime       DateTime @map("start_time") @db.Timestamp(0)
+  duration        Int      @default(0) @map("duration_minutes")
+  pollId          String   @map("poll_id")
+  maxParticipants Int?     @map("max_participants")
+  createdAt       DateTime @default(now()) @map("created_at")
 
   votes Vote[]
 

@@ -9,6 +9,13 @@ export type VoteResult = {
   startTime: Date;
   duration: number;
   score: { yes: number; ifNeedBe: number } | null;
+  /** Max number of "yes" votes this option accepts; null means no limit. */
+  maxParticipants: number | null;
+  /**
+   * Whether the "yes" limit is already met, so no further yes vote fits.
+   * Set even when scores are hidden: only the flag is revealed, not the count.
+   */
+  capacityReached: boolean;
 };
 
 /** The viewer's own response. */
