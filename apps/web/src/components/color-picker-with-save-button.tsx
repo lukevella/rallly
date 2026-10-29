@@ -12,7 +12,7 @@ import { Trans, useTranslation } from "@/i18n/client";
  * shows when `onReset` is passed and `showReset` is true. `saveBadge`
  * renders inside the save button, e.g. a plan badge.
  *
- * The wrapper div matters: react-aria's ColorPicker renders no element of
+ * The wrapper fieldset matters: react-aria's ColorPicker renders no element of
  * its own, so without it the swatch trigger would be a direct child of
  * Field, whose `*:w-auto` child selector collapses the button's width.
  */
@@ -42,7 +42,9 @@ export function ColorPickerWithSaveButton({
   const { t } = useTranslation();
 
   return (
-    <div className="flex items-center gap-2">
+    // Named group so each row's save and reset buttons say which color
+    // they act on when a page has more than one picker.
+    <fieldset aria-labelledby={labelledBy} className="flex items-center gap-2">
       {onReset && showReset ? (
         <Button
           variant="ghost"
@@ -71,6 +73,6 @@ export function ColorPickerWithSaveButton({
         aria-label={t("chooseColor", { defaultValue: "Choose color" })}
         hexInputLabel={t("hexColor", { defaultValue: "Hex color" })}
       />
-    </div>
+    </fieldset>
   );
 }
