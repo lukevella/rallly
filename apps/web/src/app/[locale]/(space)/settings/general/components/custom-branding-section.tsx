@@ -159,11 +159,7 @@ export function CustomBrandingSection({
                   isDirty={isDirty}
                   isSaving={updateSpace.isPending}
                   onSave={handleSave}
-                  saveBadge={
-                    space.tier !== "pro" ? (
-                      <ProBadge className="ml-1.5 bg-primary-foreground/20 text-primary-foreground" />
-                    ) : null
-                  }
+                  saveBadge={space.tier !== "pro" ? <ProBadge /> : null}
                   onReset={handleReset}
                   showReset={!isDefault}
                   aria-labelledby="primary-color-label"

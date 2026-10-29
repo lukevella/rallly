@@ -45,7 +45,6 @@ export function ColorPickerWithSaveButton({
     <div className="flex items-center gap-2">
       {onReset && showReset ? (
         <Button
-          size="sm"
           variant="ghost"
           onClick={onReset}
           disabled={disabled || isSaving}
@@ -55,7 +54,6 @@ export function ColorPickerWithSaveButton({
       ) : null}
       {isDirty ? (
         <Button
-          size="sm"
           variant="default"
           onClick={onSave}
           loading={isSaving}
