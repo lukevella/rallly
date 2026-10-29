@@ -33,6 +33,13 @@ const formSchema = z.object({
 
 type VotingFormValues = z.infer<typeof formSchema>;
 
+/**
+ * The voting form with the participant on display resolved.
+ * `selectedParticipantId` is the one the form names, or, on an aggregate
+ * results poll in view mode, the viewer's own response: there is no table
+ * of responses to pick from, so the viewer's answers stay on screen after
+ * they cancel an edit or the poll closes.
+ */
 export const useVotingForm = () => {
   const { options, aggregateResultsOnly } = usePoll();
   const { participants } = useParticipants();
@@ -85,6 +92,10 @@ export const useVotingForm = () => {
   };
 };
 
+/**
+ * The form a viewer votes with: it creates a response, or saves the votes
+ * of the selected one.
+ */
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const { options } = usePoll();
   const { t } = useTranslation();

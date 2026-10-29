@@ -38,6 +38,7 @@ import {
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
   getFinalizePlanGate,
+  resolveNotifyParticipantIds,
   summarizeNotifySelection,
 } from "@/features/poll/utils";
 import { claimReviewRequest } from "@/features/review-request/mutations";
@@ -1116,6 +1117,9 @@ export const polls = router({
         pollId: z.string(),
         optionId: z.string(),
         notifyParticipantIds: z.array(z.string()),
+        // An aggregate results host never sees who responded, so they can
+        // only choose to email everyone or no one.
+        notifyAllParticipants: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -1143,6 +1147,7 @@ export const polls = router({
           description: true,
           spaceId: true,
           hideParticipants: true,
+          aggregateResultsOnly: true,
           space: { select: { tier: true } },
           user: {
             select: {
@@ -1331,7 +1336,13 @@ export const polls = router({
         }
       >();
       // An address is emailed when any participant behind it was selected.
-      const notifyIds = new Set(input.notifyParticipantIds);
+      const notifyIds = new Set(
+        resolveNotifyParticipantIds({
+          participants: poll.participants,
+          notifyParticipantIds: input.notifyParticipantIds,
+          notifyAllParticipants: input.notifyAllParticipants ?? false,
+        }),
+      );
       const notifyEmails = new Set(
         poll.participants.flatMap((p) =>
           p.email && notifyIds.has(p.id) ? [p.email.trim().toLowerCase()] : [],
@@ -1340,7 +1351,13 @@ export const polls = router({
       for (const p of poll.participants) {
         if (!p.email) continue;
         const vote = p.votes.find((v) => v.optionId === input.optionId)?.type;
-        const status = vote ? inviteStatusByVote[vote] : "pending";
+        // An invite's status is visible on the event, so an aggregate
+        // results poll starts every invitee as pending instead of carrying
+        // their vote over; invitees answer the invite themselves.
+        const status =
+          vote && !poll.aggregateResultsOnly
+            ? inviteStatusByVote[vote]
+            : "pending";
         const key = p.email.trim().toLowerCase();
         const existing = invitesByEmail.get(key);
         if (
@@ -1382,7 +1399,7 @@ export const polls = router({
             spaceId,
             allDay: eventTimes.allDay,
             status: "confirmed",
-            hideAttendees: poll.hideParticipants,
+            hideAttendees: poll.hideParticipants || poll.aggregateResultsOnly,
             invites: {
               createMany: {
                 data: inviteData,
@@ -1469,13 +1486,11 @@ export const polls = router({
               location: poll.location || undefined,
               conferencing: emailConferencing,
               title: poll.title,
-              attendees: poll.participants
-                .filter((p) =>
-                  p.votes.some(
-                    (v) => v.optionId === input.optionId && v.type !== "no",
-                  ),
-                )
-                .map((p) => p.name),
+              // Names by vote would give the host what the aggregate
+              // results setting withholds.
+              attendees: poll.aggregateResultsOnly
+                ? []
+                : attendees.map((p) => p.name),
               date,
               time,
             },
@@ -1495,7 +1510,7 @@ export const polls = router({
             ...summarizeNotifySelection({
               participants: poll.participants,
               optionId: input.optionId,
-              notifyParticipantIds: input.notifyParticipantIds,
+              notifyParticipantIds: Array.from(notifyIds),
             }),
           },
           groups: {

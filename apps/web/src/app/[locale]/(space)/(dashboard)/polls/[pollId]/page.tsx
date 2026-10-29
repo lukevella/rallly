@@ -20,6 +20,10 @@ import {
 import { Trans } from "@/i18n/client";
 import { OverviewSection } from "./components/overview-section";
 
+/**
+ * The poll overview. The shell renders at once; the reads that need the
+ * session stream in behind the skeleton.
+ */
 export default function Page({
   params,
 }: {
@@ -32,6 +36,11 @@ export default function Page({
   );
 }
 
+/**
+ * The overview's sections: top dates, latest responses and recent activity.
+ * An aggregate results poll lists no responses; it counts them and explains
+ * why they are hidden instead of showing the empty state.
+ */
 async function PollOverview({
   params,
 }: {

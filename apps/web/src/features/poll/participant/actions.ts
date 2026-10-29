@@ -217,6 +217,8 @@ export const addParticipantAction = anyUserActionClient
       );
     }
 
+    // The new response email names the respondent, which an aggregate
+    // results poll keeps from its host.
     if (!poll.aggregateResultsOnly) {
       after(() =>
         sendNewResponseNotificationEmail({

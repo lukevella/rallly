@@ -73,6 +73,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       </span>
       {children}
       <IfScoresVisible>
+        {/* No responses to expand on an aggregate results poll: totals only. */}
         {poll.aggregateResultsOnly ? (
           <span className="col-start-3 justify-self-end">
             <ConnectedScoreSummary optionId={optionId} />

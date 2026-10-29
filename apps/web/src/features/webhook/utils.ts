@@ -169,6 +169,8 @@ export function buildWebhookPayload({
   }
 
   const event = parsed.data;
+  // Response events name a participant; an aggregate results poll keeps
+  // individual responses from every consumer, webhooks included.
   if (
     poll.aggregateResultsOnly &&
     (event.type === "response_created" ||

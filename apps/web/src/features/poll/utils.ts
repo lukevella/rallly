@@ -2,7 +2,11 @@ import { customAlphabet } from "nanoid";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
-import type { PollComment, PollParticipant } from "@/features/poll/types";
+import type {
+  PollComment,
+  PollDetails,
+  PollParticipant,
+} from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
@@ -40,7 +44,9 @@ type RawParticipant = Omit<PollParticipant, "hidden" | "editUrl"> & {
  * the host and their author only, so they survive only on the viewer's own
  * responses: the ones their session created, or the one the emailed link
  * they opened names. With hidden participants, everyone else's identity is
- * withheld while their votes still count.
+ * withheld while their votes still count. With aggregate results only,
+ * everyone else's response is dropped: the viewer keeps their own answers
+ * and reads the rest as totals.
  */
 export function maskParticipantsForViewer({
   participants,
@@ -152,6 +158,9 @@ export type OptionVotes = {
 /**
  * Options in the order a host picks from: most available first, with a
  * firm yes outranking an ifNeedBe at the same total. Ties keep option order.
+ *
+ * @param getScore - Totals per option that replace the participant count,
+ * for an aggregate results poll whose host holds totals and no responses.
  */
 export function rankOptionsByPopularity<T extends { id: string }>({
   options,
@@ -262,6 +271,59 @@ export function summarizeNotifySelection({
 }
 
 export type FinalizePlanGate = "conferencing";
+
+/**
+ * The participants a booking emails. Selecting everyone is the only choice
+ * an aggregate results host can make, since they never see who responded;
+ * otherwise the host's per-participant selection stands. Participants
+ * without an email cannot be notified either way.
+ */
+export function resolveNotifyParticipantIds({
+  participants,
+  notifyParticipantIds,
+  notifyAllParticipants,
+}: {
+  participants: { id: string; email: string | null }[];
+  notifyParticipantIds: string[];
+  notifyAllParticipants: boolean;
+}) {
+  const selected = new Set(notifyParticipantIds);
+  return participants
+    .filter(
+      (participant) =>
+        !!participant.email &&
+        (notifyAllParticipants || selected.has(participant.id)),
+    )
+    .map((participant) => participant.id);
+}
+
+/**
+ * A hidden tally stays on the server: with hideScores, an aggregate results
+ * poll sends its per-option totals only to a viewer who has responded, as
+ * the vote page does. A non-aggregate poll is returned unchanged; its scores
+ * are derived from participants, which are filtered separately.
+ */
+export function withholdAggregateScores({
+  poll,
+  viewerHasResponded,
+}: {
+  poll: PollDetails;
+  viewerHasResponded: boolean;
+}): PollDetails {
+  if (!poll.aggregateResultsOnly || !poll.hideScores || viewerHasResponded) {
+    return poll;
+  }
+  return {
+    ...poll,
+    aggregateVotes: poll.aggregateVotes?.map(({ optionId }) => ({
+      optionId,
+      yes: 0,
+      ifNeedBe: 0,
+      no: 0,
+      skip: 0,
+    })),
+  };
+}
 
 /**
  * Finalizing and notifying participants are free. What a free space cannot

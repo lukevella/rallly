@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
+import type { PollDetails } from "./types";
 import {
   filterCommentsForViewer,
   filterParticipantsByVote,
   getFinalizePlanGate,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
+  resolveNotifyParticipantIds,
   summarizeNotifySelection,
   toAvailabilitySpans,
+  withholdAggregateScores,
 } from "./utils";
 
 const participant = (
@@ -457,5 +460,92 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+describe("resolveNotifyParticipantIds", () => {
+  const participants = [
+    { id: "a", email: "a@example.com" },
+    { id: "b", email: "b@example.com" },
+    { id: "c", email: null },
+  ];
+
+  it("notifies only the selected participants", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["b"],
+        notifyAllParticipants: false,
+      }),
+    ).toEqual(["b"]);
+  });
+
+  it("notifies everyone with an email when asked to notify all", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: [],
+        notifyAllParticipants: true,
+      }),
+    ).toEqual(["a", "b"]);
+  });
+
+  it("skips selected participants without an email", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["c"],
+        notifyAllParticipants: false,
+      }),
+    ).toEqual([]);
+  });
+
+  it("ignores ids that are not participants of the poll", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["other"],
+        notifyAllParticipants: false,
+      }),
+    ).toEqual([]);
+  });
+});
+
+describe("withholdAggregateScores", () => {
+  const totals = { optionId: "opt-1", yes: 2, ifNeedBe: 1, no: 1, skip: 0 };
+  const poll = (overrides: Partial<PollDetails>) =>
+    ({
+      aggregateResultsOnly: true,
+      hideScores: true,
+      aggregateVotes: [totals],
+      ...overrides,
+    }) as PollDetails;
+
+  it("zeroes the totals for a viewer who has not responded", () => {
+    expect(
+      withholdAggregateScores({ poll: poll({}), viewerHasResponded: false })
+        .aggregateVotes,
+    ).toEqual([{ optionId: "opt-1", yes: 0, ifNeedBe: 0, no: 0, skip: 0 }]);
+  });
+
+  it("keeps the totals once the viewer has responded", () => {
+    const input = poll({});
+    expect(
+      withholdAggregateScores({ poll: input, viewerHasResponded: true }),
+    ).toBe(input);
+  });
+
+  it("keeps the totals when scores are not hidden", () => {
+    const input = poll({ hideScores: false });
+    expect(
+      withholdAggregateScores({ poll: input, viewerHasResponded: false }),
+    ).toBe(input);
+  });
+
+  it("leaves polls that are not aggregate unchanged", () => {
+    const input = poll({ aggregateResultsOnly: false });
+    expect(
+      withholdAggregateScores({ poll: input, viewerHasResponded: false }),
+    ).toBe(input);
   });
 });

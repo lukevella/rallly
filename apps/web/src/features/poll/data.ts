@@ -152,8 +152,15 @@ export async function getPollResults({
 }
 
 /**
- * Every participant in response order (oldest first).
+ * Participant filter that admits a row only while its poll shows individual
+ * responses. Evaluated in the same statement as the row read, so a poll
+ * switched to aggregate results between a caller's flag check and its
+ * participant read can never return a response cast under the new setting.
  */
+const individualResponsesVisible = {
+  poll: { aggregateResultsOnly: false },
+} satisfies Prisma.ParticipantWhereInput;
+
 // Votes with their option's time, for the availability conversion.
 const apiParticipantSelect = {
   id: true,
@@ -168,6 +175,11 @@ const apiParticipantSelect = {
   },
 } satisfies Prisma.ParticipantSelect;
 
+/**
+ * Every participant in response order (oldest first). An aggregate results
+ * poll yields none: the flag is read with the poll, and the participant read
+ * re-checks it so a concurrent switch cannot slip a response through.
+ */
 export async function getPollParticipants({
   pollId,
   spaceId,
@@ -195,7 +207,7 @@ export async function getPollParticipants({
   const participants = poll.aggregateResultsOnly
     ? []
     : await prisma.participant.findMany({
-        where: { pollId },
+        where: { pollId, ...individualResponsesVisible },
         select: apiParticipantSelect,
         orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       });
@@ -212,7 +224,8 @@ export async function getPollParticipants({
  * One participant of a poll. Distinguishes a missing poll from a missing
  * participant so the API can say which, and never returns a participant
  * from another poll: the participant filter is nested under the poll's own
- * scope check.
+ * scope check. Never returns a participant of an aggregate results poll,
+ * even one that switched between the two reads.
  */
 export async function getPollParticipant({
   pollId,
@@ -243,7 +256,7 @@ export async function getPollParticipant({
   const participant = poll.aggregateResultsOnly
     ? null
     : await prisma.participant.findFirst({
-        where: { pollId, id: participantId },
+        where: { pollId, id: participantId, ...individualResponsesVisible },
         select: apiParticipantSelect,
       });
 
@@ -791,6 +804,9 @@ export async function getPollDetails({
     return null;
   }
 
+  // An aggregate results poll ships totals instead of responses: votes per
+  // option and type, and how many responses there are. Other polls count
+  // their totals from the responses, so they skip both queries.
   const aggregateResultsPromise = poll.aggregateResultsOnly
     ? Promise.all([
         prisma.vote.groupBy({
@@ -896,10 +912,31 @@ export async function getPollDetails({
  * Every response with its votes and edit token. Callers scope the output to
  * the viewer before it leaves the server: the token is the edit credential
  * and notes are for the host and their author only.
+ *
+ * On an aggregate results poll only the viewer's own responses come back
+ * (none without a viewer, as on the host's pages). The rule is part of the
+ * query, not a check made beforehand, so a poll switched to aggregate
+ * results while the page loads cannot expose a response cast after the
+ * switch.
  */
-export async function listPollParticipants({ pollId }: { pollId: string }) {
+export async function listPollParticipants({
+  pollId,
+  viewer,
+}: {
+  pollId: string;
+  /** Whose own responses survive aggregate results. */
+  viewer?: { userId: string | null; participantIds: string[] };
+}) {
+  const ownResponses: Prisma.ParticipantWhereInput[] = [];
+  if (viewer?.userId) {
+    ownResponses.push({ userId: viewer.userId });
+  }
+  if (viewer && viewer.participantIds.length > 0) {
+    ownResponses.push({ id: { in: viewer.participantIds } });
+  }
+
   const participants = await prisma.participant.findMany({
-    where: { pollId },
+    where: { pollId, OR: [individualResponsesVisible, ...ownResponses] },
     select: {
       id: true,
       name: true,

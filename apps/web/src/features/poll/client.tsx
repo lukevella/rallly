@@ -83,11 +83,21 @@ export const useParticipants = () => {
   return { participants };
 };
 
+/**
+ * What the viewer may do with responses. Seeing a response and editing it
+ * are separate: a viewer always sees their own, but edits only while the
+ * poll is open.
+ */
 export const usePermissions = () => {
   const { poll, participants, linkedParticipantIds, viewerRole } =
     useRequiredContext(PollContext);
   const { user } = useUser();
 
+  /**
+   * Whether the response is the viewer's: created under their account, or
+   * named by the emailed link they opened. Independent of the poll's status,
+   * so a closed poll still shows the viewer what they answered.
+   */
   const isOwnParticipant = (participantId: string) => {
     const participant = participants.find(
       (participant) => participant.id === participantId,
@@ -101,6 +111,8 @@ export const usePermissions = () => {
 
   return {
     isOwnParticipant,
+    // The host's page of an aggregate results poll holds totals only, so
+    // responses are added from the invite page.
     canAddNewParticipant:
       poll.status === "open" &&
       !(poll.aggregateResultsOnly && viewerRole === "admin"),

@@ -6,7 +6,9 @@ import type { VoteType } from "@/features/poll/constants";
 /**
  * Vote tallies derived from the poll and its participants. These are pure
  * derivations of what `PollProvider` already holds, so they need no
- * provider of their own.
+ * provider of their own. An aggregate results poll is tallied from its
+ * per-option totals instead, since its participants are at most the
+ * viewer's own responses.
  */
 export function usePollScores() {
   const poll = usePoll();

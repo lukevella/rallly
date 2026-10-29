@@ -71,6 +71,11 @@ export const PollSettingsForm = ({
    * rule is enforced in the modify mutation.
    */
   hasTentativeVotes?: boolean;
+  /**
+   * True once the poll has a response. Aggregate results only is locked
+   * then, in both directions, so a response is never shown under a setting
+   * other than the one it was cast under. The modify mutation enforces it.
+   */
   hasResponses?: boolean;
 }>) => {
   const form = useFormContext<PollSettingsFormData>();

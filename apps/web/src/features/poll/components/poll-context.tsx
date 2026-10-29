@@ -43,6 +43,9 @@ export const PollContextProvider: React.FunctionComponent<{
 }> = ({ poll, children }) => {
   const { participants } = useParticipants();
 
+  // Totals per option: counted from the responses, or read from the
+  // server's totals on an aggregate results poll, whose participants are at
+  // most the viewer's own and would undercount.
   const getScore = React.useCallback(
     (optionId: string) => {
       if (poll.aggregateResultsOnly) {

@@ -7,6 +7,7 @@ import {
   useParticipants,
   usePermissions,
   usePoll,
+  useRole,
 } from "@/features/poll/client";
 
 export const IfScoresVisible = (props: React.PropsWithChildren) => {
@@ -29,6 +30,10 @@ const VisibilityContext = React.createContext<{
   canSeeScores: true,
 });
 
+/**
+ * The viewer's own responses and the ones they may edit. With hideScores,
+ * other people's responses are kept from a viewer until they respond.
+ */
 export const useVisibleParticipants = () => {
   const { canSeeScores } = useVisibility();
   const { canEditParticipant, isOwnParticipant } = usePermissions();
@@ -48,8 +53,15 @@ export const useVisibleParticipants = () => {
   return filteredParticipants;
 };
 
+/**
+ * Decides whether the viewer sees vote totals. With hideScores they appear
+ * once the viewer has a response of their own (or one they may edit). The
+ * host of an aggregate results poll has no response to hold, and the totals
+ * are all they are shown, so they always see them.
+ */
 export const VisibilityProvider = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
+  const role = useRole();
   const { participants } = useParticipants();
   const { canEditParticipant, isOwnParticipant } = usePermissions();
   const userAlreadyVoted = participants.some((participant) => {
@@ -58,7 +70,10 @@ export const VisibilityProvider = ({ children }: React.PropsWithChildren) => {
     );
   });
 
-  const canSeeScores = poll.hideScores ? userAlreadyVoted : true;
+  const canSeeScores =
+    !poll.hideScores ||
+    userAlreadyVoted ||
+    (!!poll.aggregateResultsOnly && role === "admin");
 
   return (
     <VisibilityContext.Provider

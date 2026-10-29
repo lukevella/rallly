@@ -15,8 +15,17 @@ export type PollDetails = {
   status: PollStatus;
   closedReason: PollClosedReason | null;
   hideParticipants: boolean;
+  /**
+   * Individual responses are withheld from everyone but their author; the
+   * poll is read through `aggregateVotes` instead.
+   */
   aggregateResultsOnly?: boolean;
+  /** How many responses an aggregate results poll has. */
   aggregateParticipantCount?: number;
+  /**
+   * Vote totals per option of an aggregate results poll, in option order.
+   * Empty otherwise, since totals are then counted from the responses.
+   */
   aggregateVotes?: {
     optionId: string;
     yes: number;

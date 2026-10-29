@@ -82,6 +82,7 @@ const participant: PollParticipant = {
   editUrl: null,
 };
 
+/** Renders the first option's totals and the high score as JSON. */
 function Scores() {
   const { getScore, highScore } = usePollScores();
   return (
@@ -110,6 +111,10 @@ describe("usePollScores", () => {
     });
   });
 
+  /**
+   * Renders what the voter sees of their own response as JSON, with a
+   * button that cancels the voting form.
+   */
   function PersonalVotes() {
     const form = useVotingForm();
     const { isOwnParticipant, canEditParticipant } = usePermissions();
@@ -245,6 +250,45 @@ describe("usePollScores", () => {
           .selectedParticipantId,
       ).toBe(participant.id);
     });
+  });
+
+  it.each([
+    { aggregateResultsOnly: true, viewerRole: "admin", canSeeScores: true },
+    {
+      aggregateResultsOnly: true,
+      viewerRole: "participant",
+      canSeeScores: false,
+    },
+    { aggregateResultsOnly: false, viewerRole: "admin", canSeeScores: false },
+  ] as const)("shows hidden scores to the aggregate host only: %j", ({
+    aggregateResultsOnly,
+    viewerRole,
+    canSeeScores,
+  }) => {
+    function ScoreVisibility() {
+      return (
+        <output data-testid="visibility">
+          {String(useVisibility().canSeeScores)}
+        </output>
+      );
+    }
+
+    render(
+      <PollProvider
+        poll={{ ...poll, hideScores: true, aggregateResultsOnly }}
+        participants={[]}
+        comments={[]}
+        viewerRole={viewerRole}
+      >
+        <VisibilityProvider>
+          <ScoreVisibility />
+        </VisibilityProvider>
+      </PollProvider>,
+    );
+
+    expect(screen.getByTestId("visibility").textContent).toBe(
+      String(canSeeScores),
+    );
   });
 
   it.each([

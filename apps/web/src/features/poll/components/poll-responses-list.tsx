@@ -51,6 +51,10 @@ export function PollResponsesList({
   pollOpen: boolean;
   selectedId?: string;
   compact?: boolean;
+  /**
+   * The poll withholds individual responses, so an empty list says they are
+   * hidden rather than that nobody has responded.
+   */
   aggregateResultsOnly?: boolean;
   className?: string;
 }) {

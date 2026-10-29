@@ -191,10 +191,12 @@ export function EditPoll({
   const update = useUpdatePollMutation();
 
   // The answer set is locked once a response uses the tentative vote, so
-  // those votes stay re-saveable by their owner.
+  // those votes stay re-saveable by their owner. Both checks read the
+  // totals, the only votes an aggregate results host holds.
   const hasTentativeVotes = poll.options.some(
     (option) => getScore(option.id).ifNeedBe > 0,
   );
+  // Whether any vote was cast, to warn before deleting voted dates.
   const hasVotes = poll.options.some((option) => {
     const { yes, ifNeedBe, no, skip } = getScore(option.id);
     return yes + ifNeedBe + no + skip > 0;
@@ -256,6 +258,8 @@ export function EditPoll({
       });
     };
 
+    // Read from the totals, so the warning also fires on an aggregate
+    // results poll, whose host holds no responses.
     const deletesVotedOptions = dateChanges?.optionsToDelete.some(
       (option) => getScore(option.id).yes > 0,
     );

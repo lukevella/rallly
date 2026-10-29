@@ -76,6 +76,10 @@ async function ResponseDetail({
   );
 }
 
+/**
+ * The poll's responses page. The shell renders at once; the reads that need
+ * the session stream in behind the skeleton.
+ */
 export default function Page({
   params,
   searchParams,
@@ -90,6 +94,11 @@ export default function Page({
   );
 }
 
+/**
+ * The response list, with the selected response beside it. An aggregate
+ * results poll has no responses to list or open, so both say the responses
+ * are hidden.
+ */
 async function PollResponses({
   params,
   searchParams,

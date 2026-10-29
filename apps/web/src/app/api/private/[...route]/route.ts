@@ -71,6 +71,10 @@ const app = new Hono<Env>().basePath("/api/private");
 
 loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
+/**
+ * Encodes a poll for the private API's poll responses, including whether it
+ * only exposes aggregate results.
+ */
 function toPollResponseBody(poll: {
   id: string;
   title: string;
