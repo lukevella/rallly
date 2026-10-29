@@ -52,6 +52,10 @@ export async function getPoll({
   });
 }
 
+/**
+ * Reads a poll's options with their per-option "yes" tallies, scoped to the
+ * given space. Runs the poll read and the vote aggregation in parallel.
+ */
 export async function getPollResults({
   pollId,
   spaceId,
@@ -649,7 +653,10 @@ export async function listParticipantIdsByToken({
   return participant ? [participant.id] : [];
 }
 
-/** A poll of the space with its options and settings, or null. */
+/**
+ * Reads a single poll with its full details and options (including each option's
+ * `maxParticipants` cap), scoped to the given space. Returns null when missing.
+ */
 export async function getPollWithOptions({
   pollId,
   spaceId,

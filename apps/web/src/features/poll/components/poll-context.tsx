@@ -38,6 +38,7 @@ export const PollContext = React.createContext<PollContextValue | null>(null);
 
 PollContext.displayName = "PollContext.Provider";
 
+/** Reads the current poll from context; throws outside a `PollContextProvider`. */
 export const usePoll = () => {
   const context = useRequiredContext(PollContext);
   return context;
@@ -158,6 +159,11 @@ export const useOptions = () => {
   return context;
 };
 
+/**
+ * Builds the options context value for rendering: parses each stored option into
+ * display parts in the viewer's zone (floating times are read in UTC so they
+ * show unshifted) and carries its `maxParticipants` cap through.
+ */
 export function createOptionsContextValue({
   pollOptions,
   pollTimeZone,

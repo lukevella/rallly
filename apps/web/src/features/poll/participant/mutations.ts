@@ -20,6 +20,11 @@ type WriteRefusal =
   | "optionFull"
   | "tentativeVotesNotAllowed";
 
+/**
+ * A participant write refused for a known, expected reason (poll closed, option
+ * full, …) rather than a bug. Caught at the boundary and turned into a typed
+ * `{ ok: false, reason }` result by {@link refusal}; any other error propagates.
+ */
 class WriteRefusedError extends Error {
   constructor(public readonly reason: WriteRefusal) {
     super(reason);
@@ -91,6 +96,11 @@ async function assertParticipantInPoll(
   }
 }
 
+/**
+ * The ids of the poll's current options, read under the poll row lock so a
+ * submitted response can be filtered down to options that still exist (one
+ * deleted since the form loaded is silently dropped rather than rejected).
+ */
 async function listValidOptionIds(
   tx: Prisma.TransactionClient,
   pollId: string,
@@ -102,6 +112,15 @@ async function listValidOptionIds(
   return new Set(options.map((option) => option.id));
 }
 
+/**
+ * Enforces each option's `maxParticipants` cap on "yes" votes. For every capped
+ * option the response says yes to, it counts the committed yes votes and refuses
+ * with `optionFull` if a new yes would exceed the limit. The count runs under
+ * the poll row lock the caller already holds, so a concurrent yes either lands
+ * before this count sees it or waits and then fails its own check. Options in
+ * `grandfatheredYesOptionIds` (a yes the participant already held) are skipped,
+ * so editing an unrelated option can't strand an existing response at the cap.
+ */
 async function assertYesVoteCapacity(
   tx: Prisma.TransactionClient,
   pollId: string,
@@ -150,6 +169,10 @@ async function assertYesVoteCapacity(
   }
 }
 
+/**
+ * Boundary handler: turns a {@link WriteRefusedError} into a typed
+ * `{ ok: false, reason }` result and rethrows anything else as a real failure.
+ */
 function refusal(error: unknown) {
   if (error instanceof WriteRefusedError) {
     return { ok: false as const, reason: error.reason };
@@ -188,9 +211,11 @@ export type AddParticipantResult =
   | { ok: false; reason: WriteRefusal };
 
 /**
- * Adds a response to an open poll, under the poll's row lock so it never
- * lands after the aggregate results setting changes. Refuses closed or
- * missing polls with a reason.
+ * Adds a participant and their votes to a poll. Runs in one transaction under
+ * the poll row lock, dropping votes for options deleted since the form loaded
+ * and enforcing the tentative-votes setting, each option's "yes" cap, and the
+ * poll's participant limit. Returns a typed refusal (poll not found/closed,
+ * option or poll full, tentative votes not allowed) instead of throwing.
  */
 export async function addParticipant({
   pollId,
@@ -344,6 +369,12 @@ export type EditParticipantResult =
   | { ok: true }
   | { ok: false; reason: WriteRefusal };
 
+/**
+ * Replaces a participant's votes. Runs under the poll row lock with the same
+ * validation as {@link addParticipant}; a "yes" the participant already held is
+ * grandfathered so editing an unrelated option can't be blocked by that option
+ * sitting at its cap. Returns a typed refusal instead of throwing.
+ */
 export async function updateParticipantVotes({
   participantId,
   pollId,
@@ -419,6 +450,10 @@ export async function updateParticipantVotes({
   return { ok: true };
 }
 
+/**
+ * Renames a participant's response, recording a `response_updated` activity.
+ * Runs under the poll row lock; returns a typed refusal instead of throwing.
+ */
 export async function renameParticipant({
   participantId,
   pollId,
@@ -461,6 +496,11 @@ export async function renameParticipant({
   return { ok: true };
 }
 
+/**
+ * Deletes a participant's response, recording a `response_deleted` activity that
+ * snapshots the removed name and votes before they are gone. Runs under the poll
+ * row lock; returns a typed refusal instead of throwing.
+ */
 export async function deleteParticipant({
   participantId,
   pollId,

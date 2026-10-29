@@ -23,8 +23,8 @@ import {
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
-import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import type { DateTimeOption } from "@/features/poll/components/forms/poll-options-form/types";
+import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type {
   NewEventData,
@@ -58,7 +58,11 @@ const encodeStoredOption = (
     : `${start}/${addMinutesToWallTime(start, option.duration)}`;
 };
 
-/** The edit form's starting values, read from the poll as saved. */
+/**
+ * Seeds the edit form from a stored poll: each option keeps its stored `id` and
+ * is read as wall-clock under the poll's zone, and the derived flags (all-day,
+ * lockTimeZone, duration) are set so the form opens exactly as the poll stands.
+ */
 function getDefaultValues(poll: PollDetails): NewEventData {
   const firstDate = toPollWallTime(
     poll.options[0]?.startTime ?? new Date(),

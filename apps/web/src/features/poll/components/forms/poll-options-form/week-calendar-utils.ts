@@ -5,7 +5,7 @@ import {
   wallTimeExists,
   wallTimeToInstant,
 } from "@/lib/datetime/wall-time";
-import type { DateOption, DateTimeOption, TimeOption } from "./types";
+import type { DateTimeOption, TimeOption } from "./types";
 
 export const DURATION_CAP_MINUTES = 60 * 24;
 
@@ -42,6 +42,7 @@ export function eventId(option: DateTimeOption): string {
     : `slot:${option.start}_${option.end}`;
 }
 
+/** Maps form options to the calendar's event shape for rendering in the grid. */
 export function optionsToEvents(options: DateTimeOption[]): CalendarEvent[] {
   return options.flatMap((option) => {
     if (option.type === "date") {
@@ -64,6 +65,7 @@ export function optionsToEvents(options: DateTimeOption[]): CalendarEvent[] {
   });
 }
 
+/** Builds a time-slot option from a calendar selection, as naive wall-clock strings. */
 export function slotToTimeOption(start: Date, end: Date): TimeOption {
   return {
     type: "timeSlot",
@@ -72,6 +74,7 @@ export function slotToTimeOption(start: Date, end: Date): TimeOption {
   };
 }
 
+/** Whether `candidate` already exists among `options` (same start and end). */
 export function isDuplicate(
   options: DateTimeOption[],
   candidate: TimeOption,
@@ -84,6 +87,7 @@ export function isDuplicate(
   );
 }
 
+/** Length of a slot in whole minutes. */
 export function durationMinutes(start: Date, end: Date): number {
   return Math.round((end.getTime() - start.getTime()) / 60_000);
 }

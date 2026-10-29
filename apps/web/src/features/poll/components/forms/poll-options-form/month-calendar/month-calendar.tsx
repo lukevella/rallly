@@ -48,6 +48,11 @@ import type { DateTimeOption, DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, removeAllOptionsForDay } from "../utils";
 import TimePicker from "./time-picker";
 
+/**
+ * Numeric input for an option's max "yes" votes. An empty field means no limit
+ * (`undefined`); out-of-range or non-integer input is ignored so the value
+ * stays a positive 32-bit integer.
+ */
 function OptionParticipantLimit({
   value,
   onChange,
@@ -205,6 +210,7 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           type: "timeSlot",
           start,
           end: addMinutesToWallTime(start, minutes),
+          id: option.id,
           maxParticipants: option.maxParticipants,
         };
       }),
@@ -593,8 +599,24 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                         times.forEach((time) => {
                                           const start =
                                             dateString + time.startTime;
+                                          const end = dayjs(start)
+                                            .add(slotDuration, "minutes")
+                                            .format("YYYY-MM-DDTHH:mm");
+                                          // Carry the stored id of any option
+                                          // that already exists at this
+                                          // date/time so a capacity edit after
+                                          // "Apply to all dates" still targets
+                                          // the right row; combos new to a day
+                                          // get no id.
+                                          const existing = options.find(
+                                            (option) =>
+                                              option.type === "timeSlot" &&
+                                              option.start === start &&
+                                              option.end === end,
+                                          );
                                           newOptions.push({
                                             type: "timeSlot",
+                                            id: existing?.id,
                                             start: start,
                                             end: addMinutesToWallTime(
                                               start,

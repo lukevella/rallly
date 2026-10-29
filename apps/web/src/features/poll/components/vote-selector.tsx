@@ -29,6 +29,11 @@ export interface VoteSelectorProps {
   className?: string;
 }
 
+/**
+ * The next vote in the click cycle. The cycle is yes → (ifNeedBe) → no, with
+ * tentative dropped when `allowTentativeVotes` is false and yes dropped when
+ * `yesDisabled` (the option is full). No current value starts at the first type.
+ */
 export const toggleVote = (
   value?: VoteType,
   allowTentativeVotes = true,
