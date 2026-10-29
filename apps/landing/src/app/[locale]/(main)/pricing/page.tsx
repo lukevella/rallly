@@ -20,10 +20,6 @@ import {
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Trans } from "react-i18next/TransWithoutContext";
-import GoogleMeetIcon from "@/assets/google-meet.svg";
-import MicrosoftTeamsIcon from "@/assets/microsoft-teams.svg";
-import WebexIcon from "@/assets/webex.svg";
-import ZoomIcon from "@/assets/zoom.svg";
 import {
   CompareTable,
   CompareTableCell,
@@ -34,8 +30,6 @@ import {
   CompareTableFeatureName,
   CompareTableHead,
   CompareTableHeader,
-  CompareTableLogo,
-  CompareTableLogos,
   CompareTableSection,
 } from "@/components/compare-table";
 import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
@@ -829,27 +823,10 @@ export default async function Page(props: {
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
                 <CompareTableCell>
-                  <CompareTableLogos>
-                    <CompareTableLogo label="Google Meet">
-                      <GoogleMeetIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                  </CompareTableLogos>
+                  <CompareTableCheck label={included} />
                 </CompareTableCell>
                 <CompareTableCell>
-                  <CompareTableLogos>
-                    <CompareTableLogo label="Google Meet">
-                      <GoogleMeetIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                    <CompareTableLogo label="Zoom">
-                      <ZoomIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                    <CompareTableLogo label="Microsoft Teams">
-                      <MicrosoftTeamsIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                    <CompareTableLogo label="Webex">
-                      <WebexIcon aria-hidden="true" />
-                    </CompareTableLogo>
-                  </CompareTableLogos>
+                  <CompareTableCheck label={included} />
                 </CompareTableCell>
               </tr>
               <tr>

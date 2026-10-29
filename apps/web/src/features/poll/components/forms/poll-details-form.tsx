@@ -9,8 +9,6 @@ import { Input } from "@rallly/ui/input";
 import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { showPayWall, useIsFree } from "@/features/billing/client";
-import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { ConferencingOptions } from "@/features/conferencing/components/conferencing-field";
 import {
   ConferencingField,
@@ -31,7 +29,6 @@ export const PollDetailsForm = ({
 }) => {
   const { t } = useTranslation();
   const form = useFormContext<NewEventData>();
-  const isFree = useIsFree();
 
   const { requiredString } = useFormValidation();
   const { register } = form;
@@ -151,20 +148,6 @@ export const PollDetailsForm = ({
                 <ConferencingProviderMenuItems
                   available={conferencing.available}
                   connected={conferencing.connected}
-                  upsell={
-                    isFree
-                      ? {
-                          badge: <ProBadge />,
-                          onSelect: (provider) => {
-                            showPayWall({
-                              from: "poll-details-form",
-                              action: "conferencing",
-                              setting: provider,
-                            });
-                          },
-                        }
-                      : undefined
-                  }
                 />
               </DropdownMenuContent>
             </DropdownMenu>
