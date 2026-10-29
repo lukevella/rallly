@@ -20,7 +20,7 @@ export const ProBadge = ({ className }: { className?: string }) => {
           className,
         )}
       >
-        <LockIcon aria-hidden="true" className="size-3" />
+        <LockIcon aria-hidden="true" className="size-3 text-current" />
         <span className="sr-only">{label}</span>
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
