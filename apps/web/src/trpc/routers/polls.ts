@@ -1167,7 +1167,8 @@ export const polls = router({
         optionId: z.string(),
         notifyParticipantIds: z.array(z.string()),
         // An aggregate results host never sees who responded, so they can
-        // only choose to email everyone or no one.
+        // only choose to email everyone or no one: notifyParticipantIds is
+        // ignored for those polls.
         notifyAllParticipants: z.boolean().optional(),
       }),
     )
@@ -1376,6 +1377,7 @@ export const polls = router({
           participants: poll.participants,
           notifyParticipantIds: input.notifyParticipantIds,
           notifyAllParticipants: input.notifyAllParticipants ?? false,
+          aggregateResultsOnly: poll.aggregateResultsOnly,
         }),
       );
       const notifyEmails = new Set(

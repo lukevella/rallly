@@ -519,6 +519,7 @@ describe("resolveNotifyParticipantIds", () => {
         participants,
         notifyParticipantIds: ["b"],
         notifyAllParticipants: false,
+        aggregateResultsOnly: false,
       }),
     ).toEqual(["b"]);
   });
@@ -529,6 +530,7 @@ describe("resolveNotifyParticipantIds", () => {
         participants,
         notifyParticipantIds: [],
         notifyAllParticipants: true,
+        aggregateResultsOnly: false,
       }),
     ).toEqual(["a", "b"]);
   });
@@ -539,8 +541,31 @@ describe("resolveNotifyParticipantIds", () => {
         participants,
         notifyParticipantIds: ["c"],
         notifyAllParticipants: false,
+        aggregateResultsOnly: false,
       }),
     ).toEqual([]);
+  });
+
+  it("ignores explicit ids on an aggregate results poll", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["a"],
+        notifyAllParticipants: false,
+        aggregateResultsOnly: true,
+      }),
+    ).toEqual([]);
+  });
+
+  it("notifies everyone with an email on an aggregate poll when asked", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["a"],
+        notifyAllParticipants: true,
+        aggregateResultsOnly: true,
+      }),
+    ).toEqual(["a", "b"]);
   });
 
   it("ignores ids that are not participants of the poll", () => {
@@ -549,6 +574,7 @@ describe("resolveNotifyParticipantIds", () => {
         participants,
         notifyParticipantIds: ["other"],
         notifyAllParticipants: false,
+        aggregateResultsOnly: false,
       }),
     ).toEqual([]);
   });

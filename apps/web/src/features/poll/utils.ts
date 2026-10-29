@@ -368,21 +368,24 @@ export function summarizeNotifySelection({
 }
 
 /**
- * The participants a booking emails. Selecting everyone is the only choice
- * an aggregate results host can make, since they never see who responded;
- * otherwise the host's per-participant selection stands. Participants
- * without an email cannot be notified either way.
+ * The participants a booking emails. An aggregate results host never sees
+ * who responded, so their choice is all or none: explicit ids are ignored,
+ * otherwise a known id (such as the host's own) would single out that
+ * respondent's address. Elsewhere the host's per-participant selection
+ * stands. Participants without an email cannot be notified either way.
  */
 export function resolveNotifyParticipantIds({
   participants,
   notifyParticipantIds,
   notifyAllParticipants,
+  aggregateResultsOnly,
 }: {
   participants: { id: string; email: string | null }[];
   notifyParticipantIds: string[];
   notifyAllParticipants: boolean;
+  aggregateResultsOnly: boolean;
 }) {
-  const selected = new Set(notifyParticipantIds);
+  const selected = new Set(aggregateResultsOnly ? [] : notifyParticipantIds);
   return participants
     .filter(
       (participant) =>
