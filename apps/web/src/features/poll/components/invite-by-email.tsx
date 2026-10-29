@@ -238,14 +238,13 @@ export function InviteByEmail({
         </InputGroup>
         <Button
           type="submit"
-          variant="primary"
+          // Free spaces get the pay wall, not a send, so the button stays quiet
+          variant={isFree ? "default" : "primary"}
           disabled={!isOpen}
           aria-describedby={isOpen ? undefined : "share-dialog-closed-reason"}
         >
           <Trans i18nKey="shareDialogSendInvite" defaults="Send invite" />
-          {isFree ? (
-            <ProBadge className="ml-1.5 bg-primary-foreground/20 text-primary-foreground" />
-          ) : null}
+          {isFree ? <ProBadge /> : null}
         </Button>
       </form>
       {!isOpen ? (
