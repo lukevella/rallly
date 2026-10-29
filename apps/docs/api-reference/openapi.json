@@ -190,6 +190,11 @@
             "description": "Whether vote counts are hidden from participants",
             "example": false
           },
+          "aggregateResultsOnly": {
+            "type": "boolean",
+            "description": "Whether individual responses are hidden from everyone in favor of aggregate vote totals",
+            "example": false
+          },
           "disableComments": {
             "type": "boolean",
             "description": "Whether the comments section is disabled",
@@ -237,6 +242,7 @@
           "requireEmail",
           "hideParticipants",
           "hideScores",
+          "aggregateResultsOnly",
           "disableComments",
           "allowTentativeVotes",
           "participantCount",
@@ -520,6 +526,11 @@
             "example": false,
             "type": "boolean"
           },
+          "aggregateResultsOnly": {
+            "description": "Show per-option vote totals only; individual responses are not returned.",
+            "example": false,
+            "type": "boolean"
+          },
           "disableComments": {
             "description": "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
             "example": false,
@@ -702,6 +713,11 @@
           },
           "hideScores": {
             "description": "Hide vote counts from participants",
+            "example": false,
+            "type": "boolean"
+          },
+          "aggregateResultsOnly": {
+            "description": "Show per-option vote totals only; individual responses are not returned.",
             "example": false,
             "type": "boolean"
           },
@@ -1903,7 +1919,7 @@
           "Polls"
         ],
         "summary": "List poll participants",
-        "description": "Lists every participant of a poll in one response, oldest response first, each with their availability. The poll must belong to the space associated with the API key.\n\nFor aggregate counts per option use the results endpoint.",
+        "description": "Lists every participant of a poll in one response, oldest response first, each with their availability. The poll must belong to the space associated with the API key.\n\nPolls with aggregateResultsOnly enabled return 403 (INDIVIDUAL_RESPONSES_DISABLED).\n\nFor aggregate counts per option use the results endpoint.",
         "security": [
           {
             "bearerAuth": []
@@ -1939,7 +1955,7 @@
             }
           },
           "403": {
-            "description": "The space associated with the API key does not have a Pro subscription",
+            "description": "Space is not on the Pro plan (`SPACE_NOT_PRO`) or individual responses are disabled (`INDIVIDUAL_RESPONSES_DISABLED`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -2014,7 +2030,7 @@
           "Polls"
         ],
         "summary": "Get a poll participant",
-        "description": "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook.",
+        "description": "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook. Polls with aggregateResultsOnly enabled return 403 (INDIVIDUAL_RESPONSES_DISABLED).",
         "security": [
           {
             "bearerAuth": []
@@ -2050,7 +2066,7 @@
             }
           },
           "403": {
-            "description": "The space associated with the API key does not have a Pro subscription",
+            "description": "Space is not on the Pro plan (`SPACE_NOT_PRO`) or individual responses are disabled (`INDIVIDUAL_RESPONSES_DISABLED`)",
             "content": {
               "application/json": {
                 "schema": {

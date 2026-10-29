@@ -156,9 +156,11 @@ export type OptionVotes = {
 export function rankOptionsByPopularity<T extends { id: string }>({
   options,
   participants,
+  getScore,
 }: {
   options: T[];
   participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
+  getScore?: (optionId: string) => { yes: number; ifNeedBe: number };
 }): (T & { votes: OptionVotes })[] {
   const votesByOptionId = new Map<string, OptionVotes>(
     options.map((option) => [option.id, { yes: [], ifNeedBe: [], no: [] }]),
@@ -168,11 +170,13 @@ export function rankOptionsByPopularity<T extends { id: string }>({
       votesByOptionId.get(vote.optionId)?.[vote.type].push(participant.id);
     }
   }
-  const score = (votes: OptionVotes) => [
-    votes.yes.length + votes.ifNeedBe.length,
-    votes.yes.length,
-    votes.ifNeedBe.length,
-  ];
+  const score = (option: T & { votes: OptionVotes }) => {
+    const { yes, ifNeedBe } = getScore?.(option.id) ?? {
+      yes: option.votes.yes.length,
+      ifNeedBe: option.votes.ifNeedBe.length,
+    };
+    return [yes + ifNeedBe, yes, ifNeedBe];
+  };
   return options
     .map((option) => ({
       ...option,
@@ -183,8 +187,8 @@ export function rankOptionsByPopularity<T extends { id: string }>({
       },
     }))
     .sort((a, b) => {
-      const sa = score(a.votes);
-      const sb = score(b.votes);
+      const sa = score(a);
+      const sb = score(b);
       for (let i = 0; i < sa.length; i++) {
         if (sa[i] !== sb[i]) return sb[i] - sa[i];
       }

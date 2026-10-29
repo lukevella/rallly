@@ -916,6 +916,8 @@ app.get(
     description: [
       "Lists every participant of a poll in one response, oldest response first, each with their availability. The poll must belong to the space associated with the API key.",
       "",
+      "Polls with aggregateResultsOnly enabled return 403 (INDIVIDUAL_RESPONSES_DISABLED).",
+      "",
       "For aggregate counts per option use the results endpoint.",
     ].join("\n"),
     security: [{ bearerAuth: [] }],
@@ -929,7 +931,11 @@ app.get(
         },
       },
       401: unauthorizedResponse,
-      403: spaceNotProResponse,
+      403: {
+        ...spaceNotProResponse,
+        description:
+          "Space is not on the Pro plan (`SPACE_NOT_PRO`) or individual responses are disabled (`INDIVIDUAL_RESPONSES_DISABLED`)",
+      },
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
       404: {
@@ -986,7 +992,7 @@ app.get(
     tags: ["Polls"],
     summary: "Get a poll participant",
     description:
-      "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook.",
+      "Returns one participant of a poll with their availability. The poll must belong to the space associated with the API key. This is the endpoint to call from a `poll.participant.*` webhook. Polls with aggregateResultsOnly enabled return 403 (INDIVIDUAL_RESPONSES_DISABLED).",
     security: [{ bearerAuth: [] }],
     responses: {
       200: {
@@ -998,7 +1004,11 @@ app.get(
         },
       },
       401: unauthorizedResponse,
-      403: spaceNotProResponse,
+      403: {
+        ...spaceNotProResponse,
+        description:
+          "Space is not on the Pro plan (`SPACE_NOT_PRO`) or individual responses are disabled (`INDIVIDUAL_RESPONSES_DISABLED`)",
+      },
       429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
       404: {

@@ -226,7 +226,7 @@ export const PollSettingsForm = ({
                     ) : (
                       <Trans
                         i18nKey="aggregateResultsOnlyDescription"
-                        defaults="Hide each response from everyone and show vote totals by option instead."
+                        defaults="Show vote totals by option. Respondents can still see their own answers."
                       />
                     )}
                   </FieldDescription>

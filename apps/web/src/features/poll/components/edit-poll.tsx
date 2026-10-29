@@ -30,8 +30,8 @@ import type {
 } from "@/features/poll/components/forms/types";
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
 import type { PollDetails } from "@/features/poll/types";
-import { filterParticipantsByVote } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import {
@@ -183,6 +183,7 @@ export function EditPoll({
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
   const { user } = useUser();
   const { t } = useTranslation();
   const router = useRouter();
@@ -191,12 +192,13 @@ export function EditPoll({
 
   // The answer set is locked once a response uses the tentative vote, so
   // those votes stay re-saveable by their owner.
-  const hasTentativeVotes = participants.some((participant) =>
-    participant.votes.some((vote) => vote.type === "ifNeedBe"),
+  const hasTentativeVotes = poll.options.some(
+    (option) => getScore(option.id).ifNeedBe > 0,
   );
-  const hasVotes = participants.some(
-    (participant) => participant.votes.length > 0,
-  );
+  const hasVotes = poll.options.some((option) => {
+    const { yes, ifNeedBe, no, skip } = getScore(option.id);
+    return yes + ifNeedBe + no + skip > 0;
+  });
 
   const [defaultValues] = React.useState(() => getDefaultValues(poll));
   const form = useForm<NewEventData>({ defaultValues });
@@ -255,8 +257,7 @@ export function EditPoll({
     };
 
     const deletesVotedOptions = dateChanges?.optionsToDelete.some(
-      (option) =>
-        filterParticipantsByVote(participants, option.id, "yes").length > 0,
+      (option) => getScore(option.id).yes > 0,
     );
 
     if (deletesVotedOptions) {

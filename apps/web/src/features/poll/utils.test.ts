@@ -95,6 +95,36 @@ describe("maskParticipantsForViewer", () => {
 
     expect(result.map(({ id }) => id)).toEqual(["a"]);
   });
+
+  it("returns no individual responses to an unlinked anonymous viewer in aggregate mode", () => {
+    expect(
+      maskParticipantsForViewer({
+        participants: [participant("a"), participant("b")],
+        viewer: { userId: null, linkedParticipantIds: [] },
+        hideParticipants: false,
+        aggregateResultsOnly: true,
+      }),
+    ).toEqual([]);
+  });
+
+  it("keeps a guest's linked response editable in aggregate mode", () => {
+    const result = maskParticipantsForViewer({
+      participants: [participant("a"), participant("b")],
+      viewer: { userId: null, linkedParticipantIds: ["b"] },
+      hideParticipants: true,
+      aggregateResultsOnly: true,
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      id: "b",
+      name: "Name b",
+      note: "Note b",
+      hidden: false,
+      votes: [{ optionId: "opt-1", type: "yes" }],
+    });
+    expect(result[0]).not.toHaveProperty("token");
+  });
 });
 
 describe("filterCommentsForViewer", () => {
@@ -260,6 +290,22 @@ describe("rankOptionsByPopularity", () => {
   it("keeps option order for ties", () => {
     const ranked = rankOptionsByPopularity({ options, participants: [] });
     expect(ranked.map((r) => r.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("ranks aggregate results without individual responses", () => {
+    const scores = new Map([
+      ["a", { yes: 2, ifNeedBe: 1 }],
+      ["b", { yes: 4, ifNeedBe: 0 }],
+      ["c", { yes: 3, ifNeedBe: 0 }],
+    ]);
+    const ranked = rankOptionsByPopularity({
+      options,
+      participants: [],
+      getScore: (optionId) => scores.get(optionId) ?? { yes: 0, ifNeedBe: 0 },
+    });
+
+    expect(ranked.map(({ id }) => id)).toEqual(["b", "c", "a"]);
+    expect(ranked.every(({ votes }) => votes.yes.length === 0)).toBe(true);
   });
 
   it("ignores votes for options that no longer exist", () => {

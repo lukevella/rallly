@@ -1,10 +1,12 @@
 import { ActivityIcon, CalendarIcon, InboxIcon } from "lucide-react";
+import { Suspense } from "react";
 import {
   EmptyState,
   EmptyStateDescription,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { PageSkeleton } from "@/components/page-layout";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import { PollResponsesList } from "@/features/poll/components/poll-responses-list";
 import { PollTopDates } from "@/features/poll/components/poll-top-dates";
@@ -18,7 +20,19 @@ import {
 import { Trans } from "@/i18n/client";
 import { OverviewSection } from "./components/overview-section";
 
-export default async function Page({
+export default function Page({
+  params,
+}: {
+  params: Promise<{ pollId: string }>;
+}) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PollOverview params={params} />
+    </Suspense>
+  );
+}
+
+async function PollOverview({
   params,
 }: {
   params: Promise<{ pollId: string }>;
@@ -88,7 +102,7 @@ export default async function Page({
             : participants.length
         }
       >
-        {participants.length > 0 ? (
+        {participants.length > 0 || poll.aggregateResultsOnly ? (
           <PollResponsesList
             pollId={pollId}
             participants={participants.slice(0, 5)}

@@ -27,6 +27,10 @@ services:
       timeout: 5s
       retries: 5
   serverless-redis-http:
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
     ports:
       - "8079:80"
     image: hiett/serverless-redis-http:latest

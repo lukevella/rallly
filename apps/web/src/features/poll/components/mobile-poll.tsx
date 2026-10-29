@@ -48,7 +48,9 @@ const MobilePoll: React.FunctionComponent = () => {
 
   const votingForm = useVotingForm();
 
-  const selectedParticipantId = votingForm.watch("participantId");
+  const { canEditParticipant, canAddNewParticipant } = usePermissions();
+  const mode = votingForm.watch("mode");
+  const { selectedParticipantId } = votingForm;
 
   const visibleParticipants = useVisibleParticipants();
   const selectedParticipant = selectedParticipantId
@@ -57,9 +59,7 @@ const MobilePoll: React.FunctionComponent = () => {
       )
     : undefined;
 
-  const { canEditParticipant, canAddNewParticipant } = usePermissions();
-
-  const isEditing = votingForm.watch("mode") !== "view";
+  const isEditing = mode !== "view";
 
   // True while the sticky footer is pinned to the viewport (floating over
   // the option list) rather than resting at the card's end. Tracked via a

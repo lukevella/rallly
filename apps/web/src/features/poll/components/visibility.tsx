@@ -31,17 +31,19 @@ const VisibilityContext = React.createContext<{
 
 export const useVisibleParticipants = () => {
   const { canSeeScores } = useVisibility();
-  const { canEditParticipant } = usePermissions();
+  const { canEditParticipant, isOwnParticipant } = usePermissions();
   const { participants } = useParticipants();
 
   const filteredParticipants = React.useMemo(() => {
     if (!canSeeScores) {
-      return participants.filter((participant) =>
-        canEditParticipant(participant.id),
+      return participants.filter(
+        (participant) =>
+          isOwnParticipant(participant.id) ||
+          canEditParticipant(participant.id),
       );
     }
     return participants;
-  }, [canEditParticipant, canSeeScores, participants]);
+  }, [canEditParticipant, isOwnParticipant, canSeeScores, participants]);
 
   return filteredParticipants;
 };
@@ -49,9 +51,11 @@ export const useVisibleParticipants = () => {
 export const VisibilityProvider = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const { participants } = useParticipants();
-  const { canEditParticipant } = usePermissions();
+  const { canEditParticipant, isOwnParticipant } = usePermissions();
   const userAlreadyVoted = participants.some((participant) => {
-    return canEditParticipant(participant.id);
+    return (
+      isOwnParticipant(participant.id) || canEditParticipant(participant.id)
+    );
   });
 
   const canSeeScores = poll.hideScores ? userAlreadyVoted : true;

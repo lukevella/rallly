@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import * as m from "motion/react-m";
 import type * as React from "react";
+import { usePoll } from "@/features/poll/client";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { PollOptionVoteSummary } from "@/features/poll/components/vote-breakdown-dialog";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -47,6 +48,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
+  const poll = usePoll();
 
   const showVote = !editable && !!selectedParticipantId;
 
@@ -71,39 +73,48 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       </span>
       {children}
       <IfScoresVisible>
-        <Button
-          {...dialog.triggerProps}
-          aria-label={`${
-            allowTentativeVotes
-              ? t("optionVoteBreakdown", {
-                  defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-                  yesScore,
-                  ifNeedBeScore,
-                })
-              : t("optionVoteBreakdownYesOnly", {
-                  defaultValue: "{yesScore} yes",
-                  yesScore,
-                })
-          }. ${t("showParticipantVotes", {
-            defaultValue: "Show participant votes",
-          })}`}
-          variant="ghost"
-          size="lg"
-          className="col-start-3 justify-self-end"
-        >
-          <ConnectedScoreSummary optionId={optionId} />
-        </Button>
-        <Dialog {...dialog.dialogProps}>
-          <DialogContent size="sm">
-            <DialogHeader>
-              <DialogTitle>
-                <Trans i18nKey="participants" defaults="Participants" />
-              </DialogTitle>
-              <DialogDescription>{optionLabel}</DialogDescription>
-            </DialogHeader>
-            <PollOptionVoteSummary optionId={optionId} />
-          </DialogContent>
-        </Dialog>
+        {poll.aggregateResultsOnly ? (
+          <span className="col-start-3 justify-self-end">
+            <ConnectedScoreSummary optionId={optionId} />
+          </span>
+        ) : (
+          <>
+            <Button
+              {...dialog.triggerProps}
+              aria-label={`${
+                allowTentativeVotes
+                  ? t("optionVoteBreakdown", {
+                      defaultValue:
+                        "{yesScore} yes, {ifNeedBeScore} if need be",
+                      yesScore,
+                      ifNeedBeScore,
+                    })
+                  : t("optionVoteBreakdownYesOnly", {
+                      defaultValue: "{yesScore} yes",
+                      yesScore,
+                    })
+              }. ${t("showParticipantVotes", {
+                defaultValue: "Show participant votes",
+              })}`}
+              variant="ghost"
+              size="lg"
+              className="col-start-3 justify-self-end"
+            >
+              <ConnectedScoreSummary optionId={optionId} />
+            </Button>
+            <Dialog {...dialog.dialogProps}>
+              <DialogContent size="sm">
+                <DialogHeader>
+                  <DialogTitle>
+                    <Trans i18nKey="participants" defaults="Participants" />
+                  </DialogTitle>
+                  <DialogDescription>{optionLabel}</DialogDescription>
+                </DialogHeader>
+                <PollOptionVoteSummary optionId={optionId} />
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </IfScoresVisible>
       {editable ? (
         <m.div

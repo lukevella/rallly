@@ -1,7 +1,8 @@
 import { Form } from "@rallly/ui/form";
 import userEvent from "@testing-library/user-event";
 import { useForm } from "react-hook-form";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useIsFree } from "@/features/billing/client";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
 import { render, screen } from "@/test/test-utils";
@@ -11,9 +12,13 @@ vi.mock("@rallly/posthog/client", () => ({
 }));
 
 vi.mock("@/features/billing/client", () => ({
-  useIsFree: () => false,
+  useIsFree: vi.fn(() => false),
   showPayWall: vi.fn(),
 }));
+
+beforeEach(() => {
+  vi.mocked(useIsFree).mockReturnValue(false);
+});
 
 function TestForm({
   enableComments = false,
@@ -102,6 +107,7 @@ describe("PollSettingsForm vote options lock", () => {
 
   describe("PollSettingsForm aggregate results setting", () => {
     it("is free and can be enabled before responses arrive", async () => {
+      vi.mocked(useIsFree).mockReturnValue(true);
       const user = userEvent.setup();
       render(<TestForm />);
       const setting = screen.getByRole("switch", {

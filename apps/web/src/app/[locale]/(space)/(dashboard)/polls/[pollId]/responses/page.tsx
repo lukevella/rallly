@@ -1,10 +1,12 @@
 import { cn } from "@rallly/ui";
 import { MousePointerClickIcon, SearchXIcon } from "lucide-react";
+import { Suspense } from "react";
 import {
   EmptyState,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { PageSkeleton } from "@/components/page-layout";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import {
   PollResponseDetail,
@@ -74,7 +76,21 @@ async function ResponseDetail({
   );
 }
 
-export default async function Page({
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ pollId: string }>;
+  searchParams: Promise<{ responseId?: string | string[] }>;
+}) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PollResponses params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function PollResponses({
   params,
   searchParams,
 }: {

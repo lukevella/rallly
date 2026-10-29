@@ -88,7 +88,19 @@ export const usePermissions = () => {
     useRequiredContext(PollContext);
   const { user } = useUser();
 
+  const isOwnParticipant = (participantId: string) => {
+    const participant = participants.find(
+      (participant) => participant.id === participantId,
+    );
+    return (
+      !!participant &&
+      ((!!user && participant.userId === user.id) ||
+        linkedParticipantIds.includes(participantId))
+    );
+  };
+
   return {
+    isOwnParticipant,
     canAddNewParticipant:
       poll.status === "open" &&
       !(poll.aggregateResultsOnly && viewerRole === "admin"),
@@ -101,18 +113,7 @@ export const usePermissions = () => {
         return true;
       }
 
-      const participant = participants.find(
-        (participant) => participant.id === participantId,
-      );
-
-      if (!participant) {
-        return false;
-      }
-
-      return (
-        (!!user && participant.userId === user.id) ||
-        linkedParticipantIds.includes(participantId)
-      );
+      return isOwnParticipant(participantId);
     },
   };
 };

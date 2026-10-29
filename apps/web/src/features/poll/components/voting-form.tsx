@@ -34,12 +34,21 @@ const formSchema = z.object({
 type VotingFormValues = z.infer<typeof formSchema>;
 
 export const useVotingForm = () => {
-  const { options } = usePoll();
+  const { options, aggregateResultsOnly } = usePoll();
   const { participants } = useParticipants();
+  const { isOwnParticipant } = usePermissions();
   const form = useFormContext<VotingFormValues>();
+  const requestedParticipantId = form.watch("participantId");
+  const mode = form.watch("mode");
+  const selectedParticipantId =
+    requestedParticipantId ??
+    (aggregateResultsOnly && mode === "view"
+      ? participants.find(({ id }) => isOwnParticipant(id))?.id
+      : undefined);
 
   return {
     ...form,
+    selectedParticipantId,
     newParticipant: () => {
       form.reset({
         mode: "new",
@@ -83,9 +92,9 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const token = useEditToken();
   const { participants } = useParticipants();
 
-  const { canAddNewParticipant, canEditParticipant } = usePermissions();
+  const { canAddNewParticipant, isOwnParticipant } = usePermissions();
   const userAlreadyVoted = participants.some((participant) =>
-    canEditParticipant(participant.id),
+    isOwnParticipant(participant.id),
   );
 
   const role = useRole();
@@ -102,7 +111,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
           : "view",
       participantId:
         role === "participant"
-          ? participants.find((p) => canEditParticipant(p.id))?.id
+          ? participants.find((p) => isOwnParticipant(p.id))?.id
           : undefined,
       votes: options.map((option) => ({
         optionId: option.id,

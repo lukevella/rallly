@@ -55,7 +55,7 @@
   "advisorySeverity": "{severity, select, critical {critical} high {high} medium {medium} low {low} other {unrated}}",
   "aggregateResponsesHiddenDescription": "This poll is set to show vote totals by option only.",
   "aggregateResponsesHiddenTitle": "Individual responses are hidden",
-  "aggregateResultsOnlyDescription": "Hide each response from everyone and show vote totals by option instead.",
+  "aggregateResultsOnlyDescription": "Show vote totals by option. Respondents can still see their own answers.",
   "aggregateResultsOnlyLockedDescription": "Locked after the first response to protect individual answers.",
   "aggregateResultsOnlyTitle": "Show aggregate results only",
   "allDatesPast": "Every date has passed",

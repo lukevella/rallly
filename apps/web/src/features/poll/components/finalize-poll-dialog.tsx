@@ -33,6 +33,8 @@ import { ConferencingProviderIcon } from "@/features/conferencing/components/con
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
+import { VoteBar } from "@/features/poll/components/vote-bar";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
 import type { VoteType } from "@/features/poll/constants";
@@ -98,9 +100,27 @@ function OptionTimeCell({ option }: { option: RankedOption }) {
   );
 }
 
-function OptionVotesCell({ votes }: { votes: OptionVotes }) {
+function OptionVotesCell({
+  optionId,
+  votes,
+}: {
+  optionId: string;
+  votes: OptionVotes;
+}) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
+  if (poll.aggregateResultsOnly) {
+    const { yes, ifNeedBe } = getScore(optionId);
+    return (
+      <VoteBar
+        className="relative z-10 w-32"
+        yes={yes}
+        ifNeedBe={ifNeedBe}
+        total={poll.aggregateParticipantCount ?? 0}
+      />
+    );
+  }
   return (
     <div className="relative z-10 flex w-32">
       <VoteSummaryProgressBar
@@ -172,7 +192,7 @@ function PickDateStep({
               </DataListCell>
             ) : null}
             <DataListCell className="hidden sm:flex">
-              <OptionVotesCell votes={option.votes} />
+              <OptionVotesCell optionId={option.id} votes={option.votes} />
             </DataListCell>
             <DataListCell>
               <div className="relative z-10">
@@ -557,6 +577,7 @@ function SummaryStep({ option }: { option: RankedOption }) {
 function FinalizeWizard({ onClose }: { onClose: () => void }) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
   const router = useRouter();
   // The pay wall nests inside the wizard so it stacks above it and the
   // wizard survives it; the app-wide instance would sit underneath.
@@ -567,8 +588,13 @@ function FinalizeWizard({ onClose }: { onClose: () => void }) {
     payWall.trigger();
   };
   const options = React.useMemo(
-    () => rankOptionsByPopularity({ options: poll.options, participants }),
-    [poll.options, participants],
+    () =>
+      rankOptionsByPopularity({
+        options: poll.options,
+        participants,
+        getScore,
+      }),
+    [poll.options, participants, getScore],
   );
   const [step, setStep] = React.useState<Step>("date");
   const [optionId, setOptionId] = React.useState<string | null>(null);
