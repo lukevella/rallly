@@ -23,6 +23,7 @@ import {
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
+import type { DateTimeOption } from "@/features/poll/components/forms/poll-options-form/types";
 import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type {
@@ -57,7 +58,11 @@ const encodeStoredOption = (
     : `${start}/${addMinutesToWallTime(start, option.duration)}`;
 };
 
-/** The edit form's starting values, read from the poll as saved. */
+/**
+ * Seeds the edit form from a stored poll: each option keeps its stored `id` and
+ * is read as wall-clock under the poll's zone, and the derived flags (all-day,
+ * lockTimeZone, duration) are set so the form opens exactly as the poll stands.
+ */
 function getDefaultValues(poll: PollDetails): NewEventData {
   const firstDate = toPollWallTime(
     poll.options[0]?.startTime ?? new Date(),
@@ -71,15 +76,23 @@ function getDefaultValues(poll: PollDetails): NewEventData {
     ...toConferencingFormValues(poll.conferencing),
     navigationDate: firstDate.slice(0, 10),
     view: "month",
-    options: poll.options.map((option) => {
+    options: poll.options.map((option): DateTimeOption => {
       const start = toPollWallTime(option.startTime, poll.timeZone);
+      const maxParticipants = option.maxParticipants ?? undefined;
       return option.duration > 0
         ? {
-            type: "timeSlot" as const,
+            type: "timeSlot",
+            id: option.id,
             start,
             end: addMinutesToWallTime(start, option.duration),
+            maxParticipants,
           }
-        : { type: "date" as const, date: start.slice(0, 10) };
+        : {
+            type: "date",
+            id: option.id,
+            date: start.slice(0, 10),
+            maxParticipants,
+          };
     }),
     timeZone: poll.timeZone ?? "",
     // A timed poll with no stored zone was locked to a single wall-clock time.
@@ -116,7 +129,13 @@ function getDateChanges({
       ? data.timeZone || fallbackTimeZone
       : null;
 
-  const encodedOptions = data.options.map(encodeDateOption);
+  const optionsWithLimits = data.options.map((option) => ({
+    option,
+    maxParticipants: option.maxParticipants ?? null,
+  }));
+  const encodedOptions = optionsWithLimits.map(({ option }) =>
+    encodeDateOption(option),
+  );
 
   // When the frame changes the stored instants no longer match it, so every
   // option is re-stored from the form's wall-clock under the new frame, which
@@ -132,23 +151,49 @@ function getDateChanges({
       );
 
   const optionsToAdd = frameChanged
-    ? encodedOptions
-    : encodedOptions.filter(
-        (encoded) =>
+    ? optionsWithLimits
+    : optionsWithLimits.filter(
+        ({ option }) =>
           !poll.options.some(
-            (option) => encodeStoredOption(option, poll.timeZone) === encoded,
+            (pollOption) =>
+              encodeStoredOption(pollOption, poll.timeZone) ===
+              encodeDateOption(option),
           ),
       );
+
+  const optionsToUpdate = frameChanged
+    ? []
+    : optionsWithLimits.flatMap(({ option, maxParticipants }) => {
+        // A capacity-only edit keeps the option's id and encoded key. Match the
+        // stored row by id so two options that share an encoded start/duration
+        // can't misroute the update to the wrong row; require the key to still
+        // match so a moved option is handled as delete + add, not an update.
+        if (!option.id) {
+          return [];
+        }
+        const encoded = encodeDateOption(option);
+        const existingOption = poll.options.find(
+          (pollOption) =>
+            pollOption.id === option.id &&
+            encodeStoredOption(pollOption, poll.timeZone) === encoded,
+        );
+
+        return existingOption &&
+          existingOption.maxParticipants !== maxParticipants
+          ? [{ id: existingOption.id, maxParticipants }]
+          : [];
+      });
 
   if (
     !frameChanged &&
     optionsToDelete.length === 0 &&
-    optionsToAdd.length === 0
+    optionsToAdd.length === 0 &&
+    optionsToUpdate.length === 0
   ) {
     return null;
   }
 
-  return { timeZone, optionsToDelete, optionsToAdd };
+  return { timeZone, optionsToDelete, optionsToAdd, optionsToUpdate };
 }
 
 const detailFields = [
@@ -229,7 +274,14 @@ export function EditPoll({
     if (dateChanges) {
       input.timeZone = dateChanges.timeZone;
       input.optionsToDelete = dateChanges.optionsToDelete.map(({ id }) => id);
-      input.optionsToAdd = dateChanges.optionsToAdd;
+      input.optionsToAdd = dateChanges.optionsToAdd.map(
+        ({ option, maxParticipants }) => ({
+          startDate: option.type === "date" ? option.date : option.start,
+          endDate: option.type === "timeSlot" ? option.end : undefined,
+          maxParticipants,
+        }),
+      );
+      input.optionsToUpdate = dateChanges.optionsToUpdate;
     }
 
     const settingsChanged = settingFields.some(isChanged);

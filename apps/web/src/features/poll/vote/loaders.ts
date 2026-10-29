@@ -47,11 +47,17 @@ export const loadVotePage = cache(
       participantIds,
     });
 
+    // Capacity is enforced even while scores are hidden, so the tally is
+    // read whenever an option carries a limit.
+    const hasCapacityLimit = poll.options.some(
+      (option) => option.maxParticipants !== null,
+    );
+
     const [response, scores, participantCount] = await Promise.all([
       responsePromise,
       // Scores stay hidden until the viewer has responded, so they are not
-      // read at all when they cannot be shown.
-      poll.hideScores
+      // read at all when they cannot be shown nor gate a limit.
+      poll.hideScores && !hasCapacityLimit
         ? responsePromise.then((found) =>
             found ? getOptionScores({ pollId }) : null,
           )
@@ -97,15 +103,25 @@ export const loadVotePage = cache(
           : null,
       },
       participantCount: scoresVisible ? participantCount : null,
-      results: poll.options.map((option) => ({
-        optionId: option.id,
-        startTime: option.startTime,
-        duration: option.duration,
-        score:
-          scoresVisible && scores
-            ? (scores.get(option.id) ?? { yes: 0, ifNeedBe: 0 })
-            : null,
-      })),
+      results: poll.options.map((option) => {
+        const tally = scores
+          ? (scores.get(option.id) ?? { yes: 0, ifNeedBe: 0 })
+          : null;
+        const score = scoresVisible ? tally : null;
+        return {
+          optionId: option.id,
+          startTime: option.startTime,
+          duration: option.duration,
+          score,
+          maxParticipants: option.maxParticipants,
+          // Computed from the raw tally so the limit is gated client-side
+          // even when scores are hidden; the mutation enforces it regardless.
+          capacityReached:
+            option.maxParticipants !== null &&
+            tally !== null &&
+            tally.yes >= option.maxParticipants,
+        };
+      }),
       response,
       canVote: poll.status === "open",
     };

@@ -11,6 +11,7 @@ describe("createOptionsContextValue — all-day options are timezone-invariant",
     id: "opt-1",
     startTime: new Date("2026-07-01T00:00:00Z"),
     duration: 0,
+    maxParticipants: null,
   };
 
   it.each([
@@ -52,6 +53,7 @@ describe("createOptionsContextValue — time slots", () => {
     id: "opt-1",
     startTime: new Date("2026-07-01T18:00:00Z"),
     duration: 60,
+    maxParticipants: null,
   };
 
   it("shows fixed times in the viewer's zone", () => {

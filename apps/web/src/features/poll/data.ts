@@ -52,6 +52,10 @@ export async function getPoll({
   });
 }
 
+/**
+ * Reads a poll's options with their per-option "yes" tallies, scoped to the
+ * given space. Runs the poll read and the vote aggregation in parallel.
+ */
 export async function getPollResults({
   pollId,
   spaceId,
@@ -76,6 +80,7 @@ export async function getPollResults({
             id: true,
             startTime: true,
             duration: true,
+            maxParticipants: true,
           },
           orderBy: {
             startTime: "asc",
@@ -128,6 +133,7 @@ export async function getPollResults({
       id: option.id,
       startTime: option.startTime,
       duration: option.duration,
+      maxParticipants: option.maxParticipants,
       votes,
       score,
     };
@@ -171,7 +177,9 @@ const apiParticipantSelect = {
   votes: {
     select: {
       type: true,
-      option: { select: { startTime: true, duration: true } },
+      option: {
+        select: { startTime: true, duration: true, maxParticipants: true },
+      },
     },
   },
 } satisfies Prisma.ParticipantSelect;
@@ -323,6 +331,7 @@ export async function listPolls({
           id: true,
           startTime: true,
           duration: true,
+          maxParticipants: true,
         },
         orderBy: {
           startTime: "asc",
@@ -644,7 +653,10 @@ export async function listParticipantIdsByToken({
   return participant ? [participant.id] : [];
 }
 
-/** A poll of the space with its options and settings, or null. */
+/**
+ * Reads a single poll with its full details and options (including each option's
+ * `maxParticipants` cap), scoped to the given space. Returns null when missing.
+ */
 export async function getPollWithOptions({
   pollId,
   spaceId,
@@ -688,6 +700,7 @@ export async function getPollWithOptions({
           id: true,
           startTime: true,
           duration: true,
+          maxParticipants: true,
         },
         orderBy: {
           startTime: "asc",
@@ -786,7 +799,12 @@ export async function getPollDetails({
       spaceId: true,
       deleted: true,
       options: {
-        select: { id: true, startTime: true, duration: true },
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+          maxParticipants: true,
+        },
         orderBy: { startTime: "asc" },
       },
       user: { select: { id: true, name: true, image: true, banned: true } },

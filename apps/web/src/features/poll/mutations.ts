@@ -17,6 +17,7 @@ import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 export type PollOption = {
   startTime: Date;
   duration: number;
+  maxParticipants?: number;
 };
 
 export type CreatePollParams = {
@@ -68,6 +69,7 @@ const pollResponseSelect = {
       id: true,
       startTime: true,
       duration: true,
+      maxParticipants: true,
     },
     orderBy: {
       startTime: "asc",

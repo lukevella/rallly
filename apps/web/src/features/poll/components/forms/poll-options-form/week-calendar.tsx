@@ -194,16 +194,15 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
 
   const handleEventClick = (occurrence: EventCalendarOccurrence) => {
     const clicked = slotToTimeOption(occurrence.start, occurrence.end);
-    onChange(
-      options.filter(
-        (option) =>
-          !(
-            option.type === "timeSlot" &&
-            option.start === clicked.start &&
-            option.end === clicked.end
-          ),
-      ),
+    const optionIndex = options.findIndex(
+      (option) =>
+        option.type === "timeSlot" &&
+        option.start === clicked.start &&
+        option.end === clicked.end,
     );
+    if (optionIndex !== -1) {
+      onChange(options.filter((_, index) => index !== optionIndex));
+    }
   };
 
   const handleEventUpdate = (
@@ -244,7 +243,11 @@ const WeekCalendar: React.FunctionComponent<DateTimePickerProps> = ({
         option.type === "timeSlot" &&
         option.start === oldOption.start &&
         option.end === oldOption.end
-          ? newOption
+          ? {
+              ...newOption,
+              id: option.id,
+              maxParticipants: option.maxParticipants,
+            }
           : option,
       ),
     );

@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
+import { Input } from "@rallly/ui/input";
 import { RadioCards, RadioCardsItem } from "@rallly/ui/radio-pills";
 import {
   CalendarIcon,
@@ -15,6 +16,7 @@ import {
   MoreVerticalIcon,
   PlusIcon,
   SparklesIcon,
+  UsersIcon,
   XIcon,
 } from "lucide-react";
 import * as React from "react";
@@ -45,6 +47,54 @@ import {
 import type { DateTimeOption, DateTimePickerProps } from "../types";
 import { formatDateWithoutTime, removeAllOptionsForDay } from "../utils";
 import TimePicker from "./time-picker";
+
+/**
+ * Numeric input for an option's max "yes" votes. An empty field means no limit
+ * (`undefined`); out-of-range or non-integer input is ignored so the value
+ * stays a positive 32-bit integer.
+ */
+function OptionParticipantLimit({
+  value,
+  onChange,
+}: {
+  value: number | undefined;
+  onChange: (value: number | undefined) => void;
+}) {
+  const { t } = useTranslation();
+  const inputId = React.useId();
+
+  return (
+    <div className="flex flex-row items-center space-x-3">
+      <UsersIcon size={24} />
+      <Input
+        id={inputId}
+        aria-label={t("optionParticipantLimitLabel", {
+          defaultValue: "Maximum participants for this option",
+        })}
+        type="number"
+        min={1}
+        max={2_147_483_647}
+        step={1}
+        value={value ?? ""}
+        onChange={(event) => {
+          const next = event.currentTarget.value;
+          if (next === "") {
+            onChange(undefined);
+            return;
+          }
+          const parsed = Number(next);
+          if (
+            Number.isSafeInteger(parsed) &&
+            parsed > 0 &&
+            parsed <= 2_147_483_647
+          ) {
+            onChange(parsed);
+          }
+        }}
+      />
+    </div>
+  );
+}
 
 // Options are floating wall-clock strings, so times are computed on the
 // strings themselves and never pass through the browser's zone.
@@ -118,10 +168,29 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
       onChangeDuration(0);
       form.setValue("timeZone", "");
       onChange(
-        datepicker.selection.map((date) => ({
-          type: "date",
-          date: formatDateWithoutTime(date),
-        })),
+        datepicker.selection.map((date) => {
+          const dateValue = formatDateWithoutTime(date);
+          // Collapsing a day's slots into one all-day option keeps the limit
+          // only when every slot that day agrees on it.
+          const dayLimits = new Set(
+            options
+              .filter(
+                (option) =>
+                  (option.type === "date"
+                    ? option.date
+                    : option.start.substring(0, 10)) === dateValue,
+              )
+              .map((option) => option.maxParticipants),
+          );
+          return {
+            type: "date" as const,
+            date: dateValue,
+            maxParticipants:
+              dayLimits.size === 1
+                ? dayLimits.values().next().value
+                : undefined,
+          };
+        }),
       );
       return;
     }
@@ -141,6 +210,8 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
           type: "timeSlot",
           start,
           end: addMinutesToWallTime(start, minutes),
+          id: option.id,
+          maxParticipants: option.maxParticipants,
         };
       }),
     );
@@ -427,6 +498,20 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                     );
                                   }}
                                 />
+
+                                <OptionParticipantLimit
+                                  value={option.maxParticipants}
+                                  onChange={(maxParticipants) =>
+                                    onChange(
+                                      options.map((o, i) =>
+                                        i === index
+                                          ? { ...o, maxParticipants }
+                                          : o,
+                                      ),
+                                    )
+                                  }
+                                />
+
                                 <Button
                                   aria-label={t("removeTimeSlot", {
                                     defaultValue: "Remove time slot",
@@ -434,10 +519,9 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   size="icon"
                                   variant="ghost"
                                   onClick={() => {
-                                    onChange([
-                                      ...options.slice(0, index),
-                                      ...options.slice(index + 1),
-                                    ]);
+                                    onChange(
+                                      options.filter((_, i) => i !== index),
+                                    );
                                   }}
                                 >
                                   <XIcon />
@@ -498,19 +582,14 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                   onClick={() => {
                                     const times = optionsForDay.map(
                                       ({ option }) => {
-                                        if (option.type === "date") {
-                                          throw new Error(
-                                            "Expected timeSlot but got date",
-                                          );
-                                        }
-
+                                        const timeOption =
+                                          expectTimeOption(option);
                                         return {
-                                          startTime: option.start.substring(
-                                            option.start.indexOf("T"),
+                                          startTime: timeOption.start.substring(
+                                            timeOption.start.indexOf("T"),
                                           ),
-                                          endTime: option.end.substring(
-                                            option.end.indexOf("T"),
-                                          ),
+                                          maxParticipants:
+                                            timeOption.maxParticipants,
                                         };
                                       },
                                     );
@@ -520,13 +599,31 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                                         times.forEach((time) => {
                                           const start =
                                             dateString + time.startTime;
+                                          const end = dayjs(start)
+                                            .add(slotDuration, "minutes")
+                                            .format("YYYY-MM-DDTHH:mm");
+                                          // Carry the stored id of any option
+                                          // that already exists at this
+                                          // date/time so a capacity edit after
+                                          // "Apply to all dates" still targets
+                                          // the right row; combos new to a day
+                                          // get no id.
+                                          const existing = options.find(
+                                            (option) =>
+                                              option.type === "timeSlot" &&
+                                              option.start === start &&
+                                              option.end === end,
+                                          );
                                           newOptions.push({
                                             type: "timeSlot",
+                                            id: existing?.id,
                                             start: start,
                                             end: addMinutesToWallTime(
                                               start,
                                               slotDuration,
                                             ),
+                                            maxParticipants:
+                                              time.maxParticipants,
                                           });
                                         });
                                       },
@@ -572,25 +669,35 @@ const MonthCalendar: React.FunctionComponent<DateTimePickerProps> = ({
                     const dateParts = formatDateParts(selectedDate, {
                       locale,
                     });
+                    const optionIndex = options.findIndex(
+                      (option) =>
+                        option.type === "date" &&
+                        option.date === formatDateWithoutTime(selectedDate),
+                    );
+                    const option = options[optionIndex];
+                    if (!option || option.type !== "date") {
+                      return null;
+                    }
                     return (
-                      <DateCard
+                      <div
                         // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
                         key={i}
-                        day={dateParts.day}
-                        month={dateParts.month}
-                        // annotation={
-                        //   <CompactButton
-                        //     icon={XIcon}
-                        //     onClick={() => {
-                        //       // TODO (Luke Vella) [2022-03-19]: Find cleaner way to manage this state
-                        //       // Quite tedious right now to remove a single element
-                        //       onChange(
-                        //         removeAllOptionsForDay(options, selectedDate),
-                        //       );
-                        //     }}
-                        //   />
-                        // }
-                      />
+                        className="flex items-center gap-2"
+                      >
+                        <DateCard day={dateParts.day} month={dateParts.month} />
+                        <OptionParticipantLimit
+                          value={option.maxParticipants}
+                          onChange={(maxParticipants) =>
+                            onChange(
+                              options.map((o, i) =>
+                                i === optionIndex
+                                  ? { ...o, maxParticipants }
+                                  : o,
+                              ),
+                            )
+                          }
+                        />
+                      </div>
                     );
                   })}
               </div>

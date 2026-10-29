@@ -58,12 +58,14 @@ function VoteCell({
   allowTentativeVotes,
   savedVote,
   canVote,
+  yesDisabled,
 }: {
   optionId: string;
   optionLabel: string;
   allowTentativeVotes: boolean;
   savedVote?: VoteType;
   canVote: boolean;
+  yesDisabled?: boolean;
 }) {
   const { value, setVote, isEditing } = useVote(optionId);
 
@@ -76,6 +78,7 @@ function VoteCell({
       onChange={setVote}
       optionLabel={optionLabel}
       allowTentativeVotes={allowTentativeVotes}
+      yesDisabled={yesDisabled}
     />
   );
 }
@@ -142,6 +145,8 @@ export function VoteViewList({
             participantCount={participantCount}
             hasSavedResponse={response !== null}
             allowTentativeVotes={poll.allowTentativeVotes}
+            maxParticipants={row.original.maxParticipants}
+            capacityReached={row.original.capacityReached}
           />
         ),
       }),
@@ -169,6 +174,10 @@ export function VoteViewList({
               allowTentativeVotes={poll.allowTentativeVotes}
               savedVote={savedVotes.get(result.optionId)}
               canVote={canVote}
+              yesDisabled={
+                result.capacityReached &&
+                savedVotes.get(result.optionId) !== "yes"
+              }
             />
           );
         },
