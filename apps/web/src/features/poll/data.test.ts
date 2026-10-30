@@ -6,25 +6,37 @@ const mockFindMany = vi.fn();
 const mockCount = vi.fn();
 const mockOptionGroupBy = vi.fn();
 const mockParticipantGroupBy = vi.fn();
+const mockPollFindFirst = vi.fn();
+const mockParticipantFindMany = vi.fn();
+const mockParticipantFindFirst = vi.fn();
 
 vi.mock("@rallly/database", () => ({
   prisma: {
     poll: {
       findMany: (...args: unknown[]) => mockFindMany(...args),
       count: (...args: unknown[]) => mockCount(...args),
+      findFirst: (...args: unknown[]) => mockPollFindFirst(...args),
     },
     option: {
       groupBy: (...args: unknown[]) => mockOptionGroupBy(...args),
     },
     participant: {
       groupBy: (...args: unknown[]) => mockParticipantGroupBy(...args),
+      findMany: (...args: unknown[]) => mockParticipantFindMany(...args),
+      findFirst: (...args: unknown[]) => mockParticipantFindFirst(...args),
     },
     $transaction: (operations: Promise<unknown>[]) => Promise.all(operations),
   },
 }));
 
 import type { AuthorizedSpaceId } from "@/features/space/types";
-import { getPolls, listPolls } from "./data";
+import {
+  getPollParticipant,
+  getPollParticipants,
+  getPolls,
+  listPollParticipants,
+  listPolls,
+} from "./data";
 
 const spaceId = "test-space-id" as AuthorizedSpaceId;
 
@@ -173,5 +185,87 @@ describe("getPolls", () => {
       participantCount: 0,
       dateRange: null,
     });
+  });
+});
+
+// The aggregate flag can flip between the poll read and the participant
+// read, so each participant read re-checks it in its own where clause: the
+// database then evaluates the flag and the rows in one statement.
+describe("participant reads of aggregate results polls", () => {
+  const visible = { poll: { aggregateResultsOnly: false } };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockParticipantFindMany.mockResolvedValue([]);
+    mockParticipantFindFirst.mockResolvedValue(null);
+  });
+
+  it("getPollParticipants re-checks the flag in the participant query", async () => {
+    mockPollFindFirst.mockResolvedValue({
+      id: "poll-1",
+      kind: "date",
+      aggregateResultsOnly: false,
+    });
+
+    await getPollParticipants({ pollId: "poll-1", spaceId });
+
+    expect(mockParticipantFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { pollId: "poll-1", ...visible },
+      }),
+    );
+  });
+
+  it("getPollParticipants reads no participants once the poll is aggregate", async () => {
+    mockPollFindFirst.mockResolvedValue({
+      id: "poll-1",
+      kind: "date",
+      aggregateResultsOnly: true,
+    });
+
+    const result = await getPollParticipants({ pollId: "poll-1", spaceId });
+
+    expect(result?.participants).toEqual([]);
+    expect(mockParticipantFindMany).not.toHaveBeenCalled();
+  });
+
+  it("getPollParticipant re-checks the flag in the participant query", async () => {
+    mockPollFindFirst.mockResolvedValue({
+      id: "poll-1",
+      kind: "date",
+      aggregateResultsOnly: false,
+    });
+
+    await getPollParticipant({
+      pollId: "poll-1",
+      participantId: "participant-1",
+      spaceId,
+    });
+
+    expect(mockParticipantFindFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { pollId: "poll-1", id: "participant-1", ...visible },
+      }),
+    );
+  });
+
+  it("listPollParticipants admits only the viewer's own responses on aggregate polls", async () => {
+    await listPollParticipants({
+      pollId: "poll-1",
+      viewer: { userId: "user-1", participantIds: ["participant-1"] },
+    });
+
+    expect(mockParticipantFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          pollId: "poll-1",
+          OR: [
+            visible,
+            { userId: "user-1" },
+            { id: { in: ["participant-1"] } },
+          ],
+        }),
+      }),
+    );
   });
 });

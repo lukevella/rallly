@@ -52,23 +52,32 @@ const columnHelper = createColumnHelper<VoteResult>();
 const endOf = (result: VoteResult) =>
   new Date(result.startTime.getTime() + result.duration * 60_000);
 
+/**
+ * Shows the saved or in-progress vote, allowing edits only when the option
+ * accepts votes.
+ */
 function VoteCell({
   optionId,
   optionLabel,
   allowTentativeVotes,
   savedVote,
   canVote,
+  yesDisabled,
 }: {
   optionId: string;
   optionLabel: string;
   allowTentativeVotes: boolean;
   savedVote?: VoteType;
   canVote: boolean;
+  yesDisabled?: boolean;
 }) {
   const { value, setVote, isEditing } = useVote(optionId);
 
-  if (!canVote || !isEditing) {
+  if (!isEditing) {
     return savedVote !== undefined ? <VoteLabel type={savedVote} /> : null;
+  }
+  if (!canVote) {
+    return <VoteLabel type={value ?? savedVote} />;
   }
   return (
     <VoteSegmentedControl
@@ -76,6 +85,7 @@ function VoteCell({
       onChange={setVote}
       optionLabel={optionLabel}
       allowTentativeVotes={allowTentativeVotes}
+      yesDisabled={yesDisabled}
     />
   );
 }
@@ -91,6 +101,7 @@ export function VoteViewList({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
 
@@ -142,6 +153,8 @@ export function VoteViewList({
             participantCount={participantCount}
             hasSavedResponse={response !== null}
             allowTentativeVotes={poll.allowTentativeVotes}
+            maxParticipants={row.original.maxParticipants}
+            capacityReached={row.original.capacityReached}
           />
         ),
       }),
@@ -168,7 +181,11 @@ export function VoteViewList({
               optionLabel={optionLabel}
               allowTentativeVotes={poll.allowTentativeVotes}
               savedVote={savedVotes.get(result.optionId)}
-              canVote={canVote}
+              canVote={canVote && !pastOptionIds.has(result.optionId)}
+              yesDisabled={
+                result.capacityReached &&
+                savedVotes.get(result.optionId) !== "yes"
+              }
             />
           );
         },
@@ -185,6 +202,7 @@ export function VoteViewList({
       readZone,
       response,
       savedVotes,
+      pastOptionIds,
     ],
   );
 

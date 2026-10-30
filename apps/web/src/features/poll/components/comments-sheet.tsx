@@ -235,8 +235,6 @@ function CommentsSheetInner({ className }: { className?: string }) {
   const poll = usePoll();
   const dialog = useDialog();
 
-  const pollId = poll.id;
-
   const comments = useComments();
 
   const deleteComment = useDeleteComment();

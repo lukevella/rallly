@@ -274,6 +274,10 @@ function DesktopPollEmptyState() {
   );
 }
 
+/**
+ * The poll as a table of responses by option on wide screens. An aggregate
+ * results poll shows totals per option and the viewer's own response only.
+ */
 const DesktopPoll: React.FunctionComponent = () => {
   const poll = usePoll();
 
@@ -358,7 +362,11 @@ const DesktopPoll: React.FunctionComponent = () => {
                 <CardTitle>
                   <Trans i18nKey="participants" />
                 </CardTitle>
-                <Badge>{participants.length}</Badge>
+                <Badge>
+                  {poll.aggregateResultsOnly
+                    ? (poll.aggregateParticipantCount ?? 0)
+                    : participants.length}
+                </Badge>
                 {canAddNewParticipant && mode !== "new" ? (
                   <Button
                     aria-label={t("addParticipant", {
@@ -396,7 +404,9 @@ const DesktopPoll: React.FunctionComponent = () => {
               />
             </CardHeader>
             <div className="flex min-h-0 flex-1 flex-col">
-              {participants.length > 0 || mode !== "view" ? (
+              {participants.length > 0 ||
+              mode !== "view" ||
+              poll.aggregateResultsOnly ? (
                 <div className="relative flex min-h-0 flex-1 flex-col">
                   <div
                     aria-hidden="true"

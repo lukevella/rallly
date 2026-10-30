@@ -1,14 +1,130 @@
 import { describe, expect, it } from "vitest";
+import type { PollDetails } from "./types";
 import {
   filterCommentsForViewer,
   filterParticipantsByVote,
   getChosenOptionRank,
   getFinalizeTiming,
+  hasPastPollOptions,
+  isPollFormOptionPast,
+  isPollOptionPast,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
+  resolveNotifyParticipantIds,
   summarizeNotifySelection,
   toAvailabilitySpans,
+  withholdAggregateScores,
 } from "./utils";
+
+describe("isPollOptionPast", () => {
+  const now = new Date("2026-10-29T01:00:00Z");
+
+  it("uses the viewer's calendar date for all-day options", () => {
+    const option = { startTime: new Date("2026-10-28T00:00:00Z"), duration: 0 };
+
+    expect(isPollOptionPast({ option, now, timeZone: "UTC" })).toBe(true);
+    expect(
+      isPollOptionPast({ option, now, timeZone: "America/Los_Angeles" }),
+    ).toBe(false);
+  });
+
+  it("keeps an all-day option votable for its full calendar date", () => {
+    const option = { startTime: new Date("2026-10-29T00:00:00Z"), duration: 0 };
+
+    expect(isPollOptionPast({ option, now, timeZone: "UTC" })).toBe(false);
+  });
+
+  it("considers a time option past once its start time is reached", () => {
+    const option = {
+      startTime: new Date("2026-10-29T00:30:00Z"),
+      duration: 120,
+    };
+
+    expect(
+      isPollOptionPast({
+        option,
+        now: new Date("2026-10-29T00:29:59.999Z"),
+        timeZone: "UTC",
+      }),
+    ).toBe(false);
+    expect(isPollOptionPast({ option, now, timeZone: "UTC" })).toBe(true);
+  });
+});
+
+describe("isPollFormOptionPast", () => {
+  it("uses the supplied timezone for floating date options", () => {
+    const option = { type: "date" as const, date: "2026-10-28" };
+    const now = new Date("2026-10-29T01:00:00Z");
+
+    expect(isPollFormOptionPast({ option, now, timeZone: "UTC" })).toBe(true);
+    expect(
+      isPollFormOptionPast({
+        option,
+        now,
+        timeZone: "America/Los_Angeles",
+      }),
+    ).toBe(false);
+  });
+
+  it("compares a time option in its selected timezone", () => {
+    const option = {
+      type: "timeSlot" as const,
+      start: "2026-10-29T08:30:00",
+      end: "2026-10-29T09:30:00",
+    };
+
+    expect(
+      isPollFormOptionPast({
+        option,
+        now: new Date("2026-10-29T12:29:59.999Z"),
+        timeZone: "America/New_York",
+      }),
+    ).toBe(false);
+    expect(
+      isPollFormOptionPast({
+        option,
+        now: new Date("2026-10-29T12:30:00Z"),
+        timeZone: "America/New_York",
+      }),
+    ).toBe(true);
+  });
+});
+
+describe("hasPastPollOptions", () => {
+  it("finds all-day and timed options that have passed", () => {
+    const now = new Date("2026-10-29T12:00:00Z");
+
+    expect(
+      hasPastPollOptions({
+        options: [
+          { startTime: new Date("2026-10-28T00:00:00Z"), duration: 0 },
+          { startTime: new Date("2026-10-29T11:30:00Z"), duration: 60 },
+        ],
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe(true);
+    expect(
+      hasPastPollOptions({
+        options: [
+          { startTime: new Date("2026-10-29T12:30:00Z"), duration: 60 },
+        ],
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe(false);
+    expect(
+      hasPastPollOptions({
+        options: [
+          { startTime: new Date("2026-10-29T12:30:00Z"), duration: 60 },
+          { startTime: new Date("2026-10-28T00:00:00Z"), duration: 0 },
+        ],
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe(true);
+  });
+});
 
 const participant = (
   id: string,
@@ -81,6 +197,50 @@ describe("maskParticipantsForViewer", () => {
       hidden: true,
     });
     expect(result[1].votes).toEqual([{ optionId: "opt-1", type: "yes" }]);
+  });
+
+  it("returns only the viewer's responses when aggregate results are enabled", () => {
+    const result = maskParticipantsForViewer({
+      participants: [
+        participant("a", { userId: "user-1" }),
+        participant("b", { userId: "user-2" }),
+      ],
+      viewer: { userId: "user-1", linkedParticipantIds: [] },
+      hideParticipants: false,
+      aggregateResultsOnly: true,
+    });
+
+    expect(result.map(({ id }) => id)).toEqual(["a"]);
+  });
+
+  it("returns no individual responses to an unlinked anonymous viewer in aggregate mode", () => {
+    expect(
+      maskParticipantsForViewer({
+        participants: [participant("a"), participant("b")],
+        viewer: { userId: null, linkedParticipantIds: [] },
+        hideParticipants: false,
+        aggregateResultsOnly: true,
+      }),
+    ).toEqual([]);
+  });
+
+  it("keeps a guest's linked response editable in aggregate mode", () => {
+    const result = maskParticipantsForViewer({
+      participants: [participant("a"), participant("b")],
+      viewer: { userId: null, linkedParticipantIds: ["b"] },
+      hideParticipants: true,
+      aggregateResultsOnly: true,
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      id: "b",
+      name: "Name b",
+      note: "Note b",
+      hidden: false,
+      votes: [{ optionId: "opt-1", type: "yes" }],
+    });
+    expect(result[0]).not.toHaveProperty("token");
   });
 });
 
@@ -247,6 +407,23 @@ describe("rankOptionsByPopularity", () => {
   it("keeps option order for ties", () => {
     const ranked = rankOptionsByPopularity({ options, participants: [] });
     expect(ranked.map((r) => r.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("ranks aggregate results without individual responses", () => {
+    const scores = new Map([
+      ["a", { yes: 2, ifNeedBe: 1 }],
+      ["b", { yes: 4, ifNeedBe: 0 }],
+      ["c", { yes: 3, ifNeedBe: 0 }],
+    ]);
+    const ranked = rankOptionsByPopularity({
+      options,
+      participants: [],
+      /** Aggregate totals stand in for the missing responses. */
+      getScore: (optionId) => scores.get(optionId) ?? { yes: 0, ifNeedBe: 0 },
+    });
+
+    expect(ranked.map(({ id }) => id)).toEqual(["b", "c", "a"]);
+    expect(ranked.every(({ votes }) => votes.yes.length === 0)).toBe(true);
   });
 
   it("ignores votes for options that no longer exist", () => {
@@ -439,5 +616,118 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+describe("resolveNotifyParticipantIds", () => {
+  const participants = [
+    { id: "a", email: "a@example.com" },
+    { id: "b", email: "b@example.com" },
+    { id: "c", email: null },
+  ];
+
+  it("notifies only the selected participants", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["b"],
+        notifyAllParticipants: false,
+        aggregateResultsOnly: false,
+      }),
+    ).toEqual(["b"]);
+  });
+
+  it("notifies everyone with an email when asked to notify all", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: [],
+        notifyAllParticipants: true,
+        aggregateResultsOnly: false,
+      }),
+    ).toEqual(["a", "b"]);
+  });
+
+  it("skips selected participants without an email", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["c"],
+        notifyAllParticipants: false,
+        aggregateResultsOnly: false,
+      }),
+    ).toEqual([]);
+  });
+
+  it("ignores explicit ids on an aggregate results poll", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["a"],
+        notifyAllParticipants: false,
+        aggregateResultsOnly: true,
+      }),
+    ).toEqual([]);
+  });
+
+  it("notifies everyone with an email on an aggregate poll when asked", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["a"],
+        notifyAllParticipants: true,
+        aggregateResultsOnly: true,
+      }),
+    ).toEqual(["a", "b"]);
+  });
+
+  it("ignores ids that are not participants of the poll", () => {
+    expect(
+      resolveNotifyParticipantIds({
+        participants,
+        notifyParticipantIds: ["other"],
+        notifyAllParticipants: false,
+        aggregateResultsOnly: false,
+      }),
+    ).toEqual([]);
+  });
+});
+
+describe("withholdAggregateScores", () => {
+  const totals = { optionId: "opt-1", yes: 2, ifNeedBe: 1, no: 1, skip: 0 };
+  const poll = (overrides: Partial<PollDetails>) =>
+    ({
+      aggregateResultsOnly: true,
+      hideScores: true,
+      aggregateVotes: [totals],
+      ...overrides,
+    }) as PollDetails;
+
+  it("zeroes the totals for a viewer who has not responded", () => {
+    expect(
+      withholdAggregateScores({ poll: poll({}), viewerHasResponded: false })
+        .aggregateVotes,
+    ).toEqual([{ optionId: "opt-1", yes: 0, ifNeedBe: 0, no: 0, skip: 0 }]);
+  });
+
+  it("keeps the totals once the viewer has responded", () => {
+    const input = poll({});
+    expect(
+      withholdAggregateScores({ poll: input, viewerHasResponded: true }),
+    ).toBe(input);
+  });
+
+  it("keeps the totals when scores are not hidden", () => {
+    const input = poll({ hideScores: false });
+    expect(
+      withholdAggregateScores({ poll: input, viewerHasResponded: false }),
+    ).toBe(input);
+  });
+
+  it("leaves polls that are not aggregate unchanged", () => {
+    const input = poll({ aggregateResultsOnly: false });
+    expect(
+      withholdAggregateScores({ poll: input, viewerHasResponded: false }),
+    ).toBe(input);
   });
 });

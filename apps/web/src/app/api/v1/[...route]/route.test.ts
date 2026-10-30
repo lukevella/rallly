@@ -3011,6 +3011,25 @@ describe("API v1 - /polls", () => {
       expect(json.data).toEqual([]);
     });
 
+    it("should reject individual responses for aggregate-only polls", async () => {
+      mockGetPollParticipants.mockResolvedValue({
+        pollId: "test-poll-id",
+        kind: "time",
+        aggregateResultsOnly: true,
+        participants,
+      });
+
+      const res = await app.request("/v1/polls/test-poll-id/participants", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${testApiKey}` },
+      });
+
+      expect(res.status).toBe(403);
+      expect((await res.json()).error.code).toBe(
+        "INDIVIDUAL_RESPONSES_DISABLED",
+      );
+    });
+
     it("should return 404 when poll not found", async () => {
       mockGetPollParticipants.mockResolvedValue(null);
 
@@ -3083,6 +3102,27 @@ describe("API v1 - /polls", () => {
         participantId: "participant-1",
         spaceId: "test-space-id",
       });
+    });
+
+    it("should reject individual responses for aggregate-only polls", async () => {
+      mockGetPollParticipant.mockResolvedValue({
+        poll: {
+          id: "test-poll-id",
+          kind: "time",
+          aggregateResultsOnly: true,
+        },
+        participant,
+      });
+
+      const res = await app.request(
+        "/v1/polls/test-poll-id/participants/participant-1",
+        { method: "GET", headers: authed },
+      );
+
+      expect(res.status).toBe(403);
+      expect((await res.json()).error.code).toBe(
+        "INDIVIDUAL_RESPONSES_DISABLED",
+      );
     });
 
     it("should return POLL_NOT_FOUND when the poll is missing", async () => {

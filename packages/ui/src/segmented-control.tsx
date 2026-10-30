@@ -28,7 +28,7 @@ function SegmentedControlItem({
     <RadioPrimitive.Root
       data-slot="segmented-control-item"
       className={cn(
-        "relative inline-flex h-full cursor-pointer touch-manipulation select-none items-center justify-center rounded-[8px] transition-colors [-webkit-tap-highlight-color:transparent] before:absolute before:inset-x-0 before:-inset-y-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-card data-checked:shadow-xs dark:data-checked:bg-gray-800",
+        "relative inline-flex h-full cursor-pointer touch-manipulation select-none items-center justify-center rounded-[8px] transition-colors [-webkit-tap-highlight-color:transparent] before:absolute before:inset-x-0 before:-inset-y-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring data-disabled:cursor-not-allowed data-checked:bg-card data-disabled:opacity-40 data-checked:shadow-xs dark:data-checked:bg-gray-800",
         className,
       )}
       {...props}

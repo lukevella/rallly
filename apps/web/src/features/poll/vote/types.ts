@@ -9,12 +9,20 @@ export type VoteResult = {
   startTime: Date;
   duration: number;
   score: { yes: number; ifNeedBe: number } | null;
+  /** Max number of "yes" votes this option accepts; null means no limit. */
+  maxParticipants: number | null;
+  /**
+   * Whether the "yes" limit is already met, so no further yes vote fits.
+   * Set even when scores are hidden: only the flag is revealed, not the count.
+   */
+  capacityReached: boolean;
 };
 
 /** The viewer's own response. */
 export type VoteResponse = {
   participantId: string;
   name: string;
+  timeZone: string | null;
   image: string | null;
   votes: { optionId: string; type: VoteType }[];
 };
@@ -74,6 +82,7 @@ export type VoteViewProps = {
   participantCount: number | null;
   response: VoteResponse | null;
   canVote: boolean;
+  pastOptionIds: Set<string>;
 };
 
 /** Which voting view is on screen. */

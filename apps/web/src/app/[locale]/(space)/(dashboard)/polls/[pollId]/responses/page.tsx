@@ -1,10 +1,12 @@
 import { cn } from "@rallly/ui";
 import { MousePointerClickIcon, SearchXIcon } from "lucide-react";
+import { Suspense } from "react";
 import {
   EmptyState,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
+import { PageSkeleton } from "@/components/page-layout";
 import { PollActivityList } from "@/features/activity/components/poll-activity-list";
 import {
   PollResponseDetail,
@@ -20,6 +22,10 @@ import {
 } from "@/features/poll/loaders";
 import { Trans } from "@/i18n/client";
 
+/**
+ * The selected response beside the list, or a prompt to pick one. An
+ * aggregate results poll has no response to open.
+ */
 async function ResponseDetail({
   pollId,
   responseId,
@@ -42,10 +48,17 @@ async function ResponseDetail({
             <SearchXIcon />
           </EmptyStateIcon>
           <EmptyStateTitle>
-            <Trans
-              i18nKey="pollResponseDetailNotFound"
-              defaults="This response no longer exists"
-            />
+            {poll.aggregateResultsOnly ? (
+              <Trans
+                i18nKey="aggregateResponsesHiddenTitle"
+                defaults="Individual responses are hidden"
+              />
+            ) : (
+              <Trans
+                i18nKey="pollResponseDetailNotFound"
+                defaults="This response no longer exists"
+              />
+            )}
           </EmptyStateTitle>
         </EmptyState>
       </PollResponseDetailCard>
@@ -67,7 +80,30 @@ async function ResponseDetail({
   );
 }
 
-export default async function Page({
+/**
+ * The poll's responses page. The shell renders at once; the reads that need
+ * the session stream in behind the skeleton.
+ */
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ pollId: string }>;
+  searchParams: Promise<{ responseId?: string | string[] }>;
+}) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PollResponses params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+/**
+ * The response list, with the selected response beside it. An aggregate
+ * results poll has no responses to list or open, so both say the responses
+ * are hidden.
+ */
+async function PollResponses({
   params,
   searchParams,
 }: {
@@ -91,6 +127,7 @@ export default async function Page({
         pollId={pollId}
         participants={participants}
         pollOpen={poll.status === "open"}
+        aggregateResultsOnly={poll.aggregateResultsOnly}
       />
     );
   }
@@ -110,6 +147,7 @@ export default async function Page({
           pollOpen={poll.status === "open"}
           selectedId={responseId}
           compact
+          aggregateResultsOnly={poll.aggregateResultsOnly}
         />
       </div>
       <div

@@ -22,6 +22,7 @@ import type { PollStatus } from "@/features/poll/schema";
 import {
   filterCommentsForViewer,
   maskParticipantsForViewer,
+  withholdAggregateScores,
 } from "@/features/poll/utils";
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
 import { getUser } from "@/features/user/data";
@@ -75,7 +76,17 @@ const loadParticipantRows = cache(async (pollId: string) => {
 const getEditUrl = ({ pollId, token }: { pollId: string; token: string }) =>
   shortUrl(getPollInvitePath({ pollId, token }));
 
+/**
+ * The poll's responses for the host's responses page, each with the edit
+ * link its confirmation email carried. Empty for an aggregate results poll;
+ * the participant read enforces that too, in case the setting changed after
+ * the poll was loaded.
+ */
 export const loadPollParticipants = cache(async (pollId: string) => {
+  const poll = await loadPoll(pollId);
+  if (poll.aggregateResultsOnly) {
+    return [];
+  }
   const participants = await loadParticipantRows(pollId);
   return participants.map(({ id, name, note, image, createdAt, token }) => ({
     id,
@@ -89,10 +100,15 @@ export const loadPollParticipants = cache(async (pollId: string) => {
 
 /**
  * One response with its votes, or null when it no longer exists (e.g. it
- * was deleted while its link stayed open).
+ * was deleted while its link stayed open) or the poll shows aggregate
+ * results only.
  */
 export const loadOptionalPollResponse = cache(
   async (pollId: string, participantId: string) => {
+    const poll = await loadPoll(pollId);
+    if (poll.aggregateResultsOnly) {
+      return null;
+    }
     const participants = await loadParticipantRows(pollId);
     const participant = participants.find(({ id }) => id === participantId);
 
@@ -148,16 +164,29 @@ export const loadPollActivity = cache(
       loadActiveSpaceContentScope(),
       loadPoll(pollId),
     ]);
-    return listPollActivity({ pollId, spaceId: scope.spaceId, limit });
+    // Response events of an aggregate results poll are left out by the
+    // query itself, before the limit applies.
+    return listPollActivity({
+      pollId,
+      spaceId: scope.spaceId,
+      limit,
+    });
   },
 );
 
+/**
+ * One response's history. Empty for an aggregate results poll, whose
+ * individual responses have no page of their own.
+ */
 export const loadPollResponseActivity = cache(
   async (pollId: string, participantId: string) => {
-    const [scope] = await Promise.all([
+    const [scope, poll] = await Promise.all([
       loadActiveSpaceContentScope(),
       loadPoll(pollId),
     ]);
+    if (poll.aggregateResultsOnly) {
+      return [];
+    }
     return listPollActivity({
       pollId,
       spaceId: scope.spaceId,
@@ -184,6 +213,10 @@ export const loadPollAvailability = cache(async (pollId: string) =>
  * invite page is the participant view, and the host reads the full list on
  * the admin page. The emailed link names the viewer's own response, so a
  * guest still sees it as theirs when opening the link in a fresh browser.
+ *
+ * The viewer is resolved before responses are read so an aggregate results
+ * poll can return the viewer's own responses and nothing else from the
+ * database, rather than relying on a flag read earlier in the request.
  */
 export const loadInvitePoll = cache(
   async ({ pollId, token }: { pollId: string; token?: string }) => {
@@ -193,24 +226,36 @@ export const loadInvitePoll = cache(
       notFound();
     }
 
-    const [session, participants, comments, linkedParticipantIds] =
-      await Promise.all([
-        getSession(),
-        listPollParticipants({ pollId }),
-        listPollComments({ pollId }),
-        token ? listParticipantIdsByToken({ pollId, token }) : [],
-      ]);
+    const [session, comments, linkedParticipantIds] = await Promise.all([
+      getSession(),
+      listPollComments({ pollId }),
+      token ? listParticipantIdsByToken({ pollId, token }) : [],
+    ]);
 
     const user = session?.user ?? null;
     const viewer = { userId: user?.id ?? null, linkedParticipantIds };
+    const participants = await listPollParticipants({
+      pollId,
+      viewer: {
+        userId: viewer.userId,
+        participantIds: linkedParticipantIds,
+      },
+    });
+    const maskedParticipants = maskParticipantsForViewer({
+      participants,
+      viewer,
+      hideParticipants: poll.hideParticipants,
+      aggregateResultsOnly: poll.aggregateResultsOnly,
+    });
 
     return {
-      poll,
-      participants: maskParticipantsForViewer({
-        participants,
-        viewer,
-        hideParticipants: poll.hideParticipants,
+      poll: withholdAggregateScores({
+        poll,
+        // On an aggregate results poll the list holds the viewer's own
+        // responses only.
+        viewerHasResponded: maskedParticipants.length > 0,
       }),
+      participants: maskedParticipants,
       comments: filterCommentsForViewer({
         comments,
         viewerUserId: viewer.userId,
@@ -226,6 +271,7 @@ export const loadInvitePoll = cache(
  * The poll as its host sees it: every response with its note and edit link,
  * every comment. Access is proven once here, so nothing downstream checks
  * again. Anyone else lands on the invite page, the same place a guest does.
+ * An aggregate results poll gives the host its vote totals and no responses.
  */
 export const loadAdminPoll = cache(async (pollId: string) => {
   const poll = await getPollDetails({ pollId });
@@ -242,7 +288,9 @@ export const loadAdminPoll = cache(async (pollId: string) => {
   }
 
   const [participants, comments] = await Promise.all([
-    listPollParticipants({ pollId }),
+    poll.aggregateResultsOnly
+      ? Promise.resolve([])
+      : listPollParticipants({ pollId }),
     listPollComments({ pollId }),
   ]);
 

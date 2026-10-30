@@ -80,7 +80,6 @@ function buildWeeks(
 
 function TimeOption({
   result,
-  timeZone,
   readZone,
   savedVote,
   participantCount,
@@ -89,7 +88,6 @@ function TimeOption({
   canVote,
 }: {
   result: VoteResult;
-  timeZone: string | null;
   readZone: string | undefined;
   savedVote: VoteType | undefined;
   participantCount: number | null;
@@ -123,6 +121,8 @@ function TimeOption({
           participantCount={participantCount}
           hasSavedResponse={hasSavedResponse}
           allowTentativeVotes={allowTentativeVotes}
+          maxParticipants={result.maxParticipants}
+          capacityReached={result.capacityReached}
           className="w-full"
         />
       </div>
@@ -133,6 +133,7 @@ function TimeOption({
             onChange={setVote}
             optionLabel={label}
             allowTentativeVotes={allowTentativeVotes}
+            yesDisabled={result.capacityReached && savedVote !== "yes"}
             className="w-full"
           />
         ) : (
@@ -156,6 +157,7 @@ export function VoteViewWeek({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
@@ -294,13 +296,12 @@ export function VoteViewWeek({
                     <TimeOption
                       key={result.optionId}
                       result={result}
-                      timeZone={poll.timeZone}
                       readZone={readZone}
                       savedVote={savedVotes.get(result.optionId)}
                       participantCount={participantCount}
                       hasSavedResponse={response !== null}
                       allowTentativeVotes={poll.allowTentativeVotes}
-                      canVote={canVote}
+                      canVote={canVote && !pastOptionIds.has(result.optionId)}
                     />
                   ))}
                 </ul>

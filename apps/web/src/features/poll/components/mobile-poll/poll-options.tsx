@@ -20,8 +20,9 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
   editable,
   selectedParticipantId,
 }) => {
-  const { control } = useVotingForm();
-  const { getScore, getVote, optionIds, poll } = usePoll();
+  const { control, watch } = useVotingForm();
+  const participantId = watch("participantId");
+  const { getScore, getVote, isYesFull, optionIds, poll } = usePoll();
   const { participants: allParticipants } = useParticipants();
   const selectedParticipant = selectedParticipantId
     ? allParticipants.find(
@@ -69,6 +70,8 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                         yesScore={score.yes}
                         ifNeedBeScore={score.ifNeedBe}
                         vote={vote}
+                        maxParticipants={option.maxParticipants}
+                        yesDisabled={isYesFull(option.optionId, participantId)}
                         startTime={option.startTime}
                         endTime={option.endTime}
                         duration={option.duration}
@@ -86,6 +89,8 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                         yesScore={score.yes}
                         ifNeedBeScore={score.ifNeedBe}
                         vote={vote}
+                        maxParticipants={option.maxParticipants}
+                        yesDisabled={isYesFull(option.optionId, participantId)}
                         dow={option.dow}
                         day={option.day}
                         month={option.month}

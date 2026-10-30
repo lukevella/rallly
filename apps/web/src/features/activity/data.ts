@@ -5,10 +5,22 @@ import type { AuthorizedSpaceId } from "@/lib/tenant-scope";
 import { parsePollActivity } from "./schema";
 
 /**
+ * Response events name a participant and say when they voted, so an
+ * aggregate results poll keeps them out of its history. The rule sits in
+ * the query so a limited read still fills its page.
+ */
+const RESPONSE_ACTIVITY_TYPES = [
+  "response_created",
+  "response_updated",
+  "response_deleted",
+];
+
+/**
  * Latest activity for a poll, newest first; every row when no limit is
  * given. Rows whose type or payload this
  * version of the vocabulary can't interpret are skipped rather than failing
- * the feed.
+ * the feed. Response events of an aggregate results poll are never
+ * returned.
  */
 export async function listPollActivity({
   pollId,
@@ -29,6 +41,10 @@ export async function listPollActivity({
       poll: {
         spaceId,
         deleted: false,
+      },
+      NOT: {
+        type: { in: RESPONSE_ACTIVITY_TYPES },
+        poll: { aggregateResultsOnly: true },
       },
     },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],

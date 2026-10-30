@@ -26,25 +26,48 @@ type PollContextValue = {
     skip: number;
   };
   getVote: (participantId: string, optionId: string) => VoteType | undefined;
+  /**
+   * Whether the option's yes limit is met, so a new yes would be refused.
+   * The participant being edited keeps a yes they already hold, since it is
+   * part of the count.
+   */
+  isYesFull: (optionId: string, participantId?: string) => boolean;
 };
 
 export const PollContext = React.createContext<PollContextValue | null>(null);
 
 PollContext.displayName = "PollContext.Provider";
 
+/** Reads the current poll from context; throws outside a `PollContextProvider`. */
 export const usePoll = () => {
   const context = useRequiredContext(PollContext);
   return context;
 };
 
+/** Provides the poll's options and their scores to the poll views. */
 export const PollContextProvider: React.FunctionComponent<{
   poll: PollDetails;
   children?: React.ReactNode;
 }> = ({ poll, children }) => {
   const { participants } = useParticipants();
 
+  // Totals per option: counted from the responses, or read from the
+  // server's totals on an aggregate results poll, whose participants are at
+  // most the viewer's own and would undercount.
   const getScore = React.useCallback(
     (optionId: string) => {
+      if (poll.aggregateResultsOnly) {
+        const aggregate = poll.aggregateVotes?.find(
+          (result) => result.optionId === optionId,
+        );
+        return {
+          yes: aggregate?.yes ?? 0,
+          ifNeedBe: aggregate?.ifNeedBe ?? 0,
+          no: aggregate?.no ?? 0,
+          skip: aggregate?.skip ?? 0,
+        };
+      }
+
       return (participants ?? []).reduce(
         (acc, curr) => {
           curr.votes.forEach((vote) => {
@@ -66,7 +89,7 @@ export const PollContextProvider: React.FunctionComponent<{
         { yes: 0, ifNeedBe: 0, no: 0, skip: 0 },
       );
     },
-    [participants],
+    [participants, poll.aggregateResultsOnly, poll.aggregateVotes],
   );
 
   const contextValue = React.useMemo<PollContextValue>(() => {
@@ -89,6 +112,25 @@ export const PollContextProvider: React.FunctionComponent<{
         return vote?.type;
       },
       getScore,
+      isYesFull: (optionId, participantId) => {
+        const maxParticipants = poll.options.find(
+          (option) => option.id === optionId,
+        )?.maxParticipants;
+        if (maxParticipants == null) {
+          return false;
+        }
+        if (
+          participantId &&
+          participants
+            .find((participant) => participant.id === participantId)
+            ?.votes.some(
+              (vote) => vote.optionId === optionId && vote.type === "yes",
+            )
+        ) {
+          return false;
+        }
+        return getScore(optionId).yes >= maxParticipants;
+      },
     };
   }, [getScore, participants, poll]);
 
@@ -117,6 +159,11 @@ export const useOptions = () => {
   return context;
 };
 
+/**
+ * Builds the options context value for rendering: parses each stored option into
+ * display parts in the viewer's zone (floating times are read in UTC so they
+ * show unshifted) and carries its `maxParticipants` cap through.
+ */
 export function createOptionsContextValue({
   pollOptions,
   pollTimeZone,
@@ -124,7 +171,12 @@ export function createOptionsContextValue({
   timeZone,
   timeFormat,
 }: {
-  pollOptions: { id: string; startTime: Date; duration: number }[];
+  pollOptions: {
+    id: string;
+    startTime: Date;
+    duration: number;
+    maxParticipants: number | null;
+  }[];
   /**
    * The poll's zone: set means options are fixed instants shown in the
    * viewer's zone; null means floating times shown as stored.
@@ -176,6 +228,7 @@ export function createOptionsContextValue({
           day: parts.day,
           dow: parts.weekday,
           year: parts.year,
+          maxParticipants: option.maxParticipants,
         } satisfies ParsedTimeSlotOption;
       }),
     };
@@ -197,6 +250,7 @@ export function createOptionsContextValue({
           day: parts.day,
           dow: parts.weekday,
           year: parts.year,
+          maxParticipants: option.maxParticipants,
         } satisfies ParsedDateOption;
       }),
     };

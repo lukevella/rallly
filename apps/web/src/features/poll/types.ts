@@ -15,6 +15,24 @@ export type PollDetails = {
   status: PollStatus;
   closedReason: PollClosedReason | null;
   hideParticipants: boolean;
+  /**
+   * Individual responses are withheld from everyone but their author; the
+   * poll is read through `aggregateVotes` instead.
+   */
+  aggregateResultsOnly?: boolean;
+  /** How many responses an aggregate results poll has. */
+  aggregateParticipantCount?: number;
+  /**
+   * Vote totals per option of an aggregate results poll, in option order.
+   * Empty otherwise, since totals are then counted from the responses.
+   */
+  aggregateVotes?: {
+    optionId: string;
+    yes: number;
+    ifNeedBe: number;
+    no: number;
+    skip: number;
+  }[];
   disableComments: boolean;
   allowTentativeVotes: boolean;
   hideScores: boolean;
@@ -23,7 +41,12 @@ export type PollDetails = {
   timeZone: string | null;
   userId: string | null;
   spaceId: string | null;
-  options: { id: string; startTime: Date; duration: number }[];
+  options: {
+    id: string;
+    startTime: Date;
+    duration: number;
+    maxParticipants: number | null;
+  }[];
   user: { id: string; name: string; image: string | null } | null;
   space: {
     name: string;

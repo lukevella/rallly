@@ -1,9 +1,22 @@
 import { customAlphabet } from "nanoid";
 import type { VoteType } from "@/features/poll/constants";
-import type { PollComment, PollParticipant } from "@/features/poll/types";
+import type {
+  PollComment,
+  PollDetails,
+  PollParticipant,
+} from "@/features/poll/types";
+import type { SpaceTier } from "@/features/space/schema";
+import {
+  getCalendarDate,
+  normalizeTimeZone,
+  toISODate,
+} from "@/lib/datetime/utils";
+import { wallTimeToInstant } from "@/lib/datetime/wall-time";
 
-// Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
-// floor documented on Participant.token and PollInvite.token.
+/**
+ * Generates a URL-safe alphanumeric token at the minimum length accepted by
+ * `Participant.token` and `PollInvite.token`.
+ */
 export const generateAccessToken = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   32,
@@ -18,6 +31,7 @@ export function isLegacyEditToken(token: string) {
   return token.startsWith("Fe26.2*");
 }
 
+/** Filters participants to those with the requested vote on an option. */
 export function filterParticipantsByVote<
   T extends { votes: { optionId: string; type: VoteType }[] },
 >(participants: T[], optionId: string, voteType: VoteType): T[] {
@@ -37,40 +51,46 @@ type RawParticipant = Omit<PollParticipant, "hidden" | "editUrl"> & {
  * the host and their author only, so they survive only on the viewer's own
  * responses: the ones their session created, or the one the emailed link
  * they opened names. With hidden participants, everyone else's identity is
- * withheld while their votes still count.
+ * withheld while their votes still count. With aggregate results only,
+ * everyone else's response is dropped: the viewer keeps their own answers
+ * and reads the rest as totals.
  */
 export function maskParticipantsForViewer({
   participants,
   viewer,
   hideParticipants,
+  aggregateResultsOnly = false,
 }: {
   participants: RawParticipant[];
   viewer: { userId: string | null; linkedParticipantIds: string[] };
   hideParticipants: boolean;
+  aggregateResultsOnly?: boolean;
 }): PollParticipant[] {
   const linkedIds = new Set(viewer.linkedParticipantIds);
   const isOwn = (participant: { id: string; userId: string | null }) =>
     linkedIds.has(participant.id) ||
     (!!viewer.userId && participant.userId === viewer.userId);
 
-  return participants.map(({ token: _token, ...participant }) => {
-    if (isOwn(participant)) {
-      return { ...participant, hidden: false, editUrl: null };
-    }
-    if (hideParticipants) {
-      return {
-        ...participant,
-        userId: null,
-        name: "",
-        email: null,
-        image: null,
-        note: null,
-        hidden: true,
-        editUrl: null,
-      };
-    }
-    return { ...participant, note: null, hidden: false, editUrl: null };
-  });
+  return participants
+    .filter((participant) => !aggregateResultsOnly || isOwn(participant))
+    .map(({ token: _token, ...participant }) => {
+      if (isOwn(participant)) {
+        return { ...participant, hidden: false, editUrl: null };
+      }
+      if (hideParticipants) {
+        return {
+          ...participant,
+          userId: null,
+          name: "",
+          email: null,
+          image: null,
+          note: null,
+          hidden: true,
+          editUrl: null,
+        };
+      }
+      return { ...participant, note: null, hidden: false, editUrl: null };
+    });
 }
 
 /**
@@ -97,6 +117,74 @@ export function filterCommentsForViewer({
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
+
+/** Error message shared by poll creation guards across app and API routes. */
+export const PAST_POLL_OPTIONS_MESSAGE = "Poll options must be in the future.";
+
+/**
+ * Whether an option has passed for a viewer.
+ *
+ * Timed options expire at their start instant; floating all-day options expire
+ * only after the viewer's calendar date has advanced in their time zone.
+ */
+export function isPollOptionPast({
+  option,
+  now,
+  timeZone,
+}: {
+  option: { startTime: Date; duration: number };
+  now: Date;
+  timeZone?: string | null;
+}) {
+  if (option.duration === 0) {
+    const today = getCalendarDate(now, normalizeTimeZone(timeZone) ?? "UTC");
+    return toISODate(option.startTime) < today;
+  }
+
+  return option.startTime.getTime() <= now.getTime();
+}
+
+/** Returns whether any option in a poll has passed for the given viewer. */
+export function hasPastPollOptions({
+  options,
+  now,
+  timeZone,
+}: {
+  options: { startTime: Date; duration: number }[];
+  now: Date;
+  timeZone?: string | null;
+}) {
+  return options.some((option) => isPollOptionPast({ option, now, timeZone }));
+}
+
+/**
+ * Checks an option in its form representation, converting wall-clock times
+ * with the selected zone and comparing date-only options as floating dates.
+ */
+export function isPollFormOptionPast({
+  option,
+  now,
+  timeZone,
+}: {
+  option:
+    | { type: "date"; date: string }
+    | { type: "timeSlot"; start: string; end: string };
+  now: Date;
+  timeZone: string;
+}) {
+  if (option.type === "date") {
+    return isPollOptionPast({
+      option: {
+        startTime: new Date(`${option.date}T00:00:00Z`),
+        duration: 0,
+      },
+      now,
+      timeZone,
+    });
+  }
+
+  return wallTimeToInstant(option.start, timeZone).getTime() <= now.getTime();
+}
 
 export type AvailabilitySpan = {
   start: string;
@@ -145,13 +233,18 @@ export type OptionVotes = {
 /**
  * Options in the order a host picks from: most available first, with a
  * firm yes outranking an ifNeedBe at the same total. Ties keep option order.
+ *
+ * @param getScore - Totals per option that replace the participant count,
+ * for an aggregate results poll whose host holds totals and no responses.
  */
 export function rankOptionsByPopularity<T extends { id: string }>({
   options,
   participants,
+  getScore,
 }: {
   options: T[];
   participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
+  getScore?: (optionId: string) => { yes: number; ifNeedBe: number };
 }): (T & { votes: OptionVotes })[] {
   const votesByOptionId = new Map<string, OptionVotes>(
     options.map((option) => [option.id, { yes: [], ifNeedBe: [], no: [] }]),
@@ -170,14 +263,38 @@ export function rankOptionsByPopularity<T extends { id: string }>({
         no: [],
       },
     }))
-    .sort((a, b) => comparePopularity(a.votes, b.votes));
+    .sort((a, b) =>
+      comparePopularity(scoreOf(a, getScore), scoreOf(b, getScore)),
+    );
 }
 
-function comparePopularity(a: OptionVotes, b: OptionVotes) {
-  const score = (votes: OptionVotes) => [
-    votes.yes.length + votes.ifNeedBe.length,
-    votes.yes.length,
-    votes.ifNeedBe.length,
+type PopularityScore = { yes: number; ifNeedBe: number };
+
+/**
+ * An option's totals: the aggregate totals when given, otherwise counted
+ * from the option's votes.
+ */
+function scoreOf(
+  option: { id: string; votes: OptionVotes },
+  getScore?: (optionId: string) => PopularityScore,
+): PopularityScore {
+  return (
+    getScore?.(option.id) ?? {
+      yes: option.votes.yes.length,
+      ifNeedBe: option.votes.ifNeedBe.length,
+    }
+  );
+}
+
+/**
+ * Sort order of two options: more available first, then more firm yeses.
+ * Negative when `a` ranks ahead of `b`, zero when they tie.
+ */
+function comparePopularity(a: PopularityScore, b: PopularityScore) {
+  const score = ({ yes, ifNeedBe }: PopularityScore) => [
+    yes + ifNeedBe,
+    yes,
+    ifNeedBe,
   ];
   const sa = score(a);
   const sb = score(b);
@@ -195,12 +312,15 @@ export function getChosenOptionRank({
   options,
   participants,
   optionId,
+  getScore,
 }: {
   options: { id: string }[];
   participants: { id: string; votes: { optionId: string; type: VoteType }[] }[];
   optionId: string;
+  /** Aggregate totals per option, as for {@link rankOptionsByPopularity}. */
+  getScore?: (optionId: string) => PopularityScore;
 }) {
-  const ranked = rankOptionsByPopularity({ options, participants });
+  const ranked = rankOptionsByPopularity({ options, participants, getScore });
   const chosen = ranked.find((option) => option.id === optionId);
   if (!chosen) {
     return {
@@ -213,7 +333,10 @@ export function getChosenOptionRank({
   let tied = 0;
   for (const option of ranked) {
     if (option.id === optionId) continue;
-    const order = comparePopularity(option.votes, chosen.votes);
+    const order = comparePopularity(
+      scoreOf(option, getScore),
+      scoreOf(chosen, getScore),
+    );
     if (order < 0) better++;
     if (order === 0) tied++;
   }
@@ -320,4 +443,60 @@ export function summarizeNotifySelection({
   // The dialog starts with everyone who has an email selected.
   summary.notify_selection_changed = selected !== eligible;
   return summary;
+}
+
+/**
+ * The participants a booking emails. An aggregate results host never sees
+ * who responded, so their choice is all or none: explicit ids are ignored,
+ * otherwise a known id (such as the host's own) would single out that
+ * respondent's address. Elsewhere the host's per-participant selection
+ * stands. Participants without an email cannot be notified either way.
+ */
+export function resolveNotifyParticipantIds({
+  participants,
+  notifyParticipantIds,
+  notifyAllParticipants,
+  aggregateResultsOnly,
+}: {
+  participants: { id: string; email: string | null }[];
+  notifyParticipantIds: string[];
+  notifyAllParticipants: boolean;
+  aggregateResultsOnly: boolean;
+}) {
+  const selected = new Set(aggregateResultsOnly ? [] : notifyParticipantIds);
+  return participants
+    .filter(
+      (participant) =>
+        !!participant.email &&
+        (notifyAllParticipants || selected.has(participant.id)),
+    )
+    .map((participant) => participant.id);
+}
+
+/**
+ * A hidden tally stays on the server: with hideScores, an aggregate results
+ * poll sends its per-option totals only to a viewer who has responded, as
+ * the vote page does. A non-aggregate poll is returned unchanged; its scores
+ * are derived from participants, which are filtered separately.
+ */
+export function withholdAggregateScores({
+  poll,
+  viewerHasResponded,
+}: {
+  poll: PollDetails;
+  viewerHasResponded: boolean;
+}): PollDetails {
+  if (!poll.aggregateResultsOnly || !poll.hideScores || viewerHasResponded) {
+    return poll;
+  }
+  return {
+    ...poll,
+    aggregateVotes: poll.aggregateVotes?.map(({ optionId }) => ({
+      optionId,
+      yes: 0,
+      ifNeedBe: 0,
+      no: 0,
+      skip: 0,
+    })),
+  };
 }

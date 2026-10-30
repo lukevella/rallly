@@ -23,6 +23,7 @@ import {
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
+import type { DateTimeOption } from "@/features/poll/components/forms/poll-options-form/types";
 import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type {
@@ -31,8 +32,8 @@ import type {
 } from "@/features/poll/components/forms/types";
 import { useUpdatePollMutation } from "@/features/poll/components/mutations";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
+import { usePollScores } from "@/features/poll/components/use-poll-scores";
 import type { PollDetails } from "@/features/poll/types";
-import { filterParticipantsByVote } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import {
@@ -57,6 +58,11 @@ const encodeStoredOption = (
     : `${start}/${addMinutesToWallTime(start, option.duration)}`;
 };
 
+/**
+ * Seeds the edit form from a stored poll: each option keeps its stored `id` and
+ * is read as wall-clock under the poll's zone, and the derived flags (all-day,
+ * lockTimeZone, duration) are set so the form opens exactly as the poll stands.
+ */
 function getDefaultValues(poll: PollDetails): NewEventData {
   const firstDate = toPollWallTime(
     poll.options[0]?.startTime ?? new Date(),
@@ -70,15 +76,23 @@ function getDefaultValues(poll: PollDetails): NewEventData {
     ...toConferencingFormValues(poll.conferencing),
     navigationDate: firstDate.slice(0, 10),
     view: "month",
-    options: poll.options.map((option) => {
+    options: poll.options.map((option): DateTimeOption => {
       const start = toPollWallTime(option.startTime, poll.timeZone);
+      const maxParticipants = option.maxParticipants ?? undefined;
       return option.duration > 0
         ? {
-            type: "timeSlot" as const,
+            type: "timeSlot",
+            id: option.id,
             start,
             end: addMinutesToWallTime(start, option.duration),
+            maxParticipants,
           }
-        : { type: "date" as const, date: start.slice(0, 10) };
+        : {
+            type: "date",
+            id: option.id,
+            date: start.slice(0, 10),
+            maxParticipants,
+          };
     }),
     timeZone: poll.timeZone ?? "",
     // A timed poll with no stored zone was locked to a single wall-clock time.
@@ -88,6 +102,7 @@ function getDefaultValues(poll: PollDetails): NewEventData {
     duration: poll.options[0]?.duration || 60,
     hideParticipants: poll.hideParticipants,
     hideScores: poll.hideScores,
+    aggregateResultsOnly: poll.aggregateResultsOnly ?? false,
     enableComments: !poll.disableComments,
     allowTentativeVotes: poll.allowTentativeVotes,
     requireParticipantEmail: poll.requireParticipantEmail,
@@ -114,7 +129,13 @@ function getDateChanges({
       ? data.timeZone || fallbackTimeZone
       : null;
 
-  const encodedOptions = data.options.map(encodeDateOption);
+  const optionsWithLimits = data.options.map((option) => ({
+    option,
+    maxParticipants: option.maxParticipants ?? null,
+  }));
+  const encodedOptions = optionsWithLimits.map(({ option }) =>
+    encodeDateOption(option),
+  );
 
   // When the frame changes the stored instants no longer match it, so every
   // option is re-stored from the form's wall-clock under the new frame, which
@@ -130,23 +151,49 @@ function getDateChanges({
       );
 
   const optionsToAdd = frameChanged
-    ? encodedOptions
-    : encodedOptions.filter(
-        (encoded) =>
+    ? optionsWithLimits
+    : optionsWithLimits.filter(
+        ({ option }) =>
           !poll.options.some(
-            (option) => encodeStoredOption(option, poll.timeZone) === encoded,
+            (pollOption) =>
+              encodeStoredOption(pollOption, poll.timeZone) ===
+              encodeDateOption(option),
           ),
       );
+
+  const optionsToUpdate = frameChanged
+    ? []
+    : optionsWithLimits.flatMap(({ option, maxParticipants }) => {
+        // A capacity-only edit keeps the option's id and encoded key. Match the
+        // stored row by id so two options that share an encoded start/duration
+        // can't misroute the update to the wrong row; require the key to still
+        // match so a moved option is handled as delete + add, not an update.
+        if (!option.id) {
+          return [];
+        }
+        const encoded = encodeDateOption(option);
+        const existingOption = poll.options.find(
+          (pollOption) =>
+            pollOption.id === option.id &&
+            encodeStoredOption(pollOption, poll.timeZone) === encoded,
+        );
+
+        return existingOption &&
+          existingOption.maxParticipants !== maxParticipants
+          ? [{ id: existingOption.id, maxParticipants }]
+          : [];
+      });
 
   if (
     !frameChanged &&
     optionsToDelete.length === 0 &&
-    optionsToAdd.length === 0
+    optionsToAdd.length === 0 &&
+    optionsToUpdate.length === 0
   ) {
     return null;
   }
 
-  return { timeZone, optionsToDelete, optionsToAdd };
+  return { timeZone, optionsToDelete, optionsToAdd, optionsToUpdate };
 }
 
 const detailFields = [
@@ -161,6 +208,7 @@ const detailFields = [
 const settingFields = [
   "hideParticipants",
   "hideScores",
+  "aggregateResultsOnly",
   "enableComments",
   "allowTentativeVotes",
   "requireParticipantEmail",
@@ -179,6 +227,7 @@ export function EditPoll({
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
+  const { getScore } = usePollScores();
   const { user } = useUser();
   const { t } = useTranslation();
   const router = useRouter();
@@ -186,13 +235,16 @@ export function EditPoll({
   const update = useUpdatePollMutation();
 
   // The answer set is locked once a response uses the tentative vote, so
-  // those votes stay re-saveable by their owner.
-  const hasTentativeVotes = participants.some((participant) =>
-    participant.votes.some((vote) => vote.type === "ifNeedBe"),
+  // those votes stay re-saveable by their owner. Both checks read the
+  // totals, the only votes an aggregate results host holds.
+  const hasTentativeVotes = poll.options.some(
+    (option) => getScore(option.id).ifNeedBe > 0,
   );
-  const hasVotes = participants.some(
-    (participant) => participant.votes.length > 0,
-  );
+  // Whether any vote was cast, to warn before deleting voted dates.
+  const hasVotes = poll.options.some((option) => {
+    const { yes, ifNeedBe, no, skip } = getScore(option.id);
+    return yes + ifNeedBe + no + skip > 0;
+  });
 
   const [defaultValues] = React.useState(() => getDefaultValues(poll));
   const form = useForm<NewEventData>({ defaultValues });
@@ -222,13 +274,21 @@ export function EditPoll({
     if (dateChanges) {
       input.timeZone = dateChanges.timeZone;
       input.optionsToDelete = dateChanges.optionsToDelete.map(({ id }) => id);
-      input.optionsToAdd = dateChanges.optionsToAdd;
+      input.optionsToAdd = dateChanges.optionsToAdd.map(
+        ({ option, maxParticipants }) => ({
+          startDate: option.type === "date" ? option.date : option.start,
+          endDate: option.type === "timeSlot" ? option.end : undefined,
+          maxParticipants,
+        }),
+      );
+      input.optionsToUpdate = dateChanges.optionsToUpdate;
     }
 
     const settingsChanged = settingFields.some(isChanged);
     if (settingsChanged) {
       input.hideParticipants = data.hideParticipants;
       input.hideScores = data.hideScores;
+      input.aggregateResultsOnly = data.aggregateResultsOnly;
       input.disableComments = !data.enableComments;
       input.allowTentativeVotes = data.allowTentativeVotes;
       input.requireParticipantEmail = data.requireParticipantEmail;
@@ -249,9 +309,10 @@ export function EditPoll({
       });
     };
 
+    // Read from the totals, so the warning also fires on an aggregate
+    // results poll, whose host holds no responses.
     const deletesVotedOptions = dateChanges?.optionsToDelete.some(
-      (option) =>
-        filterParticipantsByVote(participants, option.id, "yes").length > 0,
+      (option) => getScore(option.id).yes > 0,
     );
 
     if (deletesVotedOptions) {
@@ -294,7 +355,14 @@ export function EditPoll({
           </CardContent>
         </Card>
         <PollOptionsForm disableTimeZoneChange={hasVotes} />
-        <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
+        <PollSettingsForm
+          hasTentativeVotes={hasTentativeVotes}
+          hasResponses={
+            poll.aggregateResultsOnly
+              ? (poll.aggregateParticipantCount ?? 0) > 0
+              : participants.length > 0
+          }
+        />
         <div className="sticky bottom-0 z-20 flex justify-center pt-2 pb-6">
           <div className="flex w-full max-w-md items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
             <p className="min-w-0 truncate text-muted-foreground text-sm">

@@ -34,9 +34,10 @@ const ParticipantRowForm = ({
 }: ParticipantRowFormProps) => {
   const { t } = useTranslation();
 
-  const { optionIds, poll } = usePoll();
+  const { optionIds, poll, isYesFull } = usePoll();
   const { options } = useOptions();
   const form = useVotingForm();
+  const participantId = form.watch("participantId");
 
   React.useEffect(() => {
     function cancel(e: KeyboardEvent) {
@@ -134,6 +135,7 @@ const ParticipantRowForm = ({
                     }
                     value={field.value?.type}
                     allowTentativeVotes={poll.allowTentativeVotes}
+                    yesDisabled={isYesFull(optionId, participantId)}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
                     }}

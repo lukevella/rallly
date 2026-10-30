@@ -1966,6 +1966,34 @@ describe("Private API - /polls", () => {
       expect(json.data.participants).toEqual([]);
     });
 
+    it("should reject individual responses for aggregate-only polls", async () => {
+      mockGetPollParticipants.mockResolvedValue({
+        pollId: "test-poll-id",
+        aggregateResultsOnly: true,
+        participants: [
+          {
+            id: "participant-1",
+            name: "Alice",
+            email: "alice@example.com",
+            createdAt: new Date("2025-01-10T10:00:00Z"),
+          },
+        ],
+      });
+
+      const res = await app.request(
+        "/api/private/polls/test-poll-id/participants",
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${testApiKey}` },
+        },
+      );
+
+      expect(res.status).toBe(403);
+      expect((await res.json()).error.code).toBe(
+        "INDIVIDUAL_RESPONSES_DISABLED",
+      );
+    });
+
     it("should return 404 when poll not found", async () => {
       mockGetPollParticipants.mockResolvedValue(null);
 

@@ -151,6 +151,7 @@ export function buildWebhookPayload({
   poll: {
     id: string;
     kind: "date" | "time";
+    aggregateResultsOnly?: boolean;
   };
 }): WebhookEvent | null {
   // Every subject ref the vocabulary can require is passed: a missing one
@@ -168,6 +169,17 @@ export function buildWebhookPayload({
   }
 
   const event = parsed.data;
+  // Response events name a participant; an aggregate results poll keeps
+  // individual responses from every consumer, webhooks included.
+  if (
+    poll.aggregateResultsOnly &&
+    (event.type === "response_created" ||
+      event.type === "response_updated" ||
+      event.type === "response_deleted")
+  ) {
+    return null;
+  }
+
   const base = {
     version: WEBHOOK_VERSION,
     id: activity.id,

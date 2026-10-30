@@ -27,6 +27,7 @@ import {
 } from "@/features/space/utils";
 import { decryptToken } from "@/lib/session";
 
+/** A poll of the space in scope, with its settings, or null. */
 export async function getPoll({
   pollId,
   scope,
@@ -46,10 +47,15 @@ export async function getPoll({
       title: true,
       status: true,
       timeZone: true,
+      aggregateResultsOnly: true,
     },
   });
 }
 
+/**
+ * Reads a poll's options with their per-option "yes" tallies, scoped to the
+ * given space. Runs the poll read and the vote aggregation in parallel.
+ */
 export async function getPollResults({
   pollId,
   spaceId,
@@ -74,6 +80,7 @@ export async function getPollResults({
             id: true,
             startTime: true,
             duration: true,
+            maxParticipants: true,
           },
           orderBy: {
             startTime: "asc",
@@ -126,6 +133,7 @@ export async function getPollResults({
       id: option.id,
       startTime: option.startTime,
       duration: option.duration,
+      maxParticipants: option.maxParticipants,
       votes,
       score,
     };
@@ -151,8 +159,15 @@ export async function getPollResults({
 }
 
 /**
- * Every participant in response order (oldest first).
+ * Participant filter that admits a row only while its poll shows individual
+ * responses. Evaluated in the same statement as the row read, so a poll
+ * switched to aggregate results between a caller's flag check and its
+ * participant read can never return a response cast under the new setting.
  */
+const individualResponsesVisible = {
+  poll: { aggregateResultsOnly: false },
+} satisfies Prisma.ParticipantWhereInput;
+
 // Votes with their option's time, for the availability conversion.
 const apiParticipantSelect = {
   id: true,
@@ -162,11 +177,18 @@ const apiParticipantSelect = {
   votes: {
     select: {
       type: true,
-      option: { select: { startTime: true, duration: true } },
+      option: {
+        select: { startTime: true, duration: true, maxParticipants: true },
+      },
     },
   },
 } satisfies Prisma.ParticipantSelect;
 
+/**
+ * Every participant in response order (oldest first). An aggregate results
+ * poll yields none: the flag is read with the poll, and the participant read
+ * re-checks it so a concurrent switch cannot slip a response through.
+ */
 export async function getPollParticipants({
   pollId,
   spaceId,
@@ -183,10 +205,7 @@ export async function getPollParticipants({
     select: {
       id: true,
       kind: true,
-      participants: {
-        select: apiParticipantSelect,
-        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
-      },
+      aggregateResultsOnly: true,
     },
   });
 
@@ -194,10 +213,19 @@ export async function getPollParticipants({
     return null;
   }
 
+  const participants = poll.aggregateResultsOnly
+    ? []
+    : await prisma.participant.findMany({
+        where: { pollId, ...individualResponsesVisible },
+        select: apiParticipantSelect,
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      });
+
   return {
     pollId: poll.id,
     kind: poll.kind,
-    participants: poll.participants,
+    aggregateResultsOnly: poll.aggregateResultsOnly,
+    participants,
   };
 }
 
@@ -205,7 +233,8 @@ export async function getPollParticipants({
  * One participant of a poll. Distinguishes a missing poll from a missing
  * participant so the API can say which, and never returns a participant
  * from another poll: the participant filter is nested under the poll's own
- * scope check.
+ * scope check. Never returns a participant of an aggregate results poll,
+ * even one that switched between the two reads.
  */
 export async function getPollParticipant({
   pollId,
@@ -225,10 +254,7 @@ export async function getPollParticipant({
     select: {
       id: true,
       kind: true,
-      participants: {
-        where: { id: participantId },
-        select: apiParticipantSelect,
-      },
+      aggregateResultsOnly: true,
     },
   });
 
@@ -236,12 +262,27 @@ export async function getPollParticipant({
     return { poll: null, participant: null };
   }
 
+  const participant = poll.aggregateResultsOnly
+    ? null
+    : await prisma.participant.findFirst({
+        where: { pollId, id: participantId, ...individualResponsesVisible },
+        select: apiParticipantSelect,
+      });
+
   return {
-    poll: { id: poll.id, kind: poll.kind },
-    participant: poll.participants[0] ?? null,
+    poll: {
+      id: poll.id,
+      kind: poll.kind,
+      aggregateResultsOnly: poll.aggregateResultsOnly,
+    },
+    participant,
   };
 }
 
+/**
+ * A page of the space's polls, newest first, optionally of one status.
+ * Returns the cursor of the next page when there is one.
+ */
 export async function listPolls({
   spaceId,
   status,
@@ -274,6 +315,7 @@ export async function listPolls({
       requireParticipantEmail: true,
       hideParticipants: true,
       hideScores: true,
+      aggregateResultsOnly: true,
       disableComments: true,
       allowTentativeVotes: true,
       user: {
@@ -289,6 +331,7 @@ export async function listPolls({
           id: true,
           startTime: true,
           duration: true,
+          maxParticipants: true,
         },
         orderBy: {
           startTime: "asc",
@@ -610,6 +653,10 @@ export async function listParticipantIdsByToken({
   return participant ? [participant.id] : [];
 }
 
+/**
+ * Reads a single poll with its full details and options (including each option's
+ * `maxParticipants` cap), scoped to the given space. Returns null when missing.
+ */
 export async function getPollWithOptions({
   pollId,
   spaceId,
@@ -637,6 +684,7 @@ export async function getPollWithOptions({
       requireParticipantEmail: true,
       hideParticipants: true,
       hideScores: true,
+      aggregateResultsOnly: true,
       disableComments: true,
       allowTentativeVotes: true,
       user: {
@@ -652,6 +700,7 @@ export async function getPollWithOptions({
           id: true,
           startTime: true,
           duration: true,
+          maxParticipants: true,
         },
         orderBy: {
           startTime: "asc",
@@ -740,6 +789,7 @@ export async function getPollDetails({
       status: true,
       closedReason: true,
       hideParticipants: true,
+      aggregateResultsOnly: true,
       disableComments: true,
       allowTentativeVotes: true,
       hideScores: true,
@@ -749,7 +799,12 @@ export async function getPollDetails({
       spaceId: true,
       deleted: true,
       options: {
-        select: { id: true, startTime: true, duration: true },
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+          maxParticipants: true,
+        },
         orderBy: { startTime: "asc" },
       },
       user: { select: { id: true, name: true, image: true, banned: true } },
@@ -781,6 +836,36 @@ export async function getPollDetails({
     return null;
   }
 
+  // An aggregate results poll ships totals instead of responses: votes per
+  // option and type, and how many responses there are. Other polls count
+  // their totals from the responses, so they skip both queries.
+  const aggregateResultsPromise = poll.aggregateResultsOnly
+    ? Promise.all([
+        prisma.vote.groupBy({
+          by: ["optionId", "type"],
+          where: { pollId },
+          _count: true,
+        }),
+        prisma.participant.count({ where: { pollId } }),
+      ])
+    : Promise.resolve([[], 0] as const);
+  const [aggregateVoteRows, aggregateParticipantCount] =
+    await aggregateResultsPromise;
+  const aggregateVotesByOption = new Map<
+    string,
+    { yes: number; ifNeedBe: number; no: number; skip: number }
+  >();
+  for (const row of aggregateVoteRows) {
+    const counts = aggregateVotesByOption.get(row.optionId) ?? {
+      yes: 0,
+      ifNeedBe: 0,
+      no: 0,
+      skip: 0,
+    };
+    counts[row.type] = row._count;
+    aggregateVotesByOption.set(row.optionId, counts);
+  }
+
   const { spaceBrandingAllowed, spaceAttributionConfigurable } =
     await getInstancePolicy();
   const brandingActive = poll.space
@@ -807,6 +892,18 @@ export async function getPollDetails({
 
   return {
     ...pollFields,
+    aggregateParticipantCount,
+    aggregateVotes: poll.aggregateResultsOnly
+      ? poll.options.map((option) => ({
+          optionId: option.id,
+          ...(aggregateVotesByOption.get(option.id) ?? {
+            yes: 0,
+            ifNeedBe: 0,
+            no: 0,
+            skip: 0,
+          }),
+        }))
+      : [],
     conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
     space: space
@@ -847,10 +944,31 @@ export async function getPollDetails({
  * Every response with its votes and edit token. Callers scope the output to
  * the viewer before it leaves the server: the token is the edit credential
  * and notes are for the host and their author only.
+ *
+ * On an aggregate results poll only the viewer's own responses come back
+ * (none without a viewer, as on the host's pages). The rule is part of the
+ * query, not a check made beforehand, so a poll switched to aggregate
+ * results while the page loads cannot expose a response cast after the
+ * switch.
  */
-export async function listPollParticipants({ pollId }: { pollId: string }) {
+export async function listPollParticipants({
+  pollId,
+  viewer,
+}: {
+  pollId: string;
+  /** Whose own responses survive aggregate results. */
+  viewer?: { userId: string | null; participantIds: string[] };
+}) {
+  const ownResponses: Prisma.ParticipantWhereInput[] = [];
+  if (viewer?.userId) {
+    ownResponses.push({ userId: viewer.userId });
+  }
+  if (viewer && viewer.participantIds.length > 0) {
+    ownResponses.push({ id: { in: viewer.participantIds } });
+  }
+
   const participants = await prisma.participant.findMany({
-    where: { pollId },
+    where: { pollId, OR: [individualResponsesVisible, ...ownResponses] },
     select: {
       id: true,
       name: true,

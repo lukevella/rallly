@@ -24,11 +24,24 @@ export interface VoteSelectorProps {
    * alternates yes → no.
    */
   allowTentativeVotes?: boolean;
+  /** When true yes is dropped from the cycle (the option is full). */
+  yesDisabled?: boolean;
   className?: string;
 }
 
-export const toggleVote = (value?: VoteType, allowTentativeVotes = true) => {
-  const orderedVoteTypes = getVoteTypes(allowTentativeVotes);
+/**
+ * The next vote in the click cycle. The cycle is yes → (ifNeedBe) → no, with
+ * tentative dropped when `allowTentativeVotes` is false and yes dropped when
+ * `yesDisabled` (the option is full). No current value starts at the first type.
+ */
+export const toggleVote = (
+  value?: VoteType,
+  allowTentativeVotes = true,
+  yesDisabled = false,
+) => {
+  const orderedVoteTypes = getVoteTypes(allowTentativeVotes).filter(
+    (type) => type !== "yes" || !yesDisabled,
+  );
   if (!value) return orderedVoteTypes[0];
   const index = orderedVoteTypes.indexOf(value);
   // A vote cast before the tentative option was turned off is not in the
@@ -50,6 +63,7 @@ export const VoteSelector = React.forwardRef<
     onBlur,
     onKeyDown,
     allowTentativeVotes = true,
+    yesDisabled = false,
     className,
   },
   ref,
@@ -91,7 +105,7 @@ export const VoteSelector = React.forwardRef<
         className,
       )}
       onClick={() => {
-        onChange?.(toggleVote(value, allowTentativeVotes));
+        onChange?.(toggleVote(value, allowTentativeVotes, yesDisabled));
       }}
       ref={ref}
     >

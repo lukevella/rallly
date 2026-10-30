@@ -34,13 +34,29 @@ const formSchema = z.object({
 
 type VotingFormValues = z.infer<typeof formSchema>;
 
+/**
+ * The voting form with the participant on display resolved.
+ * `selectedParticipantId` is the one the form names, or, on an aggregate
+ * results poll in view mode, the viewer's own response: there is no table
+ * of responses to pick from, so the viewer's answers stay on screen after
+ * they cancel an edit or the poll closes.
+ */
 export const useVotingForm = () => {
-  const { options } = usePoll();
+  const { options, aggregateResultsOnly } = usePoll();
   const { participants } = useParticipants();
+  const { isOwnParticipant } = usePermissions();
   const form = useFormContext<VotingFormValues>();
+  const requestedParticipantId = form.watch("participantId");
+  const mode = form.watch("mode");
+  const selectedParticipantId =
+    requestedParticipantId ??
+    (aggregateResultsOnly && mode === "view"
+      ? participants.find(({ id }) => isOwnParticipant(id))?.id
+      : undefined);
 
   return {
     ...form,
+    selectedParticipantId,
     newParticipant: () => {
       form.reset({
         mode: "new",
@@ -77,6 +93,10 @@ export const useVotingForm = () => {
   };
 };
 
+/**
+ * The form a viewer votes with: it creates a response, or saves the votes
+ * of the selected one.
+ */
 export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const poll = usePoll();
   const { options } = poll;
@@ -85,9 +105,9 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
   const token = useEditToken();
   const { participants } = useParticipants();
 
-  const { canAddNewParticipant, canEditParticipant } = usePermissions();
+  const { canAddNewParticipant, isOwnParticipant } = usePermissions();
   const userAlreadyVoted = participants.some((participant) =>
-    canEditParticipant(participant.id),
+    isOwnParticipant(participant.id),
   );
 
   const role = useRole();
@@ -104,7 +124,7 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
           : "view",
       participantId:
         role === "participant"
-          ? participants.find((p) => canEditParticipant(p.id))?.id
+          ? participants.find((p) => isOwnParticipant(p.id))?.id
           : undefined,
       votes: options.map((option) => ({
         optionId: option.id,

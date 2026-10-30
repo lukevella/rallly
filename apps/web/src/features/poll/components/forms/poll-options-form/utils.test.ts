@@ -1,8 +1,57 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { getTimeOptions } from "./utils";
+import { getNextAvailableTimeSlotStart, getTimeOptions } from "./utils";
 
 const hoursOf = (options: string[]) =>
   [...new Set(options.map((option) => option.slice(11, 13)))].join(",");
+
+describe("getNextAvailableTimeSlotStart", () => {
+  it("rounds up to the next future 15-minute slot in the poll timezone", () => {
+    expect(
+      getNextAvailableTimeSlotStart({
+        date: "2026-10-29",
+        now: new Date("2026-10-29T19:07:00Z"),
+        timeZone: "America/Los_Angeles",
+      }),
+    ).toBe("2026-10-29T12:15:00");
+  });
+
+  it("skips the current slot when now is exactly on a 15-minute boundary", () => {
+    expect(
+      getNextAvailableTimeSlotStart({
+        date: "2026-10-29",
+        now: new Date("2026-10-29T12:15:00Z"),
+        timeZone: "UTC",
+      }),
+    ).toBe("2026-10-29T12:30:00");
+  });
+
+  it("skips missing wall-clock times during a daylight-saving transition", () => {
+    expect(
+      getNextAvailableTimeSlotStart({
+        date: "2027-03-14",
+        now: new Date("2027-03-14T07:50:00Z"),
+        timeZone: "America/Chicago",
+      }),
+    ).toBe("2027-03-14T03:00:00");
+  });
+
+  it("returns null when the date is not today or no time remains today", () => {
+    expect(
+      getNextAvailableTimeSlotStart({
+        date: "2026-10-30",
+        now: new Date("2026-10-29T23:50:00Z"),
+        timeZone: "UTC",
+      }),
+    ).toBeNull();
+    expect(
+      getNextAvailableTimeSlotStart({
+        date: "2026-10-29",
+        now: new Date("2026-10-29T23:50:00Z"),
+        timeZone: "UTC",
+      }),
+    ).toBeNull();
+  });
+});
 
 describe("getTimeOptions", () => {
   const originalTimeZone = process.env.TZ;

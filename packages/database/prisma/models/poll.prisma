@@ -52,6 +52,7 @@ model Poll {
   scheduledEventId        String?           @map("scheduled_event_id")
   hideParticipants        Boolean           @default(false) @map("hide_participants")
   hideScores              Boolean           @default(false) @map("hide_scores")
+  aggregateResultsOnly    Boolean           @default(false) @map("aggregate_results_only")
   disableComments         Boolean           @default(true) @map("disable_comments")
   requireParticipantEmail Boolean           @default(false) @map("require_participant_email")
   /// Whether participants may cast the tentative "if need be" vote. Positive
@@ -153,11 +154,12 @@ model PollActivity {
 }
 
 model Option {
-  id        String   @id @default(cuid())
-  startTime DateTime @map("start_time") @db.Timestamp(0)
-  duration  Int      @default(0) @map("duration_minutes")
-  pollId    String   @map("poll_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id              String   @id @default(cuid())
+  startTime       DateTime @map("start_time") @db.Timestamp(0)
+  duration        Int      @default(0) @map("duration_minutes")
+  pollId          String   @map("poll_id")
+  maxParticipants Int?     @map("max_participants")
+  createdAt       DateTime @default(now()) @map("created_at")
 
   votes Vote[]
 

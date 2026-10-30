@@ -19,7 +19,7 @@ model InstanceSettings {
   // Ordered [{ label, href }] rendered in the login and invite page footers.
   // Not branding: this is how self-hosted instances satisfy local legal
   // disclosure requirements (Impressum, privacy policy), so it is not gated.
-  footerLinks      Json     @default("[]") @map("footer_links")
+  footerLinks Json @default("[]") @map("footer_links")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

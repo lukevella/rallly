@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import * as m from "motion/react-m";
 import type * as React from "react";
+import { usePoll } from "@/features/poll/client";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { PollOptionVoteSummary } from "@/features/poll/components/vote-breakdown-dialog";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -31,8 +32,14 @@ export interface PollOptionProps {
   optionLabel: string;
   /** When false the segmented control offers yes and no only. */
   allowTentativeVotes?: boolean;
+  yesDisabled: boolean;
+  maxParticipants: number | null;
 }
 
+/**
+ * One option on narrow screens: the selected response's vote, the score
+ * and, unless the poll is aggregate results only, who voted for it.
+ */
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
   children,
   selectedParticipantId,
@@ -44,9 +51,12 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   yesScore,
   ifNeedBeScore,
   allowTentativeVotes = true,
+  yesDisabled = false,
+  maxParticipants = null,
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
+  const poll = usePoll();
 
   const showVote = !editable && !!selectedParticipantId;
 
@@ -69,41 +79,66 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
       >
         {showVote ? <VoteIcon type={vote} /> : null}
       </span>
-      {children}
+      <div className="min-w-0">
+        {children}
+        {maxParticipants !== null ? (
+          <span className="text-muted-foreground text-xs">
+            {yesScore >= maxParticipants ? (
+              <Trans i18nKey="optionCapacityFull" defaults="Full" />
+            ) : (
+              <Trans
+                i18nKey="optionCapacityCount"
+                defaults="{count} of {max} yes votes"
+                values={{ count: yesScore, max: maxParticipants }}
+              />
+            )}
+          </span>
+        ) : null}
+      </div>
       <IfScoresVisible>
-        <Button
-          {...dialog.triggerProps}
-          aria-label={`${
-            allowTentativeVotes
-              ? t("optionVoteBreakdown", {
-                  defaultValue: "{yesScore} yes, {ifNeedBeScore} if need be",
-                  yesScore,
-                  ifNeedBeScore,
-                })
-              : t("optionVoteBreakdownYesOnly", {
-                  defaultValue: "{yesScore} yes",
-                  yesScore,
-                })
-          }. ${t("showParticipantVotes", {
-            defaultValue: "Show participant votes",
-          })}`}
-          variant="ghost"
-          size="lg"
-          className="col-start-3 justify-self-end"
-        >
-          <ConnectedScoreSummary optionId={optionId} />
-        </Button>
-        <Dialog {...dialog.dialogProps}>
-          <DialogContent size="sm">
-            <DialogHeader>
-              <DialogTitle>
-                <Trans i18nKey="participants" defaults="Participants" />
-              </DialogTitle>
-              <DialogDescription>{optionLabel}</DialogDescription>
-            </DialogHeader>
-            <PollOptionVoteSummary optionId={optionId} />
-          </DialogContent>
-        </Dialog>
+        {/* No responses to expand on an aggregate results poll: totals only. */}
+        {poll.aggregateResultsOnly ? (
+          <span className="col-start-3 justify-self-end">
+            <ConnectedScoreSummary optionId={optionId} />
+          </span>
+        ) : (
+          <>
+            <Button
+              {...dialog.triggerProps}
+              aria-label={`${
+                allowTentativeVotes
+                  ? t("optionVoteBreakdown", {
+                      defaultValue:
+                        "{yesScore} yes, {ifNeedBeScore} if need be",
+                      yesScore,
+                      ifNeedBeScore,
+                    })
+                  : t("optionVoteBreakdownYesOnly", {
+                      defaultValue: "{yesScore} yes",
+                      yesScore,
+                    })
+              }. ${t("showParticipantVotes", {
+                defaultValue: "Show participant votes",
+              })}`}
+              variant="ghost"
+              size="lg"
+              className="col-start-3 justify-self-end"
+            >
+              <ConnectedScoreSummary optionId={optionId} />
+            </Button>
+            <Dialog {...dialog.dialogProps}>
+              <DialogContent size="sm">
+                <DialogHeader>
+                  <DialogTitle>
+                    <Trans i18nKey="participants" defaults="Participants" />
+                  </DialogTitle>
+                  <DialogDescription>{optionLabel}</DialogDescription>
+                </DialogHeader>
+                <PollOptionVoteSummary optionId={optionId} />
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
       </IfScoresVisible>
       {editable ? (
         <m.div
@@ -117,6 +152,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             onChange={onChange}
             optionLabel={optionLabel}
             allowTentativeVotes={allowTentativeVotes}
+            yesDisabled={yesDisabled}
           />
         </m.div>
       ) : null}

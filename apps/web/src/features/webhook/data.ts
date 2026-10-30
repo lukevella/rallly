@@ -132,7 +132,7 @@ export async function listWebhookActivities({
       optionId: true,
       payload: true,
       createdAt: true,
-      poll: { select: { id: true, kind: true } },
+      poll: { select: { id: true, kind: true, aggregateResultsOnly: true } },
     },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     take: limit,

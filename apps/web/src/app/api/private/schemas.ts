@@ -100,6 +100,11 @@ export const createPollInputSchema = z
       description: "Hide vote counts from participants",
       example: false,
     }),
+    aggregateResultsOnly: z.boolean().optional().meta({
+      description:
+        "Show per-option vote totals only; individual responses are not returned.",
+      example: false,
+    }),
     disableComments: z.boolean().optional().meta({
       description:
         "Disable the comments section. Defaults to true: new polls have comments disabled unless this is set to false.",
@@ -194,6 +199,11 @@ const pollSchema = z
     location: z.string().nullable().meta({ example: "Zoom" }),
     timezone: z.string().nullable().meta({ example: "Europe/London" }),
     status: pollStatusSchema,
+    aggregateResultsOnly: z.boolean().meta({
+      description:
+        "Whether individual responses are hidden from everyone in favor of aggregate vote totals",
+      example: false,
+    }),
     createdAt: z.string().datetime().meta({ example: "2025-01-10T12:00:00Z" }),
     user: pollUserSchema.nullable().meta({
       description: "The poll organizer",

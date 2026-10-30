@@ -17,6 +17,7 @@ export function getBrowserTimeZone() {
   return detectBrowserTimeZone() ?? "UTC";
 }
 
+/** Stable string key for an option: `start/end` for a time slot, the date otherwise. */
 export const encodeDateOption = (option: DateTimeOption) => {
   return option.type === "timeSlot"
     ? `${option.start}/${option.end}`
@@ -30,6 +31,7 @@ export interface ParsedDateOption {
   dow: string;
   month: string;
   year: string;
+  maxParticipants: number | null;
 }
 
 export interface ParsedTimeSlotOption {
@@ -42,6 +44,7 @@ export interface ParsedTimeSlotOption {
   endTime: string;
   duration: string;
   year: string;
+  maxParticipants: number | null;
 }
 
 export type ParsedDateTimeOpton = ParsedDateOption | ParsedTimeSlotOption;

@@ -56,6 +56,7 @@ export async function getViewerResponse({
     select: {
       id: true,
       name: true,
+      timeZone: true,
       votes: { select: { optionId: true, type: true } },
       user: { select: { image: true } },
     },
@@ -69,6 +70,7 @@ export async function getViewerResponse({
   return {
     participantId: participant.id,
     name: participant.name,
+    timeZone: participant.timeZone,
     image: participant.user?.image ?? null,
     votes: participant.votes,
   };
