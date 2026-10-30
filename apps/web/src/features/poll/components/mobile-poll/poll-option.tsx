@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import * as m from "motion/react-m";
 import type * as React from "react";
+import { PastOptionVote } from "@/features/poll/components/past-option-vote";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { PollOptionVoteSummary } from "@/features/poll/components/vote-breakdown-dialog";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -31,6 +32,8 @@ export interface PollOptionProps {
   optionLabel: string;
   /** When false the segmented control offers yes and no only. */
   allowTentativeVotes?: boolean;
+  /** Over for the viewer: greyed out, its vote frozen. */
+  isPast?: boolean;
 }
 
 const PollOption: React.FunctionComponent<PollOptionProps> = ({
@@ -44,22 +47,28 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
   yesScore,
   ifNeedBeScore,
   allowTentativeVotes = true,
+  isPast = false,
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
 
-  const showVote = !editable && !!selectedParticipantId;
+  // While composing, a past option shows its frozen vote where a saved
+  // response shows its votes, instead of the control.
+  const frozen = editable && isPast;
+  const canChange = editable && !isPast;
+  const showVote = (!editable && !!selectedParticipantId) || frozen;
 
   return (
     <div
       className={cn(
         "grid h-14 items-center px-2 text-left transition-[grid-template-columns] duration-300",
-        editable &&
+        canChange &&
           (allowTentativeVotes
             ? "grid-cols-[0rem_1fr_3.5rem_9.375rem]"
             : "grid-cols-[0rem_1fr_3.5rem_6.625rem]"),
         showVote && "grid-cols-[1.875rem_1fr_3.5rem_0rem]",
-        !editable && !showVote && "grid-cols-[0rem_1fr_3.5rem_0rem]",
+        !canChange && !showVote && "grid-cols-[0rem_1fr_3.5rem_0rem]",
+        isPast && "text-muted-foreground",
       )}
       data-testid="poll-option"
     >
@@ -67,7 +76,11 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
         aria-hidden={showVote ? undefined : true}
         className="overflow-hidden"
       >
-        {showVote ? <VoteIcon type={vote} /> : null}
+        {frozen ? (
+          <PastOptionVote type={vote} />
+        ) : showVote ? (
+          <VoteIcon type={vote} />
+        ) : null}
       </span>
       {children}
       <IfScoresVisible>
@@ -105,7 +118,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
           </DialogContent>
         </Dialog>
       </IfScoresVisible>
-      {editable ? (
+      {canChange ? (
         <m.div
           className="col-start-4 justify-self-end"
           initial={{ opacity: 0, x: 12 }}

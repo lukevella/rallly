@@ -1,7 +1,7 @@
 import type { VoteType } from "@rallly/database";
 import type * as React from "react";
 import { Controller } from "react-hook-form";
-import { useParticipants } from "@/features/poll/client";
+import { useParticipants, usePastOptionIds } from "@/features/poll/client";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
@@ -23,6 +23,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
   const { control } = useVotingForm();
   const { getScore, getVote, optionIds, poll } = usePoll();
   const { participants: allParticipants } = useParticipants();
+  const pastOptionIds = usePastOptionIds();
   const selectedParticipant = selectedParticipantId
     ? allParticipants.find(
         (participant) => participant.id === selectedParticipantId,
@@ -34,6 +35,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
       {options.map((option) => {
         const score = getScore(option.optionId);
         const index = optionIds.indexOf(option.optionId);
+        const isPast = pastOptionIds.has(option.optionId);
         return (
           <div key={option.optionId} className="p-2">
             <Controller
@@ -47,7 +49,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                     : field.value[index]?.type;
 
                 const handleChange = (newVote: VoteType) => {
-                  if (!editable) {
+                  if (!editable || isPast) {
                     return;
                   }
                   const newValue = [...field.value];
@@ -73,6 +75,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                         endTime={option.endTime}
                         duration={option.duration}
                         editable={editable}
+                        isPast={isPast}
                         selectedParticipantId={selectedParticipant?.id}
                       />
                     );
@@ -90,6 +93,7 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                         day={option.day}
                         month={option.month}
                         editable={editable}
+                        isPast={isPast}
                         selectedParticipantId={selectedParticipant?.id}
                       />
                     );

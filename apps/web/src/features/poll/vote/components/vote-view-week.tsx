@@ -3,6 +3,7 @@ import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
+import { PastOptionVote } from "@/features/poll/components/past-option-vote";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import type { VoteType } from "@/features/poll/constants";
@@ -87,6 +88,7 @@ function TimeOption({
   hasSavedResponse,
   allowTentativeVotes,
   canVote,
+  isPast,
 }: {
   result: VoteResult;
   timeZone: string | null;
@@ -96,6 +98,7 @@ function TimeOption({
   hasSavedResponse: boolean;
   allowTentativeVotes: boolean;
   canVote: boolean;
+  isPast: boolean;
 }) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
   const { value, setVote, isEditing } = useVote(result.optionId);
@@ -109,7 +112,12 @@ function TimeOption({
   })}`;
 
   return (
-    <li className="rounded-lg border bg-card p-2">
+    <li
+      className={cn(
+        "rounded-lg border bg-card p-2",
+        isPast && "text-muted-foreground",
+      )}
+    >
       <p className="truncate font-medium text-sm tabular-nums">
         {formatDateTimeRange(result.startTime, end, "time", {
           timeZone: readZone,
@@ -127,7 +135,9 @@ function TimeOption({
         />
       </div>
       <div className="mt-2">
-        {canVote && isEditing ? (
+        {canVote && isEditing && isPast ? (
+          <PastOptionVote type={value} className="h-9 w-full" />
+        ) : canVote && isEditing ? (
           <VoteSegmentedControl
             value={value}
             onChange={setVote}
@@ -156,6 +166,7 @@ export function VoteViewWeek({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
@@ -301,6 +312,7 @@ export function VoteViewWeek({
                       hasSavedResponse={response !== null}
                       allowTentativeVotes={poll.allowTentativeVotes}
                       canVote={canVote}
+                      isPast={pastOptionIds.has(result.optionId)}
                     />
                   ))}
                 </ul>

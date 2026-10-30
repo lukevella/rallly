@@ -74,6 +74,8 @@ export type VoteViewProps = {
   participantCount: number | null;
   response: VoteResponse | null;
   canVote: boolean;
+  /** Options that are over: shown with their vote frozen. */
+  pastOptionIds: Set<string>;
 };
 
 /** Which voting view is on screen. */

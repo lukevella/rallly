@@ -4,6 +4,8 @@ import {
   filterParticipantsByVote,
   getChosenOptionRank,
   getFinalizeTiming,
+  isOptionPast,
+  isOptionPastEverywhere,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
@@ -439,5 +441,128 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+const at = (iso: string) => new Date(iso);
+
+// 10:00–11:00 on 2026-10-29: a UTC instant in a zoned poll, a wall time in
+// a floating one.
+const slot = { startTime: at("2026-10-29T10:00:00Z"), duration: 60 };
+const day = { startTime: at("2026-10-29T00:00:00Z"), duration: 0 };
+
+describe("isOptionPast", () => {
+  it("retires a zoned slot once it has ended, wherever the viewer is", () => {
+    const options = {
+      pollTimeZone: "Europe/Paris",
+      viewerTimeZone: "Asia/Tokyo",
+    };
+    expect(
+      isOptionPast(slot, { ...options, now: at("2026-10-29T10:59:59Z") }),
+    ).toBe(false);
+    expect(
+      isOptionPast(slot, { ...options, now: at("2026-10-29T11:00:01Z") }),
+    ).toBe(true);
+  });
+
+  it("reads a floating slot on the viewer's own clock", () => {
+    // 11:30 UTC is 12:30 in Paris (slot over) and 07:30 in New York (not yet).
+    const now = at("2026-10-29T11:30:00Z");
+    expect(
+      isOptionPast(slot, {
+        pollTimeZone: null,
+        viewerTimeZone: "Europe/Paris",
+        now,
+      }),
+    ).toBe(true);
+    expect(
+      isOptionPast(slot, {
+        pollTimeZone: null,
+        viewerTimeZone: "America/New_York",
+        now,
+      }),
+    ).toBe(false);
+  });
+
+  it("keeps an all-day date open until the viewer's date moves on", () => {
+    // 2026-10-30 02:00 UTC is still the 29th in Los Angeles.
+    const now = at("2026-10-30T02:00:00Z");
+    expect(
+      isOptionPast(day, {
+        pollTimeZone: null,
+        viewerTimeZone: "Europe/Paris",
+        now,
+      }),
+    ).toBe(true);
+    expect(
+      isOptionPast(day, {
+        pollTimeZone: null,
+        viewerTimeZone: "America/Los_Angeles",
+        now,
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("isOptionPastEverywhere", () => {
+  it("retires a zoned slot at the same instant as the page", () => {
+    expect(
+      isOptionPastEverywhere(slot, {
+        pollTimeZone: "Europe/Paris",
+        now: at("2026-10-29T11:00:01Z"),
+      }),
+    ).toBe(true);
+  });
+
+  it("waits for the latest zone on a floating slot", () => {
+    expect(
+      isOptionPastEverywhere(slot, {
+        pollTimeZone: null,
+        now: at("2026-10-29T22:59:00Z"),
+      }),
+    ).toBe(false);
+    expect(
+      isOptionPastEverywhere(slot, {
+        pollTimeZone: null,
+        now: at("2026-10-29T23:00:01Z"),
+      }),
+    ).toBe(true);
+  });
+
+  it("waits for the latest zone on an all-day date", () => {
+    expect(
+      isOptionPastEverywhere(day, {
+        pollTimeZone: null,
+        now: at("2026-10-30T11:59:59Z"),
+      }),
+    ).toBe(false);
+    expect(
+      isOptionPastEverywhere(day, {
+        pollTimeZone: null,
+        now: at("2026-10-30T12:00:00Z"),
+      }),
+    ).toBe(true);
+  });
+
+  it("never refuses what a viewer's page still offers", () => {
+    const zones = [
+      "Etc/GMT+12",
+      "America/Los_Angeles",
+      "UTC",
+      "Europe/Paris",
+      "Pacific/Kiritimati",
+    ];
+    for (let h = 0; h < 72; h++) {
+      const now = new Date(day.startTime.getTime() + h * 3_600_000);
+      for (const option of [slot, day]) {
+        if (isOptionPastEverywhere(option, { pollTimeZone: null, now })) {
+          for (const viewerTimeZone of zones) {
+            expect(
+              isOptionPast(option, { pollTimeZone: null, viewerTimeZone, now }),
+            ).toBe(true);
+          }
+        }
+      }
+    }
   });
 });

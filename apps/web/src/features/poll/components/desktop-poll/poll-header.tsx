@@ -2,6 +2,7 @@ import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { ClockIcon } from "lucide-react";
 import type * as React from "react";
+import { usePastOptionIds } from "@/features/poll/client";
 import { useOptions } from "@/features/poll/components/poll-context";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 
@@ -58,6 +59,7 @@ const scoreRowTop = monthRowHeight + dayRowHeight;
 
 const PollHeader = () => {
   const { options } = useOptions();
+  const pastOptionIds = usePastOptionIds();
 
   const monthGroups: { month: string; year: string; count: number }[] = [];
 
@@ -149,7 +151,12 @@ const PollHeader = () => {
               style={{ minWidth: 80, top: scoreRowTop }}
               className="sticky z-20 border-b border-l bg-card px-2 pb-2.5 align-top"
             >
-              <div className="flex flex-col items-center gap-3">
+              <div
+                className={cn(
+                  "flex flex-col items-center gap-3",
+                  pastOptionIds.has(option.optionId) && "opacity-50",
+                )}
+              >
                 {option.type === "timeSlot" ? (
                   <TimeRange
                     start={option.startTime}
