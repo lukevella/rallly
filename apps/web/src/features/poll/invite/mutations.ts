@@ -293,8 +293,10 @@ export async function recordPollInviteOpen({
       return false;
     }
 
+    // Matching the token and live state too, so an open of a link revoked
+    // and reissued since the read above can't mark the new one opened
     const { count } = await tx.pollInvite.updateMany({
-      where: { id: invite.id, openedAt: null },
+      where: { id: invite.id, token, revokedAt: null, openedAt: null },
       data: { openedAt: new Date() },
     });
 
