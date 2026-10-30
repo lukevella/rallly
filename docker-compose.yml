@@ -26,7 +26,7 @@ services:
       rallly_db:
         condition: service_healthy
     ports:
-      - 3000:3000
+      - ${RALLLY_PORT:-3000}:3000
     environment:
       - DATABASE_URL=postgres://postgres:postgres@rallly_db/rallly
     env_file:
