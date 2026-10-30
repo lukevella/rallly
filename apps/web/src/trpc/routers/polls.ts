@@ -1688,10 +1688,18 @@ export const polls = router({
         });
       }
 
-      await prisma.poll.update({
-        where: { id: input.pollId },
+      // A scheduled poll is final, as in modify.
+      const { count } = await prisma.poll.updateMany({
+        where: { id: input.pollId, status: { not: "scheduled" } },
         data: { deadline: input.deadline },
       });
+
+      if (count === 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A scheduled poll cannot be edited",
+        });
+      }
 
       revalidatePollPages();
     }),

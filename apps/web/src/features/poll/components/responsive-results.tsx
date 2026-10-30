@@ -17,7 +17,9 @@ export function ResponsiveResults() {
 
   return (
     <>
-      <PollDeadlineNotice deadline={poll.deadline} />
+      {poll.status === "open" ? (
+        <PollDeadlineNotice deadline={poll.deadline} />
+      ) : null}
       <PollOutcome frame={Card}>
         <PollComponent />
       </PollOutcome>

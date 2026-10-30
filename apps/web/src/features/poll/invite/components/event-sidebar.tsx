@@ -23,6 +23,7 @@ type SidebarPoll = {
   conferencing: PollConferencing | null;
   event: { conferencingUri: string | null } | null;
   deadline: Date | null;
+  status: string;
   allowTentativeVotes: boolean;
   spaceId: string | null;
   user: { name: string } | null;
@@ -108,9 +109,11 @@ export async function EventSidebar({
             </EventMetaItem>
           ) : null}
         </EventMetaList>
-        <div className="mt-4">
-          <PollDeadlineNotice deadline={poll.deadline} />
-        </div>
+        {poll.status === "open" ? (
+          <div className="mt-4">
+            <PollDeadlineNotice deadline={poll.deadline} />
+          </div>
+        ) : null}
         <div className="mt-4">
           <VoteLegend allowTentativeVotes={poll.allowTentativeVotes} />
         </div>
