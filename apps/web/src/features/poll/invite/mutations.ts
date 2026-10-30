@@ -127,11 +127,12 @@ export async function sendPollInvite({
       let row: { id: string; email: string };
       if (existing) {
         // A revoked row is reactivated with a fresh token so a leaked old
-        // link never regains access. The claim only succeeds while the row
-        // is still revoked, so two concurrent sends cannot both take it.
+        // link never regains access, and as unopened since the new link
+        // hasn't been followed. The claim only succeeds while the row is
+        // still revoked, so two concurrent sends cannot both take it.
         const { count } = await tx.pollInvite.updateMany({
           where: { id: existing.id, revokedAt: { not: null } },
-          data: { revokedAt: null, token },
+          data: { revokedAt: null, openedAt: null, token },
         });
         if (count === 0) {
           throw new InviteClaimedElsewhere();
