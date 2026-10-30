@@ -3,7 +3,6 @@ import {
   filterCommentsForViewer,
   filterParticipantsByVote,
   getChosenOptionRank,
-  getFinalizePlanGate,
   getFinalizeTiming,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
@@ -350,61 +349,6 @@ describe("getFinalizeTiming", () => {
         now,
       }).is_past,
     ).toBe(true);
-  });
-});
-
-describe("getFinalizePlanGate", () => {
-  it("lets a pro space notify and mint a meeting", () => {
-    expect(
-      getFinalizePlanGate({
-        tier: "pro",
-        conferencing: { provider: "meet" },
-      }),
-    ).toBeNull();
-  });
-
-  it("lets a free space finalize silently without a provider link", () => {
-    expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: null,
-      }),
-    ).toBeNull();
-    expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: { provider: "custom" },
-      }),
-    ).toBeNull();
-  });
-
-  it("lets a free space notify participants", () => {
-    expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: null,
-      }),
-    ).toBeNull();
-  });
-
-  it("gates Zoom, Teams and Webex links on a free space", () => {
-    for (const provider of ["zoom", "teams", "webex"] as const) {
-      expect(
-        getFinalizePlanGate({
-          tier: "hobby",
-          conferencing: { provider },
-        }),
-      ).toBe("conferencing");
-    }
-  });
-
-  it("lets a free space mint a Google Meet link", () => {
-    expect(
-      getFinalizePlanGate({
-        tier: "hobby",
-        conferencing: { provider: "meet" },
-      }),
-    ).toBeNull();
   });
 });
 

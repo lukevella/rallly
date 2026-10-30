@@ -22,7 +22,10 @@ import type { ConferencingOptions } from "@/features/conferencing/components/con
 import { toPollConferencing } from "@/features/conferencing/components/conferencing-field";
 import { PollDetailsForm } from "@/features/poll/components/forms/poll-details-form";
 import PollOptionsForm from "@/features/poll/components/forms/poll-options-form/poll-options-form";
-import { isAllDay } from "@/features/poll/components/forms/poll-options-form/utils";
+import {
+  hasMixedOptionTypes,
+  isAllDay,
+} from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
@@ -37,8 +40,11 @@ import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
 import { setFlash } from "@/lib/flash/client";
+import { createSessionStorage } from "@/lib/session-storage";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
+
+const draftStorage = createSessionStorage();
 
 const required = <T,>(v: T | undefined): T => {
   if (!v) {
@@ -162,9 +168,28 @@ export const CreatePoll = ({
     },
   });
 
+  // Drafts saved before mixed changes were held back can mix date and time
+  // options, which the calendar can't render. Keep the time slots, matching
+  // how the calendar classified the list. Must be stable: the persist hook
+  // restores the draft again whenever this callback changes.
+  const { setValue } = form;
+  const handleDataRestored = React.useCallback(
+    (data: Partial<NewEventData>) => {
+      if (data.options && hasMixedOptionTypes(data.options)) {
+        setValue(
+          "options",
+          data.options.filter((option) => option.type === "timeSlot"),
+        );
+      }
+    },
+    [setValue],
+  );
+
   const { clear } = useFormPersist("new-poll", {
+    storage: draftStorage,
     watch: form.watch,
     setValue: form.setValue,
+    onDataRestored: handleDataRestored,
   });
 
   const makePoll = trpc.polls.make.useMutation();

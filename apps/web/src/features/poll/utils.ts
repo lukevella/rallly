@@ -1,9 +1,6 @@
 import { customAlphabet } from "nanoid";
-import type { PollConferencing } from "@/features/conferencing/schema";
-import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollComment, PollParticipant } from "@/features/poll/types";
-import type { SpaceTier } from "@/features/space/schema";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -323,28 +320,4 @@ export function summarizeNotifySelection({
   // The dialog starts with everyone who has an email selected.
   summary.notify_selection_changed = selected !== eligible;
   return summary;
-}
-
-export type FinalizePlanGate = "conferencing";
-
-/**
- * Finalizing and notifying participants are free. What a free space cannot
- * do at finalize is mint a meeting with a Pro provider.
- */
-export function getFinalizePlanGate({
-  tier,
-  conferencing,
-}: {
-  tier: SpaceTier;
-  conferencing: { provider: PollConferencing["provider"] } | null;
-}): FinalizePlanGate | null {
-  if (tier === "pro") return null;
-  if (
-    conferencing &&
-    conferencing.provider !== "custom" &&
-    isProConferencingProvider(conferencing.provider)
-  ) {
-    return "conferencing";
-  }
-  return null;
 }

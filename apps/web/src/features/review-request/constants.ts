@@ -4,6 +4,13 @@ import { isSelfHosted } from "@/lib/constants";
 // through the README and the license email instead
 export const isReviewRequestEnabled = !isSelfHosted;
 
+// The email is a personal note from the founder, so it comes from a person
+// who reads the replies rather than the no-reply address
+export const reviewRequestSender = {
+  name: "Luke from Rallly",
+  address: "luke@rallly.co",
+};
+
 // Long enough that the email reads as a note rather than a receipt for the
 // finalize click, short enough that the booking is still fresh
 export const reviewRequestEmailDelayMs = 60 * 60_000;
