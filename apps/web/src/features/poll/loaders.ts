@@ -17,7 +17,12 @@ import {
   listPollComments,
   listPollParticipants,
 } from "@/features/poll/data";
-import { getPollInvitePath } from "@/features/poll/invite/utils";
+import { listPollInvites } from "@/features/poll/invite/data";
+import type { PollInviteListItem } from "@/features/poll/invite/types";
+import {
+  derivePollInviteStatus,
+  getPollInvitePath,
+} from "@/features/poll/invite/utils";
 import type { PollStatus } from "@/features/poll/schema";
 import {
   filterCommentsForViewer,
@@ -241,9 +246,10 @@ export const loadAdminPoll = cache(async (pollId: string) => {
     redirect(`/invite/${pollId}`);
   }
 
-  const [participants, comments] = await Promise.all([
+  const [participants, comments, invites] = await Promise.all([
     listPollParticipants({ pollId }),
     listPollComments({ pollId }),
+    listPollInvites({ pollId }),
   ]);
 
   return {
@@ -257,6 +263,17 @@ export const loadAdminPoll = cache(async (pollId: string) => {
       editUrl: shortUrl(getPollInvitePath({ pollId, token })),
     })),
     comments,
+    // Each invite carries its personal link, which holds the invite's token,
+    // for the host to hand on.
+    invites: invites.map(
+      ({ id, email, openedAt, participantId, token }): PollInviteListItem => ({
+        id,
+        email,
+        status: derivePollInviteStatus({ openedAt, participantId }),
+        inviteUrl: shortUrl(getPollInvitePath({ pollId, token })),
+        participantId,
+      }),
+    ),
     user,
   };
 });

@@ -11,6 +11,7 @@ import {
   revokePollInviteSchema,
   sendPollInviteSchema,
 } from "@/features/poll/invite/schema";
+import type { PollInviteListItem } from "@/features/poll/invite/types";
 import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import {
@@ -53,7 +54,20 @@ export const sendPollInviteAction = authActionClient
       },
     );
 
-    return result;
+    // The new row as the page lists it, so the client can add it without
+    // reloading the page
+    return result.ok
+      ? {
+          ok: true as const,
+          invite: {
+            id: result.invite.id,
+            email: result.invite.email,
+            status: "sent",
+            inviteUrl: result.invite.inviteUrl,
+            participantId: null,
+          } satisfies PollInviteListItem,
+        }
+      : result;
   });
 
 export const revokePollInviteAction = authActionClient

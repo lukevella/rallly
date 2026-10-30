@@ -288,8 +288,8 @@ test.describe("Email invites", () => {
     const dialog = page.getByRole("dialog", { name: "Share" });
     await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
 
-    // Sending an invite refreshes the route; a router sync must not put the
-    // consumed param back on the address bar.
+    // Sending an invite must not put the consumed param back on the address
+    // bar.
     const field = dialog.getByLabel("Email address");
     await field.fill(INVITEE);
     await field.press("Enter");

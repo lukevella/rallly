@@ -15,7 +15,7 @@ async function AdminPollLayout({
   children: React.ReactNode;
 }) {
   const { urlId } = await params;
-  const { poll, participants, comments } = await loadAdminPoll(urlId);
+  const { poll, participants, comments, invites } = await loadAdminPoll(urlId);
 
   // Access is proven against the poll's space, not the active one, so the
   // paid features on these pages follow the poll's space too: the server
@@ -27,6 +27,7 @@ async function AdminPollLayout({
         poll={poll}
         participants={participants}
         comments={comments}
+        invites={invites}
         viewerRole="admin"
       >
         <PollLayout>{children}</PollLayout>

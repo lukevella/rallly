@@ -41,12 +41,13 @@ async function PollHeaderActions({
   await loadPoll(pollId);
   // The finalize dialog and CSV export read the whole poll, votes included,
   // from the poll provider.
-  const { poll, participants, comments } = await loadAdminPoll(pollId);
+  const { poll, participants, comments, invites } = await loadAdminPoll(pollId);
   return (
     <PollProvider
       poll={poll}
       participants={participants}
       comments={comments}
+      invites={invites}
       viewerRole="admin"
     >
       <PollAdminMenu />

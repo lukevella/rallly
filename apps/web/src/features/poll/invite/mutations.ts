@@ -16,7 +16,7 @@ const logger = createLogger("poll/invite/mutations");
 class InviteClaimedElsewhere extends Error {}
 
 export type SendPollInviteResult =
-  | { ok: true; invite: { id: string; email: string } }
+  | { ok: true; invite: { id: string; email: string; inviteUrl: string } }
   | {
       ok: false;
       reason:
@@ -169,6 +169,8 @@ export async function sendPollInvite({
     throw error;
   }
 
+  const inviteUrl = shortUrl(getPollInvitePath({ pollId, token }));
+
   try {
     await sendPollInviteEmail({
       to: email,
@@ -182,7 +184,7 @@ export async function sendPollInvite({
       props: {
         hostName: sender.name,
         pollTitle: poll.title,
-        inviteUrl: shortUrl(getPollInvitePath({ pollId, token })),
+        inviteUrl,
       },
     });
   } catch (error) {
@@ -223,7 +225,7 @@ export async function sendPollInvite({
     return { ok: false, reason: "sendFailed" };
   }
 
-  return { ok: true, invite };
+  return { ok: true, invite: { ...invite, inviteUrl } };
 }
 
 /**

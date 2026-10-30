@@ -20,7 +20,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { Spinner } from "@/components/spinner";
-import { usePoll } from "@/features/poll/client";
+import { usePoll, usePollInviteUpdates } from "@/features/poll/client";
 import { revokePollInviteAction } from "@/features/poll/invite/actions";
 import type { PollInviteStatus } from "@/features/poll/invite/utils";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -80,12 +80,14 @@ function InviteeRowMenu({
 }) {
   const poll = usePoll();
   const { t } = useTranslation();
+  const { removeInvite } = usePollInviteUpdates();
 
-  // The success handler refetches the list, which is what drops the row.
+  // Removing the row here, rather than reloading the page, is what drops it
   const revoke = useMutation(
     mutationOptions(revokePollInviteAction, {
       onSuccess: (data) => {
         if (data.ok) {
+          removeInvite(inviteId);
           toast(
             t("shareDialogInviteRemoved", {
               defaultValue: "Invite for {email} removed",
