@@ -24,7 +24,7 @@ Everyone you notify gets the video call link in their confirmation email and cal
 
 The meeting is created on the account you connected, so your usual settings, like waiting rooms, passcodes and lobby rules, still apply.
 
-Google Meet works on every plan, including free. Zoom, Microsoft Teams and Webex are part of Pro.
+Google Meet, Zoom, Microsoft Teams and Webex all work on every plan, including free.
 
 If you'd rather use something else, you can still add any video call with your own link.
 

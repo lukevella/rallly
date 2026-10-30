@@ -17,7 +17,7 @@ Rallly is pronounced like "rally", spelled with three L's.
 - Unlimited polls and unlimited participants
 - Up to 3 polls collecting votes at the same time (1 without an account). A poll stops counting once it is finalized or closed.
 - Finalizing polls and calendar invites
-- Google Meet video calls
+- Video calls with Google Meet, Zoom, Microsoft Teams and Webex
 - CSV export
 - No ads
 - Polls are deleted 30 days after their last date if there is no activity
@@ -28,7 +28,6 @@ Pro is $10 per seat per month, or $72 per seat per year (prices vary by currency
 
 - Unlimited open polls, kept indefinitely
 - Email invites with per-person response tracking
-- Zoom, Microsoft Teams and Webex video calls
 - Require email, hide participant names, hide votes until someone has voted
 - Duplicate polls
 - Team collaboration in a shared space with seat-based billing
