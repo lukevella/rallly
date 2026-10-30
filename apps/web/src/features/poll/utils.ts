@@ -321,3 +321,15 @@ export function summarizeNotifySelection({
   summary.notify_selection_changed = selected !== eligible;
   return summary;
 }
+
+/**
+ * A poll whose deadline has passed no longer accepts responses, even while
+ * its status is still "open": the deadline closes voting on its own,
+ * without the organizer having to come back and close the poll.
+ */
+export function isPastDeadline(
+  deadline: Date | null | undefined,
+  now: Date = new Date(),
+) {
+  return deadline != null && deadline.getTime() <= now.getTime();
+}
