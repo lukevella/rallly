@@ -22,6 +22,15 @@ const createPoll = (id: string, startTimes: Date[]) =>
 
 const voteSelectors = (page: Page) => page.getByTestId("vote-selector");
 
+// The selector's accessible name carries the option's date, so this proves
+// the one left is the open option and not the past one.
+const expectOnlySelectorFor = async (page: Page, date: Date) => {
+  await expect(voteSelectors(page)).toHaveCount(1);
+  await expect(voteSelectors(page)).toHaveAccessibleName(
+    new RegExp(`\\b${date.getUTCDate()}\\b`),
+  );
+};
+
 test.describe("past options", () => {
   const pollIds: string[] = [];
 
@@ -41,18 +50,20 @@ test.describe("past options", () => {
     page,
   }) => {
     const id = newPollId();
-    await createPoll(id, [fromNow({ days: -1 }), fromNow({ days: 1 })]);
+    const open = fromNow({ days: 1 });
+    await createPoll(id, [fromNow({ days: -1 }), open]);
 
     await page.goto(`/invite/${id}`);
-    await expect(voteSelectors(page)).toHaveCount(1);
+    await expectOnlySelectorFor(page, open);
   });
 
   test("the vote page only offers the options still open", async ({ page }) => {
     const id = newPollId();
-    await createPoll(id, [fromNow({ days: -1 }), fromNow({ days: 1 })]);
+    const open = fromNow({ days: 1 });
+    await createPoll(id, [fromNow({ days: -1 }), open]);
 
     await page.goto(`/invite/${id}/vote`);
-    await expect(voteSelectors(page)).toHaveCount(1);
+    await expectOnlySelectorFor(page, open);
   });
 
   for (const path of ["", "/vote"]) {
@@ -65,6 +76,25 @@ test.describe("past options", () => {
       await page.goto(`/invite/${id}${path}`);
       await expect(page.getByText("All the options are over")).toBeVisible();
       await expect(voteSelectors(page)).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Continue" })).toHaveCount(
+        0,
+      );
+    });
+  }
+
+  for (const path of ["", "/vote"]) {
+    test(`a new response stops when the last option ends at ${path || "/"}`, async ({
+      page,
+    }) => {
+      const id = newPollId();
+      await createPoll(id, [fromNow({ minutes: -30 })]);
+
+      await page.clock.install();
+      await page.goto(`/invite/${id}${path}`);
+      await expect(voteSelectors(page)).toHaveCount(1);
+
+      await page.clock.fastForward("31:00");
+      await expect(page.getByText("All the options are over")).toBeVisible();
       await expect(page.getByRole("button", { name: "Continue" })).toHaveCount(
         0,
       );

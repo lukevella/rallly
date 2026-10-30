@@ -112,10 +112,10 @@ function OptionDayContent({
 function DayCell({ day, modifiers, className, ...props }: MonthGridDayProps) {
   const ctx = React.useContext(DayContextValue);
   const result = ctx?.byDate.get(toISODate(day.date));
+  const isPast =
+    result !== undefined && ctx?.pastOptionIds.has(result.optionId);
   const interactive =
-    result !== undefined &&
-    (ctx?.canVote ?? false) &&
-    !ctx?.pastOptionIds.has(result.optionId);
+    result !== undefined && (ctx?.canVote ?? false) && !isPast;
 
   return (
     <button
@@ -130,6 +130,9 @@ function DayCell({ day, modifiers, className, ...props }: MonthGridDayProps) {
         className,
       )}
       {...props}
+      // Not `disabled`: DayPicker moves focus through the grid with the arrow
+      // keys, and a disabled button would drop out of it.
+      aria-disabled={isPast || undefined}
     >
       {result ? (
         <OptionDayContent result={result} dayNumber={props.children} />

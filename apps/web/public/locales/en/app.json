@@ -264,7 +264,7 @@
   "dangerZoneAccountDeletion": "Delete your account and all data associated with it",
   "dates": "Dates",
   "decline": "Decline",
-  "declineConfirmDescription": "{count, plural, one {This will discard your selected option and respond no to everything.} other {This will discard your # selected options and respond no to everything.}}",
+  "declineConfirmDescription": "{count, plural, one {This will discard your selected option and respond no to every open option.} other {This will discard your # selected options and respond no to every open option.}}",
   "declineConfirmTitle": "Decline?",
   "decreaseSeats": "Decrease seats",
   "defaultCalendar": "Default calendar",

@@ -119,7 +119,7 @@ export function VotePanel({
               poll={poll}
               results={results}
               response={response}
-              canVote={canVote}
+              canVote={canVote && (response !== null || !allOptionsPast)}
             />
           </div>
         </VoteOutcome>

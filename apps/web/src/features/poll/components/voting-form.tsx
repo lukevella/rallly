@@ -6,6 +6,7 @@ import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import {
+  useAllOptionsPast,
   useParticipants,
   usePermissions,
   usePoll,
@@ -112,6 +113,19 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
     },
     resolver: zodResolver(formSchema),
   });
+
+  // The last option can end while a new response is being composed. Nothing
+  // is left to answer then, and the server would refuse the response.
+  const allOptionsPast = useAllOptionsPast();
+  React.useEffect(() => {
+    if (allOptionsPast && form.getValues("mode") === "new") {
+      form.reset({
+        mode: "view",
+        participantId: undefined,
+        votes: form.getValues("votes"),
+      });
+    }
+  }, [allOptionsPast, form]);
 
   return (
     <FormProvider {...form}>

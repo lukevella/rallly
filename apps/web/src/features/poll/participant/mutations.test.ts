@@ -142,6 +142,7 @@ describe("addParticipant", () => {
         expect.objectContaining({ optionId: "past", type: "no" }),
       ]),
     );
+    expect(db.createdVotes).toHaveLength(2);
   });
 
   it("accepts a decline when a single option is left", async () => {
