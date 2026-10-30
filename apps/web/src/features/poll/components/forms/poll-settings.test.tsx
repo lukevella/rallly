@@ -75,8 +75,10 @@ describe("PollSettingsForm require email setting on a free space", () => {
   it("labels the advanced section as Pro instead of each setting", () => {
     render(<TestForm />);
     const advanced = screen.getByRole("group", { name: /advanced/i });
-    expect(advanced).toHaveTextContent(/pro/i);
-    expect(screen.getAllByText(/^pro$/i)).toHaveLength(1);
+    expect(
+      within(advanced).getByText("Unlock with Rallly Pro"),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Unlock with Rallly Pro")).toHaveLength(1);
     expect(
       within(advanced).getByRole("switch", { name: /hide participant names/i }),
     ).toBeInTheDocument();
