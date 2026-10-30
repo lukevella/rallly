@@ -22,12 +22,15 @@ const createPoll = (id: string, startTimes: Date[]) =>
 
 const voteSelectors = (page: Page) => page.getByTestId("vote-selector");
 
-// The selector's accessible name carries the option's date, so this proves
-// the one left is the open option and not the past one.
+// The selector's accessible name carries the option's date in the browser's
+// zone, which the test process shares. The weekday tells the open option from
+// the past one here, and unlike a day number it cannot match a time.
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const expectOnlySelectorFor = async (page: Page, date: Date) => {
   await expect(voteSelectors(page)).toHaveCount(1);
   await expect(voteSelectors(page)).toHaveAccessibleName(
-    new RegExp(`\\b${date.getUTCDate()}\\b`),
+    new RegExp(WEEKDAYS[date.getDay()]),
   );
 };
 
