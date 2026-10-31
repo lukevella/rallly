@@ -218,6 +218,27 @@ export default async function Page(props: {
                   <Trans
                     t={t}
                     ns="home"
+                    i18nKey="doodleComparisonVideoCalls"
+                    defaults="Zoom, Microsoft Teams and Webex links"
+                  />
+                </CompareTableFeature>
+                <CompareTableCell>
+                  <CompareTableCheck label={included} />
+                </CompareTableCell>
+                <CompareTableCell>
+                  <Trans
+                    t={t}
+                    ns="home"
+                    i18nKey="doodleComparisonPaidPlansOnly"
+                    defaults="Paid plans only"
+                  />
+                </CompareTableCell>
+              </tr>
+              <tr>
+                <CompareTableFeature>
+                  <Trans
+                    t={t}
+                    ns="home"
                     i18nKey="doodleComparisonTimeZones"
                     defaults="Automatic time zone conversion"
                   />
