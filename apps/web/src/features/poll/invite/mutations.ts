@@ -16,7 +16,7 @@ const logger = createLogger("poll/invite/mutations");
 class InviteClaimedElsewhere extends Error {}
 
 export type SendPollInviteResult =
-  | { ok: true; invite: { id: string; email: string } }
+  | { ok: true; invite: { id: string; email: string; inviteUrl: string } }
   | {
       ok: false;
       reason:
@@ -127,11 +127,12 @@ export async function sendPollInvite({
       let row: { id: string; email: string };
       if (existing) {
         // A revoked row is reactivated with a fresh token so a leaked old
-        // link never regains access. The claim only succeeds while the row
-        // is still revoked, so two concurrent sends cannot both take it.
+        // link never regains access, and as unopened since the new link
+        // hasn't been followed. The claim only succeeds while the row is
+        // still revoked, so two concurrent sends cannot both take it.
         const { count } = await tx.pollInvite.updateMany({
           where: { id: existing.id, revokedAt: { not: null } },
-          data: { revokedAt: null, token },
+          data: { revokedAt: null, openedAt: null, token },
         });
         if (count === 0) {
           throw new InviteClaimedElsewhere();
@@ -169,6 +170,8 @@ export async function sendPollInvite({
     throw error;
   }
 
+  const inviteUrl = shortUrl(getPollInvitePath({ pollId, token }));
+
   try {
     await sendPollInviteEmail({
       to: email,
@@ -182,7 +185,7 @@ export async function sendPollInvite({
       props: {
         hostName: sender.name,
         pollTitle: poll.title,
-        inviteUrl: shortUrl(getPollInvitePath({ pollId, token })),
+        inviteUrl,
       },
     });
   } catch (error) {
@@ -223,7 +226,7 @@ export async function sendPollInvite({
     return { ok: false, reason: "sendFailed" };
   }
 
-  return { ok: true, invite };
+  return { ok: true, invite: { ...invite, inviteUrl } };
 }
 
 /**
@@ -290,8 +293,10 @@ export async function recordPollInviteOpen({
       return false;
     }
 
+    // Matching the token and live state too, so an open of a link revoked
+    // and reissued since the read above can't mark the new one opened
     const { count } = await tx.pollInvite.updateMany({
-      where: { id: invite.id, openedAt: null },
+      where: { id: invite.id, token, revokedAt: null, openedAt: null },
       data: { openedAt: new Date() },
     });
 

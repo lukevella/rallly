@@ -74,7 +74,6 @@ import {
   router,
   spaceProcedure,
 } from "../trpc";
-import { invites } from "./polls/invites";
 import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
 
@@ -179,7 +178,6 @@ function getPollTier({
 }
 
 export const polls = router({
-  invites,
   make: possiblyPublicProcedure
     .input(
       z.object({

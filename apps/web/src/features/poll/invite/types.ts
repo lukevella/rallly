@@ -5,4 +5,6 @@ export type PollInviteListItem = {
   email: string;
   status: PollInviteStatus;
   inviteUrl: string;
+  /** The response the invite became, once the invitee has responded */
+  participantId: string | null;
 };

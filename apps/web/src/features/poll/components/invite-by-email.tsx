@@ -18,13 +18,12 @@ import { AnimatedHeight } from "@/components/animated-height";
 import {
   EmptyState,
   EmptyStateDescription,
-  EmptyStateFooter,
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Spinner } from "@/components/spinner";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
+import { usePollInvites, usePollInviteUpdates } from "@/features/poll/client";
 import type { InviteeRowStatus } from "@/features/poll/components/invitee-list";
 import {
   InviteeListPreview,
@@ -33,9 +32,7 @@ import {
 import { sendPollInviteAction } from "@/features/poll/invite/actions";
 import { sendPollInviteSchema } from "@/features/poll/invite/schema";
 import type { PollStatus } from "@/features/poll/schema";
-import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { trpc } from "@/trpc/client";
 
 type Row = {
   id: string;
@@ -49,9 +46,9 @@ const inviteFormSchema = sendPollInviteSchema.pick({ email: true });
 type InviteFormValues = { email: string };
 
 /**
- * The list is fetched when the dialog mounts rather than with the page: most
- * page views never open it. The send action's success refetches it, which is
- * what replaces an optimistic "Sending" row with the real one.
+ * The list comes with the page. A successful send adds the row the action
+ * returns, which is what replaces an optimistic "Sending" row with the
+ * real one, without reloading the page.
  */
 export function InviteByEmail({
   pollId,
@@ -60,16 +57,10 @@ export function InviteByEmail({
   pollId: string;
   pollStatus: PollStatus;
 }) {
-  const { user } = useUser();
   const isFree = useIsFree();
   const { t } = useTranslation();
-
-  const isGuest = !user || user.isGuest;
-  const invitesQuery = trpc.polls.invites.list.useQuery(
-    { pollId: pollId },
-    { enabled: !isGuest },
-  );
-  const invites = invitesQuery.data ?? [];
+  const invites = usePollInvites();
+  const { addInvite } = usePollInviteUpdates();
   const isOpen = pollStatus === "open";
 
   const form = useForm<InviteFormValues>({
@@ -123,7 +114,7 @@ export function InviteByEmail({
 
   const sendInvite = useMutation(
     mutationOptions(sendPollInviteAction, {
-      onSuccess: async (data, input) => {
+      onSuccess: (data, input) => {
         if (data.ok) {
           announce(
             t("shareDialogInviteSent", {
@@ -131,9 +122,7 @@ export function InviteByEmail({
               email: input.email,
             }),
           );
-          // The optimistic row lives until the refreshed server list carries
-          // it. Joins the refetch every successful write already starts.
-          await invitesQuery.refetch({ cancelRefetch: false });
+          addInvite(data.invite);
           setSending((prev) =>
             prev.filter((address) => address !== input.email),
           );
@@ -260,41 +249,7 @@ export function InviteByEmail({
       ) : null}
 
       <AnimatedHeight className="mt-3">
-        {invitesQuery.isLoading ? (
-          <div className="relative mt-2">
-            <InviteeListPreview />
-            <output
-              aria-label={t("loading", { defaultValue: "Loading..." })}
-              className="absolute inset-0 grid place-items-center backdrop-blur-[2px]"
-            >
-              <Spinner />
-            </output>
-          </div>
-        ) : invitesQuery.isError ? (
-          <div className="relative mt-2">
-            <InviteeListPreview />
-            <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
-              <EmptyStateIcon>
-                <MailIcon />
-              </EmptyStateIcon>
-              <EmptyStateTitle>
-                <Trans
-                  i18nKey="shareDialogInvitesLoadFailed"
-                  defaults="Couldn't load invites"
-                />
-              </EmptyStateTitle>
-              <EmptyStateFooter className="mt-3">
-                <Button
-                  size="sm"
-                  onClick={() => invitesQuery.refetch()}
-                  disabled={invitesQuery.isFetching}
-                >
-                  <Trans i18nKey="tryAgain" defaults="Try again" />
-                </Button>
-              </EmptyStateFooter>
-            </EmptyState>
-          </div>
-        ) : rows.length === 0 ? (
+        {rows.length === 0 ? (
           <div className="relative mt-2">
             <InviteeListPreview />
             <EmptyState className="absolute inset-0 py-0 backdrop-blur-[2px]">
