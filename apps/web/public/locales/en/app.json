@@ -1220,5 +1220,10 @@
   "you": "You",
   "youAreSignedInAs": "You're signed in as",
   "yourApiKey": "Your API key",
-  "yourName": "Your name…"
+  "yourName": "Your name…",
+  "pollDeadline": "Voting deadline",
+  "pollDeadlineDescription": "Once this date has passed, participants can no longer add or change their votes.",
+  "pollDeadlineRemove": "Remove deadline",
+  "pollDeadlinePassed": "Voting closed on {date}",
+  "pollDeadlineUpcoming": "Voting closes on {date}"
 }

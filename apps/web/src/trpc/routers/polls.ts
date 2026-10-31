@@ -39,6 +39,7 @@ import {
   checkOpenPollCapacity,
   OpenPollLimitError,
 } from "@/features/poll/limit/mutations";
+import { revalidatePollPages } from "@/features/poll/mutations";
 import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
 import {
   getChosenOptionRank,
@@ -1669,6 +1670,38 @@ export const polls = router({
       });
 
       return { ok: true as const };
+    }),
+  setDeadline: possiblyPublicProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        // null removes the deadline.
+        deadline: z.date().nullable(),
+      }),
+    )
+    .use(requireUserMiddleware)
+    .mutation(async ({ input, ctx }) => {
+      if (!(await hasPollAdminAccess(input.pollId, ctx.user.id))) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not allowed to change this poll's deadline",
+        });
+      }
+
+      // A scheduled poll is final, as in modify.
+      const { count } = await prisma.poll.updateMany({
+        where: { id: input.pollId, status: { not: "scheduled" } },
+        data: { deadline: input.deadline },
+      });
+
+      if (count === 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A scheduled poll cannot be edited",
+        });
+      }
+
+      revalidatePollPages();
     }),
   close: possiblyPublicProcedure
     .input(

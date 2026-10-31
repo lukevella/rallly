@@ -33,6 +33,7 @@ export type VotePageView = {
     conferencing: PollConferencing | null;
     status: PollStatus;
     closedReason: PollClosedReason | null;
+    deadline: Date | null;
     allowTentativeVotes: boolean;
     timeZone: string | null;
     userId: string | null;
@@ -59,7 +60,7 @@ export type VotePageView = {
   /** Denominator for the per-option tallies; null when scores are hidden. */
   participantCount: number | null;
   response: VoteResponse | null;
-  /** False once the poll is closed or scheduled. */
+  /** False once the poll is closed or scheduled, or its deadline has passed. */
   canVote: boolean;
 };
 
