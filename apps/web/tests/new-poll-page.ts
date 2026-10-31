@@ -13,11 +13,17 @@ export class NewPollPage {
     name,
     enableComments,
     allDay,
+    requireEmail = false,
   }: {
     name: string;
     enableComments?: boolean;
     /** Creates a date poll rather than the default time poll. */
     allDay?: boolean;
+    /**
+     * Keeps the default of requiring a participant email. Off unless asked
+     * for, so specs can respond with just a name.
+     */
+    requireEmail?: boolean;
   }): Promise<PollPage> {
     const page = this.page;
 
@@ -59,6 +65,15 @@ export class NewPollPage {
 
     if (allDay) {
       await page.getByTestId("all-day-option").click();
+    }
+
+    const requireEmailSwitch = page.getByRole("switch", {
+      name: /require email/i,
+    });
+    await expect(requireEmailSwitch).toBeChecked();
+    if (!requireEmail) {
+      await requireEmailSwitch.click();
+      await expect(requireEmailSwitch).not.toBeChecked();
     }
 
     if (enableComments) {

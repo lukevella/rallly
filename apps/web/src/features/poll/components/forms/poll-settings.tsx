@@ -8,6 +8,8 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from "@rallly/ui/field";
 import { FormField } from "@rallly/ui/form";
 import {
@@ -81,7 +83,7 @@ export const PollSettingsForm = ({
           <Trans i18nKey="settings" />
         </CardTitle>
       </div>
-      <CardContent>
+      <CardContent className="flex flex-col gap-6">
         <FieldGroup variant="divided">
           <FormField
             control={form.control}
@@ -97,7 +99,6 @@ export const PollSettingsForm = ({
                       i18nKey="requireParticipantEmailTitle"
                       defaults="Require email"
                     />
-                    {isFree ? <ProBadge /> : null}
                   </FieldLabel>
                   <FieldDescription>
                     <Trans
@@ -109,93 +110,7 @@ export const PollSettingsForm = ({
                 <Switch
                   id="require-participant-email"
                   checked={!!field.value}
-                  onCheckedChange={(checked) => {
-                    if (checked && isFree) {
-                      showPayWall({
-                        from: "poll-settings",
-                        setting: "requireParticipantEmail",
-                      });
-                    } else {
-                      field.onChange(checked);
-                    }
-                  }}
-                />
-              </Field>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="hideParticipants"
-            render={({ field }) => (
-              <Field orientation="horizontal">
-                <SettingIcon>
-                  <VenetianMaskIcon />
-                </SettingIcon>
-                <FieldContent>
-                  <FieldLabel htmlFor="hide-participants">
-                    <Trans
-                      i18nKey="hideParticipantsTitle"
-                      defaults="Hide participant names"
-                    />
-                    {isFree ? <ProBadge /> : null}
-                  </FieldLabel>
-                  <FieldDescription>
-                    <Trans
-                      i18nKey="hideParticipantsDescription"
-                      defaults="Participants will not be able to see the names of other respondents."
-                    />
-                  </FieldDescription>
-                </FieldContent>
-                <Switch
-                  id="hide-participants"
-                  checked={!!field.value}
-                  onCheckedChange={(checked) => {
-                    if (checked && isFree) {
-                      showPayWall({
-                        from: "poll-settings",
-                        setting: "hideParticipants",
-                      });
-                    } else {
-                      field.onChange(checked);
-                    }
-                  }}
-                />
-              </Field>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="hideScores"
-            render={({ field }) => (
-              <Field orientation="horizontal">
-                <SettingIcon>
-                  <BarChart2Icon />
-                </SettingIcon>
-                <FieldContent>
-                  <FieldLabel htmlFor="hide-scores">
-                    <Trans i18nKey="hideScoresTitle" defaults="Hide votes" />
-                    {isFree ? <ProBadge /> : null}
-                  </FieldLabel>
-                  <FieldDescription>
-                    <Trans
-                      i18nKey="hideScoresDescription"
-                      defaults="Hide everyone's votes from a participant until they cast their own."
-                    />
-                  </FieldDescription>
-                </FieldContent>
-                <Switch
-                  id="hide-scores"
-                  checked={!!field.value}
-                  onCheckedChange={(checked) => {
-                    if (checked && isFree) {
-                      showPayWall({
-                        from: "poll-settings",
-                        setting: "hideScores",
-                      });
-                    } else {
-                      field.onChange(checked);
-                    }
-                  }}
+                  onCheckedChange={field.onChange}
                 />
               </Field>
             )}
@@ -324,6 +239,101 @@ export const PollSettingsForm = ({
             }}
           />
         </FieldGroup>
+        {/* Plan gated settings share one Pro label on the section instead of
+          a badge per row. Each switch still opens the pay wall on a free
+          space, so the controls stay enabled. The divider sits on a wrapper
+          because a legend cuts into its own fieldset's border. */}
+        <div className="border-t pt-4">
+          <FieldSet className="gap-0">
+            <FieldLegend
+              variant="label"
+              className="mb-4 flex items-center gap-2"
+            >
+              <Trans i18nKey="pollSettingsAdvanced" defaults="Advanced" />
+              {isFree ? <ProBadge /> : null}
+            </FieldLegend>
+            <FieldGroup variant="divided">
+              <FormField
+                control={form.control}
+                name="hideParticipants"
+                render={({ field }) => (
+                  <Field orientation="horizontal">
+                    <SettingIcon>
+                      <VenetianMaskIcon />
+                    </SettingIcon>
+                    <FieldContent>
+                      <FieldLabel htmlFor="hide-participants">
+                        <Trans
+                          i18nKey="hideParticipantsTitle"
+                          defaults="Hide participant names"
+                        />
+                      </FieldLabel>
+                      <FieldDescription>
+                        <Trans
+                          i18nKey="hideParticipantsDescription"
+                          defaults="Participants will not be able to see the names of other respondents."
+                        />
+                      </FieldDescription>
+                    </FieldContent>
+                    <Switch
+                      id="hide-participants"
+                      checked={!!field.value}
+                      onCheckedChange={(checked) => {
+                        if (checked && isFree) {
+                          showPayWall({
+                            from: "poll-settings",
+                            setting: "hideParticipants",
+                          });
+                        } else {
+                          field.onChange(checked);
+                        }
+                      }}
+                    />
+                  </Field>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="hideScores"
+                render={({ field }) => (
+                  <Field orientation="horizontal">
+                    <SettingIcon>
+                      <BarChart2Icon />
+                    </SettingIcon>
+                    <FieldContent>
+                      <FieldLabel htmlFor="hide-scores">
+                        <Trans
+                          i18nKey="hideScoresTitle"
+                          defaults="Hide votes"
+                        />
+                      </FieldLabel>
+                      <FieldDescription>
+                        <Trans
+                          i18nKey="hideScoresDescription"
+                          defaults="Hide everyone's votes from a participant until they cast their own."
+                        />
+                      </FieldDescription>
+                    </FieldContent>
+                    <Switch
+                      id="hide-scores"
+                      checked={!!field.value}
+                      onCheckedChange={(checked) => {
+                        if (checked && isFree) {
+                          showPayWall({
+                            from: "poll-settings",
+                            setting: "hideScores",
+                          });
+                        } else {
+                          field.onChange(checked);
+                        }
+                      }}
+                    />
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+        </div>
       </CardContent>
       {children}
     </Card>
