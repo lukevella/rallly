@@ -6,10 +6,12 @@ import * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { usePastOptionIds } from "@/features/poll/client";
 import {
   Participant,
   ParticipantName,
 } from "@/features/poll/components/participant";
+import { PastOptionVote } from "@/features/poll/components/past-option-vote";
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
@@ -37,6 +39,7 @@ const ParticipantRowForm = ({
   const { optionIds, poll } = usePoll();
   const { options } = useOptions();
   const form = useVotingForm();
+  const pastOptionIds = usePastOptionIds();
 
   React.useEffect(() => {
     function cancel(e: KeyboardEvent) {
@@ -127,17 +130,21 @@ const ParticipantRowForm = ({
               name={`votes.${i}`}
               render={({ field }) => (
                 <div className={cn("flex justify-center gap-2")}>
-                  <VoteSelector
-                    className="after:absolute after:inset-0"
-                    optionLabel={
-                      option ? getOptionDateTimeLabel(option) : undefined
-                    }
-                    value={field.value?.type}
-                    allowTentativeVotes={poll.allowTentativeVotes}
-                    onChange={(vote) => {
-                      field.onChange({ optionId, type: vote });
-                    }}
-                  />
+                  {pastOptionIds.has(optionId) ? (
+                    <PastOptionVote type={field.value?.type} />
+                  ) : (
+                    <VoteSelector
+                      className="after:absolute after:inset-0"
+                      optionLabel={
+                        option ? getOptionDateTimeLabel(option) : undefined
+                      }
+                      value={field.value?.type}
+                      allowTentativeVotes={poll.allowTentativeVotes}
+                      onChange={(vote) => {
+                        field.onChange({ optionId, type: vote });
+                      }}
+                    />
+                  )}
                 </div>
               )}
             />

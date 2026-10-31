@@ -6,6 +6,7 @@ import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import * as z from "zod";
 import {
+  useAllOptionsPast,
   useParticipants,
   usePermissions,
   usePoll,
@@ -113,6 +114,19 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
     resolver: zodResolver(formSchema),
   });
 
+  // The last option can end while a new response is being composed. Nothing
+  // is left to answer then, and the server would refuse the response.
+  const allOptionsPast = useAllOptionsPast();
+  React.useEffect(() => {
+    if (allOptionsPast && form.getValues("mode") === "new") {
+      form.reset({
+        mode: "view",
+        participantId: undefined,
+        votes: form.getValues("votes"),
+      });
+    }
+  }, [allOptionsPast, form]);
+
   return (
     <FormProvider {...form}>
       <form
@@ -132,9 +146,14 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                   ? t("pollClosedDescription", {
                       defaultValue: "No more responses are being accepted.",
                     })
-                  : t("actionErrorInternalServerError", {
-                      defaultValue: "An internal server error occurred",
-                    }),
+                  : result.reason === "pastOption"
+                    ? t("pastOptionVoteRefused", {
+                        defaultValue:
+                          "One of the options is already over. Refresh the page to see which ones you can still answer.",
+                      })
+                    : t("actionErrorInternalServerError", {
+                        defaultValue: "An internal server error occurred",
+                      }),
               );
               return;
             }

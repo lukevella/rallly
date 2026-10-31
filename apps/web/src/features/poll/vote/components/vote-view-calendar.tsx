@@ -30,6 +30,7 @@ const modifiersClassNames: Record<string, string> = {
   // A day the poll does not offer is recessed, so the month reads as a
   // calendar and the votable days stand out as the surface.
   notOption: "bg-muted/40",
+  past: "opacity-50",
   voteYes: "bg-green-100 dark:bg-green-500/20",
   voteIfNeedBe: "bg-amber-100 dark:bg-amber-500/20",
 };
@@ -63,6 +64,7 @@ type DayContext = {
   hasSavedResponse: boolean;
   allowTentativeVotes: boolean;
   canVote: boolean;
+  pastOptionIds: Set<string>;
 };
 
 const DayContextValue = React.createContext<DayContext | null>(null);
@@ -110,7 +112,10 @@ function OptionDayContent({
 function DayCell({ day, modifiers, className, ...props }: MonthGridDayProps) {
   const ctx = React.useContext(DayContextValue);
   const result = ctx?.byDate.get(toISODate(day.date));
-  const interactive = result !== undefined && (ctx?.canVote ?? false);
+  const isPast =
+    result !== undefined && ctx?.pastOptionIds.has(result.optionId);
+  const interactive =
+    result !== undefined && (ctx?.canVote ?? false) && !isPast;
 
   return (
     <button
@@ -125,6 +130,9 @@ function DayCell({ day, modifiers, className, ...props }: MonthGridDayProps) {
         className,
       )}
       {...props}
+      // Not `disabled`: DayPicker moves focus through the grid with the arrow
+      // keys, and a disabled button would drop out of it.
+      aria-disabled={isPast || undefined}
     >
       {result ? (
         <OptionDayContent result={result} dayNumber={props.children} />
@@ -147,6 +155,7 @@ export function VoteViewCalendar({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const hydrated = useHydrated();
   const { locale } = useDateTimeConfig();
@@ -200,14 +209,19 @@ export function VoteViewCalendar({
       const result = byDate.get(toISODate(date));
       // Read the mode at click time: DayPicker holds on to this handler, so
       // a captured value would go stale the moment the response is saved.
-      if (!result || !canVote || form.getValues("mode") === "view") {
+      if (
+        !result ||
+        !canVote ||
+        pastOptionIds.has(result.optionId) ||
+        form.getValues("mode") === "view"
+      ) {
         return;
       }
       setVote(result.optionId, (current) =>
         nextVoteType(current, poll.allowTentativeVotes),
       );
     },
-    [byDate, canVote, form, setVote, poll.allowTentativeVotes],
+    [byDate, canVote, form, pastOptionIds, setVote, poll.allowTentativeVotes],
   );
 
   const ctx = React.useMemo(
@@ -218,6 +232,7 @@ export function VoteViewCalendar({
       hasSavedResponse: response !== null,
       allowTentativeVotes: poll.allowTentativeVotes,
       canVote,
+      pastOptionIds,
     }),
     [
       byDate,
@@ -226,6 +241,7 @@ export function VoteViewCalendar({
       response,
       poll.allowTentativeVotes,
       canVote,
+      pastOptionIds,
     ],
   );
 
@@ -255,6 +271,10 @@ export function VoteViewCalendar({
           onDayClick={handleDayClick}
           modifiers={{
             notOption: (date: Date) => !byDate.has(toISODate(date)),
+            past: (date: Date) => {
+              const result = byDate.get(toISODate(date));
+              return result !== undefined && pastOptionIds.has(result.optionId);
+            },
             ...modifiers,
           }}
           modifiersClassNames={modifiersClassNames}

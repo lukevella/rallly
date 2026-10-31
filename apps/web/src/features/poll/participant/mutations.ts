@@ -9,11 +9,19 @@ import {
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
-import { generateAccessToken } from "@/features/poll/utils";
+import {
+  generateAccessToken,
+  isOptionPastEverywhere,
+} from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
-type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
+type WriteRefusal =
+  | "notFound"
+  | "closed"
+  | "full"
+  | "tentativeVotesNotAllowed"
+  | "pastOption";
 
 class WriteRefusedError extends Error {
   constructor(public readonly reason: WriteRefusal) {
@@ -79,6 +87,75 @@ async function assertParticipantInPoll(
   if (!participant) {
     throw new WriteRefusedError("notFound");
   }
+}
+
+/**
+ * The vote on an option that is over is frozen. A response may repeat it, since the form sends every option, but not change it, and a
+ * poll whose options are all over takes no new response. Runs under the
+ * poll lock, so the options and the stored votes are current.
+ *
+ * Returns the votes to store: the submitted ones, with the stored vote kept
+ * as it was on every past option.
+ */
+async function freezePastVotes(
+  tx: Prisma.TransactionClient,
+  pollId: string,
+  votes: { optionId: string; type: VoteType }[],
+  participantId: string | null,
+) {
+  const poll = await tx.poll.findUnique({
+    where: { id: pollId },
+    select: {
+      timeZone: true,
+      options: { select: { id: true, startTime: true, duration: true } },
+    },
+  });
+  if (!poll) {
+    throw new WriteRefusedError("notFound");
+  }
+
+  const now = new Date();
+  const pastIds = new Set(
+    poll.options
+      .filter((option) =>
+        isOptionPastEverywhere(option, { pollTimeZone: poll.timeZone, now }),
+      )
+      .map((option) => option.id),
+  );
+  if (pastIds.size === 0) {
+    return votes;
+  }
+  if (!participantId && pastIds.size === poll.options.length) {
+    throw new WriteRefusedError("pastOption");
+  }
+
+  const stored = participantId
+    ? await tx.vote.findMany({
+        where: { participantId, optionId: { in: [...pastIds] } },
+        select: { optionId: true, type: true },
+      })
+    : [];
+  const storedType = new Map(stored.map((vote) => [vote.optionId, vote.type]));
+  const submittedType = new Map(
+    votes.map((vote) => [vote.optionId, vote.type]),
+  );
+
+  // No vote and a "no" read the same: an untouched form submits "no".
+  for (const optionId of pastIds) {
+    if (
+      (submittedType.get(optionId) ?? "no") !==
+      (storedType.get(optionId) ?? "no")
+    ) {
+      throw new WriteRefusedError("pastOption");
+    }
+  }
+
+  return [
+    ...votes.filter((vote) => !pastIds.has(vote.optionId)),
+    ...(participantId
+      ? stored
+      : votes.filter((vote) => pastIds.has(vote.optionId))),
+  ];
 }
 
 async function listValidOptionIds(
@@ -170,6 +247,7 @@ export async function addParticipant({
       );
 
       await lockOpenPoll(tx, pollId, validVotes);
+      const keptVotes = await freezePastVotes(tx, pollId, validVotes, null);
 
       // Counted under the lock so two responses cannot both pass at the cap.
       const participantCount = await tx.participant.count({
@@ -199,7 +277,7 @@ export async function addParticipant({
           locale,
           votes: {
             createMany: {
-              data: validVotes.map(({ optionId, type }) => ({
+              data: keptVotes.map(({ optionId, type }) => ({
                 pollId,
                 optionId,
                 type,
@@ -292,11 +370,13 @@ export async function updateParticipantVotes({
     await prisma.$transaction(async (tx) => {
       await lockOpenPoll(tx, pollId, votes);
       await assertParticipantInPoll(tx, participantId, pollId);
+      // Read before the delete below: it compares against the stored votes.
+      const keptVotes = await freezePastVotes(tx, pollId, votes, participantId);
 
       await tx.vote.deleteMany({ where: { participantId } });
 
       const validOptionIds = await listValidOptionIds(tx, pollId);
-      const validVotes = votes.filter(({ optionId }) =>
+      const validVotes = keptVotes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
 

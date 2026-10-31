@@ -273,7 +273,7 @@ export function VotePanelFooter({
             <DialogDescription>
               <Trans
                 i18nKey="declineConfirmDescription"
-                defaults="{count, plural, one {This will discard your selected option and respond no to everything.} other {This will discard your # selected options and respond no to everything.}}"
+                defaults="{count, plural, one {This will discard your selected option and respond no to every open option.} other {This will discard your # selected options and respond no to every open option.}}"
                 values={{ count: selectedCount }}
               />
             </DialogDescription>

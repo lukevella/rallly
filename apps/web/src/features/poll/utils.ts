@@ -1,6 +1,8 @@
 import { customAlphabet } from "nanoid";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollComment, PollParticipant } from "@/features/poll/types";
+import { getCalendarDate, toISO, toISODate } from "@/lib/datetime/utils";
+import { instantToWallTime } from "@/lib/datetime/wall-time";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -320,4 +322,67 @@ export function summarizeNotifySelection({
   // The dialog starts with everyone who has an email selected.
   summary.notify_selection_changed = selected !== eligible;
   return summary;
+}
+
+/** The fields of an option that decide whether it is over. */
+export type TimedOption = { startTime: Date; duration: number };
+
+const HOUR = 3_600_000;
+
+/**
+ * The latest UTC offset in use (UTC−12): the last place on Earth where a
+ * floating wall time or an all-day date ends.
+ */
+const LATEST_OFFSET = 12 * HOUR;
+
+const endOf = (option: TimedOption) =>
+  option.startTime.getTime() + option.duration * 60_000;
+
+/**
+ * Whether an option has already been and gone for this viewer, so it can no
+ * longer be voted on.
+ *
+ * - A time slot in a zoned poll is a fixed instant: past once it has ended.
+ * - A floating time slot (poll without a zone) is a wall time: past once it
+ *   has ended on the viewer's own clock.
+ * - An all-day date is a floating calendar date stored as UTC midnight
+ *   (RFC 5545): past once the viewer's calendar date has moved on.
+ */
+export function isOptionPast(
+  option: TimedOption,
+  {
+    pollTimeZone,
+    viewerTimeZone,
+    now,
+  }: { pollTimeZone: string | null; viewerTimeZone: string; now: Date },
+) {
+  if (option.duration > 0) {
+    return pollTimeZone
+      ? endOf(option) < now.getTime()
+      : // A floating time is stored as its wall time in UTC fields.
+        toISO(endOf(option)).slice(0, 19) <
+          instantToWallTime(now, viewerTimeZone);
+  }
+  return toISODate(option.startTime) < getCalendarDate(now, viewerTimeZone);
+}
+
+/**
+ * Whether an option is over for every viewer, wherever they are. The server
+ * does not know the viewer's zone, so it waits until the option has ended
+ * in the latest zone: it never refuses a vote that `isOptionPast` still
+ * offers, only ones the viewer's page has already greyed out.
+ */
+export function isOptionPastEverywhere(
+  option: TimedOption,
+  { pollTimeZone, now }: { pollTimeZone: string | null; now: Date },
+) {
+  if (option.duration > 0) {
+    return pollTimeZone
+      ? endOf(option) < now.getTime()
+      : endOf(option) + LATEST_OFFSET < now.getTime();
+  }
+  // Date D is over everywhere once UTC−12 reaches D+1, at D+1 12:00 UTC.
+  return (
+    option.startTime.getTime() + 24 * HOUR + LATEST_OFFSET <= now.getTime()
+  );
 }

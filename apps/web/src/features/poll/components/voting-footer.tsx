@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 
+import { usePastOptionIds } from "@/features/poll/client";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { Trans, useTranslation } from "@/i18n/client";
 
@@ -41,16 +42,28 @@ export function useSelectionCount() {
 
 /**
  * Submits an all-no response, confirming first when it would discard
- * selections.
+ * selections. Votes on options that are over stay as they are: they are
+ * frozen, and the server would refuse the whole response otherwise.
  */
 export function DeclineButton({ className }: { className?: string }) {
-  const { votingForm, votes, selectedCount } = useSelection();
+  const { votingForm, votes } = useSelection();
+  const pastOptionIds = usePastOptionIds();
   const confirmDialog = useDialog();
+  const selectedCount = votes.filter(
+    (vote) =>
+      vote &&
+      !pastOptionIds.has(vote.optionId) &&
+      (vote.type === "yes" || vote.type === "ifNeedBe"),
+  ).length;
 
   const submitAllNo = () => {
     votingForm.setValue(
       "votes",
-      votes.map((vote) => (vote ? { ...vote, type: "no" as const } : vote)),
+      votes.map((vote) =>
+        vote && !pastOptionIds.has(vote.optionId)
+          ? { ...vote, type: "no" as const }
+          : vote,
+      ),
     );
     document.querySelector<HTMLFormElement>("#voting-form")?.requestSubmit();
   };
@@ -80,7 +93,7 @@ export function DeclineButton({ className }: { className?: string }) {
             <DialogDescription>
               <Trans
                 i18nKey="declineConfirmDescription"
-                defaults="{count, plural, one {This will discard your selected option and respond no to everything.} other {This will discard your # selected options and respond no to everything.}}"
+                defaults="{count, plural, one {This will discard your selected option and respond no to every open option.} other {This will discard your # selected options and respond no to every open option.}}"
                 values={{ count: selectedCount }}
               />
             </DialogDescription>

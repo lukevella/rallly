@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 import { DataList } from "@/components/data-list";
+import { PastOptionVote } from "@/features/poll/components/past-option-vote";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSegmentedControl } from "@/features/poll/components/vote-segmented-control";
 import type { VoteType } from "@/features/poll/constants";
@@ -58,17 +59,22 @@ function VoteCell({
   allowTentativeVotes,
   savedVote,
   canVote,
+  isPast,
 }: {
   optionId: string;
   optionLabel: string;
   allowTentativeVotes: boolean;
   savedVote?: VoteType;
   canVote: boolean;
+  isPast: boolean;
 }) {
   const { value, setVote, isEditing } = useVote(optionId);
 
   if (!canVote || !isEditing) {
     return savedVote !== undefined ? <VoteLabel type={savedVote} /> : null;
+  }
+  if (isPast) {
+    return <PastOptionVote type={value} />;
   }
   return (
     <VoteSegmentedControl
@@ -91,6 +97,7 @@ export function VoteViewList({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
 
@@ -169,6 +176,7 @@ export function VoteViewList({
               allowTentativeVotes={poll.allowTentativeVotes}
               savedVote={savedVotes.get(result.optionId)}
               canVote={canVote}
+              isPast={pastOptionIds.has(result.optionId)}
             />
           );
         },
@@ -180,6 +188,7 @@ export function VoteViewList({
       formatDateTime,
       formatDateTimeRange,
       isTimeSlot,
+      pastOptionIds,
       poll.allowTentativeVotes,
       poll.timeZone,
       readZone,
@@ -201,6 +210,9 @@ export function VoteViewList({
   // show through its transparent end; hover is cleared to keep it clean.
   const { byOption: currentVotes } = useVotesByOption(savedVotes);
   const getRowClassName = (result: VoteResult) => {
+    if (pastOptionIds.has(result.optionId)) {
+      return "text-muted-foreground";
+    }
     const vote = currentVotes.get(result.optionId);
     if (vote === "yes") {
       return "bg-linear-to-r from-green-50 to-transparent text-green-700 hover:bg-transparent dark:from-green-500/10 dark:text-green-400";

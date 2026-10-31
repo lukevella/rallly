@@ -6,8 +6,12 @@ import type {
   PollDetails,
   PollParticipant,
 } from "@/features/poll/types";
+import { isOptionPast } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { useTranslation } from "@/i18n/client";
+import { useDateTimeConfig } from "@/lib/datetime/client";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type PollContextValue = {
   poll: PollDetails;
@@ -83,13 +87,60 @@ export const useParticipants = () => {
   return { participants };
 };
 
+/**
+ * Which of `options` are over for this viewer and can no longer be voted on.
+ * Re-read every minute, so an option that ends while the page is open greys
+ * out. Empty until hydration: the server render cannot know the viewer's
+ * clock or zone.
+ */
+export const usePastOptions = (
+  options: { id: string; startTime: Date; duration: number }[],
+  pollTimeZone: string | null,
+) => {
+  const { timeZone } = useDateTimeConfig();
+  const hydrated = useHydrated();
+  const [now, setNow] = React.useState(() => new Date());
+
+  React.useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return React.useMemo(() => {
+    if (!hydrated) {
+      return new Set<string>();
+    }
+    const viewerTimeZone = timeZone ?? getBrowserTimeZone();
+    return new Set(
+      options
+        .filter((option) =>
+          isOptionPast(option, { pollTimeZone, viewerTimeZone, now }),
+        )
+        .map((option) => option.id),
+    );
+  }, [hydrated, now, options, pollTimeZone, timeZone]);
+};
+
+export const usePastOptionIds = () => {
+  const poll = usePoll();
+  return usePastOptions(poll.options, poll.timeZone);
+};
+
+/** Nothing left to answer: the server refuses a new response too. */
+export const useAllOptionsPast = () => {
+  const poll = usePoll();
+  const pastOptionIds = usePastOptionIds();
+  return poll.options.length > 0 && pastOptionIds.size === poll.options.length;
+};
+
 export const usePermissions = () => {
   const { poll, participants, linkedParticipantIds, viewerRole } =
     useRequiredContext(PollContext);
   const { user } = useUser();
+  const allOptionsPast = useAllOptionsPast();
 
   return {
-    canAddNewParticipant: poll.status === "open",
+    canAddNewParticipant: poll.status === "open" && !allOptionsPast,
     canEditParticipant: (participantId: string) => {
       if (poll.status !== "open") {
         return false;
