@@ -1,6 +1,6 @@
 "use client";
 
-import languages, { supportedLngs } from "@rallly/languages";
+import languages, { defaultLocale } from "@rallly/languages";
 import {
   Select,
   SelectContent,
@@ -8,29 +8,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@rallly/ui/select";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "@/i18n/client/use-translation";
 
 export const LanguageSelect = () => {
   const router = useRouter();
   const pathname = usePathname() ?? "";
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const params = useParams<{ locale?: string }>();
+  const locale = params.locale ?? defaultLocale;
   return (
     <Select
       items={languages}
-      value={i18n.language}
+      value={locale}
       onValueChange={(newLocale) => {
         if (!newLocale) {
           return;
         }
 
-        const isLocalizedPath = supportedLngs.some((lng) =>
-          pathname?.startsWith(`/${lng}`),
-        );
-
-        const newPath = isLocalizedPath
-          ? pathname.replace(new RegExp(`^/${i18n.language}`), "")
-          : pathname;
+        // The default locale is served without a prefix, so only strip the
+        // current locale when it is actually the first path segment.
+        const newPath =
+          pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
+            ? pathname.slice(locale.length + 1)
+            : pathname;
 
         router.replace(`/${newLocale}${newPath}`);
       }}
