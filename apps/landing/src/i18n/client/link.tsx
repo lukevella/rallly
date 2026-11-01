@@ -2,7 +2,7 @@
 
 import { defaultLocale } from "@rallly/languages";
 import Link from "next/link";
-import { useTranslation } from "@/i18n/client/use-translation";
+import { useParams } from "next/navigation";
 
 export const LinkBase = ({
   href,
@@ -17,9 +17,14 @@ export const LinkBase = ({
   prefetch?: boolean;
   "aria-current"?: React.AriaAttributes["aria-current"];
 }) => {
-  const { i18n } = useTranslation();
+  // The route segment, not i18next's resolved language: a locale without its
+  // own resources (en-GB) resolves to en, which would point every link at
+  // another locale's pages.
+  const params = useParams<{ locale?: string }>();
   const locale =
-    i18n.resolvedLanguage === defaultLocale ? "" : `/${i18n.resolvedLanguage}`;
+    !params.locale || params.locale === defaultLocale
+      ? ""
+      : `/${params.locale}`;
   const newHref = href.startsWith("/") ? `${locale}${href}` : href;
 
   return (
