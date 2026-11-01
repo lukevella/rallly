@@ -16,7 +16,12 @@ test.describe.serial(() => {
   test("create a new poll", async () => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const pollPage = await newPollPage.create({ name: "Monthly Meetup" });
+    // Leaves the require email switch at its default, so the stored value
+    // checks what an untouched form submits.
+    const pollPage = await newPollPage.create({
+      name: "Monthly Meetup",
+      requireEmail: true,
+    });
     await pollPage.closeShareDialog();
 
     await expect(
@@ -24,6 +29,12 @@ test.describe.serial(() => {
     ).toBeVisible();
     pollId = page.url().match(/\/poll\/([a-zA-Z0-9]+)/)?.[1] ?? "";
     expect(pollId).not.toBe("");
+    expect(
+      await prisma.poll.findUnique({
+        where: { id: pollId },
+        select: { requireParticipantEmail: true },
+      }),
+    ).toEqual({ requireParticipantEmail: true });
   });
 
   // delete the poll we just created

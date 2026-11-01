@@ -21,6 +21,7 @@ import {
 import { Input } from "@rallly/ui/input";
 import { Label } from "@rallly/ui/label";
 import { MaxCharLength } from "@rallly/ui/max-char-length";
+import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import { Textarea } from "@rallly/ui/textarea";
 import { PlusIcon } from "lucide-react";
@@ -184,6 +185,12 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         });
     }
   };
+  const emailDescription = (
+    <Trans
+      i18nKey="newParticipantFormEmailDescription"
+      defaults="We'll email you a link to change your response, and the organizer can let you know the final time."
+    />
+  );
   const noteLength = watch("note")?.length ?? 0;
   const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipant();
@@ -327,12 +334,35 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  {t("email")}
-                  {!isEmailRequired
-                    ? ` ${t("optional", { defaultValue: "(optional)" })}`
-                    : null}
-                </FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>
+                    {t("email")}
+                    {!isEmailRequired
+                      ? ` ${t("optional", { defaultValue: "(optional)" })}`
+                      : null}
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger
+                      openOnHover={true}
+                      render={
+                        <Button
+                          type="button"
+                          variant="link"
+                          size="sm"
+                          className="h-auto p-0 text-muted-foreground hover:text-foreground"
+                        />
+                      }
+                    >
+                      <Trans
+                        i18nKey="newParticipantFormEmailWhy"
+                        defaults="Why?"
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent side="top" align="end" className="w-64">
+                      {emailDescription}
+                    </PopoverContent>
+                  </Popover>
+                </div>
                 <FormControl>
                   <Input
                     className="w-full"
@@ -342,6 +372,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
                     {...field}
                   />
                 </FormControl>
+                <FormDescription className="sr-only">
+                  {emailDescription}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
