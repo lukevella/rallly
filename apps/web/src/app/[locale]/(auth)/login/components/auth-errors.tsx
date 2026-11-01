@@ -9,7 +9,7 @@ export function AuthErrors() {
   if (!error) {
     return null;
   }
-  switch (error) {
+  switch (error.toLowerCase()) {
     case "account_not_linked":
       return (
         <p className="text-destructive text-sm">
@@ -25,6 +25,15 @@ export function AuthErrors() {
           {t("authErrorsEmailNotVerified", {
             defaultValue:
               "Your email address is not verified. Please verify your email before logging in.",
+          })}
+        </p>
+      );
+    case "email_blocked":
+      return (
+        <p className="text-destructive text-sm">
+          {t("authErrorsEmailBlocked", {
+            defaultValue:
+              "This email address is not allowed. Please use a different email or contact support.",
           })}
         </p>
       );

@@ -63,6 +63,15 @@ const baseURL = absoluteUrl("/api/better-auth");
 
 const logger = createLogger("auth");
 
+// OAuth callbacks put the message (from a user hook) or the code (from a
+// session hook) in the login page's `error` param, and both read as
+// email_blocked once lowercased.
+const emailBlockedError = () =>
+  new APIError("FORBIDDEN", {
+    code: "EMAIL_BLOCKED",
+    message: "email blocked",
+  });
+
 if (env.OIDC_ISSUER_URL) {
   logger.info(
     "OIDC_ISSUER_URL is no longer used. You can remove it from your environment variables.",
@@ -604,6 +613,11 @@ export const authLib = betterAuth({
               message: "Signup is disabled",
             });
           }
+          // The request middleware only sees addresses submitted in a body;
+          // social and OIDC callbacks carry theirs in the provider profile.
+          if (isEmailBlocked(user.email)) {
+            throw emailBlockedError();
+          }
           // The redirect callback names the provider in the route; the
           // ID-token variant of /sign-in/social names it in the body.
           const provider = ctx?.params?.id ?? ctx?.body?.provider;
@@ -656,6 +670,21 @@ export const authLib = betterAuth({
     },
     session: {
       create: {
+        // An account created before its address fell outside ALLOWED_EMAILS
+        // can still reach a social or OIDC callback, which the request
+        // middleware never sees.
+        before: async (session) => {
+          if (!env.ALLOWED_EMAILS) {
+            return;
+          }
+          const user = await prisma.user.findUnique({
+            where: { id: session.userId },
+            select: { email: true, isAnonymous: true },
+          });
+          if (user && !user.isAnonymous && isEmailBlocked(user.email)) {
+            throw emailBlockedError();
+          }
+        },
         after: async (session) => {
           after(async () => {
             const user = await prisma.user
