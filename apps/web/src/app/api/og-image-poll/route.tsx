@@ -22,10 +22,16 @@ const boldFont = fs.readFileSync(
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const { title, author } = schema.parse({
+  const parsed = schema.safeParse({
     title: searchParams.get("title"),
     author: searchParams.get("author"),
   });
+
+  if (!parsed.success) {
+    return new Response("Invalid parameters", { status: 400 });
+  }
+
+  const { title, author } = parsed.data;
 
   return new ImageResponse(
     <div tw="flex relative flex-col bg-gray-100 w-full h-full px-[80px] py-[70px] items-start justify-center">
