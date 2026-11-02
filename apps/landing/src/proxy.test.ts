@@ -43,6 +43,7 @@ describe("proxy markdown negotiation", () => {
       headers: { accept: "text/html" },
       redirect: "manual",
     });
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
     expect(response.status).toBe(404);
     expect(response.headers.get("content-type")).toBe(MARKDOWN_CONTENT_TYPE);
     expect(response.headers.get("vary")).toBe("Accept");
