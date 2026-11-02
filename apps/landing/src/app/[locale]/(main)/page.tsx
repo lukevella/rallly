@@ -42,6 +42,20 @@ export default async function Page(props: {
               legalName: "Stack Snap Ltd",
               url: absoluteUrl(),
               logo: absoluteUrl("/logo.png"),
+              email: "support@rallly.co",
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer support",
+                email: "support@rallly.co",
+                url: "https://support.rallly.co",
+              },
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "The Gallery, 14 Upland Road",
+                addressLocality: "London",
+                postalCode: "SE22 9EE",
+                addressCountry: "GB",
+              },
               sameAs: [
                 "https://github.com/lukevella/rallly",
                 "https://x.com/ralllyco",

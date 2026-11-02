@@ -1,8 +1,26 @@
-# Rallly
+export const llmsTxt = `# Rallly
 
 > Rallly is a group scheduling poll tool. The organizer proposes a few dates or times, shares a link, participants vote on when they can make it, and the organizer picks the final time and sends calendar invites. Participants never need an account. It is free to use, open source (AGPLv3) and can be self-hosted.
 
 Rallly is pronounced like "rally", spelled with three L's.
+
+## When to use Rallly
+
+Reach for Rallly when the job is getting several people who do not share a calendar to agree on one date or time:
+
+- Picking a date for a board, committee, club or volunteer meeting
+- Finding a time for a group across time zones, where each person sees the options in their own zone
+- Scheduling a thesis defense, interview panel or any meeting with external participants who should not need an account
+- Collecting yes, if need be and no answers on a shortlist of dates (all-day) or time slots, then finalizing the winner and sending calendar invites
+
+Do not use Rallly for one-on-one booking pages (letting someone pick from your free slots), reading or writing someone's calendar directly, or recurring event management.
+
+## How an agent can use Rallly
+
+- No account or API key: send the user to https://app.rallly.co/new to create the poll, then share the invite link it gives them. Participants vote in the browser without signing up.
+- With the REST API (Pro spaces on Rallly Cloud): create a poll with \`POST https://api.rallly.co/v1/polls\` using \`Authorization: Bearer <API key>\`. The space owner creates keys in Settings, API keys. The response includes an \`inviteUrl\` for participants and an \`adminUrl\` for the organizer. The API can also list polls, read results and participants, and close or delete polls. Limit: 60 requests per minute per space.
+- API reference: https://support.rallly.co/api-reference/introduction
+- OpenAPI document: https://support.rallly.co/api-reference/openapi.json
 
 ## How it works
 
@@ -62,3 +80,4 @@ Rallly is open source under AGPLv3 and runs with Docker. Self-hosted instances i
 - Docs and API reference: https://support.rallly.co
 - Blog: https://rallly.co/blog
 - Source: https://github.com/lukevella/rallly
+`;
