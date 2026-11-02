@@ -26,11 +26,17 @@ async function negotiateMarkdown(req: NextRequest) {
     return response;
   }
 
-  const probe = await fetch(req.nextUrl, {
-    method: "HEAD",
-    headers: { accept: "text/html" },
-    redirect: "manual",
-  });
+  let probe: Response;
+  try {
+    probe = await fetch(req.nextUrl, {
+      method: "HEAD",
+      headers: { accept: "text/html" },
+      redirect: "manual",
+    });
+  } catch {
+    // Without an answer, serve the page as HTML rather than fail the request.
+    return null;
+  }
 
   if (probe.status === 404) {
     return new NextResponse(notFoundMarkdown(absoluteUrl()), {

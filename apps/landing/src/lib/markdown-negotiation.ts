@@ -2,24 +2,43 @@ import { languages } from "@/i18n/settings";
 
 export const MARKDOWN_CONTENT_TYPE = "text/markdown; charset=utf-8";
 
-function mediaTypeQuality(accept: string, mediaType: string) {
-  let quality = 0;
-  for (const range of accept.split(",")) {
+function parseAccept(accept: string) {
+  return accept.split(",").map((range) => {
     const [type = "", ...params] = range.split(";").map((part) => part.trim());
-    if (type.toLowerCase() !== mediaType) continue;
     const q = params.find((param) => param.startsWith("q="));
-    const value = q ? Number(q.slice(2)) : 1;
-    if (Number.isFinite(value)) quality = Math.max(quality, value);
+    const quality = q ? Number(q.slice(2)) : 1;
+    return {
+      type: type.toLowerCase(),
+      quality: Number.isFinite(quality) ? quality : 0,
+    };
+  });
+}
+
+// RFC 9110: a media type takes its quality from the most specific range that
+// matches it, so text/* and */* also rank text/html.
+function htmlQuality(ranges: ReturnType<typeof parseAccept>) {
+  for (const type of ["text/html", "text/*", "*/*"]) {
+    const matches = ranges.filter((range) => range.type === type);
+    if (matches.length > 0) {
+      return Math.max(...matches.map((range) => range.quality));
+    }
   }
-  return quality;
+  return 0;
 }
 
 // Browsers never list text/markdown, so an explicit ask for it at least as
-// strong as text/html comes from an agent.
+// strong as text/html comes from an agent. Wildcards alone never select
+// Markdown.
 export function prefersMarkdown(accept: string | null) {
   if (!accept) return false;
-  const markdown = mediaTypeQuality(accept, "text/markdown");
-  return markdown > 0 && markdown >= mediaTypeQuality(accept, "text/html");
+  const ranges = parseAccept(accept);
+  const markdown = Math.max(
+    0,
+    ...ranges
+      .filter((range) => range.type === "text/markdown")
+      .map((range) => range.quality),
+  );
+  return markdown > 0 && markdown >= htmlQuality(ranges);
 }
 
 export function isHomePath(pathname: string) {

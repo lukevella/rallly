@@ -31,6 +31,15 @@ describe("prefersMarkdown", () => {
     expect(prefersMarkdown("text/html, text/markdown;q=0.5")).toBe(false);
     expect(prefersMarkdown("text/markdown;q=0")).toBe(false);
   });
+
+  it("ranks text/html by the most specific matching wildcard", () => {
+    expect(prefersMarkdown("text/markdown;q=0.5, text/*")).toBe(false);
+    expect(prefersMarkdown("text/markdown;q=0.5, */*")).toBe(false);
+    expect(prefersMarkdown("text/markdown, */*;q=0.8")).toBe(true);
+    expect(prefersMarkdown("text/markdown;q=0.5, text/*;q=0.4, */*")).toBe(
+      true,
+    );
+  });
 });
 
 describe("isHomePath", () => {
