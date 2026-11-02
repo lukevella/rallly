@@ -9,7 +9,9 @@ function request(path: string, accept: string) {
   });
 }
 
-function stubProbe(probe: () => Promise<Response>) {
+function stubProbe(
+  probe: (...args: Parameters<typeof fetch>) => Promise<Response>,
+) {
   const fetch = vi.fn(probe);
   vi.stubGlobal("fetch", fetch);
   return fetch;
@@ -32,8 +34,15 @@ describe("proxy markdown negotiation", () => {
   });
 
   it("answers a missing page with a Markdown 404", async () => {
-    stubProbe(async () => new Response(null, { status: 404 }));
+    const fetch = stubProbe(async () => new Response(null, { status: 404 }));
     const response = await proxy(request("/nope", "text/markdown"));
+    const [url, init] = fetch.mock.calls[0] ?? [];
+    expect(String(url)).toBe("https://rallly.co/nope");
+    expect(init).toMatchObject({
+      method: "HEAD",
+      headers: { accept: "text/html" },
+      redirect: "manual",
+    });
     expect(response.status).toBe(404);
     expect(response.headers.get("content-type")).toBe(MARKDOWN_CONTENT_TYPE);
     expect(response.headers.get("vary")).toBe("Accept");
@@ -57,6 +66,16 @@ describe("proxy markdown negotiation", () => {
     expect(response.headers.get("x-middleware-rewrite")).toBe(
       "https://rallly.co/en/pricing",
     );
+  });
+
+  it("adds Accept to Vary on locale redirects", async () => {
+    const response = await proxy(
+      new NextRequest(new URL("/", "https://rallly.co"), {
+        headers: { accept: "text/html", "accept-language": "de" },
+      }),
+    );
+    expect(response.status).toBe(307);
+    expect(response.headers.get("vary")).toContain("Accept");
   });
 
   it("does not probe browser requests", async () => {

@@ -5,7 +5,7 @@ export const MARKDOWN_CONTENT_TYPE = "text/markdown; charset=utf-8";
 function parseAccept(accept: string) {
   return accept.split(",").map((range) => {
     const [type = "", ...params] = range.split(";").map((part) => part.trim());
-    const q = params.find((param) => param.startsWith("q="));
+    const q = params.find((param) => param.toLowerCase().startsWith("q="));
     const quality = q ? Number(q.slice(2)) : 1;
     return {
       type: type.toLowerCase(),

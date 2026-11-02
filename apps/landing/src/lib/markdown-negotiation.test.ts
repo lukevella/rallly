@@ -30,6 +30,7 @@ describe("prefersMarkdown", () => {
   it("is false when HTML outranks Markdown or Markdown is refused", () => {
     expect(prefersMarkdown("text/html, text/markdown;q=0.5")).toBe(false);
     expect(prefersMarkdown("text/markdown;q=0")).toBe(false);
+    expect(prefersMarkdown("text/markdown;Q=0, text/html;q=0")).toBe(false);
   });
 
   it("ranks text/html by the most specific matching wildcard", () => {
