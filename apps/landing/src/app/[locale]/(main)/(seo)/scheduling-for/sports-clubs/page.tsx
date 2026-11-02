@@ -103,7 +103,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="sportsClubsFaqParentsAnswer"
-              defaults="Yes. Whoever opens the link enters a name and marks the sessions, so a parent can reply for their child, and one parent can respond for siblings by adding each of them separately. Nobody needs an account or an email address to take part."
+              defaults="Yes. Whoever opens the link enters a name and marks the sessions, so a parent can reply for their child, and one parent can respond for siblings by adding each of them separately. Nobody needs an account. New polls ask each person for an email address so they can change their response later, and you can turn that off in the poll settings."
             />
           </FaqItem>
           <FaqItem

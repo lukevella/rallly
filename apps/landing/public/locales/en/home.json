@@ -231,7 +231,7 @@
   "sportsClubsFaqNoApp": "Do players need to download an app or sign up?",
   "sportsClubsFaqNoAppAnswer": "No. Anyone with the link can respond straight from their phone browser, which matters when you are sharing it into a team group chat. Only you, as the organizer, need an account, and creating one is free.",
   "sportsClubsFaqParents": "Can parents respond on behalf of their child?",
-  "sportsClubsFaqParentsAnswer": "Yes. Whoever opens the link enters a name and marks the sessions, so a parent can reply for their child, and one parent can respond for siblings by adding each of them separately. Nobody needs an account or an email address to take part.",
+  "sportsClubsFaqParentsAnswer": "Yes. Whoever opens the link enters a name and marks the sessions, so a parent can reply for their child, and one parent can respond for siblings by adding each of them separately. Nobody needs an account. New polls ask each person for an email address so they can change their response later, and you can turn that off in the poll settings.",
   "sportsClubsFaqRepeat": "Can I reuse it for next season or the next block?",
   "sportsClubsFaqRepeatAnswer": "Yes. Most clubs run a fresh poll for each block of sessions, offering the dates the pitch or hall is available and letting the squad pick. Each block is its own poll, so last season's replies never get confused with this one.",
   "sportsClubsFaqSquadSize": "How many players can I include?",
