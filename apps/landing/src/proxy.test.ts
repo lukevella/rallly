@@ -19,6 +19,7 @@ function stubProbe(
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("proxy markdown negotiation", () => {
@@ -35,6 +36,7 @@ describe("proxy markdown negotiation", () => {
 
   it("answers a missing page with a Markdown 404", async () => {
     const fetch = stubProbe(async () => new Response(null, { status: 404 }));
+    const timeout = vi.spyOn(AbortSignal, "timeout");
     const response = await proxy(request("/nope", "text/markdown"));
     const [url, init] = fetch.mock.calls[0] ?? [];
     expect(String(url)).toBe("https://rallly.co/nope");
@@ -43,7 +45,8 @@ describe("proxy markdown negotiation", () => {
       headers: { accept: "text/html" },
       redirect: "manual",
     });
-    expect(init?.signal).toBeInstanceOf(AbortSignal);
+    expect(timeout).toHaveBeenCalledWith(3000);
+    expect(init?.signal).toBe(timeout.mock.results[0]?.value);
     expect(response.status).toBe(404);
     expect(response.headers.get("content-type")).toBe(MARKDOWN_CONTENT_TYPE);
     expect(response.headers.get("vary")).toBe("Accept");
