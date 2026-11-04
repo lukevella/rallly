@@ -165,9 +165,6 @@ const isMultiTenantMicrosoft = [
 export const authLib = betterAuth({
   appName: env.APP_NAME,
   secret: env.SECRET_PASSWORD,
-  experimental: {
-    joins: true,
-  },
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
@@ -386,6 +383,19 @@ export const authLib = betterAuth({
           }
         },
         get: async (key: string) => kv.get(key),
+        getAndDelete: async (key: string) => kv.getdel(key),
+        // Counters get their own prefix because 1.6 stored JSON under the same
+        // rate limit keys, and INCR on those fails until they expire. EXPIRE NX
+        // starts the window on the first request without ever extending it.
+        increment: async (key: string, ttl: number) => {
+          const counterKey = `counter:${key}`;
+          const [count] = await kv
+            .multi()
+            .incr(counterKey)
+            .expire(counterKey, ttl, "NX")
+            .exec<[number, number]>();
+          return count;
+        },
         delete: async (key: string) => {
           await kv.del(key);
         },
@@ -742,14 +752,17 @@ export const authLib = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
-  advanced: env.NEXT_PUBLIC_COOKIE_DOMAIN
-    ? {
-        crossSubDomainCookies: {
+  advanced: {
+    database: {
+      joins: true,
+    },
+    crossSubDomainCookies: env.NEXT_PUBLIC_COOKIE_DOMAIN
+      ? {
           enabled: true,
           domain: env.NEXT_PUBLIC_COOKIE_DOMAIN,
-        },
-      }
-    : undefined,
+        }
+      : undefined,
+  },
   trustedOrigins: [absoluteUrl()],
   baseURL,
 });

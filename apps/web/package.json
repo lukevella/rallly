@@ -62,7 +62,7 @@
     "@upstash/redis": "^1.36.2",
     "@vercel/functions": "^3.3.6",
     "ai": "^6.0.307",
-    "better-auth": "1.6.30",
+    "better-auth": "1.7.9",
     "calendar-link": "^2.6.0",
     "class-variance-authority": "^0.7.1",
     "cookie": "^0.7.2",
