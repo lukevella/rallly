@@ -4,6 +4,8 @@
 -- Rekey each Microsoft account from the `oid` in its stored ID token. Rows
 -- whose token is missing or unreadable are left alone and relink by email.
 
+BEGIN;
+
 CREATE FUNCTION pg_temp.microsoft_oid(token text) RETURNS text AS $$
 DECLARE
   payload text := translate(split_part(token, '.', 2), '-_', '+/');
@@ -48,3 +50,5 @@ WHERE accounts.id = m.id
 
 DROP TABLE microsoft_account_oids;
 DROP FUNCTION pg_temp.microsoft_oid(text);
+
+COMMIT;
