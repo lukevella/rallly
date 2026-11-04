@@ -386,10 +386,12 @@ export const authLib = betterAuth({
         getAndDelete: async (key: string) => kv.getdel(key),
         // Better Auth sets the TTL only when the counter is created, so a
         // window never slides; INCR and EXPIRE run in one script to stay atomic.
+        // Counters get their own prefix because 1.6 stored JSON under the same
+        // rate limit keys, and INCR on those fails until they expire.
         increment: async (key: string, ttl: number) =>
           kv.eval<[number], number>(
             "local v = redis.call('INCR', KEYS[1]) if v == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end return v",
-            [key],
+            [`counter:${key}`],
             [ttl],
           ),
         delete: async (key: string) => {
