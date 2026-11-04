@@ -165,9 +165,6 @@ const isMultiTenantMicrosoft = [
 export const authLib = betterAuth({
   appName: env.APP_NAME,
   secret: env.SECRET_PASSWORD,
-  experimental: {
-    joins: true,
-  },
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
@@ -386,6 +383,15 @@ export const authLib = betterAuth({
           }
         },
         get: async (key: string) => kv.get(key),
+        getAndDelete: async (key: string) => kv.getdel(key),
+        // Better Auth sets the TTL only when the counter is created, so a
+        // window never slides; INCR and EXPIRE run in one script to stay atomic.
+        increment: async (key: string, ttl: number) =>
+          kv.eval<[number], number>(
+            "local v = redis.call('INCR', KEYS[1]) if v == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end return v",
+            [key],
+            [ttl],
+          ),
         delete: async (key: string) => {
           await kv.del(key);
         },
@@ -742,14 +748,17 @@ export const authLib = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
-  advanced: env.NEXT_PUBLIC_COOKIE_DOMAIN
-    ? {
-        crossSubDomainCookies: {
+  advanced: {
+    database: {
+      joins: true,
+    },
+    crossSubDomainCookies: env.NEXT_PUBLIC_COOKIE_DOMAIN
+      ? {
           enabled: true,
           domain: env.NEXT_PUBLIC_COOKIE_DOMAIN,
-        },
-      }
-    : undefined,
+        }
+      : undefined,
+  },
   trustedOrigins: [absoluteUrl()],
   baseURL,
 });

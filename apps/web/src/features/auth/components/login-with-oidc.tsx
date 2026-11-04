@@ -17,8 +17,8 @@ export function LoginWithOIDC({
   return (
     <Button
       onClick={() => {
-        authClient.signIn.oauth2({
-          providerId: "oidc",
+        authClient.signIn.social({
+          provider: "oidc",
           callbackURL: validateRedirectUrl(redirectTo) || "/",
           errorCallbackURL: "/login",
         });
