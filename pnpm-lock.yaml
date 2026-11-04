@@ -341,6 +341,9 @@ importers:
       i18next-cli:
         specifier: ^1.58.1
         version: 1.58.1(@swc/helpers@0.5.23)(@types/node@24.10.11)(i18next@26.3.0(typescript@6.0.3))(react-dom@19.2.6(react@19.2.6))(typescript@6.0.3)
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.10.11)(jsdom@26.1.0(supports-color@8.1.1))(vite@8.3.5(@types/node@24.10.11)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.21.0)(yaml@2.9.1))
 
   apps/web:
     dependencies:
