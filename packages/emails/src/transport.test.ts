@@ -14,6 +14,7 @@ const SMTP_ENV_VARS = [
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_SECURE",
+  "SMTP_NAME",
 ];
 
 const savedEnv: Record<string, string | undefined> = {};
@@ -75,4 +76,22 @@ test("leaves auth undefined when neither is set", () => {
   expect(createTransport).toHaveBeenCalledWith(
     expect.objectContaining({ auth: undefined }),
   );
+});
+
+test("passes SMTP_NAME as the EHLO name", () => {
+  process.env.SMTP_NAME = "rallly.example.com";
+
+  createTransportForProvider("smtp");
+
+  expect(createTransport).toHaveBeenCalledWith(
+    expect.objectContaining({ name: "rallly.example.com" }),
+  );
+});
+
+test("leaves the EHLO name to nodemailer when SMTP_NAME is unset", () => {
+  createTransportForProvider("smtp");
+
+  expect(
+    (createTransport.mock.calls[0]?.[0] as { name?: string }).name,
+  ).toBeUndefined();
 });
