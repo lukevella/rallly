@@ -13,6 +13,7 @@ import {
   MAINTENANCE_PATH,
 } from "@/lib/maintenance";
 import { setPathname } from "@/lib/pathname";
+import { redirectToNewPollAdmin } from "@/lib/poll-admin-view";
 
 async function handleMaintenance(req: NextRequest) {
   const { nextUrl } = req;
@@ -99,6 +100,11 @@ export const proxy = async (req: NextRequest) => {
 
   if (req.method === "HEAD" && EMAIL_LINK_PATH.test(pathname)) {
     return new NextResponse(null, { status: 200 });
+  }
+
+  const newPollAdmin = redirectToNewPollAdmin(req);
+  if (newPollAdmin) {
+    return newPollAdmin;
   }
 
   const locale = getLocaleFromRequest(req);
