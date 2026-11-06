@@ -345,19 +345,9 @@ function useSearchResults({
     { spaceId: space.id },
     { enabled, staleTime: SEARCH_INDEX_STALE_TIME },
   );
-  // The active space changed elsewhere (another tab); the server would
-  // reject the fallback too, so resync the space instead.
-  const isSpaceConflict = index.error?.data?.code === "CONFLICT";
-  // If the refresh leaves the space unchanged the conflict stands; it then
-  // shows as a failure, and reopening the menu retries.
-  const [isRefreshingSpace, startSpaceRefresh] = React.useTransition();
-  React.useEffect(() => {
-    if (isSpaceConflict) {
-      startSpaceRefresh(() => router.refresh());
-    }
-  }, [isSpaceConflict, router]);
+  const isIndexConflict = index.error?.data?.code === "CONFLICT";
   const useServer =
-    (index.isError && !isSpaceConflict) || index.data?.complete === false;
+    !isIndexConflict && (index.isError || index.data?.complete === false);
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS);
   const server = trpc.search.query.useQuery(
     { spaceId: space.id, query: debouncedQuery },
@@ -367,6 +357,18 @@ function useSearchResults({
       staleTime: 30_000,
     },
   );
+  // The active space changed elsewhere (another tab). Cached results belong
+  // to the old space, so the conflict wins over them and the space resyncs.
+  // If the refresh leaves the space unchanged the conflict stands; it then
+  // shows as a failure, and reopening the menu retries.
+  const isSpaceConflict =
+    isIndexConflict || server.error?.data?.code === "CONFLICT";
+  const [isRefreshingSpace, startSpaceRefresh] = React.useTransition();
+  React.useEffect(() => {
+    if (isSpaceConflict) {
+      startSpaceRefresh(() => router.refresh());
+    }
+  }, [isSpaceConflict, router]);
 
   const localData = React.useMemo(
     () =>
@@ -378,6 +380,14 @@ function useSearchResults({
 
   if (!query) {
     return { results: undefined, isPending: false, isError: false };
+  }
+
+  if (isSpaceConflict) {
+    return {
+      results: undefined,
+      isPending: isRefreshingSpace,
+      isError: !isRefreshingSpace,
+    };
   }
 
   if (localData) {
@@ -402,8 +412,8 @@ function useSearchResults({
 
   return {
     results: undefined,
-    isPending: index.isPending || isRefreshingSpace,
-    isError: isSpaceConflict && !isRefreshingSpace,
+    isPending: index.isPending,
+    isError: false,
   };
 }
 
