@@ -22,6 +22,7 @@ import { getDeviceTimeZone } from "@/lib/datetime/server";
 import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { getPathname } from "@/lib/pathname";
+import { escapeLikePattern } from "@/lib/utils/escape-like-pattern";
 import { buildSafeRedirectUrl } from "@/lib/utils/redirect";
 
 /**
@@ -221,7 +222,7 @@ export const loadEvents = cache(
 
     return getEventsChronological({
       status,
-      search: q,
+      search: q ? escapeLikePattern(q) : q,
       member,
       page,
       pageSize,
