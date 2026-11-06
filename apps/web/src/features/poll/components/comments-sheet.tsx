@@ -1,5 +1,5 @@
 "use client";
-import { passwordManagerIgnoreProps } from "@rallly/ui";
+import { cn, passwordManagerIgnoreProps } from "@rallly/ui";
 import { Badge } from "@rallly/ui/badge";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -53,10 +53,6 @@ import {
   useAddComment,
   useDeleteComment,
 } from "@/features/poll/components/mutations";
-import {
-  Participant,
-  ParticipantName,
-} from "@/features/poll/components/participant";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import {
   MAX_COMMENT_AUTHOR_NAME_LENGTH,
@@ -148,7 +144,7 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
         onSubmitted();
       })}
     >
-      <InputGroup>
+      <InputGroup className="bg-card">
         <InputGroupAddon align="block-start" className="border-b">
           {user && !user.isGuest ? (
             <>
@@ -230,33 +226,170 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
   );
 }
 
-function CommentsSheetInner({ className }: { className?: string }) {
-  const { t } = useTranslation();
+/**
+ * The composer, or a confirmation once a comment is added. Nothing once the
+ * poll is scheduled: discussion is closed by then.
+ */
+export function CommentComposer() {
   const poll = usePoll();
-  const dialog = useDialog();
-
-  const pollId = poll.id;
-
-  const comments = useComments();
-
-  const deleteComment = useDeleteComment();
-
-  const session = useUser();
-
-  const role = useRole();
-
   const [hasCommented, setHasCommented] = React.useState(false);
 
-  const count = comments.length;
+  if (poll.event) {
+    return null;
+  }
+
+  if (hasCommented) {
+    return (
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-muted-foreground text-sm">
+        <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
+        <Trans
+          i18nKey="commentsSheetSubmitted"
+          defaults="Your comment has been added"
+        />
+      </div>
+    );
+  }
+
+  return <NewCommentForm onSubmitted={() => setHasCommented(true)} />;
+}
+
+/**
+ * Every comment, or an empty state. Newest first suits a composer above the
+ * list; oldest first reads as a conversation with the composer below.
+ */
+export function CommentList({
+  className,
+  order = "newest",
+}: {
+  className?: string;
+  order?: "newest" | "oldest";
+}) {
+  const { t } = useTranslation();
+  const comments = useComments();
+  const deleteComment = useDeleteComment();
+  const session = useUser();
+  const role = useRole();
 
   const sortedComments = React.useMemo(
     () =>
-      [...comments].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      ),
-    [comments],
+      [...comments].sort((a, b) => {
+        const diff =
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return order === "newest" ? diff : -diff;
+      }),
+    [comments, order],
   );
+
+  if (sortedComments.length === 0) {
+    return (
+      <EmptyState className={cn("grow", className)}>
+        <EmptyStateIcon>
+          <MessageCircleIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="commentsSheetEmpty" defaults="No comments yet" />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="commentsSheetEmptyDescription"
+            defaults="Be the first to share your thoughts on this poll."
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
+
+  return (
+    <div className={cn("space-y-5", className)}>
+      {sortedComments.map((comment) => {
+        const canDelete = role === "admin" || session.ownsObject(comment);
+
+        return (
+          <div
+            data-testid="comment"
+            key={comment.id}
+            className="flex items-start gap-x-2.5"
+          >
+            <OptimizedAvatarImage
+              name={comment.authorName}
+              size="sm"
+              className="mt-0.5 shrink-0"
+            />
+            <div className="min-w-0 flex-1">
+              {/* The bubble's flat top corner points at the avatar. */}
+              <div className="relative w-fit max-w-full rounded-2xl rounded-tl-sm border border-primary/15 bg-primary/10 px-3.5 py-2.5">
+                {canDelete && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={
+                        <Button
+                          // Out of flow: the menu mounts focus-guard spans
+                          // into the bubble, which would shift an in-flow
+                          // trigger while open.
+                          className="absolute top-1.5 right-1.5 text-muted-foreground"
+                          aria-label={t("moreOptions", {
+                            defaultValue: "More options",
+                          })}
+                          variant="ghost"
+                          size="icon-xs"
+                        />
+                      }
+                    >
+                      <MoreHorizontalIcon />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        variant="destructive"
+                        disabled={deleteComment.isPending}
+                        onClick={async () => {
+                          const result = await deleteComment.execute({
+                            commentId: comment.id,
+                          });
+                          if (!result.ok) {
+                            toast.error(
+                              t("actionErrorInternalServerError", {
+                                defaultValue:
+                                  "An internal server error occurred",
+                              }),
+                            );
+                          }
+                        }}
+                      >
+                        <TrashIcon />
+                        <Trans i18nKey="delete" />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+                <div className="whitespace-pre-wrap pr-6 text-foreground text-sm leading-relaxed">
+                  <TruncatedLinkify>{comment.content}</TruncatedLinkify>
+                </div>
+              </div>
+              <div className="mt-1.5 flex items-center gap-x-1.5 pl-3.5 text-muted-foreground text-xs dark:text-muted-foreground/75">
+                <span className="font-medium text-foreground">
+                  {comment.authorName}
+                </span>
+                {session.ownsObject(comment) ? (
+                  <Badge>
+                    <Trans i18nKey="you" />
+                  </Badge>
+                ) : null}
+                <span aria-hidden="true">·</span>
+                <RelativeTime value={comment.createdAt} />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CommentsSheetInner({ className }: { className?: string }) {
+  const poll = usePoll();
+  const dialog = useDialog();
+  const comments = useComments();
+  const count = comments.length;
 
   return (
     <>
@@ -283,122 +416,12 @@ function CommentsSheetInner({ className }: { className?: string }) {
           </SheetHeader>
           {!poll.event ? (
             <div className="pb-4">
-              {hasCommented ? (
-                <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-muted-foreground text-sm">
-                  <CheckCircle2Icon className="size-4 text-green-600 dark:text-green-500" />
-                  <Trans
-                    i18nKey="commentsSheetSubmitted"
-                    defaults="Your comment has been added"
-                  />
-                </div>
-              ) : (
-                <NewCommentForm onSubmitted={() => setHasCommented(true)} />
-              )}
+              <CommentComposer />
             </div>
           ) : null}
           <div className="-mx-4 -mb-4 flex grow flex-col overflow-y-auto border-t px-4 pt-4 sm:-mx-6 sm:-mb-6 sm:px-6">
             <div className="flex grow flex-col pb-4 sm:pb-6">
-              {count > 0 ? (
-                <div className="divide-y">
-                  {sortedComments.map((comment) => {
-                    const canDelete =
-                      role === "admin" || session.ownsObject(comment);
-
-                    return (
-                      <div
-                        data-testid="comment"
-                        key={comment.id}
-                        className="py-4 first:pt-0 last:pb-0"
-                      >
-                        <div className="relative mb-1 flex items-center gap-x-2 text-foreground">
-                          <Participant>
-                            <OptimizedAvatarImage
-                              name={comment.authorName}
-                              size="sm"
-                            />
-                            <ParticipantName>
-                              {comment.authorName}
-                            </ParticipantName>
-                            {session.ownsObject(comment) ? (
-                              <Badge>
-                                <Trans i18nKey="you" />
-                              </Badge>
-                            ) : null}
-                          </Participant>
-                          {canDelete && (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger
-                                render={
-                                  <Button
-                                    // Out of flow: the menu mounts focus-guard
-                                    // spans into the row, which would re-target
-                                    // space-x-2's not-last-child margin and
-                                    // shift an in-flow trigger while open.
-                                    className="absolute top-1/2 right-0 -translate-y-1/2 text-muted-foreground"
-                                    aria-label={t("moreOptions", {
-                                      defaultValue: "More options",
-                                    })}
-                                    variant="ghost"
-                                    size="icon-xs"
-                                  />
-                                }
-                              >
-                                <MoreHorizontalIcon />
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  variant="destructive"
-                                  disabled={deleteComment.isPending}
-                                  onClick={async () => {
-                                    const result = await deleteComment.execute({
-                                      commentId: comment.id,
-                                    });
-                                    if (!result.ok) {
-                                      toast.error(
-                                        t("actionErrorInternalServerError", {
-                                          defaultValue:
-                                            "An internal server error occurred",
-                                        }),
-                                      );
-                                    }
-                                  }}
-                                >
-                                  <TrashIcon />
-                                  <Trans i18nKey="delete" />
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          )}
-                        </div>
-                        <div className="w-fit whitespace-pre-wrap pl-8 text-foreground text-sm leading-relaxed">
-                          <TruncatedLinkify>{comment.content}</TruncatedLinkify>
-                        </div>
-                        <div className="mt-2 pl-8 text-muted-foreground text-xs dark:text-muted-foreground/75">
-                          <RelativeTime value={comment.createdAt} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <EmptyState className="grow">
-                  <EmptyStateIcon>
-                    <MessageCircleIcon />
-                  </EmptyStateIcon>
-                  <EmptyStateTitle>
-                    <Trans
-                      i18nKey="commentsSheetEmpty"
-                      defaults="No comments yet"
-                    />
-                  </EmptyStateTitle>
-                  <EmptyStateDescription>
-                    <Trans
-                      i18nKey="commentsSheetEmptyDescription"
-                      defaults="Be the first to share your thoughts on this poll."
-                    />
-                  </EmptyStateDescription>
-                </EmptyState>
-              )}
+              <CommentList />
             </div>
           </div>
         </SheetContent>

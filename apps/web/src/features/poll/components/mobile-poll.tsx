@@ -14,7 +14,6 @@ import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import * as React from "react";
 
-import { TimesShownIn } from "@/components/clock";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePermissions } from "@/features/poll/client";
 import {
@@ -23,7 +22,7 @@ import {
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
 import { ParticipantNote } from "@/features/poll/components/participant-note";
-import { useOptions, usePoll } from "@/features/poll/components/poll-context";
+import { useOptions } from "@/features/poll/components/poll-context";
 import { useVisibleParticipants } from "@/features/poll/components/visibility";
 import { VotingFooter } from "@/features/poll/components/voting-footer";
 import { useVotingForm } from "@/features/poll/components/voting-form";
@@ -32,11 +31,7 @@ import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import GroupedOptions from "./mobile-poll/grouped-options";
 
-const MobilePoll: React.FunctionComponent = () => {
-  const pollContext = usePoll();
-
-  const { poll } = pollContext;
-
+const MobilePoll = ({ className }: { className?: string }) => {
   const { options } = useOptions();
 
   const session = useUser();
@@ -114,7 +109,7 @@ const MobilePoll: React.FunctionComponent = () => {
   ];
 
   return (
-    <Card className="overflow-visible">
+    <Card className={cn("overflow-visible", className)}>
       <div className="flex flex-col space-y-2 border-b p-2">
         <div className="flex gap-x-2">
           {selectedParticipantId || !isEditing ? (
@@ -217,11 +212,6 @@ const MobilePoll: React.FunctionComponent = () => {
           ) : null}
         </div>
       </div>
-      {poll.options[0]?.duration !== 0 && poll.timeZone ? (
-        <div className="border-b p-2">
-          <TimesShownIn />
-        </div>
-      ) : null}
       <GroupedOptions
         selectedParticipantId={selectedParticipantId}
         options={options}

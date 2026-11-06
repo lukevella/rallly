@@ -177,3 +177,61 @@ export function AnimatedVoteIcon({
     </IconFrame>
   );
 }
+
+const glyphStrokes: Record<VoteIconType, string> = {
+  yes: "M5 10.5L8.5 14L15 6.5",
+  ifNeedBe: "M4.5 11C6 8 8 8 10 10S14 12 15.5 9",
+  no: "M6.5 6.5L13.5 13.5M13.5 6.5L6.5 13.5",
+  pending: "M7 10H13",
+};
+
+const voteGlyphVariants = cva("shrink-0", {
+  variants: {
+    size: {
+      sm: "size-3.5",
+      md: "size-4",
+    },
+    type: {
+      yes: "text-green-600 dark:text-green-400",
+      ifNeedBe: "text-amber-600 dark:text-amber-300",
+      // The quietest answer, so a grid of votes leads with where people can
+      // make it.
+      no: "text-gray-400 dark:text-gray-500",
+      pending: "text-gray-300 dark:text-gray-600",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
+/**
+ * The bare mark, stroked, with no container. For surfaces that already carry
+ * the vote's colour (tinted cells), where a filled badge would repeat it.
+ */
+export function VoteGlyph({
+  type = "pending",
+  size,
+  title,
+  className,
+}: VoteIconProps) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role={title ? "img" : undefined}
+      aria-hidden={title ? undefined : true}
+      className={cn(voteGlyphVariants({ size, type }), className)}
+    >
+      {title ? <title>{title}</title> : null}
+      <path
+        d={glyphStrokes[type]}
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

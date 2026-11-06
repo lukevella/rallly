@@ -3,9 +3,7 @@ import { cn } from "@rallly/ui";
 import { Card, CardContent } from "@rallly/ui/card";
 import { MapPinIcon, User2Icon } from "lucide-react";
 import { RandomGradientBar } from "@/components/random-gradient-bar";
-import { useBranding } from "@/features/branding/client";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
-import { useInstancePolicy } from "@/features/instance-policy/client";
 import { usePoll } from "@/features/poll/client";
 import {
   EventMetaItem,
@@ -14,7 +12,6 @@ import {
 } from "@/features/poll/components/event-meta";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import VoteIcon from "@/features/poll/components/vote-icon";
-import { SpaceIcon } from "@/features/space/components/space-icon";
 import { Trans } from "@/i18n/client";
 
 function IconDescriptionList({
@@ -51,9 +48,8 @@ function IconDescription({
 }
 
 /**
- * The event's identity: branding chip, title, description, organizer and
- * location. `EventCard` frames it as a standalone card with the response
- * legend; the vote page places it in the sidebar of the merged card.
+ * The event's identity: title, description, organizer and location.
+ * `EventCard` frames it as a standalone card with the response legend; the vote page places it in the sidebar of the merged card.
  */
 export function EventDetails({
   description,
@@ -61,31 +57,8 @@ export function EventDetails({
   description: React.ReactNode;
 }) {
   const poll = usePoll();
-  const branding = useBranding();
-  const { spaceBrandingAllowed } = useInstancePolicy();
   return (
     <>
-      {poll.space?.showBranding && poll.space.image ? (
-        <div className="mb-2">
-          <SpaceIcon name={poll.space.name} src={poll.space.image} size="xl" />
-          <p className="mt-2 font-medium text-muted-foreground text-sm">
-            {poll.space.name}
-          </p>
-        </div>
-      ) : !spaceBrandingAllowed ? (
-        // Instance branding is enforced: the space chip is suppressed, so
-        // the slot carries the instance's logo icon and name instead
-        <div className="mb-2">
-          <SpaceIcon
-            name={branding.appName}
-            src={branding.logoIcon}
-            size="xl"
-          />
-          <p className="mt-2 font-medium text-muted-foreground text-sm">
-            {branding.appName}
-          </p>
-        </div>
-      ) : null}
       <EventMetaTitle className="text-lg">{poll.title}</EventMetaTitle>
       {description}
       <EventMetaList className="mt-3">

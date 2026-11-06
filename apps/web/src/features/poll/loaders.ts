@@ -7,6 +7,7 @@ import { listPollActivity } from "@/features/activity/data";
 import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
   canUserManagePoll,
+  countPollComments,
   getPoll,
   getPollAvailability,
   getPollDetails,
@@ -175,8 +176,26 @@ export const loadParticipantIdsByToken = cache(
     listParticipantIdsByToken({ pollId, token }),
 );
 
+/**
+ * The comment count the invite page shows on its Comments tab. Public like
+ * the comments themselves; the caller hides it when the poll hides
+ * participants, where each viewer sees only their own comments.
+ */
+export const loadPollCommentCount = cache(async (pollId: string) =>
+  countPollComments({ pollId }),
+);
+
 export const loadPollAvailability = cache(async (pollId: string) =>
   getPollAvailability({ pollId }),
+);
+
+/**
+ * The poll's public details, without its responses. Null for a missing,
+ * deleted or removed poll. Shared by the invite page and its layout so the
+ * poll is read once per request.
+ */
+export const loadPollDetails = cache(async (pollId: string) =>
+  getPollDetails({ pollId }),
 );
 
 /**
@@ -187,7 +206,7 @@ export const loadPollAvailability = cache(async (pollId: string) =>
  */
 export const loadInvitePoll = cache(
   async ({ pollId, token }: { pollId: string; token?: string }) => {
-    const poll = await getPollDetails({ pollId });
+    const poll = await loadPollDetails(pollId);
 
     if (!poll) {
       notFound();

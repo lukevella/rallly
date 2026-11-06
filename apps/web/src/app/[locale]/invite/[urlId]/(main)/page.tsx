@@ -2,21 +2,15 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { SessionRefresher } from "@/components/session-refresher";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
-import { PollProvider } from "@/features/poll/client";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
-import { PollBrandingFromContext } from "@/features/poll/components/poll-branding";
-import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
-import { VisibilityProvider } from "@/features/poll/components/visibility";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import { loadInvitePoll, loadPollAvailability } from "@/features/poll/loaders";
-import { loadCanManagePoll } from "@/features/poll/vote/loaders";
-import { UserProvider } from "@/features/user/client";
-import { getLocale } from "@/i18n/server/get-locale";
-import { DeviceDateTimeProvider } from "@/lib/datetime/device";
-import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
+import {
+  getInviteToken,
+  InvitePollProviders,
+} from "./components/invite-poll-providers";
 import { InvitePage, InvitePageLoading } from "./invite-page";
 
 type PageProps = {
@@ -47,64 +41,28 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     );
   }
 
-  // `invite` is the param older invite emails carry; both name the same
-  // token and the client reads them the same way. A repeated param arrives
-  // as an array; only a single value is a token.
-  const token = [tokenParam, inviteParam].find(
-    (value): value is string => typeof value === "string",
-  );
+  const token = getInviteToken({ token: tokenParam, invite: inviteParam });
 
-  const [
-    { poll, participants, comments, linkedParticipantIds, user },
-    locale,
-    deviceDateTimeConfig,
-    footerLinks,
-    canManage,
-  ] = await Promise.all([
+  const [invitePoll, footerLinks] = await Promise.all([
     loadInvitePoll({ pollId: urlId, token }),
-    getLocale(),
-    getDeviceDateTimeConfig(),
     loadFooterLinks(),
-    loadCanManagePoll(urlId),
   ]);
 
   return (
     <>
-      <SessionRefresher />
       {token ? <InviteOpenRecorder pollId={urlId} token={token} /> : null}
-      <UserProvider user={user}>
-        <DeviceDateTimeProvider
-          locale={locale}
-          timeZone={deviceDateTimeConfig.timeZone}
-          timeFormat={deviceDateTimeConfig.timeFormat}
-        >
-          <PollProvider
-            poll={poll}
-            participants={participants}
-            comments={comments}
-            linkedParticipantIds={linkedParticipantIds}
-            viewerRole="participant"
-          >
-            <LegacyPollContextProvider>
-              <VisibilityProvider>
-                <PollBrandingFromContext />
-                <InvitePage
-                  pollId={poll.id}
-                  canManage={canManage}
-                  // Rendered here so the markdown parser stays on the server
-                  description={
-                    <EventMetaDescription
-                      className="mt-1 text-muted-foreground"
-                      content={poll.description}
-                    />
-                  }
-                  footerLinks={footerLinks}
-                />
-              </VisibilityProvider>
-            </LegacyPollContextProvider>
-          </PollProvider>
-        </DeviceDateTimeProvider>
-      </UserProvider>
+      <InvitePollProviders invitePoll={invitePoll}>
+        <InvitePage
+          // Rendered here so the markdown parser stays on the server
+          description={
+            <EventMetaDescription
+              className="mt-3 max-w-3xl text-base/7 text-muted-foreground lg:text-sm/6"
+              content={invitePoll.poll.description}
+            />
+          }
+          footerLinks={footerLinks}
+        />
+      </InvitePollProviders>
     </>
   );
 }

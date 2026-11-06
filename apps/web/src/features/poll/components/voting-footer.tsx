@@ -153,7 +153,14 @@ export function SubmitResponseButton({ className }: { className?: string }) {
  * selection count to screen readers, offers an explicit decline path for an
  * all-no response, and the Continue/Save submit.
  */
-export const VotingFooter = ({ className }: { className?: string }) => {
+export const VotingFooter = ({
+  className,
+  onCancel,
+}: {
+  className?: string;
+  /** Shown on the left, apart from the submit actions, when given. */
+  onCancel?: () => void;
+}) => {
   const { selectedCount } = useSelection();
 
   return (
@@ -173,6 +180,16 @@ export const VotingFooter = ({ className }: { className?: string }) => {
           values={{ count: selectedCount }}
         />
       </p>
+      {onCancel ? (
+        <Button
+          type="button"
+          variant="ghost"
+          className="mr-auto"
+          onClick={onCancel}
+        >
+          <Trans i18nKey="cancel" defaults="Cancel" />
+        </Button>
+      ) : null}
       <DeclineButton className="flex-1 md:flex-none" />
       <SubmitResponseButton className="flex-2 bg-primary/80 backdrop-blur-lg aria-disabled:opacity-50 md:flex-none" />
     </div>

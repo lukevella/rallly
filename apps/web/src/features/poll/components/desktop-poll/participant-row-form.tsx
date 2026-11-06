@@ -1,8 +1,4 @@
 import { cn } from "@rallly/ui";
-import { Button } from "@rallly/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { UndoIcon } from "lucide-react";
-import * as React from "react";
 import { Controller } from "react-hook-form";
 
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
@@ -13,42 +9,31 @@ import {
 import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import { YouAvatar } from "@/features/poll/components/you-avatar";
-import { Trans, useTranslation } from "@/i18n/client";
-import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
-import { VoteSelector } from "../vote-selector";
+import { useTranslation } from "@/i18n/client";
+import { VoteTile } from "./vote-tile";
 
 export interface ParticipantRowFormProps {
   name?: string;
   className?: string;
   image?: string;
   isYou?: boolean;
-  isNew?: boolean;
-  onCancel?: () => void;
 }
 
+/**
+ * The participant's row while their response is being edited: their name and
+ * the answers picked so far. The header is the control and the footer holds
+ * the actions.
+ */
 const ParticipantRowForm = ({
   name,
   image,
-  isNew,
   className,
 }: ParticipantRowFormProps) => {
   const { t } = useTranslation();
 
-  const { optionIds, poll } = usePoll();
+  const { optionIds } = usePoll();
   const { options } = useOptions();
   const form = useVotingForm();
-
-  React.useEffect(() => {
-    function cancel(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        form.cancel();
-      }
-    }
-    window.addEventListener("keydown", cancel);
-    return () => {
-      window.removeEventListener("keydown", cancel);
-    };
-  }, [form]);
 
   const participantName = name ?? t("you", { defaultValue: "You" });
 
@@ -71,74 +56,22 @@ const ParticipantRowForm = ({
             )}
             <ParticipantName>{participantName}</ParticipantName>
           </Participant>
-          {isNew ? (
-            <Button
-              variant="ghost"
-              size="xs"
-              onClick={() => {
-                form.cancel();
-              }}
-            >
-              <Trans i18nKey="cancel" defaults="Cancel" />
-            </Button>
-          ) : (
-            <div className="flex items-center gap-1">
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      aria-label={t("cancel", { defaultValue: "Cancel" })}
-                      variant="ghost"
-                      onClick={() => {
-                        form.cancel();
-                      }}
-                      size="icon-xs"
-                    >
-                      <UndoIcon />
-                    </Button>
-                  }
-                />
-                <TooltipContent>
-                  <Trans i18nKey="cancel" defaults="Cancel" />
-                </TooltipContent>
-              </Tooltip>
-              <Button
-                variant="primary"
-                loading={form.formState.isSubmitting}
-                size="xs"
-                form="voting-form"
-                type="submit"
-              >
-                <Trans i18nKey="save" />
-              </Button>
-            </div>
-          )}
         </div>
       </td>
       {optionIds.map((optionId, i) => {
-        const option = options[i];
         return (
           <td
             key={optionId}
-            className="relative h-12 border-b border-b-border-muted border-l bg-card group-[.last-row]:border-b-0"
+            data-col={i}
+            className="relative h-12 border-b border-b-border-muted bg-card group-[.last-row]:border-b-0"
           >
+            {/* The header above is the control; this shows what was
+                picked, in the same tile as the rows below. */}
             <Controller
               control={form.control}
               name={`votes.${i}`}
               render={({ field }) => (
-                <div className={cn("flex justify-center gap-2")}>
-                  <VoteSelector
-                    className="after:absolute after:inset-0"
-                    optionLabel={
-                      option ? getOptionDateTimeLabel(option) : undefined
-                    }
-                    value={field.value?.type}
-                    allowTentativeVotes={poll.allowTentativeVotes}
-                    onChange={(vote) => {
-                      field.onChange({ optionId, type: vote });
-                    }}
-                  />
-                </div>
+                <VoteTile vote={field.value?.type} option={options[i]} />
               )}
             />
           </td>

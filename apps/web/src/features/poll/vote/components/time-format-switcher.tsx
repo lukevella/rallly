@@ -12,7 +12,7 @@ import { getLocaleDefaults } from "@/lib/datetime/locales";
  * The viewer's clock format, beside the time zone rather than inside its
  * dialog. Only time polls render it: a date has no time to format.
  */
-export function TimeFormatSwitcher() {
+export function TimeFormatSwitcher({ className }: { className?: string }) {
   const { t } = useTranslation();
   const { locale, timeFormat } = useDateTimeConfig();
   const { setTimeFormat } = useDeviceDateTime();
@@ -22,6 +22,7 @@ export function TimeFormatSwitcher() {
 
   return (
     <SegmentedControl
+      className={className}
       aria-label={t("timeFormat", { defaultValue: "Time format" })}
       value={value}
       onValueChange={(next) => {

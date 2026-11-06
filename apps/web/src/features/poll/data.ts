@@ -871,6 +871,11 @@ export async function listPollParticipants({ pollId }: { pollId: string }) {
   }));
 }
 
+/** How many comments the poll has, for a badge. Counts every author's. */
+export async function countPollComments({ pollId }: { pollId: string }) {
+  return prisma.comment.count({ where: { pollId } });
+}
+
 export async function listPollComments({
   pollId,
 }: {

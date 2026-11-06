@@ -15,13 +15,13 @@ import {
 } from "@/features/poll/components/participant";
 import { ParticipantDropdown } from "@/features/poll/components/participant-dropdown";
 import { ParticipantNote } from "@/features/poll/components/participant-note";
-import { usePoll } from "@/features/poll/components/poll-context";
+import { useOptions, usePoll } from "@/features/poll/components/poll-context";
 import type { Vote } from "@/features/poll/types";
 import { useUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 
-import VoteIcon from "../vote-icon";
 import ParticipantRowForm from "./participant-row-form";
+import { VoteTile } from "./vote-tile";
 
 export interface ParticipantRowProps {
   participant: {
@@ -59,6 +59,7 @@ export const ParticipantRowView: React.FunctionComponent<{
   isYou,
   participantId,
 }) => {
+  const { options } = useOptions();
   return (
     <tr
       data-testid="participant-row"
@@ -94,19 +95,21 @@ export const ParticipantRowView: React.FunctionComponent<{
           <td
             // biome-ignore lint/suspicious/noArrayIndexKey: Fix this later
             key={i}
+            data-col={i}
             className={cn(
-              "h-12 border-b border-b-border-muted border-l bg-card group-[.last-row]:border-b-0",
+              "h-12 border-b border-b-border-muted bg-card group-[.last-row]:border-b-0",
             )}
           >
-            <div className={cn("flex items-center justify-center")}>
-              <VoteIcon type={vote} />
-            </div>
+            <VoteTile vote={vote} option={options[i]} />
           </td>
         );
       })}
     </tr>
   );
 };
+
+// Each answer sits on a tile tinted with its own colour, so a row reads
+// at a glance.
 
 const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
   participant,
@@ -130,7 +133,6 @@ const ParticipantRow: React.FunctionComponent<ParticipantRowProps> = ({
         name={participant.name}
         image={participant.image ?? undefined}
         isYou={isYou}
-        onCancel={() => onChangeEditMode?.(false)}
       />
     );
   }
