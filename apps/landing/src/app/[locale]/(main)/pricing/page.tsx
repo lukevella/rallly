@@ -32,10 +32,9 @@ import {
   CompareTableHeader,
   CompareTableSection,
 } from "@/components/compare-table";
-import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { FaqItem, FaqSection } from "@/components/home/faq";
-import { Stats } from "@/components/home/stats";
+import { ReviewRatings } from "@/components/home/review-ratings";
 import {
   Section,
   SectionContent,
@@ -45,11 +44,7 @@ import {
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
-import {
-  getMonthlyPollCount,
-  getMonthlyVoterCount,
-  getPricing,
-} from "@/lib/data";
+import { getPricing } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
 import {
   FREE_OPEN_POLL_LIMIT,
@@ -90,11 +85,7 @@ export default async function Page(props: {
   cacheLife("hours");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["common", "pricing", "home"]);
-  const [pollCount, voterCount, prices] = await Promise.all([
-    getMonthlyPollCount(),
-    getMonthlyVoterCount(),
-    getPricing(),
-  ]);
+  const prices = await getPricing();
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -415,19 +406,10 @@ export default async function Page(props: {
             </PlanCard>
           </PlanCards>
         </PricingProvider>
-        <Stats className="mt-8 sm:mt-12">
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="statsLast30Days"
-            defaults="<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days"
-            values={{ voterCount, pollCount }}
-            components={[
-              <PeopleBadge key="people" locale={locale} live />,
-              <PollsBadge key="polls" locale={locale} live />,
-            ]}
-          />
-        </Stats>
+        <ReviewRatings
+          locale={locale}
+          className="mt-8 justify-center sm:mt-12"
+        />
       </Section>
       <Section>
         <SectionHeading>
