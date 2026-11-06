@@ -348,9 +348,12 @@ function useSearchResults({
   // The active space changed elsewhere (another tab); the server would
   // reject the fallback too, so resync the space instead.
   const isSpaceConflict = index.error?.data?.code === "CONFLICT";
+  // If the refresh leaves the space unchanged the conflict stands; it then
+  // shows as a failure, and reopening the menu retries.
+  const [isRefreshingSpace, startSpaceRefresh] = React.useTransition();
   React.useEffect(() => {
     if (isSpaceConflict) {
-      router.refresh();
+      startSpaceRefresh(() => router.refresh());
     }
   }, [isSpaceConflict, router]);
   const useServer =
@@ -399,8 +402,8 @@ function useSearchResults({
 
   return {
     results: undefined,
-    isPending: index.isPending || isSpaceConflict,
-    isError: false,
+    isPending: index.isPending || isRefreshingSpace,
+    isError: isSpaceConflict && !isRefreshingSpace,
   };
 }
 

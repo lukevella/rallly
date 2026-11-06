@@ -904,6 +904,8 @@ export async function searchPolls({
       deletedAt: null,
       ...(query && { title: { contains: query, mode: "insensitive" } }),
       ...(scope.createdBy && { userId: scope.createdBy }),
+      // The poll page 404s a banned creator's poll; polls without a creator stay
+      NOT: { user: { is: { banned: true } } },
     },
     select: { id: true, title: true, status: true },
     orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
