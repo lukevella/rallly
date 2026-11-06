@@ -152,10 +152,5 @@ export function PlanBenefitName({
   className,
   ...props
 }: React.ComponentProps<"span">) {
-  return (
-    <span
-      className={cn("font-medium text-gray-800 text-sm", className)}
-      {...props}
-    />
-  );
+  return <span className={cn("text-gray-800 text-sm", className)} {...props} />;
 }
