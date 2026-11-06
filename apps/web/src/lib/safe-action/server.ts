@@ -11,6 +11,7 @@ import * as z from "zod";
 import { defineAbilityFor } from "@/features/user/ability";
 import { loadOptionalActor, loadOptionalUser } from "@/features/user/loaders";
 import { signOut } from "@/lib/auth";
+import { getClientIp } from "@/lib/client-ip";
 import { AppError } from "@/lib/errors/app-error";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
 import { assertAppAvailable } from "@/lib/maintenance-server";
@@ -121,10 +122,7 @@ export const actionClient = createSafeActionClient({
         headerList.get("x-request-id") ??
         undefined,
       actionName: metadata.actionName,
-      // x-real-ip is what Vercel sets; self-hosted proxies set the other.
-      ip:
-        headerList.get("x-real-ip") ??
-        headerList.get("x-forwarded-for")?.split(",")[0]?.trim(),
+      ip: getClientIp(headerList),
       ja4Digest: headerList.get("x-vercel-ja4-digest") ?? undefined,
     });
 

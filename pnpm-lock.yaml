@@ -470,9 +470,6 @@ importers:
       '@upstash/redis':
         specifier: ^1.36.2
         version: 1.36.2
-      '@vercel/functions':
-        specifier: ^3.3.6
-        version: 3.4.1(@aws-sdk/credential-provider-web-identity@3.972.82)
       ai:
         specifier: ^6.0.307
         version: 6.0.307(zod@4.3.6)
