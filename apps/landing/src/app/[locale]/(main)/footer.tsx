@@ -5,6 +5,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import DiscordIcon from "@/assets/discord.svg";
 import GithubIcon from "@/assets/github.svg";
 import LinkedinIcon from "@/assets/linkedin.svg";
+import Wordmark from "@/assets/wordmark.svg";
 import XIcon from "@/assets/x.svg";
 import { FooterPattern } from "@/components/home/footer-pattern";
 import { LinkBase } from "@/i18n/client/link";
@@ -374,6 +375,12 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </div>
         </div>
       </div>
+      {/* Negative margin cancels the layout's bottom padding so the wordmark
+          sits flush with the bottom of the page. */}
+      <Wordmark
+        aria-hidden="true"
+        className="-mb-4 block h-auto w-full select-none text-gray-300 sm:-mb-6"
+      />
     </div>
   );
 };
