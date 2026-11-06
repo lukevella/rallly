@@ -7,12 +7,9 @@ import {
   BlocksIcon,
   CalendarSearchIcon,
   ClockIcon,
-  CopyIcon,
-  EyeOffIcon,
   ListChecksIcon,
   MailPlusIcon,
   PaletteIcon,
-  Settings2Icon,
   TerminalIcon,
   UserPlusIcon,
   UsersIcon,
@@ -54,6 +51,7 @@ import {
   PlanBenefit,
   PlanBenefitName,
   PlanBenefits,
+  PlanBenefitUnavailable,
   PlanCard,
   PlanCardDescription,
   PlanCardHeader,
@@ -207,16 +205,6 @@ export default async function Page(props: {
                 </Link>
               </div>
               <PlanBenefits>
-                <PlanBenefit icon={<CalendarSearchIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="basicPolls"
-                      defaults="Basic polls"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
                 {isOpenPollLimitEnabled ? (
                   <PlanBenefit icon={<ListChecksIcon />}>
                     <PlanBenefitName>
@@ -240,11 +228,43 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="emailInvites"
+                    defaults="Email invites"
+                  />
+                </PlanBenefitUnavailable>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="teamCollaboration"
+                    defaults="Team collaboration"
+                  />
+                </PlanBenefitUnavailable>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="customBranding"
+                    defaults="Custom branding"
+                  />
+                </PlanBenefitUnavailable>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="apiAndWebhooks"
+                    defaults="API and webhooks"
+                  />
+                </PlanBenefitUnavailable>
               </PlanBenefits>
             </PlanCard>
-            <PlanCard>
+            <PlanCard featured>
               <PlanCardHeader>
-                <div className="flex items-center justify-between gap-x-4">
+                <div className="flex items-center gap-x-2">
                   <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
                   <Badge variant="secondary">
                     <Trans
@@ -309,7 +329,7 @@ export default async function Page(props: {
                   />
                 </Link>
               </div>
-              <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+              <PlanBenefits>
                 {isOpenPollLimitEnabled ? (
                   <PlanBenefit icon={<ListChecksIcon />}>
                     <PlanBenefitName>
@@ -329,26 +349,6 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="indefinitePollRetention"
                       defaults="Indefinite poll retention"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<CopyIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="duplicatePolls"
-                      defaults="Duplicate polls"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<Settings2Icon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="advancedPollSettings"
-                      defaults="Advanced poll settings"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
@@ -379,16 +379,6 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="customBranding"
                       defaults="Custom branding"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<EyeOffIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="removeAttribution"
-                      defaults="Remove attribution"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>

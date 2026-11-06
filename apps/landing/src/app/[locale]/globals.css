@@ -115,3 +115,34 @@ h2 {
     transition-property: opacity, content-visibility;
   }
 }
+
+/* Pricing: rotating gradient border on the featured plan card */
+@property --plan-card-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes plan-card-border-spin {
+  to {
+    --plan-card-angle: 360deg;
+  }
+}
+
+.plan-card-featured {
+  background: conic-gradient(
+    from var(--plan-card-angle),
+    var(--color-indigo-200) 0deg,
+    var(--color-indigo-600) 60deg,
+    var(--color-fuchsia-400) 120deg,
+    var(--color-indigo-200) 180deg,
+    var(--color-indigo-200) 360deg
+  );
+  animation: plan-card-border-spin 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card-featured {
+    animation: none;
+  }
+}
