@@ -48,6 +48,7 @@ import {
   SESSION_TTL_SECONDS,
 } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
+import { ipAddressConfig } from "@/lib/client-ip";
 import { redis } from "@/lib/kv";
 import {
   LOCALE_COOKIE_NAME,
@@ -756,6 +757,7 @@ export const authLib = betterAuth({
     database: {
       joins: true,
     },
+    ipAddress: ipAddressConfig,
     crossSubDomainCookies: env.NEXT_PUBLIC_COOKIE_DOMAIN
       ? {
           enabled: true,
