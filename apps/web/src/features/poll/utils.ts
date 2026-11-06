@@ -33,11 +33,11 @@ type RawParticipant = Omit<PollParticipant, "hidden" | "editUrl"> & {
 };
 
 /**
- * Scopes the response list to a viewer who is not the host. Notes are for
- * the host and their author only, so they survive only on the viewer's own
- * responses: the ones their session created, or the one the emailed link
- * they opened names. With hidden participants, everyone else's identity is
- * withheld while their votes still count.
+ * Scopes the response list to a viewer who is not the host. Notes and email
+ * addresses are for the host and their author only, so they survive only on
+ * the viewer's own responses: the ones their session created, or the one the
+ * emailed link they opened names. With hidden participants, everyone else's
+ * identity is withheld while their votes still count.
  */
 export function maskParticipantsForViewer({
   participants,
@@ -69,7 +69,14 @@ export function maskParticipantsForViewer({
         editUrl: null,
       };
     }
-    return { ...participant, note: null, hidden: false, editUrl: null };
+    return {
+      ...participant,
+      userId: null,
+      email: null,
+      note: null,
+      hidden: false,
+      editUrl: null,
+    };
   });
 }
 
