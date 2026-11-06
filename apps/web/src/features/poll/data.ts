@@ -888,3 +888,25 @@ export async function listPollComments({
     orderBy: [{ createdAt: "asc" }],
   });
 }
+
+export async function searchPolls({
+  scope,
+  query,
+  limit,
+}: {
+  scope: SpaceContentScope;
+  query?: string;
+  limit: number;
+}) {
+  return prisma.poll.findMany({
+    where: {
+      spaceId: scope.spaceId,
+      deletedAt: null,
+      ...(query && { title: { contains: query, mode: "insensitive" } }),
+      ...(scope.createdBy && { userId: scope.createdBy }),
+    },
+    select: { id: true, title: true, status: true },
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+    take: limit,
+  });
+}

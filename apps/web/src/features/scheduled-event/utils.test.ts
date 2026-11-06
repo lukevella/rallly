@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatEventDateTime,
+  getEventListStatus,
   pastScheduledEventWhere,
   upcomingScheduledEventWhere,
 } from "./utils";
@@ -225,5 +226,57 @@ describe("pastScheduledEventWhere", () => {
         expect(matchesWhere(upcoming, event)).toBe(!matchesWhere(past, event));
       }
     }
+  });
+});
+
+describe("getEventListStatus", () => {
+  const now = new Date(Date.UTC(2026, 5, 26, 13, 30));
+
+  it("keeps an in-progress timed event upcoming", () => {
+    expect(
+      getEventListStatus({
+        status: "confirmed",
+        allDay: false,
+        end,
+        now,
+        timeZone: "UTC",
+      }),
+    ).toBe("upcoming");
+  });
+
+  it("marks a finished timed event past", () => {
+    expect(
+      getEventListStatus({
+        status: "confirmed",
+        allDay: false,
+        end,
+        now: new Date(Date.UTC(2026, 5, 26, 15)),
+        timeZone: "UTC",
+      }),
+    ).toBe("past");
+  });
+
+  it("keeps an all-day event upcoming through its day in the viewer's zone", () => {
+    // 26 Jun all-day; exclusive end is 27 Jun UTC midnight. At 23:30 on the
+    // 26th in Los Angeles it is already the 27th in UTC.
+    expect(
+      getEventListStatus({
+        status: "confirmed",
+        allDay: true,
+        end: new Date(Date.UTC(2026, 5, 27)),
+        now: new Date(Date.UTC(2026, 5, 27, 6, 30)),
+        timeZone: "America/Los_Angeles",
+      }),
+    ).toBe("upcoming");
+  });
+
+  it("passes canceled and unconfirmed through", () => {
+    const args = { allDay: false, end, now, timeZone: "UTC" };
+    expect(getEventListStatus({ ...args, status: "canceled" })).toBe(
+      "canceled",
+    );
+    expect(getEventListStatus({ ...args, status: "unconfirmed" })).toBe(
+      "unconfirmed",
+    );
   });
 });
