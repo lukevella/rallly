@@ -131,7 +131,7 @@ const providers = [
 export default async function Security(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("hours");
+  cacheLife("max");
   const { locale } = await props.params;
   return (
     <div className="divide-y">
