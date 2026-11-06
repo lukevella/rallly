@@ -9,7 +9,7 @@ const CAPTERRA_RATING = 4.9;
 const TRUSTPILOT_RATING = 4.8;
 const G2_RATING = 4.6;
 
-const CAPTERRA_URL = "https://www.capterra.com/p/10019758/Rallly/reviews/";
+const CAPTERRA_URL = "https://www.capterra.com/p/10019758/Rallly/";
 const TRUSTPILOT_URL = "https://www.trustpilot.com/review/rallly.co";
 const G2_URL = "https://www.g2.com/products/rallly/reviews";
 
