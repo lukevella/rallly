@@ -605,3 +605,28 @@ export function getInviteEmailData({ uid }: { uid: string }) {
     },
   });
 }
+
+export async function searchScheduledEvents({
+  scope,
+  query,
+  limit,
+}: {
+  scope: SpaceContentScope;
+  query?: string;
+  limit: number;
+}) {
+  return prisma.scheduledEvent.findMany({
+    where: buildBaseWhere(scope, query),
+    select: {
+      id: true,
+      title: true,
+      start: true,
+      end: true,
+      allDay: true,
+      timeZone: true,
+      status: true,
+    },
+    orderBy: [{ start: "desc" }, { id: "desc" }],
+    take: limit,
+  });
+}

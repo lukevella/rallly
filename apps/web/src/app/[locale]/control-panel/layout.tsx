@@ -5,7 +5,6 @@ import { Suspense } from "react";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { SecurityUpdateBanner } from "@/features/instance-settings/components/security-update-banner";
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
-import { CommandMenu } from "@/features/navigation/components/command-menu";
 import { UserProvider } from "@/features/user/client";
 import { loadAdmin } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
@@ -29,7 +28,6 @@ async function AdminGate({ children }: { children: React.ReactNode }) {
         weekStart={user.weekStart}
       >
         <ControlPanelSidebarProvider>
-          <CommandMenu />
           <ControlPanelSidebar />
           <SidebarInset id="main-content" tabIndex={-1}>
             <LicenseLimitWarning />
