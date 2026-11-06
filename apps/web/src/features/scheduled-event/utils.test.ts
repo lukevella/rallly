@@ -270,6 +270,31 @@ describe("getEventListStatus", () => {
     ).toBe("upcoming");
   });
 
+  it("marks a timed event past the moment it ends", () => {
+    expect(
+      getEventListStatus({
+        status: "confirmed",
+        allDay: false,
+        end,
+        now: end,
+        timeZone: "UTC",
+      }),
+    ).toBe("past");
+  });
+
+  it("marks an all-day event past once its exclusive end is today", () => {
+    // 26 Jun all-day; on 27 Jun in Los Angeles the exclusive end has arrived.
+    expect(
+      getEventListStatus({
+        status: "confirmed",
+        allDay: true,
+        end: new Date(Date.UTC(2026, 5, 27)),
+        now: new Date(Date.UTC(2026, 5, 27, 8)),
+        timeZone: "America/Los_Angeles",
+      }),
+    ).toBe("past");
+  });
+
   it("passes canceled and unconfirmed through", () => {
     const args = { allDay: false, end, now, timeZone: "UTC" };
     expect(getEventListStatus({ ...args, status: "canceled" })).toBe(

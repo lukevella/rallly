@@ -35,7 +35,11 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { CommandMenuContext, useSpaceMenu } from "@/features/navigation/client";
-import { SEARCH_INDEX_STALE_TIME } from "@/features/navigation/constants";
+import {
+  SEARCH_INDEX_STALE_TIME,
+  SEARCH_QUERY_MAX_LENGTH,
+} from "@/features/navigation/constants";
+import { getEventListStatus } from "@/features/scheduled-event/utils";
 import { useSpace } from "@/features/space/client";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -246,7 +250,15 @@ function SearchResults({
               onSelect={() =>
                 onSelect(
                   `/events?${new URLSearchParams({
-                    status: event.listStatus,
+                    // Classified on select: the index can outlive an
+                    // event's end
+                    status: getEventListStatus({
+                      status: event.status,
+                      allDay: event.allDay,
+                      end: new Date(event.end),
+                      now: new Date(),
+                      timeZone: getBrowserTimeZone(),
+                    }),
                     q: event.title,
                   })}`,
                   "event",
@@ -327,15 +339,15 @@ function useSearchResults({
   query: string;
   enabled: boolean;
 }) {
-  const [timeZone] = React.useState(getBrowserTimeZone);
+  const { data: space } = useSpace();
   const index = trpc.search.index.useQuery(
-    { timeZone },
+    { spaceId: space.id },
     { enabled, staleTime: SEARCH_INDEX_STALE_TIME },
   );
   const useServer = index.isError || index.data?.complete === false;
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS);
   const server = trpc.search.query.useQuery(
-    { query: debouncedQuery, timeZone },
+    { spaceId: space.id, query: debouncedQuery },
     {
       enabled: useServer && debouncedQuery.length > 0,
       placeholderData: keepPreviousData,
@@ -362,7 +374,7 @@ function useSearchResults({
   if (useServer) {
     return {
       results:
-        debouncedQuery && server.data
+        debouncedQuery && server.data && !server.isPlaceholderData
           ? { query: debouncedQuery, data: server.data }
           : undefined,
       isPending: query !== debouncedQuery || server.isFetching,
@@ -420,6 +432,7 @@ function CommandMenu({
         autoFocus={true}
         value={search}
         onValueChange={setSearch}
+        maxLength={SEARCH_QUERY_MAX_LENGTH}
         placeholder={t("commandMenuSearchPlaceholder", {
           defaultValue: "Type a command or search...",
         })}
@@ -494,10 +507,33 @@ export function CommandMenuProvider({
   children: React.ReactNode;
 }) {
   const { trigger, dismiss, dialogProps } = useDialog();
+  // useDialog only refocuses a trigger it holds a ref to, and the menu has
+  // several (button, shortcut), so remember whatever had focus on open.
+  const returnFocusRef = React.useRef<HTMLElement | null>(null);
+  const isOpen = dialogProps.open;
+  const open = React.useCallback(() => {
+    if (!isOpen) {
+      returnFocusRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+    }
+    trigger();
+  }, [trigger, isOpen]);
+  const close = React.useCallback(() => {
+    dismiss();
+    returnFocusRef.current?.focus();
+  }, [dismiss]);
   return (
-    <CommandMenuContext.Provider value={{ open: trigger }}>
-      <CommandGlobalShortcut trigger={trigger} />
-      <CommandMenu dialogProps={dialogProps} dismiss={dismiss} />
+    <CommandMenuContext.Provider value={{ open }}>
+      <CommandGlobalShortcut trigger={open} />
+      <CommandMenu
+        dialogProps={{
+          open: dialogProps.open,
+          onOpenChange: (nextOpen) => (nextOpen ? open() : close()),
+        }}
+        dismiss={close}
+      />
       {children}
     </CommandMenuContext.Provider>
   );

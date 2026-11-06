@@ -14,7 +14,6 @@ import { SEARCH_INDEX_STALE_TIME } from "@/features/navigation/constants";
 import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
 
 export interface NavigationItem {
@@ -130,10 +129,12 @@ export const useCommandMenu = () => {
 // keystroke already filters locally.
 export const useSearchIndexPrefetch = () => {
   const utils = trpc.useUtils();
+  const { data: space } = useSpace();
+  const spaceId = space.id;
   return React.useCallback(() => {
     void utils.search.index.prefetch(
-      { timeZone: getBrowserTimeZone() },
+      { spaceId },
       { staleTime: SEARCH_INDEX_STALE_TIME },
     );
-  }, [utils]);
+  }, [utils, spaceId]);
 };

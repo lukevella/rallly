@@ -1,10 +1,10 @@
+import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { SEARCH_QUERY_MAX_LENGTH } from "@/features/navigation/constants";
 import { searchPolls } from "@/features/poll/data";
 import { searchScheduledEvents } from "@/features/scheduled-event/data";
-import { getEventListStatus } from "@/features/scheduled-event/utils";
 import { searchSpaceMembers } from "@/features/space/member/data";
 import type { SpaceContentScope, SpaceDTO } from "@/features/space/types";
-import { normalizeTimeZone } from "@/lib/datetime/utils";
 import { router, spaceProcedure } from "../trpc";
 
 const RESULT_LIMIT = 5;
@@ -12,24 +12,30 @@ const RESULT_LIMIT = 5;
 // and falls back to server search.
 const INDEX_LIMIT = 1000;
 
-const timeZoneSchema = z.string();
+// The client names the space it expects so cached results can never be
+// shown for a space other than the active one.
+function assertActiveSpace(space: Pick<SpaceDTO, "id">, spaceId: string) {
+  if (space.id !== spaceId) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Active space changed",
+    });
+  }
+}
 
 async function findSearchItems({
   space,
   scope,
   query,
   limit,
-  timeZone,
 }: {
   space: Pick<SpaceDTO, "id" | "role">;
   scope: SpaceContentScope;
   query?: string;
   limit: number;
-  timeZone: string;
 }) {
   // Member results open the members page, which only admins can reach
   const canSearchMembers = space.role === "admin";
-  const viewerTimeZone = normalizeTimeZone(timeZone) ?? "UTC";
 
   const [polls, events, members] = await Promise.all([
     searchPolls({ scope, query, limit }),
@@ -39,27 +45,7 @@ async function findSearchItems({
       : [],
   ]);
 
-  const now = new Date();
-
-  return {
-    polls,
-    events: events.map((event) => ({
-      id: event.id,
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      allDay: event.allDay,
-      timeZone: event.timeZone,
-      listStatus: getEventListStatus({
-        status: event.status,
-        allDay: event.allDay,
-        end: event.end,
-        now,
-        timeZone: viewerTimeZone,
-      }),
-    })),
-    members,
-  };
+  return { polls, events, members };
 }
 
 export const search = router({
@@ -67,13 +53,13 @@ export const search = router({
   // as the user types. `complete` is false when any type hit the cap; the
   // client then searches on the server instead.
   index: spaceProcedure
-    .input(z.object({ timeZone: timeZoneSchema }))
+    .input(z.object({ spaceId: z.string() }))
     .query(async ({ ctx, input }) => {
+      assertActiveSpace(ctx.space, input.spaceId);
       const items = await findSearchItems({
         space: ctx.space,
         scope: ctx.contentScope,
         limit: INDEX_LIMIT + 1,
-        timeZone: input.timeZone,
       });
       const complete =
         items.polls.length <= INDEX_LIMIT &&
@@ -84,18 +70,17 @@ export const search = router({
   query: spaceProcedure
     .input(
       z.object({
-        query: z.string().trim().min(1).max(100),
-        // The viewer's zone decides which events tab an event belongs to
-        timeZone: timeZoneSchema,
+        spaceId: z.string(),
+        query: z.string().trim().min(1).max(SEARCH_QUERY_MAX_LENGTH),
       }),
     )
-    .query(({ ctx, input }) =>
-      findSearchItems({
+    .query(({ ctx, input }) => {
+      assertActiveSpace(ctx.space, input.spaceId);
+      return findSearchItems({
         space: ctx.space,
         scope: ctx.contentScope,
         query: input.query,
         limit: RESULT_LIMIT,
-        timeZone: input.timeZone,
-      }),
-    ),
+      });
+    }),
 });
