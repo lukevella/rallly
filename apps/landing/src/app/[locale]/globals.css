@@ -3,6 +3,28 @@
 
 /* Any app specific overrides will go here */
 
+/* The shared theme scales the type ladder by 8/7 on touch devices so web app
+ * fields reach 16px and iOS Safari doesn't zoom on focus. The marketing site
+ * has no text fields, and the scale inflates its mobile typography, so restore
+ * the default ladder. */
+@layer base {
+  @media (pointer: coarse) {
+    :root {
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.25rem;
+      --text-2xl: 1.5rem;
+      --text-3xl: 1.875rem;
+      --text-4xl: 2.25rem;
+      --text-5xl: 3rem;
+      --text-6xl: 3.75rem;
+      --text-7xl: 4.5rem;
+    }
+  }
+}
+
 body {
   @apply bg-gray-100;
 }
