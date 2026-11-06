@@ -5,41 +5,26 @@ import { getTranslation } from "@/i18n/server";
 
 // None of these sites offer a keyless API and all block server fetches, so
 // these are updated by hand.
-const CAPTERRA_RATING = 4.9;
-const TRUSTPILOT_RATING = 4.8;
-const G2_RATING = 4.6;
-
-const CAPTERRA_URL = "https://www.capterra.com/p/10019758/Rallly/";
-const TRUSTPILOT_URL = "https://www.trustpilot.com/review/rallly.co";
-const G2_URL = "https://www.g2.com/products/rallly/reviews";
-
-function ReviewRating({
-  href,
-  logo,
-  children,
-}: {
-  href: string;
-  logo: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 text-gray-800 hover:text-gray-950"
-    >
-      <Image
-        src={logo}
-        width={20}
-        height={20}
-        className="size-5 object-contain"
-        alt=""
-      />
-      <span>{children}</span>
-    </a>
-  );
-}
+const reviewSites = [
+  {
+    name: "Capterra",
+    rating: 4.9,
+    url: "https://www.capterra.com/p/10019758/Rallly/",
+    logo: "/static/images/capterra-logo.svg",
+  },
+  {
+    name: "Trustpilot",
+    rating: 4.8,
+    url: "https://www.trustpilot.com/review/rallly.co",
+    logo: "/static/images/trustpilot-star.svg",
+  },
+  {
+    name: "G2",
+    rating: 4.6,
+    url: "https://www.g2.com/products/rallly/reviews",
+    logo: "/static/images/g2-logo.svg",
+  },
+];
 
 export async function ReviewRatings({
   locale,
@@ -60,39 +45,36 @@ export async function ReviewRatings({
         className,
       )}
     >
-      <ReviewRating href={CAPTERRA_URL} logo="/static/images/capterra-logo.svg">
-        <Trans
-          t={t}
-          i18n={i18n}
-          ns="home"
-          i18nKey="capterraRating"
-          defaults="{rating}/5 on Capterra"
-          values={{ rating: formatRating(CAPTERRA_RATING) }}
-        />
-      </ReviewRating>
-      <ReviewRating
-        href={TRUSTPILOT_URL}
-        logo="/static/images/trustpilot-star.svg"
-      >
-        <Trans
-          t={t}
-          i18n={i18n}
-          ns="home"
-          i18nKey="trustpilotRating"
-          defaults="{rating}/5 on Trustpilot"
-          values={{ rating: formatRating(TRUSTPILOT_RATING) }}
-        />
-      </ReviewRating>
-      <ReviewRating href={G2_URL} logo="/static/images/g2-logo.svg">
-        <Trans
-          t={t}
-          i18n={i18n}
-          ns="home"
-          i18nKey="g2Rating"
-          defaults="{rating}/5 on G2"
-          values={{ rating: formatRating(G2_RATING) }}
-        />
-      </ReviewRating>
+      {reviewSites.map((site) => (
+        <a
+          key={site.name}
+          href={site.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-gray-800 hover:text-gray-950"
+        >
+          <Image
+            src={site.logo}
+            width={20}
+            height={20}
+            className="size-5 object-contain"
+            alt=""
+          />
+          <span>
+            <Trans
+              t={t}
+              i18n={i18n}
+              ns="home"
+              i18nKey="reviewSiteRating"
+              defaults="{rating}/5 on {reviewSite}"
+              values={{
+                rating: formatRating(site.rating),
+                reviewSite: site.name,
+              }}
+            />
+          </span>
+        </a>
+      ))}
     </div>
   );
 }
