@@ -176,6 +176,7 @@
   "commandMenuDescription": "Select a command",
   "commandMenuNavigation": "Navigation",
   "commandMenuNoResults": "No results",
+  "commandMenuSearchFailed": "Search failed. Try again.",
   "commandMenuSearchPlaceholder": "Type a command or search...",
   "comments": "Comments",
   "commentsComposerPlaceholder": "Write a comment…",

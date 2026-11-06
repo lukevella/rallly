@@ -339,12 +339,22 @@ function useSearchResults({
   query: string;
   enabled: boolean;
 }) {
+  const router = useRouter();
   const { data: space } = useSpace();
   const index = trpc.search.index.useQuery(
     { spaceId: space.id },
     { enabled, staleTime: SEARCH_INDEX_STALE_TIME },
   );
-  const useServer = index.isError || index.data?.complete === false;
+  // The active space changed elsewhere (another tab); the server would
+  // reject the fallback too, so resync the space instead.
+  const isSpaceConflict = index.error?.data?.code === "CONFLICT";
+  React.useEffect(() => {
+    if (isSpaceConflict) {
+      router.refresh();
+    }
+  }, [isSpaceConflict, router]);
+  const useServer =
+    (index.isError && !isSpaceConflict) || index.data?.complete === false;
   const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS);
   const server = trpc.search.query.useQuery(
     { spaceId: space.id, query: debouncedQuery },
@@ -364,24 +374,34 @@ function useSearchResults({
   );
 
   if (!query) {
-    return { results: undefined, isPending: false };
+    return { results: undefined, isPending: false, isError: false };
   }
 
   if (localData) {
-    return { results: { query, data: localData }, isPending: false };
+    return {
+      results: { query, data: localData },
+      isPending: false,
+      isError: false,
+    };
   }
 
   if (useServer) {
+    const isPending = query !== debouncedQuery || server.isFetching;
     return {
       results:
         debouncedQuery && server.data && !server.isPlaceholderData
           ? { query: debouncedQuery, data: server.data }
           : undefined,
-      isPending: query !== debouncedQuery || server.isFetching,
+      isPending,
+      isError: !isPending && server.isError,
     };
   }
 
-  return { results: undefined, isPending: index.isPending };
+  return {
+    results: undefined,
+    isPending: index.isPending || isSpaceConflict,
+    isError: false,
+  };
 }
 
 function CommandMenu({
@@ -397,7 +417,11 @@ function CommandMenu({
   const settingsCommands = useSettingsCommands();
   const [search, setSearch] = React.useState("");
   const query = search.trim();
-  const { results, isPending: isSearchPending } = useSearchResults({
+  const {
+    results,
+    isPending: isSearchPending,
+    isError: isSearchError,
+  } = useSearchResults({
     query,
     enabled: dialogProps.open,
   });
@@ -441,6 +465,11 @@ function CommandMenu({
         <CommandEmpty>
           {isSearchPending ? (
             <LoaderCircleIcon className="mx-auto size-4 animate-spin text-muted-foreground" />
+          ) : isSearchError ? (
+            <Trans
+              i18nKey="commandMenuSearchFailed"
+              defaults="Search failed. Try again."
+            />
           ) : (
             <Trans i18nKey="commandMenuNoResults" defaults="No results" />
           )}
