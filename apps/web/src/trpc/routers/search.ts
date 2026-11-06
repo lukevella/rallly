@@ -5,6 +5,7 @@ import { searchPolls } from "@/features/poll/data";
 import { searchScheduledEvents } from "@/features/scheduled-event/data";
 import { searchSpaceMembers } from "@/features/space/member/data";
 import type { SpaceContentScope, SpaceDTO } from "@/features/space/types";
+import { escapeLikePattern } from "@/lib/utils/escape-like-pattern";
 import { router, spaceProcedure } from "../trpc";
 
 const RESULT_LIMIT = 5;
@@ -79,7 +80,7 @@ export const search = router({
       return findSearchItems({
         space: ctx.space,
         scope: ctx.contentScope,
-        query: input.query,
+        query: escapeLikePattern(input.query),
         limit: RESULT_LIMIT,
       });
     }),
