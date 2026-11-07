@@ -14,7 +14,7 @@ export const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground ring-1 ring-button-outline ring-inset hover:bg-destructive-hover not-aria-[haspopup]:active:scale-[.98] active:bg-destructive-active motion-reduce:active:scale-100",
         default:
-          "bg-background/80 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-accent not-aria-[haspopup]:active:scale-[.98] active:bg-accent data-popup-open:bg-accent motion-reduce:active:scale-100 dark:bg-foreground/5",
+          "bg-foreground/5 ring-1 ring-button-outline ring-inset backdrop-blur-lg hover:bg-foreground/10 not-aria-[haspopup]:active:scale-[.98] active:bg-foreground/10 data-popup-open:bg-foreground/10 motion-reduce:active:scale-100",
         ghost:
           "border-transparent bg-transparent text-foreground ring-1 ring-transparent ring-inset hover:bg-accent not-aria-[haspopup]:active:scale-[.98] active:bg-accent data-popup-open:bg-accent motion-reduce:active:scale-100 [&>svg]:opacity-75",
         actionBar:
