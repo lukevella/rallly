@@ -1,4 +1,12 @@
 import { Tile, TileDescription, TileGrid, TileTitle } from "@rallly/ui/tile";
+import {
+  BarChart2Icon,
+  CalendarIcon,
+  CreditCardIcon,
+  PlusIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import {
@@ -8,14 +16,6 @@ import {
   ListViewTitle,
   ListViewTitleBar,
 } from "@/components/list-view";
-import {
-  BillingPageIcon,
-  CreatePageIcon,
-  EventPageIcon,
-  MembersPageIcon,
-  PollPageIcon,
-  SettingsPageIcon,
-} from "@/components/page-icons";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -68,7 +68,7 @@ export async function DashboardHome({
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/new" />}>
-              <CreatePageIcon />
+              <PlusIcon className="size-5 text-muted-foreground" />
               <TileTitle>
                 <Trans
                   t={t}
@@ -93,7 +93,7 @@ export async function DashboardHome({
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/polls" />}>
-              <PollPageIcon />
+              <BarChart2Icon className="size-5 text-muted-foreground" />
               <TileTitle>
                 <Trans
                   t={t}
@@ -130,7 +130,7 @@ export async function DashboardHome({
             </Tile>
 
             <Tile render={<HoverPrefetchLink href="/events" />}>
-              <EventPageIcon />
+              <CalendarIcon className="size-5 text-muted-foreground" />
               <TileTitle>
                 <Trans
                   t={t}
@@ -165,7 +165,7 @@ export async function DashboardHome({
           </h2>
           <TileGrid>
             <Tile render={<HoverPrefetchLink href="/settings/general" />}>
-              <SettingsPageIcon />
+              <SettingsIcon className="size-5 text-muted-foreground" />
               <TileTitle>
                 <Trans
                   t={t}
@@ -179,7 +179,7 @@ export async function DashboardHome({
 
             {canManageMembers ? (
               <Tile render={<HoverPrefetchLink href="/members" />}>
-                <MembersPageIcon />
+                <UsersIcon className="size-5 text-muted-foreground" />
                 <TileTitle>
                   <Trans
                     t={t}
@@ -204,7 +204,7 @@ export async function DashboardHome({
 
             {isFeatureEnabled("billing") && canManageBilling ? (
               <Tile render={<HoverPrefetchLink href="/settings/billing" />}>
-                <BillingPageIcon />
+                <CreditCardIcon className="size-5 text-muted-foreground" />
                 <TileTitle>
                   <Trans
                     t={t}
