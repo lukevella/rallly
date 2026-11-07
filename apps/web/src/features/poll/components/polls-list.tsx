@@ -22,7 +22,7 @@ import {
 import { Skeleton } from "@rallly/ui/skeleton";
 import { toast } from "@rallly/ui/sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
+import { shortUrl } from "@rallly/utils/absolute-url";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -46,6 +46,7 @@ import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
+import { usePollAdminHref } from "@/features/poll/client";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import {
@@ -103,12 +104,12 @@ function PollTitleLink({
   status: PollStatus;
   closedReason: PollClosedReason | null;
 }) {
-  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
+  const pollAdminHref = usePollAdminHref();
   return (
     <div className="flex min-w-0 items-center gap-2">
       <HoverPrefetchLink
         className="min-w-0 truncate text-sm outline-none after:absolute after:inset-0"
-        href={isPollAdminEnabled ? `/polls/${id}` : absoluteUrl(`/poll/${id}`)}
+        href={pollAdminHref(id)}
       >
         {title}
       </HoverPrefetchLink>

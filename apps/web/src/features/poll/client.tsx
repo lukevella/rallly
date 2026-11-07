@@ -8,6 +8,7 @@ import type {
 } from "@/features/poll/types";
 import { useUser } from "@/features/user/client";
 import { useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 type PollContextValue = {
   poll: PollDetails;
@@ -51,6 +52,20 @@ export function PollProvider({
 }
 
 export const usePoll = () => useRequiredContext(PollContext).poll;
+
+/**
+ * Builds the link to a poll's admin page. The new admin at /polls/[pollId]
+ * 404s while the pollAdmin flag is off, so every link to a poll's admin page
+ * goes through here instead of hardcoding either route.
+ */
+export function usePollAdminHref() {
+  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
+  return React.useCallback(
+    (pollId: string) =>
+      isPollAdminEnabled ? `/polls/${pollId}` : `/poll/${pollId}`,
+    [isPollAdminEnabled],
+  );
+}
 
 /** The poll when a provider is mounted, for components shared with pages
  * that pass their data as props instead. */
