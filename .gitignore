@@ -52,3 +52,12 @@ next-env.d.ts
 .claude/launch.json
 # Radix -> Base UI migration reports (local skill state)
 .migration/
+
+# Environment files for other targets (e.g. .env.production). Tracked samples stay.
+.env.*
+!.env.sample
+!.env.test
+
+# SSH keys (PuTTY format; *.pem is ignored above)
+*.ppk
+

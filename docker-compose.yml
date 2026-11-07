@@ -1,16 +1,19 @@
+# Modified in this fork: the database user, password, name and ports are read
+# from the root .env file (see .env.sample) instead of being written here.
 services:
   rallly_db:
     image: postgres:18-alpine
     restart: always
     ports:
-      - "5450:5432"
+      - "${POSTGRES_PORT:-5450}:5432"
     volumes:
       - db-data:/var/lib/postgresql
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=rallly
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (see .env.sample)}
+      - POSTGRES_DB=${POSTGRES_DB:-rallly}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -26,9 +29,9 @@ services:
       rallly_db:
         condition: service_healthy
     ports:
-      - 3000:3000
+      - ${APP_PORT:-7201}:3000
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@rallly_db/rallly
+      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@rallly_db/${POSTGRES_DB:-rallly}
     env_file:
       - path: apps/web/.env
         required: false

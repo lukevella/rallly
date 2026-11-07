@@ -1,0 +1,44 @@
+# QA demo: runs the app as a production container (default http://localhost:7201).
+# Add-on file. Combine it with docker-compose.dev.yml (database, redis, mail, storage):
+#   docker compose -f docker-compose.dev.yml -f docker-compose.local.yml up -d --build
+#
+# Local use only. Passwords, tokens, names and ports come from the root .env file
+# (see .env.sample). Use different values before any public deployment.
+#
+# APP_VERSION is not passed on purpose: without it the app never
+# calls the Rallly update server (api.rallly.co).
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      args:
+        # The Dockerfile only works with a self-hosted build (standalone output).
+        SELF_HOSTED: "true"
+    restart: unless-stopped
+    depends_on:
+      rallly_db:
+        condition: service_healthy
+      mailpit:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      serverless-redis-http:
+        condition: service_started
+    ports:
+      - "${APP_PORT:-7201}:3000"
+    env_file:
+      - apps/web/.env
+    environment:
+      # Inside a container, localhost does not reach the other services.
+      # Use the service names instead. These override values from apps/web/.env.
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (see .env.sample)}@rallly_db:5432/${POSTGRES_DB:-rallly}
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      KV_REST_API_URL: http://serverless-redis-http:80
+      # Same token as the redis proxy, so the two can never disagree.
+      KV_REST_API_TOKEN: ${SRH_TOKEN:?set SRH_TOKEN in .env (see .env.sample)}
+      # Must match the build argument above.
+      NEXT_PUBLIC_SELF_HOSTED: "true"
+      NEXT_PUBLIC_BASE_URL: http://localhost:${APP_PORT:-7201}

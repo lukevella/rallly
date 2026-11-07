@@ -6,7 +6,6 @@ db_engine = "sqlite"
 replication_factor = 1
 
 rpc_bind_addr = "[::]:3901"
-rpc_secret = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [s3_api]
 api_bind_addr = "[::]:3900"

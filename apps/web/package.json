@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "portless run --name web.rallly sh -c 'NEXT_PUBLIC_BASE_URL=$PORTLESS_URL DEV_DOMAIN=${PORTLESS_URL#https://} pnpm exec next dev'",
     "build": "next build",
     "build:test": "NODE_ENV=test next build",
     "analyze": "cross-env ANALYZE=true next build",

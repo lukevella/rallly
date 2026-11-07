@@ -1,16 +1,19 @@
+# Modified in this fork: passwords, tokens, keys, names and ports are read from
+# the root .env file (see .env.sample) instead of being written here.
 services:
   rallly_db:
     image: postgres:18-alpine
     restart: always
     ports:
-      - "5450:5432"
+      - "${POSTGRES_PORT:-5450}:5432"
     volumes:
       - db-data:/var/lib/postgresql
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=rallly
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (see .env.sample)}
+      - POSTGRES_DB=${POSTGRES_DB:-rallly}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -32,7 +35,7 @@ services:
     image: hiett/serverless-redis-http:latest
     environment:
       SRH_MODE: env
-      SRH_TOKEN: dev_fake_token_123456789abcdefghijklmnop
+      SRH_TOKEN: ${SRH_TOKEN:?set SRH_TOKEN in .env (see .env.sample)}
       SRH_CONNECTION_STRING: "redis://redis:6379"
   garage:
     image: dxflrs/garage:v2.3.0
@@ -45,8 +48,9 @@ services:
       - garage-meta:/var/lib/garage/meta
       - garage-data:/var/lib/garage/data
     environment:
-      - GARAGE_DEFAULT_ACCESS_KEY=rallly-access-key
-      - GARAGE_DEFAULT_SECRET_KEY=rallly-secret-key
+      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET:?set GARAGE_RPC_SECRET in .env (see .env.sample)}
+      - GARAGE_DEFAULT_ACCESS_KEY=${GARAGE_ACCESS_KEY:?set GARAGE_ACCESS_KEY in .env (see .env.sample)}
+      - GARAGE_DEFAULT_SECRET_KEY=${GARAGE_SECRET_KEY:?set GARAGE_SECRET_KEY in .env (see .env.sample)}
       - GARAGE_DEFAULT_BUCKET=rallly
     command: /garage server --single-node --default-bucket
     healthcheck:
@@ -74,8 +78,8 @@ services:
       garage:
         condition: service_healthy
     environment:
-      - AWS_ACCESS_KEY_ID=rallly-access-key
-      - AWS_SECRET_ACCESS_KEY=rallly-secret-key
+      - AWS_ACCESS_KEY_ID=${GARAGE_ACCESS_KEY:?set GARAGE_ACCESS_KEY in .env (see .env.sample)}
+      - AWS_SECRET_ACCESS_KEY=${GARAGE_SECRET_KEY:?set GARAGE_SECRET_KEY in .env (see .env.sample)}
       - AWS_DEFAULT_REGION=garage
     volumes:
       - ./docker/cors.json:/cors.json:ro
