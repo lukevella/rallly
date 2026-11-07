@@ -17,7 +17,7 @@ function Tile({
     props: mergeProps<"div">(
       {
         className: cn(
-          "relative flex flex-col justify-end rounded-xl bg-white/50 p-3 text-card-foreground ring-1 ring-button-outline ring-inset transition-transform hover:bg-white/75 active:translate-y-0.5 dark:bg-card dark:hover:bg-card-accent",
+          "relative flex flex-col justify-end rounded-xl bg-foreground/5 p-3 text-card-foreground ring-1 ring-button-outline ring-inset backdrop-blur-lg transition-[background-color,transform] hover:bg-foreground/10 active:translate-y-0.5",
           className,
         ),
       },
