@@ -20,10 +20,12 @@ import {
   ContentGridLink,
   ContentGridTitle,
 } from "@/components/content-grid";
+import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
 import { Perimeter } from "@/components/home/perimeter";
 import { ReviewRatings } from "@/components/home/review-ratings";
+import { Stats } from "@/components/home/stats";
 import {
   Section,
   SectionContent,
@@ -32,6 +34,7 @@ import {
   SectionTitle,
 } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
+import { getMonthlyPollCount, getMonthlyVoterCount } from "@/lib/data";
 
 function RegionBadge({
   label,
@@ -131,8 +134,13 @@ const providers = [
 export default async function Security(props: {
   params: Promise<{ locale: string }>;
 }) {
-  cacheLife("max");
+  cacheLife("hours");
   const { locale } = await props.params;
+  const [pollCount, voterCount] = await Promise.all([
+    getMonthlyPollCount(),
+    getMonthlyVoterCount(),
+  ]);
+  const format = new Intl.NumberFormat(locale);
   return (
     <div className="divide-y">
       <Section className="relative border-b-0">
@@ -150,7 +158,16 @@ export default async function Security(props: {
             title="Securely scheduling for thousands of organizations"
             description="Every part of Rallly is built to protect your data, on trusted infrastructure with a codebase anyone can audit. Your schedule is nobody's business but yours."
           />
-          <ReviewRatings locale={locale} className="mt-8 sm:mt-24" />
+          <Stats className="mx-0 mt-8 text-left sm:mt-24">
+            <PeopleBadge locale={locale} live>
+              {format.format(voterCount)} people
+            </PeopleBadge>{" "}
+            voted on{" "}
+            <PollsBadge locale={locale} live>
+              {format.format(pollCount)} polls
+            </PollsBadge>{" "}
+            in the last 30 days
+          </Stats>
         </div>
       </Section>
       <Section>
@@ -410,6 +427,7 @@ export default async function Security(props: {
             Contact us
           </a>
         </div>
+        <ReviewRatings locale={locale} className="mt-12 justify-center" />
       </Section>
     </div>
   );
