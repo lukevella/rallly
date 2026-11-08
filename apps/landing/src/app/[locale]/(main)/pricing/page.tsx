@@ -31,7 +31,6 @@ import {
 } from "@/components/compare-table";
 import { Cta } from "@/components/home/cta";
 import { FaqItem, FaqSection } from "@/components/home/faq";
-import { ReviewRatings } from "@/components/home/review-ratings";
 import {
   Section,
   SectionContent,
@@ -396,10 +395,6 @@ export default async function Page(props: {
             </PlanCard>
           </PlanCards>
         </PricingProvider>
-        <ReviewRatings
-          locale={locale}
-          className="mt-8 justify-center sm:mt-12"
-        />
       </Section>
       <Section>
         <SectionHeading>
@@ -1087,6 +1082,7 @@ export default async function Page(props: {
         </FaqSection>
         <Section className="sm:py-24">
           <Cta
+            locale={locale}
             title={
               <Trans
                 t={t}

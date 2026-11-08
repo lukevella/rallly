@@ -146,6 +146,7 @@ export default async function Page(props: {
       </Section>
       <Section className="sm:py-24">
         <Cta
+          locale={params.locale}
           title={
             <Trans
               t={t}
