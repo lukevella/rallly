@@ -36,7 +36,13 @@ export default async function Root(props: {
   const translations = i18n.store.data;
 
   return (
-    <html lang={locale} className={cn(sans.className, display.variable)}>
+    // Horizontal overflow is clipped at the viewport, never on an ancestor of
+    // a sticky element: Safari repositions sticky elements under an overflow
+    // clip on the main thread, so they jitter while scrolling.
+    <html
+      lang={locale}
+      className={cn(sans.className, display.variable, "overflow-x-clip")}
+    >
       <body>
         <LazyMotion features={domAnimation}>
           <I18nProvider locale={locale} resources={translations}>

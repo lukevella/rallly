@@ -98,16 +98,11 @@ export default async function Root(props: {
           </div>
         </div>
       </SiteHeader>
-      {/* The clip stays off the header's ancestors: in Safari a sticky element
-          under an overflow clip is repositioned on the main thread and
-          jitters while scrolling. */}
-      <div className="flex grow flex-col overflow-x-clip">
-        <div className="mx-auto flex w-full max-w-6xl grow flex-col space-y-8 px-4 pb-4 sm:px-6 sm:pb-6">
-          <section className="relative grow">{children}</section>
-          <footer className="border-t pt-8 sm:pt-16">
-            <Footer locale={locale} />
-          </footer>
-        </div>
+      <div className="mx-auto flex w-full max-w-6xl grow flex-col space-y-8 px-4 pb-4 sm:px-6 sm:pb-6">
+        <section className="relative grow">{children}</section>
+        <footer className="border-t pt-8 sm:pt-16">
+          <Footer locale={locale} />
+        </footer>
       </div>
     </div>
   );

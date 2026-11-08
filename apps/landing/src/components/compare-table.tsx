@@ -7,12 +7,10 @@ export function CompareTable({
   ...props
 }: React.ComponentProps<"table">) {
   return (
-    <div className="overflow-x-clip">
-      <table
-        className={cn("w-full border-collapse text-sm", className)}
-        {...props}
-      />
-    </div>
+    <table
+      className={cn("w-full border-collapse text-sm", className)}
+      {...props}
+    />
   );
 }
 
@@ -65,7 +63,7 @@ export function CompareTableCell({
 }: React.ComponentProps<"td">) {
   return (
     <td
-      className={cn("whitespace-nowrap px-4 py-4 text-gray-800", className)}
+      className={cn("px-4 py-4 text-gray-800 sm:whitespace-nowrap", className)}
       {...props}
     />
   );
