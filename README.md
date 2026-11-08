@@ -99,3 +99,32 @@ Thank you to our sponsors for making this project possible.
 > - This is an **unofficial project, not affiliated with** the original author, and it is not endorsed or sponsored by them.
 > - Rights to the Rallly name and logo belong to the original author. If there is any concern, please let me know and I will act promptly.
 > - The purpose of this repository is to demonstrate QA skills such as test design, test automation, and bug reporting.
+
+---
+
+## 🖥️ Local environment / 로컬 환경
+
+Everything below runs on your own computer with Docker Compose. It is not reachable from the internet.
+아래 서비스는 모두 내 PC에서 Docker Compose로 실행되며, 인터넷에서는 접속되지 않습니다.
+
+| Service / 서비스 | Address / 주소 | Purpose / 용도 |
+| --- | --- | --- |
+| **Rallly app** / 앱 | http://localhost:7201 | The web demo (production build in a container) / 웹 데모 (컨테이너의 운영 빌드) |
+| **Mailpit** (web) | http://localhost:8025 | Fake inbox. Verification codes and invite emails arrive here / 가짜 메일함. 인증 코드와 초대 메일이 여기로 도착 |
+| Mailpit (SMTP) | localhost:1025 | Mail server the app sends to / 앱이 메일을 보내는 서버 |
+| **PostgreSQL** | localhost:5450 | Main database. Connect with a tool such as DataGrip / 메인 DB. DataGrip 같은 도구로 접속 |
+| Redis | localhost:6379 | Rate-limit storage / Rate limit 저장소 |
+| Redis REST proxy | http://localhost:8079 | Lets the app talk to Redis over HTTP (Upstash style) / 앱이 HTTP로 Redis를 사용하게 하는 프록시 |
+| Garage (S3) | localhost:3900 (API), 3903 (admin) | Optional file storage. The app does not use it yet / 선택 사항인 파일 저장소. 앱은 아직 사용하지 않음 |
+
+Ports can be changed in the root `.env` file (see `.env.sample`).
+포트는 루트 `.env` 파일에서 바꿀 수 있습니다 (`.env.sample` 참고).
+
+### Start / 실행
+
+```bash
+cp .env.sample .env        # fill in the values / 값을 채운다
+docker compose -f docker-compose.dev.yml -f docker-compose.local.yml up -d --build app
+```
+
+Open http://localhost:7201 in Chrome. / Chrome에서 http://localhost:7201 을 연다.
