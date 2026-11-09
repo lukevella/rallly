@@ -843,21 +843,6 @@ export function AccessibleBallot({
     </Button>
   );
 
-  // Past times depend on the viewer's clock, so nothing can render until there is one.
-  if (!past.ready) {
-    return (
-      <output
-        data-invite-loading
-        className="pointer-events-none fixed inset-0 flex items-center justify-center"
-      >
-        <Spinner />
-        <span className="sr-only">
-          <Trans i18nKey="screenReaderLoading" defaults="Loading the options" />
-        </span>
-      </output>
-    );
-  }
-
   return (
     <>
       {/* Above the columns, so it stays put while either of them scrolls. Editing
@@ -1110,7 +1095,22 @@ export function AccessibleBallot({
           {/* Always in the page, so readers register it before it has anything to say. */}
           <output className="sr-only">{status}</output>
 
-          {showThanks ? (
+          {/* The times depend on the viewer's clock and zone, so they wait for the
+              browser. The room they will take stops the card jumping when they land. */}
+          {!past.ready ? (
+            <output
+              className="flex justify-center pt-8"
+              style={{ minHeight: `${ballot.options.length * 3.5 + 4}rem` }}
+            >
+              <Spinner />
+              <span className="sr-only">
+                <Trans
+                  i18nKey="screenReaderLoading"
+                  defaults="Loading the options"
+                />
+              </span>
+            </output>
+          ) : showThanks ? (
             <section
               aria-labelledby="thanks-heading"
               className="flex flex-1 flex-col items-center justify-center py-8 text-center"

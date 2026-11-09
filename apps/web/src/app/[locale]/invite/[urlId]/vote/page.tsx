@@ -143,7 +143,7 @@ async function PageContent({ params, searchParams }: PageProps) {
       </header>
       {/* From lg the sidebar and answers sit in a card that fits its content, up to
           a maximum height, after which the sidebar and the answers each scroll on their own. Its width comes from main. */}
-      <div className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-180 lg:min-h-0 lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs lg:has-data-invite-loading:border-0 lg:has-data-invite-loading:bg-transparent lg:has-data-invite-loading:shadow-none">
+      <div className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-180 lg:min-h-0 lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs">
         <div data-invite-frame className="flex flex-1 flex-col lg:min-h-0">
           <AccessibleBallot
             poll={poll}
