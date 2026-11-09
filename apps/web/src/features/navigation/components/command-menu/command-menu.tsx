@@ -290,7 +290,12 @@ function SearchResults({
             <CommandItem
               key={member.userId}
               value={resultValue("member", member.userId, query)}
-              onSelect={() => onSelect("/members", "member")}
+              onSelect={() =>
+                onSelect(
+                  `/members?${new URLSearchParams({ q: member.name })}`,
+                  "member",
+                )
+              }
             >
               <OptimizedAvatarImage
                 size="sm"

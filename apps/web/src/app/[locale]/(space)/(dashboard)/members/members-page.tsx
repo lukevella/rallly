@@ -13,7 +13,8 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
-import { ListViewActions } from "@/components/list-view";
+import { ListViewActions, ListViewToolbar } from "@/components/list-view";
+import { SearchInput } from "@/components/search-input";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
 import { defineAbilityForMember } from "@/features/space/member/ability";
@@ -25,6 +26,7 @@ import {
 } from "@/features/space/member/loaders";
 import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
+import { getTranslation } from "@/i18n/server";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { InviteMemberButton } from "./components/invite-member-button";
@@ -77,6 +79,28 @@ export async function MembersPageActions() {
         canCreateInvite={memberAbility.can("create", "SpaceMemberInvite")}
       />
     </ListViewActions>
+  );
+}
+
+export async function MembersPageToolbar() {
+  const [space, { t }] = await Promise.all([
+    loadActiveSpace(),
+    getTranslation(),
+  ]);
+
+  if (!isSpaceAdmin(space)) {
+    return null;
+  }
+
+  return (
+    <ListViewToolbar>
+      <SearchInput
+        className="w-full sm:w-72"
+        placeholder={t("searchMembersPlaceholder", {
+          defaultValue: "Search members by name or email...",
+        })}
+      />
+    </ListViewToolbar>
   );
 }
 

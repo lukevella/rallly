@@ -40,6 +40,16 @@ export function SearchInput({
   const [isPending, startTransition] = React.useTransition();
   const isSearching = isDebouncing || isPending;
 
+  // Follow URL changes made elsewhere (e.g. the command menu) while mounted,
+  // unless the user is mid-edit
+  const [syncedValue, setSyncedValue] = React.useState(currentSearchValue);
+  if (syncedValue !== currentSearchValue) {
+    setSyncedValue(currentSearchValue);
+    if (!isDebouncing) {
+      setInputValue(currentSearchValue);
+    }
+  }
+
   const updateUrl = (value: string) => {
     const params = new URLSearchParams(searchParams);
     if (value) {
