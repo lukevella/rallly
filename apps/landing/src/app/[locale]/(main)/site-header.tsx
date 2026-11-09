@@ -49,7 +49,7 @@ export function SiteHeader({
       ref={ref}
       data-scrolled={stuck || undefined}
       className={cn(
-        "sticky -top-4 z-20 border-transparent border-b bg-gray-100 pt-4 transition-colors data-scrolled:border-gray-200",
+        "sticky -top-4 z-20 border-transparent border-b bg-transparent pt-4 transition-colors data-scrolled:border-gray-200 data-scrolled:bg-gray-100",
         className,
       )}
       {...props}
