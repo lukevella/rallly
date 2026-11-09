@@ -433,6 +433,12 @@ export function AccessibleBallot({
       setErrors([]);
       setSaveError(null);
       setStepExit("forward");
+      // Same name and properties as the old page, so the two compare.
+      posthog?.capture("poll_response:form_open", {
+        poll_id: ballot.pollId,
+        require_email: ballot.requireParticipantEmail,
+        tier: poll.space?.tier,
+      });
       return;
     }
     if (isNew) {
@@ -509,7 +515,15 @@ export function AccessibleBallot({
       fail([], errorMessage(result.reason));
       return;
     }
-    if (isNew) setJustSaved(true);
+    if (isNew) {
+      setJustSaved(true);
+      // poll_response_submit is captured on the server under the guest's user
+      // id, so it can't be joined to the browser's $pageview.
+      posthog?.capture("poll_response:form_submit", {
+        poll_id: ballot.pollId,
+        tier: poll.space?.tier,
+      });
+    }
     setStatus(
       t("screenReaderAnswersSaved", {
         defaultValue: "Your answers are saved",
