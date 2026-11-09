@@ -63,7 +63,7 @@ export function PastTimesToggle({
         <span className="max-sm:sr-only">{label}</span>
       </TooltipTrigger>
       {/* From sm the label is on the button. */}
-      <TooltipContent className="sm:hidden">{label}</TooltipContent>
+      <TooltipContent className="text-xs sm:hidden">{label}</TooltipContent>
     </Tooltip>
   );
 }

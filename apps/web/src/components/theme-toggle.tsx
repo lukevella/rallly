@@ -43,7 +43,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         <SunIcon className="dark:hidden" />
         <MoonIcon className="hidden dark:block" />
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent className="text-xs">
         {t("themeToggleTooltip", { defaultValue: "Switch theme" })}
       </TooltipContent>
     </Tooltip>

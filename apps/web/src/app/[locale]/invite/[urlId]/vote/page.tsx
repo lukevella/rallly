@@ -85,7 +85,6 @@ async function PageContent({ params, searchParams }: PageProps) {
   const hideAttribution =
     instanceBranding.hideAttribution || (poll.space?.hideAttribution ?? false);
   const space = poll.space?.showBranding ? poll.space : null;
-  const showHeaderLogo = showLogo || (!space && !hideAttribution);
   // An instance's own links, or the hosted product's policies where they apply.
   const links =
     footerLinks.length > 0 || !isFeatureEnabled("hostedLegalLinks")
@@ -108,13 +107,11 @@ async function PageContent({ params, searchParams }: PageProps) {
         className={cn(
           "shrink-0 pt-4 lg:flex lg:h-16 lg:items-center lg:pt-0",
           // Only the toggles: beside the space's icon rather than a row of their own.
-          space &&
-            !showHeaderLogo &&
-            "max-lg:absolute max-lg:top-0 max-lg:right-0",
+          space && !showLogo && "max-lg:absolute max-lg:top-0 max-lg:right-0",
         )}
       >
         <div className="flex flex-wrap items-start gap-x-3 px-4 lg:w-full lg:flex-nowrap lg:items-center lg:gap-x-4 lg:px-4">
-          {showHeaderLogo ? (
+          {showLogo ? (
             <div className="flex h-12 shrink-0 items-center">
               <Logo size="sm" />
             </div>
@@ -143,7 +140,10 @@ async function PageContent({ params, searchParams }: PageProps) {
       </header>
       {/* From lg the sidebar and answers sit in a card that fits its content, up to
           a maximum height, after which the sidebar and the answers each scroll on their own. Its width comes from main. */}
-      <div className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-180 lg:min-h-0 lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs">
+      <div
+        data-invite-card
+        className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-180 lg:min-h-[min(32rem,calc(100dvh-8rem))] lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs"
+      >
         <div data-invite-frame className="flex flex-1 flex-col lg:min-h-0">
           <AccessibleBallot
             poll={poll}

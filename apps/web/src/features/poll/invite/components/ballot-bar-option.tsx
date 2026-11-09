@@ -5,6 +5,7 @@ import VoteIcon from "@/features/poll/components/vote-icon";
 import { useTranslation } from "@/i18n/client";
 import type { BallotVote } from "../types";
 import { BallotCount } from "./ballot-count";
+import { BallotTimeText } from "./ballot-time-text";
 
 const barTint: Record<BallotVote | "none", string> = {
   none: "bg-gray-200 dark:bg-white/10",
@@ -44,6 +45,7 @@ export function BallotBarOption({
   count,
   total,
   compact = false,
+  timesChanged = false,
 }: {
   label: string;
   /** The full date and time, for assistive technology. */
@@ -57,6 +59,8 @@ export function BallotBarOption({
   total: number;
   /** A 40px row from lg with a mouse, matching the rows that can be answered. */
   compact?: boolean;
+  /** The viewer just changed the time zone or format. */
+  timesChanged?: boolean;
 }) {
   const { t } = useTranslation();
   const answer = {
@@ -99,7 +103,9 @@ export function BallotBarOption({
         className="min-w-0 flex-1 text-pretty text-sm tabular-nums"
       >
         <span className="sr-only">{`${fullLabel}: ${answer}`}</span>
-        <span aria-hidden="true">{label}</span>
+        <span aria-hidden="true">
+          <BallotTimeText value={label} changed={timesChanged} />
+        </span>
       </span>
       {count !== undefined ? (
         <span className="[&_[data-testid=ballot-tally]]:text-foreground">

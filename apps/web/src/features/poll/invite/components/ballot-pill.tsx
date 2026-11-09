@@ -4,7 +4,7 @@ import type * as React from "react";
 /** The size of a button in the bar: the height of a ballot row, with its corners. */
 export const ballotBarButtonClassName = "h-12 rounded-xl";
 
-/** A shortcut toggle above the options: dashed until it is on. */
+/** A shortcut toggle for the options: dashed until it is on. */
 export const ballotToggleClassName =
   "border border-gray-400 border-dashed text-muted-foreground hover:text-foreground aria-pressed:border-solid aria-pressed:bg-gray-200 aria-pressed:text-foreground aria-pressed:hover:bg-gray-200 dark:border-gray-500 dark:aria-pressed:bg-white/15 dark:aria-pressed:hover:bg-white/15";
 
