@@ -8,7 +8,9 @@ export function SiteHeader({
   ...props
 }: React.ComponentProps<"header">) {
   const ref = React.useRef<HTMLElement>(null);
-  const [stuck, setStuck] = React.useState(false);
+  // null until the scroll position is known, so the header stays opaque over
+  // any content behind it before hydration.
+  const [stuck, setStuck] = React.useState<boolean | null>(null);
 
   React.useEffect(() => {
     const header = ref.current;
@@ -48,8 +50,9 @@ export function SiteHeader({
     <header
       ref={ref}
       data-scrolled={stuck || undefined}
+      data-top={stuck === false || undefined}
       className={cn(
-        "sticky -top-4 z-20 border-transparent border-b bg-transparent pt-4 transition-colors data-scrolled:border-gray-200 data-scrolled:bg-gray-100",
+        "sticky -top-4 z-20 border-transparent border-b bg-gray-100 pt-4 transition-colors data-scrolled:border-gray-200 data-top:bg-transparent",
         className,
       )}
       {...props}

@@ -20,6 +20,9 @@ type Streak = {
   length: number;
   traveled: number;
   range: number;
+  // Ids of the "up" streaks this "down" streak has already pulsed with. It is
+  // dropped with the streak, so it never outgrows the streaks on screen.
+  crossed: Set<number>;
 };
 
 type Pulse = { x: number; y: number; start: number };
@@ -48,11 +51,50 @@ function covers(streak: Streak, point: number) {
   );
 }
 
-// Centre of the header's Login and Create a poll buttons, measured from the
-// frame's top right: the content column's right edge sits 24px in from the
-// max-w-6xl container, and the buttons centre 93px left of it.
-const headerActions =
-  "calc(100% - max((100vw - 72rem) / 2, 0px) - 24px - 93px) 46px";
+// The mask clears an ellipse behind the header's Login and Create a poll
+// buttons, positioned from the rendered buttons so it follows the mobile menu
+// and longer translations. Until measured, it falls back to the desktop layout.
+const actionsFallbackX =
+  "calc(100% - max((100vw - 72rem) / 2, 0px) - 24px - 93px)";
+
+function useHeaderActionsHole(
+  frameRef: React.RefObject<HTMLDivElement | null>,
+) {
+  React.useEffect(() => {
+    const frame = frameRef.current;
+    const actions = document.querySelector<HTMLElement>(
+      "[data-header-actions]",
+    );
+    const header = actions?.closest("header");
+    if (!frame || !actions || !header) {
+      return;
+    }
+    const measure = () => {
+      const frameRect = frame.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      // The header is in flow at the page top, so its offset from the
+      // actions holds whether or not it is currently stuck.
+      const headerRect = header.getBoundingClientRect();
+      frame.style.setProperty(
+        "--actions-x",
+        `${actionsRect.left + actionsRect.width / 2 - frameRect.left}px`,
+      );
+      frame.style.setProperty(
+        "--actions-y",
+        `${actionsRect.top - headerRect.top + actionsRect.height / 2}px`,
+      );
+      frame.style.setProperty(
+        "--actions-rx",
+        `${actionsRect.width / 2 + 77}px`,
+      );
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(actions);
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, [frameRef]);
+}
 
 export function HeroBackdrop({
   orientation = "diagonal",
@@ -60,6 +102,8 @@ export function HeroBackdrop({
   orientation?: Orientation;
 }) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const frameRef = React.useRef<HTMLDivElement>(null);
+  useHeaderActionsHole(frameRef);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -73,7 +117,6 @@ export function HeroBackdrop({
     let height = 0;
     let streaks: Streak[] = [];
     let pulses: Pulse[] = [];
-    const hits = new Set<string>();
     let nextId = 0;
     let sinceSpawn = Number.POSITIVE_INFINITY;
     let frame = 0;
@@ -137,6 +180,7 @@ export function HeroBackdrop({
           length: 70 + Math.random() * 90,
           traveled: 0,
           range,
+          crossed: new Set(),
         });
       }
     };
@@ -210,13 +254,12 @@ export function HeroBackdrop({
           if (up.axis !== "up") {
             continue;
           }
-          const key = `${down.id}:${up.id}`;
           if (
-            !hits.has(key) &&
+            !down.crossed.has(up.id) &&
             covers(down, up.fixed) &&
             covers(up, down.fixed)
           ) {
-            hits.add(key);
+            down.crossed.add(up.id);
             pulses.push({
               x: toX(down.fixed, up.fixed),
               y: toY(down.fixed, up.fixed),
@@ -253,8 +296,14 @@ export function HeroBackdrop({
     resize();
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      drawLattice();
-      return;
+      // The canvas starts at zero size below md, so redraw the static grid
+      // whenever it is resized into view.
+      const staticObserver = new ResizeObserver(() => {
+        resize();
+        drawLattice();
+      });
+      staticObserver.observe(canvas);
+      return () => staticObserver.disconnect();
     }
 
     const resizeObserver = new ResizeObserver(resize);
@@ -282,6 +331,7 @@ export function HeroBackdrop({
 
   return (
     <div
+      ref={frameRef}
       aria-hidden="true"
       className="pointer-events-none absolute top-[calc(-1*(var(--site-header-height,61px)+1rem))] right-[calc(50%-50vw)] -z-10 hidden h-[680px] w-[min(1000px,75vw)] md:block"
       style={{
@@ -291,7 +341,7 @@ export function HeroBackdrop({
           "linear-gradient(to left, transparent, black 140px)",
           "linear-gradient(to bottom, transparent, black 117px)",
           // Clear the area behind the header's Login and Create a poll buttons.
-          `radial-gradient(ellipse 170px 60px at ${headerActions}, transparent 45%, black 100%)`,
+          `radial-gradient(ellipse var(--actions-rx, 170px) 60px at var(--actions-x, ${actionsFallbackX}) var(--actions-y, 46px), transparent 45%, black 100%)`,
         ].join(", "),
         maskComposite: "intersect",
       }}

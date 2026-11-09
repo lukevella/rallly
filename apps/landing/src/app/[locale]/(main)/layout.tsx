@@ -62,7 +62,7 @@ export default async function Root(props: {
             </nav>
           </div>
           <div className="flex items-center gap-4 sm:gap-8">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" data-header-actions>
               <div className="hidden sm:block">
                 <LoginButton>
                   <Trans t={t} i18nKey="login" defaults="Login" />
