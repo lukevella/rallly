@@ -190,6 +190,13 @@ describe.each([
   });
 });
 
+describe("findSeatItem with a malformed item", () => {
+  it("counts an item without a price as the seat", () => {
+    const noPrice = { id: "si_noprice" } as unknown as Stripe.SubscriptionItem;
+    expect(findSeatItem(subscription([noPrice]))).toBe(noPrice);
+  });
+});
+
 describe("findSeatItem with no seat", () => {
   it("returns undefined with only an add-on", () => {
     expect(findSeatItem(subscription([addon]))).toBeUndefined();
@@ -235,7 +242,25 @@ describe("getApiPollAddonItem", () => {
     expect(getApiPollAddonItem(subscription([seat]))).toBeNull();
   });
 
-  it.each(["abc", "0", "-5"])("returns null for limit %s", (limit) => {
+  it("returns null when the amount is null", () => {
+    const noAmount = {
+      id: "si_noamount",
+      price: {
+        id: "price_noamount",
+        unit_amount: null,
+        metadata: { api_poll_limit: "1000" },
+      },
+    } as unknown as Stripe.SubscriptionItem;
+    expect(getApiPollAddonItem(subscription([seat, noAmount]))).toBeNull();
+  });
+
+  it.each([
+    "abc",
+    "0",
+    "-5",
+    "12abc",
+    "1.5",
+  ])("returns null for limit %s", (limit) => {
     const bad = item({ id: "si_bad", metadata: { api_poll_limit: limit } });
     expect(getApiPollAddonItem(subscription([seat, bad]))).toBeNull();
   });

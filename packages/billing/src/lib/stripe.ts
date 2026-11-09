@@ -114,7 +114,7 @@ export const API_POLL_LIMIT_METADATA_KEY = "api_poll_limit";
 
 function isAddonItem(item: Stripe.SubscriptionItem) {
   return (
-    item.price.metadata != null &&
+    item.price?.metadata != null &&
     API_POLL_LIMIT_METADATA_KEY in item.price.metadata
   );
 }
@@ -149,12 +149,13 @@ export function getApiPollAddonItem(subscription: Stripe.Subscription) {
     return null;
   }
 
-  return {
-    id: item.id,
-    priceId: item.price.id,
-    limit,
-    amount:
-      item.price.currency_options?.[subscription.currency]?.unit_amount ??
-      item.price.unit_amount,
-  };
+  const amount =
+    item.price.currency_options?.[subscription.currency]?.unit_amount ??
+    item.price.unit_amount;
+
+  if (amount == null) {
+    return null;
+  }
+
+  return { id: item.id, priceId: item.price.id, limit, amount };
 }
