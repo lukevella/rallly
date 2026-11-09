@@ -85,4 +85,39 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
       expect(await scan(page)).toEqual([]);
     });
   });
+
+  test.describe("vote view", () => {
+    let voteUrl: string;
+
+    test.beforeAll(async ({ browser }) => {
+      const page = await browser.newPage();
+      const newPollPage = new NewPollPage(page);
+      await newPollPage.goto();
+      await newPollPage.create({ name: "Accessibility Dates", allDay: true });
+      const match = page.url().match(/\/poll\/([a-zA-Z0-9]+)/);
+      if (!match) {
+        throw new Error(`could not extract poll id from ${page.url()}`);
+      }
+      voteUrl = `/invite/${match[1]}/vote`;
+      await page.close();
+    });
+
+    test("options", async ({ page }) => {
+      await page.goto(voteUrl);
+      await page.getByRole("radio").first().waitFor({ state: "attached" });
+      expect(await scan(page)).toEqual([]);
+    });
+
+    test("details step", async ({ page }) => {
+      await page.goto(voteUrl);
+      await page
+        .getByRole("radio", { name: "Yes", exact: true })
+        .first()
+        .focus();
+      await page.keyboard.press("Space");
+      await page.getByRole("button", { name: "Continue" }).click();
+      await page.getByLabel("Name").waitFor();
+      expect(await scan(page)).toEqual([]);
+    });
+  });
 });

@@ -53,4 +53,10 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // Caps open polls per organizer by tier. Billing only: the ladder sells
   // Pro, and without billing every space already has every paid feature.
   openPollLimit: isOpenPollLimitEnabled,
+  // Asks participants to try the cloud product. On a self-hosted instance a
+  // participant usually has no account to create a poll with.
+  createPollPrompt: !isSelfHosted,
+  // Links to the hosted product's terms and privacy policy. They don't cover
+  // a self-hosted instance, whose operator sets their own.
+  hostedLegalLinks: !isSelfHosted,
 };

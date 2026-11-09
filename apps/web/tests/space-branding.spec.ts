@@ -115,4 +115,40 @@ test.describe("space branding on the invite page", () => {
     );
     expect(documentOverflow).toBe(0);
   });
+
+  test("the vote view offers a poll of their own unless attribution is removed", async ({
+    browser,
+  }) => {
+    const respond = async () => {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.goto(`/invite/${POLL_ID}/vote`);
+      await page
+        .getByRole("radio", { name: "Yes", exact: true })
+        .first()
+        .focus();
+      await page.keyboard.press("Space");
+      await page.getByRole("button", { name: "Continue" }).click();
+      await page.getByLabel("Name").fill("Prompt Check");
+      await page.getByRole("button", { name: "Confirm" }).click();
+      await expect(page.getByText("Thanks, Prompt Check")).toBeVisible();
+      return { context, prompt: page.getByRole("link", { name: /own/ }) };
+    };
+
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "pro", hideAttribution: true },
+    });
+    const hidden = await respond();
+    await expect(hidden.prompt).toHaveCount(0);
+    await hidden.context.close();
+
+    await prisma.space.update({
+      where: { id: spaceId },
+      data: { tier: "hobby" },
+    });
+    const shown = await respond();
+    await expect(shown.prompt).toBeVisible();
+    await shown.context.close();
+  });
 });
