@@ -438,25 +438,30 @@ export function AccessibleBallot({
     return () => window.removeEventListener("beforeunload", warn);
   }, [hasUnsavedAnswers]);
 
-  const answersBeforeShortcut = React.useRef<Record<string, BallotVote> | null>(
-    null,
-  );
+  // The answers a shortcut replaced; null while no shortcut is on.
+  const [answersBeforeShortcut, setAnswersBeforeShortcut] =
+    React.useState<Record<string, BallotVote> | null>(null);
   const allMarked = (vote: BallotVote) =>
     votable.length > 0 &&
     votable.every((option) => state.answers[option.id] === vote);
+  // Only a shortcut can be undone: every option answered the same by hand has
+  // nothing to go back to, so its button keeps its name and does nothing.
+  const shortcutOn = (vote: BallotVote) =>
+    answersBeforeShortcut !== null && allMarked(vote);
 
   // Turning a shortcut off puts back whatever it replaced, so pressing one by
   // mistake costs nothing. Switching between them keeps the original answers.
   const markAll = (vote: "yes" | "no") => {
     if (pending) return;
     if (allMarked(vote)) {
-      const before = answersBeforeShortcut.current;
+      if (!answersBeforeShortcut) return;
+      const before = answersBeforeShortcut;
       state.setVotes(
         Object.fromEntries(
-          votable.map((option) => [option.id, before?.[option.id] ?? null]),
+          votable.map((option) => [option.id, before[option.id] ?? null]),
         ),
       );
-      answersBeforeShortcut.current = null;
+      setAnswersBeforeShortcut(null);
       setStatus(
         t("screenReaderAnswersRestored", {
           defaultValue: "Your earlier answers are back",
@@ -464,8 +469,8 @@ export function AccessibleBallot({
       );
       return;
     }
-    if (!allMarked(vote === "yes" ? "no" : "yes")) {
-      answersBeforeShortcut.current = state.answers;
+    if (!answersBeforeShortcut) {
+      setAnswersBeforeShortcut(state.answers);
     }
     state.setVotes(
       Object.fromEntries(votable.map((option) => [option.id, vote])),
@@ -944,7 +949,7 @@ export function AccessibleBallot({
     <BallotTimeControls
       timeZone={timeZoneNote}
       timeFormat={timeFormatSwitcher}
-      belowResponseBar={Boolean(active)}
+      belowResponseBar={Boolean(active && ballot.canRespond && !showThanks)}
     />
   ) : null;
 
@@ -1514,7 +1519,8 @@ export function AccessibleBallot({
                   />
                 </p>
                 {timeControls}
-                {past.ids.size > 0 ? (
+                {/* With nothing left to answer, every past time already shows. */}
+                {past.ids.size > 0 && votable.length > 0 ? (
                   <p className="mt-3 flex flex-wrap gap-2">
                     <PastTimesToggle
                       past={past}
@@ -1974,11 +1980,11 @@ export function AccessibleBallot({
                           className={cn(
                             ballotToggleClassName,
                             "shrink-0 rounded-full",
-                            allMarked("yes") && shortcutOnClassName,
+                            shortcutOn("yes") && shortcutOnClassName,
                           )}
                           onClick={() => markAll("yes")}
                         >
-                          {allMarked("yes") ? (
+                          {shortcutOn("yes") ? (
                             <Trans i18nKey="undo" defaults="Undo" />
                           ) : (
                             <Trans
@@ -1993,11 +1999,11 @@ export function AccessibleBallot({
                           className={cn(
                             ballotToggleClassName,
                             "shrink-0 rounded-full",
-                            allMarked("no") && shortcutOnClassName,
+                            shortcutOn("no") && shortcutOnClassName,
                           )}
                           onClick={() => markAll("no")}
                         >
-                          {allMarked("no") ? (
+                          {shortcutOn("no") ? (
                             <Trans i18nKey="undo" defaults="Undo" />
                           ) : (
                             <Trans
