@@ -176,6 +176,20 @@ export function AccessibleBallot({
     observer.observe(sidebar);
     return () => observer.disconnect();
   }, [past.ready]);
+  const answersRef = React.useRef<HTMLDivElement>(null);
+  const [answersScroll, setAnswersScroll] = React.useState(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: what is listed changes the content, which the observer on the panel itself can't see
+  React.useEffect(() => {
+    const answers = answersRef.current;
+    if (!past.ready || !answers) return;
+    const update = () =>
+      setAnswersScroll(answers.scrollHeight > answers.clientHeight);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(answers);
+    return () => observer.disconnect();
+  }, [past.ready, past.show, state.mode]);
   const detailsHeadingRef = React.useRef<HTMLHeadingElement>(null);
   // A new response answers the options first, then says who it is from.
   const [onDetailsStep, setOnDetailsStep] = React.useState(false);
@@ -1067,9 +1081,21 @@ export function AccessibleBallot({
         {/* Level with the top of the sidebar. Beside a title on its own, the extra
           pixel lines up their baselines. */}
         <div
+          ref={answersRef}
           data-invite-answers
+          // Results may have nothing to tab to, and not every browser lets the
+          // keyboard scroll a panel without a stop of its own.
+          {...(answersScroll && !state.canChange
+            ? {
+                tabIndex: 0,
+                role: "group",
+                "aria-label": t("voteResultsPanelLabel", {
+                  defaultValue: "Results",
+                }),
+              }
+            : {})}
           className={cn(
-            "mx-auto flex w-full min-w-0 flex-col lg:relative lg:min-h-0 lg:overflow-y-auto lg:px-8",
+            "mx-auto flex w-full min-w-0 flex-col focus-visible:outline-2 focus-visible:outline-ring focus-visible:-outline-offset-2 lg:relative lg:min-h-0 lg:overflow-y-auto lg:px-8",
             "lg:col-start-2 lg:border-l",
             showThanks && "max-lg:flex-1",
             showThanks

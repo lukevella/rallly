@@ -1236,6 +1236,7 @@
   "voteOptionsLockedDescription": "Locked: participants have already answered \"if need be\".",
   "voteOptionsSettingDescription": "The answers participants can give for each option.",
   "voteOptionsSettingTitle": "Vote options",
+  "voteResultsPanelLabel": "Results",
   "voteSummaryAvailable": "{availableCount} of {total} available",
   "voteSummaryIfNeedBe": "{count} if need be",
   "voteSummaryNotAvailable": "You're not available",

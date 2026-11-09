@@ -268,6 +268,27 @@ test.describe("invite ballot", () => {
     await context.close();
   });
 
+  test("results that overflow can be reached from the keyboard", async ({
+    browser,
+  }) => {
+    await seedPoll({ id: "ballot-spec-closed" });
+    await prisma.poll.update({
+      where: { id: "ballot-spec-closed" },
+      data: { status: "closed" },
+    });
+    const context = await browser.newContext({
+      viewport: { width: 1440, height: 380 },
+    });
+    const page = await context.newPage();
+    await page.goto("/invite/ballot-spec-closed/vote");
+
+    await expect(page.getByRole("group", { name: "Results" })).toHaveAttribute(
+      "tabindex",
+      "0",
+    );
+    await context.close();
+  });
+
   test("clicking a row cycles its answer", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-row", allowTentativeVotes: true });
     const { context, page } = await freshPage(browser);
