@@ -17,23 +17,22 @@ export function SiteHeader({
     if (!header) {
       return;
     }
-    // The sticky offset is in rem, so re-read it on resize: text zoom changes
-    // it without reloading the page.
-    let stickyTop = 0;
-    const measure = () => {
-      stickyTop = Number.parseFloat(getComputedStyle(header).top);
-    };
+    // The sticky offset is in rem, so re-read it whenever the header resizes:
+    // text-only zoom changes it without firing a window resize, but it always
+    // resizes the header.
+    const readTop = () => Number.parseFloat(getComputedStyle(header).top);
+    let stickyTop = readTop();
     const update = () => setStuck(window.scrollY >= -stickyTop);
-    const onResize = () => {
-      measure();
+    update();
+    const observer = new ResizeObserver(() => {
+      stickyTop = readTop();
       update();
-    };
-    onResize();
+    });
+    observer.observe(header);
     window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", onResize);
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", onResize);
     };
   }, []);
 
