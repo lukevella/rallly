@@ -475,6 +475,8 @@ export function AccessibleBallot({
     setPending(true);
     setErrors([]);
     setSaveError(null);
+    // So what this save announces reads as new, even with the same words.
+    setStatus("");
     let result: { ok: true } | { ok: false; reason: string };
     if (isNew) {
       const session = await ensureSession();
