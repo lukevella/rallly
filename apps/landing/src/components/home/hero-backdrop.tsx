@@ -92,8 +92,28 @@ function useHeaderActionsHole(
     const observer = new ResizeObserver(measure);
     observer.observe(actions);
     observer.observe(frame);
-    return () => observer.disconnect();
+    // At wide viewports neither element changes size while the container
+    // recentres, so also remeasure on viewport resize.
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [frameRef]);
+}
+
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function useReducedMotion() {
+  return React.useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia(reducedMotionQuery);
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(reducedMotionQuery).matches,
+    () => false,
+  );
 }
 
 export function HeroBackdrop({
@@ -104,6 +124,7 @@ export function HeroBackdrop({
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const frameRef = React.useRef<HTMLDivElement>(null);
   useHeaderActionsHole(frameRef);
+  const reducedMotion = useReducedMotion();
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -295,7 +316,7 @@ export function HeroBackdrop({
 
     resize();
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (reducedMotion) {
       // The canvas starts at zero size below md, so redraw the static grid
       // whenever it is resized into view.
       const staticObserver = new ResizeObserver(() => {
@@ -327,7 +348,7 @@ export function HeroBackdrop({
       intersectionObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [orientation]);
+  }, [orientation, reducedMotion]);
 
   return (
     <div

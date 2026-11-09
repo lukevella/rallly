@@ -17,11 +17,24 @@ export function SiteHeader({
     if (!header) {
       return;
     }
-    const stickyTop = Number.parseFloat(getComputedStyle(header).top);
+    // The sticky offset is in rem, so re-read it on resize: text zoom changes
+    // it without reloading the page.
+    let stickyTop = 0;
+    const measure = () => {
+      stickyTop = Number.parseFloat(getComputedStyle(header).top);
+    };
     const update = () => setStuck(window.scrollY >= -stickyTop);
-    update();
+    const onResize = () => {
+      measure();
+      update();
+    };
+    onResize();
     window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   React.useEffect(() => {
@@ -52,7 +65,7 @@ export function SiteHeader({
       data-scrolled={stuck || undefined}
       data-top={stuck === false || undefined}
       className={cn(
-        "sticky -top-4 z-20 border-transparent border-b bg-gray-100 pt-4 transition-colors data-scrolled:border-gray-200 data-top:bg-transparent",
+        "sticky -top-4 z-20 border-transparent border-b bg-gray-100 pt-4 transition-[border-color] data-scrolled:border-gray-200 data-top:bg-transparent",
         className,
       )}
       {...props}
