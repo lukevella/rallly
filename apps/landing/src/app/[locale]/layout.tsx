@@ -10,7 +10,7 @@ import { cacheLife } from "next/cache";
 import { display } from "@/fonts/display";
 import { sans } from "@/fonts/sans";
 import { I18nProvider } from "@/i18n/client/i18n-provider";
-import { getTranslation } from "@/i18n/server";
+import { getClientResources, getTranslation } from "@/i18n/server";
 
 export const ensureStatic = "navigation";
 
@@ -32,8 +32,8 @@ export default async function Root(props: {
   const { children, params } = props;
   const { locale } = await params;
 
-  const { i18n } = await getTranslation(locale);
-  const translations = i18n.store.data;
+  await getTranslation(locale);
+  const translations = await getClientResources(locale);
 
   return (
     // Horizontal overflow is clipped at the viewport, never on an ancestor of
