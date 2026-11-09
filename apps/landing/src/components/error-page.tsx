@@ -1,23 +1,23 @@
-"use client";
-
 import { buttonVariants } from "@rallly/ui";
 import { FileSearchIcon } from "lucide-react";
 import type * as React from "react";
 import { LinkBase } from "@/i18n/client/link";
-import { useTranslation } from "@/i18n/client/use-translation";
 
 export interface ComponentProps {
   icon?: React.ReactNode;
   title: string;
   description: string;
+  homeLabel: string;
+  supportLabel: string;
 }
 
 const ErrorPage: React.FunctionComponent<ComponentProps> = ({
   icon,
   title,
   description,
+  homeLabel,
+  supportLabel,
 }) => {
-  const { t } = useTranslation();
   return (
     <div className="inset-0 flex h-full w-full items-center justify-center lg:absolute">
       <div className="space-y-8">
@@ -32,10 +32,10 @@ const ErrorPage: React.FunctionComponent<ComponentProps> = ({
         </div>
         <div className="flex space-x-3">
           <LinkBase href="/" className={buttonVariants({ variant: "primary" })}>
-            {t("goToHome")}
+            {homeLabel}
           </LinkBase>
           <a href="https://support.rallly.co" className={buttonVariants()}>
-            {t("support")}
+            {supportLabel}
           </a>
         </div>
       </div>

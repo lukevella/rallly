@@ -5,16 +5,27 @@ import { XIcon } from "lucide-react";
 import * as m from "motion/react-m";
 import Link from "next/link";
 import * as React from "react";
-import { Trans } from "@/i18n/client/trans";
-import { useTranslation } from "@/i18n/client/use-translation";
 import { linkToApp } from "@/lib/linkToApp";
 import { useRefSlug } from "@/lib/use-ref-slug";
 
 // The action bar of the phone demo, plus the confirmation it opens. The
 // surrounding poll layout stays on the server. Must be a direct child of the
 // relative DemoScreen so the confirmation overlay covers the whole screen.
-export const VoteActions = () => {
-  const { t } = useTranslation("home");
+export const VoteActions = ({
+  declineLabel,
+  voteLabel,
+  closeLabel,
+  successTitle,
+  successDescription,
+  createPollLabel,
+}: {
+  declineLabel: string;
+  voteLabel: string;
+  closeLabel: string;
+  successTitle: string;
+  successDescription: string;
+  createPollLabel: string;
+}) => {
   const ref = useRefSlug();
   const [submitted, setSubmitted] = React.useState(false);
 
@@ -25,7 +36,7 @@ export const VoteActions = () => {
           aria-hidden="true"
           className="flex-1 rounded-xl border border-white/60 bg-white/70 py-2.5 text-center font-medium text-gray-800 text-sm shadow-sm backdrop-blur-md"
         >
-          <Trans ns="home" i18nKey="heroDemoDecline" defaults="Decline" />
+          {declineLabel}
         </span>
         <button
           type="button"
@@ -35,7 +46,7 @@ export const VoteActions = () => {
           }}
           className="flex-[2] cursor-pointer rounded-xl bg-indigo-500/90 py-2.5 text-center font-medium text-sm text-white shadow-sm backdrop-blur-md hover:bg-indigo-500"
         >
-          <Trans ns="home" i18nKey="heroDemoVote" defaults="Vote" />
+          {voteLabel}
         </button>
       </div>
       {submitted && (
@@ -48,7 +59,7 @@ export const VoteActions = () => {
           >
             <button
               type="button"
-              aria-label={t("heroDemoClose", { defaultValue: "Close" })}
+              aria-label={closeLabel}
               onClick={() => {
                 posthog?.capture("landing:hero_demo_close_click");
                 setSubmitted(false);
@@ -71,18 +82,10 @@ export const VoteActions = () => {
               }}
             >
               <p className="font-semibold text-gray-900 text-sm">
-                <Trans
-                  ns="home"
-                  i18nKey="heroDemoThatWasEasy"
-                  defaults="That was easy!"
-                />
+                {successTitle}
               </p>
               <p className="mt-1.5 text-gray-500 text-xs">
-                <Trans
-                  ns="home"
-                  i18nKey="heroDemoEasyDescription"
-                  defaults="That's all it takes to respond to a poll."
-                />
+                {successDescription}
               </p>
             </m.div>
             <m.div
@@ -106,11 +109,7 @@ export const VoteActions = () => {
                 }}
                 className="font-medium text-indigo-600 text-xs hover:underline"
               >
-                <Trans
-                  ns="home"
-                  i18nKey="heroDemoCreatePoll"
-                  defaults="Create your own poll"
-                />
+                {createPollLabel}
               </Link>
             </m.div>
           </m.div>
