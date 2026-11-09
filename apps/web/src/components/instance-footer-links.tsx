@@ -1,3 +1,4 @@
+import { cn } from "@rallly/ui";
 /**
  * Footer links configured by a self-hosted instance administrator, typically
  * legal disclosures such as an Impressum or privacy policy.
@@ -10,15 +11,22 @@
  */
 export function InstanceFooterLinks({
   links,
+  className,
 }: {
   links: { label: string; href: string }[];
+  className?: string;
 }) {
   if (links.length === 0) {
     return null;
   }
 
   return (
-    <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+    <nav
+      className={cn(
+        "flex flex-wrap items-center justify-center gap-x-4 gap-y-2",
+        className,
+      )}
+    >
       {links.map((link) => (
         <a
           key={`${link.href}:${link.label}`}

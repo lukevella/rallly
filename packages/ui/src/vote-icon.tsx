@@ -34,6 +34,8 @@ type VoteIconProps = {
    */
   title?: string;
   className?: string;
+  /** Every answer in one circle that fills the box. For the row ballot. */
+  round?: boolean;
 } & Omit<VariantProps<typeof voteIconVariants>, "type">;
 
 /**
@@ -90,6 +92,7 @@ function IconFrame({
   size,
   title,
   className,
+  round = false,
   children,
 }: VoteIconProps & { type: VoteIconType; children: React.ReactNode }) {
   return (
@@ -103,8 +106,10 @@ function IconFrame({
     >
       {title ? <title>{title}</title> : null}
       {/* Filled shapes read heavier than bare glyphs, so the artwork is inset
-          within the box rather than filling it. */}
-      <g transform="translate(10 10) scale(0.8) translate(-10 -10)">
+          within the box rather than filling it, unless it is a round one. */}
+      <g
+        transform={`translate(10 10) scale(${round ? 1.11 : 0.8}) translate(-10 -10)`}
+      >
         {children}
       </g>
     </svg>
@@ -116,7 +121,7 @@ export function VoteIcon({ type = "pending", ...props }: VoteIconProps) {
   return (
     <IconFrame type={type} {...props}>
       {type === "pending" ? null : (
-        <path d={containers[type]} fill="currentColor" />
+        <path d={props.round ? CIRCLE : containers[type]} fill="currentColor" />
       )}
       <Glyph type={type} />
     </IconFrame>
@@ -152,7 +157,7 @@ export function AnimatedVoteIcon({
       <motion.path
         initial={false}
         animate={{
-          d: type === "pending" ? CIRCLE : containers[type],
+          d: type === "pending" || props.round ? CIRCLE : containers[type],
           ...(type === "pending" ? hidden : shown),
         }}
         transition={{
