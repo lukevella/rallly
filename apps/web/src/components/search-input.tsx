@@ -75,8 +75,9 @@ export function SearchInput({
     setInputValue(currentSearchValue);
   }, [currentSearchValue]);
 
-  // A pending edit must not navigate back here after the user has left
-  React.useEffect(() => () => clearTimeout(timer.current), []);
+  // A pending edit must not navigate back here after the user has left.
+  // Layout cleanup runs in the unmount commit, before the timer can fire.
+  React.useLayoutEffect(() => () => clearTimeout(timer.current), []);
 
   const flushUpdate = () => {
     clearTimeout(timer.current);
