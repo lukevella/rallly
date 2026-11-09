@@ -14,7 +14,7 @@ const reviewSites = [
   },
   {
     name: "Trustpilot",
-    rating: 4.8,
+    rating: 4.7,
     url: "https://www.trustpilot.com/review/rallly.co",
     logo: "/static/images/trustpilot-star.svg",
   },
