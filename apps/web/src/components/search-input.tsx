@@ -75,6 +75,9 @@ export function SearchInput({
     setInputValue(currentSearchValue);
   }, [currentSearchValue]);
 
+  // A pending edit must not navigate back here after the user has left
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+
   const flushUpdate = () => {
     clearTimeout(timer.current);
     if (pendingValue.current === null) return;
