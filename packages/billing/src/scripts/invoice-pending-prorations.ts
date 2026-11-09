@@ -1,5 +1,5 @@
 import type { Stripe } from "../lib/stripe";
-import { createStripeClient } from "../lib/stripe";
+import { createStripeClient, findSeatItem } from "../lib/stripe";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 
@@ -131,7 +131,7 @@ function idOf(value: string | { id: string } | null | undefined) {
     }
 
     const interval =
-      subscription.items.data[0]?.price.recurring?.interval ?? "unknown";
+      findSeatItem(subscription)?.price.recurring?.interval ?? "unknown";
     if (args.interval && interval !== args.interval) continue;
 
     const customer = subscription.customer;

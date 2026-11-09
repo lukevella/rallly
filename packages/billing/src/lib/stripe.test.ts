@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Stripe } from "./stripe";
-import { mapProPrices } from "./stripe";
+import {
+  findSeatItem,
+  getApiPollAddonItem,
+  getSeatItem,
+  mapProPrices,
+} from "./stripe";
 
 function price(
   lookupKey: string,
@@ -115,5 +120,123 @@ describe("mapProPrices", () => {
       price("pro-monthly-early-supporter", 700),
     ]);
     expect(result.earlySupporter).toBeUndefined();
+  });
+});
+
+function item({
+  id,
+  metadata,
+  unitAmount = 700,
+  currencyOptions = {},
+}: {
+  id: string;
+  metadata?: Record<string, string>;
+  unitAmount?: number;
+  currencyOptions?: Record<string, number>;
+}) {
+  return {
+    id,
+    quantity: 1,
+    price: {
+      id: `price_${id}`,
+      unit_amount: unitAmount,
+      ...(metadata ? { metadata } : {}),
+      currency_options: Object.fromEntries(
+        Object.entries(currencyOptions).map(([currency, amount]) => [
+          currency,
+          { unit_amount: amount },
+        ]),
+      ),
+    },
+  } as unknown as Stripe.SubscriptionItem;
+}
+
+function subscription(items: Stripe.SubscriptionItem[], currency = "usd") {
+  return {
+    id: "sub_1",
+    currency,
+    items: { data: items },
+  } as unknown as Stripe.Subscription;
+}
+
+const seat = item({ id: "si_seat", metadata: {} });
+const addon = item({
+  id: "si_addon",
+  metadata: { api_poll_limit: "1000" },
+  unitAmount: 500,
+  currencyOptions: { eur: 450 },
+});
+
+describe.each([
+  ["findSeatItem", findSeatItem],
+  ["getSeatItem", getSeatItem],
+])("%s", (_name, find) => {
+  it("returns the only item with no metadata key", () => {
+    const only = item({ id: "si_only", metadata: {} });
+    expect(find(subscription([only]))).toBe(only);
+  });
+
+  it("returns the only item when metadata is absent", () => {
+    const only = item({ id: "si_only" });
+    expect(find(subscription([only]))).toBe(only);
+  });
+
+  it("returns the seat when the add-on is first", () => {
+    expect(find(subscription([addon, seat]))).toBe(seat);
+  });
+
+  it("returns the seat when the add-on is second", () => {
+    expect(find(subscription([seat, addon]))).toBe(seat);
+  });
+});
+
+describe("findSeatItem with no seat", () => {
+  it("returns undefined with only an add-on", () => {
+    expect(findSeatItem(subscription([addon]))).toBeUndefined();
+  });
+
+  it("returns undefined with no items", () => {
+    expect(findSeatItem(subscription([]))).toBeUndefined();
+  });
+});
+
+describe("getSeatItem with no seat", () => {
+  it("throws with only an add-on", () => {
+    expect(() => getSeatItem(subscription([addon]))).toThrow();
+  });
+
+  it("throws with no items", () => {
+    expect(() => getSeatItem(subscription([]))).toThrow();
+  });
+});
+
+describe("getApiPollAddonItem", () => {
+  it("parses the limit", () => {
+    expect(getApiPollAddonItem(subscription([seat, addon]))).toMatchObject({
+      id: "si_addon",
+      priceId: "price_si_addon",
+      limit: 1000,
+    });
+  });
+
+  it("reads the amount for the subscription currency", () => {
+    expect(
+      getApiPollAddonItem(subscription([seat, addon], "eur"))?.amount,
+    ).toBe(450);
+  });
+
+  it("falls back to the base unit amount", () => {
+    expect(
+      getApiPollAddonItem(subscription([seat, addon], "gbp"))?.amount,
+    ).toBe(500);
+  });
+
+  it("returns null on a single item subscription", () => {
+    expect(getApiPollAddonItem(subscription([seat]))).toBeNull();
+  });
+
+  it.each(["abc", "0", "-5"])("returns null for limit %s", (limit) => {
+    const bad = item({ id: "si_bad", metadata: { api_poll_limit: limit } });
+    expect(getApiPollAddonItem(subscription([seat, bad]))).toBeNull();
   });
 });

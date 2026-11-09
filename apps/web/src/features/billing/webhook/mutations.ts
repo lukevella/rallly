@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Stripe } from "@rallly/billing";
+import { findSeatItem } from "@rallly/billing/lib/stripe";
 import type { Prisma } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import { sendRawEmail } from "@rallly/emails";
@@ -299,7 +300,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     return;
   }
 
-  const subscriptionItem = subscription.items.data[0];
+  const subscriptionItem = findSeatItem(subscription);
 
   if (!subscriptionItem) {
     throw new Error(
@@ -463,7 +464,7 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
       interval: details.interval,
       amount: details.amount,
       currency: details.currency,
-      seats: subscription.items.data[0]?.quantity ?? null,
+      seats: findSeatItem(subscription)?.quantity ?? null,
       $set: {
         tier,
       },
@@ -508,7 +509,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     return;
   }
 
-  const subscriptionItem = subscription.items.data[0];
+  const subscriptionItem = findSeatItem(subscription);
 
   if (!subscriptionItem) {
     throw new Error("Expected subscription to have one item");
