@@ -449,6 +449,13 @@ export function AccessibleBallot({
   const shortcutOn = (vote: BallotVote) =>
     answersBeforeShortcut !== null && allMarked(vote);
 
+  // An answer given by hand keeps what the shortcut did, so Undo can no longer
+  // take it back over the top of that edit.
+  const answerOne = (optionId: string, vote: BallotVote) => {
+    setAnswersBeforeShortcut(null);
+    state.setVote(optionId, vote);
+  };
+
   // Turning a shortcut off puts back whatever it replaced, so pressing one by
   // mistake costs nothing. Switching between them keeps the original answers.
   const markAll = (vote: "yes" | "no") => {
@@ -1574,7 +1581,7 @@ export function AccessibleBallot({
                                   (event.target as Element).closest("label")
                                 )
                                   return;
-                                state.setVote(
+                                answerOne(
                                   optionId,
                                   nextVote(vote, ballot.allowTentativeVotes),
                                 );
@@ -1675,7 +1682,7 @@ export function AccessibleBallot({
                                             }),
                                           );
                                         } else {
-                                          state.setVote(optionId, choice);
+                                          answerOne(optionId, choice);
                                         }
                                       }}
                                     />
