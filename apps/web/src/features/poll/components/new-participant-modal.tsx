@@ -305,6 +305,12 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               });
               return;
             }
+            // poll_response_submit is captured on the server under the guest's
+            // user id, so it can't be joined to the browser's $pageview.
+            posthog?.capture("poll_response:form_submit", {
+              poll_id: pollId,
+              tier: poll?.space?.tier,
+            });
             props.onSubmit?.(result.participant);
           })}
           className="space-y-4"
