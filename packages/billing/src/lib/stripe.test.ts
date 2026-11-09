@@ -162,7 +162,7 @@ function subscription(items: Stripe.SubscriptionItem[], currency = "usd") {
 const seat = item({ id: "si_seat", metadata: {} });
 const addon = item({
   id: "si_addon",
-  metadata: { api_poll_limit: "1000" },
+  metadata: { addon: "api_polls", api_poll_limit: "1000" },
   unitAmount: 500,
   currencyOptions: { eur: 450 },
 });
@@ -194,6 +194,27 @@ describe("findSeatItem with a malformed item", () => {
   it("counts an item without a price as the seat", () => {
     const noPrice = { id: "si_noprice" } as unknown as Stripe.SubscriptionItem;
     expect(findSeatItem(subscription([noPrice]))).toBe(noPrice);
+  });
+});
+
+describe("add-on flag", () => {
+  const limitOnly = item({
+    id: "si_limit",
+    metadata: { api_poll_limit: "50" },
+  });
+  const other = item({
+    id: "si_other",
+    metadata: { addon: "something_else", api_poll_limit: "50" },
+  });
+
+  it("treats a price with a limit but no addon key as a seat", () => {
+    expect(findSeatItem(subscription([limitOnly]))).toBe(limitOnly);
+    expect(getApiPollAddonItem(subscription([limitOnly]))).toBeNull();
+  });
+
+  it("treats another add-on type as neither seat nor API poll add-on", () => {
+    expect(findSeatItem(subscription([other]))).toBeUndefined();
+    expect(getApiPollAddonItem(subscription([seat, other]))).toBeNull();
   });
 });
 
@@ -248,7 +269,7 @@ describe("getApiPollAddonItem", () => {
       price: {
         id: "price_noamount",
         unit_amount: null,
-        metadata: { api_poll_limit: "1000" },
+        metadata: { addon: "api_polls", api_poll_limit: "1000" },
       },
     } as unknown as Stripe.SubscriptionItem;
     expect(getApiPollAddonItem(subscription([seat, noAmount]))).toBeNull();
@@ -261,7 +282,10 @@ describe("getApiPollAddonItem", () => {
     "12abc",
     "1.5",
   ])("returns null for limit %s", (limit) => {
-    const bad = item({ id: "si_bad", metadata: { api_poll_limit: limit } });
+    const bad = item({
+      id: "si_bad",
+      metadata: { addon: "api_polls", api_poll_limit: limit },
+    });
     expect(getApiPollAddonItem(subscription([seat, bad]))).toBeNull();
   });
 });

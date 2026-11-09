@@ -110,12 +110,13 @@ export async function getProPricing({ stripe }: { stripe: Stripe }) {
 
 export type PricingData = Awaited<ReturnType<typeof getProPricing>>;
 
+export const ADDON_METADATA_KEY = "addon";
+export const API_POLLS_ADDON = "api_polls";
 export const API_POLL_LIMIT_METADATA_KEY = "api_poll_limit";
 
 function isAddonItem(item: Stripe.SubscriptionItem) {
   return (
-    item.price?.metadata != null &&
-    API_POLL_LIMIT_METADATA_KEY in item.price.metadata
+    item.price?.metadata != null && ADDON_METADATA_KEY in item.price.metadata
   );
 }
 
@@ -136,7 +137,10 @@ export function getSeatItem(subscription: Stripe.Subscription) {
 }
 
 export function getApiPollAddonItem(subscription: Stripe.Subscription) {
-  const item = subscription.items.data.find(isAddonItem);
+  const item = subscription.items.data.find(
+    (candidate) =>
+      candidate.price?.metadata?.[ADDON_METADATA_KEY] === API_POLLS_ADDON,
+  );
 
   if (!item) {
     return null;
