@@ -1,6 +1,9 @@
 import type { Stripe } from "@rallly/billing";
 import { describe, expect, it } from "vitest";
-import { isActivationEvent } from "@/features/billing/webhook/utils";
+import {
+  getSubscriptionDetails,
+  isActivationEvent,
+} from "@/features/billing/webhook/utils";
 
 function subscriptionEvent({
   type,
@@ -90,5 +93,57 @@ describe("isActivationEvent", () => {
         }),
       ),
     ).toBe(false);
+  });
+});
+
+describe("getSubscriptionDetails", () => {
+  const seat = {
+    id: "si_seat",
+    price: {
+      id: "price_seat",
+      unit_amount: 700,
+      metadata: {},
+      recurring: { interval: "month" },
+      currency_options: { eur: { unit_amount: 650 } },
+    },
+  };
+  const addon = {
+    id: "si_addon",
+    price: {
+      id: "price_addon",
+      unit_amount: 500,
+      metadata: { addon: "api_polls", api_poll_limit: "1000" },
+      recurring: { interval: "year" },
+      currency_options: { eur: { unit_amount: 450 } },
+    },
+  };
+
+  function subscription(items: unknown[]) {
+    return {
+      id: "sub_1",
+      currency: "eur",
+      items: { data: items },
+    } as unknown as Stripe.Subscription;
+  }
+
+  it("gives the seat details on a single item subscription", () => {
+    expect(getSubscriptionDetails(subscription([seat]))).toEqual({
+      interval: "month",
+      currency: "eur",
+      amount: 650,
+      priceId: "price_seat",
+      discountPercentOff: null,
+      discountAmountOff: null,
+    });
+  });
+
+  it("gives the seat details when the add-on is listed first", () => {
+    expect(getSubscriptionDetails(subscription([addon, seat]))).toEqual(
+      getSubscriptionDetails(subscription([seat])),
+    );
+  });
+
+  it("throws when there is no seat item", () => {
+    expect(() => getSubscriptionDetails(subscription([addon]))).toThrow();
   });
 });

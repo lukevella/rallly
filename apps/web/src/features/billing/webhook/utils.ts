@@ -1,4 +1,5 @@
 import type { Stripe } from "@rallly/billing";
+import { getSeatItem } from "@rallly/billing/lib/stripe";
 import { billingIntervalSchema } from "@/features/billing/schema";
 
 export function toDate(date: number) {
@@ -39,13 +40,7 @@ export function isActivationEvent(event: Stripe.Event) {
 }
 
 export function getSubscriptionDetails(subscription: Stripe.Subscription) {
-  const subscriptionItem = subscription.items.data[0];
-
-  if (!subscriptionItem) {
-    throw new Error(
-      `Missing subscription item in subscription ${subscription.id}`,
-    );
-  }
+  const subscriptionItem = getSeatItem(subscription);
 
   const interval = subscriptionItem.price.recurring?.interval;
   const currency = subscription.currency;

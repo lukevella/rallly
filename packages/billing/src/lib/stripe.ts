@@ -109,3 +109,57 @@ export async function getProPricing({ stripe }: { stripe: Stripe }) {
 }
 
 export type PricingData = Awaited<ReturnType<typeof getProPricing>>;
+
+export const ADDON_METADATA_KEY = "addon";
+export const API_POLLS_ADDON = "api_polls";
+export const API_POLL_LIMIT_METADATA_KEY = "api_poll_limit";
+
+function isAddonItem(item: Stripe.SubscriptionItem) {
+  return (
+    item.price?.metadata != null && ADDON_METADATA_KEY in item.price.metadata
+  );
+}
+
+export function findSeatItem(subscription: Stripe.Subscription) {
+  return subscription.items.data.find((item) => !isAddonItem(item));
+}
+
+export function getSeatItem(subscription: Stripe.Subscription) {
+  const item = findSeatItem(subscription);
+
+  if (!item) {
+    throw new Error(
+      `Missing subscription item in subscription ${subscription.id}`,
+    );
+  }
+
+  return item;
+}
+
+export function getApiPollAddonItem(subscription: Stripe.Subscription) {
+  const item = subscription.items.data.find(
+    (candidate) =>
+      candidate.price?.metadata?.[ADDON_METADATA_KEY] === API_POLLS_ADDON,
+  );
+
+  if (!item) {
+    return null;
+  }
+
+  const raw = item.price.metadata[API_POLL_LIMIT_METADATA_KEY] ?? "";
+  const limit = /^\d+$/.test(raw) ? Number.parseInt(raw, 10) : 0;
+
+  if (!Number.isSafeInteger(limit) || limit <= 0) {
+    return null;
+  }
+
+  const amount =
+    item.price.currency_options?.[subscription.currency]?.unit_amount ??
+    item.price.unit_amount;
+
+  if (amount == null) {
+    return null;
+  }
+
+  return { id: item.id, priceId: item.price.id, limit, amount };
+}
