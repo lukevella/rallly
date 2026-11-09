@@ -40,15 +40,10 @@ export function SearchInput({
   const [isPending, startTransition] = React.useTransition();
   const isSearching = isDebouncing || isPending;
 
-  // Follow URL changes made elsewhere (e.g. the command menu) while mounted,
-  // unless the user is mid-edit
-  const [syncedValue, setSyncedValue] = React.useState(currentSearchValue);
-  if (syncedValue !== currentSearchValue) {
-    setSyncedValue(currentSearchValue);
-    if (!isDebouncing) {
-      setInputValue(currentSearchValue);
-    }
-  }
+  // Debounce URL updates while typing; submitting flushes the pending value
+  const pendingValue = React.useRef<string | null>(null);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const lastPushedValue = React.useRef(currentSearchValue);
 
   const updateUrl = (value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -60,6 +55,7 @@ export function SearchInput({
 
     params.delete("page");
 
+    lastPushedValue.current = value;
     setIsDebouncing(false);
     startTransition(() => {
       startNavigation(() => {
@@ -68,9 +64,16 @@ export function SearchInput({
     });
   };
 
-  // Debounce URL updates while typing; submitting flushes the pending value
-  const pendingValue = React.useRef<string | null>(null);
-  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  // A URL change this input didn't make (e.g. the command menu) wins over
+  // any edit still waiting on the debounce
+  React.useEffect(() => {
+    if (currentSearchValue === lastPushedValue.current) return;
+    lastPushedValue.current = currentSearchValue;
+    clearTimeout(timer.current);
+    pendingValue.current = null;
+    setIsDebouncing(false);
+    setInputValue(currentSearchValue);
+  }, [currentSearchValue]);
 
   const flushUpdate = () => {
     clearTimeout(timer.current);
