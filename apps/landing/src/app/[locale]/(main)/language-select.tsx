@@ -9,12 +9,10 @@ import {
   SelectValue,
 } from "@rallly/ui/select";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useTranslation } from "@/i18n/client/use-translation";
 
-export const LanguageSelect = () => {
+export const LanguageSelect = ({ label }: { label: string }) => {
   const router = useRouter();
   const pathname = usePathname() ?? "";
-  const { t } = useTranslation();
   const params = useParams<{ locale?: string }>();
   const locale = params.locale ?? defaultLocale;
   return (
@@ -36,10 +34,7 @@ export const LanguageSelect = () => {
         router.replace(`/${newLocale}${newPath}`);
       }}
     >
-      <SelectTrigger
-        className="w-full"
-        aria-label={t("language", { defaultValue: "Language" })}
-      >
+      <SelectTrigger className="w-full" aria-label={label}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

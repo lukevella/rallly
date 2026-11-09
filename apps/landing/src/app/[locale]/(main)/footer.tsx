@@ -371,7 +371,9 @@ export const Footer = async ({ locale }: { locale: string }) => {
             />
           </a>
           <div className="w-48">
-            <LanguageSelect />
+            <LanguageSelect
+              label={t("language", { defaultValue: "Language" })}
+            />
           </div>
         </div>
       </div>
