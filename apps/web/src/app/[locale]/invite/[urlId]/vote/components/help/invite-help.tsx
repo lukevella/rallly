@@ -72,10 +72,15 @@ export async function InviteHelp({ poll }: { poll: PollDetails }) {
       title: t("inviteHelpChooseTitle", {
         defaultValue: "Choose your availability",
       }),
-      description: t("inviteHelpChooseRadioDescription", {
-        defaultValue:
-          "Each option can be answered yes, if need be or no. With a keyboard or screen reader, use the arrow keys or Space to choose. With a mouse, select the row to change the answer:",
-      }),
+      description: poll.allowTentativeVotes
+        ? t("inviteHelpChooseRadioDescription", {
+            defaultValue:
+              "Each option can be answered yes, if need be or no. With a keyboard or screen reader, use the arrow keys or Space to choose. With a mouse, select the row to change the answer:",
+          })
+        : t("inviteHelpChooseRadioNoTentativeDescription", {
+            defaultValue:
+              "Each option can be answered yes or no. With a keyboard or screen reader, use the arrow keys or Space to choose. With a mouse, select the row to change the answer:",
+          }),
       extra: (
         <table className="mt-4 w-full text-left text-sm">
           <thead className="text-muted-foreground text-xs">

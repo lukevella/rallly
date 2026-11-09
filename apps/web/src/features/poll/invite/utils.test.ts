@@ -102,6 +102,23 @@ describe("projectBallot", () => {
     expect(ballot.ownResponses.map((r) => r.id)).toEqual(["r2"]);
   });
 
+  it("puts the response an edit link names ahead of the viewer's newer ones", () => {
+    const source = ballotSource();
+    const [newest, older] = source.responses;
+    if (!newest || !older) throw new Error("expected two responses");
+    const ballot = projectBallot({
+      source: {
+        ...source,
+        responses: [
+          { ...newest, userId: "u1" },
+          { ...older, userId: "u1" },
+        ],
+      },
+      viewer: { userId: "u1", linkedResponseIds: [older.id] },
+    });
+    expect(ballot.ownResponses.map((r) => r.id)).toEqual([older.id, newest.id]);
+  });
+
   it("tallies yes and if need be with names", () => {
     const ballot = projectBallot({ source: ballotSource(), viewer: anonymous });
     expect(ballot.tallies?.o1).toEqual([

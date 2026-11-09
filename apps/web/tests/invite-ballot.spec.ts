@@ -250,6 +250,24 @@ test.describe("invite ballot", () => {
     await context.close();
   });
 
+  test("says so when every time has passed", async ({ browser }) => {
+    await seedPoll({ id: "ballot-spec-all-past", withPastOption: true });
+    await prisma.option.deleteMany({
+      where: {
+        pollId: "ballot-spec-all-past",
+        id: { not: "ballot-spec-all-past-o3" },
+      },
+    });
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-all-past/vote");
+
+    await expect(
+      page.getByText("All of these times have passed"),
+    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Continue" })).toHaveCount(0);
+    await context.close();
+  });
+
   test("clicking a row cycles its answer", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-row", allowTentativeVotes: true });
     const { context, page } = await freshPage(browser);

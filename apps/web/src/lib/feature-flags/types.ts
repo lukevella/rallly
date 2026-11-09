@@ -17,6 +17,7 @@ export interface FeatureFlagConfig {
   reviewRequests: boolean;
   openPollLimit: boolean;
   createPollPrompt: boolean;
+  hostedLegalLinks: boolean;
 }
 
 export type Feature = keyof FeatureFlagConfig;

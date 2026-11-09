@@ -202,6 +202,11 @@ export function useBallotErrorMessage() {
         return t("newParticipantFormErrorPollFull", {
           defaultValue: "This poll is no longer accepting responses.",
         });
+      case "tentativeVotesNotAllowed":
+        return t("ballotErrorTentativeNotAllowed", {
+          defaultValue:
+            "The organizer has turned off if need be. Change those answers and try again.",
+        });
       case "tooManyRequests":
         return t("newParticipantFormErrorTooManyRequests", {
           defaultValue:

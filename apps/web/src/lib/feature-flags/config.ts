@@ -56,4 +56,7 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // Asks participants to try the cloud product. On a self-hosted instance a
   // participant usually has no account to create a poll with.
   createPollPrompt: !isSelfHosted,
+  // Links to the hosted product's terms and privacy policy. They don't cover
+  // a self-hosted instance, whose operator sets their own.
+  hostedLegalLinks: !isSelfHosted,
 };

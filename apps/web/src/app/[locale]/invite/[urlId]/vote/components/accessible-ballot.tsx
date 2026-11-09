@@ -71,6 +71,10 @@ import {
 import { MAX_RESPONSE_NOTE_LENGTH } from "@/features/poll/schema";
 import type { PollDetails } from "@/features/poll/types";
 import { TimeFormatSwitcher } from "@/features/poll/vote/components/time-format-switcher";
+import {
+  EventDate,
+  EventTimeRange,
+} from "@/features/scheduled-event/components/event-date-time";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
@@ -345,6 +349,7 @@ export function AccessibleBallot({
   // Turning a shortcut off puts back whatever it replaced, so pressing one by
   // mistake costs nothing. Switching between them keeps the original answers.
   const markAll = (vote: "yes" | "no") => {
+    if (pending) return;
     if (allMarked(vote)) {
       const before = answersBeforeShortcut.current;
       state.setVotes(
@@ -1181,6 +1186,28 @@ export function AccessibleBallot({
                   <div className="-my-1 shrink-0">{timeFormatSwitcher}</div>
                 ) : null}
               </div>
+              {poll.status === "scheduled" && poll.event ? (
+                <p className="mt-2 flex flex-wrap gap-x-2 font-medium text-sm">
+                  <EventDate
+                    value={poll.event.start}
+                    allDay={poll.event.duration === 0}
+                    timeZone={poll.timeZone}
+                    preset="dateFull"
+                  />
+                  <EventTimeRange
+                    start={poll.event.start}
+                    end={
+                      new Date(
+                        poll.event.start.getTime() +
+                          poll.event.duration * 60_000,
+                      )
+                    }
+                    allDay={poll.event.duration === 0}
+                    timeZone={poll.timeZone}
+                    showTimeZone
+                  />
+                </p>
+              ) : null}
               {ballot.isDatePoll || !timeZoneNote ? null : (
                 <div className="mt-3">{timeZoneNote}</div>
               )}
@@ -1358,9 +1385,9 @@ export function AccessibleBallot({
                         {group.optionIds.map((optionId) => {
                           const option = optionsById.get(optionId);
                           if (!option) return null;
-                          const count = countDescription(optionId);
-                          const countId = `count-${optionId}`;
                           const vote = state.answers[optionId];
+                          const count = countDescription(optionId, vote);
+                          const countId = `count-${optionId}`;
                           // Past times cannot be attended, so they only show here.
                           const isPast = past.ids.has(optionId);
                           const liveCount = ballot.tallies
@@ -1381,6 +1408,7 @@ export function AccessibleBallot({
                                 // assistive technology activates those directly.
                                 if (
                                   isPast ||
+                                  pending ||
                                   !window.matchMedia("(pointer: fine)")
                                     .matches ||
                                   (event.target as Element).closest("label")
@@ -1487,9 +1515,13 @@ export function AccessibleBallot({
                                       name={`vote-${optionId}`}
                                       value={choice}
                                       checked={vote === choice}
-                                      onChange={() =>
-                                        state.setVote(optionId, choice)
-                                      }
+                                      onChange={() => {
+                                        // What is being saved is what stays, so
+                                        // answers hold still until it lands.
+                                        if (!pending) {
+                                          state.setVote(optionId, choice);
+                                        }
+                                      }}
                                     />
                                     <span
                                       aria-hidden="true"
@@ -1728,7 +1760,14 @@ export function AccessibleBallot({
                 </section>
               ) : null}
 
-              {isNew ? (
+              {isNew && votable.length === 0 ? (
+                <p className="py-6 text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="voteAllOptionsPassed"
+                    defaults="All of these times have passed, so there is nothing left to answer. Contact the organizer if you still want to respond."
+                  />
+                </p>
+              ) : isNew ? (
                 <div
                   className={cn(
                     "flex flex-col gap-2",

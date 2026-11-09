@@ -60,8 +60,11 @@ export function projectBallot({
     linked.has(response.id) ||
     (viewer.userId !== null && response.userId === viewer.userId);
 
+  // The response an edit link names comes first, so it is the one the ballot
+  // opens. Sort is stable, so the rest stay newest first.
   const ownResponses = source.responses
     .filter(isOwn)
+    .sort((a, b) => Number(linked.has(b.id)) - Number(linked.has(a.id)))
     .map(({ id, name, votes }) => ({ id, name, votes }));
 
   const showScores = !source.hideScores || ownResponses.length > 0;

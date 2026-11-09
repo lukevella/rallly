@@ -6,7 +6,10 @@ import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { Spinner } from "@/components/spinner";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/features/branding/components/logo";
-import { DEFAULT_LOGO_URL } from "@/features/branding/constants";
+import {
+  DEFAULT_LOGO_URL,
+  DEFAULT_LOGO_URL_DARK,
+} from "@/features/branding/constants";
 import { loadInstanceBranding } from "@/features/branding/loaders";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
@@ -14,6 +17,7 @@ import { PollUnavailable } from "@/features/poll/invite/components/poll-unavaila
 import { loadInviteBallot } from "@/features/poll/invite/loaders";
 import { loadPollAvailability, loadPollDetails } from "@/features/poll/loaders";
 import { PoweredByLink } from "@/features/poll/vote/components/powered-by-link";
+import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { AccessibleBallot } from "./components/accessible-ballot";
 import { EventLockup } from "./components/event-lockup";
@@ -35,9 +39,10 @@ function getInviteToken({
   token?: string | string[];
   invite?: string | string[];
 }) {
-  return [token, invite].find(
-    (value): value is string => typeof value === "string",
-  );
+  // A repeated param arrives as an array. The client reads the first, so does this.
+  const first = (value?: string | string[]) =>
+    Array.isArray(value) ? value[0] : value;
+  return first(token) ?? first(invite);
 }
 
 async function PageContent({ params, searchParams }: PageProps) {
@@ -59,6 +64,7 @@ async function PageContent({ params, searchParams }: PageProps) {
   }
 
   const token = getInviteToken({ token: tokenParam, invite: inviteParam });
+  const { t } = await getTranslation();
   const [poll, ballot, instanceBranding, footerLinks] = await Promise.all([
     loadPollDetails(urlId),
     loadInviteBallot({ pollId: urlId, token }),
@@ -72,19 +78,27 @@ async function PageContent({ params, searchParams }: PageProps) {
 
   // The Rallly logo stays off this page. An instance's own logo is its
   // operator's brand, so that one still shows.
-  const showLogo = instanceBranding.logo.light !== DEFAULT_LOGO_URL;
+  const showLogo =
+    instanceBranding.logo.light !== DEFAULT_LOGO_URL ||
+    instanceBranding.logo.dark !== DEFAULT_LOGO_URL_DARK;
   // Attribution can be turned off per instance or per space.
   const hideAttribution =
     instanceBranding.hideAttribution || (poll.space?.hideAttribution ?? false);
   const space = poll.space?.showBranding ? poll.space : null;
   const showHeaderLogo = showLogo || (!space && !hideAttribution);
-  // Hardcoded until cloud has a real source for these.
+  // An instance's own links, or the hosted product's policies where they apply.
   const links =
-    footerLinks.length > 0
+    footerLinks.length > 0 || !isFeatureEnabled("hostedLegalLinks")
       ? footerLinks
       : [
-          { label: "Terms of use", href: "https://rallly.co/terms-of-use" },
-          { label: "Privacy policy", href: "https://rallly.co/privacy-policy" },
+          {
+            label: t("voteFooterTerms", { defaultValue: "Terms of use" }),
+            href: "https://rallly.co/terms-of-use",
+          },
+          {
+            label: t("voteFooterPrivacy", { defaultValue: "Privacy policy" }),
+            href: "https://rallly.co/privacy-policy",
+          },
         ];
 
   return (

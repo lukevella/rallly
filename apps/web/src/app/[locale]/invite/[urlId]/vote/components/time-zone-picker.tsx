@@ -107,7 +107,6 @@ export function TimeZonePicker({
       </button>
       <Dialog {...dialog.dialogProps}>
         <DialogContent
-          showCloseButton={false}
           finalFocus={triggerRef}
           size="md"
           className="*:data-[slot=dialog-scroller]:p-0"

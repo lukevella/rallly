@@ -59,7 +59,7 @@ export type Ballot = {
   tallies: Record<string, BallotTallyEntry[]> | null;
   /** How many responses the poll has, the bar each option is measured against. */
   responseCount: number;
-  /** Newest first. */
+  /** The response an edit link names first, then newest first. */
   ownResponses: {
     id: string;
     name: string;
