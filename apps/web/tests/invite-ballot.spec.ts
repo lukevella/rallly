@@ -282,10 +282,13 @@ test.describe("invite ballot", () => {
     const page = await context.newPage();
     await page.goto("/invite/ballot-spec-closed/vote");
 
-    await expect(page.getByRole("group", { name: "Results" })).toHaveAttribute(
-      "tabindex",
-      "0",
-    );
+    const results = page.getByRole("group", { name: "Results" });
+    await expect(results).toHaveAttribute("tabindex", "0");
+    await results.focus();
+    await page.keyboard.press("End");
+    await expect
+      .poll(() => results.evaluate((element) => element.scrollTop))
+      .toBeGreaterThan(0);
     await context.close();
   });
 

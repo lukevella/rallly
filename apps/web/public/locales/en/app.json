@@ -1237,6 +1237,7 @@
   "voteOptionsSettingDescription": "The answers participants can give for each option.",
   "voteOptionsSettingTitle": "Vote options",
   "voteResultsPanelLabel": "Results",
+  "voteSaveInProgress": "Your answers are still saving. Try again when that finishes.",
   "voteSummaryAvailable": "{availableCount} of {total} available",
   "voteSummaryIfNeedBe": "{count} if need be",
   "voteSummaryNotAvailable": "You're not available",

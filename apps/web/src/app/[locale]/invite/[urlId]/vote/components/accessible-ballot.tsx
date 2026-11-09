@@ -1544,7 +1544,14 @@ export function AccessibleBallot({
                                       onChange={() => {
                                         // What is being saved is what stays, so
                                         // answers hold still until it lands.
-                                        if (!pending) {
+                                        if (pending) {
+                                          setStatus(
+                                            t("voteSaveInProgress", {
+                                              defaultValue:
+                                                "Your answers are still saving. Try again when that finishes.",
+                                            }),
+                                          );
+                                        } else {
                                           state.setVote(optionId, choice);
                                         }
                                       }}
