@@ -4,7 +4,11 @@ icon: "arrow-right-arrow-left"
 description: "Move an integration from /api/private to /v1, endpoint by endpoint."
 ---
 
-`/v1` replaces the unversioned private API at `https://app.rallly.co/api/private`. The private API is frozen: it still answers, but it receives no new fields or endpoints, and everything new lands on `/v1` only.
+`/v1` replaces the unversioned private API at `https://app.rallly.co/api/private`.
+
+<Warning>
+The private API was removed on November 10, 2026. Every request to `/api/private` now returns `410 Gone` with a `GONE` error code. Follow this guide to move an integration to `/v1`.
+</Warning>
 
 Your API keys, poll IDs, invite links and rate limits carry over unchanged. What changes is the base URL, the request and response shapes, and how errors look.
 

@@ -428,9 +428,6 @@ importers:
       '@rallly/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@scalar/hono-api-reference':
-        specifier: ^0.9.30
-        version: 0.9.40(hono@4.13.13)
       '@sentry/nextjs':
         specifier: ^11.8.0
         version: 11.8.0(@babel/core@7.29.7(supports-color@8.1.1))(next@16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.64.1)(@types/node@24.10.11)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(vite@7.3.7(@types/node@24.10.11)(jiti@2.7.0)(lightningcss@1.30.2)(terser@5.51.2)(tsx@4.21.0)(yaml@2.9.1))(webpack@5.105.0(@swc/core@1.15.40(@swc/helpers@0.5.23))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.30.2)(postcss@8.5.31))
@@ -5543,24 +5540,6 @@ packages:
     resolution: {integrity: sha512-j5rXD4R/4DM5+V991AA9xOnG2Rwu2g3p5TPgu1Eu7apju0NUrLl+Bn/KpWc6wYJtlXqzwz1r+LNV1JeBU4VGvw==}
     cpu: [x64]
     os: [win32]
-
-  '@scalar/core@0.3.37':
-    resolution: {integrity: sha512-cQWMHsGD9jCiYHi91acR3tOsj+qGk+dRQ2W+N5+au1NZ/GkUNT5TUEufekn/sj1S8af+lOnn3y0xXoTI34jCog==}
-    engines: {node: '>=20'}
-
-  '@scalar/helpers@0.2.11':
-    resolution: {integrity: sha512-Y7DLt1bIZF9dvHzJwSJTcC1lpSr1Tbf4VBhHOCRIHu23Rr7/lhQnddRxFmPV1tZXwEQKz7F7yRrubwCfKPCucw==}
-    engines: {node: '>=20'}
-
-  '@scalar/hono-api-reference@0.9.40':
-    resolution: {integrity: sha512-0tQOxyEwuu1QGcoA5aCJg2eSmNfF35mxeGx13TND9ud5ZBeuOqli8jyfykgkqV3gFTnDDlQYgQcOvB6Rgk2beA==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      hono: ^4.11.5
-
-  '@scalar/types@0.6.2':
-    resolution: {integrity: sha512-VWfY/z9R5NT8PpKVmvmIj6QSh56MMcl8x3JsGiNxR+w7txGQEq+QzEl35aU56uSBFmLfPk1oyInoaHhkosKooA==}
-    engines: {node: '>=20'}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -11987,10 +11966,6 @@ packages:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
 
-  type-fest@5.4.3:
-    resolution: {integrity: sha512-AXSAQJu79WGc79/3e9/CR77I/KQgeY1AhNvcShIH4PTcGYyC4xv6H4R4AUOwkPS5799KlVDAu8zExeCrkGquiA==}
-    engines: {node: '>=20'}
-
   type-fest@5.8.0:
     resolution: {integrity: sha512-YGYEVz3Fm5iy/AybuA0oyNFq7H4CgQNfRp/qfe8nurE1kuCeNm3/vfm9X4Mtl+qLyaKJUh5xrFZwogr41SMjYA==}
     engines: {node: '>=20'}
@@ -17415,24 +17390,6 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.64.12':
     optional: true
-
-  '@scalar/core@0.3.37':
-    dependencies:
-      '@scalar/types': 0.6.2
-
-  '@scalar/helpers@0.2.11': {}
-
-  '@scalar/hono-api-reference@0.9.40(hono@4.13.13)':
-    dependencies:
-      '@scalar/core': 0.3.37
-      hono: 4.13.13
-
-  '@scalar/types@0.6.2':
-    dependencies:
-      '@scalar/helpers': 0.2.11
-      nanoid: 5.1.16
-      type-fest: 5.4.3
-      zod: 4.3.6
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -25340,10 +25297,6 @@ snapshots:
   type-fest@2.19.0: {}
 
   type-fest@4.41.0: {}
-
-  type-fest@5.4.3:
-    dependencies:
-      tagged-tag: 1.0.0
 
   type-fest@5.8.0:
     dependencies:
