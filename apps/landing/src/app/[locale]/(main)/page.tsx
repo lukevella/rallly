@@ -8,6 +8,7 @@ import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
+import { HeroBackdrop } from "@/components/home/hero-backdrop";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { SocialProof } from "@/components/home/social-proof";
@@ -84,6 +85,7 @@ export default async function Page(props: {
         }}
       />
       <Section>
+        <HeroBackdrop orientation="grid" />
         <Hero
           title={t("headline", {
             defaultValue: "Find the best time to meet",
