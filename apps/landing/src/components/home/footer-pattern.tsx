@@ -1,7 +1,17 @@
 import { cn } from "@rallly/ui";
+import type { SpawnArea } from "@/components/home/grid-animation";
+import { GridAnimation } from "@/components/home/grid-animation";
 
-// Decorative dot grid filling the footer's spare column. Purely textural, so
-// it is aria-hidden and the copy alongside it carries the meaning.
+// Keeps crossings inside the part of the slot the mask leaves visible.
+const footerSpawnArea: SpawnArea = {
+  minX: 0.2,
+  maxX: 0.8,
+  minY: 0.25,
+  maxY: 0.7,
+};
+
+// The hero's animated grid, filling the footer's spare column. Purely
+// textural, so it is aria-hidden and the copy alongside it carries the meaning.
 export function FooterPattern({ className }: { className?: string }) {
   return (
     <div aria-hidden className={cn("relative isolate", className)}>
@@ -13,15 +23,14 @@ export function FooterPattern({ className }: { className?: string }) {
           // padding, where the mask fades it out just shy of the border. No
           // sideways bleed: that would widen the page.
           "absolute -top-14 right-0 -bottom-10 left-0 -z-10",
-          // Dots rather than ruled lines: far less ink for the same rhythm.
-          "bg-[radial-gradient(--theme(--color-black/12%)_1px,transparent_1px)]",
-          "bg-[size:24px_24px]",
-          // Fades out on every edge, so the pattern approaches the footer's
-          // top border without ever meeting it.
+          // Fades out on every edge, so the grid approaches the footer's top
+          // border without ever meeting it.
           "[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent),linear-gradient(to_bottom,transparent,black_18%,black_75%,transparent)]",
           "[mask-composite:intersect]",
         )}
-      />
+      >
+        <GridAnimation orientation="grid" spawnArea={footerSpawnArea} />
+      </div>
     </div>
   );
 }
