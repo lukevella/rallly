@@ -20,7 +20,7 @@ const reviewSites = [
   },
   {
     name: "G2",
-    rating: 4.6,
+    rating: 4.7,
     url: "https://www.g2.com/products/rallly/reviews",
     logo: "/static/images/g2-logo.svg",
   },
