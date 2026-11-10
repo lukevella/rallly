@@ -14,6 +14,7 @@ import { Input } from "@rallly/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useMountedState } from "react-use";
 import * as z from "zod";
 import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Link } from "@/components/link";
@@ -58,6 +59,8 @@ export function LoginWithEmailForm({
   const searchParams = useSearchParams();
   const [showPasswordField, setShowPasswordField] = React.useState(false);
   const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const isMounted = useMountedState();
+  const [isNavigating, startNavigation] = React.useTransition();
   const form = useForm({
     defaultValues: {
       identifier: "",
@@ -70,6 +73,7 @@ export function LoginWithEmailForm({
 
   const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
   const isPasswordLogin = showPasswordField && !!form.watch("password");
+  const isBusy = formState.isSubmitting || isNavigating;
 
   const submit = async ({
     identifier,
@@ -204,15 +208,26 @@ export function LoginWithEmailForm({
         return;
       }
 
+      // A server action posts to the current URL, and only this page can
+      // serve this one, so stop if the user has left while the code was
+      // being sent.
+      if (!isMounted()) {
+        return;
+      }
+
       await setVerificationEmail(identifier);
 
-      router.push(
-        `/login/verify${
-          validatedRedirectTo
-            ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
-            : ""
-        }`,
-      );
+      // The transition keeps the form busy until the verify page is shown,
+      // so it can't be submitted a second time on the way there.
+      startNavigation(() => {
+        router.push(
+          `/login/verify${
+            validatedRedirectTo
+              ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
+              : ""
+          }`,
+        );
+      });
     } finally {
       // Tokens are single-use; start a fresh solve for any retry.
       if (isTurnstileEnabled) {
@@ -236,7 +251,7 @@ export function LoginWithEmailForm({
                   large
                   type="text"
                   autoComplete="username"
-                  disabled={formState.isSubmitting}
+                  disabled={isBusy}
                   autoFocus={true}
                   placeholder={t("emailPlaceholder")}
                 />
@@ -277,7 +292,7 @@ export function LoginWithEmailForm({
                     large
                     type="password"
                     autoComplete="current-password"
-                    disabled={form.formState.isSubmitting}
+                    disabled={isBusy}
                     placeholder="••••••••"
                     {...field}
                   />
@@ -301,7 +316,7 @@ export function LoginWithEmailForm({
           <Button
             size="xl"
             shape="rounded"
-            loading={form.formState.isSubmitting}
+            loading={isBusy}
             type="submit"
             className="relative w-full"
             variant="primary"
