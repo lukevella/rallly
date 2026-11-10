@@ -1193,12 +1193,20 @@ export function AccessibleBallot({
             <dl className="flex flex-col gap-2.5 empty:hidden">{eventFacts}</dl>
           </div>
 
-          {/* Signs off the sidebar from lg. On a phone the key below stays next to
-              the options it explains. */}
+          {/* A visual key for the icon-only answers; the radios name themselves. */}
+          <div
+            aria-hidden="true"
+            className={cn(compactOnPhone && "max-lg:hidden")}
+          >
+            <BallotResponseOptions
+              allowTentativeVotes={ballot.allowTentativeVotes}
+            />
+          </div>
+          {/* Signs off the sidebar. */}
           {poll.user ? (
             <div
               className={cn(
-                "flex items-center gap-3 text-sm lg:order-last lg:mt-auto",
+                "flex items-center gap-3 text-sm lg:mt-auto",
                 compactOnPhone && "max-lg:hidden",
               )}
             >
@@ -1217,16 +1225,6 @@ export function AccessibleBallot({
               </div>
             </div>
           ) : null}
-
-          {/* A visual key for the icon-only answers; the radios name themselves. */}
-          <div
-            aria-hidden="true"
-            className={cn(compactOnPhone && "max-lg:hidden")}
-          >
-            <BallotResponseOptions
-              allowTentativeVotes={ballot.allowTentativeVotes}
-            />
-          </div>
         </div>
 
         {/* Level with the top of the sidebar. Beside a title on its own, the extra
@@ -1957,7 +1955,7 @@ export function AccessibleBallot({
                     "flex flex-col gap-2",
                     onDetailsStep
                       ? "pt-6 lg:mt-auto"
-                      : "sticky bottom-0 z-20 mt-6 bg-gray-50/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:bg-card/70 lg:px-8 dark:bg-gray-900/70 dark:lg:bg-card/70",
+                      : "sticky bottom-0 z-20 mt-6 bg-card/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:px-8",
                   )}
                 >
                   {/* Next to the button that raised it, for what has no field of its own. */}
