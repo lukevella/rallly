@@ -1955,7 +1955,7 @@ export function AccessibleBallot({
                     "flex flex-col gap-2",
                     onDetailsStep
                       ? "pt-6 lg:mt-auto"
-                      : "sticky bottom-0 z-20 mt-6 bg-gray-50/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:bg-card/70 lg:px-8 dark:bg-gray-900/70 dark:lg:bg-card/70",
+                      : "sticky bottom-0 z-20 mt-6 bg-card/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:px-8",
                   )}
                 >
                   {/* Next to the button that raised it, for what has no field of its own. */}

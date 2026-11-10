@@ -23,7 +23,7 @@ export function BallotTimeControls({
           // From lg it starts at the top of the panel with even padding, and the
           // negative bottom margin keeps the content below where it was. The
           // panel's own top padding counts toward a sticky offset; -top cancels it.
-          "sticky z-10 -my-2 flex items-center justify-between gap-x-4 bg-gray-50/70 py-2 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-top-6.25 lg:-mx-8 lg:-mt-6.25 lg:-mb-4 lg:bg-card/70 lg:px-8 lg:pt-4 lg:pb-4 dark:bg-gray-900/70 dark:lg:bg-card/70",
+          "sticky z-10 -my-2 flex items-center justify-between gap-x-4 bg-card/70 py-2 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-top-6.25 lg:-mx-8 lg:-mt-6.25 lg:-mb-4 lg:px-8 lg:pt-4 lg:pb-4",
           belowResponseBar ? "max-lg:top-13" : "max-lg:top-0",
         )}
       >
