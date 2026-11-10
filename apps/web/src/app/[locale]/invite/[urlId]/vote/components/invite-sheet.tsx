@@ -64,7 +64,7 @@ export function InviteSheet({
           >
             {icon}
           </TooltipTrigger>
-          <TooltipContent>{label}</TooltipContent>
+          <TooltipContent className="text-xs">{label}</TooltipContent>
         </Tooltip>
       )}
       <Sheet {...dialog.dialogProps}>

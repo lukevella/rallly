@@ -20,11 +20,20 @@ import {
 } from "@rallly/ui/dropdown-menu";
 import { Field, FieldLabel } from "@rallly/ui/field";
 import { Input } from "@rallly/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupTextarea,
+} from "@rallly/ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
-import { Textarea } from "@rallly/ui/textarea";
 import {
+  CheckIcon,
+  CircleHelpIcon,
   ClockIcon,
+  GlobeIcon,
   MapPinIcon,
   MoreHorizontalIcon,
   PencilIcon,
@@ -55,6 +64,9 @@ import {
   ballotToggleClassName,
 } from "@/features/poll/invite/components/ballot-pill";
 import { BallotResponseOptions } from "@/features/poll/invite/components/ballot-response-options";
+import { BallotTimeControls } from "@/features/poll/invite/components/ballot-time-controls";
+import { BallotTimeText } from "@/features/poll/invite/components/ballot-time-text";
+import { BallotVoteMark } from "@/features/poll/invite/components/ballot-vote-mark";
 import { PastTimesToggle } from "@/features/poll/invite/components/past-times-toggle";
 import type { Ballot, BallotVote } from "@/features/poll/invite/types";
 import {
@@ -95,14 +107,33 @@ const rowHoverClassName: Record<BallotVote | "none", string> = {
     "[@media(pointer:fine)]:hover:border-amber-600 dark:[@media(pointer:fine)]:hover:border-amber-400",
 };
 
+/** Inset as far from the right as from the top, so the button sits square in the field. */
+const fieldAddonClassName = "pr-1.5 has-[>button]:mr-0";
+/** The field is rounded-xl (12px) and the button is inset 6px: 12 - 6 keeps the corners concentric. */
+const fieldIconButtonClassName = "rounded-md text-muted-foreground";
+
+/**
+ * From lg the card resizes between steps first (320ms), and the next step waits
+ * for it, hidden meanwhile. Without motion the card doesn't animate, so no wait.
+ */
+const stepAfterCardClassName =
+  "lg:fill-mode-backwards lg:[animation-delay:320ms] motion-reduce:[animation-delay:0ms]";
+
+/** The fields' own fill, which the input group's control drops. */
+const fieldGroupClassName = "bg-background/80 dark:bg-foreground/5";
+
+/** A shortcut that's on: its label says Undo, so it can't also be aria-pressed. */
+const shortcutOnClassName =
+  "border-solid bg-gray-200 text-foreground hover:bg-gray-200 dark:bg-white/15 dark:hover:bg-white/15";
+
 const factIconClassName =
   "mt-[calc((1lh-1rem)/2)] size-4 shrink-0 text-muted-foreground";
 
 /** Kept in the tree and at a real position, so direct activation still lands. */
-const radiosWhenMouseClassName =
-  "[@media(pointer:fine)]:group-not-has-[input:focus-visible]:absolute [@media(pointer:fine)]:group-not-has-[input:focus-visible]:right-0 [@media(pointer:fine)]:group-not-has-[input:focus-visible]:bottom-0 [@media(pointer:fine)]:group-not-has-[input:focus-visible]:gap-0 [@media(pointer:fine)]:group-not-has-[input:focus-visible]:opacity-0";
-const radioWhenMouseClassName =
-  "[@media(pointer:fine)]:group-not-has-[input:focus-visible]:size-px [@media(pointer:fine)]:group-not-has-[input:focus-visible]:overflow-hidden";
+const radiosUntilKeyboardClassName =
+  "group-not-has-[input:focus-visible]:absolute group-not-has-[input:focus-visible]:right-0 group-not-has-[input:focus-visible]:bottom-0 group-not-has-[input:focus-visible]:gap-0 group-not-has-[input:focus-visible]:opacity-0";
+const radioUntilKeyboardClassName =
+  "group-not-has-[input:focus-visible]:size-px group-not-has-[input:focus-visible]:overflow-hidden";
 
 type FieldError = { field: "name" | "email" | "votes"; message: string };
 
@@ -199,7 +230,13 @@ export function AccessibleBallot({
     null,
   );
   const [cameBack, setCameBack] = React.useState(false);
+  const mainRef = React.useRef<HTMLElement>(null);
+  // The card's size before a step change, so it can morph to the next one.
+  const cardBefore = React.useRef<DOMRect | null>(null);
   const finishStepExit = React.useCallback((direction: "forward" | "back") => {
+    cardBefore.current =
+      mainRef.current?.closest("[data-invite-card]")?.getBoundingClientRect() ??
+      null;
     setStepExit(null);
     setCameBack(direction === "back");
     setOnDetailsStep(direction === "forward");
@@ -220,10 +257,41 @@ export function AccessibleBallot({
           : "motion-safe:slide-out-to-bottom-6",
       )
     : onDetailsStep
-      ? "fade-in motion-safe:slide-in-from-bottom-6 animate-in transition-none duration-300 ease-out-ui"
+      ? cn(
+          "fade-in motion-safe:slide-in-from-bottom-6 animate-in transition-none duration-300 ease-out-ui",
+          stepAfterCardClassName,
+        )
       : cameBack
-        ? "fade-in motion-safe:slide-in-from-top-6 animate-in transition-none duration-300 ease-out-ui"
+        ? cn(
+            "fade-in motion-safe:slide-in-from-top-6 animate-in transition-none duration-300 ease-out-ui",
+            stepAfterCardClassName,
+          )
         : undefined;
+  // From lg the card is centred, so as it narrows both edges move in and the
+  // sidebar travels with the left one. Before paint, so it never jumps first.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs when the step changes
+  React.useLayoutEffect(() => {
+    const from = cardBefore.current;
+    cardBefore.current = null;
+    const card = mainRef.current?.closest<HTMLElement>("[data-invite-card]");
+    if (
+      !from ||
+      !card ||
+      !window.matchMedia("(min-width: 64rem)").matches ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+    const to = card.getBoundingClientRect();
+    if (from.width === to.width && from.height === to.height) return;
+    card.animate(
+      {
+        width: [`${from.width}px`, `${to.width}px`],
+        height: [`${from.height}px`, `${to.height}px`],
+      },
+      { duration: 320, easing: "cubic-bezier(0.77, 0, 0.175, 1)" },
+    );
+  }, [onDetailsStep]);
   const previousStep = React.useRef(onDetailsStep);
   if (onDetailsStep && state.mode !== "new") {
     setOnDetailsStep(false);
@@ -269,6 +337,23 @@ export function AccessibleBallot({
     ballot.isDatePoll || !ballot.timeZone
       ? "UTC"
       : (viewerTimeZone ?? getBrowserTimeZone());
+
+  // True just long enough for the values that moved to start animating, so a row
+  // that mounts later (Edit, showing past times) doesn't flash as if it had changed.
+  const displayKey = `${displayTimeZone}|${timeFormat}`;
+  const [previousDisplayKey, setPreviousDisplayKey] =
+    React.useState(displayKey);
+  const [timesChanged, setTimesChanged] = React.useState(false);
+  if (previousDisplayKey !== displayKey) {
+    setPreviousDisplayKey(displayKey);
+    setTimesChanged(true);
+  }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a second change in the window restarts it
+  React.useEffect(() => {
+    if (!timesChanged) return;
+    const timeout = setTimeout(() => setTimesChanged(false), 300);
+    return () => clearTimeout(timeout);
+  }, [timesChanged, displayKey]);
 
   const date = (iso: string, preset: "dateFull" | "weekdayMonthDay") =>
     formatDateTime(new Date(iso), {
@@ -353,25 +438,37 @@ export function AccessibleBallot({
     return () => window.removeEventListener("beforeunload", warn);
   }, [hasUnsavedAnswers]);
 
-  const answersBeforeShortcut = React.useRef<Record<string, BallotVote> | null>(
-    null,
-  );
+  // The answers a shortcut replaced; null while no shortcut is on.
+  const [answersBeforeShortcut, setAnswersBeforeShortcut] =
+    React.useState<Record<string, BallotVote> | null>(null);
   const allMarked = (vote: BallotVote) =>
     votable.length > 0 &&
     votable.every((option) => state.answers[option.id] === vote);
+  // Only a shortcut can be undone: every option answered the same by hand has
+  // nothing to go back to, so its button keeps its name and does nothing.
+  const shortcutOn = (vote: BallotVote) =>
+    answersBeforeShortcut !== null && allMarked(vote);
+
+  // An answer given by hand keeps what the shortcut did, so Undo can no longer
+  // take it back over the top of that edit.
+  const answerOne = (optionId: string, vote: BallotVote) => {
+    setAnswersBeforeShortcut(null);
+    state.setVote(optionId, vote);
+  };
 
   // Turning a shortcut off puts back whatever it replaced, so pressing one by
   // mistake costs nothing. Switching between them keeps the original answers.
   const markAll = (vote: "yes" | "no") => {
     if (pending) return;
     if (allMarked(vote)) {
-      const before = answersBeforeShortcut.current;
+      if (!answersBeforeShortcut) return;
+      const before = answersBeforeShortcut;
       state.setVotes(
         Object.fromEntries(
-          votable.map((option) => [option.id, before?.[option.id] ?? null]),
+          votable.map((option) => [option.id, before[option.id] ?? null]),
         ),
       );
-      answersBeforeShortcut.current = null;
+      setAnswersBeforeShortcut(null);
       setStatus(
         t("screenReaderAnswersRestored", {
           defaultValue: "Your earlier answers are back",
@@ -379,8 +476,8 @@ export function AccessibleBallot({
       );
       return;
     }
-    if (!allMarked(vote === "yes" ? "no" : "yes")) {
-      answersBeforeShortcut.current = state.answers;
+    if (!answersBeforeShortcut) {
+      setAnswersBeforeShortcut(state.answers);
     }
     state.setVotes(
       Object.fromEntries(votable.map((option) => [option.id, vote])),
@@ -780,16 +877,44 @@ export function AccessibleBallot({
     </>
   );
 
+  // What an email gets someone: shown in the popover and read as the field's description.
+  const emailBenefits = (
+    <ul className="flex flex-col gap-2 text-muted-foreground">
+      <li className="flex gap-2">
+        <CheckIcon
+          aria-hidden="true"
+          className="mt-[calc((1lh-1rem)/2)] size-4 shrink-0 text-green-600 dark:text-green-400"
+        />
+        <Trans
+          i18nKey="voteEmailBenefitEdit"
+          defaults="Edit your response later"
+        />
+      </li>
+      <li className="flex gap-2">
+        <CheckIcon
+          aria-hidden="true"
+          className="mt-[calc((1lh-1rem)/2)] size-4 shrink-0 text-green-600 dark:text-green-400"
+        />
+        <Trans
+          i18nKey="voteEmailBenefitFinalTime"
+          defaults="Get notified when a time is picked"
+        />
+      </li>
+    </ul>
+  );
+
   const timeZoneNote =
     hasZone && viewerTimeZone ? (
-      <p className="text-muted-foreground text-sm">
+      <p className="flex items-center gap-1.5 text-muted-foreground text-sm">
+        <GlobeIcon aria-hidden="true" className="size-4 shrink-0" />
         <Trans
           i18nKey="screenReaderTimesShownIn"
-          defaults="Times shown in <picker>{city} time</picker>"
+          defaults="<prefix>Times shown in</prefix> <picker>{city} time</picker>"
           values={{
             city: getCityFromTimezoneId(viewerTimeZone),
           }}
           components={{
+            prefix: <span className="max-sm:sr-only" />,
             picker: (
               <TimeZonePicker
                 className="text-foreground"
@@ -827,6 +952,13 @@ export function AccessibleBallot({
       }
     />
   );
+  const timeControls = timeFormatSwitcher ? (
+    <BallotTimeControls
+      timeZone={timeZoneNote}
+      timeFormat={timeFormatSwitcher}
+      belowResponseBar={Boolean(active && ballot.canRespond && !showThanks)}
+    />
+  ) : null;
 
   const startEditing = () => {
     setJustSaved(false);
@@ -991,6 +1123,7 @@ export function AccessibleBallot({
         </section>
       ) : null}
       <main
+        ref={mainRef}
         id="main-content"
         tabIndex={-1}
         className={cn(
@@ -1030,12 +1163,26 @@ export function AccessibleBallot({
                 {poll.title}
               </h1>
             )}
-            <div className={cn(compactOnPhone && "max-lg:hidden")}>
-              {description}
+            {/* Read by the time someone confirms, so it folds away there. */}
+            <div
+              className={cn(
+                "grid transition-[grid-template-rows,opacity,visibility] duration-200 ease-out-ui motion-reduce:transition-none",
+                compactOnPhone && "max-lg:hidden",
+                onDetailsStep
+                  ? "invisible grid-rows-[0fr] opacity-0"
+                  : "visible grid-rows-[1fr] opacity-100",
+              )}
+            >
+              <div className="min-h-0 overflow-hidden">{description}</div>
             </div>
           </div>
 
-          <div className={cn("text-sm", compactOnPhone && "max-lg:hidden")}>
+          <div
+            className={cn(
+              "text-sm has-[dl:empty]:hidden",
+              compactOnPhone && "max-lg:hidden",
+            )}
+          >
             <h2 className="sr-only">
               <Trans
                 i18nKey="screenReaderDetailsHeading"
@@ -1043,30 +1190,33 @@ export function AccessibleBallot({
               />
             </h2>
             {/* Read in document order; `order` only arranges them on screen. */}
-            <dl className="flex flex-col gap-2.5">
-              {poll.user ? (
-                <div className="order-last mt-2.5">
-                  <dt className="text-muted-foreground">
-                    <Trans
-                      i18nKey="eventHeaderOrganizer"
-                      defaults="Organizer"
-                    />
-                  </dt>
-                  <dd className="mt-1 flex items-center gap-2">
-                    <span aria-hidden="true" className="flex shrink-0">
-                      <OptimizedAvatarImage
-                        size="sm"
-                        src={poll.user.image ?? undefined}
-                        name={poll.user.name}
-                      />
-                    </span>
-                    <span className="min-w-0 truncate">{poll.user.name}</span>
-                  </dd>
-                </div>
-              ) : null}
-              {eventFacts}
-            </dl>
+            <dl className="flex flex-col gap-2.5 empty:hidden">{eventFacts}</dl>
           </div>
+
+          {/* Signs off the sidebar from lg. On a phone the key below stays next to
+              the options it explains. */}
+          {poll.user ? (
+            <div
+              className={cn(
+                "flex items-center gap-3 text-sm lg:order-last lg:mt-auto",
+                compactOnPhone && "max-lg:hidden",
+              )}
+            >
+              <span aria-hidden="true" className="flex shrink-0">
+                <OptimizedAvatarImage
+                  size="lg"
+                  src={poll.user.image ?? undefined}
+                  name={poll.user.name}
+                />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate font-medium">{poll.user.name}</p>
+                <p className="text-muted-foreground">
+                  <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
+                </p>
+              </div>
+            </div>
+          ) : null}
 
           {/* A visual key for the icon-only answers; the radios name themselves. */}
           <div
@@ -1096,7 +1246,7 @@ export function AccessibleBallot({
               }
             : {})}
           className={cn(
-            "mx-auto flex w-full min-w-0 flex-col focus-visible:outline-2 focus-visible:outline-ring focus-visible:-outline-offset-2 lg:relative lg:min-h-0 lg:overflow-y-auto lg:px-8",
+            "mx-auto flex w-full min-w-0 flex-col focus-visible:outline-2 focus-visible:outline-ring focus-visible:-outline-offset-2 lg:relative lg:min-h-0 lg:overflow-y-auto lg:overscroll-none lg:px-8",
             "lg:col-start-2 lg:border-l",
             showThanks && "max-lg:flex-1",
             showThanks
@@ -1197,37 +1347,42 @@ export function AccessibleBallot({
               ) : null}
             </section>
           ) : !state.canChange ? (
-            <section aria-labelledby="result-heading" className="flex flex-col">
-              <div className="flex items-center justify-between gap-x-4">
-                <h2
-                  id="result-heading"
-                  tabIndex={-1}
-                  className="min-w-0 font-semibold text-lg tracking-tight outline-none"
-                >
-                  {hasResponded ? (
-                    <Trans
-                      i18nKey="screenReaderFormHeading"
-                      defaults="When can you make it?"
-                    />
-                  ) : active ? (
-                    <Trans
-                      i18nKey="screenReaderSavedHeading"
-                      defaults="{name}, your answers are saved"
-                      values={{ name: active.name }}
-                    />
-                  ) : poll.status === "scheduled" ? (
-                    <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
-                  ) : (
-                    <Trans
-                      i18nKey="pollClosedDescription"
-                      defaults="No more responses are being accepted."
-                    />
-                  )}
-                </h2>
-                {timeFormatSwitcher ? (
-                  <div className="-my-1 shrink-0">{timeFormatSwitcher}</div>
-                ) : null}
-              </div>
+            <section
+              aria-labelledby="result-heading"
+              className={cn(
+                "flex flex-col",
+                // With the heading hidden, what follows starts the section.
+                hasResponded && "[&>#result-heading+*]:mt-0",
+              )}
+            >
+              <h2
+                id="result-heading"
+                tabIndex={-1}
+                className={cn(
+                  "min-w-0 font-semibold text-lg tracking-tight outline-none",
+                  hasResponded && "sr-only",
+                )}
+              >
+                {hasResponded ? (
+                  <Trans
+                    i18nKey="screenReaderFormHeading"
+                    defaults="When can you make it?"
+                  />
+                ) : active ? (
+                  <Trans
+                    i18nKey="screenReaderSavedHeading"
+                    defaults="{name}, your answers are saved"
+                    values={{ name: active.name }}
+                  />
+                ) : poll.status === "scheduled" ? (
+                  <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
+                ) : (
+                  <Trans
+                    i18nKey="pollClosedDescription"
+                    defaults="No more responses are being accepted."
+                  />
+                )}
+              </h2>
               {poll.status === "scheduled" && poll.event ? (
                 <p className="mt-2 flex flex-wrap gap-x-2 font-medium text-sm">
                   <EventDate
@@ -1250,9 +1405,7 @@ export function AccessibleBallot({
                   />
                 </p>
               ) : null}
-              {ballot.isDatePoll || !timeZoneNote ? null : (
-                <div className="mt-3">{timeZoneNote}</div>
-              )}
+              {timeControls}
               {past.ids.size > 0 && votable.length > 0 ? (
                 <p className="mt-3 flex flex-wrap gap-2">
                   <PastTimesToggle
@@ -1268,7 +1421,10 @@ export function AccessibleBallot({
                   return (
                     <section key={group.key} className="flex flex-col gap-1.5">
                       <h3 className="font-medium text-sm">
-                        {dayHeading(first, group.key)}
+                        <BallotTimeText
+                          value={dayHeading(first, group.key)}
+                          changed={timesChanged}
+                        />
                       </h3>
                       <ul className="flex flex-col gap-1.5">
                         {group.optionIds.map((optionId) => {
@@ -1279,6 +1435,7 @@ export function AccessibleBallot({
                             <BallotBarOption
                               key={optionId}
                               label={rowTimeLabel(option)}
+                              timesChanged={timesChanged}
                               fullLabel={optionLabel(option)}
                               vote={vote}
                               canVote={false}
@@ -1322,7 +1479,7 @@ export function AccessibleBallot({
               className={cn(
                 "flex flex-col",
                 stepMotion,
-                onDetailsStep && "mx-auto mb-6 w-full max-w-lg",
+                onDetailsStep && "mx-auto mb-6 w-full max-w-lg lg:flex-1",
               )}
             >
               {onDetailsStep ? (
@@ -1335,37 +1492,32 @@ export function AccessibleBallot({
               {/* Kept mounted but hidden, so going back loses nothing either way. */}
               <div
                 hidden={onDetailsStep}
-                className={onDetailsStep ? "hidden" : "flex flex-col"}
+                // The first visible element after the screen reader copy starts the section.
+                className={
+                  onDetailsStep
+                    ? "hidden"
+                    : "flex flex-col [&>#availability+*]:mt-0"
+                }
               >
-                <div className="flex items-center justify-between gap-x-4">
-                  <h2
-                    id="form-heading"
-                    ref={formHeadingRef}
-                    tabIndex={-1}
-                    className="min-w-0 font-semibold text-lg tracking-tight outline-none"
-                  >
-                    {isNew ? (
-                      <span className="sr-only">
-                        <Trans
-                          i18nKey="screenReaderStep"
-                          defaults="Step {step} of 2: "
-                          values={{ step: 1 }}
-                        />
-                      </span>
-                    ) : null}
+                {/* Names the form and takes focus, for screen readers only. */}
+                <h2
+                  id="form-heading"
+                  ref={formHeadingRef}
+                  tabIndex={-1}
+                  className="sr-only"
+                >
+                  {isNew ? (
                     <Trans
-                      i18nKey="screenReaderFormHeading"
-                      defaults="When can you make it?"
+                      i18nKey="screenReaderStep"
+                      defaults="Step {step} of 2: "
+                      values={{ step: 1 }}
                     />
-                  </h2>
-                  {/* Taller than the heading, without moving it off the title's baseline. */}
-                  {timeFormatSwitcher ? (
-                    <div className="-my-1 shrink-0">{timeFormatSwitcher}</div>
                   ) : null}
-                </div>
-                {ballot.isDatePoll || !timeZoneNote ? null : (
-                  <div className="mt-3">{timeZoneNote}</div>
-                )}
+                  <Trans
+                    i18nKey="screenReaderFormHeading"
+                    defaults="When can you make it?"
+                  />
+                </h2>
                 <p id="availability" className="sr-only">
                   <Trans
                     i18nKey="screenReaderInstructions"
@@ -1373,43 +1525,15 @@ export function AccessibleBallot({
                     values={{ count: votable.length }}
                   />
                 </p>
-                {(isNew && votable.length > 1) || past.ids.size > 0 ? (
+                {timeControls}
+                {/* With nothing left to answer, every past time already shows. */}
+                {past.ids.size > 0 && votable.length > 0 ? (
                   <p className="mt-3 flex flex-wrap gap-2">
-                    {isNew && votable.length > 1 ? (
-                      <>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className={cn(ballotToggleClassName, "rounded-xl")}
-                          aria-pressed={allMarked("yes")}
-                          onClick={() => markAll("yes")}
-                        >
-                          <Trans
-                            i18nKey="screenReaderMarkAllYes"
-                            defaults="Answer yes to every option"
-                          />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className={cn(ballotToggleClassName, "rounded-xl")}
-                          aria-pressed={allMarked("no")}
-                          onClick={() => markAll("no")}
-                        >
-                          <Trans
-                            i18nKey="screenReaderMarkAllNo"
-                            defaults="Answer no to every option"
-                          />
-                        </Button>
-                      </>
-                    ) : null}
-                    {past.ids.size > 0 ? (
-                      <PastTimesToggle
-                        past={past}
-                        labelled={true}
-                        className="rounded-xl"
-                      />
-                    ) : null}
+                    <PastTimesToggle
+                      past={past}
+                      labelled={true}
+                      className="rounded-xl"
+                    />
                   </p>
                 ) : null}
 
@@ -1422,7 +1546,10 @@ export function AccessibleBallot({
                         className="flex flex-col gap-1.5"
                       >
                         <h3 className="font-medium text-sm">
-                          {dayHeading(first, group.key)}
+                          <BallotTimeText
+                            value={dayHeading(first, group.key)}
+                            changed={timesChanged}
+                          />
                         </h3>
                         {group.optionIds.map((optionId) => {
                           const option = optionsById.get(optionId);
@@ -1440,34 +1567,31 @@ export function AccessibleBallot({
                               })
                             : null;
                           return (
-                            // biome-ignore lint/a11y/useKeyWithClickEvents: a mouse shortcut; the radios inside are the keyboard path
+                            // biome-ignore lint/a11y/useKeyWithClickEvents: a click and tap shortcut; the radios inside are the keyboard path
                             <fieldset
                               key={optionId}
                               aria-describedby={count ? countId : undefined}
                               disabled={isPast}
                               onClick={(event) => {
-                                // Mouse only, and never for the radios themselves:
+                                // A click or a tap, never for the radios themselves:
                                 // assistive technology activates those directly.
                                 if (
                                   isPast ||
                                   pending ||
-                                  !window.matchMedia("(pointer: fine)")
-                                    .matches ||
                                   (event.target as Element).closest("label")
-                                ) {
+                                )
                                   return;
-                                }
-                                state.setVote(
+                                answerOne(
                                   optionId,
                                   nextVote(vote, ballot.allowTentativeVotes),
                                 );
                               }}
                               className={cn(
-                                "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-xl border bg-card py-1.5 pr-1.5 pl-3 [@media(pointer:fine)]:pr-3.5 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
+                                "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-xl border bg-card py-1.5 pr-3.5 pl-3 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
                                 isPast
                                   ? "opacity-60"
                                   : [
-                                      "[@media(pointer:fine)]:cursor-pointer",
+                                      "cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]",
                                       rowHoverClassName[vote ?? "none"],
                                     ],
                                 vote === "yes" &&
@@ -1501,26 +1625,16 @@ export function AccessibleBallot({
                                   }}
                                 />
                               ) : null}
-                              {/* With a mouse the row shows one mark, as the answer it cycles. */}
-                              <span
-                                aria-hidden="true"
-                                className="hidden [@media(pointer:fine)]:flex [@media(pointer:fine)]:shrink-0"
-                              >
-                                {vote ? (
-                                  <VoteIcon
-                                    round
-                                    type={vote}
-                                    className="lg:size-4"
-                                  />
-                                ) : (
-                                  <span className="size-5 rounded-full border border-gray-500 border-dashed lg:size-4 dark:border-gray-400" />
-                                )}
-                              </span>
+                              {/* The row shows one mark, as the answer it cycles. */}
+                              <BallotVoteMark vote={vote} />
                               <span
                                 aria-hidden="true"
                                 className="flex min-h-9 min-w-0 flex-1 items-center text-sm tabular-nums lg:[@media(pointer:fine)]:min-h-9.5"
                               >
-                                {rowTimeLabel(option)}
+                                <BallotTimeText
+                                  value={rowTimeLabel(option)}
+                                  changed={timesChanged}
+                                />
                               </span>
                               {liveCount !== null ? (
                                 <span
@@ -1535,12 +1649,12 @@ export function AccessibleBallot({
                                   {count}
                                 </p>
                               ) : null}
-                              {/* The real radio covers its icon, so touch exploration finds it
-    there. With a mouse they shrink away until the keyboard reaches them. */}
+                              {/* Shrunk away until the keyboard reaches them, and still in
+    the tree for a screen reader to step through. */}
                               <div
                                 className={cn(
                                   "flex gap-x-3 gap-y-2",
-                                  radiosWhenMouseClassName,
+                                  radiosUntilKeyboardClassName,
                                 )}
                               >
                                 {answerChoices.map((choice) => (
@@ -1548,7 +1662,7 @@ export function AccessibleBallot({
                                     key={choice}
                                     className={cn(
                                       "relative block",
-                                      radioWhenMouseClassName,
+                                      radioUntilKeyboardClassName,
                                     )}
                                   >
                                     <input
@@ -1568,20 +1682,22 @@ export function AccessibleBallot({
                                             }),
                                           );
                                         } else {
-                                          state.setVote(optionId, choice);
+                                          answerOne(optionId, choice);
                                         }
                                       }}
                                     />
                                     <span
                                       aria-hidden="true"
                                       className={cn(
-                                        "flex size-9 items-center justify-center rounded-full border border-gray-500 bg-background outline-ring outline-offset-2 peer-checked:border-2 peer-focus-visible:outline-2 dark:border-gray-400 [&_svg]:brightness-75 [&_svg]:grayscale peer-checked:[&_svg]:brightness-100 peer-checked:[&_svg]:grayscale-0 lg:[@media(pointer:fine)]:size-6",
+                                        "flex size-9 items-center justify-center rounded-full border bg-background outline-ring outline-offset-2 transition-[border-color] duration-150 peer-checked:border-2 peer-focus-visible:outline-2 motion-reduce:transition-none [&_svg]:brightness-75 [&_svg]:grayscale peer-checked:[&_svg]:brightness-100 peer-checked:[&_svg]:grayscale-0 lg:[@media(pointer:fine)]:size-6",
+                                        // One colour per answer in every state;
+                                        // only its strength changes.
                                         choice === "yes" &&
-                                          "peer-checked:border-green-600",
+                                          "border-green-600/40 peer-checked:border-green-600 peer-hover:border-green-600/70",
                                         choice === "ifNeedBe" &&
-                                          "peer-checked:border-amber-500",
+                                          "border-amber-500/40 peer-checked:border-amber-500 peer-hover:border-amber-500/70",
                                         choice === "no" &&
-                                          "peer-checked:border-gray-600",
+                                          "border-gray-500/40 peer-checked:border-gray-500 peer-hover:border-gray-500/70 dark:border-gray-400/40 dark:peer-hover:border-gray-400/70 dark:peer-checked:border-gray-400",
                                       )}
                                     >
                                       <VoteIcon
@@ -1634,18 +1750,16 @@ export function AccessibleBallot({
                     id="details-heading"
                     ref={detailsHeadingRef}
                     tabIndex={-1}
-                    className="scroll-mt-20 font-semibold text-lg tracking-tight outline-none"
+                    className="sr-only"
                   >
-                    <span className="sr-only">
-                      <Trans
-                        i18nKey="screenReaderStep"
-                        defaults="Step {step} of 2: "
-                        values={{ step: 2 }}
-                      />
-                    </span>
+                    <Trans
+                      i18nKey="screenReaderStep"
+                      defaults="Step {step} of 2: "
+                      values={{ step: 2 }}
+                    />
                     <Trans i18nKey="whoAreYou" defaults="Who are you?" />
                   </h2>
-                  <p className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5">
                     <label htmlFor="name" className="font-medium">
                       <Trans i18nKey="name" defaults="Name" />
                     </label>
@@ -1672,53 +1786,63 @@ export function AccessibleBallot({
                         {errorFor("name")?.message}
                       </span>
                     ) : null}
-                  </p>
-                  <p className="flex flex-col gap-1.5">
-                    <span className="flex items-center justify-between gap-2">
-                      <label htmlFor="email" className="font-medium">
-                        <Trans i18nKey="email" defaults="Email" />
-                        {ballot.requireParticipantEmail ? null : (
-                          <span className="font-normal text-muted-foreground">
-                            {" "}
-                            <Trans i18nKey="optional" defaults="(optional)" />
-                          </span>
-                        )}
-                      </label>
-                      <Popover>
-                        <PopoverTrigger
-                          type="button"
-                          className="h-6 rounded-sm text-muted-foreground text-sm underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
-                          aria-label={t("newParticipantFormEmailWhyLabel", {
-                            defaultValue: "Why we ask for your email",
-                          })}
-                        >
-                          <Trans
-                            i18nKey="newParticipantFormEmailWhy"
-                            defaults="Why?"
-                          />
-                        </PopoverTrigger>
-                        <PopoverContent align="end">
-                          <Trans
-                            i18nKey="newParticipantFormEmailDescription"
-                            defaults="We'll email you a link to change your response, and the organizer can let you know the final time."
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </span>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required={ballot.requireParticipantEmail}
-                      autoComplete="email"
-                      className="scroll-mt-6"
-                      aria-invalid={errorFor("email") ? true : undefined}
-                      aria-describedby={
-                        errorFor("email")
-                          ? "email-error email-help"
-                          : "email-help"
-                      }
-                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="email" className="font-medium">
+                      <Trans i18nKey="email" defaults="Email" />
+                      {ballot.requireParticipantEmail ? null : (
+                        <span className="font-normal text-muted-foreground">
+                          {" "}
+                          <Trans i18nKey="optional" defaults="(optional)" />
+                        </span>
+                      )}
+                    </label>
+                    <InputGroup className={fieldGroupClassName}>
+                      <InputGroupInput
+                        id="email"
+                        name="email"
+                        type="email"
+                        required={ballot.requireParticipantEmail}
+                        autoComplete="email"
+                        className="scroll-mt-6"
+                        aria-invalid={errorFor("email") ? true : undefined}
+                        aria-describedby={
+                          errorFor("email")
+                            ? "email-error email-help"
+                            : "email-help"
+                        }
+                      />
+                      <InputGroupAddon
+                        align="inline-end"
+                        className={fieldAddonClassName}
+                      >
+                        <Popover>
+                          <PopoverTrigger
+                            render={
+                              <InputGroupButton
+                                size="icon-xs"
+                                className={fieldIconButtonClassName}
+                                aria-label={t(
+                                  "newParticipantFormEmailWhyLabel",
+                                  { defaultValue: "Why we ask for your email" },
+                                )}
+                              />
+                            }
+                          >
+                            <CircleHelpIcon aria-hidden="true" />
+                          </PopoverTrigger>
+                          <PopoverContent align="end" className="text-xs">
+                            <p className="font-medium">
+                              <Trans
+                                i18nKey="newParticipantFormEmailWhy"
+                                defaults="Why?"
+                              />
+                            </p>
+                            {emailBenefits}
+                          </PopoverContent>
+                        </Popover>
+                      </InputGroupAddon>
+                    </InputGroup>
                     {errorFor("email") ? (
                       <span
                         id="email-error"
@@ -1728,75 +1852,86 @@ export function AccessibleBallot({
                       </span>
                     ) : null}
                     {/* Still the field's description, so a screen reader hears it on arrival. */}
-                    <span id="email-help" className="sr-only">
-                      <Trans
-                        i18nKey="newParticipantFormEmailDescription"
-                        defaults="We'll email you a link to change your response, and the organizer can let you know the final time."
-                      />
-                    </span>
-                  </p>
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-medium">
-                        <Trans i18nKey="response" defaults="Response" />
-                      </h3>
-                      <button
-                        type="button"
-                        className="h-6 rounded-sm text-muted-foreground text-sm underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
-                        aria-label={t("screenReaderChangeResponse", {
-                          defaultValue: "Change your response",
-                        })}
-                        onClick={backToAvailability}
-                      >
-                        <Trans i18nKey="change" defaults="Change" />
-                      </button>
+                    <div id="email-help" className="sr-only">
+                      {emailBenefits}
                     </div>
-                    <VoteSummary
-                      votes={votable.map(
-                        (option) => state.answers[option.id] ?? "no",
-                      )}
-                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="font-medium">
+                      <Trans i18nKey="response" defaults="Response" />
+                    </h3>
+                    <InputGroup
+                      className={cn(fieldGroupClassName, "h-auto items-start")}
+                    >
+                      <VoteSummary
+                        className="flex-1 border-0 bg-transparent dark:bg-transparent"
+                        votes={votable.map(
+                          (option) => state.answers[option.id] ?? "no",
+                        )}
+                      />
+                      <InputGroupAddon
+                        align="inline-end"
+                        className={fieldAddonClassName}
+                      >
+                        <InputGroupButton
+                          size="icon-xs"
+                          className={fieldIconButtonClassName}
+                          aria-label={t("screenReaderChangeResponse", {
+                            defaultValue: "Change your response",
+                          })}
+                          onClick={backToAvailability}
+                        >
+                          <PencilIcon aria-hidden="true" />
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
                   </div>
                   {showNote ? (
-                    <p className="flex flex-col gap-1.5">
-                      <span className="flex items-center justify-between gap-2">
-                        <label htmlFor="note" className="font-medium">
-                          <Trans i18nKey="note" defaults="Note" />
-                        </label>
-                        <button
-                          type="button"
-                          className="h-6 rounded-sm text-muted-foreground text-sm underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
-                          onClick={() => {
-                            setShowNote(false);
-                            noteRemoved.current = true;
-                          }}
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="note" className="font-medium">
+                        <Trans i18nKey="note" defaults="Note" />
+                      </label>
+                      <InputGroup
+                        className={cn(fieldGroupClassName, "items-start")}
+                      >
+                        <InputGroupTextarea
+                          id="note"
+                          aria-describedby="note-help"
+                          autoFocus
+                          name="note"
+                          maxLength={MAX_RESPONSE_NOTE_LENGTH}
+                        />
+                        <InputGroupAddon
+                          align="inline-end"
+                          className={fieldAddonClassName}
                         >
-                          <Trans
-                            i18nKey="screenReaderRemoveNote"
-                            defaults="Remove note"
-                          />
-                        </button>
-                      </span>
-                      <Textarea
-                        id="note"
-                        aria-describedby="note-help"
-                        autoFocus
-                        name="note"
-                        className="bg-background/80 dark:bg-foreground/5"
-                        maxLength={MAX_RESPONSE_NOTE_LENGTH}
-                      />
+                          <InputGroupButton
+                            size="icon-xs"
+                            className={fieldIconButtonClassName}
+                            aria-label={t("screenReaderRemoveNote", {
+                              defaultValue: "Remove note",
+                            })}
+                            onClick={() => {
+                              setShowNote(false);
+                              noteRemoved.current = true;
+                            }}
+                          >
+                            <TrashIcon aria-hidden="true" />
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </InputGroup>
                       <span id="note-help" className="text-muted-foreground">
                         <Trans
                           i18nKey="screenReaderNoteHint"
                           defaults="Only the organizer will see this"
                         />
                       </span>
-                    </p>
+                    </div>
                   ) : (
                     <Button
                       id="add-note"
                       type="button"
-                      className="self-start rounded-xl"
+                      className="self-start rounded-full"
                       onClick={() => setShowNote(true)}
                     >
                       <PlusIcon aria-hidden="true" data-icon="inline-start" />
@@ -1821,8 +1956,8 @@ export function AccessibleBallot({
                   className={cn(
                     "flex flex-col gap-2",
                     onDetailsStep
-                      ? "pt-6"
-                      : "sticky bottom-0 z-20 bg-linear-to-t from-85% from-gray-50 to-transparent pt-8 pb-4 lg:from-card dark:from-gray-900 dark:lg:from-card",
+                      ? "pt-6 lg:mt-auto"
+                      : "sticky bottom-0 z-20 mt-6 bg-gray-50/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:bg-card/70 lg:px-8 dark:bg-gray-900/70 dark:lg:bg-card/70",
                   )}
                 >
                   {/* Next to the button that raised it, for what has no field of its own. */}
@@ -1837,10 +1972,55 @@ export function AccessibleBallot({
                   ) : null}
                   <div
                     className={cn(
-                      "flex flex-wrap gap-2",
+                      "flex flex-wrap gap-2 lg:flex-nowrap lg:items-center lg:justify-end",
                       onDetailsStep && "justify-end",
                     )}
                   >
+                    {!onDetailsStep && votable.length > 1 ? (
+                      // Scrolls sideways rather than wrapping when it runs out of
+                      // room. Its padding keeps focus rings from being clipped,
+                      // and on a phone lets it run to the edges of the screen.
+                      <div className="-my-1 flex min-w-0 gap-2 overflow-x-auto py-1 [scrollbar-width:none] max-lg:-mx-4 max-lg:basis-[calc(100%+2rem)] max-lg:px-4 lg:-ml-1 lg:flex-1 lg:pl-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className={cn(
+                            ballotToggleClassName,
+                            "shrink-0 rounded-full",
+                            shortcutOn("yes") && shortcutOnClassName,
+                          )}
+                          onClick={() => markAll("yes")}
+                        >
+                          {shortcutOn("yes") ? (
+                            <Trans i18nKey="undo" defaults="Undo" />
+                          ) : (
+                            <Trans
+                              i18nKey="screenReaderMarkAllYes"
+                              defaults="Yes to all"
+                            />
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className={cn(
+                            ballotToggleClassName,
+                            "shrink-0 rounded-full",
+                            shortcutOn("no") && shortcutOnClassName,
+                          )}
+                          onClick={() => markAll("no")}
+                        >
+                          {shortcutOn("no") ? (
+                            <Trans i18nKey="undo" defaults="Undo" />
+                          ) : (
+                            <Trans
+                              i18nKey="screenReaderMarkAllNo"
+                              defaults="Can't make it"
+                            />
+                          )}
+                        </Button>
+                      </div>
+                    ) : null}
                     {onDetailsStep ? (
                       <Button
                         type="button"
@@ -1857,7 +2037,7 @@ export function AccessibleBallot({
                       className={cn(
                         onDetailsStep
                           ? "rounded-xl"
-                          : `${ballotBarButtonClassName} flex-1`,
+                          : `${ballotBarButtonClassName} flex-1 lg:h-9 lg:flex-none`,
                       )}
                       aria-disabled={pending || undefined}
                     >

@@ -1,15 +1,27 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import type { BallotVote } from "@/features/poll/invite/types";
 import { Trans } from "@/i18n/client";
 
-export function VoteSummary({ votes }: { votes: BallotVote[] }) {
+export function VoteSummary({
+  votes,
+  className,
+}: {
+  votes: BallotVote[];
+  className?: string;
+}) {
   const availableCount = votes.filter((vote) => vote === "yes").length;
   const ifNeedBeCount = votes.filter((vote) => vote === "ifNeedBe").length;
 
   return (
-    <div className="flex min-h-9 w-full flex-col justify-center gap-1.5 rounded-xl border border-input bg-background/80 px-2.5 py-1.25 dark:bg-foreground/5">
+    <div
+      className={cn(
+        "flex min-h-9 w-full flex-col justify-center gap-1.5 rounded-xl border border-input bg-background/80 px-2.5 py-1.25 dark:bg-foreground/5",
+        className,
+      )}
+    >
       {availableCount > 0 ? (
         <span className="flex items-center gap-2">
           <VoteIcon round type="yes" className="size-4" />
