@@ -5,3 +5,5 @@ export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 60; // 60 days
 
 export const LAST_LOGIN_METHOD_COOKIE_NAME =
   "better-auth.last_used_login_method";
+
+export const VERIFICATION_EMAIL_COOKIE_NAME = "verification-email";

@@ -11,11 +11,11 @@ import {
   FormMessage,
 } from "@rallly/ui/form";
 import { Input } from "@rallly/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useMountedState } from "react-use";
 import * as z from "zod";
-import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Link } from "@/components/link";
 import { Turnstile } from "@/components/turnstile";
 import { LastUsedBadge } from "@/features/auth/components/last-used-badge";
@@ -53,11 +53,12 @@ export function LoginWithEmailForm({
 }) {
   const isCaptchaEnabled = useFeatureFlag("captcha");
   const isTurnstileEnabled = isCaptchaEnabled && !!turnstileSiteKey;
-  const router = useRouter();
   const loginWithEmailSchema = useLoginWithEmailSchema();
   const searchParams = useSearchParams();
   const [showPasswordField, setShowPasswordField] = React.useState(false);
   const turnstileRef = React.useRef<TurnstileInstance>(null);
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
+  const isMounted = useMountedState();
   const form = useForm({
     defaultValues: {
       identifier: "",
@@ -70,6 +71,18 @@ export function LoginWithEmailForm({
 
   const getLoginMethod = trpc.auth.getLoginMethod.useMutation();
   const isPasswordLogin = showPasswordField && !!form.watch("password");
+  const isBusy = formState.isSubmitting || isRedirecting;
+
+  React.useEffect(() => {
+    // Back can restore this page from the bfcache still marked as busy.
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setIsRedirecting(false);
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   const submit = async ({
     identifier,
@@ -204,9 +217,16 @@ export function LoginWithEmailForm({
         return;
       }
 
-      await setVerificationEmail(identifier);
+      // The user may have followed another link while the code was sending.
+      if (!isMounted()) {
+        return;
+      }
 
-      router.push(
+      // A full navigation, because the client router can hold a verify page
+      // rendered for a previous address. The form stays busy until the page
+      // unloads so it can't be submitted a second time on the way there.
+      setIsRedirecting(true);
+      window.location.assign(
         `/login/verify${
           validatedRedirectTo
             ? `?redirectTo=${encodeURIComponent(validatedRedirectTo)}`
@@ -223,7 +243,17 @@ export function LoginWithEmailForm({
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={handleSubmit(submit)}>
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          // The loading button still takes keyboard activation.
+          if (isBusy) {
+            event.preventDefault();
+            return;
+          }
+          return handleSubmit(submit)(event);
+        }}
+      >
         <FormField
           control={form.control}
           name="identifier"
@@ -236,7 +266,7 @@ export function LoginWithEmailForm({
                   large
                   type="text"
                   autoComplete="username"
-                  disabled={formState.isSubmitting}
+                  disabled={isBusy}
                   autoFocus={true}
                   placeholder={t("emailPlaceholder")}
                 />
@@ -277,7 +307,7 @@ export function LoginWithEmailForm({
                     large
                     type="password"
                     autoComplete="current-password"
-                    disabled={form.formState.isSubmitting}
+                    disabled={isBusy}
                     placeholder="••••••••"
                     {...field}
                   />
@@ -301,7 +331,7 @@ export function LoginWithEmailForm({
           <Button
             size="xl"
             shape="rounded"
-            loading={form.formState.isSubmitting}
+            loading={isBusy}
             type="submit"
             className="relative w-full"
             variant="primary"

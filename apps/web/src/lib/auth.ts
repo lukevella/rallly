@@ -46,6 +46,7 @@ import {
 import {
   LAST_LOGIN_METHOD_COOKIE_NAME,
   SESSION_TTL_SECONDS,
+  VERIFICATION_EMAIL_COOKIE_NAME,
 } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
 import { ipAddressConfig } from "@/lib/client-ip";
@@ -499,6 +500,27 @@ export const authLib = betterAuth({
           ctx.setCookie(LOCALE_COOKIE_NAME, "", {
             ...LOCALE_COOKIE_OPTIONS,
             maxAge: 0,
+          });
+        }
+        return;
+      }
+
+      // The verify page reads the address a code was sent to from this
+      // cookie. Writing it on the send response keeps it in step with the
+      // code, with no second request for the login form to make.
+      if (ctx.path === "/email-otp/send-verification-otp") {
+        const returned = ctx.context.returned as
+          | { success?: boolean }
+          | undefined;
+        const email = ctx.body?.email as string | undefined;
+
+        if (returned?.success === true && email) {
+          ctx.setCookie(VERIFICATION_EMAIL_COOKIE_NAME, email, {
+            path: "/",
+            httpOnly: true,
+            secure: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://"),
+            sameSite: "lax",
+            maxAge: 15 * 60,
           });
         }
         return;
