@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { formatMinorUnitAmount, getCountryCurrency } from "./pricing";
+import {
+  API_POLL_TIERS,
+  apiPollAddonAmounts,
+  apiPollAddonFallback,
+  apiPollTierLimits,
+  displayedCurrencies,
+  formatMinorUnitAmount,
+  getCountryCurrency,
+} from "./pricing";
 
 describe("getCountryCurrency", () => {
   const available = ["usd", "eur", "gbp"];
@@ -50,5 +58,60 @@ describe("formatMinorUnitAmount", () => {
     expect(
       formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
     ).toBe("¥5,600");
+  });
+});
+
+describe("apiPollTierLimits", () => {
+  it("maps each tier to its monthly poll limit", () => {
+    expect(apiPollTierLimits).toEqual({
+      small: 250,
+      medium: 500,
+      large: 1000,
+      xlarge: 2500,
+    });
+  });
+});
+
+describe("apiPollAddonFallback", () => {
+  it("holds the USD amounts in minor units", () => {
+    expect(apiPollAddonFallback.xlarge).toEqual({
+      monthly: 20000,
+      yearly: 200000,
+    });
+  });
+});
+
+describe("apiPollAddonAmounts", () => {
+  it("prices a year at exactly ten months in every tier and currency", () => {
+    for (const currency of displayedCurrencies) {
+      for (const tier of API_POLL_TIERS) {
+        const { monthly, yearly } = apiPollAddonAmounts[currency][tier];
+        expect(yearly).toBe(monthly * 10);
+      }
+    }
+  });
+
+  it("pins the whole monthly table", () => {
+    const monthly = Object.fromEntries(
+      displayedCurrencies.map((currency) => [
+        currency,
+        Object.fromEntries(
+          API_POLL_TIERS.map((tier) => [
+            tier,
+            apiPollAddonAmounts[currency][tier].monthly,
+          ]),
+        ),
+      ]),
+    );
+    expect(monthly).toEqual({
+      usd: { small: 3000, medium: 5000, large: 9000, xlarge: 20000 },
+      eur: { small: 2700, medium: 4500, large: 8000, xlarge: 18000 },
+      gbp: { small: 2400, medium: 4000, large: 7000, xlarge: 16000 },
+    });
+  });
+
+  it("holds the per currency monthly amounts", () => {
+    expect(apiPollAddonAmounts.eur.large.monthly).toBe(8000);
+    expect(apiPollAddonAmounts.gbp.small.monthly).toBe(2400);
   });
 });

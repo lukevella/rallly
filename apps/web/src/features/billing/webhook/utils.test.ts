@@ -112,7 +112,7 @@ describe("getSubscriptionDetails", () => {
     price: {
       id: "price_addon",
       unit_amount: 500,
-      metadata: { addon: "api_polls", api_poll_limit: "1000" },
+      metadata: { addon: "api", api_poll_limit: "1000" },
       recurring: { interval: "year" },
       currency_options: { eur: { unit_amount: 450 } },
     },
