@@ -3,6 +3,7 @@ import type { ApiPollTier } from "../pricing";
 import {
   API_POLL_TIERS,
   apiPollAddonAmounts,
+  apiPollTierLimits,
   displayedCurrencies,
 } from "../pricing";
 
@@ -116,7 +117,7 @@ export async function getProPricing({ stripe }: { stripe: Stripe }) {
 export type PricingData = Awaited<ReturnType<typeof getProPricing>>;
 
 export const ADDON_METADATA_KEY = "addon";
-export const API_POLLS_ADDON = "api_polls";
+export const API_ADDON = "api";
 export const API_POLL_LIMIT_METADATA_KEY = "api_poll_limit";
 
 function isAddonItem(item: Stripe.SubscriptionItem) {
@@ -144,7 +145,7 @@ export function getSeatItem(subscription: Stripe.Subscription) {
 export function getApiPollAddonItem(subscription: Stripe.Subscription) {
   const item = subscription.items.data.find(
     (candidate) =>
-      candidate.price?.metadata?.[ADDON_METADATA_KEY] === API_POLLS_ADDON,
+      candidate.price?.metadata?.[ADDON_METADATA_KEY] === API_ADDON,
   );
 
   if (!item) {
@@ -178,7 +179,7 @@ export function apiPollAddonLookupKey({
   tier: ApiPollTier;
   interval: ApiPollAddonInterval;
 }) {
-  return `api-polls-${tier}-${interval}`;
+  return `api-${tier}-${interval}`;
 }
 
 const API_POLL_ADDON_INTERVALS = ["monthly", "yearly"] as const;
@@ -250,8 +251,8 @@ export function apiPollAddonPriceParams({
       ? { tax_behavior: taxBehavior }
       : {}),
     metadata: {
-      [ADDON_METADATA_KEY]: API_POLLS_ADDON,
-      [API_POLL_LIMIT_METADATA_KEY]: String(tier),
+      [ADDON_METADATA_KEY]: API_ADDON,
+      [API_POLL_LIMIT_METADATA_KEY]: String(apiPollTierLimits[tier]),
     },
     currency_options: Object.fromEntries(
       Object.entries(others).map(([currency, amounts]) => [
@@ -359,11 +360,8 @@ export function findSharedProductProblem(prices: Stripe.Price[]) {
 export function findApiPollAddonProductTagProblem(
   product: Stripe.Product | Stripe.DeletedProduct,
 ) {
-  if (
-    product.deleted ||
-    product.metadata?.[ADDON_METADATA_KEY] !== API_POLLS_ADDON
-  ) {
-    return `product ${product.id} does not have metadata.${ADDON_METADATA_KEY}=${API_POLLS_ADDON}`;
+  if (product.deleted || product.metadata?.[ADDON_METADATA_KEY] !== API_ADDON) {
+    return `product ${product.id} does not have metadata.${ADDON_METADATA_KEY}=${API_ADDON}`;
   }
   return undefined;
 }

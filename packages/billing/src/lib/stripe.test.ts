@@ -3,8 +3,8 @@ import { API_POLL_TIERS, apiPollAddonAmounts } from "../pricing";
 import type { Stripe } from "./stripe";
 import {
   ADDON_METADATA_KEY,
+  API_ADDON,
   API_POLL_LIMIT_METADATA_KEY,
-  API_POLLS_ADDON,
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
   findApiPollAddonPriceMismatches,
@@ -172,7 +172,7 @@ function subscription(items: Stripe.SubscriptionItem[], currency = "usd") {
 const seat = item({ id: "si_seat", metadata: {} });
 const addon = item({
   id: "si_addon",
-  metadata: { addon: "api_polls", api_poll_limit: "1000" },
+  metadata: { addon: "api", api_poll_limit: "1000" },
   unitAmount: 500,
   currencyOptions: { eur: 450 },
 });
@@ -279,7 +279,7 @@ describe("getApiPollAddonItem", () => {
       price: {
         id: "price_noamount",
         unit_amount: null,
-        metadata: { addon: "api_polls", api_poll_limit: "1000" },
+        metadata: { addon: "api", api_poll_limit: "1000" },
       },
     } as unknown as Stripe.SubscriptionItem;
     expect(getApiPollAddonItem(subscription([seat, noAmount]))).toBeNull();
@@ -294,7 +294,7 @@ describe("getApiPollAddonItem", () => {
   ])("returns null for limit %s", (limit) => {
     const bad = item({
       id: "si_bad",
-      metadata: { addon: "api_polls", api_poll_limit: limit },
+      metadata: { addon: "api", api_poll_limit: limit },
     });
     expect(getApiPollAddonItem(subscription([seat, bad]))).toBeNull();
   });
@@ -302,11 +302,11 @@ describe("getApiPollAddonItem", () => {
 
 describe("apiPollAddonLookupKey", () => {
   it("names the tier and interval", () => {
-    expect(apiPollAddonLookupKey({ tier: 1000, interval: "yearly" })).toBe(
-      "api-polls-1000-yearly",
+    expect(apiPollAddonLookupKey({ tier: "large", interval: "yearly" })).toBe(
+      "api-large-yearly",
     );
-    expect(apiPollAddonLookupKey({ tier: 250, interval: "monthly" })).toBe(
-      "api-polls-250-monthly",
+    expect(apiPollAddonLookupKey({ tier: "small", interval: "monthly" })).toBe(
+      "api-small-monthly",
     );
   });
 });
@@ -334,16 +334,16 @@ function addonPrices() {
 describe("mapApiPollAddonPrices", () => {
   it("maps eight prices to four tiers with monthly and yearly", () => {
     const result = mapApiPollAddonPrices(addonPrices().reverse());
-    expect(Object.keys(result)).toEqual(["250", "500", "1000", "2500"]);
-    expect(result[1000].monthly.id).toBe("price_api-polls-1000-monthly");
-    expect(result[1000].yearly.id).toBe("price_api-polls-1000-yearly");
-    expect(result[1000].monthly.amount).toBe(9000);
-    expect(result[1000].monthly.amounts).toEqual({
+    expect(Object.keys(result)).toEqual(["small", "medium", "large", "xlarge"]);
+    expect(result.large.monthly.id).toBe("price_api-large-monthly");
+    expect(result.large.yearly.id).toBe("price_api-large-yearly");
+    expect(result.large.monthly.amount).toBe(9000);
+    expect(result.large.monthly.amounts).toEqual({
       usd: 9000,
       eur: 8000,
       gbp: 7000,
     });
-    expect(result[250].yearly.amounts).toEqual({
+    expect(result.small.yearly.amounts).toEqual({
       usd: 30000,
       eur: 27000,
       gbp: 24000,
@@ -352,9 +352,9 @@ describe("mapApiPollAddonPrices", () => {
 
   it("throws naming the missing key", () => {
     const prices = addonPrices().filter(
-      (p) => p.lookup_key !== "api-polls-500-yearly",
+      (p) => p.lookup_key !== "api-medium-yearly",
     );
-    expect(() => mapApiPollAddonPrices(prices)).toThrow("api-polls-500-yearly");
+    expect(() => mapApiPollAddonPrices(prices)).toThrow("api-medium-yearly");
   });
 });
 
@@ -363,7 +363,7 @@ describe("apiPollAddonPriceParams", () => {
     expect(
       apiPollAddonPriceParams({
         product: "prod_1",
-        tier: 1000,
+        tier: "large",
         interval: "yearly",
         taxBehavior: "exclusive",
       }),
@@ -372,10 +372,10 @@ describe("apiPollAddonPriceParams", () => {
       currency: "usd",
       unit_amount: 90000,
       recurring: { interval: "year" },
-      lookup_key: "api-polls-1000-yearly",
+      lookup_key: "api-large-yearly",
       tax_behavior: "exclusive",
       metadata: {
-        [ADDON_METADATA_KEY]: API_POLLS_ADDON,
+        [ADDON_METADATA_KEY]: API_ADDON,
         [API_POLL_LIMIT_METADATA_KEY]: "1000",
       },
       currency_options: {
@@ -388,7 +388,7 @@ describe("apiPollAddonPriceParams", () => {
   it("omits tax behavior when none is given", () => {
     const params = apiPollAddonPriceParams({
       product: "prod_1",
-      tier: 250,
+      tier: "small",
       interval: "monthly",
     });
     expect(params).not.toHaveProperty("tax_behavior");
@@ -399,7 +399,7 @@ describe("apiPollAddonPriceParams", () => {
 describe("findApiPollAddonPriceMismatches", () => {
   const params = apiPollAddonPriceParams({
     product: "prod_1",
-    tier: 500,
+    tier: "medium",
     interval: "monthly",
   });
 
@@ -411,7 +411,7 @@ describe("findApiPollAddonPriceMismatches", () => {
       unit_amount: 5000,
       active: true,
       recurring: { interval: "month", interval_count: 1 },
-      metadata: { addon: "api_polls", api_poll_limit: "500" },
+      metadata: { addon: "api", api_poll_limit: "500" },
       currency_options: {
         eur: { unit_amount: 4500 },
         gbp: { unit_amount: 4000 },
@@ -431,7 +431,7 @@ describe("findApiPollAddonPriceMismatches", () => {
       price: existing({
         unit_amount: 4000,
         recurring: { interval: "year", interval_count: 1 },
-        metadata: { addon: "api_polls" },
+        metadata: { addon: "api" },
         currency_options: { eur: { unit_amount: 4500 } },
       }),
       params,
@@ -447,7 +447,7 @@ describe("findApiPollAddonPriceMismatches", () => {
 describe("findApiPollAddonPriceMismatches with the default currency listed", () => {
   const params = apiPollAddonPriceParams({
     product: "prod_1",
-    tier: 500,
+    tier: "medium",
     interval: "monthly",
   });
 
@@ -459,7 +459,7 @@ describe("findApiPollAddonPriceMismatches with the default currency listed", () 
       unit_amount: 5000,
       active: true,
       recurring: { interval: "month", interval_count: 1 },
-      metadata: { addon: "api_polls", api_poll_limit: "500" },
+      metadata: { addon: "api", api_poll_limit: "500" },
       currency_options: {
         usd: { unit_amount: usdOption },
         eur: { unit_amount: 4500 },
@@ -508,7 +508,7 @@ describe("add-on product checks", () => {
 
   it("passes a product tagged as the add-on", () => {
     expect(
-      findApiPollAddonProductTagProblem(product({ addon: "api_polls" })),
+      findApiPollAddonProductTagProblem(product({ addon: "api" })),
     ).toBeUndefined();
   });
 

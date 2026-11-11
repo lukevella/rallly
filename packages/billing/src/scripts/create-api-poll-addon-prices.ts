@@ -1,7 +1,7 @@
 import type { Stripe } from "../lib/stripe";
 import {
   ADDON_METADATA_KEY,
-  API_POLLS_ADDON,
+  API_ADDON,
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
   createStripeClient,
@@ -13,8 +13,8 @@ import {
 import { API_POLL_TIERS } from "../pricing";
 
 /**
- * Creates the API polls add-on: one product and eight recurring prices (four
- * tiers, monthly and yearly) keyed `api-polls-<tier>-<interval>`. Amounts come
+ * Creates the API add-on: one product and eight recurring prices (four
+ * tiers, monthly and yearly) keyed `api-<tier>-<interval>`. Amounts come
  * from `apiPollAddonAmounts` in pricing.ts. Tax behavior is copied from the
  * `pro-monthly` price.
  *
@@ -41,8 +41,8 @@ if (!secretKey) {
 
 const stripe = createStripeClient({ secretKey });
 
-const PRODUCT_NAME = "API polls";
-const PRODUCT_IDEMPOTENCY_KEY = "create-api-poll-addon-product";
+const PRODUCT_NAME = "Rallly API Add-on";
+const PRODUCT_IDEMPOTENCY_KEY = "create-api-addon-product";
 
 // Product search is eventually consistent, so a quick repeat run could miss a
 // product it just created. Listing is consistent.
@@ -64,7 +64,7 @@ async function findProduct(existing: Stripe.Price[]) {
   }
   const products = stripe.products.list({ active: true, limit: 100 });
   for await (const product of products) {
-    if (product.metadata?.[ADDON_METADATA_KEY] === API_POLLS_ADDON) {
+    if (product.metadata?.[ADDON_METADATA_KEY] === API_ADDON) {
       return product.id;
     }
   }
@@ -108,7 +108,7 @@ async function getTaxBehavior() {
     const product = await stripe.products.create(
       {
         name: PRODUCT_NAME,
-        metadata: { [ADDON_METADATA_KEY]: API_POLLS_ADDON },
+        metadata: { [ADDON_METADATA_KEY]: API_ADDON },
       },
       { idempotencyKey: PRODUCT_IDEMPOTENCY_KEY },
     );
@@ -158,7 +158,7 @@ async function getTaxBehavior() {
     }
 
     const created = await stripe.prices.create(params, {
-      idempotencyKey: `create-api-poll-addon-price-${key}`,
+      idempotencyKey: `create-api-addon-price-${key}`,
     });
     console.info(`✅ ${key}: created ${created.id} (${summary})`);
   }

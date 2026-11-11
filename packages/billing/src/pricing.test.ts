@@ -3,6 +3,7 @@ import {
   API_POLL_TIERS,
   apiPollAddonAmounts,
   apiPollAddonFallback,
+  apiPollTierLimits,
   displayedCurrencies,
   formatMinorUnitAmount,
   getCountryCurrency,
@@ -60,9 +61,20 @@ describe("formatMinorUnitAmount", () => {
   });
 });
 
+describe("apiPollTierLimits", () => {
+  it("maps each tier to its monthly poll limit", () => {
+    expect(apiPollTierLimits).toEqual({
+      small: 250,
+      medium: 500,
+      large: 1000,
+      xlarge: 2500,
+    });
+  });
+});
+
 describe("apiPollAddonFallback", () => {
   it("holds the USD amounts in minor units", () => {
-    expect(apiPollAddonFallback[2500]).toEqual({
+    expect(apiPollAddonFallback.xlarge).toEqual({
       monthly: 20000,
       yearly: 200000,
     });
@@ -92,14 +104,14 @@ describe("apiPollAddonAmounts", () => {
       ]),
     );
     expect(monthly).toEqual({
-      usd: { 250: 3000, 500: 5000, 1000: 9000, 2500: 20000 },
-      eur: { 250: 2700, 500: 4500, 1000: 8000, 2500: 18000 },
-      gbp: { 250: 2400, 500: 4000, 1000: 7000, 2500: 16000 },
+      usd: { small: 3000, medium: 5000, large: 9000, xlarge: 20000 },
+      eur: { small: 2700, medium: 4500, large: 8000, xlarge: 18000 },
+      gbp: { small: 2400, medium: 4000, large: 7000, xlarge: 16000 },
     });
   });
 
   it("holds the per currency monthly amounts", () => {
-    expect(apiPollAddonAmounts.eur[1000].monthly).toBe(8000);
-    expect(apiPollAddonAmounts.gbp[250].monthly).toBe(2400);
+    expect(apiPollAddonAmounts.eur.large.monthly).toBe(8000);
+    expect(apiPollAddonAmounts.gbp.small.monthly).toBe(2400);
   });
 });

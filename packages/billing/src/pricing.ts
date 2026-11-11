@@ -25,17 +25,24 @@ export type DisplayedCurrency = (typeof displayedCurrencies)[number];
 
 export const INCLUDED_API_POLLS = 50;
 
-export const API_POLL_TIERS = [250, 500, 1000, 2500] as const;
+export const API_POLL_TIERS = ["small", "medium", "large", "xlarge"] as const;
 
 export type ApiPollTier = (typeof API_POLL_TIERS)[number];
+
+export const apiPollTierLimits: Record<ApiPollTier, number> = {
+  small: 250,
+  medium: 500,
+  large: 1000,
+  xlarge: 2500,
+};
 
 const apiPollMonthlyAmounts: Record<
   DisplayedCurrency,
   Record<ApiPollTier, number>
 > = {
-  usd: { 250: 3000, 500: 5000, 1000: 9000, 2500: 20000 },
-  eur: { 250: 2700, 500: 4500, 1000: 8000, 2500: 18000 },
-  gbp: { 250: 2400, 500: 4000, 1000: 7000, 2500: 16000 },
+  usd: { small: 3000, medium: 5000, large: 9000, xlarge: 20000 },
+  eur: { small: 2700, medium: 4500, large: 8000, xlarge: 18000 },
+  gbp: { small: 2400, medium: 4000, large: 7000, xlarge: 16000 },
 };
 
 const ANNUAL_MONTHS_CHARGED = 10;
