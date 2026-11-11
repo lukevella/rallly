@@ -309,6 +309,32 @@ export function findApiPollAddonPriceMismatches({
     actual: price.recurring?.interval_count,
     expected: 1,
   });
+  check({
+    field: "usage_type",
+    actual: price.recurring?.usage_type,
+    expected: "licensed",
+  });
+  check({
+    field: "transform_quantity",
+    actual: price.transform_quantity ?? null,
+    expected: null,
+  });
+  if (params.tax_behavior) {
+    check({
+      field: "tax_behavior",
+      actual: price.tax_behavior,
+      expected: params.tax_behavior,
+    });
+    for (const [currency, option] of Object.entries(
+      price.currency_options ?? {},
+    )) {
+      if (option.tax_behavior && option.tax_behavior !== params.tax_behavior) {
+        mismatches.push(
+          `${currency} tax_behavior: expected ${params.tax_behavior}, found ${option.tax_behavior}`,
+        );
+      }
+    }
+  }
 
   for (const [key, value] of Object.entries(params.metadata ?? {})) {
     check({
@@ -362,6 +388,9 @@ export function findApiPollAddonProductTagProblem(
 ) {
   if (product.deleted || product.metadata?.[ADDON_METADATA_KEY] !== API_ADDON) {
     return `product ${product.id} does not have metadata.${ADDON_METADATA_KEY}=${API_ADDON}`;
+  }
+  if (!product.active) {
+    return `product ${product.id} is archived; unarchive it or move the add-on lookup keys to an active product`;
   }
   return undefined;
 }

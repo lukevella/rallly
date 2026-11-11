@@ -410,7 +410,11 @@ describe("findApiPollAddonPriceMismatches", () => {
       currency: "usd",
       unit_amount: 5000,
       active: true,
-      recurring: { interval: "month", interval_count: 1 },
+      recurring: {
+        interval: "month",
+        interval_count: 1,
+        usage_type: "licensed",
+      },
       metadata: { addon: "api", api_poll_limit: "500" },
       currency_options: {
         eur: { unit_amount: 4500 },
@@ -430,7 +434,11 @@ describe("findApiPollAddonPriceMismatches", () => {
     const mismatches = findApiPollAddonPriceMismatches({
       price: existing({
         unit_amount: 4000,
-        recurring: { interval: "year", interval_count: 1 },
+        recurring: {
+          interval: "year",
+          interval_count: 1,
+          usage_type: "licensed",
+        },
         metadata: { addon: "api" },
         currency_options: { eur: { unit_amount: 4500 } },
       }),
@@ -441,6 +449,60 @@ describe("findApiPollAddonPriceMismatches", () => {
     expect(mismatches.join("\n")).toContain("interval");
     expect(mismatches.join("\n")).toContain(API_POLL_LIMIT_METADATA_KEY);
     expect(mismatches.join("\n")).toContain("gbp");
+  });
+
+  it("reports a metered price", () => {
+    const mismatches = findApiPollAddonPriceMismatches({
+      price: existing({
+        recurring: {
+          interval: "month",
+          interval_count: 1,
+          usage_type: "metered",
+        },
+      }),
+      params,
+    });
+    expect(mismatches).toEqual([
+      "usage_type: expected licensed, found metered",
+    ]);
+  });
+
+  it("reports a price that transforms the quantity", () => {
+    const mismatches = findApiPollAddonPriceMismatches({
+      price: existing({ transform_quantity: { divide_by: 10, round: "up" } }),
+      params,
+    });
+    expect(mismatches).toHaveLength(1);
+    expect(mismatches[0]).toContain("transform_quantity");
+  });
+
+  it("compares tax behavior only when one is expected", () => {
+    const inclusive = existing({
+      tax_behavior: "inclusive",
+      currency_options: {
+        eur: { unit_amount: 4500, tax_behavior: "inclusive" },
+        gbp: { unit_amount: 4000 },
+      },
+    });
+    expect(
+      findApiPollAddonPriceMismatches({ price: inclusive, params }),
+    ).toEqual([]);
+
+    const exclusiveParams = apiPollAddonPriceParams({
+      product: "prod_1",
+      tier: "medium",
+      interval: "monthly",
+      taxBehavior: "exclusive",
+    });
+    expect(
+      findApiPollAddonPriceMismatches({
+        price: inclusive,
+        params: exclusiveParams,
+      }),
+    ).toEqual([
+      "tax_behavior: expected exclusive, found inclusive",
+      "eur tax_behavior: expected exclusive, found inclusive",
+    ]);
   });
 });
 
@@ -458,7 +520,11 @@ describe("findApiPollAddonPriceMismatches with the default currency listed", () 
       currency: "usd",
       unit_amount: 5000,
       active: true,
-      recurring: { interval: "month", interval_count: 1 },
+      recurring: {
+        interval: "month",
+        interval_count: 1,
+        usage_type: "licensed",
+      },
       metadata: { addon: "api", api_poll_limit: "500" },
       currency_options: {
         usd: { unit_amount: usdOption },
@@ -487,8 +553,8 @@ describe("findApiPollAddonPriceMismatches with the default currency listed", () 
 describe("add-on product checks", () => {
   const onProduct = (id: string) =>
     ({ product: id }) as unknown as Stripe.Price;
-  const product = (metadata: Record<string, string>) =>
-    ({ id: "prod_1", metadata }) as unknown as Stripe.Product;
+  const product = (metadata: Record<string, string>, active = true) =>
+    ({ id: "prod_1", active, metadata }) as unknown as Stripe.Product;
 
   it("passes with no prices", () => {
     expect(findSharedProductProblem([])).toBeUndefined();
@@ -510,6 +576,12 @@ describe("add-on product checks", () => {
     expect(
       findApiPollAddonProductTagProblem(product({ addon: "api" })),
     ).toBeUndefined();
+  });
+
+  it("fails an archived add-on product", () => {
+    expect(
+      findApiPollAddonProductTagProblem(product({ addon: "api" }, false)),
+    ).toContain("archived");
   });
 
   it("fails a product without the add-on tag", () => {
