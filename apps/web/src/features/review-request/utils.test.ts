@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   getFirstName,
-  getReviewGuidelinesUrl,
   isEligibleForReviewRequest,
+  offersChatReview,
   pickReviewSite,
 } from "./utils";
 
@@ -28,37 +28,17 @@ describe("isEligibleForReviewRequest", () => {
 
 describe("pickReviewSite", () => {
   it("sends free mail addresses to Trustpilot", () => {
-    expect(pickReviewSite({ userId: "user-1", email: "Ada@Gmail.com" })).toBe(
-      "trustpilot",
-    );
+    expect(pickReviewSite({ email: "Ada@Gmail.com" })).toBe("trustpilot");
   });
 
-  it("splits company addresses evenly across the business sites", () => {
-    const counts = { capterra: 0, g2: 0, trustpilot: 0 };
-    for (let i = 0; i < 1000; i++) {
-      counts[
-        pickReviewSite({ userId: `user-${i}`, email: "ada@example.com" })
-      ]++;
-    }
-    expect(counts.trustpilot).toBe(0);
-    expect(counts.capterra).toBeGreaterThan(400);
-    expect(counts.g2).toBeGreaterThan(400);
-  });
-
-  it("always picks the same business site for a user", () => {
-    const site = pickReviewSite({ userId: "user-1", email: "ada@example.com" });
-    expect(pickReviewSite({ userId: "user-1", email: "ada@example.com" })).toBe(
-      site,
-    );
+  it("sends company addresses to G2", () => {
+    expect(pickReviewSite({ email: "ada@example.com" })).toBe("g2");
   });
 
   it("does not treat a subdomain of a free mail provider as consumer", () => {
-    expect(
-      pickReviewSite({
-        userId: "user-1",
-        email: "ada@corp.gmail.com.example",
-      }),
-    ).not.toBe("trustpilot");
+    expect(pickReviewSite({ email: "ada@corp.gmail.com.example" })).not.toBe(
+      "trustpilot",
+    );
   });
 });
 
@@ -76,14 +56,12 @@ describe("getFirstName", () => {
   });
 });
 
-describe("getReviewGuidelinesUrl", () => {
-  it("links Capterra's community guidelines, which its vendor terms require", () => {
-    expect(getReviewGuidelinesUrl("capterra")).toBe(
-      "https://www.capterra.com/legal/community-guidelines/",
-    );
+describe("offersChatReview", () => {
+  it("is true for G2, whose chat option is quicker than its form", () => {
+    expect(offersChatReview("g2")).toBe(true);
   });
 
-  it("returns nothing for a site without the requirement", () => {
-    expect(getReviewGuidelinesUrl("trustpilot")).toBeUndefined();
+  it("is false for Trustpilot, which has no chat option", () => {
+    expect(offersChatReview("trustpilot")).toBe(false);
   });
 });
