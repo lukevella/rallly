@@ -589,7 +589,13 @@ function CommandMenu({
               <CommandItem
                 key={space.id}
                 value={`space:${space.id}`}
-                keywords={[switchSpaceKeyword, space.name]}
+                keywords={[
+                  switchSpaceKeyword,
+                  t("commandMenuSwitchToSpaceKeyword", {
+                    defaultValue: "Switch to {name}",
+                    name: space.name,
+                  }),
+                ]}
                 onSelect={() => handleSwitchSpace(space.id)}
               >
                 <SpaceIcon size="sm" src={space.image} name={space.name} />
