@@ -7,6 +7,7 @@ import { Trans } from "react-i18next/TransWithoutContext";
 import { getRegistrationEnabled } from "@/features/instance-settings/data";
 import { getTranslation } from "@/i18n/server";
 import { redirectIfLoggedIn } from "@/lib/auth";
+import { VERIFICATION_EMAIL_COOKIE_NAME } from "@/lib/auth-config";
 import {
   AuthPageContainer,
   AuthPageContent,
@@ -20,7 +21,7 @@ import { OTPForm } from "./components/otp-form";
 export default async function VerifyPage() {
   await redirectIfLoggedIn();
   const { t, i18n } = await getTranslation();
-  const email = (await cookies()).get("verification-email")?.value;
+  const email = (await cookies()).get(VERIFICATION_EMAIL_COOKIE_NAME)?.value;
   if (!email) {
     redirect("/login");
   }

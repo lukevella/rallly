@@ -14,9 +14,7 @@ import { Input } from "@rallly/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useMountedState } from "react-use";
 import * as z from "zod";
-import { setVerificationEmail } from "@/app/[locale]/(auth)/login/actions";
 import { Link } from "@/components/link";
 import { Turnstile } from "@/components/turnstile";
 import { LastUsedBadge } from "@/features/auth/components/last-used-badge";
@@ -59,7 +57,6 @@ export function LoginWithEmailForm({
   const searchParams = useSearchParams();
   const [showPasswordField, setShowPasswordField] = React.useState(false);
   const turnstileRef = React.useRef<TurnstileInstance>(null);
-  const isMounted = useMountedState();
   const [isNavigating, startNavigation] = React.useTransition();
   const form = useForm({
     defaultValues: {
@@ -207,15 +204,6 @@ export function LoginWithEmailForm({
         }
         return;
       }
-
-      // A server action posts to the current URL, and only this page can
-      // serve this one, so stop if the user has left while the code was
-      // being sent.
-      if (!isMounted()) {
-        return;
-      }
-
-      await setVerificationEmail(identifier);
 
       // The transition keeps the form busy until the verify page is shown,
       // so it can't be submitted a second time on the way there.
