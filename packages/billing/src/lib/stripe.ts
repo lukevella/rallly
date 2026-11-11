@@ -344,13 +344,7 @@ export function findApiPollAddonPriceMismatches({
   return mismatches;
 }
 
-export function findApiPollAddonProductProblem({
-  prices,
-  product,
-}: {
-  prices: Stripe.Price[];
-  product?: Stripe.Product | Stripe.DeletedProduct;
-}) {
+export function findSharedProductProblem(prices: Stripe.Price[]) {
   const ids = new Set(
     prices.map((price) =>
       typeof price.product === "string" ? price.product : price.product.id,
@@ -359,13 +353,17 @@ export function findApiPollAddonProductProblem({
   if (ids.size > 1) {
     return `existing add-on prices span several products: ${[...ids].join(", ")}`;
   }
+  return undefined;
+}
+
+export function findApiPollAddonProductTagProblem(
+  product: Stripe.Product | Stripe.DeletedProduct,
+) {
   if (
-    ids.size === 1 &&
-    (!product ||
-      product.deleted ||
-      product.metadata?.[ADDON_METADATA_KEY] !== API_POLLS_ADDON)
+    product.deleted ||
+    product.metadata?.[ADDON_METADATA_KEY] !== API_POLLS_ADDON
   ) {
-    return `product ${[...ids][0]} does not have metadata.${ADDON_METADATA_KEY}=${API_POLLS_ADDON}`;
+    return `product ${product.id} does not have metadata.${ADDON_METADATA_KEY}=${API_POLLS_ADDON}`;
   }
   return undefined;
 }

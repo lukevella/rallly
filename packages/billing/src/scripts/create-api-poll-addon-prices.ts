@@ -6,7 +6,8 @@ import {
   apiPollAddonPriceParams,
   createStripeClient,
   findApiPollAddonPriceMismatches,
-  findApiPollAddonProductProblem,
+  findApiPollAddonProductTagProblem,
+  findSharedProductProblem,
   PRO_LOOKUP_KEYS,
 } from "../lib/stripe";
 import { API_POLL_TIERS } from "../pricing";
@@ -48,12 +49,14 @@ const PRODUCT_IDEMPOTENCY_KEY = "create-api-poll-addon-product";
 async function findProduct(existing: Stripe.Price[]) {
   const fromPrice = existing[0]?.product;
   if (fromPrice) {
+    const shared = findSharedProductProblem(existing);
+    if (shared) {
+      throw new Error(`${shared}; nothing was created`);
+    }
     const id = typeof fromPrice === "string" ? fromPrice : fromPrice.id;
-    const product = await stripe.products.retrieve(id);
-    const problem = findApiPollAddonProductProblem({
-      prices: existing,
-      product,
-    });
+    const problem = findApiPollAddonProductTagProblem(
+      await stripe.products.retrieve(id),
+    );
     if (problem) {
       throw new Error(`${problem}; nothing was created`);
     }
@@ -97,11 +100,6 @@ async function getTaxBehavior() {
 
   const taxBehavior = await getTaxBehavior();
   console.info(`Tax behavior: ${taxBehavior ?? "unspecified"}`);
-
-  const problem = findApiPollAddonProductProblem({ prices: existing.data });
-  if (problem) {
-    throw new Error(`${problem}; nothing was created`);
-  }
 
   let productId = await findProduct(existing.data);
   if (productId) {

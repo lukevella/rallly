@@ -8,8 +8,9 @@ import {
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
   findApiPollAddonPriceMismatches,
-  findApiPollAddonProductProblem,
+  findApiPollAddonProductTagProblem,
   findSeatItem,
+  findSharedProductProblem,
   getApiPollAddonItem,
   getSeatItem,
   mapApiPollAddonPrices,
@@ -483,42 +484,37 @@ describe("findApiPollAddonPriceMismatches with the default currency listed", () 
   });
 });
 
-describe("findApiPollAddonProductProblem", () => {
+describe("add-on product checks", () => {
   const onProduct = (id: string) =>
     ({ product: id }) as unknown as Stripe.Price;
-  const addonProduct = {
-    id: "prod_1",
-    metadata: { addon: "api_polls" },
-  } as unknown as Stripe.Product;
+  const product = (metadata: Record<string, string>) =>
+    ({ id: "prod_1", metadata }) as unknown as Stripe.Product;
 
   it("passes with no prices", () => {
-    expect(findApiPollAddonProductProblem({ prices: [] })).toBeUndefined();
+    expect(findSharedProductProblem([])).toBeUndefined();
   });
 
-  it("passes for one tagged product", () => {
+  it("passes when prices share one product", () => {
     expect(
-      findApiPollAddonProductProblem({
-        prices: [onProduct("prod_1"), onProduct("prod_1")],
-        product: addonProduct,
-      }),
+      findSharedProductProblem([onProduct("prod_1"), onProduct("prod_1")]),
     ).toBeUndefined();
   });
 
-  it("flags prices spread over several products", () => {
+  it("fails when prices span two products", () => {
     expect(
-      findApiPollAddonProductProblem({
-        prices: [onProduct("prod_1"), onProduct("prod_2")],
-        product: addonProduct,
-      }),
+      findSharedProductProblem([onProduct("prod_1"), onProduct("prod_2")]),
     ).toContain("several products");
   });
 
-  it("flags a product without the add-on metadata", () => {
+  it("passes a product tagged as the add-on", () => {
     expect(
-      findApiPollAddonProductProblem({
-        prices: [onProduct("prod_1")],
-        product: { id: "prod_1", metadata: {} } as unknown as Stripe.Product,
-      }),
-    ).toContain("metadata.addon");
+      findApiPollAddonProductTagProblem(product({ addon: "api_polls" })),
+    ).toBeUndefined();
+  });
+
+  it("fails a product without the add-on tag", () => {
+    expect(findApiPollAddonProductTagProblem(product({}))).toContain(
+      "metadata.addon",
+    );
   });
 });
