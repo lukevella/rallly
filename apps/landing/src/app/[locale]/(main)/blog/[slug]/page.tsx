@@ -8,7 +8,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Trans } from "react-i18next/TransWithoutContext";
-import { Bar, BarChart } from "@/components/blog/bar-chart";
 import DateFormatter from "@/components/blog/date-formatter";
 import { PostFaq } from "@/components/blog/post-faq";
 import { Cta } from "@/components/home/cta";
@@ -145,7 +144,7 @@ export default async function Page(props: {
           <article className="longform min-w-0 max-w-2xl lg:order-1">
             <MDXRemote
               source={post.content}
-              components={{ BarChart, Bar, PostFaq, FaqItem }}
+              components={{ PostFaq, FaqItem }}
             />
           </article>
         </div>

@@ -137,7 +137,7 @@ export default async function Page(props: {
               t={t}
               ns="home"
               i18nKey="thesisDefenseFaqHowManyDatesAnswer"
-              defaults="Between 5 and 10, spread across different days. We looked at 1,227 defense polls, and offering more options than that did not make a date more likely. The number of people who had to attend mattered far more. See the numbers in our guide on <0>how to schedule a thesis defense</0>."
+              defaults="Between 5 and 10, spread across different days. A short list is quicker for busy examiners to answer, and you can add more dates later if none of them work. Our guide on <0>how to schedule a thesis defense</0> walks through the whole process."
               components={[
                 <LinkBase
                   key="guide"
