@@ -1,5 +1,6 @@
 "use client";
 
+import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
 import { posthog } from "@rallly/posthog/client";
 import {
   CommandDialog,
@@ -11,7 +12,7 @@ import {
   CommandShortcut,
 } from "@rallly/ui/command";
 import { useDialog } from "@rallly/ui/dialog";
-import { keepPreviousData } from "@tanstack/react-query";
+import { keepPreviousData, useMutation } from "@tanstack/react-query";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -34,6 +35,7 @@ import {
 import { useRouter } from "next/navigation";
 import React from "react";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { CommandMenuContext, useSpaceMenu } from "@/features/navigation/client";
 import {
   SEARCH_INDEX_STALE_TIME,
@@ -41,7 +43,9 @@ import {
 } from "@/features/navigation/constants";
 import { usePollAdminHref } from "@/features/poll/client";
 import { getEventListStatus } from "@/features/scheduled-event/utils";
+import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
+import { SpaceIcon } from "@/features/space/components/space-icon";
 import { useAuthedUser } from "@/features/user/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
@@ -53,6 +57,12 @@ import { CommandGlobalShortcut } from "./command-global-shortcut";
 
 const SEARCH_DEBOUNCE_MS = 200;
 const RESULT_LIMIT = 5;
+
+type SwitchableSpace = {
+  id: string;
+  name: string;
+  image?: string;
+};
 
 type NavigationCommand = {
   id: string;
@@ -201,6 +211,19 @@ function NavigationCommandLabel({ label }: { label: string }) {
         i18nKey="goTo"
         defaults="Go to <b>{page}</b>"
         values={{ page: label }}
+        components={{ b: <b className="font-medium" /> }}
+      />
+    </div>
+  );
+}
+
+function SwitchSpaceCommandLabel({ name }: { name: string }) {
+  return (
+    <div className="min-w-0 truncate">
+      <Trans
+        i18nKey="commandMenuSwitchToSpace"
+        defaults="Switch to <b>{name}</b>"
+        values={{ name }}
         components={{ b: <b className="font-medium" /> }}
       />
     </div>
@@ -425,9 +448,13 @@ function useSearchResults({
 }
 
 function CommandMenu({
+  spaces,
+  onSwitchSpace,
   dialogProps,
   dismiss,
 }: {
+  spaces: SwitchableSpace[];
+  onSwitchSpace: (spaceId: string) => void;
   dialogProps: ReturnType<typeof useDialog>["dialogProps"];
   dismiss: () => void;
 }) {
@@ -435,6 +462,11 @@ function CommandMenu({
   const { t } = useTranslation();
   const { config } = useSpaceMenu();
   const settingsCommands = useSettingsCommands();
+  const { data: activeSpace } = useSpace();
+  const otherSpaces = spaces.filter((space) => space.id !== activeSpace.id);
+  const switchSpaceKeyword = t("commandMenuSwitchSpace", {
+    defaultValue: "Switch space",
+  });
   const [search, setSearch] = React.useState("");
   const query = search.trim();
   const {
@@ -453,6 +485,12 @@ function CommandMenu({
   const handleSelect = (href: string, type: string) => {
     posthog?.capture("command_menu:item_select", { type });
     router.push(href);
+    dismiss();
+  };
+
+  const handleSwitchSpace = (spaceId: string) => {
+    posthog?.capture("command_menu:item_select", { type: "space" });
+    onSwitchSpace(spaceId);
     dismiss();
   };
 
@@ -545,16 +583,40 @@ function CommandMenu({
             </CommandItem>
           ))}
         </CommandGroup>
+        {otherSpaces.length > 0 ? (
+          <CommandGroup heading={<Trans i18nKey="spaces" defaults="Spaces" />}>
+            {otherSpaces.map((space) => (
+              <CommandItem
+                key={space.id}
+                value={`space:${space.id}`}
+                keywords={[
+                  switchSpaceKeyword,
+                  t("commandMenuSwitchToSpaceKeyword", {
+                    defaultValue: "Switch to {name}",
+                    name: space.name,
+                  }),
+                ]}
+                onSelect={() => handleSwitchSpace(space.id)}
+              >
+                <SpaceIcon size="sm" src={space.image} name={space.name} />
+                <SwitchSpaceCommandLabel name={space.name} />
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ) : null}
       </CommandList>
     </CommandDialog>
   );
 }
 
 export function CommandMenuProvider({
+  spaces,
   children,
 }: {
+  spaces: SwitchableSpace[];
   children: React.ReactNode;
 }) {
+  const setActiveSpace = useMutation(mutationOptions(setActiveSpaceAction));
   const { trigger, dismiss, dialogProps } = useDialog();
   // useDialog only refocuses a trigger it holds a ref to, and the menu has
   // several (button, shortcut), so remember whatever had focus on open.
@@ -577,12 +639,15 @@ export function CommandMenuProvider({
     <CommandMenuContext.Provider value={{ open }}>
       <CommandGlobalShortcut trigger={open} />
       <CommandMenu
+        spaces={spaces}
+        onSwitchSpace={(spaceId) => setActiveSpace.mutate({ spaceId })}
         dialogProps={{
           open: dialogProps.open,
           onOpenChange: (nextOpen) => (nextOpen ? open() : close()),
         }}
         dismiss={close}
       />
+      {setActiveSpace.isPending ? <RouterLoadingIndicator /> : null}
       {children}
     </CommandMenuContext.Provider>
   );
