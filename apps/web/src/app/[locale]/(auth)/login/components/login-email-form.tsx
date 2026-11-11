@@ -14,6 +14,7 @@ import { Input } from "@rallly/ui/input";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useMountedState } from "react-use";
 import * as z from "zod";
 import { Link } from "@/components/link";
 import { Turnstile } from "@/components/turnstile";
@@ -57,6 +58,7 @@ export function LoginWithEmailForm({
   const [showPasswordField, setShowPasswordField] = React.useState(false);
   const turnstileRef = React.useRef<TurnstileInstance>(null);
   const [isRedirecting, setIsRedirecting] = React.useState(false);
+  const isMounted = useMountedState();
   const form = useForm({
     defaultValues: {
       identifier: "",
@@ -212,6 +214,11 @@ export function LoginWithEmailForm({
             });
             break;
         }
+        return;
+      }
+
+      // The user may have followed another link while the code was sending.
+      if (!isMounted()) {
         return;
       }
 
