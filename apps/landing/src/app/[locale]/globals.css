@@ -103,6 +103,9 @@ h2 {
   strong {
     @apply font-medium;
   }
+  .faq-item p {
+    @apply mb-0;
+  }
 }
 
 /*

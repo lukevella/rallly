@@ -128,6 +128,30 @@ export default async function Page(props: {
               <Trans
                 t={t}
                 ns="home"
+                i18nKey="thesisDefenseFaqHowManyDates"
+                defaults="How many dates should we offer?"
+              />
+            }
+          >
+            <Trans
+              t={t}
+              ns="home"
+              i18nKey="thesisDefenseFaqHowManyDatesAnswer"
+              defaults="Between 5 and 10, spread across different days. We looked at 1,227 defense polls, and offering more options than that did not make a date more likely. The number of people who had to attend mattered far more. See the numbers in our guide on <0>how to schedule a thesis defense</0>."
+              components={[
+                <LinkBase
+                  key="guide"
+                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  href="/blog/how-to-schedule-a-thesis-defense"
+                />,
+              ]}
+            />
+          </FaqItem>
+          <FaqItem
+            question={
+              <Trans
+                t={t}
+                ns="home"
                 i18nKey="thesisDefenseFaqOnBehalf"
                 defaults="Can a coordinator run this on behalf of the candidate?"
               />
