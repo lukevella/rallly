@@ -43,7 +43,13 @@ export default async function Layout({
 
   return (
     <SpaceSidebarProvider>
-      <CommandMenuProvider>
+      <CommandMenuProvider
+        spaces={spaces.map((space) => ({
+          id: space.id,
+          name: space.name,
+          image: space.image,
+        }))}
+      >
         <Sidebar>
           <SidebarHeader>
             <SpaceDropdown

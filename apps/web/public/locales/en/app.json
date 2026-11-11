@@ -180,6 +180,8 @@
   "commandMenuNoResults": "No results",
   "commandMenuSearchFailed": "Search failed. Try again.",
   "commandMenuSearchPlaceholder": "Type a command or search...",
+  "commandMenuSwitchSpace": "Switch space",
+  "commandMenuSwitchToSpace": "Switch to <b>{name}</b>",
   "comments": "Comments",
   "commentsComposerPlaceholder": "Write a comment…",
   "commentsComposerVisibility": "Visible to everyone",
