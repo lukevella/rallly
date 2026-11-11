@@ -123,7 +123,7 @@ test.describe("RSVP confirmation email", () => {
       /\r?\n[ \t]/g,
       "",
     );
-    expect(ics).toContain("METHOD:request");
+    expect(ics).toContain("METHOD:REQUEST");
     expect(ics).toContain(`UID:${EVENT_UID}`);
     expect(ics).toContain('PARTSTAT="ACCEPTED"');
     expect(ics).toContain(`mailto:${email}`);

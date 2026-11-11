@@ -565,6 +565,7 @@ export function getInviteEmailData({ uid }: { uid: string }) {
   return prisma.scheduledEventInvite.findUnique({
     where: { uid },
     select: {
+      inviteeName: true,
       inviteeEmail: true,
       inviteeLocale: true,
       inviteeTimeZone: true,
