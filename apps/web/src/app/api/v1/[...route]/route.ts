@@ -74,8 +74,7 @@ type Env = {
 const app = new Hono<Env>().basePath("/v1");
 
 // Process-wide: hono-openapi keys converters by schema vendor, and every zod
-// schema reports "zod". Schemas without native `.meta()` ids convert exactly as
-// before, so the frozen /api/private route is unaffected.
+// schema reports "zod".
 loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
 type PollKind = "date" | "time";
