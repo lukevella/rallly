@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatMinorUnitAmount, getCountryCurrency } from "./pricing";
+import {
+  API_POLL_TIERS,
+  apiPollAddonAmounts,
+  apiPollAddonFallback,
+  displayedCurrencies,
+  formatMinorUnitAmount,
+  getCountryCurrency,
+} from "./pricing";
 
 describe("getCountryCurrency", () => {
   const available = ["usd", "eur", "gbp"];
@@ -50,5 +57,30 @@ describe("formatMinorUnitAmount", () => {
     expect(
       formatMinorUnitAmount({ amount: 5600, currency: "jpy", locale: "en" }),
     ).toBe("¥5,600");
+  });
+});
+
+describe("apiPollAddonFallback", () => {
+  it("holds the USD amounts in minor units", () => {
+    expect(apiPollAddonFallback[2500]).toEqual({
+      monthly: 20000,
+      yearly: 200000,
+    });
+  });
+});
+
+describe("apiPollAddonAmounts", () => {
+  it("prices a year at exactly ten months in every tier and currency", () => {
+    for (const currency of displayedCurrencies) {
+      for (const tier of API_POLL_TIERS) {
+        const { monthly, yearly } = apiPollAddonAmounts[currency][tier];
+        expect(yearly).toBe(monthly * 10);
+      }
+    }
+  });
+
+  it("holds the per currency monthly amounts", () => {
+    expect(apiPollAddonAmounts.eur[1000].monthly).toBe(8000);
+    expect(apiPollAddonAmounts.gbp[250].monthly).toBe(2400);
   });
 });

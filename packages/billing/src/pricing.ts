@@ -23,6 +23,40 @@ export const CURRENCY_COOKIE_NAME = "rallly_currency";
 
 export type DisplayedCurrency = (typeof displayedCurrencies)[number];
 
+export const INCLUDED_API_POLLS = 50;
+
+export const API_POLL_TIERS = [250, 500, 1000, 2500] as const;
+
+export type ApiPollTier = (typeof API_POLL_TIERS)[number];
+
+const apiPollMonthlyAmounts: Record<
+  DisplayedCurrency,
+  Record<ApiPollTier, number>
+> = {
+  usd: { 250: 3000, 500: 5000, 1000: 9000, 2500: 20000 },
+  eur: { 250: 2700, 500: 4500, 1000: 8000, 2500: 18000 },
+  gbp: { 250: 2400, 500: 4000, 1000: 7000, 2500: 16000 },
+};
+
+const ANNUAL_MONTHS_CHARGED = 10;
+
+export const apiPollAddonAmounts = Object.fromEntries(
+  displayedCurrencies.map((currency) => [
+    currency,
+    Object.fromEntries(
+      API_POLL_TIERS.map((tier) => {
+        const monthly = apiPollMonthlyAmounts[currency][tier];
+        return [tier, { monthly, yearly: monthly * ANNUAL_MONTHS_CHARGED }];
+      }),
+    ),
+  ]),
+) as Record<
+  DisplayedCurrency,
+  Record<ApiPollTier, { monthly: number; yearly: number }>
+>;
+
+export const apiPollAddonFallback = apiPollAddonAmounts.usd;
+
 export function isDisplayedCurrency(value: string): value is DisplayedCurrency {
   return (displayedCurrencies as readonly string[]).includes(value);
 }

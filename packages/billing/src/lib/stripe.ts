@@ -1,5 +1,10 @@
 import Stripe from "stripe";
-import { displayedCurrencies } from "../pricing";
+import type { ApiPollTier } from "../pricing";
+import {
+  API_POLL_TIERS,
+  apiPollAddonAmounts,
+  displayedCurrencies,
+} from "../pricing";
 
 export type { Stripe } from "stripe";
 
@@ -162,4 +167,173 @@ export function getApiPollAddonItem(subscription: Stripe.Subscription) {
   }
 
   return { id: item.id, priceId: item.price.id, limit, amount };
+}
+
+export type ApiPollAddonInterval = "monthly" | "yearly";
+
+export function apiPollAddonLookupKey({
+  tier,
+  interval,
+}: {
+  tier: ApiPollTier;
+  interval: ApiPollAddonInterval;
+}) {
+  return `api-polls-${tier}-${interval}`;
+}
+
+const API_POLL_ADDON_INTERVALS = ["monthly", "yearly"] as const;
+
+function allApiPollAddonLookupKeys() {
+  return API_POLL_TIERS.flatMap((tier) =>
+    API_POLL_ADDON_INTERVALS.map((interval) =>
+      apiPollAddonLookupKey({ tier, interval }),
+    ),
+  );
+}
+
+export function mapApiPollAddonPrices(prices: Stripe.Price[]) {
+  const byKey = (key: string) =>
+    toProPrice(prices.find((price) => price.lookup_key === key));
+
+  const missing: string[] = [];
+  const lookup = (tier: ApiPollTier, interval: ApiPollAddonInterval) => {
+    const key = apiPollAddonLookupKey({ tier, interval });
+    const found = byKey(key);
+    if (!found) {
+      missing.push(key);
+    }
+    return found as ProPrice;
+  };
+
+  const result = Object.fromEntries(
+    API_POLL_TIERS.map((tier) => [
+      tier,
+      { monthly: lookup(tier, "monthly"), yearly: lookup(tier, "yearly") },
+    ]),
+  ) as Record<ApiPollTier, { monthly: ProPrice; yearly: ProPrice }>;
+
+  if (missing.length > 0) {
+    throw new Error(`API poll add-on prices not found: ${missing.join(", ")}`);
+  }
+
+  return result;
+}
+
+export async function getApiPollAddonPricing({ stripe }: { stripe: Stripe }) {
+  const prices = await stripe.prices.list({
+    lookup_keys: allApiPollAddonLookupKeys(),
+    expand: ["data.currency_options"],
+  });
+
+  return mapApiPollAddonPrices(prices.data);
+}
+
+export function apiPollAddonPriceParams({
+  product,
+  tier,
+  interval,
+  taxBehavior,
+}: {
+  product: string;
+  tier: ApiPollTier;
+  interval: ApiPollAddonInterval;
+  taxBehavior?: Stripe.Price.TaxBehavior;
+}): Stripe.PriceCreateParams {
+  const { usd, ...others } = apiPollAddonAmounts;
+  return {
+    product,
+    currency: "usd",
+    unit_amount: usd[tier][interval],
+    recurring: { interval: interval === "monthly" ? "month" : "year" },
+    lookup_key: apiPollAddonLookupKey({ tier, interval }),
+    ...(taxBehavior && taxBehavior !== "unspecified"
+      ? { tax_behavior: taxBehavior }
+      : {}),
+    metadata: {
+      [ADDON_METADATA_KEY]: API_POLLS_ADDON,
+      [API_POLL_LIMIT_METADATA_KEY]: String(tier),
+    },
+    currency_options: Object.fromEntries(
+      Object.entries(others).map(([currency, amounts]) => [
+        currency,
+        { unit_amount: amounts[tier][interval] },
+      ]),
+    ),
+  };
+}
+
+export function findApiPollAddonPriceMismatches({
+  price,
+  params,
+}: {
+  price: Stripe.Price;
+  params: Stripe.PriceCreateParams;
+}) {
+  const mismatches: string[] = [];
+  const check = ({
+    field,
+    actual,
+    expected,
+  }: {
+    field: string;
+    actual: unknown;
+    expected: unknown;
+  }) => {
+    if (actual !== expected) {
+      mismatches.push(`${field}: expected ${expected}, found ${actual}`);
+    }
+  };
+
+  const productId =
+    typeof price.product === "string" ? price.product : price.product.id;
+  check({ field: "product", actual: productId, expected: params.product });
+  check({ field: "active", actual: price.active, expected: true });
+  check({
+    field: "currency",
+    actual: price.currency,
+    expected: params.currency,
+  });
+  check({
+    field: "unit_amount",
+    actual: price.unit_amount,
+    expected: params.unit_amount,
+  });
+  check({
+    field: "interval",
+    actual: price.recurring?.interval,
+    expected: params.recurring?.interval,
+  });
+  check({
+    field: "interval_count",
+    actual: price.recurring?.interval_count,
+    expected: 1,
+  });
+
+  for (const [key, value] of Object.entries(params.metadata ?? {})) {
+    check({
+      field: `metadata.${key}`,
+      actual: price.metadata?.[key],
+      expected: value,
+    });
+  }
+
+  const actualOptions = unitAmountsByCurrency({
+    ...price,
+    unit_amount: null,
+  } as Stripe.Price);
+  const expectedOptions = params.currency_options ?? {};
+  for (const [currency, option] of Object.entries(expectedOptions)) {
+    check({
+      field: `${currency} unit_amount`,
+      actual: actualOptions[currency],
+      expected: option.unit_amount,
+    });
+  }
+  for (const currency of Object.keys(actualOptions)) {
+    if (!(currency in expectedOptions)) {
+      mismatches.push(`unexpected currency option: ${currency}`);
+    }
+  }
+
+  return mismatches;
 }
