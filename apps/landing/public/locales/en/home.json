@@ -251,6 +251,8 @@
   "thesisDefenseFaqEveryoneAnswer": "Yes. Every slot shows exactly who can make it and who cannot, rather than only a total, so you can find the slots where the whole panel is free and rule out the ones where a required examiner said no. If none work, you offer another round of dates.",
   "thesisDefenseFaqExternal": "Can an external examiner respond without an account?",
   "thesisDefenseFaqExternalAnswer": "Yes. Anyone with the link can reply whether or not they use Rallly, and whichever system their own institution runs. That matters for externals, who are usually the hardest person to reach and the least likely to sign up for another tool.",
+  "thesisDefenseFaqHowManyDates": "How many dates should we offer?",
+  "thesisDefenseFaqHowManyDatesAnswer": "Between 5 and 10, spread across different days. A short list is quicker for busy examiners to answer, and you can add more dates later if none of them work. Our guide on <0>how to schedule a thesis defense</0> walks through the whole process.",
   "thesisDefenseFaqOnBehalf": "Can a coordinator run this on behalf of the candidate?",
   "thesisDefenseFaqOnBehalfAnswer": "Yes. Graduate school administrators often create and manage the poll themselves, so the responses come back to them and they set the final time. You can also add an examiner and fill in their availability yourself when they email their times instead of using the link.",
   "thesisDefenseFaqTimeZones": "How does it handle examiners in other countries?",
