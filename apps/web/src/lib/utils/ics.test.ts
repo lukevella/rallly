@@ -187,7 +187,7 @@ describe("createIcsEvent", () => {
 
       expect(result.value).toContain("SEQUENCE:0");
       expect(result.value).toContain("STATUS:CONFIRMED");
-      expect(result.value).toContain("METHOD:request");
+      expect(result.value).toContain("METHOD:REQUEST");
     });
   });
 
@@ -201,7 +201,7 @@ describe("createIcsEvent", () => {
       });
 
       expect(result.error).toBeFalsy();
-      expect(result.value).toContain("METHOD:cancel");
+      expect(result.value).toContain("METHOD:CANCEL");
       expect(result.value).toContain("STATUS:CANCELLED");
       expect(result.value).toContain("SEQUENCE:1");
     });
@@ -244,6 +244,35 @@ describe("createIcsEvent", () => {
       // The ics library should handle this - we just need to ensure we don't crash
       expect(result).toBeDefined();
       expect(result.error || result.value).toBeDefined();
+    });
+  });
+  describe("Methods", () => {
+    it("emits METHOD:PUBLISH for an organizer copy", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: "host@example.com" },
+        method: "publish",
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("METHOD:PUBLISH");
+      expect(result.value).not.toContain("ATTENDEE");
+    });
+
+    it("emits the recipient as ATTENDEE with its PARTSTAT on a request", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: "host@example.com" },
+        attendees: [
+          { name: "Guest", email: "guest@example.com", partstat: "TENTATIVE" },
+        ],
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("METHOD:REQUEST");
+      expect(result.value?.replace(/\r\n /g, "")).toMatch(
+        /ATTENDEE;[^\r\n]*PARTSTAT="?TENTATIVE"?[^\r\n]*:mailto:guest@example\.com/,
+      );
     });
   });
 });

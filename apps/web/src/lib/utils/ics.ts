@@ -56,7 +56,9 @@ export function createIcsEvent({
     location,
     organizer,
     attendees,
-    method,
+    // The library writes the value verbatim; RFC 5546 spells it uppercase,
+    // matching the MIME method parameter nodemailer sends.
+    method: method.toUpperCase(),
     status,
     startInputType: timeZone ? "utc" : "local",
     startOutputType: timeZone ? "utc" : "local",

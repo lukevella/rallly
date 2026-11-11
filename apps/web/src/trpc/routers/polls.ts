@@ -1307,6 +1307,9 @@ export const polls = router({
           name: poll.user.name,
           email: poll.user.email,
         },
+        // The host is the organizer, so this copy is a plain import. A
+        // REQUEST from yourself is an invitation Google Calendar can't accept.
+        method: "publish",
       });
 
       // A poll can have several participants sharing an email; an event holds at
@@ -1483,7 +1486,7 @@ export const polls = router({
             branding: await getInstanceBranding(),
             icalEvent: {
               filename: "invite.ics",
-              method: "request",
+              method: "publish",
               content: event.value,
             },
             props: {
