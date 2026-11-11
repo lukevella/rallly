@@ -1,9 +1,5 @@
 import type { ReviewSite } from "./constants";
-import {
-  businessReviewSites,
-  consumerEmailDomains,
-  reviewSites,
-} from "./constants";
+import { consumerEmailDomains, reviewSites } from "./constants";
 
 // A finalized poll with a group behind it means Rallly worked for them.
 // Waiting for a second one asked a fifth as many people.
@@ -26,34 +22,14 @@ export function isEligibleForReviewRequest({
 
 /**
  * Consumers are pointed to Trustpilot, judged by whether the address is on a
- * free mail provider. Everyone else is split evenly across the business review
- * sites by user id, so a retried email points to the same site.
+ * free mail provider. Everyone else is pointed to G2.
  */
-export function pickReviewSite({
-  userId,
-  email,
-}: {
-  userId: string;
-  email: string;
-}): ReviewSite {
+export function pickReviewSite({ email }: { email: string }): ReviewSite {
   const domain = email.trim().toLowerCase().split("@").pop();
   if (domain && consumerEmailDomains.has(domain)) {
     return "trustpilot";
   }
-  return (
-    businessReviewSites[hashString(userId) % businessReviewSites.length] ??
-    businessReviewSites[0]
-  );
-}
-
-// FNV-1a: stable across runtimes, spreads ids evenly
-function hashString(value: string) {
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < value.length; i++) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-  return hash >>> 0;
+  return "g2";
 }
 
 /**
@@ -65,9 +41,9 @@ export function getFirstName(name: string) {
   return first.includes("@") ? "" : first;
 }
 
-/** The site's reviewer rules, for sites whose vendor terms require linking them. */
-export function getReviewGuidelinesUrl(site: ReviewSite) {
-  const config: { name: string; url: string; guidelinesUrl?: string } =
+/** Whether the site offers voice and chat reviews instead of a long form. */
+export function offersChatReview(site: ReviewSite) {
+  const config: { name: string; url: string; offersChatReview?: boolean } =
     reviewSites[site];
-  return config.guidelinesUrl;
+  return config.offersChatReview ?? false;
 }

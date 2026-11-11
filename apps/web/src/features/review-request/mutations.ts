@@ -20,8 +20,8 @@ import {
 import { countFinalizedPolls, getReviewRequestRecipient } from "./data";
 import {
   getFirstName,
-  getReviewGuidelinesUrl,
   isEligibleForReviewRequest,
+  offersChatReview,
   pickReviewSite,
 } from "./utils";
 
@@ -115,7 +115,7 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
       return yield* new QueuedEmailSkipped({ reason: "User is banned" });
     }
 
-    const site = pickReviewSite({ userId: subjectId, email: user.email });
+    const site = pickReviewSite({ email: user.email });
     const branding = yield* Effect.tryPromise({
       try: () => getInstanceBranding(),
       catch: failWith("Failed to load branding"),
@@ -134,7 +134,7 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
             firstName: getFirstName(user.name),
             siteName: reviewSites[site].name,
             reviewUrl: reviewSites[site].url,
-            guidelinesUrl: getReviewGuidelinesUrl(site),
+            offersChatReview: offersChatReview(site),
           },
         }),
       catch: failWith("Failed to send the review request email"),
