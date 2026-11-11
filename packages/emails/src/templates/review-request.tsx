@@ -78,7 +78,7 @@ async function ReviewRequestEmail({
             <Text>
               {t("reviewRequest_chatTip", {
                 defaultValue:
-                  "Tip: we've found the voice and chat options on {siteName} are the quickest ways to leave a review.",
+                  "Tip: I've found the voice and chat options on {siteName} are the quickest ways to leave a review.",
                 siteName,
               })}
             </Text>
