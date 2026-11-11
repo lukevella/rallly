@@ -74,7 +74,10 @@ export function createIcsEvent({
     description,
     location,
     organizer: organizer ? toContact(organizer) : undefined,
-    attendees: attendees?.map(toContact),
+    // A blank address would become an empty ATTENDEE line.
+    attendees: attendees
+      ?.filter((attendee) => attendee.email.trim() !== "")
+      .map(toContact),
     // The library writes the value verbatim; RFC 5546 spells it uppercase,
     // matching the MIME method parameter nodemailer sends.
     method: method.toUpperCase(),

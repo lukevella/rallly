@@ -300,5 +300,20 @@ describe("createIcsEvent", () => {
       expect(result.error).toBeFalsy();
       expect(result.value).toContain("mailto:guest@example.com");
     });
+
+    it("omits attendees whose email is blank", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: "host@example.com" },
+        attendees: [
+          { name: "Blank", email: "   " },
+          { name: "Guest", email: "guest@example.com" },
+        ],
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).not.toContain("Blank");
+      expect(result.value).toContain("mailto:guest@example.com");
+    });
   });
 });
