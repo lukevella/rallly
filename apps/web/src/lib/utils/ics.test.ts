@@ -275,4 +275,30 @@ describe("createIcsEvent", () => {
       );
     });
   });
+  describe("Contacts", () => {
+    it("caret-encodes quotes and line breaks in names", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: 'Host "H"', email: "host@example.com" },
+        attendees: [{ name: 'Jane "JJ"\nDoe^', email: "guest@example.com" }],
+      });
+
+      expect(result.error).toBeFalsy();
+      const ics = result.value?.replace(/\r\n /g, "") ?? "";
+      expect(ics).toContain(`CN="Host ^'H^'"`);
+      expect(ics).toContain(`CN="Jane ^'JJ^'^nDoe^^"`);
+      expect(ics).not.toContain('\\"');
+    });
+
+    it("trims surrounding spaces from emails", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: " host@example.com " },
+        attendees: [{ name: "Guest", email: " guest@example.com " }],
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("mailto:guest@example.com");
+    });
+  });
 });
