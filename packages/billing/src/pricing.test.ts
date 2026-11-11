@@ -79,6 +79,25 @@ describe("apiPollAddonAmounts", () => {
     }
   });
 
+  it("pins the whole monthly table", () => {
+    const monthly = Object.fromEntries(
+      displayedCurrencies.map((currency) => [
+        currency,
+        Object.fromEntries(
+          API_POLL_TIERS.map((tier) => [
+            tier,
+            apiPollAddonAmounts[currency][tier].monthly,
+          ]),
+        ),
+      ]),
+    );
+    expect(monthly).toEqual({
+      usd: { 250: 3000, 500: 5000, 1000: 9000, 2500: 20000 },
+      eur: { 250: 2700, 500: 4500, 1000: 8000, 2500: 18000 },
+      gbp: { 250: 2400, 500: 4000, 1000: 7000, 2500: 16000 },
+    });
+  });
+
   it("holds the per currency monthly amounts", () => {
     expect(apiPollAddonAmounts.eur[1000].monthly).toBe(8000);
     expect(apiPollAddonAmounts.gbp[250].monthly).toBe(2400);

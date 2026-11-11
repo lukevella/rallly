@@ -6,6 +6,7 @@ import {
   apiPollAddonPriceParams,
   createStripeClient,
   findApiPollAddonPriceMismatches,
+  findApiPollAddonProductProblem,
   PRO_LOOKUP_KEYS,
 } from "../lib/stripe";
 import { API_POLL_TIERS } from "../pricing";
@@ -20,6 +21,9 @@ import { API_POLL_TIERS } from "../pricing";
  * of existing add-on prices, then a product list scan) before creating one.
  * A lookup key that already exists is compared with the expected price and
  * reported "ok" or as a mismatch. It is never moved, changed or archived.
+ *
+ * Prices use fixed idempotency keys, so Stripe rejects a re-run with changed
+ * params within 24 hours.
  *
  * DRY RUN by default. Pass --apply to write.
  *
@@ -44,7 +48,16 @@ const PRODUCT_IDEMPOTENCY_KEY = "create-api-poll-addon-product";
 async function findProduct(existing: Stripe.Price[]) {
   const fromPrice = existing[0]?.product;
   if (fromPrice) {
-    return typeof fromPrice === "string" ? fromPrice : fromPrice.id;
+    const id = typeof fromPrice === "string" ? fromPrice : fromPrice.id;
+    const product = await stripe.products.retrieve(id);
+    const problem = findApiPollAddonProductProblem({
+      prices: existing,
+      product,
+    });
+    if (problem) {
+      throw new Error(`${problem}; nothing was created`);
+    }
+    return id;
   }
   const products = stripe.products.list({ active: true, limit: 100 });
   for await (const product of products) {
@@ -84,6 +97,11 @@ async function getTaxBehavior() {
 
   const taxBehavior = await getTaxBehavior();
   console.info(`Tax behavior: ${taxBehavior ?? "unspecified"}`);
+
+  const problem = findApiPollAddonProductProblem({ prices: existing.data });
+  if (problem) {
+    throw new Error(`${problem}; nothing was created`);
+  }
 
   let productId = await findProduct(existing.data);
   if (productId) {

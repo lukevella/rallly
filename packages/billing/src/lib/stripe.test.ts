@@ -8,6 +8,7 @@ import {
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
   findApiPollAddonPriceMismatches,
+  findApiPollAddonProductProblem,
   findSeatItem,
   getApiPollAddonItem,
   getSeatItem,
@@ -439,5 +440,85 @@ describe("findApiPollAddonPriceMismatches", () => {
     expect(mismatches.join("\n")).toContain("interval");
     expect(mismatches.join("\n")).toContain(API_POLL_LIMIT_METADATA_KEY);
     expect(mismatches.join("\n")).toContain("gbp");
+  });
+});
+
+describe("findApiPollAddonPriceMismatches with the default currency listed", () => {
+  const params = apiPollAddonPriceParams({
+    product: "prod_1",
+    tier: 500,
+    interval: "monthly",
+  });
+
+  function existing(usdOption: number) {
+    return {
+      id: "price_1",
+      product: "prod_1",
+      currency: "usd",
+      unit_amount: 5000,
+      active: true,
+      recurring: { interval: "month", interval_count: 1 },
+      metadata: { addon: "api_polls", api_poll_limit: "500" },
+      currency_options: {
+        usd: { unit_amount: usdOption },
+        eur: { unit_amount: 4500 },
+        gbp: { unit_amount: 4000 },
+      },
+    } as unknown as Stripe.Price;
+  }
+
+  it("accepts a usd option equal to the unit amount", () => {
+    expect(
+      findApiPollAddonPriceMismatches({ price: existing(5000), params }),
+    ).toEqual([]);
+  });
+
+  it("reports a usd option that differs", () => {
+    const mismatches = findApiPollAddonPriceMismatches({
+      price: existing(4000),
+      params,
+    });
+    expect(mismatches).toHaveLength(1);
+    expect(mismatches[0]).toContain("usd");
+  });
+});
+
+describe("findApiPollAddonProductProblem", () => {
+  const onProduct = (id: string) =>
+    ({ product: id }) as unknown as Stripe.Price;
+  const addonProduct = {
+    id: "prod_1",
+    metadata: { addon: "api_polls" },
+  } as unknown as Stripe.Product;
+
+  it("passes with no prices", () => {
+    expect(findApiPollAddonProductProblem({ prices: [] })).toBeUndefined();
+  });
+
+  it("passes for one tagged product", () => {
+    expect(
+      findApiPollAddonProductProblem({
+        prices: [onProduct("prod_1"), onProduct("prod_1")],
+        product: addonProduct,
+      }),
+    ).toBeUndefined();
+  });
+
+  it("flags prices spread over several products", () => {
+    expect(
+      findApiPollAddonProductProblem({
+        prices: [onProduct("prod_1"), onProduct("prod_2")],
+        product: addonProduct,
+      }),
+    ).toContain("several products");
+  });
+
+  it("flags a product without the add-on metadata", () => {
+    expect(
+      findApiPollAddonProductProblem({
+        prices: [onProduct("prod_1")],
+        product: { id: "prod_1", metadata: {} } as unknown as Stripe.Product,
+      }),
+    ).toContain("metadata.addon");
   });
 });

@@ -329,11 +329,43 @@ export function findApiPollAddonPriceMismatches({
       expected: option.unit_amount,
     });
   }
-  for (const currency of Object.keys(actualOptions)) {
-    if (!(currency in expectedOptions)) {
+  for (const [currency, amount] of Object.entries(actualOptions)) {
+    if (currency === price.currency) {
+      check({
+        field: `${currency} currency option`,
+        actual: amount,
+        expected: price.unit_amount,
+      });
+    } else if (!(currency in expectedOptions)) {
       mismatches.push(`unexpected currency option: ${currency}`);
     }
   }
 
   return mismatches;
+}
+
+export function findApiPollAddonProductProblem({
+  prices,
+  product,
+}: {
+  prices: Stripe.Price[];
+  product?: Stripe.Product | Stripe.DeletedProduct;
+}) {
+  const ids = new Set(
+    prices.map((price) =>
+      typeof price.product === "string" ? price.product : price.product.id,
+    ),
+  );
+  if (ids.size > 1) {
+    return `existing add-on prices span several products: ${[...ids].join(", ")}`;
+  }
+  if (
+    ids.size === 1 &&
+    (!product ||
+      product.deleted ||
+      product.metadata?.[ADDON_METADATA_KEY] !== API_POLLS_ADDON)
+  ) {
+    return `product ${[...ids][0]} does not have metadata.${ADDON_METADATA_KEY}=${API_POLLS_ADDON}`;
+  }
+  return undefined;
 }
