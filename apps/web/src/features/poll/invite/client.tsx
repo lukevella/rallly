@@ -10,12 +10,13 @@ import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { Ballot, BallotVote } from "./types";
 import { isOptionPast } from "./utils";
 
-export type BallotMode = "new" | "locked" | "edit";
+/** `saved` once the viewer has a response; its answers stay open to change. */
+export type BallotMode = "new" | "saved";
 
 type OwnResponse = Ballot["ownResponses"][number];
 
 function initialMode(ballot: Ballot): BallotMode {
-  return ballot.ownResponses.length > 0 ? "locked" : "new";
+  return ballot.ownResponses.length > 0 ? "saved" : "new";
 }
 
 /**
@@ -41,6 +42,11 @@ export function useBallotState({ ballot }: { ballot: Ballot }) {
   const [answers, setAnswers] = React.useState<Record<string, BallotVote>>(
     () => ballot.ownResponses[0]?.votes ?? {},
   );
+  // What the server last accepted. Held here so a save reads as saved at once,
+  // without waiting for the page to come back with it.
+  const [savedAnswers, setSavedAnswers] = React.useState<
+    Record<string, BallotVote>
+  >(() => ballot.ownResponses[0]?.votes ?? {});
 
   const findResponse = (id: string | null): OwnResponse | undefined =>
     ballot.ownResponses.find((response) => response.id === id);
@@ -52,20 +58,30 @@ export function useBallotState({ ballot }: { ballot: Ballot }) {
     setSeededFrom(ownSignature);
     setActiveResponseIdState(active?.id ?? null);
     setAnswers(active?.votes ?? {});
+    setSavedAnswers(active?.votes ?? {});
     setMode(initialMode(ballot));
   }
 
-  const canChange = ballot.canRespond && (mode === "new" || mode === "edit");
+  const canChange = ballot.canRespond;
+  // An unanswered option is saved as no, so the two compare as equal.
+  const hasChanges =
+    mode === "saved" &&
+    ballot.options.some(
+      (option) =>
+        (answers[option.id] ?? "no") !== (savedAnswers[option.id] ?? "no"),
+    );
 
   return {
     mode,
     canChange,
+    hasChanges,
     activeResponseId,
     answers,
     setActiveResponseId: (id: string) => {
+      const votes = findResponse(id)?.votes ?? {};
       setActiveResponseIdState(id);
-      setAnswers(findResponse(id)?.votes ?? {});
-      setMode("locked");
+      setAnswers(votes);
+      setSavedAnswers(votes);
     },
     setVote: (optionId: string, vote: BallotVote) => {
       if (!canChange) return;
@@ -86,13 +102,9 @@ export function useBallotState({ ballot }: { ballot: Ballot }) {
         return next;
       });
     },
-    startEditing: () => setMode("edit"),
-    /** After a successful save: back to the thanks bar, keeping the answers. */
-    markSaved: () => setMode("locked"),
-    stopEditing: () => {
-      setAnswers(findResponse(activeResponseId)?.votes ?? {});
-      setMode("locked");
-    },
+    /** After a successful save: what is chosen is now what is saved. */
+    markSaved: () => setSavedAnswers(answers),
+    discardChanges: () => setAnswers(savedAnswers),
   };
 }
 

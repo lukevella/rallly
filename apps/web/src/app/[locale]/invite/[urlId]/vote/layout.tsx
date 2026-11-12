@@ -42,7 +42,7 @@ export default function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-card lg:relative lg:h-dvh lg:overflow-clip lg:bg-gray-100 dark:lg:bg-gray-900 max-lg:[&:has([data-invite-responded])>header]:top-13 max-lg:[body:has(&)]:bg-card lg:[html.light_body:has(&)]:bg-gray-100 lg:[html:has(&)]:overflow-hidden">
+    <div className="flex min-h-dvh flex-col bg-card lg:relative lg:h-dvh lg:overflow-clip lg:bg-gray-100 dark:lg:bg-gray-900 max-lg:[body:has(&)]:bg-card lg:[html.light_body:has(&)]:bg-gray-100 lg:[html:has(&)]:overflow-hidden">
       <Suspense>
         <VoteFrame params={params}>{children}</VoteFrame>
       </Suspense>

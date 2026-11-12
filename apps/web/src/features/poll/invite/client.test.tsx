@@ -23,15 +23,32 @@ function ballot(overrides: Partial<Ballot> = {}): Ballot {
 }
 
 describe("useBallotState", () => {
-  it("returns to the thanks bar after a save that changed nothing", () => {
+  it("has nothing to save once a change is saved or discarded", () => {
     const saved = ballot({
       ownResponses: [{ id: "r1", name: "Ann", votes: { o1: "yes" } }],
     });
     const { result } = renderHook(() => useBallotState({ ballot: saved }));
-    act(() => result.current.startEditing());
-    expect(result.current.mode).toBe("edit");
+    expect(result.current.canChange).toBe(true);
+    expect(result.current.hasChanges).toBe(false);
+
+    act(() => result.current.setVote("o2", "yes"));
+    expect(result.current.hasChanges).toBe(true);
     act(() => result.current.markSaved());
-    expect(result.current.mode).toBe("locked");
+    expect(result.current.hasChanges).toBe(false);
+
+    act(() => result.current.setVote("o1", "no"));
+    act(() => result.current.discardChanges());
+    expect(result.current.hasChanges).toBe(false);
+    expect(result.current.answers).toEqual({ o1: "yes", o2: "yes" });
+  });
+
+  it("does not count an unanswered option set to no as a change", () => {
+    const saved = ballot({
+      ownResponses: [{ id: "r1", name: "Ann", votes: { o1: "yes" } }],
+    });
+    const { result } = renderHook(() => useBallotState({ ballot: saved }));
+    act(() => result.current.setVote("o2", "no"));
+    expect(result.current.hasChanges).toBe(false);
   });
 
   it("does not change answers on a poll that no longer accepts responses", () => {
@@ -43,7 +60,7 @@ describe("useBallotState", () => {
     expect(result.current.answers).toEqual({});
   });
 
-  it("keeps editing and in-progress answers when the response is renamed", () => {
+  it("keeps in-progress answers when the response is renamed", () => {
     const votes = { o1: "yes", o2: "no" } as const;
     const { result, rerender } = renderHook(
       ({ data }) => useBallotState({ ballot: data }),
@@ -53,12 +70,11 @@ describe("useBallotState", () => {
         },
       },
     );
-    act(() => result.current.startEditing());
     act(() => result.current.setVote("o2", "yes"));
     rerender({
       data: ballot({ ownResponses: [{ id: "r1", name: "Anna", votes }] }),
     });
-    expect(result.current.mode).toBe("edit");
+    expect(result.current.hasChanges).toBe(true);
     expect(result.current.answers).toEqual({ o1: "yes", o2: "yes" });
   });
 
@@ -70,7 +86,6 @@ describe("useBallotState", () => {
       ({ data }) => useBallotState({ ballot: data }),
       { initialProps: { data: first } },
     );
-    act(() => result.current.startEditing());
     act(() => result.current.setVote("o2", "yes"));
     rerender({
       data: ballot({
@@ -79,7 +94,7 @@ describe("useBallotState", () => {
         ],
       }),
     });
-    expect(result.current.mode).toBe("edit");
+    expect(result.current.hasChanges).toBe(true);
     expect(result.current.answers.o2).toBe("yes");
   });
 });

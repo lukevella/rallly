@@ -14,7 +14,7 @@ export function EventLockup({
   title: string;
 }) {
   return (
-    <div className="flex min-w-0 flex-col items-start gap-1">
+    <div className="flex min-w-0 flex-col items-start gap-2">
       {/* The name is right below it, so the icon would only say it twice. */}
       <span aria-hidden="true" className="flex shrink-0">
         <SpaceIcon
@@ -27,7 +27,7 @@ export function EventLockup({
       <p className="max-w-full truncate text-muted-foreground text-sm">
         {spaceName}
       </p>
-      <h1 className="mt-1 text-balance font-semibold text-xl tracking-tight">
+      <h1 className="text-balance font-semibold text-xl tracking-tight">
         {title}
       </h1>
     </div>
