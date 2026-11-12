@@ -1,5 +1,6 @@
 import "server-only";
 import { env } from "@/env";
+import { isApiPollQuotaEnabled } from "@/features/api-keys/quota/constants";
 import { isBillingEnabled } from "@/features/billing/constants";
 import { isCalendarsEnabled } from "@/features/calendars/constants";
 import { isConferencingEnabled } from "@/features/conferencing/constants";
@@ -53,6 +54,9 @@ export const featureFlagConfig: FeatureFlagConfig = {
   // Caps open polls per organizer by tier. Billing only: the ladder sells
   // Pro, and without billing every space already has every paid feature.
   openPollLimit: isOpenPollLimitEnabled,
+  // Caps API-created polls per space per month. Billing only: the add-on is
+  // something to buy, and without billing there is nothing to meter against.
+  apiPollQuota: isApiPollQuotaEnabled,
   // Asks participants to try the cloud product. On a self-hosted instance a
   // participant usually has no account to create a poll with.
   createPollPrompt: !isSelfHosted,
