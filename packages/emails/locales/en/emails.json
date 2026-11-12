@@ -104,7 +104,6 @@
   "resetPassword_subject": "Reset your password",
   "reviewRequest_ask": "Would you leave a quick review on {siteName}? It takes a couple of minutes, and reviews are how people looking for a scheduling tool decide whether to trust a small, independent one like ours.",
   "reviewRequest_button": "Write a review on {siteName}",
-  "reviewRequest_chatTip": "Tip: I've found the voice and chat options on {siteName} are the quickest ways to leave a review.",
   "reviewRequest_greeting": "Hi {firstName},",
   "reviewRequest_greetingNoName": "Hi there,",
   "reviewRequest_intro": "I saw you just scheduled a meeting with Rallly. I hope it saved you some back-and-forth.",

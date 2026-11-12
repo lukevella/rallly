@@ -15,15 +15,10 @@ import { track } from "@/lib/posthog";
 import {
   reviewRequestEmailDelayMs,
   reviewRequestSender,
-  reviewSites,
+  reviewSite,
 } from "./constants";
 import { countFinalizedPolls, getReviewRequestRecipient } from "./data";
-import {
-  getFirstName,
-  isEligibleForReviewRequest,
-  offersChatReview,
-  pickReviewSite,
-} from "./utils";
+import { getFirstName, isEligibleForReviewRequest } from "./utils";
 
 const logger = createLogger("review-request");
 
@@ -99,8 +94,7 @@ const failWith = (message: string) => () => new QueuedEmailFailed({ message });
 
 /**
  * Sends the review request email queued by `queueReviewRequest`. The subject
- * is the user. The site is picked at send time, so a change to the routing
- * applies to emails already queued.
+ * is the user.
  */
 export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
   function* ({ subjectId }: { id: string; subjectId: string }) {
@@ -115,7 +109,6 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
       return yield* new QueuedEmailSkipped({ reason: "User is banned" });
     }
 
-    const site = pickReviewSite({ email: user.email });
     const branding = yield* Effect.tryPromise({
       try: () => getInstanceBranding(),
       catch: failWith("Failed to load branding"),
@@ -132,9 +125,8 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
           from: reviewRequestSender,
           props: {
             firstName: getFirstName(user.name),
-            siteName: reviewSites[site].name,
-            reviewUrl: reviewSites[site].url,
-            offersChatReview: offersChatReview(site),
+            siteName: reviewSite.name,
+            reviewUrl: reviewSite.url,
           },
         }),
       catch: failWith("Failed to send the review request email"),
@@ -147,7 +139,7 @@ export const sendReviewRequest = Effect.fn("reviewRequest.sendReviewRequest")(
       { id: subjectId, isGuest: false },
       {
         event: "review_request:email_send",
-        properties: { destination: site },
+        properties: { destination: "trustpilot" },
       },
     );
   },
