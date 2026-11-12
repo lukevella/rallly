@@ -822,11 +822,11 @@ importers:
         specifier: ^3.0.8
         version: 3.0.8
       posthog-js:
-        specifier: ^1.434.11
-        version: 1.434.11(@types/react@19.2.13)(react@19.2.6)
+        specifier: ^1.447.12
+        version: 1.447.12(@types/react@19.2.13)(react@19.2.6)
       posthog-node:
-        specifier: ^5.46.1
-        version: 5.46.1(rxjs@7.8.2)
+        specifier: ^5.68.2
+        version: 5.68.2(@opentelemetry/api@1.9.1)(rxjs@7.8.2)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -4067,23 +4067,17 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@posthog/browser-common@0.9.0':
-    resolution: {integrity: sha512-EWoVzs1vVY7ihpn8yOjj3jyjriHUEEMVSBNL/TW3hk09fTriWRe76vJXrRg0G0yjTYxHmtlSkNn4mOV24ZEzzA==}
+  '@posthog/browser-common@0.10.8':
+    resolution: {integrity: sha512-TQmqLVNFoKaL4dDV5Q8AScX2dIwdq8By2cj2KU1hMGe88tn7Usbf3U/hv5okhobEojntqJeslPIRBrG79Su+vg==}
 
-  '@posthog/core@1.45.1':
-    resolution: {integrity: sha512-tLtvzomavb2PPWdGYKsusyIzIeL2Px47v348Smibkay7sMy/83TyPk+Ptsp2NdeOgJsbuwSxWkR2+XA0aSCAaA==}
-
-  '@posthog/core@1.55.2':
-    resolution: {integrity: sha512-2mYxGbDmTLUs096VbcZqSWo0lrI48/BrX65r54NynxxFq409BOx9w73HxOAtOKZ1vblkdV6/GxQTe7KDcIQidg==}
+  '@posthog/core@1.67.1':
+    resolution: {integrity: sha512-Fq8YySx3G2ggxKV/dLf5nfbQocB3/yU6TNSGIyRvVynizrIW8tZfB2HQ/13cY61PoU+cNzvKch+B7Ac+OUkORw==}
 
   '@posthog/core@1.7.1':
     resolution: {integrity: sha512-kjK0eFMIpKo9GXIbts8VtAknsoZ18oZorANdtuTj1CbgS28t4ZVq//HAWhnxEuXRTrtkd+SUJ6Ux3j2Af8NCuA==}
 
-  '@posthog/types@1.398.0':
-    resolution: {integrity: sha512-sJMkl4k+u8yS/0fjHsKqE9xTdsAh30a2WvgChiptellnVoE0e8QJKFgqOMD2sk8FaEArPdeFklAhXvmENAt3Sg==}
-
-  '@posthog/types@1.412.4':
-    resolution: {integrity: sha512-Q7lV9O9TbLngjOYw1ucm3bS3tn48xb1B4ZQdDy8gv7yfKe99hCTeWYG4xZ36nJM80VxpTF9TriiJt5hngDOkBg==}
+  '@posthog/types@1.424.0':
+    resolution: {integrity: sha512-58RE0+Lt4vMLYmty2MlyAyfxFJvlM3Fp0tgRT25Klky7FSQvpznX+W9xKyVESB5oIAEJDxfHKX0cwEBHROZKqw==}
 
   '@prisma/adapter-pg@7.8.0':
     resolution: {integrity: sha512-ygb3UkerK3v8MDpXVgCISdRNDozpxh6+JVJgiIGbSr5KBgz10LLf5ejUskPGoXlsIjxsOu6nuy1JVQr2EKGSlg==}
@@ -10597,8 +10591,8 @@ packages:
     resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
     engines: {node: '>=12'}
 
-  posthog-js@1.434.11:
-    resolution: {integrity: sha512-B5DPg/SZaMEqsJIqX7lVkcH3orFFTk8Ok8q17fYYB8WS1rlzuoSqj5RD8v3JLIL+U9WDBZfzpY6XY9LvnJD1Yg==}
+  posthog-js@1.447.12:
+    resolution: {integrity: sha512-FN97nANDsi62K/ywRxL8XwSw8X/29cWheMzduxRiM6g7PmOWFA2MlttPM00Q+YIwzRAiTCZu0j2HMlJbbc5HLA==}
     peerDependencies:
       '@types/react': '>=16.8.0'
       react: '>=16.8.0'
@@ -10612,12 +10606,15 @@ packages:
     resolution: {integrity: sha512-lz3YJOr0Nmiz0yHASaINEDHqoV+0bC3eD8aZAG+Ky292dAnVYul+ga/dMX8KCBXg8hHfKdxw0SztYD5j6dgUqQ==}
     engines: {node: '>=20'}
 
-  posthog-node@5.46.1:
-    resolution: {integrity: sha512-WjCqExq44pBdyg9MSsH6UAE0tNZ88p4aIuVFicgqhjf2Fbws6IhS4ioYUa4aBrbUPS9EDRXtBTtF5DpP1ml8Pw==}
+  posthog-node@5.68.2:
+    resolution: {integrity: sha512-i8vfineDlIc0BQaN/G0m5zgAcP88ECwYS43QsEShZGWGYvYrfddAUnFwiljfyySPUK+RrKJWFJUJGHeYkThZoQ==}
     engines: {node: ^20.20.0 || >=22.22.0}
     peerDependencies:
+      '@opentelemetry/api': ^1.2.0
       rxjs: ^7.0.0
     peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
       rxjs:
         optional: true
 
@@ -12351,9 +12348,6 @@ packages:
 
   web-vitals@6.2.1:
     resolution: {integrity: sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw==}
-
-  web-vitals@6.2.2:
-    resolution: {integrity: sha512-oto5x6dLEgrRqfcWed+pZEUb2q6ikbFmqF54CRDhI/QGbn+qxC49b4C4OkbH+kb9C3a8shpFD3SgR9kRcs80ZQ==}
 
   web-vitals@6.2.3:
     resolution: {integrity: sha512-Dmy+vdO1UPMqXiAtZSNayhl4f794Bxfd94W4HIj2HlYtczEQfEOon969memlcpcHrTuOKLa5baFjX7WbgmOq+A==}
@@ -15664,26 +15658,24 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@posthog/browser-common@0.9.0':
+  '@posthog/browser-common@0.10.8':
     dependencies:
-      '@posthog/core': 1.55.2
-      '@posthog/types': 1.412.4
+      '@posthog/core': 1.67.1
+      '@posthog/types': 1.424.0
+      dompurify: 3.4.17
+      preact: 10.29.7
+    transitivePeerDependencies:
+      - preact-render-to-string
 
-  '@posthog/core@1.45.1':
+  '@posthog/core@1.67.1':
     dependencies:
-      '@posthog/types': 1.398.0
-
-  '@posthog/core@1.55.2':
-    dependencies:
-      '@posthog/types': 1.412.4
+      '@posthog/types': 1.424.0
 
   '@posthog/core@1.7.1':
     dependencies:
       cross-spawn: 7.0.6
 
-  '@posthog/types@1.398.0': {}
-
-  '@posthog/types@1.412.4': {}
+  '@posthog/types@1.424.0': {}
 
   '@prisma/adapter-pg@7.8.0':
     dependencies:
@@ -23362,17 +23354,17 @@ snapshots:
 
   postgres@3.4.7: {}
 
-  posthog-js@1.434.11(@types/react@19.2.13)(react@19.2.6):
+  posthog-js@1.447.12(@types/react@19.2.13)(react@19.2.6):
     dependencies:
-      '@posthog/browser-common': 0.9.0
-      '@posthog/core': 1.55.2
-      '@posthog/types': 1.412.4
+      '@posthog/browser-common': 0.10.8
+      '@posthog/core': 1.67.1
+      '@posthog/types': 1.424.0
       core-js: 3.49.0
       dompurify: 3.4.17
       fflate: 0.4.9
       preact: 10.29.7
       query-selector-shadow-dom: 1.0.1
-      web-vitals: 6.2.2
+      web-vitals: 6.2.3
       web-vitals-soft-navs: web-vitals@6.2.1
     optionalDependencies:
       '@types/react': 19.2.13
@@ -23384,10 +23376,11 @@ snapshots:
     dependencies:
       '@posthog/core': 1.7.1
 
-  posthog-node@5.46.1(rxjs@7.8.2):
+  posthog-node@5.68.2(@opentelemetry/api@1.9.1)(rxjs@7.8.2):
     dependencies:
-      '@posthog/core': 1.45.1
+      '@posthog/core': 1.67.1
     optionalDependencies:
+      '@opentelemetry/api': 1.9.1
       rxjs: 7.8.2
 
   preact@10.29.7: {}
@@ -25757,8 +25750,6 @@ snapshots:
   web-streams-polyfill@3.3.3: {}
 
   web-vitals@6.2.1: {}
-
-  web-vitals@6.2.2: {}
 
   web-vitals@6.2.3: {}
 
