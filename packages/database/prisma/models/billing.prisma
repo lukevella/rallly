@@ -1,21 +1,31 @@
 model Subscription {
-  id                 String               @id
-  priceId            String               @map("price_id")
-  quantity           Int                  @default(1)
-  subscriptionItemId String               @map("subscription_item_id")
-  amount             Int
-  discountPercentOff Float?               @map("discount_percent_off")
-  discountAmountOff  Int?                 @map("discount_amount_off")
-  status             SubscriptionStatus
-  active             Boolean
-  currency           String
-  interval           SubscriptionInterval
-  createdAt          DateTime             @default(now()) @map("created_at")
-  periodStart        DateTime             @map("period_start")
-  periodEnd          DateTime             @map("period_end")
-  cancelAtPeriodEnd  Boolean              @default(false) @map("cancel_at_period_end")
-  userId             String               @map("user_id")
-  spaceId            String               @map("space_id")
+  id                   String               @id
+  priceId              String               @map("price_id")
+  quantity             Int                  @default(1)
+  subscriptionItemId   String               @map("subscription_item_id")
+  amount               Int
+  discountPercentOff   Float?               @map("discount_percent_off")
+  discountAmountOff    Int?                 @map("discount_amount_off")
+  status               SubscriptionStatus
+  active               Boolean
+  currency             String
+  interval             SubscriptionInterval
+  createdAt            DateTime             @default(now()) @map("created_at")
+  periodStart          DateTime             @map("period_start")
+  periodEnd            DateTime             @map("period_end")
+  cancelAtPeriodEnd    Boolean              @default(false) @map("cancel_at_period_end")
+  userId               String               @map("user_id")
+  spaceId              String               @map("space_id")
+  // API poll add-on, a second item on the same Stripe subscription.
+  apiAddonItemId       String?              @map("api_addon_item_id")
+  apiAddonPriceId      String?              @map("api_addon_price_id")
+  apiAddonAmount       Int?                 @map("api_addon_amount")
+  // Monthly API poll limit granted by the add-on.
+  apiPollLimit         Int?                 @map("api_poll_limit")
+  // A lapsed add-on's limit, kept until retainedUntil so usage already
+  // accrued in the period is not suddenly over the limit.
+  apiPollRetainedLimit Int?                 @map("api_poll_retained_limit")
+  apiPollRetainedUntil DateTime?            @map("api_poll_retained_until")
 
   user  User  @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)
   space Space @relation("SpaceToSubscription", fields: [spaceId], references: [id], onDelete: Cascade)
