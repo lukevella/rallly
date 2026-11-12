@@ -866,7 +866,8 @@ export function AccessibleBallot({
           <dt className="sr-only">
             <Trans i18nKey="eventHeaderVideoCall" defaults="Video call" />
           </dt>
-          <dd className="flex items-center gap-2">
+          {/* The summary's leading icon is a direct child: sized and coloured like the other facts. */}
+          <dd className="flex items-start gap-2 [&>svg]:mt-[calc((1lh-1rem)/2)] [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-muted-foreground">
             <PollConferencingSummary
               conferencing={poll.conferencing}
               meetingUri={poll.event?.conferencingUri}
@@ -938,7 +939,6 @@ export function AccessibleBallot({
     ) : null;
   const timeFormatSwitcher = ballot.isDatePoll ? null : (
     <TimeFormatSwitcher
-      pill
       onChange={(format) =>
         setStatus(
           format === "hours12"
@@ -1132,7 +1132,7 @@ export function AccessibleBallot({
           // the form or the thanks need after that.
           compactOnPhone
             ? "lg:w-auto lg:grid-cols-[20rem_36rem] xl:grid-cols-[24rem_36rem]"
-            : "lg:w-[calc(100vw-2rem)] lg:max-w-6xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
+            : "lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
           compactOnPhone && "max-lg:gap-y-4",
         )}
       >
@@ -1219,7 +1219,7 @@ export function AccessibleBallot({
               </span>
               <div className="min-w-0">
                 <p className="truncate font-medium">{poll.user.name}</p>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
                 </p>
               </div>

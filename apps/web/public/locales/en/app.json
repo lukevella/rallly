@@ -1238,6 +1238,7 @@
   "voteBarLabel": "{yes} yes, {ifNeedBe} if need be, out of {total, plural, one {1 response} other {# responses}}",
   "voteEmailBenefitEdit": "Edit your response later",
   "voteEmailBenefitFinalTime": "Get notified when a time is picked",
+  "voteFooterCookies": "Cookie policy",
   "voteFooterPrivacy": "Privacy policy",
   "voteFooterTerms": "Terms of use",
   "voteOptionsLockedDescription": "Locked: participants have already answered \"if need be\".",
