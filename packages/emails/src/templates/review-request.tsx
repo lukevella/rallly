@@ -21,8 +21,6 @@ export type ReviewRequestEmailProps = {
   firstName: string;
   siteName: string;
   reviewUrl: string;
-  /** The site offers voice and chat reviews, which are quicker than its form. */
-  offersChatReview?: boolean;
 };
 
 /**
@@ -36,7 +34,6 @@ async function ReviewRequestEmail({
   firstName,
   siteName,
   reviewUrl,
-  offersChatReview,
 }: ReviewRequestEmailProps) {
   const { t } = await createEmailI18n(locale);
   return (
@@ -74,15 +71,6 @@ async function ReviewRequestEmail({
               siteName,
             })}
           </Text>
-          {offersChatReview ? (
-            <Text>
-              {t("reviewRequest_chatTip", {
-                defaultValue:
-                  "Tip: I've found the voice and chat options on {siteName} are the quickest ways to leave a review.",
-                siteName,
-              })}
-            </Text>
-          ) : null}
           <Button href={reviewUrl} color={chrome.primaryColor}>
             {t("reviewRequest_button", {
               defaultValue: "Write a review on {siteName}",
@@ -111,9 +99,8 @@ ReviewRequestEmail.PreviewProps = {
   locale: "en",
   chrome: previewChrome,
   firstName: "Jessie",
-  siteName: "G2",
-  reviewUrl: "https://www.g2.com",
-  offersChatReview: true,
+  siteName: "Trustpilot",
+  reviewUrl: "https://www.trustpilot.com",
 } as ReviewRequestEmailProps;
 
 export default ReviewRequestEmail;
