@@ -2,7 +2,7 @@
 title: "How to schedule a thesis defense"
 date: "2026-11-11"
 category: Guides
-excerpt: A step by step guide to finding a date for a thesis or dissertation defense or a viva. What to check first, who to ask, how many dates to offer and what to do when no date works.
+excerpt: "How to find a date for a thesis or dissertation defense or a viva: what to check first, who to ask, how many dates to offer and what to do when no date works."
 ---
 
 Scheduling a thesis or dissertation defense means finding one time that suits a whole committee, and its members rarely share a calendar. Often one of them is an external examiner in another country. Whether you're the candidate or the coordinator arranging it for them, the job is the same.
