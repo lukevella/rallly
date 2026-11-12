@@ -64,6 +64,8 @@ const prisma = vi.hoisted(() => ({
   user: {
     findUnique: vi.fn(),
   },
+  $queryRaw: vi.fn(),
+  $executeRaw: vi.fn(),
 }));
 
 vi.mock("@rallly/database", () => ({ prisma }));
@@ -180,6 +182,8 @@ describe("API v1 - /polls", () => {
       id: "test-user-id",
     } as never);
     mockGetSpaceMemberByEmail.mockResolvedValue(null);
+    prisma.$queryRaw.mockResolvedValue([{ count: 1 }]);
+    prisma.$executeRaw.mockResolvedValue(1);
 
     // Mock createPoll mutation
     mockCreatePoll.mockResolvedValue({
@@ -385,6 +389,52 @@ describe("API v1 - /polls", () => {
         code: "INAPPROPRIATE_CONTENT",
       });
       expect(mockCreatePoll).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("usage counting", () => {
+    const createRequest = (title: string) =>
+      app.request("/v1/polls", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${testApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          kind: "date",
+          options: [{ date: "2025-01-15" }],
+        }),
+      });
+
+    it("counts a created poll without releasing it", async () => {
+      const res = await createRequest("Team offsite");
+
+      expect(res.status).toBe(201);
+      expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+      expect(prisma.$executeRaw).not.toHaveBeenCalled();
+    });
+
+    it("releases the slot when the poll fails to save", async () => {
+      mockCreatePoll.mockRejectedValueOnce(new Error("insert failed"));
+
+      const res = await createRequest("Team offsite");
+
+      expect(res.status).toBe(500);
+      expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+      expect(prisma.$executeRaw).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not count a rejected request", async () => {
+      vi.mocked(moderateContent).mockResolvedValueOnce({
+        verdict: "flagged",
+        reason: "phishing",
+      });
+
+      const res = await createRequest("Verify your account");
+
+      expect(res.status).toBe(400);
+      expect(prisma.$queryRaw).not.toHaveBeenCalled();
     });
   });
 
