@@ -1,4 +1,5 @@
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
+import { Effect } from "effect";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import {
@@ -9,6 +10,10 @@ import {
   validator,
 } from "hono-openapi";
 import { after } from "next/server";
+import {
+  releaseApiPollSlot,
+  reserveApiPollSlot,
+} from "@/features/api-keys/quota/mutations";
 import { getAvailableConferencingProviders } from "@/features/conferencing/constants";
 import { getConnectedConferencingProviders } from "@/features/conferencing/data";
 import type { PollConferencing } from "@/features/conferencing/schema";
@@ -33,6 +38,7 @@ import {
   generateTimeSlots,
   parseStartTime,
 } from "@/lib/datetime/slot-generator";
+import { runtime } from "@/lib/effect/runtime";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError, validationHook } from "../../middleware/api-error";
@@ -591,6 +597,26 @@ app.post(
       after(() => flushPostHog());
     };
 
+    // Every API poll is counted, whether or not the quota is enforced, so
+    // usage is known before enforcement starts.
+    const createPollWithUsage = async (
+      params: Parameters<typeof createPoll>[0],
+    ) => {
+      const slot = await runtime.runPromise(
+        reserveApiPollSlot({ spaceId, now: new Date(), limit: null }),
+      );
+      try {
+        return await createPoll(params);
+      } catch (error) {
+        await runtime.runPromise(
+          releaseApiPollSlot({ spaceId, period: slot.period }).pipe(
+            Effect.ignore,
+          ),
+        );
+        throw error;
+      }
+    };
+
     if (input.kind === "date") {
       const dates = [...new Set(input.options.map((option) => option.date))];
       if (dates.length > MAX_POLL_OPTIONS) {
@@ -608,7 +634,7 @@ app.post(
         duration: 0,
       }));
 
-      const poll = await createPoll({
+      const poll = await createPollWithUsage({
         userId: organizerUserId,
         title: input.title,
         description: input.description,
@@ -679,7 +705,7 @@ app.post(
       );
     }
 
-    const poll = await createPoll({
+    const poll = await createPollWithUsage({
       userId: organizerUserId,
       title: input.title,
       description: input.description,

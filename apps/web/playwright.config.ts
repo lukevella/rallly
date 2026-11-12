@@ -25,6 +25,9 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   testDir: "./tests",
+  // Aliases `server-only` the way the Vitest config does, so specs can call
+  // mutations directly against the test database.
+  tsconfig: "./tests/tsconfig.json",
   // Smoke specs run against the production Docker image via
   // playwright.smoke.config.ts, not the dev/test server.
   testIgnore: "**/smoke/**",
