@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { MODERATION_AI_FAILURE_REASON } from "./constants";
 import { classifyContent } from "./service";
 
 // Calls the live model, so it only runs on request:
@@ -69,6 +70,7 @@ describe.skipIf(!runEval)("classifyContent", () => {
     "allows %s",
     async (_, text) => {
       const result = await classifyContent(text);
+      expect(result.reason).not.toBe(MODERATION_AI_FAILURE_REASON);
       expect(result, result.reason).toMatchObject({ verdict: "safe" });
     },
     60_000,

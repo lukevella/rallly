@@ -3,6 +3,7 @@ import "server-only";
 import { openai } from "@ai-sdk/openai";
 import { createLogger } from "@rallly/logger";
 import { generateText } from "ai";
+import { MODERATION_AI_FAILURE_REASON } from "./constants";
 import type { ModerationResult, ModerationVerdict } from "./types";
 
 const logger = createLogger("moderation/ai");
@@ -69,7 +70,7 @@ export async function classifyContent(text: string): Promise<ModerationResult> {
     logger.error({ error: err }, "AI moderation failed");
     return {
       verdict: "safe",
-      reason: "AI moderation failed, defaulting to safe",
+      reason: MODERATION_AI_FAILURE_REASON,
     };
   }
 }

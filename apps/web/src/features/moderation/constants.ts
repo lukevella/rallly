@@ -9,3 +9,7 @@ export const MODERATION_STRIKE_WINDOW = "24 h";
 // account at a few cents a day. Nobody legitimate writes this many polls
 // with links, emails or phone numbers in them.
 export const MODERATION_AI_CALLS_PER_DAY = 50;
+
+// The reason on the safe verdict returned when the model call fails.
+export const MODERATION_AI_FAILURE_REASON =
+  "AI moderation failed, defaulting to safe";
