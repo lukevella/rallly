@@ -1,12 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { classifyContent } from "./service";
 
 // Calls the live model, so it only runs on request:
 // MODERATION_EVAL=true OPENAI_API_KEY=... pnpm vitest run src/features/moderation/service.test.ts
 // Run it before changing the prompt or the model. The legitimate cases are
 // shaped after polls the model wrongly flagged; the scams after real flags.
-const runEval =
-  process.env.MODERATION_EVAL === "true" && !!process.env.OPENAI_API_KEY;
+const runEval = process.env.MODERATION_EVAL === "true";
 
 const legitimate: Record<string, string> = {
   "an official government link whose text does not match": `Title:
@@ -60,6 +59,12 @@ Update your password at https://doodle-com.security-login.net/reset to keep acce
 };
 
 describe.skipIf(!runEval)("classifyContent", () => {
+  beforeAll(() => {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("MODERATION_EVAL needs OPENAI_API_KEY");
+    }
+  });
+
   it.each(Object.entries(legitimate))(
     "allows %s",
     async (_, text) => {

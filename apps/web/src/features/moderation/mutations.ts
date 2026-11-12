@@ -65,8 +65,9 @@ async function isRepeatFlag(userId: string, text: string) {
     );
     return seen ? !seen.success : false;
   } catch (error) {
+    // Unknown is not a first flag: a store fault must not count a strike.
     logger.error({ error, userId }, "Could not check for repeated content");
-    return false;
+    return null;
   }
 }
 
@@ -107,8 +108,9 @@ export async function banUserForAbuse({
 }
 
 async function recordStrike(userId: string, text: string) {
-  if (await isRepeatFlag(userId, text)) {
-    return { count: null, banned: false, repeat: true };
+  const repeat = await isRepeatFlag(userId, text);
+  if (repeat !== false) {
+    return { count: null, banned: false, repeat: repeat === true };
   }
   let strike: Awaited<ReturnType<NonNullable<typeof strikes>["limit"]>> | null;
   try {
