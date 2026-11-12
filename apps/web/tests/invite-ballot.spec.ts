@@ -95,11 +95,20 @@ async function addParticipant(page: Page, name: string) {
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByLabel("Name").fill(name);
   await page.getByRole("button", { name: "Confirm" }).click();
-  await expect(page.getByText(`Thanks, ${name}`)).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: `Thanks, ${name}`,
+    }),
+  ).toBeVisible();
+}
+
+/** The message that takes the place of the save buttons, not its announcement. */
+function changesSaved(page: Page) {
+  return page.locator("p").filter({ hasText: "Changes saved" });
 }
 
 function responseBar(page: Page) {
-  return page.getByRole("region", { name: "Response" });
+  return page.getByRole("region", { name: "Status" });
 }
 
 async function freshPage(browser: Browser) {
@@ -131,25 +140,31 @@ test.describe("invite ballot", () => {
     await page.goto(
       `/invite/ballot-spec-token/vote?token=${participant.token}`,
     );
-    await expect(responseBar(page)).toContainText("Token Owner");
+    await expect(responseBar(page)).toContainText(
+      "You responded as Token Owner",
+    );
 
-    await page.getByRole("button", { name: "Edit response" }).click();
+    // Nothing to save until an answer changes.
+    const save = page.getByRole("button", { name: "Save changes" });
+    await expect(options(page).nth(1)).toBeVisible();
+    await expect(save).toHaveCount(0);
+
     const option = options(page).nth(1);
     await expect(radio(option, "No")).toBeChecked();
     await answer(option, "Yes");
     await expect(radio(option, "Yes")).toBeChecked();
-    await page.getByRole("button", { name: "Save changes" }).first().click();
-    await expect(
-      page.getByRole("button", { name: "Edit response" }),
-    ).toBeVisible();
+    await save.click();
+    await expect(changesSaved(page)).toBeVisible();
+    await expect(save).toHaveCount(0);
 
     await page.reload();
-    await page.getByRole("button", { name: "Edit response" }).click();
     await expect(radio(options(page).nth(1), "Yes")).toBeChecked();
+    // The notice is for the moment of saving, not for a later visit.
+    await expect(changesSaved(page)).toHaveCount(0);
     await context.close();
   });
 
-  test("cancelling an edit restores the saved answers and counts", async ({
+  test("discarding changes restores the saved answers and counts", async ({
     browser,
   }) => {
     await seedPoll({ id: "ballot-spec-cancel" });
@@ -158,18 +173,18 @@ test.describe("invite ballot", () => {
     await addParticipant(page, "Canceller");
     await page.reload();
 
-    await page.getByRole("button", { name: "Edit response" }).click();
     const tally = options(page).nth(1).getByTestId("ballot-tally");
-    await expect(tally).toContainText("0");
+    await expect(tally).toContainText("0 available");
     await answer(options(page).nth(1), "Yes");
-    await expect(tally).toContainText("1");
+    await expect(tally).toContainText("1 available");
 
-    await responseBar(page).getByRole("button", { name: "Cancel" }).click();
-    await page.getByRole("button", { name: "Edit response" }).click();
+    const discard = page.getByRole("button", { name: "Discard" });
+    await discard.click();
+    await expect(discard).toHaveCount(0);
     await expect(radio(options(page).nth(1), "No")).toBeChecked();
     await expect(
       options(page).nth(1).getByTestId("ballot-tally"),
-    ).toContainText("0");
+    ).toContainText("0 available");
     await context.close();
   });
 
@@ -185,7 +200,7 @@ test.describe("invite ballot", () => {
     const rename = page.getByRole("dialog", { name: "Change name" });
     await rename.getByLabel("Name").fill("Renamed");
     await rename.getByRole("button", { name: "Save" }).click();
-    await expect(responseBar(page)).toContainText("Renamed");
+    await expect(responseBar(page)).toContainText("You responded as Renamed");
 
     await page.getByRole("button", { name: "More options" }).click();
     await page.getByRole("menuitem", { name: "Delete response" }).click();
@@ -193,12 +208,12 @@ test.describe("invite ballot", () => {
       .getByRole("dialog", { name: "Delete your answers?" })
       .getByRole("button", { name: "Delete" })
       .click();
-    await expect(responseBar(page)).toHaveCount(0);
+    await expect(responseBar(page)).toContainText("When can you make it?");
     await expect(page.getByRole("button", { name: "Continue" })).toBeVisible();
     await context.close();
   });
 
-  test("the page itself never scrolls while editing in the card view", async ({
+  test("the page itself never scrolls with unsaved changes in the card view", async ({
     browser,
   }) => {
     await seedPoll({ id: "ballot-spec-scroll" });
@@ -209,9 +224,9 @@ test.describe("invite ballot", () => {
     await page.goto("/invite/ballot-spec-scroll/vote");
     await addParticipant(page, "Scroller");
     await page.reload();
-    await page.getByRole("button", { name: "Edit response" }).click();
+    await answer(options(page).nth(1), "Yes");
     await expect(
-      responseBar(page).getByRole("button", { name: "Cancel" }),
+      page.getByRole("button", { name: "Save changes" }),
     ).toBeVisible();
 
     const overflow = await page.evaluate(
@@ -221,12 +236,42 @@ test.describe("invite ballot", () => {
     await context.close();
   });
 
+  test("shortcuts are only for a first response", async ({ browser }) => {
+    await seedPoll({ id: "ballot-spec-shortcut" });
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-shortcut/vote");
+    const yesToAll = page.getByRole("button", { name: "Yes to all" });
+    await expect(yesToAll).toBeVisible();
+
+    await addParticipant(page, "Shortcutter");
+    await page.reload();
+    await expect(options(page).first()).toBeVisible();
+    await expect(yesToAll).toHaveCount(0);
+    await context.close();
+  });
+
+  test("the thanks gives way to the saved response", async ({ browser }) => {
+    await seedPoll({ id: "ballot-spec-thanks" });
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-thanks/vote");
+    await addParticipant(page, "Thanked");
+    // The thanks stands in for the form and the bar until it is left.
+    await expect(responseBar(page)).toHaveCount(0);
+
+    await page.getByRole("button", { name: "View or change response" }).click();
+    await expect(responseBar(page)).toContainText("You responded as Thanked");
+    await expect(radio(options(page).nth(0), "Yes")).toBeChecked();
+    await context.close();
+  });
+
   test("hide participants still shows counts", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-hidden", hideParticipants: true });
     const { context, page } = await freshPage(browser);
     await page.goto("/invite/ballot-spec-hidden/vote");
 
-    await expect(page.getByTestId("ballot-tally").first()).toContainText("1");
+    await expect(page.getByTestId("ballot-tally").first()).toContainText(
+      "1 available",
+    );
     await expect(page.getByText("Other Person")).toHaveCount(0);
     await context.close();
   });

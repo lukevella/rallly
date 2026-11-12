@@ -30,10 +30,16 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import {
+  CalendarCheckIcon,
   CheckIcon,
+  CircleCheckIcon,
+  CircleDashedIcon,
   CircleHelpIcon,
+  CircleXIcon,
   ClockIcon,
   GlobeIcon,
+  HistoryIcon,
+  LockIcon,
   MapPinIcon,
   MoreHorizontalIcon,
   PencilIcon,
@@ -188,12 +194,13 @@ export function AccessibleBallot({
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
   const formMessageRef = React.useRef<HTMLParagraphElement>(null);
   const formHeadingRef = React.useRef<HTMLHeadingElement>(null);
-  const resultHeadingRef = React.useRef<HTMLHeadingElement>(null);
-  const editButtonRef = React.useRef<HTMLButtonElement>(null);
-  // The thanks is only for the moment a first response is saved. A later visit,
-  // a refresh or a saved edit goes to the answers under the response bar.
-  const [justSaved, setJustSaved] = React.useState(false);
-  const previousMode = React.useRef(state.mode);
+  const noticeHeadingRef = React.useRef<HTMLElement>(null);
+  const thanksHeadingRef = React.useRef<HTMLHeadingElement>(null);
+  // What was just saved, said above the answers until the page is left: a first
+  // response or a change to one. A later visit has only the response bar.
+  const [justSaved, setJustSaved] = React.useState<
+    "response" | "changes" | null
+  >(null);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const [sidebarScrolls, setSidebarScrolls] = React.useState(false);
 
@@ -291,7 +298,7 @@ export function AccessibleBallot({
       },
       { duration: 320, easing: "cubic-bezier(0.77, 0, 0.175, 1)" },
     );
-  }, [onDetailsStep]);
+  }, [onDetailsStep, justSaved]);
   const previousStep = React.useRef(onDetailsStep);
   if (onDetailsStep && state.mode !== "new") {
     setOnDetailsStep(false);
@@ -311,19 +318,6 @@ export function AccessibleBallot({
       target?.focus();
     } else if (state.mode === "new") formHeadingRef.current?.focus();
   }, [onDetailsStep, state.mode]);
-
-  // Moving between answering and the saved result replaces the content the
-  // reader is on, so focus goes to the heading that names the new content.
-  React.useEffect(() => {
-    if (previousMode.current === state.mode) return;
-    previousMode.current = state.mode;
-    // Without scrolling: pressing Edit partway down a long poll leaves it in place.
-    const target =
-      state.mode === "locked"
-        ? (resultHeadingRef.current ?? editButtonRef.current)
-        : formHeadingRef.current;
-    target?.focus({ preventScroll: true });
-  }, [state.mode]);
 
   const backToAvailability = () => {
     if (stepExit) return;
@@ -419,18 +413,99 @@ export function AccessibleBallot({
     (response) => response.id === state.activeResponseId,
   );
   const isNew = state.mode === "new";
-  const hasResponded = state.mode === "locked" && ballot.canRespond && active;
-  const showThanks = hasResponded && justSaved ? hasResponded : null;
-  const compactOnPhone = onDetailsStep || Boolean(showThanks);
-  const hasChanges =
-    state.mode === "edit" &&
-    ballot.options.some(
-      (option) =>
-        (state.answers[option.id] ?? "no") !==
-        (active?.votes[option.id] ?? "no"),
-    );
-  const noChangesToSave = state.mode === "edit" && !hasChanges;
+  const hasChanges = state.hasChanges;
+  // Not while there are changes to save: it would say saved over unsaved answers.
+  const notice = active && ballot.canRespond && !hasChanges ? justSaved : null;
+  // A first response is thanked in place of the form, until the viewer goes
+  // back to it. The thanks is as short as the details step, so the card and a
+  // phone's page are laid out the same way for both.
+  const showThanks = notice === "response";
+  const compactCard = onDetailsStep || showThanks;
+  const showShortcuts = isNew && votable.length > 1;
+  const showFooter =
+    isNew || hasChanges || Boolean(saveError) || notice === "changes";
+  // The status bar heads the answers: where the poll stands, and where the
+  // viewer's response stands in it. One line, one icon, one size.
+  const hasBar = !compactCard;
+  const barState = !ballot.canRespond
+    ? poll.status === "scheduled"
+      ? "scheduled"
+      : poll.status === "canceled"
+        ? "canceled"
+        : "closed"
+    : hasChanges
+      ? "unsaved"
+      : active
+        ? "saved"
+        : past.ready && votable.length === 0
+          ? "passed"
+          : "new";
+  const barMuted = "text-muted-foreground";
+  const barGreen = "text-green-600 dark:text-green-400";
+  // Colour is on the icon alone, and the words always say the same thing.
+  const barIcon = {
+    new: { Icon: CircleDashedIcon, className: barMuted },
+    saved: { Icon: CircleCheckIcon, className: barGreen },
+    unsaved: {
+      Icon: PencilIcon,
+      className: "text-amber-600 dark:text-amber-400",
+    },
+    passed: { Icon: HistoryIcon, className: barMuted },
+    closed: { Icon: LockIcon, className: barMuted },
+    scheduled: { Icon: CalendarCheckIcon, className: barGreen },
+    canceled: {
+      Icon: CircleXIcon,
+      className: "text-rose-600 dark:text-rose-400",
+    },
+  }[barState];
+  const compactOnPhone = compactCard;
+  const noChangesToSave = !isNew && !hasChanges;
   const hasUnsavedAnswers = isNew ? answeredCount > 0 : hasChanges;
+
+  // Saving and discarding both take away the button that was pressed, and a
+  // first response replaces the whole step. Focus goes to what names the result,
+  // without scrolling, and stays put when it is still on something in the page.
+  // A shortcut says what it did, which is not to be talked over.
+  const shortcutSpoke = React.useRef(false);
+  const settled = React.useRef({ mode: state.mode, notice, hasChanges });
+  React.useEffect(() => {
+    const before = settled.current;
+    settled.current = { mode: state.mode, notice, hasChanges };
+    const spoke = shortcutSpoke.current;
+    shortcutSpoke.current = false;
+    if (!before.hasChanges && hasChanges && !spoke) {
+      // Once, when the first change is made: the buttons to save or discard
+      // have appeared after the options.
+      setStatus(
+        t("voteUnsavedChanges", {
+          defaultValue:
+            "You have unsaved changes. Save or discard them after the options.",
+        }),
+      );
+    }
+    const modeChanged = before.mode !== state.mode;
+    const resolved = before.hasChanges && !hasChanges;
+    const noticeShown = !before.notice && Boolean(notice);
+    if (!modeChanged && !resolved && !noticeShown) return;
+    const focused = document.activeElement;
+    if (
+      !modeChanged &&
+      focused &&
+      focused !== document.body &&
+      focused !== formHeadingRef.current
+    ) {
+      return;
+    }
+    const target =
+      state.mode === "new"
+        ? formHeadingRef.current
+        : ((notice === "response"
+            ? thanksHeadingRef.current
+            : notice === "changes"
+              ? noticeHeadingRef.current
+              : null) ?? formHeadingRef.current);
+    target?.focus({ preventScroll: true });
+  }, [state.mode, notice, hasChanges, t]);
   React.useEffect(() => {
     if (!hasUnsavedAnswers) return;
     const warn = (event: BeforeUnloadEvent) => event.preventDefault();
@@ -460,6 +535,7 @@ export function AccessibleBallot({
   // mistake costs nothing. Switching between them keeps the original answers.
   const markAll = (vote: "yes" | "no") => {
     if (pending) return;
+    shortcutSpoke.current = true;
     if (allMarked(vote)) {
       if (!answersBeforeShortcut) return;
       const before = answersBeforeShortcut;
@@ -612,8 +688,9 @@ export function AccessibleBallot({
       fail([], errorMessage(result.reason));
       return;
     }
+    setAnswersBeforeShortcut(null);
+    setJustSaved(isNew ? "response" : "changes");
     if (isNew) {
-      setJustSaved(true);
       // poll_response_submit is captured on the server under the guest's user
       // id, so it can't be joined to the browser's $pageview.
       posthog?.capture("poll_response:form_submit", {
@@ -622,8 +699,20 @@ export function AccessibleBallot({
       });
     }
     setStatus(
-      t("screenReaderAnswersSaved", {
-        defaultValue: "Your answers are saved",
+      isNew
+        ? t("voteNoticeResponseSaved", { defaultValue: "Response saved" })
+        : t("voteNoticeChangesSaved", { defaultValue: "Changes saved" }),
+    );
+  };
+
+  const discardChanges = () => {
+    setErrors([]);
+    setSaveError(null);
+    setAnswersBeforeShortcut(null);
+    state.discardChanges();
+    setStatus(
+      t("voteChangesDiscarded", {
+        defaultValue: "Your saved answers are back",
       }),
     );
   };
@@ -812,6 +901,7 @@ export function AccessibleBallot({
                   return;
                 }
                 deleteDialog.dismiss();
+                setJustSaved(null);
                 setStatus(
                   t("screenReaderAnswersDeleted", {
                     defaultValue: "Your answers were deleted",
@@ -956,916 +1046,914 @@ export function AccessibleBallot({
     <BallotTimeControls
       timeZone={timeZoneNote}
       timeFormat={timeFormatSwitcher}
-      belowResponseBar={Boolean(active && ballot.canRespond && !showThanks)}
     />
   ) : null;
 
-  const startEditing = () => {
-    setJustSaved(false);
-    state.startEditing();
-    setStatus(
-      t("screenReaderEditingResponse", {
-        defaultValue: "Editing your response",
-      }),
-    );
-  };
-  const saveChangesButton = (
-    <Button
-      type="submit"
-      form="ballot-form"
-      variant="primary"
-      className={cn(
-        "rounded-xl",
-        noChangesToSave && "cursor-not-allowed opacity-50",
-      )}
-      aria-disabled={pending || noChangesToSave || undefined}
-      aria-describedby={noChangesToSave ? "no-changes" : undefined}
-    >
-      {pending ? (
-        <Trans i18nKey="screenReaderSaving" defaults="Saving" />
-      ) : (
-        <Trans i18nKey="screenReaderSaveChanges" defaults="Save changes" />
-      )}
-    </Button>
-  );
-
   return (
-    <>
-      {/* Above the columns, so it stays put while either of them scrolls. Editing
-          only changes what is inside it, so nothing on the page moves. */}
-      {active && ballot.canRespond && !showThanks ? (
-        <section
-          data-invite-responded
-          aria-label={t("response", { defaultValue: "Response" })}
-          className="sticky top-0 z-30 flex h-13 shrink-0 items-center justify-between gap-3 border-b bg-white px-4 text-sm lg:static lg:px-6 dark:bg-muted"
-        >
-          {state.mode === "edit" ? (
-            <>
-              {saveError || (errorFor("votes") && answeredCount === 0) ? (
-                <p
-                  ref={formMessageRef}
-                  tabIndex={-1}
-                  className="min-w-0 truncate text-rose-700 outline-none dark:text-rose-400"
-                >
-                  {saveError ?? errorFor("votes")?.message}
-                </p>
-              ) : (
-                <p className="min-w-0 truncate">
-                  <span className="max-sm:hidden">
-                    <Trans
-                      i18nKey="screenReaderEditingResponse"
-                      defaults="Editing your response"
-                    />
-                  </span>
-                  <span className="sm:hidden">
-                    <Trans i18nKey="responseBarEditing" defaults="Editing" />
-                  </span>
-                </p>
-              )}
-              <div className="flex shrink-0 gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="rounded-xl"
-                  onClick={() => {
-                    setErrors([]);
-                    setSaveError(null);
-                    state.stopEditing();
-                  }}
-                >
-                  <Trans i18nKey="cancel" defaults="Cancel" />
-                </Button>
-                {saveChangesButton}
-              </div>
-              {noChangesToSave ? (
-                <p id="no-changes" className="sr-only">
-                  <Trans
-                    i18nKey="screenReaderNoChanges"
-                    defaults="No changes to save"
-                  />
-                </p>
-              ) : null}
-            </>
-          ) : (
-            <>
-              <div className="flex min-w-0 items-center gap-2">
-                <span aria-hidden="true" className="flex shrink-0">
-                  <OptimizedAvatarImage size="sm" name={active.name} />
-                </span>
-                <p className="min-w-0 truncate">
-                  <Trans
-                    i18nKey="screenReaderAlreadyResponded"
-                    defaults="You've already responded as {name}"
-                    values={{ name: active.name }}
-                  />
-                </p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    render={
-                      <Button
-                        aria-label={t("moreOptions", {
-                          defaultValue: "More options",
-                        })}
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-full"
-                      />
-                    }
-                  >
-                    <MoreHorizontalIcon />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setDetailsError(null);
-                        detailsDialog.trigger();
-                      }}
-                    >
-                      <UserRoundPenIcon />
-                      <Trans
-                        i18nKey="screenReaderChangeName"
-                        defaults="Change name"
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      variant="destructive"
-                      onClick={() => {
-                        setDeleteError(null);
-                        deleteDialog.trigger();
-                      }}
-                    >
-                      <TrashIcon />
-                      <Trans
-                        i18nKey="screenReaderDeleteResponse"
-                        defaults="Delete response"
-                      />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button
-                  ref={editButtonRef}
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                  aria-label={t("screenReaderEditResponse", {
-                    defaultValue: "Edit response",
-                  })}
-                  onClick={startEditing}
-                >
-                  <PencilIcon />
-                </Button>
-              </div>
-            </>
-          )}
-        </section>
-      ) : null}
-      <main
-        ref={mainRef}
-        id="main-content"
-        tabIndex={-1}
+    <main
+      ref={mainRef}
+      id="main-content"
+      tabIndex={-1}
+      // Read by the card, which is only as tall as this step needs.
+      data-invite-details={compactCard ? "" : undefined}
+      className={cn(
+        "flex w-full flex-1 flex-col gap-y-8 px-4 pt-4 lg:grid lg:min-h-0 lg:grid-rows-[minmax(0,1fr)] lg:items-stretch lg:px-0 lg:pt-0",
+        // The card takes this width: the full one for the answers, and only what
+        // the form or the thanks need after that.
+        compactCard
+          ? "lg:w-auto lg:grid-cols-[20rem_28rem] xl:grid-cols-[24rem_28rem]"
+          : "lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
+        compactOnPhone ? "max-lg:gap-y-4" : "max-lg:gap-y-6",
+      )}
+    >
+      <div
+        ref={sidebarRef}
+        // A panel that scrolls has to be reachable from the keyboard.
+        {...(sidebarScrolls
+          ? {
+              tabIndex: 0,
+              role: "group",
+              "aria-label": t("screenReaderDetailsHeading", {
+                defaultValue: "Poll details",
+              }),
+            }
+          : {})}
         className={cn(
-          "flex w-full flex-1 flex-col gap-y-8 px-4 pt-4 lg:grid lg:min-h-0 lg:grid-rows-[minmax(0,1fr)] lg:items-stretch lg:px-0 lg:pt-0",
-          // The card takes this width: the full one for the answers, and only what
-          // the form or the thanks need after that.
-          compactOnPhone
-            ? "lg:w-auto lg:grid-cols-[20rem_36rem] xl:grid-cols-[24rem_36rem]"
-            : "lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
-          compactOnPhone && "max-lg:gap-y-4",
+          "flex flex-col gap-6 focus-visible:outline-2 focus-visible:outline-ring lg:relative lg:min-h-0 lg:overflow-y-auto lg:p-6",
+          // Below lg the rest would push the card or the thanks below the fold, so
+          // only the branding stays there. From lg all of it stays beside every step.
+          !lockup && compactOnPhone && "max-lg:hidden",
+          !lockup && stepMotion,
+          "lg:animate-none",
         )}
       >
+        <div>
+          {lockup ?? (
+            <h1 className="text-balance font-semibold text-xl tracking-tight max-lg:hidden">
+              {poll.title}
+            </h1>
+          )}
+          {/* From lg it stays beside every step. Below lg it goes with the rest
+                of the details, so the form or the thanks starts the page. */}
+          <div className={cn(compactOnPhone && "max-lg:hidden")}>
+            {description}
+          </div>
+        </div>
+
         <div
-          ref={sidebarRef}
-          // A panel that scrolls has to be reachable from the keyboard.
-          {...(sidebarScrolls
-            ? {
-                tabIndex: 0,
-                role: "group",
-                "aria-label": t("screenReaderDetailsHeading", {
-                  defaultValue: "Poll details",
-                }),
-              }
-            : {})}
           className={cn(
-            "flex flex-col gap-6 focus-visible:outline-2 focus-visible:outline-ring lg:relative lg:min-h-0 lg:overflow-y-auto lg:p-6",
-            // Below lg the rest would push the card or the thanks below the fold, so
-            // only the branding stays there. From lg all of it stays beside every step.
-            !lockup && compactOnPhone && "max-lg:hidden",
-            !lockup && stepMotion,
-            "lg:animate-none",
+            "text-sm has-[dl:empty]:hidden",
+            compactOnPhone && "max-lg:hidden",
           )}
         >
-          <div>
-            {lockup ?? (
-              <h1 className="text-balance font-semibold text-xl tracking-tight max-lg:hidden">
-                {poll.title}
-              </h1>
-            )}
-            {/* Read by the time someone confirms, so it folds away there. */}
-            <div
-              className={cn(
-                "grid transition-[grid-template-rows,opacity,visibility] duration-200 ease-out-ui motion-reduce:transition-none",
-                compactOnPhone && "max-lg:hidden",
-                onDetailsStep
-                  ? "invisible grid-rows-[0fr] opacity-0"
-                  : "visible grid-rows-[1fr] opacity-100",
-              )}
-            >
-              <div className="min-h-0 overflow-hidden">{description}</div>
-            </div>
-          </div>
+          <h2 className="sr-only">
+            <Trans
+              i18nKey="screenReaderDetailsHeading"
+              defaults="Poll details"
+            />
+          </h2>
+          {/* Read in document order; `order` only arranges them on screen. */}
+          <dl className="flex flex-col gap-2.5 empty:hidden">{eventFacts}</dl>
+        </div>
 
+        {/* A visual key for the icon-only answers; the radios name themselves. */}
+        <div
+          aria-hidden="true"
+          className={cn(compactOnPhone && "max-lg:hidden")}
+        >
+          <BallotResponseOptions
+            allowTentativeVotes={ballot.allowTentativeVotes}
+          />
+        </div>
+        {/* Signs off the sidebar. */}
+        {poll.user ? (
           <div
             className={cn(
-              "text-sm has-[dl:empty]:hidden",
+              "flex items-center gap-3 text-sm lg:mt-auto",
               compactOnPhone && "max-lg:hidden",
             )}
           >
-            <h2 className="sr-only">
-              <Trans
-                i18nKey="screenReaderDetailsHeading"
-                defaults="Poll details"
+            <span aria-hidden="true" className="flex shrink-0">
+              <OptimizedAvatarImage
+                size="lg"
+                src={poll.user.image ?? undefined}
+                name={poll.user.name}
               />
-            </h2>
-            {/* Read in document order; `order` only arranges them on screen. */}
-            <dl className="flex flex-col gap-2.5 empty:hidden">{eventFacts}</dl>
-          </div>
-
-          {/* A visual key for the icon-only answers; the radios name themselves. */}
-          <div
-            aria-hidden="true"
-            className={cn(compactOnPhone && "max-lg:hidden")}
-          >
-            <BallotResponseOptions
-              allowTentativeVotes={ballot.allowTentativeVotes}
-            />
-          </div>
-          {/* Signs off the sidebar. */}
-          {poll.user ? (
-            <div
-              className={cn(
-                "flex items-center gap-3 text-sm lg:mt-auto",
-                compactOnPhone && "max-lg:hidden",
-              )}
-            >
-              <span aria-hidden="true" className="flex shrink-0">
-                <OptimizedAvatarImage
-                  size="lg"
-                  src={poll.user.image ?? undefined}
-                  name={poll.user.name}
-                />
-              </span>
-              <div className="min-w-0">
-                <p className="truncate font-medium">{poll.user.name}</p>
-                <p className="text-muted-foreground text-xs">
-                  <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
-                </p>
-              </div>
-            </div>
-          ) : null}
-        </div>
-
-        {/* Level with the top of the sidebar. Beside a title on its own, the extra
-          pixel lines up their baselines. */}
-        <div
-          ref={answersRef}
-          data-invite-answers
-          // Results may have nothing to tab to, and not every browser lets the
-          // keyboard scroll a panel without a stop of its own.
-          {...(answersScroll && !state.canChange
-            ? {
-                tabIndex: 0,
-                role: "group",
-                "aria-label": t("voteResultsPanelLabel", {
-                  defaultValue: "Results",
-                }),
-              }
-            : {})}
-          className={cn(
-            "mx-auto flex w-full min-w-0 flex-col focus-visible:outline-2 focus-visible:outline-ring focus-visible:-outline-offset-2 lg:relative lg:min-h-0 lg:overflow-y-auto lg:overscroll-none lg:px-8",
-            "lg:col-start-2 lg:border-l",
-            showThanks && "max-lg:flex-1",
-            showThanks
-              ? undefined
-              : compactOnPhone || lockup
-                ? "lg:pt-6"
-                : "lg:pt-[calc(1.5rem+1px)]",
-          )}
-        >
-          {/* Always in the page, so readers register it before it has anything to say. */}
-          <output className="sr-only">{status}</output>
-
-          {/* The times depend on the viewer's clock and zone, so they wait for the
-              browser. The room they will take stops the card jumping when they land. */}
-          {!past.ready ? (
-            <output
-              className="flex justify-center pt-8"
-              style={{ minHeight: `${ballot.options.length * 3.5 + 4}rem` }}
-            >
-              <Spinner />
-              <span className="sr-only">
-                <Trans
-                  i18nKey="screenReaderLoading"
-                  defaults="Loading the options"
-                />
-              </span>
-            </output>
-          ) : showThanks ? (
-            <section
-              aria-labelledby="thanks-heading"
-              className="flex flex-1 flex-col items-center justify-center py-8 text-center"
-            >
-              <SuccessCheck state="in">
-                <SuccessCheckIcon className="size-14" />
-              </SuccessCheck>
-              <h2
-                id="thanks-heading"
-                ref={resultHeadingRef}
-                tabIndex={-1}
-                className="mt-6 text-balance font-semibold text-xl tracking-tight outline-none"
-              >
-                <Trans
-                  i18nKey="screenReaderThanksHeading"
-                  defaults="Thanks, {name}"
-                  values={{ name: showThanks.name }}
-                />
-              </h2>
-              <p className="mt-2 text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="newParticipantDialogSuccessDescription"
-                  defaults="The organizer can now see your availability."
-                />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate font-medium">{poll.user.name}</p>
+              <p className="text-muted-foreground text-xs">
+                <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
               </p>
-              <div className="mt-6 flex flex-wrap justify-center gap-2">
-                <Button
-                  type="button"
-                  className="rounded-xl"
-                  onClick={startEditing}
-                >
-                  <Trans
-                    i18nKey="screenReaderEditResponse"
-                    defaults="Edit response"
-                  />
-                </Button>
-              </div>
-              {showCreatePollPrompt ? (
-                <div className="mt-8 flex flex-col items-center">
-                  <p className="text-muted-foreground text-sm">
-                    <Trans
-                      i18nKey="newParticipantDialogCreatePollPrompt"
-                      defaults="Need to schedule something yourself?"
-                    />
-                  </p>
-                  <Link
-                    href="/new"
-                    className={buttonVariants({ variant: "link" })}
-                    onClick={() => {
-                      posthog?.capture(
-                        "invite_confirmation:create_poll_link_click",
-                        {
-                          pollId: poll.id,
-                          spaceId: poll.spaceId,
-                          tier: poll.space?.tier,
-                          $groups: {
-                            poll: poll.id,
-                            ...(poll.spaceId ? { space: poll.spaceId } : {}),
-                          },
-                        },
-                      );
-                    }}
-                  >
-                    <Trans
-                      i18nKey="newParticipantDialogCreatePoll"
-                      defaults="Create your own poll"
-                    />
-                  </Link>
-                </div>
-              ) : null}
-            </section>
-          ) : !state.canChange ? (
-            <section
-              aria-labelledby="result-heading"
-              className={cn(
-                "flex flex-col",
-                // With the heading hidden, what follows starts the section.
-                hasResponded && "[&>#result-heading+*]:mt-0",
-              )}
-            >
-              <h2
-                id="result-heading"
-                tabIndex={-1}
-                className={cn(
-                  "min-w-0 font-semibold text-lg tracking-tight outline-none",
-                  hasResponded && "sr-only",
-                )}
-              >
-                {hasResponded ? (
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Level with the top of the sidebar. Beside a title on its own, the extra
+          pixel lines up their baselines. */}
+      <div
+        ref={answersRef}
+        data-invite-answers
+        // Results may have nothing to tab to, and not every browser lets the
+        // keyboard scroll a panel without a stop of its own.
+        {...(answersScroll && !state.canChange
+          ? {
+              tabIndex: 0,
+              role: "group",
+              "aria-label": t("voteResultsPanelLabel", {
+                defaultValue: "Results",
+              }),
+            }
+          : {})}
+        className={cn(
+          "mx-auto flex w-full min-w-0 flex-col focus-visible:outline-2 focus-visible:outline-ring focus-visible:-outline-offset-2 lg:relative lg:min-h-0 lg:overflow-y-auto lg:overscroll-none lg:px-8",
+          "lg:col-start-2 lg:border-l",
+          // On a phone the details sit above, and a rule across the screen
+          // sets the options apart from them.
+          !compactOnPhone &&
+            "max-lg:-mx-4 max-lg:w-auto max-lg:border-t max-lg:px-4",
+          !compactOnPhone && !hasBar && "max-lg:pt-6",
+          showThanks && "max-lg:flex-1",
+          showThanks || hasBar
+            ? undefined
+            : onDetailsStep || lockup
+              ? "lg:pt-6"
+              : "lg:pt-[calc(1.5rem+1px)]",
+        )}
+      >
+        {/* The header of the answers, which stays put as they scroll under it.
+              It only says whose response this is: saving happens in the footer. */}
+        {hasBar ? (
+          <section
+            data-invite-status={barState}
+            aria-label={t("voteStatusLabel", { defaultValue: "Status" })}
+            // Edge to edge across the panel, whose side padding it cancels.
+            className="sticky top-0 z-30 -mx-4 mb-6 flex h-13 shrink-0 items-center justify-between gap-3 border-b bg-card px-4 text-sm lg:-mx-8 lg:px-8"
+          >
+            <div className="flex min-w-0 items-center gap-2.5">
+              <barIcon.Icon
+                aria-hidden="true"
+                className={cn("size-5 shrink-0", barIcon.className)}
+              />
+              <p className="min-w-0 truncate font-medium">
+                {barState === "new" ? (
                   <Trans
                     i18nKey="screenReaderFormHeading"
                     defaults="When can you make it?"
                   />
+                ) : barState === "saved" ? (
+                  <Trans
+                    i18nKey="voteStatusRespondedAs"
+                    defaults="You responded as {name}"
+                    values={{ name: active?.name }}
+                  />
+                ) : barState === "unsaved" ? (
+                  <Trans
+                    i18nKey="voteStatusUnsaved"
+                    defaults="Unsaved changes"
+                  />
+                ) : barState === "passed" ? (
+                  <Trans
+                    i18nKey="voteStatusPassed"
+                    defaults="These times have passed"
+                  />
+                ) : barState === "scheduled" ? (
+                  poll.event ? (
+                    <Trans
+                      i18nKey="voteStatusScheduledFor"
+                      defaults="Scheduled for <date></date>"
+                      components={{
+                        date: (
+                          <EventDate
+                            value={poll.event.start}
+                            allDay={poll.event.duration === 0}
+                            timeZone={poll.timeZone}
+                            preset="weekdayMonthDay"
+                          />
+                        ),
+                      }}
+                    />
+                  ) : (
+                    <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
+                  )
+                ) : barState === "canceled" ? (
+                  <Trans
+                    i18nKey="voteStatusCanceled"
+                    defaults="This poll was canceled"
+                  />
                 ) : active ? (
                   <Trans
-                    i18nKey="screenReaderSavedHeading"
-                    defaults="{name}, your answers are saved"
+                    i18nKey="voteStatusClosedResponded"
+                    defaults="Closed. You responded as {name}"
                     values={{ name: active.name }}
                   />
-                ) : poll.status === "scheduled" ? (
-                  <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
                 ) : (
                   <Trans
-                    i18nKey="pollClosedDescription"
-                    defaults="No more responses are being accepted."
+                    i18nKey="voteStatusClosed"
+                    defaults="This poll is closed"
                   />
                 )}
+              </p>
+            </div>
+            {/* Only while the response can still be changed. */}
+            {active && ballot.canRespond ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      aria-label={t("moreOptions", {
+                        defaultValue: "More options",
+                      })}
+                      variant="ghost"
+                      size="icon"
+                      className="shrink-0 rounded-full"
+                    />
+                  }
+                >
+                  <MoreHorizontalIcon />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setDetailsError(null);
+                      detailsDialog.trigger();
+                    }}
+                  >
+                    <UserRoundPenIcon />
+                    <Trans
+                      i18nKey="screenReaderChangeName"
+                      defaults="Change name"
+                    />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => {
+                      setDeleteError(null);
+                      deleteDialog.trigger();
+                    }}
+                  >
+                    <TrashIcon />
+                    <Trans
+                      i18nKey="screenReaderDeleteResponse"
+                      defaults="Delete response"
+                    />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
+          </section>
+        ) : null}
+        {/* Always in the page, so readers register it before it has anything to say. */}
+        <output className="sr-only">{status}</output>
+
+        {/* The times depend on the viewer's clock and zone, so they wait for the
+              browser. The room they will take stops the card jumping when they land. */}
+        {!past.ready ? (
+          <output
+            className="flex justify-center pt-8"
+            style={{ minHeight: `${ballot.options.length * 3.5 + 4}rem` }}
+          >
+            <Spinner />
+            <span className="sr-only">
+              <Trans
+                i18nKey="screenReaderLoading"
+                defaults="Loading the options"
+              />
+            </span>
+          </output>
+        ) : showThanks && active ? (
+          <section
+            aria-labelledby="thanks-heading"
+            className="flex flex-1 flex-col items-center justify-center py-8 text-center"
+          >
+            <SuccessCheck state="in">
+              <SuccessCheckIcon />
+            </SuccessCheck>
+            <h2
+              id="thanks-heading"
+              ref={thanksHeadingRef}
+              tabIndex={-1}
+              className="mt-4 text-balance font-semibold text-lg tracking-tight outline-none"
+            >
+              <Trans
+                i18nKey="voteThanksTitle"
+                defaults="Thanks, {name}"
+                values={{ name: active.name }}
+              />
+            </h2>
+            <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-sm">
+              <Trans
+                i18nKey="voteThanksBody"
+                defaults="Your response has been saved. The organizer can now see your availability."
+              />
+            </p>
+            <Button
+              type="button"
+              className="mt-6 rounded-xl"
+              onClick={() => {
+                // So the card grows back to the answers rather than jumping.
+                cardBefore.current =
+                  mainRef.current
+                    ?.closest("[data-invite-card]")
+                    ?.getBoundingClientRect() ?? null;
+                setJustSaved(null);
+                // The button is gone with the thanks, so focus goes to the form.
+                requestAnimationFrame(() =>
+                  formHeadingRef.current?.focus({ preventScroll: true }),
+                );
+              }}
+            >
+              <Trans
+                i18nKey="voteThanksBack"
+                defaults="View or change response"
+              />
+            </Button>
+            {showCreatePollPrompt ? (
+              <div className="mt-8 flex flex-col items-center">
+                <p className="text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="newParticipantDialogCreatePollPrompt"
+                    defaults="Need to schedule something yourself?"
+                  />
+                </p>
+                <Link
+                  href="/new"
+                  className={buttonVariants({ variant: "link" })}
+                  onClick={() => {
+                    posthog?.capture(
+                      "invite_confirmation:create_poll_link_click",
+                      {
+                        pollId: poll.id,
+                        spaceId: poll.spaceId,
+                        tier: poll.space?.tier,
+                        $groups: {
+                          poll: poll.id,
+                          ...(poll.spaceId ? { space: poll.spaceId } : {}),
+                        },
+                      },
+                    );
+                  }}
+                >
+                  <Trans
+                    i18nKey="newParticipantDialogCreatePoll"
+                    defaults="Create your own poll"
+                  />
+                </Link>
+              </div>
+            ) : null}
+          </section>
+        ) : !state.canChange ? (
+          <section
+            aria-labelledby="result-heading"
+            className="flex flex-col pb-6"
+          >
+            {/* The status bar says where the poll stands; this names the section. */}
+            <h2 id="result-heading" tabIndex={-1} className="sr-only">
+              <Trans i18nKey="voteResultsPanelLabel" defaults="Results" />
+            </h2>
+            {poll.status === "scheduled" && poll.event ? (
+              <p className="flex flex-wrap gap-x-2 font-medium text-sm">
+                <EventDate
+                  value={poll.event.start}
+                  allDay={poll.event.duration === 0}
+                  timeZone={poll.timeZone}
+                  preset="dateFull"
+                />
+                <EventTimeRange
+                  start={poll.event.start}
+                  end={
+                    new Date(
+                      poll.event.start.getTime() + poll.event.duration * 60_000,
+                    )
+                  }
+                  allDay={poll.event.duration === 0}
+                  timeZone={poll.timeZone}
+                  showTimeZone
+                />
+              </p>
+            ) : null}
+            {timeControls}
+            {past.ids.size > 0 && votable.length > 0 ? (
+              <p className="mt-3 flex flex-wrap gap-2">
+                <PastTimesToggle
+                  past={past}
+                  labelled={true}
+                  className="rounded-xl"
+                />
+              </p>
+            ) : null}
+            <div className="mt-5 flex flex-col gap-4">
+              {groups.map((group) => {
+                const first = optionsById.get(group.optionIds[0] ?? "");
+                return (
+                  <section key={group.key} className="flex flex-col gap-1.5">
+                    <h3 className="font-normal text-sm">
+                      <BallotTimeText
+                        value={dayHeading(first, group.key)}
+                        changed={timesChanged}
+                      />
+                    </h3>
+                    <ul className="flex flex-col gap-1.5">
+                      {group.optionIds.map((optionId) => {
+                        const option = optionsById.get(optionId);
+                        if (!option) return null;
+                        const vote = state.answers[optionId];
+                        return (
+                          <BallotBarOption
+                            key={optionId}
+                            label={rowTimeLabel(option)}
+                            timesChanged={timesChanged}
+                            fullLabel={optionLabel(option)}
+                            vote={vote}
+                            canVote={false}
+                            compact={true}
+                            isPast={false}
+                            onCycle={() => {}}
+                            count={
+                              ballot.tallies
+                                ? availableCount({
+                                    entries: ballot.tallies[optionId] ?? [],
+                                    activeResponseId: state.activeResponseId,
+                                    liveVote: vote,
+                                  })
+                                : undefined
+                            }
+                            total={total}
+                          />
+                        );
+                      })}
+                    </ul>
+                  </section>
+                );
+              })}
+            </div>
+          </section>
+        ) : (
+          <form
+            id="ballot-form"
+            noValidate
+            onSubmit={submit}
+            onAnimationEnd={(event) => {
+              if (stepExit && event.target === event.currentTarget) {
+                finishStepExit(stepExit);
+              }
+            }}
+            aria-labelledby={onDetailsStep ? "details-heading" : "form-heading"}
+            className={cn(
+              "flex flex-col",
+              stepMotion,
+              onDetailsStep && "mx-auto mb-6 w-full max-w-lg lg:flex-1",
+            )}
+          >
+            {onDetailsStep ? (
+              <div className="mb-6 border-b pb-6 text-sm has-[dl:empty]:hidden lg:hidden">
+                <dl className="flex flex-col gap-2.5 empty:hidden">
+                  {eventFacts}
+                </dl>
+              </div>
+            ) : null}
+            {/* Kept mounted but hidden, so going back loses nothing either way. */}
+            <div
+              hidden={onDetailsStep}
+              // The first visible element after the screen reader copy starts the section.
+              className={cn(
+                onDetailsStep
+                  ? "hidden"
+                  : "flex flex-col [&>#availability+*]:mt-0",
+                // The footer leaves room after the options; without it they
+                // need their own, or the last one sits on the panel's edge.
+                !showFooter && "pb-6",
+              )}
+            >
+              {/* Names the form and takes focus, for screen readers only. */}
+              <h2
+                id="form-heading"
+                ref={formHeadingRef}
+                tabIndex={-1}
+                className="sr-only"
+              >
+                {isNew ? (
+                  <Trans
+                    i18nKey="screenReaderStep"
+                    defaults="Step {step} of 2: "
+                    values={{ step: 1 }}
+                  />
+                ) : null}
+                <Trans
+                  i18nKey="screenReaderFormHeading"
+                  defaults="When can you make it?"
+                />
               </h2>
-              {poll.status === "scheduled" && poll.event ? (
-                <p className="mt-2 flex flex-wrap gap-x-2 font-medium text-sm">
-                  <EventDate
-                    value={poll.event.start}
-                    allDay={poll.event.duration === 0}
-                    timeZone={poll.timeZone}
-                    preset="dateFull"
-                  />
-                  <EventTimeRange
-                    start={poll.event.start}
-                    end={
-                      new Date(
-                        poll.event.start.getTime() +
-                          poll.event.duration * 60_000,
-                      )
-                    }
-                    allDay={poll.event.duration === 0}
-                    timeZone={poll.timeZone}
-                    showTimeZone
-                  />
-                </p>
-              ) : null}
+              <p id="availability" className="sr-only">
+                <Trans
+                  i18nKey="screenReaderInstructions"
+                  defaults="{count, plural, one {There is # option.} other {There are # options.}} Each one is a group of answers, with the date and time as its name. Anything you leave unanswered is saved as no."
+                  values={{ count: votable.length }}
+                />
+              </p>
               {timeControls}
-              {past.ids.size > 0 && votable.length > 0 ? (
-                <p className="mt-3 flex flex-wrap gap-2">
-                  <PastTimesToggle
-                    past={past}
-                    labelled={true}
-                    className="rounded-xl"
-                  />
-                </p>
+              {/* Ways to answer or show several options at once, ahead of them.
+                  The shortcuts are for a first pass: a saved response is changed
+                  a row at a time, not overwritten whole.
+                    With nothing left to answer, every past time already shows. */}
+              {showShortcuts || (past.ids.size > 0 && votable.length > 0) ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {showShortcuts ? (
+                    <>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className={cn(
+                          ballotToggleClassName,
+                          "shrink-0 rounded-full",
+                          shortcutOn("yes") && shortcutOnClassName,
+                        )}
+                        onClick={() => markAll("yes")}
+                      >
+                        {shortcutOn("yes") ? (
+                          <Trans i18nKey="undo" defaults="Undo" />
+                        ) : (
+                          <Trans
+                            i18nKey="screenReaderMarkAllYes"
+                            defaults="Yes to all"
+                          />
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className={cn(
+                          ballotToggleClassName,
+                          "shrink-0 rounded-full",
+                          shortcutOn("no") && shortcutOnClassName,
+                        )}
+                        onClick={() => markAll("no")}
+                      >
+                        {shortcutOn("no") ? (
+                          <Trans i18nKey="undo" defaults="Undo" />
+                        ) : (
+                          <Trans
+                            i18nKey="screenReaderMarkAllNo"
+                            defaults="Can't make it"
+                          />
+                        )}
+                      </Button>
+                    </>
+                  ) : null}
+                  {past.ids.size > 0 && votable.length > 0 ? (
+                    <PastTimesToggle
+                      past={past}
+                      labelled={true}
+                      className="rounded-full"
+                    />
+                  ) : null}
+                </div>
               ) : null}
+
               <div className="mt-5 flex flex-col gap-4">
                 {groups.map((group) => {
                   const first = optionsById.get(group.optionIds[0] ?? "");
                   return (
                     <section key={group.key} className="flex flex-col gap-1.5">
-                      <h3 className="font-medium text-sm">
+                      <h3 className="font-normal text-sm">
                         <BallotTimeText
                           value={dayHeading(first, group.key)}
                           changed={timesChanged}
                         />
                       </h3>
-                      <ul className="flex flex-col gap-1.5">
-                        {group.optionIds.map((optionId) => {
-                          const option = optionsById.get(optionId);
-                          if (!option) return null;
-                          const vote = state.answers[optionId];
-                          return (
-                            <BallotBarOption
-                              key={optionId}
-                              label={rowTimeLabel(option)}
-                              timesChanged={timesChanged}
-                              fullLabel={optionLabel(option)}
-                              vote={vote}
-                              canVote={false}
-                              compact={true}
-                              isPast={false}
-                              onCycle={() => {}}
-                              count={
-                                ballot.tallies
-                                  ? availableCount({
-                                      entries: ballot.tallies[optionId] ?? [],
-                                      activeResponseId: state.activeResponseId,
-                                      liveVote: vote,
-                                    })
-                                  : undefined
-                              }
-                              total={total}
-                            />
-                          );
-                        })}
-                      </ul>
+                      {group.optionIds.map((optionId) => {
+                        const option = optionsById.get(optionId);
+                        if (!option) return null;
+                        const vote = state.answers[optionId];
+                        const count = countDescription(optionId, vote);
+                        const countId = `count-${optionId}`;
+                        // Past times cannot be attended, so they only show here.
+                        const isPast = past.ids.has(optionId);
+                        const liveCount = ballot.tallies
+                          ? availableCount({
+                              entries: ballot.tallies[optionId] ?? [],
+                              activeResponseId: state.activeResponseId,
+                              liveVote: vote,
+                            })
+                          : null;
+                        return (
+                          // biome-ignore lint/a11y/useKeyWithClickEvents: a click and tap shortcut; the radios inside are the keyboard path
+                          <fieldset
+                            key={optionId}
+                            aria-describedby={count ? countId : undefined}
+                            disabled={isPast}
+                            onClick={(event) => {
+                              // A click or a tap, never for the radios themselves:
+                              // assistive technology activates those directly.
+                              if (
+                                isPast ||
+                                pending ||
+                                (event.target as Element).closest("label")
+                              )
+                                return;
+                              answerOne(
+                                optionId,
+                                nextVote(vote, ballot.allowTentativeVotes),
+                              );
+                            }}
+                            className={cn(
+                              "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-xl border bg-card py-1.5 pr-3.5 pl-3 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
+                              isPast
+                                ? "opacity-60"
+                                : [
+                                    "cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]",
+                                    rowHoverClassName[vote ?? "none"],
+                                  ],
+                              vote === "yes" &&
+                                "border-green-400 dark:border-green-500/60",
+                              vote === "ifNeedBe" &&
+                                "border-amber-400 dark:border-amber-500/60",
+                            )}
+                          >
+                            {/* The full date for readers; the day heading above carries it on screen. */}
+                            <legend className="sr-only">
+                              {isPast
+                                ? t("screenReaderPastOption", {
+                                    defaultValue: "{option} (already passed)",
+                                    option: votingLabel(option),
+                                  })
+                                : votingLabel(option)}
+                            </legend>
+                            {liveCount !== null && total > 0 ? (
+                              <span
+                                aria-hidden="true"
+                                className={cn(
+                                  "absolute inset-y-0 left-0 -z-10 transition-[width,background-color] duration-200 motion-reduce:transition-none",
+                                  vote === "yes"
+                                    ? "bg-green-100 dark:bg-green-500/25"
+                                    : vote === "ifNeedBe"
+                                      ? "bg-amber-100 dark:bg-amber-500/25"
+                                      : "bg-gray-200 dark:bg-white/10",
+                                )}
+                                style={{
+                                  width: `${Math.round((liveCount / total) * 100)}%`,
+                                }}
+                              />
+                            ) : null}
+                            {/* The row shows one mark, as the answer it cycles. */}
+                            <BallotVoteMark vote={vote} />
+                            <span
+                              aria-hidden="true"
+                              className="flex min-h-9 min-w-0 flex-1 items-center text-sm tabular-nums lg:[@media(pointer:fine)]:min-h-9.5"
+                            >
+                              <BallotTimeText
+                                value={rowTimeLabel(option)}
+                                changed={timesChanged}
+                              />
+                            </span>
+                            {liveCount !== null ? (
+                              <span
+                                aria-hidden="true"
+                                className="[&_[data-testid=ballot-tally]]:text-foreground"
+                              >
+                                <BallotCount value={liveCount} />
+                              </span>
+                            ) : null}
+                            {count ? (
+                              <p id={countId} className="sr-only">
+                                {count}
+                              </p>
+                            ) : null}
+                            {/* Shrunk away until the keyboard reaches them, and still in
+    the tree for a screen reader to step through. */}
+                            <div
+                              className={cn(
+                                "flex gap-x-3 gap-y-2",
+                                radiosUntilKeyboardClassName,
+                              )}
+                            >
+                              {answerChoices.map((choice) => (
+                                <label
+                                  key={choice}
+                                  className={cn(
+                                    "relative block",
+                                    radioUntilKeyboardClassName,
+                                  )}
+                                >
+                                  <input
+                                    type="radio"
+                                    className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer scroll-mt-16 scroll-mb-24 opacity-0"
+                                    name={`vote-${optionId}`}
+                                    value={choice}
+                                    checked={vote === choice}
+                                    onChange={() => {
+                                      // What is being saved is what stays, so
+                                      // answers hold still until it lands.
+                                      if (pending) {
+                                        setStatus(
+                                          t("voteSaveInProgress", {
+                                            defaultValue:
+                                              "Your answers are still saving. Try again when that finishes.",
+                                          }),
+                                        );
+                                      } else {
+                                        answerOne(optionId, choice);
+                                      }
+                                    }}
+                                  />
+                                  <span
+                                    aria-hidden="true"
+                                    className={cn(
+                                      "flex size-9 items-center justify-center rounded-full border bg-background outline-ring outline-offset-2 transition-[border-color] duration-150 peer-checked:border-2 peer-focus-visible:outline-2 motion-reduce:transition-none [&_svg]:brightness-75 [&_svg]:grayscale peer-checked:[&_svg]:brightness-100 peer-checked:[&_svg]:grayscale-0 lg:[@media(pointer:fine)]:size-6",
+                                      // One colour per answer in every state;
+                                      // only its strength changes.
+                                      choice === "yes" &&
+                                        "border-green-600/40 peer-checked:border-green-600 peer-hover:border-green-600/70",
+                                      choice === "ifNeedBe" &&
+                                        "border-amber-500/40 peer-checked:border-amber-500 peer-hover:border-amber-500/70",
+                                      choice === "no" &&
+                                        "border-gray-500/40 peer-checked:border-gray-500 peer-hover:border-gray-500/70 dark:border-gray-400/40 dark:peer-hover:border-gray-400/70 dark:peer-checked:border-gray-400",
+                                    )}
+                                  >
+                                    <VoteIcon
+                                      round
+                                      type={choice}
+                                      className="size-5 lg:[@media(pointer:fine)]:size-4"
+                                    />
+                                  </span>
+                                  <span className="sr-only">
+                                    {answerLabels[choice]}
+                                  </span>
+                                </label>
+                              ))}
+                            </div>
+                          </fieldset>
+                        );
+                      })}
                     </section>
                   );
                 })}
               </div>
-              {/* The same room below the options as editing leaves, so the page keeps its height. */}
-              {hasResponded ? <div aria-hidden="true" className="h-6" /> : null}
-            </section>
-          ) : (
-            <form
-              id="ballot-form"
-              noValidate
-              onSubmit={submit}
-              onAnimationEnd={(event) => {
-                if (stepExit && event.target === event.currentTarget) {
-                  finishStepExit(stepExit);
-                }
-              }}
-              aria-labelledby={
-                onDetailsStep ? "details-heading" : "form-heading"
-              }
-              className={cn(
-                "flex flex-col",
-                stepMotion,
-                onDetailsStep && "mx-auto mb-6 w-full max-w-lg lg:flex-1",
-              )}
-            >
-              {onDetailsStep ? (
-                <div className="mb-6 border-b pb-6 text-sm has-[dl:empty]:hidden lg:hidden">
-                  <dl className="flex flex-col gap-2.5 empty:hidden">
-                    {eventFacts}
-                  </dl>
-                </div>
-              ) : null}
-              {/* Kept mounted but hidden, so going back loses nothing either way. */}
-              <div
-                hidden={onDetailsStep}
-                // The first visible element after the screen reader copy starts the section.
-                className={
-                  onDetailsStep
-                    ? "hidden"
-                    : "flex flex-col [&>#availability+*]:mt-0"
-                }
+            </div>
+
+            {isNew ? (
+              <section
+                aria-labelledby="details-heading"
+                hidden={!onDetailsStep}
+                className={cn(
+                  "flex-col gap-4 text-sm",
+                  onDetailsStep ? "flex" : "hidden",
+                )}
               >
-                {/* Names the form and takes focus, for screen readers only. */}
                 <h2
-                  id="form-heading"
-                  ref={formHeadingRef}
+                  id="details-heading"
+                  ref={detailsHeadingRef}
                   tabIndex={-1}
                   className="sr-only"
                 >
-                  {isNew ? (
-                    <Trans
-                      i18nKey="screenReaderStep"
-                      defaults="Step {step} of 2: "
-                      values={{ step: 1 }}
-                    />
-                  ) : null}
                   <Trans
-                    i18nKey="screenReaderFormHeading"
-                    defaults="When can you make it?"
+                    i18nKey="screenReaderStep"
+                    defaults="Step {step} of 2: "
+                    values={{ step: 2 }}
                   />
+                  <Trans i18nKey="whoAreYou" defaults="Who are you?" />
                 </h2>
-                <p id="availability" className="sr-only">
-                  <Trans
-                    i18nKey="screenReaderInstructions"
-                    defaults="{count, plural, one {There is # option.} other {There are # options.}} Each one is a group of answers, with the date and time as its name. Anything you leave unanswered is saved as no."
-                    values={{ count: votable.length }}
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="name" className="font-medium">
+                    <Trans i18nKey="name" defaults="Name" />
+                  </label>
+                  <Input
+                    id="name"
+                    name="name"
+                    required
+                    maxLength={100}
+                    autoComplete="name"
+                    className="scroll-mt-6"
+                    aria-invalid={errorFor("name") ? true : undefined}
+                    // Focus can land here, past the heading, so it names the step too.
+                    aria-describedby={
+                      errorFor("name")
+                        ? "details-heading name-error"
+                        : "details-heading"
+                    }
                   />
-                </p>
-                {timeControls}
-                {/* With nothing left to answer, every past time already shows. */}
-                {past.ids.size > 0 && votable.length > 0 ? (
-                  <p className="mt-3 flex flex-wrap gap-2">
-                    <PastTimesToggle
-                      past={past}
-                      labelled={true}
-                      className="rounded-xl"
-                    />
-                  </p>
-                ) : null}
-
-                <div className="mt-5 flex flex-col gap-4">
-                  {groups.map((group) => {
-                    const first = optionsById.get(group.optionIds[0] ?? "");
-                    return (
-                      <section
-                        key={group.key}
-                        className="flex flex-col gap-1.5"
-                      >
-                        <h3 className="font-medium text-sm">
-                          <BallotTimeText
-                            value={dayHeading(first, group.key)}
-                            changed={timesChanged}
-                          />
-                        </h3>
-                        {group.optionIds.map((optionId) => {
-                          const option = optionsById.get(optionId);
-                          if (!option) return null;
-                          const vote = state.answers[optionId];
-                          const count = countDescription(optionId, vote);
-                          const countId = `count-${optionId}`;
-                          // Past times cannot be attended, so they only show here.
-                          const isPast = past.ids.has(optionId);
-                          const liveCount = ballot.tallies
-                            ? availableCount({
-                                entries: ballot.tallies[optionId] ?? [],
-                                activeResponseId: state.activeResponseId,
-                                liveVote: vote,
-                              })
-                            : null;
-                          return (
-                            // biome-ignore lint/a11y/useKeyWithClickEvents: a click and tap shortcut; the radios inside are the keyboard path
-                            <fieldset
-                              key={optionId}
-                              aria-describedby={count ? countId : undefined}
-                              disabled={isPast}
-                              onClick={(event) => {
-                                // A click or a tap, never for the radios themselves:
-                                // assistive technology activates those directly.
-                                if (
-                                  isPast ||
-                                  pending ||
-                                  (event.target as Element).closest("label")
-                                )
-                                  return;
-                                answerOne(
-                                  optionId,
-                                  nextVote(vote, ballot.allowTentativeVotes),
-                                );
-                              }}
-                              className={cn(
-                                "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-xl border bg-card py-1.5 pr-3.5 pl-3 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
-                                isPast
-                                  ? "opacity-60"
-                                  : [
-                                      "cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]",
-                                      rowHoverClassName[vote ?? "none"],
-                                    ],
-                                vote === "yes" &&
-                                  "border-green-400 dark:border-green-500/60",
-                                vote === "ifNeedBe" &&
-                                  "border-amber-400 dark:border-amber-500/60",
-                              )}
-                            >
-                              {/* The full date for readers; the day heading above carries it on screen. */}
-                              <legend className="sr-only">
-                                {isPast
-                                  ? t("screenReaderPastOption", {
-                                      defaultValue: "{option} (already passed)",
-                                      option: votingLabel(option),
-                                    })
-                                  : votingLabel(option)}
-                              </legend>
-                              {liveCount !== null && total > 0 ? (
-                                <span
-                                  aria-hidden="true"
-                                  className={cn(
-                                    "absolute inset-y-0 left-0 -z-10 transition-[width,background-color] duration-200 motion-reduce:transition-none",
-                                    vote === "yes"
-                                      ? "bg-green-100 dark:bg-green-500/25"
-                                      : vote === "ifNeedBe"
-                                        ? "bg-amber-100 dark:bg-amber-500/25"
-                                        : "bg-gray-200 dark:bg-white/10",
-                                  )}
-                                  style={{
-                                    width: `${Math.round((liveCount / total) * 100)}%`,
-                                  }}
-                                />
-                              ) : null}
-                              {/* The row shows one mark, as the answer it cycles. */}
-                              <BallotVoteMark vote={vote} />
-                              <span
-                                aria-hidden="true"
-                                className="flex min-h-9 min-w-0 flex-1 items-center text-sm tabular-nums lg:[@media(pointer:fine)]:min-h-9.5"
-                              >
-                                <BallotTimeText
-                                  value={rowTimeLabel(option)}
-                                  changed={timesChanged}
-                                />
-                              </span>
-                              {liveCount !== null ? (
-                                <span
-                                  aria-hidden="true"
-                                  className="[&_[data-testid=ballot-tally]]:text-foreground"
-                                >
-                                  <BallotCount value={liveCount} />
-                                </span>
-                              ) : null}
-                              {count ? (
-                                <p id={countId} className="sr-only">
-                                  {count}
-                                </p>
-                              ) : null}
-                              {/* Shrunk away until the keyboard reaches them, and still in
-    the tree for a screen reader to step through. */}
-                              <div
-                                className={cn(
-                                  "flex gap-x-3 gap-y-2",
-                                  radiosUntilKeyboardClassName,
-                                )}
-                              >
-                                {answerChoices.map((choice) => (
-                                  <label
-                                    key={choice}
-                                    className={cn(
-                                      "relative block",
-                                      radioUntilKeyboardClassName,
-                                    )}
-                                  >
-                                    <input
-                                      type="radio"
-                                      className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer scroll-mt-16 scroll-mb-24 opacity-0"
-                                      name={`vote-${optionId}`}
-                                      value={choice}
-                                      checked={vote === choice}
-                                      onChange={() => {
-                                        // What is being saved is what stays, so
-                                        // answers hold still until it lands.
-                                        if (pending) {
-                                          setStatus(
-                                            t("voteSaveInProgress", {
-                                              defaultValue:
-                                                "Your answers are still saving. Try again when that finishes.",
-                                            }),
-                                          );
-                                        } else {
-                                          answerOne(optionId, choice);
-                                        }
-                                      }}
-                                    />
-                                    <span
-                                      aria-hidden="true"
-                                      className={cn(
-                                        "flex size-9 items-center justify-center rounded-full border bg-background outline-ring outline-offset-2 transition-[border-color] duration-150 peer-checked:border-2 peer-focus-visible:outline-2 motion-reduce:transition-none [&_svg]:brightness-75 [&_svg]:grayscale peer-checked:[&_svg]:brightness-100 peer-checked:[&_svg]:grayscale-0 lg:[@media(pointer:fine)]:size-6",
-                                        // One colour per answer in every state;
-                                        // only its strength changes.
-                                        choice === "yes" &&
-                                          "border-green-600/40 peer-checked:border-green-600 peer-hover:border-green-600/70",
-                                        choice === "ifNeedBe" &&
-                                          "border-amber-500/40 peer-checked:border-amber-500 peer-hover:border-amber-500/70",
-                                        choice === "no" &&
-                                          "border-gray-500/40 peer-checked:border-gray-500 peer-hover:border-gray-500/70 dark:border-gray-400/40 dark:peer-hover:border-gray-400/70 dark:peer-checked:border-gray-400",
-                                      )}
-                                    >
-                                      <VoteIcon
-                                        round
-                                        type={choice}
-                                        className="size-5 lg:[@media(pointer:fine)]:size-4"
-                                      />
-                                    </span>
-                                    <span className="sr-only">
-                                      {answerLabels[choice]}
-                                    </span>
-                                  </label>
-                                ))}
-                              </div>
-                            </fieldset>
-                          );
-                        })}
-                      </section>
-                    );
-                  })}
-                </div>
-                {state.mode === "edit" && active ? (
-                  <div className="pb-6">
-                    {/* Save sits before the options in the bar, so whoever tabbed down
-                      through them gets one here too. */}
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      className="sr-only not-focus-visible:h-px rounded-xl focus-visible:not-sr-only focus-visible:mt-6"
+                  {errorFor("name") ? (
+                    <span
+                      id="name-error"
+                      className="text-rose-700 dark:text-rose-400"
                     >
-                      <Trans
-                        i18nKey="screenReaderSaveChanges"
-                        defaults="Save changes"
-                      />
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-
-              {isNew ? (
-                <section
-                  aria-labelledby="details-heading"
-                  hidden={!onDetailsStep}
-                  className={cn(
-                    "flex-col gap-4 text-sm",
-                    onDetailsStep ? "flex" : "hidden",
-                  )}
-                >
-                  <h2
-                    id="details-heading"
-                    ref={detailsHeadingRef}
-                    tabIndex={-1}
-                    className="sr-only"
-                  >
-                    <Trans
-                      i18nKey="screenReaderStep"
-                      defaults="Step {step} of 2: "
-                      values={{ step: 2 }}
-                    />
-                    <Trans i18nKey="whoAreYou" defaults="Who are you?" />
-                  </h2>
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="name" className="font-medium">
-                      <Trans i18nKey="name" defaults="Name" />
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      required
-                      maxLength={100}
-                      autoComplete="name"
+                      {errorFor("name")?.message}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="email" className="font-medium">
+                    <Trans i18nKey="email" defaults="Email" />
+                    {ballot.requireParticipantEmail ? null : (
+                      <span className="font-normal text-muted-foreground">
+                        {" "}
+                        <Trans i18nKey="optional" defaults="(optional)" />
+                      </span>
+                    )}
+                  </label>
+                  <InputGroup className={fieldGroupClassName}>
+                    <InputGroupInput
+                      id="email"
+                      name="email"
+                      type="email"
+                      required={ballot.requireParticipantEmail}
+                      autoComplete="email"
                       className="scroll-mt-6"
-                      aria-invalid={errorFor("name") ? true : undefined}
-                      // Focus can land here, past the heading, so it names the step too.
+                      aria-invalid={errorFor("email") ? true : undefined}
                       aria-describedby={
-                        errorFor("name")
-                          ? "details-heading name-error"
-                          : "details-heading"
+                        errorFor("email")
+                          ? "email-error email-help"
+                          : "email-help"
                       }
                     />
-                    {errorFor("name") ? (
-                      <span
-                        id="name-error"
-                        className="text-rose-700 dark:text-rose-400"
-                      >
-                        {errorFor("name")?.message}
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="font-medium">
-                      <Trans i18nKey="email" defaults="Email" />
-                      {ballot.requireParticipantEmail ? null : (
-                        <span className="font-normal text-muted-foreground">
-                          {" "}
-                          <Trans i18nKey="optional" defaults="(optional)" />
-                        </span>
-                      )}
-                    </label>
-                    <InputGroup className={fieldGroupClassName}>
-                      <InputGroupInput
-                        id="email"
-                        name="email"
-                        type="email"
-                        required={ballot.requireParticipantEmail}
-                        autoComplete="email"
-                        className="scroll-mt-6"
-                        aria-invalid={errorFor("email") ? true : undefined}
-                        aria-describedby={
-                          errorFor("email")
-                            ? "email-error email-help"
-                            : "email-help"
-                        }
-                      />
-                      <InputGroupAddon
-                        align="inline-end"
-                        className={fieldAddonClassName}
-                      >
-                        <Popover>
-                          <PopoverTrigger
-                            render={
-                              <InputGroupButton
-                                size="icon-xs"
-                                className={fieldIconButtonClassName}
-                                aria-label={t(
-                                  "newParticipantFormEmailWhyLabel",
-                                  { defaultValue: "Why we ask for your email" },
-                                )}
-                              />
-                            }
-                          >
-                            <CircleHelpIcon aria-hidden="true" />
-                          </PopoverTrigger>
-                          <PopoverContent align="end" className="text-xs">
-                            <p className="font-medium">
-                              <Trans
-                                i18nKey="newParticipantFormEmailWhy"
-                                defaults="Why?"
-                              />
-                            </p>
-                            {emailBenefits}
-                          </PopoverContent>
-                        </Popover>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    {errorFor("email") ? (
-                      <span
-                        id="email-error"
-                        className="text-rose-700 dark:text-rose-400"
-                      >
-                        {errorFor("email")?.message}
-                      </span>
-                    ) : null}
-                    {/* Still the field's description, so a screen reader hears it on arrival. */}
-                    <div id="email-help" className="sr-only">
-                      {emailBenefits}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <h3 className="font-medium">
-                      <Trans i18nKey="response" defaults="Response" />
-                    </h3>
-                    <InputGroup
-                      className={cn(fieldGroupClassName, "h-auto items-start")}
+                    <InputGroupAddon
+                      align="inline-end"
+                      className={fieldAddonClassName}
                     >
-                      <VoteSummary
-                        className="flex-1 border-0 bg-transparent dark:bg-transparent"
-                        votes={votable.map(
-                          (option) => state.answers[option.id] ?? "no",
-                        )}
+                      <Popover>
+                        <PopoverTrigger
+                          render={
+                            <InputGroupButton
+                              size="icon-xs"
+                              className={fieldIconButtonClassName}
+                              aria-label={t("newParticipantFormEmailWhyLabel", {
+                                defaultValue: "Why we ask for your email",
+                              })}
+                            />
+                          }
+                        >
+                          <CircleHelpIcon aria-hidden="true" />
+                        </PopoverTrigger>
+                        <PopoverContent align="end" className="text-xs">
+                          <p className="font-medium">
+                            <Trans
+                              i18nKey="newParticipantFormEmailWhy"
+                              defaults="Why?"
+                            />
+                          </p>
+                          {emailBenefits}
+                        </PopoverContent>
+                      </Popover>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  {errorFor("email") ? (
+                    <span
+                      id="email-error"
+                      className="text-rose-700 dark:text-rose-400"
+                    >
+                      {errorFor("email")?.message}
+                    </span>
+                  ) : null}
+                  {/* Still the field's description, so a screen reader hears it on arrival. */}
+                  <div id="email-help" className="sr-only">
+                    {emailBenefits}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <h3 className="font-medium">
+                    <Trans i18nKey="response" defaults="Response" />
+                  </h3>
+                  <InputGroup
+                    className={cn(fieldGroupClassName, "h-auto items-start")}
+                  >
+                    <VoteSummary
+                      className="flex-1 border-0 bg-transparent dark:bg-transparent"
+                      votes={votable.map(
+                        (option) => state.answers[option.id] ?? "no",
+                      )}
+                    />
+                    <InputGroupAddon
+                      align="inline-end"
+                      className={fieldAddonClassName}
+                    >
+                      <InputGroupButton
+                        size="icon-xs"
+                        className={fieldIconButtonClassName}
+                        aria-label={t("screenReaderChangeResponse", {
+                          defaultValue: "Change your response",
+                        })}
+                        onClick={backToAvailability}
+                      >
+                        <PencilIcon aria-hidden="true" />
+                      </InputGroupButton>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+                {showNote ? (
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="note" className="font-medium">
+                      <Trans i18nKey="note" defaults="Note" />
+                    </label>
+                    <InputGroup
+                      className={cn(fieldGroupClassName, "items-start")}
+                    >
+                      <InputGroupTextarea
+                        id="note"
+                        aria-describedby="note-help"
+                        autoFocus
+                        name="note"
+                        maxLength={MAX_RESPONSE_NOTE_LENGTH}
                       />
                       <InputGroupAddon
                         align="inline-end"
@@ -1874,161 +1962,122 @@ export function AccessibleBallot({
                         <InputGroupButton
                           size="icon-xs"
                           className={fieldIconButtonClassName}
-                          aria-label={t("screenReaderChangeResponse", {
-                            defaultValue: "Change your response",
+                          aria-label={t("screenReaderRemoveNote", {
+                            defaultValue: "Remove note",
                           })}
-                          onClick={backToAvailability}
+                          onClick={() => {
+                            setShowNote(false);
+                            noteRemoved.current = true;
+                          }}
                         >
-                          <PencilIcon aria-hidden="true" />
+                          <TrashIcon aria-hidden="true" />
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
-                  </div>
-                  {showNote ? (
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="note" className="font-medium">
-                        <Trans i18nKey="note" defaults="Note" />
-                      </label>
-                      <InputGroup
-                        className={cn(fieldGroupClassName, "items-start")}
-                      >
-                        <InputGroupTextarea
-                          id="note"
-                          aria-describedby="note-help"
-                          autoFocus
-                          name="note"
-                          maxLength={MAX_RESPONSE_NOTE_LENGTH}
-                        />
-                        <InputGroupAddon
-                          align="inline-end"
-                          className={fieldAddonClassName}
-                        >
-                          <InputGroupButton
-                            size="icon-xs"
-                            className={fieldIconButtonClassName}
-                            aria-label={t("screenReaderRemoveNote", {
-                              defaultValue: "Remove note",
-                            })}
-                            onClick={() => {
-                              setShowNote(false);
-                              noteRemoved.current = true;
-                            }}
-                          >
-                            <TrashIcon aria-hidden="true" />
-                          </InputGroupButton>
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <span id="note-help" className="text-muted-foreground">
-                        <Trans
-                          i18nKey="screenReaderNoteHint"
-                          defaults="Only the organizer will see this"
-                        />
-                      </span>
-                    </div>
-                  ) : (
-                    <Button
-                      id="add-note"
-                      type="button"
-                      className="self-start rounded-full"
-                      onClick={() => setShowNote(true)}
-                    >
-                      <PlusIcon aria-hidden="true" data-icon="inline-start" />
+                    <span id="note-help" className="text-muted-foreground">
                       <Trans
-                        i18nKey="newParticipantFormAddNote"
-                        defaults="Add a note"
+                        i18nKey="screenReaderNoteHint"
+                        defaults="Only the organizer will see this"
                       />
-                    </Button>
-                  )}
-                </section>
-              ) : null}
+                    </span>
+                  </div>
+                ) : (
+                  <Button
+                    id="add-note"
+                    type="button"
+                    className="self-start rounded-full"
+                    onClick={() => setShowNote(true)}
+                  >
+                    <PlusIcon aria-hidden="true" data-icon="inline-start" />
+                    <Trans
+                      i18nKey="newParticipantFormAddNote"
+                      defaults="Add a note"
+                    />
+                  </Button>
+                )}
+              </section>
+            ) : null}
 
-              {isNew && votable.length === 0 ? (
-                <p className="py-6 text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="voteAllOptionsPassed"
-                    defaults="All of these times have passed, so there is nothing left to answer. Contact the organizer if you still want to respond."
-                  />
-                </p>
-              ) : isNew ? (
+            {isNew && votable.length === 0 ? (
+              <p className="py-6 text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="voteAllOptionsPassed"
+                  defaults="All of these times have passed, so there is nothing left to answer. Contact the organizer if you still want to respond."
+                />
+              </p>
+            ) : showFooter ? (
+              // For a saved response this is only here once there is something
+              // to save, or to say it was saved.
+              <div
+                className={cn(
+                  "flex flex-col gap-2",
+                  onDetailsStep
+                    ? "pt-6 lg:mt-auto"
+                    : "sticky bottom-0 z-20 mt-6 bg-card/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:px-8",
+                  // For a saved response it arrives with the first change, so it
+                  // rises into place rather than popping in.
+                  !isNew &&
+                    "fade-in motion-safe:slide-in-from-bottom-4 animate-in duration-200 ease-out-ui",
+                )}
+              >
+                {/* Next to the button that raised it, for what has no field of its own. */}
+                {saveError || (errorFor("votes") && answeredCount === 0) ? (
+                  <p
+                    ref={formMessageRef}
+                    tabIndex={-1}
+                    className="text-rose-700 text-sm outline-none dark:text-rose-400"
+                  >
+                    {saveError ?? errorFor("votes")?.message}
+                  </p>
+                ) : null}
                 <div
                   className={cn(
-                    "flex flex-col gap-2",
-                    onDetailsStep
-                      ? "pt-6 lg:mt-auto"
-                      : "sticky bottom-0 z-20 mt-6 bg-card/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:px-8",
+                    "flex flex-wrap gap-2 lg:flex-nowrap lg:items-center lg:justify-end",
+                    onDetailsStep && "justify-end",
                   )}
                 >
-                  {/* Next to the button that raised it, for what has no field of its own. */}
-                  {saveError || (errorFor("votes") && answeredCount === 0) ? (
-                    <p
-                      ref={formMessageRef}
-                      tabIndex={-1}
-                      className="text-rose-700 text-sm outline-none dark:text-rose-400"
+                  {onDetailsStep ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="rounded-xl"
+                      onClick={backToAvailability}
                     >
-                      {saveError ?? errorFor("votes")?.message}
+                      <Trans i18nKey="back" defaults="Back" />
+                    </Button>
+                  ) : null}
+                  {/* Where the buttons were, so it is seen and focus stays put. */}
+                  {notice === "changes" ? (
+                    <p
+                      ref={(element) => {
+                        noticeHeadingRef.current = element;
+                      }}
+                      tabIndex={-1}
+                      className="flex h-12 items-center gap-2 font-medium text-sm outline-none max-lg:flex-1 lg:h-9"
+                    >
+                      <SuccessCheck state="in" className="shrink-0">
+                        <SuccessCheckIcon className="size-5 shadow-none" />
+                      </SuccessCheck>
+                      <Trans
+                        i18nKey="voteNoticeChangesSaved"
+                        defaults="Changes saved"
+                      />
                     </p>
                   ) : null}
-                  <div
-                    className={cn(
-                      "flex flex-wrap gap-2 lg:flex-nowrap lg:items-center lg:justify-end",
-                      onDetailsStep && "justify-end",
-                    )}
-                  >
-                    {!onDetailsStep && votable.length > 1 ? (
-                      // Scrolls sideways rather than wrapping when it runs out of
-                      // room. Its padding keeps focus rings from being clipped,
-                      // and on a phone lets it run to the edges of the screen.
-                      <div className="-my-1 flex min-w-0 gap-2 overflow-x-auto py-1 [scrollbar-width:none] max-lg:-mx-4 max-lg:basis-[calc(100%+2rem)] max-lg:px-4 lg:-ml-1 lg:flex-1 lg:pl-1">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className={cn(
-                            ballotToggleClassName,
-                            "shrink-0 rounded-full",
-                            shortcutOn("yes") && shortcutOnClassName,
-                          )}
-                          onClick={() => markAll("yes")}
-                        >
-                          {shortcutOn("yes") ? (
-                            <Trans i18nKey="undo" defaults="Undo" />
-                          ) : (
-                            <Trans
-                              i18nKey="screenReaderMarkAllYes"
-                              defaults="Yes to all"
-                            />
-                          )}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className={cn(
-                            ballotToggleClassName,
-                            "shrink-0 rounded-full",
-                            shortcutOn("no") && shortcutOnClassName,
-                          )}
-                          onClick={() => markAll("no")}
-                        >
-                          {shortcutOn("no") ? (
-                            <Trans i18nKey="undo" defaults="Undo" />
-                          ) : (
-                            <Trans
-                              i18nKey="screenReaderMarkAllNo"
-                              defaults="Can't make it"
-                            />
-                          )}
-                        </Button>
-                      </div>
-                    ) : null}
-                    {onDetailsStep ? (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        className="rounded-xl"
-                        onClick={backToAvailability}
-                      >
-                        <Trans i18nKey="back" defaults="Back" />
-                      </Button>
-                    ) : null}
+                  {!isNew && hasChanges ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className={`${ballotBarButtonClassName} lg:h-9`}
+                      aria-disabled={pending || undefined}
+                      onClick={() => {
+                        if (!pending) discardChanges();
+                      }}
+                    >
+                      <Trans i18nKey="discard" defaults="Discard" />
+                    </Button>
+                  ) : null}
+                  {isNew || hasChanges ? (
                     <Button
                       type="submit"
                       variant="primary"
@@ -2043,21 +2092,26 @@ export function AccessibleBallot({
                         <Trans i18nKey="continue" defaults="Continue" />
                       ) : pending ? (
                         <Trans i18nKey="screenReaderSaving" defaults="Saving" />
-                      ) : (
+                      ) : isNew ? (
                         <Trans
                           i18nKey="screenReaderConfirm"
                           defaults="Confirm"
                         />
+                      ) : (
+                        <Trans
+                          i18nKey="screenReaderSaveChanges"
+                          defaults="Save changes"
+                        />
                       )}
                     </Button>
-                  </div>
+                  ) : null}
                 </div>
-              ) : null}
-            </form>
-          )}
-          {responseDialogs}
-        </div>
-      </main>
-    </>
+              </div>
+            ) : null}
+          </form>
+        )}
+        {responseDialogs}
+      </div>
+    </main>
   );
 }
