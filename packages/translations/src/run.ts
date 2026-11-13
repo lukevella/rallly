@@ -18,6 +18,8 @@ import { translateItems } from "./translator.ts";
 const maxInFlight = 4;
 
 export type RunReport = {
+  model: string;
+  provider?: string;
   files: {
     path: string;
     translated: number;
@@ -261,7 +263,7 @@ export const run = async ({
     Array.from({ length: Math.min(maxInFlight, jobs.length) }, worker),
   );
 
-  return { files: results };
+  return { model, provider, files: results };
 };
 
 export const shouldFail = (report: RunReport) => {
@@ -281,13 +283,19 @@ export const formatReport = (report: RunReport) => {
   );
   if (changed.length === 0) return "No translation changes.\n";
 
+  const sum = (pick: (file: RunReport["files"][number]) => number) =>
+    changed.reduce((total, file) => total + pick(file), 0);
+
   const lines = [
+    `Model: ${report.model}${report.provider ? ` (provider: ${report.provider})` : ""}`,
+    "",
     "| Locale file | Translated | Adopted | Removed |",
     "| --- | ---: | ---: | ---: |",
     ...changed.map(
       (file) =>
         `| ${file.path} | ${file.translated} | ${file.adopted} | ${file.removed} |`,
     ),
+    `| **Total** | **${sum((f) => f.translated)}** | **${sum((f) => f.adopted)}** | **${sum((f) => f.removed)}** |`,
   ];
 
   const withFailures = changed.filter((file) => file.failed.length > 0);

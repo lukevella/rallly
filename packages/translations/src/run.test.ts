@@ -84,6 +84,7 @@ describe("run", () => {
       a: hashSource("Save"),
       b: hashSource("Hi {name}"),
     });
+    expect(report.model).toBe(model);
     expect(report.files).toHaveLength(1);
     expect(report.files[0]).toMatchObject({
       path: "web/de/app",
@@ -393,18 +394,19 @@ describe("shouldFail", () => {
     failed: Array.from({ length: failed }, () => ({ key: "k", reason: "r" })),
   });
   it("fails only when every file with stale keys failed entirely", () => {
-    expect(shouldFail({ files: [file(0, 1), file(0, 2), file(0, 0)] })).toBe(
-      true,
-    );
-    expect(shouldFail({ files: [file(0, 1), file(3, 0)] })).toBe(false);
-    expect(shouldFail({ files: [file(2, 1)] })).toBe(false);
-    expect(shouldFail({ files: [file(0, 0)] })).toBe(false);
+    expect(
+      shouldFail({ model, files: [file(0, 1), file(0, 2), file(0, 0)] }),
+    ).toBe(true);
+    expect(shouldFail({ model, files: [file(0, 1), file(3, 0)] })).toBe(false);
+    expect(shouldFail({ model, files: [file(2, 1)] })).toBe(false);
+    expect(shouldFail({ model, files: [file(0, 0)] })).toBe(false);
   });
 });
 
 describe("formatReport", () => {
   it("renders a table and the failures", () => {
     const md = formatReport({
+      model,
       files: [
         {
           path: "web/de/app",
@@ -435,7 +437,40 @@ describe("formatReport", () => {
     expect(md).toContain("`b`: missing {name}");
     expect(md).toContain("boom");
   });
+  const sample = {
+    files: [
+      { path: "web/de/app", translated: 2, adopted: 1, removed: 0, failed: [] },
+      {
+        path: "web/fr/app",
+        translated: 5,
+        adopted: 10,
+        removed: 3,
+        failed: [],
+      },
+    ],
+  };
+
+  it("names the model, and the provider only when pinned", () => {
+    expect(formatReport({ model: "qwen/x", ...sample })).toContain(
+      "Model: qwen/x\n",
+    );
+    expect(formatReport({ model: "qwen/x", ...sample })).not.toContain(
+      "provider",
+    );
+    expect(
+      formatReport({ model: "qwen/x", provider: "fireworks", ...sample }),
+    ).toContain("Model: qwen/x (provider: fireworks)");
+  });
+
+  it("totals translated, adopted and removed", () => {
+    expect(formatReport({ model, ...sample })).toContain(
+      "| **Total** | **7** | **11** | **3** |",
+    );
+  });
+
   it("says so when nothing changed", () => {
-    expect(formatReport({ files: [] })).toContain("No translation changes");
+    expect(formatReport({ model, files: [] })).toContain(
+      "No translation changes",
+    );
   });
 });
