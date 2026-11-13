@@ -152,16 +152,16 @@ async function ApiPollQuotaWarningEmail({
             {atLimit
               ? t("apiPollQuotaWarning_atLimitBody", {
                   defaultValue:
-                    "New polls created through the API are being rejected. Add more API polls to resume right away, or wait until the count resets. Polls created in Rallly are not affected.",
+                    "New polls created through the API are being rejected. Raise your monthly limit with the API add-on to resume right away, or wait until the count resets. Polls created in Rallly are not affected.",
                 })
               : t("apiPollQuotaWarning_nearLimitBody", {
                   defaultValue:
-                    "Once you reach the limit, new polls created through the API will be rejected until the count resets. Need more? Add more API polls from your API settings.",
+                    "Once you reach the limit, new polls created through the API will be rejected until the count resets. Need a higher limit? The API add-on raises it every month.",
                 })}
           </Text>
           <Button href={settingsUrl} color={chrome.primaryColor}>
             {t("apiPollQuotaWarning_button", {
-              defaultValue: "Get more API polls",
+              defaultValue: "Increase your limit",
             })}
           </Button>
           <Hr style={{ margin: "16px 0" }} />
