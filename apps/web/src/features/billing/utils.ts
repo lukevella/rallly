@@ -145,12 +145,29 @@ type ApiPollAddonPrices = Record<
 
 type BillingChangeError = { error: "currency_unsupported" | "no_change" };
 
-function apiPollTierForLimit(limit: number) {
-  const tier = API_POLL_TIERS.find((t) => apiPollTierLimits[t] === limit);
-  if (!tier) {
-    throw new Error(`No API poll tier has a limit of ${limit}`);
-  }
-  return tier;
+/**
+ * By price first, so a tier's limit can change without stranding subscribers
+ * whose stored limit predates it. The limit only identifies a price that has
+ * since left the catalog.
+ */
+function findApiPollTier({
+  priceId,
+  limit,
+  prices,
+}: {
+  priceId: string | null;
+  limit: number | null;
+  prices: ApiPollAddonPrices;
+}) {
+  return (
+    API_POLL_TIERS.find(
+      (tier) =>
+        prices[tier].monthly.id === priceId ||
+        prices[tier].yearly.id === priceId,
+    ) ??
+    API_POLL_TIERS.find((tier) => apiPollTierLimits[tier] === limit) ??
+    null
+  );
 }
 
 function hasCurrency(price: ProPrice, currency: string) {
@@ -174,6 +191,7 @@ export function buildSubscriptionUpdate({
     priceId: string;
     subscriptionItemId: string;
     apiAddonItemId: string | null;
+    apiAddonPriceId: string | null;
     apiPollLimit: number | null;
     apiPollRetainedLimit: number | null;
     apiPollRetainedUntil: Date | null;
@@ -208,11 +226,20 @@ export function buildSubscriptionUpdate({
         }),
         pricing: prices.pro,
       }).yearly;
-      const addonPrice =
-        subscription.apiAddonItemId && subscription.apiPollLimit !== null
-          ? prices.apiPollAddon[apiPollTierForLimit(subscription.apiPollLimit)]
-              .yearly
-          : null;
+      let addonPrice: ProPrice | null = null;
+      if (subscription.apiAddonItemId) {
+        const tier = findApiPollTier({
+          priceId: subscription.apiAddonPriceId,
+          limit: subscription.apiPollLimit,
+          prices: prices.apiPollAddon,
+        });
+        if (!tier) {
+          throw new Error(
+            `API add-on price ${subscription.apiAddonPriceId} matches no tier`,
+          );
+        }
+        addonPrice = prices.apiPollAddon[tier].yearly;
+      }
       if (
         !hasCurrency(seatPrice, subscription.currency) ||
         (addonPrice && !hasCurrency(addonPrice, subscription.currency))
@@ -236,6 +263,16 @@ export function buildSubscriptionUpdate({
       };
     }
     case "api_tier": {
+      const currentTier = subscription.apiAddonItemId
+        ? findApiPollTier({
+            priceId: subscription.apiAddonPriceId,
+            limit: subscription.apiPollLimit,
+            prices: prices.apiPollAddon,
+          })
+        : null;
+      if (change.tier !== null && change.tier === currentTier) {
+        return { error: "no_change" };
+      }
       const currentLimit = subscription.apiAddonItemId
         ? subscription.apiPollLimit
         : null;

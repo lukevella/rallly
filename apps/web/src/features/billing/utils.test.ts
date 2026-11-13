@@ -295,6 +295,7 @@ describe("buildSubscriptionUpdate", () => {
     priceId: "price_new_m",
     subscriptionItemId: "si_seat",
     apiAddonItemId: null,
+    apiAddonPriceId: null,
     apiPollLimit: null,
     apiPollRetainedLimit: null,
     apiPollRetainedUntil: null,
@@ -303,6 +304,7 @@ describe("buildSubscriptionUpdate", () => {
   const withAddon = {
     ...subscription,
     apiAddonItemId: "si_api",
+    apiAddonPriceId: "price_api_medium_m",
     apiPollLimit: 500,
   };
 
@@ -380,6 +382,7 @@ describe("buildSubscriptionUpdate", () => {
       buildSubscriptionUpdate({
         subscription: {
           ...withAddon,
+          apiAddonPriceId: "price_api_small_m",
           apiPollLimit: 250,
           apiPollRetainedLimit: 500,
           apiPollRetainedUntil: tomorrow,
@@ -417,6 +420,7 @@ describe("buildSubscriptionUpdate", () => {
       buildSubscriptionUpdate({
         subscription: {
           ...withAddon,
+          apiAddonPriceId: "price_api_small_m",
           apiPollLimit: 250,
           apiPollRetainedLimit: 500,
           apiPollRetainedUntil: tomorrow,
@@ -582,6 +586,63 @@ describe("buildSubscriptionUpdate", () => {
     ).toEqual({
       items: [{ id: "si_api", deleted: true }],
       proration_behavior: "none",
+    });
+  });
+
+  describe("after a tier's limit changes", () => {
+    // Small was 200 and is now 250: the row keeps the old limit until the
+    // next webhook, but the price is the same.
+    const onSmall = {
+      ...subscription,
+      apiAddonItemId: "si_api",
+      apiAddonPriceId: "price_api_small_m",
+      apiPollLimit: 200,
+    };
+
+    it("switches to yearly by the price the subscriber is on", () => {
+      expect(
+        buildSubscriptionUpdate({
+          subscription: onSmall,
+          change: { type: "interval" },
+          prices,
+          now,
+        }),
+      ).toMatchObject({
+        items: [
+          { id: "si_seat", price: "price_new_y" },
+          { id: "si_api", price: "price_api_small_y" },
+        ],
+      });
+    });
+
+    it("treats choosing the same tier as no change rather than an upgrade", () => {
+      expect(
+        buildSubscriptionUpdate({
+          subscription: onSmall,
+          change: { type: "api_tier", tier: "small" },
+          prices,
+          now,
+        }),
+      ).toEqual({ error: "no_change" });
+    });
+
+    it("falls back to the limit for a price that has left the catalog", () => {
+      expect(
+        buildSubscriptionUpdate({
+          subscription: {
+            ...withAddon,
+            apiAddonPriceId: "price_api_medium_2025_m",
+          },
+          change: { type: "interval" },
+          prices,
+          now,
+        }),
+      ).toMatchObject({
+        items: [
+          { id: "si_seat", price: "price_new_y" },
+          { id: "si_api", price: "price_api_medium_y" },
+        ],
+      });
     });
   });
 });
