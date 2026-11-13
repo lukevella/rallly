@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Impostazioni avanzate dei sondaggi",
-  "advancedPollSettingsDescription": "Richiedi l'e-mail dei partecipanti, nascondi i nomi dei partecipanti e nascondi i voti",
   "apiAccess": "Accesso API",
   "apiAccessDescription": "Crea sondaggi e leggi i risultati dai tuoi sistemi. <a>Leggi la documentazione API</a>",
   "apiAndWebhooks": "API e webhooks",
