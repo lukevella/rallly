@@ -108,7 +108,8 @@ export const buildSystem = ({
     `## Rules
 - Keep every ICU argument (such as {name}), plural and select structure, and tag name (such as <b>) exactly as in the source.
 - Select option keys are identifiers and must never be translated.
-- Plural categories must be the ones the target language needs, and must always include \`other\`.
+- Plural categories must be the ones the target language needs.
+- Every plural and every select must include an \`other\` case.
 - Translate only the human-readable text.
 - Never translate these terms: ${glossary.doNotTranslate.join(", ")}.
 - Follow ${language}'s own capitalization conventions rather than copying English capitalization.

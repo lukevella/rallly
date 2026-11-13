@@ -71,6 +71,34 @@ describe("buildSystem", () => {
     expect(s).toContain("`other`");
   });
 
+  it("states every format rule", () => {
+    const s = buildSystem({ locale: "de", glossary, reference: {} });
+    for (const rule of [
+      "Keep every ICU argument (such as {name}), plural and select structure, and tag name (such as <b>) exactly as in the source.",
+      "Plural categories must be the ones the target language needs.",
+      "Every plural and every select must include an `other` case.",
+      "Translate only the human-readable text.",
+      "Follow German's own capitalization conventions",
+      "Return every requested key.",
+    ]) {
+      expect(s).toContain(rule);
+    }
+  });
+
+  it("does not tell the model to pick a term for do-not-translate entries", () => {
+    const proGlossary: Glossary = {
+      doNotTranslate: ["Pro"],
+      terms: [{ en: "Poll", note: "a poll", translations: {} }],
+    };
+    const s = buildSystem({
+      locale: "de",
+      glossary: proGlossary,
+      reference: {},
+    });
+    expect(s).toContain("Never translate these terms: Pro.");
+    expect(s).not.toContain('"Pro"');
+  });
+
   it("throws for an unknown locale", () =>
     expect(() =>
       buildSystem({ locale: "xx", glossary, reference: {} }),
@@ -145,6 +173,9 @@ describe("loadGlossary", () => {
   });
   it("loads the committed glossary", () => {
     const repoRoot = join(import.meta.dirname, "..", "..", "..");
-    expect(loadGlossary({ repoRoot }).doNotTranslate).toContain("Rallly");
+    const committed = loadGlossary({ repoRoot });
+    expect(committed.doNotTranslate).toContain("Rallly");
+    expect(committed.doNotTranslate).toContain("Pro");
+    expect(committed.terms.map((term) => term.en)).not.toContain("Pro");
   });
 });

@@ -8,7 +8,8 @@
     "Microsoft Teams",
     "Stripe",
     "ICS",
-    "API"
+    "API",
+    "Pro"
   ],
   "terms": [
     {
@@ -105,11 +106,6 @@
         "sv": "Kontrollpanel",
         "zh": "控制面板"
       }
-    },
-    {
-      "en": "Pro",
-      "note": "the name of the paid subscription plan; a plan name, not the adjective meaning professional",
-      "translations": {}
     },
     {
       "en": "If need be",
