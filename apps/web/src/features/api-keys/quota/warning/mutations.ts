@@ -66,12 +66,11 @@ export const sendApiPollQuotaWarning = Effect.fn(
     count: context.used,
     limit: context.limit,
   });
-  if (
-    !currentLevel ||
-    (subject.level === "at_limit" && currentLevel !== "at_limit")
-  ) {
+  // Below the level the owner no longer needs it; past it, the at limit
+  // warning supersedes a near limit one still waiting in the queue.
+  if (currentLevel !== subject.level) {
     return yield* new QueuedEmailSkipped({
-      reason: "Usage is below this warning level",
+      reason: "Usage is no longer at this warning level",
     });
   }
 
