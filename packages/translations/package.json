@@ -9,8 +9,10 @@
     "translate": "node src/cli.ts",
     "check": "node src/check.ts"
   },
+  "dependencies": {
+    "openai": "^7.35.0"
+  },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^1.8.0",
     "@formatjs/icu-messageformat-parser": "^3.5.23",
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^24.1.0",
