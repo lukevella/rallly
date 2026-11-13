@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { CalendarCheckIcon } from "lucide-react";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { useTranslation } from "@/i18n/client";
 import type { BallotVote } from "../types";
@@ -46,6 +47,8 @@ export function BallotBarOption({
   total,
   compact = false,
   timesChanged = false,
+  showMark = true,
+  chosen = false,
 }: {
   label: string;
   /** The full date and time, for assistive technology. */
@@ -61,6 +64,10 @@ export function BallotBarOption({
   compact?: boolean;
   /** The viewer just changed the time zone or format. */
   timesChanged?: boolean;
+  /** Off for a viewer with no response to show: an empty mark reads as a control. */
+  showMark?: boolean;
+  /** The time the organizer picked. */
+  chosen?: boolean;
 }) {
   const { t } = useTranslation();
   const answer = {
@@ -82,27 +89,53 @@ export function BallotBarOption({
           style={{ width: `${Math.round((count / total) * 100)}%` }}
         />
       ) : null}
-      <span aria-hidden="true" className="flex shrink-0">
-        {vote ? (
-          <VoteIcon
-            round
-            type={vote}
-            className={compact ? "lg:size-4" : undefined}
-          />
-        ) : (
-          <span
-            className={cn(
-              "size-5 rounded-full border border-gray-500 border-dashed dark:border-gray-400",
-              compact && "lg:size-4",
-            )}
-          />
-        )}
-      </span>
+      {/* A viewer's own answer stays on the picked time; the border marks it. */}
+      {chosen && !showMark ? (
+        <CalendarCheckIcon
+          aria-hidden="true"
+          className={cn(
+            "size-5 shrink-0 text-green-600 dark:text-green-400",
+            compact && "lg:size-4",
+          )}
+        />
+      ) : showMark ? (
+        <span aria-hidden="true" className="flex shrink-0">
+          {vote ? (
+            <VoteIcon
+              round
+              type={vote}
+              className={compact ? "lg:size-4" : undefined}
+            />
+          ) : (
+            <span
+              className={cn(
+                "size-5 rounded-full border border-gray-500 border-dashed dark:border-gray-400",
+                compact && "lg:size-4",
+              )}
+            />
+          )}
+        </span>
+      ) : null}
       <span
         data-testid="option-label"
         className="min-w-0 flex-1 text-pretty text-sm tabular-nums"
       >
-        <span className="sr-only">{`${fullLabel}: ${answer}`}</span>
+        <span className="sr-only">
+          {chosen && showMark
+            ? t("voteOptionChosenAnswered", {
+                defaultValue: "{option}: {answer}. The time that was picked",
+                option: fullLabel,
+                answer,
+              })
+            : chosen
+              ? t("voteOptionChosen", {
+                  defaultValue: "{option}: the time that was picked",
+                  option: fullLabel,
+                })
+              : showMark
+                ? `${fullLabel}: ${answer}`
+                : fullLabel}
+        </span>
         <span aria-hidden="true">
           <BallotTimeText value={label} changed={timesChanged} />
         </span>
@@ -119,7 +152,8 @@ export function BallotBarOption({
     <li
       data-testid="ballot-option"
       data-vote={vote ?? "none"}
-      className={cn(isPast && "opacity-60")}
+      data-chosen={chosen || undefined}
+      className={cn(isPast && !chosen && "opacity-60")}
     >
       {canVote ? (
         <button
@@ -139,6 +173,8 @@ export function BallotBarOption({
           className={cn(
             rowClassName,
             vote && borderTint[vote],
+            chosen &&
+              "border-green-600 font-medium ring-1 ring-green-600 dark:border-green-400 dark:ring-green-400",
             compact &&
               "lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0.5",
           )}

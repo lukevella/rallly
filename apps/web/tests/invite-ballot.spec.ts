@@ -102,7 +102,7 @@ async function addParticipant(page: Page, name: string) {
   ).toBeVisible();
 }
 
-/** The message that takes the place of the save buttons, not its announcement. */
+/** The status bar saying so, not the announcement of it. */
 function changesSaved(page: Page) {
   return page.locator("p").filter({ hasText: "Changes saved" });
 }

@@ -31,9 +31,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import {
   CalendarCheckIcon,
+  CalendarDaysIcon,
   CheckIcon,
   CircleCheckIcon,
-  CircleDashedIcon,
   CircleHelpIcon,
   CircleXIcon,
   ClockIcon,
@@ -194,7 +194,7 @@ export function AccessibleBallot({
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
   const formMessageRef = React.useRef<HTMLParagraphElement>(null);
   const formHeadingRef = React.useRef<HTMLHeadingElement>(null);
-  const noticeHeadingRef = React.useRef<HTMLElement>(null);
+  const barTextRef = React.useRef<HTMLParagraphElement>(null);
   const thanksHeadingRef = React.useRef<HTMLHeadingElement>(null);
   // What was just saved, said above the answers until the page is left: a first
   // response or a change to one. A later visit has only the response bar.
@@ -422,8 +422,19 @@ export function AccessibleBallot({
   const showThanks = notice === "response";
   const compactCard = onDetailsStep || showThanks;
   const showShortcuts = isNew && votable.length > 1;
-  const showFooter =
-    isNew || hasChanges || Boolean(saveError) || notice === "changes";
+  // The option the organizer picked, where the event still lines up with one.
+  const eventStart =
+    poll.status === "scheduled" ? poll.event?.start.getTime() : undefined;
+  const chosenOptionId =
+    eventStart === undefined
+      ? undefined
+      : ballot.options.find(
+          // Two options can start together and run for different lengths.
+          (option) =>
+            new Date(option.startTime).getTime() === eventStart &&
+            option.duration === poll.event?.duration,
+        )?.id;
+  const showFooter = isNew || hasChanges || Boolean(saveError);
   // The status bar heads the answers: where the poll stands, and where the
   // viewer's response stands in it. One line, one icon, one size.
   const hasBar = !compactCard;
@@ -444,7 +455,7 @@ export function AccessibleBallot({
   const barGreen = "text-green-600 dark:text-green-400";
   // Colour is on the icon alone, and the words always say the same thing.
   const barIcon = {
-    new: { Icon: CircleDashedIcon, className: barMuted },
+    new: { Icon: CalendarDaysIcon, className: barMuted },
     saved: { Icon: CircleCheckIcon, className: barGreen },
     unsaved: {
       Icon: PencilIcon,
@@ -502,7 +513,7 @@ export function AccessibleBallot({
         : ((notice === "response"
             ? thanksHeadingRef.current
             : notice === "changes"
-              ? noticeHeadingRef.current
+              ? barTextRef.current
               : null) ?? formHeadingRef.current);
     target?.focus({ preventScroll: true });
   }, [state.mode, notice, hasChanges, t]);
@@ -723,7 +734,15 @@ export function AccessibleBallot({
   const groups = past.ready
     ? groupBallotOptions({
         // With nothing left to attend, the past times are all there is to show.
-        options: past.show || votable.length === 0 ? ballot.options : votable,
+        // The time that was picked always shows, passed or not: it is the answer
+        // the page is there to give.
+        options:
+          past.show || votable.length === 0
+            ? ballot.options
+            : ballot.options.filter(
+                (option) =>
+                  !past.ids.has(option.id) || option.id === chosenOptionId,
+              ),
         isDatePoll: ballot.isDatePoll,
         timeZone: displayTimeZone,
       })
@@ -1054,8 +1073,6 @@ export function AccessibleBallot({
       ref={mainRef}
       id="main-content"
       tabIndex={-1}
-      // Read by the card, which is only as tall as this step needs.
-      data-invite-details={compactCard ? "" : undefined}
       className={cn(
         "flex w-full flex-1 flex-col gap-y-8 px-4 pt-4 lg:grid lg:min-h-0 lg:grid-rows-[minmax(0,1fr)] lg:items-stretch lg:px-0 lg:pt-0",
         // The card takes this width: the full one for the answers, and only what
@@ -1117,14 +1134,17 @@ export function AccessibleBallot({
         </div>
 
         {/* A visual key for the icon-only answers; the radios name themselves. */}
-        <div
-          aria-hidden="true"
-          className={cn(compactOnPhone && "max-lg:hidden")}
-        >
-          <BallotResponseOptions
-            allowTentativeVotes={ballot.allowTentativeVotes}
-          />
-        </div>
+        {/* Only beside the options it is a key to. */}
+        {ballot.canRespond && !compactCard ? (
+          <div
+            aria-hidden="true"
+            className={cn(compactOnPhone && "max-lg:hidden")}
+          >
+            <BallotResponseOptions
+              allowTentativeVotes={ballot.allowTentativeVotes}
+            />
+          </div>
+        ) : null}
         {/* Signs off the sidebar. */}
         {poll.user ? (
           <div
@@ -1196,11 +1216,21 @@ export function AccessibleBallot({
                 aria-hidden="true"
                 className={cn("size-5 shrink-0", barIcon.className)}
               />
-              <p className="min-w-0 truncate font-medium">
+              {/* Takes focus when changes are saved: it is where that is said. */}
+              <p
+                ref={barTextRef}
+                tabIndex={-1}
+                className="min-w-0 truncate font-medium outline-none"
+              >
                 {barState === "new" ? (
                   <Trans
                     i18nKey="screenReaderFormHeading"
                     defaults="When can you make it?"
+                  />
+                ) : barState === "saved" && notice === "changes" ? (
+                  <Trans
+                    i18nKey="voteNoticeChangesSaved"
+                    defaults="Changes saved"
                   />
                 ) : barState === "saved" ? (
                   <Trans
@@ -1412,7 +1442,7 @@ export function AccessibleBallot({
             <h2 id="result-heading" tabIndex={-1} className="sr-only">
               <Trans i18nKey="voteResultsPanelLabel" defaults="Results" />
             </h2>
-            {poll.status === "scheduled" && poll.event ? (
+            {poll.status === "scheduled" && poll.event && !chosenOptionId ? (
               <p className="flex flex-wrap gap-x-2 font-medium text-sm">
                 <EventDate
                   value={poll.event.start}
@@ -1468,6 +1498,8 @@ export function AccessibleBallot({
                             vote={vote}
                             canVote={false}
                             compact={true}
+                            showMark={Boolean(active)}
+                            chosen={optionId === chosenOptionId}
                             isPast={false}
                             onCycle={() => {}}
                             count={
@@ -2045,24 +2077,6 @@ export function AccessibleBallot({
                     >
                       <Trans i18nKey="back" defaults="Back" />
                     </Button>
-                  ) : null}
-                  {/* Where the buttons were, so it is seen and focus stays put. */}
-                  {notice === "changes" ? (
-                    <p
-                      ref={(element) => {
-                        noticeHeadingRef.current = element;
-                      }}
-                      tabIndex={-1}
-                      className="flex h-12 items-center gap-2 font-medium text-sm outline-none max-lg:flex-1 lg:h-9"
-                    >
-                      <SuccessCheck state="in" className="shrink-0">
-                        <SuccessCheckIcon className="size-5 shadow-none" />
-                      </SuccessCheck>
-                      <Trans
-                        i18nKey="voteNoticeChangesSaved"
-                        defaults="Changes saved"
-                      />
-                    </p>
                   ) : null}
                   {!isNew && hasChanges ? (
                     <Button
