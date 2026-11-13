@@ -11,9 +11,11 @@ import {
 } from "hono-openapi";
 import { after } from "next/server";
 import {
+  queueApiPollQuotaWarning,
   releaseApiPollSlot,
   reserveApiPollSlot,
 } from "@/features/api-keys/quota/mutations";
+import { startOfNextUtcMonth } from "@/features/api-keys/quota/utils";
 import { getAvailableConferencingProviders } from "@/features/conferencing/constants";
 import { getConnectedConferencingProviders } from "@/features/conferencing/data";
 import type { PollConferencing } from "@/features/conferencing/schema";
@@ -44,6 +46,8 @@ import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError, validationHook } from "../../middleware/api-error";
 import { spaceApiKeyAuth } from "../../middleware/api-key";
 import { toOpenApiSchema } from "../../middleware/openapi";
+import type { PollQuotaInfo } from "../../middleware/poll-quota";
+import { pollQuota } from "../../middleware/poll-quota";
 import {
   RATE_LIMIT_PER_DAY,
   RATE_LIMIT_PER_MINUTE,
@@ -71,6 +75,7 @@ type Env = {
       spaceTier: SpaceTier;
       apiKeyId: string;
     };
+    pollQuota?: PollQuotaInfo;
   };
 };
 
@@ -259,6 +264,34 @@ const rateLimitExceededResponse = {
   },
 };
 
+const pollQuotaHeaders = {
+  "X-Poll-Quota-Limit": {
+    description: "Polls the space may create through the API this month.",
+    schema: { type: "integer" as const },
+  },
+  "X-Poll-Quota-Used": {
+    description:
+      "Polls the space has created through the API this month. Can exceed the limit if the limit was lowered.",
+    schema: { type: "integer" as const },
+  },
+  "X-Poll-Quota-Reset": {
+    description:
+      "When the monthly count resets: the start of the next calendar month, as an ISO 8601 instant in UTC.",
+    schema: { type: "string" as const, format: "date-time" },
+  },
+};
+
+const createPollTooManyRequestsResponse = {
+  description:
+    "Rate limit exceeded (`RATE_LIMIT_EXCEEDED`), or the space has used its monthly API poll quota (`POLL_QUOTA_EXCEEDED`). Both include a `Retry-After` header; for the quota it is the number of seconds until the quota resets.",
+  headers: { ...retryAfterHeader, ...pollQuotaHeaders },
+  content: {
+    "application/json": {
+      schema: resolver(errorResponseSchema),
+    },
+  },
+};
+
 const serviceUnavailableResponse = {
   description:
     "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
@@ -288,6 +321,10 @@ async function buildOpenApiSpec() {
           "Every response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
           "",
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
+          "",
+          "## Poll quota",
+          "",
+          "Polls created through the API count against a monthly quota per space, which resets at the start of each calendar month in UTC. Every `POST /polls` response that passes authentication and the rate limit includes `X-Poll-Quota-Limit`, `X-Poll-Quota-Used` and `X-Poll-Quota-Reset` (an ISO 8601 instant in UTC). Requests that fail validation are not counted, and deleting a poll does not give its slot back. When the quota is used up, `POST /polls` responds with `429 Too Many Requests`, a `POLL_QUOTA_EXCEEDED` error body, and a `Retry-After` header with the seconds until the reset. The space owner can raise the quota from the API keys settings page.",
           "",
           "## Dates and times",
           "",
@@ -322,6 +359,7 @@ async function buildOpenApiSpec() {
           "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
           "| 404 | `PARTICIPANT_NOT_FOUND` | The participant does not exist or belongs to another poll |",
           "| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |",
+          "| 429 | `POLL_QUOTA_EXCEEDED` | The space has used its monthly API poll quota |",
           "| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |",
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
         ].join("\n"),
@@ -366,6 +404,7 @@ app.post(
   "/polls",
   spaceApiKeyAuth,
   rateLimit,
+  pollQuota,
   describeRoute({
     tags: ["Polls"],
     summary: "Create a poll",
@@ -444,6 +483,7 @@ app.post(
     responses: {
       201: {
         description: "Poll created",
+        headers: pollQuotaHeaders,
         content: {
           "application/json": {
             schema: resolver(pollResponseSchema),
@@ -460,7 +500,7 @@ app.post(
       },
       401: unauthorizedResponse,
       403: spaceNotProResponse,
-      429: rateLimitExceededResponse,
+      429: createPollTooManyRequestsResponse,
       503: serviceUnavailableResponse,
     },
   }),
@@ -598,15 +638,29 @@ app.post(
     };
 
     // Every API poll is counted, whether or not the quota is enforced, so
-    // usage is known before enforcement starts.
+    // usage is known before enforcement starts. The quota middleware only
+    // sets a limit while the capability is on; without one the reservation
+    // counts and never refuses.
     const createPollWithUsage = async (
       params: Parameters<typeof createPoll>[0],
     ) => {
+      const now = new Date();
+      const limit = c.get("pollQuota")?.limit ?? null;
       const slot = await runtime.runPromise(
-        reserveApiPollSlot({ spaceId, now: new Date(), limit: null }),
+        reserveApiPollSlot({ spaceId, now, limit }),
       );
+      if (!slot.reserved) {
+        return {
+          ok: false as const,
+          limit,
+          resetAt: startOfNextUtcMonth(now),
+          now,
+        };
+      }
+
+      let poll: Awaited<ReturnType<typeof createPoll>>;
       try {
-        return await createPoll(params);
+        poll = await createPoll(params);
       } catch (error) {
         await runtime.runPromise(
           releaseApiPollSlot({ spaceId, period: slot.period }).pipe(
@@ -615,6 +669,47 @@ app.post(
         );
         throw error;
       }
+
+      if (limit !== null) {
+        const { count } = slot;
+        c.header("X-Poll-Quota-Used", count.toString());
+        after(() => queueApiPollQuotaWarning({ spaceId, limit, count, now }));
+      }
+
+      return { ok: true as const, poll };
+    };
+
+    const pollQuotaExceeded = ({
+      limit,
+      resetAt,
+      now,
+    }: {
+      limit: number | null;
+      resetAt: Date;
+      now: Date;
+    }) => {
+      track(
+        { id: spaceOwnerId, isGuest: false },
+        {
+          event: "api_poll_quota:limit_reach",
+          properties: { limit },
+          groups: { space: spaceId },
+        },
+      );
+      after(() => flushPostHog());
+
+      const retryAfter = Math.max(
+        0,
+        Math.ceil((resetAt.getTime() - now.getTime()) / 1000),
+      );
+      return c.json(
+        apiError(
+          "POLL_QUOTA_EXCEEDED",
+          `This space has reached its monthly API poll quota. It resets at ${resetAt.toISOString()}. To raise it, add API capacity at ${absoluteUrl("/settings/api-keys")}.`,
+        ),
+        429,
+        { "Retry-After": retryAfter.toString() },
+      );
     };
 
     if (input.kind === "date") {
@@ -634,7 +729,7 @@ app.post(
         duration: 0,
       }));
 
-      const poll = await createPollWithUsage({
+      const created = await createPollWithUsage({
         userId: organizerUserId,
         title: input.title,
         description: input.description,
@@ -648,6 +743,11 @@ app.post(
         options,
         spaceId,
       });
+
+      if (!created.ok) {
+        return pollQuotaExceeded(created);
+      }
+      const { poll } = created;
 
       trackPollCreated(poll);
 
@@ -705,7 +805,7 @@ app.post(
       );
     }
 
-    const poll = await createPollWithUsage({
+    const created = await createPollWithUsage({
       userId: organizerUserId,
       title: input.title,
       description: input.description,
@@ -720,6 +820,11 @@ app.post(
       options,
       spaceId,
     });
+
+    if (!created.ok) {
+      return pollQuotaExceeded(created);
+    }
+    const { poll } = created;
 
     trackPollCreated(poll);
 
