@@ -1,8 +1,6 @@
 {
   "doNotTranslate": [
     "Rallly",
-    "Google Calendar",
-    "Microsoft Calendar",
     "Zoom",
     "Google Meet",
     "Microsoft Teams",
@@ -105,6 +103,48 @@
         "ru": "Панель управления",
         "sv": "Kontrollpanel",
         "zh": "控制面板"
+      }
+    },
+    {
+      "en": "Google Calendar",
+      "note": "Google's calendar product; use its official name in the target language",
+      "translations": {
+        "cs": "Kalendář Google",
+        "da": "Google Kalender",
+        "de": "Google Kalender",
+        "es": "Calendario de Google",
+        "fi": "Google-kalenteri",
+        "fr": "Google Agenda",
+        "hu": "Google Naptár",
+        "it": "Calendario Google",
+        "nl": "Google Agenda",
+        "no": "Google Kalender",
+        "pl": "Kalendarz Google",
+        "pt-BR": "Google Agenda",
+        "ru": "Календарь Google",
+        "sv": "Google Kalender",
+        "zh": "Google 日历"
+      }
+    },
+    {
+      "en": "Microsoft Calendar",
+      "note": "the Microsoft 365 / Outlook calendar; use its established name in the target language",
+      "translations": {
+        "cs": "Kalendář Microsoft",
+        "da": "Microsoft Kalender",
+        "de": "Microsoft Kalender",
+        "es": "Calendario de Microsoft",
+        "fi": "Microsoft-kalenteri",
+        "fr": "Calendrier Microsoft",
+        "hu": "Microsoft Naptár",
+        "it": "Calendario Microsoft",
+        "nl": "Microsoft Agenda",
+        "no": "Microsoft Kalender",
+        "pl": "Kalendarz Microsoft",
+        "pt-BR": "Calendário da Microsoft",
+        "ru": "Календарь Microsoft",
+        "sv": "Microsoft Kalender",
+        "zh": "Microsoft 日历"
       }
     },
     {
