@@ -7,6 +7,7 @@ import {
   displayedCurrencies,
   formatMinorUnitAmount,
   getCountryCurrency,
+  parseApiPollTier,
 } from "./pricing";
 
 describe("getCountryCurrency", () => {
@@ -69,6 +70,25 @@ describe("apiPollTierLimits", () => {
       large: 1000,
       xlarge: 2500,
     });
+  });
+});
+
+describe("parseApiPollTier", () => {
+  it("accepts every known tier", () => {
+    for (const tier of API_POLL_TIERS) {
+      expect(parseApiPollTier(tier)).toBe(tier);
+    }
+  });
+
+  it.each([
+    null,
+    undefined,
+    "",
+    "huge",
+    "Small",
+    "1000",
+  ])("returns null for %j", (value) => {
+    expect(parseApiPollTier(value)).toBeNull();
   });
 });
 

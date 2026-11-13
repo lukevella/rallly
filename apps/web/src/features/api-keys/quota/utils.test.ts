@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  apiPollTierLimit,
   getQuotaWarningLevel,
   resolveApiPollLimit,
   startOfNextUtcMonth,
@@ -9,6 +10,16 @@ import {
 const now = new Date("2026-11-12T10:00:00Z");
 const tomorrow = new Date("2026-11-13T10:00:00Z");
 const yesterday = new Date("2026-11-11T10:00:00Z");
+
+describe("apiPollTierLimit", () => {
+  it("maps a stored tier to its limit", () => {
+    expect(apiPollTierLimit("large")).toBe(1000);
+  });
+
+  it.each([null, "", "huge", "1000"])("returns null for %j", (value) => {
+    expect(apiPollTierLimit(value)).toBeNull();
+  });
+});
 
 describe("resolveApiPollLimit", () => {
   const base = {

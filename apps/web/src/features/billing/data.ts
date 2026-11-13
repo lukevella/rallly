@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getProPricing } from "@rallly/billing";
+import { parseApiPollTier } from "@rallly/billing/pricing";
 import { prisma } from "@rallly/database";
 import { unstable_cache } from "next/cache";
 import { paymentMethodCardSchema } from "@/features/billing/schema";
@@ -45,7 +46,9 @@ export async function getSpaceSubscription(spaceId: string) {
     apiAddonItemId: subscription.apiAddonItemId,
     apiAddonPriceId: subscription.apiAddonPriceId,
     apiAddonAmount: subscription.apiAddonAmount,
-    apiPollLimit: subscription.apiPollLimit,
+    apiAddonTier: parseApiPollTier(subscription.apiAddonTier),
+    apiPollRetainedTier: parseApiPollTier(subscription.apiPollRetainedTier),
+    apiPollRetainedUntil: subscription.apiPollRetainedUntil,
   };
 }
 

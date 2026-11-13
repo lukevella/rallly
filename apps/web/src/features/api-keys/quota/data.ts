@@ -3,6 +3,7 @@ import "server-only";
 import { prisma } from "@rallly/database";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import {
+  apiPollTierLimit,
   resolveApiPollLimit,
   startOfNextUtcMonth,
   startOfUtcMonth,
@@ -26,8 +27,8 @@ export async function getApiPollQuota({
         orderBy: { createdAt: "desc" },
         take: 1,
         select: {
-          apiPollLimit: true,
-          apiPollRetainedLimit: true,
+          apiAddonTier: true,
+          apiPollRetainedTier: true,
           apiPollRetainedUntil: true,
         },
       },
@@ -39,8 +40,10 @@ export async function getApiPollQuota({
   });
 
   const subscription = space?.subscriptions[0];
-  const addonLimit = subscription?.apiPollLimit ?? null;
-  const retainedLimit = subscription?.apiPollRetainedLimit ?? null;
+  const addonLimit = apiPollTierLimit(subscription?.apiAddonTier ?? null);
+  const retainedLimit = apiPollTierLimit(
+    subscription?.apiPollRetainedTier ?? null,
+  );
   const retainedUntil = subscription?.apiPollRetainedUntil ?? null;
 
   return {

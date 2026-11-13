@@ -91,7 +91,7 @@ export function getApiPollAddonColumns(subscription: Stripe.Subscription) {
     apiAddonItemId: addon?.id ?? null,
     apiAddonPriceId: addon?.priceId ?? null,
     apiAddonAmount: addon?.amount ?? null,
-    apiPollLimit: addon?.limit ?? null,
+    apiAddonTier: addon?.tier ?? null,
   };
 }
 

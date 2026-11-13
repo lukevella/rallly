@@ -3,8 +3,8 @@ import type { ApiPollTier } from "../pricing";
 import {
   API_POLL_TIERS,
   apiPollAddonAmounts,
-  apiPollTierLimits,
   displayedCurrencies,
+  parseApiPollTier,
 } from "../pricing";
 
 export type { Stripe } from "stripe";
@@ -118,7 +118,7 @@ export type PricingData = Awaited<ReturnType<typeof getProPricing>>;
 
 export const ADDON_METADATA_KEY = "addon";
 export const API_ADDON = "api";
-export const API_POLL_LIMIT_METADATA_KEY = "api_poll_limit";
+export const API_POLL_TIER_METADATA_KEY = "api_poll_tier";
 
 function isAddonItem(item: Stripe.SubscriptionItem) {
   return (
@@ -152,10 +152,11 @@ export function getApiPollAddonItem(subscription: Stripe.Subscription) {
     return null;
   }
 
-  const raw = item.price.metadata[API_POLL_LIMIT_METADATA_KEY] ?? "";
-  const limit = /^\d+$/.test(raw) ? Number.parseInt(raw, 10) : 0;
+  const tier = parseApiPollTier(
+    item.price.metadata[API_POLL_TIER_METADATA_KEY],
+  );
 
-  if (!Number.isSafeInteger(limit) || limit <= 0) {
+  if (!tier) {
     return null;
   }
 
@@ -167,7 +168,7 @@ export function getApiPollAddonItem(subscription: Stripe.Subscription) {
     return null;
   }
 
-  return { id: item.id, priceId: item.price.id, limit, amount };
+  return { id: item.id, priceId: item.price.id, tier, amount };
 }
 
 export type ApiPollAddonInterval = "monthly" | "yearly";
@@ -252,7 +253,7 @@ export function apiPollAddonPriceParams({
       : {}),
     metadata: {
       [ADDON_METADATA_KEY]: API_ADDON,
-      [API_POLL_LIMIT_METADATA_KEY]: String(apiPollTierLimits[tier]),
+      [API_POLL_TIER_METADATA_KEY]: tier,
     },
     currency_options: Object.fromEntries(
       Object.entries(others).map(([currency, amounts]) => [
