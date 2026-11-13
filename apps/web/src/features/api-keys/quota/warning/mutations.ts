@@ -1,6 +1,7 @@
 import "server-only";
 
-import { sendApiPollQuotaWarningEmail } from "@rallly/emails/templates/api-poll-quota-warning";
+import { sendApiPollAtLimitEmail } from "@rallly/emails/templates/api-poll-at-limit";
+import { sendApiPollNearLimitEmail } from "@rallly/emails/templates/api-poll-near-limit";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { Effect } from "effect";
 import { getInstanceBranding } from "@/emails/branding";
@@ -83,14 +84,17 @@ export const sendApiPollQuotaWarning = Effect.fn(
 
   // The mailer logs and swallows transport failures, so its result is what
   // tells a sent email from a failed one.
+  const send =
+    subject.level === "at_limit"
+      ? sendApiPollAtLimitEmail
+      : sendApiPollNearLimitEmail;
   const sent = yield* Effect.tryPromise({
     try: () =>
-      sendApiPollQuotaWarningEmail({
+      send({
         to: owner.email,
         locale,
         branding,
         props: {
-          level: subject.level,
           spaceName: context.spaceName,
           used: context.used,
           limit: context.limit,

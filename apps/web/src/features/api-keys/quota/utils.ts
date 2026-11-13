@@ -1,4 +1,5 @@
 import { INCLUDED_API_POLLS } from "@rallly/billing/pricing";
+import { API_POLL_NEAR_LIMIT_RATIO } from "./constants";
 
 export function startOfUtcMonth(now: Date) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
@@ -39,6 +40,6 @@ export function getQuotaWarningLevel({
   limit: number;
 }) {
   if (count >= limit) return "at_limit" as const;
-  if (count >= limit * 0.8) return "near_limit" as const;
+  if (count >= limit * API_POLL_NEAR_LIMIT_RATIO) return "near_limit" as const;
   return null;
 }
