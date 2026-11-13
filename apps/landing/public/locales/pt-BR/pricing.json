@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Configurações avançadas de enquete",
-  "advancedPollSettingsDescription": "Exija o e-mail dos participantes, oculte os nomes dos participantes e oculte os votos",
   "apiAccess": "Acesso à API",
   "apiAccessDescription": "Crie enquetes e leia os resultados dos seus próprios sistemas. <a>Leia a documentação da API</a>",
   "apiAndWebhooks": "API e webhooks",
