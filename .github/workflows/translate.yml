@@ -38,6 +38,9 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+          # The token must not sit in .git/config while pnpm install scripts
+          # and the CLI run. It is supplied to the push step only.
+          persist-credentials: false
 
       - uses: ./.github/actions/setup-node
       - uses: ./.github/actions/pnpm-install
@@ -77,6 +80,8 @@ jobs:
 
       - name: Commit and push
         id: commit
+        env:
+          TRANSLATIONS_PR_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
         run: |
           paths=(apps/web/public/locales apps/landing/public/locales packages/emails/locales i18n/lock)
           if [ -z "$(git status --porcelain -- "${paths[@]}")" ]; then
@@ -88,6 +93,13 @@ jobs:
           git commit -m "🌐 Update translations"
           # Lease against the SHA we fetched; an empty value means the remote branch must not exist.
           remote_sha=$(git rev-parse --verify --quiet "refs/remotes/origin/$BRANCH" || true)
+          # Authenticate through git's environment config: the credential is
+          # never written to .git/config nor placed on a command line.
+          encoded=$(printf 'x-access-token:%s' "$TRANSLATIONS_PR_TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$encoded"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="http.https://github.com/.extraheader"
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $encoded"
           git push --force-with-lease="refs/heads/$BRANCH:$remote_sha" origin "HEAD:refs/heads/$BRANCH"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
