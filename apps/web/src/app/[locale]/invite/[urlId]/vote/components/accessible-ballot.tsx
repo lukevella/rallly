@@ -429,7 +429,10 @@ export function AccessibleBallot({
     eventStart === undefined
       ? undefined
       : ballot.options.find(
-          (option) => new Date(option.startTime).getTime() === eventStart,
+          // Two options can start together and run for different lengths.
+          (option) =>
+            new Date(option.startTime).getTime() === eventStart &&
+            option.duration === poll.event?.duration,
         )?.id;
   const showFooter = isNew || hasChanges || Boolean(saveError);
   // The status bar heads the answers: where the poll stands, and where the
