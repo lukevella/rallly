@@ -194,6 +194,7 @@ export function buildSubscriptionUpdate({
       return {
         items: [{ id: subscription.subscriptionItemId, quantity }],
         proration_behavior: "always_invoice",
+        payment_behavior: "pending_if_incomplete",
       };
     }
     case "interval": {
@@ -228,7 +229,11 @@ export function buildSubscriptionUpdate({
       if (subscription.apiAddonItemId && addonPrice) {
         items.push({ id: subscription.apiAddonItemId, price: addonPrice.id });
       }
-      return { items, proration_behavior: "always_invoice" };
+      return {
+        items,
+        proration_behavior: "always_invoice",
+        payment_behavior: "pending_if_incomplete",
+      };
     }
     case "api_tier": {
       const currentLimit = subscription.apiAddonItemId

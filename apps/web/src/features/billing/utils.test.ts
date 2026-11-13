@@ -451,7 +451,7 @@ describe("buildSubscriptionUpdate", () => {
     ).toEqual({ error: "no_change" });
   });
 
-  it("changes only the seat item's quantity on a seat change", () => {
+  it("changes only the seat item's quantity and waits for payment", () => {
     expect(
       buildSubscriptionUpdate({
         subscription: withAddon,
@@ -462,6 +462,7 @@ describe("buildSubscriptionUpdate", () => {
     ).toEqual({
       items: [{ id: "si_seat", quantity: 5 }],
       proration_behavior: "always_invoice",
+      payment_behavior: "pending_if_incomplete",
     });
     expect(
       buildSubscriptionUpdate({
@@ -473,6 +474,7 @@ describe("buildSubscriptionUpdate", () => {
     ).toEqual({
       items: [{ id: "si_seat", quantity: 2 }],
       proration_behavior: "always_invoice",
+      payment_behavior: "pending_if_incomplete",
     });
   });
 
@@ -487,7 +489,7 @@ describe("buildSubscriptionUpdate", () => {
     ).toEqual({ error: "no_change" });
   });
 
-  it("moves both items to yearly prices and keeps the seat quantity", () => {
+  it("moves both items to yearly prices, keeps the seat quantity and waits for payment", () => {
     expect(
       buildSubscriptionUpdate({
         subscription: withAddon,
@@ -501,6 +503,7 @@ describe("buildSubscriptionUpdate", () => {
         { id: "si_api", price: "price_api_medium_y" },
       ],
       proration_behavior: "always_invoice",
+      payment_behavior: "pending_if_incomplete",
     });
   });
 
@@ -531,6 +534,7 @@ describe("buildSubscriptionUpdate", () => {
     ).toEqual({
       items: [{ id: "si_seat", price: "price_new_y", quantity: 3 }],
       proration_behavior: "always_invoice",
+      payment_behavior: "pending_if_incomplete",
     });
   });
 
