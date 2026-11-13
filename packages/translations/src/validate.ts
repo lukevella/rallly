@@ -21,7 +21,7 @@ const tryParse = (message: string) => {
   }
 };
 
-type Branching = { kind: "plural" | "select"; hasOther: boolean };
+type Branching = { kind: "plural" | "select"; keys: Set<string> };
 
 const inspect = (elements: MessageFormatElement[]) => {
   const args = new Set<string>();
@@ -48,7 +48,7 @@ const inspect = (elements: MessageFormatElement[]) => {
           args.add(node.value);
           branching.set(node.value, {
             kind: node.type === TYPE.plural ? "plural" : "select",
-            hasOther: "other" in node.options,
+            keys: new Set(Object.keys(node.options)),
           });
           for (const option of Object.values(node.options)) {
             walk(option.value);
@@ -89,16 +89,31 @@ export const validateTranslation = ({
     ];
   }
 
+  if (/<\/?num-\d+/.test(source)) {
+    return [
+      "the source uses a tag named num-<digits>, which is reserved by the validator; it cannot be validated",
+    ];
+  }
+
   const parsedSource = tryParse(source);
   if (!parsedSource.ast) return [];
 
   const parsedTranslation = tryParse(translation);
   if (!parsedTranslation.ast) {
+    if (parsedTranslation.error === "MISSING_OTHER_CLAUSE") {
+      const names = [...inspect(parsedSource.ast).branching.keys()];
+      return [
+        `a plural or select in the translation has no "other" case; every plural and select must end with an other {...} case${names.length ? ` (source arguments: ${names.map((n) => `{${n}}`).join(", ")})` : ""}`,
+      ];
+    }
     return [
       `the translation is not valid ICU MessageFormat (${parsedTranslation.error}); check for unbalanced braces, stray "},{" fragments, mismatched tags, and apostrophes before "{" which start quoted text`,
     ];
   }
 
+  const apostropheHint = translation.includes("'")
+    ? " (an apostrophe directly before { or < starts quoted text and turns the argument or tag into literal text; write '' for a literal apostrophe)"
+    : "";
   const expected = inspect(parsedSource.ast);
   const actual = inspect(parsedTranslation.ast);
 
@@ -133,10 +148,21 @@ export const validateTranslation = ({
         `{${name}} must be a ${wanted.kind} argument like in the source, but it is a ${found.kind}`,
       );
     }
-    if (!found.hasOther) {
-      reasons.push(
-        `the ${found.kind} for {${name}} must include an "other" case`,
-      );
+    if (wanted.kind === "select" && found.kind === "select") {
+      for (const key of wanted.keys) {
+        if (!found.keys.has(key)) {
+          reasons.push(
+            `the select for {${name}} is missing the case "${key}"; select case names are identifiers and must stay exactly as in the source (do not translate them)`,
+          );
+        }
+      }
+      for (const key of found.keys) {
+        if (!wanted.keys.has(key)) {
+          reasons.push(
+            `the select for {${name}} has the case "${key}" which does not exist in the source; select case names must not be translated or added`,
+          );
+        }
+      }
     }
   }
 
@@ -144,7 +170,7 @@ export const validateTranslation = ({
     const found = actual.tags.get(name) ?? 0;
     if (found < count) {
       reasons.push(
-        `tag ${describeTag(name)} appears ${found} time(s) in the translation but ${count} in the source; keep every tag and do not rename it`,
+        `tag ${describeTag(name)} appears ${found} time(s) in the translation but ${count} in the source; keep every tag and do not rename it${apostropheHint}`,
       );
     }
   }
@@ -152,7 +178,7 @@ export const validateTranslation = ({
     const wanted = expected.tags.get(name) ?? 0;
     if (count > wanted) {
       reasons.push(
-        `tag ${describeTag(name)} appears ${count} time(s) in the translation but ${wanted} in the source; do not add or rename tags`,
+        `tag ${describeTag(name)} appears ${count} time(s) in the translation but ${wanted} in the source; do not add or rename tags${apostropheHint}`,
       );
     }
   }

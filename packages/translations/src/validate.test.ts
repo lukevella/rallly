@@ -39,13 +39,47 @@ describe("validateTranslation", () => {
       ),
     ).toEqual([]));
 
-  it("rejects a plural without other", () =>
+  it("rejects a plural without other and says so", () => {
+    const reasons = v(
+      "{count, plural, one {# poll} other {# polls}}",
+      "{count, plural, one {# Umfrage}}",
+    );
+    expect(reasons).toHaveLength(1);
+    expect(reasons[0]).toContain('"other" case');
+    expect(reasons[0]).toContain("{count}");
+  });
+
+  it("rejects a select without other and says so", () =>
     expect(
-      v(
-        "{count, plural, one {# poll} other {# polls}}",
-        "{count, plural, one {# Umfrage}}",
-      ),
-    ).not.toEqual([]));
+      v("{k, select, a {A} other {B}}", "{k, select, a {A}}")[0],
+    ).toContain('"other" case'));
+
+  const select = "{interval, select, month {month} other {year}}";
+
+  it("rejects a select with a dropped key", () => {
+    const reasons = v(select, "{interval, select, other {Jahr}}");
+    expect(reasons.join()).toContain('"month"');
+  });
+
+  it("rejects a select with a translated key", () => {
+    const reasons = v(select, "{interval, select, monat {Monat} other {Jahr}}");
+    expect(reasons.join()).toContain('"month"');
+    expect(reasons.join()).toContain('"monat"');
+  });
+
+  it("accepts a select with the same keys", () =>
+    expect(v(select, "{interval, select, month {Monat} other {Jahr}}")).toEqual(
+      [],
+    ));
+
+  it("blames the apostrophe when it quotes a tag", () => {
+    const reasons = v("The <b>organiser</b>", "L'<b>organisateur</b>");
+    expect(reasons).not.toEqual([]);
+    expect(reasons.join()).toContain("apostrophe");
+  });
+
+  it("refuses to validate a source using the reserved tag prefix", () =>
+    expect(v("<num-0>A</num-0>", "<0>B</0>")).not.toEqual([]));
 
   it("rejects a plural flattened to a simple argument", () =>
     expect(
