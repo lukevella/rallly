@@ -90,8 +90,50 @@ const runFile = async ({
 
   const path = `${rootId}/${locale}/${namespace}`;
   const readOne = (file: string) => {
+    let value: unknown;
     try {
-      return readMessages(file);
+      value = readMessages(file);
+    } catch (error) {
+      throw new Error(
+        `${file}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+      const found =
+        value === null
+          ? "null"
+          : Array.isArray(value)
+            ? "an array"
+            : typeof value;
+      throw new Error(`${file}: expected a JSON object, found ${found}`);
+    }
+    return value as Messages;
+  };
+
+  const failedFile = (error: unknown) => ({
+    path,
+    translated: 0,
+    adopted: 0,
+    removed: 0,
+    failed: [
+      {
+        key: "*",
+        reason: error instanceof Error ? error.message : String(error),
+      },
+    ],
+  });
+
+  const write = ({
+    file,
+    values,
+    order,
+  }: {
+    file: string;
+    values: Messages;
+    order: string[];
+  }) => {
+    try {
+      writeMessages({ path: file, messages: values, order });
     } catch (error) {
       throw new Error(
         `${file}: ${error instanceof Error ? error.message : String(error)}`,
@@ -109,18 +151,7 @@ const runFile = async ({
     lock = readOne(lockFile);
     plan = planLocale({ en, messages, lock });
   } catch (error) {
-    return {
-      path,
-      translated: 0,
-      adopted: 0,
-      removed: 0,
-      failed: [
-        {
-          key: "*",
-          reason: error instanceof Error ? error.message : String(error),
-        },
-      ],
-    };
+    return failedFile(error);
   }
 
   let translated: Messages = {};
@@ -173,14 +204,18 @@ const runFile = async ({
   }
   const order = Object.keys(en);
 
-  if (report.translated > 0 || plan.orphans.some((key) => key in messages)) {
-    writeMessages({
-      path: messagesPath,
-      messages: { ...without(messages, plan.orphans), ...translated },
-      order,
-    });
+  try {
+    if (report.translated > 0 || plan.orphans.some((key) => key in messages)) {
+      write({
+        file: messagesPath,
+        values: { ...without(messages, plan.orphans), ...translated },
+        order,
+      });
+    }
+    write({ file: lockFile, values: newLock, order });
+  } catch (error) {
+    return failedFile(error);
   }
-  writeMessages({ path: lockFile, messages: newLock, order });
 
   return report;
 };

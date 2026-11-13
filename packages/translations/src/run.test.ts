@@ -241,12 +241,65 @@ describe("run", () => {
     });
   });
 
-  it("writes messages before the lock", async () => {
-    writeFileSync(join(tmp, "i18n/lock"), "not a directory");
-    await expect(
-      run({ repoRoot: tmp, complete: echo(), model }),
-    ).rejects.toThrow();
+  it("reports a write failure, keeps messages before lock, and continues", async () => {
+    write(localePath("fr"), { a: "Sauver" });
+    write(join(tmp, "i18n/lock/web/de"), "not a directory");
+    const report = await run({ repoRoot: tmp, complete: echo(), model });
+    const de = report.files.find((file) => file.path === "web/de/app");
+    expect(de?.failed).toHaveLength(1);
+    expect(de?.failed[0]?.key).toBe("*");
+    expect(de?.failed[0]?.reason).toContain(join(tmp, "i18n/lock/web/de"));
     expect(read("de").b).toBe("[de] Hi {name}");
+    const fr = report.files.find((file) => file.path === "web/fr/app");
+    expect(fr?.failed).toEqual([]);
+    expect(read("fr")).toEqual({ a: "Sauver", b: "[de] Hi {name}" });
+    expect(readLock("fr")).toEqual({
+      a: hashSource("Save"),
+      b: hashSource("Hi {name}"),
+    });
+  });
+
+  it.each([
+    {
+      name: "an array messages file",
+      target: "messages",
+      content: "[]",
+      found: "an array",
+    },
+    {
+      name: "a string lock file",
+      target: "lock",
+      content: '"text"',
+      found: "string",
+    },
+    {
+      name: "a null messages file",
+      target: "messages",
+      content: "null",
+      found: "null",
+    },
+  ])("reports $name and leaves it untouched", async ({
+    target,
+    content,
+    found,
+  }) => {
+    const file =
+      target === "messages"
+        ? localePath("de")
+        : lockPath({
+            repoRoot: tmp,
+            rootId: "web",
+            locale: "de",
+            namespace: "app",
+          });
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, content);
+    const report = await run({ repoRoot: tmp, complete: echo(), model });
+    expect(report.files[0]?.failed).toHaveLength(1);
+    expect(report.files[0]?.failed[0]?.reason).toContain(file);
+    expect(report.files[0]?.failed[0]?.reason).toContain(found);
+    expect(readFileSync(file, "utf8")).toBe(content);
+    expect(calls).toHaveLength(0);
   });
 
   it("writes nothing on dry run but still reports", async () => {
