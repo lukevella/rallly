@@ -1,6 +1,9 @@
-import type { PricingData, ProPrice } from "@rallly/billing";
+import type { PricingData, ProPrice, Stripe } from "@rallly/billing";
+import type { ApiPollTier } from "@rallly/billing/pricing";
+import { API_POLL_TIERS, apiPollTierLimits } from "@rallly/billing/pricing";
 import { isBillingEnabled } from "@/features/billing/constants";
 import type {
+  BillingChange,
   BillingInterval,
   SubscriptionStatus,
 } from "@/features/billing/schema";
@@ -88,4 +91,239 @@ export function canChangeBillingInterval(subscription: {
     // Yearly to monthly would need a schedule to let the paid year run out.
     subscription.interval === "month"
   );
+}
+
+export type ApiPollTierChange = "none" | "upgrade" | "restore" | "downgrade";
+
+/**
+ * A downgrade keeps the old limit until renewal without a refund, so moving
+ * back up to anything at or below that retained limit is already paid for.
+ */
+export function classifyApiPollTierChange({
+  currentLimit,
+  retainedLimit,
+  retainedUntil,
+  targetLimit,
+  now,
+}: {
+  currentLimit: number | null;
+  retainedLimit: number | null;
+  retainedUntil: Date | null;
+  targetLimit: number | null;
+  now: Date;
+}): ApiPollTierChange {
+  if (targetLimit === currentLimit) {
+    return "none";
+  }
+  if (targetLimit === null) {
+    return "downgrade";
+  }
+  if (currentLimit !== null && targetLimit < currentLimit) {
+    return "downgrade";
+  }
+  const paidUpTo =
+    retainedUntil && retainedUntil > now ? (retainedLimit ?? 0) : 0;
+  return targetLimit <= paidUpTo ? "restore" : "upgrade";
+}
+
+export function canChangeApiPollTier(subscription: {
+  active: boolean;
+  status: SubscriptionStatus;
+  cancelAtPeriodEnd: boolean;
+}) {
+  return (
+    subscription.active &&
+    (subscription.status === "active" || subscription.status === "trialing") &&
+    !subscription.cancelAtPeriodEnd
+  );
+}
+
+type ApiPollAddonPrices = Record<
+  ApiPollTier,
+  { monthly: ProPrice; yearly: ProPrice }
+>;
+
+type BillingChangeError = { error: "currency_unsupported" | "no_change" };
+
+/**
+ * By price first, so a tier's limit can change without stranding subscribers
+ * whose stored limit predates it. The limit only identifies a price that has
+ * since left the catalog.
+ */
+function findApiPollTier({
+  priceId,
+  limit,
+  prices,
+}: {
+  priceId: string | null;
+  limit: number | null;
+  prices: ApiPollAddonPrices;
+}) {
+  return (
+    API_POLL_TIERS.find(
+      (tier) =>
+        prices[tier].monthly.id === priceId ||
+        prices[tier].yearly.id === priceId,
+    ) ??
+    API_POLL_TIERS.find((tier) => apiPollTierLimits[tier] === limit) ??
+    null
+  );
+}
+
+function hasCurrency(price: ProPrice, currency: string) {
+  return price.amounts[currency] !== undefined;
+}
+
+/**
+ * The Stripe update for one billing change. Never combines an add-on removal
+ * with anything else: `pending_if_incomplete` updates reject `deleted` items.
+ */
+export function buildSubscriptionUpdate({
+  subscription,
+  change,
+  prices,
+  now,
+}: {
+  subscription: {
+    currency: string;
+    interval: BillingInterval;
+    quantity: number;
+    priceId: string;
+    subscriptionItemId: string;
+    apiAddonItemId: string | null;
+    apiAddonPriceId: string | null;
+    apiPollLimit: number | null;
+    apiPollRetainedLimit: number | null;
+    apiPollRetainedUntil: Date | null;
+    periodEnd: Date;
+  };
+  change: BillingChange;
+  prices: { pro: PricingLike; apiPollAddon: ApiPollAddonPrices };
+  now: Date;
+}): Stripe.SubscriptionUpdateParams | BillingChangeError {
+  switch (change.type) {
+    case "seats": {
+      if (change.seatDelta === 0) {
+        return { error: "no_change" };
+      }
+      const quantity = subscription.quantity + change.seatDelta;
+      if (quantity < 1) {
+        throw new Error("A subscription needs at least one seat");
+      }
+      return {
+        items: [{ id: subscription.subscriptionItemId, quantity }],
+        proration_behavior: "always_invoice",
+        payment_behavior: "pending_if_incomplete",
+      };
+    }
+    case "interval": {
+      if (subscription.interval === "year") {
+        return { error: "no_change" };
+      }
+      const seatPrice = resolvePriceSet({
+        earlySupporter: isEarlySupporter({
+          priceId: subscription.priceId,
+          pricing: prices.pro,
+        }),
+        pricing: prices.pro,
+      }).yearly;
+      let addonPrice: ProPrice | null = null;
+      if (subscription.apiAddonItemId) {
+        const tier = findApiPollTier({
+          priceId: subscription.apiAddonPriceId,
+          limit: subscription.apiPollLimit,
+          prices: prices.apiPollAddon,
+        });
+        if (!tier) {
+          throw new Error(
+            `API add-on price ${subscription.apiAddonPriceId} matches no tier`,
+          );
+        }
+        addonPrice = prices.apiPollAddon[tier].yearly;
+      }
+      if (
+        !hasCurrency(seatPrice, subscription.currency) ||
+        (addonPrice && !hasCurrency(addonPrice, subscription.currency))
+      ) {
+        return { error: "currency_unsupported" };
+      }
+      const items: Stripe.SubscriptionUpdateParams.Item[] = [
+        {
+          id: subscription.subscriptionItemId,
+          price: seatPrice.id,
+          quantity: subscription.quantity,
+        },
+      ];
+      if (subscription.apiAddonItemId && addonPrice) {
+        items.push({ id: subscription.apiAddonItemId, price: addonPrice.id });
+      }
+      return {
+        items,
+        proration_behavior: "always_invoice",
+        payment_behavior: "pending_if_incomplete",
+      };
+    }
+    case "api_tier": {
+      const currentTier = subscription.apiAddonItemId
+        ? findApiPollTier({
+            priceId: subscription.apiAddonPriceId,
+            limit: subscription.apiPollLimit,
+            prices: prices.apiPollAddon,
+          })
+        : null;
+      if (change.tier !== null && change.tier === currentTier) {
+        return { error: "no_change" };
+      }
+      const currentLimit = currentTier
+        ? apiPollTierLimits[currentTier]
+        : subscription.apiAddonItemId
+          ? subscription.apiPollLimit
+          : null;
+      const targetLimit = change.tier ? apiPollTierLimits[change.tier] : null;
+      // A retained tier was paid for up to the period end it was set at. Once
+      // the period moves (renewal, or a switch to yearly) it covers none of it.
+      const retainedUntil =
+        subscription.apiPollRetainedUntil &&
+        subscription.apiPollRetainedUntil >= subscription.periodEnd
+          ? subscription.apiPollRetainedUntil
+          : null;
+      const kind = classifyApiPollTierChange({
+        currentLimit,
+        retainedLimit: subscription.apiPollRetainedLimit,
+        retainedUntil,
+        targetLimit,
+        now,
+      });
+      if (kind === "none") {
+        return { error: "no_change" };
+      }
+      if (change.tier === null) {
+        if (!subscription.apiAddonItemId) {
+          return { error: "no_change" };
+        }
+        return {
+          items: [{ id: subscription.apiAddonItemId, deleted: true }],
+          proration_behavior: "none",
+        };
+      }
+      const price =
+        prices.apiPollAddon[change.tier][
+          subscription.interval === "year" ? "yearly" : "monthly"
+        ];
+      if (!hasCurrency(price, subscription.currency)) {
+        return { error: "currency_unsupported" };
+      }
+      const item = subscription.apiAddonItemId
+        ? { id: subscription.apiAddonItemId, price: price.id }
+        : { price: price.id };
+      if (kind === "upgrade") {
+        return {
+          items: [item],
+          proration_behavior: "always_invoice",
+          payment_behavior: "pending_if_incomplete",
+        };
+      }
+      return { items: [item], proration_behavior: "none" };
+    }
+  }
 }
