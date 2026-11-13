@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Kyselyjen lisäasetukset",
-  "advancedPollSettingsDescription": "Vaadi osallistujien sähköpostiosoitteet, piilota osallistujien nimet ja piilota äänet",
   "apiAccess": "API-käyttöoikeus",
   "apiAccessDescription": "Luo kyselyitä ja tarkastele tuloksia omista järjestelmistäsi. <a>Lue API-dokumentaatiota</a>",
   "apiAndWebhooks": "API ja webhookit",
