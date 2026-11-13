@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Speciális szavazásbeállítások",
-  "advancedPollSettingsDescription": "Kérj e-mail-címet a résztvevőktől, rejtsd el a résztvevők nevét és a szavazatokat",
   "apiAccess": "API hozzáférés",
   "apiAccessDescription": "Hozz létre szavazásokat és tekintsd meg az eredményt a saját rendszeredből. <a>Olvasd el az API dokumentációt</a>",
   "apiAndWebhooks": "API és webhookok",
