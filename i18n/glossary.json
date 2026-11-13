@@ -1,0 +1,130 @@
+{
+  "doNotTranslate": [
+    "Rallly",
+    "Google Calendar",
+    "Microsoft Calendar",
+    "Zoom",
+    "Google Meet",
+    "Microsoft Teams",
+    "Stripe",
+    "ICS",
+    "API"
+  ],
+  "terms": [
+    {
+      "en": "Poll",
+      "note": "a scheduling poll where participants vote on proposed times to find when a group can meet; not an opinion survey",
+      "translations": {
+        "de": "Umfrage",
+        "fi": "Kysely",
+        "fr": "Sondage",
+        "hu": "Szavazás",
+        "nl": "Poll"
+      }
+    },
+    {
+      "en": "Space",
+      "note": "a workspace that holds a team's polls and events; not outer space and not whitespace",
+      "translations": {
+        "cs": "Prostor",
+        "da": "Rum",
+        "de": "Gruppe",
+        "es": "Espacio",
+        "fi": "Tila",
+        "fr": "Espace",
+        "hu": "Munkatér",
+        "it": "Spazio",
+        "nl": "Ruimte",
+        "no": "Område",
+        "pl": "Przestrzeń",
+        "pt-BR": "Espaço",
+        "ru": "Пространство",
+        "sv": "Område",
+        "zh": "空间"
+      }
+    },
+    {
+      "en": "Event Types",
+      "note": "a product feature: reusable templates for bookable meetings, such as a 30 minute call; capitalized as a feature name",
+      "translations": {
+        "cs": "Typy událostí",
+        "da": "Begivenhedstyper",
+        "de": "Termintypen",
+        "es": "Tipos de eventos",
+        "fi": "Tapahtumalajit",
+        "fr": "Types d'événement",
+        "hu": "Eseménytípusok",
+        "it": "Tipi di evento",
+        "nl": "Evenementtypes",
+        "no": "Arrangementstyper",
+        "pl": "Typy wydarzeń",
+        "pt-BR": "Tipos de Evento",
+        "ru": "Типы событий",
+        "sv": "Evenemangstyper",
+        "zh": "活动类型"
+      }
+    },
+    {
+      "en": "Quick Create",
+      "note": "a product feature: a fast way to create a poll or event in one step; capitalized as a feature name",
+      "translations": {
+        "cs": "Rychlé vytvoření",
+        "da": "Hurtig oprettelse",
+        "de": "Schnell erstellen",
+        "es": "Creación rápida",
+        "fi": "Pikaluonti",
+        "fr": "Créer Rapidement",
+        "hu": "Gyors létrehozás",
+        "it": "Creazione Rapida",
+        "nl": "Snel beginnen",
+        "no": "Hurtigoppsett",
+        "pl": "Szybkie tworzenie",
+        "pt-BR": "Crie rápido",
+        "ru": "Быстрое создание",
+        "sv": "Snabbskapa",
+        "zh": "快速创建"
+      }
+    },
+    {
+      "en": "Control Panel",
+      "note": "a product feature: the admin area where an instance administrator manages users and settings; not a hardware panel",
+      "translations": {
+        "cs": "Řídící panel",
+        "da": "Kontrol panel",
+        "de": "Verwaltung",
+        "es": "Panel de control",
+        "fi": "Ohjauspaneeli",
+        "fr": "Panneau de Configuration",
+        "hu": "Vezérlőpult",
+        "it": "Pannello di controllo",
+        "nl": "Configuratiescherm",
+        "no": "Kontrollpanel",
+        "pl": "Panel zarządzania",
+        "pt-BR": "Painel de controle",
+        "ru": "Панель управления",
+        "sv": "Kontrollpanel",
+        "zh": "控制面板"
+      }
+    },
+    {
+      "en": "Pro",
+      "note": "the name of the paid subscription plan; a plan name, not the adjective meaning professional",
+      "translations": {}
+    },
+    {
+      "en": "If need be",
+      "note": "a vote option meaning a time works only if no better time is found; between yes and no",
+      "translations": {}
+    },
+    {
+      "en": "Participant",
+      "note": "a person who votes on a poll or responds to an event invitation; not the organizer",
+      "translations": {}
+    },
+    {
+      "en": "Organizer",
+      "note": "the person who creates and manages a poll or event; not a participant",
+      "translations": {}
+    }
+  ]
+}
