@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Zaawansowane ustawienia ankiet",
-  "advancedPollSettingsDescription": "Wymagaj adresów e-mail uczestników, ukrywaj imiona uczestników i ukrywaj głosy",
   "apiAccess": "Dostęp do API",
   "apiAccessDescription": "Twórz ankiety i odczytuj wyniki z własnych systemów. <a>Przeczytaj dokumentację API</a>",
   "apiAndWebhooks": "API i webhooki",
