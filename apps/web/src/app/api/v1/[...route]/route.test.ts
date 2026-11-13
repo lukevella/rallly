@@ -31,6 +31,10 @@ vi.mock("@/features/conferencing/data", () => ({
   parsePollConferencing: (value: unknown) => value,
 }));
 
+vi.mock("@/features/email-queue/mutations", () => ({
+  queueEmails: vi.fn(),
+}));
+
 vi.mock("@/features/moderation/mutations", () => ({
   moderateContent: vi.fn().mockResolvedValue({ verdict: "safe", reason: "" }),
 }));

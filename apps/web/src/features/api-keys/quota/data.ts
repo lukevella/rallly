@@ -9,11 +9,11 @@ import {
   startOfUtcMonth,
 } from "./utils";
 
-export async function getApiPollQuota({
+async function readApiPollQuota({
   spaceId,
   now,
 }: {
-  spaceId: AuthorizedSpaceId;
+  spaceId: string;
   now: Date;
 }) {
   const period = startOfUtcMonth(now);
@@ -21,7 +21,16 @@ export async function getApiPollQuota({
   const space = await prisma.space.findUnique({
     where: { id: spaceId },
     select: {
+      name: true,
       apiPollQuotaOverride: true,
+      owner: {
+        select: {
+          email: true,
+          locale: true,
+          banned: true,
+          deletedAt: true,
+        },
+      },
       subscriptions: {
         where: { active: true },
         orderBy: { createdAt: "desc" },
@@ -47,17 +56,50 @@ export async function getApiPollQuota({
   const retainedUntil = subscription?.apiPollRetainedUntil ?? null;
 
   return {
-    limit: resolveApiPollLimit({
+    space,
+    quota: {
+      limit: resolveApiPollLimit({
+        addonLimit,
+        retainedLimit,
+        retainedUntil,
+        override: space?.apiPollQuotaOverride ?? null,
+        now,
+      }),
+      used: space?.apiUsage[0]?.count ?? 0,
+      resetAt: startOfNextUtcMonth(now),
       addonLimit,
       retainedLimit,
       retainedUntil,
-      override: space?.apiPollQuotaOverride ?? null,
-      now,
-    }),
-    used: space?.apiUsage[0]?.count ?? 0,
-    resetAt: startOfNextUtcMonth(now),
-    addonLimit,
-    retainedLimit,
-    retainedUntil,
+    },
   };
+}
+
+export async function getApiPollQuota({
+  spaceId,
+  now,
+}: {
+  spaceId: AuthorizedSpaceId;
+  now: Date;
+}) {
+  const { quota } = await readApiPollQuota({ spaceId, now });
+  return quota;
+}
+
+/**
+ * What the quota warning email needs: the space's current quota and its
+ * owner. Keyed by the queued email's subject, which the queue wrote itself,
+ * so it takes a plain id.
+ */
+export async function getApiPollQuotaWarningContext({
+  spaceId,
+  now,
+}: {
+  spaceId: string;
+  now: Date;
+}) {
+  const { space, quota } = await readApiPollQuota({ spaceId, now });
+  if (!space) {
+    return null;
+  }
+  return { spaceName: space.name, owner: space.owner, ...quota };
 }

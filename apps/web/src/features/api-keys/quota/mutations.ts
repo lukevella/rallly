@@ -1,10 +1,14 @@
 import "server-only";
 
 import { prisma } from "@rallly/database";
+import { createLogger } from "@rallly/logger";
 import { Effect } from "effect";
+import { queueEmails } from "@/features/email-queue/mutations";
 import type { AuthorizedSpaceId } from "@/features/space/types";
 import { fromPrisma } from "@/lib/effect/db";
-import { startOfUtcMonth } from "./utils";
+import { getQuotaWarningLevel, startOfUtcMonth, toMonthKey } from "./utils";
+
+const logger = createLogger("api-poll-quota");
 
 function toPeriodDate(period: Date) {
   return period.toISOString().slice(0, 10);
@@ -75,3 +79,82 @@ export const releaseApiPollSlot = Effect.fn("apiPollQuota.releaseApiPollSlot")(
     );
   },
 );
+
+/**
+ * Queues the owner's warning when a reservation brings the space to 80% or
+ * 100% of its limit, once per level per month. Never throws: it runs after
+ * the poll is already created, so a failure here must not fail the request.
+ */
+export async function queueApiPollQuotaWarning(params: {
+  spaceId: AuthorizedSpaceId;
+  limit: number;
+  count: number;
+  now: Date;
+}) {
+  try {
+    await queueApiPollQuotaWarningOrThrow(params);
+  } catch (error) {
+    logger.error(
+      { error, spaceId: params.spaceId },
+      "API poll quota warning failed",
+    );
+  }
+}
+
+async function queueApiPollQuotaWarningOrThrow({
+  spaceId,
+  limit,
+  count,
+  now,
+}: {
+  spaceId: AuthorizedSpaceId;
+  limit: number;
+  count: number;
+  now: Date;
+}) {
+  const level = getQuotaWarningLevel({ count, limit });
+  if (!level) {
+    return;
+  }
+
+  const period = startOfUtcMonth(now);
+  const where = { spaceId, resource: "poll" as const, period };
+  const subjectId = `${spaceId}:${toMonthKey(period)}:${level}`;
+
+  await prisma.$transaction(async (tx) => {
+    // Conditional on the column being unset, so concurrent reservations
+    // crossing the same level still warn only once.
+    const { count: claimed } = await tx.apiUsage.updateMany({
+      where:
+        level === "at_limit"
+          ? { ...where, atLimitWarnedAt: null }
+          : { ...where, nearLimitWarnedAt: null },
+      data:
+        level === "at_limit"
+          ? { atLimitWarnedAt: now }
+          : { nearLimitWarnedAt: now },
+    });
+    if (claimed === 0) {
+      return;
+    }
+    if (level === "at_limit") {
+      // A count that drops back below the limit after a released slot must
+      // not send a near limit warning after this one.
+      await tx.apiUsage.updateMany({
+        where: { ...where, nearLimitWarnedAt: null },
+        data: { nearLimitWarnedAt: now },
+      });
+    }
+
+    const space = await tx.space.findUniqueOrThrow({
+      where: { id: spaceId },
+      select: { ownerId: true },
+    });
+    await queueEmails(tx, {
+      kind: "api_poll_quota_warning",
+      userId: space.ownerId,
+      batchId: subjectId,
+      subjectIds: [subjectId],
+    });
+  });
+}
