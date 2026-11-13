@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "高级投票设置",
-  "advancedPollSettingsDescription": "要求参与者提供电子邮箱、隐藏参与者姓名并隐藏票数",
   "apiAccess": "API 访问",
   "apiAccessDescription": "从您自己的系统创建投票并读取结果。<a>阅读 API 文档</a>",
   "apiAndWebhooks": "API 和 Webhook",
