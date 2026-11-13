@@ -114,12 +114,39 @@ const failAll = ({
   reason: string;
 }) => items.map(({ key }) => ({ key, reason }));
 
+const escapeRegExp = (text: string) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const protectedTermReasons = ({
+  protectedTerms,
+  source,
+  translation,
+}: {
+  protectedTerms: string[];
+  source: string;
+  translation: string;
+}) =>
+  protectedTerms
+    .filter(
+      (term) =>
+        new RegExp(
+          `(?<![\\p{L}\\p{N}])${escapeRegExp(term)}(?![\\p{L}\\p{N}])`,
+          "u",
+        ).test(source) && !translation.includes(term),
+    )
+    .map(
+      (term) =>
+        `the protected term "${term}" is missing from the translation; keep it exactly as written in the source, do not translate it`,
+    );
+
 const judge = ({
   items,
   attempt,
+  protectedTerms,
 }: {
   items: TranslationItem[];
   attempt: Attempt;
+  protectedTerms: string[];
 }) => {
   const accepted: Messages = {};
   const rejected: TranslationItem[] = [];
@@ -141,10 +168,14 @@ const judge = ({
       });
       continue;
     }
-    const reasons = validateTranslation({
-      source: item.source,
-      translation: value,
-    });
+    const reasons = [
+      ...validateTranslation({ source: item.source, translation: value }),
+      ...protectedTermReasons({
+        protectedTerms,
+        source: item.source,
+        translation: value,
+      }),
+    ];
     if (reasons.length === 0) {
       accepted[item.key] = value;
     } else {
@@ -164,12 +195,14 @@ const translateGroup = async ({
   model,
   system,
   items,
+  protectedTerms,
   canSplit,
 }: {
   complete: Complete;
   model: string;
   system: string;
   items: TranslationItem[];
+  protectedTerms: string[];
   canSplit: boolean;
 }): Promise<{
   translated: Messages;
@@ -201,6 +234,7 @@ const translateGroup = async ({
         model,
         system,
         items: half,
+        protectedTerms,
         canSplit: false,
       });
       Object.assign(translated, result.translated);
@@ -209,7 +243,7 @@ const translateGroup = async ({
     return { translated, failed };
   }
 
-  const firstPass = judge({ items, attempt: first });
+  const firstPass = judge({ items, attempt: first, protectedTerms });
   if (firstPass.rejected.length === 0) {
     return { translated: firstPass.accepted, failed: [] };
   }
@@ -231,7 +265,11 @@ const translateGroup = async ({
       }),
     };
   }
-  const secondPass = judge({ items: firstPass.rejected, attempt: second });
+  const secondPass = judge({
+    items: firstPass.rejected,
+    attempt: second,
+    protectedTerms,
+  });
 
   return {
     translated: { ...firstPass.accepted, ...secondPass.accepted },
@@ -267,6 +305,7 @@ export const translateItems = async ({
       model,
       system,
       items: items.slice(i, i + chunkSize),
+      protectedTerms: glossary.doNotTranslate,
       canSplit: true,
     });
     Object.assign(translated, result.translated);

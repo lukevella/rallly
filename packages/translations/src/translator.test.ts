@@ -177,6 +177,83 @@ describe("translateItems", () => {
     expect(sent.map((i: { key: string }) => i.key)).toEqual(["b"]);
   });
 
+  const runWith = ({
+    complete,
+    locale,
+    items,
+  }: {
+    complete: Complete;
+    locale: string;
+    items: { key: string; source: string }[];
+  }) =>
+    translateItems({
+      complete,
+      model,
+      locale,
+      glossary: { doNotTranslate: ["Rallly", "Pro"], terms: [] },
+      reference: {},
+      items,
+    });
+
+  it("retries a translation that translates a protected term", async () => {
+    const { complete, calls } = fake([
+      reply({ translations: [{ key: "u", value: "Auf Premium upgraden" }] }),
+      reply({ translations: [{ key: "u", value: "Auf Pro upgraden" }] }),
+    ]);
+    const r = await runWith({
+      complete,
+      locale: "de",
+      items: [{ key: "u", source: "Upgrade to Pro" }],
+    });
+    expect(r).toEqual({ translated: { u: "Auf Pro upgraden" }, failed: [] });
+    expect(calls).toHaveLength(2);
+    const sent = JSON.parse(lastContent(calls[1]));
+    expect(sent[0]).toMatchObject({
+      key: "u",
+      previous: "Auf Premium upgraden",
+    });
+    expect(sent[0].error).toContain('"Pro"');
+  });
+
+  it("fails a protected term that is translated twice", async () => {
+    const bad = reply({
+      translations: [{ key: "u", value: "Auf Premium upgraden" }],
+    });
+    const { complete } = fake([bad, bad]);
+    const r = await runWith({
+      complete,
+      locale: "de",
+      items: [{ key: "u", source: "Upgrade to Pro" }],
+    });
+    expect(r.translated).toEqual({});
+    expect(r.failed[0]?.reason).toContain('"Pro"');
+  });
+
+  it("finds a protected term without surrounding spaces", async () => {
+    const { complete, calls } = fake([
+      reply({ translations: [{ key: "u", value: "升级到Pro" }] }),
+    ]);
+    const r = await runWith({
+      complete,
+      locale: "zh",
+      items: [{ key: "u", source: "Upgrade to Pro" }],
+    });
+    expect(r).toEqual({ translated: { u: "升级到Pro" }, failed: [] });
+    expect(calls).toHaveLength(1);
+  });
+
+  it("only protects a term the source uses as a whole word", async () => {
+    const { complete } = fake([
+      reply({ translations: [{ key: "p", value: "Angeben" }] }),
+    ]);
+    const r = await runWith({
+      complete,
+      locale: "de",
+      items: [{ key: "p", source: "Provide" }],
+    });
+    expect(r.translated).toEqual({ p: "Angeben" });
+  });
+
   it("fails a key that is omitted twice", async () => {
     const { complete, calls } = fake([
       reply({ translations: [] }),
