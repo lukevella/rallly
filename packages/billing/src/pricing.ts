@@ -29,6 +29,12 @@ export const API_POLL_TIERS = ["small", "medium", "large", "xlarge"] as const;
 
 export type ApiPollTier = (typeof API_POLL_TIERS)[number];
 
+export function parseApiPollTier(value: string | null | undefined) {
+  return API_POLL_TIERS.find((tier) => tier === value) ?? null;
+}
+
+// Existing subscribers' limits follow this table. Only ever raise a tier's
+// limit; to lower one, add a new tier with new Stripe prices instead.
 export const apiPollTierLimits: Record<ApiPollTier, number> = {
   small: 250,
   medium: 500,

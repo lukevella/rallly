@@ -1,4 +1,8 @@
-import { INCLUDED_API_POLLS } from "@rallly/billing/pricing";
+import {
+  apiPollTierLimits,
+  INCLUDED_API_POLLS,
+  parseApiPollTier,
+} from "@rallly/billing/pricing";
 import { API_POLL_NEAR_LIMIT_RATIO } from "./constants";
 
 export function startOfUtcMonth(now: Date) {
@@ -11,6 +15,11 @@ export function toMonthKey(date: Date) {
 
 export function startOfNextUtcMonth(now: Date) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+}
+
+export function apiPollTierLimit(value: string | null) {
+  const tier = parseApiPollTier(value);
+  return tier ? apiPollTierLimits[tier] : null;
 }
 
 export function resolveApiPollLimit({

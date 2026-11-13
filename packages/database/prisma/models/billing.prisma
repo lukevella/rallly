@@ -20,11 +20,11 @@ model Subscription {
   apiAddonItemId       String?              @map("api_addon_item_id")
   apiAddonPriceId      String?              @map("api_addon_price_id")
   apiAddonAmount       Int?                 @map("api_addon_amount")
-  // Monthly API poll limit granted by the add-on.
-  apiPollLimit         Int?                 @map("api_poll_limit")
-  // A lapsed add-on's limit, kept until retainedUntil so usage already
+  // Add-on tier name (ApiPollTier). The app maps it to a poll limit.
+  apiAddonTier         String?              @map("api_addon_tier")
+  // A lapsed add-on's tier, kept until retainedUntil so usage already
   // accrued in the period is not suddenly over the limit.
-  apiPollRetainedLimit Int?                 @map("api_poll_retained_limit")
+  apiPollRetainedTier  String?              @map("api_poll_retained_tier")
   apiPollRetainedUntil DateTime?            @map("api_poll_retained_until")
 
   user  User  @relation("UserToSubscription", fields: [userId], references: [id], onDelete: Cascade)

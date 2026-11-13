@@ -4,9 +4,10 @@ import type { Stripe } from "./stripe";
 import {
   ADDON_METADATA_KEY,
   API_ADDON,
-  API_POLL_LIMIT_METADATA_KEY,
+  API_POLL_TIER_METADATA_KEY,
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
+  findApiPollAddonMetadataUpdates,
   findApiPollAddonPriceMismatches,
   findApiPollAddonProductTagProblem,
   findSeatItem,
@@ -172,7 +173,7 @@ function subscription(items: Stripe.SubscriptionItem[], currency = "usd") {
 const seat = item({ id: "si_seat", metadata: {} });
 const addon = item({
   id: "si_addon",
-  metadata: { addon: "api", api_poll_limit: "1000" },
+  metadata: { addon: "api", api_poll_tier: "large" },
   unitAmount: 500,
   currencyOptions: { eur: 450 },
 });
@@ -208,18 +209,18 @@ describe("findSeatItem with a malformed item", () => {
 });
 
 describe("add-on flag", () => {
-  const limitOnly = item({
-    id: "si_limit",
-    metadata: { api_poll_limit: "50" },
+  const tierOnly = item({
+    id: "si_tier",
+    metadata: { api_poll_tier: "small" },
   });
   const other = item({
     id: "si_other",
-    metadata: { addon: "something_else", api_poll_limit: "50" },
+    metadata: { addon: "something_else", api_poll_tier: "small" },
   });
 
-  it("treats a price with a limit but no addon key as a seat", () => {
-    expect(findSeatItem(subscription([limitOnly]))).toBe(limitOnly);
-    expect(getApiPollAddonItem(subscription([limitOnly]))).toBeNull();
+  it("treats a price with a tier but no addon key as a seat", () => {
+    expect(findSeatItem(subscription([tierOnly]))).toBe(tierOnly);
+    expect(getApiPollAddonItem(subscription([tierOnly]))).toBeNull();
   });
 
   it("treats another add-on type as neither seat nor API poll add-on", () => {
@@ -249,11 +250,12 @@ describe("getSeatItem with no seat", () => {
 });
 
 describe("getApiPollAddonItem", () => {
-  it("parses the limit", () => {
-    expect(getApiPollAddonItem(subscription([seat, addon]))).toMatchObject({
+  it("parses the tier", () => {
+    expect(getApiPollAddonItem(subscription([seat, addon]))).toEqual({
       id: "si_addon",
       priceId: "price_si_addon",
-      limit: 1000,
+      tier: "large",
+      amount: 500,
     });
   });
 
@@ -279,24 +281,26 @@ describe("getApiPollAddonItem", () => {
       price: {
         id: "price_noamount",
         unit_amount: null,
-        metadata: { addon: "api", api_poll_limit: "1000" },
+        metadata: { addon: "api", api_poll_tier: "large" },
       },
     } as unknown as Stripe.SubscriptionItem;
     expect(getApiPollAddonItem(subscription([seat, noAmount]))).toBeNull();
   });
 
-  it.each([
-    "abc",
-    "0",
-    "-5",
-    "12abc",
-    "1.5",
-  ])("returns null for limit %s", (limit) => {
+  it.each(["huge", "", "Small", "1000"])("returns null for tier %j", (tier) => {
     const bad = item({
       id: "si_bad",
-      metadata: { addon: "api", api_poll_limit: limit },
+      metadata: { addon: "api", api_poll_tier: tier },
     });
     expect(getApiPollAddonItem(subscription([seat, bad]))).toBeNull();
+  });
+
+  it("returns null for a price that only carries a limit", () => {
+    const legacy = item({
+      id: "si_legacy",
+      metadata: { addon: "api", api_poll_limit: "1000" },
+    });
+    expect(getApiPollAddonItem(subscription([seat, legacy]))).toBeNull();
   });
 });
 
@@ -376,7 +380,7 @@ describe("apiPollAddonPriceParams", () => {
       tax_behavior: "exclusive",
       metadata: {
         [ADDON_METADATA_KEY]: API_ADDON,
-        [API_POLL_LIMIT_METADATA_KEY]: "1000",
+        [API_POLL_TIER_METADATA_KEY]: "large",
       },
       currency_options: {
         eur: { unit_amount: 80000 },
@@ -415,7 +419,7 @@ describe("findApiPollAddonPriceMismatches", () => {
         interval_count: 1,
         usage_type: "licensed",
       },
-      metadata: { addon: "api", api_poll_limit: "500" },
+      metadata: { addon: "api", api_poll_tier: "medium" },
       currency_options: {
         eur: { unit_amount: 4500 },
         gbp: { unit_amount: 4000 },
@@ -444,11 +448,19 @@ describe("findApiPollAddonPriceMismatches", () => {
       }),
       params,
     });
-    expect(mismatches).toHaveLength(4);
+    expect(mismatches).toHaveLength(3);
     expect(mismatches.join("\n")).toContain("unit_amount");
     expect(mismatches.join("\n")).toContain("interval");
-    expect(mismatches.join("\n")).toContain(API_POLL_LIMIT_METADATA_KEY);
     expect(mismatches.join("\n")).toContain("gbp");
+  });
+
+  it("leaves metadata to findApiPollAddonMetadataUpdates", () => {
+    expect(
+      findApiPollAddonPriceMismatches({
+        price: existing({ metadata: { addon: "api" } }),
+        params,
+      }),
+    ).toEqual([]);
   });
 
   it("reports a metered price", () => {
@@ -506,6 +518,45 @@ describe("findApiPollAddonPriceMismatches", () => {
   });
 });
 
+describe("findApiPollAddonMetadataUpdates", () => {
+  const params = apiPollAddonPriceParams({
+    product: "prod_1",
+    tier: "medium",
+    interval: "monthly",
+  });
+
+  function existing(metadata: Record<string, string>) {
+    return { id: "price_1", metadata } as unknown as Stripe.Price;
+  }
+
+  it("is empty when the metadata matches", () => {
+    expect(
+      findApiPollAddonMetadataUpdates({
+        price: existing({ addon: "api", api_poll_tier: "medium" }),
+        params,
+      }),
+    ).toEqual({});
+  });
+
+  it("sets a missing tier and keeps unrelated keys out of the update", () => {
+    expect(
+      findApiPollAddonMetadataUpdates({
+        price: existing({ addon: "api", api_poll_limit: "500" }),
+        params,
+      }),
+    ).toEqual({ [API_POLL_TIER_METADATA_KEY]: "medium" });
+  });
+
+  it("corrects a wrong tier", () => {
+    expect(
+      findApiPollAddonMetadataUpdates({
+        price: existing({ addon: "api", api_poll_tier: "small" }),
+        params,
+      }),
+    ).toEqual({ [API_POLL_TIER_METADATA_KEY]: "medium" });
+  });
+});
+
 describe("findApiPollAddonPriceMismatches with the default currency listed", () => {
   const params = apiPollAddonPriceParams({
     product: "prod_1",
@@ -525,7 +576,7 @@ describe("findApiPollAddonPriceMismatches with the default currency listed", () 
         interval_count: 1,
         usage_type: "licensed",
       },
-      metadata: { addon: "api", api_poll_limit: "500" },
+      metadata: { addon: "api", api_poll_tier: "medium" },
       currency_options: {
         usd: { unit_amount: usdOption },
         eur: { unit_amount: 4500 },
