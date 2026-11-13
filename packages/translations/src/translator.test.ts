@@ -247,16 +247,65 @@ describe("translateItems", () => {
     expect(calls).toHaveLength(1);
   });
 
-  it("fails the chunk on a truncated response without retrying", async () => {
-    const truncated = respond({
-      content: '{"translations":[',
-      finishReason: "length",
-    });
-    const { complete, calls } = fake([truncated]);
+  const truncated = respond({
+    content: '{"translations":[',
+    finishReason: "length",
+  });
+  const four = ["a", "b", "c", "d"].map((key) => ({ key, source: key }));
+  const ok = (keys: string[]) =>
+    reply({ translations: keys.map((key) => ({ key, value: key })) });
+  const keysOf = (call: Call | undefined) =>
+    JSON.parse(lastContent(call)).map((i: { key: string }) => i.key);
+
+  it("splits a truncated chunk into two halves", async () => {
+    const { complete, calls } = fake([
+      truncated,
+      ok(["a", "b"]),
+      ok(["c", "d"]),
+    ]);
+    const r = await run(complete, four);
+    expect(calls).toHaveLength(3);
+    expect(keysOf(calls[1])).toEqual(["a", "b"]);
+    expect(keysOf(calls[2])).toEqual(["c", "d"]);
+    expect(r.translated).toEqual({ a: "a", b: "b", c: "c", d: "d" });
+    expect(r.failed).toEqual([]);
+  });
+
+  it("fails only the half that truncates again, without splitting further", async () => {
+    const { complete, calls } = fake([truncated, ok(["a", "b"]), truncated]);
+    const r = await run(complete, four);
+    expect(calls).toHaveLength(3);
+    expect(r.translated).toEqual({ a: "a", b: "b" });
+    expect(r.failed.map((f) => f.key)).toEqual(["c", "d"]);
+    for (const f of r.failed) expect(f.reason).toMatch(/length/);
+  });
+
+  it("gives each half its own single validation retry", async () => {
+    const { complete, calls } = fake([
+      truncated,
+      reply({ translations: [{ key: "a", value: "a" }] }),
+      ok(["b"]),
+      ok(["c", "d"]),
+    ]);
+    const r = await run(complete, four);
+    expect(calls).toHaveLength(4);
+    expect(keysOf(calls[2])).toEqual(["b"]);
+    expect(r.failed).toEqual([]);
+    expect(Object.keys(r.translated)).toHaveLength(4);
+  });
+
+  it("bounds the requests for a chunk that always truncates", async () => {
+    const { complete, calls } = fake(Array(20).fill(truncated));
+    const r = await run(complete, four);
+    expect(calls).toHaveLength(3);
+    expect(r.translated).toEqual({});
+    expect(r.failed).toHaveLength(4);
+  });
+
+  it("does not split a single truncating item", async () => {
+    const { complete, calls } = fake([truncated, truncated]);
     const r = await run(complete, save);
     expect(calls).toHaveLength(1);
-    expect(r.translated).toEqual({});
-    expect(r.failed[0]?.key).toBe("a");
     expect(r.failed[0]?.reason).toMatch(/length/);
   });
 

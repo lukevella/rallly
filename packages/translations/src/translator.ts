@@ -147,25 +147,50 @@ const judge = ({
   return { accepted, rejected };
 };
 
-const translateChunk = async ({
+const translateGroup = async ({
   complete,
   model,
   provider,
   system,
   items,
+  canSplit,
 }: {
   complete: Complete;
   model: string;
   provider?: string;
   system: string;
   items: TranslationItem[];
-}) => {
+  canSplit: boolean;
+}): Promise<{
+  translated: Messages;
+  failed: { key: string; reason: string }[];
+}> => {
   const first = await request({ complete, model, provider, system, items });
-  const failAll = (reason: string) => ({
-    translated: {} as Messages,
-    failed: items.map(({ key }) => ({ key, reason })),
-  });
-  if (!first.ok && first.final) return failAll(first.reason);
+  if (!first.ok && first.final) {
+    if (!canSplit || items.length < 2) {
+      return {
+        translated: {},
+        failed: items.map(({ key }) => ({ key, reason: first.reason })),
+      };
+    }
+    const middle = Math.ceil(items.length / 2);
+    const halves = [items.slice(0, middle), items.slice(middle)];
+    const translated: Messages = {};
+    const failed: { key: string; reason: string }[] = [];
+    for (const half of halves) {
+      const result = await translateGroup({
+        complete,
+        model,
+        provider,
+        system,
+        items: half,
+        canSplit: false,
+      });
+      Object.assign(translated, result.translated);
+      failed.push(...result.failed);
+    }
+    return { translated, failed };
+  }
 
   const firstPass = judge({ items, attempt: first });
   if (firstPass.rejected.length === 0) {
@@ -212,12 +237,13 @@ export const translateItems = async ({
   const failed: { key: string; reason: string }[] = [];
 
   for (let i = 0; i < items.length; i += chunkSize) {
-    const result = await translateChunk({
+    const result = await translateGroup({
       complete,
       model,
       provider,
       system,
       items: items.slice(i, i + chunkSize),
+      canSplit: true,
     });
     Object.assign(translated, result.translated);
     failed.push(...result.failed);
