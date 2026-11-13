@@ -7,6 +7,7 @@ import {
   API_POLL_TIER_METADATA_KEY,
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
+  findApiPollAddonMetadataUpdates,
   findApiPollAddonPriceMismatches,
   findApiPollAddonProductTagProblem,
   findSeatItem,
@@ -447,11 +448,19 @@ describe("findApiPollAddonPriceMismatches", () => {
       }),
       params,
     });
-    expect(mismatches).toHaveLength(4);
+    expect(mismatches).toHaveLength(3);
     expect(mismatches.join("\n")).toContain("unit_amount");
     expect(mismatches.join("\n")).toContain("interval");
-    expect(mismatches.join("\n")).toContain(API_POLL_TIER_METADATA_KEY);
     expect(mismatches.join("\n")).toContain("gbp");
+  });
+
+  it("leaves metadata to findApiPollAddonMetadataUpdates", () => {
+    expect(
+      findApiPollAddonPriceMismatches({
+        price: existing({ metadata: { addon: "api" } }),
+        params,
+      }),
+    ).toEqual([]);
   });
 
   it("reports a metered price", () => {
@@ -506,6 +515,45 @@ describe("findApiPollAddonPriceMismatches", () => {
       "tax_behavior: expected exclusive, found inclusive",
       "eur tax_behavior: expected exclusive, found inclusive",
     ]);
+  });
+});
+
+describe("findApiPollAddonMetadataUpdates", () => {
+  const params = apiPollAddonPriceParams({
+    product: "prod_1",
+    tier: "medium",
+    interval: "monthly",
+  });
+
+  function existing(metadata: Record<string, string>) {
+    return { id: "price_1", metadata } as unknown as Stripe.Price;
+  }
+
+  it("is empty when the metadata matches", () => {
+    expect(
+      findApiPollAddonMetadataUpdates({
+        price: existing({ addon: "api", api_poll_tier: "medium" }),
+        params,
+      }),
+    ).toEqual({});
+  });
+
+  it("sets a missing tier and keeps unrelated keys out of the update", () => {
+    expect(
+      findApiPollAddonMetadataUpdates({
+        price: existing({ addon: "api", api_poll_limit: "500" }),
+        params,
+      }),
+    ).toEqual({ [API_POLL_TIER_METADATA_KEY]: "medium" });
+  });
+
+  it("corrects a wrong tier", () => {
+    expect(
+      findApiPollAddonMetadataUpdates({
+        price: existing({ addon: "api", api_poll_tier: "small" }),
+        params,
+      }),
+    ).toEqual({ [API_POLL_TIER_METADATA_KEY]: "medium" });
   });
 });
 

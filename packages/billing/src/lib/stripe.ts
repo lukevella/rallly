@@ -337,14 +337,6 @@ export function findApiPollAddonPriceMismatches({
     }
   }
 
-  for (const [key, value] of Object.entries(params.metadata ?? {})) {
-    check({
-      field: `metadata.${key}`,
-      actual: price.metadata?.[key],
-      expected: value,
-    });
-  }
-
   const actualOptions = unitAmountsByCurrency({
     ...price,
     unit_amount: null,
@@ -370,6 +362,20 @@ export function findApiPollAddonPriceMismatches({
   }
 
   return mismatches;
+}
+
+export function findApiPollAddonMetadataUpdates({
+  price,
+  params,
+}: {
+  price: Stripe.Price;
+  params: Stripe.PriceCreateParams;
+}) {
+  return Object.fromEntries(
+    Object.entries(params.metadata ?? {}).filter(
+      ([key, value]) => price.metadata?.[key] !== value,
+    ),
+  );
 }
 
 export function findSharedProductProblem(prices: Stripe.Price[]) {
