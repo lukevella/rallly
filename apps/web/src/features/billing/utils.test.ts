@@ -299,6 +299,7 @@ describe("buildSubscriptionUpdate", () => {
     apiPollLimit: null,
     apiPollRetainedLimit: null,
     apiPollRetainedUntil: null,
+    periodEnd: tomorrow,
   };
 
   const withAddon = {
@@ -643,6 +644,43 @@ describe("buildSubscriptionUpdate", () => {
           { id: "si_api", price: "price_api_medium_y" },
         ],
       });
+    });
+  });
+
+  it("classifies by the tier's current limit, not a stale stored one", () => {
+    expect(
+      buildSubscriptionUpdate({
+        subscription: { ...withAddon, apiPollLimit: 250 },
+        change: { type: "api_tier", tier: "small" },
+        prices,
+        now,
+      }),
+    ).toEqual({
+      items: [{ id: "si_api", price: "price_api_small_m" }],
+      proration_behavior: "none",
+    });
+  });
+
+  it("charges for a retained tier once the period has moved past it", () => {
+    expect(
+      buildSubscriptionUpdate({
+        subscription: {
+          ...withAddon,
+          interval: "year",
+          apiAddonPriceId: "price_api_small_y",
+          apiPollLimit: 250,
+          apiPollRetainedLimit: 500,
+          apiPollRetainedUntil: tomorrow,
+          periodEnd: new Date("2027-11-13T12:00:00Z"),
+        },
+        change: { type: "api_tier", tier: "medium" },
+        prices,
+        now,
+      }),
+    ).toEqual({
+      items: [{ id: "si_api", price: "price_api_medium_y" }],
+      proration_behavior: "always_invoice",
+      payment_behavior: "pending_if_incomplete",
     });
   });
 });

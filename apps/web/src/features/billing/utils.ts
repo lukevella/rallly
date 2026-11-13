@@ -195,6 +195,7 @@ export function buildSubscriptionUpdate({
     apiPollLimit: number | null;
     apiPollRetainedLimit: number | null;
     apiPollRetainedUntil: Date | null;
+    periodEnd: Date;
   };
   change: BillingChange;
   prices: { pro: PricingLike; apiPollAddon: ApiPollAddonPrices };
@@ -273,14 +274,23 @@ export function buildSubscriptionUpdate({
       if (change.tier !== null && change.tier === currentTier) {
         return { error: "no_change" };
       }
-      const currentLimit = subscription.apiAddonItemId
-        ? subscription.apiPollLimit
-        : null;
+      const currentLimit = currentTier
+        ? apiPollTierLimits[currentTier]
+        : subscription.apiAddonItemId
+          ? subscription.apiPollLimit
+          : null;
       const targetLimit = change.tier ? apiPollTierLimits[change.tier] : null;
+      // A retained tier was paid for up to the period end it was set at. Once
+      // the period moves (renewal, or a switch to yearly) it covers none of it.
+      const retainedUntil =
+        subscription.apiPollRetainedUntil &&
+        subscription.apiPollRetainedUntil >= subscription.periodEnd
+          ? subscription.apiPollRetainedUntil
+          : null;
       const kind = classifyApiPollTierChange({
         currentLimit,
         retainedLimit: subscription.apiPollRetainedLimit,
-        retainedUntil: subscription.apiPollRetainedUntil,
+        retainedUntil,
         targetLimit,
         now,
       });
