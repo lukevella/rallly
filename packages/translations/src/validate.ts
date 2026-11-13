@@ -118,6 +118,16 @@ const inline = ({
   };
 };
 
+const branchNames = (scope: Scope): Set<string> =>
+  new Set(
+    scope.branches.flatMap((branch) => [
+      branch.name,
+      ...[...branch.options.values()].flatMap((option) => [
+        ...branchNames(option),
+      ]),
+    ]),
+  );
+
 const compareScopes = ({
   expected,
   actual,
@@ -144,7 +154,20 @@ const compareScopes = ({
     }
   }
 
-  const expectedOnly = unmatched[0];
+  const actualUnmatched = actual.branches.filter(
+    (branch) => !paired.has(branch),
+  );
+  const expectedNames = branchNames(expected);
+  const actualNames = branchNames(actual);
+  const actualAdded = actualUnmatched.find(
+    (branch) => !expectedNames.has(branch.name),
+  );
+  const expectedAdded = unmatched.find(
+    (branch) => !actualNames.has(branch.name),
+  );
+  const expectedOnly = actualAdded
+    ? undefined
+    : (expectedAdded ?? unmatched[0]);
   if (expectedOnly) {
     for (const option of expectedOnly.options.values()) {
       compareScopes({
@@ -156,7 +179,7 @@ const compareScopes = ({
     }
     return;
   }
-  const actualOnly = actual.branches.find((branch) => !paired.has(branch));
+  const actualOnly = actualAdded ?? actualUnmatched[0];
   if (actualOnly) {
     for (const option of actualOnly.options.values()) {
       compareScopes({
@@ -233,6 +256,13 @@ const compareBranches = ({
       compareScopes({ expected: source, actual: scope, reasons, hint });
     }
     return;
+  }
+  for (const key of wanted.options.keys()) {
+    if (key.startsWith("=") && !found.options.has(key)) {
+      reasons.add(
+        `the plural for {${name}} is missing the case "${key}"; exact number cases like "${key}" must be kept from the source`,
+      );
+    }
   }
   for (const [key, scope] of found.options) {
     const source = wanted.options.get(key) ?? wanted.options.get("other");

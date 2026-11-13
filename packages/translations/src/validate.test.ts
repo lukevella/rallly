@@ -192,6 +192,37 @@ describe("validateTranslation", () => {
     ).not.toEqual([]);
   });
 
+  it("requires every exact number case of the source plural", () => {
+    const source = "{n, plural, =0 {<a>Add a vote</a>} other {# votes}}";
+    const dropped = v(source, "{n, plural, other {# Stimmen}}");
+    expect(dropped.join()).toContain('"=0"');
+    expect(
+      v(source, "{n, plural, =0 {<a>Stimme abgeben</a>} other {# Stimmen}}"),
+    ).toEqual([]);
+    expect(
+      v(
+        source,
+        "{n, plural, =0 {<a>Stimme abgeben</a>} =1 {Eine Stimme} other {# Stimmen}}",
+      ),
+    ).toEqual([]);
+  });
+
+  it("pairs a select nested in a wrapper the translation adds", () => {
+    const source = "{n} {k, select, a {<b>A</b>} other {B}}";
+    expect(
+      v(source, "{n, plural, other {# {k, select, a {<b>A</b>} other {B}}}}"),
+    ).toEqual([]);
+    expect(
+      v(source, "{n, plural, other {# {k, select, x {<b>A</b>} other {B}}}}"),
+    ).not.toEqual([]);
+    expect(
+      v(
+        "{n} {k, select, a {A} other {B}}",
+        "{n, plural, other {# {k, select, x {A} other {B}}}}",
+      ),
+    ).not.toEqual([]);
+  });
+
   it("rejects the reserved tag prefix in the translation", () =>
     expect(v("<0>A</0>", "<num-0>B</num-0>")).not.toEqual([]));
 
