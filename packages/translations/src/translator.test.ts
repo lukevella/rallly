@@ -28,6 +28,8 @@ type Call = {
   service_tier: string;
 };
 
+const asCall = (params: Parameters<Complete>[0]) => params as unknown as Call;
+
 const lastMessage = (call: Call | undefined) =>
   call?.messages[call.messages.length - 1];
 
@@ -49,7 +51,7 @@ const reply = (obj: unknown) => respond({ content: JSON.stringify(obj) });
 const fake = (queue: Response[]) => {
   const calls: Call[] = [];
   const complete: Complete = async (params) => {
-    calls.push(params as Call);
+    calls.push(asCall(params));
     const next = queue.shift();
     if (!next) throw new Error("fake complete: queue exhausted");
     return next;
@@ -314,11 +316,74 @@ describe("translateItems", () => {
     expect(r.failed[0]?.reason).toMatch(/choices/i);
   });
 
-  it("propagates a thrown API error", async () => {
+  it("fails the chunk's keys with the message of a thrown API error", async () => {
     const complete: Complete = async () => {
       throw new Error("402 payment required");
     };
-    await expect(run(complete, save)).rejects.toThrow("402");
+    expect(await run(complete, save)).toEqual({
+      translated: {},
+      failed: [{ key: "a", reason: "402 payment required" }],
+    });
+  });
+
+  it("keeps earlier chunks when a later chunk throws", async () => {
+    const items = Array.from({ length: 450 }, (_, i) => ({
+      key: `k${i}`,
+      source: `Source ${i}`,
+    }));
+    let count = 0;
+    const complete: Complete = async (params) => {
+      count++;
+      if (count === 3) throw new Error("429 flex capacity");
+      const sent = JSON.parse(lastContent(asCall(params)));
+      return reply({
+        translations: sent.map((i: { key: string; source: string }) => ({
+          key: i.key,
+          value: i.source,
+        })),
+      });
+    };
+    const r = await run(complete, items);
+    expect(count).toBe(5);
+    expect(Object.keys(r.translated)).toHaveLength(350);
+    expect(r.translated.k199).toBe("Source 199");
+    expect(r.translated.k300).toBe("Source 300");
+    expect(r.failed).toHaveLength(100);
+    expect(r.failed[0]).toEqual({ key: "k200", reason: "429 flex capacity" });
+    expect(r.failed[99]?.key).toBe("k299");
+  });
+
+  it("keeps the first pass's accepted keys when the retry throws", async () => {
+    let count = 0;
+    const complete: Complete = async () => {
+      count++;
+      if (count === 2) throw new Error("timed out");
+      return reply({
+        translations: [
+          { key: "a", value: "Speichern" },
+          { key: "b", value: "Hallo {nom}" },
+        ],
+      });
+    };
+    const r = await run(complete, [
+      { key: "a", source: "Save" },
+      { key: "b", source: "Hi {name}" },
+    ]);
+    expect(count).toBe(2);
+    expect(r).toEqual({
+      translated: { a: "Speichern" },
+      failed: [{ key: "b", reason: "timed out" }],
+    });
+  });
+
+  it("keeps the first half of a split chunk when the second half throws", async () => {
+    const { complete } = fake([truncated, ok(["a", "b"])]);
+    const r = await run(complete, four);
+    expect(r.translated).toEqual({ a: "a", b: "b" });
+    expect(r.failed).toEqual([
+      { key: "c", reason: "fake complete: queue exhausted" },
+      { key: "d", reason: "fake complete: queue exhausted" },
+    ]);
   });
 
   it("splits 250 items into three requests", async () => {
@@ -328,8 +393,8 @@ describe("translateItems", () => {
     }));
     const calls: Call[] = [];
     const complete: Complete = async (params) => {
-      calls.push(params as Call);
-      const sent = JSON.parse(lastContent(params as Call));
+      calls.push(asCall(params));
+      const sent = JSON.parse(lastContent(asCall(params)));
       return reply({
         translations: sent.map((i: { key: string; source: string }) => ({
           key: i.key,

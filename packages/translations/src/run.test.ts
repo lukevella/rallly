@@ -335,12 +335,44 @@ describe("run", () => {
     const fr = report.files.find((file) => file.path === "web/fr/app");
     expect(fr).toMatchObject({
       translated: 0,
-      failed: [{ key: "*", reason: "boom" }],
+      failed: [
+        { key: "a", reason: "boom" },
+        { key: "b", reason: "boom" },
+      ],
     });
     expect(readFileSync(localePath("fr"), "utf8")).toBe("{}");
     expect(
       report.files.find((file) => file.path === "web/de/app")?.failed,
     ).toEqual([]);
+  });
+
+  it("writes and locks the chunks that completed before a request threw", async () => {
+    const en = Object.fromEntries(
+      Array.from({ length: 250 }, (_, i) => [`k${i}`, `Source ${i}`]),
+    );
+    write(join(localesDir(), "en/app.json"), en);
+    write(localePath("de"), {});
+    let count = 0;
+    const complete: Complete = async (params) => {
+      count++;
+      if (count === 2) throw new Error("429 flex capacity");
+      return echo()(params);
+    };
+    const report = await run({ repoRoot: tmp, complete, model });
+    const written = read("de");
+    const lock = readLock("de");
+    expect(Object.keys(written)).toHaveLength(150);
+    expect(written.k0).toBe("[de] Source 0");
+    expect(written.k249).toBe("[de] Source 249");
+    expect(written).not.toHaveProperty("k100");
+    expect(Object.keys(lock)).toEqual(Object.keys(written));
+    expect(lock.k0).toBe(hashSource("Source 0"));
+    expect(report.files[0]?.translated).toBe(150);
+    expect(report.files[0]?.failed).toHaveLength(100);
+    expect(report.files[0]?.failed[0]).toEqual({
+      key: "k100",
+      reason: "429 flex capacity",
+    });
   });
 
   it("runs at most four files at once", async () => {

@@ -2,7 +2,6 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import OpenAI from "openai";
-import type { ChatCompletionCreateParamsNonStreaming } from "openai/resources/chat/completions";
 import { formatReport, run, shouldFail } from "./run.ts";
 import type { Complete } from "./translator.ts";
 import { defaultModel } from "./translator.ts";
@@ -66,9 +65,7 @@ const redact = (text: string) => text.split(apiKey).join("[redacted]");
 
 const complete: Complete = async (params) => {
   try {
-    return await client.chat.completions.create(
-      params as ChatCompletionCreateParamsNonStreaming,
-    );
+    return await client.chat.completions.create(params);
   } catch (error) {
     throw new Error(
       redact(error instanceof Error ? error.message : "request failed"),

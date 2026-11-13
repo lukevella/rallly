@@ -1,3 +1,4 @@
+import type { ChatCompletionCreateParamsNonStreaming } from "openai/resources/chat/completions";
 import * as z from "zod";
 import type { Messages } from "./locales.ts";
 import type { Glossary, TranslationItem } from "./prompt.ts";
@@ -10,7 +11,9 @@ export const serviceTier = "flex";
 
 const chunkSize = 100;
 
-export type Complete = (params: object) => Promise<{
+export type Complete = (
+  params: ChatCompletionCreateParamsNonStreaming,
+) => Promise<{
   choices: {
     message: { content: string | null };
     finish_reason: string | null;
@@ -85,7 +88,7 @@ const request = async ({
       },
     },
     service_tier: serviceTier,
-  });
+  } satisfies ChatCompletionCreateParamsNonStreaming);
   const choice = response?.choices?.[0];
   if (!choice) {
     return { ok: false, reason: "response contained no choices", final: false };
@@ -99,6 +102,17 @@ const request = async ({
   }
   return parseContent(choice.message?.content);
 };
+
+const errorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
+
+const failAll = ({
+  items,
+  reason,
+}: {
+  items: TranslationItem[];
+  reason: string;
+}) => items.map(({ key }) => ({ key, reason }));
 
 const judge = ({
   items,
@@ -161,12 +175,20 @@ const translateGroup = async ({
   translated: Messages;
   failed: { key: string; reason: string }[];
 }> => {
-  const first = await request({ complete, model, system, items });
+  let first: Attempt;
+  try {
+    first = await request({ complete, model, system, items });
+  } catch (error) {
+    return {
+      translated: {},
+      failed: failAll({ items, reason: errorMessage(error) }),
+    };
+  }
   if (!first.ok && first.final) {
     if (!canSplit || items.length < 2) {
       return {
         translated: {},
-        failed: items.map(({ key }) => ({ key, reason: first.reason })),
+        failed: failAll({ items, reason: first.reason }),
       };
     }
     const middle = Math.ceil(items.length / 2);
@@ -192,12 +214,23 @@ const translateGroup = async ({
     return { translated: firstPass.accepted, failed: [] };
   }
 
-  const second = await request({
-    complete,
-    model,
-    system,
-    items: firstPass.rejected,
-  });
+  let second: Attempt;
+  try {
+    second = await request({
+      complete,
+      model,
+      system,
+      items: firstPass.rejected,
+    });
+  } catch (error) {
+    return {
+      translated: firstPass.accepted,
+      failed: failAll({
+        items: firstPass.rejected,
+        reason: errorMessage(error),
+      }),
+    };
+  }
   const secondPass = judge({ items: firstPass.rejected, attempt: second });
 
   return {
