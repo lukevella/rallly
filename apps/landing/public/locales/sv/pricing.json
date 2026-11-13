@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Avancerade omröstningsinställningar",
-  "advancedPollSettingsDescription": "Kräv deltagarnas e-postadresser, dölj deltagarnas namn och dölj röster",
   "apiAccess": "API-åtkomst",
   "apiAccessDescription": "Skapa omröstningar och läs resultat från dina egna system. <a>Läs API-dokumentationen</a>",
   "apiAndWebhooks": "API och webhooks",
