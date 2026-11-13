@@ -17,7 +17,7 @@ jobs:
   translate:
     name: Translate
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 240
     steps:
       - name: Check required secrets
         env:

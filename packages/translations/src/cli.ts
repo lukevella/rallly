@@ -62,7 +62,7 @@ const timeout = 15 * 60 * 1000;
 const client = new OpenAI({
   apiKey,
   timeout,
-  maxRetries: 8,
+  maxRetries: 5,
   fetchOptions: {
     dispatcher: new Agent({ headersTimeout: timeout, bodyTimeout: timeout }),
   },
