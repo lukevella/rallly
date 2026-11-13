@@ -6,8 +6,7 @@
   "scripts": {
     "test:unit": "vitest run",
     "type-check": "tsc --noEmit",
-    "translate": "node src/cli.ts",
-    "check": "node src/check.ts"
+    "translate": "node src/cli.ts"
   },
   "dependencies": {
     "@formatjs/icu-messageformat-parser": "^3.5.23",
