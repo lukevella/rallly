@@ -129,21 +129,21 @@ const tomorrow = new Date("2026-11-14T12:00:00Z");
 const yesterday = new Date("2026-11-12T12:00:00Z");
 
 describe("classifyApiPollTierChange", () => {
-  const base = { retainedLimit: null, retainedUntil: null, now };
+  const base = { retainedTier: null, retainedUntil: null, now };
 
   it("is none when the target matches the current limit", () => {
     expect(
       classifyApiPollTierChange({
         ...base,
-        currentLimit: 500,
-        targetLimit: 500,
+        currentTier: "medium",
+        targetTier: "medium",
       }),
     ).toBe("none");
     expect(
       classifyApiPollTierChange({
         ...base,
-        currentLimit: null,
-        targetLimit: null,
+        currentTier: null,
+        targetTier: null,
       }),
     ).toBe("none");
   });
@@ -152,15 +152,15 @@ describe("classifyApiPollTierChange", () => {
     expect(
       classifyApiPollTierChange({
         ...base,
-        currentLimit: null,
-        targetLimit: 250,
+        currentTier: null,
+        targetTier: "small",
       }),
     ).toBe("upgrade");
     expect(
       classifyApiPollTierChange({
         ...base,
-        currentLimit: 250,
-        targetLimit: 1000,
+        currentTier: "small",
+        targetTier: "large",
       }),
     ).toBe("upgrade");
   });
@@ -169,15 +169,15 @@ describe("classifyApiPollTierChange", () => {
     expect(
       classifyApiPollTierChange({
         ...base,
-        currentLimit: 500,
-        targetLimit: 250,
+        currentTier: "medium",
+        targetTier: "small",
       }),
     ).toBe("downgrade");
     expect(
       classifyApiPollTierChange({
         ...base,
-        currentLimit: 500,
-        targetLimit: null,
+        currentTier: "medium",
+        targetTier: null,
       }),
     ).toBe("downgrade");
   });
@@ -185,19 +185,19 @@ describe("classifyApiPollTierChange", () => {
   it("is a restore when going back up within a retained limit", () => {
     expect(
       classifyApiPollTierChange({
-        currentLimit: 250,
-        retainedLimit: 500,
+        currentTier: "small",
+        retainedTier: "medium",
         retainedUntil: tomorrow,
-        targetLimit: 500,
+        targetTier: "medium",
         now,
       }),
     ).toBe("restore");
     expect(
       classifyApiPollTierChange({
-        currentLimit: null,
-        retainedLimit: 1000,
+        currentTier: null,
+        retainedTier: "large",
         retainedUntil: tomorrow,
-        targetLimit: 500,
+        targetTier: "medium",
         now,
       }),
     ).toBe("restore");
@@ -206,19 +206,19 @@ describe("classifyApiPollTierChange", () => {
   it("is an upgrade above the retained limit or once it has expired", () => {
     expect(
       classifyApiPollTierChange({
-        currentLimit: 250,
-        retainedLimit: 500,
+        currentTier: "small",
+        retainedTier: "medium",
         retainedUntil: tomorrow,
-        targetLimit: 1000,
+        targetTier: "large",
         now,
       }),
     ).toBe("upgrade");
     expect(
       classifyApiPollTierChange({
-        currentLimit: 250,
-        retainedLimit: 500,
+        currentTier: "small",
+        retainedTier: "medium",
         retainedUntil: yesterday,
-        targetLimit: 500,
+        targetTier: "medium",
         now,
       }),
     ).toBe("upgrade");
@@ -296,8 +296,8 @@ describe("buildSubscriptionUpdate", () => {
     subscriptionItemId: "si_seat",
     apiAddonItemId: null,
     apiAddonPriceId: null,
-    apiPollLimit: null,
-    apiPollRetainedLimit: null,
+    apiAddonTier: null,
+    apiPollRetainedTier: null,
     apiPollRetainedUntil: null,
     periodEnd: tomorrow,
   };
@@ -306,7 +306,7 @@ describe("buildSubscriptionUpdate", () => {
     ...subscription,
     apiAddonItemId: "si_api",
     apiAddonPriceId: "price_api_medium_m",
-    apiPollLimit: 500,
+    apiAddonTier: "medium" as const,
   };
 
   it("adds the add-on item on a first purchase and invoices at once", () => {
@@ -384,8 +384,8 @@ describe("buildSubscriptionUpdate", () => {
         subscription: {
           ...withAddon,
           apiAddonPriceId: "price_api_small_m",
-          apiPollLimit: 250,
-          apiPollRetainedLimit: 500,
+          apiAddonTier: "small" as const,
+          apiPollRetainedTier: "medium" as const,
           apiPollRetainedUntil: tomorrow,
         },
         change: { type: "api_tier", tier: "medium" },
@@ -403,7 +403,7 @@ describe("buildSubscriptionUpdate", () => {
       buildSubscriptionUpdate({
         subscription: {
           ...subscription,
-          apiPollRetainedLimit: 500,
+          apiPollRetainedTier: "medium" as const,
           apiPollRetainedUntil: tomorrow,
         },
         change: { type: "api_tier", tier: "medium" },
@@ -422,8 +422,8 @@ describe("buildSubscriptionUpdate", () => {
         subscription: {
           ...withAddon,
           apiAddonPriceId: "price_api_small_m",
-          apiPollLimit: 250,
-          apiPollRetainedLimit: 500,
+          apiAddonTier: "small" as const,
+          apiPollRetainedTier: "medium" as const,
           apiPollRetainedUntil: tomorrow,
         },
         change: { type: "api_tier", tier: "large" },
@@ -590,67 +590,53 @@ describe("buildSubscriptionUpdate", () => {
     });
   });
 
-  describe("after a tier's limit changes", () => {
-    // Small was 200 and is now 250: the row keeps the old limit until the
-    // next webhook, but the price is the same.
-    const onSmall = {
-      ...subscription,
-      apiAddonItemId: "si_api",
-      apiAddonPriceId: "price_api_small_m",
-      apiPollLimit: 200,
-    };
-
-    it("switches to yearly by the price the subscriber is on", () => {
-      expect(
-        buildSubscriptionUpdate({
-          subscription: onSmall,
-          change: { type: "interval" },
-          prices,
-          now,
-        }),
-      ).toMatchObject({
-        items: [
-          { id: "si_seat", price: "price_new_y" },
-          { id: "si_api", price: "price_api_small_y" },
-        ],
-      });
-    });
-
-    it("treats choosing the same tier as no change rather than an upgrade", () => {
-      expect(
-        buildSubscriptionUpdate({
-          subscription: onSmall,
-          change: { type: "api_tier", tier: "small" },
-          prices,
-          now,
-        }),
-      ).toEqual({ error: "no_change" });
-    });
-
-    it("falls back to the limit for a price that has left the catalog", () => {
-      expect(
-        buildSubscriptionUpdate({
-          subscription: {
-            ...withAddon,
-            apiAddonPriceId: "price_api_medium_2025_m",
-          },
-          change: { type: "interval" },
-          prices,
-          now,
-        }),
-      ).toMatchObject({
-        items: [
-          { id: "si_seat", price: "price_new_y" },
-          { id: "si_api", price: "price_api_medium_y" },
-        ],
-      });
+  it("switches to yearly by the stored tier", () => {
+    expect(
+      buildSubscriptionUpdate({
+        subscription: withAddon,
+        change: { type: "interval" },
+        prices,
+        now,
+      }),
+    ).toMatchObject({
+      items: [
+        { id: "si_seat", price: "price_new_y" },
+        { id: "si_api", price: "price_api_medium_y" },
+      ],
     });
   });
 
-  it("classifies by the tier's current limit, not a stale stored one", () => {
+  it("falls back to the price id when the tier was never stored", () => {
     expect(
       buildSubscriptionUpdate({
-        subscription: { ...withAddon, apiPollLimit: 250 },
+        subscription: { ...withAddon, apiAddonTier: null },
+        change: { type: "interval" },
+        prices,
+        now,
+      }),
+    ).toMatchObject({
+      items: [
+        { id: "si_seat", price: "price_new_y" },
+        { id: "si_api", price: "price_api_medium_y" },
+      ],
+    });
+  });
+
+  it("treats choosing the current tier as no change", () => {
+    expect(
+      buildSubscriptionUpdate({
+        subscription: withAddon,
+        change: { type: "api_tier", tier: "medium" },
+        prices,
+        now,
+      }),
+    ).toEqual({ error: "no_change" });
+  });
+
+  it("downgrades to a lower tier without charging", () => {
+    expect(
+      buildSubscriptionUpdate({
+        subscription: withAddon,
         change: { type: "api_tier", tier: "small" },
         prices,
         now,
@@ -668,8 +654,8 @@ describe("buildSubscriptionUpdate", () => {
           ...withAddon,
           interval: "year",
           apiAddonPriceId: "price_api_small_y",
-          apiPollLimit: 250,
-          apiPollRetainedLimit: 500,
+          apiAddonTier: "small" as const,
+          apiPollRetainedTier: "medium" as const,
           apiPollRetainedUntil: tomorrow,
           periodEnd: new Date("2027-11-13T12:00:00Z"),
         },
