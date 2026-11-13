@@ -75,7 +75,6 @@
   "apiKeysSettingsDescription": "Vytvářejte a spravujte klíče API pro programatický přístup k vašemu prostoru.",
   "apiRateLimitLabel": "Limit požadavků",
   "apiRateLimitValue": "{count} požadavků za minutu",
-  "apiReference": "API reference",
   "apiViewDocs": "Zobrazit dokumentaci API",
   "applyToAllDates": "Použít pro všechny termíny",
   "appName": "Název aplikace",

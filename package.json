@@ -34,6 +34,7 @@
     "check:cascades": "node scripts/check-user-cascade-relations.mjs",
     "check:openapi": "pnpm --filter @rallly/web openapi:generate && git diff --exit-code -- apps/docs/api-reference/openapi.json",
     "i18n:scan": "turbo i18n:scan",
+    "i18n:translate": "pnpm --filter @rallly/translations translate",
     "type-check": "turbo type-check",
     "release": "./scripts/create-release.sh",
     "screenshots": "pnpm --filter @rallly/screenshots capture",

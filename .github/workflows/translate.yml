@@ -1,0 +1,138 @@
+name: Translate
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: translate
+  cancel-in-progress: false
+
+# Writes go through TRANSLATIONS_PR_TOKEN, not the workflow token.
+permissions:
+  contents: read
+
+env:
+  BRANCH: i18n/translations
+
+jobs:
+  translate:
+    name: Translate
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Check required secrets
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TRANSLATIONS_PR_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+        run: |
+          missing=0
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::The OPENAI_API_KEY secret is not set."
+            missing=1
+          fi
+          if [ -z "$TRANSLATIONS_PR_TOKEN" ]; then
+            echo "::error::The TRANSLATIONS_PR_TOKEN secret is not set. The default GITHUB_TOKEN cannot be used because PRs it opens do not trigger CI."
+            missing=1
+          fi
+          exit "$missing"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+          # The token must not sit in .git/config while pnpm install scripts
+          # and the CLI run. It is supplied to the push step only.
+          persist-credentials: false
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # Keep the rolling branch when it has an open PR so translations already
+      # generated are reused. Otherwise, or when it conflicts with main, start
+      # from main: a human change on main always wins and the bot regenerates.
+      - name: Prepare branch
+        id: prepare
+        env:
+          GH_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+        run: |
+          open_prs=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq 'length')
+          if git rev-parse --verify --quiet "refs/remotes/origin/$BRANCH" >/dev/null && [ "$open_prs" -gt 0 ]; then
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+            if ! git merge origin/main --no-edit; then
+              echo "::warning::Merging main into $BRANCH conflicted. Recreating the branch from main."
+              git merge --abort
+              git checkout -B "$BRANCH" origin/main
+              echo "recreated=true" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            git checkout -B "$BRANCH" origin/main
+          fi
+
+      # Installed after the branch is prepared so dependencies match the
+      # lockfile of the tree the CLI runs on.
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/pnpm-install
+
+      - name: Translate
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TRANSLATION_MODEL: ${{ vars.TRANSLATION_MODEL }}
+        run: pnpm i18n:translate --report "$RUNNER_TEMP/report.md"
+
+      - name: Validate locale files
+        run: pnpm check:locales
+
+      - name: Commit and push
+        id: commit
+        env:
+          TRANSLATIONS_PR_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+          GH_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+          RECREATED: ${{ steps.prepare.outputs.recreated }}
+        run: |
+          # One pathspec set for both the guard and the staging. i18n/lock only
+          # exists once a lock file has been written, and git add rejects a
+          # pathspec that matches nothing.
+          paths=(apps/web/public/locales apps/landing/public/locales packages/emails/locales)
+          if [ -d i18n/lock ]; then
+            paths+=(i18n/lock)
+          fi
+          if [ -z "$(git status --porcelain -- "${paths[@]}")" ]; then
+            echo "No translation changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            # The open PR still holds the conflicting branch and nothing would replace it.
+            if [ "$RECREATED" = "true" ]; then
+              open_prs=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq 'length')
+              if [ "$open_prs" -gt 0 ]; then
+                gh pr close "$BRANCH" --comment "This branch conflicted with main, so the translation run started again from main and found nothing left to translate. Closing this pull request; the next run with new translations opens a fresh one."
+              fi
+            fi
+            exit 0
+          fi
+          git add -- "${paths[@]}"
+          git commit -m "🌐 Update translations"
+          # Lease against the SHA we fetched; an empty value means the remote branch must not exist.
+          remote_sha=$(git rev-parse --verify --quiet "refs/remotes/origin/$BRANCH" || true)
+          # Authenticate through git's environment config: the credential is
+          # never written to .git/config nor placed on a command line.
+          encoded=$(printf 'x-access-token:%s' "$TRANSLATIONS_PR_TOKEN" | base64 | tr -d '\n')
+          echo "::add-mask::$encoded"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="http.https://github.com/.extraheader"
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $encoded"
+          git push --force-with-lease="refs/heads/$BRANCH:$remote_sha" origin "HEAD:refs/heads/$BRANCH"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Deliberately re-queries after the push instead of reusing the earlier
+      # result: the PR may have been closed or opened since "Prepare branch".
+      - name: Open or update pull request
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+        run: |
+          open_prs=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq 'length')
+          if [ "$open_prs" -gt 0 ]; then
+            gh pr edit "$BRANCH" --body-file "$RUNNER_TEMP/report.md"
+          else
+            gh pr create --base main --head "$BRANCH" --title "🌐 Update translations" --body-file "$RUNNER_TEMP/report.md"
+          fi

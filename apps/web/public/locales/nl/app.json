@@ -895,7 +895,6 @@
   "removeMemberFinished": "Voltooid",
   "removeMemberNoActiveContent": "Geen open polls of aankomende evenementen",
   "removeMemberNoFinishedContent": "Geen gesloten polls of vorige evenementen",
-  "removeMemberOpenPolls": "{count, plural, one {# open poll} other {# open polls}}",
   "removeMemberOutcome": "Wat er met hun inhoud gebeurt",
   "removeMemberPastEvents": "{count, plural, one {# vorig evenement} other {# vorige evenementen}}",
   "removeMemberReassign": "Overdragen",
