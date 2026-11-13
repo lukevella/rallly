@@ -4,6 +4,10 @@ export function startOfUtcMonth(now: Date) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
 }
 
+export function toMonthKey(date: Date) {
+  return date.toISOString().slice(0, 7);
+}
+
 export function startOfNextUtcMonth(now: Date) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
 }
