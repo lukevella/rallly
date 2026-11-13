@@ -187,6 +187,68 @@ describe("run", () => {
     expect(calls[0]?.messages[0]?.content).toContain("Speichern");
   });
 
+  it("isolates a malformed locale file and names it", async () => {
+    write(localePath("fr"), {});
+    writeFileSync(localePath("fr"), "{ BROKEN");
+    const report = await run({ repoRoot: tmp, complete: echo(), model });
+    expect(read("de").b).toBe("[de] Hi {name}");
+    const fr = report.files.find((file) => file.path === "web/fr/app");
+    expect(fr?.failed).toHaveLength(1);
+    expect(fr?.failed[0]?.key).toBe("*");
+    expect(fr?.failed[0]?.reason).toContain(localePath("fr"));
+    expect(readFileSync(localePath("fr"), "utf8")).toBe("{ BROKEN");
+  });
+
+  it("does not rewrite messages when a run only adopts", async () => {
+    write(localePath("de"), { b: "Hi {name}-de", a: "Speichern" });
+    write(join(localesDir(), "en/app.json"), { a: "Save", b: "Hi {name}" });
+    const before = readFileSync(localePath("de"), "utf8");
+    const report = await run({ repoRoot: tmp, complete: echo(), model });
+    expect(report.files[0]).toMatchObject({
+      translated: 0,
+      adopted: 2,
+      removed: 0,
+    });
+    expect(readFileSync(localePath("de"), "utf8")).toBe(before);
+    expect(readLock("de")).toEqual({
+      a: hashSource("Save"),
+      b: hashSource("Hi {name}"),
+    });
+    expect(calls).toHaveLength(0);
+  });
+
+  it("does not rewrite messages when only a lock orphan is removed, and drops it from the lock", async () => {
+    write(localePath("de"), { b: "Hi {name}-de", a: "Speichern" });
+    await run({ repoRoot: tmp, complete: echo(), model });
+    const lockFile = lockPath({
+      repoRoot: tmp,
+      rootId: "web",
+      locale: "de",
+      namespace: "app",
+    });
+    write(lockFile, { ...readLock("de"), gone: "deadbeef" });
+    const before = readFileSync(localePath("de"), "utf8");
+    const report = await run({ repoRoot: tmp, complete: echo(), model });
+    expect(report.files[0]).toMatchObject({
+      translated: 0,
+      adopted: 0,
+      removed: 1,
+    });
+    expect(readFileSync(localePath("de"), "utf8")).toBe(before);
+    expect(readLock("de")).toEqual({
+      a: hashSource("Save"),
+      b: hashSource("Hi {name}"),
+    });
+  });
+
+  it("writes messages before the lock", async () => {
+    writeFileSync(join(tmp, "i18n/lock"), "not a directory");
+    await expect(
+      run({ repoRoot: tmp, complete: echo(), model }),
+    ).rejects.toThrow();
+    expect(read("de").b).toBe("[de] Hi {name}");
+  });
+
   it("writes nothing on dry run but still reports", async () => {
     const deBefore = readFileSync(localePath("de"), "utf8");
     const report = await run({

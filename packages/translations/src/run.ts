@@ -88,10 +88,40 @@ const runFile = async ({
   const messagesPath = join(repoRoot, dir, locale, `${namespace}.json`);
   const lockFile = lockPath({ repoRoot, rootId, locale, namespace });
 
-  const en = readMessages(enPath);
-  const messages = readMessages(messagesPath);
-  const lock = readMessages(lockFile);
-  const plan = planLocale({ en, messages, lock });
+  const path = `${rootId}/${locale}/${namespace}`;
+  const readOne = (file: string) => {
+    try {
+      return readMessages(file);
+    } catch (error) {
+      throw new Error(
+        `${file}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  };
+
+  let en: Messages;
+  let messages: Messages;
+  let lock: Messages;
+  let plan: ReturnType<typeof planLocale>;
+  try {
+    en = readOne(enPath);
+    messages = readOne(messagesPath);
+    lock = readOne(lockFile);
+    plan = planLocale({ en, messages, lock });
+  } catch (error) {
+    return {
+      path,
+      translated: 0,
+      adopted: 0,
+      removed: 0,
+      failed: [
+        {
+          key: "*",
+          reason: error instanceof Error ? error.message : String(error),
+        },
+      ],
+    };
+  }
 
   let translated: Messages = {};
   let failed: { key: string; reason: string }[] = [];
@@ -126,7 +156,7 @@ const runFile = async ({
 
   const translatedKeys = Object.keys(translated);
   const report = {
-    path: `${rootId}/${locale}/${namespace}`,
+    path,
     translated: translatedKeys.length,
     adopted: plan.adopt.length,
     removed: plan.orphans.length,
