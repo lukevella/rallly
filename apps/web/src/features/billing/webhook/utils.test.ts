@@ -115,7 +115,7 @@ describe("getSubscriptionDetails", () => {
     price: {
       id: "price_addon",
       unit_amount: 500,
-      metadata: { addon: "api", api_poll_limit: "1000" },
+      metadata: { addon: "api", api_poll_tier: "large" },
       recurring: { interval: "year" },
       currency_options: { eur: { unit_amount: 450 } },
     },
@@ -169,7 +169,7 @@ describe("toSubscriptionRow", () => {
     price: {
       id: "price_addon",
       unit_amount: 9000,
-      metadata: { addon: "api", api_poll_limit: "1000" },
+      metadata: { addon: "api", api_poll_tier: "large" },
       recurring: { interval: "month" },
       currency_options: { eur: { unit_amount: 8000 } },
     },
@@ -200,7 +200,7 @@ describe("toSubscriptionRow", () => {
       apiAddonItemId: null,
       apiAddonPriceId: null,
       apiAddonAmount: null,
-      apiPollLimit: null,
+      apiAddonTier: null,
     });
   });
 
@@ -213,7 +213,7 @@ describe("toSubscriptionRow", () => {
       apiAddonItemId: "si_addon",
       apiAddonPriceId: "price_addon",
       apiAddonAmount: 8000,
-      apiPollLimit: 1000,
+      apiAddonTier: "large",
     });
   });
 });
@@ -239,23 +239,22 @@ describe("hasUnreadableApiPollAddon", () => {
       price: {
         id: "price_addon",
         unit_amount: 3000,
-        metadata: { addon: "api", api_poll_limit: "250" },
+        metadata: { addon: "api", api_poll_tier: "small" },
       },
     };
     expect(hasUnreadableApiPollAddon(subscription([seat, addon]))).toBe(false);
   });
 
-  it("is true when the add-on limit cannot be read", () => {
+  it.each([
+    ["an unknown tier", { addon: "api", api_poll_tier: "huge" }],
+    ["only a limit", { addon: "api", api_poll_limit: "250" }],
+  ])("is true when the add-on has %s", (_, metadata) => {
     const addon = {
       id: "si_addon",
-      price: {
-        id: "price_addon",
-        unit_amount: 3000,
-        metadata: { addon: "api", api_poll_limit: "lots" },
-      },
+      price: { id: "price_addon", unit_amount: 3000, metadata },
     };
     const sub = subscription([seat, addon]);
     expect(hasUnreadableApiPollAddon(sub)).toBe(true);
-    expect(getApiPollAddonColumns(sub).apiPollLimit).toBeNull();
+    expect(getApiPollAddonColumns(sub).apiAddonTier).toBeNull();
   });
 });

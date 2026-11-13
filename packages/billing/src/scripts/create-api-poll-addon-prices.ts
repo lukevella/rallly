@@ -5,6 +5,7 @@ import {
   apiPollAddonLookupKey,
   apiPollAddonPriceParams,
   createStripeClient,
+  findApiPollAddonMetadataUpdates,
   findApiPollAddonPriceMismatches,
   findApiPollAddonProductTagProblem,
   findSharedProductProblem,
@@ -20,8 +21,10 @@ import { API_POLL_TIERS } from "../pricing";
  *
  * Safe to repeat. The product is found by `metadata.addon` (via the products
  * of existing add-on prices, then a product list scan) before creating one.
- * A lookup key that already exists is compared with the expected price and
- * reported "ok" or as a mismatch. It is never moved, changed or archived.
+ * A lookup key that already exists is compared with the expected price.
+ * Missing or wrong metadata keys are set in place, since metadata does not
+ * affect billing; keys are never removed. Any other difference is reported
+ * as a mismatch, and the price is never moved, repriced or archived.
  *
  * Prices use fixed idempotency keys, so Stripe rejects a re-run with changed
  * params within 24 hours.
@@ -83,7 +86,7 @@ async function getTaxBehavior() {
 
   console.info(
     apply
-      ? "⚠️  APPLY mode — the product and missing prices will be created."
+      ? "⚠️  APPLY mode — the product and missing prices will be created, and price metadata corrected."
       : "🔍 DRY RUN — nothing will change. Pass --apply to write.",
   );
 
@@ -135,12 +138,32 @@ async function getTaxBehavior() {
         price: found,
         params,
       });
-      if (mismatches.length === 0) {
-        console.info(`✅ ${key}: ok (${found.id})`);
-      } else {
+      if (mismatches.length > 0) {
         mismatched++;
         console.info(
           `❌ ${key}: mismatch on ${found.id}, left unchanged:\n   ${mismatches.join("\n   ")}`,
+        );
+        continue;
+      }
+
+      const metadata = findApiPollAddonMetadataUpdates({
+        price: found,
+        params,
+      });
+      const changes = Object.entries(metadata)
+        .map(
+          ([field, value]) =>
+            `${field}: ${found.metadata[field] ?? "(missing)"} → ${value}`,
+        )
+        .join(", ");
+      if (!changes) {
+        console.info(`✅ ${key}: ok (${found.id})`);
+      } else if (apply) {
+        await stripe.prices.update(found.id, { metadata });
+        console.info(`✅ ${key}: updated metadata on ${found.id} (${changes})`);
+      } else {
+        console.info(
+          `✏️  ${key}: would update metadata on ${found.id} (${changes})`,
         );
       }
       continue;
