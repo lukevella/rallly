@@ -102,6 +102,99 @@ describe("validateTranslation", () => {
     expect(v("Line<br/>break", "Zeilenumbruch")).not.toEqual([]);
   });
 
+  const taggedPlural =
+    "{n, plural, one {<b>#</b> vote} other {<b>#</b> votes}}";
+
+  it("compares tags per plural branch, not as totals", () =>
+    expect(
+      v(
+        taggedPlural,
+        "{n, plural, one {<b>#</b> голос} few {<b>#</b> голоса} many {<b>#</b> голосов} other {<b>#</b> голоса}}",
+      ),
+    ).toEqual([]));
+
+  it("rejects a plural branch that drops a tag", () => {
+    const reasons = v(
+      taggedPlural,
+      "{n, plural, one {<b>#</b> голос} few {# голоса} many {<b>#</b> голосов} other {<b>#</b> голоса}}",
+    );
+    expect(reasons.join()).toContain("<b>");
+  });
+
+  it("blames the apostrophe for a tag quoted inside a branch", () =>
+    expect(
+      v(
+        "{n, plural, one {<b>#</b> x} other {<b>#</b> xs}}",
+        "{n, plural, one {'<b>#</b>' x} other {<b>#</b> xs}}",
+      ).join(),
+    ).toContain("apostrophe"));
+
+  it("rejects a select branch that drops its tag", () =>
+    expect(
+      v(
+        "{k, select, a {<b>A</b>} other {B}}",
+        "{k, select, a {A} other {<b>B</b>}}",
+      ),
+    ).not.toEqual([]));
+
+  it("compares nested branches", () => {
+    const source =
+      "{k, select, a {{n, plural, one {<b>#</b>} other {<b>#</b>}}} other {B}}";
+    expect(
+      v(
+        source,
+        "{k, select, a {{n, plural, one {<b>#</b>} few {<b>#</b>} other {<b>#</b>}}} other {B}}",
+      ),
+    ).toEqual([]);
+    expect(
+      v(
+        source,
+        "{k, select, a {{n, plural, one {<b>#</b>} few {#} other {<b>#</b>}}} other {B}}",
+      ),
+    ).not.toEqual([]);
+  });
+
+  it("checks every occurrence of a repeated select", () => {
+    const source = "{k, select, a {A} other {B}} {k, select, a {C} other {D}}";
+    expect(
+      v(source, "{k, select, a {A} other {B}} {k, select, a {C} other {D}}"),
+    ).toEqual([]);
+    expect(
+      v(source, "{k, select, x {A} other {B}} {k, select, a {C} other {D}}"),
+    ).not.toEqual([]);
+  });
+
+  it("rejects a changed plural offset", () => {
+    const source = "{n, plural, one {# vote} other {# votes}}";
+    expect(
+      v(source, "{n, plural, offset:1 one {# Stimme} other {# Stimmen}}"),
+    ).not.toEqual([]);
+    expect(
+      v(
+        "{n, plural, offset:1 one {# vote} other {# votes}}",
+        "{n, plural, offset:1 one {# Stimme} other {# Stimmen}}",
+      ),
+    ).toEqual([]);
+  });
+
+  it("checks every branch of a plural the translation adds", () => {
+    expect(
+      v(
+        "<b>{n}</b> votes",
+        "{n, plural, one {<b>{n}</b> Stimme} other {<b>{n}</b> Stimmen}}",
+      ),
+    ).toEqual([]);
+    expect(
+      v(
+        "<b>{n}</b> votes",
+        "{n, plural, one {<b>{n}</b> Stimme} other {{n} Stimmen}}",
+      ),
+    ).not.toEqual([]);
+  });
+
+  it("rejects the reserved tag prefix in the translation", () =>
+    expect(v("<0>A</0>", "<num-0>B</num-0>")).not.toEqual([]));
+
   it("skips comparison when the source does not parse", () =>
     expect(v("broken {", "kaputt {")).toEqual([]));
 });

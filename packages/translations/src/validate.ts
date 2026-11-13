@@ -21,55 +21,228 @@ const tryParse = (message: string) => {
   }
 };
 
-type Branching = { kind: "plural" | "select"; keys: Set<string> };
+type Scope = { tags: Map<string, number>; branches: Branch[] };
+
+type Branch = {
+  name: string;
+  kind: "plural" | "select";
+  offset: number;
+  options: Map<string, Scope>;
+};
 
 const inspect = (elements: MessageFormatElement[]) => {
   const args = new Set<string>();
-  const branching = new Map<string, Branching>();
-  const tags = new Map<string, number>();
-  const countTag = (name: string) => tags.set(name, (tags.get(name) ?? 0) + 1);
+  const branching = new Map<string, Branch["kind"]>();
 
-  const walk = (nodes: MessageFormatElement[]) => {
-    for (const node of nodes) {
-      switch (node.type) {
-        case TYPE.literal:
-          for (const match of node.value.matchAll(/<([\w-]+)\s*\/>/g)) {
-            countTag(`${match[1]}/`);
-          }
-          break;
-        case TYPE.argument:
-        case TYPE.number:
-        case TYPE.date:
-        case TYPE.time:
-          args.add(node.value);
-          break;
-        case TYPE.select:
-        case TYPE.plural:
-          args.add(node.value);
-          branching.set(node.value, {
-            kind: node.type === TYPE.plural ? "plural" : "select",
-            keys: new Set(Object.keys(node.options)),
-          });
-          for (const option of Object.values(node.options)) {
-            walk(option.value);
-          }
-          break;
-        case TYPE.tag:
-          countTag(node.value);
-          walk(node.children);
-          break;
+  const scopeOf = (elements: MessageFormatElement[]) => {
+    const scope: Scope = { tags: new Map(), branches: [] };
+    const countTag = (name: string) =>
+      scope.tags.set(name, (scope.tags.get(name) ?? 0) + 1);
+
+    const walk = (nodes: MessageFormatElement[]) => {
+      for (const node of nodes) {
+        switch (node.type) {
+          case TYPE.literal:
+            for (const match of node.value.matchAll(/<([\w-]+)\s*\/>/g)) {
+              countTag(`${match[1]}/`);
+            }
+            break;
+          case TYPE.argument:
+          case TYPE.number:
+          case TYPE.date:
+          case TYPE.time:
+            args.add(node.value);
+            break;
+          case TYPE.select:
+          case TYPE.plural:
+            args.add(node.value);
+            if (!branching.has(node.value)) {
+              branching.set(
+                node.value,
+                node.type === TYPE.plural ? "plural" : "select",
+              );
+            }
+            scope.branches.push({
+              name: node.value,
+              kind: node.type === TYPE.plural ? "plural" : "select",
+              offset: node.type === TYPE.plural ? node.offset : 0,
+              options: new Map(
+                Object.entries(node.options).map(([key, option]) => [
+                  key,
+                  scopeOf(option.value),
+                ]),
+              ),
+            });
+            break;
+          case TYPE.tag:
+            countTag(node.value);
+            walk(node.children);
+            break;
+        }
       }
-    }
+    };
+
+    walk(elements);
+    return scope;
   };
 
-  walk(elements);
-  return { args, branching, tags };
+  return { args, branching, root: scopeOf(elements) };
 };
 
 const describeTag = (name: string) =>
   name.endsWith("/")
     ? `<${displayTag(name.slice(0, -1))}/>`
     : `<${displayTag(name)}>`;
+
+const inline = ({
+  scope,
+  branch,
+  option,
+}: {
+  scope: Scope;
+  branch: Branch;
+  option: Scope;
+}) => {
+  const tags = new Map(scope.tags);
+  for (const [name, count] of option.tags) {
+    tags.set(name, (tags.get(name) ?? 0) + count);
+  }
+  const index = scope.branches.indexOf(branch);
+  return {
+    tags,
+    branches: [
+      ...scope.branches.slice(0, index),
+      ...option.branches,
+      ...scope.branches.slice(index + 1),
+    ],
+  };
+};
+
+const compareScopes = ({
+  expected,
+  actual,
+  reasons,
+  hint,
+}: {
+  expected: Scope;
+  actual: Scope;
+  reasons: Set<string>;
+  hint: string;
+}) => {
+  const paired = new Set<Branch>();
+  const pairs: [Branch, Branch][] = [];
+  const unmatched: Branch[] = [];
+  for (const branch of expected.branches) {
+    const match = actual.branches.find(
+      (candidate) => candidate.name === branch.name && !paired.has(candidate),
+    );
+    if (match) {
+      paired.add(match);
+      pairs.push([branch, match]);
+    } else {
+      unmatched.push(branch);
+    }
+  }
+
+  const expectedOnly = unmatched[0];
+  if (expectedOnly) {
+    for (const option of expectedOnly.options.values()) {
+      compareScopes({
+        expected: inline({ scope: expected, branch: expectedOnly, option }),
+        actual,
+        reasons,
+        hint,
+      });
+    }
+    return;
+  }
+  const actualOnly = actual.branches.find((branch) => !paired.has(branch));
+  if (actualOnly) {
+    for (const option of actualOnly.options.values()) {
+      compareScopes({
+        expected,
+        actual: inline({ scope: actual, branch: actualOnly, option }),
+        reasons,
+        hint,
+      });
+    }
+    return;
+  }
+
+  for (const [name, count] of expected.tags) {
+    const found = actual.tags.get(name) ?? 0;
+    if (found < count) {
+      reasons.add(
+        `tag ${describeTag(name)} appears ${found} time(s) in the translation but ${count} in the source; keep every tag and do not rename it${hint}`,
+      );
+    }
+  }
+  for (const [name, count] of actual.tags) {
+    const wanted = expected.tags.get(name) ?? 0;
+    if (count > wanted) {
+      reasons.add(
+        `tag ${describeTag(name)} appears ${count} time(s) in the translation but ${wanted} in the source; do not add or rename tags${hint}`,
+      );
+    }
+  }
+
+  for (const [wanted, found] of pairs) {
+    compareBranches({ wanted, found, reasons, hint });
+  }
+};
+
+const compareBranches = ({
+  wanted,
+  found,
+  reasons,
+  hint,
+}: {
+  wanted: Branch;
+  found: Branch;
+  reasons: Set<string>;
+  hint: string;
+}) => {
+  const { name } = wanted;
+  if (found.kind !== wanted.kind) {
+    reasons.add(
+      `{${name}} must be a ${wanted.kind} argument like in the source, but it is a ${found.kind}`,
+    );
+    return;
+  }
+  if (found.offset !== wanted.offset) {
+    reasons.add(
+      `the plural for {${name}} has offset:${found.offset} but the source has offset:${wanted.offset}; keep the offset exactly as in the source`,
+    );
+  }
+  if (wanted.kind === "select") {
+    for (const key of wanted.options.keys()) {
+      if (!found.options.has(key)) {
+        reasons.add(
+          `the select for {${name}} is missing the case "${key}"; select case names are identifiers and must stay exactly as in the source (do not translate them)`,
+        );
+      }
+    }
+    for (const [key, scope] of found.options) {
+      const source = wanted.options.get(key);
+      if (!source) {
+        reasons.add(
+          `the select for {${name}} has the case "${key}" which does not exist in the source; select case names must not be translated or added`,
+        );
+        continue;
+      }
+      compareScopes({ expected: source, actual: scope, reasons, hint });
+    }
+    return;
+  }
+  for (const [key, scope] of found.options) {
+    const source = wanted.options.get(key) ?? wanted.options.get("other");
+    if (source) {
+      compareScopes({ expected: source, actual: scope, reasons, hint });
+    }
+  }
+};
+
+const reservedTag = /<\/?num-\d+/;
 
 export const validateTranslation = ({
   source,
@@ -78,8 +251,6 @@ export const validateTranslation = ({
   source: string;
   translation: string;
 }) => {
-  const reasons: string[] = [];
-
   if (translation.trim() === "") {
     return ["the translation is empty"];
   }
@@ -89,9 +260,14 @@ export const validateTranslation = ({
     ];
   }
 
-  if (/<\/?num-\d+/.test(source)) {
+  if (reservedTag.test(source)) {
     return [
       "the source uses a tag named num-<digits>, which is reserved by the validator; it cannot be validated",
+    ];
+  }
+  if (reservedTag.test(translation)) {
+    return [
+      "the translation uses a tag named num-<digits>, which does not exist in the source; keep the tag names exactly as in the source",
     ];
   }
 
@@ -111,7 +287,8 @@ export const validateTranslation = ({
     ];
   }
 
-  const apostropheHint = translation.includes("'")
+  const reasons = new Set<string>();
+  const hint = translation.includes("'")
     ? " (an apostrophe directly before { or < starts quoted text and turns the argument or tag into literal text; write '' for a literal apostrophe)"
     : "";
   const expected = inspect(parsedSource.ast);
@@ -119,69 +296,36 @@ export const validateTranslation = ({
 
   for (const name of expected.args) {
     if (!actual.args.has(name)) {
-      const hint = translation.includes("'")
+      const argumentHint = translation.includes("'")
         ? " (an apostrophe directly before { starts quoted text and turns the argument into literal text; use '' for a literal apostrophe)"
         : "";
-      reasons.push(`argument {${name}} is missing from the translation${hint}`);
+      reasons.add(
+        `argument {${name}} is missing from the translation${argumentHint}`,
+      );
     }
   }
   for (const name of actual.args) {
     if (!expected.args.has(name)) {
-      reasons.push(
+      reasons.add(
         `argument {${name}} does not exist in the source; argument names must not be translated or renamed`,
       );
     }
   }
 
-  for (const [name, wanted] of expected.branching) {
-    const found = actual.branching.get(name);
-    if (!found) {
-      if (actual.args.has(name)) {
-        reasons.push(
-          `{${name}} must be a ${wanted.kind} argument like in the source, not a simple argument`,
-        );
-      }
-      continue;
-    }
-    if (found.kind !== wanted.kind) {
-      reasons.push(
-        `{${name}} must be a ${wanted.kind} argument like in the source, but it is a ${found.kind}`,
-      );
-    }
-    if (wanted.kind === "select" && found.kind === "select") {
-      for (const key of wanted.keys) {
-        if (!found.keys.has(key)) {
-          reasons.push(
-            `the select for {${name}} is missing the case "${key}"; select case names are identifiers and must stay exactly as in the source (do not translate them)`,
-          );
-        }
-      }
-      for (const key of found.keys) {
-        if (!wanted.keys.has(key)) {
-          reasons.push(
-            `the select for {${name}} has the case "${key}" which does not exist in the source; select case names must not be translated or added`,
-          );
-        }
-      }
-    }
-  }
-
-  for (const [name, count] of expected.tags) {
-    const found = actual.tags.get(name) ?? 0;
-    if (found < count) {
-      reasons.push(
-        `tag ${describeTag(name)} appears ${found} time(s) in the translation but ${count} in the source; keep every tag and do not rename it${apostropheHint}`,
-      );
-    }
-  }
-  for (const [name, count] of actual.tags) {
-    const wanted = expected.tags.get(name) ?? 0;
-    if (count > wanted) {
-      reasons.push(
-        `tag ${describeTag(name)} appears ${count} time(s) in the translation but ${wanted} in the source; do not add or rename tags${apostropheHint}`,
+  for (const [name, kind] of expected.branching) {
+    if (!actual.branching.has(name) && actual.args.has(name)) {
+      reasons.add(
+        `{${name}} must be a ${kind} argument like in the source, not a simple argument`,
       );
     }
   }
 
-  return reasons;
+  compareScopes({
+    expected: expected.root,
+    actual: actual.root,
+    reasons,
+    hint,
+  });
+
+  return [...reasons];
 };
