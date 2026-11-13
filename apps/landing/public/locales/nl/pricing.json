@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Geavanceerde pollinstellingen",
-  "advancedPollSettingsDescription": "Vereis e-mailadressen van deelnemers, verberg namen van deelnemers en verberg stemmen",
   "apiAccess": "API-toegang",
   "apiAccessDescription": "Maak Polls aan en lees resultaten vanuit je eigen systemen. <a>Lees de API-documentatie</a>",
   "apiAndWebhooks": "API en webhooks",
