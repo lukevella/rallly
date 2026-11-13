@@ -325,6 +325,7 @@ describe("translateItems", () => {
     const r = await run(complete, save);
     expect(calls).toHaveLength(2);
     expect(r.failed).toHaveLength(1);
+    expect(r.failed[0]?.reason).toMatch(/choices/i);
   });
 
   it("propagates a thrown API error", async () => {
