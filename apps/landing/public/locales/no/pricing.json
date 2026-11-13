@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Avanserte avstemningsinnstillinger",
-  "advancedPollSettingsDescription": "Krev deltakernes e-postadresser, skjul deltakernavn og skjul stemmer",
   "apiAccess": "API-tilgang",
   "apiAccessDescription": "Opprett avstemninger og les resultater fra dine egne systemer. <a>Les API-dokumentasjonen</a>",
   "apiAndWebhooks": "API og webhooks",
