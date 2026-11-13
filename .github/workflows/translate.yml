@@ -83,7 +83,13 @@ jobs:
         env:
           TRANSLATIONS_PR_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
         run: |
-          paths=(apps/web/public/locales apps/landing/public/locales packages/emails/locales i18n/lock)
+          # One pathspec set for both the guard and the staging. i18n/lock only
+          # exists once a lock file has been written, and git add rejects a
+          # pathspec that matches nothing.
+          paths=(apps/web/public/locales apps/landing/public/locales packages/emails/locales)
+          if [ -d i18n/lock ]; then
+            paths+=(i18n/lock)
+          fi
           if [ -z "$(git status --porcelain -- "${paths[@]}")" ]; then
             echo "No translation changes."
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -103,6 +109,8 @@ jobs:
           git push --force-with-lease="refs/heads/$BRANCH:$remote_sha" origin "HEAD:refs/heads/$BRANCH"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
+      # Deliberately re-queries after the push instead of reusing the earlier
+      # result: the PR may have been closed or opened since "Prepare branch".
       - name: Open or update pull request
         if: steps.commit.outputs.changed == 'true'
         env:
