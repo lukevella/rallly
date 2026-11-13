@@ -95,35 +95,37 @@ export function canChangeBillingInterval(subscription: {
 
 export type ApiPollTierChange = "none" | "upgrade" | "restore" | "downgrade";
 
+const tierLimit = (tier: ApiPollTier | null) =>
+  tier ? apiPollTierLimits[tier] : 0;
+
 /**
- * A downgrade keeps the old limit until renewal without a refund, so moving
- * back up to anything at or below that retained limit is already paid for.
+ * A downgrade keeps the old tier until renewal without a refund, so moving
+ * back up to anything at or below that retained tier is already paid for.
+ * `null` is no add-on.
  */
 export function classifyApiPollTierChange({
-  currentLimit,
-  retainedLimit,
+  currentTier,
+  retainedTier,
   retainedUntil,
-  targetLimit,
+  targetTier,
   now,
 }: {
-  currentLimit: number | null;
-  retainedLimit: number | null;
+  currentTier: ApiPollTier | null;
+  retainedTier: ApiPollTier | null;
   retainedUntil: Date | null;
-  targetLimit: number | null;
+  targetTier: ApiPollTier | null;
   now: Date;
 }): ApiPollTierChange {
-  if (targetLimit === currentLimit) {
+  if (targetTier === currentTier) {
     return "none";
   }
-  if (targetLimit === null) {
-    return "downgrade";
-  }
-  if (currentLimit !== null && targetLimit < currentLimit) {
+  const target = tierLimit(targetTier);
+  if (target < tierLimit(currentTier)) {
     return "downgrade";
   }
   const paidUpTo =
-    retainedUntil && retainedUntil > now ? (retainedLimit ?? 0) : 0;
-  return targetLimit <= paidUpTo ? "restore" : "upgrade";
+    retainedUntil && retainedUntil > now ? tierLimit(retainedTier) : 0;
+  return target <= paidUpTo ? "restore" : "upgrade";
 }
 
 export function canChangeApiPollTier(subscription: {
@@ -146,26 +148,25 @@ type ApiPollAddonPrices = Record<
 type BillingChangeError = { error: "currency_unsupported" | "no_change" };
 
 /**
- * By price first, so a tier's limit can change without stranding subscribers
- * whose stored limit predates it. The limit only identifies a price that has
- * since left the catalog.
+ * The stored tier, falling back to the price id for a row written before the
+ * tier column existed.
  */
 function findApiPollTier({
+  tier,
   priceId,
-  limit,
   prices,
 }: {
+  tier: ApiPollTier | null;
   priceId: string | null;
-  limit: number | null;
   prices: ApiPollAddonPrices;
 }) {
   return (
+    tier ??
     API_POLL_TIERS.find(
-      (tier) =>
-        prices[tier].monthly.id === priceId ||
-        prices[tier].yearly.id === priceId,
+      (candidate) =>
+        prices[candidate].monthly.id === priceId ||
+        prices[candidate].yearly.id === priceId,
     ) ??
-    API_POLL_TIERS.find((tier) => apiPollTierLimits[tier] === limit) ??
     null
   );
 }
@@ -192,8 +193,8 @@ export function buildSubscriptionUpdate({
     subscriptionItemId: string;
     apiAddonItemId: string | null;
     apiAddonPriceId: string | null;
-    apiPollLimit: number | null;
-    apiPollRetainedLimit: number | null;
+    apiAddonTier: ApiPollTier | null;
+    apiPollRetainedTier: ApiPollTier | null;
     apiPollRetainedUntil: Date | null;
     periodEnd: Date;
   };
@@ -230,8 +231,8 @@ export function buildSubscriptionUpdate({
       let addonPrice: ProPrice | null = null;
       if (subscription.apiAddonItemId) {
         const tier = findApiPollTier({
+          tier: subscription.apiAddonTier,
           priceId: subscription.apiAddonPriceId,
-          limit: subscription.apiPollLimit,
           prices: prices.apiPollAddon,
         });
         if (!tier) {
@@ -266,20 +267,11 @@ export function buildSubscriptionUpdate({
     case "api_tier": {
       const currentTier = subscription.apiAddonItemId
         ? findApiPollTier({
+            tier: subscription.apiAddonTier,
             priceId: subscription.apiAddonPriceId,
-            limit: subscription.apiPollLimit,
             prices: prices.apiPollAddon,
           })
         : null;
-      if (change.tier !== null && change.tier === currentTier) {
-        return { error: "no_change" };
-      }
-      const currentLimit = currentTier
-        ? apiPollTierLimits[currentTier]
-        : subscription.apiAddonItemId
-          ? subscription.apiPollLimit
-          : null;
-      const targetLimit = change.tier ? apiPollTierLimits[change.tier] : null;
       // A retained tier was paid for up to the period end it was set at. Once
       // the period moves (renewal, or a switch to yearly) it covers none of it.
       const retainedUntil =
@@ -288,10 +280,10 @@ export function buildSubscriptionUpdate({
           ? subscription.apiPollRetainedUntil
           : null;
       const kind = classifyApiPollTierChange({
-        currentLimit,
-        retainedLimit: subscription.apiPollRetainedLimit,
+        currentTier,
+        retainedTier: subscription.apiPollRetainedTier,
         retainedUntil,
-        targetLimit,
+        targetTier: change.tier,
         now,
       });
       if (kind === "none") {
