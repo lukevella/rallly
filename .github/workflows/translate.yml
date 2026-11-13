@@ -1,0 +1,104 @@
+name: Translate
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: translate
+  cancel-in-progress: false
+
+# Writes go through TRANSLATIONS_PR_TOKEN, not the workflow token.
+permissions:
+  contents: read
+
+env:
+  BRANCH: i18n/translations
+
+jobs:
+  translate:
+    name: Translate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required secrets
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TRANSLATIONS_PR_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+        run: |
+          missing=0
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "::error::The OPENROUTER_API_KEY secret is not set."
+            missing=1
+          fi
+          if [ -z "$TRANSLATIONS_PR_TOKEN" ]; then
+            echo "::error::The TRANSLATIONS_PR_TOKEN secret is not set. The default GITHUB_TOKEN cannot be used because PRs it opens do not trigger CI."
+            missing=1
+          fi
+          exit "$missing"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/pnpm-install
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # Keep the rolling branch when it has an open PR so translations already
+      # generated are reused. Otherwise, or when it conflicts with main, start
+      # from main: a human change on main always wins and the bot regenerates.
+      - name: Prepare branch
+        env:
+          GH_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+        run: |
+          open_prs=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq 'length')
+          if git rev-parse --verify --quiet "refs/remotes/origin/$BRANCH" >/dev/null && [ "$open_prs" -gt 0 ]; then
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+            if ! git merge origin/main --no-edit; then
+              echo "::warning::Merging main into $BRANCH conflicted. Recreating the branch from main."
+              git merge --abort
+              git checkout -B "$BRANCH" origin/main
+            fi
+          else
+            git checkout -B "$BRANCH" origin/main
+          fi
+
+      - name: Translate
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TRANSLATION_MODEL: ${{ vars.TRANSLATION_MODEL }}
+        run: pnpm i18n:translate --report "$RUNNER_TEMP/report.md"
+
+      - name: Validate locale files
+        run: pnpm check:locales
+
+      - name: Commit and push
+        id: commit
+        run: |
+          paths=(apps/web/public/locales apps/landing/public/locales packages/emails/locales i18n/lock)
+          if [ -z "$(git status --porcelain -- "${paths[@]}")" ]; then
+            echo "No translation changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git add -- "${paths[@]}"
+          git commit -m "🌐 Update translations"
+          # Lease against the SHA we fetched; an empty value means the remote branch must not exist.
+          remote_sha=$(git rev-parse --verify --quiet "refs/remotes/origin/$BRANCH" || true)
+          git push --force-with-lease="refs/heads/$BRANCH:$remote_sha" origin "HEAD:refs/heads/$BRANCH"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update pull request
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
+        run: |
+          open_prs=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq 'length')
+          if [ "$open_prs" -gt 0 ]; then
+            gh pr edit "$BRANCH" --body-file "$RUNNER_TEMP/report.md"
+          else
+            gh pr create --base main --head "$BRANCH" --title "🌐 Update translations" --body-file "$RUNNER_TEMP/report.md"
+          fi
