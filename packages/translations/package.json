@@ -10,14 +10,15 @@
     "check": "node src/check.ts"
   },
   "dependencies": {
-    "openai": "^7.35.0"
+    "@formatjs/icu-messageformat-parser": "^3.5.23",
+    "openai": "^7.35.0",
+    "undici": "^7.30.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@formatjs/icu-messageformat-parser": "^3.5.23",
     "@rallly/tsconfig": "workspace:*",
     "@types/node": "^24.1.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.11",
-    "zod": "^4.3.6"
+    "vitest": "^4.1.11"
   }
 }

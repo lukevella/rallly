@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import OpenAI from "openai";
+import { Agent } from "undici";
 import { formatReport, run, shouldFail } from "./run.ts";
 import type { Complete } from "./translator.ts";
 import { defaultModel } from "./translator.ts";
@@ -55,10 +56,16 @@ for (const file of values.file ?? []) {
 }
 
 const apiKey = loadApiKey();
+const timeout = 15 * 60 * 1000;
+// Node's bundled fetch stops waiting for headers after 300 seconds, well short
+// of a slow flex request, so the dispatcher carries the SDK timeout instead.
 const client = new OpenAI({
   apiKey,
-  timeout: 15 * 60 * 1000,
-  maxRetries: 4,
+  timeout,
+  maxRetries: 8,
+  fetchOptions: {
+    dispatcher: new Agent({ headersTimeout: timeout, bodyTimeout: timeout }),
+  },
 });
 
 const redact = (text: string) => text.split(apiKey).join("[redacted]");
