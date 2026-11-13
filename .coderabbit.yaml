@@ -24,13 +24,16 @@ reviews:
         the diff or the codebase, or a value with unbalanced ICU braces.
     - path: "apps/web/public/locales/!(en)/**"
       instructions: >
-        Non-English locale files are owned by Crowdin. Flag any change to them
-        that is not part of a "New Crowdin updates" pull request.
+        Non-English locale files are written by the Translate workflow. Flag any
+        change to them unless the pull request is titled "🌐 Update translations"
+        or its stated purpose is correcting a translation.
     - path: "apps/landing/public/locales/!(en)/**"
       instructions: >
-        Non-English locale files are owned by Crowdin. Flag any change to them
-        that is not part of a "New Crowdin updates" pull request.
+        Non-English locale files are written by the Translate workflow. Flag any
+        change to them unless the pull request is titled "🌐 Update translations"
+        or its stated purpose is correcting a translation.
     - path: "packages/emails/locales/!(en)/**"
       instructions: >
-        Non-English locale files are owned by Crowdin. Flag any change to them
-        that is not part of a "New Crowdin updates" pull request.
+        Non-English locale files are written by the Translate workflow. Flag any
+        change to them unless the pull request is titled "🌐 Update translations"
+        or its stated purpose is correcting a translation.
