@@ -20,9 +20,11 @@ import {
 import { getStripe } from "@/features/billing/service";
 import {
   getSubscriptionDetails,
+  hasUnreadableApiPollAddon,
   isActivationEvent,
   isSubscriptionActive,
   toDate,
+  toSubscriptionRow,
 } from "@/features/billing/webhook/utils";
 import { queueEmails } from "@/features/email-queue/mutations";
 import {
@@ -33,6 +35,16 @@ import { licenseManager } from "@/features/licensing/mutations";
 import { licenseCheckoutMetadataSchema } from "@/features/licensing/schema";
 import { spaceExists } from "@/features/space/data";
 import { identifyGroup, posthog } from "@/lib/posthog";
+
+function reportUnreadableApiPollAddon(subscription: Stripe.Subscription) {
+  if (hasUnreadableApiPollAddon(subscription)) {
+    Sentry.captureMessage("Unreadable API add-on price metadata", {
+      level: "error",
+      fingerprint: ["unreadable-api-addon"],
+      extra: { subscriptionId: subscription.id },
+    });
+  }
+}
 
 async function getExpandedSubscription(subscriptionId: string) {
   return getStripe().subscriptions.retrieve(subscriptionId, {
@@ -277,14 +289,8 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
 
   const isActive = isSubscriptionActive(subscription);
   const activated = isActivationEvent(event);
-  const {
-    priceId,
-    currency,
-    interval,
-    amount,
-    discountPercentOff,
-    discountAmountOff,
-  } = getSubscriptionDetails(subscription);
+  const row = toSubscriptionRow(subscription);
+  reportUnreadableApiPollAddon(subscription);
 
   const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
 
@@ -300,17 +306,6 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     return;
   }
 
-  const subscriptionItem = findSeatItem(subscription);
-
-  if (!subscriptionItem) {
-    throw new Error(
-      `Missing subscription item in subscription ${subscription.id}`,
-    );
-  }
-
-  const subscriptionItemId = subscriptionItem.id;
-  const quantity = subscriptionItem.quantity ?? 1;
-
   const tier = await prisma.$transaction(async (tx) => {
     await tx.subscription.upsert({
       where: { id: subscription.id },
@@ -318,14 +313,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
         id: subscription.id,
         userId,
         active: isActive,
-        quantity,
-        subscriptionItemId,
-        priceId,
-        currency,
-        interval,
-        amount,
-        discountPercentOff,
-        discountAmountOff,
+        ...row,
         status: subscription.status,
         createdAt: toDate(subscription.created),
         periodStart: toDate(subscription.current_period_start),
@@ -337,14 +325,7 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
         id: subscription.id,
         userId,
         active: isActive,
-        subscriptionItemId,
-        quantity,
-        priceId,
-        currency,
-        interval,
-        amount,
-        discountPercentOff,
-        discountAmountOff,
+        ...row,
         status: subscription.status,
         createdAt: toDate(subscription.created),
         periodStart: toDate(subscription.current_period_start),
@@ -368,13 +349,18 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     groupType: "space",
     groupKey: spaceId,
     properties: {
-      seat_count: quantity,
+      seat_count: row.quantity,
       tier,
     },
   });
 
   if (activated) {
-    captureSubscriptionCreate({ userId, spaceId, interval, tier });
+    captureSubscriptionCreate({
+      userId,
+      spaceId,
+      interval: row.interval,
+      tier,
+    });
   }
 }
 
@@ -486,14 +472,8 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
 
   const isActive = isSubscriptionActive(subscription);
   const activated = isActivationEvent(event);
-  const {
-    priceId,
-    currency,
-    interval,
-    amount,
-    discountPercentOff,
-    discountAmountOff,
-  } = getSubscriptionDetails(subscription);
+  const row = toSubscriptionRow(subscription);
+  reportUnreadableApiPollAddon(subscription);
 
   const res = subscriptionMetadataSchema.safeParse(subscription.metadata);
 
@@ -509,15 +489,6 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     return;
   }
 
-  const subscriptionItem = findSeatItem(subscription);
-
-  if (!subscriptionItem) {
-    throw new Error("Expected subscription to have one item");
-  }
-
-  const subscriptionItemId = subscriptionItem.id;
-  const quantity = subscriptionItem.quantity ?? 1;
-
   // Update the subscription in the database
   const tier = await prisma.$transaction(async (tx) => {
     await tx.subscription.upsert({
@@ -526,14 +497,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
       },
       update: {
         active: isActive,
-        priceId,
-        currency,
-        interval,
-        subscriptionItemId,
-        quantity,
-        amount,
-        discountPercentOff,
-        discountAmountOff,
+        ...row,
         status: subscription.status,
         periodStart: toDate(subscription.current_period_start),
         periodEnd: toDate(subscription.current_period_end),
@@ -544,14 +508,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
         userId,
         spaceId,
         active: isActive,
-        priceId,
-        currency,
-        interval,
-        subscriptionItemId,
-        quantity,
-        amount,
-        discountPercentOff,
-        discountAmountOff,
+        ...row,
         status: subscription.status,
         createdAt: toDate(subscription.created),
         periodStart: toDate(subscription.current_period_start),
@@ -574,7 +531,7 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     groupType: "space",
     groupKey: spaceId,
     properties: {
-      seat_count: quantity,
+      seat_count: row.quantity,
       tier,
     },
   });
@@ -583,8 +540,8 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
     distinctId: userId,
     event: "subscription_update",
     properties: {
-      interval,
-      quantity,
+      interval: row.interval,
+      quantity: row.quantity,
       $set: {
         tier,
       },
@@ -595,7 +552,12 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
   });
 
   if (activated) {
-    captureSubscriptionCreate({ userId, spaceId, interval, tier });
+    captureSubscriptionCreate({
+      userId,
+      spaceId,
+      interval: row.interval,
+      tier,
+    });
   }
 }
 
