@@ -466,8 +466,54 @@ describe("formatReport", () => {
     expect(md).toContain("| web/de/app | 2 | 1 | 0 |");
     expect(md).not.toContain("web/es/app");
     expect(md).toContain("Failed validation");
-    expect(md).toContain("`b`: missing {name}");
-    expect(md).toContain("boom");
+    expect(md).toContain("- `b`: `missing {name}`");
+    expect(md).toContain("- Whole file failed: `boom`");
+  });
+
+  it("renders reasons as code so their markup is not interpreted", () => {
+    const md = formatReport({
+      model,
+      files: [
+        {
+          path: "web/de/app",
+          translated: 0,
+          adopted: 0,
+          removed: 0,
+          failed: [
+            { key: "a", reason: "tags differ: expected <b>, <a>, <br/>" },
+            { key: "b", reason: "use `{name}` here" },
+            { key: "c", reason: "`edge`" },
+          ],
+        },
+      ],
+    });
+    expect(md).toContain("- `a`: `tags differ: expected <b>, <a>, <br/>`");
+    expect(md).toContain("- `b`: ``use `{name}` here``");
+    expect(md).toContain("- `c`: `` `edge` ``");
+  });
+
+  it("keeps the table and totals but truncates failures to fit GitHub's limit", () => {
+    const files = Array.from({ length: 30 }, (_, i) => ({
+      path: `web/l${i}/app`,
+      translated: 1,
+      adopted: 0,
+      removed: 0,
+      failed: Array.from({ length: 200 }, (_, j) => ({
+        key: `key${j}`,
+        reason: `placeholder {name} is missing from the translation <b>${j}</b>`,
+      })),
+    }));
+    const md = formatReport({ model, files });
+    expect(md.length).toBeLessThanOrEqual(60_000);
+    expect(md.split("\n")[0]).toBe(`Model: ${model}`);
+    for (const file of files)
+      expect(md).toContain(`| ${file.path} | 1 | 0 | 0 |`);
+    expect(md).toContain("| **Total** | **30** | **0** | **0** |");
+    const shown = md.split("\n").filter((line) => line.startsWith("- ")).length;
+    const omitted = Number(md.match(/_(\d+) more failures omitted/)?.[1]);
+    expect(shown).toBeGreaterThan(0);
+    expect(shown + omitted).toBe(6000);
+    expect(md.trimEnd()).toMatch(/failures omitted[^\n]*$/);
   });
   const sample = {
     files: [

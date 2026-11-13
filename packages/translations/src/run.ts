@@ -268,6 +268,20 @@ export const shouldFail = (report: RunReport) => {
   );
 };
 
+const maxReportLength = 60_000;
+const omissionReserve = 200;
+
+const code = (text: string) => {
+  const flat = text.replace(/\s*\n\s*/g, " ");
+  const longestRun = Math.max(
+    0,
+    ...(flat.match(/`+/g) ?? []).map((run) => run.length),
+  );
+  const fence = "`".repeat(longestRun + 1);
+  const pad = flat.startsWith("`") || flat.endsWith("`") ? " " : "";
+  return `${fence}${pad}${flat}${pad}${fence}`;
+};
+
 export const formatReport = (report: RunReport) => {
   const changed = report.files.filter(
     (file) =>
@@ -294,16 +308,38 @@ export const formatReport = (report: RunReport) => {
   const withFailures = changed.filter((file) => file.failed.length > 0);
   if (withFailures.length > 0) {
     lines.push("", "### Failed validation", "");
+    let length = lines.join("\n").length;
+    let omitted = 0;
     for (const file of withFailures) {
-      lines.push(`**${file.path}**`, "");
+      const heading = [`**${file.path}**`, ""];
+      let headed = false;
       for (const { key, reason } of file.failed) {
-        lines.push(
+        const line =
           key === "*"
-            ? `- Whole file failed: ${reason}`
-            : `- \`${key}\`: ${reason}`,
-        );
+            ? `- Whole file failed: ${code(reason)}`
+            : `- ${code(key)}: ${code(reason)}`;
+        const added =
+          line.length + 1 + (headed ? 0 : heading.join("\n").length + 1);
+        if (omitted > 0 || length + added > maxReportLength - omissionReserve) {
+          omitted++;
+          continue;
+        }
+        if (!headed) {
+          lines.push(...heading);
+          headed = true;
+        }
+        lines.push(line);
+        length += added;
       }
-      lines.push("");
+      if (headed) {
+        lines.push("");
+        length += 1;
+      }
+    }
+    if (omitted > 0) {
+      lines.push(
+        `_${omitted} more ${omitted === 1 ? "failure" : "failures"} omitted to stay under GitHub's character limit._`,
+      );
     }
   }
 
