@@ -19,7 +19,6 @@ const maxInFlight = 4;
 
 export type RunReport = {
   model: string;
-  provider?: string;
   files: {
     path: string;
     translated: number;
@@ -73,7 +72,6 @@ const runFile = async ({
   job,
   complete,
   model,
-  provider,
   glossary,
   dryRun,
 }: {
@@ -81,7 +79,6 @@ const runFile = async ({
   job: Job;
   complete: Complete;
   model: string;
-  provider?: string;
   glossary: Glossary;
   dryRun: boolean;
 }): Promise<RunReport["files"][number]> => {
@@ -169,7 +166,6 @@ const runFile = async ({
       const result = await translateItems({
         complete,
         model,
-        provider,
         locale,
         glossary,
         reference: messages,
@@ -226,7 +222,6 @@ export const run = async ({
   repoRoot,
   complete,
   model,
-  provider,
   locales,
   files,
   dryRun = false,
@@ -234,7 +229,6 @@ export const run = async ({
   repoRoot: string;
   complete: Complete;
   model: string;
-  provider?: string;
   locales?: string[];
   files?: string[];
   dryRun?: boolean;
@@ -252,7 +246,6 @@ export const run = async ({
         job: jobs[index] as Job,
         complete,
         model,
-        provider,
         glossary,
         dryRun,
       });
@@ -263,7 +256,7 @@ export const run = async ({
     Array.from({ length: Math.min(maxInFlight, jobs.length) }, worker),
   );
 
-  return { model, provider, files: results };
+  return { model, files: results };
 };
 
 export const shouldFail = (report: RunReport) => {
@@ -287,7 +280,7 @@ export const formatReport = (report: RunReport) => {
     changed.reduce((total, file) => total + pick(file), 0);
 
   const lines = [
-    `Model: ${report.model}${report.provider ? ` (provider: ${report.provider})` : ""}`,
+    `Model: ${report.model}`,
     "",
     "| Locale file | Translated | Adopted | Removed |",
     "| --- | ---: | ---: | ---: |",

@@ -20,12 +20,12 @@ jobs:
     steps:
       - name: Check required secrets
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TRANSLATIONS_PR_TOKEN: ${{ secrets.TRANSLATIONS_PR_TOKEN }}
         run: |
           missing=0
-          if [ -z "$OPENROUTER_API_KEY" ]; then
-            echo "::error::The OPENROUTER_API_KEY secret is not set."
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::The OPENAI_API_KEY secret is not set."
             missing=1
           fi
           if [ -z "$TRANSLATIONS_PR_TOKEN" ]; then
@@ -71,7 +71,7 @@ jobs:
 
       - name: Translate
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TRANSLATION_MODEL: ${{ vars.TRANSLATION_MODEL }}
         run: pnpm i18n:translate --report "$RUNNER_TEMP/report.md"
 

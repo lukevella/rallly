@@ -4,7 +4,9 @@ import type { Glossary, TranslationItem } from "./prompt.ts";
 import { buildSystem, buildUser } from "./prompt.ts";
 import { validateTranslation } from "./validate.ts";
 
-export const defaultModel = "qwen/qwen3.8-27b";
+export const defaultModel = "gpt-5.6-luna";
+
+export const serviceTier = "flex";
 
 const chunkSize = 100;
 
@@ -60,13 +62,11 @@ const parseContent = (content: string | null | undefined): Attempt => {
 const request = async ({
   complete,
   model,
-  provider,
   system,
   items,
 }: {
   complete: Complete;
   model: string;
-  provider?: string;
   system: string;
   items: TranslationItem[];
 }): Promise<Attempt> => {
@@ -84,9 +84,7 @@ const request = async ({
         schema: responseSchema,
       },
     },
-    provider: provider
-      ? { require_parameters: true, only: [provider] }
-      : { require_parameters: true },
+    service_tier: serviceTier,
   });
   const choice = response?.choices?.[0];
   if (!choice) {
@@ -150,14 +148,12 @@ const judge = ({
 const translateGroup = async ({
   complete,
   model,
-  provider,
   system,
   items,
   canSplit,
 }: {
   complete: Complete;
   model: string;
-  provider?: string;
   system: string;
   items: TranslationItem[];
   canSplit: boolean;
@@ -165,7 +161,7 @@ const translateGroup = async ({
   translated: Messages;
   failed: { key: string; reason: string }[];
 }> => {
-  const first = await request({ complete, model, provider, system, items });
+  const first = await request({ complete, model, system, items });
   if (!first.ok && first.final) {
     if (!canSplit || items.length < 2) {
       return {
@@ -181,7 +177,6 @@ const translateGroup = async ({
       const result = await translateGroup({
         complete,
         model,
-        provider,
         system,
         items: half,
         canSplit: false,
@@ -200,7 +195,6 @@ const translateGroup = async ({
   const second = await request({
     complete,
     model,
-    provider,
     system,
     items: firstPass.rejected,
   });
@@ -218,7 +212,6 @@ const translateGroup = async ({
 export const translateItems = async ({
   complete,
   model,
-  provider,
   locale,
   glossary,
   reference,
@@ -226,7 +219,6 @@ export const translateItems = async ({
 }: {
   complete: Complete;
   model: string;
-  provider?: string;
   locale: string;
   glossary: Glossary;
   reference: Messages;
@@ -240,7 +232,6 @@ export const translateItems = async ({
     const result = await translateGroup({
       complete,
       model,
-      provider,
       system,
       items: items.slice(i, i + chunkSize),
       canSplit: true,

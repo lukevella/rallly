@@ -9,7 +9,7 @@ import { defaultModel } from "./translator.ts";
 
 const repoRoot = resolve(import.meta.dirname, "../../..");
 const envFile = join(import.meta.dirname, "..", ".env.local");
-const keyName = "OPENROUTER_API_KEY";
+const keyName = "OPENAI_API_KEY";
 
 const fail = (message: string): never => {
   console.error(message);
@@ -46,7 +46,6 @@ const { values } = parseArgs({
     "dry-run": { type: "boolean" },
     report: { type: "string" },
     model: { type: "string" },
-    provider: { type: "string" },
   },
 });
 
@@ -59,7 +58,8 @@ for (const file of values.file ?? []) {
 const apiKey = loadApiKey();
 const client = new OpenAI({
   apiKey,
-  baseURL: "https://openrouter.ai/api/v1",
+  timeout: 15 * 60 * 1000,
+  maxRetries: 4,
 });
 
 const redact = (text: string) => text.split(apiKey).join("[redacted]");
@@ -78,15 +78,12 @@ const complete: Complete = async (params) => {
 
 const model = values.model || process.env.TRANSLATION_MODEL || defaultModel;
 
-console.error(
-  `Model: ${model}${values.provider ? ` via ${values.provider}` : ""}`,
-);
+console.error(`Model: ${model}`);
 
 const report = await run({
   repoRoot,
   complete,
   model,
-  provider: values.provider,
   locales: values.locale,
   files: values.file,
   dryRun: values["dry-run"],

@@ -450,16 +450,10 @@ describe("formatReport", () => {
     ],
   };
 
-  it("names the model, and the provider only when pinned", () => {
-    expect(formatReport({ model: "qwen/x", ...sample })).toContain(
-      "Model: qwen/x\n",
+  it("names the model", () => {
+    expect(formatReport({ model: "gpt-x", ...sample }).split("\n")[0]).toBe(
+      "Model: gpt-x",
     );
-    expect(formatReport({ model: "qwen/x", ...sample })).not.toContain(
-      "provider",
-    );
-    expect(
-      formatReport({ model: "qwen/x", provider: "fireworks", ...sample }),
-    ).toContain("Model: qwen/x (provider: fireworks)");
   });
 
   it("totals translated, adopted and removed", () => {

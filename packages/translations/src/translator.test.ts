@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Glossary } from "./prompt.ts";
 import type { Complete } from "./translator.ts";
-import { defaultModel, translateItems } from "./translator.ts";
+import { defaultModel, serviceTier, translateItems } from "./translator.ts";
 
 const glossary: Glossary = { doNotTranslate: ["Rallly"], terms: [] };
 const model = "test/model";
@@ -25,7 +25,7 @@ type Call = {
       };
     };
   };
-  provider: object;
+  service_tier: string;
 };
 
 const lastMessage = (call: Call | undefined) =>
@@ -57,11 +57,7 @@ const fake = (queue: Response[]) => {
   return { complete, calls };
 };
 
-const run = (
-  complete: Complete,
-  items: { key: string; source: string }[],
-  extra: { provider?: string } = {},
-) =>
+const run = (complete: Complete, items: { key: string; source: string }[]) =>
   translateItems({
     complete,
     model,
@@ -69,14 +65,13 @@ const run = (
     glossary,
     reference: {},
     items,
-    ...extra,
   });
 
 const save = [{ key: "a", source: "Save" }];
 
 describe("translateItems", () => {
   it("exposes the default model", () => {
-    expect(defaultModel).toBe("qwen/qwen3.8-27b");
+    expect(defaultModel).toBe("gpt-5.6-luna");
   });
 
   it("returns validated translations", async () => {
@@ -108,24 +103,15 @@ describe("translateItems", () => {
     expect(item?.additionalProperties).toBe(false);
   });
 
-  it("requires parameters without pinning a provider by default", async () => {
+  it("sends strict json_schema on the flex tier with no provider field", async () => {
     const { complete, calls } = fake([
       reply({ translations: [{ key: "a", value: "Speichern" }] }),
     ]);
     await run(complete, save);
-    expect(calls[0]?.provider).toEqual({ require_parameters: true });
-  });
-
-  it("sends require_parameters and pins a provider when asked", async () => {
-    const { complete, calls } = fake([
-      reply({ translations: [{ key: "a", value: "Speichern" }] }),
-    ]);
-    await run(complete, save, { provider: "fireworks" });
-    expect(calls[0]?.provider).toEqual({
-      require_parameters: true,
-      only: ["fireworks"],
-    });
+    expect(calls[0]?.service_tier).toBe(serviceTier);
+    expect(serviceTier).toBe("flex");
     expect(calls[0]?.response_format.json_schema.strict).toBe(true);
+    expect(calls[0]).not.toHaveProperty("provider");
   });
 
   it("ignores keys that were not requested", async () => {
