@@ -42,6 +42,10 @@ export async function getSpaceSubscription(spaceId: string) {
     status: subscription.status,
     periodEnd: subscription.periodEnd,
     active: subscription.active,
+    apiAddonItemId: subscription.apiAddonItemId,
+    apiAddonPriceId: subscription.apiAddonPriceId,
+    apiAddonAmount: subscription.apiAddonAmount,
+    apiPollLimit: subscription.apiPollLimit,
   };
 }
 

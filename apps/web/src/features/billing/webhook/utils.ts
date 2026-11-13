@@ -1,5 +1,10 @@
 import type { Stripe } from "@rallly/billing";
-import { getSeatItem } from "@rallly/billing/lib/stripe";
+import {
+  ADDON_METADATA_KEY,
+  API_ADDON,
+  getApiPollAddonItem,
+  getSeatItem,
+} from "@rallly/billing/lib/stripe";
 import { billingIntervalSchema } from "@/features/billing/schema";
 
 export function toDate(date: number) {
@@ -76,5 +81,44 @@ export function getSubscriptionDetails(subscription: Stripe.Subscription) {
     priceId: subscriptionItem.price.id,
     discountPercentOff: coupon?.percent_off ?? null,
     discountAmountOff: coupon?.amount_off ?? null,
+  };
+}
+
+export function getApiPollAddonColumns(subscription: Stripe.Subscription) {
+  const addon = getApiPollAddonItem(subscription);
+
+  return {
+    apiAddonItemId: addon?.id ?? null,
+    apiAddonPriceId: addon?.priceId ?? null,
+    apiAddonAmount: addon?.amount ?? null,
+    apiPollLimit: addon?.limit ?? null,
+  };
+}
+
+/**
+ * True when the subscription carries an API add-on item whose price metadata
+ * cannot be read, which would otherwise silently leave the space on the
+ * included limit.
+ */
+export function hasUnreadableApiPollAddon(subscription: Stripe.Subscription) {
+  return (
+    subscription.items.data.some(
+      (item) => item.price?.metadata?.[ADDON_METADATA_KEY] === API_ADDON,
+    ) && getApiPollAddonItem(subscription) === null
+  );
+}
+
+/**
+ * The columns the subscription webhooks write, with the seat and the add-on
+ * found by price metadata whatever order Stripe lists the items in.
+ */
+export function toSubscriptionRow(subscription: Stripe.Subscription) {
+  const seat = getSeatItem(subscription);
+
+  return {
+    ...getSubscriptionDetails(subscription),
+    subscriptionItemId: seat.id,
+    quantity: seat.quantity ?? 1,
+    ...getApiPollAddonColumns(subscription),
   };
 }
