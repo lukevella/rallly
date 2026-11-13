@@ -1238,6 +1238,7 @@
   "voteNoticeChangesSaved": "Changes saved",
   "voteNoticeResponseSaved": "Response saved",
   "voteOptionChosen": "{option}: the time that was picked",
+  "voteOptionChosenAnswered": "{option}: {answer}. The time that was picked",
   "voteOptionsLockedDescription": "Locked: participants have already answered \"if need be\".",
   "voteOptionsSettingDescription": "The answers participants can give for each option.",
   "voteOptionsSettingTitle": "Vote options",

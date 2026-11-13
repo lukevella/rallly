@@ -731,7 +731,15 @@ export function AccessibleBallot({
   const groups = past.ready
     ? groupBallotOptions({
         // With nothing left to attend, the past times are all there is to show.
-        options: past.show || votable.length === 0 ? ballot.options : votable,
+        // The time that was picked always shows, passed or not: it is the answer
+        // the page is there to give.
+        options:
+          past.show || votable.length === 0
+            ? ballot.options
+            : ballot.options.filter(
+                (option) =>
+                  !past.ids.has(option.id) || option.id === chosenOptionId,
+              ),
         isDatePoll: ballot.isDatePoll,
         timeZone: displayTimeZone,
       })

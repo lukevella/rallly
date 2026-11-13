@@ -121,14 +121,20 @@ export function BallotBarOption({
         className="min-w-0 flex-1 text-pretty text-sm tabular-nums"
       >
         <span className="sr-only">
-          {chosen
-            ? t("voteOptionChosen", {
-                defaultValue: "{option}: the time that was picked",
+          {chosen && showMark
+            ? t("voteOptionChosenAnswered", {
+                defaultValue: "{option}: {answer}. The time that was picked",
                 option: fullLabel,
+                answer,
               })
-            : showMark
-              ? `${fullLabel}: ${answer}`
-              : fullLabel}
+            : chosen
+              ? t("voteOptionChosen", {
+                  defaultValue: "{option}: the time that was picked",
+                  option: fullLabel,
+                })
+              : showMark
+                ? `${fullLabel}: ${answer}`
+                : fullLabel}
         </span>
         <span aria-hidden="true">
           <BallotTimeText value={label} changed={timesChanged} />
