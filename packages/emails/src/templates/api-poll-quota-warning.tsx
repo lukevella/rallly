@@ -9,6 +9,8 @@ import {
   Button,
   Container,
   Heading,
+  Section,
+  SmallText,
   Text,
 } from "../components/styled-components";
 import { createEmailI18n } from "../i18n";
@@ -23,10 +25,55 @@ export type ApiPollQuotaWarningEmailProps = {
   spaceName: string;
   used: number;
   limit: number;
-  /** The UTC date the count resets, already formatted for the locale. */
+  /** When the count resets, already formatted for the locale. */
   resetDate: string;
+  /** How far away the reset is, e.g. "in 3 weeks", formatted for the locale. */
+  resetIn: string;
   settingsUrl: string;
 };
+
+const barColors = {
+  near_limit: "#F59E0B",
+  at_limit: "#DC2626",
+};
+
+/**
+ * A table rather than nested divs, because Outlook ignores widths and
+ * backgrounds on divs.
+ */
+function UsageBar({ percent, color }: { percent: number; color: string }) {
+  return (
+    <table
+      role="presentation"
+      width="100%"
+      cellPadding={0}
+      cellSpacing={0}
+      style={{
+        borderCollapse: "separate",
+        borderRadius: 4,
+        overflow: "hidden",
+        backgroundColor: "#E5E7EB",
+      }}
+    >
+      <tbody>
+        <tr>
+          <td
+            width={`${percent}%`}
+            height={8}
+            style={{ backgroundColor: color, height: 8, lineHeight: "8px" }}
+          >
+            &nbsp;
+          </td>
+          {percent < 100 ? (
+            <td height={8} style={{ height: 8, lineHeight: "8px" }}>
+              &nbsp;
+            </td>
+          ) : null}
+        </tr>
+      </tbody>
+    </table>
+  );
+}
 
 async function ApiPollQuotaWarningEmail({
   locale = "en",
@@ -36,10 +83,12 @@ async function ApiPollQuotaWarningEmail({
   used,
   limit,
   resetDate,
+  resetIn,
   settingsUrl,
 }: ApiPollQuotaWarningEmailProps) {
   const { t, i18n } = await createEmailI18n(locale);
   const atLimit = level === "at_limit";
+  const percent = Math.min(100, Math.round((used / limit) * 100));
   return (
     <Html>
       <Head />
@@ -87,22 +136,32 @@ async function ApiPollQuotaWarningEmail({
               components={{ b: <strong /> }}
             />
           </Text>
+          <Section>
+            <UsageBar percent={percent} color={barColors[level]} />
+            <SmallText style={{ margin: "8px 0 0" }}>
+              {t("apiPollQuotaWarning_resets", {
+                defaultValue:
+                  "{percent}% used · Resets {resetIn}, on {resetDate}",
+                percent,
+                resetIn,
+                resetDate,
+              })}
+            </SmallText>
+          </Section>
           <Text>
             {atLimit
-              ? t("apiPollQuotaWarning_atLimitReset", {
+              ? t("apiPollQuotaWarning_atLimitBody", {
                   defaultValue:
-                    "New polls created through the API will be rejected until the count resets on {resetDate} (UTC). Polls created in Rallly are not affected.",
-                  resetDate,
+                    "New polls created through the API are being rejected. Add more API polls to resume right away, or wait until the count resets. Polls created in Rallly are not affected.",
                 })
-              : t("apiPollQuotaWarning_nearLimitReset", {
+              : t("apiPollQuotaWarning_nearLimitBody", {
                   defaultValue:
-                    "The count resets on {resetDate} (UTC). Once the limit is reached, new polls created through the API will be rejected until then.",
-                  resetDate,
+                    "Once you reach the limit, new polls created through the API will be rejected until the count resets. Need more? Add more API polls from your API settings.",
                 })}
           </Text>
           <Button href={settingsUrl} color={chrome.primaryColor}>
             {t("apiPollQuotaWarning_button", {
-              defaultValue: "View API usage",
+              defaultValue: "Get more API polls",
             })}
           </Button>
           <Hr style={{ margin: "16px 0" }} />
@@ -121,6 +180,7 @@ ApiPollQuotaWarningEmail.PreviewProps = {
   used: 40,
   limit: 50,
   resetDate: "December 1, 2026",
+  resetIn: "in 3 weeks",
   settingsUrl: "https://app.rallly.co/settings/api-keys",
 } as ApiPollQuotaWarningEmailProps;
 

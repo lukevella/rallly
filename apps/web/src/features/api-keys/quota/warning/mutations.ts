@@ -8,7 +8,7 @@ import {
   QueuedEmailFailed,
   QueuedEmailSkipped,
 } from "@/features/email-queue/service";
-import { formatDate } from "@/lib/datetime/format";
+import { formatDate, formatRelativeTime } from "@/lib/datetime/format";
 import { getApiPollQuotaWarningContext } from "../data";
 import { getQuotaWarningLevel, toMonthKey } from "../utils";
 
@@ -96,6 +96,7 @@ export const sendApiPollQuotaWarning = Effect.fn(
           used: context.used,
           limit: context.limit,
           resetDate: formatDate(context.resetAt, { locale }),
+          resetIn: formatRelativeTime(context.resetAt, locale),
           settingsUrl: absoluteUrl("/settings/api-keys"),
         },
       }),
