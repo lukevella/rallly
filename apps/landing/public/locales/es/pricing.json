@@ -1,6 +1,5 @@
 {
   "advancedPollSettings": "Configuración avanzada de encuestas",
-  "advancedPollSettingsDescription": "Exige el correo electrónico de los participantes, oculta sus nombres y oculta los votos",
   "apiAccess": "Acceso a la API",
   "apiAccessDescription": "Crea encuestas y consulta los resultados desde tus propios sistemas. <a>Consulta la documentación de la API</a>",
   "apiAndWebhooks": "API y webhooks",
