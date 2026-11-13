@@ -8,6 +8,7 @@ import {
   buildUser,
   languageName,
   loadGlossary,
+  sampleReference,
 } from "./prompt.ts";
 
 const glossary: Glossary = {
@@ -177,5 +178,108 @@ describe("loadGlossary", () => {
     expect(committed.doNotTranslate).toContain("Rallly");
     expect(committed.doNotTranslate).toContain("Pro");
     expect(committed.terms.map((term) => term.en)).not.toContain("Pro");
+  });
+});
+
+const makeReference = (count: number) =>
+  Object.fromEntries(
+    Array.from({ length: count }, (_, i) => [
+      `key${i}`,
+      `Text ${"x".repeat(i % 40)} ${i}`,
+    ]),
+  );
+
+describe("sampleReference", () => {
+  it("uses a reference of 150 or fewer strings whole", () => {
+    const reference = makeReference(20);
+    expect(sampleReference({ reference })).toEqual(reference);
+    const s = buildSystem({ locale: "de", glossary, reference });
+    for (const value of Object.values(reference)) {
+      expect(s).toContain(value);
+    }
+  });
+
+  it("samples about 150 of 500 strings", () => {
+    const sample = sampleReference({ reference: makeReference(500) });
+    expect(Object.keys(sample)).toHaveLength(150);
+  });
+
+  it("only returns entries from the reference", () => {
+    const reference = makeReference(500);
+    for (const [key, value] of Object.entries(sampleReference({ reference }))) {
+      expect(reference[key]).toBe(value);
+    }
+  });
+
+  it("includes a plural, a tag and an argument", () => {
+    const reference = {
+      ...makeReference(500),
+      aPlural: "{count, plural, one {# Tag} other {# Tage}}",
+      aSelect: "{kind, select, a {A} other {B}}",
+      aTag: "Klicke <b>hier</b>",
+      aTrans: "Klicke <0>hier</0>",
+      anArg: "Hallo {name}",
+    };
+    const values = Object.values(sampleReference({ reference }));
+    expect(values.some((v) => v.includes(", plural,"))).toBe(true);
+    expect(values.some((v) => v.includes(", select,"))).toBe(true);
+    expect(values.some((v) => v.includes("<b>"))).toBe(true);
+    expect(values.some((v) => v.includes("<0>"))).toBe(true);
+    expect(values.some((v) => v.includes("{name}"))).toBe(true);
+  });
+
+  it("prefers structured strings over ordinary ones", () => {
+    const reference = {
+      ...makeReference(500),
+      ...Object.fromEntries(
+        Array.from({ length: 200 }, (_, i) => [
+          `p${i}`,
+          `{n, plural, one {# a${i}} other {# b${i}}}`,
+        ]),
+      ),
+    };
+    const values = Object.values(sampleReference({ reference }));
+    expect(values.filter((v) => v.includes(", plural,")).length).toBe(30);
+    expect(values).toHaveLength(150);
+  });
+
+  it("covers short and long strings", () => {
+    const lengths = Object.values(
+      sampleReference({ reference: makeReference(500) }),
+    ).map((v) => v.length);
+    expect(Math.min(...lengths)).toBeLessThan(15);
+    expect(Math.max(...lengths)).toBeGreaterThan(40);
+  });
+
+  it("is deterministic regardless of key order", () => {
+    const reference = makeReference(500);
+    const reversed = Object.fromEntries(Object.entries(reference).reverse());
+    expect(JSON.stringify(sampleReference({ reference }))).toBe(
+      JSON.stringify(sampleReference({ reference: reversed })),
+    );
+  });
+});
+
+describe("buildSystem reference sampling", () => {
+  it("yields a byte-identical prompt across calls", () => {
+    const reference = makeReference(500);
+    const a = buildSystem({ locale: "de", glossary, reference });
+    expect(buildSystem({ locale: "de", glossary, reference })).toBe(a);
+    const reversed = Object.fromEntries(Object.entries(reference).reverse());
+    expect(buildSystem({ locale: "de", glossary, reference: reversed })).toBe(
+      a,
+    );
+  });
+
+  it("embeds a sample, not the whole reference, after the glossary", () => {
+    const reference = makeReference(500);
+    const s = buildSystem({ locale: "de", glossary, reference });
+    const section = s.slice(s.indexOf("## Existing translations"));
+    expect(s.indexOf("## Glossary")).toBeLessThan(
+      s.indexOf("## Existing translations"),
+    );
+    expect(
+      Object.keys(JSON.parse(section.slice(section.indexOf("{")))),
+    ).toHaveLength(150);
   });
 });

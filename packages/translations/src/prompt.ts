@@ -92,6 +92,65 @@ const glossaryLines = ({
       : `- "${term.en}" (${term.note}). No fixed translation: pick the natural term and use it consistently.`;
   });
 
+const categoryQuota = 30;
+
+const categories = [
+  /\{[^{}]+,\s*(?:plural|selectordinal|select)\s*,/,
+  /<\/?[A-Za-z0-9]+[^<>]*>/,
+  /\{\s*[A-Za-z0-9_]+\s*\}/,
+];
+
+const spread = <T>({ items, count }: { items: T[]; count: number }) =>
+  count >= items.length
+    ? items
+    : Array.from(
+        { length: count },
+        (_, i) => items[Math.floor(((i + 0.5) * items.length) / count)],
+      ).filter((item): item is T => item !== undefined);
+
+const byLength = (a: [string, string], b: [string, string]) =>
+  a[1].length - b[1].length || (a[0] < b[0] ? -1 : 1);
+
+export const sampleReference = ({
+  reference,
+  limit = 150,
+}: {
+  reference: Messages;
+  limit?: number;
+}) => {
+  const entries = Object.entries(reference);
+  if (entries.length <= limit) return reference;
+
+  const sorted = entries.sort(byLength);
+  const buckets = categories.map(() => [] as [string, string][]);
+  const ordinary: [string, string][] = [];
+  for (const entry of sorted) {
+    const index = categories.findIndex((pattern) => pattern.test(entry[1]));
+    (buckets[index] ?? ordinary).push(entry);
+  }
+
+  const picked = new Set<[string, string]>();
+  for (const bucket of buckets) {
+    for (const entry of spread({ items: bucket, count: categoryQuota })) {
+      picked.add(entry);
+    }
+  }
+  for (const entry of spread({
+    items: ordinary,
+    count: limit - picked.size,
+  })) {
+    picked.add(entry);
+  }
+  if (picked.size < limit) {
+    const rest = sorted.filter((entry) => !picked.has(entry));
+    for (const entry of spread({ items: rest, count: limit - picked.size })) {
+      picked.add(entry);
+    }
+  }
+
+  return Object.fromEntries(picked);
+};
+
 export const buildSystem = ({
   locale,
   glossary,
@@ -119,7 +178,7 @@ Use these terms consistently.
 ${glossaryLines({ locale, glossary }).join("\n")}`,
     `## Existing translations
 These are already translated in ${language}. Match their terminology and tone.
-${JSON.stringify(reference, null, 2)}`,
+${JSON.stringify(sampleReference({ reference }), null, 2)}`,
   ].join("\n\n");
 };
 
