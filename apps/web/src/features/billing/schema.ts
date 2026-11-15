@@ -1,3 +1,4 @@
+import { API_POLL_TIERS } from "@rallly/billing/pricing";
 import * as z from "zod";
 
 export const billingIntervalSchema = z.enum(["month", "year"]);
@@ -64,3 +65,13 @@ export const paymentMethodCardSchema = z.object({
   exp_year: z.number(),
 });
 export type PaymentMethodCard = z.infer<typeof paymentMethodCardSchema>;
+
+export const billingChangeSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("seats"), seatDelta: z.number().int() }),
+  z.object({ type: z.literal("interval") }),
+  z.object({
+    type: z.literal("api_tier"),
+    tier: z.enum(API_POLL_TIERS).nullable(),
+  }),
+]);
+export type BillingChange = z.infer<typeof billingChangeSchema>;

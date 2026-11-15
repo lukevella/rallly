@@ -4,7 +4,37 @@ vi.mock("@/env", () => ({ env: {} }));
 
 import type { UserDTO } from "@/features/user/schema";
 import { t } from "./init";
-import { createGuestIpRateLimitMiddleware } from "./rate-limit";
+import {
+  createGuestIpRateLimitMiddleware,
+  createRateLimitMiddleware,
+} from "./rate-limit";
+
+describe("createRateLimitMiddleware", () => {
+  const router = t.router({
+    lookup: t.procedure
+      .use(createRateLimitMiddleware("lookup", 2, "1 m"))
+      .mutation(() => "ok"),
+  });
+
+  it("limits per identifier", async () => {
+    const caller = router.createCaller({ identifier: "1.2.3.4" });
+    await caller.lookup();
+    await caller.lookup();
+    await expect(caller.lookup()).rejects.toMatchObject({
+      code: "TOO_MANY_REQUESTS",
+    });
+
+    const other = router.createCaller({ identifier: "5.6.7.8" });
+    await expect(other.lookup()).resolves.toBe("ok");
+  });
+
+  it("does not limit callers with no identifier", async () => {
+    const caller = router.createCaller({});
+    for (let i = 0; i < 5; i++) {
+      await expect(caller.lookup()).resolves.toBe("ok");
+    }
+  });
+});
 
 const createRouter = () =>
   t.router({

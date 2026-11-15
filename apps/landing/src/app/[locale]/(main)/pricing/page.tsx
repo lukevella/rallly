@@ -7,12 +7,9 @@ import {
   BlocksIcon,
   CalendarSearchIcon,
   ClockIcon,
-  CopyIcon,
-  EyeOffIcon,
   ListChecksIcon,
   MailPlusIcon,
   PaletteIcon,
-  Settings2Icon,
   TerminalIcon,
   UserPlusIcon,
   UsersIcon,
@@ -32,10 +29,8 @@ import {
   CompareTableHeader,
   CompareTableSection,
 } from "@/components/compare-table";
-import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { FaqItem, FaqSection } from "@/components/home/faq";
-import { Stats } from "@/components/home/stats";
 import {
   Section,
   SectionContent,
@@ -45,11 +40,7 @@ import {
 } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
-import {
-  getMonthlyPollCount,
-  getMonthlyVoterCount,
-  getPricing,
-} from "@/lib/data";
+import { getPricing } from "@/lib/data";
 import { linkToApp } from "@/lib/linkToApp";
 import {
   FREE_OPEN_POLL_LIMIT,
@@ -59,6 +50,7 @@ import {
   PlanBenefit,
   PlanBenefitName,
   PlanBenefits,
+  PlanBenefitUnavailable,
   PlanCard,
   PlanCardDescription,
   PlanCardHeader,
@@ -90,11 +82,7 @@ export default async function Page(props: {
   cacheLife("hours");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["common", "pricing", "home"]);
-  const [pollCount, voterCount, prices] = await Promise.all([
-    getMonthlyPollCount(),
-    getMonthlyVoterCount(),
-    getPricing(),
-  ]);
+  const prices = await getPricing();
   const included = t("included", {
     ns: "pricing",
     defaultValue: "Included",
@@ -216,16 +204,6 @@ export default async function Page(props: {
                 </Link>
               </div>
               <PlanBenefits>
-                <PlanBenefit icon={<CalendarSearchIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="basicPolls"
-                      defaults="Basic polls"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
                 {isOpenPollLimitEnabled ? (
                   <PlanBenefit icon={<ListChecksIcon />}>
                     <PlanBenefitName>
@@ -249,11 +227,43 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="emailInvites"
+                    defaults="Email invites"
+                  />
+                </PlanBenefitUnavailable>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="teamCollaboration"
+                    defaults="Team collaboration"
+                  />
+                </PlanBenefitUnavailable>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="customBranding"
+                    defaults="Custom branding"
+                  />
+                </PlanBenefitUnavailable>
+                <PlanBenefitUnavailable srLabel={notIncluded}>
+                  <Trans
+                    t={t}
+                    ns="pricing"
+                    i18nKey="apiAndWebhooks"
+                    defaults="API and webhooks"
+                  />
+                </PlanBenefitUnavailable>
               </PlanBenefits>
             </PlanCard>
-            <PlanCard>
+            <PlanCard featured>
               <PlanCardHeader>
-                <div className="flex items-center justify-between gap-x-4">
+                <div className="flex items-center gap-x-2">
                   <PlanCardName>{PLAN_NAMES.PRO}</PlanCardName>
                   <Badge variant="secondary">
                     <Trans
@@ -318,7 +328,7 @@ export default async function Page(props: {
                   />
                 </Link>
               </div>
-              <PlanBenefits className="sm:grid-cols-2 sm:gap-x-6">
+              <PlanBenefits>
                 {isOpenPollLimitEnabled ? (
                   <PlanBenefit icon={<ListChecksIcon />}>
                     <PlanBenefitName>
@@ -338,26 +348,6 @@ export default async function Page(props: {
                       ns="pricing"
                       i18nKey="indefinitePollRetention"
                       defaults="Indefinite poll retention"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<CopyIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="duplicatePolls"
-                      defaults="Duplicate polls"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
-                <PlanBenefit icon={<Settings2Icon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="advancedPollSettings"
-                      defaults="Advanced poll settings"
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
@@ -391,16 +381,6 @@ export default async function Page(props: {
                     />
                   </PlanBenefitName>
                 </PlanBenefit>
-                <PlanBenefit icon={<EyeOffIcon />}>
-                  <PlanBenefitName>
-                    <Trans
-                      t={t}
-                      ns="pricing"
-                      i18nKey="removeAttribution"
-                      defaults="Remove attribution"
-                    />
-                  </PlanBenefitName>
-                </PlanBenefit>
                 <PlanBenefit icon={<TerminalIcon />}>
                   <PlanBenefitName>
                     <Trans
@@ -415,19 +395,6 @@ export default async function Page(props: {
             </PlanCard>
           </PlanCards>
         </PricingProvider>
-        <Stats className="mt-8 sm:mt-12">
-          <Trans
-            t={t}
-            ns="home"
-            i18nKey="statsLast30Days"
-            defaults="<0>{voterCount, plural, one {# person} other {# people}}</0> voted on <1>{pollCount, plural, one {# poll} other {# polls}}</1> in the last 30 days"
-            values={{ voterCount, pollCount }}
-            components={[
-              <PeopleBadge key="people" locale={locale} live />,
-              <PollsBadge key="polls" locale={locale} live />,
-            ]}
-          />
-        </Stats>
       </Section>
       <Section>
         <SectionHeading>
@@ -657,8 +624,8 @@ export default async function Page(props: {
                     <Trans
                       t={t}
                       ns="pricing"
-                      i18nKey="advancedPollSettingsDescription"
-                      defaults="Require participant emails, hide participant names, and hide votes"
+                      i18nKey="advancedPollSettingsPrivacyDescription"
+                      defaults="Hide participant names and hide votes"
                     />
                   </CompareTableFeatureDescription>
                 </CompareTableFeature>
@@ -1115,6 +1082,7 @@ export default async function Page(props: {
         </FaqSection>
         <Section className="sm:py-24">
           <Cta
+            locale={locale}
             title={
               <Trans
                 t={t}

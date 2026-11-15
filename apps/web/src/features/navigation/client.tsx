@@ -10,9 +10,11 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { SEARCH_INDEX_STALE_TIME } from "@/features/navigation/constants";
 import { useSpace } from "@/features/space/client";
 import { useTranslation } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
+import { trpc } from "@/trpc/client";
 
 export interface NavigationItem {
   id: string;
@@ -106,4 +108,33 @@ export const useSpaceMenu = () => {
     }),
     [config],
   );
+};
+
+type CommandMenuContextValue = {
+  open: () => void;
+};
+
+export const CommandMenuContext =
+  React.createContext<CommandMenuContextValue | null>(null);
+
+export const useCommandMenu = () => {
+  const context = React.useContext(CommandMenuContext);
+  if (!context) {
+    throw new Error("useCommandMenu must be used within a CommandMenuProvider");
+  }
+  return context;
+};
+
+// Warms the command menu's search index before it opens, so the first
+// keystroke already filters locally.
+export const useSearchIndexPrefetch = () => {
+  const utils = trpc.useUtils();
+  const { data: space } = useSpace();
+  const spaceId = space.id;
+  return React.useCallback(() => {
+    void utils.search.index.prefetch(
+      { spaceId },
+      { staleTime: SEARCH_INDEX_STALE_TIME },
+    );
+  }, [utils, spaceId]);
 };

@@ -1,6 +1,6 @@
 {
   "advancedPollSettings": "Advanced poll settings",
-  "advancedPollSettingsDescription": "Require participant emails, hide participant names, and hide votes",
+  "advancedPollSettingsPrivacyDescription": "Hide participant names and hide votes",
   "apiAccess": "API access",
   "apiAccessDescription": "Create polls and read results from your own systems. <a>Read the API docs</a>",
   "apiAndWebhooks": "API and webhooks",

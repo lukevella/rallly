@@ -2,7 +2,6 @@
 import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import * as React from "react";
-import { useTranslation } from "@/i18n/client/use-translation";
 import type { DemoVote } from "./demo-data";
 import { VoteIcon } from "./vote-icon";
 
@@ -10,18 +9,14 @@ import { VoteIcon } from "./vote-icon";
 // per option. Everything around it is server rendered.
 export const VoteSelector = ({
   label,
+  voteLabels,
   defaultValue,
 }: {
   label: string;
+  voteLabels: Record<DemoVote, string>;
   defaultValue?: DemoVote;
 }) => {
-  const { t } = useTranslation("home");
   const [value, setValue] = React.useState(defaultValue);
-  const voteLabels: Record<DemoVote, string> = {
-    yes: t("heroDemoYes", { defaultValue: "Yes" }),
-    ifNeedBe: t("heroDemoIfNeedBe", { defaultValue: "If need be" }),
-    no: t("heroDemoNo", { defaultValue: "No" }),
-  };
   return (
     <div className="flex h-8 w-24 shrink-0 items-center rounded-lg border border-gray-200/60 bg-gray-100 p-0.5">
       {(["yes", "ifNeedBe", "no"] as const).map((vote) => {

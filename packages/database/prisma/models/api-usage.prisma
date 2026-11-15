@@ -1,0 +1,20 @@
+enum ApiUsageResource {
+  poll
+
+  @@map("api_usage_resource")
+}
+
+model ApiUsage {
+  spaceId           String           @map("space_id")
+  resource          ApiUsageResource
+  period            DateTime         @db.Date
+  count             Int              @default(0)
+  nearLimitWarnedAt DateTime?        @map("near_limit_warned_at")
+  atLimitWarnedAt   DateTime?        @map("at_limit_warned_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  @@id([spaceId, resource, period])
+  @@map("api_usage")
+}

@@ -3,6 +3,28 @@
 
 /* Any app specific overrides will go here */
 
+/* The shared theme scales the type ladder by 8/7 on touch devices so web app
+ * fields reach 16px and iOS Safari doesn't zoom on focus. The marketing site
+ * has no text fields, and the scale inflates its mobile typography, so restore
+ * the default ladder. */
+@layer base {
+  @media (pointer: coarse) {
+    :root {
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.25rem;
+      --text-2xl: 1.5rem;
+      --text-3xl: 1.875rem;
+      --text-4xl: 2.25rem;
+      --text-5xl: 3rem;
+      --text-6xl: 3.75rem;
+      --text-7xl: 4.5rem;
+    }
+  }
+}
+
 body {
   @apply bg-gray-100;
 }
@@ -81,6 +103,9 @@ h2 {
   strong {
     @apply font-medium;
   }
+  .faq-item p {
+    @apply mb-0;
+  }
 }
 
 /*
@@ -113,5 +138,36 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .faq-item::details-content {
     transition-property: opacity, content-visibility;
+  }
+}
+
+/* Pricing: rotating gradient border on the featured plan card */
+@property --plan-card-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes plan-card-border-spin {
+  to {
+    --plan-card-angle: 360deg;
+  }
+}
+
+.plan-card-featured {
+  background: conic-gradient(
+    from var(--plan-card-angle),
+    var(--color-indigo-200) 0deg,
+    var(--color-indigo-600) 60deg,
+    var(--color-fuchsia-400) 120deg,
+    var(--color-indigo-200) 180deg,
+    var(--color-indigo-200) 360deg
+  );
+  animation: plan-card-border-spin 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card-featured {
+    animation: none;
   }
 }

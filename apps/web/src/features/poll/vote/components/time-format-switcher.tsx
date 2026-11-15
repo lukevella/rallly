@@ -12,7 +12,11 @@ import { getLocaleDefaults } from "@/lib/datetime/locales";
  * The viewer's clock format, beside the time zone rather than inside its
  * dialog. Only time polls render it: a date has no time to format.
  */
-export function TimeFormatSwitcher() {
+export function TimeFormatSwitcher({
+  onChange,
+}: {
+  onChange?: (timeFormat: "hours12" | "hours24") => void;
+}) {
   const { t } = useTranslation();
   const { locale, timeFormat } = useDateTimeConfig();
   const { setTimeFormat } = useDeviceDateTime();
@@ -27,6 +31,7 @@ export function TimeFormatSwitcher() {
       onValueChange={(next) => {
         if (next) {
           setTimeFormat(next as "hours12" | "hours24");
+          onChange?.(next as "hours12" | "hours24");
         }
       }}
     >

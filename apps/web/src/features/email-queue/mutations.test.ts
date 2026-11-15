@@ -29,6 +29,7 @@ function attemptWith(handler: QueuedEmailHandler, banned = false) {
             scheduled_event_invite: handler,
             review_request: handler,
             subscription_feedback: handler,
+            api_poll_quota_warning: handler,
           }),
         ),
       ),

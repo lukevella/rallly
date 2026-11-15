@@ -12,12 +12,15 @@ const VoteIcon = ({
   size = "md",
   className,
   animated = false,
+  round = false,
 }: {
   type?: VoteType;
   size?: "sm" | "md";
   className?: string;
   /** Morph between shapes when `type` changes, for controls that cycle the vote. */
   animated?: boolean;
+  /** Every answer in one circle that fills the box, for the row ballot. */
+  round?: boolean;
 }) => {
   const { t } = useTranslation();
 
@@ -37,6 +40,7 @@ const VoteIcon = ({
       size={size}
       title={title}
       className={className}
+      round={round}
     />
   );
 };

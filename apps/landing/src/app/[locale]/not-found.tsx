@@ -1,14 +1,15 @@
-"use client";
-
+import { locale as getLocale } from "next/root-params";
 import ErrorPage from "@/components/error-page";
-import { useTranslation } from "@/i18n/client/use-translation";
+import { getTranslation } from "@/i18n/server";
 
-export default function Page() {
-  const { t } = useTranslation("common");
+export default async function Page() {
+  const { t } = await getTranslation(await getLocale(), "common");
   return (
     <ErrorPage
       title={t("notFoundTitle")}
       description={t("notFoundDescription")}
+      homeLabel={t("goToHome")}
+      supportLabel={t("support")}
     />
   );
 }

@@ -7,10 +7,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
 import { cacheLife } from "next/cache";
+import { notFound } from "next/navigation";
 import { display } from "@/fonts/display";
 import { sans } from "@/fonts/sans";
-import { I18nProvider } from "@/i18n/client/i18n-provider";
-import { getTranslation } from "@/i18n/server";
 
 export const ensureStatic = "navigation";
 
@@ -32,20 +31,24 @@ export default async function Root(props: {
   const { children, params } = props;
   const { locale } = await params;
 
-  const { i18n } = await getTranslation(locale);
-  const translations = i18n.store.data;
+  // The proxy skips paths containing a dot, so they reach [locale] with the raw
+  // path as the locale, e.g. "ads.txt".
+  if (!Object.hasOwn(languages, locale)) {
+    notFound();
+  }
 
   return (
+    // Horizontal overflow is clipped at the viewport, never on an ancestor of
+    // a sticky element: Safari repositions sticky elements under an overflow
+    // clip on the main thread, so they jitter while scrolling.
     <html
-      lang={i18n.resolvedLanguage}
-      className={cn(sans.className, display.variable)}
+      lang={locale}
+      className={cn(sans.className, display.variable, "overflow-x-clip")}
     >
       <body>
         <LazyMotion features={domAnimation}>
-          <I18nProvider locale={i18n.resolvedLanguage} resources={translations}>
-            <PostHogInit>{children}</PostHogInit>
-            <Analytics />
-          </I18nProvider>
+          <PostHogInit>{children}</PostHogInit>
+          <Analytics />
         </LazyMotion>
       </body>
     </html>

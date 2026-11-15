@@ -17,7 +17,7 @@ Next, choose who to notify. Everyone who left an email address is selected, and 
 
 ![The Notify participants step, with five participants selected and how each of them voted on the chosen date](/static/images/free-scheduling/finalize-notify.png)
 
-Everyone you select gets an email with a calendar invite. If you added a video call to your poll, the link is created when you finalize and included in the invite. Google Meet works on every plan, and Zoom, Microsoft Teams and Webex are available on Pro.
+Everyone you select gets an email with a calendar invite. If you added a video call to your poll, the link is created when you finalize and included in the invite. Google Meet, Zoom, Microsoft Teams and Webex work on every plan, including free.
 
 ![The Summary step, showing the chosen date and a Google Meet video call before finalizing](/static/images/free-scheduling/finalize-summary.png)
 
@@ -33,7 +33,7 @@ From now on, what separates the plans is how many polls you can have open at the
 
 You can still create as many polls as you like, and there's no limit on participants or options. A poll stops counting as soon as you finalize or close it, and polls close on their own once their dates have passed. If you organize the odd team meeting or get together, you'll probably never notice.
 
-If you're running several polls at once, Pro removes the limit and gives you everything else Pro has to offer, like email invites, custom branding and video calls with Zoom, Teams and Webex. Every subscription goes straight back into building Rallly.
+If you're running several polls at once, Pro removes the limit and gives you everything else Pro has to offer, like email invites and custom branding. Every subscription goes straight back into building Rallly.
 
 ## What's next
 

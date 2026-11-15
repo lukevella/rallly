@@ -187,7 +187,7 @@ describe("createIcsEvent", () => {
 
       expect(result.value).toContain("SEQUENCE:0");
       expect(result.value).toContain("STATUS:CONFIRMED");
-      expect(result.value).toContain("METHOD:request");
+      expect(result.value).toContain("METHOD:REQUEST");
     });
   });
 
@@ -201,7 +201,7 @@ describe("createIcsEvent", () => {
       });
 
       expect(result.error).toBeFalsy();
-      expect(result.value).toContain("METHOD:cancel");
+      expect(result.value).toContain("METHOD:CANCEL");
       expect(result.value).toContain("STATUS:CANCELLED");
       expect(result.value).toContain("SEQUENCE:1");
     });
@@ -244,6 +244,76 @@ describe("createIcsEvent", () => {
       // The ics library should handle this - we just need to ensure we don't crash
       expect(result).toBeDefined();
       expect(result.error || result.value).toBeDefined();
+    });
+  });
+  describe("Methods", () => {
+    it("emits METHOD:PUBLISH for an organizer copy", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: "host@example.com" },
+        method: "publish",
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("METHOD:PUBLISH");
+      expect(result.value).not.toContain("ATTENDEE");
+    });
+
+    it("emits the recipient as ATTENDEE with its PARTSTAT on a request", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: "host@example.com" },
+        attendees: [
+          { name: "Guest", email: "guest@example.com", partstat: "TENTATIVE" },
+        ],
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("METHOD:REQUEST");
+      expect(result.value?.replace(/\r\n /g, "")).toMatch(
+        /ATTENDEE;[^\r\n]*PARTSTAT="?TENTATIVE"?[^\r\n]*:mailto:guest@example\.com/,
+      );
+    });
+  });
+  describe("Contacts", () => {
+    it("caret-encodes quotes and line breaks in names", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: 'Host "H"', email: "host@example.com" },
+        attendees: [{ name: 'Jane "JJ"\nDoe^', email: "guest@example.com" }],
+      });
+
+      expect(result.error).toBeFalsy();
+      const ics = result.value?.replace(/\r\n /g, "") ?? "";
+      expect(ics).toContain(`CN="Host ^'H^'"`);
+      expect(ics).toContain(`CN="Jane ^'JJ^'^nDoe^^"`);
+      expect(ics).not.toContain('\\"');
+    });
+
+    it("trims surrounding spaces from emails", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: " host@example.com " },
+        attendees: [{ name: "Guest", email: " guest@example.com " }],
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("mailto:guest@example.com");
+    });
+
+    it("omits attendees whose email is blank", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        organizer: { name: "Host", email: "host@example.com" },
+        attendees: [
+          { name: "Blank", email: "   " },
+          { name: "Guest", email: "guest@example.com" },
+        ],
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).not.toContain("Blank");
+      expect(result.value).toContain("mailto:guest@example.com");
     });
   });
 });

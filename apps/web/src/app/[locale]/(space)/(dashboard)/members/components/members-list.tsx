@@ -4,9 +4,19 @@ import { Badge } from "@rallly/ui/badge";
 import {
   createColumnHelper,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { SearchIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import React from "react";
 import { DataList } from "@/components/data-list";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { SpaceRole } from "@/features/space/components/space-role";
 import type {
@@ -105,13 +115,53 @@ const columns = [
   }),
 ];
 
+function matchesQuery(row: MemberRow, query: string) {
+  const needle = query.toLocaleLowerCase();
+  return (
+    row.member.name.toLocaleLowerCase().includes(needle) ||
+    row.member.email.toLocaleLowerCase().includes(needle)
+  );
+}
+
 export function MembersList({ rows }: { rows: MemberRow[] }) {
+  const query = useSearchParams().get("q")?.trim() ?? "";
+  const state = React.useMemo(() => ({ globalFilter: query }), [query]);
+
+  // Filtered in the row model, not the data: the actions column reads every
+  // member from table.options.data to offer content reassignment.
   const table = useReactTable({
     data: rows,
     columns,
+    state,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: (row, _columnId, filterValue: string) =>
+      matchesQuery(row.original, filterValue),
     getRowId: (row) => row.member.id,
   });
+
+  if (query && table.getRowModel().rows.length === 0) {
+    return (
+      <EmptyState className="h-96">
+        <EmptyStateIcon>
+          <SearchIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans
+            i18nKey="membersSearchEmptyTitle"
+            defaults="No members found"
+          />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="membersSearchEmptyDescription"
+            defaults="No members match “{query}”."
+            values={{ query }}
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
 
   return (
     <DataList

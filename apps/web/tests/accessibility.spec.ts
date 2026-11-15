@@ -86,7 +86,7 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
     });
   });
 
-  test.describe("vote page calendar", () => {
+  test.describe("vote view", () => {
     let voteUrl: string;
 
     test.beforeAll(async ({ browser }) => {
@@ -102,10 +102,21 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
       await page.close();
     });
 
-    test("month grid", async ({ page }) => {
+    test("options", async ({ page }) => {
       await page.goto(voteUrl);
-      await page.getByRole("radio", { name: "Calendar" }).click();
-      await page.getByRole("grid").waitFor();
+      await page.getByRole("radio").first().waitFor({ state: "attached" });
+      expect(await scan(page)).toEqual([]);
+    });
+
+    test("details step", async ({ page }) => {
+      await page.goto(voteUrl);
+      await page
+        .getByRole("radio", { name: "Yes", exact: true })
+        .first()
+        .focus();
+      await page.keyboard.press("Space");
+      await page.getByRole("button", { name: "Continue" }).click();
+      await page.getByLabel("Name").waitFor();
       expect(await scan(page)).toEqual([]);
     });
   });

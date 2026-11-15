@@ -8,7 +8,11 @@ import {
 } from "@/components/list-view";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import { MembersPageActions, MembersPageContent } from "./members-page";
+import {
+  MembersPageActions,
+  MembersPageContent,
+  MembersPageToolbar,
+} from "./members-page";
 
 // No Suspense boundaries here: the data loads under the dashboard's
 // loading.tsx, so the page appears once instead of skeleton after skeleton.
@@ -22,6 +26,7 @@ export default function Page() {
           </ListViewTitle>
           <MembersPageActions />
         </ListViewTitleBar>
+        <MembersPageToolbar />
       </ListViewHeader>
       <ListViewContent className="pt-2">
         <MembersPageContent />

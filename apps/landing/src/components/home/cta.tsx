@@ -2,14 +2,17 @@ import { cn } from "@rallly/ui";
 import type * as React from "react";
 import { CaptureOnView } from "@/components/home/capture-on-view";
 import { CtaButton } from "@/components/home/cta-button";
+import { ReviewRatings } from "@/components/home/review-ratings";
 import { handwritten } from "@/fonts/handwritten";
 
 export function Cta({
+  locale,
   title,
   description,
   buttonLabel,
   hint,
 }: {
+  locale: string;
   title: React.ReactNode;
   description: React.ReactNode;
   buttonLabel: React.ReactNode;
@@ -39,6 +42,7 @@ export function Cta({
           {hint}
         </p>
       </div>
+      <ReviewRatings locale={locale} className="mt-12 justify-center" />
     </CaptureOnView>
   );
 }

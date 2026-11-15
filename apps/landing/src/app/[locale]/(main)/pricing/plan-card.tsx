@@ -1,4 +1,5 @@
 import { cn } from "@rallly/ui";
+import { MinusIcon } from "lucide-react";
 import type * as React from "react";
 
 export function PlanCards({
@@ -8,7 +9,7 @@ export function PlanCards({
   return (
     <div
       className={cn(
-        "grid w-full max-w-full divide-y divide-gray-950/5 overflow-hidden rounded-2xl border bg-white md:w-fit md:grid-cols-[minmax(16rem,2fr)_minmax(24rem,3fr)] md:divide-x md:divide-y-0",
+        "grid w-full max-w-3xl gap-4 md:grid-cols-2 md:gap-6",
         className,
       )}
       {...props}
@@ -16,9 +17,31 @@ export function PlanCards({
   );
 }
 
-export function PlanCard({ className, ...props }: React.ComponentProps<"div">) {
+export function PlanCard({
+  className,
+  featured,
+  ...props
+}: React.ComponentProps<"div"> & { featured?: boolean }) {
+  const card = (
+    <div
+      className={cn(
+        "flex h-full flex-col gap-6 rounded-2xl bg-white p-6",
+        !featured && "border",
+        featured && "rounded-[calc(var(--radius-2xl)-1px)]",
+        className,
+      )}
+      {...props}
+    />
+  );
+
+  if (!featured) {
+    return card;
+  }
+
   return (
-    <div className={cn("flex flex-col gap-6 p-6", className)} {...props} />
+    <div className="plan-card-featured relative rounded-2xl p-px shadow-indigo-500/10 shadow-lg">
+      {card}
+    </div>
   );
 }
 
@@ -70,7 +93,7 @@ export function PlanCardPriceAmount({
   return (
     <span
       className={cn(
-        "font-semibold text-4xl text-gray-800 tabular-nums tracking-tight",
+        "font-medium text-4xl text-gray-800 tabular-nums tracking-tight",
         className,
       )}
       {...props}
@@ -107,14 +130,27 @@ export function PlanBenefit({
   );
 }
 
+export function PlanBenefitUnavailable({
+  srLabel,
+  children,
+}: {
+  srLabel: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="flex items-center gap-x-3">
+      <MinusIcon className="size-4 h-lh shrink-0 text-gray-300" />
+      <span className="text-gray-400 text-sm">
+        {children}
+        <span className="sr-only"> ({srLabel})</span>
+      </span>
+    </li>
+  );
+}
+
 export function PlanBenefitName({
   className,
   ...props
 }: React.ComponentProps<"span">) {
-  return (
-    <span
-      className={cn("font-medium text-gray-800 text-sm", className)}
-      {...props}
-    />
-  );
+  return <span className={cn("text-gray-800 text-sm", className)} {...props} />;
 }

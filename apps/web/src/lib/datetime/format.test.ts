@@ -254,4 +254,32 @@ describe("provinces that stopped changing clocks", () => {
   it("leaves times before the cutoff unchanged", () => {
     expect(time("2026-07-01T16:00:00Z", "America/Edmonton")).toBe("10:00");
   });
+
+  it.each([
+    ["America/Winnipeg", "2026-11-05T15:00:00Z", "CT"],
+    ["America/Edmonton", "2026-11-05T16:00:00Z", "MT"],
+    ["America/Vancouver", "2026-11-05T17:00:00Z", "PT"],
+  ])("names %s after its own zone, not the substitute", (timeZone, instant, label) => {
+    expect(
+      formatDateTime(new Date(instant), {
+        preset: "time",
+        showTimeZone: true,
+        ...ctx("en", "hours24", timeZone),
+      }),
+    ).toBe(`10:00 ${label}`);
+  });
+
+  it("names a range after its own zone, not the substitute", () => {
+    expect(
+      formatDateTimeRange(
+        new Date("2026-11-05T15:00:00Z"),
+        new Date("2026-11-05T16:00:00Z"),
+        {
+          preset: "time",
+          showTimeZone: true,
+          ...ctx("en", "hours24", "America/Winnipeg"),
+        },
+      ),
+    ).toMatch(/^10:00\s–\s11:00 CT$/);
+  });
 });

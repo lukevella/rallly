@@ -59,8 +59,13 @@ function SheetContent({
   side = "right",
   className,
   children,
+  showCloseButton = true,
   ...props
-}: SheetPrimitive.Popup.Props & VariantProps<typeof sheetVariants>) {
+}: SheetPrimitive.Popup.Props &
+  VariantProps<typeof sheetVariants> & {
+    /** Off when the sheet brings its own close control. */
+    showCloseButton?: boolean;
+  }) {
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -70,10 +75,12 @@ function SheetContent({
         {...props}
       >
         {children}
-        <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </SheetPrimitive.Close>
+        {showCloseButton ? (
+          <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </SheetPrimitive.Close>
+        ) : null}
       </SheetPrimitive.Popup>
     </SheetPortal>
   );

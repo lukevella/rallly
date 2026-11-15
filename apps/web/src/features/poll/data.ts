@@ -888,3 +888,27 @@ export async function listPollComments({
     orderBy: [{ createdAt: "asc" }],
   });
 }
+
+export async function searchPolls({
+  scope,
+  query,
+  limit,
+}: {
+  scope: SpaceContentScope;
+  query?: string;
+  limit: number;
+}) {
+  return prisma.poll.findMany({
+    where: {
+      spaceId: scope.spaceId,
+      deletedAt: null,
+      ...(query && { title: { contains: query, mode: "insensitive" } }),
+      ...(scope.createdBy && { userId: scope.createdBy }),
+      // The poll page 404s a banned creator's poll; polls without a creator stay
+      NOT: { user: { is: { banned: true } } },
+    },
+    select: { id: true, title: true, status: true },
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+    take: limit,
+  });
+}

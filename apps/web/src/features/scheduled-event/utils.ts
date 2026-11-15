@@ -5,6 +5,7 @@ import {
   calendarDateToUTCMidnight,
   getCalendarDate,
 } from "@/lib/datetime/utils";
+import type { Status } from "./schema";
 
 export interface FormattedEventDateTime {
   date: string;
@@ -160,4 +161,34 @@ export function isEventFull({
   acceptedCount: number;
 }) {
   return capacity !== null && acceptedCount >= capacity;
+}
+
+/**
+ * The events list tab a single event appears under, for the viewer's
+ * present. The per-row twin of scheduledEventWhere: allDay rows compare
+ * their exclusive end date against today in the viewer's zone.
+ */
+export function getEventListStatus({
+  status,
+  allDay,
+  end,
+  now,
+  timeZone,
+}: {
+  status: ScheduledEventStatus;
+  allDay: boolean;
+  end: Date;
+  now: Date;
+  timeZone: string;
+}): Status {
+  if (status === "canceled") {
+    return "canceled";
+  }
+  if (status === "unconfirmed") {
+    return "unconfirmed";
+  }
+  const boundary = allDay
+    ? calendarDateToUTCMidnight(getCalendarDate(now, timeZone))
+    : now;
+  return end > boundary ? "upcoming" : "past";
 }

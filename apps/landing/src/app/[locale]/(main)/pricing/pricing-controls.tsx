@@ -128,7 +128,7 @@ export function BillingIntervalSwitch({
   const { interval, setInterval } = usePricing();
   const isYearly = interval === "yearly";
   return (
-    <div className="flex items-center gap-x-3">
+    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
       <button
         type="button"
         aria-pressed={!isYearly}

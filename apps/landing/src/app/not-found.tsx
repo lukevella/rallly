@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: "The page you are looking for does not exist.",
 };
 
-// Renders outside the [locale] segment, so there is no locale and no
-// I18nProvider to read from. Copy is hardcoded English.
+// Renders outside the [locale] segment, so there is no locale to translate
+// into. Copy is hardcoded English.
 export default function NotFound() {
   return (
     <html lang="en" className={sans.className}>

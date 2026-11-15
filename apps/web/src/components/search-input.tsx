@@ -40,6 +40,11 @@ export function SearchInput({
   const [isPending, startTransition] = React.useTransition();
   const isSearching = isDebouncing || isPending;
 
+  // Debounce URL updates while typing; submitting flushes the pending value
+  const pendingValue = React.useRef<string | null>(null);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const lastPushedValue = React.useRef(currentSearchValue);
+
   const updateUrl = (value: string) => {
     const params = new URLSearchParams(searchParams);
     if (value) {
@@ -50,6 +55,7 @@ export function SearchInput({
 
     params.delete("page");
 
+    lastPushedValue.current = value;
     setIsDebouncing(false);
     startTransition(() => {
       startNavigation(() => {
@@ -58,9 +64,20 @@ export function SearchInput({
     });
   };
 
-  // Debounce URL updates while typing; submitting flushes the pending value
-  const pendingValue = React.useRef<string | null>(null);
-  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  // A URL change this input didn't make (e.g. the command menu) wins over
+  // any edit still waiting on the debounce
+  React.useEffect(() => {
+    if (currentSearchValue === lastPushedValue.current) return;
+    lastPushedValue.current = currentSearchValue;
+    clearTimeout(timer.current);
+    pendingValue.current = null;
+    setIsDebouncing(false);
+    setInputValue(currentSearchValue);
+  }, [currentSearchValue]);
+
+  // A pending edit must not navigate back here after the user has left.
+  // Layout cleanup runs in the unmount commit, before the timer can fire.
+  React.useLayoutEffect(() => () => clearTimeout(timer.current), []);
 
   const flushUpdate = () => {
     clearTimeout(timer.current);

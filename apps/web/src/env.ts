@@ -171,6 +171,12 @@ export const env = createEnv({
      */
     RATE_LIMIT_ENABLED: z.enum(["true", "false"]).default("true"),
     /**
+     * Comma separated IP addresses or CIDR ranges of proxies in front of the
+     * app. Rate limits read the client from X-Forwarded-For by stripping these
+     * hops from the right, which a header with several entries requires.
+     */
+    TRUSTED_PROXIES: z.string().optional(),
+    /**
      * Run the queued email scheduler inside the server process. Off where a
      * test needs to control exactly when the queue runs.
      * @default "true"
@@ -183,6 +189,14 @@ export const env = createEnv({
      * @default "false"
      */
     OPEN_POLL_LIMIT_ENABLED: z.enum(["true", "false"]).default("false"),
+
+    /**
+     * Enforce the monthly API poll quota. Only takes effect where billing is
+     * enabled. Off until enforcement ships; turning it back off is the
+     * rollback.
+     * @default "false"
+     */
+    API_POLL_QUOTA_ENABLED: z.enum(["true", "false"]).default("false"),
 
     /**
      * Take the app offline for scheduled maintenance. Page traffic is
@@ -335,8 +349,10 @@ export const env = createEnv({
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
+    TRUSTED_PROXIES: process.env.TRUSTED_PROXIES,
     EMAIL_QUEUE_SCHEDULER_ENABLED: process.env.EMAIL_QUEUE_SCHEDULER_ENABLED,
     OPEN_POLL_LIMIT_ENABLED: process.env.OPEN_POLL_LIMIT_ENABLED,
+    API_POLL_QUOTA_ENABLED: process.env.API_POLL_QUOTA_ENABLED,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     MAINTENANCE_BYPASS_TOKEN: process.env.MAINTENANCE_BYPASS_TOKEN,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,

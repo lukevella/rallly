@@ -22,9 +22,14 @@ function useForgotPasswordSchema() {
   const { t } = useTranslation();
   return React.useMemo(() => {
     return z.object({
-      email: z.email(
-        t("validEmail", { defaultValue: "Please enter a valid email" }),
-      ),
+      email: z
+        .string()
+        .trim()
+        .pipe(
+          z.email(
+            t("validEmail", { defaultValue: "Please enter a valid email" }),
+          ),
+        ),
     });
   }, [t]);
 }

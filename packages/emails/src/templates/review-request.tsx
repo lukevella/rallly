@@ -1,5 +1,4 @@
 import { Head, Html, Preview } from "@react-email/components";
-import { Trans } from "react-i18next/TransWithoutContext";
 
 import { resolveChrome } from "../chrome";
 import { previewChrome } from "../components/preview-chrome";
@@ -7,7 +6,6 @@ import {
   Body,
   Button,
   Container,
-  Link,
   Signature,
   Text,
 } from "../components/styled-components";
@@ -23,8 +21,6 @@ export type ReviewRequestEmailProps = {
   firstName: string;
   siteName: string;
   reviewUrl: string;
-  /** The site's reviewer rules, when its vendor terms require linking them. */
-  guidelinesUrl?: string;
 };
 
 /**
@@ -38,9 +34,8 @@ async function ReviewRequestEmail({
   firstName,
   siteName,
   reviewUrl,
-  guidelinesUrl,
 }: ReviewRequestEmailProps) {
-  const { t, i18n } = await createEmailI18n(locale);
+  const { t } = await createEmailI18n(locale);
   return (
     <Html>
       <Head />
@@ -82,21 +77,6 @@ async function ReviewRequestEmail({
               siteName,
             })}
           </Button>
-          {guidelinesUrl ? (
-            <Text small light={true}>
-              <Trans
-                t={t}
-                i18n={i18n}
-                ns="emails"
-                i18nKey="reviewRequest_guidelines"
-                defaults="Reviews must follow the <a>{siteName} community guidelines</a>."
-                values={{ siteName }}
-                components={{
-                  a: <Link color={chrome.primaryColor} href={guidelinesUrl} />,
-                }}
-              />
-            </Text>
-          ) : null}
           <Text>
             {t("reviewRequest_reply", {
               defaultValue:
@@ -119,9 +99,8 @@ ReviewRequestEmail.PreviewProps = {
   locale: "en",
   chrome: previewChrome,
   firstName: "Jessie",
-  siteName: "Capterra",
-  reviewUrl: "https://www.capterra.com",
-  guidelinesUrl: "https://www.capterra.com/legal/community-guidelines/",
+  siteName: "Trustpilot",
+  reviewUrl: "https://www.trustpilot.com",
 } as ReviewRequestEmailProps;
 
 export default ReviewRequestEmail;

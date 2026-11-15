@@ -4,13 +4,9 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import {
   BarChart2Icon,
-  CalendarIcon,
-  CreditCardIcon,
   EyeIcon,
   HomeIcon,
-  PlusIcon,
   Settings2Icon,
-  SettingsIcon,
   UserCogIcon,
   UserIcon,
   UsersIcon,
@@ -57,14 +53,6 @@ export function PageIcon({
   return <span className={pageIconVariants({ color, size })}>{children}</span>;
 }
 
-export function SettingsPageIcon() {
-  return (
-    <PageIcon color="gray" size="md">
-      <SettingsIcon />
-    </PageIcon>
-  );
-}
-
 export function AccountPageIcon() {
   return (
     <PageIcon color="gray" size="md">
@@ -76,14 +64,6 @@ export function SpacesPageIcon() {
   return (
     <PageIcon color="lime" size="md">
       <EyeIcon />
-    </PageIcon>
-  );
-}
-
-export function MembersPageIcon() {
-  return (
-    <PageIcon color="gray" size="md">
-      <UsersIcon />
     </PageIcon>
   );
 }
@@ -102,26 +82,11 @@ export function HomePageIcon(props: PageIconVariantProps) {
     </PageIcon>
   );
 }
-export function CreatePageIcon() {
-  return (
-    <PageIcon color="gray" size="md">
-      <PlusIcon />
-    </PageIcon>
-  );
-}
 
 export function PollPageIcon(props: PageIconVariantProps) {
   return (
     <PageIcon color="purple" size="md" {...props}>
       <BarChart2Icon />
-    </PageIcon>
-  );
-}
-
-export function EventPageIcon(props: PageIconVariantProps) {
-  return (
-    <PageIcon color="rose" size="md" {...props}>
-      <CalendarIcon />
     </PageIcon>
   );
 }
@@ -138,14 +103,6 @@ export function PreferencesPageIcon(props: PageIconVariantProps) {
   return (
     <PageIcon color="gray" size="md" {...props}>
       <Settings2Icon />
-    </PageIcon>
-  );
-}
-
-export function BillingPageIcon(props: PageIconVariantProps) {
-  return (
-    <PageIcon color="gray" size="md" {...props}>
-      <CreditCardIcon />
     </PageIcon>
   );
 }

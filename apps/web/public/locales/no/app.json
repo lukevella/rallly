@@ -67,7 +67,6 @@
   "areYouSure": "Er du sikker?",
   "assetUploadError": "Opplastingen mislyktes",
   "assetUploadErrorDescription": "Det oppstod et problem ved opplasting av filen din. Prøv igjen senere.",
-  "attendeeCount": "{count, plural, =0 {No attendees} one {1 attendee} other {# attendees}}",
   "attribution": "Kreditering",
   "attributionDescription": "Kontroller synligheten til krediteringsteksten",
   "authenticationAndSecurity": "Autentisering og sikkerhet",

@@ -12,8 +12,8 @@ export function OIDCAutoSignIn() {
   const redirectTo = searchParams.get("redirectTo");
 
   useMount(() => {
-    authClient.signIn.oauth2({
-      providerId: "oidc",
+    authClient.signIn.social({
+      provider: "oidc",
       callbackURL: validateRedirectUrl(redirectTo) || "/",
       errorCallbackURL: "/login",
     });

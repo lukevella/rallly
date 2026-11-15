@@ -5,6 +5,7 @@ import { calendars } from "./calendars";
 import { eventTypes } from "./event-types";
 import { events } from "./events";
 import { polls } from "./polls";
+import { search } from "./search";
 import { spaces } from "./spaces";
 
 export const appRouter = mergeRouters(
@@ -14,6 +15,7 @@ export const appRouter = mergeRouters(
     eventTypes,
     events,
     polls,
+    search,
     spaces,
     calendars,
   }),

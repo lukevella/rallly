@@ -68,9 +68,9 @@ export const DesktopDemo = ({
             <div className="h-1.5 bg-linear-to-r from-indigo-500 to-violet-500" />
             <div className="space-y-3 p-4 sm:p-5">
               <div>
-                <h3 className="font-semibold text-gray-900 text-lg tracking-tight">
+                <div className="font-semibold text-gray-900 text-lg tracking-tight">
                   {preset.title}
-                </h3>
+                </div>
                 <p className="mt-1 text-gray-600 text-sm">
                   {preset.description}
                 </p>

@@ -16,15 +16,10 @@ export const createRateLimitMiddleware = (
       ctx.event.rateLimiter = ratelimit?.name ?? "none";
     }
 
-    if (!ratelimit) {
+    // An unknown caller (no session, no address) is not limited, so
+    // unrelated visitors never share one bucket.
+    if (!ratelimit || !ctx.identifier) {
       return next();
-    }
-
-    if (!ctx.identifier) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to get identifier",
-      });
     }
 
     const { success, remainingPoints } = await ratelimit.limit(

@@ -4,6 +4,7 @@ import { createLogger } from "@rallly/logger";
 import { Effect, Layer } from "effect";
 import { after } from "next/server";
 import { env } from "@/env";
+import { sendApiPollQuotaWarning } from "@/features/api-keys/quota/warning/mutations";
 import { sendSubscriptionFeedbackEmail } from "@/features/billing/webhook/mutations";
 import {
   QUEUED_EMAIL_BATCH_SIZE,
@@ -32,6 +33,7 @@ const queuedEmailLayer = Layer.mergeAll(
       scheduled_event_invite: sendScheduledEventInviteEmail,
       review_request: sendReviewRequest,
       subscription_feedback: sendSubscriptionFeedbackEmail,
+      api_poll_quota_warning: sendApiPollQuotaWarning,
     }),
   ),
   SendRateLimiter.layer,

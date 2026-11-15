@@ -19,9 +19,8 @@ type WideEventEnv = {
  * every outcome, including maintenance (503), auth (401/403), and rate limit
  * (429) short-circuits from downstream middleware.
  *
- * `service` labels the route that handled the request (`api-private`,
- * `api-v1`), so migration between versions is a single `group_by` in the
- * logs.
+ * `service` labels the route that handled the request (`api-v1`), so a
+ * future version migration is a single `group_by` in the logs.
  */
 export const wideEvent = ({ service }: { service: string }) =>
   createMiddleware<WideEventEnv>(async (c, next) => {

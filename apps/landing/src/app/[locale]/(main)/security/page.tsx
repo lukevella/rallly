@@ -24,6 +24,7 @@ import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero } from "@/components/home/hero";
 import { Perimeter } from "@/components/home/perimeter";
+import { ReviewRatings } from "@/components/home/review-ratings";
 import { Stats } from "@/components/home/stats";
 import {
   Section,
@@ -426,6 +427,7 @@ export default async function Security(props: {
             Contact us
           </a>
         </div>
+        <ReviewRatings locale={locale} className="mt-12 justify-center" />
       </Section>
     </div>
   );

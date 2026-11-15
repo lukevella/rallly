@@ -88,7 +88,7 @@ function toPlainText(node: React.ReactNode): string {
   return toPlainText((node.props as { children?: React.ReactNode }).children);
 }
 
-function faqPageSchema(children: React.ReactNode) {
+export function faqPageSchema(children: React.ReactNode) {
   const mainEntity = React.Children.toArray(children).flatMap((child) => {
     if (!React.isValidElement<React.ComponentProps<typeof FaqItem>>(child)) {
       return [];

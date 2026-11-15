@@ -46,8 +46,10 @@ import {
 import {
   LAST_LOGIN_METHOD_COOKIE_NAME,
   SESSION_TTL_SECONDS,
+  VERIFICATION_EMAIL_COOKIE_NAME,
 } from "@/lib/auth-config";
 import { hostOnlyCookieCleanup } from "@/lib/auth-plugins/host-only-cookie-cleanup";
+import { ipAddressConfig } from "@/lib/client-ip";
 import { redis } from "@/lib/kv";
 import {
   LOCALE_COOKIE_NAME,
@@ -62,6 +64,15 @@ const kv = redis;
 const baseURL = absoluteUrl("/api/better-auth");
 
 const logger = createLogger("auth");
+
+// OAuth callbacks put the message (from a user hook) or the code (from a
+// session hook) in the login page's `error` param, and both read as
+// email_blocked once lowercased.
+const emailBlockedError = () =>
+  new APIError("FORBIDDEN", {
+    code: "EMAIL_BLOCKED",
+    message: "email blocked",
+  });
 
 if (env.OIDC_ISSUER_URL) {
   logger.info(
@@ -156,9 +167,6 @@ const isMultiTenantMicrosoft = [
 export const authLib = betterAuth({
   appName: env.APP_NAME,
   secret: env.SECRET_PASSWORD,
-  experimental: {
-    joins: true,
-  },
   emailAndPassword: {
     enabled: env.EMAIL_LOGIN_ENABLED !== "false",
     requireEmailVerification: true,
@@ -377,6 +385,19 @@ export const authLib = betterAuth({
           }
         },
         get: async (key: string) => kv.get(key),
+        getAndDelete: async (key: string) => kv.getdel(key),
+        // Counters get their own prefix because 1.6 stored JSON under the same
+        // rate limit keys, and INCR on those fails until they expire. EXPIRE NX
+        // starts the window on the first request without ever extending it.
+        increment: async (key: string, ttl: number) => {
+          const counterKey = `counter:${key}`;
+          const [count] = await kv
+            .multi()
+            .incr(counterKey)
+            .expire(counterKey, ttl, "NX")
+            .exec<[number, number]>();
+          return count;
+        },
         delete: async (key: string) => {
           await kv.del(key);
         },
@@ -479,6 +500,27 @@ export const authLib = betterAuth({
           ctx.setCookie(LOCALE_COOKIE_NAME, "", {
             ...LOCALE_COOKIE_OPTIONS,
             maxAge: 0,
+          });
+        }
+        return;
+      }
+
+      // The verify page reads the address a code was sent to from this
+      // cookie. Writing it on the send response keeps it in step with the
+      // code, with no second request for the login form to make.
+      if (ctx.path === "/email-otp/send-verification-otp") {
+        const returned = ctx.context.returned as
+          | { success?: boolean }
+          | undefined;
+        const email = ctx.body?.email as string | undefined;
+
+        if (returned?.success === true && email) {
+          ctx.setCookie(VERIFICATION_EMAIL_COOKIE_NAME, email, {
+            path: "/",
+            httpOnly: true,
+            secure: process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https://"),
+            sameSite: "lax",
+            maxAge: 15 * 60,
           });
         }
         return;
@@ -604,6 +646,11 @@ export const authLib = betterAuth({
               message: "Signup is disabled",
             });
           }
+          // The request middleware only sees addresses submitted in a body;
+          // social and OIDC callbacks carry theirs in the provider profile.
+          if (isEmailBlocked(user.email)) {
+            throw emailBlockedError();
+          }
           // The redirect callback names the provider in the route; the
           // ID-token variant of /sign-in/social names it in the body.
           const provider = ctx?.params?.id ?? ctx?.body?.provider;
@@ -656,6 +703,21 @@ export const authLib = betterAuth({
     },
     session: {
       create: {
+        // An account created before its address fell outside ALLOWED_EMAILS
+        // can still reach a social or OIDC callback, which the request
+        // middleware never sees.
+        before: async (session) => {
+          if (!env.ALLOWED_EMAILS) {
+            return;
+          }
+          const user = await prisma.user.findUnique({
+            where: { id: session.userId },
+            select: { email: true, isAnonymous: true },
+          });
+          if (user && !user.isAnonymous && isEmailBlocked(user.email)) {
+            throw emailBlockedError();
+          }
+        },
         after: async (session) => {
           after(async () => {
             const user = await prisma.user
@@ -713,14 +775,18 @@ export const authLib = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
-  advanced: env.NEXT_PUBLIC_COOKIE_DOMAIN
-    ? {
-        crossSubDomainCookies: {
+  advanced: {
+    database: {
+      joins: true,
+    },
+    ipAddress: ipAddressConfig,
+    crossSubDomainCookies: env.NEXT_PUBLIC_COOKIE_DOMAIN
+      ? {
           enabled: true,
           domain: env.NEXT_PUBLIC_COOKIE_DOMAIN,
-        },
-      }
-    : undefined,
+        }
+      : undefined,
+  },
   trustedOrigins: [absoluteUrl()],
   baseURL,
 });

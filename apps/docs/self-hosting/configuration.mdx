@@ -149,7 +149,11 @@ Customise the look of your instance. These settings can also be changed from the
 </ParamField>
 
 <ParamField path="RATE_LIMIT_ENABLED" default="true">
-  Limits how often one visitor can perform actions such as submitting responses. Counts are kept in memory and reset when the container restarts. Rallly reads the visitor's address from the `X-Real-IP` header, so if you run your own reverse proxy, make sure it sets that header. The bundled proxy does. Set to `false` to turn the limits off.
+  Limits how often one visitor can perform actions such as signing in or submitting responses. Counts are kept in memory and reset when the container restarts. Rallly reads the visitor's address from the `X-Real-IP` header, then from `X-Forwarded-For`, so if you run your own reverse proxy, make sure it sets one of them. The bundled proxy sets `X-Real-IP`. When Rallly can't determine a visitor's address, it doesn't apply limits keyed by address. Set to `false` to turn the limits off.
+</ParamField>
+
+<ParamField path="TRUSTED_PROXIES">
+  Comma separated IP addresses or CIDR ranges of the proxies between your visitors and Rallly, for example `10.0.0.0/8,172.16.0.1`. Set this when requests pass through more than one proxy, so `X-Forwarded-For` holds several addresses. Rallly removes the trusted addresses from the right of the header and uses the first one left as the visitor's address. Without it, an `X-Forwarded-For` header with several addresses is ignored.
 </ParamField>
 
 ### External reverse proxy

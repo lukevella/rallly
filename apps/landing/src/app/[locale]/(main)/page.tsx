@@ -8,6 +8,7 @@ import { PeopleBadge, PollsBadge } from "@/components/home/animated-number";
 import { Cta } from "@/components/home/cta";
 import { FaqItem, FaqSection } from "@/components/home/faq";
 import { Hero, HeroAnnouncement } from "@/components/home/hero";
+import { HeroBackdrop } from "@/components/home/hero-backdrop";
 import { HeroDemo } from "@/components/home/hero-demo/hero-demo";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { SocialProof } from "@/components/home/social-proof";
@@ -42,6 +43,20 @@ export default async function Page(props: {
               legalName: "Stack Snap Ltd",
               url: absoluteUrl(),
               logo: absoluteUrl("/logo.png"),
+              email: "support@rallly.co",
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer support",
+                email: "support@rallly.co",
+                url: "https://support.rallly.co",
+              },
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "The Gallery, 14 Upland Road",
+                addressLocality: "London",
+                postalCode: "SE22 9EE",
+                addressCountry: "GB",
+              },
               sameAs: [
                 "https://github.com/lukevella/rallly",
                 "https://x.com/ralllyco",
@@ -70,6 +85,7 @@ export default async function Page(props: {
         }}
       />
       <Section>
+        <HeroBackdrop orientation="grid" />
         <Hero
           title={t("headline", {
             defaultValue: "Find the best time to meet",
@@ -275,6 +291,7 @@ export default async function Page(props: {
         </FaqSection>
         <Section className="sm:py-24">
           <Cta
+            locale={locale}
             title={
               <Trans
                 t={t}

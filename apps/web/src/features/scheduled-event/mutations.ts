@@ -7,6 +7,7 @@ import { sendFinalizeParticipantEmail } from "@rallly/emails/templates/finalized
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { nanoid } from "@rallly/utils/nanoid";
 import { Effect } from "effect";
+import type { ParticipationStatus } from "ics";
 import { updateTag } from "next/cache";
 import { after } from "next/server";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
@@ -105,6 +106,13 @@ const voteByInviteStatus = {
   pending: undefined,
 } as const satisfies Record<ScheduledEventInviteStatus, string | undefined>;
 
+const partstatByInviteStatus = {
+  accepted: "ACCEPTED",
+  tentative: "TENTATIVE",
+  declined: "DECLINED",
+  pending: "NEEDS-ACTION",
+} as const satisfies Record<ScheduledEventInviteStatus, ParticipationStatus>;
+
 /**
  * The queue handler for `scheduled_event_invite`: tells one invitee their
  * event is booked, built from the invite (the subject, by uid) and its event
@@ -157,6 +165,14 @@ export const sendScheduledEventInviteEmail = Effect.fn(
     allDay: event.allDay,
     timeZone: event.timeZone ?? undefined,
     organizer: { name: host.name, email: host.email },
+    // RFC 5546 requires the recipient as ATTENDEE on a REQUEST.
+    attendees: [
+      {
+        name: invite.inviteeName,
+        email: invite.inviteeEmail,
+        partstat: partstatByInviteStatus[invite.status],
+      },
+    ],
   });
   if (ics.error || !ics.value) {
     return yield* new QueuedEmailFailed({

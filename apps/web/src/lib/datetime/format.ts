@@ -56,6 +56,45 @@ function getCachedIntlDateFormatter({
   return f;
 }
 
+const zoneLabelFormatters = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * A substitute zone keeps the right clock but carries its own name ("EST"
+ * for Winnipeg), so the name comes from the zone that was asked for. Generic
+ * names ("CT") are read in a year every engine agrees on: engines name a zone
+ * by its standard time ("MST") when they see no clock changes around the date.
+ */
+const zoneLabelInstant = Date.UTC(2025, 6, 1);
+
+function getZoneLabel(locale: string, timeZone: string) {
+  const key = `${locale}|${timeZone}`;
+  let f = zoneLabelFormatters.get(key);
+  if (!f) {
+    try {
+      f = new Intl.DateTimeFormat(locale, {
+        timeZone,
+        timeZoneName: "shortGeneric",
+      });
+    } catch {
+      // Engines without generic names (Chrome < 95, Safari < 15.4).
+      f = new Intl.DateTimeFormat(locale, { timeZone, timeZoneName: "short" });
+    }
+    zoneLabelFormatters.set(key, f);
+  }
+  return f
+    .formatToParts(zoneLabelInstant)
+    .find((part) => part.type === "timeZoneName")?.value;
+}
+
+function joinWithZoneLabel(
+  parts: Intl.DateTimeFormatPart[],
+  label: string | undefined,
+) {
+  return parts
+    .map((part) => (part.type === "timeZoneName" && label ? label : part.value))
+    .join("");
+}
+
 function presetOptions(
   preset: DateTimePreset,
   timeFormat?: TimeFormat,
@@ -127,10 +166,19 @@ export function formatDateTime(
   options: FormatDateTimeOptions,
 ): string {
   const date = toDate(value);
-  return getCachedIntlDateFormatter({
-    ...options,
-    timeZone: resolveOptionalTimeZone(options.timeZone, date),
-  }).format(date);
+  const timeZone = resolveOptionalTimeZone(options.timeZone, date);
+  const formatter = getCachedIntlDateFormatter({ ...options, timeZone });
+  if (
+    options.showTimeZone &&
+    options.timeZone &&
+    timeZone !== options.timeZone
+  ) {
+    return joinWithZoneLabel(
+      formatter.formatToParts(date),
+      getZoneLabel(options.locale, options.timeZone),
+    );
+  }
+  return formatter.format(date);
 }
 
 export function formatDateTimeRange(
@@ -147,15 +195,21 @@ export function formatDateTimeRange(
     timeZone: startTimeZone,
   });
   if (startTimeZone === endTimeZone) {
+    if (
+      options.showTimeZone &&
+      options.timeZone &&
+      startTimeZone !== options.timeZone
+    ) {
+      return joinWithZoneLabel(
+        formatter.formatRangeToParts(startDate, endDate),
+        getZoneLabel(options.locale, options.timeZone),
+      );
+    }
     return formatter.formatRange(startDate, endDate);
   }
   // Only a range crossing an override cutoff lands here; no single zone
   // formats both ends correctly, so each end gets its own.
-  const endFormatter = getCachedIntlDateFormatter({
-    ...options,
-    timeZone: endTimeZone,
-  });
-  return `${formatter.format(startDate)} – ${endFormatter.format(endDate)}`;
+  return `${formatDateTime(startDate, options)} – ${formatDateTime(endDate, options)}`;
 }
 
 // All-day values are stored as UTC midnight, so they always format in UTC.

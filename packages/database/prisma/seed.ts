@@ -10,6 +10,7 @@ import {
   subscriptions,
   users,
 } from "./seed/data";
+import { personas } from "./seed/personas";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -30,31 +31,47 @@ async function main() {
     );
   }
 
+  const allUsers = [...users, ...personas.flatMap((p) => p.users)];
+  const allSpaces = [...spaces, ...personas.map((p) => p.space)];
+  const allMembers = [...spaceMembers, ...personas.flatMap((p) => p.members)];
+  const allSubscriptions = [
+    ...subscriptions,
+    ...personas.flatMap((p) =>
+      p.subscription ? [{ ...p.subscription, spaceId: p.space.id }] : [],
+    ),
+  ];
+  const allEvents = [...scheduledEvents, ...personas.flatMap((p) => p.events)];
+  const allPolls = [...polls, ...personas.flatMap((p) => p.polls)];
+  const allEventTypes = [
+    ...eventTypes,
+    ...personas.flatMap((p) => p.eventTypes ?? []),
+  ];
+
   // 1. Users
-  await prisma.user.createMany({ data: users.map((u) => ({ ...u })) });
-  console.info(`✓ ${users.length} users`);
+  await prisma.user.createMany({ data: allUsers.map((u) => ({ ...u })) });
+  console.info(`✓ ${allUsers.length} users`);
 
   // 2. Spaces
-  await prisma.space.createMany({ data: spaces });
-  console.info(`✓ ${spaces.length} spaces`);
+  await prisma.space.createMany({ data: allSpaces });
+  console.info(`✓ ${allSpaces.length} spaces (${personas.length} personas)`);
 
   // 3. Space members
-  await prisma.spaceMember.createMany({ data: spaceMembers });
-  console.info(`✓ ${spaceMembers.length} space members`);
+  await prisma.spaceMember.createMany({ data: allMembers });
+  console.info(`✓ ${allMembers.length} space members`);
 
   // 4. Subscriptions
   await prisma.subscription.createMany({
-    data: subscriptions.map((sub) => ({
+    data: allSubscriptions.map((sub) => ({
       ...sub,
       periodStart: new Date(sub.periodStart),
       periodEnd: new Date(sub.periodEnd),
     })),
   });
-  console.info(`✓ ${subscriptions.length} subscriptions`);
+  console.info(`✓ ${allSubscriptions.length} subscriptions`);
 
   // 5. Scheduled events + invites
   let inviteCount = 0;
-  for (const evt of scheduledEvents) {
+  for (const evt of allEvents) {
     const eventId = evt.id ?? nextId();
     const uid = crypto.randomUUID();
 
@@ -95,7 +112,7 @@ async function main() {
     }
   }
   console.info(
-    `✓ ${scheduledEvents.length} scheduled events, ${inviteCount} invites`,
+    `✓ ${allEvents.length} scheduled events, ${inviteCount} invites`,
   );
 
   // 6. Polls + options + participants + votes + comments
@@ -106,7 +123,7 @@ async function main() {
   let pollInviteCount = 0;
   let activityCount = 0;
 
-  for (const [pollIndex, poll] of polls.entries()) {
+  for (const [pollIndex, poll] of allPolls.entries()) {
     const pollId = nextId();
     const optionIds = poll.options.map(() => nextId());
     const participantIds = poll.participants.map(() => nextId());
@@ -130,6 +147,7 @@ async function main() {
         title: poll.title,
         description: poll.description,
         location: poll.location,
+        conferencing: poll.conferencing,
         status: poll.status,
         closedReason: poll.closedReason,
         timeZone: poll.timeZone,
@@ -218,13 +236,13 @@ async function main() {
   }
 
   console.info(
-    `✓ ${polls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments, ${pollInviteCount} invites, ${activityCount} activity entries`,
+    `✓ ${allPolls.length} polls, ${optionCount} options, ${participantCount} participants, ${voteCount} votes, ${commentCount} comments, ${pollInviteCount} invites, ${activityCount} activity entries`,
   );
 
   // 7. Event types
   const now = Date.now();
   await prisma.eventType.createMany({
-    data: eventTypes.map((et, i) => ({
+    data: allEventTypes.map((et, i) => ({
       id: et.id,
       spaceId: et.spaceId,
       hostId: et.hostId,
@@ -236,7 +254,7 @@ async function main() {
       updatedAt: new Date(now - i * 60_000),
     })),
   });
-  console.info(`✓ ${eventTypes.length} event types`);
+  console.info(`✓ ${allEventTypes.length} event types`);
 }
 
 main()

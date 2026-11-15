@@ -1,9 +1,8 @@
 import "server-only";
 
-import { openai } from "@ai-sdk/openai";
+import { createHash } from "node:crypto";
 import { sendRawEmail } from "@rallly/emails";
 import { createLogger } from "@rallly/logger";
-import { generateText } from "ai";
 import { after } from "next/server";
 import { env } from "@/env";
 import { cancelUserSubscriptions } from "@/features/billing/mutations";
@@ -14,66 +13,11 @@ import {
   MODERATION_STRIKE_WINDOW,
   MODERATION_STRIKES_BEFORE_BAN,
 } from "./constants";
-import type { ModerationResult, ModerationVerdict } from "./types";
+import { classifyContent } from "./service";
+import type { ModerationResult } from "./types";
 import { containsSuspiciousPatterns } from "./utils";
 
 const logger = createLogger("moderation");
-const aiLogger = createLogger("moderation/ai");
-
-const AI_REQUEST_TIMEOUT_MS = 30_000;
-
-/**
- * Moderates content using AI to detect inappropriate content
- * @param text The text to moderate
- * @returns The moderation result with verdict and explanation
- */
-async function moderateContentWithAI(text: string): Promise<ModerationResult> {
-  try {
-    const result = await generateText({
-      model: openai("gpt-6-luna"),
-      providerOptions: { openai: { reasoningEffort: "none" } },
-      abortSignal: AbortSignal.timeout(AI_REQUEST_TIMEOUT_MS),
-      system: `You are a content moderator for a scheduling and polling application. Users create polls about any topic — finding meeting times, making group decisions, voting on proposals, etc. Content may be in any language.
-
-Respond with one of two verdicts:
-- FLAGGED: Content is clearly abusive and harmful to the platform. Use this for:
-  - Phishing or scams: fake account notifications, brand impersonation
-  - Financial fraud: fake crypto mining, investment scams, unclaimed funds, lottery winnings
-  - Illegal activities: drugs, prostitution, illegal gambling
-
-- SAFE: Content is not harmful.
-
-Do NOT flag content because:
-- It is in a non-English language
-- It is short, brief, or lacks detail
-- It is ambiguous or unclear
-
-When in doubt, choose SAFE.
-
-Respond in exactly this format:
-VERDICT
-Brief explanation of why this verdict was chosen.`,
-      messages: [{ role: "user", content: text }],
-    });
-
-    const lines = result.text.trim().split("\n");
-    const verdictLine = (lines[0] ?? "").trim().toUpperCase();
-    const reason = lines.slice(1).join("\n").trim() || "No reason provided";
-
-    let verdict: ModerationVerdict = "safe";
-    if (verdictLine.startsWith("FLAGGED")) {
-      verdict = "flagged";
-    }
-
-    return { verdict, reason };
-  } catch (err) {
-    aiLogger.error({ error: err }, "AI moderation failed");
-    return {
-      verdict: "safe",
-      reason: "AI moderation failed, defaulting to safe",
-    };
-  }
-}
 
 function getBannedDomains(): string[] {
   const csv = env.BANNED_DOMAINS;
@@ -102,6 +46,30 @@ const strikes = createRatelimit(
   MODERATION_STRIKES_BEFORE_BAN,
   MODERATION_STRIKE_WINDOW,
 );
+
+// A user whose poll is blocked submits it again. Only the first flag of the
+// same content in the window is a strike, so one wrong verdict cannot ban
+// on its own; a scammer rewording still collects one strike per rewrite.
+const flaggedContent = createRatelimit(1, MODERATION_STRIKE_WINDOW);
+
+function contentFingerprint(text: string) {
+  return createHash("sha256")
+    .update(text.toLowerCase().replace(/\s+/g, " ").trim())
+    .digest("hex");
+}
+
+async function isRepeatFlag(userId: string, text: string) {
+  try {
+    const seen = await flaggedContent?.limit(
+      `moderation-content:${userId}:${contentFingerprint(text)}`,
+    );
+    return seen ? !seen.success : false;
+  } catch (error) {
+    // Unknown is not a first flag: a store fault must not count a strike.
+    logger.error({ error, userId }, "Could not check for repeated content");
+    return null;
+  }
+}
 
 const aiBudget = createRatelimit(MODERATION_AI_CALLS_PER_DAY, "24 h");
 
@@ -139,7 +107,11 @@ export async function banUserForAbuse({
   }
 }
 
-async function recordStrike(userId: string) {
+async function recordStrike(userId: string, text: string) {
+  const repeat = await isRepeatFlag(userId, text);
+  if (repeat !== false) {
+    return { count: null, banned: false, repeat: repeat === true };
+  }
   let strike: Awaited<ReturnType<NonNullable<typeof strikes>["limit"]>> | null;
   try {
     strike = (await strikes?.limit(`moderation:${userId}`)) ?? null;
@@ -150,7 +122,7 @@ async function recordStrike(userId: string) {
     strike = null;
   }
   if (!strike) {
-    return { count: null, banned: false };
+    return { count: null, banned: false, repeat: false };
   }
   const count = strike.success
     ? MODERATION_STRIKES_BEFORE_BAN - strike.remainingPoints
@@ -163,7 +135,7 @@ async function recordStrike(userId: string) {
       reason: `Automatic ban: ${count} pieces of content flagged by moderation within ${MODERATION_STRIKE_WINDOW}`,
     });
   }
-  return { count, banned };
+  return { count, banned, repeat: false };
 }
 
 /**
@@ -173,8 +145,8 @@ async function recordStrike(userId: string) {
  * 2. AI-based moderation for more sophisticated content analysis
  *
  * A flagged verdict always blocks. Paid users are not exempt: the two most
- * recent abuse cases were Pro subscriptions, and no flag in the last 90
- * days was a false positive. Repeated flags ban the user (see recordStrike).
+ * recent abuse cases were Pro subscriptions. Flags on distinct content ban
+ * the user (see recordStrike); resubmitting the same content does not.
  *
  * @returns Moderation result with verdict and explanation
  */
@@ -241,7 +213,7 @@ export async function moderateContent({
 
     logger.info("Suspicious patterns detected, performing AI moderation check");
     try {
-      const result = await moderateContentWithAI(textToModerate);
+      const result = await classifyContent(textToModerate);
 
       if (result.verdict === "flagged") {
         logger.warn(
@@ -249,7 +221,7 @@ export async function moderateContent({
           `Content ${result.verdict} by AI moderation`,
         );
         after(async () => {
-          const strike = await recordStrike(userId);
+          const strike = await recordStrike(userId, textToModerate);
           await sendRawEmail({
             to: env.SUPPORT_EMAIL,
             subject: strike.banned
@@ -258,7 +230,7 @@ export async function moderateContent({
             text: [
               `User ID: ${userId}`,
               `User Email: ${userEmail ?? "unknown"}`,
-              `Strike: ${strike.count ?? "not counted"} of ${MODERATION_STRIKES_BEFORE_BAN}`,
+              `Strike: ${strike.repeat ? "not counted, same content as an earlier flag" : `${strike.count ?? "not counted"} of ${MODERATION_STRIKES_BEFORE_BAN}`}`,
               `Banned: ${strike.banned ? "Yes" : "No"}`,
               `Verdict: ${result.verdict}`,
               `Reason: ${result.reason}`,

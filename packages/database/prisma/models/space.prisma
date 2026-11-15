@@ -24,6 +24,9 @@ model Space {
   // Set by hand when support grants the nonprofit discount; checkout applies
   // the coupon from this. An existing subscription gets it in Stripe.
   nonprofitDiscountGrantedAt DateTime?  @map("nonprofit_discount_granted_at")
+  // Set by hand by support; raises the monthly API poll limit above the
+  // included amount. Never lowers it and never adds to a purchased add-on.
+  apiPollQuotaOverride       Int?       @map("api_poll_quota_override")
   createdAt                  DateTime   @default(now()) @map("created_at")
   updatedAt                  DateTime   @updatedAt @map("updated_at")
 
@@ -43,6 +46,8 @@ model Space {
   nonprofitApplications NonprofitApplication[]
 
   webhooks SpaceWebhook[]
+
+  apiUsage ApiUsage[]
 
   @@index([ownerId])
   @@map("spaces")

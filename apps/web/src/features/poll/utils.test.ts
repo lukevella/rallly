@@ -44,6 +44,36 @@ describe("maskParticipantsForViewer", () => {
     expect(result.map((p) => p.note)).toEqual(["Note a", null, "Note c"]);
   });
 
+  it("keeps email and user id only for the viewer's own responses", () => {
+    const result = maskParticipantsForViewer({
+      participants: [
+        participant("a", { userId: "user-1" }),
+        participant("b", { userId: "user-2" }),
+        participant("c"),
+      ],
+      viewer: { userId: "user-1", linkedParticipantIds: ["c"] },
+      hideParticipants: false,
+    });
+
+    expect(result.map((p) => p.email)).toEqual([
+      "a@example.com",
+      null,
+      "c@example.com",
+    ]);
+    expect(result.map((p) => p.userId)).toEqual(["user-1", null, null]);
+  });
+
+  it("withholds every email from an anonymous viewer", () => {
+    const result = maskParticipantsForViewer({
+      participants: [participant("a", { userId: "user-1" }), participant("b")],
+      viewer: { userId: null, linkedParticipantIds: [] },
+      hideParticipants: false,
+    });
+
+    expect(result.map((p) => p.email)).toEqual([null, null]);
+    expect(result.map((p) => p.userId)).toEqual([null, null]);
+  });
+
   it("never exposes the edit token or an edit link", () => {
     const [result] = maskParticipantsForViewer({
       participants: [participant("a")],

@@ -3,7 +3,6 @@ import { absoluteUrl } from "@rallly/utils/absolute-url";
 import {
   anonymousClient,
   emailOTPClient,
-  genericOAuthClient,
   inferAdditionalFields,
   lastLoginMethodClient,
 } from "better-auth/client/plugins";
@@ -17,7 +16,6 @@ export const authClient = createAuthClient({
   plugins: [
     inferAdditionalFields<Auth>(),
     emailOTPClient(),
-    genericOAuthClient(),
     lastLoginMethodClient({ cookieName: LAST_LOGIN_METHOD_COOKIE_NAME }),
     anonymousClient(),
   ],

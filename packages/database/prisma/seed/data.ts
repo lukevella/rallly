@@ -126,6 +126,9 @@ export type PollDef = {
   title: string;
   description?: string;
   location?: string;
+  conferencing?:
+    | { provider: "zoom" | "meet" | "teams" | "webex" }
+    | { provider: "custom"; label: string; uri?: string };
   status: PollStatus;
   closedReason?: PollClosedReason;
   timeZone?: string;

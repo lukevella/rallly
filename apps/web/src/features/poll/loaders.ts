@@ -180,6 +180,15 @@ export const loadPollAvailability = cache(async (pollId: string) =>
 );
 
 /**
+ * The poll's public details, without its responses. Null for a missing,
+ * deleted or removed poll. Shared by the vote page and its layout so the poll
+ * is read once per request.
+ */
+export const loadPollDetails = cache(async (pollId: string) =>
+  getPollDetails({ pollId }),
+);
+
+/**
  * The poll as a participant sees it. Deliberately no admin check: the
  * invite page is the participant view, and the host reads the full list on
  * the admin page. The emailed link names the viewer's own response, so a

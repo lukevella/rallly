@@ -8,6 +8,7 @@
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit",
+    "test:unit": "vitest run",
     "i18n:scan": "i18next-cli extract"
   },
   "dependencies": {
@@ -51,6 +52,7 @@
     "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3",
     "cross-env": "^7.0.3",
-    "i18next-cli": "^1.58.1"
+    "i18next-cli": "^1.58.1",
+    "vitest": "^4.1.11"
   }
 }

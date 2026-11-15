@@ -24,6 +24,11 @@ export const MobileDemo = ({
 }) => {
   const format = formatDemoParts(locale);
   const topScore = Math.max(...scores);
+  const voteLabels = {
+    yes: t("heroDemoYes", { ns: "home", defaultValue: "Yes" }),
+    ifNeedBe: t("heroDemoIfNeedBe", { ns: "home", defaultValue: "If need be" }),
+    no: t("heroDemoNo", { ns: "home", defaultValue: "No" }),
+  };
   let optionIndex = -1;
 
   return (
@@ -67,6 +72,7 @@ export const MobileDemo = ({
                       />
                       <VoteSelector
                         label={`${label} ${time}`}
+                        voteLabels={voteLabels}
                         defaultValue={initialVotes[optionIndex]}
                       />
                     </div>
@@ -76,7 +82,26 @@ export const MobileDemo = ({
             );
           })}
         </div>
-        <VoteActions />
+        <VoteActions
+          declineLabel={t("heroDemoDecline", {
+            ns: "home",
+            defaultValue: "Decline",
+          })}
+          voteLabel={t("heroDemoVote", { ns: "home", defaultValue: "Vote" })}
+          closeLabel={t("heroDemoClose", { ns: "home", defaultValue: "Close" })}
+          successTitle={t("heroDemoThatWasEasy", {
+            ns: "home",
+            defaultValue: "That was easy!",
+          })}
+          successDescription={t("heroDemoEasyDescription", {
+            ns: "home",
+            defaultValue: "That's all it takes to respond to a poll.",
+          })}
+          createPollLabel={t("heroDemoCreatePoll", {
+            ns: "home",
+            defaultValue: "Create your own poll",
+          })}
+        />
       </DemoScreen>
     </DemoFrame>
   );

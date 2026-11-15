@@ -220,3 +220,40 @@ export async function listMemberContentSummaries({
 
   return summaries;
 }
+
+export async function searchSpaceMembers({
+  spaceId,
+  query,
+  limit,
+}: {
+  spaceId: AuthorizedSpaceId;
+  query?: string;
+  limit: number;
+}) {
+  const members = await prisma.spaceMember.findMany({
+    where: {
+      spaceId,
+      ...(query && {
+        user: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { email: { contains: query, mode: "insensitive" } },
+          ],
+        },
+      }),
+    },
+    select: {
+      userId: true,
+      user: { select: { name: true, email: true, image: true } },
+    },
+    orderBy: { createdAt: "asc" },
+    take: limit,
+  });
+
+  return members.map((member) => ({
+    userId: member.userId,
+    name: member.user.name,
+    email: member.user.email,
+    image: member.user.image ?? undefined,
+  }));
+}

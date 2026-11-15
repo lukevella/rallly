@@ -1,6 +1,6 @@
 import { prisma } from "@rallly/database";
 
-import { createStripeClient } from "../lib/stripe";
+import { createStripeClient, getSeatItem } from "../lib/stripe";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 
@@ -31,7 +31,7 @@ const stripe = createStripeClient({ secretKey });
         },
       );
       const currency = subscription.currency;
-      const subscriptionItem = subscription.items.data[0];
+      const subscriptionItem = getSeatItem(subscription);
       const currencyOption =
         subscriptionItem.price.currency_options?.[currency];
       const interval = subscriptionItem.price.recurring?.interval;
