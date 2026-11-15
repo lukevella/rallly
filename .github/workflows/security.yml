@@ -1,0 +1,108 @@
+name: security
+
+# Analyses de sécurité du code : Trivy (dépendances, secrets, configuration) et
+# SonarQube (qualité et sécurité du code). L'image est scannée à part, avant sa
+# publication, dans preprod.yml. Jobs hébergés par GitHub : jamais le runner de la VM.
+on:
+  pull_request:
+    branches: [preprod]
+  push:
+    branches: [preprod]
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  trivy:
+    name: Trivy (dépôt)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      # Rapport complet, sans faire échouer : alimente l'onglet Security
+      - name: Trivy (rapport SARIF)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          skip-dirs: node_modules
+          format: sarif
+          output: trivy-repo.sarif
+          exit-code: "0"
+
+      # Les PR de forks n'ont pas le droit d'écrire dans l'onglet Security
+      - uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        with:
+          sarif_file: trivy-repo.sarif
+          category: trivy-repo
+
+      - name: "Trivy (barrière : vulnérabilité ou mauvaise configuration critique corrigeable)"
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,misconfig
+          severity: CRITICAL
+          ignore-unfixed: true
+          skip-dirs: node_modules
+          exit-code: "1"
+
+      - name: "Trivy (barrière : secret détecté)"
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: secret
+          severity: HIGH,CRITICAL
+          skip-dirs: node_modules
+          exit-code: "1"
+
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0 # historique complet : attribution des issues et période de référence
+
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/pnpm-install
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
+      # Le fournisseur de couverture est ajouté à la volée, à la version exacte de vitest :
+      # le déclarer dans package.json ferait conflit avec le lockfile d'upstream à chaque merge
+      - name: Tests unitaires avec couverture
+        run: |
+          version=$(node -p "require('vitest/package.json').version")
+          pnpm add -w -D "@vitest/coverage-v8@${version}"
+          pnpm test:unit -- --coverage --coverage.provider=v8 --coverage.reporter=lcov
+
+      # Vitest écrit les chemins relatifs au paquet (src/...) : SonarQube les lit depuis la racine
+      - name: Chemins des rapports de couverture
+        run: |
+          find apps packages -name node_modules -prune -o -path '*/coverage/lcov.info' -print | while read -r f; do
+            sed -i "s#^SF:#SF:$(dirname "$(dirname "$f")")/#" "$f"
+          done
+
+      # Échoue si la barrière qualité de SonarQube n'est pas franchie
+      - name: SonarQube
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: -Dsonar.qualitygate.wait=true
