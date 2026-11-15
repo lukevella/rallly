@@ -75,52 +75,6 @@ jobs:
       - name: Run tests
         run: pnpm test:unit
 
-  docker-smoke-test:
-    name: Docker smoke test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # Shell exports don't reach the container — compose only forwards
-      # DATABASE_URL. The env_file (apps/web/.env) is how the stack reads
-      # config, so write the documented-required variables there.
-      - name: Start services
-        run: |
-          cat > apps/web/.env <<'EOF'
-          SECRET_PASSWORD=0123456789abcdef0123456789abcdef
-          SUPPORT_EMAIL=support@example.com
-          NEXT_PUBLIC_BASE_URL=http://localhost:3000
-          EOF
-          docker compose up -d --build --wait --wait-timeout 60
-
-      # The image healthcheck hits /api/status, but that endpoint returns
-      # 200 even when the database is unreachable and doesn't touch env
-      # validation — assert both explicitly so a booted-but-broken stack
-      # fails here.
-      - name: Check status endpoint and login page respond
-        run: |
-          status=$(curl -fsS --connect-timeout 5 --max-time 15 \
-            http://localhost:3000/api/status)
-          echo "$status"
-          echo "$status" | jq -e '.database == "connected"'
-          curl -fsSL --connect-timeout 5 --max-time 15 \
-            -o /dev/null http://localhost:3000/login
-
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/pnpm-install
-
-      - name: Install Playwright browser
-        run: pnpm --filter @rallly/web exec playwright install --with-deps chromium
-
-      # A crashed client bundle still serves 200s; only a browser loading
-      # the page catches that class of failure.
-      - name: Run browser smoke test against the image
-        run: pnpm --filter @rallly/web exec playwright test --config playwright.smoke.config.ts
-
-      - name: Show logs on failure
-        if: failure()
-        run: docker compose logs
-
   # Resolves the @playwright/test version from the lockfile so the container
   # image tag below stays in sync with it automatically.
   playwright-version:

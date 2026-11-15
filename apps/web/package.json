@@ -15,7 +15,6 @@
     "test:integration": "playwright test",
     "test:unit": "vitest run",
     "test:codegen": "playwright codegen http://localhost:3000",
-    "docker:start": "./scripts/docker-start.sh",
     "better-auth:generate": "pnpx @better-auth/cli@latest generate --config ./src/lib/auth.ts --output ../../packages/database/prisma/models/user.prisma"
   },
   "dependencies": {
