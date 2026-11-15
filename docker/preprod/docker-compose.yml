@@ -155,6 +155,8 @@ services:
       OIDC_DISCOVERY_URL: https://auth.${DOMAIN}/.well-known/openid-configuration
       OIDC_CLIENT_ID: rallly
       OIDC_CLIENT_SECRET: ${RALLLY_OIDC_CLIENT_SECRET:?}
+      # Seule une session Authelia permet de voter, l'identité du votant vient de l'IdP
+      REQUIRE_AUTH_TO_VOTE: "true"
     labels:
       traefik.enable: "true"
       traefik.http.routers.rallly.rule: Host(`rallly.${DOMAIN}`)

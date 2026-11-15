@@ -163,6 +163,10 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorPollFull", {
           defaultValue: "This poll is no longer accepting responses.",
         });
+      case "authRequired":
+        return t("newParticipantFormErrorAuthRequired", {
+          defaultValue: "Log in to respond to this poll.",
+        });
       case "tooManyRequests":
         return t("newParticipantFormErrorTooManyRequests", {
           defaultValue:

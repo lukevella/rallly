@@ -31,6 +31,7 @@ import {
   renameParticipantSchema,
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
+import { resolveVoter } from "@/features/poll/participant/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
@@ -192,7 +193,17 @@ export const addParticipantAction = anyUserActionClient
   .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(addParticipantSchema)
   .action(async ({ ctx, parsedInput }) => {
-    const { pollId, votes, name, email, note, timeZone, token } = parsedInput;
+    const { pollId, votes, note, timeZone, token } = parsedInput;
+
+    const voter = resolveVoter({
+      requireAuth: env.REQUIRE_AUTH_TO_VOTE === "true",
+      user: ctx.user,
+      input: { name: parsedInput.name, email: parsedInput.email },
+    });
+    if (!voter.ok) {
+      return voter;
+    }
+    const { name, email } = voter;
 
     ctx.event.pollId = pollId;
     await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);

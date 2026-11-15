@@ -166,6 +166,12 @@ export const env = createEnv({
      */
     HIDE_ATTRIBUTION: z.enum(["true", "false"]).default("false"),
     /**
+     * Only signed-in users can respond to a poll; their name and email come
+     * from their account (the identity provider), not from the form
+     * @default "false"
+     */
+    REQUIRE_AUTH_TO_VOTE: z.enum(["true", "false"]).default("false"),
+    /**
      * Enable or disable rate limiting globally.
      * @default "true"
      */
@@ -348,6 +354,7 @@ export const env = createEnv({
     LOGO_ICON_URL: process.env.LOGO_ICON_URL,
     APP_NAME: process.env.APP_NAME,
     HIDE_ATTRIBUTION: process.env.HIDE_ATTRIBUTION,
+    REQUIRE_AUTH_TO_VOTE: process.env.REQUIRE_AUTH_TO_VOTE,
     RATE_LIMIT_ENABLED: process.env.RATE_LIMIT_ENABLED,
     TRUSTED_PROXIES: process.env.TRUSTED_PROXIES,
     EMAIL_QUEUE_SCHEDULER_ENABLED: process.env.EMAIL_QUEUE_SCHEDULER_ENABLED,
