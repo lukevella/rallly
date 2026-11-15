@@ -139,7 +139,8 @@ services:
 
   rallly:
     <<: *hardened
-    image: lukevella/rallly:4
+    # Le workflow preprod fixe RALLLY_IMAGE sur le commit déployé ; le défaut sert aux lancements à la main
+    image: ${RALLLY_IMAGE:-ghcr.io/ogb4n/rallly:preprod}
     environment:
       DATABASE_URL: postgres://rallly:rallly@rallly-db:5432/rallly
       NEXT_PUBLIC_BASE_URL: https://rallly.${DOMAIN}
