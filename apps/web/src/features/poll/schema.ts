@@ -6,6 +6,13 @@ import * as z from "zod";
 // existing poll — including long institutional event invites — so no real
 // content is rejected.
 export const MAX_POLL_TITLE_LENGTH = 255;
+
+// A location poll lists the places people vote between. The count is capped so
+// the vote grid stays readable and the poll page stays light.
+export const MAX_POLL_PLACES = 20;
+export const MAX_PLACE_NAME_LENGTH = 120;
+export const MAX_PLACE_ADDRESS_LENGTH = 255;
+export const MAX_PLACE_URL_LENGTH = 2048;
 export const MAX_POLL_DESCRIPTION_LENGTH = 8000;
 
 // Comment content ships in the new-comment notification email, so it must be
@@ -38,4 +45,42 @@ export {
 export const setPollMutedSchema = z.object({
   pollId: z.string(),
   muted: z.boolean(),
+});
+
+const httpUrlSchema = z
+  .string()
+  .trim()
+  .max(MAX_PLACE_URL_LENGTH)
+  .refine((value) => {
+    try {
+      const { protocol } = new URL(value);
+      return protocol === "http:" || protocol === "https:";
+    } catch {
+      return false;
+    }
+  });
+
+/**
+ * One place proposed on a location poll. The address and the link are optional
+ * and may be empty strings, which is what an untouched form field holds.
+ */
+export const pollPlaceSchema = z.object({
+  name: z.string().trim().min(1).max(MAX_PLACE_NAME_LENGTH),
+  address: z
+    .string()
+    .trim()
+    .max(MAX_PLACE_ADDRESS_LENGTH)
+    .optional()
+    .transform((value) => value || undefined),
+  url: httpUrlSchema
+    .or(z.literal(""))
+    .optional()
+    .transform((value) => value || undefined),
+});
+
+export type PollPlace = z.infer<typeof pollPlaceSchema>;
+
+export const finalizeLocationPollSchema = z.object({
+  pollId: z.string(),
+  optionId: z.string(),
 });

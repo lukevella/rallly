@@ -39,7 +39,11 @@ import {
   checkOpenPollCapacity,
   OpenPollLimitError,
 } from "@/features/poll/limit/mutations";
-import { MAX_POLL_DESCRIPTION_LENGTH } from "@/features/poll/schema";
+import {
+  MAX_POLL_DESCRIPTION_LENGTH,
+  MAX_POLL_PLACES,
+  pollPlaceSchema,
+} from "@/features/poll/schema";
 import {
   getChosenOptionRank,
   getFinalizeTiming,
@@ -152,13 +156,15 @@ async function mintConferencing({
   });
 }
 
+// Activity snapshots describe options as time slots. The option lists they are
+// built from only ever hold dates: place edits are refused before this point.
 const toOptionSnapshot = (option: {
   id: string;
-  startTime: Date;
+  startTime: Date | null;
   duration: number;
 }) => ({
   optionId: option.id,
-  start: option.startTime.toISOString(),
+  start: (option.startTime ?? new Date(0)).toISOString(),
   duration: option.duration,
 });
 
@@ -182,30 +188,41 @@ export const polls = router({
   invites,
   make: possiblyPublicProcedure
     .input(
-      z.object({
-        title: z.string().trim().min(1),
-        timeZone: timeZoneInput,
-        location: z.string().trim().optional(),
-        conferencing: pollConferencingSchema.optional(),
-        description: z
-          .string()
-          .trim()
-          .max(MAX_POLL_DESCRIPTION_LENGTH)
-          .transform(collapseNewlines)
-          .optional(),
-        hideParticipants: z.boolean().optional(),
-        hideScores: z.boolean().optional(),
-        disableComments: z.boolean().optional(),
-        allowTentativeVotes: z.boolean().optional(),
-        requireParticipantEmail: z.boolean().optional(),
-        options: z
-          .object({
-            startDate: z.string(),
-            endDate: z.string().optional(),
-          })
-          .array()
-          .min(1),
-      }),
+      z
+        .object({
+          title: z.string().trim().min(1),
+          timeZone: timeZoneInput,
+          location: z.string().trim().optional(),
+          conferencing: pollConferencingSchema.optional(),
+          description: z
+            .string()
+            .trim()
+            .max(MAX_POLL_DESCRIPTION_LENGTH)
+            .transform(collapseNewlines)
+            .optional(),
+          hideParticipants: z.boolean().optional(),
+          hideScores: z.boolean().optional(),
+          disableComments: z.boolean().optional(),
+          allowTentativeVotes: z.boolean().optional(),
+          requireParticipantEmail: z.boolean().optional(),
+          options: z
+            .object({
+              startDate: z.string(),
+              endDate: z.string().optional(),
+            })
+            .array()
+            .min(1)
+            .optional(),
+          // The places of a location poll. A poll has either dates or places.
+          places: pollPlaceSchema
+            .array()
+            .min(1)
+            .max(MAX_POLL_PLACES)
+            .optional(),
+        })
+        .refine((input) => Boolean(input.options) !== Boolean(input.places), {
+          message: "A poll needs either options or places, not both",
+        }),
     )
     .use(requireUserMiddleware)
     .use(createRateLimitMiddleware("create_poll", 20, "1 h"))
@@ -229,6 +246,9 @@ export const polls = router({
           Title: input.title,
           Description: input.description || "",
           Location: input.location || "",
+          Places: (input.places ?? [])
+            .map((place) => `${place.name} ${place.address ?? ""}`)
+            .join("\n"),
           // The pasted URL goes in with its label so a benign label cannot
           // hide a scam destination from moderation. Only the origin and
           // path: a Zoom join link carries the meeting password in its query.
@@ -285,20 +305,31 @@ export const polls = router({
       // is the single source of truth for "floating", so date-only polls drop
       // any timezone the client sent, and date-only options of mixed polls
       // ignore the poll's timezone.
-      const isTimePoll = input.options.some((option) => option.endDate);
+      const dateOptions = input.options ?? [];
+      const isTimePoll = dateOptions.some((option) => option.endDate);
       const timeZone = isTimePoll ? input.timeZone : null;
 
-      const optionsData = input.options.map((option) => ({
-        startTime: wallTimeToInstant(
-          option.startDate,
-          timeZone && option.endDate ? timeZone : "UTC",
-        ),
-        duration: option.endDate
-          ? wallTimeDiffInMinutes(option.startDate, option.endDate)
-          : 0,
-      }));
+      // A place has no date, so a location poll's options carry only the
+      // place fields and have no time zone to convert.
+      const optionsData = input.places
+        ? input.places.map((place) => ({
+            startTime: null,
+            duration: 0,
+            name: place.name,
+            address: place.address ?? null,
+            url: place.url ?? null,
+          }))
+        : dateOptions.map((option) => ({
+            startTime: wallTimeToInstant(
+              option.startDate,
+              timeZone && option.endDate ? timeZone : "UTC",
+            ),
+            duration: option.endDate
+              ? wallTimeDiffInMinutes(option.startDate, option.endDate)
+              : 0,
+          }));
 
-      const kind = isTimePoll ? "time" : "date";
+      const kind = input.places ? "location" : isTimePoll ? "time" : "date";
 
       const poll = await prisma
         .$transaction(async (tx) => {
@@ -596,6 +627,7 @@ export const polls = router({
             disableComments: true,
             allowTentativeVotes: true,
             requireParticipantEmail: true,
+            kind: true,
             status: true,
             closedReason: true,
             userId: true,
@@ -605,6 +637,18 @@ export const polls = router({
 
         if (!prior) {
           throw new TRPCError({ code: "NOT_FOUND" });
+        }
+
+        // The places of a location poll can't be edited yet, and the option
+        // lists below only know about dates. Details and settings still can.
+        if (
+          prior.kind === "location" &&
+          (newOptions.length > 0 || (input.optionsToDelete?.length ?? 0) > 0)
+        ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "The places of a location poll can't be edited",
+          });
         }
 
         // Turning the tentative option off would strand votes already cast as
@@ -701,7 +745,13 @@ export const polls = router({
           where: { pollId },
           _max: { duration: true },
         });
-        const kind = (maxDuration._max.duration ?? 0) > 0 ? "time" : "date";
+        // A location poll's options have no duration to derive the kind from.
+        const kind =
+          prior.kind === "location"
+            ? "location"
+            : (maxDuration._max.duration ?? 0) > 0
+              ? "time"
+              : "date";
 
         // Conditional on status so a booking that lands after the check above
         // rolls this edit back instead of it silently missing the event.
@@ -1235,8 +1285,18 @@ export const polls = router({
         });
       }
 
+      // A place has no time to book: location polls are finalized by choosing
+      // the place (see finalizeLocationPoll), not by scheduling an event.
+      const startTime = option.startTime;
+      if (!startTime) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "A place can't be scheduled as an event",
+        });
+      }
+
       const eventTimes = getScheduledEventTimes({
-        startTime: option.startTime,
+        startTime,
         duration: option.duration,
         timeZone: poll.timeZone,
       });
@@ -1435,7 +1495,7 @@ export const polls = router({
             userId: ctx.user.id,
             optionId: input.optionId,
             payload: {
-              start: option.startTime.toISOString(),
+              start: startTime.toISOString(),
               duration: option.duration,
             },
           },

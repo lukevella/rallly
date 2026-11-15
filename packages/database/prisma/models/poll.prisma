@@ -18,6 +18,7 @@ enum PollStatus {
 enum PollKind {
   date
   time
+  location
 
   @@map("poll_kind")
 }
@@ -153,11 +154,16 @@ model PollActivity {
 }
 
 model Option {
-  id        String   @id @default(cuid())
-  startTime DateTime @map("start_time") @db.Timestamp(0)
-  duration  Int      @default(0) @map("duration_minutes")
-  pollId    String   @map("poll_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id        String    @id @default(cuid())
+  /// Null on the options of a location poll, which vote on a place, not a date.
+  startTime DateTime? @map("start_time") @db.Timestamp(0)
+  duration  Int       @default(0) @map("duration_minutes")
+  /// Place fields, set only on the options of a location poll.
+  name      String?
+  address   String?
+  url       String?
+  pollId    String    @map("poll_id")
+  createdAt DateTime  @default(now()) @map("created_at")
 
   votes Vote[]
 

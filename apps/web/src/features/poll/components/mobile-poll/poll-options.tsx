@@ -2,15 +2,17 @@ import type { VoteType } from "@rallly/database";
 import type * as React from "react";
 import { Controller } from "react-hook-form";
 import { useParticipants } from "@/features/poll/client";
+import type { ParsedPlaceOption } from "@/features/poll/components/poll-context";
 import { usePoll } from "@/features/poll/components/poll-context";
 import { useVotingForm } from "@/features/poll/components/voting-form";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
 import { getOptionDateTimeLabel } from "@/lib/utils/date-time-utils";
 import DateOption from "./date-option";
+import PlaceOption from "./place-option";
 import TimeSlotOption from "./time-slot-option";
 
 export interface PollOptions {
-  options: ParsedDateTimeOpton[];
+  options: (ParsedDateTimeOpton | ParsedPlaceOption)[];
   editable?: boolean;
   selectedParticipantId?: string;
 }
@@ -59,6 +61,23 @@ const PollOptions: React.FunctionComponent<PollOptions> = ({
                 };
 
                 switch (option.type) {
+                  case "place":
+                    return (
+                      <PlaceOption
+                        onChange={handleChange}
+                        allowTentativeVotes={poll.allowTentativeVotes}
+                        optionId={option.optionId}
+                        optionLabel={option.name}
+                        yesScore={score.yes}
+                        ifNeedBeScore={score.ifNeedBe}
+                        vote={vote}
+                        name={option.name}
+                        address={option.address}
+                        url={option.url}
+                        editable={editable}
+                        selectedParticipantId={selectedParticipant?.id}
+                      />
+                    );
                   case "timeSlot":
                     return (
                       <TimeSlotOption

@@ -31,6 +31,10 @@ export const useCsvExporter = () => {
         t("email"),
         `${t("respondedOn", { defaultValue: "Responded on" })} (${timeZone})`,
         ...options.map((decodedOption) => {
+          if (decodedOption.type === "place") {
+            // A place name is free text: quote it so a comma can't shift columns.
+            return `"${decodedOption.name.replaceAll('"', '""')}"`;
+          }
           const day = `${decodedOption.dow} ${decodedOption.day} ${decodedOption.month} ${decodedOption.year}`;
           return decodedOption.type === "date"
             ? day

@@ -14,8 +14,9 @@ import { Trans } from "@/i18n/client";
 
 type DateRow = {
   id: string;
-  startTime: Date;
+  startTime: Date | null;
   duration: number;
+  name: string | null;
   votes: { type: VoteType; count: number }[];
 };
 
@@ -25,7 +26,7 @@ export function PollDatesList({
   participantCount,
   timeZone,
 }: {
-  kind: "date" | "time";
+  kind: "date" | "time" | "location";
   options: DateRow[];
   participantCount: number;
   timeZone: string | null;
@@ -53,7 +54,11 @@ export function PollDatesList({
           <CalendarIcon />
         </EmptyStateIcon>
         <EmptyStateTitle>
-          <Trans i18nKey="pollDatesListEmpty" defaults="No dates" />
+          {kind === "location" ? (
+            <Trans i18nKey="pollPlacesListEmpty" defaults="No places" />
+          ) : (
+            <Trans i18nKey="pollDatesListEmpty" defaults="No dates" />
+          )}
         </EmptyStateTitle>
       </EmptyState>
     );

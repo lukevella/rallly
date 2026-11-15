@@ -78,6 +78,22 @@ describe("toWebhookEventType", () => {
 });
 
 describe("buildWebhookPayload", () => {
+  it("emits no event for a location poll, which has no time to describe", () => {
+    expect(
+      buildWebhookPayload({
+        activity: {
+          id: "act_1",
+          type: "poll_closed",
+          participantId: null,
+          optionId: null,
+          payload: { reason: "manual" },
+          createdAt: new Date("2026-09-15T10:00:00.000Z"),
+        },
+        poll: { id: "Xk3pQ9vLm2Ab", kind: "location" },
+      }),
+    ).toBeNull();
+  });
+
   const poll = { id: "Xk3pQ9vLm2Ab", kind: "time" as const };
   const createdAt = new Date("2026-09-15T10:00:00.000Z");
 

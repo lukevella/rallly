@@ -12,8 +12,10 @@ import {
 
 type TopOption = {
   id: string;
-  startTime: Date;
+  startTime: Date | null;
   duration: number;
+  name: string | null;
+  address: string | null;
   votes: { type: VoteType; count: number }[];
 };
 
@@ -34,30 +36,53 @@ export function PollTopDates({
         const allDay = option.duration === 0;
         const count = (type: VoteType) =>
           option.votes.find((vote) => vote.type === type)?.count ?? 0;
+        const { startTime } = option;
+
+        // A place has no date to show on a calendar card.
+        if (!startTime) {
+          return (
+            <li key={option.id}>
+              <Card className="flex h-full flex-col gap-4 p-3.5">
+                <div className="min-w-0 text-sm">
+                  <div className="truncate font-medium">{option.name}</div>
+                  {option.address ? (
+                    <div className="truncate text-muted-foreground">
+                      {option.address}
+                    </div>
+                  ) : null}
+                </div>
+                <VoteBar
+                  className="mt-auto w-full"
+                  yes={count("yes")}
+                  ifNeedBe={count("ifNeedBe")}
+                  total={participantCount}
+                />
+              </Card>
+            </li>
+          );
+        }
 
         return (
           <li key={option.id}>
             <Card className="flex h-full flex-col gap-4 p-3.5">
               <div className="flex items-center gap-3">
                 <EventCalendarCard
-                  start={option.startTime}
+                  start={startTime}
                   allDay={allDay}
                   timeZone={timeZone}
                 />
                 <div className="min-w-0 text-sm">
                   <EventDate
-                    value={option.startTime}
+                    value={startTime}
                     allDay={allDay}
                     timeZone={timeZone}
                     preset="weekday"
                     className="block truncate font-medium"
                   />
                   <EventTimeRange
-                    start={option.startTime}
+                    start={startTime}
                     end={
-                      new Date(
-                        option.startTime.getTime() + option.duration * 60_000,
-                      )
+                      new Date(startTime.getTime() + option.duration * 60_000)
                     }
                     allDay={allDay}
                     timeZone={timeZone}

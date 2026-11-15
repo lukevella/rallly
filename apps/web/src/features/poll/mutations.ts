@@ -209,6 +209,77 @@ export const closePoll = async ({
 };
 
 /**
+ * Finalizes a location poll on one of its places: the place becomes the
+ * poll's location and the poll closes, since there is no event to schedule.
+ * Authorization is the caller's: `userId` only attributes the activity.
+ */
+export const finalizeLocationPoll = async ({
+  pollId,
+  optionId,
+  userId,
+}: {
+  pollId: string;
+  optionId: string;
+  userId: string;
+}) => {
+  return prisma.$transaction(async (tx) => {
+    // The lock every poll write takes, so a concurrent close or edit can't
+    // slip between the checks below and the update.
+    await tx.$queryRaw`SELECT id FROM polls WHERE id = ${pollId} FOR UPDATE`;
+
+    const poll = await tx.poll.findFirst({
+      where: { id: pollId, deleted: false },
+      select: { kind: true, status: true },
+    });
+
+    if (!poll) {
+      return { ok: false as const, reason: "notFound" as const };
+    }
+    if (poll.kind !== "location") {
+      return { ok: false as const, reason: "notLocationPoll" as const };
+    }
+    // Like booking a date, finalizing stays possible after the poll was
+    // closed, so the organizer can still change the place.
+    if (poll.status !== "open" && poll.status !== "closed") {
+      return { ok: false as const, reason: "notOpen" as const };
+    }
+
+    // Scoped to the poll: an option id from another poll must not match.
+    const option = await tx.option.findFirst({
+      where: { id: optionId, pollId },
+      select: { name: true, address: true },
+    });
+
+    if (!option?.name) {
+      return { ok: false as const, reason: "optionNotFound" as const };
+    }
+
+    await tx.poll.update({
+      where: { id: pollId },
+      data: {
+        location: [option.name, option.address].filter(Boolean).join(", "),
+        status: "closed",
+        closedReason: "manual",
+      },
+    });
+
+    // Closing is recorded only when this call is what closed the poll.
+    if (poll.status === "open") {
+      await recordPollActivities(tx, [
+        {
+          pollId,
+          type: "poll_closed",
+          userId,
+          payload: { reason: "manual" },
+        },
+      ]);
+    }
+
+    return { ok: true as const };
+  });
+};
+
+/**
  * Muting is a per-owner notification preference, so the scope is the owner's
  * userId rather than a space.
  */
@@ -389,6 +460,9 @@ export async function autoClosePolls({
   const isDue = Prisma.sql`
     p.status = 'open'
     AND p.deleted = false
+    -- A place has no end time: a location poll closes when its organizer
+    -- finalizes it, never because its options have passed.
+    AND p.kind <> 'location'
     AND EXISTS (SELECT 1 FROM options o WHERE o.poll_id = p.id)
     AND NOT EXISTS (
       SELECT 1 FROM options o

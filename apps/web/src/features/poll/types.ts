@@ -5,9 +5,23 @@ import type { SpaceTier } from "@/features/space/schema";
 
 export type PollUnavailableReason = "deleted" | "removed";
 
+/**
+ * A poll option: a time slot on date and time polls, a place on a location
+ * poll. A location option has no `startTime`; it carries its place fields.
+ */
+export type PollOption = {
+  id: string;
+  startTime: Date | null;
+  duration: number;
+  name: string | null;
+  address: string | null;
+  url: string | null;
+};
+
 export type PollDetails = {
   id: string;
   title: string;
+  kind: "date" | "time" | "location";
   location: string | null;
   conferencing: PollConferencing | null;
   description: string | null;
@@ -23,7 +37,7 @@ export type PollDetails = {
   timeZone: string | null;
   userId: string | null;
   spaceId: string | null;
-  options: { id: string; startTime: Date; duration: number }[];
+  options: PollOption[];
   user: { id: string; name: string; image: string | null } | null;
   space: {
     name: string;

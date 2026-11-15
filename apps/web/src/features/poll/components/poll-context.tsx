@@ -3,7 +3,8 @@ import type { TimeFormat, VoteType } from "@rallly/database";
 import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
 import { useParticipants } from "@/features/poll/client";
-import type { PollDetails } from "@/features/poll/types";
+import type { PollDetails, PollOption } from "@/features/poll/types";
+import { getDatedOptions } from "@/features/poll/utils";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
   formatDateParts,
@@ -97,6 +98,15 @@ export const PollContextProvider: React.FunctionComponent<{
   );
 };
 
+/** An option of a location poll: a place, not a point in time. */
+export type ParsedPlaceOption = {
+  optionId: string;
+  type: "place";
+  name: string;
+  address: string | null;
+  url: string | null;
+};
+
 type OptionsContextValue =
   | {
       pollType: "date";
@@ -105,6 +115,10 @@ type OptionsContextValue =
   | {
       pollType: "timeSlot";
       options: ParsedTimeSlotOption[];
+    }
+  | {
+      pollType: "place";
+      options: ParsedPlaceOption[];
     };
 
 const OptionsContext = React.createContext<OptionsContextValue>({
@@ -124,7 +138,7 @@ export function createOptionsContextValue({
   timeZone,
   timeFormat,
 }: {
-  pollOptions: { id: string; startTime: Date; duration: number }[];
+  pollOptions: PollOption[];
   /**
    * The poll's zone: set means options are fixed instants shown in the
    * viewer's zone; null means floating times shown as stored.
@@ -141,13 +155,32 @@ export function createOptionsContextValue({
       options: [],
     };
   }
-  if (pollOptions[0].duration > 0) {
+
+  // A location poll's options have no start time, only place fields.
+  if (pollOptions.every((option) => option.startTime === null)) {
+    return {
+      pollType: "place",
+      options: pollOptions.map((option) => ({
+        optionId: option.id,
+        type: "place" as const,
+        name: option.name ?? "",
+        address: option.address,
+        url: option.url,
+      })),
+    };
+  }
+
+  // Past this point every option has a start time: the dates and times of one
+  // poll are never mixed with places.
+  const datedOptions = getDatedOptions(pollOptions);
+
+  if (datedOptions[0].duration > 0) {
     // Floating times are stored as UTC wall times, so reading them in UTC
     // shows them unshifted.
     const displayTimeZone = pollTimeZone ? timeZone : "UTC";
     return {
       pollType: "timeSlot",
-      options: pollOptions.map((option) => {
+      options: datedOptions.map((option) => {
         const endTime = new Date(
           option.startTime.getTime() + option.duration * 60_000,
         );
@@ -182,7 +215,7 @@ export function createOptionsContextValue({
   } else {
     return {
       pollType: "date",
-      options: pollOptions.map((option) => {
+      options: datedOptions.map((option) => {
         // All-day options are floating dates: always read them in UTC so the
         // calendar date is identical for every viewer, regardless of timezone.
         const parts = formatDateParts(option.startTime, {

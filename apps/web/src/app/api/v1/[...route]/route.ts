@@ -85,12 +85,29 @@ loadVendor("zod", { toOpenAPISchema: toOpenApiSchema });
 
 type PollKind = "date" | "time";
 
+// API v1 describes options as calendar days and time slots, so it can't
+// describe the places of a location poll. Those polls exist in the app only:
+// the endpoints below answer 404 for them, and the helpers refuse them so a
+// missed guard fails loudly instead of serializing a wrong shape.
+const isLocationPoll = (poll: { kind: string }) => poll.kind === "location";
+
+function assertApiKind(kind: PollKind | "location"): PollKind {
+  if (kind === "location") {
+    throw new Error("API v1 does not serve location polls");
+  }
+  return kind;
+}
+
 // All-day options are stored as UTC midnight of the calendar date, so the
 // date is the first ten characters of the ISO string.
 function toOptionResponse(
-  kind: PollKind,
-  option: { id: string; startTime: Date; duration: number },
+  pollKind: PollKind | "location",
+  option: { id: string; startTime: Date | null; duration: number },
 ) {
+  const kind = assertApiKind(pollKind);
+  if (!option.startTime) {
+    throw new Error("API v1 can't describe an option without a start time");
+  }
   if (kind === "date") {
     return {
       id: option.id,
@@ -112,7 +129,7 @@ function toPollResponseBody(poll: {
   conferencing: PollConferencing | null;
   timeZone: string | null;
   status: string;
-  kind: PollKind;
+  kind: PollKind | "location";
   createdAt: Date;
   updatedAt: Date;
   requireParticipantEmail: boolean;
@@ -127,7 +144,7 @@ function toPollResponseBody(poll: {
     email: string;
     image: string | null;
   } | null;
-  options: { id: string; startTime: Date; duration: number }[];
+  options: { id: string; startTime: Date | null; duration: number }[];
 }) {
   return {
     data: {
@@ -138,7 +155,7 @@ function toPollResponseBody(poll: {
       conferencing: poll.conferencing ?? null,
       timeZone: poll.timeZone,
       status: poll.status,
-      kind: poll.kind,
+      kind: assertApiKind(poll.kind),
       createdAt: poll.createdAt.toISOString(),
       updatedAt: poll.updatedAt.toISOString(),
       organizer: poll.user
@@ -777,7 +794,9 @@ app.get(
 
     return c.json(
       listPollsSuccessResponseSchema.parse({
-        data: polls.map((poll) => toPollResponseBody(poll).data),
+        data: polls
+          .filter((poll) => !isLocationPoll(poll))
+          .map((poll) => toPollResponseBody(poll).data),
         nextCursor,
       }),
     );
@@ -823,7 +842,7 @@ app.get(
 
     const poll = await getPollWithOptions({ pollId, spaceId });
 
-    if (!poll) {
+    if (!poll || isLocationPoll(poll)) {
       return c.json(
         apiError(
           "POLL_NOT_FOUND",
@@ -879,7 +898,7 @@ app.get(
 
     const data = await getPollResults({ pollId, spaceId });
 
-    if (!data) {
+    if (!data || isLocationPoll(data)) {
       return c.json(
         apiError(
           "POLL_NOT_FOUND",
@@ -910,20 +929,32 @@ app.get(
 );
 
 const toParticipantResponse = (
-  kind: "date" | "time",
+  kind: PollKind | "location",
   participant: {
     id: string;
     name: string;
     email: string | null;
     createdAt: Date;
-    votes: Parameters<typeof toAvailabilitySpans>[0]["votes"];
+    votes: {
+      type: Parameters<typeof toAvailabilitySpans>[0]["votes"][number]["type"];
+      option: { startTime: Date | null; duration: number };
+    }[];
   },
 ) => ({
   id: participant.id,
   name: participant.name,
   email: participant.email,
   createdAt: participant.createdAt.toISOString(),
-  availability: toAvailabilitySpans({ kind, votes: participant.votes }),
+  availability: toAvailabilitySpans({
+    kind: assertApiKind(kind),
+    // Only location polls have options without a start time, and the
+    // endpoints that reach this answer 404 for those before getting here.
+    votes: participant.votes.flatMap(({ type, option }) =>
+      option.startTime
+        ? [{ type, option: { ...option, startTime: option.startTime } }]
+        : [],
+    ),
+  }),
 });
 
 app.get(
@@ -968,7 +999,7 @@ app.get(
 
     const data = await getPollParticipants({ pollId, spaceId });
 
-    if (!data) {
+    if (!data || isLocationPoll(data)) {
       return c.json(
         apiError(
           "POLL_NOT_FOUND",
@@ -1032,7 +1063,7 @@ app.get(
       spaceId,
     });
 
-    if (!poll) {
+    if (!poll || isLocationPoll(poll)) {
       return c.json(
         apiError(
           "POLL_NOT_FOUND",

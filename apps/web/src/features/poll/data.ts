@@ -74,10 +74,11 @@ export async function getPollResults({
             id: true,
             startTime: true,
             duration: true,
+            name: true,
+            address: true,
+            url: true,
           },
-          orderBy: {
-            startTime: "asc",
-          },
+          orderBy: [{ startTime: "asc" }, { createdAt: "asc" }],
         },
         _count: {
           select: {
@@ -126,6 +127,9 @@ export async function getPollResults({
       id: option.id,
       startTime: option.startTime,
       duration: option.duration,
+      name: option.name,
+      address: option.address,
+      url: option.url,
       votes,
       score,
     };
@@ -733,6 +737,7 @@ export async function getPollDetails({
       id: true,
       timeZone: true,
       title: true,
+      kind: true,
       location: true,
       conferencing: true,
       description: true,
@@ -749,8 +754,15 @@ export async function getPollDetails({
       spaceId: true,
       deleted: true,
       options: {
-        select: { id: true, startTime: true, duration: true },
-        orderBy: { startTime: "asc" },
+        select: {
+          id: true,
+          startTime: true,
+          duration: true,
+          name: true,
+          address: true,
+          url: true,
+        },
+        orderBy: [{ startTime: "asc" }, { createdAt: "asc" }],
       },
       user: { select: { id: true, name: true, image: true, banned: true } },
       space: {

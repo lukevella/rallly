@@ -1,15 +1,18 @@
 import { cn } from "@rallly/ui";
 import type * as React from "react";
 
+import type { ParsedPlaceOption } from "@/features/poll/components/poll-context";
 import type { ParsedDateTimeOpton } from "@/lib/utils/date-time-utils";
+
+type GroupableOption = ParsedDateTimeOpton | ParsedPlaceOption;
 
 import PollOptions from "./poll-options";
 
 export interface GroupedOptionsProps {
-  options: ParsedDateTimeOpton[];
+  options: GroupableOption[];
   editable?: boolean;
   selectedParticipantId?: string;
-  group: (option: ParsedDateTimeOpton) => string;
+  group: (option: GroupableOption) => string;
   groupClassName?: string;
 }
 
@@ -20,7 +23,7 @@ const GroupedOptions: React.FunctionComponent<GroupedOptionsProps> = ({
   group,
   groupClassName,
 }) => {
-  const grouped = new Map<string, ParsedDateTimeOpton[]>();
+  const grouped = new Map<string, GroupableOption[]>();
   for (const option of options) {
     const key = group(option);
     const list = grouped.get(key);

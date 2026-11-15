@@ -328,3 +328,32 @@ export function summarizeNotifySelection({
   summary.notify_selection_changed = selected !== eligible;
   return summary;
 }
+
+/**
+ * The places of the new poll form as the server wants them: trimmed, and
+ * without the rows the organizer left unnamed.
+ */
+export function toPlaceInputs(
+  places: { name: string; address: string; url: string }[],
+) {
+  return places
+    .map((place) => ({
+      name: place.name.trim(),
+      address: place.address.trim(),
+      url: place.url.trim(),
+    }))
+    .filter((place) => place.name);
+}
+
+/**
+ * The options that have a start time. A location poll's places have none, and
+ * a poll never mixes dates with places, so for any other poll this is every
+ * option.
+ */
+export function getDatedOptions<T extends { startTime: Date | null }>(
+  options: T[],
+): (Omit<T, "startTime"> & { startTime: Date })[] {
+  return options.flatMap(({ startTime, ...option }) =>
+    startTime ? [{ ...option, startTime }] : [],
+  );
+}

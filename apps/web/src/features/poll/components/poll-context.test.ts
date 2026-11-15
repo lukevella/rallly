@@ -11,6 +11,9 @@ describe("createOptionsContextValue — all-day options are timezone-invariant",
     id: "opt-1",
     startTime: new Date("2026-07-01T00:00:00Z"),
     duration: 0,
+    name: null,
+    address: null,
+    url: null,
   };
 
   it.each([
@@ -52,6 +55,9 @@ describe("createOptionsContextValue — time slots", () => {
     id: "opt-1",
     startTime: new Date("2026-07-01T18:00:00Z"),
     duration: 60,
+    name: null,
+    address: null,
+    url: null,
   };
 
   it("shows fixed times in the viewer's zone", () => {
@@ -88,5 +94,52 @@ describe("createOptionsContextValue — time slots", () => {
       startTime: "18:00",
       endTime: "19:00",
     });
+  });
+});
+
+describe("createOptionsContextValue — location polls", () => {
+  const place = (id: string, name: string) => ({
+    id,
+    startTime: null,
+    duration: 0,
+    name,
+    address: "12 rue de la Paix, Paris",
+    url: "https://maps.example.com/cafe",
+  });
+
+  it("returns the places as options when no option has a start time", () => {
+    const result = createOptionsContextValue({
+      pollOptions: [place("a", "Café du Centre"), place("b", "Le Bistrot")],
+      pollTimeZone: null,
+      locale: "en",
+    });
+
+    expect(result.pollType).toBe("place");
+    expect(result.options).toEqual([
+      {
+        optionId: "a",
+        type: "place",
+        name: "Café du Centre",
+        address: "12 rue de la Paix, Paris",
+        url: "https://maps.example.com/cafe",
+      },
+      {
+        optionId: "b",
+        type: "place",
+        name: "Le Bistrot",
+        address: "12 rue de la Paix, Paris",
+        url: "https://maps.example.com/cafe",
+      },
+    ]);
+  });
+
+  it("keeps an empty poll a date poll", () => {
+    const result = createOptionsContextValue({
+      pollOptions: [],
+      pollTimeZone: null,
+      locale: "en",
+    });
+
+    expect(result.pollType).toBe("date");
   });
 });

@@ -18,15 +18,19 @@ import {
 } from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
-type OptionRow = {
+export type OptionRow = {
   id: string;
-  startTime: Date;
+  /** Null on the options of a location poll. */
+  startTime: Date | null;
   duration: number;
+  /** The place's name, set on the options of a location poll. */
+  name?: string | null;
 };
 
 /**
  * A poll's options as a list: grouped by day for a time poll, one row per
- * day for a date poll. `renderValue` fills the trailing column.
+ * day for a date poll, one row per place for a location poll. `renderValue`
+ * fills the trailing column.
  */
 export function PollOptionsList<TRow extends OptionRow>({
   kind,
@@ -35,7 +39,7 @@ export function PollOptionsList<TRow extends OptionRow>({
   renderValue,
   className,
 }: {
-  kind: "date" | "time";
+  kind: "date" | "time" | "location";
   options: TRow[];
   timeZone: string | null;
   renderValue: (option: TRow) => React.ReactNode;
@@ -47,8 +51,9 @@ export function PollOptionsList<TRow extends OptionRow>({
   // is read in UTC; fixed times fall on the viewer's day.
   const dayKey = React.useCallback(
     (option: TRow) =>
+      // Only time polls group by day, and their options all have a start time.
       getCalendarDate(
-        option.startTime,
+        option.startTime ?? new Date(0),
         option.duration === 0 || timeZone === null ? "UTC" : viewerTimeZone,
       ),
     [timeZone, viewerTimeZone],
@@ -63,34 +68,40 @@ export function PollOptionsList<TRow extends OptionRow>({
           <Trans i18nKey="pollOptionsListOption" defaults="Option" />
         ),
         meta: { className: "text-sm" },
-        cell: ({ row }) =>
-          kind === "date" ? (
+        cell: ({ row }) => {
+          const { startTime } = row.original;
+          if (kind === "location" || !startTime) {
+            return (
+              <span className="block truncate font-medium">
+                {row.original.name}
+              </span>
+            );
+          }
+          return kind === "date" ? (
             <span className="flex min-w-0 gap-2">
               <CalendarDate
-                value={row.original.startTime}
+                value={startTime}
                 preset="weekday"
                 className="font-medium"
               />
               <CalendarDate
-                value={row.original.startTime}
+                value={startTime}
                 preset="dateLong"
                 className="truncate text-muted-foreground"
               />
             </span>
           ) : (
             <EventTimeRange
-              start={row.original.startTime}
+              start={startTime}
               end={
-                new Date(
-                  row.original.startTime.getTime() +
-                    row.original.duration * 60_000,
-                )
+                new Date(startTime.getTime() + row.original.duration * 60_000)
               }
               allDay={row.original.duration === 0}
               timeZone={timeZone}
               className="truncate"
             />
-          ),
+          );
+        },
       }),
       columnHelper.display({
         id: "value",
@@ -112,9 +123,9 @@ export function PollOptionsList<TRow extends OptionRow>({
     <DataList
       table={table}
       // A date poll has one option per day, so a day header would repeat
-      // the row it heads.
+      // the row it heads, and the places of a location poll have no day.
       getGroup={
-        kind === "date"
+        kind === "date" || kind === "location"
           ? undefined
           : (option) => {
               const key = dayKey(option);

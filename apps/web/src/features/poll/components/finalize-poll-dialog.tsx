@@ -39,6 +39,7 @@ import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import { ConferencingProviderIcon } from "@/features/conferencing/components/conferencing-provider-icon";
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
 import { useParticipants, usePoll } from "@/features/poll/client";
+import { FinalizeLocationDialog } from "@/features/poll/components/finalize-location-dialog";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import { VoteSummaryProgressBar } from "@/features/poll/components/vote-summary-progress-bar";
@@ -46,7 +47,10 @@ import type { VoteType } from "@/features/poll/constants";
 import { VOTE_TYPES } from "@/features/poll/constants";
 import type { PollParticipant } from "@/features/poll/types";
 import type { OptionVotes } from "@/features/poll/utils";
-import { rankOptionsByPopularity } from "@/features/poll/utils";
+import {
+  getDatedOptions,
+  rankOptionsByPopularity,
+} from "@/features/poll/utils";
 import {
   EventDate,
   EventTimeRange,
@@ -581,7 +585,12 @@ function FinalizeWizard({
     payWall.trigger();
   };
   const options = React.useMemo(
-    () => rankOptionsByPopularity({ options: poll.options, participants }),
+    () =>
+      rankOptionsByPopularity({
+        // Location polls never reach this wizard, so every option is dated.
+        options: getDatedOptions(poll.options),
+        participants,
+      }),
     [poll.options, participants],
   );
   const [optionId, setOptionId] = React.useState<string | null>(null);
@@ -756,6 +765,14 @@ function FinalizeWizard({
 }
 
 export function FinalizePollDialog(props: DialogProps) {
+  const poll = usePoll();
+  if (poll.kind === "location") {
+    return <FinalizeLocationDialog {...props} />;
+  }
+  return <FinalizeDatePollDialog {...props} />;
+}
+
+function FinalizeDatePollDialog(props: DialogProps) {
   const [step, setStep] = React.useState<Step>("date");
   const onOpenChange = (open: boolean) => {
     if (!open && step !== "done") {

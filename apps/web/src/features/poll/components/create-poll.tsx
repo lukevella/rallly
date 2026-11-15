@@ -26,7 +26,9 @@ import {
   hasMixedOptionTypes,
   isAllDay,
 } from "@/features/poll/components/forms/poll-options-form/utils";
+import { PollPlacesForm } from "@/features/poll/components/forms/poll-places-form";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
+import { PollTypeToggle } from "@/features/poll/components/forms/poll-type-toggle";
 import type { NewEventData } from "@/features/poll/components/forms/types";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
@@ -36,6 +38,7 @@ import {
 } from "@/features/poll/limit/client";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { isAtOpenPollLimit } from "@/features/poll/limit/utils";
+import { toPlaceInputs } from "@/features/poll/utils";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -158,6 +161,8 @@ export const CreatePoll = ({
       conferencingLabel: "",
       view: "month",
       options: [],
+      pollType: "date",
+      places: [],
       hideScores: false,
       hideParticipants: false,
       requireParticipantEmail: true,
@@ -193,6 +198,7 @@ export const CreatePoll = ({
   });
 
   const makePoll = trpc.polls.make.useMutation();
+  const pollType = form.watch("pollType");
 
   // Explain the limit before the organizer fills in a form they can't submit.
   // The form persists, so it survives closing a poll to make room. The count
@@ -256,6 +262,16 @@ export const CreatePoll = ({
           id="create-poll"
           onSubmit={form.handleSubmit(async (formData) => {
             const title = required(formData?.title.trim());
+            const isLocationPoll = formData.pollType === "location";
+            const places = toPlaceInputs(formData.places);
+            if (isLocationPoll && places.length === 0) {
+              toast.error(
+                t("placesRequiredError", {
+                  defaultValue: "Add at least one place",
+                }),
+              );
+              return;
+            }
             const session = await createGuestIfNeeded();
             if (!session.ok) {
               toast.error(
@@ -280,7 +296,9 @@ export const CreatePoll = ({
               // Fall back to the organizer's zone so a converting poll is always
               // anchored to a concrete zone.
               timeZone:
-                !formData?.lockTimeZone && !isAllDay(formData?.options ?? [])
+                !isLocationPoll &&
+                !formData?.lockTimeZone &&
+                !isAllDay(formData?.options ?? [])
                   ? formData?.timeZone || user?.timeZone || getBrowserTimeZone()
                   : null,
               hideParticipants: formData?.hideParticipants,
@@ -288,10 +306,16 @@ export const CreatePoll = ({
               hideScores: formData?.hideScores,
               allowTentativeVotes: formData?.allowTentativeVotes,
               requireParticipantEmail: formData?.requireParticipantEmail,
-              options: required(formData?.options).map((option) => ({
-                startDate: option.type === "date" ? option.date : option.start,
-                endDate: option.type === "timeSlot" ? option.end : undefined,
-              })),
+              ...(isLocationPoll
+                ? { places }
+                : {
+                    options: required(formData?.options).map((option) => ({
+                      startDate:
+                        option.type === "date" ? option.date : option.start,
+                      endDate:
+                        option.type === "timeSlot" ? option.end : undefined,
+                    })),
+                  }),
             });
 
             if (res.ok) {
@@ -342,7 +366,24 @@ export const CreatePoll = ({
               </CardContent>
             </Card>
 
-            <PollOptionsForm />
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <Trans i18nKey="pollType" defaults="Poll type" />
+                </CardTitle>
+                <CardDescription>
+                  <Trans
+                    i18nKey="pollTypeDescription"
+                    defaults="What should participants vote on?"
+                  />
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PollTypeToggle />
+              </CardContent>
+            </Card>
+
+            {pollType === "location" ? <PollPlacesForm /> : <PollOptionsForm />}
 
             <PollSettingsForm />
           </div>

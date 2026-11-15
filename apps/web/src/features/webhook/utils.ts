@@ -150,9 +150,15 @@ export function buildWebhookPayload({
   };
   poll: {
     id: string;
-    kind: "date" | "time";
+    kind: "date" | "time" | "location";
   };
 }): WebhookEvent | null {
+  // Webhook events describe options as spans of time, which a place is not.
+  // Location polls emit no events until the payload learns to carry places.
+  if (poll.kind === "location") {
+    return null;
+  }
+
   // Every subject ref the vocabulary can require is passed: a missing one
   // fails the parse and the event is dropped without a trace.
   const parsed = pollActivitySchema.safeParse({

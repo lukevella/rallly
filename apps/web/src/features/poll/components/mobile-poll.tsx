@@ -217,7 +217,9 @@ const MobilePoll: React.FunctionComponent = () => {
           ) : null}
         </div>
       </div>
-      {poll.options[0]?.duration !== 0 && poll.timeZone ? (
+      {poll.kind !== "location" &&
+      poll.options[0]?.duration !== 0 &&
+      poll.timeZone ? (
         <div className="border-b p-2">
           <TimesShownIn />
         </div>
@@ -227,6 +229,9 @@ const MobilePoll: React.FunctionComponent = () => {
         options={options}
         editable={isEditing}
         group={(option) => {
+          if (option.type === "place") {
+            return t("places", { defaultValue: "Places" });
+          }
           if (option.type === "timeSlot") {
             return `${option.dow} ${option.day} ${option.month} ${option.year}`;
           }

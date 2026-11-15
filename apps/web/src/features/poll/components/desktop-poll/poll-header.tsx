@@ -1,7 +1,8 @@
 import { cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
-import { ClockIcon } from "lucide-react";
+import { ClockIcon, ExternalLinkIcon } from "lucide-react";
 import type * as React from "react";
+import type { ParsedPlaceOption } from "@/features/poll/components/poll-context";
 import { useOptions } from "@/features/poll/components/poll-context";
 import { ConnectedScoreSummary } from "@/features/poll/components/score-summary";
 
@@ -56,8 +57,56 @@ const dayRowHeight = 60;
 
 const scoreRowTop = monthRowHeight + dayRowHeight;
 
+// A location poll has no calendar to group by: each column is one place.
+const PlaceHeader = ({ options }: { options: ParsedPlaceOption[] }) => {
+  return (
+    <TimelineRow top={0} rowSpan={1}>
+      {options.map((option) => (
+        <th
+          key={option.optionId}
+          scope="col"
+          style={{ minWidth: 140, top: 0 }}
+          className="sticky z-20 border-b border-l bg-card px-2 pt-3 pb-2.5 align-top"
+        >
+          <div className="flex flex-col items-center gap-2">
+            <div className="text-center">
+              <div
+                data-testid="option-place-name"
+                className="font-medium text-sm"
+              >
+                {option.name}
+              </div>
+              {option.address ? (
+                <div className="font-normal text-muted-foreground text-xs">
+                  {option.address}
+                </div>
+              ) : null}
+            </div>
+            {option.url ? (
+              <a
+                href={option.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-normal text-primary text-xs hover:underline"
+              >
+                <ExternalLinkIcon className="size-3" />
+                {new URL(option.url).hostname}
+              </a>
+            ) : null}
+            <ConnectedScoreSummary optionId={option.optionId} />
+          </div>
+        </th>
+      ))}
+    </TimelineRow>
+  );
+};
+
 const PollHeader = () => {
-  const { options } = useOptions();
+  const { pollType, options } = useOptions();
+
+  if (pollType === "place") {
+    return <PlaceHeader options={options} />;
+  }
 
   const monthGroups: { month: string; year: string; count: number }[] = [];
 

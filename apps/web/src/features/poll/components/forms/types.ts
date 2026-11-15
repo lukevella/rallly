@@ -20,6 +20,13 @@ export type PollOptionsData = {
   options: DateTimeOption[];
 };
 
+export type PollTypeData = {
+  /** What the poll asks participants to choose between. */
+  pollType: "date" | "location";
+  /** The places of a location poll; empty strings stand for "not set". */
+  places: { name: string; address: string; url: string }[];
+};
+
 export type PollSettingsFormData = {
   requireParticipantEmail: boolean;
   hideParticipants: boolean;
@@ -30,6 +37,7 @@ export type PollSettingsFormData = {
 
 export type NewEventData = PollDetailsData &
   PollOptionsData &
+  PollTypeData &
   PollSettingsFormData;
 
 // biome-ignore lint/suspicious/noExplicitAny: Fix this later

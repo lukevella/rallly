@@ -135,7 +135,8 @@ export const loadPollTopOptions = cache(
         .filter((option) => option.score > 0)
         .sort(
           (a, b) =>
-            b.score - a.score || a.startTime.getTime() - b.startTime.getTime(),
+            b.score - a.score ||
+            (a.startTime?.getTime() ?? 0) - (b.startTime?.getTime() ?? 0),
         )
         .slice(0, limit),
     };

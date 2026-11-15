@@ -130,7 +130,11 @@ const ParticipantRowForm = ({
                   <VoteSelector
                     className="after:absolute after:inset-0"
                     optionLabel={
-                      option ? getOptionDateTimeLabel(option) : undefined
+                      option
+                        ? option.type === "place"
+                          ? option.name
+                          : getOptionDateTimeLabel(option)
+                        : undefined
                     }
                     value={field.value?.type}
                     allowTentativeVotes={poll.allowTentativeVotes}

@@ -3,11 +3,13 @@ import {
   filterCommentsForViewer,
   filterParticipantsByVote,
   getChosenOptionRank,
+  getDatedOptions,
   getFinalizeTiming,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
   toAvailabilitySpans,
+  toPlaceInputs,
 } from "./utils";
 
 const participant = (
@@ -469,5 +471,53 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+describe("toPlaceInputs", () => {
+  it("trims every field", () => {
+    expect(
+      toPlaceInputs([
+        { name: "  Café  ", address: " 12 rue A ", url: " https://a.example " },
+      ]),
+    ).toEqual([
+      { name: "Café", address: "12 rue A", url: "https://a.example" },
+    ]);
+  });
+
+  it("drops the rows left without a name", () => {
+    expect(
+      toPlaceInputs([
+        { name: "", address: "12 rue A", url: "" },
+        { name: "   ", address: "", url: "" },
+        { name: "Bistrot", address: "", url: "" },
+      ]),
+    ).toEqual([{ name: "Bistrot", address: "", url: "" }]);
+  });
+
+  it("has nothing to give for a form with no places", () => {
+    expect(toPlaceInputs([])).toEqual([]);
+  });
+});
+
+describe("getDatedOptions", () => {
+  it("keeps the options that have a start time", () => {
+    const startTime = new Date("2026-11-20T00:00:00.000Z");
+
+    expect(
+      getDatedOptions([
+        { id: "a", startTime, duration: 0 },
+        { id: "b", startTime: null, duration: 0 },
+      ]),
+    ).toEqual([{ id: "a", startTime, duration: 0 }]);
+  });
+
+  it("leaves a location poll with no options", () => {
+    expect(
+      getDatedOptions([
+        { id: "a", startTime: null, name: "Café" },
+        { id: "b", startTime: null, name: "Bistrot" },
+      ]),
+    ).toEqual([]);
   });
 });

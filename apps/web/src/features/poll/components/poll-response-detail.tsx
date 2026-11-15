@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import type { OptionRow } from "@/features/poll/components/poll-options-list";
 import { PollOptionsList } from "@/features/poll/components/poll-options-list";
 import { PollResponseActions } from "@/features/poll/components/poll-response-actions";
 import VoteIcon from "@/features/poll/components/vote-icon";
@@ -60,7 +61,7 @@ export function PollResponseDetail({
 }: {
   pollId: string;
   pollOpen: boolean;
-  kind: "date" | "time";
+  kind: "date" | "time" | "location";
   timeZone: string | null;
   response: {
     id: string;
@@ -72,7 +73,7 @@ export function PollResponseDetail({
     editUrl: string;
     votes: { optionId: string; type: VoteType }[];
   };
-  options: { id: string; startTime: Date; duration: number }[];
+  options: OptionRow[];
   activity: React.ReactNode;
 }) {
   const router = useRouter();

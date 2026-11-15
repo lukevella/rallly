@@ -427,12 +427,20 @@ export async function deleteParticipant({
           participantId,
           payload: {
             name: snapshot.name,
-            votes: snapshot.votes.map((vote) => ({
-              optionId: vote.optionId,
-              start: vote.option.startTime.toISOString(),
-              duration: vote.option.duration,
-              type: vote.type,
-            })),
+            // Activity snapshots describe options as time slots; votes on the
+            // places of a location poll are left out of the record.
+            votes: snapshot.votes.flatMap((vote) =>
+              vote.option.startTime
+                ? [
+                    {
+                      optionId: vote.optionId,
+                      start: vote.option.startTime.toISOString(),
+                      duration: vote.option.duration,
+                      type: vote.type,
+                    },
+                  ]
+                : [],
+            ),
           },
         },
       ]);
