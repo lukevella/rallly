@@ -1,0 +1,61 @@
+# Secrets (session, chiffrement du stockage, JWT, mot de passe PostgreSQL) : variables AUTHELIA_* du compose ;
+# empreinte du secret client OIDC de Rallly : RALLLY_OIDC_CLIENT_SECRET_DIGEST (.env).
+server:
+  address: 'tcp://:9091'
+
+log:
+  level: info
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: 'mail.{{ env "DOMAIN" }}'
+      policy: one_factor
+      subject: 'group:admins'
+    - domain: 'mail.{{ env "DOMAIN" }}'
+      policy: deny
+    - domain: '*.{{ env "DOMAIN" }}'
+      policy: one_factor
+
+session:
+  cookies:
+    - domain: '{{ env "DOMAIN" }}'
+      authelia_url: 'https://auth.{{ env "DOMAIN" }}'
+      default_redirection_url: 'https://rallly.{{ env "DOMAIN" }}'
+
+storage:
+  postgres:
+    address: 'tcp://authelia-db:5432'
+    database: authelia
+    username: authelia
+
+notifier:
+  smtp:
+    address: 'smtp://mailpit:1025'
+    sender: 'Authelia <authelia@{{ env "DOMAIN" }}>'
+    disable_require_tls: true
+
+identity_providers:
+  oidc:
+    jwks:
+      - key_id: 'preprod'
+        algorithm: 'RS256'
+        use: 'sig'
+        key: {{ secret "/config/oidc_key.pem" | mindent 10 "|" | msquote }}
+    clients:
+      - client_id: 'rallly'
+        client_name: 'Rallly'
+        client_secret: '{{ env "RALLLY_OIDC_CLIENT_SECRET_DIGEST" }}'
+        public: false
+        authorization_policy: 'one_factor'
+        consent_mode: 'implicit'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'https://rallly.{{ env "DOMAIN" }}/api/auth/callback/oidc'
+        scopes: ['openid', 'profile', 'email']
+        token_endpoint_auth_method: 'client_secret_post'

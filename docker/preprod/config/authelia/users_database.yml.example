@@ -1,0 +1,9 @@
+# Copier en users_database.yml (ignoré par Git) puis remplacer le hachage :
+#   docker run --rm authelia/authelia:4.39 authelia crypto hash generate argon2 --password '<mot de passe>'
+users:
+  admin:
+    disabled: false
+    displayname: Admin
+    password: '$argon2id$REMPLACER'
+    email: admin@example.org
+    groups: [admins]
