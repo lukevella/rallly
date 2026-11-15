@@ -71,6 +71,8 @@ jobs:
 
   sonarqube:
     name: SonarQube
+    # Le plan gratuit n'analyse que main et les PR : sur un push de preprod, la barrière qualité est refusée
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
