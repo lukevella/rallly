@@ -22,11 +22,15 @@ function TestForm({
   allowTentativeVotes = true,
   hasTentativeVotes = false,
   requireParticipantEmail = false,
+  maxYesVotesPerOption = null,
+  minYesVotesPerOption = 0,
 }: {
   enableComments?: boolean;
   allowTentativeVotes?: boolean;
   hasTentativeVotes?: boolean;
   requireParticipantEmail?: boolean;
+  maxYesVotesPerOption?: number | null;
+  minYesVotesPerOption?: number;
 }) {
   const form = useForm<PollSettingsFormData>({
     defaultValues: {
@@ -35,11 +39,18 @@ function TestForm({
       requireParticipantEmail,
       hideParticipants: false,
       hideScores: false,
+      maxYesVotesPerOption,
     },
   });
   return (
     <Form {...form}>
-      <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
+      <form onSubmit={form.handleSubmit(() => {})}>
+        <PollSettingsForm
+          hasTentativeVotes={hasTentativeVotes}
+          minYesVotesPerOption={minYesVotesPerOption}
+        />
+        <button type="submit">Submit</button>
+      </form>
     </Form>
   );
 }
@@ -172,5 +183,63 @@ describe("PollSettingsForm vote options lock", () => {
   it("says why it is locked", () => {
     render(<TestForm hasTentativeVotes={true} />);
     expect(screen.getByText(/locked/i)).toBeInTheDocument();
+  });
+});
+
+describe("PollSettingsForm place limit", () => {
+  it("has no limit by default", () => {
+    render(<TestForm />);
+    expect(
+      screen.getByRole("switch", { name: /limit places per option/i }),
+    ).not.toBeChecked();
+    expect(
+      screen.queryByLabelText(/places per option/i, {
+        selector: "input[type=number]",
+      }),
+    ).toBeNull();
+  });
+
+  it("proposes ten places when switched on", async () => {
+    const user = userEvent.setup();
+    render(<TestForm />);
+    await user.click(
+      screen.getByRole("switch", { name: /limit places per option/i }),
+    );
+    expect(screen.getByRole("spinbutton")).toHaveValue(10);
+  });
+
+  it("never proposes fewer places than the yes votes an option holds", async () => {
+    const user = userEvent.setup();
+    render(<TestForm minYesVotesPerOption={14} />);
+    await user.click(
+      screen.getByRole("switch", { name: /limit places per option/i }),
+    );
+    const input = screen.getByRole("spinbutton");
+    expect(input).toHaveValue(14);
+    expect(input).toHaveAttribute("min", "14");
+  });
+
+  it("shows the stored limit", () => {
+    render(<TestForm maxYesVotesPerOption={3} />);
+    expect(screen.getByRole("spinbutton")).toHaveValue(3);
+  });
+
+  it("takes the number typed in", async () => {
+    const user = userEvent.setup();
+    render(<TestForm maxYesVotesPerOption={3} />);
+    const input = screen.getByRole("spinbutton");
+    await user.clear(input);
+    await user.type(input, "7");
+    expect(input).toHaveValue(7);
+  });
+
+  it("asks for a number when the field is left empty", async () => {
+    const user = userEvent.setup();
+    render(<TestForm maxYesVotesPerOption={5} minYesVotesPerOption={4} />);
+    await user.clear(screen.getByRole("spinbutton"));
+    await user.click(screen.getByRole("button", { name: "Submit" }));
+    expect(
+      await screen.findByText(/Enter a whole number of at least/),
+    ).toBeInTheDocument();
   });
 });

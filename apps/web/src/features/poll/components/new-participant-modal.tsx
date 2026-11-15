@@ -167,6 +167,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorAuthRequired", {
           defaultValue: "Log in to respond to this poll.",
         });
+      case "optionFull":
+        return t("optionFullError", {
+          defaultValue:
+            'An option you said "yes" to is full. Change that answer and try again.',
+        });
       case "tooManyRequests":
         return t("newParticipantFormErrorTooManyRequests", {
           defaultValue:

@@ -97,6 +97,7 @@ function getDefaultValues(poll: PollDetails): NewEventData {
     hideScores: poll.hideScores,
     enableComments: !poll.disableComments,
     allowTentativeVotes: poll.allowTentativeVotes,
+    maxYesVotesPerOption: poll.maxYesVotesPerOption,
     requireParticipantEmail: poll.requireParticipantEmail,
   };
 }
@@ -176,6 +177,7 @@ const settingFields = [
   "hideScores",
   "enableComments",
   "allowTentativeVotes",
+  "maxYesVotesPerOption",
   "requireParticipantEmail",
 ] as const;
 
@@ -202,6 +204,13 @@ export function EditPoll({
   // those votes stay re-saveable by their owner.
   const hasTentativeVotes = participants.some((participant) =>
     participant.votes.some((vote) => vote.type === "ifNeedBe"),
+  );
+  const mostYesVotesOnAnOption = Math.max(
+    0,
+    ...poll.options.map(
+      (option) =>
+        filterParticipantsByVote(participants, option.id, "yes").length,
+    ),
   );
   const hasVotes = participants.some(
     (participant) => participant.votes.length > 0,
@@ -244,6 +253,7 @@ export function EditPoll({
       input.hideScores = data.hideScores;
       input.disableComments = !data.enableComments;
       input.allowTentativeVotes = data.allowTentativeVotes;
+      input.maxYesVotesPerOption = data.maxYesVotesPerOption;
       input.requireParticipantEmail = data.requireParticipantEmail;
     }
 
@@ -309,7 +319,10 @@ export function EditPoll({
         {poll.kind === "location" ? null : (
           <PollOptionsForm disableTimeZoneChange={hasVotes} />
         )}
-        <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
+        <PollSettingsForm
+          hasTentativeVotes={hasTentativeVotes}
+          minYesVotesPerOption={mostYesVotesOnAnOption}
+        />
         <div className="sticky bottom-0 z-20 flex justify-center pt-2 pb-6">
           <div className="flex w-full max-w-md items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
             <p className="min-w-0 truncate text-muted-foreground text-sm">

@@ -132,9 +132,14 @@ export const VotingForm = ({ children }: React.PropsWithChildren) => {
                   ? t("pollClosedDescription", {
                       defaultValue: "No more responses are being accepted.",
                     })
-                  : t("actionErrorInternalServerError", {
-                      defaultValue: "An internal server error occurred",
-                    }),
+                  : result.reason === "optionFull"
+                    ? t("optionFullError", {
+                        defaultValue:
+                          'An option you said "yes" to is full. Change that answer and try again.',
+                      })
+                    : t("actionErrorInternalServerError", {
+                        defaultValue: "An internal server error occurred",
+                      }),
               );
               return;
             }

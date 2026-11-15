@@ -5,7 +5,12 @@ import type { AuthorizedSpaceId } from "@/features/space/types";
 // environment on import. Stub the env with nothing set.
 vi.mock("@/env", () => ({ env: {} }));
 
-import { closePoll, deleteInactivePolls, setPollMuted } from "./mutations";
+import {
+  canApplyPlaceLimit,
+  closePoll,
+  deleteInactivePolls,
+  setPollMuted,
+} from "./mutations";
 
 const { mockUpdateMany, mockFindFirst, mockUpdate, mockActivityCreateMany } =
   vi.hoisted(() => ({
@@ -307,5 +312,77 @@ describe("setPollMuted", () => {
     });
 
     expect(result).toEqual({ ok: false, reason: "notFound" });
+  });
+});
+
+describe("canApplyPlaceLimit", () => {
+  const groupBy = vi.fn();
+  const tx = { vote: { groupBy } } as unknown as Parameters<
+    typeof canApplyPlaceLimit
+  >[0];
+
+  beforeEach(() => {
+    groupBy.mockReset();
+  });
+
+  it("allows leaving the limit unchanged", async () => {
+    expect(
+      await canApplyPlaceLimit(tx, {
+        pollId: "p1",
+        nextLimit: undefined,
+        currentLimit: 3,
+      }),
+    ).toBe(true);
+    expect(groupBy).not.toHaveBeenCalled();
+  });
+
+  it("allows removing the limit", async () => {
+    expect(
+      await canApplyPlaceLimit(tx, {
+        pollId: "p1",
+        nextLimit: null,
+        currentLimit: 3,
+      }),
+    ).toBe(true);
+    expect(groupBy).not.toHaveBeenCalled();
+  });
+
+  it("allows raising the limit without counting votes", async () => {
+    expect(
+      await canApplyPlaceLimit(tx, {
+        pollId: "p1",
+        nextLimit: 5,
+        currentLimit: 3,
+      }),
+    ).toBe(true);
+    expect(groupBy).not.toHaveBeenCalled();
+  });
+
+  it("allows a first limit that every option fits under", async () => {
+    groupBy.mockResolvedValue([]);
+    expect(
+      await canApplyPlaceLimit(tx, {
+        pollId: "p1",
+        nextLimit: 2,
+        currentLimit: null,
+      }),
+    ).toBe(true);
+    expect(groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { pollId: "p1", type: "yes" },
+        having: { optionId: { _count: { gt: 2 } } },
+      }),
+    );
+  });
+
+  it("refuses lowering the limit below an option's yes votes", async () => {
+    groupBy.mockResolvedValue([{ optionId: "o1", _count: { _all: 3 } }]);
+    expect(
+      await canApplyPlaceLimit(tx, {
+        pollId: "p1",
+        nextLimit: 2,
+        currentLimit: 5,
+      }),
+    ).toBe(false);
   });
 });

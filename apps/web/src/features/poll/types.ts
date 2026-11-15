@@ -31,6 +31,7 @@ export type PollDetails = {
   hideParticipants: boolean;
   disableComments: boolean;
   allowTentativeVotes: boolean;
+  maxYesVotesPerOption: number | null;
   hideScores: boolean;
   requireParticipantEmail: boolean;
   muted: boolean;

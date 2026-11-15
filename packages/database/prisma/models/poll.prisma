@@ -60,7 +60,8 @@ model Poll {
   /// negative. Turning it off only blocks new tentative votes; existing ones
   /// are kept and stay visible.
   allowTentativeVotes     Boolean           @default(true) @map("allow_tentative_votes")
-  muted                   Boolean           @default(false)
+  maxYesVotesPerOption    Int?              @map("max_yes_votes_per_option")
+  muted                  Boolean           @default(false)
 
   user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   scheduledEvent ScheduledEvent? @relation(fields: [scheduledEventId], references: [id], onDelete: SetNull)

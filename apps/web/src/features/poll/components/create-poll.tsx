@@ -168,6 +168,7 @@ export const CreatePoll = ({
       requireParticipantEmail: true,
       enableComments: false,
       allowTentativeVotes: true,
+      maxYesVotesPerOption: null,
       duration: 60,
       lockTimeZone: false,
     },
@@ -305,6 +306,7 @@ export const CreatePoll = ({
               disableComments: !formData?.enableComments,
               hideScores: formData?.hideScores,
               allowTentativeVotes: formData?.allowTentativeVotes,
+              maxYesVotesPerOption: formData?.maxYesVotesPerOption ?? null,
               requireParticipantEmail: formData?.requireParticipantEmail,
               ...(isLocationPoll
                 ? { places }

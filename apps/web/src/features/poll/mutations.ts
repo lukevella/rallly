@@ -570,6 +570,36 @@ export async function removeDeletedPolls() {
  * read is cached, so this only makes the action response carry a fresh
  * render of the page that called it and drops the router's copy of both.
  */
+export async function canApplyPlaceLimit(
+  tx: Prisma.TransactionClient,
+  {
+    pollId,
+    nextLimit,
+    currentLimit,
+  }: {
+    pollId: string;
+    nextLimit: number | null | undefined;
+    currentLimit: number | null;
+  },
+) {
+  if (typeof nextLimit !== "number") {
+    return true;
+  }
+
+  if (currentLimit !== null && nextLimit >= currentLimit) {
+    return true;
+  }
+
+  const overLimit = await tx.vote.groupBy({
+    by: ["optionId"],
+    where: { pollId, type: "yes" },
+    _count: { _all: true },
+    having: { optionId: { _count: { gt: nextLimit } } },
+  });
+
+  return overLimit.length === 0;
+}
+
 export function revalidatePollPages() {
   // "layout" so the nested /vote route is covered too; as a "page" it
   // would keep serving a response the viewer has just deleted.

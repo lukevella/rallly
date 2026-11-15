@@ -13,7 +13,12 @@ import { generateAccessToken } from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
-type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
+type WriteRefusal =
+  | "notFound"
+  | "closed"
+  | "full"
+  | "optionFull"
+  | "tentativeVotesNotAllowed";
 
 class WriteRefusedError extends Error {
   constructor(public readonly reason: WriteRefusal) {
@@ -36,9 +41,14 @@ async function lockOpenPoll(
   votes: { type: VoteType }[],
 ) {
   const [poll] = await tx.$queryRaw<
-    { status: string; deleted: boolean; allow_tentative_votes: boolean }[]
+    {
+      status: string;
+      deleted: boolean;
+      allow_tentative_votes: boolean;
+      max_yes_votes_per_option: number | null;
+    }[]
   >`
-    SELECT status, deleted, allow_tentative_votes
+    SELECT status, deleted, allow_tentative_votes, max_yes_votes_per_option
     FROM polls WHERE id = ${pollId} FOR UPDATE
   `;
 
@@ -58,6 +68,45 @@ async function lockOpenPoll(
     votes.some((vote) => vote.type === "ifNeedBe")
   ) {
     throw new WriteRefusedError("tentativeVotesNotAllowed");
+  }
+
+  return { maxYesVotesPerOption: poll.max_yes_votes_per_option };
+}
+
+async function assertOptionsHaveRoom(
+  tx: Prisma.TransactionClient,
+  pollId: string,
+  maxYesVotesPerOption: number | null,
+  votes: { optionId: string; type: VoteType }[],
+) {
+  if (maxYesVotesPerOption === null) {
+    return;
+  }
+
+  const requested = new Map<string, number>();
+  for (const vote of votes) {
+    if (vote.type === "yes") {
+      requested.set(vote.optionId, (requested.get(vote.optionId) ?? 0) + 1);
+    }
+  }
+
+  if (requested.size === 0) {
+    return;
+  }
+
+  const stored = await tx.vote.groupBy({
+    by: ["optionId"],
+    where: { pollId, type: "yes", optionId: { in: [...requested.keys()] } },
+    _count: { _all: true },
+  });
+  const storedByOption = new Map(
+    stored.map(({ optionId, _count }) => [optionId, _count._all]),
+  );
+
+  for (const [optionId, count] of requested) {
+    if ((storedByOption.get(optionId) ?? 0) + count > maxYesVotesPerOption) {
+      throw new WriteRefusedError("optionFull");
+    }
   }
 }
 
@@ -169,7 +218,12 @@ export async function addParticipant({
         validOptionIds.has(optionId),
       );
 
-      await lockOpenPoll(tx, pollId, validVotes);
+      const { maxYesVotesPerOption } = await lockOpenPoll(
+        tx,
+        pollId,
+        validVotes,
+      );
+      await assertOptionsHaveRoom(tx, pollId, maxYesVotesPerOption, validVotes);
 
       // Counted under the lock so two responses cannot both pass at the cap.
       const participantCount = await tx.participant.count({
@@ -290,7 +344,7 @@ export async function updateParticipantVotes({
 }): Promise<EditParticipantResult> {
   try {
     await prisma.$transaction(async (tx) => {
-      await lockOpenPoll(tx, pollId, votes);
+      const { maxYesVotesPerOption } = await lockOpenPoll(tx, pollId, votes);
       await assertParticipantInPoll(tx, participantId, pollId);
 
       await tx.vote.deleteMany({ where: { participantId } });
@@ -299,6 +353,8 @@ export async function updateParticipantVotes({
       const validVotes = votes.filter(({ optionId }) =>
         validOptionIds.has(optionId),
       );
+
+      await assertOptionsHaveRoom(tx, pollId, maxYesVotesPerOption, validVotes);
 
       await tx.vote.createMany({
         data: validVotes.map(({ optionId, type }) => ({

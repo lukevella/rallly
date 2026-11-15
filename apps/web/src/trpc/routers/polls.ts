@@ -33,12 +33,14 @@ import { EmailBudgetStore } from "@/features/email-budget/service";
 import { queueEmails } from "@/features/email-queue/mutations";
 import { getInstancePolicy } from "@/features/instance-policy/data";
 import { moderateContent } from "@/features/moderation/mutations";
+import { MAX_PARTICIPANTS } from "@/features/poll/constants";
 import { canUserManagePoll, hasPollAdminAccess } from "@/features/poll/data";
 import {
   assertOpenPollCapacity,
   checkOpenPollCapacity,
   OpenPollLimitError,
 } from "@/features/poll/limit/mutations";
+import { canApplyPlaceLimit } from "@/features/poll/mutations";
 import {
   MAX_POLL_DESCRIPTION_LENGTH,
   MAX_POLL_PLACES,
@@ -81,6 +83,13 @@ import {
 import { invites } from "./polls/invites";
 import { getScheduledEventTimes } from "./polls/scheduled-event-times";
 import { timeZoneInput } from "./polls/schema";
+
+const maxYesVotesPerOptionSchema = z
+  .number()
+  .int()
+  .min(1)
+  .max(MAX_PARTICIPANTS)
+  .nullable();
 
 const collapseNewlines = (s: string) => s.replace(/\n{3,}/g, "\n\n");
 
@@ -204,6 +213,7 @@ export const polls = router({
           hideScores: z.boolean().optional(),
           disableComments: z.boolean().optional(),
           allowTentativeVotes: z.boolean().optional(),
+          maxYesVotesPerOption: maxYesVotesPerOptionSchema.optional(),
           requireParticipantEmail: z.boolean().optional(),
           options: z
             .object({
@@ -363,6 +373,7 @@ export const polls = router({
               hideParticipants: input.hideParticipants,
               disableComments: input.disableComments,
               allowTentativeVotes: input.allowTentativeVotes,
+              maxYesVotesPerOption: input.maxYesVotesPerOption,
               hideScores: input.hideScores,
               requireParticipantEmail: input.requireParticipantEmail,
               spaceId,
@@ -492,6 +503,7 @@ export const polls = router({
         hideParticipants: z.boolean().optional(),
         disableComments: z.boolean().optional(),
         allowTentativeVotes: z.boolean().optional(),
+        maxYesVotesPerOption: maxYesVotesPerOptionSchema.optional(),
         hideScores: z.boolean().optional(),
         requireParticipantEmail: z.boolean().optional(),
       }),
@@ -626,6 +638,7 @@ export const polls = router({
             hideScores: true,
             disableComments: true,
             allowTentativeVotes: true,
+            maxYesVotesPerOption: true,
             requireParticipantEmail: true,
             kind: true,
             status: true,
@@ -672,6 +685,20 @@ export const polls = router({
                 "Tentative votes cannot be turned off once participants have used them",
             });
           }
+        }
+
+        const placeLimitFits = await canApplyPlaceLimit(tx, {
+          pollId,
+          nextLimit: input.maxYesVotesPerOption,
+          currentLimit: prior.maxYesVotesPerOption,
+        });
+
+        if (!placeLimitFits) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "The place limit cannot be lower than the yes votes an option already has",
+          });
         }
 
         // Reopen an auto-closed poll when new future dates are added. Manually
@@ -772,6 +799,7 @@ export const polls = router({
             hideParticipants: input.hideParticipants,
             disableComments: input.disableComments,
             allowTentativeVotes: input.allowTentativeVotes,
+            maxYesVotesPerOption: input.maxYesVotesPerOption,
             requireParticipantEmail: input.requireParticipantEmail,
             kind,
           },
@@ -943,6 +971,7 @@ export const polls = router({
         input.hideParticipants !== undefined ||
         input.disableComments !== undefined ||
         input.allowTentativeVotes !== undefined ||
+        input.maxYesVotesPerOption !== undefined ||
         input.hideScores !== undefined ||
         input.requireParticipantEmail !== undefined;
 
@@ -1072,6 +1101,7 @@ export const polls = router({
           hideParticipants: true,
           disableComments: true,
           allowTentativeVotes: true,
+          maxYesVotesPerOption: true,
           hideScores: true,
           requireParticipantEmail: true,
           options: {
@@ -1820,6 +1850,7 @@ export const polls = router({
           requireParticipantEmail: true,
           disableComments: true,
           allowTentativeVotes: true,
+          maxYesVotesPerOption: true,
           spaceId: true,
           space: { select: { tier: true } },
           kind: true,
@@ -1873,6 +1904,7 @@ export const polls = router({
             hideScores: poll.hideScores,
             disableComments: poll.disableComments,
             allowTentativeVotes: poll.allowTentativeVotes,
+            maxYesVotesPerOption: poll.maxYesVotesPerOption,
             kind: poll.kind,
             options: {
               create: poll.options,

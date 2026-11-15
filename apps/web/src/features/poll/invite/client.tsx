@@ -214,6 +214,11 @@ export function useBallotErrorMessage() {
         return t("newParticipantFormErrorPollFull", {
           defaultValue: "This poll is no longer accepting responses.",
         });
+      case "optionFull":
+        return t("optionFullError", {
+          defaultValue:
+            'An option you said "yes" to is full. Change that answer and try again.',
+        });
       case "tentativeVotesNotAllowed":
         return t("ballotErrorTentativeNotAllowed", {
           defaultValue:

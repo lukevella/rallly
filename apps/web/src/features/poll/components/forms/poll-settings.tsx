@@ -6,12 +6,14 @@ import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
   FieldSet,
 } from "@rallly/ui/field";
 import { FormField } from "@rallly/ui/form";
+import { Input } from "@rallly/ui/input";
 import {
   Select,
   SelectContent,
@@ -26,6 +28,7 @@ import {
   ListChecksIcon,
   MailIcon,
   MessageCircleIcon,
+  UsersIcon,
   VenetianMaskIcon,
 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
@@ -34,7 +37,9 @@ import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import type { PollSettingsFormData } from "@/features/poll/components/forms/types";
 import type { VoteType } from "@/features/poll/constants";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
+
+const DEFAULT_MAX_YES_VOTES_PER_OPTION = 10;
 
 /**
  * Each answer as its icon plus its name, so the choice shows exactly what a
@@ -65,6 +70,7 @@ function VoteOptionLabel({ types }: { types: VoteType[] }) {
 export const PollSettingsForm = ({
   children,
   hasTentativeVotes = false,
+  minYesVotesPerOption = 0,
 }: React.PropsWithChildren<{
   /**
    * True when responses already use the tentative vote. Those votes stay
@@ -72,9 +78,12 @@ export const PollSettingsForm = ({
    * rule is enforced in the modify mutation.
    */
   hasTentativeVotes?: boolean;
+  minYesVotesPerOption?: number;
 }>) => {
   const form = useFormContext<PollSettingsFormData>();
   const isFree = useIsFree();
+  const { t } = useTranslation();
+  const lowestLimit = Math.max(1, minYesVotesPerOption);
 
   return (
     <Card>
@@ -234,6 +243,87 @@ export const PollSettingsForm = ({
                       </SelectContent>
                     </Select>
                   </div>
+                </Field>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
+            name="maxYesVotesPerOption"
+            rules={{
+              validate: (value) =>
+                value === null ||
+                value === undefined ||
+                (Number.isInteger(value) && value >= lowestLimit) ||
+                t("maxYesVotesPerOptionInvalid", {
+                  defaultValue: "Enter a whole number of at least {count}.",
+                  count: lowestLimit,
+                }),
+            }}
+            render={({ field, fieldState }) => {
+              const isLimited = typeof field.value === "number";
+
+              return (
+                <Field orientation="horizontal">
+                  <SettingIcon>
+                    <UsersIcon />
+                  </SettingIcon>
+                  <FieldContent>
+                    <FieldLabel htmlFor="limit-yes-votes">
+                      <Trans
+                        i18nKey="maxYesVotesPerOptionTitle"
+                        defaults="Limit places per option"
+                      />
+                    </FieldLabel>
+                    <FieldDescription>
+                      <Trans
+                        i18nKey="maxYesVotesPerOptionDescription"
+                        defaults={
+                          'Once an option has this many "yes" votes, it is full and no one else can say yes to it.'
+                        }
+                      />
+                    </FieldDescription>
+                    {isLimited ? (
+                      <Input
+                        id="max-yes-votes-per-option"
+                        type="number"
+                        inputMode="numeric"
+                        min={lowestLimit}
+                        step={1}
+                        className="mt-2 w-24"
+                        aria-label={t("maxYesVotesPerOptionInputLabel", {
+                          defaultValue: "Places per option",
+                        })}
+                        aria-invalid={!!fieldState.error}
+                        value={
+                          Number.isNaN(field.value) ? "" : (field.value ?? "")
+                        }
+                        onChange={(event) =>
+                          field.onChange(event.target.valueAsNumber)
+                        }
+                        onBlur={field.onBlur}
+                      />
+                    ) : null}
+                    <FieldError errors={[fieldState.error]} />
+                  </FieldContent>
+                  <Switch
+                    id="limit-yes-votes"
+                    checked={isLimited}
+                    onCheckedChange={(checked) => {
+                      field.onChange(
+                        checked
+                          ? Math.max(
+                              DEFAULT_MAX_YES_VOTES_PER_OPTION,
+                              lowestLimit,
+                            )
+                          : null,
+                      );
+                      posthog?.capture(
+                        "poll_settings:max_yes_votes_toggle_click",
+                        { enabled: checked },
+                      );
+                    }}
+                  />
                 </Field>
               );
             }}
