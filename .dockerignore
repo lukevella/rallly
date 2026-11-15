@@ -1,0 +1,21 @@
+node_modules
+.git
+.github
+.vscode
+tsconfig.tsbuildinfo
+.env*
+.sentryclirc
+sentry.properties
+Dockerfile
+docker-compose.yml
+/docs
+README.md
+node_modules
+
+# Build outputs
+apps/*/.next
+apps/*/dist
+packages/*/dist
+
+# Turbo prune output
+out/
