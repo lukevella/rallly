@@ -6,6 +6,7 @@ import VoteIcon from "@/features/poll/components/vote-icon";
 import { useTranslation } from "@/i18n/client";
 import type { BallotVote } from "../types";
 import { BallotCount } from "./ballot-count";
+import type { BallotTimeValue } from "./ballot-time-text";
 import { BallotTimeText } from "./ballot-time-text";
 
 const barTint: Record<BallotVote | "none", string> = {
@@ -50,7 +51,7 @@ export function BallotBarOption({
   showMark = true,
   chosen = false,
 }: {
-  label: string;
+  label: BallotTimeValue;
   /** The full date and time, for assistive technology. */
   fullLabel: string;
   vote: BallotVote | undefined;
