@@ -29,7 +29,7 @@
     "check": "biome check .",
     "check:fix": "biome check . --write",
     "lint": "oxlint",
-    "check:locales": "node scripts/check-locale-braces.mjs",
+    "check:locales": "pnpm --filter @rallly/translations check",
     "check:structure": "node scripts/check-feature-structure.mjs && node scripts/check-feature-cycles.mjs",
     "check:cascades": "node scripts/check-user-cascade-relations.mjs",
     "check:openapi": "pnpm --filter @rallly/web openapi:generate && git diff --exit-code -- apps/docs/api-reference/openapi.json",

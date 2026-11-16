@@ -55,7 +55,7 @@ jobs:
       - name: Check feature folder structure
         run: pnpm check:structure
 
-      - name: Check locale files for unbalanced braces
+      - name: Check locale files against their English source
         run: pnpm check:locales
 
       - name: Check User cascade relations are covered by the guest purge
