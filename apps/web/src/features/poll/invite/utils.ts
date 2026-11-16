@@ -1,6 +1,7 @@
 import { instantToWallTime } from "@/lib/datetime/wall-time";
 import type {
   Ballot,
+  BallotBreakdownEntry,
   BallotSource,
   BallotTallyEntry,
   BallotViewer,
@@ -78,9 +79,7 @@ export function projectBallot({
       const name =
         isOwn(response) || !source.hideParticipants ? response.name : null;
       for (const [optionId, vote] of Object.entries(response.votes)) {
-        if (vote !== "no") {
-          tallies[optionId]?.push({ responseId: response.id, name, vote });
-        }
+        tallies[optionId]?.push({ responseId: response.id, name, vote });
       }
     }
   }
@@ -91,6 +90,7 @@ export function projectBallot({
     isDatePoll: source.options.every((option) => option.duration === 0),
     allowTentativeVotes: source.allowTentativeVotes,
     requireParticipantEmail: source.requireParticipantEmail,
+    hideParticipants: source.hideParticipants,
     canRespond: source.status === "open",
     options: source.options.map((option) => ({
       id: option.id,
@@ -150,9 +150,45 @@ export function availableCount({
   liveVote: BallotVote | undefined;
 }): number {
   const others = entries.filter(
-    (entry) => entry.responseId !== activeResponseId,
+    (entry) => entry.responseId !== activeResponseId && entry.vote !== "no",
   ).length;
   return others + (liveVote === "yes" || liveVote === "ifNeedBe" ? 1 : 0);
+}
+
+const voteOrder: Record<BallotVote, number> = { yes: 0, ifNeedBe: 1, no: 2 };
+
+/**
+ * Everyone's answer to one option, yes first, with the viewer's saved answer
+ * swapped for the one they are choosing now, under `viewerName`.
+ */
+export function optionBreakdown({
+  entries,
+  activeResponseId,
+  liveVote,
+  viewerName,
+}: {
+  entries: BallotTallyEntry[];
+  activeResponseId: string | null;
+  liveVote: BallotVote | undefined;
+  viewerName: string;
+}): BallotBreakdownEntry[] {
+  const others = entries.filter(
+    (entry) => entry.responseId !== activeResponseId,
+  );
+  const saved = entries.find((entry) => entry.responseId === activeResponseId);
+  const viewer: BallotBreakdownEntry[] = liveVote
+    ? [
+        {
+          responseId: activeResponseId ?? "viewer",
+          name: viewerName,
+          vote: liveVote,
+          viewer: { unsaved: saved?.vote !== liveVote },
+        },
+      ]
+    : [];
+  return [...viewer, ...others].sort(
+    (a, b) => voteOrder[a.vote] - voteOrder[b.vote],
+  );
 }
 
 /**

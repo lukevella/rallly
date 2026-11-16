@@ -64,6 +64,7 @@ import {
   usePastOptions,
 } from "@/features/poll/invite/client";
 import { BallotBarOption } from "@/features/poll/invite/components/ballot-bar-option";
+import { BallotBreakdown } from "@/features/poll/invite/components/ballot-breakdown";
 import { BallotCount } from "@/features/poll/invite/components/ballot-count";
 import {
   ballotBarButtonClassName,
@@ -79,6 +80,7 @@ import {
   availableCount,
   groupBallotOptions,
   nextVote,
+  optionBreakdown,
 } from "@/features/poll/invite/utils";
 import {
   addParticipantAction,
@@ -801,6 +803,28 @@ export function AccessibleBallot({
   const total =
     ballot.responseCount + (state.canChange && !state.activeResponseId ? 1 : 0);
 
+  // Who answered what, for options whose count opens it. Not when the poll
+  // withholds other people's names: there would be no one to list.
+  const renderBreakdown =
+    ballot.tallies && !ballot.hideParticipants
+      ? (optionId: string) => {
+          const option = optionsById.get(optionId);
+          return option && ballot.tallies ? (
+            <BallotBreakdown
+              option={option}
+              timeZone={ballot.isDatePoll ? null : ballot.timeZone}
+              total={total}
+              entries={optionBreakdown({
+                entries: ballot.tallies[optionId] ?? [],
+                activeResponseId: state.activeResponseId,
+                liveVote: state.answers[optionId],
+                viewerName: t("you", { defaultValue: "You" }),
+              })}
+            />
+          ) : null;
+        }
+      : null;
+
   // Outside the voting form: React events cross portals, so the form in here
   // would submit that one too.
   const responseDialogs = active ? (
@@ -1512,6 +1536,7 @@ export function AccessibleBallot({
                                 : undefined
                             }
                             total={total}
+                            breakdown={renderBreakdown?.(optionId)}
                           />
                         );
                       })}
@@ -1681,7 +1706,9 @@ export function AccessibleBallot({
                               if (
                                 isPast ||
                                 pending ||
-                                (event.target as Element).closest("label")
+                                (event.target as Element).closest(
+                                  "label, button",
+                                )
                               )
                                 return;
                               answerOne(
@@ -1741,10 +1768,13 @@ export function AccessibleBallot({
                             </span>
                             {liveCount !== null ? (
                               <span
-                                aria-hidden="true"
+                                aria-hidden={renderBreakdown ? undefined : true}
                                 className="[&_[data-testid=ballot-tally]]:text-foreground"
                               >
-                                <BallotCount value={liveCount} />
+                                <BallotCount
+                                  value={liveCount}
+                                  breakdown={renderBreakdown?.(optionId)}
+                                />
                               </span>
                             ) : null}
                             {count ? (
