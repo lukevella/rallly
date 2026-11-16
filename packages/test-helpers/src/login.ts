@@ -33,7 +33,12 @@ export async function loginWithEmail(
     await page.getByRole("button", { name: "Login with password" }).click();
   } else {
     const code = await getCode(email);
-    await page.getByLabel("Enter your 6-digit code").fill(code);
+    // /login/verify is a full page load, so the same streamed-copy window
+    // as the heading above applies: getByLabel matches the hidden staging
+    // copy of the OTP input too, getByRole does not.
+    await page
+      .getByRole("textbox", { name: "Enter your 6-digit code" })
+      .fill(code);
   }
 
   // Wait until the login flow navigates away before handing control back

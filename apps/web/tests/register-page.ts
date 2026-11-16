@@ -13,7 +13,7 @@ export class RegisterPage {
 
   async goto() {
     await this.page.goto("/login");
-    await this.page.getByText("Welcome").waitFor();
+    await this.page.getByRole("heading", { name: "Welcome" }).first().waitFor();
   }
 
   async register({ name, email }: { name: string; email: string }) {
@@ -40,7 +40,9 @@ export class RegisterPage {
 
     // Handle verification code
     const code = await getCode(email);
-    await this.page.getByLabel("Enter your 6-digit code").fill(code);
+    await this.page
+      .getByRole("textbox", { name: "Enter your 6-digit code" })
+      .fill(code);
 
     // New accounts have no name and go through onboarding. The space name
     // is prefilled, so only the name needs to be entered.
