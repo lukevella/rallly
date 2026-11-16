@@ -1,8 +1,10 @@
-import { cn } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
+import { ArrowUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
+import { Link } from "@/components/link";
 import { Spinner } from "@/components/spinner";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/features/branding/components/logo";
@@ -17,6 +19,7 @@ import { PollUnavailable } from "@/features/poll/invite/components/poll-unavaila
 import { loadInviteBallot } from "@/features/poll/invite/loaders";
 import { loadPollAvailability, loadPollDetails } from "@/features/poll/loaders";
 import { PoweredByLink } from "@/features/poll/vote/components/powered-by-link";
+import { loadCanManagePoll } from "@/features/poll/vote/loaders";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { AccessibleBallot } from "./components/accessible-ballot";
@@ -66,12 +69,14 @@ async function PageContent({ params, searchParams }: PageProps) {
 
   const token = getInviteToken({ token: tokenParam, invite: inviteParam });
   const { t } = await getTranslation();
-  const [poll, ballot, instanceBranding, footerLinks] = await Promise.all([
-    loadPollDetails(urlId),
-    loadInviteBallot({ pollId: urlId, token }),
-    loadInstanceBranding(),
-    loadFooterLinks(),
-  ]);
+  const [poll, ballot, instanceBranding, footerLinks, canManage] =
+    await Promise.all([
+      loadPollDetails(urlId),
+      loadInviteBallot({ pollId: urlId, token }),
+      loadInstanceBranding(),
+      loadFooterLinks(),
+      loadCanManagePoll(urlId),
+    ]);
 
   if (!poll || !ballot) {
     notFound();
@@ -122,6 +127,15 @@ async function PageContent({ params, searchParams }: PageProps) {
             </div>
           ) : null}
           <div className="ml-auto flex h-12 shrink-0 items-center gap-1">
+            {canManage ? (
+              <Link
+                className={cn(buttonVariants({ size: "sm" }), "mr-1")}
+                href={`/poll/${poll.id}`}
+              >
+                {t("managePoll", { defaultValue: "Manage poll" })}
+                <ArrowUpRightIcon data-icon="inline-end" />
+              </Link>
+            ) : null}
             <InviteHelpSheet>
               <Suspense
                 fallback={
