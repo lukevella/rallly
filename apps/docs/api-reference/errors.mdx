@@ -34,11 +34,13 @@ Every failure is `application/json` with the same shape:
 | 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |
 | 404 | `PARTICIPANT_NOT_FOUND` | The participant does not exist or belongs to another poll |
 | 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted; see [Rate limits](/api-reference/rate-limits) |
+| 429 | `POLL_QUOTA_EXCEEDED` | The space has used its monthly API poll quota; see [Poll quota](/api-reference/rate-limits#poll-quota) |
 | 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |
 | 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |
 
 ## Handling errors
 
 - Treat `4xx` responses other than `429` as bugs in the request. Retrying without changing it returns the same error.
-- Retry `429` and `503` after the `Retry-After` header.
+- Retry `RATE_LIMIT_EXCEEDED` and `503` after the `Retry-After` header.
+- Do not retry `POLL_QUOTA_EXCEEDED`: its `Retry-After` points at the start of next month. Raise the quota or wait for the reset.
 - Retry `500` with backoff. If it persists, contact support with the time of the request.
