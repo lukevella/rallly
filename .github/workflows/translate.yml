@@ -1,6 +1,15 @@
 name: Translate
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/public/locales/en/**"
+      - "apps/landing/public/locales/en/**"
+      - "packages/emails/locales/en/**"
+      - "i18n/glossary.json"
+      - "packages/translations/src/**"
+      - "!packages/translations/src/**/*.test.ts"
 
 concurrency:
   group: translate
