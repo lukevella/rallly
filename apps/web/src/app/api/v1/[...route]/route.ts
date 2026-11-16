@@ -677,7 +677,10 @@ app.post(
           `This space has reached its monthly API poll quota. It resets at ${resetAt.toISOString()}. To raise it, add API capacity at ${absoluteUrl("/settings/api-keys")}.`,
         ),
         429,
-        { "Retry-After": retryAfter.toString() },
+        {
+          "Retry-After": retryAfter.toString(),
+          "X-Poll-Quota-Reset": resetAt.toISOString(),
+        },
       );
     };
 
