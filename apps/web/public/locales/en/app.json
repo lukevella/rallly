@@ -315,6 +315,8 @@
   "describeYourEvent": "Describe what your event is about",
   "description": "Description",
   "descriptionPlaceholder": "Hey everyone, please choose the dates that work for you!",
+  "descriptionShowLess": "Show less",
+  "descriptionShowMore": "Show more",
   "descriptionTooLong": "Description must be at most {count} characters",
   "desktopPollEmptyStateAddDescription": "Click <b>+</b> to add a response",
   "desktopPollEmptyStateDescription": "Click <b>+</b> to add a response or <b>Share</b> to invite participants",
