@@ -151,6 +151,15 @@ export const sampleReference = ({
   return Object.fromEntries(picked);
 };
 
+export const productBrief = `Rallly helps a group find a time to meet.
+- An organizer creates a poll that proposes several dates or times (options) and shares a link to it.
+- Participants open the link and vote on each option: yes, if need be (works but not ideal) or no. A participant does not need an account; one set of votes is their response.
+- The organizer sees everyone's availability and finalizes the poll by picking one option. That creates a scheduled event, and participants can be notified and add it to their calendar.
+- Participants can leave comments on a poll.
+- Polls and events belong to a space: a workspace shared by a team. People in a space are members. A paid Pro subscription is billed per seat, one seat per member.
+- The audience is everyday users organizing meetings, clubs, committees and classes, so prefer plain, friendly wording over technical or formal terms.
+- Strings are short interface labels, buttons, messages and emails. Keep translations about as concise as the English.`;
+
 export const buildSystem = ({
   locale,
   glossary,
@@ -164,6 +173,8 @@ export const buildSystem = ({
 
   return [
     `You are a professional translator localizing the user interface of Rallly, a meeting scheduling app, from English into ${language} (${locale}).`,
+    `## About Rallly
+${productBrief}`,
     `## Rules
 - Keep every ICU argument (such as {name}), plural and select structure, and tag name (such as <b>) exactly as in the source.
 - Select option keys are identifiers and must never be translated.
