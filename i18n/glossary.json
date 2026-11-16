@@ -12,13 +12,23 @@
   "terms": [
     {
       "en": "Poll",
-      "note": "a scheduling poll where participants vote on proposed times to find when a group can meet; not an opinion survey",
+      "note": "a scheduling poll: the organizer proposes dates or times and participants say which work for them; not an opinion survey",
       "translations": {
+        "cs": "Anketa",
+        "da": "Afstemning",
         "de": "Umfrage",
+        "es": "Encuesta",
         "fi": "Kysely",
         "fr": "Sondage",
         "hu": "Szavazás",
-        "nl": "Poll"
+        "it": "Sondaggio",
+        "nl": "Poll",
+        "no": "Avstemning",
+        "pl": "Ankieta",
+        "pt-BR": "Enquete",
+        "ru": "Опрос",
+        "sv": "Förfrågan",
+        "zh": "投票"
       }
     },
     {
@@ -149,17 +159,290 @@
     },
     {
       "en": "If need be",
-      "note": "a vote option meaning a time works only if no better time is found; between yes and no",
-      "translations": {}
+      "note": "the middle vote answer, between yes and no: the time works but is not ideal",
+      "translations": {
+        "cs": "Pokud je to nutné",
+        "da": "Hvis behov",
+        "de": "Falls erforderlich",
+        "es": "Si es necesario",
+        "fi": "Tarvittaessa",
+        "fr": "En cas de besoin",
+        "hu": "Ha szükséges",
+        "it": "Se necessario",
+        "nl": "Optioneel",
+        "no": "Om nødvendig",
+        "pl": "W razie potrzeby",
+        "pt-BR": "Se for necessário",
+        "ru": "Если потребуется",
+        "sv": "Om det behövs",
+        "zh": "如果需要"
+      }
     },
     {
       "en": "Participant",
-      "note": "a person who votes on a poll or responds to an event invitation; not the organizer",
+      "note": "a person who responds to a poll or event invitation; distinct from a member of a space",
       "translations": {}
     },
     {
       "en": "Organizer",
-      "note": "the person who creates and manages a poll or event; not a participant",
+      "note": "the person who creates and manages a poll or event",
+      "translations": {
+        "cs": "Organizátor",
+        "da": "Arrangør",
+        "es": "Organizador",
+        "fi": "Järjestäjä",
+        "fr": "Organisateur",
+        "hu": "Szervező",
+        "it": "Organizzatore",
+        "nl": "Organisator",
+        "no": "Arrangør",
+        "pl": "Organizator",
+        "pt-BR": "Organizador",
+        "ru": "Организатор",
+        "sv": "Organisatör",
+        "zh": "组织者"
+      }
+    },
+    {
+      "en": "Yes",
+      "note": "the vote answer meaning the time works for the participant",
+      "translations": {
+        "cs": "Ano",
+        "da": "Ja",
+        "de": "Ja",
+        "es": "Sí",
+        "fi": "Kyllä",
+        "fr": "Oui",
+        "hu": "Igen",
+        "it": "Si",
+        "nl": "Ja",
+        "no": "Ja",
+        "pl": "Tak",
+        "pt-BR": "Sim",
+        "ru": "Да",
+        "sv": "Ja",
+        "zh": "有空"
+      }
+    },
+    {
+      "en": "No",
+      "note": "the vote answer meaning the time does not work for the participant",
+      "translations": {
+        "cs": "Ne",
+        "da": "Nej",
+        "de": "Nein",
+        "es": "No",
+        "fi": "Ei",
+        "fr": "Non",
+        "hu": "Nem",
+        "it": "No",
+        "nl": "Nee",
+        "no": "Nei",
+        "pl": "Nie",
+        "pt-BR": "Não",
+        "ru": "Нет",
+        "sv": "Nej",
+        "zh": "否"
+      }
+    },
+    {
+      "en": "Response",
+      "note": "one participant's set of votes on a poll; not a reply to a message",
+      "translations": {
+        "cs": "Reakce",
+        "da": "Svar",
+        "de": "Antwort",
+        "es": "Respuesta",
+        "fi": "Vastaus",
+        "fr": "Réponse",
+        "hu": "Válasz",
+        "it": "Risposta",
+        "nl": "Antwoord",
+        "no": "Svar",
+        "pl": "Odpowiedź",
+        "pt-BR": "Resposta",
+        "ru": "Ответ",
+        "sv": "Svar",
+        "zh": "回复"
+      }
+    },
+    {
+      "en": "Option",
+      "note": "one proposed date or time in a poll that participants vote on",
+      "translations": {
+        "cs": "Možnost",
+        "da": "Mulighed",
+        "de": "Option",
+        "es": "Opción",
+        "fi": "Vaihtoehto",
+        "fr": "Option",
+        "hu": "Lehetőség",
+        "it": "Opzione",
+        "nl": "Optie",
+        "no": "Alternativ",
+        "pl": "Opcja",
+        "pt-BR": "Opção",
+        "ru": "Вариант",
+        "sv": "Alternativ",
+        "zh": "选项"
+      }
+    },
+    {
+      "en": "Availability",
+      "note": "which proposed times work for a participant",
+      "translations": {
+        "cs": "Dostupnost",
+        "da": "Tilgængelighed",
+        "de": "Verfügbarkeit",
+        "es": "Disponibilidad",
+        "fi": "Saatavuus",
+        "fr": "Disponibilité",
+        "hu": "Elérhetőség",
+        "it": "Disponibilità",
+        "nl": "Beschikbaarheid",
+        "no": "Tilgjengelighet",
+        "pl": "Dostępność",
+        "pt-BR": "Disponibilidade",
+        "ru": "Доступность",
+        "sv": "Tillgänglighet",
+        "zh": "可用时间"
+      }
+    },
+    {
+      "en": "Finalize",
+      "note": "to pick the final date or time of a poll, which turns it into a scheduled event",
+      "translations": {
+        "cs": "Dokončit",
+        "da": "Færdiggør",
+        "de": "Abschließen",
+        "es": "Finalizar",
+        "fi": "Sulje",
+        "fr": "Finaliser",
+        "hu": "Véglegesítés",
+        "it": "Concludi",
+        "nl": "Afronden",
+        "no": "Fullfør",
+        "pl": "Zatwierdź",
+        "pt-BR": "Finalizar",
+        "ru": "Завершить",
+        "sv": "Slutför",
+        "zh": "完成"
+      }
+    },
+    {
+      "en": "Event",
+      "note": "a scheduled meeting with a confirmed date and time, often created by finalizing a poll",
+      "translations": {
+        "cs": "Událost",
+        "da": "Begivenhed",
+        "de": "Veranstaltung",
+        "es": "Evento",
+        "fi": "Tapahtuma",
+        "fr": "Événement",
+        "hu": "Esemény",
+        "it": "Evento",
+        "nl": "Evenement",
+        "no": "Arrangement",
+        "pl": "Wydarzenie",
+        "pt-BR": "Evento",
+        "ru": "Событие",
+        "sv": "Evenemang",
+        "zh": "活动"
+      }
+    },
+    {
+      "en": "Member",
+      "note": "a user who belongs to a space; distinct from a participant who responds to a poll",
+      "translations": {
+        "cs": "Člen",
+        "da": "Medlem",
+        "de": "Mitglied",
+        "es": "Miembro",
+        "fi": "Jäsen",
+        "fr": "Membre",
+        "hu": "Tag",
+        "it": "Membro",
+        "no": "Medlem",
+        "pl": "Członek",
+        "pt-BR": "Membro",
+        "sv": "Medlem",
+        "zh": "成员"
+      }
+    },
+    {
+      "en": "Guest",
+      "note": "someone using Rallly without an account",
+      "translations": {
+        "cs": "Host",
+        "da": "Gæst",
+        "de": "Gast",
+        "es": "Visitante",
+        "fi": "Vieras",
+        "fr": "Invité",
+        "hu": "Vendég",
+        "it": "Ospite",
+        "nl": "Gast",
+        "no": "Gjest",
+        "pl": "Gość",
+        "pt-BR": "Convidado",
+        "ru": "Гость",
+        "sv": "Gäst",
+        "zh": "访客"
+      }
+    },
+    {
+      "en": "Comments",
+      "note": "messages participants leave on a poll",
+      "translations": {
+        "cs": "Komentáře",
+        "da": "Kommentarer",
+        "de": "Kommentare",
+        "es": "Comentarios",
+        "fi": "Kommentit",
+        "fr": "Commentaires",
+        "hu": "Hozzászólások",
+        "it": "Commenti",
+        "no": "Kommentarer",
+        "pl": "Komentarze",
+        "pt-BR": "Comentários",
+        "ru": "Комментарии",
+        "sv": "Kommentarer"
+      }
+    },
+    {
+      "en": "Time zone",
+      "note": "the time zone that times are shown in",
+      "translations": {
+        "cs": "Časové pásmo",
+        "da": "Tidszone",
+        "de": "Zeitzone",
+        "es": "Zona horaria",
+        "fi": "Aikavyöhyke",
+        "fr": "Fuseau horaire",
+        "hu": "Időzóna",
+        "it": "Fuso orario",
+        "nl": "Tijdzone",
+        "no": "Tidssone",
+        "pl": "Strefa czasowa",
+        "pt-BR": "Fuso horário",
+        "ru": "Часовой пояс",
+        "sv": "Tidszon",
+        "zh": "时区"
+      }
+    },
+    {
+      "en": "Seat",
+      "note": "a paid place for one member in a space subscription",
+      "translations": {}
+    },
+    {
+      "en": "Vote",
+      "note": "a participant's answer (yes, if need be or no) for one proposed time",
+      "translations": {}
+    },
+    {
+      "en": "Invite",
+      "note": "to ask someone to respond to a poll, or to join a space",
       "translations": {}
     }
   ]

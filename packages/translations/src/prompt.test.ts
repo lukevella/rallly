@@ -113,6 +113,7 @@ describe("buildSystem", () => {
     });
     const order = [
       "You are a professional translator",
+      "## About Rallly",
       "## Rules",
       "## Glossary",
       "## Existing translations",
@@ -178,6 +179,14 @@ describe("loadGlossary", () => {
     expect(committed.doNotTranslate).toContain("Rallly");
     expect(committed.doNotTranslate).toContain("Pro");
     expect(committed.terms.map((term) => term.en)).not.toContain("Pro");
+  });
+
+  it("gives every committed term a meaning", () => {
+    const repoRoot = join(import.meta.dirname, "..", "..", "..");
+    const committed = loadGlossary({ repoRoot });
+    for (const term of committed.terms) {
+      expect(term.note.length).toBeGreaterThan(10);
+    }
   });
 });
 
