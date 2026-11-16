@@ -1119,6 +1119,9 @@ export function AccessibleBallot({
           ? "lg:h-[min(36rem,calc(100dvh-8rem-2px))] lg:w-auto lg:grid-cols-[20rem_28rem] xl:h-[min(39rem,calc(100dvh-8rem-2px))] xl:grid-cols-[24rem_28rem]"
           : "lg:h-[min(calc(100dvh-8rem-2px),calc(min(100vw-2rem,64rem)*0.75))] lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
         compactOnPhone ? "max-lg:gap-y-4" : "max-lg:gap-y-6",
+        // Below lg the title sits in the header, so the description that
+        // follows it keeps the same gap it has under the title from lg.
+        !lockup && !compactOnPhone && "max-lg:pt-0",
       )}
     >
       <div
