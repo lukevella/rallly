@@ -9,7 +9,6 @@
 [**Website**](https://rallly.co) · [**Documentation**](https://support.rallly.co) · [**Discord**](https://discord.gg/uzg4ZcHbuM)
 
 [![Actions Status](https://github.com/lukevella/rallly/actions/workflows/ci.yml/badge.svg)](https://github.com/lukevella/rallly/actions)
-[![Crowdin](https://badges.crowdin.net/rallly/localized.svg)](https://crowdin.com/project/rallly)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-orange.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Discord](https://img.shields.io/badge/-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/uzg4ZcHbuM)
 [![Donate](https://img.shields.io/badge/-Donate%20with%20Paypal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=7QXP2CUBLY88E)
@@ -28,7 +27,7 @@ Rallly is an open-source scheduling tool that helps you find the best date and t
 - 💬 **Comments** — Discuss the details right on the poll
 - 🔔 **Notifications** — Get notified when participants respond
 - ✅ **Finalize a date** — Pick the winning option and notify everyone
-- 🌍 **10+ languages** — Community-translated via [Crowdin](https://crowdin.com/project/rallly)
+- 🌍 **15+ languages** — [Help improve translations](https://support.rallly.co/contribute/translations)
 - 🔒 **Open source & self-hostable** — Own your data
 
 ## ☁️ Cloud version
