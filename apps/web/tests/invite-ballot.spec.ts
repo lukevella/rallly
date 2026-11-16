@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { Browser, Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { prisma } from "@rallly/database";
+import { createUserInDb, loginWithEmail } from "./test-utils";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -445,5 +446,39 @@ test.describe("invite ballot", () => {
     await page.reload();
     await expect(page.getByTestId("ballot-tally").first()).toBeVisible();
     await context.close();
+  });
+
+  test("only someone who can manage the poll gets a link to manage it", async ({
+    browser,
+  }) => {
+    const email = "ballot-spec-host@example.com";
+    await prisma.user.deleteMany({ where: { email } });
+    const host = await createUserInDb({ email, name: "Ballot Host" });
+    const space = await prisma.space.findFirstOrThrow({
+      where: { ownerId: host.id },
+    });
+    await seedPoll({ id: "ballot-spec-manage" });
+    await prisma.poll.update({
+      where: { id: "ballot-spec-manage" },
+      data: { userId: host.id, spaceId: space.id },
+    });
+
+    const participant = await freshPage(browser);
+    await participant.page.goto("/invite/ballot-spec-manage/vote");
+    await expect(options(participant.page).first()).toBeVisible();
+    await expect(
+      participant.page.getByRole("link", { name: "Manage poll" }),
+    ).toHaveCount(0);
+    await participant.context.close();
+
+    const creator = await freshPage(browser);
+    await loginWithEmail(creator.page, { email });
+    await creator.page.goto("/invite/ballot-spec-manage/vote");
+    const manage = creator.page.getByRole("link", { name: "Manage poll" });
+    await expect(manage).toHaveAttribute("href", "/poll/ballot-spec-manage");
+    await manage.click();
+    await expect(creator.page).toHaveURL(/\/poll\/ballot-spec-manage$/);
+    await creator.context.close();
+    await prisma.user.deleteMany({ where: { email } });
   });
 });
