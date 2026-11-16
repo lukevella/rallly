@@ -2069,6 +2069,49 @@ describe("API v1 - /polls", () => {
     });
   });
 
+  describe("OpenAPI poll quota", () => {
+    // The capability is read when the route module loads, so each state
+    // needs a fresh import.
+    async function specWithPollQuota(enabled: boolean) {
+      vi.resetModules();
+      if (enabled) {
+        enabledFeatures.add("apiPollQuota");
+      }
+      const { app: freshApp } = await import("./route");
+      const res = await freshApp.request("/v1/openapi");
+      expect(res.status).toBe(200);
+      return res.json();
+    }
+
+    it("describes the quota where it is enforced", async () => {
+      const spec = await specWithPollQuota(true);
+      const create = spec.paths["/v1/polls"].post;
+
+      expect(spec.info.description).toContain("## Poll quota");
+      expect(spec.info.description).toContain("`POLL_QUOTA_EXCEEDED`");
+      expect(Object.keys(create.responses["201"].headers)).toEqual([
+        "X-Poll-Quota-Limit",
+        "X-Poll-Quota-Used",
+        "X-Poll-Quota-Reset",
+      ]);
+      expect(create.responses["429"].description).toContain(
+        "POLL_QUOTA_EXCEEDED",
+      );
+    });
+
+    it("leaves the quota out where it is not enforced", async () => {
+      const spec = await specWithPollQuota(false);
+      const create = spec.paths["/v1/polls"].post;
+
+      expect(spec.info.description).not.toContain("Poll quota");
+      expect(spec.info.description).not.toContain("POLL_QUOTA_EXCEEDED");
+      expect(create.responses["201"].headers).toBeUndefined();
+      expect(create.responses["429"].description).not.toContain(
+        "POLL_QUOTA_EXCEEDED",
+      );
+    });
+  });
+
   describe("OpenAPI endpoints", () => {
     it("should return OpenAPI spec", async () => {
       const res = await app.request("/v1/openapi");
