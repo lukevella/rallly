@@ -4,11 +4,11 @@ icon: globe
 description: Help improve Rallly in your language
 ---
 
-Rallly is available in more than 15 languages. Translations are generated with AI whenever the English text changes, and anyone can correct them by opening a pull request on GitHub.
+Rallly is available in more than 15 languages. Translations are generated with AI, and anyone can correct them by opening a pull request on GitHub.
 
 ## How translations work
 
-When new or changed English text is merged, a workflow translates it into every supported language and opens a pull request titled "🌐 Update translations". Each translation is checked before it is accepted: variables, tags and plural rules must match the English text.
+New or changed English text is translated into every supported language by a workflow, which opens a pull request titled "🌐 Update translations". The workflow is run by the maintainers, so a translation may not appear as soon as the English text is merged. Each translation is checked before it is accepted: variables, tags and plural rules must match the English text.
 
 A glossary keeps product terms consistent within each language. It lives in [`i18n/glossary.json`](https://github.com/lukevella/rallly/blob/main/i18n/glossary.json) and lists how terms such as "Space" or "Event Types" are translated, plus names that are never translated, such as "Rallly" and "Pro".
 
@@ -26,7 +26,7 @@ Each file maps a key to its text. Find the key by searching for the English text
 
 Your correction is kept. The workflow only translates a string again when its English text changes, and it uses your version as a starting point when it does.
 
-If a term is translated inconsistently across many strings, it is usually better to add it to the glossary than to fix each string.
+If a term is translated inconsistently across many strings, fix the existing strings and add the term to the glossary in the same pull request. The glossary only guides future translations; it doesn't change strings that are already translated.
 
 ## Tips for translators
 
