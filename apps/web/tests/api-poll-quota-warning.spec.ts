@@ -140,3 +140,14 @@ test("reaching the limit covers the near limit warning", async () => {
     `${spaceId}:2031-07:at_limit`,
   ]);
 });
+
+test("uses the stored count, not the count a request reserved", async () => {
+  const now = new Date(Date.UTC(2031, 7, 10));
+  // A request reserved slot 50, but another released its slot since.
+  await reserveTo({ now, count: 49 });
+  await warn({ now, count: 50 });
+
+  expect(await queuedSubjects("2031-08")).toEqual([
+    `${spaceId}:2031-08:near_limit`,
+  ]);
+});

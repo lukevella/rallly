@@ -13,6 +13,8 @@ const mockGetPollWithOptions = vi.fn();
 const mockGetSpaceMemberByEmail = vi.fn();
 const mockTrack = vi.fn();
 const mockIdentifyGroup = vi.fn();
+const mockQueueApiPollQuotaWarning = vi.fn();
+const enabledFeatures = vi.hoisted(() => new Set<string>());
 
 const mockGetAvailableConferencingProviders = vi.fn(() => [] as string[]);
 const mockGetConnectedConferencingProviders = vi.fn(
@@ -68,6 +70,9 @@ const prisma = vi.hoisted(() => ({
   user: {
     findUnique: vi.fn(),
   },
+  space: {
+    findUnique: vi.fn(),
+  },
   $queryRaw: vi.fn(),
   $executeRaw: vi.fn(),
 }));
@@ -88,7 +93,15 @@ vi.mock("next/server", () => ({
 }));
 
 vi.mock("@/lib/feature-flags/server", () => ({
-  isFeatureEnabled: () => false,
+  isFeatureEnabled: (feature: string) => enabledFeatures.has(feature),
+}));
+
+vi.mock("@/features/api-keys/quota/mutations", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("@/features/api-keys/quota/mutations")
+  >()),
+  queueApiPollQuotaWarning: (...args: unknown[]) =>
+    mockQueueApiPollQuotaWarning(...args),
 }));
 
 vi.mock("@/lib/kv", async () => ({
@@ -176,6 +189,7 @@ const mockApiKey = {
 describe("API v1 - /polls", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    enabledFeatures.clear();
     (redis as unknown as FakeRedis).reset();
 
     // Mock findMany for the timing-safe lookup
@@ -439,6 +453,255 @@ describe("API v1 - /polls", () => {
 
       expect(res.status).toBe(400);
       expect(prisma.$queryRaw).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("poll quota", () => {
+    const authHeaders = {
+      Authorization: `Bearer ${testApiKey}`,
+      "Content-Type": "application/json",
+    };
+
+    const createRequest = (body: unknown) =>
+      app.request("/v1/polls", {
+        method: "POST",
+        headers: authHeaders,
+        body: JSON.stringify(body),
+      });
+
+    const validDatePoll = {
+      title: "Team offsite",
+      kind: "date",
+      options: [{ date: "2025-01-15" }],
+    };
+
+    const mockQuota = ({
+      used,
+      override = null,
+    }: {
+      used: number;
+      override?: number | null;
+    }) => {
+      prisma.space.findUnique.mockResolvedValue({
+        name: "Test Space",
+        apiPollQuotaOverride: override,
+        owner: {
+          email: "owner@example.com",
+          locale: "en",
+          banned: false,
+          deletedAt: null,
+        },
+        subscriptions: [],
+        apiUsage: used > 0 ? [{ count: used }] : [],
+      });
+    };
+
+    // The reservation's tagged template takes spaceId, period, then the
+    // limit twice.
+    const reservedLimits = () => {
+      const [, , , first, second] = prisma.$queryRaw.mock.calls[0] ?? [];
+      return [first, second];
+    };
+
+    const runAfterCallbacks = async () => {
+      for (const [callback] of vi.mocked(after).mock.calls) {
+        await (callback as () => unknown)();
+      }
+    };
+
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-11-30T23:00:00.000Z"));
+      onTestFinished(() => {
+        vi.useRealTimers();
+      });
+    });
+
+    describe("with the capability on", () => {
+      beforeEach(() => {
+        enabledFeatures.add("apiPollQuota");
+      });
+
+      it("reports the quota on poll creation", async () => {
+        mockQuota({ used: 12 });
+
+        const res = await createRequest({ kind: "date" });
+
+        expect(res.status).toBe(400);
+        expect(res.headers.get("X-Poll-Quota-Limit")).toBe("50");
+        expect(res.headers.get("X-Poll-Quota-Used")).toBe("12");
+        expect(res.headers.get("X-Poll-Quota-Reset")).toBe(
+          "2026-12-01T00:00:00.000Z",
+        );
+      });
+
+      it("does not read the quota on other endpoints", async () => {
+        mockGetPollWithOptions.mockResolvedValue(null);
+
+        const res = await app.request("/v1/polls/some-poll", {
+          headers: { Authorization: `Bearer ${testApiKey}` },
+        });
+
+        expect(res.status).toBe(404);
+        expect(res.headers.get("X-Poll-Quota-Limit")).toBeNull();
+        expect(prisma.space.findUnique).not.toHaveBeenCalled();
+      });
+
+      it("refuses a poll at the limit without creating it", async () => {
+        mockQuota({ used: 50 });
+        prisma.$queryRaw.mockResolvedValue([]);
+
+        const res = await createRequest(validDatePoll);
+
+        const json = await expectErrorEnvelope(res, {
+          status: 429,
+          code: "POLL_QUOTA_EXCEEDED",
+        });
+        expect(json.error.message).toContain(
+          "https://example.com/settings/api-keys",
+        );
+        expect(res.headers.get("Retry-After")).toBe("3600");
+        expect(reservedLimits()).toEqual([50, 50]);
+        expect(res.headers.get("X-Poll-Quota-Used")).toBe("50");
+        expect(mockCreatePoll).not.toHaveBeenCalled();
+        expect(prisma.$executeRaw).not.toHaveBeenCalled();
+        expect(mockQueueApiPollQuotaWarning).not.toHaveBeenCalled();
+        expect(mockTrack).toHaveBeenCalledWith(
+          { id: "test-user-id", isGuest: false },
+          expect.objectContaining({
+            event: "api_poll_quota:limit_reach",
+            groups: { space: "test-space-id" },
+          }),
+        );
+      });
+
+      it("creates a poll under the limit and reports the new count", async () => {
+        mockQuota({ used: 39 });
+        prisma.$queryRaw.mockResolvedValue([{ count: 40 }]);
+
+        const res = await createRequest(validDatePoll);
+
+        expect(res.status).toBe(201);
+        expect(res.headers.get("X-Poll-Quota-Limit")).toBe("50");
+        expect(res.headers.get("X-Poll-Quota-Used")).toBe("40");
+        expect(mockCreatePoll).toHaveBeenCalledTimes(1);
+        expect(reservedLimits()).toEqual([50, 50]);
+        expect(mockTrack).not.toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({ event: "api_poll_quota:limit_reach" }),
+        );
+
+        expect(mockQueueApiPollQuotaWarning).not.toHaveBeenCalled();
+        await runAfterCallbacks();
+        expect(mockQueueApiPollQuotaWarning).toHaveBeenCalledWith({
+          spaceId: "test-space-id",
+          limit: 50,
+          count: 40,
+          now: new Date("2026-11-30T23:00:00.000Z"),
+        });
+      });
+
+      it("reserves against the override when it is higher", async () => {
+        mockQuota({ used: 120, override: 500 });
+        prisma.$queryRaw.mockResolvedValue([{ count: 121 }]);
+
+        const res = await createRequest(validDatePoll);
+
+        expect(res.status).toBe(201);
+        expect(res.headers.get("X-Poll-Quota-Limit")).toBe("500");
+        expect(res.headers.get("X-Poll-Quota-Used")).toBe("121");
+        expect(reservedLimits()).toEqual([500, 500]);
+      });
+
+      it("releases the slot once and answers 500 when the poll fails to save", async () => {
+        mockQuota({ used: 10 });
+        prisma.$queryRaw.mockResolvedValue([{ count: 11 }]);
+        mockCreatePoll.mockRejectedValueOnce(new Error("insert failed"));
+
+        const res = await createRequest(validDatePoll);
+
+        await expectErrorEnvelope(res, { status: 500, code: "INTERNAL_ERROR" });
+        expect(prisma.$executeRaw).toHaveBeenCalledTimes(1);
+        await runAfterCallbacks();
+        expect(mockQueueApiPollQuotaWarning).not.toHaveBeenCalled();
+      });
+
+      it("never reserves for a request that fails validation", async () => {
+        mockQuota({ used: 10 });
+
+        const schemaRejection = await createRequest({ kind: "date" });
+        expect(schemaRejection.status).toBe(400);
+
+        const unknownOrganizer = await createRequest({
+          ...validDatePoll,
+          organizer: { email: "stranger@example.com" },
+        });
+        const unknownOrganizerJson = await unknownOrganizer.json();
+        expect(unknownOrganizerJson.error.code).toBe("ORGANIZER_NOT_MEMBER");
+
+        vi.mocked(moderateContent).mockResolvedValueOnce({
+          verdict: "flagged",
+          reason: "phishing",
+        });
+        const moderationRejection = await createRequest(validDatePoll);
+        expect(moderationRejection.status).toBe(400);
+
+        const tooManyOptions = await createRequest({
+          title: "Too many",
+          kind: "date",
+          options: Array.from({ length: 101 }, (_, i) => ({
+            date: new Date(Date.UTC(2027, 0, 1 + i)).toISOString().slice(0, 10),
+          })),
+        });
+        expect(tooManyOptions.status).toBe(400);
+
+        expect(prisma.$queryRaw).not.toHaveBeenCalled();
+      });
+
+      it("still deletes a poll at the limit", async () => {
+        mockQuota({ used: 50 });
+        mockDeletePoll.mockResolvedValue({ id: "test-poll-id" });
+
+        const res = await app.request("/v1/polls/test-poll-id", {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${testApiKey}` },
+        });
+
+        expect(res.status).toBe(200);
+        expect(mockDeletePoll).toHaveBeenCalledTimes(1);
+        expect(prisma.space.findUnique).not.toHaveBeenCalled();
+        expect(prisma.$queryRaw).not.toHaveBeenCalled();
+        expect(prisma.$executeRaw).not.toHaveBeenCalled();
+      });
+
+      it("reports the raw count when usage is above the limit", async () => {
+        mockQuota({ used: 300 });
+        prisma.$queryRaw.mockResolvedValue([]);
+
+        const res = await createRequest(validDatePoll);
+
+        expect(res.status).toBe(429);
+        expect(res.headers.get("X-Poll-Quota-Limit")).toBe("50");
+        expect(res.headers.get("X-Poll-Quota-Used")).toBe("300");
+      });
+    });
+
+    describe("with the capability off", () => {
+      it("sends no quota headers and counts without a limit", async () => {
+        prisma.$queryRaw.mockResolvedValue([{ count: 300 }]);
+
+        const res = await createRequest(validDatePoll);
+
+        expect(res.status).toBe(201);
+        expect(res.headers.get("X-Poll-Quota-Limit")).toBeNull();
+        expect(res.headers.get("X-Poll-Quota-Used")).toBeNull();
+        expect(res.headers.get("X-Poll-Quota-Reset")).toBeNull();
+        expect(prisma.space.findUnique).not.toHaveBeenCalled();
+        expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+        expect(reservedLimits()).toEqual([null, null]);
+        await runAfterCallbacks();
+        expect(mockQueueApiPollQuotaWarning).not.toHaveBeenCalled();
+      });
     });
   });
 
