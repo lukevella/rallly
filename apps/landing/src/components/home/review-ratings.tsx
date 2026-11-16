@@ -14,13 +14,13 @@ const reviewSites = [
   },
   {
     name: "Trustpilot",
-    rating: 4.7,
+    rating: 4.8,
     url: "https://www.trustpilot.com/review/rallly.co",
     logo: "/static/images/trustpilot-star.svg",
   },
   {
     name: "G2",
-    rating: 4.7,
+    rating: 4.6,
     url: "https://www.g2.com/products/rallly/reviews",
     logo: "/static/images/g2-logo.svg",
   },
