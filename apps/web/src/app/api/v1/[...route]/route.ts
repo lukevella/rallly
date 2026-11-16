@@ -264,34 +264,6 @@ const rateLimitExceededResponse = {
   },
 };
 
-const pollQuotaHeaders = {
-  "X-Poll-Quota-Limit": {
-    description: "Polls the space may create through the API this month.",
-    schema: { type: "integer" as const },
-  },
-  "X-Poll-Quota-Used": {
-    description:
-      "Polls the space has created through the API this month. Can exceed the limit if the limit was lowered.",
-    schema: { type: "integer" as const },
-  },
-  "X-Poll-Quota-Reset": {
-    description:
-      "When the monthly count resets: the start of the next calendar month, as an ISO 8601 instant in UTC.",
-    schema: { type: "string" as const, format: "date-time" },
-  },
-};
-
-const createPollTooManyRequestsResponse = {
-  description:
-    "Rate limit exceeded (`RATE_LIMIT_EXCEEDED`), or the space has used its monthly API poll quota (`POLL_QUOTA_EXCEEDED`). Both include a `Retry-After` header; for the quota it is the number of seconds until the quota resets.",
-  headers: { ...retryAfterHeader, ...pollQuotaHeaders },
-  content: {
-    "application/json": {
-      schema: resolver(errorResponseSchema),
-    },
-  },
-};
-
 const serviceUnavailableResponse = {
   description:
     "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
@@ -321,10 +293,6 @@ async function buildOpenApiSpec() {
           "Every response from an authenticated request includes the standard `RateLimit-*` headers. Responses sent before the limiter runs (`401`, `403`, and the maintenance `503`) do not. `RateLimit-Policy` lists both limits; `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` describe whichever limit is closest to being exhausted. When either limit is exceeded the API responds with `429 Too Many Requests`, a `RATE_LIMIT_EXCEEDED` error body, and a `Retry-After` header indicating how many seconds to wait before retrying.",
           "",
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
-          "",
-          "## Poll quota",
-          "",
-          "Polls created through the API count against a monthly quota per space, which resets at the start of each calendar month in UTC. Every `POST /polls` response that passes authentication and the rate limit includes `X-Poll-Quota-Limit`, `X-Poll-Quota-Used` and `X-Poll-Quota-Reset` (an ISO 8601 instant in UTC). Requests that fail validation are not counted, and deleting a poll does not give its slot back. When the quota is used up, `POST /polls` responds with `429 Too Many Requests`, a `POLL_QUOTA_EXCEEDED` error body, and a `Retry-After` header with the seconds until the reset. The space owner can raise the quota from the API keys settings page.",
           "",
           "## Dates and times",
           "",
@@ -359,7 +327,6 @@ async function buildOpenApiSpec() {
           "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
           "| 404 | `PARTICIPANT_NOT_FOUND` | The participant does not exist or belongs to another poll |",
           "| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |",
-          "| 429 | `POLL_QUOTA_EXCEEDED` | The space has used its monthly API poll quota |",
           "| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |",
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
         ].join("\n"),
@@ -483,7 +450,6 @@ app.post(
     responses: {
       201: {
         description: "Poll created",
-        headers: pollQuotaHeaders,
         content: {
           "application/json": {
             schema: resolver(pollResponseSchema),
@@ -500,7 +466,7 @@ app.post(
       },
       401: unauthorizedResponse,
       403: spaceNotProResponse,
-      429: createPollTooManyRequestsResponse,
+      429: rateLimitExceededResponse,
       503: serviceUnavailableResponse,
     },
   }),
