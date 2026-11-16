@@ -7,7 +7,7 @@ export class LoginPage {
 
   async goto() {
     await this.page.goto("/login");
-    await this.page.getByText("Welcome").waitFor();
+    await this.page.getByRole("heading", { name: "Welcome" }).first().waitFor();
   }
 
   async login({ email, password }: { email: string; password?: string }) {
@@ -31,7 +31,9 @@ export class LoginPage {
       await this.page
         .getByRole("heading", { name: "Verify your email" })
         .waitFor();
-      await this.page.getByLabel("Enter your 6-digit code").fill(code);
+      await this.page
+        .getByRole("textbox", { name: "Enter your 6-digit code" })
+        .fill(code);
     }
 
     // Wait for page to load
