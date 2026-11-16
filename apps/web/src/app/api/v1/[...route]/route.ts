@@ -639,6 +639,9 @@ app.post(
       if (limit !== null) {
         const { count } = slot;
         c.header("X-Poll-Quota-Used", count.toString());
+        // The reservation's month, which can be a month later than the one
+        // the middleware read if the request crossed a UTC month boundary.
+        c.header("X-Poll-Quota-Reset", startOfNextUtcMonth(now).toISOString());
         after(() => queueApiPollQuotaWarning({ spaceId, limit, count, now }));
       }
 

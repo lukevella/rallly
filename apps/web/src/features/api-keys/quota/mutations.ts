@@ -112,16 +112,28 @@ async function queueApiPollQuotaWarningOrThrow({
   count: number;
   now: Date;
 }) {
-  const level = getQuotaWarningLevel({ count, limit });
-  if (!level) {
+  if (!getQuotaWarningLevel({ count, limit })) {
     return;
   }
 
   const period = startOfUtcMonth(now);
   const where = { spaceId, resource: "poll" as const, period };
-  const subjectId = `${spaceId}:${toMonthKey(period)}:${level}`;
 
   await prisma.$transaction(async (tx) => {
+    // Another request can release a slot between this request's reservation
+    // and now, so the level comes from the stored count, not the reserved one.
+    const usage = await tx.apiUsage.findUnique({
+      where: { spaceId_resource_period: where },
+      select: { count: true },
+    });
+    const level = usage
+      ? getQuotaWarningLevel({ count: usage.count, limit })
+      : null;
+    if (!level) {
+      return;
+    }
+    const subjectId = `${spaceId}:${toMonthKey(period)}:${level}`;
+
     // Conditional on the column being unset, so concurrent reservations
     // crossing the same level still warn only once.
     const { count: claimed } = await tx.apiUsage.updateMany({
