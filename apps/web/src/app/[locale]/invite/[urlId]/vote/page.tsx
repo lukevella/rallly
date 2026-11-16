@@ -20,6 +20,7 @@ import { PoweredByLink } from "@/features/poll/vote/components/powered-by-link";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { AccessibleBallot } from "./components/accessible-ballot";
+import { CollapsibleDescription } from "./components/collapsible-description";
 import { EventLockup } from "./components/event-lockup";
 import { InviteHelp } from "./components/help/invite-help";
 import { InviteHelpSheet } from "./components/help/invite-help-sheet";
@@ -142,13 +143,11 @@ async function PageContent({ params, searchParams }: PageProps) {
           )}
         </div>
       </header>
-      {/* From lg the sidebar and answers sit in a card. It is as tall as what it
-          holds, between a floor that keeps a short poll from looking stranded and
-          a ceiling past which the sidebar and the answers each scroll on their
-          own. Its width comes from main. */}
+      {/* From lg the sidebar and answers sit in a card. Main sets its size: 4:3
+          where the screen has room, and never taller than the screen. */}
       <div
         data-invite-card
-        className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-[min(45rem,calc(100dvh-8rem))] lg:min-h-88 lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs"
+        className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-[calc(100dvh-8rem)] lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs"
       >
         <AccessibleBallot
           poll={poll}
@@ -167,10 +166,12 @@ async function PageContent({ params, searchParams }: PageProps) {
           }
           description={
             poll.description ? (
-              <EventMetaDescription
-                className="mt-2 text-base/7 text-muted-foreground lg:text-sm/6"
-                content={poll.description}
-              />
+              <CollapsibleDescription>
+                <EventMetaDescription
+                  className="mt-2 text-base/7 text-muted-foreground lg:text-sm/6"
+                  content={poll.description}
+                />
+              </CollapsibleDescription>
             ) : null
           }
         />

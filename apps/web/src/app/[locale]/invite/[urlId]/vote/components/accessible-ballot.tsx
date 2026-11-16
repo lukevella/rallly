@@ -1086,10 +1086,14 @@ export function AccessibleBallot({
       className={cn(
         "flex w-full flex-1 flex-col gap-y-8 px-4 pt-4 lg:grid lg:min-h-0 lg:grid-rows-[minmax(0,1fr)] lg:items-stretch lg:px-0 lg:pt-0",
         // The card takes this width: the full one for the answers, and only what
-        // the form or the thanks need after that.
+        // the form or the thanks need after that. Its height is three quarters
+        // of that width, short of the screen's, and fixed so nothing inside
+        // resizes it: the sidebar and the answers each scroll on their own. The
+        // 2px is the card's border.
+        "lg:flex-none",
         compactCard
-          ? "lg:w-auto lg:grid-cols-[20rem_28rem] xl:grid-cols-[24rem_28rem]"
-          : "lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
+          ? "lg:h-[min(36rem,calc(100dvh-8rem-2px))] lg:w-auto lg:grid-cols-[20rem_28rem] xl:h-[min(39rem,calc(100dvh-8rem-2px))] xl:grid-cols-[24rem_28rem]"
+          : "lg:h-[min(calc(100dvh-8rem-2px),calc(min(100vw-2rem,64rem)*0.75))] lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
         compactOnPhone ? "max-lg:gap-y-4" : "max-lg:gap-y-6",
       )}
     >
