@@ -1,6 +1,6 @@
 {
   "advancedPollSettings": "Расширенные настройки опросов",
-  "advancedPollSettingsDescription": "Требуйте адреса электронной почты участников, скрывайте имена участников и скрывайте голоса",
+  "advancedPollSettingsPrivacyDescription": "Скрывайте имена участников и голоса",
   "apiAccess": "Доступ через API",
   "apiAccessDescription": "Создавайте опросы и просматривайте результаты в собственных системах. <a>Читайте документацию по API</a>",
   "apiAndWebhooks": "API и вебхуки",
