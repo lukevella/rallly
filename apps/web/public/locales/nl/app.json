@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} beschikbaar",
   "ballotErrorTentativeNotAllowed": "De organisator heeft ‘indien nodig’ uitgeschakeld. Wijzig die antwoorden en probeer het opnieuw.",
   "ballotHidePast": "Afgelopen tijden verbergen",
+  "ballotShowBreakdown": "{count} beschikbaar, bekijk wie heeft geantwoord",
   "banned": "Geblokkeerd",
   "banUser": "Gebruiker blokkeren",
   "banUserDesc": "Weet je zeker dat je <b>{email}</b> wilt blokkeren? Ze worden uitgelogd en kunnen niet meer inloggen.",

@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} tillgängliga",
   "ballotErrorTentativeNotAllowed": "Organisatören har stängt av alternativet ”vid behov”. Ändra svaren och försök igen.",
   "ballotHidePast": "Dölj tidigare tider",
+  "ballotShowBreakdown": "{count} tillgängliga, visa vilka som svarade",
   "banned": "Bannad",
   "banUser": "Banna användare",
   "banUserDesc": "Är du säker på att du vill spärra <b>{email}</b>? Personen kommer att loggas ut och kan inte logga in.",

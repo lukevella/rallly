@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} dostupných",
   "ballotErrorTentativeNotAllowed": "Organizátor vypnul možnost „pokud bude třeba“. Změňte tyto odpovědi a zkuste to znovu.",
   "ballotHidePast": "Skrýt minulé časy",
+  "ballotShowBreakdown": "{count} dostupných, zobrazit, kdo odpověděl",
   "banned": "Zablokován",
   "banUser": "Zablokovat uživatele",
   "banUserDesc": "Opravdu chcete zablokovat <b>{email}</b>? Bude odhlášen a nebude se moci přihlásit.",

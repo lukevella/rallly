@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} tilgængelige",
   "ballotErrorTentativeNotAllowed": "Arrangøren har slået »hvis nødvendigt« fra. Rediger disse svar, og prøv igen.",
   "ballotHidePast": "Skjul tidligere tidspunkter",
+  "ballotShowBreakdown": "{count} tilgængelige, vis hvem der har svaret",
   "banned": "Blokeret",
   "banUser": "Bloker bruger",
   "banUserDesc": "Er du sikker på, at du vil blokere <b>{email}</b>? De vil blive logget ud og kan ikke logge ind.",

@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} disponíveis",
   "ballotErrorTentativeNotAllowed": "O organizador desativou a opção “se necessário”. Altere essas respostas e tente novamente.",
   "ballotHidePast": "Ocultar horários passados",
+  "ballotShowBreakdown": "{count} disponíveis, mostrar quem respondeu",
   "banned": "Banido",
   "banUser": "Banir usuário",
   "banUserDesc": "Tem certeza que deseja banir <b>{email}</b>? Eles serão desconectados e não poderão fazer login.",

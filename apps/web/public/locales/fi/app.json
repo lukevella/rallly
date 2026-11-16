@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} saatavilla",
   "ballotErrorTentativeNotAllowed": "Järjestäjä on poistanut tarvittaessa-vaihtoehdon käytöstä. Muuta vastauksiasi ja yritä uudelleen.",
   "ballotHidePast": "Piilota menneet ajat",
+  "ballotShowBreakdown": "{count} sopii, näytä vastaajat",
   "banned": "Estetty",
   "banUser": "Estä käyttäjä",
   "banUserDesc": "Haluatko varmasti estää käyttäjän <b>{email}</b>? Hänet kirjataan ulos, eikä hän voi enää kirjautua sisään.",

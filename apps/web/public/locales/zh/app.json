@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} 个可用",
   "ballotErrorTentativeNotAllowed": "组织者已关闭“如有需要”选项。请更改这些回答，然后重试。",
   "ballotHidePast": "隐藏过去的时间",
+  "ballotShowBreakdown": "{count} 个可用，查看回答者",
   "banned": "已封禁",
   "banUser": "封禁用户",
   "banUserDesc": "确定要封禁 <b>{email}</b> 吗？他们将被登出，且无法登录。",

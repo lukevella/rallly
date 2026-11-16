@@ -99,6 +99,7 @@
   "ballotAvailableCount": "{count} disponibles",
   "ballotErrorTentativeNotAllowed": "El organizador ha desactivado la opción «si es necesario». Cambia esas respuestas e inténtalo de nuevo.",
   "ballotHidePast": "Ocultar horarios pasados",
+  "ballotShowBreakdown": "{count} disponibles, mostrar quién ha respondido",
   "banned": "Bloqueado",
   "banUser": "Bloquear usuario",
   "banUserDesc": "¿Estás seguro de que quieres bloquear a <b>{email}</b>? Se cerrará su sesión y no podrá iniciar sesión.",
