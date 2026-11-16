@@ -315,6 +315,8 @@
   "describeYourEvent": "描述您的活动内容",
   "description": "描述",
   "descriptionPlaceholder": "嘿，请选择一个合适的日期！",
+  "descriptionShowLess": "收起",
+  "descriptionShowMore": "展开",
   "descriptionTooLong": "描述不得超过 {count} 个字符",
   "desktopPollEmptyStateAddDescription": "点击 <b>+</b> 添加回答",
   "desktopPollEmptyStateDescription": "点击 <b>+</b> 添加回答，或点击 <b>分享</b> 邀请参与者",

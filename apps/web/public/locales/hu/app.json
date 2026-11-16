@@ -315,6 +315,8 @@
   "describeYourEvent": "Foglald össze, hogy miről szól az eseményed",
   "description": "Leírás",
   "descriptionPlaceholder": "Sziasztok, kérlek válasszátok ki a nektek megfelelő dátumokat!",
+  "descriptionShowLess": "Kevesebb megjelenítése",
+  "descriptionShowMore": "Több megjelenítése",
   "descriptionTooLong": "A leírás maximum {count} karakter lehet",
   "desktopPollEmptyStateAddDescription": "Kattints a <b>+</b>-ra válasz hozzáadásához",
   "desktopPollEmptyStateDescription": "Kattints a <b>+</b>-ra válasz hozzáadásához vagy a <b>Megosztás</b>ra résztvevők meghívásához",

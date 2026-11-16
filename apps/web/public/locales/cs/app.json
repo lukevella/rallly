@@ -315,6 +315,8 @@
   "describeYourEvent": "Popište, o jakou události se jedná",
   "description": "Popis",
   "descriptionPlaceholder": "Ahoj všichni, prosím, zahlasujte pro termíny, které vám vyhovují!",
+  "descriptionShowLess": "Zobrazit méně",
+  "descriptionShowMore": "Zobrazit více",
   "descriptionTooLong": "Popis může mít maximálně {count} znaků",
   "desktopPollEmptyStateAddDescription": "Kliknutím na <b>+</b> přidáte odpověď",
   "desktopPollEmptyStateDescription": "Kliknutím na <b>+</b> přidáte odpověď nebo na <b>Sdílet</b> pozvete účastníky",

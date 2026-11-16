@@ -315,6 +315,8 @@
   "describeYourEvent": "Kuvaile, mistä tapahtumassasi on kyse",
   "description": "Kuvaus",
   "descriptionPlaceholder": "Hei kaikki, valitkaa teille sopivat päivämäärät!",
+  "descriptionShowLess": "Näytä vähemmän",
+  "descriptionShowMore": "Näytä enemmän",
   "descriptionTooLong": "Kuvauksen pituus saa olla enintään {count} merkkiä",
   "desktopPollEmptyStateAddDescription": "Napsauta <b>+</b> lisätäksesi vastauksen",
   "desktopPollEmptyStateDescription": "Napsauta <b>+</b> lisätäksesi vastauksen tai <b>Jaa</b> kutsuaksesi osallistujia",

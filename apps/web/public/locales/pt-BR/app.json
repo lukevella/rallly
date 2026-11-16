@@ -315,6 +315,8 @@
   "describeYourEvent": "Descreva sobre o que é seu evento",
   "description": "Descrição",
   "descriptionPlaceholder": "Olá a todos! Por gentileza, escolha as datas que sirva para você!",
+  "descriptionShowLess": "Mostrar menos",
+  "descriptionShowMore": "Mostrar mais",
   "descriptionTooLong": "A descrição deve ter no máximo {count} caracteres",
   "desktopPollEmptyStateAddDescription": "Clique em <b>+</b> para adicionar uma resposta",
   "desktopPollEmptyStateDescription": "Clique em <b>+</b> para adicionar uma resposta ou em <b>Compartilhar</b> para convidar participantes",

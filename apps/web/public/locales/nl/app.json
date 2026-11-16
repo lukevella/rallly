@@ -315,6 +315,8 @@
   "describeYourEvent": "Beschrijf waar je evenement over gaat",
   "description": "Beschrijving",
   "descriptionPlaceholder": "Hallo allemaal! Kies hier de datums die voor jou het beste uitkomen.",
+  "descriptionShowLess": "Minder weergeven",
+  "descriptionShowMore": "Meer weergeven",
   "descriptionTooLong": "Beschrijving mag maximaal {count} tekens bevatten",
   "desktopPollEmptyStateAddDescription": "Klik op <b>+</b> om een reactie toe te voegen",
   "desktopPollEmptyStateDescription": "Klik op <b>+</b> om een reactie toe te voegen of op <b>Delen</b> om deelnemers uit te nodigen",

@@ -315,6 +315,8 @@
   "describeYourEvent": "Beskriv arrangementet ditt",
   "description": "Beskrivelse",
   "descriptionPlaceholder": "Hei, alle sammen! Velg datoene som passer for dere.",
+  "descriptionShowLess": "Vis mindre",
+  "descriptionShowMore": "Vis mer",
   "descriptionTooLong": "Beskrivelsen må være på maks {count} tegn",
   "desktopPollEmptyStateAddDescription": "Klikk på <b>+</b> for å legge til et svar",
   "desktopPollEmptyStateDescription": "Klikk på <b>+</b> for å legge til et svar eller på <b>Del</b> for å invitere deltakere",

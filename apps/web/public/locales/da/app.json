@@ -315,6 +315,8 @@
   "describeYourEvent": "Beskriv hvad din begivenhed handler om",
   "description": "Beskrivelse",
   "descriptionPlaceholder": "Hej alle, vælg venligst de datoer som passer jer!",
+  "descriptionShowLess": "Vis mindre",
+  "descriptionShowMore": "Vis mere",
   "descriptionTooLong": "Beskrivelsen må være højst {count} tegn.",
   "desktopPollEmptyStateAddDescription": "Klik på <b>+</b> for at tilføje et svar",
   "desktopPollEmptyStateDescription": "Klik på <b>+</b> for at tilføje et svar eller på <b>Del</b> for at invitere deltagere",

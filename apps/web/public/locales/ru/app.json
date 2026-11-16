@@ -315,6 +315,8 @@
   "describeYourEvent": "Опишите ваше событие",
   "description": "Описание",
   "descriptionPlaceholder": "Всем привет! Пожалуйста, выберите даты, которые вам подходят!",
+  "descriptionShowLess": "Показать меньше",
+  "descriptionShowMore": "Показать больше",
   "descriptionTooLong": "Описание должно содержать не более {count} символов",
   "desktopPollEmptyStateAddDescription": "Нажмите <b>+</b>, чтобы добавить ответ",
   "desktopPollEmptyStateDescription": "Нажмите <b>+</b>, чтобы добавить ответ, или <b>Поделиться</b>, чтобы пригласить участников",
