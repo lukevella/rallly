@@ -71,6 +71,7 @@ import {
 } from "@/features/poll/invite/components/ballot-pill";
 import { BallotResponseOptions } from "@/features/poll/invite/components/ballot-response-options";
 import { BallotTimeControls } from "@/features/poll/invite/components/ballot-time-controls";
+import type { BallotTimeValue } from "@/features/poll/invite/components/ballot-time-text";
 import { BallotTimeText } from "@/features/poll/invite/components/ballot-time-text";
 import { BallotVoteMark } from "@/features/poll/invite/components/ballot-vote-mark";
 import { PastTimesToggle } from "@/features/poll/invite/components/past-times-toggle";
@@ -96,6 +97,7 @@ import {
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
+  formatDateParts,
   formatDateTime,
   formatDateTimeRange,
   formatDuration,
@@ -764,8 +766,16 @@ export function AccessibleBallot({
   };
 
   /** What a row shows on screen; the day heading above it carries the date. */
-  const rowTimeLabel = (option: Ballot["options"][number]) => {
-    if (ballot.isDatePoll || option.duration === 0) {
+  const rowTimeLabel = (option: Ballot["options"][number]): BallotTimeValue => {
+    if (ballot.isDatePoll) {
+      // The month heading carries the month; the row needs only the day.
+      const { day, weekday } = formatDateParts(new Date(option.startTime), {
+        locale,
+        timeZone: displayTimeZone,
+      });
+      return { day, weekday };
+    }
+    if (option.duration === 0) {
       return date(option.startTime, "weekdayMonthDay");
     }
     const start = new Date(option.startTime);
