@@ -7,6 +7,7 @@ import {
   groupBallotOptions,
   isOptionPast,
   nextVote,
+  optionBreakdown,
   projectBallot,
 } from "./utils";
 
@@ -119,10 +120,11 @@ describe("projectBallot", () => {
     expect(ballot.ownResponses.map((r) => r.id)).toEqual([older.id, newest.id]);
   });
 
-  it("tallies yes and if need be with names", () => {
+  it("tallies every answer with names", () => {
     const ballot = projectBallot({ source: ballotSource(), viewer: anonymous });
     expect(ballot.tallies?.o1).toEqual([
       { responseId: "r1", name: "Ann", vote: "yes" },
+      { responseId: "r2", name: "Bob", vote: "no" },
     ]);
     expect(ballot.tallies?.o2).toHaveLength(2);
   });
@@ -231,6 +233,77 @@ describe("availableCount", () => {
     expect(
       availableCount({ entries, activeResponseId: null, liveVote: "yes" }),
     ).toBe(3);
+  });
+
+  it("does not count no", () => {
+    expect(
+      availableCount({
+        entries: [...entries, { responseId: "r3", name: "Cy", vote: "no" }],
+        activeResponseId: null,
+        liveVote: undefined,
+      }),
+    ).toBe(2);
+  });
+});
+
+describe("optionBreakdown", () => {
+  const entries = [
+    { responseId: "r1", name: "Ann", vote: "no" as const },
+    { responseId: "r2", name: "Bob", vote: "ifNeedBe" as const },
+    { responseId: "r3", name: "Cy", vote: "yes" as const },
+  ];
+
+  it("orders yes, if need be, then no", () => {
+    expect(
+      optionBreakdown({
+        entries,
+        activeResponseId: null,
+        liveVote: undefined,
+        viewerName: "You",
+      }).map((entry) => entry.name),
+    ).toEqual(["Cy", "Bob", "Ann"]);
+  });
+
+  it("swaps the active response for the live vote", () => {
+    expect(
+      optionBreakdown({
+        entries,
+        activeResponseId: "r1",
+        liveVote: "yes",
+        viewerName: "Ann",
+      }),
+    ).toEqual([
+      {
+        responseId: "r1",
+        name: "Ann",
+        vote: "yes",
+        viewer: { unsaved: true },
+      },
+      { responseId: "r3", name: "Cy", vote: "yes" },
+      { responseId: "r2", name: "Bob", vote: "ifNeedBe" },
+    ]);
+  });
+
+  it("marks the viewer saved while their answer matches the record", () => {
+    expect(
+      optionBreakdown({
+        entries,
+        activeResponseId: "r2",
+        liveVote: "ifNeedBe",
+        viewerName: "You",
+      }).find((entry) => entry.viewer)?.viewer,
+    ).toEqual({ unsaved: false });
+  });
+
+  it("adds a first time viewer once they answer", () => {
+    expect(
+      optionBreakdown({
+        entries,
+        activeResponseId: null,
+        liveVote: "no",
+        viewerName: "You",
+      }),
+    ).toHaveLength(4);
   });
 });
 

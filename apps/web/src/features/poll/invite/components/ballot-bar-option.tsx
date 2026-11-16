@@ -50,6 +50,7 @@ export function BallotBarOption({
   timesChanged = false,
   showMark = true,
   chosen = false,
+  breakdown,
 }: {
   label: BallotTimeValue;
   /** The full date and time, for assistive technology. */
@@ -69,6 +70,8 @@ export function BallotBarOption({
   showMark?: boolean;
   /** The time the organizer picked. */
   chosen?: boolean;
+  /** Makes the count open who answered what. Ignored on a row that is itself a button. */
+  breakdown?: React.ReactNode;
 }) {
   const { t } = useTranslation();
   const answer = {
@@ -143,7 +146,10 @@ export function BallotBarOption({
       </span>
       {count !== undefined ? (
         <span className="[&_[data-testid=ballot-tally]]:text-foreground">
-          <BallotCount value={count} />
+          <BallotCount
+            value={count}
+            breakdown={canVote ? undefined : breakdown}
+          />
         </span>
       ) : null}
     </>
