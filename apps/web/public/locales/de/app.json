@@ -1141,6 +1141,8 @@
   "viewInvites": "Einladungen ansehen",
   "viewResults": "Ergebnisse ansehen",
   "voteBarLabel": "{yes} ja, {ifNeedBe} bei Bedarf, von {total, plural, one {1 Antwort} other {# Antworten}}",
+  "voteOptionChosen": "{option}: die Uhrzeit, die ausgewählt wurde",
+  "voteOptionChosenAnswered": "{option}: {answer}. Die Uhrzeit, die ausgewählt wurde",
   "voteOptionsLockedDescription": "Gesperrt: Teilnehmende haben bereits mit „Falls erforderlich“ geantwortet.",
   "voteOptionsSettingDescription": "Die Antworten, die Teilnehmende bei jeder Option geben können.",
   "voteOptionsSettingTitle": "Antwortmöglichkeiten",
