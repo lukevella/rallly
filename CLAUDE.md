@@ -71,7 +71,7 @@ pnpm lint                 # Run Oxlint; hosts the @shadcn/lint plugin (no rules 
 pnpm type-check           # Run TypeScript type checking
 pnpm check:structure      # Enforce the feature file vocabulary and no feature cycles
 pnpm check:cascades       # Fail on User cascade relations the deletion code does not account for
-pnpm check:locales        # Verify ICU brace balance in locale files
+pnpm check:locales        # Validate translations against their English source
 
 # Utilities
 pnpm i18n:scan            # Scan for translation keys
