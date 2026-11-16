@@ -1,6 +1,6 @@
 {
   "advancedPollSettings": "Pokročilá nastavení hlasování",
-  "advancedPollSettingsDescription": "Vyžadujte e-maily účastníků, skryjte jména účastníků a skryjte hlasy",
+  "advancedPollSettingsPrivacyDescription": "Skrýt jména účastníků a skrýt hlasy",
   "apiAccess": "API přístup",
   "apiAccessDescription": "Vytvářet ankety a číst výsledky na vlastních systémech. <a>Číst dokumentaci k API</a>",
   "apiAndWebhooks": "API a webhooky",
