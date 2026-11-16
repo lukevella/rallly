@@ -10,6 +10,7 @@ function ballot(overrides: Partial<Ballot> = {}): Ballot {
     isDatePoll: false,
     allowTentativeVotes: true,
     requireParticipantEmail: false,
+    hideParticipants: false,
     canRespond: true,
     options: [
       { id: "o1", startTime: "2026-11-18T09:00:00.000Z", duration: 60 },

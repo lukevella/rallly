@@ -43,7 +43,13 @@ export type BallotTallyEntry = {
   responseId: string;
   /** Null when the poll hides participants and the response is not the viewer's. */
   name: string | null;
-  vote: "yes" | "ifNeedBe";
+  vote: BallotVote;
+};
+
+/** A row of an option's breakdown. `viewer` marks the person looking at it. */
+export type BallotBreakdownEntry = BallotTallyEntry & {
+  /** `unsaved` while their answer differs from the one on record. */
+  viewer?: { unsaved: boolean };
 };
 
 /** The ballot as one viewer may see it. */
@@ -53,6 +59,8 @@ export type Ballot = {
   isDatePoll: boolean;
   allowTentativeVotes: boolean;
   requireParticipantEmail: boolean;
+  /** Other people's names are withheld, so there is no one to list. */
+  hideParticipants: boolean;
   canRespond: boolean;
   options: { id: string; startTime: string; duration: number }[];
   /** Null when the poll hides scores from this viewer. */
