@@ -4,7 +4,7 @@ import { cn } from "@rallly/ui";
 import { NumberTicker } from "@rallly/ui/number-ticker";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { UserRoundIcon } from "lucide-react";
-import { Trans, useTranslation } from "@/i18n/client";
+import { Trans } from "@/i18n/client";
 
 /**
  * How many people can make an option. With `breakdown` it is a button that
@@ -17,7 +17,6 @@ export function BallotCount({
   value: number;
   breakdown?: React.ReactNode;
 }) {
-  const { t } = useTranslation();
   const content = (
     <>
       <UserRoundIcon className="size-3.5" aria-hidden="true" />
@@ -36,10 +35,6 @@ export function BallotCount({
       <Popover>
         <PopoverTrigger
           data-testid="ballot-tally"
-          aria-label={t("ballotShowBreakdown", {
-            defaultValue: "{count} available, show who answered",
-            count: value,
-          })}
           render={<button type="button" />}
           className={cn(
             className,
@@ -49,6 +44,13 @@ export function BallotCount({
           )}
         >
           {content}
+          <span className="sr-only">
+            <Trans
+              i18nKey="ballotShowBreakdown"
+              defaults="{count} available, show who answered"
+              values={{ count: value }}
+            />
+          </span>
         </PopoverTrigger>
         {/* React events cross the portal: keep clicks in here from reaching the
             row, which would change the vote. */}
