@@ -8,11 +8,10 @@ import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
   canUserManagePoll,
   getPoll,
-  getPollAvailability,
-  getPollDetails,
   getPollResults,
   getPollStatusCounts,
   getPolls,
+  getPollWithAvailability,
   listParticipantIdsByToken,
   listPollComments,
   listPollParticipants,
@@ -175,18 +174,24 @@ export const loadParticipantIdsByToken = cache(
     listParticipantIdsByToken({ pollId, token }),
 );
 
-export const loadPollAvailability = cache(async (pollId: string) =>
-  getPollAvailability({ pollId }),
+// One read of the poll row per request, shared by availability and details.
+const loadPollWithAvailability = cache(async (pollId: string) =>
+  getPollWithAvailability({ pollId }),
 );
+
+export const loadPollAvailability = cache(async (pollId: string) => {
+  const poll = await loadPollWithAvailability(pollId);
+  return poll?.availability ?? null;
+});
 
 /**
  * The poll's public details, without its responses. Null for a missing,
- * deleted or removed poll. Shared by the vote page and its layout so the poll
- * is read once per request.
+ * deleted or removed poll.
  */
-export const loadPollDetails = cache(async (pollId: string) =>
-  getPollDetails({ pollId }),
-);
+export const loadPollDetails = cache(async (pollId: string) => {
+  const poll = await loadPollWithAvailability(pollId);
+  return poll?.details ?? null;
+});
 
 /**
  * The poll as a participant sees it. Deliberately no admin check: the
@@ -194,42 +199,40 @@ export const loadPollDetails = cache(async (pollId: string) =>
  * the admin page. The emailed link names the viewer's own response, so a
  * guest still sees it as theirs when opening the link in a fresh browser.
  */
-export const loadInvitePoll = cache(
-  async ({ pollId, token }: { pollId: string; token?: string }) => {
-    const poll = await getPollDetails({ pollId });
+export const loadInvitePoll = cache(async (pollId: string, token?: string) => {
+  const poll = await loadPollDetails(pollId);
 
-    if (!poll) {
-      notFound();
-    }
+  if (!poll) {
+    notFound();
+  }
 
-    const [session, participants, comments, linkedParticipantIds] =
-      await Promise.all([
-        getSession(),
-        listPollParticipants({ pollId }),
-        listPollComments({ pollId }),
-        token ? listParticipantIdsByToken({ pollId, token }) : [],
-      ]);
+  const [session, participants, comments, linkedParticipantIds] =
+    await Promise.all([
+      getSession(),
+      listPollParticipants({ pollId }),
+      listPollComments({ pollId }),
+      token ? listParticipantIdsByToken({ pollId, token }) : [],
+    ]);
 
-    const user = session?.user ?? null;
-    const viewer = { userId: user?.id ?? null, linkedParticipantIds };
+  const user = session?.user ?? null;
+  const viewer = { userId: user?.id ?? null, linkedParticipantIds };
 
-    return {
-      poll,
-      participants: maskParticipantsForViewer({
-        participants,
-        viewer,
-        hideParticipants: poll.hideParticipants,
-      }),
-      comments: filterCommentsForViewer({
-        comments,
-        viewerUserId: viewer.userId,
-        hideParticipants: poll.hideParticipants,
-      }),
-      linkedParticipantIds,
-      user,
-    };
-  },
-);
+  return {
+    poll,
+    participants: maskParticipantsForViewer({
+      participants,
+      viewer,
+      hideParticipants: poll.hideParticipants,
+    }),
+    comments: filterCommentsForViewer({
+      comments,
+      viewerUserId: viewer.userId,
+      hideParticipants: poll.hideParticipants,
+    }),
+    linkedParticipantIds,
+    user,
+  };
+});
 
 /**
  * The poll as its host sees it: every response with its note and edit link,
@@ -237,7 +240,7 @@ export const loadInvitePoll = cache(
  * again. Anyone else lands on the invite page, the same place a guest does.
  */
 export const loadAdminPoll = cache(async (pollId: string) => {
-  const poll = await getPollDetails({ pollId });
+  const poll = await loadPollDetails(pollId);
 
   if (!poll) {
     notFound();

@@ -61,7 +61,7 @@ async function InvitePageContent({ params, searchParams }: PageProps) {
     footerLinks,
     canManage,
   ] = await Promise.all([
-    loadInvitePoll({ pollId: urlId, token }),
+    loadInvitePoll(urlId, token),
     getLocale(),
     getDeviceDateTimeConfig(),
     loadFooterLinks(),
