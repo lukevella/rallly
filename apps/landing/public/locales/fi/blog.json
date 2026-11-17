@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "Yritys",
+  "blogCategoryGuides": "Oppaat",
+  "blogCategoryProduct": "Tuote",
+  "blogCategorySecurity": "Tietoturva",
+  "blogCategorySelfHosting": "Omatoiminen isännöinti",
   "blogDescription": "Uutisia, päivityksiä ja tiedotteita Ralllysta.",
   "blogFilterAll": "Kaikki",
   "blogPublishedOn": "Julkaistu",

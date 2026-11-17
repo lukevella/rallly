@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "Společnost",
+  "blogCategoryGuides": "Průvodce",
+  "blogCategoryProduct": "Produkt",
+  "blogCategorySecurity": "Bezpečnost",
+  "blogCategorySelfHosting": "Vlastní hosting",
   "blogDescription": "Novinky, aktualizace a oznámení o Rallly.",
   "blogFilterAll": "Všechny",
   "blogPublishedOn": "Zveřejněno",

@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "Vállalat",
+  "blogCategoryGuides": "Útmutatók",
+  "blogCategoryProduct": "Termék",
+  "blogCategorySecurity": "Biztonság",
+  "blogCategorySelfHosting": "Saját üzemeltetés",
   "blogDescription": "Hírek, frissítések és bejelentések a Rallly-ról.",
   "blogFilterAll": "Összes",
   "blogPublishedOn": "Közzétéve:",

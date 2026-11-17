@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "Компания",
+  "blogCategoryGuides": "Руководства",
+  "blogCategoryProduct": "Продукт",
+  "blogCategorySecurity": "Безопасность",
+  "blogCategorySelfHosting": "Самостоятельный хостинг",
   "blogDescription": "Новости, обновления и анонсы о Rallly.",
   "blogFilterAll": "Все",
   "blogPublishedOn": "Опубликовано",
