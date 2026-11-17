@@ -31,10 +31,15 @@ export class RegisterPage {
       if (await verifyHeading.isVisible()) {
         return;
       }
-      await this.page.getByPlaceholder("jessie.smith@example.com").fill(email);
+      // Bounded: the navigation can still land after the check above, and
+      // an unbounded fill would wait for the missing form until the test
+      // times out.
+      await this.page
+        .getByPlaceholder("jessie.smith@example.com")
+        .fill(email, { timeout: 5000 });
       await this.page
         .getByRole("button", { name: "Continue with email" })
-        .click();
+        .click({ timeout: 5000 });
       await verifyHeading.waitFor({ timeout: 5000 });
     }).toPass();
 

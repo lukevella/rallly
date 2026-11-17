@@ -60,7 +60,7 @@ export async function getMessages(): Promise<MailpitListMessagesResponse> {
 export async function getMessage(id: string): Promise<MailpitMessage> {
   const response = await fetch(`${MAILPIT_API_URL}/v1/message/${id}`);
   const data = (await response.json()) as MailpitMessage;
-  await markMessageAsRead(id);
+  await markMessagesAsRead([id]);
   return data;
 }
 
@@ -70,14 +70,31 @@ export async function deleteAllMessages(): Promise<void> {
   });
 }
 
-async function markMessageAsRead(id: string): Promise<void> {
+async function markMessagesAsRead(ids: string[]): Promise<void> {
   await fetch(`${MAILPIT_API_URL}/v1/messages`, {
     headers: {
       "Content-Type": "application/json",
     },
     method: "PUT",
-    body: JSON.stringify({ IDs: [id], Read: true }),
+    body: JSON.stringify({ IDs: ids, Read: true }),
   });
+}
+
+/**
+ * Mark everything already delivered to an address as read, so the next
+ * capture for it only sees mail sent from here on.
+ */
+export async function skipPendingMessages(to: string): Promise<void> {
+  const { messages } = await getMessages();
+  const ids = messages
+    .filter(
+      (msg) =>
+        msg.To.some((recipient) => recipient.Address === to) && !msg.Read,
+    )
+    .map((msg) => msg.ID);
+  if (ids.length > 0) {
+    await markMessagesAsRead(ids);
+  }
 }
 
 export async function captureOne(
