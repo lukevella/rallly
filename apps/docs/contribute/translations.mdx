@@ -1,31 +1,36 @@
 ---
 title: Translations
 icon: globe
-description: Help translate Rallly into your language
+description: Help improve Rallly in your language
 ---
 
-Rallly is made available in different languages by volunteer translators.
-Translations can be submitted through [Crowdin](https://crowdin.com/project/rallly).
-Submitting translations is super easy and doesn't require any coding skills.
+Rallly is available in more than 15 languages. Translations are generated with AI, and anyone can correct them by opening a pull request on GitHub.
 
-## Sign Up to Crowdin
+## How translations work
 
-The first thing you need to do is [create a Crowdin account](https://accounts.crowdin.com/register). Crowdin offers a user-friendly interface to submit translations.
-You can then join the project using this link: https://crowdin.com/project/rallly
+New or changed English text is translated into every supported language by a workflow, which opens a pull request titled "🌐 Update translations". The workflow is run by the maintainers, so a translation may not appear as soon as the English text is merged. Each translation is checked before it is accepted: variables, tags and plural rules must match the English text.
 
-Once you've joined the project:
+A glossary keeps product terms consistent within each language. It lives in [`i18n/glossary.json`](https://github.com/lukevella/rallly/blob/main/i18n/glossary.json) and lists how terms such as "Space" or "Event Types" are translated, plus names that are never translated, such as "Rallly" and "Pro".
 
-1. Pick the language you'd like to translate
-2. Select a file (each file contains text for different parts of the site)
-3. Start translating!
+## Correcting a translation
 
-<Frame>
-  <img src="/images/contribute/crowdin-project.png" alt="Crowdin Project" />
-</Frame>
+If a translation is wrong or reads awkwardly, edit it directly and open a pull request. Translations live in JSON files, one folder per language:
 
-## Tips for Translators
+| Part of Rallly | Files |
+| --- | --- |
+| The app | [`apps/web/public/locales/<language>/app.json`](https://github.com/lukevella/rallly/tree/main/apps/web/public/locales) |
+| The website | [`apps/landing/public/locales/<language>/`](https://github.com/lukevella/rallly/tree/main/apps/landing/public/locales) |
+| Emails | [`packages/emails/locales/<language>/emails.json`](https://github.com/lukevella/rallly/tree/main/packages/emails/locales) |
 
-Here are a few things to keep in mind when translating.
+Each file maps a key to its text. Find the key by searching for the English text in the matching file under `en`, then change the value in your language's file.
+
+Your correction is kept. The workflow only translates a string again when its English text changes, and it uses your version as a starting point when it does.
+
+If a term is translated inconsistently across many strings, fix the existing strings and add the term to the glossary in the same pull request. The glossary only guides future translations; it doesn't change strings that are already translated.
+
+## Tips for translators
+
+Here are a few things to keep in mind when editing a translation.
 
 ### Punctuation
 
@@ -35,7 +40,7 @@ Pay close attention to how phrases are punctuated.
 Name:
 ```
 
-If a sentence ends with a period (.) or a colon (:), you will want to include that in your translation.
+If a sentence ends with a period (.) or a colon (:), include it in your translation.
 
 ```
 ❌ Nombre
@@ -50,7 +55,7 @@ Variables are placeholders for content that can change. They look like this:
 Hi {name}, welcome back!
 ```
 
-`{name}` is a variable that will be replaced with the user's name. Please make sure variables remain unchanged when translating.
+`{name}` is replaced with the user's name. Leave variables unchanged.
 
 ```
 ❌ Salut {nom}, bienvenue!
@@ -59,13 +64,13 @@ Hi {name}, welcome back!
 
 ### Tags
 
-Tags can be used to create a hyperlink or change the appearance of some text (ex. bold, italics etc…). They look like this:
+Tags create a link or change how some text looks (for example bold or italics). They look like this:
 
 ```
 Go to <a>page</a>
 ```
 
-The tags should remain wrapped around the same content and should not be translated. The contents between the tags should be translated (unless they are a [variable](#variables)).
+Keep the tags wrapped around the same content and don't translate them. Translate the text between the tags, unless it is a [variable](#variables).
 
 ```
 ❌ Gehen Sie zur Seite
@@ -77,57 +82,44 @@ The tags should remain wrapped around the same content and should not be transla
 ### Plurals
 
 <Note>
-  We use [ICU message format](https://crowdin.com/blog/2022/04/13/icu-guide) to
-  format our plurals
+  We use [ICU message format](https://unicode-org.github.io/icu/userguide/format_parse/messages/)
+  for plurals.
 </Note>
 
-Plurals are like special rules that help make sure a message is written correctly when you're using different values.
-
-For example, the following message will display **1 option** if count is `1` or **2 options** if count is anything else.
+Plurals make sure a message reads correctly for different numbers. The following message displays **1 option** if count is `1`, or **2 options** for anything else:
 
 ```
 {count, plural, one {# option} other {# options}}
 ```
 
-Note that `#` is a placeholder for the value of `count`.
+`#` is a placeholder for the value of `count`.
 
-If your language requires more than one plural form, you can add additional rules.
+If your language needs more plural forms, add them. Every plural must keep its `other` case, and any exact number cases such as `=0`.
 
 ```
-{count, plural, one {# опция} few {# опции} other {# опций}}
+{count, plural, one {# опция} few {# опции} many {# опций} other {# опции}}
 ```
-
-<Frame caption="Crowdin let's you preview your message to make sure it works">
-  <img
-    src="/images/contribute/icu-message-format.png"
-    alt="Using ICU Message Format on Corwdin"
-  />
-</Frame>
 
 ### Register
 
-For languages that have different registers (informal vs. formal), the general advise is to use an **informal** register. However, there may be exceptions for certain languages so if you are not sure please [reach out](#contact).
+For languages with informal and formal registers, use the **informal** register unless your language's existing translations do otherwise. If you're not sure, please [reach out](#contact).
 
 ## FAQ
 
 <AccordionGroup>
-  <Accordion title="What if my language is already translated?">
-    You should still join the Crowdin project. When new translations are added
-    you will be notified to help translate them.
+  <Accordion title="What if I don't see my language?">
+    New languages are added by us. If you'd like us to add your language,
+    please [contact us](#contact).
   </Accordion>
-  <Accordion title="What if I don't see my language on Crowdin?">
-    New languages need to be manually added by us. If you'd like us to add your
-    language please [contact us](#contact).
-  </Accordion>
-  <Accordion title="How quickly will my translations get released?">
-    Translations are manually approved before being released. This can take
-    anywhere from a few hours to a few days.
+  <Accordion title="How quickly will my correction be released?">
+    Corrections are released once the pull request is reviewed and merged,
+    usually within a few days.
   </Accordion>
 </AccordionGroup>
 
 ## Contact
 
-If you have an questions you can reach out using one of the following methods:
+If you have any questions, you can reach out using one of the following methods:
 
 <CardGroup cols={3}>
 
