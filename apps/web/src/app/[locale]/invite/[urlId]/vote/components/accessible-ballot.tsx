@@ -325,6 +325,7 @@ export function AccessibleBallot({
 
   const backToAvailability = () => {
     if (stepExit) return;
+    capture("poll_vote:details_back_click");
     setErrors([]);
     setSaveError(null);
     setStepExit("back");
@@ -418,6 +419,36 @@ export function AccessibleBallot({
   );
   const isNew = state.mode === "new";
   const hasChanges = state.hasChanges;
+
+  // Plain properties, not groups: a guest's events are personless, and PostHog
+  // drops group associations without person processing.
+  const capture = (event: string, properties?: Record<string, unknown>) => {
+    posthog?.capture(event, {
+      poll_id: ballot.pollId,
+      tier: poll.space?.tier,
+      option_count: ballot.options.length,
+      is_date_poll: ballot.isDatePoll,
+      has_response: Boolean(active),
+      ...properties,
+    });
+  };
+  const usedMarkAll = React.useRef(false);
+  const trackedPast = {
+    ...past,
+    toggle: () => {
+      capture("poll_vote:past_times_toggle", { show: !past.show });
+      past.toggle();
+    },
+  };
+  const captureBreakdownOpen = () => capture("poll_vote:breakdown_open");
+  const hadChanges = React.useRef(hasChanges);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: once, as a saved response starts to change
+  React.useEffect(() => {
+    if (hasChanges && !hadChanges.current) {
+      capture("poll_vote:response_edit_start");
+    }
+    hadChanges.current = hasChanges;
+  }, [hasChanges]);
   // Not while there are changes to save: it would say saved over unsaved answers.
   const notice = active && ballot.canRespond && !hasChanges ? justSaved : null;
   // A first response is thanked in place of the form, until the viewer goes
@@ -554,6 +585,7 @@ export function AccessibleBallot({
     if (allMarked(vote)) {
       if (!answersBeforeShortcut) return;
       const before = answersBeforeShortcut;
+      capture("poll_vote:mark_all_click", { answer: vote, undo: true });
       state.setVotes(
         Object.fromEntries(
           votable.map((option) => [option.id, before[option.id] ?? null]),
@@ -570,6 +602,8 @@ export function AccessibleBallot({
     if (!answersBeforeShortcut) {
       setAnswersBeforeShortcut(state.answers);
     }
+    usedMarkAll.current = true;
+    capture("poll_vote:mark_all_click", { answer: vote, undo: false });
     state.setVotes(
       Object.fromEntries(votable.map((option) => [option.id, vote])),
     );
@@ -586,6 +620,12 @@ export function AccessibleBallot({
   const fail = (nextErrors: FieldError[], nextSaveError: string | null) => {
     setErrors(nextErrors);
     setSaveError(nextSaveError);
+    if (nextErrors.length > 0) {
+      capture("poll_vote:form_error", {
+        step: onDetailsStep ? "details" : "answers",
+        fields: nextErrors.map((error) => error.field),
+      });
+    }
     // After the errors have rendered. A field's error is read out as its
     // description; one with no field gets focus on the message itself.
     const first = nextErrors[0]?.field;
@@ -700,6 +740,10 @@ export function AccessibleBallot({
     }
     setPending(false);
     if (!result.ok) {
+      capture("poll_vote:save_error", {
+        reason: result.reason,
+        is_new: isNew,
+      });
       fail([], errorMessage(result.reason));
       return;
     }
@@ -708,10 +752,19 @@ export function AccessibleBallot({
     if (isNew) {
       // poll_response_submit is captured on the server under the guest's user
       // id, so it can't be joined to the browser's $pageview.
-      posthog?.capture("poll_response:form_submit", {
-        poll_id: ballot.pollId,
-        tier: poll.space?.tier,
+      // The same name as the old page, so the two compare. What the response
+      // holds goes with it, since the server's copy can't be joined either.
+      const countOf = (type: BallotVote) =>
+        votes.filter((vote) => vote.type === type).length;
+      capture("poll_response:form_submit", {
+        yes_count: countOf("yes"),
+        if_need_be_count: countOf("ifNeedBe"),
+        no_count: countOf("no"),
+        used_mark_all: usedMarkAll.current,
+        has_note: Boolean(String(data.get("note") ?? "").trim()),
       });
+    } else {
+      capture("poll_vote:changes_save");
     }
     setStatus(
       isNew
@@ -721,6 +774,7 @@ export function AccessibleBallot({
   };
 
   const discardChanges = () => {
+    capture("poll_vote:changes_discard");
     setErrors([]);
     setSaveError(null);
     setAnswersBeforeShortcut(null);
@@ -868,6 +922,7 @@ export function AccessibleBallot({
                 return;
               }
               detailsDialog.dismiss();
+              capture("poll_vote:name_save");
               setStatus(
                 t("screenReaderNameUpdated", {
                   defaultValue: "Your name was updated",
@@ -954,6 +1009,7 @@ export function AccessibleBallot({
                   return;
                 }
                 deleteDialog.dismiss();
+                capture("poll_vote:response_delete");
                 setJustSaved(null);
                 setStatus(
                   t("screenReaderAnswersDeleted", {
@@ -1066,14 +1122,15 @@ export function AccessibleBallot({
                   defaultValue: "{city} time. Change time zone",
                   city: getCityFromTimezoneId(viewerTimeZone),
                 })}
-                onChange={(id) =>
+                onChange={(id) => {
+                  capture("poll_vote:time_zone_change", { time_zone: id });
                   setStatus(
                     t("screenReaderTimeZoneChanged", {
                       defaultValue: "Times are now shown in {city} time",
                       city: getCityFromTimezoneId(id),
                     }),
-                  )
-                }
+                  );
+                }}
               />
             ),
           }}
@@ -1082,7 +1139,8 @@ export function AccessibleBallot({
     ) : null;
   const timeFormatSwitcher = ballot.isDatePoll ? null : (
     <TimeFormatSwitcher
-      onChange={(format) =>
+      onChange={(format) => {
+        capture("poll_vote:time_format_change", { time_format: format });
         setStatus(
           format === "hours12"
             ? t("screenReaderTimeFormat12", {
@@ -1091,8 +1149,8 @@ export function AccessibleBallot({
             : t("screenReaderTimeFormat24", {
                 defaultValue: "Times are now shown in 24-hour format",
               }),
-        )
-      }
+        );
+      }}
     />
   );
   const timeControls = timeFormatSwitcher ? (
@@ -1347,6 +1405,7 @@ export function AccessibleBallot({
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
                     onClick={() => {
+                      capture("poll_vote:change_name_click");
                       setDetailsError(null);
                       detailsDialog.trigger();
                     }}
@@ -1360,6 +1419,7 @@ export function AccessibleBallot({
                   <DropdownMenuItem
                     variant="destructive"
                     onClick={() => {
+                      capture("poll_vote:delete_response_click");
                       setDeleteError(null);
                       deleteDialog.trigger();
                     }}
@@ -1423,6 +1483,7 @@ export function AccessibleBallot({
               type="button"
               className="mt-6 rounded-xl"
               onClick={() => {
+                capture("poll_vote:view_response_click");
                 // So the card grows back to the answers rather than jumping.
                 cardBefore.current =
                   mainRef.current
@@ -1508,7 +1569,7 @@ export function AccessibleBallot({
             {past.ids.size > 0 && votable.length > 0 ? (
               <p className="mt-3 flex flex-wrap gap-2">
                 <PastTimesToggle
-                  past={past}
+                  past={trackedPast}
                   labelled={true}
                   className="rounded-xl"
                 />
@@ -1554,6 +1615,7 @@ export function AccessibleBallot({
                             }
                             total={total}
                             breakdown={renderBreakdown?.(optionId)}
+                            onBreakdownOpen={captureBreakdownOpen}
                           />
                         );
                       })}
@@ -1677,7 +1739,7 @@ export function AccessibleBallot({
                   ) : null}
                   {past.ids.size > 0 && votable.length > 0 ? (
                     <PastTimesToggle
-                      past={past}
+                      past={trackedPast}
                       labelled={true}
                       className="rounded-full"
                     />
@@ -1791,6 +1853,7 @@ export function AccessibleBallot({
                                 <BallotCount
                                   value={liveCount}
                                   breakdown={renderBreakdown?.(optionId)}
+                                  onBreakdownOpen={captureBreakdownOpen}
                                 />
                               </span>
                             ) : null}
@@ -1950,7 +2013,11 @@ export function AccessibleBallot({
                       align="inline-end"
                       className={fieldAddonClassName}
                     >
-                      <Popover>
+                      <Popover
+                        onOpenChange={(open) => {
+                          if (open) capture("poll_vote:email_why_open");
+                        }}
+                      >
                         <PopoverTrigger
                           render={
                             <InputGroupButton
@@ -2045,6 +2112,7 @@ export function AccessibleBallot({
                             defaultValue: "Remove note",
                           })}
                           onClick={() => {
+                            capture("poll_vote:note_remove");
                             setShowNote(false);
                             noteRemoved.current = true;
                           }}
@@ -2065,7 +2133,10 @@ export function AccessibleBallot({
                     id="add-note"
                     type="button"
                     className="self-start rounded-full"
-                    onClick={() => setShowNote(true)}
+                    onClick={() => {
+                      capture("poll_vote:note_add");
+                      setShowNote(true);
+                    }}
                   >
                     <PlusIcon aria-hidden="true" data-icon="inline-start" />
                     <Trans

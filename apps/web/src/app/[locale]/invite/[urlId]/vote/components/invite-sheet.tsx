@@ -25,6 +25,7 @@ export function InviteSheet({
   title,
   className,
   bar = false,
+  onOpen,
   children,
 }: {
   label: string;
@@ -34,9 +35,17 @@ export function InviteSheet({
   className?: string;
   /** A labelled button beside the ballot's actions instead of an icon. */
   bar?: boolean;
+  onOpen?: () => void;
   children: React.ReactNode;
 }) {
   const dialog = useDialog();
+  const triggerProps = {
+    ...dialog.triggerProps,
+    onClick: () => {
+      onOpen?.();
+      dialog.trigger();
+    },
+  };
 
   return (
     <>
@@ -44,7 +53,7 @@ export function InviteSheet({
         <Button
           type="button"
           className={ballotBarButtonClassName}
-          {...dialog.triggerProps}
+          {...triggerProps}
         >
           {icon}
           {label}
@@ -58,7 +67,7 @@ export function InviteSheet({
                 variant="ghost"
                 size="icon"
                 aria-label={label}
-                {...dialog.triggerProps}
+                {...triggerProps}
               />
             }
           >

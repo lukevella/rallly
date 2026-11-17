@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import * as React from "react";
 import { Trans } from "@/i18n/client";
@@ -15,8 +16,10 @@ const slackRem = 1.75;
  * way to reveal it.
  */
 export function CollapsibleDescription({
+  pollId,
   children,
 }: {
+  pollId: string;
   children: React.ReactNode;
 }) {
   const id = React.useId();
@@ -75,7 +78,14 @@ export function CollapsibleDescription({
           type="button"
           aria-expanded={expanded}
           aria-controls={id}
-          onClick={() => setExpanded((value) => !value)}
+          onClick={() => {
+            if (!expanded) {
+              posthog?.capture("poll_vote:description_expand", {
+                poll_id: pollId,
+              });
+            }
+            setExpanded(!expanded);
+          }}
           className="mt-1 text-foreground text-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
         >
           {expanded ? (
