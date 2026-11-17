@@ -12,7 +12,7 @@ import { projectBallot } from "./utils";
  * resolved here, outside anything that will be cached.
  */
 export const loadInviteBallot = cache(
-  async ({ pollId, token }: { pollId: string; token?: string }) => {
+  async (pollId: string, token?: string) => {
     const [source, session, linkedResponseIds] = await Promise.all([
       getBallotSource({ pollId }),
       getSession(),

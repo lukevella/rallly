@@ -1,7 +1,8 @@
 import "server-only";
 
 import { cache } from "react";
-import { canUserManagePoll, getPollDetails } from "@/features/poll/data";
+import { canUserManagePoll } from "@/features/poll/data";
+import { loadPollDetails } from "@/features/poll/loaders";
 import { getSession } from "@/lib/auth";
 
 /**
@@ -12,7 +13,7 @@ import { getSession } from "@/lib/auth";
  */
 export const loadCanManagePoll = cache(async (pollId: string) => {
   const [poll, session] = await Promise.all([
-    getPollDetails({ pollId }),
+    loadPollDetails(pollId),
     getSession(),
   ]);
 

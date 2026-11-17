@@ -1,10 +1,49 @@
 "use client";
 
 import { cn } from "@rallly/ui";
-import { NumberTicker } from "@rallly/ui/number-ticker";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import { UserRoundIcon } from "lucide-react";
 import { Trans } from "@/i18n/client";
+
+const digits = Array.from({ length: 10 }, (_, digit) => digit);
+
+/**
+ * The count as columns of digits that roll to a new value. A CSS transition
+ * rather than the animated ticker: there is one on every row, so it holds no
+ * layers and runs no script while it rests.
+ */
+function RollingCount({ value }: { value: number }) {
+  // Keyed by place value, so the ones keep rolling when the count gains a digit.
+  const chars = String(value).split("");
+  const places = chars.map((char, index) => ({
+    digit: Number(char),
+    place: chars.length - 1 - index,
+  }));
+  return (
+    <span aria-hidden="true" className="inline tabular-nums">
+      {places.map(({ digit: shown, place }) => (
+        <span
+          key={place}
+          className="relative inline-block h-[1em] w-[1ch] overflow-hidden align-[-0.125em]"
+        >
+          <span
+            className="absolute inset-x-0 top-0 flex flex-col items-center transition-transform duration-300 ease-out-ui motion-reduce:transition-none"
+            style={{ transform: `translateY(-${shown}em)` }}
+          >
+            {digits.map((digit) => (
+              <span
+                key={digit}
+                className="block h-[1em] text-center leading-[1em]"
+              >
+                {digit}
+              </span>
+            ))}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
 
 /**
  * How many people can make an option. With `breakdown` it is a button that
@@ -24,9 +63,7 @@ export function BallotCount({
       <UserRoundIcon className="size-3.5" aria-hidden="true" />
       {/* Rolls to the new count as an answer changes it. Hidden whole, with the
           ticker's own reading of the number: the sentence below says it. */}
-      <span aria-hidden="true">
-        <NumberTicker value={value} duration={0.3} />
-      </span>
+      <RollingCount value={value} />
     </>
   );
   const className =

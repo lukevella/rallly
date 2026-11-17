@@ -48,6 +48,7 @@ import {
   UserRoundPenIcon,
 } from "lucide-react";
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
@@ -62,6 +63,7 @@ import {
   useBallotState,
   useLinkToken,
   usePastOptions,
+  useTimesChangedAt,
 } from "@/features/poll/invite/client";
 import { BallotBarOption } from "@/features/poll/invite/components/ballot-bar-option";
 import { BallotBreakdown } from "@/features/poll/invite/components/ballot-breakdown";
@@ -179,16 +181,6 @@ export function AccessibleBallot({
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
   const [showNote, setShowNote] = React.useState(false);
-  const noteRemoved = React.useRef(false);
-
-  // The button that was pressed is gone, so focus goes back to the one that
-  // replaced it.
-  React.useEffect(() => {
-    if (!showNote && noteRemoved.current) {
-      noteRemoved.current = false;
-      document.getElementById("add-note")?.focus();
-    }
-  }, [showNote]);
   const [status, setStatus] = React.useState("");
   const deleteDialog = useDialog();
   const detailsDialog = useDialog();
@@ -337,22 +329,7 @@ export function AccessibleBallot({
       ? "UTC"
       : (viewerTimeZone ?? getBrowserTimeZone());
 
-  // True just long enough for the values that moved to start animating, so a row
-  // that mounts later (Edit, showing past times) doesn't flash as if it had changed.
-  const displayKey = `${displayTimeZone}|${timeFormat}`;
-  const [previousDisplayKey, setPreviousDisplayKey] =
-    React.useState(displayKey);
-  const [timesChanged, setTimesChanged] = React.useState(false);
-  if (previousDisplayKey !== displayKey) {
-    setPreviousDisplayKey(displayKey);
-    setTimesChanged(true);
-  }
-  // biome-ignore lint/correctness/useExhaustiveDependencies: a second change in the window restarts it
-  React.useEffect(() => {
-    if (!timesChanged) return;
-    const timeout = setTimeout(() => setTimesChanged(false), 300);
-    return () => clearTimeout(timeout);
-  }, [timesChanged, displayKey]);
+  const timesChangedAt = useTimesChangedAt(`${displayTimeZone}|${timeFormat}`);
 
   const date = (iso: string, preset: "dateFull" | "weekdayMonthDay") =>
     formatDateTime(new Date(iso), {
@@ -812,7 +789,8 @@ export function AccessibleBallot({
   const countDescription = (optionId: string, liveVote?: BallotVote) => {
     if (!ballot.tallies) return null;
     const count = availableCount({
-      entries: ballot.tallies[optionId] ?? [],
+      tallies: ballot.tallies,
+      votes: ballot.tallies.votes[optionId] ?? [],
       activeResponseId: state.activeResponseId,
       liveVote,
     });
@@ -881,7 +859,8 @@ export function AccessibleBallot({
               timeZone={ballot.isDatePoll ? null : ballot.timeZone}
               total={total}
               entries={optionBreakdown({
-                entries: ballot.tallies[optionId] ?? [],
+                tallies: ballot.tallies,
+                votes: ballot.tallies.votes[optionId] ?? [],
                 activeResponseId: state.activeResponseId,
                 liveVote: state.answers[optionId],
                 viewerName: t("you", { defaultValue: "You" }),
@@ -1586,7 +1565,7 @@ export function AccessibleBallot({
                     <h3 className="font-normal text-sm">
                       <BallotTimeText
                         value={dayHeading(first, group.key)}
-                        changed={timesChanged}
+                        changedAt={timesChangedAt}
                       />
                     </h3>
                     <ul className="flex flex-col gap-1.5">
@@ -1598,7 +1577,7 @@ export function AccessibleBallot({
                           <BallotBarOption
                             key={optionId}
                             label={rowTimeLabel(option)}
-                            timesChanged={timesChanged}
+                            timesChangedAt={timesChangedAt}
                             fullLabel={optionLabel(option)}
                             vote={vote}
                             canVote={false}
@@ -1610,7 +1589,8 @@ export function AccessibleBallot({
                             count={
                               ballot.tallies
                                 ? availableCount({
-                                    entries: ballot.tallies[optionId] ?? [],
+                                    tallies: ballot.tallies,
+                                    votes: ballot.tallies.votes[optionId] ?? [],
                                     activeResponseId: state.activeResponseId,
                                     liveVote: vote,
                                   })
@@ -1758,7 +1738,7 @@ export function AccessibleBallot({
                       <h3 className="font-normal text-sm">
                         <BallotTimeText
                           value={dayHeading(first, group.key)}
-                          changed={timesChanged}
+                          changedAt={timesChangedAt}
                         />
                       </h3>
                       {group.optionIds.map((optionId) => {
@@ -1771,7 +1751,8 @@ export function AccessibleBallot({
                         const isPast = past.ids.has(optionId);
                         const liveCount = ballot.tallies
                           ? availableCount({
-                              entries: ballot.tallies[optionId] ?? [],
+                              tallies: ballot.tallies,
+                              votes: ballot.tallies.votes[optionId] ?? [],
                               activeResponseId: state.activeResponseId,
                               liveVote: vote,
                             })
@@ -1825,15 +1806,17 @@ export function AccessibleBallot({
                               <span
                                 aria-hidden="true"
                                 className={cn(
-                                  "absolute inset-y-0 left-0 -z-10 transition-[width,background-color] duration-200 motion-reduce:transition-none",
+                                  "absolute inset-y-0 left-0 -z-10 w-full origin-left transition-[transform,background-color] duration-200 motion-reduce:transition-none",
                                   vote === "yes"
                                     ? "bg-green-100 dark:bg-green-500/25"
                                     : vote === "ifNeedBe"
                                       ? "bg-amber-100 dark:bg-amber-500/25"
                                       : "bg-gray-200 dark:bg-white/10",
                                 )}
+                                // Scaled, not sized, so a changing count
+                                // animates without layout.
                                 style={{
-                                  width: `${Math.round((liveCount / total) * 100)}%`,
+                                  transform: `scaleX(${Math.round((liveCount / total) * 100) / 100})`,
                                 }}
                               />
                             ) : null}
@@ -1845,7 +1828,7 @@ export function AccessibleBallot({
                             >
                               <BallotTimeText
                                 value={rowTimeLabel(option)}
-                                changed={timesChanged}
+                                changedAt={timesChangedAt}
                               />
                             </span>
                             {liveCount !== null ? (
@@ -2116,8 +2099,10 @@ export function AccessibleBallot({
                           })}
                           onClick={() => {
                             capture("poll_vote:note_remove");
-                            setShowNote(false);
-                            noteRemoved.current = true;
+                            // The button that was pressed is gone, so focus
+                            // goes to the one that replaced it.
+                            flushSync(() => setShowNote(false));
+                            document.getElementById("add-note")?.focus();
                           }}
                         >
                           <TrashIcon aria-hidden="true" />

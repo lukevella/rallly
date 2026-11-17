@@ -48,10 +48,30 @@ function getInviteToken({
   return first(token) ?? first(invite);
 }
 
+// Started ahead of the availability check, so a branch that returns early may
+// never await it. Marked handled so its rejection cannot go unhandled; an
+// await still sees the error.
+function startEarly<T>(promise: Promise<T>) {
+  promise.catch(() => {});
+  return promise;
+}
+
 async function PageContent({ params, searchParams }: PageProps) {
   const { urlId } = await params;
-  const [availability, { token: tokenParam, invite: inviteParam }] =
-    await Promise.all([loadPollAvailability(urlId), searchParams]);
+  const footerLinksRead = startEarly(loadFooterLinks());
+  const rest = startEarly(
+    Promise.all([
+      loadPollDetails(urlId),
+      searchParams.then((query) =>
+        loadInviteBallot(urlId, getInviteToken(query)),
+      ),
+      loadInstanceBranding(),
+      loadCanManagePoll(urlId),
+      getTranslation(),
+    ]),
+  );
+
+  const availability = await loadPollAvailability(urlId);
 
   if (!availability) {
     notFound();
@@ -61,21 +81,13 @@ async function PageContent({ params, searchParams }: PageProps) {
     return (
       <PollUnavailable
         reason={availability.unavailable}
-        footerLinks={await loadFooterLinks()}
+        footerLinks={await footerLinksRead}
       />
     );
   }
 
-  const token = getInviteToken({ token: tokenParam, invite: inviteParam });
-  const { t } = await getTranslation();
-  const [poll, ballot, instanceBranding, footerLinks, canManage] =
-    await Promise.all([
-      loadPollDetails(urlId),
-      loadInviteBallot({ pollId: urlId, token }),
-      loadInstanceBranding(),
-      loadFooterLinks(),
-      loadCanManagePoll(urlId),
-    ]);
+  const [[poll, ballot, instanceBranding, canManage, { t }], footerLinks] =
+    await Promise.all([rest, footerLinksRead]);
 
   if (!poll || !ballot) {
     notFound();

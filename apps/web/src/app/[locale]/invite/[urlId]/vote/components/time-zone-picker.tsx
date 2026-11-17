@@ -2,41 +2,33 @@
 
 import { cn } from "@rallly/ui";
 import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@rallly/ui/command";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import * as React from "react";
-import {
-  getAllTimezoneIds,
-  getCityFromTimezoneId,
-  getCuratedTimezoneIds,
-  matchesTimezoneQuery,
-} from "@/components/time-zone-picker/timezone-data";
+import { Spinner } from "@/components/spinner";
+import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { useDeviceDateTime } from "@/lib/datetime/device";
-import { Time } from "@/lib/datetime/time";
-import {
-  normalizeLegacyIanaId,
-  toRuntimeCanonicalIanaId,
-} from "@/lib/utils/timezone-schema";
+import { normalizeLegacyIanaId } from "@/lib/utils/timezone-schema";
 
-const allIds = getAllTimezoneIds().sort((a, b) =>
-  getCityFromTimezoneId(a).localeCompare(getCityFromTimezoneId(b)),
-);
+const loadTimeZoneList = () =>
+  import("./time-zone-list").then((mod) => mod.TimeZoneList);
 
-const curatedIds = getCuratedTimezoneIds(allIds);
+const TimeZoneList = dynamic(loadTimeZoneList, {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-40 items-center justify-center">
+      <Spinner />
+    </div>
+  ),
+});
 
 /**
  * The viewer's time zone as its city; tapping it opens a
@@ -60,22 +52,12 @@ export function TimeZonePicker({
   const { timeZone } = useDateTimeConfig();
   const { setTimeZone } = useDeviceDateTime();
   const dialog = useDialog();
-  const [query, setQuery] = React.useState("");
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   if (!timeZone) {
     return null;
   }
 
-  const selected = toRuntimeCanonicalIanaId(timeZone);
-  // Until the viewer searches, their current zone leads the shortlist, so
-  // it is visible even when it isn't one of the curated cities.
-  const current =
-    allIds.find((id) => toRuntimeCanonicalIanaId(id) === selected) ?? timeZone;
-  const items = query.trim()
-    ? allIds.filter((id) => matchesTimezoneQuery(id, query))
-    : [current, ...curatedIds.filter((id) => id !== current)];
-  const now = new Date();
   const city = getCityFromTimezoneId(timeZone);
 
   return (
@@ -87,10 +69,10 @@ export function TimeZonePicker({
           "inline-flex items-center gap-1 text-left underline decoration-muted-foreground/60 decoration-dotted underline-offset-4 hover:decoration-foreground",
           className,
         )}
-        onClick={() => {
-          setQuery("");
-          dialog.trigger();
-        }}
+        // Fetched ahead of the click, so the list is there when the dialog opens.
+        onPointerEnter={loadTimeZoneList}
+        onFocus={loadTimeZoneList}
+        onClick={() => dialog.trigger()}
         aria-label={
           triggerLabel ??
           t("changeTimeZoneFrom", {
@@ -120,50 +102,14 @@ export function TimeZonePicker({
               defaults="Dates and times are shown in this time zone."
             />
           </DialogDescription>
-          <Command shouldFilter={false} className="[[cmdk-input]]:**:h-12">
-            <CommandInput
-              autoFocus={true}
-              value={query}
-              onValueChange={setQuery}
-              placeholder={t("timezoneInputPlaceholder", {
-                defaultValue: "Search time zone…",
-              })}
-            />
-            <CommandList className="p-1">
-              <CommandEmpty>
-                <Trans
-                  i18nKey="timeZoneSelect__noOption"
-                  defaults="No option found"
-                />
-              </CommandEmpty>
-              {items.map((id) => (
-                <CommandItem
-                  key={id}
-                  value={id}
-                  className="p-2"
-                  onSelect={() => {
-                    setTimeZone(normalizeLegacyIanaId(id));
-                    onChange?.(id);
-                    dialog.dismiss();
-                  }}
-                >
-                  <span className="min-w-0 flex-1 truncate">
-                    {getCityFromTimezoneId(id)}
-                  </span>
-                  <span className="text-muted-foreground text-xs tabular-nums">
-                    <Time value={now} preset="time" timeZone={id} />
-                  </span>
-                  <CheckIcon
-                    className={
-                      toRuntimeCanonicalIanaId(id) === selected
-                        ? "size-4"
-                        : "invisible size-4"
-                    }
-                  />
-                </CommandItem>
-              ))}
-            </CommandList>
-          </Command>
+          <TimeZoneList
+            timeZone={timeZone}
+            onSelect={(id) => {
+              setTimeZone(normalizeLegacyIanaId(id));
+              onChange?.(id);
+              dialog.dismiss();
+            }}
+          />
         </DialogContent>
       </Dialog>
     </>

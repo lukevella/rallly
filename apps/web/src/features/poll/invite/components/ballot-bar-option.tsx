@@ -47,7 +47,7 @@ export function BallotBarOption({
   count,
   total,
   compact = false,
-  timesChanged = false,
+  timesChangedAt,
   showMark = true,
   chosen = false,
   breakdown,
@@ -65,8 +65,8 @@ export function BallotBarOption({
   total: number;
   /** A 40px row from lg with a mouse, matching the rows that can be answered. */
   compact?: boolean;
-  /** The viewer just changed the time zone or format. */
-  timesChanged?: boolean;
+  /** When the viewer last changed the time zone or format. */
+  timesChangedAt?: React.RefObject<number>;
   /** Off for a viewer with no response to show: an empty mark reads as a control. */
   showMark?: boolean;
   /** The time the organizer picked. */
@@ -89,10 +89,13 @@ export function BallotBarOption({
         <span
           aria-hidden="true"
           className={cn(
-            "absolute inset-y-0 left-0 -z-10 transition-[width,background-color] duration-200 motion-reduce:transition-none",
+            "absolute inset-y-0 left-0 -z-10 w-full origin-left transition-[transform,background-color] duration-200 motion-reduce:transition-none",
             barTint[vote ?? "none"],
           )}
-          style={{ width: `${Math.round((count / total) * 100)}%` }}
+          // Scaled, not sized, so a changing count animates without layout.
+          style={{
+            transform: `scaleX(${Math.round((count / total) * 100) / 100})`,
+          }}
         />
       ) : null}
       {/* A viewer's own answer stays on the picked time; the border marks it. */}
@@ -143,7 +146,7 @@ export function BallotBarOption({
                 : fullLabel}
         </span>
         <span aria-hidden="true">
-          <BallotTimeText value={label} changed={timesChanged} />
+          <BallotTimeText value={label} changedAt={timesChangedAt} />
         </span>
       </span>
       {count !== undefined ? (
