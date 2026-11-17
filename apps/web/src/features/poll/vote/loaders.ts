@@ -1,8 +1,9 @@
 import "server-only";
 
 import { cache } from "react";
-import { canUserManagePoll } from "@/features/poll/data";
+import { canUserManagePoll, listPollComments } from "@/features/poll/data";
 import { loadPollDetails } from "@/features/poll/loaders";
+import { filterCommentsForViewer } from "@/features/poll/utils";
 import { getSession } from "@/lib/auth";
 
 /**
@@ -19,6 +20,42 @@ export const loadOptionalResponder = cache(async () => {
   }
 
   return { name: user.name, email: user.email };
+});
+
+/**
+ * The poll's comments as this viewer may see them, oldest first. Empty when
+ * comments are off. A poll that hides participants shows a viewer only
+ * their own.
+ */
+export const loadVoteComments = cache(async (pollId: string) => {
+  const [poll, session, canManage] = await Promise.all([
+    loadPollDetails(pollId),
+    getSession(),
+    loadCanManagePoll(pollId),
+  ]);
+
+  if (!poll || poll.disableComments) {
+    return [];
+  }
+
+  const viewerUserId = session?.user?.id ?? null;
+  const comments = filterCommentsForViewer({
+    comments: await listPollComments({ pollId }),
+    viewerUserId,
+    hideParticipants: poll.hideParticipants,
+  });
+
+  return comments.map((comment) => {
+    const isOwn = viewerUserId !== null && comment.userId === viewerUserId;
+    return {
+      id: comment.id,
+      authorName: comment.authorName,
+      content: comment.content,
+      createdAt: comment.createdAt,
+      isOwn,
+      canDelete: isOwn || canManage,
+    };
+  });
 });
 
 /**
