@@ -678,55 +678,34 @@ export async function getPollWithOptions({
 }
 
 /**
- * Whether a poll can be served at all, and why not. A poll that exists but
- * must not be shown gets its own page instead of a 404: the viewer of a
- * banned creator's poll is usually a scam target and needs to be told so,
- * and a deleted poll's viewer deserves better than "page not found". The
- * space owner counts as a creator too: an API key holder can organize polls
- * under any member, and banning the payer must take every link in the
- * space down with it.
+ * A poll's availability and its details, from one read of the row. Null for
+ * a missing poll.
+ *
+ * Availability says whether the poll can be served at all, and why not. A
+ * poll that exists but must not be shown gets its own page instead of a 404:
+ * the viewer of a banned creator's poll is usually a scam target and needs
+ * to be told so, and a deleted poll's viewer deserves better than "page not
+ * found". The space owner counts as a creator too: an API key holder can
+ * organize polls under any member, and banning the payer must take every
+ * link in the space down with it.
+ *
+ * Details are the poll as both the invite page and the admin page show it,
+ * and null whenever the poll is unavailable, for everyone including its
+ * owner, so nothing about it travels further than its title and author.
  */
-export async function getPollAvailability({ pollId }: { pollId: string }) {
-  const poll = await prisma.poll.findUnique({
-    where: { id: pollId },
-    select: {
-      id: true,
-      title: true,
-      deleted: true,
-      user: { select: { name: true, banned: true } },
-      space: { select: { owner: { select: { banned: true } } } },
-    },
-  });
-
-  if (!poll) {
-    return null;
-  }
-
-  const unavailable: PollUnavailableReason | null = poll.deleted
-    ? "deleted"
-    : poll.user?.banned || poll.space?.owner.banned
-      ? "removed"
-      : null;
-
-  return {
-    id: poll.id,
-    title: poll.title,
-    authorName: poll.user?.name || "Guest",
-    unavailable,
-  };
-}
-
-/**
- * The poll as both the invite page and the admin page show it. Null for a
- * missing poll, a deleted one, or a banned creator's: all three are treated
- * as if the poll never existed, for everyone including its owner. The space
- * owner counts as a creator, as in getPollAvailability.
- */
-export async function getPollDetails({
+export async function getPollWithAvailability({
   pollId,
 }: {
   pollId: string;
-}): Promise<PollDetails | null> {
+}): Promise<{
+  availability: {
+    id: string;
+    title: string;
+    authorName: string;
+    unavailable: PollUnavailableReason | null;
+  };
+  details: PollDetails | null;
+} | null> {
   const poll = await prisma.poll.findUnique({
     where: { id: pollId },
     select: {
@@ -777,8 +756,25 @@ export async function getPollDetails({
     },
   });
 
-  if (!poll || poll.deleted || poll.user?.banned || poll.space?.owner.banned) {
+  if (!poll) {
     return null;
+  }
+
+  const unavailable: PollUnavailableReason | null = poll.deleted
+    ? "deleted"
+    : poll.user?.banned || poll.space?.owner.banned
+      ? "removed"
+      : null;
+
+  const availability = {
+    id: poll.id,
+    title: poll.title,
+    authorName: poll.user?.name || "Guest",
+    unavailable,
+  };
+
+  if (unavailable) {
+    return { availability, details: null };
   }
 
   const { spaceBrandingAllowed, spaceAttributionConfigurable } =
@@ -805,7 +801,7 @@ export async function getPollDetails({
         })
       : null;
 
-  return {
+  const details = {
     ...pollFields,
     conferencing: parsePollConferencing(conferencing, { pollId: poll.id }),
     user: user ? { id: user.id, name: user.name, image: user.image } : null,
@@ -841,6 +837,8 @@ export async function getPollDetails({
       : null,
     inviteLink: shortUrl(`/invite/${poll.id}`),
   };
+
+  return { availability, details };
 }
 
 /**
