@@ -20,7 +20,7 @@ allowBuilds:
   sharp: false
 
 overrides:
-  next@16.3.0: 16.4.2
+  next@16.3.0: 16.4.6
 
 # @hookform/resolvers imports zod/v4/core without declaring zod as a peer,
 # relying on pnpm's hoisted fallback which can flip to zod@3 on re-resolution
