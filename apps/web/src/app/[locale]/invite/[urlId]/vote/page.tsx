@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
+import { SessionRefresher } from "@/components/session-refresher";
 import { Spinner } from "@/components/spinner";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/features/branding/components/logo";
@@ -127,6 +128,7 @@ async function PageContent({ params, searchParams }: PageProps) {
 
   return (
     <>
+      <SessionRefresher />
       {token ? <InviteOpenRecorder pollId={poll.id} token={token} /> : null}
       {/* First in the reading order, and outside the card from lg. */}
       <header
