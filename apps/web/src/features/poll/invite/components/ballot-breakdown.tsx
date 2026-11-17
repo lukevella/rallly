@@ -10,8 +10,52 @@ import {
   EventDate,
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
-import { Trans } from "@/i18n/client";
-import type { Ballot, BallotBreakdownEntry, BallotVote } from "../types";
+import { Trans, useTranslation } from "@/i18n/client";
+import type {
+  Ballot,
+  BallotBreakdownEntry,
+  BallotTallies,
+  BallotVote,
+} from "../types";
+import { optionBreakdown } from "../utils";
+
+/**
+ * The breakdown worked out from the tallies. Rendered inside the popover, so
+ * the list is only built while it is open.
+ */
+export function BallotOptionBreakdown({
+  option,
+  timeZone,
+  total,
+  tallies,
+  votes,
+  activeResponseId,
+  liveVote,
+}: {
+  option: Ballot["options"][number];
+  timeZone: string | null;
+  total: number;
+  tallies: BallotTallies;
+  votes: (BallotVote | null)[];
+  activeResponseId: string | null;
+  liveVote: BallotVote | undefined;
+}) {
+  const { t } = useTranslation();
+  return (
+    <BallotBreakdown
+      option={option}
+      timeZone={timeZone}
+      total={total}
+      entries={optionBreakdown({
+        tallies,
+        votes,
+        activeResponseId,
+        liveVote,
+        viewerName: t("you", { defaultValue: "You" }),
+      })}
+    />
+  );
+}
 
 /** Who answered what on one option, as the body of the count's popover. */
 export function BallotBreakdown({

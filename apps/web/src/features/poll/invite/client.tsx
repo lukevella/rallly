@@ -68,6 +68,32 @@ export function useBallotState({ ballot }: { ballot: Ballot }) {
   }
 
   const canChange = ballot.canRespond;
+  // Stable, so memoized rows can take them.
+  const setVote = React.useCallback(
+    (optionId: string, vote: BallotVote) => {
+      if (!canChange) return;
+      setAnswers((current) => ({ ...current, [optionId]: vote }));
+    },
+    [canChange],
+  );
+  /** Sets several answers at once; null clears an answer. */
+  const setVotes = React.useCallback(
+    (votes: Record<string, BallotVote | null>) => {
+      if (!canChange) return;
+      setAnswers((current) => {
+        const next = { ...current };
+        for (const [optionId, vote] of Object.entries(votes)) {
+          if (vote) {
+            next[optionId] = vote;
+          } else {
+            delete next[optionId];
+          }
+        }
+        return next;
+      });
+    },
+    [canChange],
+  );
   // An unanswered option is saved as no, so the two compare as equal.
   const hasChanges =
     mode === "saved" &&
@@ -88,25 +114,8 @@ export function useBallotState({ ballot }: { ballot: Ballot }) {
       setAnswers(votes);
       setSavedAnswers(votes);
     },
-    setVote: (optionId: string, vote: BallotVote) => {
-      if (!canChange) return;
-      setAnswers((current) => ({ ...current, [optionId]: vote }));
-    },
-    /** Sets several answers at once; null clears an answer. */
-    setVotes: (votes: Record<string, BallotVote | null>) => {
-      if (!canChange) return;
-      setAnswers((current) => {
-        const next = { ...current };
-        for (const [optionId, vote] of Object.entries(votes)) {
-          if (vote) {
-            next[optionId] = vote;
-          } else {
-            delete next[optionId];
-          }
-        }
-        return next;
-      });
-    },
+    setVote,
+    setVotes,
     /** After a successful save: what is chosen is now what is saved. */
     markSaved: () => setSavedAnswers(answers),
     discardChanges: () => setAnswers(savedAnswers),
