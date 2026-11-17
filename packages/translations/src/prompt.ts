@@ -36,9 +36,11 @@ export const languageNames: Record<string, string> = {
   no: "Norwegian Bokmål",
   pl: "Polish",
   "pt-BR": "Brazilian Portuguese",
+  "pt-PT": "European Portuguese (Portugal)",
   ru: "Russian",
   sv: "Swedish",
   zh: "Simplified Chinese",
+  "zh-Hant": "Traditional Chinese (Taiwan)",
 };
 
 export const languageName = (locale: string) => {
