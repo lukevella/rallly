@@ -16,7 +16,7 @@ function ballot(overrides: Partial<Ballot> = {}): Ballot {
       { id: "o1", startTime: "2026-11-18T09:00:00.000Z", duration: 60 },
       { id: "o2", startTime: "2026-11-18T11:00:00.000Z", duration: 60 },
     ],
-    tallies: {},
+    tallies: { responses: [], votes: {} },
     responseCount: 0,
     ownResponses: [],
     ...overrides,
