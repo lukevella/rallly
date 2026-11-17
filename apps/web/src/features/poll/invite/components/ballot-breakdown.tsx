@@ -78,7 +78,7 @@ export function BallotBreakdown({
         </div>
       </div>
       {entries.length > 0 ? (
-        <div className="max-h-[min(20rem,50dvh)] space-y-4 overflow-y-auto border-t p-3">
+        <div className="max-h-[min(20rem,50dvh)] space-y-1 overflow-y-auto border-t p-3">
           <BreakdownGroup
             vote="yes"
             label={<Trans i18nKey="yes" defaults="Yes" />}
@@ -121,7 +121,7 @@ function BreakdownGroup({
   }
   // "No" starts collapsed: the least useful group for picking a time.
   return (
-    <details open={vote !== "no"} className="group space-y-1.5">
+    <details open={vote !== "no"} className="group">
       <summary className="-mx-1 flex cursor-pointer list-none items-center gap-1.5 rounded-md px-1 py-0.5 text-muted-foreground text-xs hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
         <VoteIcon round type={vote} className="size-3.5 shrink-0" />
         {label}
@@ -131,10 +131,10 @@ function BreakdownGroup({
           className="ml-auto size-3.5 shrink-0 transition-transform group-not-open:-rotate-90"
         />
       </summary>
-      <ul className="space-y-1 pl-5">
+      <ul className="space-y-1 pt-1.5 pb-3 pl-5 group-last:pb-0">
         {entries.map((entry) => (
           <li key={entry.responseId} className="flex items-center gap-1.5">
-            <span className="min-w-0 truncate text-sm">{entry.name}</span>
+            <span className="min-w-0 truncate text-xs">{entry.name}</span>
             {/* An unsaved answer, drawn like the Pro badge. */}
             {entry.viewer?.unsaved ? (
               <Tooltip>
