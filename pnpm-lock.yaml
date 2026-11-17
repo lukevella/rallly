@@ -914,12 +914,24 @@ importers:
       '@formatjs/icu-messageformat-parser':
         specifier: ^3.5.23
         version: 3.5.23
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
       openai:
         specifier: ^7.35.0
         version: 7.55.0(@aws-sdk/credential-provider-node@3.972.88)(@smithy/signature-v4@5.7.4)(google-auth-library@11.3.1(supports-color@8.1.1))(undici@7.30.1)(ws@8.22.0)(zod@4.5.4)
+      remark-mdx:
+        specifier: ^3.1.1
+        version: 3.1.1(supports-color@8.1.1)
+      remark-parse:
+        specifier: ^11.0.0
+        version: 11.0.0(supports-color@8.1.1)
       undici:
         specifier: ^7.30.1
         version: 7.30.1
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
       zod:
         specifier: ^4.3.6
         version: 4.5.4

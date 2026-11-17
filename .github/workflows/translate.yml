@@ -6,6 +6,7 @@ on:
     paths:
       - "apps/web/public/locales/en/**"
       - "apps/landing/public/locales/en/**"
+      - "apps/landing/src/posts/*.md"
       - "packages/emails/locales/en/**"
       - "i18n/glossary.json"
       - "packages/translations/src/**"
@@ -102,7 +103,7 @@ jobs:
           # One pathspec set for both the guard and the staging. i18n/lock only
           # exists once a lock file has been written, and git add rejects a
           # pathspec that matches nothing.
-          paths=(apps/web/public/locales apps/landing/public/locales packages/emails/locales)
+          paths=(apps/web/public/locales apps/landing/public/locales apps/landing/src/posts packages/emails/locales)
           if [ -d i18n/lock ]; then
             paths+=(i18n/lock)
           fi

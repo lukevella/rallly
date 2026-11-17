@@ -159,8 +159,7 @@ export const productBrief = `Rallly helps a group find a time to meet.
 - The organizer sees everyone's availability and finalizes the poll by picking one option. That creates a scheduled event, and participants can be notified and add it to their calendar.
 - Participants can leave comments on a poll.
 - Polls and events belong to a space: a workspace shared by a team. People in a space are members. A paid Pro subscription is billed per seat, one seat per member.
-- The audience is everyday users organizing meetings, clubs, committees and classes, so prefer plain, friendly wording over technical or formal terms.
-- Strings are short interface labels, buttons, messages and emails. Keep translations about as concise as the English.`;
+- The audience is everyday users organizing meetings, clubs, committees and classes, so prefer plain, friendly wording over technical or formal terms.`;
 
 export const buildSystem = ({
   locale,
@@ -176,7 +175,8 @@ export const buildSystem = ({
   return [
     `You are a professional translator localizing the user interface of Rallly, a meeting scheduling app, from English into ${language} (${locale}).`,
     `## About Rallly
-${productBrief}`,
+${productBrief}
+- Strings are short interface labels, buttons, messages and emails. Keep translations about as concise as the English.`,
     `## Rules
 - Keep every ICU argument (such as {name}), plural and select structure, and tag name (such as <b>) exactly as in the source.
 - Select option keys are identifiers and must never be translated.
@@ -204,3 +204,33 @@ export const buildUser = ({ items }: { items: TranslationItem[] }) =>
       ...(error !== undefined && { error }),
     })),
   );
+
+export const buildPostSystem = ({
+  locale,
+  glossary,
+}: {
+  locale: string;
+  glossary: Glossary;
+}) => {
+  const language = languageName(locale);
+
+  return [
+    `You are a professional translator localizing a blog post of Rallly, a meeting scheduling app, from English into ${language} (${locale}).`,
+    `## About Rallly
+${productBrief}`,
+    `## Rules
+- Keep Markdown and MDX syntax, URLs, code, component names and props exactly as in the source.
+- Translate the text of the \`question\` attribute.
+- Never translate these terms: ${glossary.doNotTranslate.join(", ")}.
+- Follow ${language}'s own capitalization conventions rather than copying English capitalization.
+- Keep the author's voice: plain and direct.
+- This is a long-form article. Translate every sentence; do not shorten, summarise or omit anything.
+- \`previous\`, when present, is an earlier translation of this post: reuse its wording where it is still correct.
+- \`error\`, when present, lists why your last answer was rejected: fix every point.
+- Do not introduce \`<\`, \`{\` or \`}\` into prose; they have special meaning in MDX.
+- Return every part you were given (\`title\`, \`excerpt\` when present, and \`body\`).`,
+    `## Glossary
+Use these terms consistently.
+${glossaryLines({ locale, glossary }).join("\n")}`,
+  ].join("\n\n");
+};

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { checkLocales } from "./check.ts";
-import { lockPath } from "./locales.ts";
+import { lockPath, postLockPath } from "./locales.ts";
 import { hashSource } from "./lock.ts";
 
 let tmp: string;
@@ -82,5 +82,56 @@ describe("checkLocales", () => {
     const offenders = checkLocales({ repoRoot: tmp });
     expect(offenders).toHaveLength(1);
     expect(offenders[0]?.path).toBe("i18n/lock/web/de/app.json");
+  });
+
+  describe("posts", () => {
+    const post = (slug: string, locale?: string) =>
+      join(tmp, "apps/landing/src/posts", locale ?? "", `${slug}.md`);
+    const english =
+      "---\ntitle: Plan\ndate: 2026-01-02\n---\n\n## Heading\n\nBody.\n";
+    const broken = "---\ntitle: Planen\ndate: 2026-01-02\n---\n\nBody.\n";
+
+    beforeEach(() => {
+      mkdirSync(join(tmp, "apps/landing/public/locales/de"), {
+        recursive: true,
+      });
+      write(post("plan"), english);
+      write(post("plan", "de"), broken);
+    });
+
+    it("flags an invalid post translation whose lock is current", () => {
+      write(postLockPath({ repoRoot: tmp, locale: "de" }), {
+        plan: hashSource(english),
+      });
+      const offenders = checkLocales({ repoRoot: tmp });
+      expect(offenders).toHaveLength(1);
+      expect(offenders[0]).toMatchObject({
+        path: "apps/landing/src/posts/de/plan.md",
+        key: "*",
+      });
+      expect(offenders[0]?.reasons.length).toBeGreaterThan(0);
+    });
+
+    it("exempts a post whose English changed", () => {
+      write(postLockPath({ repoRoot: tmp, locale: "de" }), {
+        plan: hashSource("older english"),
+      });
+      expect(checkLocales({ repoRoot: tmp })).toEqual([]);
+    });
+
+    it("flags a post lockfile that is not valid JSON", () => {
+      write(postLockPath({ repoRoot: tmp, locale: "de" }), "{ BROKEN");
+      const offenders = checkLocales({ repoRoot: tmp });
+      expect(offenders).toHaveLength(1);
+      expect(offenders[0]).toMatchObject({
+        path: "i18n/lock/posts/de.json",
+        key: "*",
+      });
+    });
+
+    it("ignores posts when the posts directory is missing", () => {
+      rmSync(join(tmp, "apps/landing/src/posts"), { recursive: true });
+      expect(checkLocales({ repoRoot: tmp })).toEqual([]);
+    });
   });
 });

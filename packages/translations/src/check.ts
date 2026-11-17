@@ -6,8 +6,11 @@ import {
   listNamespaces,
   localeRoots,
   lockPath,
+  postLockPath,
 } from "./locales.ts";
-import { isCurrent } from "./lock.ts";
+import { hashSource, isCurrent } from "./lock.ts";
+import { validatePost } from "./post-validate.ts";
+import { listPosts, postPath } from "./posts.ts";
 import { untranslatedPlaceholder, validateTranslation } from "./validate.ts";
 
 export type Offender = { path: string; key: string; reasons: string[] };
@@ -98,6 +101,38 @@ export const checkLocales = ({ repoRoot }: { repoRoot: string }) => {
     }
   }
 
+  const landing = localeRoots.find((root) => root.id === "landing");
+  const posts = listPosts({ repoRoot });
+  if (landing && posts.length > 0) {
+    for (const locale of listLocales({ repoRoot, root: landing })) {
+      const lockFile = postLockPath({ repoRoot, locale });
+      let lock: Record<string, string> = {};
+      try {
+        lock = strings(readObject(lockFile));
+      } catch (error) {
+        offenders.push({
+          path: rel(lockFile),
+          key: "*",
+          reasons: [(error as Error).message],
+        });
+        continue;
+      }
+      for (const slug of posts) {
+        const translationPath = postPath({ repoRoot, locale, slug });
+        if (!existsSync(translationPath)) continue;
+        const source = readFileSync(postPath({ repoRoot, slug }), "utf8");
+        if (lock[slug] !== hashSource(source)) continue;
+        const reasons = validatePost({
+          source,
+          translation: readFileSync(translationPath, "utf8"),
+        });
+        if (reasons.length > 0) {
+          offenders.push({ path: rel(translationPath), key: "*", reasons });
+        }
+      }
+    }
+  }
+
   return offenders;
 };
 
@@ -113,7 +148,7 @@ if (isEntryPoint) {
   }
   if (offenders.length > 0) {
     console.error(
-      `\nFound ${offenders.length} invalid locale string(s). Fix the translation, or change the English source so the Translate workflow retranslates it.`,
+      `\nFound ${offenders.length} invalid locale string(s) or post(s). Fix the translation, or change the English source so the Translate workflow retranslates it.`,
     );
     process.exit(1);
   }

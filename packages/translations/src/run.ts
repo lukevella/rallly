@@ -10,6 +10,7 @@ import {
   writeMessages,
 } from "./locales.ts";
 import { hashSource, planLocale } from "./lock.ts";
+import { runPosts } from "./posts.ts";
 import type { Glossary, TranslationItem } from "./prompt.ts";
 import { loadGlossary } from "./prompt.ts";
 import type { Complete } from "./translator.ts";
@@ -255,6 +256,19 @@ export const run = async ({
   await Promise.all(
     Array.from({ length: Math.min(maxInFlight, jobs.length) }, worker),
   );
+
+  if (!files || files.includes("posts/blog")) {
+    results.push(
+      ...(await runPosts({
+        repoRoot,
+        complete,
+        model,
+        glossary,
+        locales,
+        dryRun,
+      })),
+    );
+  }
 
   return { model, files: results };
 };

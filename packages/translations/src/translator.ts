@@ -30,7 +30,7 @@ type Attempt =
   | { ok: true; values: Map<string, string> }
   | { ok: false; reason: string; final: boolean };
 
-const stripFence = (content: string) =>
+export const stripFence = (content: string) =>
   content
     .trim()
     .replace(/^```[a-zA-Z]*\s*\n/, "")
@@ -103,7 +103,7 @@ const request = async ({
   return parseContent(choice.message?.content);
 };
 
-const errorMessage = (error: unknown) =>
+export const errorMessage = (error: unknown) =>
   error instanceof Error ? error.message : String(error);
 
 const failAll = ({
@@ -117,7 +117,7 @@ const failAll = ({
 const escapeRegExp = (text: string) =>
   text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const protectedTermReasons = ({
+export const protectedTermReasons = ({
   protectedTerms,
   source,
   translation,

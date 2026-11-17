@@ -41,9 +41,11 @@ function FilterPill({
 export function PostsList({
   posts,
   allLabel,
+  categoryLabels,
 }: {
   posts: Post[];
   allLabel: string;
+  categoryLabels: Record<string, string>;
 }) {
   const [category, setCategory] = React.useState<string | null>(null);
 
@@ -79,7 +81,7 @@ export function PostsList({
             active={category === c}
             onClick={() => setCategory(c)}
           >
-            {c}
+            {categoryLabels[c] ?? c}
           </FilterPill>
         ))}
       </div>
@@ -88,7 +90,11 @@ export function PostsList({
           <PostPreview
             key={post.slug}
             title={post.title}
-            category={post.category}
+            category={
+              post.category
+                ? (categoryLabels[post.category] ?? post.category)
+                : undefined
+            }
             date={post.date}
             slug={post.slug}
             excerpt={post.excerpt}

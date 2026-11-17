@@ -16,7 +16,9 @@ import { JsonLd } from "@/components/json-ld";
 import { Section } from "@/components/section";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
-import { getAllPosts, getPostBySlug } from "@/lib/api";
+import { getPostAlternates } from "@/lib/alternates";
+import { getAllPosts, getPostBySlug, getPostLocales } from "@/lib/api";
+import { getCategoryLabels } from "@/lib/blog-categories";
 
 export default async function Page(props: {
   params: Promise<{ locale: string; slug: string }>;
@@ -28,22 +30,33 @@ export default async function Page(props: {
     "common",
     "home",
   ]);
-  const post = getPostBySlug(params.slug, [
-    "title",
-    "date",
-    "slug",
-    "author",
-    "category",
-    "excerpt",
-    "content",
-    "updated",
-  ]);
+  const post = getPostBySlug(
+    params.slug,
+    [
+      "title",
+      "date",
+      "slug",
+      "author",
+      "category",
+      "excerpt",
+      "content",
+      "updated",
+      "contentLocale",
+    ],
+    params.locale,
+  );
 
   if (!post) {
     notFound();
   }
 
-  const url = absoluteUrl(`/blog/${post.slug}`);
+  const categoryLabels = getCategoryLabels(t);
+  const alternates = getPostAlternates({
+    locale: params.locale,
+    slug: post.slug,
+    translatedLocales: getPostLocales(post.slug),
+  });
+  const url = String(alternates?.canonical);
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -52,6 +65,7 @@ export default async function Page(props: {
     image: ogImageUrl(post),
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
+    inLanguage: post.contentLocale,
     url,
     mainEntityOfPage: url,
     author: {
@@ -89,7 +103,9 @@ export default async function Page(props: {
               <span aria-hidden="true" className="text-gray-400">
                 /
               </span>
-              <span className="text-gray-800">{post.category}</span>
+              <span className="text-gray-800">
+                {categoryLabels[post.category] ?? post.category}
+              </span>
             </>
           ) : null}
         </nav>
@@ -141,7 +157,10 @@ export default async function Page(props: {
               </div>
             </dl>
           </aside>
-          <article className="longform min-w-0 max-w-2xl lg:order-1">
+          <article
+            lang={post.contentLocale}
+            className="longform min-w-0 max-w-2xl lg:order-1"
+          >
             <MDXRemote
               source={post.content}
               components={{ PostFaq, FaqItem }}
@@ -213,31 +232,32 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   cacheLife("max");
   const params = await props.params;
-  const post = getPostBySlug(params.slug, [
-    "title",
-    "date",
-    "slug",
-    "author",
-    "excerpt",
-  ]);
+  const post = getPostBySlug(
+    params.slug,
+    ["title", "date", "slug", "author", "excerpt"],
+    params.locale,
+  );
 
   if (!post) {
     notFound();
   }
 
+  const alternates = getPostAlternates({
+    locale: params.locale,
+    slug: post.slug,
+    translatedLocales: getPostLocales(post.slug),
+  });
+
   return {
     title: post.title,
     description: post.excerpt,
-    // Posts are English only, so every locale prefix points at the English URL
-    alternates: {
-      canonical: absoluteUrl(`/blog/${post.slug}`),
-    },
+    alternates,
     openGraph: {
       type: "article",
       publishedTime: post.date,
       title: post.title,
       description: post.excerpt,
-      url: absoluteUrl(`/blog/${post.slug}`),
+      url: String(alternates?.canonical),
       images: [
         {
           url: ogImageUrl(post),

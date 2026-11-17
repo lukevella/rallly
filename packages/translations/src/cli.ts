@@ -51,7 +51,9 @@ const { values } = parseArgs({
 
 for (const file of values.file ?? []) {
   if (!/^[^/]+\/[^/]+$/.test(file)) {
-    fail(`--file expects <rootId>/<namespace>, got "${file}"`);
+    fail(
+      `--file expects <rootId>/<namespace> (for example web/app, or posts/blog for blog posts), got "${file}"`,
+    );
   }
 }
 

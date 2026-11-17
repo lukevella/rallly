@@ -546,3 +546,41 @@ describe("formatReport", () => {
     );
   });
 });
+
+describe("posts in run", () => {
+  const seedPost = () => {
+    const post =
+      "---\ntitle: A\ndate: 2026-01-02\ncategory: guides\nexcerpt: B.\n---\n\nBody.\n";
+    write(join(tmp, "apps/landing/public/locales/en/x.json"), {});
+    write(join(tmp, "apps/landing/public/locales/de/x.json"), {});
+    mkdirSync(join(tmp, "apps/landing/src/posts"), { recursive: true });
+    writeFileSync(join(tmp, "apps/landing/src/posts/a.md"), post);
+  };
+  const complete: Complete = async () => ({
+    choices: [
+      {
+        message: {
+          content: JSON.stringify({
+            title: "A",
+            excerpt: "B.",
+            body: "\nBody.\n",
+          }),
+        },
+        finish_reason: "stop",
+      },
+    ],
+  });
+
+  it("includes posts unless filtered out", async () => {
+    seedPost();
+    const filtered = await run({
+      repoRoot: tmp,
+      complete,
+      model,
+      files: ["web/app"],
+    });
+    expect(filtered.files.some((f) => f.path.startsWith("posts/"))).toBe(false);
+    const all = await run({ repoRoot: tmp, complete, model });
+    expect(all.files.some((f) => f.path === "posts/de")).toBe(true);
+  });
+});
