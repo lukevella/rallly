@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Przełącz przestrzeń",
   "commandMenuSwitchToSpace": "Przełącz na <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Przełącz na {name}",
+  "commentDeleteLabel": "Usuń komentarz użytkownika {name}",
   "comments": "Komentarze",
   "commentsComposerPlaceholder": "Napisz komentarz…",
   "commentsComposerVisibility": "Widoczne dla wszystkich",

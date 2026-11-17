@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "切換空間",
   "commandMenuSwitchToSpace": "切換至 <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "切換至 {name}",
+  "commentDeleteLabel": "刪除 {name} 的留言",
   "comments": "留言",
   "commentsComposerPlaceholder": "撰寫留言…",
   "commentsComposerVisibility": "所有人都能看見",

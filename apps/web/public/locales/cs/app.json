@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Přepnout prostor",
   "commandMenuSwitchToSpace": "Přepnout na <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Přepnout na {name}",
+  "commentDeleteLabel": "Smazat komentář od uživatele {name}",
   "comments": "Komentáře",
   "commentsComposerPlaceholder": "Napsat komentář…",
   "commentsComposerVisibility": "Viditelné pro všechny",

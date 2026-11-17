@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Gruppe wechseln",
   "commandMenuSwitchToSpace": "Zu <b>{name}</b> wechseln",
   "commandMenuSwitchToSpaceKeyword": "Zu {name} wechseln",
+  "commentDeleteLabel": "Kommentar von {name} löschen",
   "comments": "Kommentare",
   "commentsComposerPlaceholder": "Kommentar schreiben…",
   "commentsComposerVisibility": "Für alle sichtbar",

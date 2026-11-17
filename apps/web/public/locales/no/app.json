@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Bytt område",
   "commandMenuSwitchToSpace": "Bytt til <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Bytt til {name}",
+  "commentDeleteLabel": "Slett kommentaren fra {name}",
   "comments": "Kommentarer",
   "commentsComposerPlaceholder": "Skriv en kommentar …",
   "commentsComposerVisibility": "Synlig for alle",

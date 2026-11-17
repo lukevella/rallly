@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "公司",
+  "blogCategoryGuides": "指南",
+  "blogCategoryProduct": "產品",
+  "blogCategorySecurity": "安全性",
+  "blogCategorySelfHosting": "自行託管",
   "blogDescription": "Rallly 的新聞、更新與公告。",
   "blogFilterAll": "全部",
   "blogPublishedOn": "發布於",

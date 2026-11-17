@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "Azienda",
+  "blogCategoryGuides": "Guide",
+  "blogCategoryProduct": "Prodotto",
+  "blogCategorySecurity": "Sicurezza",
+  "blogCategorySelfHosting": "Self-hosting",
   "blogDescription": "Notizie, aggiornamenti e annunci su Rallly.",
   "blogFilterAll": "Tutti",
   "blogPublishedOn": "Pubblicato il",

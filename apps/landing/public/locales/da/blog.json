@@ -1,4 +1,9 @@
 {
+  "blogCategoryCompany": "Virksomhed",
+  "blogCategoryGuides": "Vejledninger",
+  "blogCategoryProduct": "Produkt",
+  "blogCategorySecurity": "Sikkerhed",
+  "blogCategorySelfHosting": "Selvhosting",
   "blogDescription": "Nyheder, opdateringer og meddelelser om Rallly.",
   "blogFilterAll": "Alle",
   "blogPublishedOn": "Udgivet den",

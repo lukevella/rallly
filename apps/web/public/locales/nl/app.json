@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Van ruimte wisselen",
   "commandMenuSwitchToSpace": "Overschakelen naar <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Overschakelen naar {name}",
+  "commentDeleteLabel": "Opmerking van {name} verwijderen",
   "comments": "Reacties",
   "commentsComposerPlaceholder": "Schrijf een reactie…",
   "commentsComposerVisibility": "Zichtbaar voor iedereen",
