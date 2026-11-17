@@ -2,6 +2,7 @@
 
 import { posthog } from "@rallly/posthog/client";
 import { buttonVariants, cn } from "@rallly/ui";
+import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import {
   Dialog,
@@ -1998,12 +1999,15 @@ export function AccessibleBallot({
             ) : null}
 
             {isNew && votable.length === 0 ? (
-              <p className="py-6 text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="voteAllOptionsPassed"
-                  defaults="All of these times have passed, so there is nothing left to answer. Contact the organizer if you still want to respond."
-                />
-              </p>
+              <Alert className="my-6">
+                <HistoryIcon />
+                <AlertDescription>
+                  <Trans
+                    i18nKey="voteAllOptionsPassed"
+                    defaults="All of these times have passed, so there is nothing left to answer. Contact the organizer if you still want to respond."
+                  />
+                </AlertDescription>
+              </Alert>
             ) : showFooter ? (
               // For a saved response this is only here once there is something
               // to save, or to say it was saved.
