@@ -434,6 +434,41 @@ test.describe("invite ballot", () => {
     await context.close();
   });
 
+  test("a signed-in viewer's name and email are already filled in", async ({
+    browser,
+  }) => {
+    const email = "ballot-spec-member@example.com";
+    await prisma.user.deleteMany({ where: { email } });
+    await createUserInDb({ email, name: "Ballot Member" });
+    await seedPoll({ id: "ballot-spec-prefill" });
+
+    const guest = await freshPage(browser);
+    await guest.page.goto("/invite/ballot-spec-prefill/vote");
+    await answer(options(guest.page).nth(0), "Yes");
+    await guest.page.getByRole("button", { name: "Continue" }).click();
+    await expect(guest.page.getByLabel("Name")).toHaveValue("");
+    await expect(
+      guest.page.getByRole("textbox", { name: "Email" }),
+    ).toHaveValue("");
+    await guest.context.close();
+
+    const member = await freshPage(browser);
+    await loginWithEmail(member.page, { email });
+    await member.page.goto("/invite/ballot-spec-prefill/vote");
+    await answer(options(member.page).nth(0), "Yes");
+    await member.page.getByRole("button", { name: "Continue" }).click();
+    await expect(member.page.getByLabel("Name")).toHaveValue("Ballot Member");
+    await expect(
+      member.page.getByRole("textbox", { name: "Email" }),
+    ).toHaveValue(email);
+    await member.page.getByRole("button", { name: "Confirm" }).click();
+    await expect(
+      member.page.getByRole("heading", { name: "Thanks, Ballot Member" }),
+    ).toBeVisible();
+    await member.context.close();
+    await prisma.user.deleteMany({ where: { email } });
+  });
+
   test("hide scores hides counts until responding", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-scores", hideScores: true });
     const { context, page } = await freshPage(browser);
@@ -479,41 +514,6 @@ test.describe("invite ballot", () => {
     await manage.click();
     await expect(creator.page).toHaveURL(/\/poll\/ballot-spec-manage$/);
     await creator.context.close();
-    await prisma.user.deleteMany({ where: { email } });
-  });
-
-  test("a signed-in viewer's name and email are already filled in", async ({
-    browser,
-  }) => {
-    const email = "ballot-spec-member@example.com";
-    await prisma.user.deleteMany({ where: { email } });
-    await createUserInDb({ email, name: "Ballot Member" });
-    await seedPoll({ id: "ballot-spec-prefill" });
-
-    const guest = await freshPage(browser);
-    await guest.page.goto("/invite/ballot-spec-prefill/vote");
-    await answer(options(guest.page).nth(0), "Yes");
-    await guest.page.getByRole("button", { name: "Continue" }).click();
-    await expect(guest.page.getByLabel("Name")).toHaveValue("");
-    await expect(
-      guest.page.getByRole("textbox", { name: "Email" }),
-    ).toHaveValue("");
-    await guest.context.close();
-
-    const member = await freshPage(browser);
-    await loginWithEmail(member.page, { email });
-    await member.page.goto("/invite/ballot-spec-prefill/vote");
-    await answer(options(member.page).nth(0), "Yes");
-    await member.page.getByRole("button", { name: "Continue" }).click();
-    await expect(member.page.getByLabel("Name")).toHaveValue("Ballot Member");
-    await expect(
-      member.page.getByRole("textbox", { name: "Email" }),
-    ).toHaveValue(email);
-    await member.page.getByRole("button", { name: "Confirm" }).click();
-    await expect(
-      member.page.getByRole("heading", { name: "Thanks, Ballot Member" }),
-    ).toBeVisible();
-    await member.context.close();
     await prisma.user.deleteMany({ where: { email } });
   });
 });
