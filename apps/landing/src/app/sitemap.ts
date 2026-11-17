@@ -71,24 +71,25 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
         languages: getAlternateLanguages("/blog"),
       },
     },
-    ...posts.map((post) => {
+    ...posts.flatMap((post) => {
       const translatedLocales = getPostLocales(post.slug);
-      return {
-        url: absoluteUrl(`/blog/${post.slug}`),
+      const entry = {
         lastModified: new Date(post.updated ?? post.date),
         changeFrequency: "yearly" as const,
         priority: 0.7,
-        ...(translatedLocales.length > 0
-          ? {
-              alternates: {
-                languages: getPostAlternateLanguages({
-                  slug: post.slug,
-                  translatedLocales,
-                }),
-              },
-            }
-          : {}),
       };
+      if (translatedLocales.length === 0) {
+        return [{ ...entry, url: absoluteUrl(`/blog/${post.slug}`) }];
+      }
+      const languages = getPostAlternateLanguages({
+        slug: post.slug,
+        translatedLocales,
+      });
+      return ["en", ...translatedLocales].map((locale) => ({
+        ...entry,
+        url: languages[locale] as string,
+        alternates: { languages },
+      }));
     }),
   ];
 }

@@ -1,4 +1,5 @@
 import {
+  chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -121,6 +122,17 @@ describe("runPosts", () => {
     await go();
     expect(calls).toEqual([{ title: "Beta v2" }]);
     expect(readLock("de").beta).toBe(hashSource(post("Beta v2")));
+  });
+
+  it("keeps the old lock entry when writing a translation fails", async () => {
+    await go();
+    const oldHash = readLock("de").beta;
+    put(en("beta"), post("Beta v2"));
+    chmodSync(tr("de", "beta"), 0o444);
+    const [report] = await go();
+    chmodSync(tr("de", "beta"), 0o644);
+    expect(readLock("de").beta).toBe(oldHash);
+    expect(report?.failed.map((f) => f.key)).toContain("beta");
   });
 
   it("adopts a valid hand-written translation without a lock entry", async () => {

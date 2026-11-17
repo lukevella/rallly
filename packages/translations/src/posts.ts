@@ -206,11 +206,11 @@ export const runPosts = async ({
           plan.failed.push({ key: slug, reason: result.reason });
           continue;
         }
-        plan.translated.set(slug, result.content);
         if (!dryRun) {
           mkdirSync(dirname(file), { recursive: true });
           writeFileSync(file, result.content);
         }
+        plan.translated.set(slug, result.content);
       } catch (error) {
         plan.failed.push({ key: slug, reason: errorText(error) });
       }
