@@ -71,7 +71,9 @@ describe("validatePost", () => {
     ).toContain("https://rallly.co/pricing"));
 
   it("rejects a missing heading", () =>
-    expect(v(swap("## Eine Überschrift\n", "")).length).toBeGreaterThan(0));
+    expect(v(swap("## Eine Überschrift\n", "")).join()).toContain(
+      "heading depth 2",
+    ));
 
   it("rejects a missing list item", () =>
     expect(v(swap("- zwei\n", "")).length).toBeGreaterThan(0));
@@ -89,8 +91,8 @@ describe("validatePost", () => {
           '<FaqItem question="F?">A</FaqItem>',
           '<FaqEntry question="F?">A</FaqEntry>',
         ),
-      ).length,
-    ).toBeGreaterThan(0));
+      ).join(),
+    ).toContain("component names differ"));
 
   it("rejects a dropped component", () =>
     expect(
@@ -103,7 +105,9 @@ describe("validatePost", () => {
     ));
 
   it("rejects a changed date", () =>
-    expect(v(swap("2026-01-02", "2026-01-03")).length).toBeGreaterThan(0));
+    expect(v(swap("2026-01-02", "2026-01-03")).join()).toContain(
+      'frontmatter "date"',
+    ));
 
   it("rejects a translated category", () =>
     expect(
@@ -122,9 +126,15 @@ describe("validatePost", () => {
 
   it("rejects a body that carries its own frontmatter", () =>
     expect(
-      v(german.replace("\n\n## Eine", "\n\n---\ntitle: x\n---\n\n## Eine"))
-        .length,
-    ).toBeGreaterThan(0));
+      v(
+        german.replace("\n\n## Eine", "\n\n---\ntitle: x\n---\n\n## Eine"),
+      ).join(),
+    ).toContain("body must not start with frontmatter fences"));
+
+  it("rejects a translation whose frontmatter is not valid YAML", () =>
+    expect(v(swap("title: Besser planen", "title: [unclosed"))[0]).toMatch(
+      /^frontmatter is not valid YAML/,
+    ));
 
   it("accepts every committed English post against itself", () => {
     const files = readdirSync(postsDir).filter((f) => f.endsWith(".md"));

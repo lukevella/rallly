@@ -10,7 +10,11 @@ type Node = {
   url?: string;
   value?: string;
   name?: string | null;
-  attributes?: { type: string; name?: string; value?: unknown }[];
+  attributes?: {
+    type: string;
+    name?: string;
+    value?: string | { value?: string } | null;
+  }[];
   children?: Node[];
 };
 
@@ -58,9 +62,11 @@ function collect(body: string) {
       case "mdxJsxTextElement": {
         const attributes = new Map<string, string>();
         for (const attribute of node.attributes ?? []) {
+          const raw = attribute.value;
+          const value = typeof raw === "string" ? raw : (raw?.value ?? null);
           attributes.set(
-            attribute.name ?? attribute.type,
-            JSON.stringify(attribute.value ?? null),
+            attribute.name ?? `{${String(value)}}`,
+            JSON.stringify(value),
           );
         }
         elements.push({ name: node.name ?? "", attributes });
@@ -71,6 +77,9 @@ function collect(body: string) {
 
   return { headings, listItems, links, images, code, inlineCode, elements };
 }
+
+const messageOf = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
 
 const sorted = (values: string[]) => [...values].sort();
 
@@ -129,8 +138,18 @@ export function validatePost({
   source: string;
   translation: string;
 }) {
-  const sourceFile = matter(source);
-  const translationFile = matter(translation);
+  let sourceFile: matter.GrayMatterFile<string>;
+  let translationFile: matter.GrayMatterFile<string>;
+  try {
+    sourceFile = matter(source);
+  } catch (error) {
+    return [`source frontmatter is not valid YAML: ${messageOf(error)}`];
+  }
+  try {
+    translationFile = matter(translation);
+  } catch (error) {
+    return [`frontmatter is not valid YAML: ${messageOf(error)}`];
+  }
   const reasons = frontmatterReasons({
     source: sourceFile.data,
     translation: translationFile.data,
