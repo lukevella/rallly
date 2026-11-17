@@ -1143,7 +1143,7 @@ export function AccessibleBallot({
         // 2px is the card's border.
         "lg:flex-none",
         compactCard
-          ? "lg:h-[min(36rem,calc(100dvh-8rem-2px))] lg:w-auto lg:grid-cols-[20rem_28rem] xl:h-[min(39rem,calc(100dvh-8rem-2px))] xl:grid-cols-[24rem_28rem]"
+          ? "lg:h-[min(27rem,calc(100dvh-8rem-2px))] lg:w-auto lg:grid-cols-[20rem_28rem] xl:grid-cols-[24rem_28rem]"
           : "lg:h-[min(calc(100dvh-8rem-2px),calc(min(100vw-2rem,64rem)*0.75))] lg:w-[calc(100vw-2rem)] lg:max-w-5xl lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[24rem_minmax(0,1fr)]",
         compactOnPhone ? "max-lg:gap-y-4" : "max-lg:gap-y-6",
         // Below lg the title sits in the header, so the description that
@@ -1203,7 +1203,7 @@ export function AccessibleBallot({
 
         {/* A visual key for the icon-only answers; the radios name themselves. */}
         {/* Only beside the options it is a key to. */}
-        {ballot.canRespond && !compactCard ? (
+        {ballot.canRespond && !showThanks ? (
           <div
             aria-hidden="true"
             className={cn(compactOnPhone && "max-lg:hidden")}
@@ -1213,26 +1213,22 @@ export function AccessibleBallot({
             />
           </div>
         ) : null}
-        {/* Signs off the sidebar. */}
         {poll.user ? (
-          <div
-            className={cn(
-              "flex items-center gap-3 text-sm lg:mt-auto",
-              compactOnPhone && "max-lg:hidden",
-            )}
-          >
-            <span aria-hidden="true" className="flex shrink-0">
-              <OptimizedAvatarImage
-                size="lg"
-                src={poll.user.image ?? undefined}
-                name={poll.user.name}
-              />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate font-medium">{poll.user.name}</p>
-              <p className="text-muted-foreground text-xs">
-                <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
-              </p>
+          <div className={cn("text-sm", compactOnPhone && "max-lg:hidden")}>
+            <h2 className="font-normal text-muted-foreground">
+              <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
+            </h2>
+            {/* Centred on the icons above, so the name starts where their labels do. */}
+            <div className="mt-1 -ml-0.5 flex items-center gap-1.5">
+              <span aria-hidden="true" className="flex shrink-0">
+                <OptimizedAvatarImage
+                  size="sm"
+                  className="size-5"
+                  src={poll.user.image ?? undefined}
+                  name={poll.user.name}
+                />
+              </span>
+              <span className="min-w-0 truncate">{poll.user.name}</span>
             </div>
           </div>
         ) : null}
@@ -1629,9 +1625,9 @@ export function AccessibleBallot({
             }}
             aria-labelledby={onDetailsStep ? "details-heading" : "form-heading"}
             className={cn(
-              "flex flex-col",
+              "flex flex-col lg:flex-1",
               stepMotion,
-              onDetailsStep && "mx-auto mb-6 w-full max-w-lg lg:flex-1",
+              onDetailsStep && "mx-auto w-full max-w-lg max-lg:mb-6",
             )}
           >
             {onDetailsStep ? (
@@ -1648,7 +1644,8 @@ export function AccessibleBallot({
               className={cn(
                 onDetailsStep
                   ? "hidden"
-                  : "flex flex-col [&>#availability+*]:mt-0",
+                  : // Grows so the footer after it sits at the foot of the card.
+                    "flex flex-col lg:flex-1 [&>#availability+*]:mt-0",
                 // The footer leaves room after the options; without it they
                 // need their own, or the last one sits on the panel's edge.
                 !showFooter && "pb-6",
@@ -2032,7 +2029,8 @@ export function AccessibleBallot({
                 className={cn(
                   "flex flex-col gap-2",
                   onDetailsStep
-                    ? "pt-6 lg:mt-auto"
+                    ? // The card is short, so a note can push this past its foot.
+                      "pt-6 lg:sticky lg:bottom-0 lg:z-20 lg:mt-auto lg:bg-card/70 lg:pb-6 lg:backdrop-blur-md"
                     : "sticky bottom-0 z-20 mt-6 bg-card/70 py-3 backdrop-blur-md max-lg:-mx-4 max-lg:px-4 lg:-mx-8 lg:px-8",
                   // For a saved response it arrives with the first change, so it
                   // rises into place rather than popping in.

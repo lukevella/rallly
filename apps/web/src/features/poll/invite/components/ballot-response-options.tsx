@@ -27,16 +27,12 @@ export function BallotResponseOptions({
 
   return (
     <div>
-      {/* Below lg the key is one row, so the options start higher up the page. */}
-      <h2
-        id={headingId}
-        className="font-normal text-muted-foreground text-sm max-lg:sr-only"
-      >
+      <h2 id={headingId} className="font-normal text-muted-foreground text-sm">
         <Trans i18nKey="responseOptions" defaults="Response options" />
       </h2>
       <ul
         aria-labelledby={headingId}
-        className="flex gap-x-4 gap-y-1.5 text-sm max-lg:flex-wrap lg:mt-1 lg:flex-col"
+        className="mt-1 flex gap-x-4 gap-y-1.5 text-sm max-lg:flex-wrap lg:flex-col"
       >
         {options.map(({ type, label }) => (
           <li key={type} className="flex items-center gap-2">
