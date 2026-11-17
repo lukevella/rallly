@@ -158,7 +158,11 @@ function NewCommentForm({
             return;
           }
           const result = await runBallotAction(() =>
-            addCommentAction({ pollId, authorName: name, content }),
+            addCommentAction({
+              pollId,
+              authorName: name.trim().slice(0, MAX_COMMENT_AUTHOR_NAME_LENGTH),
+              content,
+            }),
           );
           if (!result.ok) {
             toast.error(getErrorMessage(result.reason));
@@ -201,7 +205,11 @@ function NewCommentForm({
           value={content}
           onChange={(event) => setContent(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
+            if (
+              event.key === "Enter" &&
+              !event.shiftKey &&
+              !event.nativeEvent.isComposing
+            ) {
               event.preventDefault();
               event.currentTarget.form?.requestSubmit();
             }
@@ -269,6 +277,7 @@ function CommentItem({ comment }: { comment: VoteComment }) {
             })}
             loading={isDeleting}
             onClick={async () => {
+              if (isDeleting) return;
               setIsDeleting(true);
               const result = await runBallotAction(() =>
                 deleteCommentAction({ commentId: comment.id }),
