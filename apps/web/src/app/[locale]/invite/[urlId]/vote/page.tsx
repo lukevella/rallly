@@ -1,8 +1,10 @@
 import { cn } from "@rallly/ui";
+import { absoluteUrl } from "@rallly/utils/absolute-url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
+import { SessionRefresher } from "@/components/session-refresher";
 import { Spinner } from "@/components/spinner";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/features/branding/components/logo";
@@ -13,6 +15,7 @@ import {
 import { loadInstanceBranding } from "@/features/branding/loaders";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
+import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
 import { PollUnavailable } from "@/features/poll/invite/components/poll-unavailable";
 import { loadInviteBallot } from "@/features/poll/invite/loaders";
 import { loadPollAvailability, loadPollDetails } from "@/features/poll/loaders";
@@ -59,12 +62,11 @@ function startEarly<T>(promise: Promise<T>) {
 async function PageContent({ params, searchParams }: PageProps) {
   const { urlId } = await params;
   const footerLinksRead = startEarly(loadFooterLinks());
+  const tokenRead = startEarly(searchParams.then(getInviteToken));
   const rest = startEarly(
     Promise.all([
       loadPollDetails(urlId),
-      searchParams.then((query) =>
-        loadInviteBallot(urlId, getInviteToken(query)),
-      ),
+      tokenRead.then((token) => loadInviteBallot(urlId, token)),
       loadInstanceBranding(),
       loadCanManagePoll(urlId),
       getTranslation(),
@@ -86,8 +88,11 @@ async function PageContent({ params, searchParams }: PageProps) {
     );
   }
 
-  const [[poll, ballot, instanceBranding, canManage, { t }], footerLinks] =
-    await Promise.all([rest, footerLinksRead]);
+  const [
+    [poll, ballot, instanceBranding, canManage, { t }],
+    footerLinks,
+    token,
+  ] = await Promise.all([rest, footerLinksRead, tokenRead]);
 
   if (!poll || !ballot) {
     notFound();
@@ -123,6 +128,8 @@ async function PageContent({ params, searchParams }: PageProps) {
 
   return (
     <>
+      <SessionRefresher />
+      {token ? <InviteOpenRecorder pollId={poll.id} token={token} /> : null}
       {/* First in the reading order, and outside the card from lg. */}
       <header
         className={cn(
@@ -232,9 +239,36 @@ export async function generateMetadata(props: {
   const { urlId } = await props.params;
   const availability = await loadPollAvailability(urlId);
 
+  if (!availability) {
+    notFound();
+  }
+
+  // Not linked from anywhere yet, so it stays out of search.
+  const robots = { index: false, follow: false };
+
+  if (availability.unavailable) {
+    return { title: "Poll unavailable", robots };
+  }
+
+  const { title, id, authorName } = availability;
+
   return {
-    title: availability?.unavailable ? "Poll unavailable" : availability?.title,
-    // Not linked from anywhere yet, so it stays out of search.
-    robots: { index: false, follow: false },
+    title,
+    metadataBase: new URL(absoluteUrl()),
+    openGraph: {
+      title,
+      description: `By ${authorName}`,
+      // The address people share, which this page will take over.
+      url: `/invite/${id}`,
+      images: [
+        {
+          url: absoluteUrl("/api/og-image-poll", { title, author: authorName }),
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    robots,
   };
 }
