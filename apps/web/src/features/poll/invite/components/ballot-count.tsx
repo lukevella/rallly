@@ -52,9 +52,11 @@ function RollingCount({ value }: { value: number }) {
 export function BallotCount({
   value,
   breakdown,
+  onBreakdownOpen,
 }: {
   value: number;
   breakdown?: React.ReactNode;
+  onBreakdownOpen?: () => void;
 }) {
   const content = (
     <>
@@ -69,7 +71,11 @@ export function BallotCount({
 
   if (breakdown) {
     return (
-      <Popover>
+      <Popover
+        onOpenChange={(open) => {
+          if (open) onBreakdownOpen?.();
+        }}
+      >
         <PopoverTrigger
           data-testid="ballot-tally"
           render={<button type="button" />}

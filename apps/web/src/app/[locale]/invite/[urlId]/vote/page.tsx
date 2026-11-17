@@ -1,10 +1,8 @@
-import { buttonVariants, cn } from "@rallly/ui";
-import { ArrowUpRightIcon } from "lucide-react";
+import { cn } from "@rallly/ui";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { InstanceFooterLinks } from "@/components/instance-footer-links";
-import { Link } from "@/components/link";
 import { Spinner } from "@/components/spinner";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/features/branding/components/logo";
@@ -27,6 +25,7 @@ import { CollapsibleDescription } from "./components/collapsible-description";
 import { EventLockup } from "./components/event-lockup";
 import { InviteHelp } from "./components/help/invite-help";
 import { InviteHelpSheet } from "./components/help/invite-help-sheet";
+import { ManagePollLink } from "./components/manage-poll-link";
 
 type PageProps = {
   params: Promise<{ urlId: string }>;
@@ -140,15 +139,11 @@ async function PageContent({ params, searchParams }: PageProps) {
           ) : null}
           <div className="ml-auto flex h-12 shrink-0 items-center gap-1">
             {canManage ? (
-              <Link
-                className={cn(buttonVariants({ size: "sm" }), "mr-1")}
-                href={`/poll/${poll.id}`}
-              >
+              <ManagePollLink pollId={poll.id}>
                 {t("managePoll", { defaultValue: "Manage poll" })}
-                <ArrowUpRightIcon data-icon="inline-end" />
-              </Link>
+              </ManagePollLink>
             ) : null}
-            <InviteHelpSheet>
+            <InviteHelpSheet pollId={poll.id}>
               <Suspense
                 fallback={
                   <div className="flex flex-1 items-center justify-center">
@@ -192,7 +187,7 @@ async function PageContent({ params, searchParams }: PageProps) {
           }
           description={
             poll.description ? (
-              <CollapsibleDescription>
+              <CollapsibleDescription pollId={poll.id}>
                 <EventMetaDescription
                   className="mt-2 text-base/7 text-muted-foreground lg:text-sm/6"
                   content={poll.description}
