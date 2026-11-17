@@ -33,7 +33,7 @@
     "lucide-react": "^0.479.0",
     "motion": "^12.6.2",
     "nanoid": "^5.1.16",
-    "next": "16.4.2",
+    "next": "16.4.5",
     "next-mdx-remote": "^6.0.0",
     "next-seo": "^6.1.0",
     "pg": "^8.17.1",
