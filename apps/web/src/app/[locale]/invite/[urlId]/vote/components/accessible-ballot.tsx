@@ -766,6 +766,8 @@ export function AccessibleBallot({
     } else {
       capture("poll_vote:changes_save");
     }
+    // The next response, after this one is deleted, starts with none used.
+    usedMarkAll.current = false;
     setStatus(
       isNew
         ? t("voteNoticeResponseSaved", { defaultValue: "Response saved" })
@@ -1010,6 +1012,7 @@ export function AccessibleBallot({
                 }
                 deleteDialog.dismiss();
                 capture("poll_vote:response_delete");
+                usedMarkAll.current = false;
                 setJustSaved(null);
                 setStatus(
                   t("screenReaderAnswersDeleted", {
