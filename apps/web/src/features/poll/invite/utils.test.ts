@@ -122,11 +122,13 @@ describe("projectBallot", () => {
 
   it("tallies every answer with names", () => {
     const ballot = projectBallot({ source: ballotSource(), viewer: anonymous });
-    expect(ballot.tallies?.o1).toEqual([
-      { responseId: "r1", name: "Ann", vote: "yes" },
-      { responseId: "r2", name: "Bob", vote: "no" },
-    ]);
-    expect(ballot.tallies?.o2).toHaveLength(2);
+    expect(ballot.tallies).toEqual({
+      responses: [
+        { id: "r1", name: "Ann" },
+        { id: "r2", name: "Bob" },
+      ],
+      votes: { o1: ["yes", "no"], o2: ["ifNeedBe", "yes"] },
+    });
   });
 
   it("hides other names when participants are hidden", () => {
@@ -134,10 +136,11 @@ describe("projectBallot", () => {
       source: ballotSource({ hideParticipants: true }),
       viewer: { userId: "u1", linkedResponseIds: [] },
     });
-    expect(ballot.tallies?.o2).toEqual([
-      { responseId: "r1", name: "Ann", vote: "ifNeedBe" },
-      { responseId: "r2", name: null, vote: "yes" },
+    expect(ballot.tallies?.responses).toEqual([
+      { id: "r1", name: "Ann" },
+      { id: "r2", name: null },
     ]);
+    expect(ballot.tallies?.votes.o2).toEqual(["ifNeedBe", "yes"]);
   });
 
   it("hides tallies until the viewer responds", () => {
@@ -218,27 +221,34 @@ describe("groupBallotOptions", () => {
 });
 
 describe("availableCount", () => {
-  const entries = [
-    { responseId: "r1", name: "Ann", vote: "yes" as const },
-    { responseId: "r2", name: "Bob", vote: "ifNeedBe" as const },
-  ];
+  const tallies = {
+    responses: [
+      { id: "r1", name: "Ann" },
+      { id: "r2", name: "Bob" },
+      { id: "r3", name: "Cy" },
+    ],
+    votes: {},
+  };
+  const votes = ["yes" as const, "ifNeedBe" as const, null];
+  const base = { tallies, votes };
 
   it("replaces the active response with the live vote", () => {
     expect(
-      availableCount({ entries, activeResponseId: "r1", liveVote: "no" }),
+      availableCount({ ...base, activeResponseId: "r1", liveVote: "no" }),
     ).toBe(1);
     expect(
-      availableCount({ entries, activeResponseId: "r1", liveVote: "yes" }),
+      availableCount({ ...base, activeResponseId: "r1", liveVote: "yes" }),
     ).toBe(2);
     expect(
-      availableCount({ entries, activeResponseId: null, liveVote: "yes" }),
+      availableCount({ ...base, activeResponseId: null, liveVote: "yes" }),
     ).toBe(3);
   });
 
   it("does not count no", () => {
     expect(
       availableCount({
-        entries: [...entries, { responseId: "r3", name: "Cy", vote: "no" }],
+        tallies,
+        votes: ["yes", "ifNeedBe", "no"],
         activeResponseId: null,
         liveVote: undefined,
       }),
@@ -247,16 +257,21 @@ describe("availableCount", () => {
 });
 
 describe("optionBreakdown", () => {
-  const entries = [
-    { responseId: "r1", name: "Ann", vote: "no" as const },
-    { responseId: "r2", name: "Bob", vote: "ifNeedBe" as const },
-    { responseId: "r3", name: "Cy", vote: "yes" as const },
-  ];
+  const tallies = {
+    responses: [
+      { id: "r1", name: "Ann" },
+      { id: "r2", name: "Bob" },
+      { id: "r3", name: "Cy" },
+    ],
+    votes: {},
+  };
+  const votes = ["no" as const, "ifNeedBe" as const, "yes" as const];
 
   it("orders yes, if need be, then no", () => {
     expect(
       optionBreakdown({
-        entries,
+        tallies,
+        votes,
         activeResponseId: null,
         liveVote: undefined,
         viewerName: "You",
@@ -267,7 +282,8 @@ describe("optionBreakdown", () => {
   it("swaps the active response for the live vote", () => {
     expect(
       optionBreakdown({
-        entries,
+        tallies,
+        votes,
         activeResponseId: "r1",
         liveVote: "yes",
         viewerName: "Ann",
@@ -287,7 +303,8 @@ describe("optionBreakdown", () => {
   it("marks the viewer saved while their answer matches the record", () => {
     expect(
       optionBreakdown({
-        entries,
+        tallies,
+        votes,
         activeResponseId: "r2",
         liveVote: "ifNeedBe",
         viewerName: "You",
@@ -298,12 +315,25 @@ describe("optionBreakdown", () => {
   it("adds a first time viewer once they answer", () => {
     expect(
       optionBreakdown({
-        entries,
+        tallies,
+        votes,
         activeResponseId: null,
         liveVote: "no",
         viewerName: "You",
       }),
     ).toHaveLength(4);
+  });
+
+  it("leaves out a response with no answer to the option", () => {
+    expect(
+      optionBreakdown({
+        tallies,
+        votes: ["yes", null, null],
+        activeResponseId: null,
+        liveVote: undefined,
+        viewerName: "You",
+      }).map((entry) => entry.name),
+    ).toEqual(["Ann"]);
   });
 });
 

@@ -756,7 +756,8 @@ export function AccessibleBallot({
   const countDescription = (optionId: string, liveVote?: BallotVote) => {
     if (!ballot.tallies) return null;
     const count = availableCount({
-      entries: ballot.tallies[optionId] ?? [],
+      tallies: ballot.tallies,
+      votes: ballot.tallies.votes[optionId] ?? [],
       activeResponseId: state.activeResponseId,
       liveVote,
     });
@@ -825,7 +826,8 @@ export function AccessibleBallot({
               timeZone={ballot.isDatePoll ? null : ballot.timeZone}
               total={total}
               entries={optionBreakdown({
-                entries: ballot.tallies[optionId] ?? [],
+                tallies: ballot.tallies,
+                votes: ballot.tallies.votes[optionId] ?? [],
                 activeResponseId: state.activeResponseId,
                 liveVote: state.answers[optionId],
                 viewerName: t("you", { defaultValue: "You" }),
@@ -1546,7 +1548,8 @@ export function AccessibleBallot({
                             count={
                               ballot.tallies
                                 ? availableCount({
-                                    entries: ballot.tallies[optionId] ?? [],
+                                    tallies: ballot.tallies,
+                                    votes: ballot.tallies.votes[optionId] ?? [],
                                     activeResponseId: state.activeResponseId,
                                     liveVote: vote,
                                   })
@@ -1706,7 +1709,8 @@ export function AccessibleBallot({
                         const isPast = past.ids.has(optionId);
                         const liveCount = ballot.tallies
                           ? availableCount({
-                              entries: ballot.tallies[optionId] ?? [],
+                              tallies: ballot.tallies,
+                              votes: ballot.tallies.votes[optionId] ?? [],
                               activeResponseId: state.activeResponseId,
                               liveVote: vote,
                             })
