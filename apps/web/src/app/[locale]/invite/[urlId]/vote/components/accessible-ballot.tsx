@@ -53,6 +53,7 @@ import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
 import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
+import { AddToCalendarButton } from "@/features/calendars/components/add-to-calendar-button";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import {
@@ -1506,26 +1507,35 @@ export function AccessibleBallot({
             <h2 id="result-heading" tabIndex={-1} className="sr-only">
               <Trans i18nKey="voteResultsPanelLabel" defaults="Results" />
             </h2>
-            {poll.status === "scheduled" && poll.event && !chosenOptionId ? (
-              <p className="flex flex-wrap gap-x-2 font-medium text-sm">
-                <EventDate
-                  value={poll.event.start}
-                  allDay={poll.event.duration === 0}
-                  timeZone={poll.timeZone}
-                  preset="dateFull"
+            {poll.status === "scheduled" && poll.event ? (
+              <div className="mb-2 flex flex-col items-start gap-3">
+                {chosenOptionId ? null : (
+                  <p className="flex flex-wrap gap-x-2 font-medium text-sm">
+                    <EventDate
+                      value={poll.event.start}
+                      allDay={poll.event.duration === 0}
+                      timeZone={poll.timeZone}
+                      preset="dateFull"
+                    />
+                    <EventTimeRange
+                      start={poll.event.start}
+                      end={
+                        new Date(
+                          poll.event.start.getTime() +
+                            poll.event.duration * 60_000,
+                        )
+                      }
+                      allDay={poll.event.duration === 0}
+                      timeZone={poll.timeZone}
+                      showTimeZone
+                    />
+                  </p>
+                )}
+                <AddToCalendarButton
+                  eventId={poll.event.id}
+                  className="rounded-xl"
                 />
-                <EventTimeRange
-                  start={poll.event.start}
-                  end={
-                    new Date(
-                      poll.event.start.getTime() + poll.event.duration * 60_000,
-                    )
-                  }
-                  allDay={poll.event.duration === 0}
-                  timeZone={poll.timeZone}
-                  showTimeZone
-                />
-              </p>
+              </div>
             ) : null}
             {timeControls}
             {past.ids.size > 0 && votable.length > 0 ? (
