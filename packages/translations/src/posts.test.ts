@@ -179,6 +179,56 @@ describe("runPosts", () => {
     expect(report[1]).toMatchObject({ path: "posts/fr", translated: 2 });
   });
 
+  it("never deletes outside the locale directory", async () => {
+    await go();
+    put(lockFile("de"), JSON.stringify({ ...readLock("de"), "../alpha": "x" }));
+    const report = await go();
+    expect(report[0]?.removed).toBe(1);
+    expect(existsSync(en("alpha"))).toBe(true);
+    expect(readLock("de")).not.toHaveProperty("../alpha");
+  });
+
+  it("writes nothing when the posts directory is missing", async () => {
+    rmSync(join(tmp, "apps/landing/src/posts"), { recursive: true });
+    expect(await go()).toEqual([]);
+    expect(existsSync(join(tmp, "i18n"))).toBe(false);
+  });
+
+  it("sorts failures by slug", async () => {
+    const complete: Complete = async () => {
+      throw new Error("boom");
+    };
+    const report = await go({ complete });
+    expect(report[0]?.failed.map((f) => f.key)).toEqual(["alpha", "beta"]);
+  });
+
+  it("passes the outdated translation as previous", async () => {
+    await go();
+    const seen: unknown[] = [];
+    const complete: Complete = async (params) => {
+      const messages = (params as { messages: { content: string }[] }).messages;
+      seen.push(JSON.parse(messages[messages.length - 1]?.content ?? "{}"));
+      return translator()(params);
+    };
+    put(en("alpha"), post("Alpha v2"));
+    await go({ complete });
+    expect(seen).toHaveLength(1);
+    expect((seen[0] as { previous: string }).previous).toContain("[de] Alpha");
+  });
+
+  it("honours the locales filter", async () => {
+    mkdirSync(join(tmp, "apps/landing/public/locales/fr"), { recursive: true });
+    const report = await runPosts({
+      repoRoot: tmp,
+      complete: translator(),
+      model,
+      glossary,
+      locales: ["fr"],
+    });
+    expect(report.map((r) => r.path)).toEqual(["posts/fr"]);
+    expect(existsSync(tr("de", "alpha"))).toBe(false);
+  });
+
   it("does nothing when posts or locales are missing", async () => {
     rmSync(join(tmp, "apps/landing"), { recursive: true });
     expect(await go()).toEqual([]);

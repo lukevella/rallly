@@ -106,6 +106,9 @@ export const planPosts = ({
   return { stale, adopt, orphans };
 };
 
+const isPlainSlug = (slug: string) =>
+  /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(slug) && !slug.includes("..");
+
 const guardLocale = (locale: string) => {
   if (locale === "" || locale === "en") {
     throw new Error(`Refusing to write posts for locale "${locale}"`);
@@ -135,7 +138,12 @@ export const runPosts = async ({
   locales?: string[];
   dryRun?: boolean;
 }): Promise<RunReport["files"]> => {
-  if (!existsSync(join(repoRoot, landing.dir))) return [];
+  if (
+    !existsSync(join(repoRoot, landing.dir)) ||
+    !existsSync(join(repoRoot, postsDir))
+  ) {
+    return [];
+  }
   const posts = listPosts({ repoRoot });
   const targets = listLocales({ repoRoot, root: landing }).filter(
     (locale) => !locales || locales.includes(locale),
@@ -221,13 +229,13 @@ export const runPosts = async ({
       translated: translated.size,
       adopted: adopt.length,
       removed: orphans.length,
-      failed,
+      failed: failed.sort((a, b) => a.key.localeCompare(b.key)),
     };
     if (report.translated + report.adopted + report.removed === 0 || dryRun) {
       return report;
     }
     try {
-      for (const slug of orphans) {
+      for (const slug of orphans.filter(isPlainSlug)) {
         rmSync(postPath({ repoRoot, locale, slug }), { force: true });
       }
       const newLock: Messages = {};
