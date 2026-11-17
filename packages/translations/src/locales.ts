@@ -84,3 +84,13 @@ export const lockPath = ({
   locale: string;
   namespace: string;
 }) => join(repoRoot, "i18n", "lock", rootId, locale, `${namespace}.json`);
+
+export const postsDir = "apps/landing/src/posts";
+
+export const postLockPath = ({
+  repoRoot,
+  locale,
+}: {
+  repoRoot: string;
+  locale: string;
+}) => join(repoRoot, "i18n", "lock", "posts", `${locale}.json`);
