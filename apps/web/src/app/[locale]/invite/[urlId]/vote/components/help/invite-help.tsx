@@ -3,7 +3,7 @@ import { LightbulbIcon } from "lucide-react";
 import { Trans } from "react-i18next/TransWithoutContext";
 import type { PollDetails } from "@/features/poll/types";
 import { getTranslation } from "@/i18n/server";
-import { StepStage } from "./step-stage";
+import { LazyStepStage } from "./lazy-step-stage";
 
 /** How to vote, step by step. The sheet around it carries the title. */
 export async function InviteHelp({ poll }: { poll: PollDetails }) {
@@ -185,7 +185,7 @@ export async function InviteHelp({ poll }: { poll: PollDetails }) {
               ) : null}
             </div>
             {step.key === "choose" ? null : (
-              <StepStage step={step.key} className="h-72" />
+              <LazyStepStage step={step.key} className="h-72" />
             )}
           </li>
         ))}
