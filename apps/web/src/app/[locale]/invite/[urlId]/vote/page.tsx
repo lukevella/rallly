@@ -20,7 +20,10 @@ import { PollUnavailable } from "@/features/poll/invite/components/poll-unavaila
 import { loadInviteBallot } from "@/features/poll/invite/loaders";
 import { loadPollAvailability, loadPollDetails } from "@/features/poll/loaders";
 import { PoweredByLink } from "@/features/poll/vote/components/powered-by-link";
-import { loadCanManagePoll } from "@/features/poll/vote/loaders";
+import {
+  loadCanManagePoll,
+  loadOptionalResponder,
+} from "@/features/poll/vote/loaders";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { AccessibleBallot } from "./components/accessible-ballot";
@@ -61,6 +64,7 @@ function startEarly<T>(promise: Promise<T>) {
 
 async function PageContent({ params, searchParams }: PageProps) {
   const { urlId } = await params;
+  const responderRead = startEarly(loadOptionalResponder());
   const footerLinksRead = startEarly(loadFooterLinks());
   const tokenRead = startEarly(searchParams.then(getInviteToken));
   const rest = startEarly(
@@ -97,6 +101,8 @@ async function PageContent({ params, searchParams }: PageProps) {
   if (!poll || !ballot) {
     notFound();
   }
+
+  const responder = await responderRead;
 
   // The Rallly logo stays off this page. An instance's own logo is its
   // operator's brand, so that one still shows.
@@ -180,6 +186,8 @@ async function PageContent({ params, searchParams }: PageProps) {
         <AccessibleBallot
           poll={poll}
           ballot={ballot}
+          defaultName={responder?.name}
+          defaultEmail={responder?.email}
           showCreatePollPrompt={
             !hideAttribution && isFeatureEnabled("createPollPrompt")
           }

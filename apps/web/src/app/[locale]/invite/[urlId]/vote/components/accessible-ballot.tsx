@@ -145,6 +145,8 @@ export function AccessibleBallot({
   description,
   lockup,
   showCreatePollPrompt,
+  defaultName,
+  defaultEmail,
 }: {
   poll: PollDetails;
   ballot: Ballot;
@@ -152,6 +154,9 @@ export function AccessibleBallot({
   lockup: React.ReactNode;
   /** An invitation to make a poll, where the page still credits Rallly. */
   showCreatePollPrompt: boolean;
+  /** A signed-in viewer's own details, which a new response starts with. */
+  defaultName?: string;
+  defaultEmail?: string;
   description: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -1824,6 +1829,7 @@ export function AccessibleBallot({
                     required
                     maxLength={100}
                     autoComplete="name"
+                    defaultValue={defaultName}
                     className="scroll-mt-6"
                     aria-invalid={errorFor("name") ? true : undefined}
                     // Focus can land here, past the heading, so it names the step too.
@@ -1859,6 +1865,7 @@ export function AccessibleBallot({
                       type="email"
                       required={ballot.requireParticipantEmail}
                       autoComplete="email"
+                      defaultValue={defaultEmail}
                       className="scroll-mt-6"
                       aria-invalid={errorFor("email") ? true : undefined}
                       aria-describedby={
