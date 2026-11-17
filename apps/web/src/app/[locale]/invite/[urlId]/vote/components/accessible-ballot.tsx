@@ -48,6 +48,7 @@ import {
   UserRoundPenIcon,
 } from "lucide-react";
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { Spinner } from "@/components/spinner";
@@ -180,16 +181,6 @@ export function AccessibleBallot({
   const [saveError, setSaveError] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
   const [showNote, setShowNote] = React.useState(false);
-  const noteRemoved = React.useRef(false);
-
-  // The button that was pressed is gone, so focus goes back to the one that
-  // replaced it.
-  React.useEffect(() => {
-    if (!showNote && noteRemoved.current) {
-      noteRemoved.current = false;
-      document.getElementById("add-note")?.focus();
-    }
-  }, [showNote]);
   const [status, setStatus] = React.useState("");
   const deleteDialog = useDialog();
   const detailsDialog = useDialog();
@@ -2037,8 +2028,10 @@ export function AccessibleBallot({
                             defaultValue: "Remove note",
                           })}
                           onClick={() => {
-                            setShowNote(false);
-                            noteRemoved.current = true;
+                            // The button that was pressed is gone, so focus
+                            // goes to the one that replaced it.
+                            flushSync(() => setShowNote(false));
+                            document.getElementById("add-note")?.focus();
                           }}
                         >
                           <TrashIcon aria-hidden="true" />
