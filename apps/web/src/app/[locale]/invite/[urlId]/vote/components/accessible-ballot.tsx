@@ -55,7 +55,6 @@ import { Spinner } from "@/components/spinner";
 import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-data";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
-import VoteIcon from "@/features/poll/components/vote-icon";
 import {
   ensureSession,
   runBallotAction,
@@ -66,8 +65,7 @@ import {
   useTimesChangedAt,
 } from "@/features/poll/invite/client";
 import { BallotBarOption } from "@/features/poll/invite/components/ballot-bar-option";
-import { BallotBreakdown } from "@/features/poll/invite/components/ballot-breakdown";
-import { BallotCount } from "@/features/poll/invite/components/ballot-count";
+import { BallotOptionBreakdown } from "@/features/poll/invite/components/ballot-breakdown";
 import {
   ballotBarButtonClassName,
   ballotToggleClassName,
@@ -76,14 +74,11 @@ import { BallotResponseOptions } from "@/features/poll/invite/components/ballot-
 import { BallotTimeControls } from "@/features/poll/invite/components/ballot-time-controls";
 import type { BallotTimeValue } from "@/features/poll/invite/components/ballot-time-text";
 import { BallotTimeText } from "@/features/poll/invite/components/ballot-time-text";
-import { BallotVoteMark } from "@/features/poll/invite/components/ballot-vote-mark";
 import { PastTimesToggle } from "@/features/poll/invite/components/past-times-toggle";
 import type { Ballot, BallotVote } from "@/features/poll/invite/types";
 import {
   availableCount,
   groupBallotOptions,
-  nextVote,
-  optionBreakdown,
 } from "@/features/poll/invite/utils";
 import {
   addParticipantAction,
@@ -107,17 +102,10 @@ import {
   formatDuration,
 } from "@/lib/datetime/format";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
+import type { BallotVoteSource } from "./ballot-vote-row";
+import { BallotVoteRow } from "./ballot-vote-row";
 import { TimeZonePicker } from "./time-zone-picker";
 import { VoteSummary } from "./vote-summary";
-
-/** The hover for the rows a mouse can cycle. */
-const rowHoverClassName: Record<BallotVote | "none", string> = {
-  none: "[@media(pointer:fine)]:hover:border-gray-400 dark:[@media(pointer:fine)]:hover:border-gray-500",
-  no: "[@media(pointer:fine)]:hover:border-gray-400 dark:[@media(pointer:fine)]:hover:border-gray-500",
-  yes: "[@media(pointer:fine)]:hover:border-green-600 dark:[@media(pointer:fine)]:hover:border-green-400",
-  ifNeedBe:
-    "[@media(pointer:fine)]:hover:border-amber-600 dark:[@media(pointer:fine)]:hover:border-amber-400",
-};
 
 /** Inset as far from the right as from the top, so the button sits square in the field. */
 const fieldAddonClassName = "pr-1.5 has-[>button]:mr-0";
@@ -140,12 +128,6 @@ const shortcutOnClassName =
 
 const factIconClassName =
   "mt-[calc((1lh-1rem)/2)] size-4 shrink-0 text-muted-foreground";
-
-/** Kept in the tree and at a real position, so direct activation still lands. */
-const radiosUntilKeyboardClassName =
-  "group-not-has-[input:focus-visible]:absolute group-not-has-[input:focus-visible]:right-0 group-not-has-[input:focus-visible]:bottom-0 group-not-has-[input:focus-visible]:gap-0 group-not-has-[input:focus-visible]:opacity-0";
-const radioUntilKeyboardClassName =
-  "group-not-has-[input:focus-visible]:size-px group-not-has-[input:focus-visible]:overflow-hidden";
 
 type FieldError = { field: "name" | "email" | "votes"; message: string };
 
@@ -179,7 +161,12 @@ export function AccessibleBallot({
 
   const [errors, setErrors] = React.useState<FieldError[]>([]);
   const [saveError, setSaveError] = React.useState<string | null>(null);
-  const [pending, setPending] = React.useState(false);
+  const [pending, setPendingState] = React.useState(false);
+  const pendingRef = React.useRef(false);
+  const setPending = (value: boolean) => {
+    pendingRef.current = value;
+    setPendingState(value);
+  };
   const [showNote, setShowNote] = React.useState(false);
   const [status, setStatus] = React.useState("");
   const deleteDialog = useDialog();
@@ -383,10 +370,6 @@ export function AccessibleBallot({
     ifNeedBe: t("ifNeedBe", { defaultValue: "If need be" }),
     no: t("no", { defaultValue: "No" }),
   };
-  const answerChoices: BallotVote[] = ballot.allowTentativeVotes
-    ? ["yes", "ifNeedBe", "no"]
-    : ["yes", "no"];
-
   const votable = ballot.options.filter((option) => !past.ids.has(option.id));
   const answeredCount = votable.filter(
     (option) => state.answers[option.id],
@@ -417,7 +400,15 @@ export function AccessibleBallot({
       past.toggle();
     },
   };
-  const captureBreakdownOpen = () => capture("poll_vote:breakdown_open");
+  // Through a ref, so the memoized rows get a callback that never changes.
+  const captureRef = React.useRef(capture);
+  React.useLayoutEffect(() => {
+    captureRef.current = capture;
+  });
+  const captureBreakdownOpen = React.useCallback(
+    () => captureRef.current("poll_vote:breakdown_open"),
+    [],
+  );
   const hadChanges = React.useRef(hasChanges);
   // biome-ignore lint/correctness/useExhaustiveDependencies: once, as a saved response starts to change
   React.useEffect(() => {
@@ -549,10 +540,27 @@ export function AccessibleBallot({
 
   // An answer given by hand keeps what the shortcut did, so Undo can no longer
   // take it back over the top of that edit.
-  const answerOne = (optionId: string, vote: BallotVote) => {
-    setAnswersBeforeShortcut(null);
-    state.setVote(optionId, vote);
-  };
+  const { setVote } = state;
+  // What is being saved is what stays, so answers hold still until it lands.
+  // Read from a ref so the handler, and every row given it, stays the same.
+  const onVote = React.useCallback(
+    (optionId: string, vote: BallotVote, from: BallotVoteSource) => {
+      if (pendingRef.current) {
+        if (from === "radio") {
+          setStatus(
+            t("voteSaveInProgress", {
+              defaultValue:
+                "Your answers are still saving. Try again when that finishes.",
+            }),
+          );
+        }
+        return;
+      }
+      setAnswersBeforeShortcut(null);
+      setVote(optionId, vote);
+    },
+    [setVote, t],
+  );
 
   // Turning a shortcut off puts back whatever it replaced, so pressing one by
   // mistake costs nothing. Switching between them keeps the original answers.
@@ -786,21 +794,6 @@ export function AccessibleBallot({
     : [];
   const optionsById = new Map(ballot.options.map((o) => [o.id, o]));
 
-  const countDescription = (optionId: string, liveVote?: BallotVote) => {
-    if (!ballot.tallies) return null;
-    const count = availableCount({
-      tallies: ballot.tallies,
-      votes: ballot.tallies.votes[optionId] ?? [],
-      activeResponseId: state.activeResponseId,
-      liveVote,
-    });
-    return t("screenReaderOptionCount", {
-      defaultValue:
-        "{count, plural, =0 {No one has said they can make this yet} one {# person can make this} other {# people can make this}}",
-      count,
-    });
-  };
-
   /** What a row shows on screen; the day heading above it carries the date. */
   const rowTimeLabel = (option: Ballot["options"][number]): BallotTimeValue => {
     if (ballot.isDatePoll) {
@@ -849,26 +842,13 @@ export function AccessibleBallot({
 
   // Who answered what, for options whose count opens it. Not when the poll
   // withholds other people's names: there would be no one to list.
-  const renderBreakdown =
+  // The breakdown itself is worked out inside the popover, only while it is open.
+  const breakdownTimeZone =
     ballot.tallies && !ballot.hideParticipants
-      ? (optionId: string) => {
-          const option = optionsById.get(optionId);
-          return option && ballot.tallies ? (
-            <BallotBreakdown
-              option={option}
-              timeZone={ballot.isDatePoll ? null : ballot.timeZone}
-              total={total}
-              entries={optionBreakdown({
-                tallies: ballot.tallies,
-                votes: ballot.tallies.votes[optionId] ?? [],
-                activeResponseId: state.activeResponseId,
-                liveVote: state.answers[optionId],
-                viewerName: t("you", { defaultValue: "You" }),
-              })}
-            />
-          ) : null;
-        }
-      : null;
+      ? ballot.isDatePoll
+        ? null
+        : ballot.timeZone
+      : undefined;
 
   // Outside the voting form: React events cross portals, so the form in here
   // would submit that one too.
@@ -1597,7 +1577,20 @@ export function AccessibleBallot({
                                 : undefined
                             }
                             total={total}
-                            breakdown={renderBreakdown?.(optionId)}
+                            breakdown={
+                              ballot.tallies &&
+                              breakdownTimeZone !== undefined ? (
+                                <BallotOptionBreakdown
+                                  option={option}
+                                  timeZone={breakdownTimeZone}
+                                  total={total}
+                                  tallies={ballot.tallies}
+                                  votes={ballot.tallies.votes[optionId] ?? []}
+                                  activeResponseId={state.activeResponseId}
+                                  liveVote={vote}
+                                />
+                              ) : undefined
+                            }
                             onBreakdownOpen={captureBreakdownOpen}
                           />
                         );
@@ -1744,174 +1737,42 @@ export function AccessibleBallot({
                       {group.optionIds.map((optionId) => {
                         const option = optionsById.get(optionId);
                         if (!option) return null;
-                        const vote = state.answers[optionId];
-                        const count = countDescription(optionId, vote);
-                        const countId = `count-${optionId}`;
                         // Past times cannot be attended, so they only show here.
                         const isPast = past.ids.has(optionId);
-                        const liveCount = ballot.tallies
-                          ? availableCount({
-                              tallies: ballot.tallies,
-                              votes: ballot.tallies.votes[optionId] ?? [],
-                              activeResponseId: state.activeResponseId,
-                              liveVote: vote,
-                            })
-                          : null;
+                        const timeLabel = rowTimeLabel(option);
                         return (
-                          // biome-ignore lint/a11y/useKeyWithClickEvents: a click and tap shortcut; the radios inside are the keyboard path
-                          <fieldset
+                          <BallotVoteRow
                             key={optionId}
-                            aria-describedby={count ? countId : undefined}
-                            disabled={isPast}
-                            onClick={(event) => {
-                              // A click or a tap, never for the radios themselves:
-                              // assistive technology activates those directly.
-                              if (
-                                isPast ||
-                                pending ||
-                                (event.target as Element).closest(
-                                  "label, button",
-                                )
-                              )
-                                return;
-                              answerOne(
-                                optionId,
-                                nextVote(vote, ballot.allowTentativeVotes),
-                              );
-                            }}
-                            className={cn(
-                              "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-xl border bg-card py-1.5 pr-3.5 pl-3 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
+                            option={option}
+                            vote={state.answers[optionId]}
+                            isPast={isPast}
+                            allowTentativeVotes={ballot.allowTentativeVotes}
+                            legend={
                               isPast
-                                ? "opacity-60"
-                                : [
-                                    "cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]",
-                                    rowHoverClassName[vote ?? "none"],
-                                  ],
-                              vote === "yes" &&
-                                "border-green-400 dark:border-green-500/60",
-                              vote === "ifNeedBe" &&
-                                "border-amber-400 dark:border-amber-500/60",
-                            )}
-                          >
-                            {/* The full date for readers; the day heading above carries it on screen. */}
-                            <legend className="sr-only">
-                              {isPast
                                 ? t("screenReaderPastOption", {
                                     defaultValue: "{option} (already passed)",
                                     option: votingLabel(option),
                                   })
-                                : votingLabel(option)}
-                            </legend>
-                            {liveCount !== null && total > 0 ? (
-                              <span
-                                aria-hidden="true"
-                                className={cn(
-                                  "absolute inset-y-0 left-0 -z-10 w-full origin-left transition-[transform,background-color] duration-200 motion-reduce:transition-none",
-                                  vote === "yes"
-                                    ? "bg-green-100 dark:bg-green-500/25"
-                                    : vote === "ifNeedBe"
-                                      ? "bg-amber-100 dark:bg-amber-500/25"
-                                      : "bg-gray-200 dark:bg-white/10",
-                                )}
-                                // Scaled, not sized, so a changing count
-                                // animates without layout.
-                                style={{
-                                  transform: `scaleX(${Math.round((liveCount / total) * 100) / 100})`,
-                                }}
-                              />
-                            ) : null}
-                            {/* The row shows one mark, as the answer it cycles. */}
-                            <BallotVoteMark vote={vote} />
-                            <span
-                              aria-hidden="true"
-                              className="flex min-h-9 min-w-0 flex-1 items-center text-sm tabular-nums lg:[@media(pointer:fine)]:min-h-9.5"
-                            >
-                              <BallotTimeText
-                                value={rowTimeLabel(option)}
-                                changedAt={timesChangedAt}
-                              />
-                            </span>
-                            {liveCount !== null ? (
-                              <span
-                                aria-hidden={renderBreakdown ? undefined : true}
-                                className="[&_[data-testid=ballot-tally]]:text-foreground"
-                              >
-                                <BallotCount
-                                  value={liveCount}
-                                  breakdown={renderBreakdown?.(optionId)}
-                                  onBreakdownOpen={captureBreakdownOpen}
-                                />
-                              </span>
-                            ) : null}
-                            {count ? (
-                              <p id={countId} className="sr-only">
-                                {count}
-                              </p>
-                            ) : null}
-                            {/* Shrunk away until the keyboard reaches them, and still in
-    the tree for a screen reader to step through. */}
-                            <div
-                              className={cn(
-                                "flex gap-x-3 gap-y-2",
-                                radiosUntilKeyboardClassName,
-                              )}
-                            >
-                              {answerChoices.map((choice) => (
-                                <label
-                                  key={choice}
-                                  className={cn(
-                                    "relative block",
-                                    radioUntilKeyboardClassName,
-                                  )}
-                                >
-                                  <input
-                                    type="radio"
-                                    className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer scroll-mt-16 scroll-mb-24 opacity-0"
-                                    name={`vote-${optionId}`}
-                                    value={choice}
-                                    checked={vote === choice}
-                                    onChange={() => {
-                                      // What is being saved is what stays, so
-                                      // answers hold still until it lands.
-                                      if (pending) {
-                                        setStatus(
-                                          t("voteSaveInProgress", {
-                                            defaultValue:
-                                              "Your answers are still saving. Try again when that finishes.",
-                                          }),
-                                        );
-                                      } else {
-                                        answerOne(optionId, choice);
-                                      }
-                                    }}
-                                  />
-                                  <span
-                                    aria-hidden="true"
-                                    className={cn(
-                                      "flex size-9 items-center justify-center rounded-full border bg-background outline-ring outline-offset-2 transition-[border-color] duration-150 peer-checked:border-2 peer-focus-visible:outline-2 motion-reduce:transition-none [&_svg]:brightness-75 [&_svg]:grayscale peer-checked:[&_svg]:brightness-100 peer-checked:[&_svg]:grayscale-0 lg:[@media(pointer:fine)]:size-6",
-                                      // One colour per answer in every state;
-                                      // only its strength changes.
-                                      choice === "yes" &&
-                                        "border-green-600/40 peer-checked:border-green-600 peer-hover:border-green-600/70",
-                                      choice === "ifNeedBe" &&
-                                        "border-amber-500/40 peer-checked:border-amber-500 peer-hover:border-amber-500/70",
-                                      choice === "no" &&
-                                        "border-gray-500/40 peer-checked:border-gray-500 peer-hover:border-gray-500/70 dark:border-gray-400/40 dark:peer-hover:border-gray-400/70 dark:peer-checked:border-gray-400",
-                                    )}
-                                  >
-                                    <VoteIcon
-                                      round
-                                      type={choice}
-                                      className="size-5 lg:[@media(pointer:fine)]:size-4"
-                                    />
-                                  </span>
-                                  <span className="sr-only">
-                                    {answerLabels[choice]}
-                                  </span>
-                                </label>
-                              ))}
-                            </div>
-                          </fieldset>
+                                : votingLabel(option)
+                            }
+                            label={
+                              typeof timeLabel === "string"
+                                ? timeLabel
+                                : timeLabel.day
+                            }
+                            weekday={
+                              typeof timeLabel === "string"
+                                ? undefined
+                                : timeLabel.weekday
+                            }
+                            timesChangedAt={timesChangedAt}
+                            total={total}
+                            tallies={ballot.tallies}
+                            activeResponseId={state.activeResponseId}
+                            breakdownTimeZone={breakdownTimeZone}
+                            onBreakdownOpen={captureBreakdownOpen}
+                            onVote={onVote}
+                          />
                         );
                       })}
                     </section>
