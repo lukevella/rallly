@@ -62,6 +62,7 @@ import {
   useBallotState,
   useLinkToken,
   usePastOptions,
+  useTimesChangedAt,
 } from "@/features/poll/invite/client";
 import { BallotBarOption } from "@/features/poll/invite/components/ballot-bar-option";
 import { BallotBreakdown } from "@/features/poll/invite/components/ballot-breakdown";
@@ -336,22 +337,7 @@ export function AccessibleBallot({
       ? "UTC"
       : (viewerTimeZone ?? getBrowserTimeZone());
 
-  // True just long enough for the values that moved to start animating, so a row
-  // that mounts later (Edit, showing past times) doesn't flash as if it had changed.
-  const displayKey = `${displayTimeZone}|${timeFormat}`;
-  const [previousDisplayKey, setPreviousDisplayKey] =
-    React.useState(displayKey);
-  const [timesChanged, setTimesChanged] = React.useState(false);
-  if (previousDisplayKey !== displayKey) {
-    setPreviousDisplayKey(displayKey);
-    setTimesChanged(true);
-  }
-  // biome-ignore lint/correctness/useExhaustiveDependencies: a second change in the window restarts it
-  React.useEffect(() => {
-    if (!timesChanged) return;
-    const timeout = setTimeout(() => setTimesChanged(false), 300);
-    return () => clearTimeout(timeout);
-  }, [timesChanged, displayKey]);
+  const timesChangedAt = useTimesChangedAt(`${displayTimeZone}|${timeFormat}`);
 
   const date = (iso: string, preset: "dateFull" | "weekdayMonthDay") =>
     formatDateTime(new Date(iso), {
@@ -1524,7 +1510,7 @@ export function AccessibleBallot({
                     <h3 className="font-normal text-sm">
                       <BallotTimeText
                         value={dayHeading(first, group.key)}
-                        changed={timesChanged}
+                        changedAt={timesChangedAt}
                       />
                     </h3>
                     <ul className="flex flex-col gap-1.5">
@@ -1536,7 +1522,7 @@ export function AccessibleBallot({
                           <BallotBarOption
                             key={optionId}
                             label={rowTimeLabel(option)}
-                            timesChanged={timesChanged}
+                            timesChangedAt={timesChangedAt}
                             fullLabel={optionLabel(option)}
                             vote={vote}
                             canVote={false}
@@ -1696,7 +1682,7 @@ export function AccessibleBallot({
                       <h3 className="font-normal text-sm">
                         <BallotTimeText
                           value={dayHeading(first, group.key)}
-                          changed={timesChanged}
+                          changedAt={timesChangedAt}
                         />
                       </h3>
                       {group.optionIds.map((optionId) => {
@@ -1784,7 +1770,7 @@ export function AccessibleBallot({
                             >
                               <BallotTimeText
                                 value={rowTimeLabel(option)}
-                                changed={timesChanged}
+                                changedAt={timesChangedAt}
                               />
                             </span>
                             {liveCount !== null ? (

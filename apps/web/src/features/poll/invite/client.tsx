@@ -148,6 +148,22 @@ export function usePastOptions({ ballot }: { ballot: Ballot }) {
 export type PastOptions = ReturnType<typeof usePastOptions>;
 
 /**
+ * When the viewer last changed the time zone or format, so the times that
+ * moved can flash. A ref, so marking a change renders nothing more.
+ */
+export function useTimesChangedAt(displayKey: string) {
+  const changedAt = React.useRef(Number.NEGATIVE_INFINITY);
+  const previous = React.useRef(displayKey);
+  // A layout effect, so it is set before the times' own effects read it.
+  React.useLayoutEffect(() => {
+    if (previous.current === displayKey) return;
+    previous.current = displayKey;
+    changedAt.current = performance.now();
+  }, [displayKey]);
+  return changedAt;
+}
+
+/**
  * The token from an emailed link: a response's edit token, an invite token,
  * or a legacy seal. `invite` is the param older invite emails carry.
  */
