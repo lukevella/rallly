@@ -8,7 +8,7 @@ Rallly is available in more than 15 languages. Translations are generated with A
 
 ## How translations work
 
-New or changed English text is translated into every supported language by a workflow, which opens a pull request titled "🌐 Update translations". The workflow is run by the maintainers, so a translation may not appear as soon as the English text is merged. Each translation is checked before it is accepted: variables, tags and plural rules must match the English text.
+New or changed English text is translated into every supported language by a workflow, which opens a pull request titled "🌐 Update translations". The workflow runs whenever English text changes on the main branch, so a translation usually appears within a few hours of the English text being merged. Each translation is checked before it is accepted: variables, tags and plural rules must match the English text.
 
 A glossary keeps product terms consistent within each language. It lives in [`i18n/glossary.json`](https://github.com/lukevella/rallly/blob/main/i18n/glossary.json) and lists how terms such as "Space" or "Event Types" are translated, plus names that are never translated, such as "Rallly" and "Pro".
 
@@ -21,8 +21,11 @@ If a translation is wrong or reads awkwardly, edit it directly and open a pull r
 | The app | [`apps/web/public/locales/<language>/app.json`](https://github.com/lukevella/rallly/tree/main/apps/web/public/locales) |
 | The website | [`apps/landing/public/locales/<language>/`](https://github.com/lukevella/rallly/tree/main/apps/landing/public/locales) |
 | Emails | [`packages/emails/locales/<language>/emails.json`](https://github.com/lukevella/rallly/tree/main/packages/emails/locales) |
+| Blog posts | [`apps/landing/src/posts/<language>/<post>.md`](https://github.com/lukevella/rallly/tree/main/apps/landing/src/posts) |
 
-Each file maps a key to its text. Find the key by searching for the English text in the matching file under `en`, then change the value in your language's file.
+Each JSON file maps a key to its text. Find the key by searching for the English text in the matching file under `en`, then change the value in your language's file.
+
+A blog post is translated as a whole Markdown file. Edit the text, but keep links, images, code and components such as `<FaqItem>` exactly as they are in the English post, or the check rejects the file.
 
 Your correction is kept. The workflow only translates a string again when its English text changes, and it uses your version as a starting point when it does.
 
