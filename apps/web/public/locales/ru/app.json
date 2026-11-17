@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Сменить пространство",
   "commandMenuSwitchToSpace": "Перейти в <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Перейти в {name}",
+  "commentDeleteLabel": "Удалить комментарий пользователя {name}",
   "comments": "Комментарии",
   "commentsComposerPlaceholder": "Напишите комментарий…",
   "commentsComposerVisibility": "Доступно всем",

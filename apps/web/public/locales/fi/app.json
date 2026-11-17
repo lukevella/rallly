@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Vaihda tilaa",
   "commandMenuSwitchToSpace": "Vaihda tilaan <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Vaihda tilaan {name}",
+  "commentDeleteLabel": "Poista käyttäjän {name} kommentti",
   "comments": "Kommentit",
   "commentsComposerPlaceholder": "Kirjoita kommentti…",
   "commentsComposerVisibility": "Näkyy kaikille",

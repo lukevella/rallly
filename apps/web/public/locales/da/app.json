@@ -184,6 +184,7 @@
   "commandMenuSwitchSpace": "Skift rum",
   "commandMenuSwitchToSpace": "Skift til <b>{name}</b>",
   "commandMenuSwitchToSpaceKeyword": "Skift til {name}",
+  "commentDeleteLabel": "Slet kommentar fra {name}",
   "comments": "Kommentarer",
   "commentsComposerPlaceholder": "Skriv en kommentar…",
   "commentsComposerVisibility": "Synlig for alle",
