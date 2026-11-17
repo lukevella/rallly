@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { Glossary } from "./prompt.ts";
 import {
+  buildPostSystem,
   buildSystem,
   buildUser,
   languageName,
@@ -291,4 +292,16 @@ describe("buildSystem reference sampling", () => {
       Object.keys(JSON.parse(section.slice(section.indexOf("{")))),
     ).toHaveLength(150);
   });
+});
+
+describe("buildPostSystem", () => {
+  const s = buildPostSystem({ locale: "de", glossary });
+  it("names the language and locale", () => expect(s).toContain("German (de)"));
+  it("describes the product", () => expect(s).toContain("## About Rallly"));
+  it("includes only this locale's glossary translations", () => {
+    expect(s).toContain("Umfrage");
+    expect(s).not.toContain("Sondage");
+  });
+  it("lists the protected terms", () =>
+    expect(s).toContain("Never translate these terms: Rallly, Zoom"));
 });

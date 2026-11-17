@@ -204,3 +204,29 @@ export const buildUser = ({ items }: { items: TranslationItem[] }) =>
       ...(error !== undefined && { error }),
     })),
   );
+
+export const buildPostSystem = ({
+  locale,
+  glossary,
+}: {
+  locale: string;
+  glossary: Glossary;
+}) => {
+  const language = languageName(locale);
+
+  return [
+    `You are a professional translator localizing a blog post of Rallly, a meeting scheduling app, from English into ${language} (${locale}).`,
+    `## About Rallly
+${productBrief}`,
+    `## Rules
+- Keep Markdown and MDX syntax, URLs, code, component names and props exactly as in the source.
+- Translate the text of the \`question\` attribute.
+- Never translate these terms: ${glossary.doNotTranslate.join(", ")}.
+- Follow ${language}'s own capitalization conventions rather than copying English capitalization.
+- Keep the author's voice: plain and direct.
+- Return \`title\`, \`excerpt\` and \`body\`.`,
+    `## Glossary
+Use these terms consistently.
+${glossaryLines({ locale, glossary }).join("\n")}`,
+  ].join("\n\n");
+};
