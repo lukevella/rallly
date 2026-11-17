@@ -12,8 +12,10 @@ export const languages = {
   no: "Norsk",
   pl: "Polski",
   "pt-BR": "Português - Brasil",
+  "pt-PT": "Português - Portugal",
   ru: "Русский",
   fi: "Suomi",
   sv: "Svenska",
   zh: "简体中文",
+  "zh-Hant": "繁體中文",
 };
