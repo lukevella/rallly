@@ -8,7 +8,11 @@ import { captureEmailHTML } from "./mailpit";
 export async function getCode(email: string): Promise<string> {
   const html = await captureEmailHTML(email);
   const $ = load(html);
-  return $("#code").text().trim();
+  const code = $("#code").text().trim();
+  if (!code) {
+    throw new Error(`Email to ${email} doesn't contain a code`);
+  }
+  return code;
 }
 
 /**
