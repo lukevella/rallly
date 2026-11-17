@@ -36,7 +36,7 @@ const slugsIn = (dir: string) =>
 export const listPosts = ({ repoRoot }: { repoRoot: string }) =>
   slugsIn(join(repoRoot, postsDir));
 
-const postPath = ({
+export const postPath = ({
   repoRoot,
   locale,
   slug,
