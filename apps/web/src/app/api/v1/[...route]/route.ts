@@ -41,6 +41,7 @@ import {
   parseStartTime,
 } from "@/lib/datetime/slot-generator";
 import { runtime } from "@/lib/effect/runtime";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { isMaintenanceModeEnabled } from "@/lib/maintenance";
 import { flushPostHog, identifyGroup, track } from "@/lib/posthog";
 import { apiError, validationHook } from "../../middleware/api-error";
@@ -264,6 +265,38 @@ const rateLimitExceededResponse = {
   },
 };
 
+// Each instance serves its own spec, so the quota is described only where it
+// is enforced.
+const isPollQuotaEnabled = isFeatureEnabled("apiPollQuota");
+
+const pollQuotaHeaders = {
+  "X-Poll-Quota-Limit": {
+    description: "Polls the space may create through the API this month.",
+    schema: { type: "integer" as const },
+  },
+  "X-Poll-Quota-Used": {
+    description:
+      "Polls the space has created through the API this month. Can exceed the limit if the limit was lowered.",
+    schema: { type: "integer" as const },
+  },
+  "X-Poll-Quota-Reset": {
+    description:
+      "When the monthly count resets: the start of the next calendar month, as an ISO 8601 instant in UTC.",
+    schema: { type: "string" as const, format: "date-time" },
+  },
+};
+
+const createPollTooManyRequestsResponse = {
+  description:
+    "Rate limit exceeded (`RATE_LIMIT_EXCEEDED`), or the space has used its monthly API poll quota (`POLL_QUOTA_EXCEEDED`). Both include a `Retry-After` header; for the quota it is the number of seconds until the quota resets.",
+  headers: { ...retryAfterHeader, ...pollQuotaHeaders },
+  content: {
+    "application/json": {
+      schema: resolver(errorResponseSchema),
+    },
+  },
+};
+
 const serviceUnavailableResponse = {
   description:
     "The API is temporarily unavailable, for maintenance or because the rate limit store cannot be reached. Includes a `Retry-After` header. Maintenance responses are sent before the rate limiter runs and carry no `RateLimit-*` headers.",
@@ -294,6 +327,14 @@ async function buildOpenApiSpec() {
           "",
           "If the rate limit store cannot be reached the API fails closed and responds with `503 Service Unavailable`, a `SERVICE_UNAVAILABLE` error body, and a `Retry-After` header.",
           "",
+          ...(isPollQuotaEnabled
+            ? [
+                "## Poll quota",
+                "",
+                "Polls created through the API count against a monthly quota per space, which resets at the start of each calendar month in UTC. Every `POST /polls` response that passes authentication and the rate limit includes `X-Poll-Quota-Limit`, `X-Poll-Quota-Used` and `X-Poll-Quota-Reset` (an ISO 8601 instant in UTC). Requests that fail validation are not counted, and deleting a poll does not give its slot back. When the quota is used up, `POST /polls` responds with `429 Too Many Requests`, a `POLL_QUOTA_EXCEEDED` error body, and a `Retry-After` header with the seconds until the reset. The space owner can raise the quota from the API keys settings page.",
+                "",
+              ]
+            : []),
           "## Dates and times",
           "",
           "Every poll has a `kind`. A `date` poll offers calendar days: each option carries a `date` in `YYYY-MM-DD` format, which is a floating date with no time component and no timezone, so never convert it through a timezone. A `time` poll offers time slots: each option carries a `startTime` as an ISO 8601 instant in UTC and a `duration` in minutes; convert `startTime` into the poll's `timeZone` (or the viewer's) for display. Timestamps such as `createdAt` and `updatedAt` are always ISO 8601 instants in UTC.",
@@ -327,6 +368,11 @@ async function buildOpenApiSpec() {
           "| 404 | `POLL_NOT_FOUND` | The poll does not exist or belongs to another space |",
           "| 404 | `PARTICIPANT_NOT_FOUND` | The participant does not exist or belongs to another poll |",
           "| 429 | `RATE_LIMIT_EXCEEDED` | A rate limit window is exhausted |",
+          ...(isPollQuotaEnabled
+            ? [
+                "| 429 | `POLL_QUOTA_EXCEEDED` | The space has used its monthly API poll quota |",
+              ]
+            : []),
           "| 503 | `SERVICE_UNAVAILABLE` | Maintenance, or the rate limit store cannot be reached |",
           "| 500 | `INTERNAL_ERROR` | Unexpected failure; the request id is logged |",
         ].join("\n"),
@@ -450,6 +496,7 @@ app.post(
     responses: {
       201: {
         description: "Poll created",
+        ...(isPollQuotaEnabled ? { headers: pollQuotaHeaders } : {}),
         content: {
           "application/json": {
             schema: resolver(pollResponseSchema),
@@ -466,7 +513,9 @@ app.post(
       },
       401: unauthorizedResponse,
       403: spaceNotProResponse,
-      429: rateLimitExceededResponse,
+      429: isPollQuotaEnabled
+        ? createPollTooManyRequestsResponse
+        : rateLimitExceededResponse,
       503: serviceUnavailableResponse,
     },
   }),

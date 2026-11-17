@@ -9,6 +9,10 @@ process.env.API_BASE_URL = "https://api.rallly.co";
 process.env.NEXT_PUBLIC_BASE_URL = "https://app.rallly.co";
 process.env.NEXT_PUBLIC_SHORT_BASE_URL = "https://rallly.co";
 process.env.SKIP_ENV_VALIDATION = "1";
+// The spec describes the cloud API, where billing exists and the poll quota
+// is enforced, whatever the invoking environment says.
+process.env.NEXT_PUBLIC_SELF_HOSTED = "false";
+process.env.API_POLL_QUOTA_ENABLED = "true";
 // The wide event middleware logs the spec request; keep stdout to the result.
 process.env.LOG_LEVEL = "silent";
 

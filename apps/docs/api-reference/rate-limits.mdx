@@ -1,7 +1,7 @@
 ---
 title: "Rate limits"
 icon: "gauge-high"
-description: "Per space request limits and how to back off."
+description: "Per space request limits, the monthly poll quota, and how to back off."
 ---
 
 All endpoints share two limits per space:
@@ -48,6 +48,45 @@ RateLimit-Reset: 23
 ```
 
 Wait for `Retry-After` before retrying. Do not retry on a fixed interval: a client that ignores the header spends its next window on requests that fail.
+
+## Poll quota
+
+Separately from the request limits, polls created through the API count against a monthly quota per space. Pro includes 50 polls a month. The space owner can raise the quota from the API keys settings page.
+
+- The quota resets at the start of each calendar month in UTC.
+- Only successful `POST /polls` requests count. A request that fails validation is not counted.
+- Deleting a poll does not give its slot back.
+- Polls created in Rallly itself never count.
+- The space owner is emailed when the space reaches 80% of its quota, and again when it reaches 100%.
+
+Every `POST /polls` response that passes authentication and the request limits carries three headers:
+
+| Header | Meaning |
+| --- | --- |
+| `X-Poll-Quota-Limit` | Polls the space may create through the API this month |
+| `X-Poll-Quota-Used` | Polls the space has created through the API this month. Can exceed the limit if the limit was lowered |
+| `X-Poll-Quota-Reset` | When the count resets, as an ISO 8601 instant in UTC |
+
+When the quota is used up, `POST /polls` responds with `429 Too Many Requests`, a `POLL_QUOTA_EXCEEDED` error body and a `Retry-After` header with the number of seconds until the reset.
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 1036800
+X-Poll-Quota-Limit: 50
+X-Poll-Quota-Used: 50
+X-Poll-Quota-Reset: 2027-01-01T00:00:00.000Z
+```
+
+```json
+{
+  "error": {
+    "code": "POLL_QUOTA_EXCEEDED",
+    "message": "This space has reached its monthly API poll quota. It resets at 2027-01-01T00:00:00.000Z. To raise it, add API capacity at https://app.rallly.co/settings/api-keys."
+  }
+}
+```
+
+Unlike a rate limit, `Retry-After` here can be days away. Do not retry: raise the quota, or wait for the reset. Reading, listing and deleting polls are unaffected.
 
 ## Store outages
 

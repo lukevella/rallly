@@ -4,6 +4,16 @@ icon: "clock-rotate-left"
 description: "Changes to the API, newest first."
 ---
 
+<Update label="LAUNCH_DATE">
+Polls created through the API now count against a monthly quota per space. Pro includes 50 a month, and the space owner can raise it from the API keys settings page.
+
+- `POST /polls` responses carry `X-Poll-Quota-Limit`, `X-Poll-Quota-Used` and `X-Poll-Quota-Reset`.
+- Once the quota is used up, `POST /polls` returns `429` with `POLL_QUOTA_EXCEEDED` and a `Retry-After` header until the start of the next month.
+- Reading, listing and deleting polls are unaffected.
+
+See [Poll quota](/api-reference/rate-limits#poll-quota).
+</Update>
+
 <Update label="2026-11-10">
 The private API at `https://app.rallly.co/api/private` is removed. Every request to it returns `410 Gone` with the `GONE` error code. `/v1` is unchanged. See [Migrating from the private API](/api-reference/migrating-from-the-private-api).
 </Update>
