@@ -136,6 +136,22 @@ describe("validatePost", () => {
       /^frontmatter is not valid YAML/,
     ));
 
+  it("rejects a translation that adds an expression in prose", () =>
+    expect(v(swap("Besuche", "Besuche {1+1}")).join()).toContain(
+      "expressions differ",
+    ));
+
+  it("rejects a translation that drops an expression", () => {
+    const withExpression = source.replace("Visit", "Visit {1+1}");
+    const translated = german.replace("Besuche", "Besuche {1+1}");
+    expect(
+      validatePost({ source: withExpression, translation: translated }),
+    ).toEqual([]);
+    expect(
+      validatePost({ source: withExpression, translation: german }).join(),
+    ).toContain("expressions differ");
+  });
+
   it("accepts every committed English post against itself", () => {
     const files = readdirSync(postsDir).filter((f) => f.endsWith(".md"));
     expect(files.length).toBeGreaterThan(0);

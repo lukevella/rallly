@@ -12,21 +12,29 @@ import {
   stripFence,
 } from "./translator.ts";
 
-const partsZod = z.object({
-  title: z.string(),
-  excerpt: z.string(),
-  body: z.string(),
-});
+type Part = "title" | "excerpt" | "body";
 
-type Parts = z.infer<typeof partsZod>;
+type Parts = Partial<Record<Part, string>> & { body: string };
 
-const { $schema: _draft, ...responseSchema } = z.toJSONSchema(partsZod);
+const schemaFor = (present: Part[]) => {
+  const zod = z.object(
+    Object.fromEntries(present.map((part) => [part, z.string()])),
+  );
+  const { $schema: _draft, ...schema } = z.toJSONSchema(zod);
+  return { zod, schema };
+};
 
 type Attempt =
   | { ok: true; parts: Parts }
   | { ok: false; reason: string; final: boolean };
 
-const parseContent = (content: string | null | undefined): Attempt => {
+const parseContent = ({
+  content,
+  zod,
+}: {
+  content: string | null | undefined;
+  zod: z.ZodType<Record<string, string>>;
+}): Attempt => {
   if (content === null || content === undefined || content.trim() === "") {
     return { ok: false, reason: "empty response content", final: false };
   }
@@ -36,7 +44,7 @@ const parseContent = (content: string | null | undefined): Attempt => {
   } catch {
     return { ok: false, reason: "response was not valid JSON", final: false };
   }
-  const parsed = partsZod.safeParse(json);
+  const parsed = zod.safeParse(json);
   if (!parsed.success) {
     return {
       ok: false,
@@ -44,7 +52,7 @@ const parseContent = (content: string | null | undefined): Attempt => {
       final: false,
     };
   }
-  return { ok: true, parts: parsed.data };
+  return { ok: true, parts: parsed.data as Parts };
 };
 
 const request = async ({
@@ -52,11 +60,13 @@ const request = async ({
   model,
   system,
   user,
+  schema,
 }: {
   complete: Complete;
   model: string;
   system: string;
   user: Record<string, string>;
+  schema: ReturnType<typeof schemaFor>;
 }): Promise<Attempt> => {
   const response = await complete({
     model,
@@ -66,7 +76,7 @@ const request = async ({
     ],
     response_format: {
       type: "json_schema",
-      json_schema: { name: "post", strict: true, schema: responseSchema },
+      json_schema: { name: "post", strict: true, schema: schema.schema },
     },
     service_tier: serviceTier,
   } satisfies ChatCompletionCreateParamsNonStreaming);
@@ -81,7 +91,7 @@ const request = async ({
       final: true,
     };
   }
-  return parseContent(choice.message?.content);
+  return parseContent({ content: choice.message?.content, zod: schema.zod });
 };
 
 export const translatePost = async ({
@@ -102,10 +112,14 @@ export const translatePost = async ({
   const system = buildPostSystem({ locale, glossary });
   const english = matter(source);
   const englishParts: Parts = {
-    title: String(english.data.title ?? ""),
-    excerpt: String(english.data.excerpt ?? ""),
+    ...("title" in english.data && { title: String(english.data.title ?? "") }),
+    ...("excerpt" in english.data && {
+      excerpt: String(english.data.excerpt ?? ""),
+    }),
     body: english.content,
   };
+  const present = Object.keys(englishParts) as Part[];
+  const schema = schemaFor(present);
 
   const judge = (
     attempt: Attempt,
@@ -116,16 +130,16 @@ export const translatePost = async ({
     const { parts } = attempt;
     const content = matter.stringify(parts.body, {
       ...english.data,
-      title: parts.title,
-      excerpt: parts.excerpt,
+      ...(parts.title !== undefined && { title: parts.title }),
+      ...(parts.excerpt !== undefined && { excerpt: parts.excerpt }),
     });
     const reasons = [
       ...validatePost({ source, translation: content }),
-      ...(["title", "excerpt", "body"] as const).flatMap((part) =>
+      ...present.flatMap((part) =>
         protectedTermReasons({
           protectedTerms: glossary.doNotTranslate,
-          source: englishParts[part],
-          translation: parts[part],
+          source: englishParts[part] ?? "",
+          translation: parts[part] ?? "",
         }),
       ),
     ];
@@ -135,7 +149,7 @@ export const translatePost = async ({
 
   const attempt = async (user: Record<string, string>) => {
     try {
-      return await request({ complete, model, system, user });
+      return await request({ complete, model, system, user, schema });
     } catch (error) {
       return { ok: false, reason: errorMessage(error), final: true } as const;
     }

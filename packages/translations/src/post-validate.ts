@@ -36,6 +36,7 @@ function collect(body: string) {
   const images: string[] = [];
   const code: string[] = [];
   const inlineCode: string[] = [];
+  const expressions: string[] = [];
   let listItems = 0;
 
   walk(tree, (node) => {
@@ -58,6 +59,11 @@ function collect(body: string) {
       case "inlineCode":
         inlineCode.push(node.value ?? "");
         break;
+      case "mdxFlowExpression":
+      case "mdxTextExpression":
+      case "mdxjsEsm":
+        expressions.push(`${node.type}:${node.value ?? ""}`);
+        break;
       case "mdxJsxFlowElement":
       case "mdxJsxTextElement": {
         const attributes = new Map<string, string>();
@@ -75,7 +81,16 @@ function collect(body: string) {
     }
   });
 
-  return { headings, listItems, links, images, code, inlineCode, elements };
+  return {
+    headings,
+    listItems,
+    links,
+    images,
+    code,
+    inlineCode,
+    expressions,
+    elements,
+  };
 }
 
 const messageOf = (error: unknown) =>
@@ -219,6 +234,11 @@ export function validatePost({
       label: "inline code",
       source: expected.inlineCode,
       translation: actual.inlineCode,
+    }),
+    ...compareMultiset({
+      label: "expressions",
+      source: expected.expressions,
+      translation: actual.expressions,
     }),
   );
 

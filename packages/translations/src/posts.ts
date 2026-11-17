@@ -228,10 +228,14 @@ export const runPosts = async ({
       path: `posts/${locale}`,
       translated: translated.size,
       adopted: adopt.length,
-      removed: orphans.length,
+      removed: orphans.filter(isPlainSlug).length,
       failed: failed.sort((a, b) => a.key.localeCompare(b.key)),
     };
-    if (report.translated + report.adopted + report.removed === 0 || dryRun) {
+    const dropped = orphans.length - report.removed;
+    if (
+      report.translated + report.adopted + report.removed + dropped === 0 ||
+      dryRun
+    ) {
       return report;
     }
     try {

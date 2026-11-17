@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -32,6 +33,20 @@ describe("languageName", () => {
 });
 
 describe("buildSystem", () => {
+  it("is byte-identical to the previous output", () => {
+    const system = buildSystem({
+      locale: "de",
+      glossary,
+      reference: { greeting: "Hallo" },
+    });
+    expect(system).toContain(
+      "- Strings are short interface labels, buttons, messages and emails. Keep translations about as concise as the English.",
+    );
+    expect(createHash("sha256").update(system).digest("hex")).toBe(
+      "e092008227ea58372e9f0792dac7e11cf469e10bc7bec3d7026a6198a5226d2c",
+    );
+  });
+
   it("names the language and locale", () =>
     expect(buildSystem({ locale: "pt-BR", glossary, reference: {} })).toContain(
       "Brazilian Portuguese (pt-BR)",
@@ -304,4 +319,12 @@ describe("buildPostSystem", () => {
   });
   it("lists the protected terms", () =>
     expect(s).toContain("Never translate these terms: Rallly, Zoom"));
+  it("leaves out the interface-only brevity bullet", () =>
+    expect(s).not.toContain("Keep translations about as concise"));
+  it.each([
+    "This is a long-form article. Translate every sentence; do not shorten, summarise or omit anything.",
+    "`previous`, when present, is an earlier translation of this post: reuse its wording where it is still correct.",
+    "`error`, when present, lists why your last answer was rejected: fix every point.",
+    "Do not introduce `<`, `{` or `}` into prose; they have special meaning in MDX.",
+  ])("includes the rule %s", (rule) => expect(s).toContain(`- ${rule}`));
 });

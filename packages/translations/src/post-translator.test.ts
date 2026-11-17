@@ -84,6 +84,27 @@ describe("translatePost", () => {
     });
   });
 
+  it("translates a post without an excerpt", async () => {
+    const noExcerpt = source.replace("excerpt: How to plan.\n", "");
+    const { complete, calls } = fake([
+      reply({ title: good.title, body: good.body }),
+    ]);
+    const result = await translatePost({
+      complete,
+      model,
+      locale: "de",
+      glossary,
+      source: noExcerpt,
+    });
+    expect(userJson(calls[0])).toEqual({
+      title: "Plan with Rallly",
+      body: sourceBody,
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok)
+      expect(matter(result.content).data).not.toHaveProperty("excerpt");
+  });
+
   it("assembles the translation under the English frontmatter", async () => {
     const { complete } = fake([reply(good)]);
     const result = await run(complete);

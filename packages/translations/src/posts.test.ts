@@ -183,7 +183,7 @@ describe("runPosts", () => {
     await go();
     put(lockFile("de"), JSON.stringify({ ...readLock("de"), "../alpha": "x" }));
     const report = await go();
-    expect(report[0]?.removed).toBe(1);
+    expect(report[0]?.removed).toBe(0);
     expect(existsSync(en("alpha"))).toBe(true);
     expect(readLock("de")).not.toHaveProperty("../alpha");
   });

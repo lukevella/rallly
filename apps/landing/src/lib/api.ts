@@ -13,7 +13,12 @@ export function createPostsApi(postsDirectory: string) {
       .map((entry) => entry.name.replace(/\.md$/, ""));
   }
 
+  function hasEnglish(slug: string) {
+    return fs.existsSync(join(postsDirectory, `${slug}.md`));
+  }
+
   function getPostLocales(slug: string) {
+    if (!hasEnglish(slug)) return [];
     return fs
       .readdirSync(postsDirectory, { withFileTypes: true })
       .filter(
@@ -42,6 +47,7 @@ export function createPostsApi(postsDirectory: string) {
 
   function getPostBySlug(slug: string, fields: string[] = [], locale?: string) {
     const realSlug = slug.replace(/\.md$/, "");
+    if (!hasEnglish(realSlug)) return null;
     const { fullPath, contentLocale } = resolvePath({
       slug: realSlug,
       locale,

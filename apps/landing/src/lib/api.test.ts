@@ -15,6 +15,10 @@ beforeAll(() => {
     "---\ntitle: English\ndate: 2026-01-01\n---\nBody\n",
   );
   fs.writeFileSync(
+    path.join(dir, "de", "orphan.md"),
+    "---\ntitle: Waise\ndate: 2026-01-01\n---\nKörper\n",
+  );
+  fs.writeFileSync(
     path.join(dir, "de", "a.md"),
     "---\ntitle: Deutsch\ndate: 2026-01-01\n---\nKörper\n",
   );
@@ -45,6 +49,12 @@ describe("posts api", () => {
         api.getPostBySlug("a", ["title", "contentLocale"], locale),
       ).toMatchObject({ title: "English", contentLocale: "en" });
     }
+  });
+
+  it("returns null when only a translation exists", () => {
+    const api = createPostsApi(dir);
+    expect(api.getPostBySlug("orphan", ["title"], "de")).toBeNull();
+    expect(api.getPostLocales("orphan")).toEqual([]);
   });
 
   it("lists translated locales", () => {
