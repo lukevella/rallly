@@ -28,7 +28,9 @@
         "pt-BR": "Enquete",
         "ru": "Опрос",
         "sv": "Förfrågan",
-        "zh": "投票"
+        "zh": "投票",
+        "pt-PT": "Sondagem",
+        "zh-Hant": "投票"
       }
     },
     {
@@ -49,7 +51,9 @@
         "pt-BR": "Espaço",
         "ru": "Пространство",
         "sv": "Område",
-        "zh": "空间"
+        "zh": "空间",
+        "pt-PT": "Espaço",
+        "zh-Hant": "空間"
       }
     },
     {
@@ -70,7 +74,9 @@
         "pt-BR": "Tipos de Evento",
         "ru": "Типы событий",
         "sv": "Evenemangstyper",
-        "zh": "活动类型"
+        "zh": "活动类型",
+        "pt-PT": "Tipos de evento",
+        "zh-Hant": "活動類型"
       }
     },
     {
@@ -91,7 +97,9 @@
         "pt-BR": "Crie rápido",
         "ru": "Быстрое создание",
         "sv": "Snabbskapa",
-        "zh": "快速创建"
+        "zh": "快速创建",
+        "pt-PT": "Criação rápida",
+        "zh-Hant": "快速建立"
       }
     },
     {
@@ -112,7 +120,9 @@
         "pt-BR": "Painel de controle",
         "ru": "Панель управления",
         "sv": "Kontrollpanel",
-        "zh": "控制面板"
+        "zh": "控制面板",
+        "pt-PT": "Painel de controlo",
+        "zh-Hant": "控制台"
       }
     },
     {
@@ -133,7 +143,9 @@
         "pt-BR": "Google Agenda",
         "ru": "Календарь Google",
         "sv": "Google Kalender",
-        "zh": "Google 日历"
+        "zh": "Google 日历",
+        "pt-PT": "Calendário Google",
+        "zh-Hant": "Google 日曆"
       }
     },
     {
@@ -154,7 +166,9 @@
         "pt-BR": "Calendário da Microsoft",
         "ru": "Календарь Microsoft",
         "sv": "Microsoft Kalender",
-        "zh": "Microsoft 日历"
+        "zh": "Microsoft 日历",
+        "pt-PT": "Calendário Microsoft",
+        "zh-Hant": "Microsoft 日曆"
       }
     },
     {
@@ -175,13 +189,18 @@
         "pt-BR": "Se for necessário",
         "ru": "Если потребуется",
         "sv": "Om det behövs",
-        "zh": "如果需要"
+        "zh": "如果需要",
+        "pt-PT": "Se necessário",
+        "zh-Hant": "如有需要"
       }
     },
     {
       "en": "Participant",
       "note": "a person who responds to a poll or event invitation; distinct from a member of a space",
-      "translations": {}
+      "translations": {
+        "pt-PT": "Participante",
+        "zh-Hant": "參與者"
+      }
     },
     {
       "en": "Organizer",
@@ -200,7 +219,9 @@
         "pt-BR": "Organizador",
         "ru": "Организатор",
         "sv": "Organisatör",
-        "zh": "组织者"
+        "zh": "组织者",
+        "pt-PT": "Organizador",
+        "zh-Hant": "主辦人"
       }
     },
     {
@@ -221,7 +242,9 @@
         "pt-BR": "Sim",
         "ru": "Да",
         "sv": "Ja",
-        "zh": "有空"
+        "zh": "有空",
+        "pt-PT": "Sim",
+        "zh-Hant": "有空"
       }
     },
     {
@@ -242,7 +265,9 @@
         "pt-BR": "Não",
         "ru": "Нет",
         "sv": "Nej",
-        "zh": "否"
+        "zh": "否",
+        "pt-PT": "Não",
+        "zh-Hant": "沒空"
       }
     },
     {
@@ -263,7 +288,9 @@
         "pt-BR": "Resposta",
         "ru": "Ответ",
         "sv": "Svar",
-        "zh": "回复"
+        "zh": "回复",
+        "pt-PT": "Resposta",
+        "zh-Hant": "回覆"
       }
     },
     {
@@ -284,7 +311,9 @@
         "pt-BR": "Opção",
         "ru": "Вариант",
         "sv": "Alternativ",
-        "zh": "选项"
+        "zh": "选项",
+        "pt-PT": "Opção",
+        "zh-Hant": "選項"
       }
     },
     {
@@ -305,7 +334,9 @@
         "pt-BR": "Disponibilidade",
         "ru": "Доступность",
         "sv": "Tillgänglighet",
-        "zh": "可用时间"
+        "zh": "可用时间",
+        "pt-PT": "Disponibilidade",
+        "zh-Hant": "可參加時間"
       }
     },
     {
@@ -326,7 +357,9 @@
         "pt-BR": "Finalizar",
         "ru": "Завершить",
         "sv": "Slutför",
-        "zh": "完成"
+        "zh": "完成",
+        "pt-PT": "Finalizar",
+        "zh-Hant": "確定時間"
       }
     },
     {
@@ -347,7 +380,9 @@
         "pt-BR": "Evento",
         "ru": "Событие",
         "sv": "Evenemang",
-        "zh": "活动"
+        "zh": "活动",
+        "pt-PT": "Evento",
+        "zh-Hant": "活動"
       }
     },
     {
@@ -366,7 +401,9 @@
         "pl": "Członek",
         "pt-BR": "Membro",
         "sv": "Medlem",
-        "zh": "成员"
+        "zh": "成员",
+        "pt-PT": "Membro",
+        "zh-Hant": "成員"
       }
     },
     {
@@ -387,7 +424,9 @@
         "pt-BR": "Convidado",
         "ru": "Гость",
         "sv": "Gäst",
-        "zh": "访客"
+        "zh": "访客",
+        "pt-PT": "Convidado",
+        "zh-Hant": "訪客"
       }
     },
     {
@@ -406,7 +445,9 @@
         "pl": "Komentarze",
         "pt-BR": "Comentários",
         "ru": "Комментарии",
-        "sv": "Kommentarer"
+        "sv": "Kommentarer",
+        "pt-PT": "Comentários",
+        "zh-Hant": "留言"
       }
     },
     {
@@ -427,23 +468,33 @@
         "pt-BR": "Fuso horário",
         "ru": "Часовой пояс",
         "sv": "Tidszon",
-        "zh": "时区"
+        "zh": "时区",
+        "pt-PT": "Fuso horário",
+        "zh-Hant": "時區"
       }
     },
     {
       "en": "Seat",
       "note": "a paid place for one member in a space subscription",
-      "translations": {}
+      "translations": {
+        "pt-PT": "Lugar",
+        "zh-Hant": "席位"
+      }
     },
     {
       "en": "Vote",
       "note": "a participant's answer (yes, if need be or no) for one proposed time",
-      "translations": {}
+      "translations": {
+        "pt-PT": "Voto"
+      }
     },
     {
       "en": "Invite",
       "note": "to ask someone to respond to a poll, or to join a space",
-      "translations": {}
+      "translations": {
+        "pt-PT": "Convidar",
+        "zh-Hant": "邀請"
+      }
     }
   ]
 }
