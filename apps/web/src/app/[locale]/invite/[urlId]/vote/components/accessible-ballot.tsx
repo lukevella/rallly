@@ -1764,15 +1764,17 @@ export function AccessibleBallot({
                               <span
                                 aria-hidden="true"
                                 className={cn(
-                                  "absolute inset-y-0 left-0 -z-10 transition-[width,background-color] duration-200 motion-reduce:transition-none",
+                                  "absolute inset-y-0 left-0 -z-10 w-full origin-left transition-[transform,background-color] duration-200 motion-reduce:transition-none",
                                   vote === "yes"
                                     ? "bg-green-100 dark:bg-green-500/25"
                                     : vote === "ifNeedBe"
                                       ? "bg-amber-100 dark:bg-amber-500/25"
                                       : "bg-gray-200 dark:bg-white/10",
                                 )}
+                                // Scaled, not sized, so a changing count
+                                // animates without layout.
                                 style={{
-                                  width: `${Math.round((liveCount / total) * 100)}%`,
+                                  transform: `scaleX(${Math.round((liveCount / total) * 100) / 100})`,
                                 }}
                               />
                             ) : null}
