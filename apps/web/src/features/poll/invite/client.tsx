@@ -27,12 +27,17 @@ function initialMode(ballot: Ballot): BallotMode {
  */
 export function useBallotState({ ballot }: { ballot: Ballot }) {
   // Key order is not guaranteed by the read, so the signature sorts it:
-  // the same saved response must never look like a new one.
-  const ownSignature = JSON.stringify(
-    ballot.ownResponses.map((response) => [
-      response.id,
-      Object.entries(response.votes).sort(([a], [b]) => a.localeCompare(b)),
-    ]),
+  // the same saved response must never look like a new one. Every page render
+  // from the server sends a new array, so the memo never hides a change.
+  const ownSignature = React.useMemo(
+    () =>
+      JSON.stringify(
+        ballot.ownResponses.map((response) => [
+          response.id,
+          Object.entries(response.votes).sort(([a], [b]) => a.localeCompare(b)),
+        ]),
+      ),
+    [ballot.ownResponses],
   );
   const [seededFrom, setSeededFrom] = React.useState(ownSignature);
   const [mode, setMode] = React.useState<BallotMode>(() => initialMode(ballot));
