@@ -71,13 +71,18 @@ export async function deleteAllMessages(): Promise<void> {
 }
 
 async function markMessagesAsRead(ids: string[]): Promise<void> {
-  await fetch(`${MAILPIT_API_URL}/v1/messages`, {
+  const response = await fetch(`${MAILPIT_API_URL}/v1/messages`, {
     headers: {
       "Content-Type": "application/json",
     },
     method: "PUT",
     body: JSON.stringify({ IDs: ids, Read: true }),
   });
+  if (!response.ok) {
+    throw new Error(
+      `Mailpit failed to mark messages as read: ${response.status}`,
+    );
+  }
 }
 
 /**
