@@ -134,7 +134,7 @@ function BreakdownGroup({
       <ul className="space-y-1 pt-1.5 pb-3 pl-5 group-last:pb-0">
         {entries.map((entry) => (
           <li key={entry.responseId} className="flex items-center gap-1.5">
-            <span className="min-w-0 truncate text-sm">{entry.name}</span>
+            <span className="min-w-0 truncate text-xs">{entry.name}</span>
             {/* An unsaved answer, drawn like the Pro badge. */}
             {entry.viewer?.unsaved ? (
               <Tooltip>
