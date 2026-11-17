@@ -23,6 +23,7 @@ import { PoweredByLink } from "@/features/poll/vote/components/powered-by-link";
 import {
   loadCanManagePoll,
   loadOptionalResponder,
+  loadVoteComments,
 } from "@/features/poll/vote/loaders";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -32,6 +33,7 @@ import { EventLockup } from "./components/event-lockup";
 import { InviteHelp } from "./components/help/invite-help";
 import { InviteHelpSheet } from "./components/help/invite-help-sheet";
 import { ManagePollLink } from "./components/manage-poll-link";
+import { VoteComments, VoteCommentsSheet } from "./components/vote-comments";
 
 type PageProps = {
   params: Promise<{ urlId: string }>;
@@ -74,6 +76,7 @@ async function PageContent({ params, searchParams }: PageProps) {
       loadInstanceBranding(),
       loadCanManagePoll(urlId),
       getTranslation(),
+      loadVoteComments(urlId),
     ]),
   );
 
@@ -93,7 +96,7 @@ async function PageContent({ params, searchParams }: PageProps) {
   }
 
   const [
-    [poll, ballot, instanceBranding, canManage, { t }],
+    [poll, ballot, instanceBranding, canManage, { t }, comments],
     footerLinks,
     token,
   ] = await Promise.all([rest, footerLinksRead, tokenRead]);
@@ -156,6 +159,17 @@ async function PageContent({ params, searchParams }: PageProps) {
                 {t("managePoll", { defaultValue: "Manage poll" })}
               </ManagePollLink>
             ) : null}
+            {poll.disableComments ? null : (
+              <VoteCommentsSheet pollId={poll.id} count={comments.length}>
+                <VoteComments
+                  pollId={poll.id}
+                  comments={comments}
+                  canComment={!poll.event}
+                  signedInName={responder?.name}
+                  defaultName={ballot.ownResponses[0]?.name}
+                />
+              </VoteCommentsSheet>
+            )}
             <InviteHelpSheet pollId={poll.id}>
               <Suspense
                 fallback={
