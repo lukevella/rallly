@@ -15,6 +15,7 @@ const withBundleAnalyzer = createBundleAnalyzer({
 const nextConfig: NextConfig = {
   allowedDevOrigins: [process.env.DEV_DOMAIN ?? "web.rallly.localhost"],
   experimental: {
+    agentUpgrade: "security",
     staleTimes: {
       dynamic: 60,
     },
