@@ -10,7 +10,9 @@ export async function loginWithEmail(
 ) {
   // getCode reads the oldest unread email for the address. Anything a
   // previous test or run left unread would be taken for the code email.
-  await skipPendingMessages(email);
+  if (!password) {
+    await skipPendingMessages(email);
+  }
 
   await page.goto("/login");
   // React reveals streamed Suspense content paint-aligned, so the page can
