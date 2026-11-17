@@ -7,6 +7,7 @@ import { Section, SectionContent } from "@/components/section";
 import { getTranslation } from "@/i18n/server";
 import { getAlternates } from "@/lib/alternates";
 import { getAllPosts } from "@/lib/api";
+import { getCategoryLabels } from "@/lib/blog-categories";
 import { PostsList } from "./posts-list";
 
 export default async function Page(props: {
@@ -15,14 +16,10 @@ export default async function Page(props: {
   cacheLife("max");
   const { locale } = await props.params;
   const { t } = await getTranslation(locale, ["blog", "common"]);
-  const allPosts = getAllPosts([
-    "title",
-    "date",
-    "slug",
-    "author",
-    "category",
-    "excerpt",
-  ]);
+  const allPosts = getAllPosts(
+    ["title", "date", "slug", "author", "category", "excerpt"],
+    locale,
+  );
   return (
     <Section>
       <Hero
@@ -41,6 +38,7 @@ export default async function Page(props: {
             slug: post.slug,
             excerpt: post.excerpt,
           }))}
+          categoryLabels={getCategoryLabels(t)}
           allLabel={t("blogFilterAll", { ns: "blog", defaultValue: "All" })}
         />
       </SectionContent>
