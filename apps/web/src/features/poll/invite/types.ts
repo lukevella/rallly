@@ -39,15 +39,19 @@ export type BallotViewer = {
   linkedResponseIds: string[];
 };
 
-export type BallotTallyEntry = {
-  responseId: string;
-  /** Null when the poll hides participants and the response is not the viewer's. */
-  name: string | null;
-  vote: BallotVote;
+/** Everyone's answers, with each person listed once however many options there are. */
+export type BallotTallies = {
+  /** Newest first. A name is null when the poll hides participants and the response is not the viewer's. */
+  responses: { id: string; name: string | null }[];
+  /** Per option, each response's answer in the order of `responses`; null where it has none. */
+  votes: Record<string, (BallotVote | null)[]>;
 };
 
 /** A row of an option's breakdown. `viewer` marks the person looking at it. */
-export type BallotBreakdownEntry = BallotTallyEntry & {
+export type BallotBreakdownEntry = {
+  responseId: string;
+  name: string | null;
+  vote: BallotVote;
   /** `unsaved` while their answer differs from the one on record. */
   viewer?: { unsaved: boolean };
 };
@@ -64,7 +68,7 @@ export type Ballot = {
   canRespond: boolean;
   options: { id: string; startTime: string; duration: number }[];
   /** Null when the poll hides scores from this viewer. */
-  tallies: Record<string, BallotTallyEntry[]> | null;
+  tallies: BallotTallies | null;
   /** How many responses the poll has, the bar each option is measured against. */
   responseCount: number;
   /** The response an edit link names first, then newest first. */

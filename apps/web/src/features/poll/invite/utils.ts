@@ -3,7 +3,7 @@ import type {
   Ballot,
   BallotBreakdownEntry,
   BallotSource,
-  BallotTallyEntry,
+  BallotTallies,
   BallotViewer,
   BallotVote,
 } from "./types";
@@ -70,19 +70,23 @@ export function projectBallot({
 
   const showScores = !source.hideScores || ownResponses.length > 0;
 
-  let tallies: Ballot["tallies"] = null;
-  if (showScores) {
-    tallies = Object.fromEntries(
-      source.options.map((option) => [option.id, [] as BallotTallyEntry[]]),
-    );
-    for (const response of source.responses) {
-      const name =
-        isOwn(response) || !source.hideParticipants ? response.name : null;
-      for (const [optionId, vote] of Object.entries(response.votes)) {
-        tallies[optionId]?.push({ responseId: response.id, name, vote });
+  const tallies: Ballot["tallies"] = showScores
+    ? {
+        responses: source.responses.map((response) => ({
+          id: response.id,
+          name:
+            isOwn(response) || !source.hideParticipants ? response.name : null,
+        })),
+        votes: Object.fromEntries(
+          source.options.map((option) => [
+            option.id,
+            source.responses.map(
+              (response) => response.votes[option.id] ?? null,
+            ),
+          ]),
+        ),
       }
-    }
-  }
+    : null;
 
   return {
     pollId: source.pollId,
@@ -139,19 +143,29 @@ export function groupBallotOptions({
 /**
  * How many people can make an option: everyone who said yes or if need be,
  * with the viewer's saved answer swapped for the one they are choosing now.
+ * `votes` is the option's column of the tallies.
  */
 export function availableCount({
-  entries,
+  tallies,
+  votes,
   activeResponseId,
   liveVote,
 }: {
-  entries: BallotTallyEntry[];
+  tallies: BallotTallies;
+  votes: (BallotVote | null)[];
   activeResponseId: string | null;
   liveVote: BallotVote | undefined;
 }): number {
-  const others = entries.filter(
-    (entry) => entry.responseId !== activeResponseId && entry.vote !== "no",
-  ).length;
+  let others = 0;
+  for (const [index, vote] of votes.entries()) {
+    if (
+      vote &&
+      vote !== "no" &&
+      tallies.responses[index]?.id !== activeResponseId
+    ) {
+      others += 1;
+    }
+  }
   return others + (liveVote === "yes" || liveVote === "ifNeedBe" ? 1 : 0);
 }
 
@@ -162,27 +176,36 @@ const voteOrder: Record<BallotVote, number> = { yes: 0, ifNeedBe: 1, no: 2 };
  * swapped for the one they are choosing now, under `viewerName`.
  */
 export function optionBreakdown({
-  entries,
+  tallies,
+  votes,
   activeResponseId,
   liveVote,
   viewerName,
 }: {
-  entries: BallotTallyEntry[];
+  tallies: BallotTallies;
+  votes: (BallotVote | null)[];
   activeResponseId: string | null;
   liveVote: BallotVote | undefined;
   viewerName: string;
 }): BallotBreakdownEntry[] {
-  const others = entries.filter(
-    (entry) => entry.responseId !== activeResponseId,
-  );
-  const saved = entries.find((entry) => entry.responseId === activeResponseId);
+  const others: BallotBreakdownEntry[] = [];
+  let saved: BallotVote | null = null;
+  for (const [index, vote] of votes.entries()) {
+    const response = tallies.responses[index];
+    if (!response || !vote) continue;
+    if (response.id === activeResponseId) {
+      saved = vote;
+    } else {
+      others.push({ responseId: response.id, name: response.name, vote });
+    }
+  }
   const viewer: BallotBreakdownEntry[] = liveVote
     ? [
         {
           responseId: activeResponseId ?? "viewer",
           name: viewerName,
           vote: liveVote,
-          viewer: { unsaved: saved?.vote !== liveVote },
+          viewer: { unsaved: saved !== liveVote },
         },
       ]
     : [];
