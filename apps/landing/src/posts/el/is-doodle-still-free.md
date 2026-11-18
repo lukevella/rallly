@@ -24,7 +24,7 @@ _Τελευταία ενημέρωση: 14 Οκτωβρίου 2026_
 
 ![Η σελίδα τιμών του Doodle που δείχνει ότι το δωρεάν πρόγραμμα περιορίζεται σε μία ψηφοφορία ομάδας](/static/images/is-doodle-still-free/doodle-pricing-september-2026.png)
 
-Η σελίδα τιμών δεν расскаει ολόκληρη την ιστορία. Το κέντρο βοήθειας του Doodle διαθέτει μια [σύγκριση δωρεάν και Professional](https://help.doodle.com/en/articles/10448913-doodle-free-and-doodle-professional-differences-at-a-glance) που συμπληρώνει τις υπόλοιπες πληροφορίες:
+Η σελίδα τιμών δεν λέει ολόκληρη την ιστορία. Το κέντρο βοήθειας του Doodle διαθέτει μια [σύγκριση δωρεάν και Professional](https://help.doodle.com/en/articles/10448913-doodle-free-and-doodle-professional-differences-at-a-glance) που συμπληρώνει τις υπόλοιπες πληροφορίες:
 
 <div className="overflow-x-auto">
 <table>
