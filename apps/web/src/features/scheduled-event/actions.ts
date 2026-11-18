@@ -25,7 +25,10 @@ import {
 } from "@/features/scheduled-event/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { authLib, getSession } from "@/lib/auth";
-import { getDeviceDateTimeConfig } from "@/lib/datetime/server";
+import {
+  getDeviceDateTimeConfig,
+  getDeviceTimeZone,
+} from "@/lib/datetime/server";
 import type { TimeFormat } from "@/lib/datetime/types";
 import { AppError } from "@/lib/errors/app-error";
 import { actionClient, authActionClient } from "@/lib/safe-action/server";
@@ -73,6 +76,7 @@ async function sendRsvpConfirmation({
   status,
   locale,
   timeZone,
+  deviceTimeZone,
   timeFormat,
 }: {
   eventId: string;
@@ -81,6 +85,7 @@ async function sendRsvpConfirmation({
   status: "accepted" | "declined";
   locale: string;
   timeZone?: string;
+  deviceTimeZone?: string;
   timeFormat?: TimeFormat;
 }) {
   const event = await getScheduledEventRsvpEmailData(eventId);
@@ -119,6 +124,7 @@ async function sendRsvpConfirmation({
     end: event.end,
     allDay: event.allDay,
     timeZone: event.timeZone ?? undefined,
+    recipientTimeZone: deviceTimeZone,
     organizer: {
       name: event.user.name,
       email: event.user.email,
@@ -209,10 +215,14 @@ export const submitRsvpAction = actionClient
 
     // Request APIs are unavailable inside after(), so resolve the invitee's
     // locale and zone here and pass them through.
-    const [locale, { timeZone, timeFormat }] = await Promise.all([
-      getLocale(),
-      getDeviceDateTimeConfig(),
-    ]);
+    // The device zone, not the poll preview override, is where the invitee
+    // is: it anchors floating times in this and later attachments.
+    const [locale, { timeZone, timeFormat }, deviceTimeZone] =
+      await Promise.all([
+        getLocale(),
+        getDeviceDateTimeConfig(),
+        getDeviceTimeZone(),
+      ]);
 
     const result = await createRsvp({
       eventId,
@@ -221,7 +231,7 @@ export const submitRsvpAction = actionClient
       status,
       inviteeId,
       locale,
-      timeZone,
+      timeZone: deviceTimeZone,
     });
 
     if (result.ok) {
@@ -233,6 +243,7 @@ export const submitRsvpAction = actionClient
           status,
           locale,
           timeZone,
+          deviceTimeZone,
           timeFormat,
         }),
       );
@@ -249,10 +260,14 @@ export const registerForEventAction = authActionClient
 
     await assertRegistrationOpen(eventId);
 
-    const [locale, { timeZone, timeFormat }] = await Promise.all([
-      getLocale(),
-      getDeviceDateTimeConfig(),
-    ]);
+    // The device zone, not the poll preview override, is where the invitee
+    // is: it anchors floating times in this and later attachments.
+    const [locale, { timeZone, timeFormat }, deviceTimeZone] =
+      await Promise.all([
+        getLocale(),
+        getDeviceDateTimeConfig(),
+        getDeviceTimeZone(),
+      ]);
 
     const result = await createRsvp({
       eventId,
@@ -261,7 +276,7 @@ export const registerForEventAction = authActionClient
       status: "accepted",
       inviteeId: ctx.user.id,
       locale,
-      timeZone,
+      timeZone: deviceTimeZone,
     });
 
     if (result.ok) {
@@ -273,6 +288,7 @@ export const registerForEventAction = authActionClient
           status: "accepted",
           locale,
           timeZone,
+          deviceTimeZone,
           timeFormat,
         }),
       );

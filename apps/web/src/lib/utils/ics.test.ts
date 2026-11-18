@@ -128,6 +128,79 @@ describe("createIcsEvent", () => {
       expect(result.value).not.toContain("DTSTART:20240315T120000Z");
       expect(result.value).not.toContain("DTEND:20240315T130000Z");
     });
+
+    it("anchors the wall clock time in the recipient's zone", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        start: new Date("2026-12-04T14:00:00Z"),
+        end: new Date("2026-12-04T15:00:00Z"),
+        recipientTimeZone: "America/Chicago",
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toContain("DTSTART:20261204T200000Z");
+      expect(result.value).toContain("DTEND:20261204T210000Z");
+    });
+
+    it("keeps the end after the start when the start falls in a skipped hour", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        start: new Date("2027-03-14T02:30:00Z"),
+        end: new Date("2027-03-14T03:00:00Z"),
+        recipientTimeZone: "America/Chicago",
+      });
+
+      expect(result.value).toContain("DTSTART:20270314T083000Z");
+      expect(result.value).toContain("DTEND:20270314T090000Z");
+    });
+
+    it("keeps the end after the start at minute precision", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        start: new Date("2027-03-14T02:30:00Z"),
+        end: new Date("2027-03-14T03:30:30Z"),
+        recipientTimeZone: "America/Chicago",
+      });
+
+      expect(result.value).toContain("DTSTART:20270314T083000Z");
+      expect(result.value).toContain("DTEND:20270314T093000Z");
+    });
+
+    it("stays floating when the recipient's zone is invalid", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        start: new Date("2026-12-04T14:00:00Z"),
+        end: new Date("2026-12-04T15:00:00Z"),
+        recipientTimeZone: "Not/AZone",
+      });
+
+      expect(result.error).toBeFalsy();
+      expect(result.value).toMatch(/DTSTART:20261204T140000\r?\n/);
+    });
+
+    it("ignores the recipient's zone for zoned events", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        start: new Date("2026-12-04T14:00:00Z"),
+        end: new Date("2026-12-04T15:00:00Z"),
+        timeZone: "Europe/London",
+        recipientTimeZone: "America/Chicago",
+      });
+
+      expect(result.value).toContain("DTSTART:20261204T140000Z");
+    });
+
+    it("ignores the recipient's zone for all-day events", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        allDay: true,
+        start: new Date("2026-12-04T00:00:00Z"),
+        end: new Date("2026-12-05T00:00:00Z"),
+        recipientTimeZone: "Asia/Tokyo",
+      });
+
+      expect(result.value).toContain("DTSTART;VALUE=DATE:20261204");
+    });
   });
 
   describe("Event properties", () => {

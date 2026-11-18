@@ -164,6 +164,7 @@ export const sendScheduledEventInviteEmail = Effect.fn(
     end: event.end,
     allDay: event.allDay,
     timeZone: event.timeZone ?? undefined,
+    recipientTimeZone: invite.inviteeTimeZone,
     organizer: { name: host.name, email: host.email },
     // RFC 5546 requires the recipient as ATTENDEE on a REQUEST.
     attendees: [
@@ -262,39 +263,56 @@ export async function sendScheduledEventCanceledEmails({
     ? getConferencingUri(conferencing)
     : undefined;
 
-  const ics = createIcsEvent({
-    uid: event.uid,
-    sequence: event.sequence,
-    title: event.title,
-    description:
-      [event.description, conferencingUri].filter(Boolean).join("\n\n") ||
-      undefined,
-    location: locationText ?? conferencingUri,
-    start: event.start,
-    end: event.end,
-    allDay: event.allDay,
-    timeZone: event.timeZone ?? undefined,
-    organizer,
-    attendees: event.invites.map((invite) => ({
-      name: invite.inviteeName,
-      email: invite.inviteeEmail,
-    })),
-    method: "cancel",
-    status: "CANCELLED",
-  });
-
-  if (ics.error || !ics.value) {
-    throw new Error(
-      `Failed to generate cancellation ICS: ${ics.error?.message ?? "empty"}`,
-    );
-  }
-  const icsContent = ics.value;
-
-  for (const invite of event.invites) {
-    if (invite.status === "declined") {
-      continue;
+  // A floating time is anchored in each recipient's zone, so it needs one copy
+  // per zone; a zoned or all-day event shares a single copy.
+  const floating = !event.timeZone && !event.allDay;
+  const icsByZone = new Map<string, string>();
+  const getIcsContent = (inviteeTimeZone: string | null) => {
+    const key = floating ? (inviteeTimeZone ?? "") : "";
+    const cached = icsByZone.get(key);
+    if (cached) {
+      return cached;
     }
+    const ics = createIcsEvent({
+      uid: event.uid,
+      sequence: event.sequence,
+      title: event.title,
+      description:
+        [event.description, conferencingUri].filter(Boolean).join("\n\n") ||
+        undefined,
+      location: locationText ?? conferencingUri,
+      start: event.start,
+      end: event.end,
+      allDay: event.allDay,
+      timeZone: event.timeZone ?? undefined,
+      recipientTimeZone: key || undefined,
+      organizer,
+      attendees: event.invites.map((attendee) => ({
+        name: attendee.inviteeName,
+        email: attendee.inviteeEmail,
+      })),
+      method: "cancel",
+      status: "CANCELLED",
+    });
+    if (ics.error || !ics.value) {
+      throw new Error(
+        `Failed to generate cancellation ICS: ${ics.error?.message ?? "empty"}`,
+      );
+    }
+    icsByZone.set(key, ics.value);
+    return ics.value;
+  };
 
+  // Every attachment is built before any email is scheduled, so a failure
+  // sends none.
+  const recipients = event.invites
+    .filter((invite) => invite.status !== "declined")
+    .map((invite) => ({
+      invite,
+      icsContent: getIcsContent(invite.inviteeTimeZone),
+    }));
+
+  for (const { invite, icsContent } of recipients) {
     const { date, time } = formatEventDateTime({
       start: event.start,
       end: event.end,
