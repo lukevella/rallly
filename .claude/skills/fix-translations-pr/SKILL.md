@@ -69,7 +69,7 @@ It must print `Locale files OK`. A failure means the run would retranslate what 
 
 ### 6. Commit and push
 
-Commit to `i18n/translations` with a `🌐` message listing the locales touched. Before pushing, `git fetch origin` and confirm `origin/i18n/translations` hasn't moved since checkout (a run may have pushed). Push normally, never with force. If every finding was skipped there is nothing to commit; go straight to step 7.
+Commit to `i18n/translations` with a `🌐` message listing the locales touched. Immediately before pushing, repeat the step 2 check: a run may have started since. If one is in progress or queued, wait for it, then `git fetch origin` and rebase onto `origin/i18n/translations` if it moved. Push only when no run is active and `origin/i18n/translations` matches the commit you built on. Push normally, never with force. If every finding was skipped there is nothing to commit; go straight to step 7.
 
 ### 7. Reply to and resolve every thread
 
