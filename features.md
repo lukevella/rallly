@@ -5,7 +5,7 @@ Chaque section ci-dessous tient lieu d'issue : contexte, périmètre, critères 
 
 | # | Feature | Type | Ancrage upstream | Branche | Responsable | État |
 |---|---|---|---|---|---|---|
-| 1 | [Block voting on past dates/times](#1-catalog-5--block-voting-on-past-datestimes) | Catalogue n°5 | [#1677](https://github.com/lukevella/rallly/issues/1677) | `FeatureNikita` | _à définir_ | 🚧 En cours |
+| 1 | [Block voting on past dates/times](#1-catalog-5--block-voting-on-past-datestimes) | Catalogue n°5 | [#1677](https://github.com/lukevella/rallly/issues/1677) | `FeatureNikita` | https://github.com/lukevella/rallly/issues/1677 | fini |
 | 2 | [Restrict comments to signed-in users](#2-catalog-9--variant--restrict-comments-to-signed-in-users) | Catalogue n°9 (variante) | [#224](https://github.com/lukevella/rallly/discussions/224) | `feature/comments-signed-in-only` | _à définir_ | ⏳ À faire |
 | 3 | [Map Authentik groups to Rallly permissions](#3-free-feature--map-authentik-oidc-groups-to-rallly-permissions) | Feature libre | [#3639](https://github.com/lukevella/rallly/discussions/3639) | `feature/oidc-group-permissions` | _à définir_ | ⏳ À faire |
 
