@@ -7,12 +7,8 @@ import { InstanceFooterLinks } from "@/components/instance-footer-links";
 import { SessionRefresher } from "@/components/session-refresher";
 import { Spinner } from "@/components/spinner";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Logo } from "@/features/branding/components/logo";
-import {
-  DEFAULT_LOGO_URL,
-  DEFAULT_LOGO_URL_DARK,
-} from "@/features/branding/constants";
 import { loadInstanceBranding } from "@/features/branding/loaders";
+import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { loadFooterLinks } from "@/features/instance-settings/loaders";
 import { EventMetaDescription } from "@/features/poll/components/event-meta-description";
 import { InviteOpenRecorder } from "@/features/poll/invite/components/invite-open-recorder";
@@ -74,6 +70,7 @@ async function PageContent({ params, searchParams }: PageProps) {
       loadPollDetails(urlId),
       tokenRead.then((token) => loadInviteBallot(urlId, token)),
       loadInstanceBranding(),
+      loadInstancePolicy(),
       loadCanManagePoll(urlId),
       getTranslation(),
       loadVoteComments(urlId),
@@ -96,7 +93,15 @@ async function PageContent({ params, searchParams }: PageProps) {
   }
 
   const [
-    [poll, ballot, instanceBranding, canManage, { t }, comments],
+    [
+      poll,
+      ballot,
+      instanceBranding,
+      instancePolicy,
+      canManage,
+      { t },
+      comments,
+    ],
     footerLinks,
     token,
   ] = await Promise.all([rest, footerLinksRead, tokenRead]);
@@ -107,15 +112,16 @@ async function PageContent({ params, searchParams }: PageProps) {
 
   const responder = await responderRead;
 
-  // The Rallly logo stays off this page. An instance's own logo is its
-  // operator's brand, so that one still shows.
-  const showLogo =
-    instanceBranding.logo.light !== DEFAULT_LOGO_URL ||
-    instanceBranding.logo.dark !== DEFAULT_LOGO_URL_DARK;
   // Attribution can be turned off per instance or per space.
   const hideAttribution =
     instanceBranding.hideAttribution || (poll.space?.hideAttribution ?? false);
-  const space = poll.space?.showBranding ? poll.space : null;
+  // Whose identity heads the sidebar: the space's when it brands its polls,
+  // or the instance's when the operator's white label replaces every space's.
+  const brand = poll.space?.showBranding
+    ? { name: poll.space.name, image: poll.space.image }
+    : instancePolicy.spaceBrandingAllowed
+      ? null
+      : { name: instanceBranding.appName, image: instanceBranding.logoIcon };
   // An instance's own links, or the hosted product's policies where they apply.
   const links =
     footerLinks.length > 0 || !isFeatureEnabled("hostedLegalLinks")
@@ -143,16 +149,11 @@ async function PageContent({ params, searchParams }: PageProps) {
       <header
         className={cn(
           "shrink-0 pt-4 lg:flex lg:h-16 lg:items-center lg:pt-0",
-          // Only the toggles: beside the space's icon rather than a row of their own.
-          space && !showLogo && "max-lg:absolute max-lg:top-0 max-lg:right-0",
+          // Only the toggles: beside the brand's icon rather than a row of their own.
+          brand && "max-lg:absolute max-lg:top-0 max-lg:right-0",
         )}
       >
         <div className="flex flex-wrap items-start gap-x-3 px-4 lg:w-full lg:flex-nowrap lg:items-center lg:gap-x-4 lg:px-4">
-          {showLogo ? (
-            <div className="flex h-12 shrink-0 items-center">
-              <Logo size="sm" />
-            </div>
-          ) : null}
           <div className="ml-auto flex h-12 shrink-0 items-center gap-1">
             {canManage ? (
               <ManagePollLink pollId={poll.id}>
@@ -183,8 +184,8 @@ async function PageContent({ params, searchParams }: PageProps) {
             </InviteHelpSheet>
             <ThemeToggle />
           </div>
-          {/* Below lg the title lives here, unless the space brands the sidebar. */}
-          {space ? null : (
+          {/* Below lg the title lives here, unless a brand heads the sidebar. */}
+          {brand ? null : (
             <h1 className="order-last mt-2 basis-full text-balance font-semibold text-xl tracking-tight lg:hidden">
               {poll.title}
             </h1>
@@ -206,10 +207,10 @@ async function PageContent({ params, searchParams }: PageProps) {
             !hideAttribution && isFeatureEnabled("createPollPrompt")
           }
           lockup={
-            space ? (
+            brand ? (
               <EventLockup
-                spaceName={space.name}
-                spaceImage={space.image}
+                name={brand.name}
+                image={brand.image}
                 title={poll.title}
               />
             ) : null
