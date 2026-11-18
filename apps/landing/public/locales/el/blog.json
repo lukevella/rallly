@@ -1,1 +1,12 @@
-{}
+{
+  "blogCategoryCompany": "Εταιρεία",
+  "blogCategoryGuides": "Οδηγοί",
+  "blogCategoryProduct": "Προϊόν",
+  "blogCategorySecurity": "Ασφάλεια",
+  "blogCategorySelfHosting": "Αυτοφιλοξενία",
+  "blogDescription": "Νέα, ενημερώσεις και ανακοινώσεις σχετικά με το Rallly.",
+  "blogFilterAll": "Όλα",
+  "blogPublishedOn": "Δημοσιεύτηκε στις",
+  "blogTitle": "Ιστολόγιο",
+  "blogWrittenBy": "Γράφτηκε από"
+}

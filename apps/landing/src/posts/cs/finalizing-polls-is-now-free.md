@@ -33,7 +33,7 @@ Nikdy mi nepřišlo správné účtovat si za dokončení ankety. Je to krok, kt
 
 Odteď se tarify liší tím, kolik anket můžete mít současně otevřených. Bez účtu můžete mít jednu otevřenou anketu. Bezplatný účet umožňuje tři. Pro nemá žádný limit.
 
-Anket můžete stále vytvářet, kolik chcete, a neexistuje žádný limit počtu účastníků ani možností. Ankета se přestane započítávat, jakmile ji dokončíte nebo zavřete, a po uplynutí uvedených dat se zavře sama. Pokud organizujete jen občasnou týmovou schůzku nebo setkání, nejspíš si toho nikdy nevšimnete.
+Anket můžete stále vytvářet, kolik chcete, a neexistuje žádný limit počtu účastníků ani možností. Anketa se přestane započítávat, jakmile ji dokončíte nebo zavřete, a po uplynutí uvedených dat se zavře sama. Pokud organizujete jen občasnou týmovou schůzku nebo setkání, nejspíš si toho nikdy nevšimnete.
 
 Pokud máte otevřených několik anket najednou, Pro limit odstraní a nabídne vám i vše ostatní, co Pro poskytuje, například e-mailové pozvánky a vlastní branding. Každé předplatné se přímo vrací do vývoje Rallly.
 
