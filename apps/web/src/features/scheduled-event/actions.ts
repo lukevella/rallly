@@ -119,6 +119,7 @@ async function sendRsvpConfirmation({
     end: event.end,
     allDay: event.allDay,
     timeZone: event.timeZone ?? undefined,
+    recipientTimeZone: timeZone,
     organizer: {
       name: event.user.name,
       email: event.user.email,

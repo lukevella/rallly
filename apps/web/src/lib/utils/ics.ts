@@ -1,5 +1,7 @@
 import * as ics from "ics";
 
+import { wallTimeToInstant } from "@/lib/datetime/wall-time";
+
 const productId = "-//Rallly//EN";
 
 export interface CreateIcsEventOptions {
@@ -9,6 +11,12 @@ export interface CreateIcsEventOptions {
   end: Date;
   allDay: boolean;
   timeZone?: string;
+  /**
+   * Where the attachment's recipient is. A floating time is anchored here and
+   * sent as an instant, because Outlook reads a floating time in an invite as
+   * UTC.
+   */
+  recipientTimeZone?: string | null;
   title: string;
   description?: string;
   location?: string;
@@ -44,6 +52,28 @@ function toContact<T extends { name: string; email: string }>(contact: T) {
   };
 }
 
+const toWallTime = (date: Date) => date.toISOString().slice(0, 19);
+
+function anchorFloatingTime({
+  start,
+  end,
+  timeZone,
+}: {
+  start: Date;
+  end: Date;
+  timeZone: string;
+}) {
+  try {
+    return {
+      start: wallTimeToInstant(toWallTime(start), timeZone),
+      end: wallTimeToInstant(toWallTime(end), timeZone),
+    };
+  } catch {
+    // An unknown zone makes Intl throw; floating is the honest fallback.
+    return undefined;
+  }
+}
+
 /**
  * Creates an ICS event with proper date/time handling
  * Handles all-day events, timezone conversions, and floating time automatically
@@ -54,6 +84,7 @@ export function createIcsEvent({
   end,
   allDay,
   timeZone,
+  recipientTimeZone,
   sequence = 0,
   title,
   description,
@@ -66,6 +97,13 @@ export function createIcsEvent({
   error?: Error;
   value?: string;
 } {
+  const anchored =
+    !timeZone && !allDay && recipientTimeZone
+      ? anchorFloatingTime({ start, end, timeZone: recipientTimeZone })
+      : undefined;
+  const { start: from, end: to } = anchored ?? { start, end };
+  const utc = Boolean(timeZone) || Boolean(anchored);
+
   return ics.createEvent({
     uid,
     productId,
@@ -82,31 +120,31 @@ export function createIcsEvent({
     // matching the MIME method parameter nodemailer sends.
     method: method.toUpperCase(),
     status,
-    startInputType: timeZone ? "utc" : "local",
-    startOutputType: timeZone ? "utc" : "local",
+    startInputType: utc ? "utc" : "local",
+    startOutputType: utc ? "utc" : "local",
     ...(allDay
       ? {
           start: [
-            start.getUTCFullYear(),
-            start.getUTCMonth() + 1,
-            start.getUTCDate(),
+            from.getUTCFullYear(),
+            from.getUTCMonth() + 1,
+            from.getUTCDate(),
           ],
-          end: [end.getUTCFullYear(), end.getUTCMonth() + 1, end.getUTCDate()],
+          end: [to.getUTCFullYear(), to.getUTCMonth() + 1, to.getUTCDate()],
         }
       : {
           start: [
-            start.getUTCFullYear(),
-            start.getUTCMonth() + 1,
-            start.getUTCDate(),
-            start.getUTCHours(),
-            start.getUTCMinutes(),
+            from.getUTCFullYear(),
+            from.getUTCMonth() + 1,
+            from.getUTCDate(),
+            from.getUTCHours(),
+            from.getUTCMinutes(),
           ],
           end: [
-            end.getUTCFullYear(),
-            end.getUTCMonth() + 1,
-            end.getUTCDate(),
-            end.getUTCHours(),
-            end.getUTCMinutes(),
+            to.getUTCFullYear(),
+            to.getUTCMonth() + 1,
+            to.getUTCDate(),
+            to.getUTCHours(),
+            to.getUTCMinutes(),
           ],
         }),
   });
