@@ -142,6 +142,18 @@ describe("createIcsEvent", () => {
       expect(result.value).toContain("DTEND:20261204T210000Z");
     });
 
+    it("keeps the end after the start when the start falls in a skipped hour", () => {
+      const result = createIcsEvent({
+        ...baseOptions,
+        start: new Date("2027-03-14T02:30:00Z"),
+        end: new Date("2027-03-14T03:00:00Z"),
+        recipientTimeZone: "America/Chicago",
+      });
+
+      expect(result.value).toContain("DTSTART:20270314T083000Z");
+      expect(result.value).toContain("DTEND:20270314T090000Z");
+    });
+
     it("stays floating when the recipient's zone is invalid", () => {
       const result = createIcsEvent({
         ...baseOptions,

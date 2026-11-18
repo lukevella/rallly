@@ -64,9 +64,18 @@ function anchorFloatingTime({
   timeZone: string;
 }) {
   try {
+    const anchoredStart = wallTimeToInstant(toWallTime(start), timeZone);
+    const anchoredEnd = wallTimeToInstant(toWallTime(end), timeZone);
+    // A start in a skipped hour moves forward and can overtake the end;
+    // DTEND must stay after DTSTART, so keep the wall clock duration.
     return {
-      start: wallTimeToInstant(toWallTime(start), timeZone),
-      end: wallTimeToInstant(toWallTime(end), timeZone),
+      start: anchoredStart,
+      end:
+        anchoredEnd > anchoredStart
+          ? anchoredEnd
+          : new Date(
+              anchoredStart.getTime() + (end.getTime() - start.getTime()),
+            ),
     };
   } catch {
     // An unknown zone makes Intl throw; floating is the honest fallback.
