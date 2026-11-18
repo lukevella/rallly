@@ -2,6 +2,7 @@
 
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { Turnstile as TurnstileWidget } from "@marsidev/react-turnstile";
+import * as Sentry from "@sentry/nextjs";
 import React from "react";
 
 /**
@@ -33,6 +34,15 @@ export function Turnstile({
       onBeforeInteractive={() => setIsInteractive(true)}
       onAfterInteractive={() => setIsInteractive(false)}
       onSuccess={onSuccess}
+      onError={(code) => {
+        // Without this a failed challenge is silent: the widget retries or
+        // stalls and the form never gets a token.
+        Sentry.captureMessage("Turnstile challenge failed", {
+          level: "warning",
+          tags: { turnstile_error_code: code },
+          fingerprint: ["turnstile-challenge-failed", code],
+        });
+      }}
       options={{
         language,
         size: "flexible",
