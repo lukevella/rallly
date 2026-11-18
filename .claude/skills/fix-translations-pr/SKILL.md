@@ -52,7 +52,7 @@ Sort findings into four kinds:
 | A class a check could catch | stray ICU tokens, mixed scripts | Fix the values, then propose a check in `packages/translations/src/validate.ts` as a follow-up so the pipeline retries such output by itself. |
 | A change the structure check forbids | changing a link URL, heading count, code, JSX in a post | Skip. `validatePost` requires links, code and components to match the English exactly; an edited URL fails validation and the next run retranslates the post. If the English itself is wrong, fix it on `main`. |
 
-To have the model retranslate one string instead of fixing it by hand, delete the key from the locale file: a missing key is stale, so the next run translates it again. To retranslate a post, delete `apps/landing/src/posts/<locale>/<slug>.md`.
+To have the model retranslate one string instead of fixing it by hand, delete the key from the locale file: a missing key is stale, so the next run translates it again. To retranslate a post, delete `apps/landing/src/posts/<locale>/<slug>.md`. `pnpm check:locales` skips missing keys and posts, so it can't vouch for the replacement: keep those threads open (step 7) until a later run has filled the value in and you have reviewed it.
 
 ### 5. Apply the fixes
 
@@ -69,7 +69,7 @@ It must print `Locale files OK`. A failure means the run would retranslate what 
 
 ### 6. Commit and push
 
-Commit to `i18n/translations` with a `🌐` message listing the locales touched. Before pushing, `git fetch origin` and confirm `origin/i18n/translations` hasn't moved since checkout (a run may have pushed). Push normally, never with force.
+Commit to `i18n/translations` with a `🌐` message listing the locales touched. Before pushing, `git fetch origin` and confirm `origin/i18n/translations` hasn't moved since checkout (a run may have pushed). Push normally, never with force. If every finding was skipped there is nothing to commit; go straight to step 7.
 
 ### 7. Reply to and resolve every thread
 
@@ -77,10 +77,11 @@ An unresolved thread should mean "not yet handled". Reply to every finding, appl
 
 - **Applied:** name the commit sha and what changed.
 - **Skipped:** give the reason (matches the English, the structure check would revert it, can't judge the language).
+- **Deleted for retranslation:** reply that retranslation is pending and leave the thread open. Resolve it once a later run has regenerated the value and you have reviewed it.
 
 ```bash
 gh api -X POST repos/lukevella/rallly/pulls/<PR>/comments/<comment-id>/replies -f body='...'
-gh api graphql -f query='query { repository(owner: "lukevella", name: "rallly") { pullRequest(number: <PR>) { reviewThreads(first: 100) { nodes { id isResolved comments(first: 1) { nodes { databaseId } } } } } } }'
+gh api graphql --paginate -F pr=<PR> -f query='query($pr: Int!, $endCursor: String) { repository(owner: "lukevella", name: "rallly") { pullRequest(number: $pr) { reviewThreads(first: 100, after: $endCursor) { nodes { id isResolved comments(first: 1) { nodes { databaseId } } } pageInfo { hasNextPage endCursor } } } } }'
 gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "<thread-id>"}) { thread { isResolved } } }'
 ```
 
