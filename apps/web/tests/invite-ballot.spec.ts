@@ -658,7 +658,7 @@ test.describe("invite ballot", () => {
       content: "Mornings suit me",
     });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-comment/vote");
+    await page.goto("/invite/ballot-spec-comment");
 
     const sheet = await openComments(page);
     await sheet.getByRole("textbox", { name: "Your name" }).fill("Guest");
@@ -714,7 +714,7 @@ test.describe("invite ballot", () => {
       content: "Someone else's comment",
     });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-comment-hidden/vote");
+    await page.goto("/invite/ballot-spec-comment-hidden");
 
     const sheet = await openComments(page);
     await expect(sheet.getByText("No comments yet")).toBeVisible();
@@ -733,7 +733,7 @@ test.describe("invite ballot", () => {
   test("comments turned off leave no comments button", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-no-comments", disableComments: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-no-comments/vote");
+    await page.goto("/invite/ballot-spec-no-comments");
 
     await expect(options(page).first()).toBeVisible();
     await expect(
@@ -778,7 +778,7 @@ test.describe("invite ballot", () => {
     });
 
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-comment-scheduled/vote");
+    await page.goto("/invite/ballot-spec-comment-scheduled");
 
     const sheet = await openComments(page);
     await expect(sheet.getByTestId("comment")).toContainText("See you there");
@@ -800,7 +800,7 @@ test.describe("invite ballot", () => {
     });
 
     const visitor = await freshPage(browser);
-    await visitor.page.goto("/invite/ballot-spec-comment-manage/vote");
+    await visitor.page.goto("/invite/ballot-spec-comment-manage");
     const visitorSheet = await openComments(visitor.page);
     await expect(visitorSheet.getByTestId("comment")).toContainText(
       "Spam to remove",
@@ -814,7 +814,7 @@ test.describe("invite ballot", () => {
 
     const manager = await freshPage(browser);
     await loginWithEmail(manager.page, { email });
-    await manager.page.goto("/invite/ballot-spec-comment-manage/vote");
+    await manager.page.goto("/invite/ballot-spec-comment-manage");
     const sheet = await openComments(manager.page);
     await sheet
       .getByRole("button", { name: "Delete comment by Other Person" })
@@ -833,7 +833,7 @@ test.describe("invite ballot", () => {
     await seedPoll({ id: "ballot-spec-time-zone" });
     const context = await browser.newContext({ timezoneId: "UTC" });
     const page = await context.newPage();
-    await page.goto("/invite/ballot-spec-time-zone/vote");
+    await page.goto("/invite/ballot-spec-time-zone");
 
     const first = options(page).first();
     // Seeded at 09:00 UTC.
