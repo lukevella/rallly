@@ -250,7 +250,13 @@ async function PageContent({ params, searchParams }: PageProps) {
 
 export default function Page(props: PageProps) {
   return (
-    <Suspense>
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center">
+          <Spinner />
+        </div>
+      }
+    >
       <PageContent {...props} />
     </Suspense>
   );

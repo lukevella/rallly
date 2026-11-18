@@ -77,6 +77,12 @@ test.describe(() => {
       "You responded as Anne",
       { timeout: 10000 },
     );
+    // Only a response that can still be changed has its menu.
+    await expect(
+      newPage.getByRole("region", { name: "Status" }).getByRole("button", {
+        name: "More options",
+      }),
+    ).toBeVisible();
   });
 
   // The host copies the same link the confirmation email carried, so a

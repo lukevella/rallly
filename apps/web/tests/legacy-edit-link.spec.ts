@@ -54,5 +54,11 @@ test.describe("Legacy edit link", () => {
     await expect(page.getByRole("region", { name: "Status" })).toContainText(
       "You responded as Legacy Guest",
     );
+    // Only a response that can still be changed has its menu.
+    await expect(
+      page.getByRole("region", { name: "Status" }).getByRole("button", {
+        name: "More options",
+      }),
+    ).toBeVisible();
   });
 });

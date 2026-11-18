@@ -80,6 +80,13 @@ function readOptionLegend(page: Page) {
   return readWhenHydrated(page, "main fieldset:has(input[type=radio]) legend");
 }
 
+/** What the first option shows on screen: its day heading, then its row. */
+async function readVisibleOption(page: Page) {
+  const heading = await readWhenHydrated(page, "main section:has(fieldset) h3");
+  const row = await readWhenHydrated(page, "option-time");
+  return `${heading} ${row}`;
+}
+
 const SEPTEMBER_10 = /\bSep\w* 10\b/;
 
 /**
@@ -249,9 +256,16 @@ test.describe("cross-timezone rendering", () => {
     const timeA = await formatTimeInPage(pageA, startIso); // 9:45 PM
     const timeB = await formatTimeInPage(pageB, startIso); // 1:30 PM
 
+    const [visibleA, visibleB] = await Promise.all([
+      readVisibleOption(pageA),
+      readVisibleOption(pageB),
+    ]);
+
     expect(timeA).not.toBe(timeB);
     expect(legendA).toContain(timeA);
     expect(legendB).toContain(timeB);
+    expect(visibleA).toContain(timeA);
+    expect(visibleB).toContain(timeB);
 
     expectNoHydrationErrors();
     await close();
@@ -278,6 +292,15 @@ test.describe("cross-timezone rendering", () => {
     expect(legendA).toMatch(SEPTEMBER_10);
     expect(legendB).toMatch(SEPTEMBER_10);
 
+    const [visibleA, visibleB] = await Promise.all([
+      readVisibleOption(pageA),
+      readVisibleOption(pageB),
+    ]);
+    expect(visibleA).toContain(expected);
+    expect(visibleB).toContain(expected);
+    expect(visibleA).toMatch(SEPTEMBER_10);
+    expect(visibleB).toMatch(SEPTEMBER_10);
+
     expectNoHydrationErrors();
     await close();
   });
@@ -293,6 +316,17 @@ test.describe("cross-timezone rendering", () => {
 
     expect(legendA).toMatch(SEPTEMBER_10);
     expect(legendB).toMatch(SEPTEMBER_10);
+
+    // On screen the heading carries the month and the row the day.
+    const [visibleA, visibleB] = await Promise.all([
+      readVisibleOption(pageA),
+      readVisibleOption(pageB),
+    ]);
+    for (const visible of [visibleA, visibleB]) {
+      expect(visible).toMatch(/\bSep/);
+      // The row's day and weekday sit side by side ("10Fri").
+      expect(visible).toMatch(/\s10(?!\d)/);
+    }
 
     expectNoHydrationErrors();
     await close();
