@@ -27,6 +27,7 @@ export const languageNames: Record<string, string> = {
   cs: "Czech",
   da: "Danish",
   de: "German",
+  el: "Greek",
   es: "Spanish (Spain)",
   fi: "Finnish",
   fr: "French",
