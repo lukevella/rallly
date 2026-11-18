@@ -73,7 +73,7 @@ Commit to `i18n/translations` with a `🌐` message listing the locales touched.
 
 ### 7. Reply to and resolve every thread
 
-An unresolved thread should mean "not yet handled". Reply to every finding, applied or skipped, then resolve it:
+First check the PR is still open; if a run closed it in the meantime, stop and report instead. An unresolved thread should mean "not yet handled". Reply to every finding, applied or skipped, then resolve it:
 
 - **Applied:** name the commit sha and what changed.
 - **Skipped:** give the reason (matches the English, the structure check would revert it, can't judge the language).
