@@ -4,6 +4,7 @@ export const languages = {
   de: "Deutsch",
   en: "English",
   "en-GB": "English (UK)",
+  el: "Ελληνικά",
   es: "Español",
   fr: "Français",
   it: "Italiano",
