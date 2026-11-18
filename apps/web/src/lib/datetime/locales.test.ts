@@ -70,7 +70,6 @@ describe("getWeekdayNames", () => {
   });
 });
 
-// The browser's region decides the week start, not the UI language.
 describe("getWeekStartFromLanguageTags", () => {
   it("uses Monday for en-GB and en-SE", () => {
     expect(getWeekStartFromLanguageTags(["en-GB"])).toBe(1);

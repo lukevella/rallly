@@ -31,9 +31,8 @@ export async function getDeviceTimeZone() {
 }
 
 /**
- * The week start of the browser's full language tag (e.g. "en-GB"), not the
- * UI language, which carries no region. Viewers without a stored week start
- * get this so the server and client render the same calendar.
+ * Viewers without a stored week start get this so the server and client
+ * render the same calendar.
  */
 async function getDeviceWeekStart() {
   const headersList = await headers();
