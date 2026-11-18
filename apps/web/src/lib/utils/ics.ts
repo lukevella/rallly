@@ -54,6 +54,9 @@ function toContact<T extends { name: string; email: string }>(contact: T) {
 
 const toWallTime = (date: Date) => date.toISOString().slice(0, 19);
 
+// The attachment carries minutes, so ordering is decided at that precision.
+const toMinute = (date: Date) => Math.floor(date.getTime() / 60_000);
+
 function anchorFloatingTime({
   start,
   end,
@@ -71,7 +74,7 @@ function anchorFloatingTime({
     return {
       start: anchoredStart,
       end:
-        anchoredEnd > anchoredStart
+        toMinute(anchoredEnd) > toMinute(anchoredStart)
           ? anchoredEnd
           : new Date(
               anchoredStart.getTime() + (end.getTime() - start.getTime()),
