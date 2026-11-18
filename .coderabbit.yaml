@@ -26,14 +26,23 @@ reviews:
       instructions: >
         Non-English locale files are written by the Translate workflow. Flag any
         change to them unless the pull request is titled "🌐 Update translations"
-        or its stated purpose is correcting a translation.
+        or its stated purpose is correcting a translation. Exception: a pull
+        request adding a new language may create that language's directory
+        with an empty `{}` file per namespace, which is how the Translate
+        workflow discovers the language.
     - path: "apps/landing/public/locales/!(en)/**"
       instructions: >
         Non-English locale files are written by the Translate workflow. Flag any
         change to them unless the pull request is titled "🌐 Update translations"
-        or its stated purpose is correcting a translation.
+        or its stated purpose is correcting a translation. Exception: a pull
+        request adding a new language may create that language's directory
+        with an empty `{}` file per namespace, which is how the Translate
+        workflow discovers the language.
     - path: "packages/emails/locales/!(en)/**"
       instructions: >
         Non-English locale files are written by the Translate workflow. Flag any
         change to them unless the pull request is titled "🌐 Update translations"
-        or its stated purpose is correcting a translation.
+        or its stated purpose is correcting a translation. Exception: a pull
+        request adding a new language may create that language's directory
+        with an empty `{}` file per namespace, which is how the Translate
+        workflow discovers the language.
