@@ -4,21 +4,26 @@ import React from "react";
 import { useRequiredContext } from "@/components/use-required-context";
 import { useParticipants } from "@/features/poll/client";
 import type { PollDetails } from "@/features/poll/types";
+import { isOptionPast } from "@/features/poll/utils";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import {
   formatDateParts,
   formatDateTime,
   formatDuration,
 } from "@/lib/datetime/format";
+import { useHydrated } from "@/lib/datetime/use-hydrated";
 import type {
   ParsedDateOption,
   ParsedTimeSlotOption,
 } from "@/lib/utils/date-time-utils";
+import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 
 type PollContextValue = {
   poll: PollDetails;
   highScore: number;
   optionIds: string[];
+  /** Options that can no longer take a vote. Empty until hydration. */
+  pastOptionIds: Set<string>;
   getScore: (optionId: string) => {
     yes: number;
     ifNeedBe: number;
@@ -42,6 +47,7 @@ export const PollContextProvider: React.FunctionComponent<{
   children?: React.ReactNode;
 }> = ({ poll, children }) => {
   const { participants } = useParticipants();
+  const hydrated = useHydrated();
 
   const getScore = React.useCallback(
     (optionId: string) => {
@@ -78,8 +84,21 @@ export const PollContextProvider: React.FunctionComponent<{
 
     const optionIds = poll.options.map(({ id }) => id);
 
+    // Judged from the viewer's clock and zone, which the server render
+    // cannot know, so nothing is past until hydration.
+    const now = new Date();
+    const timeZone = getBrowserTimeZone();
+    const pastOptionIds = new Set(
+      hydrated
+        ? poll.options
+            .filter((option) => isOptionPast(option, { now, timeZone }))
+            .map(({ id }) => id)
+        : [],
+    );
+
     return {
       optionIds,
+      pastOptionIds,
       poll,
       highScore,
       getVote: (participantId, optionId) => {
@@ -90,7 +109,7 @@ export const PollContextProvider: React.FunctionComponent<{
       },
       getScore,
     };
-  }, [getScore, participants, poll]);
+  }, [getScore, hydrated, participants, poll]);
 
   return (
     <PollContext.Provider value={contextValue}>{children}</PollContext.Provider>

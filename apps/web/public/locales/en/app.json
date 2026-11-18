@@ -607,6 +607,7 @@
   "newParticipantDialogSuccessTitle": "Your response has been saved",
   "newParticipantFormAddNote": "Add a note",
   "newParticipantFormDescription": "Fill in the form below to submit your votes.",
+  "newParticipantFormErrorPastOption": "One of the options you picked is now in the past. Refresh the page and try again.",
   "newParticipantFormErrorPollFull": "This poll is no longer accepting responses.",
   "newParticipantFormErrorTooManyRequests": "You have made too many attempts. Please wait a while and try again.",
   "newParticipantFormErrorUnauthorized": "We couldn't verify your session. Please refresh the page and try again.",

@@ -12,6 +12,7 @@ import {
 } from "@rallly/ui/dialog";
 import * as m from "motion/react-m";
 import type * as React from "react";
+import { usePoll } from "@/features/poll/components/poll-context";
 import { IfScoresVisible } from "@/features/poll/components/visibility";
 import { PollOptionVoteSummary } from "@/features/poll/components/vote-breakdown-dialog";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -47,6 +48,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
 }) => {
   const { t } = useTranslation();
   const dialog = useDialog();
+  const { pastOptionIds } = usePoll();
 
   const showVote = !editable && !!selectedParticipantId;
 
@@ -117,6 +119,7 @@ const PollOption: React.FunctionComponent<PollOptionProps> = ({
             onChange={onChange}
             optionLabel={optionLabel}
             allowTentativeVotes={allowTentativeVotes}
+            disabled={pastOptionIds.has(optionId)}
           />
         </m.div>
       ) : null}

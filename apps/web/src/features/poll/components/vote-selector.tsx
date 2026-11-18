@@ -24,6 +24,7 @@ export interface VoteSelectorProps {
    * alternates yes → no.
    */
   allowTentativeVotes?: boolean;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -50,6 +51,7 @@ export const VoteSelector = React.forwardRef<
     onBlur,
     onKeyDown,
     allowTentativeVotes = true,
+    disabled,
     className,
   },
   ref,
@@ -73,6 +75,7 @@ export const VoteSelector = React.forwardRef<
     <button
       data-testid="vote-selector"
       type="button"
+      disabled={disabled}
       aria-label={optionLabel ? `${optionLabel}, ${voteLabel}` : voteLabel}
       onFocus={onFocus}
       onBlur={onBlur}

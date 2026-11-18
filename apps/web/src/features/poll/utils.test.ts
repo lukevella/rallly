@@ -3,6 +3,8 @@ import {
   filterCommentsForViewer,
   filterParticipantsByVote,
   getFinalizePlanGate,
+  isOptionPast,
+  LATEST_TIME_ZONE,
   maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
@@ -397,5 +399,51 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+describe("isOptionPast", () => {
+  // 2026-06-10 03:00 UTC: still June 9 in Los Angeles, June 10 in Paris.
+  const now = new Date("2026-06-10T03:00:00Z");
+  const slot = (iso: string) => ({ startTime: new Date(iso), duration: 60 });
+  const day = (iso: string) => ({
+    startTime: new Date(`${iso}T00:00:00Z`),
+    duration: 0,
+  });
+
+  it("retires a time slot once it has started", () => {
+    expect(
+      isOptionPast(slot("2026-06-10T02:30:00Z"), { now, timeZone: "UTC" }),
+    ).toBe(true);
+    expect(
+      isOptionPast(slot("2026-06-10T03:00:00Z"), { now, timeZone: "UTC" }),
+    ).toBe(true);
+    expect(
+      isOptionPast(slot("2026-06-10T03:01:00Z"), { now, timeZone: "UTC" }),
+    ).toBe(false);
+  });
+
+  it("judges an all-day date by the calendar date in the given zone", () => {
+    const la = { now, timeZone: "America/Los_Angeles" };
+    expect(isOptionPast(day("2026-06-09"), la)).toBe(false);
+    expect(isOptionPast(day("2026-06-08"), la)).toBe(true);
+
+    const paris = { now, timeZone: "Europe/Paris" };
+    expect(isOptionPast(day("2026-06-09"), paris)).toBe(true);
+    expect(isOptionPast(day("2026-06-10"), paris)).toBe(false);
+  });
+
+  it("refuses an all-day date server side only once it is over everywhere", () => {
+    const server = (iso: string) => ({
+      now: new Date(iso),
+      timeZone: LATEST_TIME_ZONE,
+    });
+    // June 9 ends in UTC-12 at June 10 12:00 UTC.
+    expect(
+      isOptionPast(day("2026-06-09"), server("2026-06-10T11:59:00Z")),
+    ).toBe(false);
+    expect(
+      isOptionPast(day("2026-06-09"), server("2026-06-10T12:00:00Z")),
+    ).toBe(true);
   });
 });

@@ -34,7 +34,7 @@ const ParticipantRowForm = ({
 }: ParticipantRowFormProps) => {
   const { t } = useTranslation();
 
-  const { optionIds, poll } = usePoll();
+  const { optionIds, pastOptionIds, poll } = usePoll();
   const { options } = useOptions();
   const form = useVotingForm();
 
@@ -117,9 +117,11 @@ const ParticipantRowForm = ({
       </td>
       {optionIds.map((optionId, i) => {
         const option = options[i];
+        const isPast = pastOptionIds.has(optionId);
         return (
           <td
             key={optionId}
+            title={isPast ? t("past", { defaultValue: "Past" }) : undefined}
             className="relative h-12 border-b border-b-border-muted border-l bg-card group-[.last-row]:border-b-0"
           >
             <Controller
@@ -134,6 +136,7 @@ const ParticipantRowForm = ({
                     }
                     value={field.value?.type}
                     allowTentativeVotes={poll.allowTentativeVotes}
+                    disabled={isPast}
                     onChange={(vote) => {
                       field.onChange({ optionId, type: vote });
                     }}

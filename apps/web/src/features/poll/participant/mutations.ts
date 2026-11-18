@@ -9,11 +9,20 @@ import {
   findPendingPollInvite,
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
-import { generateAccessToken } from "@/features/poll/utils";
+import {
+  generateAccessToken,
+  isOptionPast,
+  LATEST_TIME_ZONE,
+} from "@/features/poll/utils";
 import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
-type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
+type WriteRefusal =
+  | "notFound"
+  | "closed"
+  | "full"
+  | "tentativeVotesNotAllowed"
+  | "pastOption";
 
 class WriteRefusedError extends Error {
   constructor(public readonly reason: WriteRefusal) {
@@ -81,15 +90,23 @@ async function assertParticipantInPoll(
   }
 }
 
-async function listValidOptionIds(
-  tx: Prisma.TransactionClient,
-  pollId: string,
-) {
+/** The poll's option ids, and those that can no longer take a vote. */
+async function listOptionIds(tx: Prisma.TransactionClient, pollId: string) {
   const options = await tx.option.findMany({
     where: { pollId },
-    select: { id: true },
+    select: { id: true, startTime: true, duration: true },
   });
-  return new Set(options.map((option) => option.id));
+  const now = new Date();
+  return {
+    valid: new Set(options.map((option) => option.id)),
+    past: new Set(
+      options
+        .filter((option) =>
+          isOptionPast(option, { now, timeZone: LATEST_TIME_ZONE }),
+        )
+        .map((option) => option.id),
+    ),
+  };
 }
 
 function refusal(error: unknown) {
@@ -163,12 +180,22 @@ export async function addParticipant({
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-      const validOptionIds = await listValidOptionIds(tx, pollId);
+      const optionIds = await listOptionIds(tx, pollId);
       const validVotes = votes.filter(({ optionId }) =>
-        validOptionIds.has(optionId),
+        optionIds.valid.has(optionId),
       );
 
       await lockOpenPoll(tx, pollId, validVotes);
+
+      // The form sends a "no" for every option it does not ask about, so
+      // only an availability on a past option is refused.
+      if (
+        validVotes.some(
+          ({ optionId, type }) => type !== "no" && optionIds.past.has(optionId),
+        )
+      ) {
+        throw new WriteRefusedError("pastOption");
+      }
 
       // Counted under the lock so two responses cannot both pass at the cap.
       const participantCount = await tx.participant.count({
@@ -291,12 +318,17 @@ export async function updateParticipantVotes({
       await lockOpenPoll(tx, pollId, votes);
       await assertParticipantInPoll(tx, participantId, pollId);
 
-      await tx.vote.deleteMany({ where: { participantId } });
+      // Votes on past options are frozen: the stored ones are kept and the
+      // submitted ones ignored, so an edit only changes what is still ahead.
+      const optionIds = await listOptionIds(tx, pollId);
+      const isOpen = (optionId: string) =>
+        optionIds.valid.has(optionId) && !optionIds.past.has(optionId);
 
-      const validOptionIds = await listValidOptionIds(tx, pollId);
-      const validVotes = votes.filter(({ optionId }) =>
-        validOptionIds.has(optionId),
-      );
+      await tx.vote.deleteMany({
+        where: { participantId, optionId: { notIn: [...optionIds.past] } },
+      });
+
+      const validVotes = votes.filter(({ optionId }) => isOpen(optionId));
 
       await tx.vote.createMany({
         data: validVotes.map(({ optionId, type }) => ({

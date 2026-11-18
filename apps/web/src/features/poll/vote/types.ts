@@ -72,6 +72,8 @@ export type VoteViewProps = {
   participantCount: number | null;
   response: VoteResponse | null;
   canVote: boolean;
+  /** Options that can no longer take a vote, from the viewer's clock. */
+  pastOptionIds: Set<string>;
 };
 
 /** Which voting view is on screen. */

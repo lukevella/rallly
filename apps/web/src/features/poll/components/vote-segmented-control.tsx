@@ -17,10 +17,12 @@ export const VoteSegmentedControl = ({
   onChange,
   optionLabel,
   allowTentativeVotes = true,
+  disabled,
   className,
 }: {
   value?: VoteType;
   onChange: (value: VoteType) => void;
+  disabled?: boolean;
   className?: string;
   /** When false only yes and no are offered. */
   allowTentativeVotes?: boolean;
@@ -45,7 +47,12 @@ export const VoteSegmentedControl = ({
       data-testid="vote-selector"
       aria-label={optionLabel}
       // Touch-sized below sm; from there it matches a default button.
-      className={cn("h-11 sm:h-9", className)}
+      className={cn(
+        "h-11 data-disabled:opacity-50 sm:h-9 data-disabled:[&_*]:cursor-not-allowed",
+        className,
+      )}
+      disabled={disabled}
+      title={disabled ? t("past", { defaultValue: "Past" }) : undefined}
       value={value ?? null}
       onValueChange={(newValue) => {
         if (newValue) {

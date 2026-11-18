@@ -87,6 +87,7 @@ function TimeOption({
   hasSavedResponse,
   allowTentativeVotes,
   canVote,
+  isPast,
 }: {
   result: VoteResult;
   timeZone: string | null;
@@ -96,6 +97,7 @@ function TimeOption({
   hasSavedResponse: boolean;
   allowTentativeVotes: boolean;
   canVote: boolean;
+  isPast: boolean;
 }) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
   const { value, setVote, isEditing } = useVote(result.optionId);
@@ -133,6 +135,7 @@ function TimeOption({
             onChange={setVote}
             optionLabel={label}
             allowTentativeVotes={allowTentativeVotes}
+            disabled={isPast}
             className="w-full"
           />
         ) : (
@@ -156,6 +159,7 @@ export function VoteViewWeek({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { t } = useTranslation();
   const { locale } = useDateTimeConfig();
@@ -301,6 +305,7 @@ export function VoteViewWeek({
                       hasSavedResponse={response !== null}
                       allowTentativeVotes={poll.allowTentativeVotes}
                       canVote={canVote}
+                      isPast={pastOptionIds.has(result.optionId)}
                     />
                   ))}
                 </ul>

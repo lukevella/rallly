@@ -162,6 +162,11 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorPollFull", {
           defaultValue: "This poll is no longer accepting responses.",
         });
+      case "pastOption":
+        return t("newParticipantFormErrorPastOption", {
+          defaultValue:
+            "One of the options you picked is now in the past. Refresh the page and try again.",
+        });
       case "tooManyRequests":
         return t("newParticipantFormErrorTooManyRequests", {
           defaultValue:

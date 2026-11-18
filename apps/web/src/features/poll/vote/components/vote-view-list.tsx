@@ -58,12 +58,14 @@ function VoteCell({
   allowTentativeVotes,
   savedVote,
   canVote,
+  isPast,
 }: {
   optionId: string;
   optionLabel: string;
   allowTentativeVotes: boolean;
   savedVote?: VoteType;
   canVote: boolean;
+  isPast: boolean;
 }) {
   const { value, setVote, isEditing } = useVote(optionId);
 
@@ -76,6 +78,7 @@ function VoteCell({
       onChange={setVote}
       optionLabel={optionLabel}
       allowTentativeVotes={allowTentativeVotes}
+      disabled={isPast}
     />
   );
 }
@@ -91,6 +94,7 @@ export function VoteViewList({
   participantCount,
   response,
   canVote,
+  pastOptionIds,
 }: VoteViewProps) {
   const { formatDateTime, formatDateTimeRange } = useDateTime();
 
@@ -169,6 +173,7 @@ export function VoteViewList({
               allowTentativeVotes={poll.allowTentativeVotes}
               savedVote={savedVotes.get(result.optionId)}
               canVote={canVote}
+              isPast={pastOptionIds.has(result.optionId)}
             />
           );
         },
@@ -176,6 +181,7 @@ export function VoteViewList({
     ],
     [
       canVote,
+      pastOptionIds,
       participantCount,
       formatDateTime,
       formatDateTimeRange,

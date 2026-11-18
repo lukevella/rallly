@@ -4,6 +4,7 @@ import { isProConferencingProvider } from "@/features/conferencing/utils";
 import type { VoteType } from "@/features/poll/constants";
 import type { PollComment, PollParticipant } from "@/features/poll/types";
 import type { SpaceTier } from "@/features/space/schema";
+import { getCalendarDate, toISODate } from "@/lib/datetime/utils";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -97,6 +98,30 @@ export function filterCommentsForViewer({
   }
   return comments.filter((comment) => comment.userId === viewerUserId);
 }
+
+/**
+ * Whether an option can no longer take a vote. A time slot is past once it
+ * has started. An all-day date is a floating calendar date stored as UTC
+ * midnight (RFC 5545), so it is past only once the calendar date in
+ * `timeZone` has moved on — comparing its instant to now would retire
+ * today's date for everyone west of UTC.
+ */
+export function isOptionPast(
+  option: { startTime: Date; duration: number },
+  { now, timeZone }: { now: Date; timeZone: string },
+) {
+  if (option.duration > 0) {
+    return option.startTime.getTime() <= now.getTime();
+  }
+  return toISODate(option.startTime) < getCalendarDate(now, timeZone);
+}
+
+/**
+ * The server does not know the voter's zone, so it judges all-day dates in
+ * the last zone on Earth (UTC-12; the IANA sign is inverted): a date is
+ * refused only once it is over everywhere.
+ */
+export const LATEST_TIME_ZONE = "Etc/GMT+12";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MINUTE_MS = 60 * 1000;
