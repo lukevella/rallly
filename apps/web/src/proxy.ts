@@ -48,7 +48,7 @@ async function handleMaintenance(req: NextRequest) {
 // Email link scanners (Safe Links and similar) send HEAD to every link in an
 // invite or notification email, in bursts. Rendering these pages for them
 // opens a database connection per request for a response with no body.
-const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+(?:\/vote)?\/?$/;
+const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+\/?$/;
 
 export const proxy = async (req: NextRequest) => {
   const { nextUrl } = req;

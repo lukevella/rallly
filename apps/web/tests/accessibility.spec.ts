@@ -74,14 +74,14 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
 
     test("desktop layout", async ({ page }) => {
       await page.goto(inviteUrl);
-      await page.getByTestId("vote-selector").first().waitFor();
+      await page.getByRole("radio").first().waitFor({ state: "attached" });
       expect(await scan(page)).toEqual([]);
     });
 
     test("mobile layout", async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(inviteUrl);
-      await page.getByTestId("vote-selector").first().waitFor();
+      await page.getByRole("radio").first().waitFor({ state: "attached" });
       expect(await scan(page)).toEqual([]);
     });
   });
@@ -98,7 +98,7 @@ test.describe("accessibility (axe-core, WCAG 2.1 A/AA)", () => {
       if (!match) {
         throw new Error(`could not extract poll id from ${page.url()}`);
       }
-      voteUrl = `/invite/${match[1]}/vote`;
+      voteUrl = `/invite/${match[1]}`;
       await page.close();
     });
 

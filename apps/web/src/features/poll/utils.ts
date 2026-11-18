@@ -1,6 +1,6 @@
 import { customAlphabet } from "nanoid";
 import type { VoteType } from "@/features/poll/constants";
-import type { PollComment, PollParticipant } from "@/features/poll/types";
+import type { PollComment } from "@/features/poll/types";
 
 // Alphanumeric only: url safe with no linkifier edge cases. 32 chars is the
 // floor documented on Participant.token and PollInvite.token.
@@ -25,58 +25,6 @@ export function filterParticipantsByVote<
     return participant.votes.some((vote) => {
       return vote.optionId === optionId && vote.type === voteType;
     });
-  });
-}
-
-type RawParticipant = Omit<PollParticipant, "hidden" | "editUrl"> & {
-  token: string;
-};
-
-/**
- * Scopes the response list to a viewer who is not the host. Notes and email
- * addresses are for the host and their author only, so they survive only on
- * the viewer's own responses: the ones their session created, or the one the
- * emailed link they opened names. With hidden participants, everyone else's
- * identity is withheld while their votes still count.
- */
-export function maskParticipantsForViewer({
-  participants,
-  viewer,
-  hideParticipants,
-}: {
-  participants: RawParticipant[];
-  viewer: { userId: string | null; linkedParticipantIds: string[] };
-  hideParticipants: boolean;
-}): PollParticipant[] {
-  const linkedIds = new Set(viewer.linkedParticipantIds);
-  const isOwn = (participant: { id: string; userId: string | null }) =>
-    linkedIds.has(participant.id) ||
-    (!!viewer.userId && participant.userId === viewer.userId);
-
-  return participants.map(({ token: _token, ...participant }) => {
-    if (isOwn(participant)) {
-      return { ...participant, hidden: false, editUrl: null };
-    }
-    if (hideParticipants) {
-      return {
-        ...participant,
-        userId: null,
-        name: "",
-        email: null,
-        image: null,
-        note: null,
-        hidden: true,
-        editUrl: null,
-      };
-    }
-    return {
-      ...participant,
-      userId: null,
-      email: null,
-      note: null,
-      hidden: false,
-      editUrl: null,
-    };
   });
 }
 

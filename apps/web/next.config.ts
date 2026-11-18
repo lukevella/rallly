@@ -95,6 +95,12 @@ const nextConfig: NextConfig = {
         destination: "/poll/:urlId/edit",
         permanent: true,
       },
+      // The redesigned vote page was previewed here before it replaced the invite page.
+      {
+        source: "/invite/:urlId/vote",
+        destination: "/invite/:urlId",
+        permanent: false,
+      },
       // Login and registration are a single flow on /login: entering an
       // unknown email creates an account on OTP verification. redirectTo
       // and other query params are passed through automatically.

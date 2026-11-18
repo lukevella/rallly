@@ -52,14 +52,15 @@ async function renameThroughInviteLink(
   const guest = await openAsGuest(browser, inviteUrl);
   try {
     const { guestPage } = guest;
-    await expect(guestPage.getByText(from)).toBeVisible();
-    await guestPage.getByTestId("participant-menu").click();
+    const status = guestPage.getByRole("region", { name: "Status" });
+    await expect(status).toContainText(`You responded as ${from}`);
+    await guestPage.getByRole("button", { name: "More options" }).click();
     await guestPage.getByRole("menuitem", { name: "Change name" }).click();
     const dialog = guestPage.getByRole("dialog", { name: "Change name" });
     await dialog.getByLabel("Name").fill(to);
     await dialog.getByRole("button", { name: "Save" }).click();
     await expect(dialog).toBeHidden();
-    await expect(guestPage.getByText(to)).toBeVisible();
+    await expect(status).toContainText(`You responded as ${to}`);
   } finally {
     await guest.close();
   }

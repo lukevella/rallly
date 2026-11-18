@@ -4,13 +4,12 @@ import {
   filterParticipantsByVote,
   getChosenOptionRank,
   getFinalizeTiming,
-  maskParticipantsForViewer,
   rankOptionsByPopularity,
   summarizeNotifySelection,
   toAvailabilitySpans,
 } from "./utils";
 
-const participant = (
+const _participant = (
   id: string,
   overrides: Partial<{
     userId: string | null;
@@ -27,91 +26,6 @@ const participant = (
   createdAt: new Date("2026-01-01T00:00:00Z"),
   token: `token-${id}`,
   votes: [{ optionId: "opt-1", type: "yes" as const }],
-});
-
-describe("maskParticipantsForViewer", () => {
-  it("keeps notes only for the viewer's own responses", () => {
-    const result = maskParticipantsForViewer({
-      participants: [
-        participant("a", { userId: "user-1" }),
-        participant("b", { userId: "user-2" }),
-        participant("c"),
-      ],
-      viewer: { userId: "user-1", linkedParticipantIds: ["c"] },
-      hideParticipants: false,
-    });
-
-    expect(result.map((p) => p.note)).toEqual(["Note a", null, "Note c"]);
-  });
-
-  it("keeps email and user id only for the viewer's own responses", () => {
-    const result = maskParticipantsForViewer({
-      participants: [
-        participant("a", { userId: "user-1" }),
-        participant("b", { userId: "user-2" }),
-        participant("c"),
-      ],
-      viewer: { userId: "user-1", linkedParticipantIds: ["c"] },
-      hideParticipants: false,
-    });
-
-    expect(result.map((p) => p.email)).toEqual([
-      "a@example.com",
-      null,
-      "c@example.com",
-    ]);
-    expect(result.map((p) => p.userId)).toEqual(["user-1", null, null]);
-  });
-
-  it("withholds every email from an anonymous viewer", () => {
-    const result = maskParticipantsForViewer({
-      participants: [participant("a", { userId: "user-1" }), participant("b")],
-      viewer: { userId: null, linkedParticipantIds: [] },
-      hideParticipants: false,
-    });
-
-    expect(result.map((p) => p.email)).toEqual([null, null]);
-    expect(result.map((p) => p.userId)).toEqual([null, null]);
-  });
-
-  it("never exposes the edit token or an edit link", () => {
-    const [result] = maskParticipantsForViewer({
-      participants: [participant("a")],
-      viewer: { userId: null, linkedParticipantIds: [] },
-      hideParticipants: false,
-    });
-
-    expect(result).not.toHaveProperty("token");
-    expect(result.editUrl).toBeNull();
-    expect(result.hidden).toBe(false);
-  });
-
-  it("withholds identity of other participants when hidden", () => {
-    const result = maskParticipantsForViewer({
-      participants: [
-        participant("a", { userId: "user-1" }),
-        participant("b", { userId: "user-2" }),
-      ],
-      viewer: { userId: "user-1", linkedParticipantIds: [] },
-      hideParticipants: true,
-    });
-
-    expect(result[0]).toMatchObject({
-      name: "Name a",
-      email: "a@example.com",
-      userId: "user-1",
-      hidden: false,
-    });
-    expect(result[1]).toMatchObject({
-      name: "",
-      email: null,
-      userId: null,
-      image: null,
-      note: null,
-      hidden: true,
-    });
-    expect(result[1].votes).toEqual([{ optionId: "opt-1", type: "yes" }]);
-  });
 });
 
 describe("filterCommentsForViewer", () => {
