@@ -713,9 +713,7 @@ export function AccessibleBallot({
               name: String(data.get("name") ?? ""),
               email: String(data.get("email") ?? ""),
               note: String(data.get("note") ?? ""),
-              timeZone: ballot.timeZone
-                ? (viewerTimeZone ?? undefined)
-                : undefined,
+              timeZone: viewerTimeZone ?? undefined,
               token,
               votes,
             }),
