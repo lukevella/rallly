@@ -1,4 +1,4 @@
-import type { ErrorEvent } from "@sentry/nextjs";
+import type { ErrorEvent, StackFrame } from "@sentry/nextjs";
 
 // The Sentry Next.js SDK rewrites the origin of every frame URL to `app://`
 // before `beforeSend` runs, so a URL frame arrives here as `app:///<path>`
@@ -11,18 +11,38 @@ function isOutsideOurBundles(filename: string) {
     const url = new URL(filename);
     return (
       URL_FRAME_PROTOCOLS.includes(url.protocol) &&
-      !url.pathname.startsWith("/_next/")
+      !url.pathname.includes("/_next/")
     );
   } catch {
     return false;
   }
 }
 
-// When the thrown value has no stack, the SDK invents one frame that names
-// the page. Only a stack the browser reported says where the code ran.
-function hasStackLocation(exception: unknown) {
-  const stack = (exception as { stack?: unknown } | null | undefined)?.stack;
-  return typeof stack === "string" && /:\d+:\d+/.test(stack);
+// The stacks the SDK may have parsed: the thrown value's own, or that of an
+// Error held in one of its properties when a plain object was rejected.
+function reportedStacks(exception: unknown) {
+  try {
+    const candidates: unknown[] =
+      typeof exception === "object" && exception !== null
+        ? [exception, ...Object.values(exception)]
+        : [];
+    return candidates
+      .map((candidate) => (candidate as { stack?: unknown } | null)?.stack)
+      .filter((stack) => typeof stack === "string");
+  } catch {
+    return [];
+  }
+}
+
+// When the thrown value has no stack the SDK invents a single frame that
+// names the page. A frame the browser reported has its location in a stack.
+function isReportedFrame(frame: StackFrame, exception: unknown) {
+  if (frame.lineno === undefined || frame.colno === undefined) {
+    return false;
+  }
+  const path = (frame.filename ?? "").replace(/^app:\/\//, "");
+  const location = `${path}:${frame.lineno}:${frame.colno}`;
+  return reportedStacks(exception).some((stack) => stack.includes(location));
 }
 
 // An error whose every frame is a URL outside our bundles came from a script
@@ -40,9 +60,12 @@ export function isForeignError({
     event.exception?.values?.flatMap(
       (exception) => exception.stacktrace?.frames ?? [],
     ) ?? [];
+  const [firstFrame] = frames;
   return (
-    frames.length > 0 &&
-    hasStackLocation(originalException) &&
-    frames.every((frame) => isOutsideOurBundles(frame.filename?.trim() ?? ""))
+    firstFrame !== undefined &&
+    frames.every((frame) =>
+      isOutsideOurBundles(frame.filename?.trim() ?? ""),
+    ) &&
+    (frames.length > 1 || isReportedFrame(firstFrame, originalException))
   );
 }
