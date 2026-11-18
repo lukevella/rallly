@@ -117,6 +117,46 @@ async function freshPage(browser: Browser) {
   return { context, page: await context.newPage() };
 }
 
+async function seedComment({
+  pollId,
+  authorName,
+  content,
+  userId,
+}: {
+  pollId: string;
+  authorName: string;
+  content: string;
+  userId?: string;
+}) {
+  await prisma.comment.create({
+    data: { pollId, authorName, content, userId },
+  });
+}
+
+async function openComments(page: Page) {
+  await page.getByRole("button", { name: /^(\d+ )?Comments?$/ }).click();
+  return page.getByRole("dialog", { name: "Comments" });
+}
+
+/** A host who owns the poll and can manage it. */
+async function seedHostedPoll({
+  id,
+  email,
+  ...options
+}: Parameters<typeof seedPoll>[0] & { email: string }) {
+  await prisma.user.deleteMany({ where: { email } });
+  const host = await createUserInDb({ email, name: "Ballot Host" });
+  const space = await prisma.space.findFirstOrThrow({
+    where: { ownerId: host.id },
+  });
+  await seedPoll({ id, ...options });
+  await prisma.poll.update({
+    where: { id },
+    data: { userId: host.id, spaceId: space.id },
+  });
+  return { host, space };
+}
+
 test.describe("invite ballot", () => {
   test.afterAll(async () => {
     await prisma.poll.deleteMany({
@@ -607,6 +647,211 @@ test.describe("invite ballot", () => {
       "content",
       /\/invite\/ballot-spec-preview$/,
     );
+    await context.close();
+  });
+
+  test("a guest with no session can comment and sees it as theirs", async ({
+    browser,
+  }) => {
+    await seedPoll({ id: "ballot-spec-comment" });
+    await seedComment({
+      pollId: "ballot-spec-comment",
+      authorName: "Other Person",
+      content: "Mornings suit me",
+    });
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-comment/vote");
+
+    const sheet = await openComments(page);
+    await sheet.getByRole("textbox", { name: "Your name" }).fill("Guest");
+    await sheet
+      .getByRole("textbox", { name: "Write a comment…" })
+      .fill("Afternoons for me");
+    await sheet.getByRole("button", { name: "Add comment" }).click();
+    await expect(sheet.getByText("Your comment has been added")).toBeVisible();
+
+    const own = sheet
+      .getByTestId("comment")
+      .filter({ hasText: "Afternoons for me" });
+    await expect(own).toContainText("Guest");
+    await expect(own).toContainText("You");
+    await expect(
+      own.getByRole("button", { name: "Delete comment by Guest" }),
+    ).toBeVisible();
+    const other = sheet
+      .getByTestId("comment")
+      .filter({ hasText: "Mornings suit me" });
+    await expect(other).not.toContainText("You");
+    await expect(other.getByRole("button")).toHaveCount(0);
+
+    // Their own, newest first, and still theirs after a reload.
+    await page.reload();
+    const reopened = await openComments(page);
+    await expect(reopened.getByTestId("comment").first()).toContainText(
+      "Afternoons for me",
+    );
+    await reopened
+      .getByRole("button", { name: "Delete comment by Guest" })
+      .click();
+    await expect(
+      reopened.getByTestId("comment").filter({ hasText: "Afternoons for me" }),
+    ).toHaveCount(0);
+    await expect(reopened.getByTestId("comment")).toHaveCount(1);
+    expect(
+      await prisma.comment.count({ where: { pollId: "ballot-spec-comment" } }),
+    ).toBe(1);
+    await context.close();
+  });
+
+  test("a poll that hides participants shows a viewer only their own comments", async ({
+    browser,
+  }) => {
+    await seedPoll({
+      id: "ballot-spec-comment-hidden",
+      hideParticipants: true,
+    });
+    await seedComment({
+      pollId: "ballot-spec-comment-hidden",
+      authorName: "Other Person",
+      content: "Someone else's comment",
+    });
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-comment-hidden/vote");
+
+    const sheet = await openComments(page);
+    await expect(sheet.getByText("No comments yet")).toBeVisible();
+    await sheet.getByRole("textbox", { name: "Your name" }).fill("Private");
+    await sheet
+      .getByRole("textbox", { name: "Write a comment…" })
+      .fill("My own comment");
+    await sheet.getByRole("button", { name: "Add comment" }).click();
+
+    await expect(sheet.getByTestId("comment")).toHaveCount(1);
+    await expect(sheet.getByTestId("comment")).toContainText("My own comment");
+    await expect(sheet.getByText("Someone else's comment")).toHaveCount(0);
+    await context.close();
+  });
+
+  test("comments turned off leave no comments button", async ({ browser }) => {
+    await seedPoll({ id: "ballot-spec-no-comments", disableComments: true });
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-no-comments/vote");
+
+    await expect(options(page).first()).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /^(\d+ )?Comments?$/ }),
+    ).toHaveCount(0);
+    await context.close();
+  });
+
+  test("a scheduled poll's comments are readable but closed", async ({
+    browser,
+  }) => {
+    const email = "ballot-spec-comment-scheduled@example.com";
+    const eventId = "ballot-spec-comment-scheduled-event";
+    await prisma.scheduledEvent.deleteMany({ where: { id: eventId } });
+    const { host, space } = await seedHostedPoll({
+      id: "ballot-spec-comment-scheduled",
+      email,
+    });
+    const option = await prisma.option.findUniqueOrThrow({
+      where: { id: "ballot-spec-comment-scheduled-o0" },
+    });
+    await prisma.scheduledEvent.create({
+      data: {
+        id: eventId,
+        uid: `${eventId}@rallly.co`,
+        userId: host.id,
+        spaceId: space.id,
+        title: "Ballot ballot-spec-comment-scheduled",
+        timeZone: "UTC",
+        start: option.startTime,
+        end: new Date(option.startTime.getTime() + 60 * 60 * 1000),
+      },
+    });
+    await prisma.poll.update({
+      where: { id: "ballot-spec-comment-scheduled" },
+      data: { status: "scheduled", scheduledEventId: eventId },
+    });
+    await seedComment({
+      pollId: "ballot-spec-comment-scheduled",
+      authorName: "Other Person",
+      content: "See you there",
+    });
+
+    const { context, page } = await freshPage(browser);
+    await page.goto("/invite/ballot-spec-comment-scheduled/vote");
+
+    const sheet = await openComments(page);
+    await expect(sheet.getByTestId("comment")).toContainText("See you there");
+    await expect(sheet.getByRole("textbox")).toHaveCount(0);
+    await expect(
+      sheet.getByRole("button", { name: "Add comment" }),
+    ).toHaveCount(0);
+    await context.close();
+    await prisma.user.deleteMany({ where: { email } });
+  });
+
+  test("a poll manager can delete anyone's comment", async ({ browser }) => {
+    const email = "ballot-spec-comment-host@example.com";
+    await seedHostedPoll({ id: "ballot-spec-comment-manage", email });
+    await seedComment({
+      pollId: "ballot-spec-comment-manage",
+      authorName: "Other Person",
+      content: "Spam to remove",
+    });
+
+    const visitor = await freshPage(browser);
+    await visitor.page.goto("/invite/ballot-spec-comment-manage/vote");
+    const visitorSheet = await openComments(visitor.page);
+    await expect(visitorSheet.getByTestId("comment")).toContainText(
+      "Spam to remove",
+    );
+    await expect(
+      visitorSheet.getByRole("button", {
+        name: "Delete comment by Other Person",
+      }),
+    ).toHaveCount(0);
+    await visitor.context.close();
+
+    const manager = await freshPage(browser);
+    await loginWithEmail(manager.page, { email });
+    await manager.page.goto("/invite/ballot-spec-comment-manage/vote");
+    const sheet = await openComments(manager.page);
+    await sheet
+      .getByRole("button", { name: "Delete comment by Other Person" })
+      .click();
+    await expect(sheet.getByTestId("comment")).toHaveCount(0);
+    expect(
+      await prisma.comment.count({
+        where: { pollId: "ballot-spec-comment-manage" },
+      }),
+    ).toBe(0);
+    await manager.context.close();
+    await prisma.user.deleteMany({ where: { email } });
+  });
+
+  test("picking a time zone shows the times in it", async ({ browser }) => {
+    await seedPoll({ id: "ballot-spec-time-zone" });
+    const context = await browser.newContext({ timezoneId: "UTC" });
+    const page = await context.newPage();
+    await page.goto("/invite/ballot-spec-time-zone/vote");
+
+    const first = options(page).first();
+    // Seeded at 09:00 UTC.
+    await expect(first).toHaveAccessibleName(/9:00|09:00/);
+
+    await page.getByRole("button", { name: /Change time zone$/ }).click();
+    const picker = page.getByRole("dialog", { name: "Time zone" });
+    await picker.getByPlaceholder("Search time zone…").fill("Tokyo");
+    await picker.getByRole("option", { name: /^Tokyo/ }).click();
+    await expect(picker).toBeHidden();
+
+    await expect(
+      page.getByRole("button", { name: "Tokyo time. Change time zone" }),
+    ).toBeVisible();
+    // 09:00 UTC is 18:00 in Tokyo.
+    await expect(first).toHaveAccessibleName(/18:00|6:00\sPM/);
     await context.close();
   });
 });
