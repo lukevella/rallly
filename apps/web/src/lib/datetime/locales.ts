@@ -22,14 +22,29 @@ function getWeekStart(locale: string) {
 }
 
 /**
- * The week start for the first tag Intl accepts. Uncached, because the tags
- * come from request headers. Week start follows the region, so "en-GB" gives
- * Monday where the bare UI language "en" gives Sunday.
+ * The browser's region week start, used only under the bare "en" UI. Every
+ * other UI locale names its region (en-GB, pt-BR) or implies it through its
+ * language (de, sv), and a language the viewer chose beats an Accept-Language
+ * header they never set. Bare "en" alone guesses the US, so there a tag that
+ * names a region explicitly ("en-SE", "sv-SE") wins. Tags without a region
+ * are skipped: "en" would restate the US guess. Uncached, because the tags
+ * come from request headers.
  */
-export function getWeekStartFromLanguageTags(tags: string[]) {
+export function getWeekStartFromLanguageTags({
+  locale,
+  tags,
+}: {
+  locale: string;
+  tags: string[];
+}) {
+  if (locale !== "en") {
+    return undefined;
+  }
   for (const tag of tags) {
     try {
-      return getWeekStart(tag);
+      if (new Intl.Locale(tag).region) {
+        return getWeekStart(tag);
+      }
     } catch {
       // Intl.Locale throws a RangeError for a malformed tag
     }
@@ -42,14 +57,10 @@ type Weekday = { day: number; label: string; short: string };
 const weekdayCache = new Map<string, Weekday[]>();
 
 // 2024-01-07 is a Sunday; formatting in UTC keeps the 0=Sunday mapping. Days
-// are ordered from `weekStart` (the locale's default when omitted); `day`
-// stays canonical (0=Sunday .. 6=Saturday).
-export function getWeekdayNames(
-  locale: string,
-  weekStart = getLocaleDefaults(locale).weekStart,
-): Weekday[] {
-  const cacheKey = `${locale}:${weekStart}`;
-  let weekdays = weekdayCache.get(cacheKey);
+// are ordered from the locale's default week start; `day` stays canonical
+// (0=Sunday .. 6=Saturday).
+export function getWeekdayNames(locale: string): Weekday[] {
+  let weekdays = weekdayCache.get(locale);
   if (!weekdays) {
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: "long",
@@ -61,6 +72,7 @@ export function getWeekdayNames(
       weekday: "short",
       timeZone: "UTC",
     });
+    const { weekStart } = getLocaleDefaults(locale);
     weekdays = Array.from({ length: 7 }, (_, index) => {
       const day = (weekStart + index) % 7;
       const date = new Date(Date.UTC(2024, 0, 7 + day));
@@ -70,7 +82,7 @@ export function getWeekdayNames(
         short: shortFormatter.format(date),
       };
     });
-    weekdayCache.set(cacheKey, weekdays);
+    weekdayCache.set(locale, weekdays);
   }
   return weekdays;
 }

@@ -80,7 +80,7 @@ export function useDateTimeConfig() {
 // locale/timeZone themselves. UTC covers the pre-hydration window before the
 // browser zone is detected.
 export function useDateTime() {
-  const { locale, timeZone, timeFormat, weekStart } = useDateTimeConfig();
+  const { locale, timeZone, timeFormat } = useDateTimeConfig();
 
   return React.useMemo(
     () => ({
@@ -110,8 +110,8 @@ export function useDateTime() {
           showTimeZone: opts?.showTimeZone,
         }),
       toRelativeTime: (value: DateInput) => formatRelativeTime(value, locale),
-      weekdays: () => getWeekdayNames(locale, weekStart),
+      weekdays: () => getWeekdayNames(locale),
     }),
-    [locale, timeZone, timeFormat, weekStart],
+    [locale, timeZone, timeFormat],
   );
 }

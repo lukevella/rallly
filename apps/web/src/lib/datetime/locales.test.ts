@@ -58,12 +58,6 @@ describe("getWeekdayNames", () => {
     expect(weekdays[6]).toEqual({ day: 0, label: "Sonntag", short: "So" });
   });
 
-  it("starts with the given week start", () => {
-    const weekdays = getWeekdayNames("en", 1);
-    expect(weekdays[0]).toEqual({ day: 1, label: "Monday", short: "Mon" });
-    expect(weekdays[6]).toEqual({ day: 0, label: "Sunday", short: "Sun" });
-  });
-
   it("localizes the abbreviated names", () => {
     expect(getWeekdayNames("fr").map((day) => day.short)).toContain("lun.");
     expect(getWeekdayNames("es").map((day) => day.short)).toContain("lun");
@@ -71,21 +65,29 @@ describe("getWeekdayNames", () => {
 });
 
 describe("getWeekStartFromLanguageTags", () => {
-  it("uses Monday for en-GB and en-SE", () => {
-    expect(getWeekStartFromLanguageTags(["en-GB"])).toBe(1);
-    expect(getWeekStartFromLanguageTags(["en-SE"])).toBe(1);
+  const fromTags = (locale: string, tags: string[]) =>
+    getWeekStartFromLanguageTags({ locale, tags });
+
+  it("uses the browser region under the bare en UI", () => {
+    expect(fromTags("en", ["en-SE", "en"])).toBe(1);
+    expect(fromTags("en", ["sv-SE"])).toBe(1);
+    expect(fromTags("en", ["en-US"])).toBe(0);
   });
 
-  it("uses Sunday for en-US", () => {
-    expect(getWeekStartFromLanguageTags(["en-US"])).toBe(0);
+  it("skips tags without a region", () => {
+    expect(fromTags("en", ["en", "sv", "en-GB"])).toBe(1);
+    expect(fromTags("en", ["en", "sv"])).toBeUndefined();
+  });
+
+  it("leaves every other UI locale on its own default", () => {
+    expect(fromTags("en-GB", ["en-US"])).toBeUndefined();
+    expect(fromTags("de", ["en-US"])).toBeUndefined();
+    expect(fromTags("sv", ["en-US"])).toBeUndefined();
   });
 
   it("skips tags that Intl rejects", () => {
-    expect(getWeekStartFromLanguageTags(["not_a_tag", "sv"])).toBe(1);
-  });
-
-  it("returns undefined when no tag is usable", () => {
-    expect(getWeekStartFromLanguageTags([])).toBeUndefined();
-    expect(getWeekStartFromLanguageTags(["not_a_tag"])).toBeUndefined();
+    expect(fromTags("en", ["not_a_tag", "en-GB"])).toBe(1);
+    expect(fromTags("en", ["not_a_tag"])).toBeUndefined();
+    expect(fromTags("en", [])).toBeUndefined();
   });
 });

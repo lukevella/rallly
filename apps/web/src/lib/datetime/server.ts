@@ -2,6 +2,7 @@ import "server-only";
 
 import { getPreferredLanguagesFromHeaders } from "@rallly/languages/get-preferred-locale";
 import { cookies, headers } from "next/headers";
+import { getLocale } from "@/i18n/server/get-locale";
 import {
   TIME_FORMAT_COOKIE_NAME,
   TIME_ZONE_COOKIE_NAME,
@@ -35,14 +36,15 @@ export async function getDeviceTimeZone() {
  * render the same calendar.
  */
 async function getDeviceWeekStart() {
-  const headersList = await headers();
+  const [locale, headersList] = await Promise.all([getLocale(), headers()]);
   const acceptLanguageHeader = headersList.get("accept-language");
   if (!acceptLanguageHeader) {
     return undefined;
   }
-  return getWeekStartFromLanguageTags(
-    getPreferredLanguagesFromHeaders({ acceptLanguageHeader }),
-  );
+  return getWeekStartFromLanguageTags({
+    locale,
+    tags: getPreferredLanguagesFromHeaders({ acceptLanguageHeader }),
+  });
 }
 
 export async function getDeviceDateTimeConfig() {
