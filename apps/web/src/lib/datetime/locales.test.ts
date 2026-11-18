@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
+import {
+  getLocaleDefaults,
+  getWeekdayNames,
+  getWeekStartFromLanguageTags,
+} from "@/lib/datetime/locales";
 
 // Tripwire: these lock the CLDR-derived defaults so an ICU/Node upgrade that
 // shifts one fails loudly.
@@ -54,8 +58,35 @@ describe("getWeekdayNames", () => {
     expect(weekdays[6]).toEqual({ day: 0, label: "Sonntag", short: "So" });
   });
 
+  it("starts with the given week start", () => {
+    const weekdays = getWeekdayNames("en", 1);
+    expect(weekdays[0]).toEqual({ day: 1, label: "Monday", short: "Mon" });
+    expect(weekdays[6]).toEqual({ day: 0, label: "Sunday", short: "Sun" });
+  });
+
   it("localizes the abbreviated names", () => {
     expect(getWeekdayNames("fr").map((day) => day.short)).toContain("lun.");
     expect(getWeekdayNames("es").map((day) => day.short)).toContain("lun");
+  });
+});
+
+// The browser's region decides the week start, not the UI language.
+describe("getWeekStartFromLanguageTags", () => {
+  it("uses Monday for en-GB and en-SE", () => {
+    expect(getWeekStartFromLanguageTags(["en-GB"])).toBe(1);
+    expect(getWeekStartFromLanguageTags(["en-SE"])).toBe(1);
+  });
+
+  it("uses Sunday for en-US", () => {
+    expect(getWeekStartFromLanguageTags(["en-US"])).toBe(0);
+  });
+
+  it("skips tags that Intl rejects", () => {
+    expect(getWeekStartFromLanguageTags(["not_a_tag", "sv"])).toBe(1);
+  });
+
+  it("returns undefined when no tag is usable", () => {
+    expect(getWeekStartFromLanguageTags([])).toBeUndefined();
+    expect(getWeekStartFromLanguageTags(["not_a_tag"])).toBeUndefined();
   });
 });

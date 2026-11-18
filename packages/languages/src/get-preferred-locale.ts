@@ -2,18 +2,32 @@ import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { defaultLocale, supportedLngs } from "./index";
 
-export function getPreferredLocaleFromHeaders({
+/**
+ * The full language tags from an Accept-Language header (e.g. "en-GB"),
+ * most preferred first.
+ */
+export function getPreferredLanguagesFromHeaders({
   acceptLanguageHeader,
 }: {
   acceptLanguageHeader: string;
 }) {
-  const preferredLanguages = new Negotiator({
+  return new Negotiator({
     headers: {
       "accept-language": acceptLanguageHeader,
     },
   })
     .languages()
     .filter((lang) => lang !== "*");
+}
+
+export function getPreferredLocaleFromHeaders({
+  acceptLanguageHeader,
+}: {
+  acceptLanguageHeader: string;
+}) {
+  const preferredLanguages = getPreferredLanguagesFromHeaders({
+    acceptLanguageHeader,
+  });
 
   try {
     return match(preferredLanguages, supportedLngs, defaultLocale);

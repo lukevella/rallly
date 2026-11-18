@@ -54,7 +54,7 @@ async function OptionalSpaceGate({ children }: { children: React.ReactNode }) {
           timeFormat={
             user?.timeFormat ?? deviceDateTimeConfig.timeFormat ?? undefined
           }
-          weekStart={user?.weekStart ?? undefined}
+          weekStart={user?.weekStart ?? deviceDateTimeConfig.weekStart}
         >
           <TierProvider tier={tier}>
             {children}

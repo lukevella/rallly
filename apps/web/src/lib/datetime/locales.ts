@@ -16,15 +16,40 @@ function getWeekInfo(locale: string): WeekInfo {
   return l.getWeekInfo?.() ?? l.weekInfo ?? { firstDay: 1 };
 }
 
+// `firstDay` is 1..7 (Mon..Sun); map to JS 0..6 (Sun..Sat).
+function getWeekStart(locale: string) {
+  return getWeekInfo(locale).firstDay % 7;
+}
+
+/**
+ * The week start for the first tag Intl accepts. Uncached, because the tags
+ * come from request headers. Week start follows the region, so "en-GB" gives
+ * Monday where the bare UI language "en" gives Sunday.
+ */
+export function getWeekStartFromLanguageTags(tags: string[]) {
+  for (const tag of tags) {
+    try {
+      return getWeekStart(tag);
+    } catch {
+      // Intl.Locale throws a RangeError for a malformed tag
+    }
+  }
+  return undefined;
+}
+
 type Weekday = { day: number; label: string; short: string };
 
 const weekdayCache = new Map<string, Weekday[]>();
 
 // 2024-01-07 is a Sunday; formatting in UTC keeps the 0=Sunday mapping. Days
-// are ordered from the locale's default week start; `day` stays canonical
-// (0=Sunday .. 6=Saturday).
-export function getWeekdayNames(locale: string): Weekday[] {
-  let weekdays = weekdayCache.get(locale);
+// are ordered from `weekStart` (the locale's default when omitted); `day`
+// stays canonical (0=Sunday .. 6=Saturday).
+export function getWeekdayNames(
+  locale: string,
+  weekStart = getLocaleDefaults(locale).weekStart,
+): Weekday[] {
+  const cacheKey = `${locale}:${weekStart}`;
+  let weekdays = weekdayCache.get(cacheKey);
   if (!weekdays) {
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: "long",
@@ -36,7 +61,6 @@ export function getWeekdayNames(locale: string): Weekday[] {
       weekday: "short",
       timeZone: "UTC",
     });
-    const { weekStart } = getLocaleDefaults(locale);
     weekdays = Array.from({ length: 7 }, (_, index) => {
       const day = (weekStart + index) % 7;
       const date = new Date(Date.UTC(2024, 0, 7 + day));
@@ -46,7 +70,7 @@ export function getWeekdayNames(locale: string): Weekday[] {
         short: shortFormatter.format(date),
       };
     });
-    weekdayCache.set(locale, weekdays);
+    weekdayCache.set(cacheKey, weekdays);
   }
   return weekdays;
 }
@@ -62,8 +86,7 @@ export function getLocaleDefaults(locale: string): LocaleDefaults {
     const timeFormat: TimeFormat =
       hourCycle === "h11" || hourCycle === "h12" ? "hours12" : "hours24";
 
-    // `firstDay` is 1..7 (Mon..Sun); map to JS 0..6 (Sun..Sat).
-    const weekStart = getWeekInfo(locale).firstDay % 7;
+    const weekStart = getWeekStart(locale);
 
     defaults = { weekStart, timeFormat };
     cache.set(locale, defaults);
