@@ -74,7 +74,7 @@ Sentry.init({
   ],
 
   beforeSend(event, hint) {
-    if (isForeignError({ event, originalException: hint.originalException })) {
+    if (isForeignError(event)) {
       return null;
     }
     if (isModuleFactoryError(hint.originalException)) {
