@@ -16,6 +16,9 @@
 
 </div>
 
+> Fork utilisé pour le projet Dev avec Docker : la stack Docker Compose (Traefik, Authelia, Rallly), son
+> lancement en local et le déploiement sont expliqués dans [docker/README.md](./docker/README.md).
+
 <img src="./assets/images/screenshot.png" alt="A Rallly poll showing participants' availability across four time slots" />
 
 Rallly is an open-source scheduling tool that helps you find the best date and time to meet. Create a poll with a few options, share the link, and let your participants vote on when they're available. No more back-and-forth emails.

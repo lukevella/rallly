@@ -1,3 +1,4 @@
 .env
 config/authelia/users_database.yml
 config/authelia/oidc_key.pem
+certs/

@@ -1,0 +1,8 @@
+# Certificat par défaut de Traefik en local (généré par scripts/local-setup.sh).
+# Uniquement chargé par docker-compose.local.yml.
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/local.crt
+        keyFile: /certs/local.key

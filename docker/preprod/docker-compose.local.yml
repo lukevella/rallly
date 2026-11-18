@@ -1,0 +1,46 @@
+# Surcouche pour lancer la stack de preprod sur sa machine (DOMAIN=m2.localhost).
+# Elle est chargée seule grâce à COMPOSE_FILE, que ./scripts/local-setup.sh écrit dans le .env.
+# Sur la VM le .env n'a pas COMPOSE_FILE : seul docker-compose.yml est lu.
+#
+# Trois différences avec la VM :
+#  - Traefik sert un certificat local (certs/) au lieu de passer par le tunnel Cloudflare ;
+#  - Traefik répond aussi aux noms auth.* et rallly.* sur le réseau proxy, pour que Rallly
+#    puisse joindre Authelia (discovery OIDC) depuis son conteneur ;
+#  - Rallly fait confiance à la CA locale (NODE_EXTRA_CA_CERTS).
+
+services:
+  traefik:
+    # Un "command" est remplacé en entier par l'override, donc on recopie celui de
+    # docker-compose.yml et on ajoute juste le provider file (dernière ligne).
+    # À garder synchronisé avec docker-compose.yml.
+    command:
+      - --log=true
+      - --global.sendAnonymousUsage=false
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.websecure.http.tls=true
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker.endpoint=tcp://socket-proxy:2375
+      - --providers.docker.network=m2_proxy
+      - --ping=true
+      - --providers.file.filename=/etc/traefik/tls-local.yml
+    volumes:
+      - ./certs:/certs:ro
+      - ./config/traefik/tls-local.yml:/etc/traefik/tls-local.yml:ro
+    networks:
+      proxy:
+        aliases:
+          - auth.${DOMAIN}
+          - rallly.${DOMAIN}
+
+  rallly:
+    # L'image publiée par la CI n'existe qu'en amd64 ; sur un Mac M1/M2 elle tourne en émulation.
+    platform: linux/amd64
+    environment:
+      NODE_EXTRA_CA_CERTS: /certs/ca.crt
+    volumes:
+      - ./certs/ca.crt:/certs/ca.crt:ro
