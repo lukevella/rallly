@@ -29,6 +29,7 @@ import {
   getPollWithOptions,
   listPolls,
 } from "@/features/poll/data";
+import { getPollInvitePath } from "@/features/poll/invite/utils";
 import { createPoll, deletePoll } from "@/features/poll/mutations";
 import { toAvailabilitySpans } from "@/features/poll/utils";
 import { getSpaceMemberByEmail } from "@/features/space/member/data";
@@ -1035,20 +1036,27 @@ app.get(
   },
 );
 
-const toParticipantResponse = (
-  kind: "date" | "time",
+const toParticipantResponse = ({
+  pollId,
+  kind,
+  participant,
+}: {
+  pollId: string;
+  kind: "date" | "time";
   participant: {
     id: string;
     name: string;
     email: string | null;
     createdAt: Date;
+    token: string;
     votes: Parameters<typeof toAvailabilitySpans>[0]["votes"];
-  },
-) => ({
+  };
+}) => ({
   id: participant.id,
   name: participant.name,
   email: participant.email,
   createdAt: participant.createdAt.toISOString(),
+  editUrl: shortUrl(getPollInvitePath({ pollId, token: participant.token })),
   availability: toAvailabilitySpans({ kind, votes: participant.votes }),
 });
 
@@ -1107,7 +1115,11 @@ app.get(
     return c.json(
       getPollParticipantsSuccessResponseSchema.parse({
         data: data.participants.map((participant) =>
-          toParticipantResponse(data.kind, participant),
+          toParticipantResponse({
+            pollId: data.pollId,
+            kind: data.kind,
+            participant,
+          }),
         ),
       }),
     );
@@ -1180,7 +1192,11 @@ app.get(
 
     return c.json(
       getPollParticipantSuccessResponseSchema.parse({
-        data: toParticipantResponse(poll.kind, participant),
+        data: toParticipantResponse({
+          pollId: poll.id,
+          kind: poll.kind,
+          participant,
+        }),
       }),
     );
   },

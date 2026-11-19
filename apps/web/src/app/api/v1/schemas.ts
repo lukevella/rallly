@@ -645,6 +645,12 @@ export const participantSchema = z
     name: z.string().meta({ example: "Jane Smith" }),
     email: z.string().nullable().meta({ example: "jane@example.com" }),
     createdAt: z.iso.datetime().meta({ example: "2025-01-10T12:00:00.000Z" }),
+    editUrl: z.string().meta({
+      description:
+        "Link that lets the participant change their response without signing in. It is the same link their confirmation email carried. Anyone holding it can edit the response, so share it only with the participant.",
+      example:
+        "https://rallly.co/invite/Xk3pQ9vLm2Ab?token=Vb3kQ9xTz2LmN8rYw4HsJ6dFg1PcXe7A",
+    }),
     availability: z.array(availabilitySpanSchema).meta({
       description:
         "When the participant is available: one span per option they can make, in start order, not merged. Options they cannot make, or did not answer, are absent. Each span matches an option of the poll by its time.",

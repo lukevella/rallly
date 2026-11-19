@@ -4,6 +4,10 @@ icon: "clock-rotate-left"
 description: "Changes to the API, newest first."
 ---
 
+<Update label="2026-11-19">
+Participants now carry `editUrl`, the link that lets them change their response without signing in, on both `GET /polls/{pollId}/participants` and `GET /polls/{pollId}/participants/{participantId}`. It is the same link their confirmation email carried. Anyone holding it can edit the response, so share it only with that participant.
+</Update>
+
 <Update label="LAUNCH_DATE">
 Polls created through the API now count against a monthly quota per space. Pro includes 50 a month, and the space owner can raise it from the API keys settings page.
 
