@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getLocaleDefaults, getWeekdayNames } from "@/lib/datetime/locales";
+import {
+  getLocaleDefaults,
+  getWeekdayNames,
+  getWeekStartFromLanguageTags,
+} from "@/lib/datetime/locales";
 
 // Tripwire: these lock the CLDR-derived defaults so an ICU/Node upgrade that
 // shifts one fails loudly.
@@ -57,5 +61,33 @@ describe("getWeekdayNames", () => {
   it("localizes the abbreviated names", () => {
     expect(getWeekdayNames("fr").map((day) => day.short)).toContain("lun.");
     expect(getWeekdayNames("es").map((day) => day.short)).toContain("lun");
+  });
+});
+
+describe("getWeekStartFromLanguageTags", () => {
+  const fromTags = (locale: string, tags: string[]) =>
+    getWeekStartFromLanguageTags({ locale, tags });
+
+  it("uses the browser region under the bare en UI", () => {
+    expect(fromTags("en", ["en-SE", "en"])).toBe(1);
+    expect(fromTags("en", ["sv-SE"])).toBe(1);
+    expect(fromTags("en", ["en-US"])).toBe(0);
+  });
+
+  it("skips tags without a region", () => {
+    expect(fromTags("en", ["en", "sv", "en-GB"])).toBe(1);
+    expect(fromTags("en", ["en", "sv"])).toBeUndefined();
+  });
+
+  it("leaves every other UI locale on its own default", () => {
+    expect(fromTags("en-GB", ["en-US"])).toBeUndefined();
+    expect(fromTags("de", ["en-US"])).toBeUndefined();
+    expect(fromTags("sv", ["en-US"])).toBeUndefined();
+  });
+
+  it("skips tags that Intl rejects", () => {
+    expect(fromTags("en", ["not_a_tag", "en-GB"])).toBe(1);
+    expect(fromTags("en", ["not_a_tag"])).toBeUndefined();
+    expect(fromTags("en", [])).toBeUndefined();
   });
 });

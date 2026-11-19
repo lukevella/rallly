@@ -1,11 +1,14 @@
 import "server-only";
 
-import { cookies } from "next/headers";
+import { getPreferredLanguagesFromHeaders } from "@rallly/languages/get-preferred-locale";
+import { cookies, headers } from "next/headers";
+import { getLocale } from "@/i18n/server/get-locale";
 import {
   TIME_FORMAT_COOKIE_NAME,
   TIME_ZONE_COOKIE_NAME,
   TIME_ZONE_OVERRIDE_COOKIE_NAME,
 } from "@/lib/datetime/constants";
+import { getWeekStartFromLanguageTags } from "@/lib/datetime/locales";
 import { normalizeTimeFormat, normalizeTimeZone } from "@/lib/datetime/utils";
 
 /**
@@ -28,8 +31,27 @@ export async function getDeviceTimeZone() {
   return normalizeTimeZone(cookieStore.get(TIME_ZONE_COOKIE_NAME)?.value);
 }
 
+/**
+ * Viewers without a stored week start get this so the server and client
+ * render the same calendar.
+ */
+async function getDeviceWeekStart() {
+  const [locale, headersList] = await Promise.all([getLocale(), headers()]);
+  const acceptLanguageHeader = headersList.get("accept-language");
+  if (!acceptLanguageHeader) {
+    return undefined;
+  }
+  return getWeekStartFromLanguageTags({
+    locale,
+    tags: getPreferredLanguagesFromHeaders({ acceptLanguageHeader }),
+  });
+}
+
 export async function getDeviceDateTimeConfig() {
-  const cookieStore = await cookies();
+  const [cookieStore, weekStart] = await Promise.all([
+    cookies(),
+    getDeviceWeekStart(),
+  ]);
 
   return {
     timeZone:
@@ -39,5 +61,6 @@ export async function getDeviceDateTimeConfig() {
     timeFormat: normalizeTimeFormat(
       cookieStore.get(TIME_FORMAT_COOKIE_NAME)?.value,
     ),
+    weekStart,
   };
 }
