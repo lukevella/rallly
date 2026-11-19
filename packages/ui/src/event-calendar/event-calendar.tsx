@@ -1678,7 +1678,9 @@ function EventCalendar<TData = unknown>({
     // Inner elements omit their own text-size so they cascade from here (the
     // few portaled surfaces - "+N more" popover, drag carry clone - pin the
     // size explicitly since DOM inheritance does not cross a portal).
-    className: cn("flex min-h-0 min-w-0 flex-col text-xs", className),
+    // `isolate` keeps the internal z-index layers (now indicator, sticky
+    // headers, drag previews) from competing with the host page's chrome.
+    className: cn("isolate flex min-h-0 min-w-0 flex-col text-xs", className),
     children: (
       <>
         {children}
