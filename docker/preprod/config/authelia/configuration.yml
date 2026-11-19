@@ -1,5 +1,6 @@
-# Secrets (session, chiffrement du stockage, JWT, mot de passe PostgreSQL) : variables AUTHELIA_* du compose ;
-# empreinte du secret client OIDC de Rallly : RALLLY_OIDC_CLIENT_SECRET_DIGEST (.env).
+# Secrets (session, chiffrement du stockage, JWT, mot de passe PostgreSQL) : fichiers AUTHELIA_*_FILE du
+# compose ; clé OIDC et empreinte du secret client : fichiers de /secrets, écrits par init.sh. Les comptes sont
+# dans config/users_database.yml (hors dépôt), créé par init.sh s'il n'existe pas.
 server:
   address: 'tcp://:9091'
 
@@ -45,11 +46,11 @@ identity_providers:
       - key_id: 'preprod'
         algorithm: 'RS256'
         use: 'sig'
-        key: {{ secret "/config/oidc_key.pem" | mindent 10 "|" | msquote }}
+        key: {{ secret "/secrets/oidc_key.pem" | mindent 10 "|" | msquote }}
     clients:
       - client_id: 'rallly'
         client_name: 'Rallly'
-        client_secret: '{{ env "RALLLY_OIDC_CLIENT_SECRET_DIGEST" }}'
+        client_secret: '{{ secret "/secrets/oidc_client_digest" }}'
         public: false
         authorization_policy: 'one_factor'
         consent_mode: 'implicit'

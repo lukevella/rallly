@@ -18,7 +18,8 @@ users_file=config/authelia/users_database.yml
 [ -f "$users_file" ] || { echo "$users_file introuvable" >&2; exit 1; }
 grep -q "^  ${login}:" "$users_file" && { echo "l'utilisateur ${login} existe déjà" >&2; exit 1; }
 
-tag=$(sed -n 's/^AUTHELIA_TAG=//p' .env)
+tag=$(sed -n 's/^AUTHELIA_TAG=//p' .env 2>/dev/null || true)
+tag=${tag:-4.39}
 password=$(openssl rand -hex 8)
 hash=$(docker run --rm "authelia/authelia:${tag}" \
   authelia crypto hash generate argon2 --password "$password" | sed -n 's/^Digest: //p')

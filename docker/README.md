@@ -37,6 +37,7 @@ Les services :
 - `mailpit` : un faux serveur SMTP avec une interface web. Authelia et Rallly y envoient leurs mails, rien
   ne part vraiment sur Internet.
 - `garage` : stockage S3. Il est démarré mais Rallly ne s'en sert pas pour l'instant.
+- `init` : s'exécute une fois au premier démarrage et génère les secrets (voir plus bas), puis s'arrête.
 - `cloudflared` : seulement avec le profil `tunnel` (voir la partie VM).
 
 Les réseaux :
@@ -46,28 +47,27 @@ Les réseaux :
   rien là-dedans n'est joignable de l'extérieur et les bases n'ont aucun port publié.
 - `socket` : uniquement Traefik et `socket-proxy`, aussi `internal`.
 
-Les volumes nommés : `authelia_db`, `rallly_db`, `garage_meta`, `garage_data`.
+Les volumes nommés : `authelia_db`, `rallly_db`, `garage_meta`, `garage_data` et `secrets`.
 
 Les seuls ports ouverts sur l'hôte sont 80 et 443 (Traefik) et le tableau de bord de Traefik sur
 `127.0.0.1:8080`, donc visible uniquement depuis la machine elle-même.
 
 ## Lancer en local
 
-Il faut Docker (avec Compose v2) et `openssl`.
+Il faut Docker avec Compose v2, rien d'autre.
 
 ```
 git clone <url du dépôt>
-cd rallly
-git switch preprod
-cd docker/preprod
-./scripts/local-setup.sh
+cd rallly/docker/preprod
 docker compose up -d --wait
 ```
 
-`local-setup.sh` crée tout ce qui n'est pas dans le dépôt parce que c'est secret : le `.env` avec des
-secrets tirés au hasard, la clé de signature OIDC, le fichier des utilisateurs, et un certificat local.
-Il s'arrête s'il y a déjà un `.env`, pour ne rien écraser (`--force` pour tout refaire). Au premier lancement les images
-sont téléchargées, ça prend quelques minutes.
+Il n'y a rien à configurer : au premier lancement, le service `init` génère tout ce qui est secret, une seule
+fois. Les secrets d'Authelia, les mots de passe des deux bases, le secret OIDC de Rallly, la clé de
+signature OIDC, une autorité de certification locale et un certificat pour `*.m2.localhost` vont dans un
+volume Docker (`secrets`), chaque service ne montant que son propre sous-dossier. Les deux comptes de démo
+vont dans `config/authelia/users_database.yml`, qui n'est pas dans Git. Au premier lancement les images sont
+téléchargées, ça prend quelques minutes.
 
 Une fois que c'est démarré :
 
@@ -76,18 +76,24 @@ Une fois que c'est démarré :
 - Mailpit : https://mail.m2.localhost (réservé au groupe `admins`)
 - Tableau de bord Traefik : http://127.0.0.1:8080
 
-Comptes de démo (local uniquement) :
+Comptes de démo : `admin` (groupe `admins`) et `alice` (groupe `users`). Leurs mots de passe sont tirés au
+hasard et affichés une seule fois, dans les logs du service `init` :
 
-- `admin`, groupe `admins`, mot de passe `demo-local-pass`
-- `alice`, groupe `users`, mot de passe `demo-local-pass`
+```
+docker compose logs init
+```
 
-Les adresses en `*.localhost` se résolvent toutes seules vers la machine (testé sur Mac uniquement).
-Le certificat est signé par une petite autorité qu'on génère nous-mêmes (`certs/ca.crt`), donc
-le navigateur va afficher un avertissement : soit on l'accepte, soit on importe `certs/ca.crt`. Rallly,
-lui, fait confiance à cette autorité (`NODE_EXTRA_CA_CERTS`), sinon il ne pourrait pas lire la
-configuration OIDC d'Authelia.
+Les adresses en `*.localhost` se résolvent toutes seules vers la machine dans un navigateur (vérifié sur Mac ;
+sous Linux la stack démarre et la connexion SSO a été rejouée par script, pas dans un navigateur). Le certificat est signé par la petite autorité générée par `init`, donc le navigateur va
+afficher un avertissement : soit on l'accepte, soit on importe l'autorité
+(`docker compose cp init:/secrets/ca-public/ca.pem .`). Rallly, lui, lui fait confiance
+(`NODE_EXTRA_CA_CERTS`), sinon il ne pourrait pas lire la configuration OIDC d'Authelia.
 
-Pour tout effacer et repartir de zéro : `docker compose down -v`.
+Pour tout effacer et repartir de zéro, secrets et données compris : `docker compose down -v` (et supprimer
+`config/authelia/users_database.yml` pour regénérer les comptes de démo).
+
+Un `.env` est facultatif (voir `.env.example`) : il sert à changer le domaine ou à reprendre les secrets d'une
+stack qui tourne déjà. Une valeur qui y est posée est utilisée telle quelle au lieu d'être générée.
 
 Sur un Mac avec puce Apple, l'image de Rallly tourne en émulation parce que la CI ne la publie qu'en
 amd64. C'est plus lent au démarrage mais ça marche.
@@ -103,15 +109,14 @@ puis mettre `RALLLY_IMAGE=rallly:local` dans le `.env` et refaire `docker compos
 
 ## Local et VM : ce qui est pareil, ce qui change
 
-C'est le même `docker-compose.yml` des deux côtés, avec les mêmes images et la même configuration
-Authelia. En local on ajoute seulement `docker-compose.local.yml` (le script l'active avec la variable
-`COMPOSE_FILE` du `.env`). Les écarts :
+C'est exactement le même `docker-compose.yml` des deux côtés, avec les mêmes images et la même configuration
+Authelia. Les écarts :
 
 - Le domaine : `m2.localhost` en local, le vrai domaine de la VM dans son `.env`.
-- Le HTTPS : en local Traefik sert le certificat généré par le script. Sur la VM le trafic public arrive
-  par le tunnel Cloudflare (voir plus bas).
-- En local, Traefik répond aussi aux noms `auth.*` et `rallly.*` depuis l'intérieur du réseau `proxy`, pour
-  que le conteneur Rallly puisse joindre Authelia avec la même URL que le navigateur.
+- Le HTTPS : en local Traefik sert le certificat de l'autorité générée par `init`. Sur la VM le trafic public
+  arrive par le tunnel Cloudflare (voir plus bas).
+- Traefik répond aussi aux noms `auth.*` et `rallly.*` depuis l'intérieur du réseau `proxy`, des deux côtés,
+  pour que le conteneur Rallly puisse joindre Authelia avec la même URL que le navigateur.
 - L'image de Rallly : en local on récupère celle que la CI a publiée, sur la VM c'est celle du commit
   déployé (`ghcr.io/ogb4n/rallly:sha-xxxxxxx`).
 - Les comptes : ceux de démo en local, sur la VM les vrais comptes qu'on y a créés.
@@ -123,10 +128,14 @@ bas) et le dernier job tourne sur un runner GitHub installé sur la VM. Il copie
 `/home/ogb4n/stack`, se connecte à GHCR avec le jeton du job, puis lance
 `docker compose --profile tunnel up -d --wait`.
 
-Les secrets ne sont jamais dans le dépôt. Ils sont dans le dossier de la stack sur la VM : le `.env`, le
-`users_database.yml` et la clé `oidc_key.pem`. La copie de la CI ne les écrase pas puisqu'ils n'existent
-pas dans le dépôt. Pour créer un `.env` à la main on part de `.env.example` (les commandes pour générer
-chaque secret sont dedans).
+Les secrets ne sont jamais dans le dépôt. Sur la VM, `init` les génère dans le volume `secrets` au premier
+démarrage, ou les reprend du `.env` quand il en contient (c'est ce qui a servi à garder ceux de la stack
+qui tournait déjà). Le fichier des comptes, `config/authelia/users_database.yml`, est dans le dossier de la
+stack et `init` ne le touche pas s'il existe ; on y ajoute des comptes avec `scripts/add-user.sh`. Si la
+stack tourne déjà avec des bases existantes, `init` les reconnaît et garde leurs mots de passe d'origine
+(Postgres n'applique un mot de passe qu'à la création de son volume), donc rien n'est à toucher sur la VM
+pour le passage à cette version. Pour les changer, on fait `ALTER USER` dans chaque base puis on pose les
+nouvelles valeurs dans le `.env` (`AUTHELIA_DB_PASSWORD`, `RALLLY_DB_PASSWORD`).
 
 Le profil `tunnel` démarre `cloudflared`, qui relie la stack à un tunnel Cloudflare avec un jeton
 (`CLOUDFLARE_TUNNEL_TOKEN` dans le `.env`). C'est ce tunnel qui rend la stack joignable depuis Internet ;
@@ -153,7 +162,7 @@ login de Rallly, et l'identité du votant vient de là (voir la feature 1 plus b
 **Groupes.** Il y a deux groupes, `admins` et `users`, définis dans `users_database.yml`. La politique
 d'accès est dans `access_control` : tout est refusé par défaut, `mail.<domaine>` n'est ouvert qu'au groupe
 `admins`, le reste des sous-domaines demande une authentification simple. Pour le voir en local : se
-connecter à https://auth.m2.localhost avec `alice` puis ouvrir https://mail.m2.localhost, on a une erreur
+connecter à https://auth.m2.localhost avec `alice` (mot de passe dans les logs de `init`) puis ouvrir https://mail.m2.localhost, on a une erreur
 403 ; avec `admin`, Mailpit s'ouvre. La limite : pour Rallly (le client OIDC) tout le monde a les mêmes
 droits, les groupes ne jouent que sur l'accès à Mailpit.
 
@@ -223,7 +232,9 @@ Ce qu'on a mis en place :
 - les conteneurs Traefik, Authelia, Rallly, Mailpit et cloudflared ont `cap_drop: ALL` et
   `no-new-privileges` ;
 - Rallly tourne avec un utilisateur non-root dans l'image ;
-- les secrets sont hors du dépôt et hors des images (`.env`, fichiers montés), avec un `.env.example` ;
+- les secrets sont hors du dépôt et hors des images : générés au premier démarrage dans un volume, un
+  sous-dossier par service, ou repris d'un `.env` gitignoré (avec un `.env.example`). Aucun mot de passe n'est
+  écrit dans le compose, bases comprises ;
 - le socket Docker n'est pas monté dans Traefik mais dans un proxy en lecture seule ;
 - les bases ne sont que sur un réseau `internal` ;
 - les images ont des versions fixées (pas de `latest`), et celle de Rallly est épinglée sur le commit ;
@@ -231,8 +242,9 @@ Ce qu'on a mis en place :
 
 Les limites qu'on assume :
 
-- les mots de passe des deux Postgres (`authelia` et `rallly`) sont écrits dans le compose. Les bases ne
-  sont joignables que depuis le réseau interne, mais ce n'est pas propre ;
+- les fichiers de secrets du volume sont lisibles (644) parce que les conteneurs n'ont pas tous le même
+  utilisateur et que Traefik tourne sans capabilities : la protection est le volume et les sous-dossiers
+  montés, pas les droits des fichiers ;
 - les Postgres, Garage et `socket-proxy` n'ont pas `cap_drop: ALL` (l'entrypoint de Postgres a besoin de
   certaines capabilities, on ne l'a pas durci) ;
 - Trivy ne bloque que sur CRITICAL, les HIGH sont seulement remontées dans le rapport ;

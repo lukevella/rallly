@@ -1,5 +1,7 @@
-# Preprod : déployée par la CI ; Rallly n'est PAS derrière le forward-auth Authelia (liens de sondage
-# ouverts aux participants externes), la connexion passe par le bouton OIDC de Rallly.
+# Stack Rallly + Authelia (OIDC) + Traefik. `docker compose up -d` suffit : le service init génère
+# les secrets au premier démarrage (voir init.sh). Un .env est optionnel (voir .env.example).
+# Rallly n'est PAS derrière le forward-auth Authelia (liens de sondage ouverts aux participants
+# externes) : la connexion passe par le bouton OIDC de Rallly.
 name: fullstack-dev-si
 
 x-hardened: &hardened
@@ -8,7 +10,52 @@ x-hardened: &hardened
   cap_drop:
     - ALL
 
+# Chaque service ne monte que son sous-dossier du volume de secrets
+x-secrets: &secrets-volume
+  type: volume
+  source: secrets
+  read_only: true
+
 services:
+  # ---------- Génération des secrets, une seule fois ----------
+  init:
+    image: authelia/authelia:${AUTHELIA_TAG:-4.39}
+    user: "0:0"
+    entrypoint: ["/bin/sh", "/init.sh"]
+    restart: "no"
+    network_mode: none
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Pour créer config/authelia/users_database.yml au nom de l'utilisateur de l'hôte
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+    environment:
+      DOMAIN: ${DOMAIN:-m2.localhost}
+      HOST_UID: ${HOST_UID:-1000}
+      HOST_GID: ${HOST_GID:-1000}
+      # Optionnel : reprendre les secrets d'un déploiement existant au lieu d'en générer
+      AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET:-}
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${AUTHELIA_STORAGE_ENCRYPTION_KEY:-}
+      AUTHELIA_JWT_SECRET: ${AUTHELIA_JWT_SECRET:-}
+      AUTHELIA_OIDC_HMAC_SECRET: ${AUTHELIA_OIDC_HMAC_SECRET:-}
+      AUTHELIA_DB_PASSWORD: ${AUTHELIA_DB_PASSWORD:-}
+      RALLLY_DB_PASSWORD: ${RALLLY_DB_PASSWORD:-}
+      RALLLY_SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:-}
+      RALLLY_OIDC_CLIENT_SECRET: ${RALLLY_OIDC_CLIENT_SECRET:-}
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes:
+      - ./init.sh:/init.sh:ro
+      - ./config/authelia:/hostconfig
+      - secrets:/secrets
+      # Lecture seule : sert à reconnaître des bases créées par une version précédente
+      - authelia_db:/pg/authelia:ro
+      - rallly_db:/pg/rallly:ro
+
   # ---------- Accès au socket Docker, Traefik ne monte pas le socket lui-même ----------
   socket-proxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:${SOCKET_PROXY_TAG:-v0.5.0}
@@ -44,16 +91,30 @@ services:
       # Arguments ET variables TRAEFIK_* : Traefik ne lit qu'une source, les variables seraient ignorées
       - --providers.docker.endpoint=tcp://socket-proxy:2375
       - --providers.docker.network=m2_proxy
+      # Certificat joker signé par la CA locale, posé par init
+      - --providers.file.directory=/tls
       - --ping=true
     ports:
       - "80:80"
       - "443:443"
-      - "127.0.0.1:8080:8080" # tableau de bord Traefik, local à la VM (api.insecure)
-    depends_on: [socket-proxy]
+      - "127.0.0.1:8080:8080" # tableau de bord Traefik, local à la machine (api.insecure)
+    depends_on:
+      socket-proxy:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
     cap_add:
       - NET_BIND_SERVICE
+    volumes:
+      - <<: *secrets-volume
+        target: /tls
+        volume: { subpath: traefik }
     networks:
-      proxy: {}
+      proxy:
+        # Les conteneurs joignent Authelia et Rallly par leur adresse publique : Traefik répond
+        aliases:
+          - auth.${DOMAIN:-m2.localhost}
+          - rallly.${DOMAIN:-m2.localhost}
       socket: {}
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
@@ -69,9 +130,15 @@ services:
     environment:
       POSTGRES_USER: authelia
       POSTGRES_DB: authelia
-      POSTGRES_PASSWORD: authelia
+      POSTGRES_PASSWORD_FILE: /run/secrets/password
+    depends_on:
+      init:
+        condition: service_completed_successfully
     volumes:
       - authelia_db:/var/lib/postgresql/data
+      - <<: *secrets-volume
+        target: /run/secrets
+        volume: { subpath: authelia-db }
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d authelia -U authelia"]
       interval: 10s
@@ -85,10 +152,12 @@ services:
   # ---------- Authelia : Application ----------
   authelia:
     <<: *hardened
-    image: authelia/authelia:${AUTHELIA_TAG:?}
-    # Dépend de Mailpit pour que l'email de confirmation fonctionne.
+    image: authelia/authelia:${AUTHELIA_TAG:-4.39}
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     depends_on:
+      init:
+        condition: service_completed_successfully
+      # Authelia teste le SMTP au démarrage : Mailpit doit être là pour l'e-mail de confirmation
       mailpit:
         condition: service_started
       authelia-db:
@@ -96,9 +165,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./config/authelia:/config:ro
+      - <<: *secrets-volume
+        target: /secrets
+        volume: { subpath: authelia }
     labels:
       traefik.enable: "true"
-      traefik.http.routers.authelia.rule: Host(`auth.${DOMAIN}`)
+      traefik.http.routers.authelia.rule: Host(`auth.${DOMAIN:-m2.localhost}`)
       traefik.http.services.authelia.loadbalancer.server.port: "9091"
       traefik.http.middlewares.authelia.forwardAuth.maxResponseBodySize: '8192'
       traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/authz/forward-auth
@@ -107,27 +179,31 @@ services:
     environment:
       X_AUTHELIA_CONFIG: /config/configuration.yml
       X_AUTHELIA_CONFIG_FILTERS: template
-      # Lus par le gabarit de configuration.yml
-      DOMAIN: ${DOMAIN:?}
-      AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET:?}
-      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${AUTHELIA_STORAGE_ENCRYPTION_KEY:?}
-      AUTHELIA_STORAGE_POSTGRES_PASSWORD: authelia
-      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET: ${AUTHELIA_JWT_SECRET:?}
-      AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET: ${AUTHELIA_OIDC_HMAC_SECRET:?}
-      RALLLY_OIDC_CLIENT_SECRET_DIGEST: ${RALLLY_OIDC_CLIENT_SECRET_DIGEST:?}
+      # Lu par le gabarit de configuration.yml
+      DOMAIN: ${DOMAIN:-m2.localhost}
+      AUTHELIA_SESSION_SECRET_FILE: /secrets/session_secret
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/storage_encryption_key
+      AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /secrets/db_password
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /secrets/jwt_secret
+      AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /secrets/oidc_hmac_secret
     networks: [proxy, backend]
-
 
   rallly-db:
     image: postgres:${POSTGRES_TAG:-16-alpine}
     environment:
       POSTGRES_USER: rallly
-      POSTGRES_PASSWORD: rallly
+      POSTGRES_PASSWORD_FILE: /run/secrets/password
       POSTGRES_DB: rallly
+    depends_on:
+      init:
+        condition: service_completed_successfully
     security_opt:
       - no-new-privileges:true
     volumes:
       - rallly_db:/var/lib/postgresql/data
+      - <<: *secrets-volume
+        target: /run/secrets
+        volume: { subpath: rallly-db }
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d rallly -U rallly"]
       interval: 10s
@@ -136,15 +212,16 @@ services:
       start_period: 20s
     networks: [backend]
 
-
   rallly:
     <<: *hardened
     # Le workflow preprod fixe RALLLY_IMAGE sur le commit déployé ; le défaut sert aux lancements à la main
     image: ${RALLLY_IMAGE:-ghcr.io/ogb4n/rallly:preprod}
+    # L'image n'est publiée qu'en amd64 : émulée sur un Mac Apple
+    platform: linux/amd64
+    # Rallly ne lit pas de fichiers de secrets : on source celui que init a écrit
+    command: ["sh", "-c", ". /secrets/env && exec ./docker-start.sh"]
     environment:
-      DATABASE_URL: postgres://rallly:rallly@rallly-db:5432/rallly
-      NEXT_PUBLIC_BASE_URL: https://rallly.${DOMAIN}
-      SECRET_PASSWORD: ${RALLLY_SECRET_PASSWORD:?}
+      NEXT_PUBLIC_BASE_URL: https://rallly.${DOMAIN:-m2.localhost}
       SUPPORT_EMAIL: support@preprod.example
       NOREPLY_EMAIL: noreply@preprod.example
       # Sans SMTP, Rallly n'envoie pas le code de connexion
@@ -152,22 +229,30 @@ services:
       SMTP_PORT: 1025
       SMTP_SECURE: "false"
       OIDC_NAME: Authelia
-      OIDC_DISCOVERY_URL: https://auth.${DOMAIN}/.well-known/openid-configuration
+      OIDC_DISCOVERY_URL: https://auth.${DOMAIN:-m2.localhost}/.well-known/openid-configuration
       OIDC_CLIENT_ID: rallly
-      OIDC_CLIENT_SECRET: ${RALLLY_OIDC_CLIENT_SECRET:?}
+      # La CA locale signe le certificat d'Authelia vu depuis le réseau Docker
+      NODE_EXTRA_CA_CERTS: /ca/ca.pem
       # Seule une session Authelia permet de voter, l'identité du votant vient de l'IdP
       REQUIRE_AUTH_TO_VOTE: "true"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.rallly.rule: Host(`rallly.${DOMAIN}`)
+      traefik.http.routers.rallly.rule: Host(`rallly.${DOMAIN:-m2.localhost}`)
       traefik.http.services.rallly.loadbalancer.server.port: "3000"
     depends_on:
+      init:
+        condition: service_completed_successfully
       rallly-db:
         condition: service_healthy
       authelia:
         condition: service_healthy
-      # garage:
-      #   condition: service_started
+    volumes:
+      - <<: *secrets-volume
+        target: /secrets
+        volume: { subpath: rallly }
+      - <<: *secrets-volume
+        target: /ca
+        volume: { subpath: ca-public }
     networks: [proxy, backend]
 
   garage:
@@ -177,11 +262,17 @@ services:
       - no-new-privileges:true
     environment:
       # Hors de garage.toml pour ne pas committer le secret RPC
-      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?}
+      GARAGE_RPC_SECRET_FILE: /secrets/rpc_secret
+    depends_on:
+      init:
+        condition: service_completed_successfully
     volumes:
       - ./garage.toml:/etc/garage.toml:ro
       - garage_meta:/var/lib/garage/meta
       - garage_data:/var/lib/garage/data
+      - <<: *secrets-volume
+        target: /secrets
+        volume: { subpath: garage }
     networks: [backend]
 
   mailpit:
@@ -190,12 +281,11 @@ services:
     restart: unless-stopped
     labels:
       traefik.enable: "true"
-      traefik.http.routers.mailpit.rule: Host(`mail.${DOMAIN}`)
+      traefik.http.routers.mailpit.rule: Host(`mail.${DOMAIN:-m2.localhost}`)
       traefik.http.routers.mailpit.middlewares: authelia@docker
       traefik.http.services.mailpit.loadbalancer.server.port: "8025"
     # proxy : Traefik doit joindre l'UI ; backend : Authelia et Rallly y envoient leurs mails
     networks: [proxy, backend]
-
 
   # Profil "tunnel" : démarre seulement une fois CLOUDFLARE_TUNNEL_TOKEN posé dans .env
   cloudflared:
@@ -223,6 +313,7 @@ networks:
     internal: true
 
 volumes:
+  secrets:
   authelia_db:
   rallly_db:
   garage_meta:
