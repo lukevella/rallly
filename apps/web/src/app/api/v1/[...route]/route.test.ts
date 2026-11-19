@@ -3237,6 +3237,7 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: new Date("2025-01-10T10:00:00Z"),
+        token: "alice-token",
         votes: [
           {
             type: "yes",
@@ -3266,6 +3267,7 @@ describe("API v1 - /polls", () => {
         name: "Bob",
         email: null,
         createdAt: new Date("2025-01-10T11:00:00Z"),
+        token: "bob-token",
         votes: [],
       },
     ];
@@ -3308,6 +3310,7 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: "2025-01-10T10:00:00.000Z",
+        editUrl: "https://example.com/invite/test-poll-id?token=alice-token",
         availability: aliceAvailability,
       });
       expect(json.data[1].availability).toEqual([]);
@@ -3401,6 +3404,7 @@ describe("API v1 - /polls", () => {
       name: "Alice",
       email: "alice@example.com",
       createdAt: new Date("2025-01-10T10:00:00Z"),
+      token: "alice-token",
       votes: [
         {
           type: "yes",
@@ -3429,6 +3433,7 @@ describe("API v1 - /polls", () => {
         name: "Alice",
         email: "alice@example.com",
         createdAt: "2025-01-10T10:00:00.000Z",
+        editUrl: "https://example.com/invite/test-poll-id?token=alice-token",
         availability: [
           {
             start: "2025-01-15T00:00:00.000Z",

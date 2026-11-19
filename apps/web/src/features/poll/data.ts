@@ -159,6 +159,7 @@ const apiParticipantSelect = {
   name: true,
   email: true,
   createdAt: true,
+  token: true,
   votes: {
     select: {
       type: true,
