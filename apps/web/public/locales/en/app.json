@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Invite for {email} removed",
   "shareDialogInviteSent": "Invite sent to {email}",
   "shareDialogInvitesLoadFailed": "Couldn't load invites",
+  "shareDialogMonthlyLimit": "This space has reached its invite limit for the month",
   "shareDialogNoInvitesDescription": "Enter an address above to send the first invite.",
   "shareDialogNoInvitesTitle": "No one invited yet",
   "shareDialogPersonalLinkCopied": "Personal link for {email} copied",
