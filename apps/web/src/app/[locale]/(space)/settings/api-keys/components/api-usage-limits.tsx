@@ -3,9 +3,9 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import { Link } from "@/components/link";
 import {
+  API_DOCS_URL,
   API_RATE_LIMIT_PER_DAY,
   API_RATE_LIMIT_PER_MINUTE,
-  getApiDocsPath,
 } from "@/features/api-keys/constants";
 import { Trans } from "@/i18n/client";
 
@@ -39,7 +39,7 @@ export function ApiUsageLimits() {
         </div>
       </div>
       <Link
-        href={getApiDocsPath()}
+        href={API_DOCS_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1 text-primary text-sm underline-offset-4 hover:underline"

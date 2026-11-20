@@ -12,8 +12,8 @@ import {
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
 import {
+  API_DOCS_URL,
   API_RATE_LIMIT_PER_MINUTE,
-  getApiDocsPath,
 } from "@/features/api-keys/constants";
 import { showPayWall } from "@/features/billing/client";
 import { Trans } from "@/i18n/client";
@@ -47,7 +47,7 @@ export function ApiAccessUpgrade() {
           <Trans i18nKey="upgradeToPro" defaults="Upgrade to Pro" />
         </Button>
         <Link
-          href={getApiDocsPath()}
+          href={API_DOCS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className={buttonVariants()}

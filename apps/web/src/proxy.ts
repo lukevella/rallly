@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getApiDocsPath } from "@/features/api-keys/constants";
+import { API_DOCS_URL } from "@/features/api-keys/constants";
 import { setRefCookie } from "@/lib/acquisition";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 import {
@@ -63,7 +63,7 @@ function handleApiHost(req: NextRequest) {
   if (nextUrl.pathname === "/") {
     return NextResponse.json({
       baseUrl: new URL("/v1", apiBaseUrl).href,
-      docs: getApiDocsPath(),
+      docs: API_DOCS_URL,
     });
   }
 
@@ -71,7 +71,7 @@ function handleApiHost(req: NextRequest) {
     {
       error: {
         code: "NOT_FOUND",
-        message: `No route matches ${req.method} ${nextUrl.pathname}. See ${getApiDocsPath()}`,
+        message: `No route matches ${req.method} ${nextUrl.pathname}. See ${API_DOCS_URL}`,
       },
     },
     { status: 404 },
