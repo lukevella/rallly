@@ -232,7 +232,7 @@ export default async function Page(props: {
               components={[
                 <LinkBase
                   key="pricing"
-                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  className="text-foreground underline underline-offset-2 hover:text-muted-foreground"
                   href="/pricing"
                 />,
               ]}
@@ -290,7 +290,7 @@ export default async function Page(props: {
               components={[
                 <LinkBase
                   key="privacy"
-                  className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                  className="text-foreground underline underline-offset-2 hover:text-muted-foreground"
                   href="/privacy-policy"
                 />,
               ]}

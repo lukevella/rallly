@@ -21,7 +21,7 @@ export function CompareTableHeader({
   return (
     <thead
       className={cn(
-        "sticky top-(--site-header-height,0px) z-10 bg-gray-100 [&_th]:shadow-[inset_0_-1px_0_var(--color-border)]",
+        "sticky top-(--site-header-height,0px) z-10 bg-page [&_th]:shadow-[inset_0_-1px_0_var(--color-border)]",
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ export function CompareTableHead({
   return (
     <th
       className={cn(
-        "w-1/5 px-4 py-4 text-left font-medium text-base text-gray-800",
+        "w-1/5 px-4 py-4 text-left font-medium text-base text-foreground",
         className,
       )}
       {...props}
@@ -51,7 +51,10 @@ export function CompareTableFeature({
   return (
     <th
       scope="row"
-      className={cn("py-4 pr-4 text-left font-normal text-gray-600", className)}
+      className={cn(
+        "py-4 pr-4 text-left font-normal text-muted-foreground",
+        className,
+      )}
       {...props}
     />
   );
@@ -63,7 +66,10 @@ export function CompareTableCell({
 }: React.ComponentProps<"td">) {
   return (
     <td
-      className={cn("px-4 py-4 text-gray-800 sm:whitespace-nowrap", className)}
+      className={cn(
+        "px-4 py-4 text-foreground sm:whitespace-nowrap",
+        className,
+      )}
       {...props}
     />
   );
@@ -75,7 +81,7 @@ export function CompareTableFeatureName({
 }: React.ComponentProps<"span">) {
   return (
     <span
-      className={cn("block font-normal text-gray-800", className)}
+      className={cn("block font-normal text-foreground", className)}
       {...props}
     />
   );
@@ -86,7 +92,13 @@ export function CompareTableFeatureDescription({
   ...props
 }: React.ComponentProps<"p">) {
   return (
-    <p className={cn("mt-0.5 text-gray-500 text-xs", className)} {...props} />
+    <p
+      className={cn(
+        "mt-0.5 text-gray-500 text-xs dark:text-gray-400",
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
@@ -102,12 +114,12 @@ export function CompareTableSection({
         scope="colgroup"
         colSpan={3}
         className={cn(
-          "pt-8 pb-3 text-left font-medium text-base text-gray-800",
+          "pt-8 pb-3 text-left font-medium text-base text-foreground",
           className,
         )}
         {...props}
       >
-        <span className="flex items-center gap-x-2 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-gray-400">
+        <span className="flex items-center gap-x-2 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-gray-400 dark:[&_svg]:text-gray-500">
           {icon}
           {children}
         </span>
@@ -119,7 +131,10 @@ export function CompareTableSection({
 export function CompareTableCheck({ label }: { label: string }) {
   return (
     <>
-      <CircleCheckIcon className="size-4 text-green-600" aria-hidden="true" />
+      <CircleCheckIcon
+        className="size-4 text-green-600 dark:text-green-500"
+        aria-hidden="true"
+      />
       <span className="sr-only">{label}</span>
     </>
   );
@@ -128,7 +143,10 @@ export function CompareTableCheck({ label }: { label: string }) {
 export function CompareTableDash({ label }: { label: string }) {
   return (
     <>
-      <XIcon className="size-4 text-gray-400" aria-hidden="true" />
+      <XIcon
+        className="size-4 text-gray-400 dark:text-gray-500"
+        aria-hidden="true"
+      />
       <span className="sr-only">{label}</span>
     </>
   );

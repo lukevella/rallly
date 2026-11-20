@@ -89,7 +89,10 @@ export default async function Page(props: {
       <JsonLd data={articleSchema} />
       <Section>
         <nav className="flex items-center gap-2 text-sm">
-          <LinkBase href="/blog" className="text-gray-500 hover:text-gray-800">
+          <LinkBase
+            href="/blog"
+            className="text-gray-500 hover:text-foreground dark:text-gray-400"
+          >
             <Trans
               t={t}
               i18n={i18n}
@@ -100,23 +103,26 @@ export default async function Page(props: {
           </LinkBase>
           {post.category ? (
             <>
-              <span aria-hidden="true" className="text-gray-400">
+              <span
+                aria-hidden="true"
+                className="text-gray-400 dark:text-gray-500"
+              >
                 /
               </span>
-              <span className="text-gray-800">
+              <span className="text-foreground">
                 {categoryLabels[post.category] ?? post.category}
               </span>
             </>
           ) : null}
         </nav>
-        <h1 className="mt-8 max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
+        <h1 className="mt-8 max-w-2xl text-balance font-medium text-3xl text-foreground tracking-tight sm:text-4xl">
           {post.title}
         </h1>
         <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
           <aside className="lg:sticky lg:top-[calc(var(--site-header-height,61px)+2rem)] lg:order-2 lg:w-56 lg:shrink-0">
             <dl className="flex flex-wrap gap-x-12 gap-y-6 lg:flex-col">
               <div>
-                <dt className="text-gray-500 text-sm">
+                <dt className="text-gray-500 text-sm dark:text-gray-400">
                   <Trans
                     t={t}
                     i18n={i18n}
@@ -125,12 +131,12 @@ export default async function Page(props: {
                     defaults="Published on"
                   />
                 </dt>
-                <dd className="mt-1 text-gray-800">
+                <dd className="mt-1 text-foreground">
                   <DateFormatter dateString={post.date} />
                 </dd>
               </div>
               <div>
-                <dt className="text-gray-500 text-sm">
+                <dt className="text-gray-500 text-sm dark:text-gray-400">
                   <Trans
                     t={t}
                     i18n={i18n}
@@ -148,7 +154,7 @@ export default async function Page(props: {
                     alt=""
                   />
                   <Link
-                    className="text-gray-800 hover:underline"
+                    className="text-foreground hover:underline"
                     href="https://twitter.com/imlukevella"
                   >
                     Luke Vella

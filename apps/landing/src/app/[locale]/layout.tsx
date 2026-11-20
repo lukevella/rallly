@@ -3,6 +3,7 @@ import "./globals.css";
 import languages from "@rallly/languages";
 import { PostHogInit } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
+import { ThemeProvider } from "@rallly/ui/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { domAnimation, LazyMotion } from "motion/react";
 import type { Metadata, Viewport } from "next";
@@ -44,12 +45,16 @@ export default async function Root(props: {
     <html
       lang={locale}
       className={cn(sans.className, display.variable, "overflow-x-clip")}
+      // next-themes sets the theme class before hydration
+      suppressHydrationWarning
     >
       <body>
-        <LazyMotion features={domAnimation}>
-          <PostHogInit>{children}</PostHogInit>
-          <Analytics />
-        </LazyMotion>
+        <ThemeProvider>
+          <LazyMotion features={domAnimation}>
+            <PostHogInit>{children}</PostHogInit>
+            <Analytics />
+          </LazyMotion>
+        </ThemeProvider>
       </body>
     </html>
   );

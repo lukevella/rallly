@@ -64,7 +64,7 @@ export function SiteHeader({
       data-scrolled={stuck || undefined}
       data-top={stuck === false || undefined}
       className={cn(
-        "sticky -top-4 z-20 border-transparent border-b bg-gray-100 pt-4 transition-[border-color] data-scrolled:border-gray-200 data-top:bg-transparent",
+        "sticky -top-4 z-20 border-transparent border-b bg-page pt-4 transition-[border-color] data-scrolled:border-border data-top:bg-transparent",
         className,
       )}
       {...props}

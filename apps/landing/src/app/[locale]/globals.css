@@ -25,8 +25,22 @@
   }
 }
 
+/* The page sits a step below its cards: gray in light mode, the app's base
+ * background in dark mode, where cards are lighter than the page. */
+:root {
+  --page: var(--color-gray-100);
+}
+
+.dark {
+  --page: var(--background);
+}
+
+@theme inline {
+  --color-page: var(--page);
+}
+
 body {
-  @apply bg-gray-100;
+  @apply bg-page;
 }
 
 @theme {
@@ -46,19 +60,19 @@ h2 {
     @apply mb-4 mt-8;
   }
   h2 {
-    @apply scroll-mt-24 text-2xl font-medium tracking-tight text-gray-800;
+    @apply scroll-mt-24 text-2xl font-medium tracking-tight text-foreground;
   }
   h3 {
-    @apply text-xl font-medium tracking-tight text-gray-800;
+    @apply text-xl font-medium tracking-tight text-foreground;
   }
   h4 {
-    @apply text-lg font-medium tracking-tight text-gray-800;
+    @apply text-lg font-medium tracking-tight text-foreground;
   }
   p {
     @apply mb-6 leading-relaxed;
   }
   p:has(> img) {
-    @apply flex items-center justify-center overflow-hidden rounded-xl border bg-gray-50 p-2;
+    @apply flex items-center justify-center overflow-hidden rounded-xl border bg-muted p-2;
   }
   img {
     @apply mx-auto rounded-lg border;
@@ -83,19 +97,19 @@ h2 {
     @apply mb-6 w-full text-left text-sm;
   }
   th {
-    @apply border-b border-gray-200 py-2 pr-4 font-medium text-gray-800;
+    @apply border-b border-border py-2 pr-4 font-medium text-foreground;
   }
   td {
-    @apply border-b border-gray-100 py-2 pr-4 align-top;
+    @apply border-b border-border-muted py-2 pr-4 align-top;
   }
   a {
     @apply text-primary hover:underline;
   }
   blockquote {
-    @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700;
+    @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700 dark:border-gray-600 dark:text-gray-300;
   }
   pre {
-    @apply my-6 overflow-x-auto rounded-lg border bg-gray-50 p-4;
+    @apply my-6 overflow-x-auto rounded-lg border bg-muted p-4;
   }
   code {
     @apply rounded px-1 py-0.5;
@@ -154,14 +168,22 @@ h2 {
   }
 }
 
+:root {
+  --plan-card-rest: var(--color-indigo-200);
+}
+
+.dark {
+  --plan-card-rest: var(--color-indigo-900);
+}
+
 .plan-card-featured {
   background: conic-gradient(
     from var(--plan-card-angle),
-    var(--color-indigo-200) 0deg,
+    var(--plan-card-rest) 0deg,
     var(--color-indigo-600) 60deg,
     var(--color-fuchsia-400) 120deg,
-    var(--color-indigo-200) 180deg,
-    var(--color-indigo-200) 360deg
+    var(--plan-card-rest) 180deg,
+    var(--plan-card-rest) 360deg
   );
   animation: plan-card-border-spin 4s linear infinite;
 }

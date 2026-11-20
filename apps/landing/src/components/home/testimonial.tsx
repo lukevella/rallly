@@ -24,7 +24,9 @@ export function Testimonial({
         {logo}
         <div>
           <div className="font-semibold">{name}</div>
-          <div className="text-balance text-gray-600 text-sm">{title}</div>
+          <div className="text-balance text-muted-foreground text-sm">
+            {title}
+          </div>
         </div>
         {avatar}
       </div>

@@ -1,7 +1,9 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { useTheme } from "@rallly/ui/theme-provider";
 import * as React from "react";
+import { readInk } from "@/lib/canvas-ink";
 
 // Geometry in units of half the canvas height. The parent fades the canvas
 // to transparent at its own edges, so the drawing dissolves top and bottom
@@ -32,19 +34,6 @@ function easeInOut(t: number) {
   return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 }
 
-// Computed colours arrive in whatever space Tailwind used (lab, oklch), so
-// let the canvas resolve the text colour to sRGB rather than parsing it.
-function readInk(element: HTMLElement) {
-  const probe = document.createElement("canvas").getContext("2d");
-  if (!probe) {
-    return "63, 63, 70";
-  }
-  probe.fillStyle = getComputedStyle(element).color;
-  probe.fillRect(0, 0, 1, 1);
-  const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
-  return `${r}, ${g}, ${b}`;
-}
-
 /**
  * Decorative perimeter: a dotted boundary around a quiet grid, with particles
  * that approach from outside and stop at the edge. Drawn in the element's
@@ -53,7 +42,9 @@ function readInk(element: HTMLElement) {
  */
 export function Perimeter({ className }: { className?: string }) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const { resolvedTheme } = useTheme();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: resolvedTheme re-reads the ink after a theme change
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -270,7 +261,7 @@ export function Perimeter({ className }: { className?: string }) {
       document.removeEventListener("visibilitychange", onVisibility);
       reduceMotionQuery.removeEventListener("change", onMotionChange);
     };
-  }, []);
+  }, [resolvedTheme]);
 
   return (
     <canvas ref={canvasRef} className={cn("block size-full", className)} />

@@ -31,7 +31,7 @@ export function ContentGridTitle({
   return (
     <h3
       className={cn(
-        "flex items-center gap-x-2.5 font-medium text-base text-gray-800 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-gray-500",
+        "flex items-center gap-x-2.5 font-medium text-base text-foreground [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-gray-500 dark:[&_svg]:text-gray-400",
         className,
       )}
       {...props}
@@ -46,7 +46,7 @@ export function ContentGridDescription({
   return (
     <p
       className={cn(
-        "mt-2 text-pretty text-gray-500 text-sm leading-relaxed",
+        "mt-2 text-pretty text-gray-500 text-sm leading-relaxed dark:text-gray-400",
         className,
       )}
       {...props}

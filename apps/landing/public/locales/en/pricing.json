@@ -4,7 +4,6 @@
   "apiAccess": "API access",
   "apiAccessDescription": "Create polls and read results from your own systems. <a>Read the API docs</a>",
   "apiAndWebhooks": "API and webhooks",
-  "basicPolls": "Basic polls",
   "branding": "Branding",
   "cancelSubscription": "How do I cancel my subscription?",
   "cancelSubscriptionAnswer": "You can cancel your subscription at any time by going to your <a>billing settings</a>. Once you cancel your subscription, you will still have access to your paid plan until the end of your billing period. After that, you will be downgraded to a free plan.",

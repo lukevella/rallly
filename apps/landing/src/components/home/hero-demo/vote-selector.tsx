@@ -18,7 +18,7 @@ export const VoteSelector = ({
 }) => {
   const [value, setValue] = React.useState(defaultValue);
   return (
-    <div className="flex h-8 w-24 shrink-0 items-center rounded-lg border border-gray-200/60 bg-gray-100 p-0.5">
+    <div className="flex h-8 w-24 shrink-0 items-center rounded-lg border border-border/60 bg-muted p-0.5">
       {(["yes", "ifNeedBe", "no"] as const).map((vote) => {
         const isSelected = vote === value;
         return (
@@ -26,7 +26,7 @@ export const VoteSelector = ({
             key={vote}
             className={cn(
               "group flex h-full flex-1 cursor-pointer items-center justify-center rounded-md has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-indigo-500",
-              isSelected && "bg-white shadow-sm",
+              isSelected && "bg-card shadow-sm",
             )}
           >
             <input
@@ -44,7 +44,7 @@ export const VoteSelector = ({
               vote={vote}
               className={cn(
                 !isSelected &&
-                  "text-gray-400 opacity-50 transition-opacity group-hover:opacity-100",
+                  "text-gray-400 opacity-50 transition-opacity group-hover:opacity-100 dark:text-gray-500",
               )}
             />
           </label>

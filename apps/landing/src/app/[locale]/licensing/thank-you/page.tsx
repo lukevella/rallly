@@ -17,7 +17,20 @@ export default async function LicensingThankYouPage(props: {
       <div className="relative z-10 mx-auto w-full max-w-2xl space-y-6">
         <div className="py-4">
           <LinkBase className="inline-block rounded-sm" href="/">
-            <Image src="/logo.svg" width={150} height={30} alt="rallly.co" />
+            <Image
+              src="/logo.svg"
+              width={150}
+              height={30}
+              alt="rallly.co"
+              className="dark:hidden"
+            />
+            <Image
+              src="/logo-dark.svg"
+              width={150}
+              height={30}
+              alt="rallly.co"
+              className="hidden dark:block"
+            />
           </LinkBase>
         </div>
         <div className="space-y-4">

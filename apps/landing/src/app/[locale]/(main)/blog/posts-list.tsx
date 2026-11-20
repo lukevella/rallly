@@ -29,8 +29,8 @@ function FilterPill({
       className={cn(
         "rounded-full border px-3.5 py-1.5 text-sm transition-colors",
         active
-          ? "border-gray-300 bg-gray-200/50 text-gray-800"
-          : "bg-white text-gray-600 hover:border-gray-300",
+          ? "border-gray-300 bg-gray-200/50 text-foreground dark:border-gray-600 dark:bg-gray-700/50"
+          : "bg-card text-muted-foreground hover:border-gray-300 dark:hover:border-gray-600",
       )}
     >
       {children}

@@ -46,7 +46,13 @@ export default async function Root(props: {
                 src="/logo.svg"
                 fill
                 alt="rallly.co"
-                className="object-contain"
+                className="object-contain dark:hidden"
+              />
+              <Image
+                src="/logo-dark.svg"
+                fill
+                alt="rallly.co"
+                className="hidden object-contain dark:block"
               />
             </LinkBase>
             <nav className="hidden items-center gap-2 lg:flex">

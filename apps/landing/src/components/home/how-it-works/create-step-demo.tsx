@@ -57,15 +57,15 @@ export const CreateStepDemo = ({ playback }: { playback: Playback }) => {
     <>
       <DemoScreen className="space-y-2 p-4">
         <div className="space-y-1.5">
-          <div className="h-1.5 w-8 rounded-full bg-gray-300" />
-          <div className="flex h-6 items-center rounded-md border border-gray-200 px-2">
-            <div className="h-1.5 w-24 rounded-full bg-gray-300" />
+          <div className="h-1.5 w-8 rounded-full bg-gray-300 dark:bg-gray-600" />
+          <div className="flex h-6 items-center rounded-md border border-border px-2">
+            <div className="h-1.5 w-24 rounded-full bg-gray-300 dark:bg-gray-600" />
           </div>
         </div>
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <div className="h-1.5 w-14 rounded-full bg-gray-300" />
-            <div className="h-1.5 w-10 rounded-full bg-gray-200" />
+            <div className="h-1.5 w-14 rounded-full bg-gray-300 dark:bg-gray-600" />
+            <div className="h-1.5 w-10 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
           <div className="grid grid-cols-7 gap-1">
             {Array.from({ length: 7 }, (_, index) => (
@@ -74,7 +74,7 @@ export const CreateStepDemo = ({ playback }: { playback: Playback }) => {
                 key={index}
                 className="flex justify-center py-0.5"
               >
-                <div className="h-1 w-2 rounded-full bg-gray-200" />
+                <div className="h-1 w-2 rounded-full bg-gray-200 dark:bg-gray-700" />
               </div>
             ))}
             {Array.from({ length: WEEKS * 7 }, (_, index) => {
@@ -92,7 +92,7 @@ export const CreateStepDemo = ({ playback }: { playback: Playback }) => {
                   <div
                     // biome-ignore lint/suspicious/noArrayIndexKey: calendar cells are positional
                     key={index}
-                    className="h-3.5 rounded bg-gray-100"
+                    className="h-3.5 rounded bg-muted"
                   />
                 );
               }
@@ -106,8 +106,8 @@ export const CreateStepDemo = ({ playback }: { playback: Playback }) => {
                   className={cn(
                     "h-3.5 rounded transition-colors ease-[cubic-bezier(0.23,1,0.32,1)]",
                     on
-                      ? "bg-gray-300 duration-220"
-                      : "bg-gray-100 duration-180",
+                      ? "bg-gray-300 duration-220 dark:bg-gray-600"
+                      : "bg-muted duration-180",
                     instant && "duration-0",
                   )}
                   style={{
@@ -133,7 +133,7 @@ export const CreateStepDemo = ({ playback }: { playback: Playback }) => {
             })}
           </div>
         </div>
-        <div className="flex justify-end border-gray-200/60 border-t pt-2">
+        <div className="flex justify-end border-border/60 border-t pt-2">
           <div ref={submitRef}>
             <PressButton
               playback={playback}

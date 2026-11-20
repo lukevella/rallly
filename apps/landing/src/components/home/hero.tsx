@@ -23,11 +23,11 @@ export function HeroAnnouncement({
         aria-hidden="true"
       />
       <span className="sr-only">{badge} </span>
-      <span className="text-gray-500 transition-colors group-hover:text-gray-800">
+      <span className="text-gray-500 transition-colors group-hover:text-foreground dark:text-gray-400">
         {children}
       </span>
       <ArrowRightIcon
-        className="ml-1.5 inline size-3.5 align-[-2px] text-gray-400 transition-transform group-hover:translate-x-0.5 group-active:translate-x-0.5"
+        className="ml-1.5 inline size-3.5 align-[-2px] text-gray-400 transition-transform group-hover:translate-x-0.5 group-active:translate-x-0.5 dark:text-gray-500"
         aria-hidden="true"
       />
     </LinkBase>
@@ -67,7 +67,7 @@ export function Hero({
       ) : null}
       <h1
         className={cn(
-          "max-w-[700px] text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-[2.75rem]/none",
+          "max-w-[700px] text-balance font-medium text-3xl text-foreground tracking-tight sm:text-[2.75rem]/none",
           centered && "mx-auto",
         )}
       >
@@ -75,7 +75,7 @@ export function Hero({
       </h1>
       <p
         className={cn(
-          "mt-4 text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed",
+          "mt-4 text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed dark:text-gray-400",
           wideDescription ? "max-w-[760px]" : "max-w-[620px]",
           centered && "mx-auto",
           descriptionClassName,

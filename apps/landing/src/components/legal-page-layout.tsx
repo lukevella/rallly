@@ -67,7 +67,7 @@ export function LegalPageLayout({
   const { items, content } = indexHeadings(children);
   return (
     <>
-      <h1 className="max-w-2xl text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-4xl">
+      <h1 className="max-w-2xl text-balance font-medium text-3xl text-foreground tracking-tight sm:text-4xl">
         {title}
       </h1>
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
@@ -79,8 +79,10 @@ export function LegalPageLayout({
           ) : null}
           <dl className="flex flex-wrap gap-x-12 gap-y-6 lg:flex-col">
             <div>
-              <dt className="text-gray-500 text-sm">Last updated</dt>
-              <dd className="mt-1 text-gray-800">
+              <dt className="text-gray-500 text-sm dark:text-gray-400">
+                Last updated
+              </dt>
+              <dd className="mt-1 text-foreground">
                 <DateFormatter dateString={lastUpdated} />
               </dd>
             </div>

@@ -70,7 +70,7 @@ export const DecideStepDemo = ({ playback }: { playback: Playback }) => {
             // A gradient cannot live in border-color, so the edge is a padded
             // backdrop behind the surface. Every row keeps the same shape, and
             // the winner's gradient edge cross-fades over the grey one.
-            className="relative rounded-md bg-gray-200 p-px"
+            className="relative rounded-md bg-gray-200 p-px dark:bg-gray-700"
           >
             {row.winner ? (
               <m.div
@@ -83,7 +83,7 @@ export const DecideStepDemo = ({ playback }: { playback: Playback }) => {
                 transition={accentIn}
               />
             ) : null}
-            <div className="relative overflow-hidden rounded-[5px] bg-white">
+            <div className="relative overflow-hidden rounded-[5px] bg-card">
               {row.winner ? (
                 <m.div
                   className={cn("pointer-events-none absolute inset-0", ACCENT)}
@@ -94,7 +94,7 @@ export const DecideStepDemo = ({ playback }: { playback: Playback }) => {
               ) : null}
               <div className="relative flex items-center justify-between gap-3 px-2.5 py-2">
                 <div className="min-w-0 space-y-1.5">
-                  <div className="relative h-1.5 w-16 overflow-hidden rounded-full bg-gray-300">
+                  <div className="relative h-1.5 w-16 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-600">
                     {row.winner ? (
                       <m.div
                         className={cn("absolute inset-0", ACCENT)}
@@ -105,7 +105,7 @@ export const DecideStepDemo = ({ playback }: { playback: Playback }) => {
                     ) : null}
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-10 rounded-full bg-gray-200" />
+                    <div className="h-1.5 w-10 rounded-full bg-gray-200 dark:bg-gray-700" />
                     {row.winner ? (
                       <m.div
                         className={cn("h-1.5 w-12 rounded-full", ACCENT)}
