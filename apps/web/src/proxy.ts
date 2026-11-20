@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getApiDocsPath } from "@/features/api-keys/constants";
 import { setRefCookie } from "@/lib/acquisition";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 import {
@@ -50,8 +51,6 @@ async function handleMaintenance(req: NextRequest) {
 // opens a database connection per request for a response with no body.
 const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+(?:\/vote)?\/?$/;
 
-const API_DOCS_URL = "https://support.rallly.co/api-reference/introduction";
-
 // The API host shares this deployment, so without this every app page would
 // render there too. `/v1` and `/api` never reach the proxy (see the matcher),
 // so whatever does is a path the API does not serve.
@@ -64,7 +63,7 @@ function handleApiHost(req: NextRequest) {
   if (nextUrl.pathname === "/") {
     return NextResponse.json({
       baseUrl: new URL("/v1", apiBaseUrl).href,
-      docs: API_DOCS_URL,
+      docs: getApiDocsPath(),
     });
   }
 
@@ -72,7 +71,7 @@ function handleApiHost(req: NextRequest) {
     {
       error: {
         code: "NOT_FOUND",
-        message: `No route matches ${req.method} ${nextUrl.pathname}. See ${API_DOCS_URL}`,
+        message: `No route matches ${req.method} ${nextUrl.pathname}. See ${getApiDocsPath()}`,
       },
     },
     { status: 404 },
