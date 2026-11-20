@@ -170,7 +170,7 @@ The stack bundles Traefik for TLS termination. To put Rallly behind your own rev
 
 ### External database
 
-The stack bundles a PostgreSQL container that works out of the box. Set `DATABASE_URL` in `.env` to point at an external Postgres instead (RDS, Supabase, Neon, etc.) — the bundled `db` container is skipped automatically when this variable is set.
+The stack bundles a PostgreSQL container that works out of the box. Set `DATABASE_URL` in `.env` to point at an external Postgres instead (RDS, Supabase, Neon, [Prisma Postgres](https://www.prisma.io/postgres), etc.) — the bundled `db` container is skipped automatically when this variable is set.
 
 <ParamField path="DATABASE_URL">
   Postgres connection string. Leave unset to use the bundled database. Example: `postgres://user:password@db.example.com:5432/rallly`.
