@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { API_DOCS_URL } from "@/features/api-keys/constants";
 import { setRefCookie } from "@/lib/acquisition";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 import {
@@ -50,7 +51,39 @@ async function handleMaintenance(req: NextRequest) {
 // opens a database connection per request for a response with no body.
 const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+(?:\/vote)?\/?$/;
 
+// The API host shares this deployment, so without this every app page would
+// render there too. `/v1` and `/api` never reach the proxy (see the matcher),
+// so whatever does is a path the API does not serve.
+function handleApiHost(req: NextRequest) {
+  const apiBaseUrl = process.env.API_BASE_URL;
+  if (!apiBaseUrl) return null;
+  const { nextUrl } = req;
+  if (nextUrl.hostname !== new URL(apiBaseUrl).hostname) return null;
+
+  if (nextUrl.pathname === "/") {
+    return NextResponse.json({
+      baseUrl: new URL("/v1", apiBaseUrl).href,
+      docs: API_DOCS_URL,
+    });
+  }
+
+  return NextResponse.json(
+    {
+      error: {
+        code: "NOT_FOUND",
+        message: `No route matches ${req.method} ${nextUrl.pathname}. See ${API_DOCS_URL}`,
+      },
+    },
+    { status: 404 },
+  );
+}
+
 export const proxy = async (req: NextRequest) => {
+  const apiHostResponse = handleApiHost(req);
+  if (apiHostResponse) {
+    return apiHostResponse;
+  }
+
   const { nextUrl } = req;
   const newUrl = nextUrl.clone();
   const pathname = newUrl.pathname;

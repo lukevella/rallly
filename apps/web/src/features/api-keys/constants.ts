@@ -23,5 +23,5 @@ export const API_RATE_LIMIT_PER_DAY = 5000;
  * The API reference lives in the docs site, generated from `/api/v1/openapi`
  * by `scripts/generate-openapi.ts`. v1 has no in-app docs page.
  */
-export const getApiDocsPath = () =>
+export const API_DOCS_URL =
   "https://support.rallly.co/api-reference/introduction";
