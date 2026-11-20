@@ -169,7 +169,7 @@ test.describe("invite ballot", () => {
   }) => {
     await seedPoll({ id: "ballot-spec-token" });
     const first = await freshPage(browser);
-    await first.page.goto("/invite/ballot-spec-token/vote");
+    await first.page.goto("/invite/ballot-spec-token");
     await addParticipant(first.page, "Token Owner");
     await first.context.close();
 
@@ -178,9 +178,7 @@ test.describe("invite ballot", () => {
     });
 
     const { context, page } = await freshPage(browser);
-    await page.goto(
-      `/invite/ballot-spec-token/vote?token=${participant.token}`,
-    );
+    await page.goto(`/invite/ballot-spec-token?token=${participant.token}`);
     await expect(responseBar(page)).toContainText(
       "You responded as Token Owner",
     );
@@ -210,7 +208,7 @@ test.describe("invite ballot", () => {
   }) => {
     await seedPoll({ id: "ballot-spec-cancel" });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-cancel/vote");
+    await page.goto("/invite/ballot-spec-cancel");
     await addParticipant(page, "Canceller");
     await page.reload();
 
@@ -232,7 +230,7 @@ test.describe("invite ballot", () => {
   test("rename and delete from the response menu", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-manage" });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-manage/vote");
+    await page.goto("/invite/ballot-spec-manage");
     await addParticipant(page, "Before");
     await page.reload();
 
@@ -262,7 +260,7 @@ test.describe("invite ballot", () => {
       viewport: { width: 1440, height: 560 },
     });
     const page = await context.newPage();
-    await page.goto("/invite/ballot-spec-scroll/vote");
+    await page.goto("/invite/ballot-spec-scroll");
     await addParticipant(page, "Scroller");
     await page.reload();
     await answer(options(page).nth(1), "Yes");
@@ -280,7 +278,7 @@ test.describe("invite ballot", () => {
   test("shortcuts are only for a first response", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-shortcut" });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-shortcut/vote");
+    await page.goto("/invite/ballot-spec-shortcut");
     const yesToAll = page.getByRole("button", { name: "Yes to all" });
     await expect(yesToAll).toBeVisible();
 
@@ -294,7 +292,7 @@ test.describe("invite ballot", () => {
   test("the thanks gives way to the saved response", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-thanks" });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-thanks/vote");
+    await page.goto("/invite/ballot-spec-thanks");
     await addParticipant(page, "Thanked");
     // The thanks stands in for the form and the bar until it is left.
     await expect(responseBar(page)).toHaveCount(0);
@@ -308,7 +306,7 @@ test.describe("invite ballot", () => {
   test("hide participants still shows counts", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-hidden", hideParticipants: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-hidden/vote");
+    await page.goto("/invite/ballot-spec-hidden");
 
     await expect(page.getByTestId("ballot-tally").first()).toContainText(
       "1 available",
@@ -320,7 +318,7 @@ test.describe("invite ballot", () => {
   test("past times are hidden until asked for", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-past", withPastOption: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-past/vote");
+    await page.goto("/invite/ballot-spec-past");
 
     await expect(options(page)).toHaveCount(3);
 
@@ -345,7 +343,7 @@ test.describe("invite ballot", () => {
       },
     });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-all-past/vote");
+    await page.goto("/invite/ballot-spec-all-past");
 
     await expect(
       page.getByText("All of these times have passed"),
@@ -366,7 +364,7 @@ test.describe("invite ballot", () => {
       viewport: { width: 1440, height: 380 },
     });
     const page = await context.newPage();
-    await page.goto("/invite/ballot-spec-closed/vote");
+    await page.goto("/invite/ballot-spec-closed");
 
     const results = page.getByRole("group", { name: "Results" });
     await expect(results).toHaveAttribute("tabindex", "0");
@@ -381,7 +379,7 @@ test.describe("invite ballot", () => {
   test("clicking a row cycles its answer", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-row", allowTentativeVotes: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-row/vote");
+    await page.goto("/invite/ballot-spec-row");
 
     const option = options(page).first();
     await option.click();
@@ -398,7 +396,7 @@ test.describe("invite ballot", () => {
   test("answers are a radio group a keyboard can work", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-keyboard", allowTentativeVotes: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-keyboard/vote");
+    await page.goto("/invite/ballot-spec-keyboard");
 
     const option = options(page).first();
     await expect(option).toHaveAccessibleName(/\d/);
@@ -419,7 +417,7 @@ test.describe("invite ballot", () => {
       allowTentativeVotes: false,
     });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-no-tentative/vote");
+    await page.goto("/invite/ballot-spec-no-tentative");
 
     await expect(options(page).first().getByRole("radio")).toHaveCount(2);
     await context.close();
@@ -431,7 +429,7 @@ test.describe("invite ballot", () => {
       viewport: { width: 390, height: 560 },
     });
     const page = await context.newPage();
-    await page.goto("/invite/ballot-spec-focus/vote");
+    await page.goto("/invite/ballot-spec-focus");
     await page.getByRole("radio").first().waitFor({ state: "attached" });
     await page.getByRole("radio").first().focus();
     for (let stop = 0; stop < 6; stop++) {
@@ -459,7 +457,7 @@ test.describe("invite ballot", () => {
   test("help keeps unsaved answers", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-toggle" });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-toggle/vote");
+    await page.goto("/invite/ballot-spec-toggle");
 
     const option = options(page).first();
     await answer(option, "Yes");
@@ -483,7 +481,7 @@ test.describe("invite ballot", () => {
     await seedPoll({ id: "ballot-spec-prefill" });
 
     const guest = await freshPage(browser);
-    await guest.page.goto("/invite/ballot-spec-prefill/vote");
+    await guest.page.goto("/invite/ballot-spec-prefill");
     await answer(options(guest.page).nth(0), "Yes");
     await guest.page.getByRole("button", { name: "Continue" }).click();
     await expect(guest.page.getByLabel("Name")).toHaveValue("");
@@ -494,7 +492,7 @@ test.describe("invite ballot", () => {
 
     const member = await freshPage(browser);
     await loginWithEmail(member.page, { email });
-    await member.page.goto("/invite/ballot-spec-prefill/vote");
+    await member.page.goto("/invite/ballot-spec-prefill");
     await answer(options(member.page).nth(0), "Yes");
     await member.page.getByRole("button", { name: "Continue" }).click();
     await expect(member.page.getByLabel("Name")).toHaveValue("Ballot Member");
@@ -512,7 +510,7 @@ test.describe("invite ballot", () => {
   test("hide scores hides counts until responding", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-scores", hideScores: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-scores/vote");
+    await page.goto("/invite/ballot-spec-scores");
 
     await expect(options(page).first()).toBeVisible();
     await expect(page.getByTestId("ballot-tally")).toHaveCount(0);
@@ -539,7 +537,7 @@ test.describe("invite ballot", () => {
     });
 
     const participant = await freshPage(browser);
-    await participant.page.goto("/invite/ballot-spec-manage/vote");
+    await participant.page.goto("/invite/ballot-spec-manage");
     await expect(options(participant.page).first()).toBeVisible();
     await expect(
       participant.page.getByRole("link", { name: "Manage poll" }),
@@ -548,7 +546,7 @@ test.describe("invite ballot", () => {
 
     const creator = await freshPage(browser);
     await loginWithEmail(creator.page, { email });
-    await creator.page.goto("/invite/ballot-spec-manage/vote");
+    await creator.page.goto("/invite/ballot-spec-manage");
     const manage = creator.page.getByRole("link", { name: "Manage poll" });
     await expect(manage).toHaveAttribute("href", "/poll/ballot-spec-manage");
     await manage.click();
@@ -570,7 +568,7 @@ test.describe("invite ballot", () => {
       },
     });
     const { context, page } = await freshPage(browser);
-    await page.goto(`/invite/ballot-spec-open/vote?token=${token}`);
+    await page.goto(`/invite/ballot-spec-open?token=${token}`);
 
     await expect
       .poll(async () => {
@@ -620,7 +618,7 @@ test.describe("invite ballot", () => {
     });
 
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-scheduled/vote");
+    await page.goto("/invite/ballot-spec-scheduled");
 
     await page.getByRole("button", { name: "Add to calendar" }).click();
     await expect(
@@ -633,7 +631,7 @@ test.describe("invite ballot", () => {
   test("a shared link has a preview card", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-preview" });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-preview/vote");
+    await page.goto("/invite/ballot-spec-preview");
 
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
@@ -660,7 +658,7 @@ test.describe("invite ballot", () => {
       content: "Mornings suit me",
     });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-comment/vote");
+    await page.goto("/invite/ballot-spec-comment");
 
     const sheet = await openComments(page);
     await sheet.getByRole("textbox", { name: "Your name" }).fill("Guest");
@@ -716,7 +714,7 @@ test.describe("invite ballot", () => {
       content: "Someone else's comment",
     });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-comment-hidden/vote");
+    await page.goto("/invite/ballot-spec-comment-hidden");
 
     const sheet = await openComments(page);
     await expect(sheet.getByText("No comments yet")).toBeVisible();
@@ -735,7 +733,7 @@ test.describe("invite ballot", () => {
   test("comments turned off leave no comments button", async ({ browser }) => {
     await seedPoll({ id: "ballot-spec-no-comments", disableComments: true });
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-no-comments/vote");
+    await page.goto("/invite/ballot-spec-no-comments");
 
     await expect(options(page).first()).toBeVisible();
     await expect(
@@ -780,7 +778,7 @@ test.describe("invite ballot", () => {
     });
 
     const { context, page } = await freshPage(browser);
-    await page.goto("/invite/ballot-spec-comment-scheduled/vote");
+    await page.goto("/invite/ballot-spec-comment-scheduled");
 
     const sheet = await openComments(page);
     await expect(sheet.getByTestId("comment")).toContainText("See you there");
@@ -802,7 +800,7 @@ test.describe("invite ballot", () => {
     });
 
     const visitor = await freshPage(browser);
-    await visitor.page.goto("/invite/ballot-spec-comment-manage/vote");
+    await visitor.page.goto("/invite/ballot-spec-comment-manage");
     const visitorSheet = await openComments(visitor.page);
     await expect(visitorSheet.getByTestId("comment")).toContainText(
       "Spam to remove",
@@ -816,7 +814,7 @@ test.describe("invite ballot", () => {
 
     const manager = await freshPage(browser);
     await loginWithEmail(manager.page, { email });
-    await manager.page.goto("/invite/ballot-spec-comment-manage/vote");
+    await manager.page.goto("/invite/ballot-spec-comment-manage");
     const sheet = await openComments(manager.page);
     await sheet
       .getByRole("button", { name: "Delete comment by Other Person" })
@@ -835,7 +833,7 @@ test.describe("invite ballot", () => {
     await seedPoll({ id: "ballot-spec-time-zone" });
     const context = await browser.newContext({ timezoneId: "UTC" });
     const page = await context.newPage();
-    await page.goto("/invite/ballot-spec-time-zone/vote");
+    await page.goto("/invite/ballot-spec-time-zone");
 
     const first = options(page).first();
     // Seeded at 09:00 UTC.

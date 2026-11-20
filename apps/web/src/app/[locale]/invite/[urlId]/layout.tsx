@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { Spinner } from "@/components/spinner";
 import { BrandStyle } from "@/features/branding/components/brand-style";
 import { loadPollDetails } from "@/features/poll/loaders";
 import { getLocale } from "@/i18n/server/get-locale";
@@ -43,7 +44,13 @@ export default function Layout({
 }) {
   return (
     <div className="flex min-h-dvh flex-col bg-card lg:relative lg:h-dvh lg:overflow-clip lg:bg-gray-100 dark:lg:bg-gray-900 max-lg:[body:has(&)]:bg-card lg:[html.light_body:has(&)]:bg-gray-100 lg:[html:has(&)]:overflow-hidden">
-      <Suspense>
+      <Suspense
+        fallback={
+          <div className="flex flex-1 items-center justify-center">
+            <Spinner />
+          </div>
+        }
+      >
         <VoteFrame params={params}>{children}</VoteFrame>
       </Suspense>
     </div>

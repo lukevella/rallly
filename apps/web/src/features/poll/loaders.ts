@@ -18,10 +18,6 @@ import {
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
 import type { PollStatus } from "@/features/poll/schema";
-import {
-  filterCommentsForViewer,
-  maskParticipantsForViewer,
-} from "@/features/poll/utils";
 import { loadActiveSpaceContentScope } from "@/features/space/loaders";
 import { getUser } from "@/features/user/data";
 import { getSession } from "@/lib/auth";
@@ -191,47 +187,6 @@ export const loadPollAvailability = cache(async (pollId: string) => {
 export const loadPollDetails = cache(async (pollId: string) => {
   const poll = await loadPollWithAvailability(pollId);
   return poll?.details ?? null;
-});
-
-/**
- * The poll as a participant sees it. Deliberately no admin check: the
- * invite page is the participant view, and the host reads the full list on
- * the admin page. The emailed link names the viewer's own response, so a
- * guest still sees it as theirs when opening the link in a fresh browser.
- */
-export const loadInvitePoll = cache(async (pollId: string, token?: string) => {
-  const poll = await loadPollDetails(pollId);
-
-  if (!poll) {
-    notFound();
-  }
-
-  const [session, participants, comments, linkedParticipantIds] =
-    await Promise.all([
-      getSession(),
-      listPollParticipants({ pollId }),
-      listPollComments({ pollId }),
-      token ? listParticipantIdsByToken({ pollId, token }) : [],
-    ]);
-
-  const user = session?.user ?? null;
-  const viewer = { userId: user?.id ?? null, linkedParticipantIds };
-
-  return {
-    poll,
-    participants: maskParticipantsForViewer({
-      participants,
-      viewer,
-      hideParticipants: poll.hideParticipants,
-    }),
-    comments: filterCommentsForViewer({
-      comments,
-      viewerUserId: viewer.userId,
-      hideParticipants: poll.hideParticipants,
-    }),
-    linkedParticipantIds,
-    user,
-  };
 });
 
 /**

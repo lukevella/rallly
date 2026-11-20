@@ -59,8 +59,6 @@ test.describe(() => {
 
     const { email } = await captureOne("test@example.com");
 
-    await expect(page.locator("text='Anne'")).toBeVisible();
-
     expect(email.Subject).toBe("Thanks for responding to Monthly Meetup");
 
     const $ = load(email.HTML);
@@ -75,9 +73,16 @@ test.describe(() => {
 
   test("should be able to edit submission", async ({ page: newPage }) => {
     await newPage.goto(editSubmissionUrl);
-    await expect(newPage.getByTestId("participant-menu")).toBeVisible({
-      timeout: 10000,
-    });
+    await expect(newPage.getByRole("region", { name: "Status" })).toContainText(
+      "You responded as Anne",
+      { timeout: 10000 },
+    );
+    // Only a response that can still be changed has its menu.
+    await expect(
+      newPage.getByRole("region", { name: "Status" }).getByRole("button", {
+        name: "More options",
+      }),
+    ).toBeVisible();
   });
 
   // The host copies the same link the confirmation email carried, so a
