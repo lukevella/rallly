@@ -48,10 +48,7 @@ export function track(
   posthog()?.capture({
     ...event,
     distinctId: user.id,
-    properties: {
-      ...event.properties,
-      $process_person_profile: !user.isGuest,
-    },
+    options: { process_person_profile: !user.isGuest },
   });
 }
 
@@ -94,10 +91,7 @@ export function trackSystemEvent(event: {
   posthog()?.capture({
     ...event,
     distinctId: SYSTEM_EVENT_DISTINCT_ID,
-    properties: {
-      ...event.properties,
-      $process_person_profile: false,
-    },
+    options: { process_person_profile: false },
   });
 }
 
