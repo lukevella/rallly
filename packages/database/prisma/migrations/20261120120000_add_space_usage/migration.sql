@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "space_usage_resource" AS ENUM ('api_poll', 'poll_invite');
+CREATE TYPE "space_usage_resource" AS ENUM ('api_poll', 'email_invite');
 
 -- CreateTable
 CREATE TABLE "space_usage" (

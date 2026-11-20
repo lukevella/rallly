@@ -1,6 +1,6 @@
 enum SpaceUsageResource {
   api_poll
-  poll_invite
+  email_invite
 
   @@map("space_usage_resource")
 }

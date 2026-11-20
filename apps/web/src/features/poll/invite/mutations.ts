@@ -9,11 +9,11 @@ import { recordPollActivities } from "@/features/activity/mutations";
 import { startOfUtcMonth } from "@/features/api-keys/quota/utils";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import {
-  isPollInviteQuotaEnabled,
-  MAX_POLL_INVITES_PER_DAY,
+  isEmailInviteQuotaEnabled,
+  MAX_EMAIL_INVITES_PER_DAY,
 } from "@/features/poll/invite/constants";
 import {
-  getMonthlyPollInviteLimit,
+  getMonthlyEmailInviteLimit,
   getPollInvitePath,
 } from "@/features/poll/invite/utils";
 import { generateAccessToken } from "@/features/poll/utils";
@@ -32,7 +32,7 @@ function toPeriodDate(period: Date) {
  * and the check are one statement, so concurrent sends can never exceed it.
  * Returns false when the limit is already reached.
  */
-async function reservePollInviteSlot(
+async function reserveEmailInviteSlot(
   tx: Prisma.TransactionClient,
   {
     spaceId,
@@ -42,7 +42,7 @@ async function reservePollInviteSlot(
 ) {
   const rows = await tx.$queryRaw<{ count: number }[]>`
     INSERT INTO space_usage (space_id, resource, period, count, updated_at)
-    VALUES (${spaceId}, 'poll_invite', ${toPeriodDate(period)}::date, 1, NOW())
+    VALUES (${spaceId}, 'email_invite', ${toPeriodDate(period)}::date, 1, NOW())
     ON CONFLICT (space_id, resource, period) DO UPDATE
     SET count = space_usage.count + 1, updated_at = NOW()
     WHERE ${limit}::int IS NULL OR space_usage.count < ${limit}::int
@@ -55,7 +55,7 @@ async function reservePollInviteSlot(
  * Gives back a slot for an invite that was never delivered, in the month it
  * was reserved in.
  */
-async function releasePollInviteSlot(
+async function releaseEmailInviteSlot(
   tx: Prisma.TransactionClient,
   { spaceId, period }: { spaceId: string; period: Date },
 ) {
@@ -63,7 +63,7 @@ async function releasePollInviteSlot(
     UPDATE space_usage
     SET count = GREATEST(count - 1, 0), updated_at = NOW()
     WHERE space_id = ${spaceId}
-      AND resource = 'poll_invite'
+      AND resource = 'email_invite'
       AND period = ${toPeriodDate(period)}::date
   `;
 }
@@ -142,7 +142,7 @@ export async function sendPollInvite({
     where: { type: "invite_sent", userId, createdAt: { gte: since } },
   });
 
-  if (sentToday >= MAX_POLL_INVITES_PER_DAY) {
+  if (sentToday >= MAX_EMAIL_INVITES_PER_DAY) {
     return { ok: false, reason: "dailyLimit" };
   }
 
@@ -185,8 +185,8 @@ export async function sendPollInvite({
   // Charged to the poll's space, pooled across its members. A poll without a
   // space has nothing to charge and, with billing on, cannot reach here.
   const spaceId = poll.spaceId;
-  const monthlyLimit = getMonthlyPollInviteLimit({
-    enforced: isPollInviteQuotaEnabled,
+  const monthlyLimit = getMonthlyEmailInviteLimit({
+    enforced: isEmailInviteQuotaEnabled,
     seats: poll.space?.subscriptions[0]?.quantity ?? null,
   });
 
@@ -195,7 +195,7 @@ export async function sendPollInvite({
     invite = await prisma.$transaction(async (tx) => {
       if (
         spaceId &&
-        !(await reservePollInviteSlot(tx, {
+        !(await reserveEmailInviteSlot(tx, {
           spaceId,
           period,
           limit: monthlyLimit,
@@ -278,7 +278,7 @@ export async function sendPollInvite({
     try {
       await prisma.$transaction(async (tx) => {
         if (spaceId) {
-          await releasePollInviteSlot(tx, { spaceId, period });
+          await releaseEmailInviteSlot(tx, { spaceId, period });
         }
         await tx.pollActivity.deleteMany({
           where: {
