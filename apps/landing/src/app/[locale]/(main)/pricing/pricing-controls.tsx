@@ -99,7 +99,7 @@ export function CurrencySelect({ label }: { label: string }) {
     >
       <SelectTrigger
         aria-label={label}
-        className="-ml-2 bg-transparent px-2 shadow-none ring-0 hover:bg-gray-200/60"
+        className="-ml-2 bg-transparent px-2 shadow-none ring-0 hover:bg-gray-200/60 dark:hover:bg-gray-700/60"
       >
         <SelectValue>{currencyLabel(currency, locale)}</SelectValue>
       </SelectTrigger>
@@ -135,7 +135,7 @@ export function BillingIntervalSwitch({
         onClick={() => setInterval("monthly")}
         className={cn(
           "cursor-pointer whitespace-nowrap rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-          isYearly ? "text-gray-500" : "text-gray-800",
+          isYearly ? "text-gray-500 dark:text-gray-400" : "text-foreground",
         )}
       >
         {monthlyLabel}
@@ -154,7 +154,7 @@ export function BillingIntervalSwitch({
           onClick={() => setInterval("yearly")}
           className={cn(
             "cursor-pointer whitespace-nowrap rounded-sm font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            isYearly ? "text-gray-800" : "text-gray-500",
+            isYearly ? "text-foreground" : "text-gray-500 dark:text-gray-400",
           )}
         >
           {yearlyLabel}
@@ -178,7 +178,7 @@ export function PricingControlsDivider() {
   return (
     <div
       aria-hidden="true"
-      className="hidden h-5 w-px bg-gray-200 first:hidden sm:block"
+      className="hidden h-5 w-px bg-gray-200 first:hidden sm:block dark:bg-gray-700"
     />
   );
 }

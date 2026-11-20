@@ -14,10 +14,10 @@ const ScribbleArrow = ({ className }: { className?: string }) => (
 );
 
 export const TryItPrompt = ({ text }: { text: string }) => (
-  <div className="pointer-events-none absolute -top-9 right-2 z-10 flex items-start text-gray-600">
-    <span className="whitespace-nowrap rounded-full bg-gray-900 px-3 py-1 text-sm text-white">
+  <div className="pointer-events-none absolute -top-9 right-2 z-10 flex items-start text-muted-foreground">
+    <span className="whitespace-nowrap rounded-full bg-gray-900 px-3 py-1 text-sm text-white dark:bg-white dark:text-gray-900">
       {text}
     </span>
-    <ScribbleArrow className="mt-2.5 -ml-0.5 size-6 text-gray-900" />
+    <ScribbleArrow className="mt-2.5 -ml-0.5 size-6 text-gray-900 dark:text-white" />
   </div>
 );

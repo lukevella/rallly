@@ -57,6 +57,7 @@ export const SocialProof = async ({
               width={54}
               height={28}
               alt=""
+              className="dark:invert"
             />
           }
           avatar={
@@ -115,6 +116,7 @@ export const SocialProof = async ({
                   alt="HubSpot"
                   fill
                   style={{ objectFit: "contain" }}
+                  className="dark:hue-rotate-180 dark:invert"
                 />
               </div>
             }
@@ -155,6 +157,7 @@ export const SocialProof = async ({
                   alt="PopSci"
                   fill
                   style={{ objectFit: "contain" }}
+                  className="dark:invert"
                 />
               </div>
             }

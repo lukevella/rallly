@@ -21,10 +21,10 @@ export function Cta({
   return (
     <CaptureOnView event="landing:final_cta_view">
       <div className="text-center">
-        <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
+        <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-foreground leading-tight tracking-tight sm:text-4xl">
           {title}
         </h2>
-        <p className="mx-auto mt-4 max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg">
+        <p className="mx-auto mt-4 max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg dark:text-gray-400">
           {description}
         </p>
       </div>
@@ -34,7 +34,7 @@ export function Cta({
         </CtaButton>
         <p
           className={cn(
-            "whitespace-nowrap text-gray-600 text-xs",
+            "whitespace-nowrap text-muted-foreground text-xs",
             handwritten.className,
             "decoration underline decoration-2 decoration-gray-300 underline-offset-8",
           )}

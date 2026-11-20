@@ -26,11 +26,11 @@ export function FaqItem({
 }) {
   return (
     <details className="faq-item group" name={name}>
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-base text-gray-800 [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium text-base text-foreground [&::-webkit-details-marker]:hidden">
         {question}
-        <PlusIcon className="size-4 shrink-0 text-gray-400 transition-transform duration-200 ease-out-expo group-open:rotate-45 motion-reduce:transition-none" />
+        <PlusIcon className="size-4 shrink-0 text-gray-400 transition-transform duration-200 ease-out-expo group-open:rotate-45 motion-reduce:transition-none dark:text-gray-500" />
       </summary>
-      <p className="max-w-prose pb-5 text-gray-500 text-sm leading-relaxed sm:text-base">
+      <p className="max-w-prose pb-5 text-gray-500 text-sm leading-relaxed sm:text-base dark:text-gray-400">
         {children}
       </p>
     </details>
@@ -137,7 +137,7 @@ export async function FaqSection({
             components={[
               <a
                 key="support"
-                className="text-gray-800 underline underline-offset-2 hover:text-gray-600"
+                className="text-foreground underline underline-offset-2 hover:text-muted-foreground"
                 href="mailto:support@rallly.co"
               >
                 Email us

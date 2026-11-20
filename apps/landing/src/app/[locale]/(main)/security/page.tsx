@@ -44,7 +44,7 @@ function RegionBadge({
   children: React.ReactNode;
 }) {
   return (
-    <span className="inline-flex h-5 items-center rounded-full bg-gray-200 px-2 font-medium text-gray-600 text-xs tracking-wide">
+    <span className="inline-flex h-5 items-center rounded-full bg-gray-200 px-2 font-medium text-muted-foreground text-xs tracking-wide dark:bg-gray-700">
       <span aria-hidden="true">{children}</span>
       <span className="sr-only">{label}</span>
     </span>
@@ -55,7 +55,8 @@ const unitedStates = { code: "US", label: "United States" };
 const europeanUnion = { code: "EU", label: "European Union" };
 
 // Logo heights are tuned per wordmark so they sit at the same visual weight;
-// the brightness filter flattens every logo to one tone until hovered
+// the brightness filter flattens every logo to one tone until hovered. Dark
+// mode keeps them white on hover, since several wordmarks are dark ink.
 const providers = [
   {
     name: "Vercel",
@@ -146,7 +147,7 @@ export default async function Security(props: {
       <Section className="relative border-b-0">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48rem] translate-x-1/2 text-gray-700 [mask-composite:intersect] [mask-image:radial-gradient(closest-side,black_30%,transparent_100%),linear-gradient(to_right,black_40%,transparent_52%)] lg:block xl:w-[52rem] xl:translate-x-1/4 xl:[mask-image:radial-gradient(closest-side,black_30%,transparent_100%)]"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[48rem] translate-x-1/2 text-gray-700 [mask-composite:intersect] [mask-image:radial-gradient(closest-side,black_30%,transparent_100%),linear-gradient(to_right,black_40%,transparent_52%)] lg:block xl:w-[52rem] xl:translate-x-1/4 dark:text-gray-300 xl:[mask-image:radial-gradient(closest-side,black_30%,transparent_100%)]"
         >
           <Perimeter />
         </div>
@@ -283,7 +284,7 @@ export default async function Security(props: {
                         height={provider.logo.height}
                         alt={provider.name}
                         className={cn(
-                          "w-auto opacity-60 brightness-0 transition group-hover:opacity-100 group-hover:brightness-100",
+                          "w-auto opacity-60 brightness-0 transition group-hover:opacity-100 group-hover:brightness-100 dark:invert dark:group-hover:brightness-0",
                           provider.logo.className,
                         )}
                       />
@@ -292,12 +293,14 @@ export default async function Security(props: {
                       {provider.location.code}
                     </RegionBadge>
                   </div>
-                  <p className="text-gray-500 text-sm">{provider.purpose}</p>
+                  <p className="text-gray-500 text-sm dark:text-gray-400">
+                    {provider.purpose}
+                  </p>
                 </li>
               ))}
             </ul>
           </div>
-          <p className="mt-6 max-w-prose text-pretty text-gray-500 text-sm">
+          <p className="mt-6 max-w-prose text-pretty text-gray-500 text-sm dark:text-gray-400">
             Every provider is bound by a data processing agreement, with EU-US
             Data Privacy Framework certification or Standard Contractual Clauses
             covering international transfers.
@@ -410,10 +413,10 @@ export default async function Security(props: {
       </FaqSection>
       <Section>
         <div className="text-center">
-          <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-gray-800 leading-tight tracking-tight sm:text-4xl">
+          <h2 className="mx-auto max-w-[700px] text-balance font-medium text-2xl text-foreground leading-tight tracking-tight sm:text-4xl">
             Evaluating Rallly for your organization?
           </h2>
-          <p className="mx-auto mt-4 max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg">
+          <p className="mx-auto mt-4 max-w-prose text-pretty text-base/6 text-gray-500 sm:text-lg dark:text-gray-400">
             We are happy to answer questions, complete your security review, or
             talk through deployment options, including self-hosting on your own
             infrastructure.

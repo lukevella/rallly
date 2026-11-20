@@ -100,7 +100,7 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
           />
         </SectionDescription>
         <a
-          className="inline-flex items-center gap-1.5 font-medium text-gray-800 text-sm hover:text-gray-600"
+          className="inline-flex items-center gap-1.5 font-medium text-foreground text-sm hover:text-muted-foreground"
           href="https://support.rallly.co/workflow/create"
         >
           <Trans
@@ -120,10 +120,10 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
             {steps.map((step, index) => (
               <div
                 key={step.key}
-                className="row-span-2 grid snap-start grid-rows-subgrid rounded-2xl border bg-white p-1"
+                className="row-span-2 grid snap-start grid-rows-subgrid rounded-2xl border bg-card p-1"
               >
-                <div className="space-y-4 rounded-xl border bg-gray-100 p-4">
-                  <div className="font-mono text-gray-400 text-xs uppercase tracking-wide">
+                <div className="space-y-4 rounded-xl border bg-page p-4">
+                  <div className="font-mono text-gray-400 text-xs uppercase tracking-wide dark:text-gray-500">
                     <Trans
                       t={t}
                       ns="home"
@@ -139,8 +139,10 @@ export const HowItWorks = async ({ locale }: { locale: string }) => {
                   />
                 </div>
                 <div className="p-3">
-                  <dt className="font-medium text-gray-900">{step.title}</dt>
-                  <dd className="mt-2 text-pretty text-base/6 text-gray-500 sm:text-sm/5">
+                  <dt className="font-medium text-gray-900 dark:text-white">
+                    {step.title}
+                  </dt>
+                  <dd className="mt-2 text-pretty text-base/6 text-gray-500 sm:text-sm/5 dark:text-gray-400">
                     {step.description}
                   </dd>
                 </div>

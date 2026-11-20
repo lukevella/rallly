@@ -18,11 +18,11 @@ export default function NotFound() {
         <div className="inset-0 flex h-full w-full items-center justify-center lg:absolute">
           <div className="space-y-8">
             <div className="space-y-4">
-              <FileSearchIcon className="mb-4 inline-block size-24 text-gray-400" />
+              <FileSearchIcon className="mb-4 inline-block size-24 text-gray-400 dark:text-gray-500" />
               <div className="mb-2 font-semibold text-3xl text-primary">
                 404 not found
               </div>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 We couldn't find the page you're looking for.
               </p>
             </div>

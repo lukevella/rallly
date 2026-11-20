@@ -50,12 +50,12 @@ export const ShareStepDemo = ({ playback }: { playback: Playback }) => {
     <>
       <DemoScreen className="space-y-2 p-4">
         <div className="space-y-1.5">
-          <div className="h-1.5 w-12 rounded-full bg-gray-300" />
+          <div className="h-1.5 w-12 rounded-full bg-gray-300 dark:bg-gray-600" />
           <div className="flex items-center gap-2">
-            <div className="flex h-7 min-w-0 flex-1 items-center rounded-md border border-gray-200 bg-gray-50 px-2">
+            <div className="flex h-7 min-w-0 flex-1 items-center rounded-md border border-border bg-gray-50 px-2 dark:bg-gray-800/50">
               {/* The accent fades over the resting bar rather than replacing its
               class, so the recolor transitions instead of snapping. */}
-              <div className="relative h-1.5 w-28 shrink-0 overflow-hidden rounded-full bg-gray-300">
+              <div className="relative h-1.5 w-28 shrink-0 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-600">
                 <m.div
                   className={cn("absolute inset-0", ACCENT)}
                   initial={false}
@@ -81,29 +81,32 @@ export const ShareStepDemo = ({ playback }: { playback: Playback }) => {
           {CHANNELS.map((channel) => (
             <div
               key={channel.key}
-              className="flex items-center gap-2 rounded-md border border-gray-200 px-2 py-1.5"
+              className="flex items-center gap-2 rounded-md border border-border px-2 py-1.5"
             >
-              <div className="flex size-5 shrink-0 items-center justify-center rounded bg-gray-100">
-                <channel.icon className="size-3 text-gray-400" />
+              <div className="flex size-5 shrink-0 items-center justify-center rounded bg-muted">
+                <channel.icon className="size-3 text-gray-400 dark:text-gray-500" />
               </div>
               <div
-                className={cn("h-1.5 rounded-full bg-gray-300", channel.width)}
+                className={cn(
+                  "h-1.5 rounded-full bg-gray-300 dark:bg-gray-600",
+                  channel.width,
+                )}
               />
             </div>
           ))}
         </div>
-        <div className="flex items-center gap-3 border-gray-200/60 border-t pt-3">
+        <div className="flex items-center gap-3 border-border/60 border-t pt-3">
           <div className="flex shrink-0 -space-x-1.5">
             {[0, 1, 2, 3].map((participant) => (
               <div
                 key={participant}
-                className="size-6 rounded-full bg-gray-300 ring-2 ring-white"
+                className="size-6 rounded-full bg-gray-300 ring-2 ring-card dark:bg-gray-600"
               />
             ))}
           </div>
           <div className="min-w-0 flex-1 space-y-1.5">
-            <div className="h-1.5 max-w-32 rounded-full bg-gray-200" />
-            <div className="h-1.5 max-w-20 rounded-full bg-gray-200" />
+            <div className="h-1.5 max-w-32 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-1.5 max-w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
         </div>
       </DemoScreen>

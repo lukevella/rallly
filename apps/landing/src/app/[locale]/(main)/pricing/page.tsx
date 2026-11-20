@@ -71,7 +71,7 @@ import {
 } from "./pricing-controls";
 
 const faqLinkClassName =
-  "text-gray-800 underline underline-offset-2 hover:text-gray-600";
+  "text-foreground underline underline-offset-2 hover:text-muted-foreground";
 
 const apiDocsUrl = "https://support.rallly.co/api-reference/introduction";
 const webhooksDocsUrl = "https://support.rallly.co/api-reference/webhooks";
@@ -101,13 +101,13 @@ export default async function Page(props: {
         >
           <div className="flex flex-col items-center gap-y-8 text-center">
             <div>
-              <h1 className="mx-auto max-w-[700px] text-balance font-medium text-3xl text-gray-800 tracking-tight sm:text-[2.75rem]/none">
+              <h1 className="mx-auto max-w-[700px] text-balance font-medium text-3xl text-foreground tracking-tight sm:text-[2.75rem]/none">
                 {t("pricingTitle", {
                   ns: "pricing",
                   defaultValue: "Pricing",
                 })}
               </h1>
-              <p className="mx-auto mt-4 max-w-[620px] text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed">
+              <p className="mx-auto mt-4 max-w-[620px] text-pretty font-normal text-base/6 text-gray-500 sm:text-lg sm:leading-relaxed dark:text-gray-400">
                 {t("pricingSubtitle", {
                   ns: "pricing",
                   defaultValue:
@@ -147,7 +147,7 @@ export default async function Page(props: {
                 badge={
                   <Badge
                     variant="pill"
-                    className="bg-lime-300 font-semibold text-lime-900"
+                    className="bg-lime-300 font-semibold text-lime-900 dark:bg-lime-300 dark:text-lime-900"
                   >
                     <Trans
                       t={t}

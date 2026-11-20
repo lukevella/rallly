@@ -31,10 +31,10 @@ export const VoteActions = ({
 
   return (
     <>
-      <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-55% from-white via-85% via-white/70 to-transparent p-3 pt-10">
+      <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-55% from-card via-85% via-card/70 to-transparent p-3 pt-10">
         <span
           aria-hidden="true"
-          className="flex-1 rounded-xl border border-white/60 bg-white/70 py-2.5 text-center font-medium text-gray-800 text-sm shadow-sm backdrop-blur-md"
+          className="flex-1 rounded-xl border border-white/60 bg-card/70 py-2.5 text-center font-medium text-foreground text-sm shadow-sm backdrop-blur-md dark:border-white/10"
         >
           {declineLabel}
         </span>
@@ -55,7 +55,7 @@ export const VoteActions = ({
             initial={{ scale: 0.92, opacity: 0, y: 8 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             transition={{ type: "spring", duration: 0.5, bounce: 0.35 }}
-            className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl border border-white/60 bg-white/85 p-4 text-center shadow-lg backdrop-blur-xl"
+            className="relative flex aspect-[4/3] w-full flex-col items-center justify-center rounded-2xl border border-white/60 bg-card/85 p-4 text-center shadow-lg backdrop-blur-xl dark:border-white/10"
           >
             <button
               type="button"
@@ -64,7 +64,7 @@ export const VoteActions = ({
                 posthog?.capture("landing:hero_demo_close_click");
                 setSubmitted(false);
               }}
-              className="absolute top-3 right-3 flex size-6 cursor-pointer items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              className="absolute top-3 right-3 flex size-6 cursor-pointer items-center justify-center rounded-full text-gray-400 hover:bg-muted hover:text-muted-foreground dark:text-gray-500"
             >
               <XIcon className="size-4" />
             </button>
@@ -81,10 +81,10 @@ export const VoteActions = ({
                 delay: 0.2,
               }}
             >
-              <p className="font-semibold text-gray-900 text-sm">
+              <p className="font-semibold text-gray-900 text-sm dark:text-white">
                 {successTitle}
               </p>
-              <p className="mt-1.5 text-gray-500 text-xs">
+              <p className="mt-1.5 text-gray-500 text-xs dark:text-gray-400">
                 {successDescription}
               </p>
             </m.div>
@@ -107,7 +107,7 @@ export const VoteActions = ({
                     ref,
                   });
                 }}
-                className="font-medium text-indigo-600 text-xs hover:underline"
+                className="font-medium text-primary text-xs hover:underline"
               >
                 {createPollLabel}
               </Link>

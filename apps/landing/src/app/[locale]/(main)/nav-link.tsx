@@ -15,7 +15,7 @@ export const NavLink = ({
       className={cn(
         buttonVariants({ variant: "ghost" }),
         isActive
-          ? "bg-gray-200 text-foreground"
+          ? "bg-gray-200 text-foreground dark:bg-gray-700"
           : "text-muted-foreground hover:text-foreground",
         className,
       )}

@@ -60,29 +60,29 @@ export const DesktopDemo = ({
   return (
     <DemoWindow>
       <BrowserChrome url="app.rallly.co/invite/k3Xb9qLm" />
-      <div className="bg-gray-100 p-4 sm:p-6">
+      <div className="bg-page p-4 sm:p-6">
         {/* Pinned to the grid width (235px + 8 × 84px) so a long description
             wraps instead of stretching the card past the table. */}
         <div className="mx-auto w-[907px] space-y-3 text-left">
-          <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
+          <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
             <div className="h-1.5 bg-linear-to-r from-indigo-500 to-violet-500" />
             <div className="space-y-3 p-4 sm:p-5">
               <div>
-                <div className="font-semibold text-gray-900 text-lg tracking-tight">
+                <div className="font-semibold text-gray-900 text-lg tracking-tight dark:text-white">
                   {preset.title}
                 </div>
-                <p className="mt-1 text-gray-600 text-sm">
+                <p className="mt-1 text-muted-foreground text-sm">
                   {preset.description}
                 </p>
               </div>
-              <div className="space-y-1.5 text-gray-600 text-sm">
+              <div className="space-y-1.5 text-muted-foreground text-sm">
                 <div className="flex items-center gap-2">
-                  <UserIcon className="size-4 text-gray-400" />
+                  <UserIcon className="size-4 text-gray-400 dark:text-gray-500" />
                   {preset.organizer}
                 </div>
                 {preset.location ? (
                   <div className="flex items-center gap-2">
-                    <MapPinIcon className="size-4 text-gray-400" />
+                    <MapPinIcon className="size-4 text-gray-400 dark:text-gray-500" />
                     {preset.location}
                   </div>
                 ) : null}
@@ -93,13 +93,13 @@ export const DesktopDemo = ({
                 ) : null}
               </div>
               <div>
-                <div className="font-medium text-gray-900 text-sm">
+                <div className="font-medium text-gray-900 text-sm dark:text-white">
                   {t("heroDemoResponseOptions", {
                     ns: "home",
                     defaultValue: "Response options",
                   })}
                 </div>
-                <div className="mt-1.5 flex items-center gap-4 text-gray-600 text-sm">
+                <div className="mt-1.5 flex items-center gap-4 text-muted-foreground text-sm">
                   <span className="flex items-center gap-1.5">
                     <VoteIcon vote="yes" />
                     {t("heroDemoYes", {
@@ -125,23 +125,23 @@ export const DesktopDemo = ({
               </div>
             </div>
           </div>
-          <div className="overflow-hidden rounded-xl border border-gray-200/60 bg-white">
+          <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
             <div className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-900 text-sm">
+                <span className="font-semibold text-gray-900 text-sm dark:text-white">
                   {t("heroDemoParticipants", {
                     ns: "home",
                     defaultValue: "Participants",
                   })}
                 </span>
-                <span className="rounded-md border px-1.5 py-0.5 text-gray-500 text-xs">
+                <span className="rounded-md border px-1.5 py-0.5 text-gray-500 text-xs dark:text-gray-400">
                   {preset.participants.length}
                 </span>
-                <span className="flex size-6 items-center justify-center rounded-md border text-gray-500">
+                <span className="flex size-6 items-center justify-center rounded-md border text-gray-500 dark:text-gray-400">
                   <PlusIcon className="size-3.5" />
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-gray-500 text-sm">
+              <div className="flex items-center gap-3 text-gray-500 text-sm dark:text-gray-400">
                 <Maximize2Icon className="size-4" />
               </div>
             </div>
@@ -149,15 +149,15 @@ export const DesktopDemo = ({
                 demo reads as a replica of the real thing. Preset names are kept
                 short enough to fit it; the name span needs flex-1 to claim the
                 width. */}
-            <div className="grid grid-cols-[235px_repeat(8,84px)] border-gray-100 border-t text-center">
+            <div className="grid grid-cols-[235px_repeat(8,84px)] border-border-muted border-t text-center">
               <div />
               {monthGroups.map((group) => (
                 <div
                   key={group.label}
                   style={{ gridColumn: `span ${group.span}` }}
-                  className="border-gray-100 border-l py-2 text-left"
+                  className="border-border-muted border-l py-2 text-left"
                 >
-                  <span className="pl-3 font-medium text-gray-700 text-xs tracking-wide">
+                  <span className="pl-3 font-medium text-gray-700 text-xs tracking-wide dark:text-gray-200">
                     {group.label}
                   </span>
                 </div>
@@ -168,14 +168,14 @@ export const DesktopDemo = ({
                   <div
                     key={option.start.toISOString()}
                     className={cn(
-                      "border-gray-100 border-t pt-2.5 text-gray-500 text-xs",
+                      "border-border-muted border-t pt-2.5 text-gray-500 text-xs dark:text-gray-400",
                       slotIndex === 0 && "border-l",
                     )}
                   >
                     {slotIndex === 0 && (
                       <>
                         {format.weekday.format(day.date)}
-                        <div className="font-semibold text-base text-gray-900">
+                        <div className="font-semibold text-base text-gray-900 dark:text-white">
                           {format.dayOfMonth.format(day.date)}
                         </div>
                       </>
@@ -198,14 +198,14 @@ export const DesktopDemo = ({
                       className={cn(
                         "space-y-1 py-2.5 text-xs",
                         slotIndex === 0
-                          ? "border-gray-100 border-l"
-                          : "border-gray-50 border-l",
+                          ? "border-border-muted border-l"
+                          : "border-gray-50 border-l dark:border-gray-800",
                       )}
                     >
-                      <div className="text-gray-700">
+                      <div className="text-gray-700 dark:text-gray-200">
                         {format.time.format(option.start)}
                       </div>
-                      <div className="flex items-center justify-center gap-1 text-gray-500">
+                      <div className="flex items-center justify-center gap-1 text-gray-500 dark:text-gray-400">
                         <ClockIcon className="size-3" />
                         1h
                       </div>
@@ -216,13 +216,13 @@ export const DesktopDemo = ({
               )}
               {preset.participants.map((participant) => (
                 <React.Fragment key={participant.name}>
-                  <div className="flex items-center gap-2.5 border-gray-100 border-t px-3 py-3 text-left">
+                  <div className="flex items-center gap-2.5 border-border-muted border-t px-3 py-3 text-left">
                     <Avatar size="sm" className="size-7" bordered={false}>
                       <AvatarFallback seed={participant.name}>
                         {getInitials(participant.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="min-w-0 flex-1 truncate text-gray-800 text-sm">
+                    <span className="min-w-0 flex-1 truncate text-foreground text-sm">
                       {participant.name}
                     </span>
                   </div>
@@ -230,10 +230,10 @@ export const DesktopDemo = ({
                     <div
                       key={`${participant.name}-${index}`}
                       className={cn(
-                        "flex items-center justify-center border-gray-100 border-t",
+                        "flex items-center justify-center border-border-muted border-t",
                         index % 2 === 0
                           ? "border-l"
-                          : "border-gray-50 border-l",
+                          : "border-gray-50 border-l dark:border-gray-800",
                       )}
                     >
                       <VoteIcon vote={vote} />

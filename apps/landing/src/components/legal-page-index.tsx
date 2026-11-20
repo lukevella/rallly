@@ -56,10 +56,13 @@ export function LegalPageIndex({
 
   return (
     <nav aria-labelledby="legal-page-index-label">
-      <p id="legal-page-index-label" className="text-gray-500 text-sm">
+      <p
+        id="legal-page-index-label"
+        className="text-gray-500 text-sm dark:text-gray-400"
+      >
         Contents
       </p>
-      <ul className="mt-2 border-gray-200 border-l">
+      <ul className="mt-2 border-border border-l">
         {items.map((item) => {
           const isActive = item.id === activeId;
           return (
@@ -70,8 +73,8 @@ export function LegalPageIndex({
                 className={cn(
                   "-ml-px block border-l py-1 pl-3 text-sm transition-colors",
                   isActive
-                    ? "border-gray-800 text-gray-800"
-                    : "border-transparent text-gray-500 hover:text-gray-800",
+                    ? "border-gray-800 text-foreground"
+                    : "border-transparent text-gray-500 hover:text-foreground dark:text-gray-400",
                 )}
               >
                 {item.title}

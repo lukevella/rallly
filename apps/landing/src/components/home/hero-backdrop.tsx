@@ -1,9 +1,10 @@
 "use client";
 
+import { useTheme } from "@rallly/ui/theme-provider";
 import * as React from "react";
+import { readInk } from "@/lib/canvas-ink";
 
 const spacing = 36;
-const ink = "24, 24, 27";
 const root2 = Math.SQRT2;
 
 // Streaks run along two perpendicular families of lines. A point is described
@@ -125,7 +126,9 @@ export function HeroBackdrop({
   const frameRef = React.useRef<HTMLDivElement>(null);
   useHeaderActionsHole(frameRef);
   const reducedMotion = useReducedMotion();
+  const { resolvedTheme } = useTheme();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: resolvedTheme re-reads the ink after a theme change
   React.useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
@@ -133,6 +136,7 @@ export function HeroBackdrop({
       return;
     }
     const { toX, toY, toU, toV } = geometry[orientation];
+    const ink = readInk(canvas);
 
     let width = 0;
     let height = 0;
@@ -348,7 +352,7 @@ export function HeroBackdrop({
       intersectionObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [orientation, reducedMotion]);
+  }, [orientation, reducedMotion, resolvedTheme]);
 
   return (
     <div
@@ -367,7 +371,10 @@ export function HeroBackdrop({
         maskComposite: "intersect",
       }}
     >
-      <canvas ref={canvasRef} className="size-full" />
+      <canvas
+        ref={canvasRef}
+        className="size-full text-gray-900 dark:text-white"
+      />
     </div>
   );
 }

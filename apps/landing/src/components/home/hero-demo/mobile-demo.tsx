@@ -34,10 +34,10 @@ export const MobileDemo = ({
   return (
     <DemoFrame className="rounded-[1.8rem]">
       <DemoScreen className="relative flex h-[620px] flex-col rounded-[1.4rem] text-left">
-        <div className="flex items-center justify-between border-gray-100 border-b px-3 py-3">
-          <span className="flex items-center gap-2 font-medium text-gray-900 text-sm">
-            <span className="flex size-6 items-center justify-center rounded-full bg-gray-100">
-              <UserIcon className="size-3.5 text-gray-500" />
+        <div className="flex items-center justify-between border-border-muted border-b px-3 py-3">
+          <span className="flex items-center gap-2 font-medium text-gray-900 text-sm dark:text-white">
+            <span className="flex size-6 items-center justify-center rounded-full bg-muted">
+              <UserIcon className="size-3.5 text-gray-500 dark:text-gray-400" />
             </span>
             {t("heroDemoYou", { ns: "home", defaultValue: "You" })}
           </span>
@@ -47,7 +47,7 @@ export const MobileDemo = ({
             const label = format.fullDay.format(day.date);
             return (
               <div key={label}>
-                <div className="border-gray-100 border-b bg-gray-50/60 px-3 py-2 font-semibold text-gray-900 text-xs">
+                <div className="border-border-muted border-b bg-gray-50/60 px-3 py-2 font-semibold text-gray-900 text-xs dark:bg-white/5 dark:text-white">
                   {label}
                 </div>
                 {day.options.map((option) => {
@@ -60,9 +60,9 @@ export const MobileDemo = ({
                   return (
                     <div
                       key={option.start.toISOString()}
-                      className="flex items-center justify-between gap-2 border-gray-100 border-b px-3 py-3"
+                      className="flex items-center justify-between gap-2 border-border-muted border-b px-3 py-3"
                     >
-                      <div className="min-w-0 flex-1 text-gray-800 text-xs">
+                      <div className="min-w-0 flex-1 text-foreground text-xs">
                         {time}
                       </div>
                       <VoteCount

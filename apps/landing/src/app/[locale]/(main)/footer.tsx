@@ -10,6 +10,7 @@ import { FooterPattern } from "@/components/home/footer-pattern";
 import { LinkBase } from "@/i18n/client/link";
 import { getTranslation } from "@/i18n/server";
 import { LanguageSelect } from "./language-select";
+import { ThemeSwitcher } from "./theme-switcher";
 
 function FooterExternalLink({
   href,
@@ -23,7 +24,7 @@ function FooterExternalLink({
       target="_blank"
       rel="noopener"
       href={href}
-      className="group inline-flex items-center gap-1 font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+      className="group inline-flex items-center gap-1 font-normal text-muted-foreground hover:text-foreground hover:no-underline"
     >
       {children}
       <ArrowUpRightIcon
@@ -48,7 +49,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
               className="object-contain"
             />
           </div>
-          <p className="max-w-sm text-pretty text-gray-600 text-sm leading-relaxed">
+          <p className="max-w-sm text-pretty text-muted-foreground text-sm leading-relaxed">
             <Trans
               t={t}
               ns="common"
@@ -60,7 +61,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <a
               target="_blank"
               href="https://x.com/ralllyco"
-              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
+              className="text-muted-foreground text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
               aria-label={t("footerXLabel", { defaultValue: "Follow us on X" })}
             >
@@ -69,7 +70,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <a
               target="_blank"
               href="https://discord.gg/uzg4ZcHbuM"
-              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
+              className="text-muted-foreground text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
               aria-label={t("footerDiscordLabel", {
                 defaultValue: "Join us on Discord",
@@ -80,7 +81,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <a
               target="_blank"
               href="https://www.linkedin.com/company/rallly"
-              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
+              className="text-muted-foreground text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
               aria-label={t("footerLinkedinLabel", {
                 defaultValue: "Follow us on LinkedIn",
@@ -91,7 +92,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <a
               target="_blank"
               href="https://github.com/lukevella/rallly"
-              className="text-gray-600 text-sm hover:text-primary hover:no-underline"
+              className="text-muted-foreground text-sm hover:text-primary hover:no-underline"
               rel="noreferrer noopener"
               aria-label={t("footerGithubLabel", {
                 defaultValue: "View our GitHub repository",
@@ -108,13 +109,13 @@ export const Footer = async ({ locale }: { locale: string }) => {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-8">
         <div className="space-y-8">
           <div>
-            <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+            <div className="mb-6 font-medium text-foreground text-sm uppercase tracking-wide">
               <Trans t={t} ns="common" i18nKey="product" defaults="Product" />
             </div>
             <ul className="grid gap-3 text-sm">
               <li>
                 <LinkBase
-                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                   href="/pricing"
                 >
                   <Trans t={t} i18nKey="pricing" defaults="Pricing" />
@@ -122,7 +123,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
               </li>
               <li>
                 <LinkBase
-                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                   href="/free-scheduling-poll"
                 >
                   <Trans
@@ -135,7 +136,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
               </li>
               <li>
                 <LinkBase
-                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                   href="/security"
                 >
                   <Trans
@@ -149,13 +150,13 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </ul>
           </div>
           <div>
-            <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+            <div className="mb-6 font-medium text-foreground text-sm uppercase tracking-wide">
               <Trans t={t} ns="common" i18nKey="compare" defaults="Compare" />
             </div>
             <ul className="grid gap-3 text-sm">
               <li>
                 <LinkBase
-                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                   href="/best-doodle-alternative"
                 >
                   <Trans
@@ -168,7 +169,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
               </li>
               <li>
                 <LinkBase
-                  className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                  className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                   href="/when2meet-alternative"
                 >
                   <Trans
@@ -183,13 +184,13 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </div>
         </div>
         <div>
-          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+          <div className="mb-6 font-medium text-foreground text-sm uppercase tracking-wide">
             <Trans t={t} ns="common" i18nKey="useCases" defaults="Use cases" />
           </div>
           <ul className="grid gap-3 text-sm">
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/scheduling-for/assistants"
               >
                 <Trans
@@ -202,7 +203,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/scheduling-for/committees"
               >
                 <Trans
@@ -215,7 +216,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/scheduling-for/sports-clubs"
               >
                 <Trans
@@ -228,7 +229,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/scheduling-for/thesis-defense"
               >
                 <Trans
@@ -241,7 +242,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/scheduling-for/legal"
               >
                 <Trans
@@ -255,14 +256,14 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </ul>
         </div>
         <div>
-          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+          <div className="mb-6 font-medium text-foreground text-sm uppercase tracking-wide">
             <Trans t={t} ns="common" i18nKey="resources" defaults="Resources" />
           </div>
           <ul className="grid gap-3 text-sm">
             <li>
               <LinkBase
                 href="/blog"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
               >
                 <Trans t={t} ns="common" i18nKey="blog" defaults="Blog" />
               </LinkBase>
@@ -285,7 +286,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <li>
               <LinkBase
                 href="/press-kit"
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
               >
                 <Trans
                   t={t}
@@ -298,13 +299,13 @@ export const Footer = async ({ locale }: { locale: string }) => {
           </ul>
         </div>
         <div>
-          <div className="mb-6 font-medium text-gray-800 text-sm uppercase tracking-wide">
+          <div className="mb-6 font-medium text-foreground text-sm uppercase tracking-wide">
             <Trans t={t} ns="common" i18nKey="footerLegal" defaults="Legal" />
           </div>
           <ul className="grid gap-3 text-sm">
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/privacy-policy"
               >
                 <Trans
@@ -317,7 +318,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/cookie-policy"
               >
                 <Trans
@@ -330,7 +331,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/terms-of-use"
               >
                 <Trans
@@ -343,7 +344,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
             </li>
             <li>
               <LinkBase
-                className="inline-block font-normal text-gray-600 hover:text-gray-800 hover:no-underline"
+                className="inline-block font-normal text-muted-foreground hover:text-foreground hover:no-underline"
                 href="/dpa"
               >
                 <Trans t={t} ns="common" i18nKey="dpa" defaults="DPA" />
@@ -353,7 +354,7 @@ export const Footer = async ({ locale }: { locale: string }) => {
         </div>
       </div>
       <div className="flex flex-col gap-x-8 gap-y-8 sm:pb-8 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
-        <p className="whitespace-nowrap text-gray-600 text-sm leading-loose">
+        <p className="whitespace-nowrap text-muted-foreground text-sm leading-loose">
           &copy; 2026 Stack Snap Ltd.
         </p>
         <div className="flex flex-wrap items-center gap-4">
@@ -366,9 +367,21 @@ export const Footer = async ({ locale }: { locale: string }) => {
             <img
               src="https://rallly.openstatus.dev/badge/v2"
               alt={t("statusBadgeAlt", { defaultValue: "Rallly status" })}
-              className="mix-blend-multiply"
+              className="mix-blend-multiply dark:hidden"
+            />
+            {/* biome-ignore lint/performance/noImgElement: dynamic external badge, not optimizable via next/image */}
+            <img
+              src="https://rallly.openstatus.dev/badge/v2?theme=dark"
+              alt={t("statusBadgeAlt", { defaultValue: "Rallly status" })}
+              className="hidden mix-blend-lighten dark:block"
             />
           </a>
+          <ThemeSwitcher
+            label={t("theme", { defaultValue: "Theme" })}
+            systemLabel={t("themeSystem", { defaultValue: "System" })}
+            lightLabel={t("themeLight", { defaultValue: "Light" })}
+            darkLabel={t("themeDark", { defaultValue: "Dark" })}
+          />
           <div className="w-48">
             <LanguageSelect
               label={t("language", { defaultValue: "Language" })}

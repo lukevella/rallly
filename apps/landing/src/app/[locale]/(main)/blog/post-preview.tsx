@@ -23,7 +23,7 @@ export const PostPreview = ({
 }: Props) => {
   return (
     <article className="py-8">
-      <div className="flex items-center gap-2 text-gray-500 text-sm">
+      <div className="flex items-center gap-2 text-gray-500 text-sm dark:text-gray-400">
         {category ? (
           <>
             <span>{category}</span>
@@ -32,12 +32,12 @@ export const PostPreview = ({
         ) : null}
         <time dateTime={date}>{dayjs(date).format("LL")}</time>
       </div>
-      <h2 className="mt-2 text-balance font-medium text-gray-800 text-xl tracking-tight">
+      <h2 className="mt-2 text-balance font-medium text-foreground text-xl tracking-tight">
         <LinkBase href={`/blog/${slug}`} className="hover:underline">
           {title}
         </LinkBase>
       </h2>
-      <p className="mt-2 max-w-prose text-pretty text-base/6 text-gray-500">
+      <p className="mt-2 max-w-prose text-pretty text-base/6 text-gray-500 dark:text-gray-400">
         {excerpt}
       </p>
     </article>

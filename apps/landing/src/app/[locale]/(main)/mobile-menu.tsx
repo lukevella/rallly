@@ -101,14 +101,14 @@ export const MobileMenu = ({
       <div
         id={PANEL_ID}
         hidden={!open}
-        className="absolute inset-x-0 top-full z-10 flex h-[calc(100dvh-100%)] flex-col bg-gray-100 lg:hidden"
+        className="absolute inset-x-0 top-full z-10 flex h-[calc(100dvh-100%)] flex-col bg-page lg:hidden"
       >
         <nav className="flex grow flex-col gap-1 overflow-y-auto px-4 py-8 sm:px-6">
           {links.map((link) => (
             <LinkBase
               key={link.href}
               href={link.href}
-              className="-mx-2 block rounded-lg px-2 py-3 font-normal text-3xl text-foreground tracking-tight hover:bg-gray-200 hover:no-underline"
+              className="-mx-2 block rounded-lg px-2 py-3 font-normal text-3xl text-foreground tracking-tight hover:bg-gray-200 hover:no-underline dark:hover:bg-gray-700"
             >
               {link.label}
             </LinkBase>

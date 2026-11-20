@@ -51,7 +51,7 @@ export async function ReviewRatings({
           href={site.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-gray-800 hover:text-gray-950"
+          className="inline-flex items-center gap-2 text-foreground hover:text-gray-950 dark:hover:text-white"
         >
           <Image
             src={site.logo}
