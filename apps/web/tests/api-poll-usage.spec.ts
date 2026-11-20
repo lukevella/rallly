@@ -33,10 +33,10 @@ test.afterAll(async () => {
 });
 
 function storedCount(period: Date) {
-  return prisma.apiUsage
+  return prisma.spaceUsage
     .findUnique({
       where: {
-        spaceId_resource_period: { spaceId, resource: "poll", period },
+        spaceId_resource_period: { spaceId, resource: "api_poll", period },
       },
       select: { count: true },
     })

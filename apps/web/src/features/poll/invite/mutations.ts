@@ -6,14 +6,67 @@ import { createLogger } from "@rallly/logger";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { recordPollActivities } from "@/features/activity/mutations";
+import { startOfUtcMonth } from "@/features/api-keys/quota/utils";
 import { resolveSpaceTier } from "@/features/billing/utils";
-import { MAX_POLL_INVITES_PER_DAY } from "@/features/poll/invite/constants";
-import { getPollInvitePath } from "@/features/poll/invite/utils";
+import {
+  isEmailInviteQuotaEnabled,
+  MAX_EMAIL_INVITES_PER_DAY,
+} from "@/features/poll/invite/constants";
+import {
+  getMonthlyEmailInviteLimit,
+  getPollInvitePath,
+} from "@/features/poll/invite/utils";
 import { generateAccessToken } from "@/features/poll/utils";
 
 const logger = createLogger("poll/invite/mutations");
 
 class InviteClaimedElsewhere extends Error {}
+class MonthlyLimitReached extends Error {}
+
+function toPeriodDate(period: Date) {
+  return period.toISOString().slice(0, 10);
+}
+
+/**
+ * Counts one invite against the space's month. With a limit, the increment
+ * and the check are one statement, so concurrent sends can never exceed it.
+ * Returns false when the limit is already reached.
+ */
+async function reserveEmailInviteSlot(
+  tx: Prisma.TransactionClient,
+  {
+    spaceId,
+    period,
+    limit,
+  }: { spaceId: string; period: Date; limit: number | null },
+) {
+  const rows = await tx.$queryRaw<{ count: number }[]>`
+    INSERT INTO space_usage (space_id, resource, period, count, updated_at)
+    VALUES (${spaceId}, 'email_invite', ${toPeriodDate(period)}::date, 1, NOW())
+    ON CONFLICT (space_id, resource, period) DO UPDATE
+    SET count = space_usage.count + 1, updated_at = NOW()
+    WHERE ${limit}::int IS NULL OR space_usage.count < ${limit}::int
+    RETURNING count
+  `;
+  return rows.length > 0;
+}
+
+/**
+ * Gives back a slot for an invite that was never delivered, in the month it
+ * was reserved in.
+ */
+async function releaseEmailInviteSlot(
+  tx: Prisma.TransactionClient,
+  { spaceId, period }: { spaceId: string; period: Date },
+) {
+  await tx.$executeRaw`
+    UPDATE space_usage
+    SET count = GREATEST(count - 1, 0), updated_at = NOW()
+    WHERE space_id = ${spaceId}
+      AND resource = 'email_invite'
+      AND period = ${toPeriodDate(period)}::date
+  `;
+}
 
 export type SendPollInviteResult =
   | { ok: true; invite: { id: string; email: string } }
@@ -24,6 +77,7 @@ export type SendPollInviteResult =
         | "pollClosed"
         | "paymentRequired"
         | "dailyLimit"
+        | "monthlyLimit"
         | "alreadyResponded"
         | "alreadyInvited"
         | "sendFailed";
@@ -44,9 +98,16 @@ export async function sendPollInvite({
       select: {
         title: true,
         status: true,
+        spaceId: true,
         space: {
           select: {
             tier: true,
+            subscriptions: {
+              where: { active: true },
+              orderBy: { createdAt: "desc" },
+              take: 1,
+              select: { quantity: true },
+            },
             showBranding: true,
             hideAttribution: true,
             primaryColor: true,
@@ -81,7 +142,7 @@ export async function sendPollInvite({
     where: { type: "invite_sent", userId, createdAt: { gte: since } },
   });
 
-  if (sentToday >= MAX_POLL_INVITES_PER_DAY) {
+  if (sentToday >= MAX_EMAIL_INVITES_PER_DAY) {
     return { ok: false, reason: "dailyLimit" };
   }
 
@@ -120,10 +181,29 @@ export async function sendPollInvite({
   // A reactivated invite keeps its id and gains a second invite_sent event,
   // so the rollback below must only touch events from this attempt.
   const attemptStartedAt = new Date();
+  const period = startOfUtcMonth(attemptStartedAt);
+  // Charged to the poll's space, pooled across its members. A poll without a
+  // space has nothing to charge and, with billing on, cannot reach here.
+  const spaceId = poll.spaceId;
+  const monthlyLimit = getMonthlyEmailInviteLimit({
+    enforced: isEmailInviteQuotaEnabled,
+    seats: poll.space?.subscriptions[0]?.quantity ?? null,
+  });
 
   let invite: { id: string; email: string };
   try {
     invite = await prisma.$transaction(async (tx) => {
+      if (
+        spaceId &&
+        !(await reserveEmailInviteSlot(tx, {
+          spaceId,
+          period,
+          limit: monthlyLimit,
+        }))
+      ) {
+        throw new MonthlyLimitReached();
+      }
+
       let row: { id: string; email: string };
       if (existing) {
         // A revoked row is reactivated with a fresh token so a leaked old
@@ -157,6 +237,9 @@ export async function sendPollInvite({
       return row;
     });
   } catch (error) {
+    if (error instanceof MonthlyLimitReached) {
+      return { ok: false, reason: "monthlyLimit" };
+    }
     // A concurrent send for the same poll/email either claimed the revoked
     // row first or raced the unique index on create.
     if (
@@ -190,10 +273,13 @@ export async function sendPollInvite({
       { error, pollId, inviteId: invite.id },
       "Failed to send poll invite email",
     );
-    // Undo the row and its activity so the list never shows an invite that
+    // Undo the row, its activity and its usage slot so the list never shows an invite that
     // was never delivered. A reactivated row goes back to revoked.
     try {
       await prisma.$transaction(async (tx) => {
+        if (spaceId) {
+          await releaseEmailInviteSlot(tx, { spaceId, period });
+        }
         await tx.pollActivity.deleteMany({
           where: {
             pollId,

@@ -3,6 +3,7 @@ import type { BallotSource } from "./types";
 import {
   availableCount,
   derivePollInviteStatus,
+  getMonthlyEmailInviteLimit,
   getPollInvitePath,
   groupBallotOptions,
   isOptionPast,
@@ -403,5 +404,24 @@ describe("nextVote", () => {
   it("skips if need be when the poll disallows it", () => {
     expect(nextVote("yes", false)).toBe("no");
     expect(nextVote("no", false)).toBe("yes");
+  });
+});
+
+describe("getMonthlyEmailInviteLimit", () => {
+  it("scales with paid seats", () => {
+    expect(getMonthlyEmailInviteLimit({ enforced: true, seats: 5 })).toBe(1000);
+  });
+
+  it("gives at least one seat's worth without a subscription", () => {
+    expect(getMonthlyEmailInviteLimit({ enforced: true, seats: null })).toBe(
+      200,
+    );
+    expect(getMonthlyEmailInviteLimit({ enforced: true, seats: 0 })).toBe(200);
+  });
+
+  it("has no limit when not enforced", () => {
+    expect(
+      getMonthlyEmailInviteLimit({ enforced: false, seats: 3 }),
+    ).toBeNull();
   });
 });

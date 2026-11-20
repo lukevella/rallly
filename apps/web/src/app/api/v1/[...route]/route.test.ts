@@ -492,7 +492,7 @@ describe("API v1 - /polls", () => {
           deletedAt: null,
         },
         subscriptions: [],
-        apiUsage: used > 0 ? [{ count: used }] : [],
+        usage: used > 0 ? [{ count: used }] : [],
       });
     };
 

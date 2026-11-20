@@ -1,3 +1,4 @@
+import { EMAIL_INVITES_PER_SEAT_PER_MONTH } from "@/features/poll/invite/constants";
 import { instantToWallTime } from "@/lib/datetime/wall-time";
 import type {
   Ballot,
@@ -256,4 +257,21 @@ export function nextVote(
     case "ifNeedBe":
       return "no";
   }
+}
+
+/**
+ * A space's monthly invite limit, scaled by the seats it pays for. Null when
+ * the limit is not enforced, so usage is counted but not capped.
+ */
+export function getMonthlyEmailInviteLimit({
+  enforced,
+  seats,
+}: {
+  enforced: boolean;
+  seats: number | null;
+}) {
+  if (!enforced) {
+    return null;
+  }
+  return EMAIL_INVITES_PER_SEAT_PER_MONTH * Math.max(1, seats ?? 1);
 }

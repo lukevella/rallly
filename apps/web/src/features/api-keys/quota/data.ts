@@ -41,8 +41,8 @@ async function readApiPollQuota({
           apiPollRetainedUntil: true,
         },
       },
-      apiUsage: {
-        where: { resource: "poll", period },
+      usage: {
+        where: { resource: "api_poll", period },
         select: { count: true },
       },
     },
@@ -65,7 +65,7 @@ async function readApiPollQuota({
         override: space?.apiPollQuotaOverride ?? null,
         now,
       }),
-      used: space?.apiUsage[0]?.count ?? 0,
+      used: space?.usage[0]?.count ?? 0,
       resetAt: startOfNextUtcMonth(now),
       addonLimit,
       retainedLimit,
