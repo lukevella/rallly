@@ -25,6 +25,7 @@ export function Turnstile({
   onSuccess?: (token: string) => void;
 }) {
   const [isInteractive, setIsInteractive] = React.useState(false);
+  const reportedCodes = React.useRef(new Set<string>());
 
   return (
     <TurnstileWidget
@@ -36,7 +37,12 @@ export function Turnstile({
       onSuccess={onSuccess}
       onError={(code) => {
         // Without this a failed challenge is silent: the widget retries or
-        // stalls and the form never gets a token.
+        // stalls and the form never gets a token. The widget retries for as
+        // long as the tab stays open, so each code is reported once.
+        if (reportedCodes.current.has(code)) {
+          return;
+        }
+        reportedCodes.current.add(code);
         Sentry.captureMessage("Turnstile challenge failed", {
           level: "warning",
           tags: { turnstile_error_code: code },
