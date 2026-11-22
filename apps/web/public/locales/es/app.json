@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Se ha eliminado la invitación para {email}",
   "shareDialogInviteSent": "Invitación enviada a {email}",
   "shareDialogInvitesLoadFailed": "No se han podido cargar las invitaciones",
+  "shareDialogMonthlyLimit": "Este espacio ha alcanzado su límite mensual de invitaciones",
   "shareDialogNoInvitesDescription": "Introduce una dirección arriba para enviar la primera invitación.",
   "shareDialogNoInvitesTitle": "Todavía no hay nadie invitado",
   "shareDialogPersonalLinkCopied": "Se ha copiado el enlace personal para {email}",

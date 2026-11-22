@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "已移除发送给 {email} 的邀请",
   "shareDialogInviteSent": "邀请已发送至 {email}",
   "shareDialogInvitesLoadFailed": "无法加载邀请",
+  "shareDialogMonthlyLimit": "此空间已达到本月的邀请上限",
   "shareDialogNoInvitesDescription": "在上方输入地址，发送第一个邀请。",
   "shareDialogNoInvitesTitle": "尚未邀请任何人",
   "shareDialogPersonalLinkCopied": "{email} 的个人链接已复制",

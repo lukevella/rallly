@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Usunięto zaproszenie dla {email}",
   "shareDialogInviteSent": "Wysłano zaproszenie do {email}",
   "shareDialogInvitesLoadFailed": "Nie udało się załadować zaproszeń",
+  "shareDialogMonthlyLimit": "Ta przestrzeń osiągnęła miesięczny limit zaproszeń",
   "shareDialogNoInvitesDescription": "Wprowadź powyżej adres, aby wysłać pierwsze zaproszenie.",
   "shareDialogNoInvitesTitle": "Nikt nie został jeszcze zaproszony",
   "shareDialogPersonalLinkCopied": "Skopiowano osobisty link dla {email}",

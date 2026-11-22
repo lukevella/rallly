@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Invitasjonen til {email} er fjernet",
   "shareDialogInviteSent": "Invitasjon sendt til {email}",
   "shareDialogInvitesLoadFailed": "Kunne ikke laste inn invitasjoner",
+  "shareDialogMonthlyLimit": "Dette området har nådd invitasjonsgrensen for måneden",
   "shareDialogNoInvitesDescription": "Skriv inn en adresse ovenfor for å sende den første invitasjonen.",
   "shareDialogNoInvitesTitle": "Ingen er invitert ennå",
   "shareDialogPersonalLinkCopied": "Personlig lenke for {email} kopiert",

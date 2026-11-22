@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Приглашение для {email} удалено",
   "shareDialogInviteSent": "Приглашение отправлено на {email}",
   "shareDialogInvitesLoadFailed": "Не удалось загрузить приглашения",
+  "shareDialogMonthlyLimit": "В этом пространстве достигнут месячный лимит приглашений",
   "shareDialogNoInvitesDescription": "Введите адрес выше, чтобы отправить первое приглашение.",
   "shareDialogNoInvitesTitle": "Пока никто не приглашён",
   "shareDialogPersonalLinkCopied": "Персональная ссылка для {email} скопирована",

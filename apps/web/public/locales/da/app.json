@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Invitationen til {email} blev fjernet",
   "shareDialogInviteSent": "Invitation sendt til {email}",
   "shareDialogInvitesLoadFailed": "Kunne ikke indlæse invitationer",
+  "shareDialogMonthlyLimit": "Dette rum har nået sin invitationsgrænse for måneden",
   "shareDialogNoInvitesDescription": "Indtast en adresse ovenfor for at sende den første invitation.",
   "shareDialogNoInvitesTitle": "Ingen er inviteret endnu",
   "shareDialogPersonalLinkCopied": "Personligt link til {email} kopieret",
