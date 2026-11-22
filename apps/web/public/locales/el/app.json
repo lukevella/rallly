@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Η πρόσκληση για το {email} αφαιρέθηκε",
   "shareDialogInviteSent": "Η πρόσκληση στάλθηκε στο {email}",
   "shareDialogInvitesLoadFailed": "Δεν ήταν δυνατή η φόρτωση των προσκλήσεων",
+  "shareDialogMonthlyLimit": "Αυτός ο χώρος έφτασε το μηνιαίο όριο προσκλήσεων",
   "shareDialogNoInvitesDescription": "Εισαγάγετε μια διεύθυνση παραπάνω για να στείλετε την πρώτη πρόσκληση.",
   "shareDialogNoInvitesTitle": "Δεν έχει προσκληθεί κανείς ακόμη",
   "shareDialogPersonalLinkCopied": "Ο προσωπικός σύνδεσμος για το {email} αντιγράφηκε",

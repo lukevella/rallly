@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Pozvánka pro {email} odstraněna",
   "shareDialogInviteSent": "Pozvánka odeslána na {email}",
   "shareDialogInvitesLoadFailed": "Nepodařilo se načíst pozvánky",
+  "shareDialogMonthlyLimit": "Tento prostor dosáhl měsíčního limitu pozvánek",
   "shareDialogNoInvitesDescription": "Do pole výše zadejte adresu pro odeslání první pozvánky.",
   "shareDialogNoInvitesTitle": "Zatím nikdo nebyl pozván",
   "shareDialogPersonalLinkCopied": "Osobní odkaz pro {email} zkopírován",

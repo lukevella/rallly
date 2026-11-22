@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Uitnodiging voor {email} verwijderd",
   "shareDialogInviteSent": "Uitnodiging verzonden naar {email}",
   "shareDialogInvitesLoadFailed": "Kon uitnodigingen niet laden",
+  "shareDialogMonthlyLimit": "Deze ruimte heeft de uitnodigingslimiet voor deze maand bereikt",
   "shareDialogNoInvitesDescription": "Voer hierboven een adres in om de eerste uitnodiging te versturen.",
   "shareDialogNoInvitesTitle": "Nog niemand uitgenodigd",
   "shareDialogPersonalLinkCopied": "Persoonlijke link voor {email} gekopieerd",

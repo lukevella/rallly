@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Kutsu käyttäjälle {email} poistettu",
   "shareDialogInviteSent": "Kutsu lähetetty käyttäjälle {email}",
   "shareDialogInvitesLoadFailed": "Kutsujen lataaminen ei onnistunut",
+  "shareDialogMonthlyLimit": "Tämä tila on saavuttanut kuukausittaisen kutsurajan",
   "shareDialogNoInvitesDescription": "Syötä yllä olevaan kenttään sähköpostiosoite lähettääksesi ensimmäisen kutsun.",
   "shareDialogNoInvitesTitle": "Ei kutsuja vielä",
   "shareDialogPersonalLinkCopied": "Henkilökohtainen linkki käyttäjälle {email} kopioitu",

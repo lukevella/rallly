@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "{email} meghívó eltávolítva",
   "shareDialogInviteSent": "Meghívó elküldve: {email}",
   "shareDialogInvitesLoadFailed": "Nem tudtuk betölteni a meghívókat",
+  "shareDialogMonthlyLimit": "Ez a munkatér elérte a havi meghívási korlátját",
   "shareDialogNoInvitesDescription": "Adj meg egy címet fent az első meghívó elküldéséhez.",
   "shareDialogNoInvitesTitle": "Még nem lett meghívva senki",
   "shareDialogPersonalLinkCopied": "{email} személyes linkje másolva",

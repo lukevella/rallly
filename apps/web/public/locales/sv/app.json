@@ -1106,6 +1106,7 @@
   "shareDialogInviteRemoved": "Inbjudan för {email} togs bort",
   "shareDialogInviteSent": "Inbjudan skickad till {email}",
   "shareDialogInvitesLoadFailed": "Kunde inte läsa in inbjudningar",
+  "shareDialogMonthlyLimit": "Detta område har nått sin inbjudningsgräns för månaden",
   "shareDialogNoInvitesDescription": "Ange en adress ovan för att skicka den första inbjudan.",
   "shareDialogNoInvitesTitle": "Ingen har bjudits in ännu",
   "shareDialogPersonalLinkCopied": "Personlig länk för {email} kopierad",
