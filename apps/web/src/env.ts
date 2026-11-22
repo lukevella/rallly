@@ -199,6 +199,13 @@ export const env = createEnv({
     API_POLL_QUOTA_ENABLED: z.enum(["true", "false"]).default("false"),
 
     /**
+     * Refuse email invites once a space reaches its monthly limit. Usage is
+     * counted either way; off means count only.
+     * @default "false"
+     */
+    EMAIL_INVITE_QUOTA_ENABLED: z.enum(["true", "false"]).default("false"),
+
+    /**
      * Take the app offline for scheduled maintenance. Page traffic is
      * redirected to /maintenance and API requests are rejected with 503.
      * @default "false"
@@ -353,6 +360,7 @@ export const env = createEnv({
     EMAIL_QUEUE_SCHEDULER_ENABLED: process.env.EMAIL_QUEUE_SCHEDULER_ENABLED,
     OPEN_POLL_LIMIT_ENABLED: process.env.OPEN_POLL_LIMIT_ENABLED,
     API_POLL_QUOTA_ENABLED: process.env.API_POLL_QUOTA_ENABLED,
+    EMAIL_INVITE_QUOTA_ENABLED: process.env.EMAIL_INVITE_QUOTA_ENABLED,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     MAINTENANCE_BYPASS_TOKEN: process.env.MAINTENANCE_BYPASS_TOKEN,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,

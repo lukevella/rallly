@@ -37,11 +37,11 @@ export const reserveApiPollSlot = Effect.fn("apiPollQuota.reserveApiPollSlot")(
 
     const rows = yield* fromPrisma(
       () => prisma.$queryRaw<{ count: number }[]>`
-        INSERT INTO api_usage (space_id, resource, period, count, updated_at)
-        VALUES (${spaceId}, 'poll', ${toPeriodDate(period)}::date, 1, NOW())
+        INSERT INTO space_usage (space_id, resource, period, count, updated_at)
+        VALUES (${spaceId}, 'api_poll', ${toPeriodDate(period)}::date, 1, NOW())
         ON CONFLICT (space_id, resource, period) DO UPDATE
-        SET count = api_usage.count + 1, updated_at = NOW()
-        WHERE ${limit}::int IS NULL OR api_usage.count < ${limit}::int
+        SET count = space_usage.count + 1, updated_at = NOW()
+        WHERE ${limit}::int IS NULL OR space_usage.count < ${limit}::int
         RETURNING count
       `,
     );
@@ -70,10 +70,10 @@ export const releaseApiPollSlot = Effect.fn("apiPollQuota.releaseApiPollSlot")(
   }) {
     yield* fromPrisma(
       () => prisma.$executeRaw`
-        UPDATE api_usage
+        UPDATE space_usage
         SET count = GREATEST(count - 1, 0), updated_at = NOW()
         WHERE space_id = ${spaceId}
-          AND resource = 'poll'
+          AND resource = 'api_poll'
           AND period = ${toPeriodDate(period)}::date
       `,
     );
@@ -117,12 +117,12 @@ async function queueApiPollQuotaWarningOrThrow({
   }
 
   const period = startOfUtcMonth(now);
-  const where = { spaceId, resource: "poll" as const, period };
+  const where = { spaceId, resource: "api_poll" as const, period };
 
   await prisma.$transaction(async (tx) => {
     // Another request can release a slot between this request's reservation
     // and now, so the level comes from the stored count, not the reserved one.
-    const usage = await tx.apiUsage.findUnique({
+    const usage = await tx.spaceUsage.findUnique({
       where: { spaceId_resource_period: where },
       select: { count: true },
     });
@@ -136,7 +136,7 @@ async function queueApiPollQuotaWarningOrThrow({
 
     // Conditional on the column being unset, so concurrent reservations
     // crossing the same level still warn only once.
-    const { count: claimed } = await tx.apiUsage.updateMany({
+    const { count: claimed } = await tx.spaceUsage.updateMany({
       where:
         level === "at_limit"
           ? { ...where, atLimitWarnedAt: null }
@@ -152,7 +152,7 @@ async function queueApiPollQuotaWarningOrThrow({
     if (level === "at_limit") {
       // A count that drops back below the limit after a released slot must
       // not send a near limit warning after this one.
-      await tx.apiUsage.updateMany({
+      await tx.spaceUsage.updateMany({
         where: { ...where, nearLimitWarnedAt: null },
         data: { nearLimitWarnedAt: now },
       });

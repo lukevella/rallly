@@ -1,0 +1,24 @@
+enum SpaceUsageResource {
+  api_poll
+  email_invite
+
+  @@map("space_usage_resource")
+}
+
+/// Monthly counters for metered actions charged to a space, independent of
+/// the records they produce, so deleting a poll does not give back what it
+/// spent.
+model SpaceUsage {
+  spaceId           String             @map("space_id")
+  resource          SpaceUsageResource
+  period            DateTime           @db.Date
+  count             Int                @default(0)
+  nearLimitWarnedAt DateTime?          @map("near_limit_warned_at")
+  atLimitWarnedAt   DateTime?          @map("at_limit_warned_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  @@id([spaceId, resource, period])
+  @@map("space_usage")
+}

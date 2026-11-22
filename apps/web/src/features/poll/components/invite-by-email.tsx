@@ -152,6 +152,10 @@ export function InviteByEmail({
           dailyLimit: t("shareDialogDailyLimit", {
             defaultValue: "You've reached today's limit of 100 invites",
           }),
+          monthlyLimit: t("shareDialogMonthlyLimit", {
+            defaultValue:
+              "This space has reached its invite limit for the month",
+          }),
           pollClosed: t("shareDialogPollClosed", {
             defaultValue: "Reopen the poll to send invites",
           }),
