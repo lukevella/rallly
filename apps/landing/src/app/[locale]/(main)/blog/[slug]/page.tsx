@@ -19,6 +19,7 @@ import { getTranslation } from "@/i18n/server";
 import { getPostAlternates } from "@/lib/alternates";
 import { getAllPosts, getPostBySlug, getPostLocales } from "@/lib/api";
 import { getCategoryLabels } from "@/lib/blog-categories";
+import { localizePostHref } from "@/lib/post-links";
 
 export default async function Page(props: {
   params: Promise<{ locale: string; slug: string }>;
@@ -163,7 +164,21 @@ export default async function Page(props: {
           >
             <MDXRemote
               source={post.content}
-              components={{ PostFaq, FaqItem }}
+              components={{
+                PostFaq,
+                FaqItem,
+                a: ({ href, ...rest }: React.ComponentProps<"a">) => (
+                  <a
+                    {...rest}
+                    href={localizePostHref({
+                      href,
+                      locale: post.contentLocale,
+                      isPostTranslated: (slug) =>
+                        getPostLocales(slug).includes(post.contentLocale),
+                    })}
+                  />
+                ),
+              }}
             />
           </article>
         </div>
