@@ -181,6 +181,19 @@ export function formatDateTime(
   return formatter.format(date);
 }
 
+/** Days since the epoch of the calendar date `date` falls on in `timeZone`. */
+function calendarDayNumber(date: Date, timeZone: string | undefined) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value);
+  return Date.UTC(get("year"), get("month") - 1, get("day")) / 86_400_000;
+}
+
 export function formatDateTimeRange(
   start: DateInput,
   end: DateInput,
@@ -190,6 +203,23 @@ export function formatDateTimeRange(
   const endDate = toDate(end);
   const startTimeZone = resolveOptionalTimeZone(options.timeZone, startDate);
   const endTimeZone = resolveOptionalTimeZone(options.timeZone, endDate);
+  if (options.preset === "time") {
+    // Intl widens a time range that crosses midnight to both full dates; a
+    // time-only range marks the end's day offset instead ("11 PM – 3 AM +1").
+    const daysLater =
+      calendarDayNumber(endDate, endTimeZone) -
+      calendarDayNumber(startDate, startTimeZone);
+    if (daysLater > 0) {
+      const bare = { ...options, showTimeZone: false };
+      const endTime = formatDateTime(endDate, bare);
+      const endWithZone = formatDateTime(endDate, options);
+      // Keep the offset on the time, ahead of any zone label that follows it.
+      const endLabel = endWithZone.startsWith(endTime)
+        ? `${endTime} +${daysLater}${endWithZone.slice(endTime.length)}`
+        : `${endWithZone} +${daysLater}`;
+      return `${formatDateTime(startDate, bare)} – ${endLabel}`;
+    }
+  }
   const formatter = getCachedIntlDateFormatter({
     ...options,
     timeZone: startTimeZone,

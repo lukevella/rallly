@@ -157,6 +157,48 @@ describe("formatDateTimeRange", () => {
     expect(out).toContain("13:00");
     expect(out).toContain("14:00");
   });
+
+  it("marks a time range ending the next day instead of printing dates", () => {
+    const out = formatDateTimeRange(
+      at(23),
+      new Date(Date.UTC(2026, 5, 27, 3)),
+      {
+        preset: "time",
+        ...ctx("en", "hours12"),
+      },
+    );
+    expect(out).toBe("11:00 PM – 3:00 AM +1");
+  });
+
+  it("counts days in the display zone, not UTC", () => {
+    // 20:00–23:00 UTC is 21:00 Fri – 00:00 Sat in London (BST).
+    const out = formatDateTimeRange(at(20), at(23), {
+      preset: "time",
+      ...ctx("en", "hours24", "Europe/London"),
+    });
+    expect(out).toBe("21:00 – 00:00 +1");
+  });
+
+  it("keeps the offset ahead of the zone label", () => {
+    const out = formatDateTimeRange(
+      at(23),
+      new Date(Date.UTC(2026, 5, 27, 3)),
+      {
+        preset: "time",
+        ...ctx("en", "hours24"),
+        showTimeZone: true,
+      },
+    );
+    expect(out).toMatch(/^23:00 – 03:00 \+1 \S+/);
+  });
+
+  it("leaves a same-day range to Intl", () => {
+    const out = formatDateTimeRange(at(9), at(17), {
+      preset: "time",
+      ...ctx("en", "hours24", "Europe/London"),
+    });
+    expect(out).not.toContain("+");
+  });
 });
 
 describe("formatDate", () => {
