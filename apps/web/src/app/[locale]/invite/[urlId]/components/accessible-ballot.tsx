@@ -104,6 +104,10 @@ import {
   formatDateTimeRange,
   formatDuration,
 } from "@/lib/datetime/format";
+import {
+  calendarDateToUTCMidnight,
+  getCalendarDate,
+} from "@/lib/datetime/utils";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import type { BallotVoteSource } from "./ballot-vote-row";
 import { BallotVoteRow } from "./ballot-vote-row";
@@ -822,18 +826,29 @@ export function AccessibleBallot({
       return date(option.startTime, "weekdayMonthDay");
     }
     const start = new Date(option.startTime);
-    return sharedDuration
-      ? time(start)
-      : formatDateTimeRange(
-          start,
-          new Date(start.getTime() + option.duration * 60_000),
-          {
-            preset: "time",
-            locale,
-            timeFormat,
-            timeZone: displayTimeZone,
-          },
-        );
+    const end = new Date(start.getTime() + option.duration * 60_000);
+    if (sharedDuration) {
+      return time(start);
+    }
+    // Intl prints both full dates for a range ending on a later day; the day
+    // heading already carries the start date, so mark the end's offset instead.
+    const daysLater =
+      (calendarDateToUTCMidnight(
+        getCalendarDate(end, displayTimeZone),
+      ).getTime() -
+        calendarDateToUTCMidnight(
+          getCalendarDate(start, displayTimeZone),
+        ).getTime()) /
+      86_400_000;
+    if (daysLater > 0) {
+      return `${time(start)} – ${time(end)} +${daysLater}`;
+    }
+    return formatDateTimeRange(start, end, {
+      preset: "time",
+      locale,
+      timeFormat,
+      timeZone: displayTimeZone,
+    });
   };
 
   const dayHeading = (
