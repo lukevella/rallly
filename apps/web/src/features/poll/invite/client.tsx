@@ -186,8 +186,33 @@ export function useLinkToken() {
   return searchParams.get("token") ?? searchParams.get("invite") ?? undefined;
 }
 
-type ActionResult<T> = { data?: T; serverError?: string };
-type Failure = { ok: false; reason: string };
+type ActionResult<T> = {
+  data?: T;
+  serverError?: string;
+  validationErrors?: unknown;
+};
+
+/**
+ * What lay behind a failure, for analytics only. The reason picks the message
+ * the viewer reads; several causes share one reason.
+ */
+export type FailureDetail = {
+  cause: string;
+  server_error?: string;
+  error_name?: string;
+  error_message?: string;
+  status?: number;
+};
+type Failure = { ok: false; reason: string; detail?: FailureDetail };
+
+const thrownDetail = (cause: string, error: unknown): FailureDetail => ({
+  cause,
+  error_name: error instanceof Error ? error.name : typeof error,
+  error_message: String(error instanceof Error ? error.message : error).slice(
+    0,
+    200,
+  ),
+});
 
 /**
  * Runs a server action and folds transport and auth failures into the same
@@ -199,37 +224,72 @@ export async function runBallotAction<T extends { ok: boolean }>(
   try {
     const result = await run();
     if (!result?.data) {
+      const detail: FailureDetail = result?.serverError
+        ? { cause: "server_error", server_error: result.serverError }
+        : result?.validationErrors
+          ? { cause: "validation_error" }
+          : { cause: result ? "no_data" : "no_result" };
       switch (result?.serverError) {
         case "TOO_MANY_REQUESTS":
-          return { ok: false, reason: "tooManyRequests" };
+          return { ok: false, reason: "tooManyRequests", detail };
         case "UNAUTHORIZED":
-          return { ok: false, reason: "unauthorized" };
+          return { ok: false, reason: "unauthorized", detail };
         default:
-          return { ok: false, reason: "unknown" };
+          return { ok: false, reason: "unknown", detail };
       }
     }
     return result.data;
-  } catch {
-    return { ok: false, reason: "unknown" };
+  } catch (error) {
+    return {
+      ok: false,
+      reason: "unknown",
+      detail: thrownDetail("action_threw", error),
+    };
   }
 }
 
 /** A session to attach the response to: the existing one, or a new guest. */
 export async function ensureSession(): Promise<{ ok: true } | Failure> {
+  let step = "get_session";
   try {
     const { data: existing } = await authClient.getSession();
     if (existing?.user) return { ok: true };
+    step = "sign_in";
     const { error } = await authClient.signIn.anonymous();
     const result = toGuestSessionResult(error);
-    if (!result.ok) return result;
+    if (!result.ok) {
+      return {
+        ...result,
+        detail: {
+          cause: "sign_in_error",
+          status: error?.status,
+          server_error: error?.code,
+        },
+      };
+    }
     // A browser that blocks cookies drops Set-Cookie and still reports
     // success, so only reading the session back proves it.
-    const { data: session } = await authClient.getSession();
-    return session?.user
-      ? { ok: true }
-      : { ok: false, reason: "sessionUnavailable" };
-  } catch {
-    return { ok: false, reason: "sessionUnavailable" };
+    step = "read_back";
+    const { data: session, error: readBackError } =
+      await authClient.getSession();
+    if (session?.user) return { ok: true };
+    return {
+      ok: false,
+      reason: "sessionUnavailable",
+      detail: readBackError
+        ? {
+            cause: "read_back_error",
+            status: readBackError.status,
+            server_error: readBackError.code,
+          }
+        : { cause: "no_session_after_sign_in" },
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      reason: "sessionUnavailable",
+      detail: thrownDetail(`${step}_threw`, error),
+    };
   }
 }
 
