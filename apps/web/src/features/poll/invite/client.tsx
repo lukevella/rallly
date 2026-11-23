@@ -270,14 +270,20 @@ export async function ensureSession(): Promise<{ ok: true } | Failure> {
     // A browser that blocks cookies drops Set-Cookie and still reports
     // success, so only reading the session back proves it.
     step = "read_back";
-    const { data: session } = await authClient.getSession();
-    return session?.user
-      ? { ok: true }
-      : {
-          ok: false,
-          reason: "sessionUnavailable",
-          detail: { cause: "no_session_after_sign_in" },
-        };
+    const { data: session, error: readBackError } =
+      await authClient.getSession();
+    if (session?.user) return { ok: true };
+    return {
+      ok: false,
+      reason: "sessionUnavailable",
+      detail: readBackError
+        ? {
+            cause: "read_back_error",
+            status: readBackError.status,
+            server_error: readBackError.code,
+          }
+        : { cause: "no_session_after_sign_in" },
+    };
   } catch (error) {
     return {
       ok: false,
