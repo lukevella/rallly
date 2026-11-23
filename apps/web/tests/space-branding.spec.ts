@@ -122,7 +122,7 @@ test.describe("space branding on the invite page", () => {
     const respond = async () => {
       const context = await browser.newContext();
       const page = await context.newPage();
-      await page.goto(`/invite/${POLL_ID}/vote`);
+      await page.goto(`/invite/${POLL_ID}`);
       await page
         .getByRole("radio", { name: "Yes", exact: true })
         .first()

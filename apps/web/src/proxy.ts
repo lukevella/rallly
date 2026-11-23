@@ -49,7 +49,7 @@ async function handleMaintenance(req: NextRequest) {
 // Email link scanners (Safe Links and similar) send HEAD to every link in an
 // invite or notification email, in bursts. Rendering these pages for them
 // opens a database connection per request for a response with no body.
-const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+(?:\/vote)?\/?$/;
+const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+\/?$/;
 
 // The API host shares this deployment, so without this every app page would
 // render there too. `/v1` and `/api` never reach the proxy (see the matcher),

@@ -51,6 +51,14 @@ test.describe("Legacy edit link", () => {
     );
 
     await page.goto(`/invite/${POLL_ID}?token=${sealed}`);
-    await expect(page.getByTestId("participant-menu")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Status" })).toContainText(
+      "You responded as Legacy Guest",
+    );
+    // Only a response that can still be changed has its menu.
+    await expect(
+      page.getByRole("region", { name: "Status" }).getByRole("button", {
+        name: "More options",
+      }),
+    ).toBeVisible();
   });
 });

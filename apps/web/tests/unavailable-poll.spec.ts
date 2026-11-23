@@ -46,16 +46,21 @@ test.describe("unavailable poll invite page", () => {
     // refusal lands.
     await page.goto(`/invite/${poll.id}`);
     await expect(main.getByText(scamTitle).first()).toBeVisible();
-    await page.locator("data-testid=vote-selector >> nth=0").click();
-    await page.click("button >> text='Continue'");
-    await page.type('[placeholder="Jessie Smith"]', "Victim");
+    await main
+      .locator("fieldset:has(input[type=radio])")
+      .first()
+      .getByRole("radio", { name: "Yes", exact: true })
+      .focus();
+    await page.keyboard.press("Space");
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByLabel("Name").fill("Victim");
 
     await prisma.user.update({
       where: { id: user.id },
       data: { banned: true, bannedAt: new Date(), banReason: "scam" },
     });
 
-    await page.click("text='Save availability'");
+    await page.getByRole("button", { name: "Confirm" }).click();
     // Either the form reports the refusal, or the page has already
     // re-rendered into the removed page; both mean the action has settled.
     await expect(
@@ -63,7 +68,7 @@ test.describe("unavailable poll invite page", () => {
         .getByText("This poll is no longer accepting responses.")
         .or(main.getByRole("heading", { name: "This poll has been removed" })),
     ).toBeVisible();
-    await expect(page.getByText("Your response has been saved")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: /^Thanks/ })).toHaveCount(0);
     expect(await prisma.participant.count({ where: { pollId: poll.id } })).toBe(
       0,
     );

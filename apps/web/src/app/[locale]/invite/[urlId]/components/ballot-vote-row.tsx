@@ -138,6 +138,7 @@ export const BallotVoteRow = React.memo(function BallotVoteRow({
       <BallotVoteMark vote={vote} />
       <span
         aria-hidden="true"
+        data-testid="option-time"
         className="flex min-h-9 min-w-0 flex-1 items-center text-sm tabular-nums lg:[@media(pointer:fine)]:min-h-9.5"
       >
         <BallotTimeText

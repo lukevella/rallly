@@ -62,14 +62,32 @@ function watchForHydrationErrors(page: Page) {
   return errors;
 }
 
-async function readWhenHydrated(page: Page, testId: string) {
-  const locator = page.getByTestId(testId).first();
+async function readWhenHydrated(page: Page, testIdOrSelector: string) {
+  const locator = (
+    testIdOrSelector.includes(" ")
+      ? page.locator(testIdOrSelector)
+      : page.getByTestId(testIdOrSelector)
+  ).first();
   // Datetime components render blank until hydration, when the viewer's
   // zone is known.
   await expect(locator).not.toHaveText(/^[\s ]*$/);
   const text = await locator.textContent();
   return text?.trim() ?? "";
 }
+
+/** The first option's full date and time, as its radio group is named. */
+function readOptionLegend(page: Page) {
+  return readWhenHydrated(page, "main fieldset:has(input[type=radio]) legend");
+}
+
+/** What the first option shows on screen: its day heading, then its row. */
+async function readVisibleOption(page: Page) {
+  const heading = await readWhenHydrated(page, "main section:has(fieldset) h3");
+  const row = await readWhenHydrated(page, "option-time");
+  return `${heading} ${row}`;
+}
+
+const SEPTEMBER_10 = /\bSep\w* 10\b/;
 
 /**
  * Formats an instant with the page's own Intl engine (matching the app's
@@ -231,14 +249,23 @@ test.describe("cross-timezone rendering", () => {
       await openInBothZones(`/invite/${ZONED_POLL_ID}`);
 
     const startIso = ZONED_POLL_START.toISOString();
-    const [timeA, timeB] = await Promise.all([
-      readWhenHydrated(pageA, "option-start-time"),
-      readWhenHydrated(pageB, "option-start-time"),
+    const [legendA, legendB] = await Promise.all([
+      readOptionLegend(pageA),
+      readOptionLegend(pageB),
+    ]);
+    const timeA = await formatTimeInPage(pageA, startIso); // 9:45 PM
+    const timeB = await formatTimeInPage(pageB, startIso); // 1:30 PM
+
+    const [visibleA, visibleB] = await Promise.all([
+      readVisibleOption(pageA),
+      readVisibleOption(pageB),
     ]);
 
-    expect(timeA).toBe(await formatTimeInPage(pageA, startIso)); // 9:45 PM
-    expect(timeB).toBe(await formatTimeInPage(pageB, startIso)); // 1:30 PM
     expect(timeA).not.toBe(timeB);
+    expect(legendA).toContain(timeA);
+    expect(legendB).toContain(timeB);
+    expect(visibleA).toContain(timeA);
+    expect(visibleB).toContain(timeB);
 
     expectNoHydrationErrors();
     await close();
@@ -248,11 +275,9 @@ test.describe("cross-timezone rendering", () => {
     const { pageA, pageB, expectNoHydrationErrors, close } =
       await openInBothZones(`/invite/${FLOATING_POLL_ID}`);
 
-    const [timeA, timeB, dayA, dayB] = await Promise.all([
-      readWhenHydrated(pageA, "option-start-time"),
-      readWhenHydrated(pageB, "option-start-time"),
-      readWhenHydrated(pageA, "option-day"),
-      readWhenHydrated(pageB, "option-day"),
+    const [legendA, legendB] = await Promise.all([
+      readOptionLegend(pageA),
+      readOptionLegend(pageB),
     ]);
 
     // Floating wall times are stored as UTC and must render unshifted.
@@ -261,11 +286,20 @@ test.describe("cross-timezone rendering", () => {
       FLOATING_POLL_START.toISOString(),
       "UTC",
     ); // 12:30 AM
-    expect(timeA).toBe(expected);
-    expect(timeB).toBe(expected);
+    expect(legendA).toContain(expected);
+    expect(legendB).toContain(expected);
     // A viewer west of UTC must not see the previous day.
-    expect(dayA).toBe("10");
-    expect(dayB).toBe("10");
+    expect(legendA).toMatch(SEPTEMBER_10);
+    expect(legendB).toMatch(SEPTEMBER_10);
+
+    const [visibleA, visibleB] = await Promise.all([
+      readVisibleOption(pageA),
+      readVisibleOption(pageB),
+    ]);
+    expect(visibleA).toContain(expected);
+    expect(visibleB).toContain(expected);
+    expect(visibleA).toMatch(SEPTEMBER_10);
+    expect(visibleB).toMatch(SEPTEMBER_10);
 
     expectNoHydrationErrors();
     await close();
@@ -275,17 +309,24 @@ test.describe("cross-timezone rendering", () => {
     const { pageA, pageB, expectNoHydrationErrors, close } =
       await openInBothZones(`/invite/${DATE_POLL_ID}`);
 
-    const [dayA, dayB, monthA, monthB] = await Promise.all([
-      readWhenHydrated(pageA, "option-day"),
-      readWhenHydrated(pageB, "option-day"),
-      readWhenHydrated(pageA, "option-month"),
-      readWhenHydrated(pageB, "option-month"),
+    const [legendA, legendB] = await Promise.all([
+      readOptionLegend(pageA),
+      readOptionLegend(pageB),
     ]);
 
-    expect(dayA).toBe("10");
-    expect(dayB).toBe("10");
-    expect(monthA).toBe("Sep");
-    expect(monthB).toBe("Sep");
+    expect(legendA).toMatch(SEPTEMBER_10);
+    expect(legendB).toMatch(SEPTEMBER_10);
+
+    // On screen the heading carries the month and the row the day.
+    const [visibleA, visibleB] = await Promise.all([
+      readVisibleOption(pageA),
+      readVisibleOption(pageB),
+    ]);
+    for (const visible of [visibleA, visibleB]) {
+      expect(visible).toMatch(/\bSep/);
+      // The row's day and weekday sit side by side ("10Fri").
+      expect(visible).toMatch(/\s10(?!\d)/);
+    }
 
     expectNoHydrationErrors();
     await close();

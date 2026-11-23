@@ -8,7 +8,6 @@ const request = (method: string, path: string) =>
 describe("proxy", () => {
   it.each([
     "/invite/abc123",
-    "/invite/abc123/vote",
     "/poll/abc123",
     "/unsubscribe/token",
   ])("answers HEAD %s without rendering", async (path) => {
