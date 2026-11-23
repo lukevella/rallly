@@ -1,3 +1,6 @@
+import { avatarAssetProfile } from "@/features/user/constants";
+import { parseAssetKey } from "@/lib/storage/asset-profile";
+
 export type GuestSessionResult =
   | { ok: true }
   | { ok: false; reason: "tooManyRequests" | "sessionUnavailable" };
@@ -23,3 +26,16 @@ export const toGuestSessionResult = (
 
   return { ok: false, reason: "sessionUnavailable" };
 };
+
+/**
+ * Whether a stored image value is an avatar object this user uploaded. The
+ * image column is writable by its owner, so it proves nothing about who owns
+ * the object it names: anything that deletes by it checks this first.
+ */
+export const isOwnAvatarKey = ({
+  key,
+  userId,
+}: {
+  key: string;
+  userId: string;
+}) => parseAssetKey(key, [avatarAssetProfile])?.entityId === userId;
