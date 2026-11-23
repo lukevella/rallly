@@ -1,6 +1,7 @@
 "use server";
 
 import { displayedCurrencies, getProPricing } from "@rallly/billing";
+import { createLogger } from "@rallly/logger";
 import { absoluteUrl } from "@rallly/utils/absolute-url";
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
@@ -27,7 +28,7 @@ import { getStripe } from "@/features/billing/service";
 import {
   canChangeBillingInterval,
   isEarlySupporter,
-  isStripeInvalidRequestError,
+  isStripeCurrencyConflictError,
   resolvePriceSet,
 } from "@/features/billing/utils";
 import { getActiveSpaceForUser } from "@/features/space/data";
@@ -36,6 +37,8 @@ import { AppError } from "@/lib/errors/app-error";
 import { track } from "@/lib/posthog";
 import { authActionClient } from "@/lib/safe-action/server";
 import { validateRedirectUrl } from "@/lib/utils/redirect";
+
+const logger = createLogger("billing");
 
 const returnPathSchema = z
   .string()
@@ -167,13 +170,15 @@ export const upgradeToProAction = authActionClient
       });
 
     // Stripe refuses a currency that conflicts with anything the customer
-    // still has open in another one (e.g. a subscription for another space),
-    // with no code or param to match on.
-    // Retrying without the hint lets Stripe pick the customer's currency; an
-    // unrelated invalid request fails again and is thrown.
+    // still has open in another one (e.g. a subscription for another space).
+    // Retrying without the hint lets Stripe pick the customer's currency.
     const checkoutSession = await createCheckoutSession(currency).catch(
       (error: unknown) => {
-        if (currency && isStripeInvalidRequestError(error)) {
+        if (currency && isStripeCurrencyConflictError(error)) {
+          logger.warn(
+            { userId: ctx.user.id, spaceId: space.id, currency },
+            "Checkout currency conflicts with the customer, retrying without it",
+          );
           return createCheckoutSession();
         }
         throw error;

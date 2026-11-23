@@ -4,7 +4,7 @@ import {
   canChangeApiPollTier,
   classifyApiPollTierChange,
   isEarlySupporter,
-  isStripeInvalidRequestError,
+  isStripeCurrencyConflictError,
   resolvePriceSet,
 } from "./utils";
 
@@ -105,22 +105,42 @@ describe("resolvePriceSet", () => {
   });
 });
 
-describe("isStripeInvalidRequestError", () => {
+describe("isStripeCurrencyConflictError", () => {
   it("matches the error Stripe returns for a currency conflict", () => {
     expect(
-      isStripeInvalidRequestError({
+      isStripeCurrencyConflictError({
         rawType: "invalid_request_error",
         code: null,
         param: null,
         message: "You cannot combine currencies on a single customer.",
       }),
     ).toBe(true);
+    expect(
+      isStripeCurrencyConflictError({ rawType: "invalid_request_error" }),
+    ).toBe(true);
+  });
+
+  it("ignores invalid requests that name a param or code", () => {
+    expect(
+      isStripeCurrencyConflictError({
+        rawType: "invalid_request_error",
+        param: "currency",
+        message: "Price does not support this currency",
+      }),
+    ).toBe(false);
+    expect(
+      isStripeCurrencyConflictError({
+        rawType: "invalid_request_error",
+        code: "resource_missing",
+        param: "line_items[0][price]",
+      }),
+    ).toBe(false);
   });
 
   it("ignores other errors", () => {
-    expect(isStripeInvalidRequestError({ rawType: "api_error" })).toBe(false);
-    expect(isStripeInvalidRequestError(new Error("boom"))).toBe(false);
-    expect(isStripeInvalidRequestError(null)).toBe(false);
+    expect(isStripeCurrencyConflictError({ rawType: "api_error" })).toBe(false);
+    expect(isStripeCurrencyConflictError(new Error("boom"))).toBe(false);
+    expect(isStripeCurrencyConflictError(null)).toBe(false);
   });
 });
 
