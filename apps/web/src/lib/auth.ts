@@ -35,6 +35,7 @@ import { isRegistrationOpen } from "@/features/instance-settings/data";
 import { getUserLocaleByEmail } from "@/features/user/data";
 import type { UserDTO } from "@/features/user/schema";
 import { jobTitleFieldSchema } from "@/features/user/schema";
+import { isOwnAvatarKey } from "@/features/user/utils";
 import { getTranslation } from "@/i18n/server";
 import { getLocale } from "@/i18n/server/get-locale";
 import {
@@ -435,6 +436,24 @@ export const authLib = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      // `image` is a built-in field the update endpoint accepts as any
+      // string. The only value a user may put there is an avatar they
+      // uploaded; provider avatar URLs are written at account creation.
+      if (ctx.path === "/update-user" && ctx.body?.image != null) {
+        const session = await getSessionFromCtx(ctx);
+        const image = ctx.body.image;
+        if (
+          !session ||
+          typeof image !== "string" ||
+          !isOwnAvatarKey({ key: image, userId: session.user.id })
+        ) {
+          throw new APIError("BAD_REQUEST", {
+            code: "INVALID_IMAGE",
+            message: "Invalid image",
+          });
+        }
+      }
+
       if (
         ctx.path.startsWith("/sign-in") ||
         ctx.path.startsWith("/email-otp")
