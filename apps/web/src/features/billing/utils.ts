@@ -31,12 +31,22 @@ export function isStripeResourceMissingError(error: unknown) {
   return isStripeErrorCode(error, "resource_missing");
 }
 
-export function isStripeInvalidRequestError(error: unknown) {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    (error as { rawType?: unknown }).rawType === "invalid_request_error"
-  );
+/**
+ * Stripe rejects a checkout currency that conflicts with what the customer
+ * already has open in another one as an invalid request with no code and no
+ * param. An invalid request that names either is about something else, such
+ * as a price that lacks the currency.
+ */
+export function isStripeCurrencyConflictError(error: unknown) {
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+  const { rawType, code, param } = error as {
+    rawType?: unknown;
+    code?: unknown;
+    param?: unknown;
+  };
+  return rawType === "invalid_request_error" && code == null && param == null;
 }
 
 type PricingLike = Pick<PricingData, "monthly" | "yearly" | "earlySupporter">;
