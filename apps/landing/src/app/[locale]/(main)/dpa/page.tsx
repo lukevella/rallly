@@ -28,7 +28,7 @@ export default async function DataProcessingAgreement() {
     <Section>
       <LegalPageLayout
         title="Data processing agreement"
-        lastUpdated="2026-09-29"
+        lastUpdated="2026-11-23"
       >
         <p>
           This Data Processing Agreement (&quot;DPA&quot;) forms part of the{" "}
@@ -299,9 +299,10 @@ export default async function DataProcessingAgreement() {
           event within 35 days of deletion.
         </p>
         <p>
-          9.4 Short-lived copies of Customer Data used in access-restricted
-          preview environments are deleted automatically no later than 7 days
-          after they are created.
+          9.4 Preview and test environments do not contain Customer Data. Where
+          a copy of Customer Data is needed to diagnose a fault, it is held in
+          an access-restricted environment and deleted no later than 7 days
+          after it is created.
         </p>
 
         <hr />
@@ -362,9 +363,10 @@ export default async function DataProcessingAgreement() {
           <li>
             <strong>Access control:</strong> access to production systems is
             limited to authorized personnel on a need-to-know basis and
-            protected by strong authentication. The Service itself uses email
-            verification codes, Google, or Microsoft sign-in, so we store no
-            user passwords.
+            protected by strong authentication. Users sign in to the Service
+            with email verification codes, Google, or Microsoft accounts. A user
+            may also choose to set a password, which is stored only as a salted
+            hash.
           </li>
           <li>
             <strong>Tenant isolation:</strong> Customer Data is scoped to its
