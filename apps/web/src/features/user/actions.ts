@@ -9,6 +9,7 @@ import * as z from "zod";
 import { avatarAssetProfile } from "@/features/user/constants";
 import { isEmailTaken } from "@/features/user/data";
 import { unbanUser, updateUserRole } from "@/features/user/mutations";
+import { isOwnAvatarKey } from "@/features/user/utils";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
@@ -105,6 +106,13 @@ export const checkEmailAvailabilityAction = authActionClient
     return { ok: true as const };
   });
 
+// The image column is writable through Better-Auth's update endpoint, so the
+// stored value is only deleted when it names an avatar this user uploaded.
+const ownAvatarKey = (user: { id: string; image?: string }) =>
+  user.image && isOwnAvatarKey({ key: user.image, userId: user.id })
+    ? user.image
+    : null;
+
 export const getAvatarUploadUrlAction = authActionClient
   .metadata({ actionName: "get_avatar_upload_url" })
   .use(createRateLimitMiddleware({ requests: 10, duration: "1 h", by: "user" }))
@@ -139,7 +147,7 @@ export const updateUserAvatarAction = authActionClient
     });
 
     await replaceStoredAsset({
-      currentKey: ctx.user.image,
+      currentKey: ownAvatarKey(ctx.user),
       nextKey: imageKey,
       persist: async () => {
         await authLib.api.updateUser({
@@ -156,7 +164,7 @@ export const removeUserAvatarAction = authActionClient
   .metadata({ actionName: "remove_user_avatar" })
   .action(async ({ ctx }) => {
     await replaceStoredAsset({
-      currentKey: ctx.user.image,
+      currentKey: ownAvatarKey(ctx.user),
       nextKey: null,
       persist: async () => {
         await authLib.api.updateUser({

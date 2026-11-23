@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Prisma, TimeFormat } from "@rallly/database";
 import { prisma } from "@rallly/database";
+import { isOwnAvatarKey } from "@/features/user/utils";
 import { authLib } from "@/lib/auth";
 import { SESSION_TTL_SECONDS } from "@/lib/auth-config";
 import { deleteStoredAsset } from "@/lib/storage/asset-upload";
@@ -129,14 +130,15 @@ export async function hardDeleteUser({ userId }: { userId: string }) {
 
   await internalAdapter.deleteUserSessions(userId);
 
-  // The avatar lives in object storage, outside the cascade. External URLs
-  // (OAuth provider avatars) are not ours to delete.
+  // The avatar lives in object storage, outside the cascade. Only an object
+  // this user uploaded is deleted: the column is owner-writable and may name
+  // an external URL (OAuth provider avatars) or someone else's object.
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { image: true },
   });
 
-  if (user?.image) {
+  if (user?.image && isOwnAvatarKey({ key: user.image, userId })) {
     await deleteStoredAsset(user.image);
   }
 
