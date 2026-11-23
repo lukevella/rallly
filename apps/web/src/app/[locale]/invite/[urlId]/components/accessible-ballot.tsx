@@ -57,6 +57,7 @@ import { getCityFromTimezoneId } from "@/components/time-zone-picker/timezone-da
 import { AddToCalendarButton } from "@/features/calendars/components/add-to-calendar-button";
 import { PollConferencingSummary } from "@/features/conferencing/components/poll-conferencing-summary";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
+import type { FailureDetail } from "@/features/poll/invite/client";
 import {
   ensureSession,
   runBallotAction,
@@ -703,7 +704,9 @@ export function AccessibleBallot({
     setSaveError(null);
     // So what this save announces reads as new, even with the same words.
     setStatus("");
-    let result: { ok: true } | { ok: false; reason: string };
+    let result:
+      | { ok: true }
+      | { ok: false; reason: string; detail?: FailureDetail };
     if (isNew) {
       const session = await ensureSession();
       result = session.ok
@@ -725,7 +728,11 @@ export function AccessibleBallot({
         ? await runBallotAction(() =>
             updateParticipantVotesAction({ participantId, votes, token }),
           )
-        : { ok: false, reason: "unknown" };
+        : {
+            ok: false,
+            reason: "unknown",
+            detail: { cause: "no_active_response" },
+          };
       if (result.ok) state.markSaved();
     }
     setPending(false);
@@ -733,6 +740,8 @@ export function AccessibleBallot({
       capture("poll_vote:save_error", {
         reason: result.reason,
         is_new: isNew,
+        online: navigator.onLine,
+        ...result.detail,
       });
       fail([], errorMessage(result.reason));
       return;
