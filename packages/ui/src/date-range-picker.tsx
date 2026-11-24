@@ -120,7 +120,7 @@ function DateRangePicker({
       </Group>
       <Popover
         className={cn(
-          "z-50 rounded-lg border bg-popover p-3 text-popover-foreground shadow-md outline-none",
+          "z-50 rounded-popup border bg-popover p-3 text-popover-foreground shadow-md outline-none",
           "data-[entering]:fade-in-0 data-[entering]:animate-in",
           "data-[exiting]:fade-out-0 data-[exiting]:animate-out",
         )}
