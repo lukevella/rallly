@@ -9,6 +9,7 @@ import {
 } from "@rallly/ui/field";
 import { InfoIcon, KeyRoundIcon } from "lucide-react";
 import type { Metadata } from "next";
+import React from "react";
 import type { Params } from "@/app/[locale]/types";
 import {
   PageSection,
@@ -33,6 +34,7 @@ import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { ChangePasswordDialog } from "./components/change-password-dialog";
 import { SetupPasswordDialog } from "./components/setup-password-dialog";
+import { SignInAccounts } from "./components/sign-in-accounts";
 
 export default async function SecurityPage() {
   const user = await loadUser();
@@ -121,6 +123,9 @@ export default async function SecurityPage() {
                       />
                     )}
                   </Field>
+                  <React.Suspense fallback={null}>
+                    <SignInAccounts />
+                  </React.Suspense>
                 </FieldGroup>
               </PageSectionContent>
             </PageSection>

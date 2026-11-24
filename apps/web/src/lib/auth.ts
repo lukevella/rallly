@@ -425,6 +425,10 @@ export const authLib = betterAuth({
       // email_verified claim. Without trust, a user whose row predates their
       // first OIDC sign-in (an email login, or a changed subject) is refused.
       trustedProviders: ["oidc"],
+      // Email code login needs no account row, so with it on a user can
+      // remove their last OAuth link and still sign in. Without it (SSO
+      // only), the last link is the only way in.
+      allowUnlinkingAll: env.EMAIL_LOGIN_ENABLED !== "false",
     },
     fields: {
       providerId: "provider",

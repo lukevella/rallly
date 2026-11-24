@@ -100,6 +100,19 @@ export const getUserHasPassword = async (userId: string) => {
   return !!account;
 };
 
+// OAuth and OIDC links that can sign the user in. The credential row holds
+// the password, which the security page manages on its own row.
+export function getUserSignInAccounts(userId: string) {
+  return prisma.account.findMany({
+    where: {
+      userId,
+      provider: { not: "credential" },
+    },
+    select: { id: true, provider: true },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
 export const getUserHasNoAccounts = async (userId: string) => {
   const accountCount = await prisma.account.count({
     where: {
