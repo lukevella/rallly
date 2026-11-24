@@ -125,6 +125,13 @@ const stepAfterCardClassName =
 /** The fields' own fill, which the input group's control drops. */
 const fieldGroupClassName = "bg-background/80 dark:bg-foreground/5";
 
+/**
+ * Disabled shortcuts stay focusable so Undo can't drop focus to the page, which
+ * renders aria-disabled instead of the native attribute the button styles key on.
+ */
+const shortcutClassName =
+  "shrink-0 rounded-full aria-disabled:pointer-events-none aria-disabled:opacity-50";
+
 /** A shortcut that's on: its label says Undo, so it can't also be aria-pressed. */
 const shortcutOnClassName =
   "border-solid bg-gray-200 text-foreground hover:bg-gray-200 dark:bg-white/15 dark:hover:bg-white/15";
@@ -542,9 +549,11 @@ export function AccessibleBallot({
     votable.length > 0 &&
     votable.every((option) => state.answers[option.id] === vote);
   // Only a shortcut can be undone: every option answered the same by hand has
-  // nothing to go back to, so its button keeps its name and does nothing.
+  // nothing to go back to, so its button is disabled.
   const shortcutOn = (vote: BallotVote) =>
     answersBeforeShortcut !== null && allMarked(vote);
+  const shortcutIdle = (vote: BallotVote) =>
+    allMarked(vote) && !shortcutOn(vote);
 
   // An answer given by hand keeps what the shortcut did, so Undo can no longer
   // take it back over the top of that edit.
@@ -1699,9 +1708,11 @@ export function AccessibleBallot({
                         variant="ghost"
                         className={cn(
                           ballotToggleClassName,
-                          "shrink-0 rounded-full",
+                          shortcutClassName,
                           shortcutOn("yes") && shortcutOnClassName,
                         )}
+                        disabled={shortcutIdle("yes")}
+                        focusableWhenDisabled={true}
                         onClick={() => markAll("yes")}
                       >
                         {shortcutOn("yes") ? (
@@ -1718,9 +1729,11 @@ export function AccessibleBallot({
                         variant="ghost"
                         className={cn(
                           ballotToggleClassName,
-                          "shrink-0 rounded-full",
+                          shortcutClassName,
                           shortcutOn("no") && shortcutOnClassName,
                         )}
+                        disabled={shortcutIdle("no")}
+                        focusableWhenDisabled={true}
                         onClick={() => markAll("no")}
                       >
                         {shortcutOn("no") ? (
