@@ -68,7 +68,10 @@ export function SpaceDropdown({
               <Button
                 aria-labelledby={nameId}
                 className={cn(
-                  "group/space-trigger relative size-12 rounded-lg p-0",
+                  // The icon may be any shape (a transparent PNG logo), so
+                  // nothing paints behind it: the ghost hover background
+                  // would show through the transparent corners.
+                  "group/space-trigger relative size-12 rounded-lg bg-transparent p-0 hover:bg-transparent active:bg-transparent data-popup-open:bg-transparent",
                   {
                     "pointer-events-none": isSwitching,
                   },
@@ -78,16 +81,19 @@ export function SpaceDropdown({
               />
             }
           >
+            {/* Dimming with a filter keeps transparent pixels transparent,
+              so the effect follows the icon's own shape. */}
             <SpaceIcon
               src={displayedSpace.image}
               name={displayedSpace.name}
               size="xl"
+              className="transition-[filter] duration-150 ease-out group-hover/space-trigger:brightness-50 group-focus-visible/space-trigger:brightness-50 group-data-popup-open/space-trigger:brightness-50 motion-reduce:transition-none"
             />
             <span
               aria-hidden="true"
-              className="absolute inset-0 hidden items-center justify-center rounded-lg bg-black/50 text-white group-hover/space-trigger:flex group-focus-visible/space-trigger:flex group-data-popup-open/space-trigger:flex"
+              className="pointer-events-none absolute inset-0 flex scale-75 items-center justify-center text-white opacity-0 transition-[opacity,scale] duration-150 ease-out group-hover/space-trigger:scale-100 group-hover/space-trigger:opacity-100 group-focus-visible/space-trigger:scale-100 group-focus-visible/space-trigger:opacity-100 group-data-popup-open/space-trigger:scale-100 group-data-popup-open/space-trigger:opacity-100 motion-reduce:transition-none"
             >
-              <ChevronDownIcon className="size-5" />
+              <ChevronDownIcon className="size-5 drop-shadow-sm" />
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64" align="start">
