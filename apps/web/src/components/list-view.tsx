@@ -1,6 +1,16 @@
 import { cn } from "@rallly/ui";
 import { SidebarTrigger } from "@rallly/ui/sidebar";
 import { Skeleton } from "@rallly/ui/skeleton";
+import { MenuIcon } from "lucide-react";
+
+// Opens the sidebar on small screens, at the trailing edge of the page title.
+function MobileMenuButton() {
+  return (
+    <SidebarTrigger className="ml-auto size-9 shrink-0 md:hidden">
+      <MenuIcon className="size-5" />
+    </SidebarTrigger>
+  );
+}
 
 // Fills the dashboard shell's bounded main area: the header stays put and
 // ListViewContent is the scroll area.
@@ -72,10 +82,10 @@ export function ListViewPageTitle({
         className,
       )}
     >
-      <SidebarTrigger className="md:hidden" />
       <h1 className="truncate font-semibold text-foreground text-xl tracking-tight md:text-2xl">
         {children}
       </h1>
+      <MobileMenuButton />
     </div>
   );
 }
@@ -83,8 +93,8 @@ export function ListViewPageTitle({
 export function ListViewPageTitleSkeleton() {
   return (
     <div className="flex items-center gap-2 px-4 pt-4 md:pt-8 lg:pt-12">
-      <SidebarTrigger className="md:hidden" />
       <Skeleton aria-hidden className="h-7 w-28 md:h-8" />
+      <MobileMenuButton />
     </div>
   );
 }
