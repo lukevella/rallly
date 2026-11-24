@@ -20,7 +20,7 @@
     "@rallly/utils": "workspace:*",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.9",
-    "i18next": "^26.3.0",
+    "i18next": "^26.3.4",
     "i18next-icu": "^2.4.3",
     "i18next-resources-to-backend": "^1.2.1",
     "nodemailer": "^10.2.0",
