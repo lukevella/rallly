@@ -184,7 +184,7 @@ export function formatDateTime(
 /** Days since the epoch of the calendar date `date` falls on in `timeZone`. */
 function calendarDayNumber(date: Date, timeZone: string | undefined) {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
+    timeZone: timeZone || undefined,
     year: "numeric",
     month: "numeric",
     day: "numeric",
@@ -210,14 +210,32 @@ export function formatDateTimeRange(
       calendarDayNumber(endDate, endTimeZone) -
       calendarDayNumber(startDate, startTimeZone);
     if (daysLater > 0) {
-      const bare = { ...options, showTimeZone: false };
-      const endTime = formatDateTime(endDate, bare);
-      const endWithZone = formatDateTime(endDate, options);
+      const endParts = getCachedIntlDateFormatter({
+        ...options,
+        timeZone: endTimeZone,
+      }).formatToParts(endDate);
       // Keep the offset on the time, ahead of any zone label that follows it.
-      const endLabel = endWithZone.startsWith(endTime)
-        ? `${endTime} +${daysLater}${endWithZone.slice(endTime.length)}`
-        : `${endWithZone} +${daysLater}`;
-      return `${formatDateTime(startDate, bare)} – ${endLabel}`;
+      const lastTimePart = endParts.findLastIndex(
+        (part) => part.type !== "literal" && part.type !== "timeZoneName",
+      );
+      endParts.splice(lastTimePart + 1, 0, {
+        type: "literal",
+        value: ` +${daysLater}`,
+      });
+      const zoneLabel =
+        options.showTimeZone &&
+        options.timeZone &&
+        endTimeZone !== options.timeZone
+          ? getZoneLabel(options.locale, options.timeZone)
+          : undefined;
+      // Both ends go through formatToParts: format() can space a day period
+      // differently (U+0020 vs U+202F), which would mismatch the two ends.
+      const startParts = getCachedIntlDateFormatter({
+        ...options,
+        timeZone: startTimeZone,
+        showTimeZone: false,
+      }).formatToParts(startDate);
+      return `${joinWithZoneLabel(startParts, undefined)} – ${joinWithZoneLabel(endParts, zoneLabel)}`;
     }
   }
   const formatter = getCachedIntlDateFormatter({

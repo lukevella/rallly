@@ -167,7 +167,7 @@ describe("formatDateTimeRange", () => {
         ...ctx("en", "hours12"),
       },
     );
-    expect(out).toBe("11:00 PM – 3:00 AM +1");
+    expect(out).toMatch(/^11:00(\s)PM – 3:00\1AM \+1$/);
   });
 
   it("counts days in the display zone, not UTC", () => {
@@ -190,6 +190,29 @@ describe("formatDateTimeRange", () => {
       },
     );
     expect(out).toMatch(/^23:00 – 03:00 \+1 \S+/);
+  });
+
+  it("keeps the offset ahead of a substituted zone's label", () => {
+    // 22:00 Thu – 02:00 Fri in Alberta, which formats through an override zone.
+    const out = formatDateTimeRange(
+      new Date("2026-11-06T04:00:00Z"),
+      new Date("2026-11-06T08:00:00Z"),
+      {
+        preset: "time",
+        ...ctx("en", "hours12", "America/Edmonton"),
+        showTimeZone: true,
+      },
+    );
+    expect(out).toMatch(/^10:00\sPM – 2:00\sAM \+1 \S+$/);
+  });
+
+  it("treats an empty time zone as unset", () => {
+    expect(() =>
+      formatDateTimeRange(at(9), at(17), {
+        preset: "time",
+        ...ctx("en", "hours24", ""),
+      }),
+    ).not.toThrow();
   });
 
   it("leaves a same-day range to Intl", () => {
