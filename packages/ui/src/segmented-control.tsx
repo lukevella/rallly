@@ -12,7 +12,7 @@ function SegmentedControl({ className, ...props }: RadioGroupPrimitive.Props) {
       className={cn(
         // A recessed track with the selection floating above it. Tabs use
         // the same treatment, so the two read as one family.
-        "inline-flex h-9 shrink-0 items-center justify-center gap-0.5 rounded-[10px] border border-input bg-muted p-0.5 dark:bg-gray-900",
+        "inline-flex h-9 shrink-0 items-center justify-center gap-0.5 rounded-control border border-input bg-muted p-0.5 dark:bg-gray-900",
         className,
       )}
       {...props}
@@ -28,7 +28,7 @@ function SegmentedControlItem({
     <RadioPrimitive.Root
       data-slot="segmented-control-item"
       className={cn(
-        "relative inline-flex h-full cursor-pointer touch-manipulation select-none items-center justify-center rounded-[8px] text-muted-foreground transition-colors [-webkit-tap-highlight-color:transparent] before:absolute before:inset-x-0 before:-inset-y-1 hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-card data-checked:text-foreground data-checked:shadow-xs dark:data-checked:bg-gray-800",
+        "relative inline-flex h-full cursor-pointer touch-manipulation select-none items-center justify-center rounded-control-sm text-muted-foreground transition-colors [-webkit-tap-highlight-color:transparent] before:absolute before:inset-x-0 before:-inset-y-1 hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring data-checked:bg-card data-checked:text-foreground data-checked:shadow-xs dark:data-checked:bg-gray-800",
         className,
       )}
       {...props}

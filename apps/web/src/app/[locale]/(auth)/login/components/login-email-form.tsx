@@ -330,7 +330,6 @@ export function LoginWithEmailForm({
         <div>
           <Button
             size="xl"
-            shape="rounded"
             loading={isBusy}
             type="submit"
             className="relative w-full"

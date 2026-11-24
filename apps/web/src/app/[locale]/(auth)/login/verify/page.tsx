@@ -88,7 +88,6 @@ export default async function VerifyPage() {
           className={buttonVariants({
             size: "xl",
             variant: "link",
-            shape: "rounded",
             className: "w-full",
           })}
         >

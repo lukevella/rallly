@@ -83,7 +83,7 @@ export function BallotCount({
             className,
             // Inset by the same 3px from the row's top, bottom and right edges, with
             // the radius that keeps it concentric with the row's corners.
-            "relative z-10 -my-1.5 -mr-2.75 h-10.5 cursor-pointer rounded-lg border border-foreground/10 bg-background/50 px-2.5 shadow-xs backdrop-blur-sm hover:bg-background/70 focus-visible:outline-2 focus-visible:outline-ring data-popup-open:bg-background/70 lg:[@media(pointer:fine)]:h-8",
+            "relative z-10 -my-1.5 -mr-2.75 h-10.5 cursor-pointer rounded-control border border-foreground/10 bg-background/50 px-2.5 shadow-xs backdrop-blur-sm hover:bg-background/70 focus-visible:outline-2 focus-visible:outline-ring data-popup-open:bg-background/70 lg:[@media(pointer:fine)]:h-8",
           )}
         >
           {content}

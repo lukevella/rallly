@@ -75,7 +75,7 @@ export function StepStage({
           aria-label={t("inviteHelpReplay", {
             defaultValue: "Replay animation",
           })}
-          className="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-gray-300/60 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring dark:hover:bg-gray-700/60"
+          className="absolute right-2 bottom-2 flex size-8 items-center justify-center rounded-control-sm text-muted-foreground transition-colors hover:bg-gray-300/60 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring dark:hover:bg-gray-700/60"
         >
           <RotateCcwIcon className="size-4" />
         </button>

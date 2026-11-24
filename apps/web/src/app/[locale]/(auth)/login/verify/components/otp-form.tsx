@@ -149,7 +149,6 @@ export function OTPForm({
           className="w-full"
           variant="primary"
           size="xl"
-          shape="rounded"
           type="submit"
           loading={
             form.formState.isSubmitting || form.formState.isSubmitSuccessful

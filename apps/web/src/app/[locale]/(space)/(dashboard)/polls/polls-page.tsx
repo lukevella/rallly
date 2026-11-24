@@ -241,7 +241,6 @@ export function PollsPage({
                 href="/new"
                 className={buttonVariants({
                   variant: "primary",
-                  shape: "rounded",
                 })}
               >
                 <Trans i18nKey="createPoll" defaults="Create poll" />

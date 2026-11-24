@@ -18,7 +18,7 @@ export function VoteSummary({
   return (
     <div
       className={cn(
-        "flex min-h-9 w-full flex-col justify-center gap-1.5 rounded-xl border border-input bg-background/80 px-2.5 py-1.25 dark:bg-foreground/5",
+        "flex min-h-9 w-full flex-col justify-center gap-1.5 rounded-control border border-input bg-background/80 px-2.5 py-1.25 dark:bg-foreground/5",
         className,
       )}
     >

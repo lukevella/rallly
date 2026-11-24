@@ -8,10 +8,7 @@ import { getTranslation } from "@/i18n/server";
 export async function QuickCreateButton() {
   const { t, i18n } = await getTranslation();
   return (
-    <Link
-      href="/quick-create"
-      className={buttonVariants({ className: "rounded-full" })}
-    >
+    <Link href="/quick-create" className={buttonVariants()}>
       <ZapIcon className="size-4 text-muted-foreground" />
       <Trans
         t={t}

@@ -10,7 +10,7 @@ import { cn } from "./lib/utils";
 export type MonthGridDay = DayButtonProps["day"];
 
 const navButtonClassName = cn(
-  "inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors",
+  "inline-flex size-8 items-center justify-center rounded-control-sm text-muted-foreground transition-colors",
   "hover:bg-muted hover:text-foreground",
   // A month with nowhere to go reads as spent: dimmed, no hover, and it
   // does not take the pointer.

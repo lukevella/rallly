@@ -164,7 +164,7 @@ const CommandItemShortcut = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex h-12 cursor-pointer select-none items-center gap-3 rounded-xl px-3 font-medium outline-hidden aria-selected:bg-muted data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+      "relative flex h-12 cursor-pointer select-none items-center gap-3 rounded-control-lg px-3 font-medium outline-hidden aria-selected:bg-muted data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
       className,
     )}
     {...props}

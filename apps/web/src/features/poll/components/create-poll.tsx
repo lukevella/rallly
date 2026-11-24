@@ -94,7 +94,7 @@ const CreatePollActions = ({
 
   if (createdPollId) {
     return (
-      <output className="flex h-9 items-center gap-x-1.5 rounded-full bg-green-600/10 px-3.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
+      <output className="flex h-9 items-center gap-x-1.5 rounded-control bg-green-600/10 px-3.5 font-medium text-green-600 text-sm dark:bg-green-500/10 dark:text-green-500">
         <CheckIcon className="size-4 shrink-0" />
         <Trans i18nKey="createPollFooterCreated" defaults="Created" />
       </output>
@@ -103,7 +103,7 @@ const CreatePollActions = ({
 
   return (
     <Button
-      className="rounded-full px-4"
+      className="px-4"
       form="create-poll"
       loading={form.formState.isSubmitting}
       type="submit"
@@ -350,7 +350,7 @@ export const CreatePoll = ({
         <div className="pointer-events-none sticky bottom-0 z-20 flex justify-center pt-4 pb-6 lg:pb-16">
           <div
             className={cn(
-              "pointer-events-auto flex w-full items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 transition-[max-width,box-shadow] duration-300",
+              "pointer-events-auto flex w-full items-center justify-between gap-x-4 rounded-dock border border-popover-border bg-popover py-2 pr-2 pl-5 transition-[max-width,box-shadow] duration-300",
               isDocked
                 ? "max-w-full shadow-none"
                 : "max-w-md shadow-2xl shadow-black/40",

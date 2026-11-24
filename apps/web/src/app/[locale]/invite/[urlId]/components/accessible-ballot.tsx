@@ -112,8 +112,7 @@ import { VoteSummary } from "./vote-summary";
 
 /** Inset as far from the right as from the top, so the button sits square in the field. */
 const fieldAddonClassName = "pr-1.5 has-[>button]:mr-0";
-/** The field is rounded-xl (12px) and the button is inset 6px: 12 - 6 keeps the corners concentric. */
-const fieldIconButtonClassName = "rounded-md text-muted-foreground";
+const fieldIconButtonClassName = "text-muted-foreground";
 
 /**
  * From lg the card resizes between steps first (320ms), and the next step waits
@@ -130,7 +129,7 @@ const fieldGroupClassName = "bg-background/80 dark:bg-foreground/5";
  * renders aria-disabled instead of the native attribute the button styles key on.
  */
 const shortcutClassName =
-  "shrink-0 rounded-full aria-disabled:pointer-events-none aria-disabled:opacity-50";
+  "shrink-0 aria-disabled:pointer-events-none aria-disabled:opacity-50";
 
 /** A shortcut that's on: its label says Undo, so it can't also be aria-pressed. */
 const shortcutOnClassName =
@@ -1378,7 +1377,7 @@ export function AccessibleBallot({
                       })}
                       variant="ghost"
                       size="icon"
-                      className="shrink-0 rounded-full"
+                      className="shrink-0"
                     />
                   }
                 >
@@ -1463,7 +1462,7 @@ export function AccessibleBallot({
             </p>
             <Button
               type="button"
-              className="mt-6 rounded-xl"
+              className="mt-6"
               onClick={() => {
                 capture("poll_vote:view_response_click");
                 // So the card grows back to the answers rather than jumping.
@@ -1550,20 +1549,13 @@ export function AccessibleBallot({
                     />
                   </p>
                 )}
-                <AddToCalendarButton
-                  eventId={poll.event.id}
-                  className="rounded-xl"
-                />
+                <AddToCalendarButton eventId={poll.event.id} />
               </div>
             ) : null}
             {timeControls}
             {past.ids.size > 0 && votable.length > 0 ? (
               <p className="mt-3 flex flex-wrap gap-2">
-                <PastTimesToggle
-                  past={trackedPast}
-                  labelled={true}
-                  className="rounded-xl"
-                />
+                <PastTimesToggle past={trackedPast} labelled={true} />
               </p>
             ) : null}
             <div className="mt-5 flex flex-col gap-4">
@@ -1748,11 +1740,7 @@ export function AccessibleBallot({
                     </>
                   ) : null}
                   {past.ids.size > 0 && votable.length > 0 ? (
-                    <PastTimesToggle
-                      past={trackedPast}
-                      labelled={true}
-                      className="rounded-full"
-                    />
+                    <PastTimesToggle past={trackedPast} labelled={true} />
                   ) : null}
                 </div>
               ) : null}
@@ -2020,7 +2008,7 @@ export function AccessibleBallot({
                   <Button
                     id="add-note"
                     type="button"
-                    className="self-start rounded-full"
+                    className="self-start"
                     onClick={() => {
                       capture("poll_vote:note_add");
                       setShowNote(true);
@@ -2082,7 +2070,6 @@ export function AccessibleBallot({
                     <Button
                       type="button"
                       variant="ghost"
-                      className="rounded-xl"
                       onClick={backToAvailability}
                     >
                       <Trans i18nKey="back" defaults="Back" />
@@ -2092,7 +2079,7 @@ export function AccessibleBallot({
                     <Button
                       type="button"
                       variant="ghost"
-                      className={`${ballotBarButtonClassName} lg:h-9`}
+                      className={`${ballotBarButtonClassName} lg:h-9 lg:rounded-control`}
                       aria-disabled={pending || undefined}
                       onClick={() => {
                         if (!pending) discardChanges();
@@ -2107,8 +2094,8 @@ export function AccessibleBallot({
                       variant="primary"
                       className={cn(
                         onDetailsStep
-                          ? "rounded-xl"
-                          : `${ballotBarButtonClassName} flex-1 lg:h-9 lg:flex-none`,
+                          ? undefined
+                          : `${ballotBarButtonClassName} flex-1 lg:h-9 lg:flex-none lg:rounded-control`,
                       )}
                       aria-disabled={pending || undefined}
                     >

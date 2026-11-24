@@ -90,7 +90,7 @@ export function MemberDropdownMenu({
               aria-label={t("moreOptions", { defaultValue: "More options" })}
               variant="ghost"
               size="icon"
-              className="size-8"
+              className="size-8 rounded-control-sm"
             />
           }
         >

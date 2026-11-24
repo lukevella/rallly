@@ -104,7 +104,7 @@ export const BallotVoteRow = React.memo(function BallotVoteRow({
         onVote(optionId, nextVote(vote, allowTentativeVotes), "row");
       }}
       className={cn(
-        "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-xl border bg-card py-1.5 pr-3.5 pl-3 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
+        "group relative isolate flex min-h-12.5 min-w-0 flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-control-lg border bg-card py-1.5 pr-3.5 pl-3 lg:[@media(pointer:fine)]:min-h-10 lg:[@media(pointer:fine)]:py-0",
         isPast
           ? "opacity-60"
           : [

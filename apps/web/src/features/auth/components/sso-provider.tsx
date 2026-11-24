@@ -53,7 +53,6 @@ export function SSOProvider({
   return (
     <Button
       size="xl"
-      shape="rounded"
       className="relative"
       key={providerId}
       onClick={() => {

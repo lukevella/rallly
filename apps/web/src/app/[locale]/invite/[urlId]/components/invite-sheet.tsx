@@ -114,7 +114,7 @@ function InviteSheetPanel({
               variant="ghost"
               size="icon"
               aria-label={closeLabel}
-              className="shrink-0 rounded-full"
+              className="shrink-0"
             />
           }
         >

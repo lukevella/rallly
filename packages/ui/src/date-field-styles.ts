@@ -3,13 +3,13 @@ import { cn } from "./lib/utils";
 /**
  * Shared styling for react-aria segmented date/time fields.
  *
- * Height and radius match the default Button and Input (h-9, rounded-lg) so a
+ * Height and radius match the default Button and Input (h-9, rounded-control) so a
  * date or time field lines up with the rest of the form controls. react-aria
  * exposes focus/invalid/disabled as data attributes on the wrapper rather than
  * through `has-[]` selectors, so the states are re-expressed here.
  */
 export const fieldGroupClassName = cn(
-  "flex h-9 w-full min-w-0 items-center rounded-lg border border-input bg-background/80 py-1 pr-1 pl-2 text-sm outline-none transition-colors dark:bg-input/30",
+  "flex h-9 w-full min-w-0 items-center rounded-control border border-input bg-background/80 py-1 pr-1 pl-2 text-sm outline-none transition-colors dark:bg-input/30",
   "data-[focus-within]:border-ring data-[focus-within]:ring-3 data-[focus-within]:ring-ring/50",
   "data-[invalid]:border-destructive data-[invalid]:ring-3 data-[invalid]:ring-destructive/20 dark:data-[invalid]:ring-destructive/40",
   "data-[disabled]:opacity-50",
@@ -37,7 +37,7 @@ export const segmentClassName = cn(
 
 /** Matches the Button `icon-sm` footprint, sized for the h-9 field. */
 export const triggerButtonClassName = cn(
-  "ml-auto inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none transition-colors",
+  "ml-auto inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-control-sm text-muted-foreground outline-none transition-colors",
   "hover:bg-accent hover:text-foreground",
   "data-[focus-visible]:ring-3 data-[focus-visible]:ring-ring/50",
 );

@@ -35,7 +35,7 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "inline-flex h-9 shrink-0 items-center gap-x-2.5 whitespace-nowrap rounded-xl bg-foreground/5 px-2.5 text-sm outline-none ring-1 ring-button-outline ring-inset backdrop-blur-lg transition-[background-color,color,box-shadow] hover:bg-foreground/10 disabled:pointer-events-none disabled:opacity-50 data-popup-open:bg-foreground/10 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "inline-flex h-9 shrink-0 items-center gap-x-2.5 whitespace-nowrap rounded-control bg-foreground/5 px-2.5 text-sm outline-none ring-1 ring-button-outline ring-inset backdrop-blur-lg transition-[background-color,color,box-shadow] hover:bg-foreground/10 disabled:pointer-events-none disabled:opacity-50 data-popup-open:bg-foreground/10 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         "focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "data-invalid:ring-destructive",
         className,
@@ -62,7 +62,7 @@ function SelectContent({
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
-            "relative z-50 max-h-[300px] w-full min-w-[max(--spacing(32),var(--anchor-width))] animate-in overflow-y-auto rounded-xl border border-popover-border bg-popover p-1 shadow-sm",
+            "relative z-50 max-h-[300px] w-full min-w-[max(--spacing(32),var(--anchor-width))] animate-in overflow-y-auto rounded-popup border border-popover-border bg-popover p-1 shadow-sm",
             className,
           )}
           {...props}
@@ -99,7 +99,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default select-none items-center rounded-lg py-1.5 pr-2 pl-8 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-popover-accent data-disabled:opacity-50 data-highlighted:ring-1 data-highlighted:ring-black/5 data-highlighted:ring-inset dark:data-highlighted:ring-white/5",
+        "relative flex w-full cursor-default select-none items-center rounded-control-sm py-1.5 pr-2 pl-8 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-popover-accent data-disabled:opacity-50 data-highlighted:ring-1 data-highlighted:ring-black/5 data-highlighted:ring-inset dark:data-highlighted:ring-white/5",
         className,
       )}
       {...props}

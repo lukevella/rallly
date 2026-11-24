@@ -35,7 +35,7 @@ function DemoField({
       <DemoBar tone="soft" className="w-10" />
       <div
         ref={fieldRef}
-        className="flex h-7 items-center rounded-md border bg-background px-2"
+        className="flex h-7 items-center rounded-control-sm border bg-background px-2"
       >
         <m.div
           className={className}
@@ -119,7 +119,7 @@ export function SaveStepDemo({ playback }: { playback: Playback }) {
             <PressButton
               playback={playback}
               delay={SUBMIT_AT}
-              className="h-7 w-16 rounded-md bg-primary"
+              className="h-7 w-16 rounded-control-sm bg-primary"
             />
           </div>
         </div>

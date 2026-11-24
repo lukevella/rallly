@@ -325,7 +325,7 @@ function VoteShortcut({
       type="button"
       aria-label={label}
       aria-pressed={pressed}
-      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-input border-dashed pr-3 pl-2 text-muted-foreground text-sm outline-none transition-colors hover:border-solid hover:bg-foreground/3 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-foreground/15 aria-pressed:border-solid aria-pressed:bg-foreground/6 aria-pressed:text-foreground aria-pressed:hover:border-foreground/25 aria-pressed:hover:bg-foreground/10"
+      className="inline-flex h-7 items-center gap-1.5 rounded-control-sm border border-input border-dashed pr-3 pl-2 text-muted-foreground text-sm outline-none transition-colors hover:border-solid hover:bg-foreground/3 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-foreground/15 aria-pressed:border-solid aria-pressed:bg-foreground/6 aria-pressed:text-foreground aria-pressed:hover:border-foreground/25 aria-pressed:hover:bg-foreground/10"
       onClick={() => {
         posthog?.capture("poll_finalize:vote_shortcut_click", {
           vote_type: voteType === "ifNeedBe" ? "if_need_be" : voteType,

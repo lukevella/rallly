@@ -52,7 +52,10 @@ export function ScheduledEventRowActions({
   return (
     <div className="relative z-10 flex items-center gap-x-1">
       {isScheduledEventEnabled && (
-        <CopyLinkButton href={shortUrl(`/e/${eventId}`)} className="size-8" />
+        <CopyLinkButton
+          href={shortUrl(`/e/${eventId}`)}
+          className="size-8 rounded-control-sm"
+        />
       )}
       <DropdownMenu>
         <DropdownMenuTrigger
@@ -63,7 +66,7 @@ export function ScheduledEventRowActions({
               })}
               variant="ghost"
               size="icon"
-              className="size-8"
+              className="size-8 rounded-control-sm"
             />
           }
         >

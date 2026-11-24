@@ -58,7 +58,7 @@ export function PollFooter({
 }
 
 const pillClassName =
-  "inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background px-4 font-normal text-foreground text-xs shadow-xs dark:bg-muted";
+  "inline-flex h-9 items-center gap-2 rounded-control border border-border bg-background px-4 font-normal text-foreground text-xs shadow-xs dark:bg-muted";
 
 function PoweredByLink({ className }: { className: string }) {
   const poll = usePoll();

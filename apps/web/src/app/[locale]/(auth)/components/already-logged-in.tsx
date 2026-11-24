@@ -56,7 +56,6 @@ export async function AlreadyLoggedIn({ redirectTo }: { redirectTo?: string }) {
             className={buttonVariants({
               variant: "primary",
               size: "xl",
-              shape: "rounded",
             })}
             href={validateRedirectUrl(redirectTo) ?? "/"}
           >

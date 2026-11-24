@@ -40,7 +40,7 @@ export function AdminPage({
         <ResponsiveResults />
       </VotingForm>
       <div className="fixed right-4 bottom-15 z-40 lg:right-6 lg:bottom-6">
-        <CommentsSheet className="rounded-full shadow-lg" />
+        <CommentsSheet className="shadow-lg" />
       </div>
       <PollFooter
         footerLinks={footerLinks}
