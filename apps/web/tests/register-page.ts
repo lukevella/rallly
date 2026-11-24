@@ -72,8 +72,5 @@ export class RegisterPage {
         timeout: 5000,
       });
     }).toPass();
-
-    // Verify successful registration
-    await expect(this.page.getByText(name)).toBeVisible();
   }
 }

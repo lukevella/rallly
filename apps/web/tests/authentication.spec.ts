@@ -6,7 +6,7 @@ import {
   getPasswordResetLink,
 } from "@rallly/test-helpers";
 import { RegisterPage } from "./register-page";
-import { createUserInDb, loginWithEmail } from "./test-utils";
+import { createUserInDb, expectSignedInAs, loginWithEmail } from "./test-utils";
 
 const testUserEmail = "test@example.com";
 const testExistingUserEmail = "existing-user-for-disabled-test@example.com";
@@ -34,6 +34,7 @@ test.describe.serial(() => {
         name: "Test User",
         email: testUserEmail,
       });
+      await expectSignedInAs(page, "Test User");
     });
   });
 
@@ -60,7 +61,7 @@ test.describe.serial(() => {
         .fill(code);
 
       // Existing user should be signed in
-      await expect(page.getByText("Test User")).toBeVisible();
+      await expectSignedInAs(page, "Test User");
     });
 
     test("shows error for invalid verification code", async ({ page }) => {
@@ -100,7 +101,7 @@ test.describe.serial(() => {
         .getByRole("textbox", { name: "Enter your 6-digit code" })
         .fill(code);
 
-      await expect(page.getByText("Test User")).toBeVisible();
+      await expectSignedInAs(page, "Test User");
     });
 
     test("allow using different case in email", async ({ page }) => {
@@ -121,7 +122,7 @@ test.describe.serial(() => {
         .getByRole("textbox", { name: "Enter your 6-digit code" })
         .fill(code);
 
-      await expect(page.getByText("Test User")).toBeVisible();
+      await expectSignedInAs(page, "Test User");
     });
 
     test.describe("Password Reset", () => {
@@ -297,7 +298,7 @@ test.describe.serial(() => {
         await page.getByRole("button", { name: "Login with password" }).click();
 
         // Should be logged in
-        await expect(page.getByText("Test User")).toBeVisible();
+        await expectSignedInAs(page, "Test User");
       });
 
       test("displays back to login link on reset page", async ({ page }) => {

@@ -1,8 +1,20 @@
 import { randomUUID } from "node:crypto";
+import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import type { SpaceTier, UserRole } from "@rallly/database";
 import { prisma } from "@rallly/database";
 
 export { loginWithEmail } from "@rallly/test-helpers";
+
+/**
+ * The signed-in user's name only shows inside the account menu, behind the
+ * avatar at the top of the sidebar.
+ */
+export async function expectSignedInAs(page: Page, name: string) {
+  await page.getByRole("button", { name: "Account" }).click();
+  await expect(page.getByRole("menu").getByText(name)).toBeVisible();
+  await page.keyboard.press("Escape");
+}
 
 /**
  * A date offset from now, for seeding rows relative to the test's clock.
