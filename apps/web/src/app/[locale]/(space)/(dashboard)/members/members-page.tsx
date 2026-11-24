@@ -49,13 +49,10 @@ function isSpaceAdmin(space: { role: string }) {
   return space.role === "admin";
 }
 
-export async function MembersPageActions() {
+async function MembersPageActions() {
   const space = await loadActiveSpace();
 
-  if (
-    !isSpaceAdmin(space) ||
-    defineAbilityForSpace(space).cannot("invite", "Member")
-  ) {
+  if (defineAbilityForSpace(space).cannot("invite", "Member")) {
     return null;
   }
 
@@ -93,13 +90,14 @@ export async function MembersPageToolbar() {
   }
 
   return (
-    <ListViewToolbar>
+    <ListViewToolbar className="pt-6">
       <SearchInput
-        className="w-full sm:w-72"
+        className="w-auto min-w-0 flex-1 sm:min-w-48"
         placeholder={t("searchMembersPlaceholder", {
           defaultValue: "Search members by name or email...",
         })}
       />
+      <MembersPageActions />
     </ListViewToolbar>
   );
 }

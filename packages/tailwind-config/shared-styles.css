@@ -122,6 +122,15 @@
 }
 
 /*
+ * In dark mode the sidebar panel sits one step lighter than the page so the
+ * two read as separate surfaces. Scoped to the panel rather than the
+ * --sidebar token, which also paints the body of public pages.
+ */
+.dark [data-sidebar="sidebar"] {
+  --sidebar: oklch(0.24 0.006 var(--gray-hue));
+}
+
+/*
  * Surface-relative card: inside an elevated surface (dialog, popover) a card
  * steps once more away from that surface — darker in light mode, lighter in
  * dark mode — so it never blends into the surface it sits on. Works because

@@ -11,14 +11,14 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { FilterPills } from "@/components/filter-pills";
+import { FilterTabs } from "@/components/filter-tabs";
 import { Link } from "@/components/link";
 import {
   ListView,
+  ListViewColumn,
   ListViewContent,
   ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
+  ListViewPageTitle,
   ListViewToolbar,
 } from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
@@ -196,40 +196,38 @@ export function EventsPage({
     <ListView>
       <RefreshOnFocus />
       <ListViewHeader>
-        <ListViewTitleBar>
-          <ListViewTitle>
+        <ListViewColumn>
+          <ListViewPageTitle>
             <Trans i18nKey="events" defaults="Events" />
-          </ListViewTitle>
-        </ListViewTitleBar>
-        <ListViewToolbar>
-          <FilterPills
-            param="status"
-            value={status}
-            label={t("eventsListStatusFilter", {
-              defaultValue: "Filter by status",
-            })}
-            options={[
-              {
-                value: "upcoming",
-                label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
-              },
-              {
-                value: "past",
-                label: <Trans i18nKey="past" defaults="Past" />,
-              },
-              {
-                value: "canceled",
-                label: <Trans i18nKey="canceled" defaults="Canceled" />,
-              },
-            ]}
-            startTransition={startNavigation}
-          />
-          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
+          </ListViewPageTitle>
+          <ListViewToolbar className="pt-6">
             <SearchInput
-              className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
+              className="w-full min-w-0 sm:w-auto sm:min-w-48 sm:flex-1"
               placeholder={t("searchEventsPlaceholder", {
                 defaultValue: "Search events by title...",
               })}
+              startTransition={startNavigation}
+            />
+            <FilterTabs
+              param="status"
+              value={status}
+              label={t("eventsListStatusFilter", {
+                defaultValue: "Filter by status",
+              })}
+              options={[
+                {
+                  value: "upcoming",
+                  label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
+                },
+                {
+                  value: "past",
+                  label: <Trans i18nKey="past" defaults="Past" />,
+                },
+                {
+                  value: "canceled",
+                  label: <Trans i18nKey="canceled" defaults="Canceled" />,
+                },
+              ]}
               startTransition={startNavigation}
             />
             {showMemberFilter ? (
@@ -239,18 +237,20 @@ export function EventsPage({
                 startTransition={startNavigation}
               />
             ) : null}
-          </div>
-        </ListViewToolbar>
+          </ListViewToolbar>
+        </ListViewColumn>
       </ListViewHeader>
       <ListViewContent>
-        {isNavigating ? <EventsListSkeleton /> : list}
-        {isNavigating ? null : (
-          <EventsPagination
-            page={page}
-            hasNextPage={hasNextPage}
-            startTransition={startNavigation}
-          />
-        )}
+        <ListViewColumn className="pb-8">
+          {isNavigating ? <EventsListSkeleton /> : list}
+          {isNavigating ? null : (
+            <EventsPagination
+              page={page}
+              hasNextPage={hasNextPage}
+              startTransition={startNavigation}
+            />
+          )}
+        </ListViewColumn>
       </ListViewContent>
     </ListView>
   );

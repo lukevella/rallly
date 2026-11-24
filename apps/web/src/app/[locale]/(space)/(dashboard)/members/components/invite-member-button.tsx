@@ -3,7 +3,6 @@
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
-import { UserPlusIcon } from "lucide-react";
 import { Trans, useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
 
@@ -20,6 +19,7 @@ export function InviteMemberButton({
     <>
       <Button
         variant="primary"
+        shape="rounded"
         disabled={disabled}
         onClick={() => {
           if (!canCreateInvite) {
@@ -33,7 +33,6 @@ export function InviteMemberButton({
           }
         }}
       >
-        <UserPlusIcon data-icon="inline-start" />
         <Trans i18nKey="inviteMember" defaults="Invite member" />
       </Button>
       <InviteMemberDialog {...inviteMemberDialog.dialogProps} />

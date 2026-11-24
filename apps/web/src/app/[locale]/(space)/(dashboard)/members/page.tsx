@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
 import {
   ListView,
+  ListViewColumn,
   ListViewContent,
   ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
+  ListViewPageTitle,
 } from "@/components/list-view";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
-import {
-  MembersPageActions,
-  MembersPageContent,
-  MembersPageToolbar,
-} from "./members-page";
+import { MembersPageContent, MembersPageToolbar } from "./members-page";
 
 // No Suspense boundaries here: the data loads under the dashboard's
 // loading.tsx, so the page appears once instead of skeleton after skeleton.
@@ -20,16 +16,17 @@ export default function Page() {
   return (
     <ListView>
       <ListViewHeader>
-        <ListViewTitleBar>
-          <ListViewTitle>
+        <ListViewColumn>
+          <ListViewPageTitle>
             <Trans i18nKey="members" defaults="Members" />
-          </ListViewTitle>
-          <MembersPageActions />
-        </ListViewTitleBar>
-        <MembersPageToolbar />
+          </ListViewPageTitle>
+          <MembersPageToolbar />
+        </ListViewColumn>
       </ListViewHeader>
       <ListViewContent className="pt-2">
-        <MembersPageContent />
+        <ListViewColumn className="pb-8">
+          <MembersPageContent />
+        </ListViewColumn>
       </ListViewContent>
     </ListView>
   );

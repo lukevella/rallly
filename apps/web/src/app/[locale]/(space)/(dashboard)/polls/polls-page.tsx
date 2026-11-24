@@ -2,7 +2,7 @@
 
 import { buttonVariants } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
-import { CircleStopIcon, InboxIcon, PlusIcon } from "lucide-react";
+import { CircleStopIcon, InboxIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import {
@@ -12,15 +12,15 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { FilterPills } from "@/components/filter-pills";
+import { FilterTabs } from "@/components/filter-tabs";
 import { Link } from "@/components/link";
 import {
   ListView,
   ListViewActions,
+  ListViewColumn,
   ListViewContent,
   ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
+  ListViewPageTitle,
   ListViewToolbar,
 } from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
@@ -183,52 +183,42 @@ export function PollsPage({
   return (
     <ListView>
       <ListViewHeader>
-        <ListViewTitleBar>
-          <ListViewTitle>
+        <ListViewColumn>
+          <ListViewPageTitle>
             <Trans i18nKey="polls" defaults="Polls" />
-          </ListViewTitle>
-          <ListViewActions>
-            {usageMeter}
-            <Link
-              href="/new"
-              className={buttonVariants({ variant: "primary" })}
-            >
-              <PlusIcon data-icon="inline-start" />
-              <Trans i18nKey="createPoll" defaults="Create poll" />
-            </Link>
-          </ListViewActions>
-        </ListViewTitleBar>
-        <ListViewToolbar>
-          <FilterPills
-            param="status"
-            value={status}
-            label={t("pollsListStatusFilter", {
-              defaultValue: "Filter by status",
-            })}
-            options={[
-              {
-                value: "open",
-                label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
-              },
-              {
-                value: "closed",
-                label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
-              },
-              {
-                value: "scheduled",
-                label: (
-                  <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
-                ),
-              },
-            ]}
-            startTransition={startNavigation}
-          />
-          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
+          </ListViewPageTitle>
+          <ListViewToolbar className="pt-6">
+            {/* Below sm, search and the CTA share the first row and the
+                filters wrap to the second. */}
             <SearchInput
-              className="w-auto min-w-0 flex-1 sm:w-56 sm:flex-none"
+              className="min-w-40 flex-1 max-sm:order-first sm:min-w-48"
               placeholder={t("searchPollsPlaceholder", {
                 defaultValue: "Search polls by title...",
               })}
+              startTransition={startNavigation}
+            />
+            <FilterTabs
+              param="status"
+              value={status}
+              label={t("pollsListStatusFilter", {
+                defaultValue: "Filter by status",
+              })}
+              options={[
+                {
+                  value: "open",
+                  label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
+                },
+                {
+                  value: "closed",
+                  label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
+                },
+                {
+                  value: "scheduled",
+                  label: (
+                    <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
+                  ),
+                },
+              ]}
               startTransition={startNavigation}
             />
             {showMemberFilter ? (
@@ -238,18 +228,32 @@ export function PollsPage({
                 startTransition={startNavigation}
               />
             ) : null}
-          </div>
-        </ListViewToolbar>
+            <ListViewActions className="max-sm:order-first">
+              {usageMeter}
+              <Link
+                href="/new"
+                className={buttonVariants({
+                  variant: "primary",
+                  shape: "rounded",
+                })}
+              >
+                <Trans i18nKey="createPoll" defaults="Create poll" />
+              </Link>
+            </ListViewActions>
+          </ListViewToolbar>
+        </ListViewColumn>
       </ListViewHeader>
       <ListViewContent>
-        {isNavigating ? <PollsListSkeleton /> : list}
-        {isNavigating ? null : (
-          <PollsPagination
-            page={page}
-            hasNextPage={hasNextPage}
-            startTransition={startNavigation}
-          />
-        )}
+        <ListViewColumn className="pb-8">
+          {isNavigating ? <PollsListSkeleton /> : list}
+          {isNavigating ? null : (
+            <PollsPagination
+              page={page}
+              hasNextPage={hasNextPage}
+              startTransition={startNavigation}
+            />
+          )}
+        </ListViewColumn>
       </ListViewContent>
     </ListView>
   );

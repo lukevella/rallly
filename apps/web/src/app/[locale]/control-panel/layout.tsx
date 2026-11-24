@@ -29,7 +29,11 @@ async function AdminGate({ children }: { children: React.ReactNode }) {
       >
         <ControlPanelSidebarProvider>
           <ControlPanelSidebar />
-          <SidebarInset id="main-content" tabIndex={-1}>
+          <SidebarInset
+            id="main-content"
+            tabIndex={-1}
+            className="bg-background"
+          >
             <LicenseLimitWarning />
             <div className="flex flex-1 flex-col">
               <header className="sticky top-0 z-10 border-b bg-sidebar/90 p-3 backdrop-blur-xs md:hidden">

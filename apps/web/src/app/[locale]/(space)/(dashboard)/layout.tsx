@@ -104,7 +104,11 @@ export default async function Layout({
         {/* Bounded to the viewport so a page can own its scroll area (list
           views scroll their rows under a fixed header); other pages scroll
           the wrapper below instead of the window. */}
-        <SidebarInset id="main-content" tabIndex={-1} className="h-svh min-w-0">
+        <SidebarInset
+          id="main-content"
+          tabIndex={-1}
+          className="h-svh min-w-0 bg-background"
+        >
           <LicenseLimitWarning />
           <PastDueAlert />
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
