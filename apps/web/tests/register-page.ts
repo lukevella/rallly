@@ -2,6 +2,7 @@ import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 import { getCode } from "@rallly/test-helpers";
+import { expectSignedInAs } from "./test-utils";
 
 /**
  * Registration happens through the combined login flow: an email that
@@ -74,6 +75,6 @@ export class RegisterPage {
     }).toPass();
 
     // Verify successful registration
-    await expect(this.page.getByText(name)).toBeVisible();
+    await expectSignedInAs(this.page, name);
   }
 }
