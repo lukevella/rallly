@@ -18,6 +18,19 @@ async function scan(page: Page) {
   // deterministic.
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForLoadState("networkidle");
+  // Reduced motion still fades step transitions in; sampling mid-fade reads
+  // every element at partial opacity.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter(
+          (a) =>
+            a.effect?.getComputedTiming().endTime !== Number.POSITIVE_INFINITY,
+        )
+        .map((a) => a.finished),
+    ),
+  );
   const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
   return results.violations.map((violation) => ({
     id: violation.id,

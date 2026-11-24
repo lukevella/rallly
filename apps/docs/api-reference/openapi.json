@@ -18,6 +18,17 @@
       }
     },
     "schemas": {
+      "PollResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Poll"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "Poll": {
         "type": "object",
         "properties": {
@@ -30,26 +41,18 @@
             "example": "Team sync"
           },
           "description": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "example": "Pick a time that works for everyone"
+            "example": "Pick a time that works for everyone",
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "location": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "example": "Conference Room A"
+            "example": "Conference Room A",
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "conferencing": {
             "anyOf": [
@@ -137,15 +140,11 @@
             }
           },
           "timeZone": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "example": "Europe/London"
+            "example": "Europe/London",
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "status": {
             "$ref": "#/components/schemas/PollStatus"
@@ -280,15 +279,11 @@
             "example": "organizer@example.com"
           },
           "image": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "example": "https://cdn.rallly.co/avatars/cm3f7d1qa0000t2k9c6b8h4jr.jpg"
+            "example": "https://cdn.rallly.co/avatars/cm3f7d1qa0000t2k9c6b8h4jr.jpg",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
@@ -357,17 +352,6 @@
         ],
         "description": "A time slot. Only present in polls with `kind: time`."
       },
-      "PollResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Poll"
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -394,6 +378,24 @@
         "required": [
           "error"
         ]
+      },
+      "CreatePollInput": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CreateDatePollInput"
+          },
+          {
+            "$ref": "#/components/schemas/CreateTimePollInput"
+          }
+        ],
+        "description": "`kind` chooses what participants vote on: whole days (`date`) or time slots (`time`). The request mirrors the poll the API returns: the same settings, and `options` in the same shape as the response.",
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "date": "#/components/schemas/CreateDatePollInput",
+            "time": "#/components/schemas/CreateTimePollInput"
+          }
+        }
       },
       "CreateDatePollInput": {
         "type": "object",
@@ -772,7 +774,7 @@
         "properties": {
           "startTime": {
             "type": "string",
-            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$",
             "description": "ISO datetime start time. A string without an offset is wall clock time in `timeZone` when that is set (`2027-03-01T09:00:00` with `timeZone: Europe/London` means 09:00 in London) and a floating time with no conversion otherwise. A string with an offset or `Z` is an absolute instant.",
             "example": "2027-03-01T09:00:00"
           },
@@ -869,24 +871,6 @@
         "title": "Slot generator",
         "description": "Expands into one slot of `duration` minutes every `interval` minutes between `from` and `to`, on each listed day of the week between `startDate` and `endDate`. Slots that would not end by `to` are not generated."
       },
-      "CreatePollInput": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/CreateDatePollInput"
-          },
-          {
-            "$ref": "#/components/schemas/CreateTimePollInput"
-          }
-        ],
-        "description": "`kind` chooses what participants vote on: whole days (`date`) or time slots (`time`). The request mirrors the poll the API returns: the same settings, and `options` in the same shape as the response.",
-        "discriminator": {
-          "propertyName": "kind",
-          "mapping": {
-            "date": "#/components/schemas/CreateDatePollInput",
-            "time": "#/components/schemas/CreateTimePollInput"
-          }
-        }
-      },
       "ListPollsResponse": {
         "type": "object",
         "properties": {
@@ -897,21 +881,70 @@
             }
           },
           "nextCursor": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "description": "Cursor to fetch the next page. `null` when there are no more results.",
-            "example": "Xk3pQ9vLm2Ab"
+            "example": "Xk3pQ9vLm2Ab",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
           "data",
           "nextCursor"
+        ]
+      },
+      "GetPollResultsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "pollId": {
+                "type": "string",
+                "example": "Xk3pQ9vLm2Ab"
+              },
+              "kind": {
+                "$ref": "#/components/schemas/PollKind"
+              },
+              "status": {
+                "description": "Current poll status. Polls close automatically when all options are in the past.",
+                "example": "open",
+                "$ref": "#/components/schemas/PollStatus"
+              },
+              "participantCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Total number of participants",
+                "example": 8
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/OptionResult"
+                }
+              },
+              "highScore": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "The highest `score` among the options. Opaque like `score`: use it to identify the leading options, not as a measurement.",
+                "example": 5004
+              }
+            },
+            "required": [
+              "pollId",
+              "kind",
+              "status",
+              "participantCount",
+              "options",
+              "highScore"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "OptionResult": {
@@ -1041,53 +1074,14 @@
         ],
         "description": "Results for a time slot. Only present in polls with `kind: time`."
       },
-      "GetPollResultsResponse": {
+      "GetPollParticipantsResponse": {
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "pollId": {
-                "type": "string",
-                "example": "Xk3pQ9vLm2Ab"
-              },
-              "kind": {
-                "$ref": "#/components/schemas/PollKind"
-              },
-              "status": {
-                "description": "Current poll status. Polls close automatically when all options are in the past.",
-                "example": "open",
-                "$ref": "#/components/schemas/PollStatus"
-              },
-              "participantCount": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "Total number of participants",
-                "example": 8
-              },
-              "options": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/OptionResult"
-                }
-              },
-              "highScore": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 9007199254740991,
-                "description": "The highest `score` among the options. Opaque like `score`: use it to identify the leading options, not as a measurement.",
-                "example": 5004
-              }
-            },
-            "required": [
-              "pollId",
-              "kind",
-              "status",
-              "participantCount",
-              "options",
-              "highScore"
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Participant"
+            }
           }
         },
         "required": [
@@ -1106,15 +1100,11 @@
             "example": "Jane Smith"
           },
           "email": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "example": "jane@example.com"
+            "example": "jane@example.com",
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "createdAt": {
             "type": "string",
@@ -1179,20 +1169,6 @@
           "end",
           "allDay",
           "modifiers"
-        ]
-      },
-      "GetPollParticipantsResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Participant"
-            }
-          }
-        },
-        "required": [
-          "data"
         ]
       },
       "GetPollParticipantResponse": {
