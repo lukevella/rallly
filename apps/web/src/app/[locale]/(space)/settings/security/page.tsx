@@ -14,7 +14,6 @@ import type { Params } from "@/app/[locale]/types";
 import {
   PageSection,
   PageSectionContent,
-  PageSectionDescription,
   PageSectionGroup,
   PageSectionHeader,
   PageSectionTitle,
@@ -63,17 +62,8 @@ export default async function SecurityPage() {
             <PageSection variant="card">
               <PageSectionHeader>
                 <PageSectionTitle>
-                  <Trans
-                    i18nKey="securityAuthentication"
-                    defaults="Authentication"
-                  />
+                  <Trans i18nKey="password" defaults="Password" />
                 </PageSectionTitle>
-                <PageSectionDescription>
-                  <Trans
-                    i18nKey="securityAuthenticationDescription"
-                    defaults="Manage how you sign in to your account"
-                  />
-                </PageSectionDescription>
               </PageSectionHeader>
               <PageSectionContent>
                 <FieldGroup variant="divided">
@@ -83,18 +73,28 @@ export default async function SecurityPage() {
                     </SettingIcon>
                     <FieldContent>
                       <FieldTitle>
-                        <Trans i18nKey="password" defaults="Password" />
+                        {hasPassword ? (
+                          <Trans
+                            i18nKey="changePassword"
+                            defaults="Change password"
+                          />
+                        ) : (
+                          <Trans
+                            i18nKey="noPasswordSet"
+                            defaults="No password set"
+                          />
+                        )}
                       </FieldTitle>
                       <FieldDescription>
                         {hasPassword ? (
                           <Trans
-                            i18nKey="changePasswordSettingHint"
-                            defaults="Update your password to keep your account secure."
+                            i18nKey="passwordSetHint"
+                            defaults="Your account has a password set."
                           />
                         ) : (
                           <Trans
-                            i18nKey="setPasswordSettingHint"
-                            defaults="Your account doesn't have a password yet. Set one to sign in with your email address."
+                            i18nKey="noPasswordSetHint"
+                            defaults="Your account doesn't have a password yet."
                           />
                         )}
                       </FieldDescription>
@@ -123,12 +123,12 @@ export default async function SecurityPage() {
                       />
                     )}
                   </Field>
-                  <React.Suspense fallback={null}>
-                    <SignInAccounts />
-                  </React.Suspense>
                 </FieldGroup>
               </PageSectionContent>
             </PageSection>
+            <React.Suspense fallback={null}>
+              <SignInAccounts />
+            </React.Suspense>
           </PageSectionGroup>
         ) : (
           <Alert>

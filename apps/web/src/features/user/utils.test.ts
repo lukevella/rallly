@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isOwnAvatarKey, toGuestSessionResult } from "./utils";
+import { getIdTokenEmail, isOwnAvatarKey, toGuestSessionResult } from "./utils";
 
 describe("toGuestSessionResult", () => {
   it("succeeds when sign-in returns no error", () => {
@@ -65,5 +65,32 @@ describe("isOwnAvatarKey", () => {
       false,
     );
     expect(isOwnAvatarKey({ key: "user-1", userId })).toBe(false);
+  });
+});
+
+describe("getIdTokenEmail", () => {
+  const token = (claims: object) =>
+    `header.${Buffer.from(JSON.stringify(claims)).toString("base64url")}.signature`;
+
+  it("reads the email claim", () => {
+    expect(getIdTokenEmail(token({ email: "jo@example.com" }))).toBe(
+      "jo@example.com",
+    );
+  });
+
+  it("falls back to preferred_username when it is an address", () => {
+    expect(
+      getIdTokenEmail(token({ preferred_username: "jo@contoso.com" })),
+    ).toBe("jo@contoso.com");
+  });
+
+  it("ignores a preferred_username that is not an address", () => {
+    expect(getIdTokenEmail(token({ preferred_username: "jo" }))).toBeNull();
+  });
+
+  it("returns null without a token or for a malformed one", () => {
+    expect(getIdTokenEmail(null)).toBeNull();
+    expect(getIdTokenEmail("not-a-jwt")).toBeNull();
+    expect(getIdTokenEmail("a.%%%.c")).toBeNull();
   });
 });
