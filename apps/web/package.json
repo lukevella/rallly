@@ -71,7 +71,7 @@
     "hono": "^4.13.16",
     "hono-openapi": "1.2.0",
     "hono-rate-limiter": "^0.2.1",
-    "i18next": "^26.3.0",
+    "i18next": "^26.3.4",
     "i18next-icu": "^2.4.3",
     "i18next-resources-to-backend": "^1.2.1",
     "ics": "^3.1.0",
