@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import {
-  ListView,
-  ListViewColumn,
-  ListViewContent,
-  ListViewHeader,
-  ListViewPageTitle,
-} from "@/components/list-view";
+  PageColumn,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageTitle,
+} from "@/components/page";
 import { Trans } from "@/i18n/client";
 import { getTranslation } from "@/i18n/server";
 import { MembersPageContent, MembersPageToolbar } from "./members-page";
@@ -14,21 +14,21 @@ import { MembersPageContent, MembersPageToolbar } from "./members-page";
 // loading.tsx, so the page appears once instead of skeleton after skeleton.
 export default function Page() {
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewColumn>
-          <ListViewPageTitle>
+    <PageShell>
+      <PageHeader>
+        <PageColumn>
+          <PageTitle>
             <Trans i18nKey="members" defaults="Members" />
-          </ListViewPageTitle>
+          </PageTitle>
           <MembersPageToolbar />
-        </ListViewColumn>
-      </ListViewHeader>
-      <ListViewContent className="pt-2">
-        <ListViewColumn className="pb-8">
+        </PageColumn>
+      </PageHeader>
+      <PageContent className="pt-2">
+        <PageColumn className="pb-8">
           <MembersPageContent />
-        </ListViewColumn>
-      </ListViewContent>
-    </ListView>
+        </PageColumn>
+      </PageContent>
+    </PageShell>
   );
 }
 

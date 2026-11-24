@@ -13,15 +13,15 @@ import {
 } from "@/components/empty-state";
 import { FilterTabs } from "@/components/filter-tabs";
 import { Link } from "@/components/link";
-import {
-  ListView,
-  ListViewColumn,
-  ListViewContent,
-  ListViewHeader,
-  ListViewPageTitle,
-  ListViewToolbar,
-} from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
+import {
+  PageColumn,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageTitle,
+  PageToolbar,
+} from "@/components/page";
 import { RefreshOnFocus } from "@/components/refresh-on-focus";
 import { SearchInput } from "@/components/search-input";
 import type { Status } from "@/features/scheduled-event/schema";
@@ -193,14 +193,14 @@ export function EventsPage({
   );
 
   return (
-    <ListView>
+    <PageShell>
       <RefreshOnFocus />
-      <ListViewHeader>
-        <ListViewColumn>
-          <ListViewPageTitle>
+      <PageHeader>
+        <PageColumn>
+          <PageTitle>
             <Trans i18nKey="events" defaults="Events" />
-          </ListViewPageTitle>
-          <ListViewToolbar className="pt-6">
+          </PageTitle>
+          <PageToolbar className="pt-6">
             <SearchInput
               className="w-full min-w-0 sm:w-auto sm:min-w-48 sm:flex-1"
               placeholder={t("searchEventsPlaceholder", {
@@ -237,11 +237,11 @@ export function EventsPage({
                 startTransition={startNavigation}
               />
             ) : null}
-          </ListViewToolbar>
-        </ListViewColumn>
-      </ListViewHeader>
-      <ListViewContent>
-        <ListViewColumn className="pb-8">
+          </PageToolbar>
+        </PageColumn>
+      </PageHeader>
+      <PageContent>
+        <PageColumn className="pb-8">
           {isNavigating ? <EventsListSkeleton /> : list}
           {isNavigating ? null : (
             <EventsPagination
@@ -250,8 +250,8 @@ export function EventsPage({
               startTransition={startNavigation}
             />
           )}
-        </ListViewColumn>
-      </ListViewContent>
-    </ListView>
+        </PageColumn>
+      </PageContent>
+    </PageShell>
   );
 }
