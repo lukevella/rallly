@@ -61,7 +61,7 @@ import {
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { identifyGroup, track } from "@/lib/posthog";
-import { createIcsEvent } from "@/lib/utils/ics";
+import { anchorFloatingTime, createIcsEvent } from "@/lib/utils/ics";
 import {
   createGuestIpRateLimitMiddleware,
   createRateLimitMiddleware,
@@ -1171,6 +1171,7 @@ export const polls = router({
               email: true,
               locale: true,
               timeFormat: true,
+              timeZone: true,
             },
           },
           options: { select: { id: true } },
@@ -1266,6 +1267,21 @@ export const polls = router({
         pollId: poll.id,
       });
 
+      // A floating time is read as the host's wall clock: the meeting and the
+      // host's calendar copy must name the same instant, so both are anchored
+      // in the host's zone. The stored event stays floating.
+      const hostAnchoredTimes =
+        !eventTimes.timeZone && !eventTimes.allDay && poll.user.timeZone
+          ? anchorFloatingTime({
+              start: eventTimes.start,
+              end: eventTimes.end,
+              timeZone: poll.user.timeZone,
+            })
+          : undefined;
+      const hostTimes = hostAnchoredTimes
+        ? { ...hostAnchoredTimes, timeZone: poll.user.timeZone }
+        : eventTimes;
+
       // The meeting is minted before anything is written: a failed provider
       // call leaves the poll open so the organizer can fix the connection and
       // try again, instead of an event going out without a link. The poll
@@ -1274,9 +1290,9 @@ export const polls = router({
         userId: poll.user.id,
         conferencing: pollConferencing,
         title: poll.title,
-        start: eventTimes.start,
-        end: eventTimes.end,
-        timeZone: eventTimes.timeZone,
+        start: hostTimes.start,
+        end: hostTimes.end,
+        timeZone: hostTimes.timeZone,
       });
 
       const attendees = poll.participants.filter((p) =>
@@ -1299,10 +1315,10 @@ export const polls = router({
         description:
           [poll.description, conferencingUri].filter(Boolean).join("\n\n") ||
           undefined,
-        start: eventTimes.start,
-        end: eventTimes.end,
+        start: hostTimes.start,
+        end: hostTimes.end,
         allDay: eventTimes.allDay,
-        timeZone: eventTimes.timeZone ?? undefined,
+        timeZone: hostTimes.timeZone ?? undefined,
         organizer: {
           name: poll.user.name,
           email: poll.user.email,
