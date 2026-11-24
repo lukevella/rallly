@@ -82,17 +82,16 @@ export function ListViewPageTitle({
 
 export function ListViewPageTitleSkeleton() {
   return (
-    <div
-      aria-hidden
-      className="flex items-center gap-2 px-4 pt-4 md:pt-8 lg:pt-12"
-    >
+    <div className="flex items-center gap-2 px-4 pt-4 md:pt-8 lg:pt-12">
       <SidebarTrigger className="md:hidden" />
-      <Skeleton className="h-7 w-28 md:h-8" />
+      <Skeleton aria-hidden className="h-7 w-28 md:h-8" />
     </div>
   );
 }
 
 // Placeholder for a toolbar holding a search input, FilterTabs and a CTA.
+// Wraps like ListViewToolbar: on small screens search and the CTA share the
+// first row and the tabs drop below.
 export function ListViewToolbarSkeleton({
   tabs = true,
   action = false,
@@ -101,10 +100,15 @@ export function ListViewToolbarSkeleton({
   action?: boolean;
 }) {
   return (
-    <div aria-hidden className="flex items-center gap-2 px-4 pt-6 pb-3">
-      <Skeleton className="h-9 min-w-0 flex-1 rounded-md" />
+    <div
+      aria-hidden
+      className="flex flex-wrap items-center gap-x-2 gap-y-4 px-4 pt-6 pb-3"
+    >
+      <Skeleton className="h-9 min-w-40 flex-1 rounded-md max-sm:order-first sm:min-w-48" />
       {tabs ? <Skeleton className="h-9 w-56 rounded-xl" /> : null}
-      {action ? <Skeleton className="h-9 w-28 rounded-xl" /> : null}
+      {action ? (
+        <Skeleton className="h-9 w-28 rounded-xl max-sm:order-first" />
+      ) : null}
     </div>
   );
 }
