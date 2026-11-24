@@ -106,10 +106,14 @@ export function EventsEmptyState({ status }: { status: Status }) {
 function EventsPagination({
   page,
   hasNextPage,
+  disabled,
   startTransition,
 }: {
   page: number;
   hasNextPage: boolean;
+  // While a navigation is pending the URL still holds the previous filters,
+  // so a page link built from it would replace the pending change.
+  disabled: boolean;
   startTransition: React.TransitionStartFunction;
 }) {
   const searchParams = useSearchParams();
@@ -153,12 +157,12 @@ function EventsPagination({
 
   return (
     <nav className="flex items-center justify-end gap-2 px-4 py-4">
-      {page > 1 ? (
+      {page > 1 && !disabled ? (
         pageLink(page - 1, previousLabel)
       ) : (
         <Button disabled>{previousLabel}</Button>
       )}
-      {hasNextPage ? (
+      {hasNextPage && !disabled ? (
         pageLink(page + 1, nextLabel)
       ) : (
         <Button disabled>{nextLabel}</Button>
@@ -270,6 +274,7 @@ export function HomePage({
             <EventsPagination
               page={page}
               hasNextPage={hasNextPage}
+              disabled={isNavigating}
               startTransition={startNavigation}
             />
           </div>
