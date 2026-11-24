@@ -19,6 +19,7 @@ import { InstancePolicyProvider } from "@/features/instance-policy/client";
 import { loadInstancePolicy } from "@/features/instance-policy/loaders";
 import { I18nProvider } from "@/i18n/client";
 import { initI18next } from "@/i18n/i18n";
+import { assetLoadReportScript } from "@/lib/asset-load-report";
 import { chunkRegistrationLogScript } from "@/lib/chunk-registration-log";
 import { TimeZoneSync } from "@/lib/datetime/timezone-sync";
 import { FeatureFlagsProvider } from "@/lib/feature-flags/client";
@@ -72,6 +73,9 @@ export default async function Root({
     "--primary-dark-foreground": brandingConfig.primaryColor.darkForeground,
   } as React.CSSProperties;
 
+  // Only cloud serves chunks from a separate host; see next.config.ts.
+  const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX;
+
   return (
     <html
       lang={locale}
@@ -84,6 +88,14 @@ export default async function Root({
           // biome-ignore lint/security/noDangerouslySetInnerHtml: static diagnostics script with no user input
           dangerouslySetInnerHTML={{ __html: chunkRegistrationLogScript }}
         />
+        {assetPrefix ? (
+          <script
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: static diagnostics script built from build-time config
+            dangerouslySetInnerHTML={{
+              __html: assetLoadReportScript(assetPrefix),
+            }}
+          />
+        ) : null}
       </head>
       <body>
         <ThemeProvider>
