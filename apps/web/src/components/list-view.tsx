@@ -101,7 +101,7 @@ export function ListViewPageTitleSkeleton() {
 
 // Placeholder for a toolbar holding a search input, FilterTabs and a CTA.
 // Wraps like ListViewToolbar: on small screens search and the CTA share the
-// first row and the tabs drop below.
+// first row and the tabs take the full second row.
 export function ListViewToolbarSkeleton({
   tabs = true,
   action = false,
@@ -115,7 +115,11 @@ export function ListViewToolbarSkeleton({
       className="flex flex-wrap items-center gap-x-2 gap-y-4 px-4 pt-6 pb-3"
     >
       <Skeleton className="h-9 min-w-40 flex-1 rounded-md max-sm:order-first sm:min-w-48" />
-      {tabs ? <Skeleton className="h-9 w-56 rounded-xl" /> : null}
+      {tabs ? (
+        <div className="flex items-center gap-2 max-sm:w-full">
+          <Skeleton className="h-9 w-56 rounded-xl" />
+        </div>
+      ) : null}
       {action ? (
         <Skeleton className="h-9 w-28 rounded-xl max-sm:order-first" />
       ) : null}

@@ -189,7 +189,7 @@ export function PollsPage({
           </ListViewPageTitle>
           <ListViewToolbar className="pt-6">
             {/* Below sm, search and the CTA share the first row and the
-                filters wrap to the second. */}
+                filters take the full second row whatever the width. */}
             <SearchInput
               className="min-w-40 flex-1 max-sm:order-first sm:min-w-48"
               placeholder={t("searchPollsPlaceholder", {
@@ -197,37 +197,44 @@ export function PollsPage({
               })}
               startTransition={startNavigation}
             />
-            <FilterTabs
-              param="status"
-              value={status}
-              label={t("pollsListStatusFilter", {
-                defaultValue: "Filter by status",
-              })}
-              options={[
-                {
-                  value: "open",
-                  label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
-                },
-                {
-                  value: "closed",
-                  label: <Trans i18nKey="pollStatusClosed" defaults="Closed" />,
-                },
-                {
-                  value: "scheduled",
-                  label: (
-                    <Trans i18nKey="pollStatusScheduled" defaults="Scheduled" />
-                  ),
-                },
-              ]}
-              startTransition={startNavigation}
-            />
-            {showMemberFilter ? (
-              <MemberSelector
-                members={members}
-                className="min-w-0 sm:min-w-40"
+            <div className="flex min-w-0 items-center gap-2 max-sm:w-full">
+              <FilterTabs
+                param="status"
+                value={status}
+                label={t("pollsListStatusFilter", {
+                  defaultValue: "Filter by status",
+                })}
+                options={[
+                  {
+                    value: "open",
+                    label: <Trans i18nKey="pollStatusOpen" defaults="Open" />,
+                  },
+                  {
+                    value: "closed",
+                    label: (
+                      <Trans i18nKey="pollStatusClosed" defaults="Closed" />
+                    ),
+                  },
+                  {
+                    value: "scheduled",
+                    label: (
+                      <Trans
+                        i18nKey="pollStatusScheduled"
+                        defaults="Scheduled"
+                      />
+                    ),
+                  },
+                ]}
                 startTransition={startNavigation}
               />
-            ) : null}
+              {showMemberFilter ? (
+                <MemberSelector
+                  members={members}
+                  className="min-w-0 sm:min-w-40"
+                  startTransition={startNavigation}
+                />
+              ) : null}
+            </div>
             <ListViewActions className="max-sm:order-first">
               {usageMeter}
               <Link
