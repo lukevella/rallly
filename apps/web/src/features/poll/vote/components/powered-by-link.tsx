@@ -21,7 +21,7 @@ export function PoweredByLink({
       className={
         plain
           ? "inline-flex h-6 items-center text-muted-foreground text-xs underline-offset-4 hover:text-foreground hover:underline"
-          : "inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-border bg-background px-4 font-normal text-foreground text-xs shadow-xs transition-[background-color,transform] ease-out hover:bg-gray-50 active:scale-[.98] motion-reduce:active:scale-100 dark:bg-muted dark:hover:bg-[color-mix(in_oklab,var(--color-gray-800),var(--color-gray-700)_25%)]"
+          : "inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-control border border-border bg-background px-4 font-normal text-foreground text-xs shadow-xs transition-[background-color,transform] ease-out hover:bg-gray-50 active:scale-[.98] motion-reduce:active:scale-100 dark:bg-muted dark:hover:bg-[color-mix(in_oklab,var(--color-gray-800),var(--color-gray-700)_25%)]"
       }
       href="https://rallly.co?utm_source=rallly&utm_medium=poll&utm_campaign=powered_by"
       onClick={() => {

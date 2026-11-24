@@ -88,7 +88,7 @@ const VoteSummary = ({
   return (
     <div
       className={cn(
-        "flex h-9 w-full items-center gap-3 rounded-lg border border-input bg-background/80 px-2.5 dark:bg-foreground/5",
+        "flex h-9 w-full items-center gap-3 rounded-control border border-input bg-background/80 px-2.5 dark:bg-foreground/5",
         className,
       )}
     >
@@ -449,7 +449,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             />
           ) : (
             <Button
-              className="rounded-full"
               type="button"
               disabled={formState.isSubmitting}
               onClick={() => {

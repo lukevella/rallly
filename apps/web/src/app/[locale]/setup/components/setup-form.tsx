@@ -77,7 +77,7 @@ function SpaceTypeOption({
   return (
     <label
       htmlFor={id}
-      className="group flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-input bg-card px-3 text-sm transition-colors hover:bg-accent has-data-checked:border-primary has-data-checked:bg-primary/5"
+      className="group flex h-9 cursor-pointer items-center gap-2 rounded-control border border-input bg-card px-3 text-sm transition-colors hover:bg-accent has-data-checked:border-primary has-data-checked:bg-primary/5"
     >
       <span className="text-muted-foreground group-has-data-checked:text-primary">
         {icon}

@@ -50,22 +50,22 @@ export type DateRangePickerProps = Pick<
 };
 
 const cellClassName = cn(
-  "flex size-8 cursor-pointer select-none items-center justify-center rounded-md text-sm outline-none",
+  "flex size-8 cursor-pointer select-none items-center justify-center rounded-control-sm text-sm outline-none",
   "hover:bg-accent",
   "data-[focus-visible]:ring-[3px] data-[focus-visible]:ring-ring/50",
   // Selected span uses the pro-badge treatment: a low-opacity primary fill
   // with primary text. Squared off by default so the days read as one
   // continuous block; only the endpoints round their outer edge.
   "data-[selected]:rounded-none data-[selected]:bg-primary/10 data-[selected]:text-primary",
-  "data-[selection-start]:rounded-l-md",
-  "data-[selection-end]:rounded-r-md",
+  "data-[selection-start]:rounded-l-control-sm",
+  "data-[selection-end]:rounded-r-control-sm",
   "data-[outside-month]:invisible",
   "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
   "data-[unavailable]:pointer-events-none data-[unavailable]:line-through data-[unavailable]:opacity-50",
 );
 
 const navButtonClassName = cn(
-  "inline-flex size-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none",
+  "inline-flex size-8 cursor-pointer items-center justify-center rounded-control-sm text-muted-foreground outline-none",
   "hover:bg-accent hover:text-foreground",
   "data-[focus-visible]:ring-[3px] data-[focus-visible]:ring-ring/50",
   "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
@@ -120,7 +120,7 @@ function DateRangePicker({
       </Group>
       <Popover
         className={cn(
-          "z-50 rounded-lg border bg-popover p-3 text-popover-foreground shadow-md outline-none",
+          "z-50 rounded-popup border bg-popover p-3 text-popover-foreground shadow-md outline-none",
           "data-[entering]:fade-in-0 data-[entering]:animate-in",
           "data-[exiting]:fade-out-0 data-[exiting]:animate-out",
         )}

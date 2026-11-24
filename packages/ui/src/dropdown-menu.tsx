@@ -40,7 +40,7 @@ function DropdownMenuContent({
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
           className={cn(
-            "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[100px] animate-in overflow-hidden rounded-xl border border-popover-border bg-popover p-1 text-popover-foreground shadow-md",
+            "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[100px] animate-in overflow-hidden rounded-popup border border-popover-border bg-popover p-1 text-popover-foreground shadow-md",
             className,
           )}
           {...props}
@@ -51,7 +51,7 @@ function DropdownMenuContent({
 }
 
 const dropdownMenuItemVariants = cva(
-  "relative flex cursor-default select-none items-center gap-x-2.5 rounded-lg px-2 py-1.5 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-popover-accent data-disabled:opacity-50 data-highlighted:ring-1 data-highlighted:ring-menu-item-outline data-highlighted:ring-inset [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "relative flex cursor-default select-none items-center gap-x-2.5 rounded-control-sm px-2 py-1.5 text-sm outline-hidden data-disabled:pointer-events-none data-highlighted:bg-popover-accent data-disabled:opacity-50 data-highlighted:ring-1 data-highlighted:ring-menu-item-outline data-highlighted:ring-inset [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -186,7 +186,7 @@ function DropdownMenuSubContent({
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-sub-content"
           className={cn(
-            "data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1 z-50 min-w-32 animate-in overflow-hidden rounded-xl border border-popover-border bg-popover p-1 text-popover-foreground shadow-md",
+            "data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1 z-50 min-w-32 animate-in overflow-hidden rounded-popup border border-popover-border bg-popover p-1 text-popover-foreground shadow-md",
             className,
           )}
           {...props}

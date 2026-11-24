@@ -74,7 +74,6 @@ export async function QuickCreateWidget() {
             href="/new"
             className={buttonVariants({
               size: "xl",
-              shape: "rounded",
               className: "w-full",
             })}
           >

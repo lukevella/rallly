@@ -83,10 +83,9 @@ export function NavUserAvatar() {
         render={
           <Button
             aria-label={t("account", { defaultValue: "Account" })}
-            className="p-0"
+            className="rounded-full p-0"
             variant="ghost"
             size="icon"
-            shape="pill"
           />
         }
       >

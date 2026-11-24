@@ -181,7 +181,6 @@ export function ManageSeatsDialog({
           <div className="flex items-center gap-6">
             <Button
               size="icon-lg"
-              className="rounded-full"
               onClick={handleDecrement}
               disabled={newSeatCount <= 1}
             >
@@ -228,7 +227,6 @@ export function ManageSeatsDialog({
             </SeatGauge>
             <Button
               size="icon-lg"
-              className="rounded-full"
               onClick={handleIncrement}
               disabled={!canIncrement}
             >

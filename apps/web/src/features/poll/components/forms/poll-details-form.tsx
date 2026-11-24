@@ -112,11 +112,7 @@ export const PollDetailsForm = ({
       {canAddAddress || canAddVideoCall || !descriptionExpanded ? (
         <div className="flex flex-wrap gap-2">
           {canAddAddress ? (
-            <Button
-              type="button"
-              className="rounded-full"
-              onClick={() => setLocationOpened(true)}
-            >
+            <Button type="button" onClick={() => setLocationOpened(true)}>
               <PlusIcon data-icon="inline-start" />
               <Trans i18nKey="addLocation" defaults="Add location" />
             </Button>
@@ -127,7 +123,6 @@ export const PollDetailsForm = ({
             // focus moves to the call's name once that field renders.
             <Button
               type="button"
-              className="rounded-full"
               onClick={() => {
                 form.setValue("conferencingProvider", "custom", {
                   shouldDirty: true,
@@ -153,11 +148,7 @@ export const PollDetailsForm = ({
             </DropdownMenu>
           ) : null}
           {!descriptionExpanded ? (
-            <Button
-              type="button"
-              className="rounded-full"
-              onClick={() => setDescriptionOpened(true)}
-            >
+            <Button type="button" onClick={() => setDescriptionOpened(true)}>
               <PlusIcon data-icon="inline-start" />
               <Trans i18nKey="addDescription" defaults="Add description" />
             </Button>

@@ -21,7 +21,8 @@
   /* Hue of the --color-gray-* scale in @theme; change both together */
   --gray-hue: 286.033;
 
-  --radius: 0.625rem;
+  /* Corner radius of a 36px control; every control and popup radius derives from it */
+  --control-radius: 10px;
   --primary: var(--primary-light, var(--color-indigo-600));
   --primary-foreground: var(--primary-light-foreground, var(--color-white));
   --state-shade: black;
@@ -146,6 +147,15 @@
 }
 
 @theme inline {
+  /* Control radii by height: xs 20px, sm 24-32px, base 36-40px, lg 48px */
+  --radius-control-xs: max(0px, calc(var(--control-radius) - 4px));
+  --radius-control-sm: max(0px, calc(var(--control-radius) - 2px));
+  --radius-control: var(--control-radius);
+  --radius-control-lg: calc(var(--control-radius) + 2px);
+  /* Menus and popovers: an sm item plus the 4px padding around it */
+  --radius-popup: calc(var(--control-radius) + 2px);
+  /* Floating action bars: a base control plus the 8px inset around it */
+  --radius-dock: calc(var(--control-radius) + 8px);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   /*

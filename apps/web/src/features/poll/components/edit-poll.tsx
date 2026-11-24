@@ -296,7 +296,7 @@ export function EditPoll({
         <PollOptionsForm disableTimeZoneChange={hasVotes} />
         <PollSettingsForm hasTentativeVotes={hasTentativeVotes} />
         <div className="sticky bottom-0 z-20 flex justify-center pt-2 pb-6">
-          <div className="flex w-full max-w-md items-center justify-between gap-x-4 rounded-full border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
+          <div className="flex w-full max-w-md items-center justify-between gap-x-4 rounded-dock border border-popover-border bg-popover py-2 pr-2 pl-5 shadow-2xl shadow-black/40">
             <p className="min-w-0 truncate text-muted-foreground text-sm">
               <SelectedOptionsCount />
             </p>
@@ -305,7 +305,6 @@ export function EditPoll({
                 href={returnHref}
                 className={buttonVariants({
                   variant: "ghost",
-                  className: "rounded-full",
                 })}
               >
                 <Trans i18nKey="cancel" defaults="Cancel" />
@@ -313,7 +312,7 @@ export function EditPoll({
               <Button
                 type="submit"
                 variant="primary"
-                className="rounded-full px-4"
+                className="px-4"
                 loading={update.isPending}
               >
                 <Trans i18nKey="saveChanges" defaults="Save changes" />

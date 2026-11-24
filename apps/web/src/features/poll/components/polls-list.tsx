@@ -162,7 +162,10 @@ function PollRowActions({
   const reopenPoll = trpc.polls.reopen.useMutation();
   return (
     <div className="relative z-10 flex items-center gap-x-1">
-      <CopyLinkButton href={shortUrl(`/invite/${id}`)} className="size-8" />
+      <CopyLinkButton
+        href={shortUrl(`/invite/${id}`)}
+        className="size-8 rounded-control-sm"
+      />
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
@@ -172,7 +175,7 @@ function PollRowActions({
               })}
               variant="ghost"
               size="icon"
-              className="size-8"
+              className="size-8 rounded-control-sm"
             />
           }
         >

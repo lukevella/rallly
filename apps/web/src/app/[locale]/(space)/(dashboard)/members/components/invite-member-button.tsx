@@ -19,7 +19,6 @@ export function InviteMemberButton({
     <>
       <Button
         variant="primary"
-        shape="rounded"
         disabled={disabled}
         onClick={() => {
           if (!canCreateInvite) {

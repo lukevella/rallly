@@ -38,10 +38,7 @@ export default async function QuickCreatePage() {
             </div>
           </div>
           <div className="flex justify-center gap-4">
-            <Link
-              href="/login"
-              className={buttonVariants({ className: "rounded-full" })}
-            >
+            <Link href="/login" className={buttonVariants()}>
               <LogInIcon className="text-muted-foreground" />
               {t("login")}
             </Link>

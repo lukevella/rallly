@@ -456,12 +456,7 @@ export function PayWallDialog({
                 </TabsContent>
               )}
               {selectedPlan === "hobby" && (
-                <Button
-                  disabled={true}
-                  size="xl"
-                  shape="rounded"
-                  className="w-full"
-                >
+                <Button disabled={true} size="xl" className="w-full">
                   <Trans i18nKey="currentPlan" defaults="Current plan" />
                 </Button>
               )}

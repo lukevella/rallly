@@ -42,7 +42,7 @@ export function FilterTabs<T extends string>({
   return (
     <nav
       aria-label={label}
-      className="inline-flex h-9 shrink-0 items-center gap-0.5 rounded-xl border border-input bg-muted p-0.5 dark:bg-gray-900"
+      className="inline-flex h-9 shrink-0 items-center gap-0.5 rounded-control border border-input bg-muted p-0.5 dark:bg-gray-900"
     >
       {options.map((option) => {
         const selected = option.value === selectedValue;
@@ -62,7 +62,7 @@ export function FilterTabs<T extends string>({
             }}
             aria-current={selected ? "page" : undefined}
             className={cn(
-              "inline-flex h-full items-center whitespace-nowrap rounded-lg px-3 text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
+              "inline-flex h-full items-center whitespace-nowrap rounded-control-sm px-3 text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
               selected
                 ? "bg-card text-foreground shadow-xs dark:bg-gray-800"
                 : "text-muted-foreground hover:text-foreground",

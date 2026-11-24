@@ -31,7 +31,6 @@ export const UpgradeButton = ({
     <Button
       type="button"
       size="xl"
-      shape="rounded"
       className={className}
       variant="primary"
       loading={upgradeToPro.isPending}

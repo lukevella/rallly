@@ -79,14 +79,14 @@ export function PageToolbarSkeleton({
       aria-hidden
       className="flex flex-wrap items-center gap-x-2 gap-y-4 px-4 pt-6 pb-3"
     >
-      <Skeleton className="h-9 min-w-40 flex-1 rounded-md max-sm:order-first sm:min-w-48" />
+      <Skeleton className="h-9 min-w-40 flex-1 rounded-control max-sm:order-first sm:min-w-48" />
       {tabs ? (
         <div className="flex items-center gap-2 max-sm:w-full">
-          <Skeleton className="h-9 w-56 rounded-xl" />
+          <Skeleton className="h-9 w-56 rounded-control" />
         </div>
       ) : null}
       {action ? (
-        <Skeleton className="h-9 w-28 rounded-xl max-sm:order-first" />
+        <Skeleton className="h-9 w-28 rounded-control max-sm:order-first" />
       ) : null}
     </div>
   );

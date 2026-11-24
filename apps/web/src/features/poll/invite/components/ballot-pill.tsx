@@ -2,7 +2,7 @@ import { cn } from "@rallly/ui";
 import type * as React from "react";
 
 /** The size of a button in the bar: the height of a ballot row, with its corners. */
-export const ballotBarButtonClassName = "h-12 rounded-xl";
+export const ballotBarButtonClassName = "h-12 rounded-control-lg";
 
 /** A shortcut toggle for the options: dashed until it is on. */
 export const ballotToggleClassName =
@@ -25,7 +25,7 @@ export function BallotPill({
         "pointer-events-auto flex items-center",
         bar
           ? "w-full gap-2"
-          : "ml-auto gap-1 rounded-full bg-gray-100/80 p-1 shadow-xs backdrop-blur-lg dark:bg-gray-800/80",
+          : "ml-auto gap-1 rounded-xl bg-gray-100/80 p-1 shadow-xs backdrop-blur-lg dark:bg-gray-800/80",
       )}
     >
       {children}

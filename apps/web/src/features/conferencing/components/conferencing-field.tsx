@@ -296,7 +296,7 @@ export function ConferencingField({
         return (
           <FormItem>
             {header}
-            <div className="flex h-9 items-center gap-x-2 rounded-xl border border-input bg-background/80 px-2.5 text-sm dark:bg-foreground/5">
+            <div className="flex h-9 items-center gap-x-2 rounded-control border border-input bg-background/80 px-2.5 text-sm dark:bg-foreground/5">
               <ConferencingProviderIcon provider={provider} size={16} />
               <span>{label}</span>
             </div>

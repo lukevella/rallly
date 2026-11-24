@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "./lib/utils";
 
 const badgeVariants = cva(
-  "group inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-lg font-normal transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "group inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-control-sm font-normal transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
@@ -23,7 +23,7 @@ const badgeVariants = cva(
         pill: "rounded-full bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200",
       },
       size: {
-        sm: "h-5 min-w-5 px-1.5 text-xs",
+        sm: "h-5 min-w-5 rounded-control-xs px-1.5 text-xs",
         md: "h-6 min-w-5 px-2 text-xs",
         lg: "h-7 min-w-7 px-2.5 text-sm",
       },
