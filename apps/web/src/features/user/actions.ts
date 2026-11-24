@@ -122,9 +122,8 @@ export const unlinkSignInAccountAction = authActionClient
     }),
   )
   .action(async ({ ctx, parsedInput }) => {
-    // The page hides the list behind the emailLogin flag. Email code login is
-    // the fallback that makes removing the last link safe, so gate the action
-    // too.
+    // The page hides the list behind the emailLogin flag; gate the action
+    // too so a direct request can't reach it on an SSO-only instance.
     if (!isFeatureEnabled("emailLogin")) {
       throw new AppError({
         code: "FORBIDDEN",

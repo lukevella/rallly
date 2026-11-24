@@ -4,10 +4,9 @@ import {
   FieldDescription,
   FieldTitle,
 } from "@rallly/ui/field";
-import { UserIcon } from "lucide-react";
-import Image from "next/image";
 import { SettingIcon } from "@/components/setting-icon";
 import { env } from "@/env";
+import { SSOImage } from "@/features/auth/components/sso-provider";
 import { loadSignInAccounts, loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { UnlinkSignInAccountButton } from "./unlink-sign-in-account-button";
@@ -25,22 +24,6 @@ function providerName(provider: string) {
   }
 }
 
-function ProviderIcon({ provider }: { provider: string }) {
-  if (provider === "google" || provider === "microsoft") {
-    return (
-      <Image
-        src={`/static/${provider}.svg`}
-        width={20}
-        height={20}
-        alt=""
-        unoptimized
-      />
-    );
-  }
-
-  return <UserIcon />;
-}
-
 export async function SignInAccounts() {
   const [user, accounts] = await Promise.all([
     loadUser(),
@@ -52,7 +35,7 @@ export async function SignInAccounts() {
     return (
       <Field key={account.id} orientation="responsive">
         <SettingIcon>
-          <ProviderIcon provider={account.provider} />
+          <SSOImage provider={account.provider} />
         </SettingIcon>
         <FieldContent>
           <FieldTitle>{name}</FieldTitle>

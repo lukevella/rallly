@@ -17,7 +17,6 @@ import { toast } from "@rallly/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
 import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { unlinkSignInAccountAction } from "@/features/user/actions";
 import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
@@ -37,13 +36,11 @@ export function UnlinkSignInAccountButton({
   const router = useRouter();
   const dialog = useDialog();
   const isCalendarsEnabled = useFeatureFlag("calendars");
-  const [needsFreshSession, setNeedsFreshSession] = React.useState(false);
 
   const unlink = useMutation(
     mutationOptions(unlinkSignInAccountAction, {
       onSuccess: (result) => {
         if (!result.ok) {
-          setNeedsFreshSession(true);
           return;
         }
         dialog.dismiss();
@@ -55,6 +52,7 @@ export function UnlinkSignInAccountButton({
       },
     }),
   );
+  const needsFreshSession = unlink.data?.ok === false;
 
   return (
     <Dialog
@@ -62,7 +60,7 @@ export function UnlinkSignInAccountButton({
       onOpenChange={(open) => {
         dialog.dialogProps.onOpenChange(open);
         if (!open) {
-          setNeedsFreshSession(false);
+          unlink.reset();
         }
       }}
     >
