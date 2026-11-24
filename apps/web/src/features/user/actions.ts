@@ -3,16 +3,19 @@
 import { subject } from "@casl/ability";
 import { prisma } from "@rallly/database";
 import { supportedLngs } from "@rallly/languages";
+import { APIError } from "better-auth/api";
 import { refresh } from "next/cache";
 import { headers } from "next/headers";
 import * as z from "zod";
 import { avatarAssetProfile } from "@/features/user/constants";
-import { isEmailTaken } from "@/features/user/data";
+import { getUserSignInAccounts, isEmailTaken } from "@/features/user/data";
 import { unbanUser, updateUserRole } from "@/features/user/mutations";
 import { isOwnAvatarKey } from "@/features/user/utils";
 import authLib from "@/lib/auth";
 import { timeFormatSchema, weekStartSchema } from "@/lib/datetime/schema";
 import { AppError } from "@/lib/errors/app-error";
+import { isFeatureEnabled } from "@/lib/feature-flags/server";
+import { track } from "@/lib/posthog";
 import {
   adminActionClient,
   authActionClient,
@@ -102,6 +105,66 @@ export const checkEmailAvailabilityAction = authActionClient
     if (await isEmailTaken(email)) {
       return { ok: false as const, reason: "email_taken" as const };
     }
+
+    return { ok: true as const };
+  });
+
+// Better-Auth's unlink endpoint scopes the account to the session's user and
+// only accepts a recently created session. A stale session is an expected
+// outcome, so it comes back as a value and the UI asks the user to sign in
+// again.
+export const unlinkSignInAccountAction = authActionClient
+  .metadata({ actionName: "unlink_sign_in_account" })
+  .use(createRateLimitMiddleware({ requests: 10, duration: "1 h", by: "user" }))
+  .inputSchema(
+    z.object({
+      accountId: z.string(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    // The page hides the list behind the emailLogin flag; gate the action
+    // too so a direct request can't reach it on an SSO-only instance.
+    if (!isFeatureEnabled("emailLogin")) {
+      throw new AppError({
+        code: "FORBIDDEN",
+        message: "Email login is not enabled",
+      });
+    }
+
+    const accounts = await getUserSignInAccounts(ctx.user.id);
+    const account = accounts.find(({ id }) => id === parsedInput.accountId);
+
+    if (!account) {
+      throw new AppError({
+        code: "NOT_FOUND",
+        message: "Sign-in account not found",
+      });
+    }
+
+    try {
+      await authLib.api.unlinkAccount({
+        body: { accountId: account.id },
+        headers: await headers(),
+      });
+    } catch (error) {
+      if (
+        error instanceof APIError &&
+        error.body?.code === "SESSION_NOT_FRESH"
+      ) {
+        return { ok: false as const, reason: "session_not_fresh" as const };
+      }
+      throw error;
+    }
+
+    track(
+      { id: ctx.user.id, isGuest: false },
+      {
+        event: "account_settings:sign_in_account_unlink",
+        properties: { provider: account.provider },
+      },
+    );
+
+    refresh();
 
     return { ok: true as const };
   });

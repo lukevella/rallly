@@ -3,6 +3,7 @@ import "server-only";
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import type { UserDTO } from "@/features/user/schema";
+import { getIdTokenEmail } from "@/features/user/utils";
 
 export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
@@ -99,6 +100,25 @@ export const getUserHasPassword = async (userId: string) => {
   });
   return !!account;
 };
+
+// OAuth and OIDC links that can sign the user in. The credential row holds
+// the password, which the security page manages on its own row.
+export async function getUserSignInAccounts(userId: string) {
+  const accounts = await prisma.account.findMany({
+    where: {
+      userId,
+      provider: { not: "credential" },
+    },
+    select: { id: true, provider: true, id_token: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return accounts.map(({ id, provider, id_token }) => ({
+    id,
+    provider,
+    email: getIdTokenEmail(id_token),
+  }));
+}
 
 export const getUserHasNoAccounts = async (userId: string) => {
   const accountCount = await prisma.account.count({

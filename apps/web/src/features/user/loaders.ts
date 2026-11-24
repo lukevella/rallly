@@ -2,7 +2,11 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { getUser, getUserHasNoAccounts } from "@/features/user/data";
+import {
+  getUser,
+  getUserHasNoAccounts,
+  getUserSignInAccounts,
+} from "@/features/user/data";
 import type { UserDTO } from "@/features/user/schema";
 import { getSession, getSessionState } from "@/lib/auth";
 import { InvalidSessionError } from "@/lib/errors/invalid-session-error";
@@ -116,4 +120,12 @@ export const loadAdmin = cache(async () => {
 export const loadUserHasNoAccounts = cache(async () => {
   const user = await loadUser();
   return getUserHasNoAccounts(user.id);
+});
+
+/**
+ * The OAuth and OIDC accounts that can sign the signed-in user in.
+ */
+export const loadSignInAccounts = cache(async () => {
+  const user = await loadUser();
+  return getUserSignInAccounts(user.id);
 });
