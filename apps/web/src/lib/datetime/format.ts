@@ -376,3 +376,22 @@ export function formatRelativeTime(value: DateInput, locale: string): string {
   }
   return rtf.format(Math.round(amount), "year");
 }
+
+/** A whole number of calendar days from today: "tomorrow", "in 3 days", "in 2 weeks". */
+export function formatRelativeDays(days: number, locale: string): string {
+  let rtf = relativeFormatters.get(locale);
+  if (!rtf) {
+    rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+    relativeFormatters.set(locale, rtf);
+  }
+  if (Math.abs(days) < 7) {
+    return rtf.format(days, "day");
+  }
+  if (Math.abs(days) < 30) {
+    return rtf.format(Math.round(days / 7), "week");
+  }
+  if (Math.abs(days) < 365) {
+    return rtf.format(Math.round(days / 30.4369), "month");
+  }
+  return rtf.format(Math.round(days / 365.2425), "year");
+}

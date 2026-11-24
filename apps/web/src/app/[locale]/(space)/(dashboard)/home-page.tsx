@@ -24,10 +24,10 @@ import {
 } from "@/components/page";
 import { RefreshOnFocus } from "@/components/refresh-on-focus";
 import { SearchInput } from "@/components/search-input";
+import { CreateButton } from "@/features/navigation/components/create-button";
 import type { Status } from "@/features/scheduled-event/schema";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { EventsListSkeleton } from "./events-list";
 import { eventsSearchParamsSchema } from "./schema";
 
 export function EventsEmptyState({ status }: { status: Status }) {
@@ -167,12 +167,18 @@ function EventsPagination({
   );
 }
 
-export function EventsPage({
+export function HomePage({
+  title,
+  subtitle,
+  cards,
   members,
   list,
   page,
   hasNextPage,
 }: {
+  title: React.ReactNode;
+  subtitle: React.ReactNode;
+  cards: React.ReactNode;
   members: { userId: string; name: string; image?: string }[];
   list: React.ReactNode;
   page: number;
@@ -180,8 +186,8 @@ export function EventsPage({
 }) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  // Filter and page changes are server navigations that hold the current
-  // list until the new one is rendered, so show a skeleton while pending.
+  // Filter and page changes are server navigations inside a transition, so
+  // the current list stays on screen until the new one is rendered.
   const [isNavigating, startNavigation] = React.useTransition();
   const { data: space } = useSpace();
   // Filtering by member is pointless when the space restricts this member
@@ -197,10 +203,24 @@ export function EventsPage({
       <RefreshOnFocus />
       <PageHeader>
         <PageColumn>
-          <PageTitle>
-            <Trans i18nKey="events" defaults="Events" />
+          <PageTitle
+            actions={
+              // The sidebar's Create button is hidden behind the menu on
+              // phones, so the home page shows the same one there
+              <CreateButton className="md:hidden" />
+            }
+          >
+            {title}
           </PageTitle>
-          <PageToolbar className="pt-6">
+          {subtitle}
+        </PageColumn>
+      </PageHeader>
+      <PageContent>
+        <PageColumn className="pb-8">
+          {cards}
+          <PageToolbar className="pt-8">
+            {/* Below sm, search takes the first row and the filters the
+                full second row whatever the width. */}
             <SearchInput
               className="w-full min-w-0 sm:w-auto sm:min-w-48 sm:flex-1"
               placeholder={t("searchEventsPlaceholder", {
@@ -208,48 +228,51 @@ export function EventsPage({
               })}
               startTransition={startNavigation}
             />
-            <FilterTabs
-              param="status"
-              value={status}
-              label={t("eventsListStatusFilter", {
-                defaultValue: "Filter by status",
-              })}
-              options={[
-                {
-                  value: "upcoming",
-                  label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
-                },
-                {
-                  value: "past",
-                  label: <Trans i18nKey="past" defaults="Past" />,
-                },
-                {
-                  value: "canceled",
-                  label: <Trans i18nKey="canceled" defaults="Canceled" />,
-                },
-              ]}
-              startTransition={startNavigation}
-            />
-            {showMemberFilter ? (
-              <MemberSelector
-                members={members}
-                className="min-w-0 sm:min-w-40"
+            <div className="flex min-w-0 items-center gap-2 max-sm:w-full">
+              <FilterTabs
+                param="status"
+                value={status}
+                label={t("eventsListStatusFilter", {
+                  defaultValue: "Filter by status",
+                })}
+                options={[
+                  {
+                    value: "upcoming",
+                    label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
+                  },
+                  {
+                    value: "past",
+                    label: <Trans i18nKey="past" defaults="Past" />,
+                  },
+                  {
+                    value: "canceled",
+                    label: <Trans i18nKey="canceled" defaults="Canceled" />,
+                  },
+                ]}
                 startTransition={startNavigation}
               />
-            ) : null}
+              {showMemberFilter ? (
+                <MemberSelector
+                  members={members}
+                  className="min-w-0 sm:min-w-40"
+                  startTransition={startNavigation}
+                />
+              ) : null}
+            </div>
           </PageToolbar>
-        </PageColumn>
-      </PageHeader>
-      <PageContent>
-        <PageColumn className="pb-8">
-          {isNavigating ? <EventsListSkeleton /> : list}
-          {isNavigating ? null : (
+          {/* Dims only once loading outlasts the delay, so a fast change
+              never flickers; restores at once when the new list lands */}
+          <div
+            aria-busy={isNavigating}
+            className="transition-opacity duration-200 aria-busy:opacity-50 aria-busy:delay-150"
+          >
+            {list}
             <EventsPagination
               page={page}
               hasNextPage={hasNextPage}
               startTransition={startNavigation}
             />
-          )}
+          </div>
         </PageColumn>
       </PageContent>
     </PageShell>

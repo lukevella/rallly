@@ -6,6 +6,7 @@ import {
   getCalendarDate,
 } from "@/lib/datetime/utils";
 import type { Status } from "./schema";
+import type { EventRow } from "./types";
 
 export interface FormattedEventDateTime {
   date: string;
@@ -191,4 +192,21 @@ export function getEventListStatus({
     ? calendarDateToUTCMidnight(getCalendarDate(now, timeZone))
     : now;
   return end > boundary ? "upcoming" : "past";
+}
+
+export function toEventRow(
+  event: Omit<EventRow, "attendeeCount"> & { invites: unknown[] },
+): EventRow {
+  return {
+    id: event.id,
+    title: event.title,
+    status: event.status,
+    start: event.start,
+    end: event.end,
+    allDay: event.allDay,
+    timeZone: event.timeZone,
+    conferencing: event.conferencing,
+    createdBy: event.createdBy,
+    attendeeCount: event.invites.length,
+  };
 }

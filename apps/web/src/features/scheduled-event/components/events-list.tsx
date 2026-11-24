@@ -13,31 +13,16 @@ import React from "react";
 import { DataList } from "@/components/data-list";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { EventConferencingSummary } from "@/features/conferencing/components/event-conferencing-summary";
-import type { Conferencing } from "@/features/conferencing/schema";
 import { EventTimeRange } from "@/features/scheduled-event/components/event-date-time";
 import { ScheduledEventRowActions } from "@/features/scheduled-event/components/scheduled-event-row";
-import type { ScheduledEventStatus } from "@/features/scheduled-event/schema";
+import type { EventRow } from "@/features/scheduled-event/types";
 import { Trans } from "@/i18n/client";
 import { CalendarDate } from "@/lib/datetime/calendar-date";
 import { useDateTimeConfig } from "@/lib/datetime/client";
-import type { DateInput } from "@/lib/datetime/types";
 import {
   calendarDateToUTCMidnight,
   getCalendarDate,
 } from "@/lib/datetime/utils";
-
-export type EventRow = {
-  id: string;
-  title: string;
-  status: ScheduledEventStatus;
-  start: DateInput;
-  end: DateInput;
-  allDay: boolean;
-  timeZone: string | null;
-  conferencing: Conferencing | null;
-  attendeeCount: number;
-  createdBy: { name: string; image?: string };
-};
 
 const columnHelper = createColumnHelper<EventRow>();
 

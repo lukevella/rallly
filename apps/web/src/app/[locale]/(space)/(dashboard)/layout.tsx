@@ -20,6 +20,7 @@ import {
   CommandMenuProvider,
   SearchButton,
 } from "@/features/navigation/components/command-menu";
+import { CreateButton } from "@/features/navigation/components/create-button";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { listSpacesForUser } from "@/features/space/data";
 import { NavUserAvatar } from "@/features/user/components/nav-user";
@@ -39,6 +40,12 @@ export default async function Layout({
 }) {
   const user = await loadUser();
   const spaces = await listSpacesForUser(user.id);
+  const dropdownSpaces = spaces.map((space) => ({
+    id: space.id,
+    name: space.name,
+    image: space.image,
+    tier: space.tier,
+  }));
 
   return (
     <SpaceSidebarProvider>
@@ -52,15 +59,9 @@ export default async function Layout({
         <Sidebar>
           <SidebarHeader>
             <div className="relative p-2">
-              <SpaceDropdown
-                spaces={spaces.map((space) => ({
-                  id: space.id,
-                  name: space.name,
-                  image: space.image,
-                  tier: space.tier,
-                }))}
-              />
+              <SpaceDropdown spaces={dropdownSpaces} />
               <div className="absolute top-3.5 right-2 flex items-center gap-1">
+                <CreateButton />
                 <SearchButton />
                 <NavUserAvatar />
               </div>
