@@ -1,3 +1,5 @@
+import { getIanaIdAliases } from "@/lib/utils/timezone-schema";
+
 /**
  * Zones whose rules changed recently enough that engines disagree about them.
  *
@@ -54,6 +56,33 @@ const overridesByZone = new Map(
   }),
 );
 
+const engineSpellings = new Map<string, string>();
+
+function isKnownToEngine(timeZone: string) {
+  try {
+    new Intl.DateTimeFormat(undefined, { timeZone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Stored zones use modern tzdb names (`Europe/Kyiv`), which engines bundling
+ * tz data from before the rename reject with a RangeError. Those engines get
+ * a legacy alias they know (`Europe/Kiev`), which has the same rules.
+ */
+export function toEngineTimeZone(timeZone: string) {
+  let spelling = engineSpellings.get(timeZone);
+  if (spelling === undefined) {
+    spelling = isKnownToEngine(timeZone)
+      ? timeZone
+      : (getIanaIdAliases(timeZone).find(isKnownToEngine) ?? timeZone);
+    engineSpellings.set(timeZone, spelling);
+  }
+  return spelling;
+}
+
 const wallTimePattern = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/;
 
 function parseWallTime(value: string) {
@@ -76,7 +105,7 @@ export function resolveTimeZone(timeZone: string, instant: Date) {
   const override = overridesByZone.get(timeZone);
   return override && instant.getTime() >= override.fromInstant
     ? override.substitute
-    : timeZone;
+    : toEngineTimeZone(timeZone);
 }
 
 /**
@@ -88,5 +117,5 @@ export function resolveTimeZoneAtWallTime(timeZone: string, wallTime: string) {
   const wall = override ? parseWallTime(wallTime) : undefined;
   return override && wall !== undefined && wall >= override.fromWallTime
     ? override.substitute
-    : timeZone;
+    : toEngineTimeZone(timeZone);
 }
