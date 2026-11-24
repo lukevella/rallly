@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   resolveTimeZone,
   resolveTimeZoneAtWallTime,
@@ -120,3 +120,50 @@ describe.each(timeZoneOverrides)("override for $zones.0", (override) => {
 function resolveCutoff(from: string, utcOffsetMinutes: number) {
   return Date.parse(`${from}:00Z`) - utcOffsetMinutes * 60_000;
 }
+
+describe("on an engine that predates a zone rename", () => {
+  const RealDateTimeFormat = Intl.DateTimeFormat;
+
+  const loadWithoutZone = async (missingZone: string) => {
+    vi.resetModules();
+    class DateTimeFormatWithoutZone extends RealDateTimeFormat {
+      constructor(
+        locale?: string | string[],
+        options?: Intl.DateTimeFormatOptions,
+      ) {
+        if (options?.timeZone === missingZone) {
+          throw new RangeError(`Invalid time zone specified: ${missingZone}`);
+        }
+        super(locale, options);
+      }
+    }
+    vi.spyOn(Intl, "DateTimeFormat").mockImplementation(
+      DateTimeFormatWithoutZone as typeof Intl.DateTimeFormat,
+    );
+    return import("./time-zone-overrides");
+  };
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("hands Intl the legacy alias", async () => {
+    const { resolveTimeZone, resolveTimeZoneAtWallTime } =
+      await loadWithoutZone("Europe/Kyiv");
+    const instant = new Date("2026-11-24T08:00:00Z");
+    expect(resolveTimeZone("Europe/Kyiv", instant)).toBe("Europe/Kiev");
+    expect(resolveTimeZoneAtWallTime("Europe/Kyiv", "2026-11-24T10:00")).toBe(
+      "Europe/Kiev",
+    );
+  });
+
+  it("keeps zones the engine knows unchanged", async () => {
+    const { toEngineTimeZone } = await loadWithoutZone("Europe/Kyiv");
+    expect(toEngineTimeZone("Europe/Berlin")).toBe("Europe/Berlin");
+  });
+
+  it("returns an unknown zone unchanged", async () => {
+    const { toEngineTimeZone } = await loadWithoutZone("Mars/Olympus_Mons");
+    expect(toEngineTimeZone("Mars/Olympus_Mons")).toBe("Mars/Olympus_Mons");
+  });
+});

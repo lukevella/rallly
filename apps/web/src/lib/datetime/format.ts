@@ -1,4 +1,7 @@
-import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
+import {
+  resolveTimeZone,
+  toEngineTimeZone,
+} from "@/lib/datetime/time-zone-overrides";
 import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 
 export type DatePreset =
@@ -175,7 +178,7 @@ export function formatDateTime(
   ) {
     return joinWithZoneLabel(
       formatter.formatToParts(date),
-      getZoneLabel(options.locale, options.timeZone),
+      getZoneLabel(options.locale, toEngineTimeZone(options.timeZone)),
     );
   }
   return formatter.format(date);
@@ -202,7 +205,7 @@ export function formatDateTimeRange(
     ) {
       return joinWithZoneLabel(
         formatter.formatRangeToParts(startDate, endDate),
-        getZoneLabel(options.locale, options.timeZone),
+        getZoneLabel(options.locale, toEngineTimeZone(options.timeZone)),
       );
     }
     return formatter.formatRange(startDate, endDate);

@@ -1,4 +1,7 @@
-import { resolveTimeZone } from "@/lib/datetime/time-zone-overrides";
+import {
+  resolveTimeZone,
+  toEngineTimeZone,
+} from "@/lib/datetime/time-zone-overrides";
 import type { DateInput, TimeFormat } from "@/lib/datetime/types";
 
 function toDate(value: DateInput) {
@@ -49,7 +52,9 @@ export function normalizeTimeZone(timeZone: string | undefined | null) {
     return undefined;
   }
   try {
-    new Intl.DateTimeFormat(undefined, { timeZone });
+    new Intl.DateTimeFormat(undefined, {
+      timeZone: toEngineTimeZone(timeZone),
+    });
     return timeZone;
   } catch {
     return undefined;
