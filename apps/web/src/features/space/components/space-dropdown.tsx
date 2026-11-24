@@ -118,11 +118,18 @@ export function SpaceDropdown({
                   <span className="min-w-0 truncate" title={space.name}>
                     {space.name}
                   </span>
-                  {space.tier === "pro" ? (
-                    <Badge variant="secondary" size="sm" className="ml-auto">
-                      <SpaceTierLabel tier={space.tier} />
-                    </Badge>
-                  ) : null}
+                  {/* Translucent so the badge stays a step lighter than
+                    the row, highlighted or not. */}
+                  <Badge
+                    variant={space.tier === "pro" ? "secondary" : "default"}
+                    size="sm"
+                    className={cn("ml-auto", {
+                      "bg-foreground/10 dark:bg-foreground/10":
+                        space.tier !== "pro",
+                    })}
+                  >
+                    <SpaceTierLabel tier={space.tier} />
+                  </Badge>
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
