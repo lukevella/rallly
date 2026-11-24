@@ -1171,6 +1171,7 @@ export const polls = router({
               email: true,
               locale: true,
               timeFormat: true,
+              timeZone: true,
             },
           },
           options: { select: { id: true } },
@@ -1310,6 +1311,7 @@ export const polls = router({
         // The host is the organizer, so this copy is a plain import. A
         // REQUEST from yourself is an invitation Google Calendar can't accept.
         method: "publish",
+        recipientTimeZone: poll.user.timeZone,
       });
 
       // A poll can have several participants sharing an email; an event holds at
