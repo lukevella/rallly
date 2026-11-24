@@ -157,6 +157,71 @@ describe("formatDateTimeRange", () => {
     expect(out).toContain("13:00");
     expect(out).toContain("14:00");
   });
+
+  it("marks a time range ending the next day instead of printing dates", () => {
+    const out = formatDateTimeRange(
+      at(23),
+      new Date(Date.UTC(2026, 5, 27, 3)),
+      {
+        preset: "time",
+        ...ctx("en", "hours12"),
+      },
+    );
+    expect(out).toMatch(/^11:00(\s)PM – 3:00\1AM \+1$/);
+  });
+
+  it("counts days in the display zone, not UTC", () => {
+    // 20:00–23:00 UTC is 21:00 Fri – 00:00 Sat in London (BST).
+    const out = formatDateTimeRange(at(20), at(23), {
+      preset: "time",
+      ...ctx("en", "hours24", "Europe/London"),
+    });
+    expect(out).toBe("21:00 – 00:00 +1");
+  });
+
+  it("keeps the offset ahead of the zone label", () => {
+    const out = formatDateTimeRange(
+      at(23),
+      new Date(Date.UTC(2026, 5, 27, 3)),
+      {
+        preset: "time",
+        ...ctx("en", "hours24"),
+        showTimeZone: true,
+      },
+    );
+    expect(out).toMatch(/^23:00 – 03:00 \+1 \S+/);
+  });
+
+  it("keeps the offset ahead of a substituted zone's label", () => {
+    // 22:00 Thu – 02:00 Fri in Alberta, which formats through an override zone.
+    const out = formatDateTimeRange(
+      new Date("2026-11-06T04:00:00Z"),
+      new Date("2026-11-06T08:00:00Z"),
+      {
+        preset: "time",
+        ...ctx("en", "hours12", "America/Edmonton"),
+        showTimeZone: true,
+      },
+    );
+    expect(out).toMatch(/^10:00\sPM – 2:00\sAM \+1 \S+$/);
+  });
+
+  it("treats an empty time zone as unset", () => {
+    expect(() =>
+      formatDateTimeRange(at(9), at(17), {
+        preset: "time",
+        ...ctx("en", "hours24", ""),
+      }),
+    ).not.toThrow();
+  });
+
+  it("leaves a same-day range to Intl", () => {
+    const out = formatDateTimeRange(at(9), at(17), {
+      preset: "time",
+      ...ctx("en", "hours24", "Europe/London"),
+    });
+    expect(out).not.toContain("+");
+  });
 });
 
 describe("formatDate", () => {

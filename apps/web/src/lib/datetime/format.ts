@@ -181,6 +181,19 @@ export function formatDateTime(
   return formatter.format(date);
 }
 
+/** Days since the epoch of the calendar date `date` falls on in `timeZone`. */
+function calendarDayNumber(date: Date, timeZone: string | undefined) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timeZone || undefined,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value);
+  return Date.UTC(get("year"), get("month") - 1, get("day")) / 86_400_000;
+}
+
 export function formatDateTimeRange(
   start: DateInput,
   end: DateInput,
@@ -190,6 +203,41 @@ export function formatDateTimeRange(
   const endDate = toDate(end);
   const startTimeZone = resolveOptionalTimeZone(options.timeZone, startDate);
   const endTimeZone = resolveOptionalTimeZone(options.timeZone, endDate);
+  if (options.preset === "time") {
+    // Intl widens a time range that crosses midnight to both full dates; a
+    // time-only range marks the end's day offset instead ("11 PM – 3 AM +1").
+    const daysLater =
+      calendarDayNumber(endDate, endTimeZone) -
+      calendarDayNumber(startDate, startTimeZone);
+    if (daysLater > 0) {
+      const endParts = getCachedIntlDateFormatter({
+        ...options,
+        timeZone: endTimeZone,
+      }).formatToParts(endDate);
+      // Keep the offset on the time, ahead of any zone label that follows it.
+      const lastTimePart = endParts.findLastIndex(
+        (part) => part.type !== "literal" && part.type !== "timeZoneName",
+      );
+      endParts.splice(lastTimePart + 1, 0, {
+        type: "literal",
+        value: ` +${daysLater}`,
+      });
+      const zoneLabel =
+        options.showTimeZone &&
+        options.timeZone &&
+        endTimeZone !== options.timeZone
+          ? getZoneLabel(options.locale, options.timeZone)
+          : undefined;
+      // Both ends go through formatToParts: format() can space a day period
+      // differently (U+0020 vs U+202F), which would mismatch the two ends.
+      const startParts = getCachedIntlDateFormatter({
+        ...options,
+        timeZone: startTimeZone,
+        showTimeZone: false,
+      }).formatToParts(startDate);
+      return `${joinWithZoneLabel(startParts, undefined)} – ${joinWithZoneLabel(endParts, zoneLabel)}`;
+    }
+  }
   const formatter = getCachedIntlDateFormatter({
     ...options,
     timeZone: startTimeZone,
