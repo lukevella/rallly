@@ -542,9 +542,11 @@ export function AccessibleBallot({
     votable.length > 0 &&
     votable.every((option) => state.answers[option.id] === vote);
   // Only a shortcut can be undone: every option answered the same by hand has
-  // nothing to go back to, so its button keeps its name and does nothing.
+  // nothing to go back to, so its button is disabled.
   const shortcutOn = (vote: BallotVote) =>
     answersBeforeShortcut !== null && allMarked(vote);
+  const shortcutIdle = (vote: BallotVote) =>
+    allMarked(vote) && !shortcutOn(vote);
 
   // An answer given by hand keeps what the shortcut did, so Undo can no longer
   // take it back over the top of that edit.
@@ -1702,6 +1704,7 @@ export function AccessibleBallot({
                           "shrink-0 rounded-full",
                           shortcutOn("yes") && shortcutOnClassName,
                         )}
+                        disabled={shortcutIdle("yes")}
                         onClick={() => markAll("yes")}
                       >
                         {shortcutOn("yes") ? (
@@ -1721,6 +1724,7 @@ export function AccessibleBallot({
                           "shrink-0 rounded-full",
                           shortcutOn("no") && shortcutOnClassName,
                         )}
+                        disabled={shortcutIdle("no")}
                         onClick={() => markAll("no")}
                       >
                         {shortcutOn("no") ? (
