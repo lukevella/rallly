@@ -57,7 +57,7 @@ const toWallTime = (date: Date) => date.toISOString().slice(0, 19);
 // The attachment carries minutes, so ordering is decided at that precision.
 const toMinute = (date: Date) => Math.floor(date.getTime() / 60_000);
 
-function anchorFloatingTime({
+export function anchorFloatingTime({
   start,
   end,
   timeZone,
