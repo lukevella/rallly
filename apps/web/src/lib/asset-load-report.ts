@@ -9,6 +9,7 @@ export const ASSET_LOAD_REPORT_PATH = "/api/asset-load";
 
 const STALL_MS = 15_000;
 const SETTLE_MS = 1000;
+const MAX_ELAPSED_MS = 3_600_000;
 
 export const assetLoadReportSchema = z.object({
   // failed: the browser gave up on at least one file. stalled: nothing from
@@ -20,8 +21,9 @@ export const assetLoadReportSchema = z.object({
   // False means no chunk from the host executed at all.
   scriptsRan: z.boolean(),
   // Time since navigation start: of the first failure, or of the stall check.
-  // Fast failures point to DNS or a reset, slow ones to a timeout.
-  ms: z.number().int().min(0).max(3_600_000),
+  // Fast failures point to DNS or a reset, slow ones to a timeout. The script
+  // clamps it, so a chunk that fails late in a long-lived tab still reports.
+  ms: z.number().int().min(0).max(MAX_ELAPSED_MS),
 });
 
 export type AssetLoadReport = z.infer<typeof assetLoadReportSchema>;
@@ -33,6 +35,7 @@ export function installAssetLoadReport(
   endpoint: string,
   stallMs: number,
   settleMs: number,
+  maxElapsedMs: number,
 ) {
   try {
     const SENT_KEY = "rallly:asset-load-reported";
@@ -75,8 +78,9 @@ export function installAssetLoadReport(
         failed,
         loaded,
         scriptsRan: scriptsRan(),
-        ms: Math.round(
-          outcome === "failed" ? firstFailureAt : performance.now(),
+        ms: Math.min(
+          maxElapsedMs,
+          Math.round(outcome === "failed" ? firstFailureAt : performance.now()),
         ),
       });
       if (!navigator.sendBeacon?.(endpoint, body)) {
@@ -120,7 +124,13 @@ export function installAssetLoadReport(
 }
 
 export function assetLoadReportScript(assetPrefix: string) {
-  const args = [assetPrefix, ASSET_LOAD_REPORT_PATH, STALL_MS, SETTLE_MS]
+  const args = [
+    assetPrefix,
+    ASSET_LOAD_REPORT_PATH,
+    STALL_MS,
+    SETTLE_MS,
+    MAX_ELAPSED_MS,
+  ]
     .map((arg) => JSON.stringify(arg).replace(/</g, "\\u003c"))
     .join(",");
   return `(${installAssetLoadReport.toString()})(${args})`;

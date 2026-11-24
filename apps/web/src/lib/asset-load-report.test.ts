@@ -42,6 +42,7 @@ describe("asset load report", () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
@@ -118,6 +119,18 @@ describe("asset load report", () => {
     vi.advanceTimersByTime(20_000);
 
     expect(sendBeacon).not.toHaveBeenCalled();
+  });
+
+  it("clamps the elapsed time of a failure late in a long-lived tab", () => {
+    install();
+    vi.spyOn(performance, "now").mockReturnValue(5 * 3_600_000);
+    chunk("a.js").dispatchEvent(new Event("error"));
+    vi.advanceTimersByTime(2000);
+
+    expect(reports()[0]?.report).toMatchObject({
+      outcome: "failed",
+      ms: 3_600_000,
+    });
   });
 
   it("reports once per tab across page loads", () => {

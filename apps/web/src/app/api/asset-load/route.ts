@@ -7,7 +7,27 @@ import { createRatelimit } from "@/lib/rate-limit";
 // The inline script reports once per tab, so this budget only stops abuse.
 const ratelimit = createRatelimit(20, "1 h");
 
-const MAX_BODY_LENGTH = 512;
+const MAX_BODY_BYTES = 512;
+
+// Stops reading once the body passes the limit instead of buffering whatever
+// an unauthenticated client sends. Returns null when the body is too large.
+async function readBoundedText(req: NextRequest, limit: number) {
+  if (!req.body) return "";
+  const reader = req.body.getReader();
+  const decoder = new TextDecoder();
+  let total = 0;
+  let text = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) return text + decoder.decode();
+    total += value.byteLength;
+    if (total > limit) {
+      await reader.cancel();
+      return null;
+    }
+    text += decoder.decode(value, { stream: true });
+  }
+}
 
 // Receives the report posted by the inline script in lib/asset-load-report.ts.
 // sendBeacon posts a string as text/plain, so the body is parsed by hand.
@@ -21,8 +41,8 @@ export const POST = withPostHog(async (req: NextRequest) => {
     if (result && !result.success) return new Response(null, { status: 429 });
   }
 
-  const text = await req.text();
-  if (text.length > MAX_BODY_LENGTH) return new Response(null, { status: 413 });
+  const text = await readBoundedText(req, MAX_BODY_BYTES);
+  if (text === null) return new Response(null, { status: 413 });
 
   let json: unknown;
   try {
