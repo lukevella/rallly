@@ -1,27 +1,27 @@
 import { Skeleton } from "@rallly/ui/skeleton";
 import {
-  ListView,
-  ListViewColumn,
-  ListViewContent,
-  ListViewHeader,
-  ListViewPageTitleSkeleton,
-  ListViewToolbarSkeleton,
-} from "@/components/list-view";
+  PageColumn,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageTitleSkeleton,
+  PageToolbarSkeleton,
+} from "@/components/page";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 
 export default function Loading() {
   return (
     <>
       <RouterLoadingIndicator />
-      <ListView>
-        <ListViewHeader>
-          <ListViewColumn>
-            <ListViewPageTitleSkeleton />
-            <ListViewToolbarSkeleton tabs={false} action />
-          </ListViewColumn>
-        </ListViewHeader>
-        <ListViewContent className="pt-2">
-          <ListViewColumn className="pb-8">
+      <PageShell>
+        <PageHeader>
+          <PageColumn>
+            <PageTitleSkeleton />
+            <PageToolbarSkeleton tabs={false} action />
+          </PageColumn>
+        </PageHeader>
+        <PageContent className="pt-2">
+          <PageColumn className="pb-8">
             <div aria-hidden className="py-2">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
@@ -34,9 +34,9 @@ export default function Loading() {
                 </div>
               ))}
             </div>
-          </ListViewColumn>
-        </ListViewContent>
-      </ListView>
+          </PageColumn>
+        </PageContent>
+      </PageShell>
     </>
   );
 }

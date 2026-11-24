@@ -14,16 +14,16 @@ import {
 } from "@/components/empty-state";
 import { FilterTabs } from "@/components/filter-tabs";
 import { Link } from "@/components/link";
-import {
-  ListView,
-  ListViewActions,
-  ListViewColumn,
-  ListViewContent,
-  ListViewHeader,
-  ListViewPageTitle,
-  ListViewToolbar,
-} from "@/components/list-view";
 import { MemberSelector } from "@/components/member-selector";
+import {
+  PageActions,
+  PageColumn,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageTitle,
+  PageToolbar,
+} from "@/components/page";
 import { SearchInput } from "@/components/search-input";
 import { PollsListSkeleton } from "@/features/poll/components/polls-list";
 import { useSpace } from "@/features/space/client";
@@ -181,13 +181,13 @@ export function PollsPage({
   );
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewColumn>
-          <ListViewPageTitle>
+    <PageShell>
+      <PageHeader>
+        <PageColumn>
+          <PageTitle>
             <Trans i18nKey="polls" defaults="Polls" />
-          </ListViewPageTitle>
-          <ListViewToolbar className="pt-6">
+          </PageTitle>
+          <PageToolbar className="pt-6">
             {/* Below sm, search and the CTA share the first row and the
                 filters take the full second row whatever the width. */}
             <SearchInput
@@ -235,7 +235,7 @@ export function PollsPage({
                 />
               ) : null}
             </div>
-            <ListViewActions className="max-sm:order-first">
+            <PageActions className="max-sm:order-first">
               {usageMeter}
               <Link
                 href="/new"
@@ -246,12 +246,12 @@ export function PollsPage({
               >
                 <Trans i18nKey="createPoll" defaults="Create poll" />
               </Link>
-            </ListViewActions>
-          </ListViewToolbar>
-        </ListViewColumn>
-      </ListViewHeader>
-      <ListViewContent>
-        <ListViewColumn className="pb-8">
+            </PageActions>
+          </PageToolbar>
+        </PageColumn>
+      </PageHeader>
+      <PageContent>
+        <PageColumn className="pb-8">
           {isNavigating ? <PollsListSkeleton /> : list}
           {isNavigating ? null : (
             <PollsPagination
@@ -260,8 +260,8 @@ export function PollsPage({
               startTransition={startNavigation}
             />
           )}
-        </ListViewColumn>
-      </ListViewContent>
-    </ListView>
+        </PageColumn>
+      </PageContent>
+    </PageShell>
   );
 }

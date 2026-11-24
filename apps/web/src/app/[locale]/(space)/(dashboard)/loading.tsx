@@ -1,11 +1,11 @@
 import { Skeleton } from "@rallly/ui/skeleton";
 import {
-  ListView,
-  ListViewColumn,
-  ListViewContent,
-  ListViewHeader,
-  ListViewPageTitleSkeleton,
-} from "@/components/list-view";
+  PageColumn,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageTitleSkeleton,
+} from "@/components/page";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 
 // Shaped like the home page. Other dashboard routes provide their own
@@ -14,14 +14,14 @@ export default function Loading() {
   return (
     <>
       <RouterLoadingIndicator />
-      <ListView>
-        <ListViewHeader>
-          <ListViewColumn>
-            <ListViewPageTitleSkeleton />
-          </ListViewColumn>
-        </ListViewHeader>
-        <ListViewContent>
-          <ListViewColumn className="pb-8">
+      <PageShell>
+        <PageHeader>
+          <PageColumn>
+            <PageTitleSkeleton />
+          </PageColumn>
+        </PageHeader>
+        <PageContent>
+          <PageColumn className="pb-8">
             <div aria-hidden className="space-y-8 px-4 pt-6">
               {[1, 3, 3].map((tileCount, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
@@ -36,9 +36,9 @@ export default function Loading() {
                 </div>
               ))}
             </div>
-          </ListViewColumn>
-        </ListViewContent>
-      </ListView>
+          </PageColumn>
+        </PageContent>
+      </PageShell>
     </>
   );
 }

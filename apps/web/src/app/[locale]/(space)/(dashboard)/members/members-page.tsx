@@ -13,7 +13,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { Link } from "@/components/link";
-import { ListViewActions, ListViewToolbar } from "@/components/list-view";
+import { PageActions, PageToolbar } from "@/components/page";
 import { SearchInput } from "@/components/search-input";
 import { defineAbilityForSpace } from "@/features/space/ability";
 import { loadActiveSpace, loadSeatUsage } from "@/features/space/loaders";
@@ -63,7 +63,7 @@ async function MembersPageActions() {
   const availableSeats = Math.max(seatUsage.total - seatUsage.used, 0);
 
   return (
-    <ListViewActions>
+    <PageActions>
       <p className="mr-2 hidden text-muted-foreground text-sm sm:block">
         <Trans
           i18nKey="seatsAvailable"
@@ -75,7 +75,7 @@ async function MembersPageActions() {
         disabled={availableSeats <= 0}
         canCreateInvite={memberAbility.can("create", "SpaceMemberInvite")}
       />
-    </ListViewActions>
+    </PageActions>
   );
 }
 
@@ -90,7 +90,7 @@ export async function MembersPageToolbar() {
   }
 
   return (
-    <ListViewToolbar className="pt-6">
+    <PageToolbar className="pt-6">
       <SearchInput
         className="w-auto min-w-0 flex-1 sm:min-w-48"
         placeholder={t("searchMembersPlaceholder", {
@@ -98,7 +98,7 @@ export async function MembersPageToolbar() {
         })}
       />
       <MembersPageActions />
-    </ListViewToolbar>
+    </PageToolbar>
   );
 }
 

@@ -1,18 +1,17 @@
 import { buttonVariants } from "@rallly/ui";
+import { SidebarTrigger } from "@rallly/ui/sidebar";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { ArrowLeftIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Link } from "@/components/link";
 import {
-  ListView,
-  ListViewActions,
-  ListViewContent,
-  ListViewHeader,
-  ListViewTitle,
-  ListViewTitleBar,
-  ListViewToolbar,
-} from "@/components/list-view";
+  PageActions,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageToolbar,
+} from "@/components/page";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
@@ -21,6 +20,17 @@ import { Trans } from "@/i18n/client";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
 import { PollDetailSheet } from "./poll-detail-sheet";
 import { PollShellTabs } from "./poll-shell-tabs";
+
+function TitleBar({ children }: React.PropsWithChildren) {
+  return (
+    <div className="flex h-16 items-end justify-between gap-4 pr-4 pb-1 pl-4">
+      <div className="flex h-9 min-w-0 flex-1 items-center gap-2">
+        <SidebarTrigger className="md:hidden" />
+        {children}
+      </div>
+    </div>
+  );
+}
 
 async function PollPageTitle({
   params,
@@ -67,9 +77,9 @@ export default function Layout({
   }
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewTitleBar className="md:pl-4">
+    <PageShell>
+      <PageHeader>
+        <TitleBar>
           <Link
             href="/polls"
             className={buttonVariants({ variant: "ghost", size: "icon" })}
@@ -79,23 +89,23 @@ export default function Layout({
               <Trans i18nKey="back" defaults="Back" />
             </span>
           </Link>
-          <ListViewTitle>
+          <h1 className="truncate font-semibold text-foreground text-lg tracking-tight">
             <Suspense fallback={<Skeleton className="h-5 w-40" />}>
               <PollPageTitle params={params} />
             </Suspense>
-          </ListViewTitle>
-          <ListViewActions>
+          </h1>
+          <PageActions>
             <Suspense>
               <PollHeaderActions params={params} />
             </Suspense>
-          </ListViewActions>
-        </ListViewTitleBar>
-        <ListViewToolbar>
+          </PageActions>
+        </TitleBar>
+        <PageToolbar>
           <PollShellTabs />
-        </ListViewToolbar>
-      </ListViewHeader>
-      <ListViewContent>{children}</ListViewContent>
+        </PageToolbar>
+      </PageHeader>
+      <PageContent>{children}</PageContent>
       <PollDetailSheet />
-    </ListView>
+    </PageShell>
   );
 }
