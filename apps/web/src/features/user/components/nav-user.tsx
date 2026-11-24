@@ -30,97 +30,148 @@ import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { useUser } from "@/features/user/client";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { signOut } from "@/lib/auth-client";
 import { useTheme } from "@/lib/theme";
 
 export function NavUser() {
   const { user } = useUser();
-  const [isPending, setIsPending] = React.useState(false);
-  const { theme, setTheme } = useTheme();
-  const router = useRouter();
 
   if (!user) {
     return null;
   }
 
   return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            className="flex h-auto w-full gap-2 rounded-lg p-2"
+            variant="ghost"
+          />
+        }
+      >
+        <OptimizedAvatarImage size="lg" src={user.image} name={user.name} />
+        <div className="flex-1 truncate text-left">
+          <div className="font-medium">{user.name}</div>
+          <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
+            {user.email}
+          </div>
+        </div>
+        <ChevronDownIcon className="text-muted-foreground" />
+      </DropdownMenuTrigger>
+      <UserMenuContent className="w-(--anchor-width)" align="end" side="top">
+        <DropdownMenuLabel>
+          <Trans i18nKey="account" defaults="Account" />
+        </DropdownMenuLabel>
+      </UserMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export function NavUserAvatar() {
+  const { user } = useUser();
+  const { t } = useTranslation();
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            aria-label={t("account", { defaultValue: "Account" })}
+            className="p-0"
+            variant="ghost"
+            size="icon"
+            shape="pill"
+          />
+        }
+      >
+        <OptimizedAvatarImage size="md" src={user.image} name={user.name} />
+      </DropdownMenuTrigger>
+      <UserMenuContent className="w-64" align="end" side="bottom">
+        <div className="px-2 py-1.5">
+          <div className="truncate font-medium text-sm">{user.name}</div>
+          <div className="mt-0.5 truncate text-muted-foreground text-xs">
+            {user.email}
+          </div>
+        </div>
+        <DropdownMenuSeparator />
+      </UserMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function UserMenuContent({
+  className,
+  align,
+  side,
+  children,
+}: {
+  className?: string;
+  align: "start" | "end";
+  side: "top" | "bottom";
+  children?: React.ReactNode;
+}) {
+  const [isPending, setIsPending] = React.useState(false);
+  const { theme, setTheme } = useTheme();
+  const router = useRouter();
+
+  return (
     <>
       {isPending && <RouterLoadingIndicator />}
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              className="flex h-auto w-full gap-2 rounded-lg p-2"
-              variant="ghost"
-            />
-          }
+      <DropdownMenuContent className={className} align={align} side={side}>
+        {children}
+        <DropdownMenuItem render={<Link href="/settings/profile" />}>
+          <UserIcon />
+          <Trans i18nKey="profile" defaults="Profile" />
+        </DropdownMenuItem>
+        <DropdownMenuItem render={<Link href="/settings/preferences" />}>
+          <Settings2Icon />
+          <Trans i18nKey="preferences" defaults="Preferences" />
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <SunMoonIcon />
+            <Trans i18nKey="theme" defaults="Theme" />
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+              <DropdownMenuRadioItem value="system">
+                <MonitorIcon />
+                <Trans i18nKey="themeSystem" defaults="System" />
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="light">
+                <SunIcon />
+                <Trans i18nKey="themeLight" defaults="Light" />
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark">
+                <MoonIcon />
+                <Trans i18nKey="themeDark" defaults="Dark" />
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={async () => {
+            setIsPending(true);
+            try {
+              await signOut();
+              router.refresh();
+            } finally {
+              setIsPending(false);
+            }
+          }}
         >
-          <OptimizedAvatarImage size="lg" src={user.image} name={user.name} />
-          <div className="flex-1 truncate text-left">
-            <div className="font-medium">{user.name}</div>
-            <div className="mt-0.5 truncate font-normal text-muted-foreground text-xs">
-              {user.email}
-            </div>
-          </div>
-          <ChevronDownIcon className="text-muted-foreground" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-(--anchor-width)"
-          align="end"
-          side="top"
-        >
-          <DropdownMenuLabel>
-            <Trans i18nKey="account" defaults="Account" />
-          </DropdownMenuLabel>
-          <DropdownMenuItem render={<Link href="/settings/profile" />}>
-            <UserIcon />
-            <Trans i18nKey="profile" defaults="Profile" />
-          </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href="/settings/preferences" />}>
-            <Settings2Icon />
-            <Trans i18nKey="preferences" defaults="Preferences" />
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <SunMoonIcon />
-              <Trans i18nKey="theme" defaults="Theme" />
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-                <DropdownMenuRadioItem value="system">
-                  <MonitorIcon />
-                  <Trans i18nKey="themeSystem" defaults="System" />
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="light">
-                  <SunIcon />
-                  <Trans i18nKey="themeLight" defaults="Light" />
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="dark">
-                  <MoonIcon />
-                  <Trans i18nKey="themeDark" defaults="Dark" />
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={async () => {
-              setIsPending(true);
-              try {
-                await signOut();
-                router.refresh();
-              } finally {
-                setIsPending(false);
-              }
-            }}
-          >
-            <LogOutIcon />
-            <Trans i18nKey="signOut" defaults="Sign out" />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <LogOutIcon />
+          <Trans i18nKey="signOut" defaults="Sign out" />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
     </>
   );
 }

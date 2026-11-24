@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
 } from "@rallly/ui/sidebar";
 import { SettingsIcon } from "lucide-react";
 import { Suspense } from "react";
@@ -19,11 +18,11 @@ import { UpdateIndicator } from "@/features/instance-settings/components/update-
 import { LicenseLimitWarning } from "@/features/licensing/components/license-limit-warning";
 import {
   CommandMenuProvider,
-  SearchMenuItem,
+  SearchButton,
 } from "@/features/navigation/components/command-menu";
 import { SpaceDropdown } from "@/features/space/components/space-dropdown";
 import { listSpacesForUser } from "@/features/space/data";
-import { NavUser } from "@/features/user/components/nav-user";
+import { NavUserAvatar } from "@/features/user/components/nav-user";
 import { loadUser } from "@/features/user/loaders";
 import { Trans } from "@/i18n/client";
 import { IfFeatureEnabled } from "@/lib/feature-flags/client";
@@ -52,18 +51,20 @@ export default async function Layout({
       >
         <Sidebar>
           <SidebarHeader>
-            <SpaceDropdown
-              spaces={spaces.map((space) => ({
-                id: space.id,
-                name: space.name,
-                image: space.image,
-                tier: space.tier,
-                role: space.role,
-              }))}
-            />
-            <SidebarMenu>
-              <SearchMenuItem />
-            </SidebarMenu>
+            <div className="relative p-2">
+              <SpaceDropdown
+                spaces={spaces.map((space) => ({
+                  id: space.id,
+                  name: space.name,
+                  image: space.image,
+                  tier: space.tier,
+                }))}
+              />
+              <div className="absolute top-3.5 right-2 flex items-center gap-1">
+                <SearchButton />
+                <NavUserAvatar />
+              </div>
+            </div>
           </SidebarHeader>
           <SidebarContent>
             <SpaceSidebarMenu />
@@ -97,8 +98,6 @@ export default async function Layout({
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
-            <SidebarSeparator className="my-1" />
-            <NavUser />
           </SidebarFooter>
         </Sidebar>
         {/* Bounded to the viewport so a page can own its scroll area (list
