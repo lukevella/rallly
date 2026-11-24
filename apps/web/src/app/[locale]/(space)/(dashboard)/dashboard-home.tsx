@@ -10,12 +10,12 @@ import {
 import { Trans } from "react-i18next/TransWithoutContext";
 import { HoverPrefetchLink } from "@/components/hover-prefetch-link";
 import {
-  ListView,
-  ListViewColumn,
-  ListViewContent,
-  ListViewHeader,
-  ListViewPageTitle,
-} from "@/components/list-view";
+  PageColumn,
+  PageContent,
+  PageHeader,
+  PageShell,
+  PageTitle,
+} from "@/components/page";
 import type { OpenPollUsage } from "@/features/poll/limit/types";
 import { getTranslation } from "@/i18n/server";
 import { isFeatureEnabled } from "@/lib/feature-flags/server";
@@ -44,16 +44,16 @@ export async function DashboardHome({
   const { t, i18n } = await getTranslation();
 
   return (
-    <ListView>
-      <ListViewHeader>
-        <ListViewColumn>
-          <ListViewPageTitle>
+    <PageShell>
+      <PageHeader>
+        <PageColumn>
+          <PageTitle>
             <Trans t={t} i18n={i18n} ns="app" i18nKey="home" defaults="Home" />
-          </ListViewPageTitle>
-        </ListViewColumn>
-      </ListViewHeader>
-      <ListViewContent>
-        <ListViewColumn className="pb-8">
+          </PageTitle>
+        </PageColumn>
+      </PageHeader>
+      <PageContent>
+        <PageColumn className="pb-8">
           <div className="space-y-8 px-4 pt-6">
             {hasNoAccounts && isFeatureEnabled("emailLogin") ? (
               <PasswordSetupAlert />
@@ -231,8 +231,8 @@ export async function DashboardHome({
               </TileGrid>
             </div>
           </div>
-        </ListViewColumn>
-      </ListViewContent>
-    </ListView>
+        </PageColumn>
+      </PageContent>
+    </PageShell>
   );
 }

@@ -1,3 +1,5 @@
+// The layout every app page is built from: PageShell > PageHeader (PageColumn >
+// PageTitle + PageToolbar) and PageContent (PageColumn > content).
 import { cn } from "@rallly/ui";
 import { SidebarTrigger } from "@rallly/ui/sidebar";
 import { Skeleton } from "@rallly/ui/skeleton";
@@ -13,8 +15,8 @@ function MobileMenuButton() {
 }
 
 // Fills the dashboard shell's bounded main area: the header stays put and
-// ListViewContent is the scroll area.
-export function ListView({
+// PageContent is the scroll area.
+export function PageShell({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
@@ -25,53 +27,16 @@ export function ListView({
   );
 }
 
-export function ListViewHeader({
+export function PageHeader({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
   return <div className={cn("shrink-0", className)}>{children}</div>;
 }
 
-export function ListViewTitleBar({
-  children,
-  className,
-}: React.PropsWithChildren<{ className?: string }>) {
-  return (
-    <div
-      className={cn(
-        "flex h-16 items-end justify-between gap-4 pr-4 pb-1 pl-4 md:pl-6",
-        className,
-      )}
-    >
-      <div className="flex h-9 min-w-0 flex-1 items-center gap-2">
-        <SidebarTrigger className="md:hidden" />
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// Same type as PageTitle on the other dashboard pages; the sidebar trigger
-// lives in ListViewTitleBar instead.
-export function ListViewTitle({
-  children,
-  className,
-}: React.PropsWithChildren<{ className?: string }>) {
-  return (
-    <h1
-      className={cn(
-        "truncate font-semibold text-foreground text-lg tracking-tight",
-        className,
-      )}
-    >
-      {children}
-    </h1>
-  );
-}
-
-// Large page title for top-level list pages that sit in a centred column
-// (ListViewColumn) with the toolbar below.
-export function ListViewPageTitle({
+// The page title, at the top of a centred column (PageColumn) with the
+// toolbar below.
+export function PageTitle({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
@@ -90,7 +55,7 @@ export function ListViewPageTitle({
   );
 }
 
-export function ListViewPageTitleSkeleton() {
+export function PageTitleSkeleton() {
   return (
     <div className="flex items-center gap-2 px-4 pt-4 md:pt-8 lg:pt-12">
       <Skeleton aria-hidden className="h-7 w-28 md:h-8" />
@@ -99,10 +64,10 @@ export function ListViewPageTitleSkeleton() {
   );
 }
 
-// Placeholder for a toolbar holding a search input, FilterTabs and a CTA.
-// Wraps like ListViewToolbar: on small screens search and the CTA share the
+// Placeholder for a toolbar holding a search input, tabs and a CTA.
+// Wraps like PageToolbar: on small screens search and the CTA share the
 // first row and the tabs take the full second row.
-export function ListViewToolbarSkeleton({
+export function PageToolbarSkeleton({
   tabs = true,
   action = false,
 }: {
@@ -127,11 +92,11 @@ export function ListViewToolbarSkeleton({
   );
 }
 
-// Centres a list page's header and content in a max-w-5xl column. The scroll
+// Centres a page's header and content in a max-w-5xl column. The scroll
 // area stays full width so the scrollbar sits at the edge of the main area.
 // Children bring their own px-4, so the gutter is 16px on small screens and
-// 32px from md, matching the top padding of ListViewPageTitle.
-export function ListViewColumn({
+// 32px from md, matching the top padding of PageTitle.
+export function PageColumn({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
@@ -142,7 +107,7 @@ export function ListViewColumn({
   );
 }
 
-export function ListViewActions({
+export function PageActions({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
@@ -153,7 +118,7 @@ export function ListViewActions({
   );
 }
 
-export function ListViewToolbar({
+export function PageToolbar({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
@@ -169,7 +134,7 @@ export function ListViewToolbar({
   );
 }
 
-export function ListViewContent({
+export function PageContent({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
