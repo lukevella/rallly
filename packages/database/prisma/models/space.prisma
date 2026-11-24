@@ -47,8 +47,7 @@ model Space {
 
   webhooks SpaceWebhook[]
 
-  apiUsage ApiUsage[]
-  usage    SpaceUsage[]
+  usage SpaceUsage[]
 
   @@index([ownerId])
   @@map("spaces")
