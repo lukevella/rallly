@@ -34,6 +34,7 @@ test.describe.serial(() => {
         name: "Test User",
         email: testUserEmail,
       });
+      await expectSignedInAs(page, "Test User");
     });
   });
 

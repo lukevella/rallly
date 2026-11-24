@@ -2,7 +2,6 @@ import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 import { getCode } from "@rallly/test-helpers";
-import { expectSignedInAs } from "./test-utils";
 
 /**
  * Registration happens through the combined login flow: an email that
@@ -73,8 +72,5 @@ export class RegisterPage {
         timeout: 5000,
       });
     }).toPass();
-
-    // Verify successful registration
-    await expectSignedInAs(this.page, name);
   }
 }
