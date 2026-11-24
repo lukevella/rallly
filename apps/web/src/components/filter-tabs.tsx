@@ -1,15 +1,15 @@
 "use client";
 
+import { cn } from "@rallly/ui";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { Link } from "@/components/link";
-import { pillVariants } from "@/components/pill-variants";
 
 /**
- * A single-select filter kept in a URL search param. Each option is a link,
- * so the selection survives reloads and can be shared.
+ * A single-select filter kept in a URL search param, styled like TabsList.
+ * Each option is a link, so the selection survives reloads and can be shared.
  */
-export function FilterPills<T extends string>({
+export function FilterTabs<T extends string>({
   param,
   value,
   options,
@@ -40,7 +40,10 @@ export function FilterPills<T extends string>({
   };
 
   return (
-    <nav aria-label={label} className="flex items-center gap-1">
+    <nav
+      aria-label={label}
+      className="inline-flex h-9 shrink-0 items-center gap-0.5 rounded-xl border border-input bg-muted p-0.5 dark:bg-gray-900"
+    >
       {options.map((option) => {
         const selected = option.value === selectedValue;
         const href = hrefFor(option.value);
@@ -58,7 +61,12 @@ export function FilterPills<T extends string>({
               });
             }}
             aria-current={selected ? "page" : undefined}
-            className={pillVariants({ selected })}
+            className={cn(
+              "inline-flex h-full items-center whitespace-nowrap rounded-lg px-3 text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",
+              selected
+                ? "bg-card text-foreground shadow-xs dark:bg-gray-800"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             {option.label}
           </Link>
