@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mutationOptions } from "@next-safe-action/adapter-tanstack-query";
-import { passwordManagerIgnoreProps } from "@rallly/ui";
+import { buttonVariants, passwordManagerIgnoreProps } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
 import {
@@ -36,11 +36,13 @@ import { CheckIcon, XIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Link } from "@/components/link";
 import { SpaceRole } from "@/features/space/components/space-role";
 import { inviteMemberAction } from "@/features/space/member/actions";
 import type { MemberRole } from "@/features/space/schema";
 import { memberRoleSchema } from "@/features/space/schema";
 import { Trans, useTranslation } from "@/i18n/client";
+import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 function useInviteMemberFormSchema() {
   const { t } = useTranslation();
@@ -201,7 +203,10 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   );
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => inviteMember.mutate(data))}>
+      <form
+        className="grid gap-4"
+        onSubmit={form.handleSubmit((data) => inviteMember.mutate(data))}
+      >
         <div className="space-y-4">
           <FormField
             control={form.control}
@@ -281,26 +286,126 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
   );
 }
 
-export function InviteMemberDialog(props: DialogProps) {
-  return (
-    <Dialog {...props}>
-      <DialogContent size="sm">
+function NoSeatsAvailableDialogContent({
+  canManageBilling,
+}: {
+  canManageBilling: boolean;
+}) {
+  const isBillingEnabled = useFeatureFlag("billing");
+
+  if (!isBillingEnabled) {
+    return (
+      <>
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="inviteMember" defaults="Invite member" />
+            <Trans i18nKey="noSeatsAvailable" defaults="No seats available" />
           </DialogTitle>
           <DialogDescription>
             <Trans
-              i18nKey="inviteMemberDescription"
-              defaults="Invite a new member to your space"
+              i18nKey="noSeatsAvailableSelfHostedDescription"
+              defaults="Every seat on this instance's license is in use. Upgrade the license to add more members."
             />
           </DialogDescription>
         </DialogHeader>
-        <InviteMemberForm
-          onSuccess={() => {
-            props.onOpenChange?.(false);
-          }}
-        />
+        <DialogFooter>
+          <DialogClose render={<Button />}>
+            <Trans i18nKey="cancel" defaults="Cancel" />
+          </DialogClose>
+          <Link
+            className={buttonVariants({ variant: "primary" })}
+            prefetch={false}
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://support.rallly.co/self-hosting/licensing"
+          >
+            <Trans i18nKey="upgrade" defaults="Upgrade" />
+          </Link>
+        </DialogFooter>
+      </>
+    );
+  }
+
+  if (!canManageBilling) {
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle>
+            <Trans i18nKey="noSeatsAvailable" defaults="No seats available" />
+          </DialogTitle>
+          <DialogDescription>
+            <Trans
+              i18nKey="noSeatsAvailableAskOwnerDescription"
+              defaults="Every seat in this space is in use. Ask the space owner to add more seats."
+            />
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose render={<Button />}>
+            <Trans i18nKey="close" defaults="Close" />
+          </DialogClose>
+        </DialogFooter>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>
+          <Trans i18nKey="noSeatsAvailable" defaults="No seats available" />
+        </DialogTitle>
+        <DialogDescription>
+          <Trans
+            i18nKey="noSeatsAvailableOwnerDescription"
+            defaults="Every seat in this space is in use. Add seats to invite more members."
+          />
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <DialogClose render={<Button />}>
+          <Trans i18nKey="cancel" defaults="Cancel" />
+        </DialogClose>
+        <Link
+          className={buttonVariants({ variant: "primary" })}
+          href="/settings/billing"
+        >
+          <Trans i18nKey="noSeatsAvailableAddSeats" defaults="Add seats" />
+        </Link>
+      </DialogFooter>
+    </>
+  );
+}
+
+export function InviteMemberDialog({
+  noSeatsAvailable,
+  canManageBilling,
+  ...props
+}: DialogProps & { noSeatsAvailable: boolean; canManageBilling: boolean }) {
+  return (
+    <Dialog {...props}>
+      <DialogContent size="sm">
+        {noSeatsAvailable ? (
+          <NoSeatsAvailableDialogContent canManageBilling={canManageBilling} />
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle>
+                <Trans i18nKey="addMember" defaults="Add member" />
+              </DialogTitle>
+              <DialogDescription>
+                <Trans
+                  i18nKey="inviteMemberDescription"
+                  defaults="Invite a new member to your space"
+                />
+              </DialogDescription>
+            </DialogHeader>
+            <InviteMemberForm
+              onSuccess={() => {
+                props.onOpenChange?.(false);
+              }}
+            />
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

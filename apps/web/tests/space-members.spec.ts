@@ -114,7 +114,7 @@ test.describe("Space members", () => {
       mainContent(page).getByText("2 seats available"),
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Invite member" }).click();
+    await page.getByRole("button", { name: "Add member" }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByLabel("Email").fill(inviteeEmail);
     await dialog.getByRole("button", { name: "Send invite" }).click();
@@ -234,24 +234,31 @@ test.describe("Space members", () => {
     ).toBeVisible();
   });
 
-  test("invite button is disabled when all seats are used", async ({
+  test("add member explains how to get more seats when all seats are used", async ({
     page,
   }) => {
     const owner = await createSpaceAdmin({ name: "Full Owner", seats: 1 });
 
     await gotoMembersPage(page, owner.email);
 
+    await expect(mainContent(page).getByText(/seats? available/)).toHaveCount(
+      0,
+    );
+
+    await page.getByRole("button", { name: "Add member" }).click();
+    const dialog = page.getByRole("dialog");
     await expect(
-      mainContent(page).getByText("No seats available"),
+      dialog.getByRole("heading", { name: "No seats available" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Invite member" }),
-    ).toBeDisabled();
-    await expect(
-      mainContent(page).getByText(
-        "Increase the number of seats in this space from the billing page.",
+      dialog.getByText(
+        "Every seat in this space is in use. Add seats to invite more members.",
       ),
     ).toBeVisible();
+    await expect(dialog.getByLabel("Email")).toHaveCount(0);
+    await expect(
+      dialog.getByRole("link", { name: "Add seats" }),
+    ).toHaveAttribute("href", /\/settings\/billing$/);
   });
 
   test("a non-admin member who opens the page directly sees access denied", async ({
@@ -271,8 +278,8 @@ test.describe("Space members", () => {
       mainContent(page).getByText("Only space admins can manage members."),
     ).toBeVisible();
     await expect(mainContent(page).getByText(owner.email)).toHaveCount(0);
-    await expect(
-      page.getByRole("button", { name: "Invite member" }),
-    ).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Add member" })).toHaveCount(
+      0,
+    );
   });
 });
