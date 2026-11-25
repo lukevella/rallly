@@ -123,6 +123,9 @@ function ImageCropper({
               setCompletedCrop(percentCrop);
             }}
             aspect={1}
+            // A click outside the selection would otherwise replace it with
+            // an empty crop, which cannot be drawn to a canvas
+            keepSelection
             minWidth={100}
             minHeight={100}
             className="max-h-96"
