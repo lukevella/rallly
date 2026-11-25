@@ -12,7 +12,6 @@ import {
   EmptyStateIcon,
   EmptyStateTitle,
 } from "@/components/empty-state";
-import { Link } from "@/components/link";
 import { PageActions, PageToolbar } from "@/components/page";
 import { SearchInput } from "@/components/search-input";
 import { defineAbilityForSpace } from "@/features/space/ability";
@@ -64,15 +63,18 @@ async function MembersPageActions() {
 
   return (
     <PageActions>
-      <p className="mr-2 hidden text-muted-foreground text-sm sm:block">
-        <Trans
-          i18nKey="seatsAvailable"
-          defaults="{count, plural, =0 {No seats available} one {# seat available} other {# seats available}}"
-          values={{ count: availableSeats }}
-        />
-      </p>
+      {availableSeats > 0 ? (
+        <p className="mr-2 hidden text-muted-foreground text-sm sm:block">
+          <Trans
+            i18nKey="seatsAvailable"
+            defaults="{count, plural, =0 {No seats available} one {# seat available} other {# seats available}}"
+            values={{ count: availableSeats }}
+          />
+        </p>
+      ) : null}
       <InviteMemberButton
-        disabled={availableSeats <= 0}
+        noSeatsAvailable={availableSeats <= 0}
+        canManageBilling={memberAbility.can("manage", "Billing")}
         canCreateInvite={memberAbility.can("create", "SpaceMemberInvite")}
       />
     </PageActions>
@@ -124,18 +126,15 @@ export async function MembersPageContent() {
     );
   }
 
-  const [user, members, seatUsage, memberAbility, contentSummaries] =
-    await Promise.all([
-      loadUser(),
-      loadSpaceMembers(),
-      loadSeatUsage(),
-      getMemberAbility(),
-      loadMemberContentSummaries(),
-    ]);
+  const [user, members, memberAbility, contentSummaries] = await Promise.all([
+    loadUser(),
+    loadSpaceMembers(),
+    getMemberAbility(),
+    loadMemberContentSummaries(),
+  ]);
 
   const canInviteMembers = defineAbilityForSpace(space).can("invite", "Member");
   const invites = canInviteMembers ? await loadPendingInvites() : [];
-  const availableSeats = Math.max(seatUsage.total - seatUsage.used, 0);
   const hasInactiveMembers = space.tier === "hobby" && members.length > 1;
   const showInactive = isFeatureEnabled("billing") && space.tier === "hobby";
 
@@ -147,45 +146,6 @@ export async function MembersPageContent() {
             invites={invites}
             canCancelInvite={memberAbility.can("delete", "SpaceMemberInvite")}
           />
-        ) : null}
-        {canInviteMembers && availableSeats <= 0 ? (
-          <Alert variant="info">
-            <InfoIcon />
-            <AlertDescription>
-              {isFeatureEnabled("billing") ? (
-                <p>
-                  <Trans
-                    i18nKey="noSeatsAvailableAlertBillingDescription"
-                    defaults="Increase the number of seats in this space from the <a>billing page</a>."
-                    components={{
-                      a: (
-                        <Link
-                          className="underline hover:text-foreground"
-                          href="/settings/billing"
-                        />
-                      ),
-                    }}
-                  />
-                </p>
-              ) : (
-                <p>
-                  <Trans
-                    i18nKey="noSeatsAvailableAlertSelfHostedDescription"
-                    defaults="You will need to <a>upgrade</a> to increase the number of seats in this space."
-                    components={{
-                      a: (
-                        <Link
-                          className="underline hover:text-foreground"
-                          prefetch={false}
-                          href="https://support.rallly.co/self-hosting/licensing"
-                        />
-                      ),
-                    }}
-                  />
-                </p>
-              )}
-            </AlertDescription>
-          </Alert>
         ) : null}
         <IfFeatureEnabled feature="billing">
           {hasInactiveMembers ? (

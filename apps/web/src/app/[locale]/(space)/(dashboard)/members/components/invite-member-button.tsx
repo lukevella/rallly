@@ -7,10 +7,12 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function InviteMemberButton({
-  disabled,
+  noSeatsAvailable,
+  canManageBilling,
   canCreateInvite,
 }: {
-  disabled?: boolean;
+  noSeatsAvailable: boolean;
+  canManageBilling: boolean;
   canCreateInvite: boolean;
 }) {
   const { t } = useTranslation();
@@ -18,8 +20,6 @@ export function InviteMemberButton({
   return (
     <>
       <Button
-        variant="primary"
-        disabled={disabled}
         onClick={() => {
           if (!canCreateInvite) {
             toast.error(
@@ -32,9 +32,13 @@ export function InviteMemberButton({
           }
         }}
       >
-        <Trans i18nKey="inviteMember" defaults="Invite member" />
+        <Trans i18nKey="addMember" defaults="Add member" />
       </Button>
-      <InviteMemberDialog {...inviteMemberDialog.dialogProps} />
+      <InviteMemberDialog
+        {...inviteMemberDialog.dialogProps}
+        noSeatsAvailable={noSeatsAvailable}
+        canManageBilling={canManageBilling}
+      />
     </>
   );
 }
