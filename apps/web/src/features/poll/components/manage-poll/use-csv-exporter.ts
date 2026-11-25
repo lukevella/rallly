@@ -1,6 +1,7 @@
 import { useParticipants, usePoll } from "@/features/poll/client";
 import { createOptionsContextValue } from "@/features/poll/components/poll-context";
 import { useTranslation } from "@/i18n/client";
+import { toCsv } from "@/lib/csv";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { instantToWallTime } from "@/lib/datetime/wall-time";
 import { dayjs } from "@/lib/dayjs";
@@ -36,11 +37,11 @@ export const useCsvExporter = () => {
             ? day
             : `${day} ${decodedOption.startTime} - ${decodedOption.endTime}`;
         }),
-      ].join(",");
+      ];
       const rows = participants.map((participant) => {
         return [
           participant.name,
-          participant.email,
+          participant.email ?? "",
           instantToWallTime(new Date(participant.createdAt), timeZone).replace(
             "T",
             " ",
@@ -59,15 +60,16 @@ export const useCsvExporter = () => {
                 return t("no");
             }
           }),
-        ].join(",");
+        ];
       });
-      const csv = `data:text/csv;charset=utf-8,${[header, ...rows].join(
-        "\r\n",
-      )}`;
-
-      const encodedCsv = encodeURI(csv);
+      // The BOM makes Excel decode the file as UTF-8 instead of the system
+      // code page.
+      const blob = new Blob(["\uFEFF", toCsv([header, ...rows])], {
+        type: "text/csv;charset=utf-8",
+      });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.setAttribute("href", encodedCsv);
+      link.setAttribute("href", url);
       link.setAttribute(
         "download",
         `${poll.title.replace(/\s/g, "_")}-${dayjs().format(
@@ -77,6 +79,7 @@ export const useCsvExporter = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     },
   };
 };
