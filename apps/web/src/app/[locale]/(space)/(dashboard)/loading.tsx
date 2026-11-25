@@ -18,14 +18,14 @@ export default function Loading() {
       <RouterLoadingIndicator />
       <PageShell>
         <PageHeader>
-          <PageColumn>
+          <PageColumn className="pb-3">
             <PageTitleSkeleton />
             <Skeleton aria-hidden className="mx-4 mt-2 h-4 w-48" />
           </PageColumn>
         </PageHeader>
         <PageContent>
           <PageColumn className="pb-8">
-            <div aria-hidden className="flex gap-4 overflow-hidden px-4 pt-6">
+            <div aria-hidden className="flex gap-4 overflow-hidden px-4 pt-3">
               {["a", "b"].map((key) => (
                 <Skeleton
                   key={key}
