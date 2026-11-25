@@ -39,6 +39,7 @@
   --ring: var(--color-gray-500);
 
   --destructive: var(--color-rose-600);
+  --destructive-solid: var(--color-rose-600);
   --destructive-foreground: var(--color-rose-100);
 
   --background: var(--color-white);
@@ -100,7 +101,8 @@
 
   --ring: var(--color-gray-600);
 
-  --destructive: var(--color-rose-500);
+  --destructive: var(--color-rose-400);
+  --destructive-solid: var(--color-rose-500);
   --destructive-foreground: var(--color-rose-50);
 
   --accent: oklch(1 0 0 / 0.1);
@@ -186,15 +188,17 @@
   --color-ring: var(--ring);
 
   --color-destructive: var(--destructive);
+  /* Fill behind --destructive-foreground; --destructive is for text and strokes on surfaces */
+  --color-destructive-solid: var(--destructive-solid);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-hover: color-mix(
     in oklch,
-    var(--destructive),
+    var(--destructive-solid),
     var(--state-shade) 8%
   );
   --color-destructive-active: color-mix(
     in oklch,
-    var(--destructive),
+    var(--destructive-solid),
     var(--state-shade) 14%
   );
 
