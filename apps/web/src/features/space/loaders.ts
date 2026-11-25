@@ -3,10 +3,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import {
-  getEventsChronological,
-  getUpcomingEventCount,
-} from "@/features/scheduled-event/data";
+import { getEventsChronological } from "@/features/scheduled-event/data";
 import type { Status } from "@/features/scheduled-event/schema";
 import {
   getActiveSpaceForUser,
@@ -190,15 +187,6 @@ const loadViewerTimeZone = cache(async () => {
     getDeviceTimeZone(),
   ]);
   return deviceTimeZone ?? normalizeTimeZone(user.timeZone) ?? "UTC";
-});
-
-export const loadUpcomingEventCount = cache(async () => {
-  const [scope, timeZone] = await Promise.all([
-    loadActiveSpaceContentScope(),
-    loadViewerTimeZone(),
-  ]);
-
-  return getUpcomingEventCount({ scope, timeZone });
 });
 
 export const loadEvents = cache(

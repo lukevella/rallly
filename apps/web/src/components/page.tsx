@@ -35,11 +35,13 @@ export function PageHeader({
 }
 
 // The page title, at the top of a centred column (PageColumn) with the
-// toolbar below.
+// toolbar below. `actions` are page-wide (not tied to the toolbar's list)
+// and sit at the trailing edge, before the mobile menu button.
 export function PageTitle({
   children,
+  actions,
   className,
-}: React.PropsWithChildren<{ className?: string }>) {
+}: React.PropsWithChildren<{ actions?: React.ReactNode; className?: string }>) {
   return (
     <div
       className={cn(
@@ -47,10 +49,15 @@ export function PageTitle({
         className,
       )}
     >
-      <h1 className="truncate font-semibold text-foreground text-xl tracking-tight md:text-2xl">
+      <h1 className="min-w-0 truncate font-semibold text-foreground text-xl tracking-tight md:text-2xl">
         {children}
       </h1>
-      <MobileMenuButton />
+      {/* One trailing group, so the actions and the menu button share the
+          free space instead of each pushing itself right */}
+      <div className="ml-auto flex shrink-0 items-center gap-2">
+        {actions}
+        <MobileMenuButton />
+      </div>
     </div>
   );
 }

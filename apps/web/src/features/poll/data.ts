@@ -472,6 +472,29 @@ export const getPollStatusCounts = async ({
   return counts;
 };
 
+// Open polls only: a small set, so the newest row comes from a few short
+// (poll_id, created_at) index ranges instead of the space's whole history.
+export const getLastOpenPollActivityAt = async ({
+  scope,
+}: {
+  scope: SpaceContentScope;
+}) => {
+  const activity = await prisma.pollActivity.findFirst({
+    where: {
+      poll: {
+        spaceId: scope.spaceId,
+        ...(scope.createdBy && { userId: scope.createdBy }),
+        status: "open",
+        deletedAt: null,
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    select: { createdAt: true },
+  });
+
+  return activity?.createdAt ?? null;
+};
+
 export async function canUserManagePoll(
   user: {
     id: string;

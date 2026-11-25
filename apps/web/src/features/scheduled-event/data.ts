@@ -311,22 +311,6 @@ function buildBaseWhere(
 }
 
 // Get upcoming events (confirmed events in the future)
-export async function getUpcomingEventCount({
-  scope,
-  timeZone,
-}: {
-  scope: SpaceContentScope;
-  timeZone: string;
-}) {
-  return prisma.scheduledEvent.count({
-    where: {
-      spaceId: scope.spaceId,
-      ...(scope.createdBy && { userId: scope.createdBy }),
-      ...upcomingScheduledEventWhere({ now: new Date(), timeZone }),
-    },
-  });
-}
-
 // Everything a user hosts, across spaces: the account deletion dialog warns
 // about events that would be lost, wherever they live.
 export async function getUserUpcomingEventCount({

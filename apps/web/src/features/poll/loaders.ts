@@ -7,6 +7,7 @@ import { listPollActivity } from "@/features/activity/data";
 import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
   canUserManagePoll,
+  getLastOpenPollActivityAt,
   getPoll,
   getPollResults,
   getPollStatusCounts,
@@ -44,6 +45,11 @@ export const loadPolls = cache(
 export const loadPollStatusCounts = cache(async () => {
   const scope = await loadActiveSpaceContentScope();
   return getPollStatusCounts({ scope });
+});
+
+export const loadLastOpenPollActivityAt = cache(async () => {
+  const scope = await loadActiveSpaceContentScope();
+  return getLastOpenPollActivityAt({ scope });
 });
 
 export const loadPoll = cache(async (pollId: string) => {

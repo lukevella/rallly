@@ -79,6 +79,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Events are listed on the home page; keeps old links and their filters
+      {
+        source: "/events",
+        destination: "/",
+        permanent: false,
+      },
       {
         source: "/support",
         destination: "https://support.rallly.co",
