@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,10 +24,10 @@ import {
 } from "@/components/page";
 import { RefreshOnFocus } from "@/components/refresh-on-focus";
 import { SearchInput } from "@/components/search-input";
+import { CreateButton } from "@/features/navigation/components/create-button";
 import type { Status } from "@/features/scheduled-event/schema";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { EventsListSkeleton } from "./events-list";
 import { eventsSearchParamsSchema } from "./schema";
 
 export function EventsEmptyState({ status }: { status: Status }) {
@@ -106,10 +106,14 @@ export function EventsEmptyState({ status }: { status: Status }) {
 function EventsPagination({
   page,
   hasNextPage,
+  disabled,
   startTransition,
 }: {
   page: number;
   hasNextPage: boolean;
+  // While a navigation is pending the URL still holds the previous filters,
+  // so a page link built from it would replace the pending change.
+  disabled: boolean;
   startTransition: React.TransitionStartFunction;
 }) {
   const searchParams = useSearchParams();
@@ -153,12 +157,12 @@ function EventsPagination({
 
   return (
     <nav className="flex items-center justify-end gap-2 px-4 py-4">
-      {page > 1 ? (
+      {page > 1 && !disabled ? (
         pageLink(page - 1, previousLabel)
       ) : (
         <Button disabled>{previousLabel}</Button>
       )}
-      {hasNextPage ? (
+      {hasNextPage && !disabled ? (
         pageLink(page + 1, nextLabel)
       ) : (
         <Button disabled>{nextLabel}</Button>
@@ -167,12 +171,18 @@ function EventsPagination({
   );
 }
 
-export function EventsPage({
+export function HomePage({
+  title,
+  subtitle,
+  cards,
   members,
   list,
   page,
   hasNextPage,
 }: {
+  title: React.ReactNode;
+  subtitle: React.ReactNode;
+  cards: React.ReactNode;
   members: { userId: string; name: string; image?: string }[];
   list: React.ReactNode;
   page: number;
@@ -180,8 +190,8 @@ export function EventsPage({
 }) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  // Filter and page changes are server navigations that hold the current
-  // list until the new one is rendered, so show a skeleton while pending.
+  // Filter and page changes are server navigations inside a transition, so
+  // the current list stays on screen until the new one is rendered.
   const [isNavigating, startNavigation] = React.useTransition();
   const { data: space } = useSpace();
   // Filtering by member is pointless when the space restricts this member
@@ -196,11 +206,36 @@ export function EventsPage({
     <PageShell>
       <RefreshOnFocus />
       <PageHeader>
-        <PageColumn>
-          <PageTitle>
-            <Trans i18nKey="events" defaults="Events" />
+        <PageColumn className="pb-3">
+          <PageTitle
+            actions={
+              <>
+                {/* Phones share this row with the menu button, so they get
+                    the sidebar's compact icon instead */}
+                <CreateButton className="md:hidden" />
+                <Link
+                  href="/new"
+                  className={cn(
+                    buttonVariants({ variant: "primary" }),
+                    "max-md:hidden",
+                  )}
+                >
+                  <Trans i18nKey="create" defaults="Create" />
+                </Link>
+              </>
+            }
+          >
+            {title}
           </PageTitle>
-          <PageToolbar className="pt-6">
+          {subtitle}
+        </PageColumn>
+      </PageHeader>
+      <PageContent>
+        <PageColumn className="pb-8">
+          {cards}
+          <PageToolbar className="pt-8">
+            {/* Below sm, search takes the first row and the filters the
+                full second row whatever the width. */}
             <SearchInput
               className="w-full min-w-0 sm:w-auto sm:min-w-48 sm:flex-1"
               placeholder={t("searchEventsPlaceholder", {
@@ -208,48 +243,52 @@ export function EventsPage({
               })}
               startTransition={startNavigation}
             />
-            <FilterTabs
-              param="status"
-              value={status}
-              label={t("eventsListStatusFilter", {
-                defaultValue: "Filter by status",
-              })}
-              options={[
-                {
-                  value: "upcoming",
-                  label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
-                },
-                {
-                  value: "past",
-                  label: <Trans i18nKey="past" defaults="Past" />,
-                },
-                {
-                  value: "canceled",
-                  label: <Trans i18nKey="canceled" defaults="Canceled" />,
-                },
-              ]}
-              startTransition={startNavigation}
-            />
-            {showMemberFilter ? (
-              <MemberSelector
-                members={members}
-                className="min-w-0 sm:min-w-40"
+            <div className="flex min-w-0 flex-wrap items-center gap-2 max-sm:w-full">
+              <FilterTabs
+                param="status"
+                value={status}
+                label={t("eventsListStatusFilter", {
+                  defaultValue: "Filter by status",
+                })}
+                options={[
+                  {
+                    value: "upcoming",
+                    label: <Trans i18nKey="upcoming" defaults="Upcoming" />,
+                  },
+                  {
+                    value: "past",
+                    label: <Trans i18nKey="past" defaults="Past" />,
+                  },
+                  {
+                    value: "canceled",
+                    label: <Trans i18nKey="canceled" defaults="Canceled" />,
+                  },
+                ]}
                 startTransition={startNavigation}
               />
-            ) : null}
+              {showMemberFilter ? (
+                <MemberSelector
+                  members={members}
+                  className="min-w-0 sm:min-w-40"
+                  startTransition={startNavigation}
+                />
+              ) : null}
+            </div>
           </PageToolbar>
-        </PageColumn>
-      </PageHeader>
-      <PageContent>
-        <PageColumn className="pb-8">
-          {isNavigating ? <EventsListSkeleton /> : list}
-          {isNavigating ? null : (
+          {/* Dims only once loading outlasts the delay, so a fast change
+              never flickers; restores at once when the new list lands */}
+          <div
+            aria-busy={isNavigating}
+            className="transition-opacity duration-200 aria-busy:opacity-50 aria-busy:delay-150"
+          >
+            {list}
             <EventsPagination
               page={page}
               hasNextPage={hasNextPage}
+              disabled={isNavigating}
               startTransition={startNavigation}
             />
-          )}
+          </div>
         </PageColumn>
       </PageContent>
     </PageShell>

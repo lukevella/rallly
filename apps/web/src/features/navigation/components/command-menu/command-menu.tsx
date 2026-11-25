@@ -274,7 +274,7 @@ function SearchResults({
               value={resultValue("event", event.id, query)}
               onSelect={() =>
                 onSelect(
-                  `/events?${new URLSearchParams({
+                  `/?${new URLSearchParams({
                     // Classified on select: the index can outlive an
                     // event's end
                     status: getEventListStatus({

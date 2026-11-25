@@ -5,8 +5,10 @@ import {
   PageHeader,
   PageShell,
   PageTitleSkeleton,
+  PageToolbarSkeleton,
 } from "@/components/page";
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
+import { EventsListSkeleton } from "@/features/scheduled-event/components/events-list";
 
 // Shaped like the home page. Other dashboard routes provide their own
 // loading.tsx so they don't inherit it.
@@ -16,26 +18,25 @@ export default function Loading() {
       <RouterLoadingIndicator />
       <PageShell>
         <PageHeader>
-          <PageColumn>
+          <PageColumn className="pb-3">
             <PageTitleSkeleton />
+            <Skeleton aria-hidden className="mx-4 mt-2 h-4 w-48" />
           </PageColumn>
         </PageHeader>
         <PageContent>
           <PageColumn className="pb-8">
-            <div aria-hidden className="space-y-8 px-4 pt-6">
-              {[1, 3, 3].map((tileCount, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
-                <div key={i} className="space-y-4">
-                  <Skeleton className="h-5 w-20" />
-                  <div className="grid gap-4 md:grid-cols-3 2xl:grid-cols-4">
-                    {Array.from({ length: tileCount }).map((_, j) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
-                      <Skeleton key={j} className="h-[76px] rounded-xl" />
-                    ))}
-                  </div>
-                </div>
+            <div aria-hidden className="flex gap-4 overflow-hidden px-4 pt-3">
+              {["a", "b"].map((key) => (
+                <Skeleton
+                  key={key}
+                  className="h-32 min-w-72 flex-1 rounded-xl sm:min-w-64"
+                />
               ))}
             </div>
+            <div className="pt-2">
+              <PageToolbarSkeleton />
+            </div>
+            <EventsListSkeleton />
           </PageColumn>
         </PageContent>
       </PageShell>

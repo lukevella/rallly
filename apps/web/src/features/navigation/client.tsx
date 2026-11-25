@@ -4,7 +4,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   BarChart2Icon,
   CalendarDaysIcon,
-  CalendarIcon,
   HomeIcon,
   UsersIcon,
 } from "lucide-react";
@@ -65,13 +64,6 @@ export const useSpaceMenu = () => {
               href: "/polls",
               icon: BarChart2Icon,
               isActive: pathname === "/polls",
-            },
-            {
-              id: "events",
-              label: t("events", { defaultValue: "Events" }),
-              href: "/events",
-              icon: CalendarIcon,
-              isActive: pathname === "/events",
             },
             ...(isCalendarsEnabled
               ? [

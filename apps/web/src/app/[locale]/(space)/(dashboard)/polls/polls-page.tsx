@@ -25,7 +25,6 @@ import {
   PageToolbar,
 } from "@/components/page";
 import { SearchInput } from "@/components/search-input";
-import { PollsListSkeleton } from "@/features/poll/components/polls-list";
 import { useSpace } from "@/features/space/client";
 import { Trans, useTranslation } from "@/i18n/client";
 import { searchParamsSchema } from "./schema";
@@ -92,10 +91,14 @@ export function PollsEmptyState() {
 function PollsPagination({
   page,
   hasNextPage,
+  disabled,
   startTransition,
 }: {
   page: number;
   hasNextPage: boolean;
+  // While a navigation is pending the URL still holds the previous filters,
+  // so a page link built from it would replace the pending change.
+  disabled: boolean;
   startTransition: React.TransitionStartFunction;
 }) {
   const searchParams = useSearchParams();
@@ -139,12 +142,12 @@ function PollsPagination({
 
   return (
     <nav className="flex items-center justify-end gap-2 px-4 py-4">
-      {page > 1 ? (
+      {page > 1 && !disabled ? (
         pageLink(page - 1, previousLabel)
       ) : (
         <Button disabled>{previousLabel}</Button>
       )}
-      {hasNextPage ? (
+      {hasNextPage && !disabled ? (
         pageLink(page + 1, nextLabel)
       ) : (
         <Button disabled>{nextLabel}</Button>
@@ -168,8 +171,8 @@ export function PollsPage({
 }) {
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  // Filter and page changes are server navigations that hold the current
-  // list until the new one is rendered, so show a skeleton while pending.
+  // Filter and page changes are server navigations inside a transition, so
+  // the current list stays on screen until the new one is rendered.
   const [isNavigating, startNavigation] = React.useTransition();
   const { data: space } = useSpace();
   // Filtering by member is pointless when the space restricts this member
@@ -239,11 +242,9 @@ export function PollsPage({
               {usageMeter}
               <Link
                 href="/new"
-                className={buttonVariants({
-                  variant: "primary",
-                })}
+                className={buttonVariants({ variant: "primary" })}
               >
-                <Trans i18nKey="createPoll" defaults="Create poll" />
+                <Trans i18nKey="create" defaults="Create" />
               </Link>
             </PageActions>
           </PageToolbar>
@@ -251,14 +252,20 @@ export function PollsPage({
       </PageHeader>
       <PageContent>
         <PageColumn className="pb-8">
-          {isNavigating ? <PollsListSkeleton /> : list}
-          {isNavigating ? null : (
+          {/* Dims only once loading outlasts the delay, so a fast change
+              never flickers; restores at once when the new list lands */}
+          <div
+            aria-busy={isNavigating}
+            className="transition-opacity duration-200 aria-busy:opacity-50 aria-busy:delay-150"
+          >
+            {list}
             <PollsPagination
               page={page}
               hasNextPage={hasNextPage}
+              disabled={isNavigating}
               startTransition={startNavigation}
             />
-          )}
+          </div>
         </PageColumn>
       </PageContent>
     </PageShell>
