@@ -239,9 +239,11 @@ export function PollsPage({
               {usageMeter}
               <Link
                 href="/new"
-                className={buttonVariants({ variant: "primary" })}
+                className={buttonVariants({
+                  variant: "primary",
+                })}
               >
-                <Trans i18nKey="create" defaults="Create" />
+                <Trans i18nKey="createPoll" defaults="Create poll" />
               </Link>
             </PageActions>
           </PageToolbar>
