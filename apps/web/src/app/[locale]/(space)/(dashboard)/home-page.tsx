@@ -206,7 +206,7 @@ export function HomePage({
     <PageShell>
       <RefreshOnFocus />
       <PageHeader>
-        <PageColumn>
+        <PageColumn className="pb-3">
           <PageTitle
             actions={
               <>

@@ -126,7 +126,7 @@ export async function HomeCards({
   }[];
 
   return (
-    <div className="space-y-6 px-4 pt-6">
+    <div className="space-y-6 px-4 pt-3">
       {showPasswordSetup ? <PasswordSetupAlert /> : null}
       <StatCardStack>
         {cards.map((card) => {
