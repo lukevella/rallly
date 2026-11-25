@@ -60,7 +60,7 @@ export default async function Layout({
                   tier: space.tier,
                 }))}
               />
-              <div className="absolute top-3.5 right-2 flex items-center gap-1">
+              <div className="absolute top-2 right-2 flex items-center gap-1">
                 <SearchButton />
                 <NavUserAvatar />
               </div>

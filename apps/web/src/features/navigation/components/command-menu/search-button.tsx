@@ -36,6 +36,7 @@ export function SearchButton() {
           <Button
             variant="ghost"
             size="icon"
+            className="rounded-full"
             aria-label={t("search", { defaultValue: "Search" })}
             aria-keyshortcuts="Meta+K Control+K"
             onClick={open}
