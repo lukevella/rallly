@@ -57,7 +57,7 @@ const dropdownMenuItemVariants = cva(
       variant: {
         default: "[&_svg:not([class*='text-'])]:text-muted-foreground",
         destructive:
-          "text-destructive [&_svg:not([class*='text-'])]:text-destructive",
+          "text-destructive data-highlighted:bg-destructive/10 data-highlighted:ring-destructive/20 [&_svg:not([class*='text-'])]:text-destructive",
       },
     },
     defaultVariants: {
