@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import { PlusIcon } from "lucide-react";
 import { Link } from "@/components/link";
@@ -21,7 +21,7 @@ export function CreateButton({ className }: { className?: string }) {
             className={buttonVariants({
               variant: "ghost",
               size: "icon",
-              className,
+              className: cn("rounded-full", className),
             })}
           />
         }

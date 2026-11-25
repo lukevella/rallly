@@ -89,7 +89,7 @@ export function NavUserAvatar() {
           />
         }
       >
-        <OptimizedAvatarImage size="md" src={user.image} name={user.name} />
+        <OptimizedAvatarImage size="sm" src={user.image} name={user.name} />
       </DropdownMenuTrigger>
       <UserMenuContent className="w-64" align="end" side="bottom">
         <div className="px-2 py-1.5">

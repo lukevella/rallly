@@ -60,7 +60,7 @@ export default async function Layout({
           <SidebarHeader>
             <div className="relative p-2">
               <SpaceDropdown spaces={dropdownSpaces} />
-              <div className="absolute top-3.5 right-2 flex items-center gap-1">
+              <div className="absolute top-2 right-2 flex items-center gap-1">
                 <CreateButton />
                 <SearchButton />
                 <NavUserAvatar />
