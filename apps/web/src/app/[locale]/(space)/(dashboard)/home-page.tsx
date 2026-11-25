@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -209,9 +209,20 @@ export function HomePage({
         <PageColumn>
           <PageTitle
             actions={
-              // The sidebar's Create button is hidden behind the menu on
-              // phones, so the home page shows the same one there
-              <CreateButton className="md:hidden" />
+              <>
+                {/* Phones share this row with the menu button, so they get
+                    the sidebar's compact icon instead */}
+                <CreateButton className="md:hidden" />
+                <Link
+                  href="/new"
+                  className={cn(
+                    buttonVariants({ variant: "primary" }),
+                    "max-md:hidden",
+                  )}
+                >
+                  <Trans i18nKey="create" defaults="Create" />
+                </Link>
+              </>
             }
           >
             {title}
@@ -232,7 +243,7 @@ export function HomePage({
               })}
               startTransition={startNavigation}
             />
-            <div className="flex min-w-0 items-center gap-2 max-sm:w-full">
+            <div className="flex min-w-0 flex-wrap items-center gap-2 max-sm:w-full">
               <FilterTabs
                 param="status"
                 value={status}
