@@ -1234,8 +1234,8 @@ export function AccessibleBallot({
             <h2 className="font-normal text-muted-foreground">
               <Trans i18nKey="eventHeaderOrganizer" defaults="Organizer" />
             </h2>
-            {/* Centred on the icons above, so the name starts where their labels do. */}
-            <div className="mt-1 -ml-0.5 flex items-center gap-1.5">
+            {/* Flush with the heading; the name starts where the fact labels do. */}
+            <div className="mt-1 flex items-center gap-1">
               <span aria-hidden="true" className="flex shrink-0">
                 <OptimizedAvatarImage
                   size="sm"
