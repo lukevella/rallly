@@ -165,8 +165,9 @@ test.describe("Email invites", () => {
       dialog.getByRole("heading", { name: "1 invited" }),
     ).toBeVisible();
 
-    // Opening the emailed link records the open once: a second visit
-    // neither moves the timestamp nor adds another activity event.
+    // Opening the emailed link records the open once, on the reader's first
+    // interaction: a second visit neither moves the timestamp nor adds
+    // another activity event.
     expect(emailedUrl).toBeTruthy();
     const browser = page.context().browser();
     expect(browser).toBeTruthy();
@@ -175,15 +176,15 @@ test.describe("Email invites", () => {
       where: { email: INVITEE, poll: { title: POLL_TITLE } },
       select: { id: true },
     });
-    await expect
-      .poll(async () => {
-        const row = await prisma.pollInvite.findUniqueOrThrow({
-          where: { id: invite.id },
-          select: { openedAt: true },
-        });
-        return row.openedAt;
-      })
-      .not.toBeNull();
+    // Retried: a keypress before hydration has no listener to reach.
+    await expect(async () => {
+      await guest.guestPage.keyboard.press("Tab");
+      const row = await prisma.pollInvite.findUniqueOrThrow({
+        where: { id: invite.id },
+        select: { openedAt: true },
+      });
+      expect(row.openedAt).not.toBeNull();
+    }).toPass();
     const { openedAt } = await prisma.pollInvite.findUniqueOrThrow({
       where: { id: invite.id },
       select: { openedAt: true },
@@ -193,6 +194,7 @@ test.describe("Email invites", () => {
     await expect(
       guest.guestPage.getByRole("heading", { name: POLL_TITLE }),
     ).toBeVisible();
+    await guest.guestPage.keyboard.press("Tab");
 
     const openedRow = (await reopenShareDialog(page))
       .getByRole("listitem")

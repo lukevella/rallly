@@ -580,8 +580,10 @@ test.describe("invite ballot", () => {
     await page.waitForLoadState("networkidle");
     expect(await openedAt()).toBeNull();
 
-    await page.keyboard.press("Tab");
-    await expect.poll(openedAt).not.toBeNull();
+    await expect(async () => {
+      await page.keyboard.press("Tab");
+      expect(await openedAt()).not.toBeNull();
+    }).toPass();
     await context.close();
   });
 
