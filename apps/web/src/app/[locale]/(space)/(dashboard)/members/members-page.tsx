@@ -63,17 +63,8 @@ async function MembersPageActions() {
 
   return (
     <PageActions>
-      {availableSeats > 0 ? (
-        <p className="mr-2 hidden text-muted-foreground text-sm sm:block">
-          <Trans
-            i18nKey="seatsAvailable"
-            defaults="{count, plural, =0 {No seats available} one {# seat available} other {# seats available}}"
-            values={{ count: availableSeats }}
-          />
-        </p>
-      ) : null}
       <InviteMemberButton
-        noSeatsAvailable={availableSeats <= 0}
+        availableSeats={availableSeats}
         canManageBilling={memberAbility.can("manage", "Billing")}
         canCreateInvite={memberAbility.can("create", "SpaceMemberInvite")}
       />
