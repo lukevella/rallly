@@ -82,6 +82,14 @@ function mainContent(page: Page) {
   return page.locator("#main-content");
 }
 
+async function expectAvailableSeats(page: Page, text: string) {
+  await page.getByRole("button", { name: "Add member" }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByText(text)).toBeVisible();
+  await dialog.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toBeHidden();
+}
+
 async function gotoMembersPage(page: Page, email: string) {
   await loginWithEmail(page, { email });
   await page.goto("/members");
@@ -110,12 +118,10 @@ test.describe("Space members", () => {
     const inviteeEmail = `invitee-${runId}@example.com`;
 
     await gotoMembersPage(page, owner.email);
-    await expect(
-      mainContent(page).getByText("2 seats available"),
-    ).toBeVisible();
 
     await page.getByRole("button", { name: "Add member" }).click();
     const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText("2 seats available")).toBeVisible();
     await dialog.getByLabel("Email").fill(inviteeEmail);
     await dialog.getByRole("button", { name: "Send invite" }).click();
 
@@ -158,7 +164,7 @@ test.describe("Space members", () => {
     await expect(
       mainContent(page).getByText("There is 1 pending invite"),
     ).toBeHidden();
-    await expect(mainContent(page).getByText("1 seat available")).toBeVisible();
+    await expectAvailableSeats(page, "1 seat available");
   });
 
   test("admin can cancel a pending invite", async ({ page }) => {
@@ -219,7 +225,7 @@ test.describe("Space members", () => {
     });
 
     await gotoMembersPage(page, owner.email);
-    await expect(mainContent(page).getByText("1 seat available")).toBeVisible();
+    await expectAvailableSeats(page, "1 seat available");
 
     const row = memberRow(page, member.email);
     await row.getByRole("button", { name: "More options" }).click();
@@ -229,9 +235,7 @@ test.describe("Space members", () => {
     await expect(page.getByText("Member removed successfully")).toBeVisible();
     await expect(row).toBeHidden();
 
-    await expect(
-      mainContent(page).getByText("2 seats available"),
-    ).toBeVisible();
+    await expectAvailableSeats(page, "2 seats available");
   });
 
   test("add member explains how to get more seats when all seats are used", async ({
@@ -240,10 +244,6 @@ test.describe("Space members", () => {
     const owner = await createSpaceAdmin({ name: "Full Owner", seats: 1 });
 
     await gotoMembersPage(page, owner.email);
-
-    await expect(mainContent(page).getByText(/seats? available/)).toHaveCount(
-      0,
-    );
 
     await page.getByRole("button", { name: "Add member" }).click();
     const dialog = page.getByRole("dialog");
