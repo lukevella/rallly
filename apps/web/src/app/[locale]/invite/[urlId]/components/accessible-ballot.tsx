@@ -1526,7 +1526,7 @@ export function AccessibleBallot({
               <Trans i18nKey="voteResultsPanelLabel" defaults="Results" />
             </h2>
             {poll.status === "scheduled" && poll.event ? (
-              <div className="mb-2 flex flex-col items-start gap-3">
+              <div className="mb-5 flex flex-col items-start gap-3">
                 {chosenOptionId ? null : (
                   <p className="flex flex-wrap gap-x-2 font-medium text-sm">
                     <EventDate
