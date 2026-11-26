@@ -192,8 +192,8 @@ async function PageContent({ params, searchParams }: PageProps) {
           )}
         </div>
       </header>
-      {/* From lg the sidebar and answers sit in a card. Main sets its size: 4:3
-          where the screen has room, and never taller than the screen. */}
+      {/* From lg the sidebar and answers sit in a card. Main sets its size: as
+          tall as the screen, and never taller than it is wide. */}
       <div
         data-invite-card
         className="flex flex-1 flex-col lg:mx-auto lg:my-auto lg:max-h-[calc(100dvh-8rem)] lg:w-fit lg:max-w-[calc(100%-2rem)] lg:flex-none lg:shrink lg:overflow-hidden lg:rounded-2xl lg:border lg:bg-card lg:shadow-xs"
