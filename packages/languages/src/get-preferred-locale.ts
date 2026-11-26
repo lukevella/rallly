@@ -20,6 +20,10 @@ export function getPreferredLanguagesFromHeaders({
     .filter((lang) => lang !== "*");
 }
 
+function isRussianTag(tag: string) {
+  return tag.split("-")[0]?.toLowerCase() === "ru";
+}
+
 export function getPreferredLocaleFromHeaders({
   acceptLanguageHeader,
 }: {
@@ -30,7 +34,18 @@ export function getPreferredLocaleFromHeaders({
   });
 
   try {
-    return match(preferredLanguages, supportedLngs, defaultLocale);
+    const locale = match(preferredLanguages, supportedLngs, defaultLocale);
+    // CLDR language distance maps Ukrainian, Belarusian, Kazakh and other
+    // languages of the former Soviet Union to Russian. Only serve Russian to
+    // visitors who ask for it.
+    if (locale === "ru" && !preferredLanguages.some(isRussianTag)) {
+      return match(
+        preferredLanguages,
+        supportedLngs.filter((lng) => lng !== "ru"),
+        defaultLocale,
+      );
+    }
+    return locale;
   } catch (_error) {
     return defaultLocale;
   }

@@ -2,6 +2,9 @@
   "name": "@rallly/languages",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "test:unit": "vitest run"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
@@ -12,6 +15,7 @@
   },
   "devDependencies": {
     "@rallly/tsconfig": "workspace:*",
-    "@types/negotiator": "^0.6.3"
+    "@types/negotiator": "^0.6.3",
+    "vitest": "^4.1.11"
   }
 }
