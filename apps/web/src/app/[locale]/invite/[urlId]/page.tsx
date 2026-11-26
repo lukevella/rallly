@@ -30,6 +30,7 @@ import { InviteHelp } from "./components/help/invite-help";
 import { InviteHelpSheet } from "./components/help/invite-help-sheet";
 import { ManagePollLink } from "./components/manage-poll-link";
 import { VoteComments, VoteCommentsSheet } from "./components/vote-comments";
+import { VoteLanguageSelect } from "./components/vote-language-select";
 
 type PageProps = {
   params: Promise<{ urlId: string }>;
@@ -171,6 +172,7 @@ async function PageContent({ params, searchParams }: PageProps) {
                 />
               </VoteCommentsSheet>
             )}
+            <VoteLanguageSelect pollId={poll.id} />
             <InviteHelpSheet pollId={poll.id}>
               <Suspense
                 fallback={
