@@ -9,6 +9,11 @@ import {
   FieldLabel,
 } from "@rallly/ui/field";
 import {
+  LanguageSelect,
+  LanguageSelectContent,
+  LanguageSelectTrigger,
+} from "@rallly/ui/language-select";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,7 +29,6 @@ import {
   LanguagesIcon,
 } from "lucide-react";
 import React from "react";
-import { LanguageSelect } from "@/components/language-selector";
 import { SettingIcon } from "@/components/setting-icon";
 import { TimeZoneSelect } from "@/components/time-zone-picker/time-zone-select";
 import { updateLocalizationAction } from "@/features/user/actions";
@@ -111,10 +115,8 @@ export const LocalizationPreferences = ({
             </FieldDescription>
           </FieldContent>
           <LanguageSelect
-            id="language-select"
-            className="min-w-32"
             value={language}
-            onChange={async (nextLanguage) => {
+            onValueChange={async (nextLanguage) => {
               // The route locale comes from this device's cookie, so it can
               // differ from the stored preference; save whenever either differs.
               if (
@@ -141,7 +143,10 @@ export const LocalizationPreferences = ({
                 }
               }
             }}
-          />
+          >
+            <LanguageSelectTrigger id="language-select" className="min-w-32" />
+            <LanguageSelectContent />
+          </LanguageSelect>
         </Field>
         <Field orientation="responsive">
           <SettingIcon>

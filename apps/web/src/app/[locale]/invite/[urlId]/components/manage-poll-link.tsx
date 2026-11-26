@@ -15,7 +15,7 @@ export function ManagePollLink({
 }) {
   return (
     <Link
-      className={cn(buttonVariants({ size: "sm" }), "mr-1")}
+      className={cn(buttonVariants(), "mr-1")}
       href={`/poll/${pollId}`}
       onClick={() => {
         posthog?.capture("poll_vote:manage_poll_link_click", {

@@ -1,13 +1,11 @@
 "use client";
 
-import languages, { defaultLocale } from "@rallly/languages";
+import { defaultLocale } from "@rallly/languages";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@rallly/ui/select";
+  LanguageSelectContent,
+  LanguageSelect as LanguageSelectRoot,
+  LanguageSelectTrigger,
+} from "@rallly/ui/language-select";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
 export const LanguageSelect = ({ label }: { label: string }) => {
@@ -16,14 +14,9 @@ export const LanguageSelect = ({ label }: { label: string }) => {
   const params = useParams<{ locale?: string }>();
   const locale = params.locale ?? defaultLocale;
   return (
-    <Select
-      items={languages}
+    <LanguageSelectRoot
       value={locale}
       onValueChange={(newLocale) => {
-        if (!newLocale) {
-          return;
-        }
-
         // The default locale is served without a prefix, so only strip the
         // current locale when it is actually the first path segment.
         const newPath =
@@ -34,16 +27,8 @@ export const LanguageSelect = ({ label }: { label: string }) => {
         router.replace(`/${newLocale}${newPath}`);
       }}
     >
-      <SelectTrigger className="w-full" aria-label={label}>
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {Object.entries(languages).map(([code, name]) => (
-          <SelectItem key={code} value={code}>
-            {name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+      <LanguageSelectTrigger className="w-full" aria-label={label} />
+      <LanguageSelectContent />
+    </LanguageSelectRoot>
   );
 };
