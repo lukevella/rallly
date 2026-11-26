@@ -199,17 +199,27 @@ test.describe("Email invites", () => {
     const inviteToken = new URL(
       (emailedUrl as string).replace(/&amp;/g, "&"),
     ).searchParams.get("token") as string;
-    await expect(async () => {
-      const repeatOpen = guest.guestPage.waitForResponse(
+    // One waiter across the retries: the recorder stops listening after the
+    // first press it receives, so a later press sends nothing to wait for.
+    let landed = false;
+    const repeatOpen = guest.guestPage
+      .waitForResponse(
         (response) =>
           response.request().method() === "POST" &&
           response.request().headers()["next-action"] !== undefined &&
           (response.request().postData() ?? "").includes(inviteToken),
-        { timeout: 1000 },
-      );
-      await guest.guestPage.keyboard.press("Tab");
-      await repeatOpen;
-    }).toPass();
+        { timeout: 15_000 },
+      )
+      .then(() => {
+        landed = true;
+      });
+    await expect(async () => {
+      if (!landed) {
+        await guest.guestPage.keyboard.press("Tab");
+      }
+      expect(landed).toBe(true);
+    }).toPass({ timeout: 15_000 });
+    await repeatOpen;
 
     const openedRow = (await reopenShareDialog(page))
       .getByRole("listitem")
