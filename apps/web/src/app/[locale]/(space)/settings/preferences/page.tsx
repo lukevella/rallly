@@ -57,6 +57,7 @@ export default async function Page() {
             <PageSectionContent>
               <LocalizationPreferences
                 initialValues={{
+                  locale: user.locale,
                   timeFormat: user.timeFormat,
                   timeZone: user.timeZone,
                   weekStart: user.weekStart,

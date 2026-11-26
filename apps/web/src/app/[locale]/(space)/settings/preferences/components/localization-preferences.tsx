@@ -39,6 +39,7 @@ export const LocalizationPreferences = ({
   initialValues,
 }: {
   initialValues: {
+    locale?: string;
     timeFormat?: TimeFormat;
     timeZone?: string;
     weekStart?: number;
@@ -114,7 +115,12 @@ export const LocalizationPreferences = ({
             className="min-w-32"
             value={language}
             onChange={async (nextLanguage) => {
-              if (nextLanguage === language) {
+              // The route locale comes from this device's cookie, so it can
+              // differ from the stored preference; save whenever either differs.
+              if (
+                nextLanguage === language &&
+                nextLanguage === initialValues.locale
+              ) {
                 return;
               }
               const previousLanguage = language;
