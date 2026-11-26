@@ -194,7 +194,22 @@ test.describe("Email invites", () => {
     await expect(
       guest.guestPage.getByRole("heading", { name: POLL_TITLE }),
     ).toBeVisible();
-    await guest.guestPage.keyboard.press("Tab");
+    // Wait for the second visit's open action to finish, so the checks below
+    // see what a repeat open did rather than a press that never landed.
+    const inviteToken = new URL(
+      (emailedUrl as string).replace(/&amp;/g, "&"),
+    ).searchParams.get("token") as string;
+    await expect(async () => {
+      const repeatOpen = guest.guestPage.waitForResponse(
+        (response) =>
+          response.request().method() === "POST" &&
+          response.request().headers()["next-action"] !== undefined &&
+          (response.request().postData() ?? "").includes(inviteToken),
+        { timeout: 1000 },
+      );
+      await guest.guestPage.keyboard.press("Tab");
+      await repeatOpen;
+    }).toPass();
 
     const openedRow = (await reopenShareDialog(page))
       .getByRole("listitem")
