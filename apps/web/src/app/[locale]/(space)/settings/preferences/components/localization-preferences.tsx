@@ -57,9 +57,10 @@ export const LocalizationPreferences = ({
     mutationOptions(updateLocalizationAction),
   );
 
-  const [language, setLanguage] = React.useState(
-    initialValues.locale ?? locale,
-  );
+  // Seed from the route locale, not the stored user.locale: the page is
+  // rendered in the route locale, and the session snapshot can still hold the
+  // previous value on the render that follows a language change.
+  const [language, setLanguage] = React.useState(locale);
   const [timeZone, setTimeZone] = React.useState(
     initialValues.timeZone ?? getBrowserTimeZone(),
   );
@@ -116,7 +117,12 @@ export const LocalizationPreferences = ({
           <LanguageSelect
             value={language}
             onValueChange={async (nextLanguage) => {
-              if (nextLanguage === language) {
+              // The route locale comes from this device's cookie, so it can
+              // differ from the stored preference; save whenever either differs.
+              if (
+                nextLanguage === language &&
+                nextLanguage === initialValues.locale
+              ) {
                 return;
               }
               const previousLanguage = language;
