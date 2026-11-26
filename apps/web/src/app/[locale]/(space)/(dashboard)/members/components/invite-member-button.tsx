@@ -7,11 +7,11 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function InviteMemberButton({
-  noSeatsAvailable,
+  availableSeats,
   canManageBilling,
   canCreateInvite,
 }: {
-  noSeatsAvailable: boolean;
+  availableSeats: number;
   canManageBilling: boolean;
   canCreateInvite: boolean;
 }) {
@@ -36,7 +36,7 @@ export function InviteMemberButton({
       </Button>
       <InviteMemberDialog
         {...inviteMemberDialog.dialogProps}
-        noSeatsAvailable={noSeatsAvailable}
+        availableSeats={availableSeats}
         canManageBilling={canManageBilling}
       />
     </>

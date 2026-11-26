@@ -124,7 +124,13 @@ function RolePermissions({ role, id }: { role: MemberRole; id?: string }) {
   );
 }
 
-export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
+export function InviteMemberForm({
+  availableSeats,
+  onSuccess,
+}: {
+  availableSeats: number;
+  onSuccess?: () => void;
+}) {
   const { t } = useTranslation();
   const formSchema = useInviteMemberFormSchema();
   const rolePermissionsId = React.useId();
@@ -270,6 +276,13 @@ export function InviteMemberForm({ onSuccess }: { onSuccess?: () => void }) {
           <FormMessage />
         </div>
         <DialogFooter>
+          <p className="self-center text-center text-muted-foreground text-sm sm:mr-auto sm:text-left">
+            <Trans
+              i18nKey="seatsAvailable"
+              defaults="{count, plural, =0 {No seats available} one {# seat available} other {# seats available}}"
+              values={{ count: availableSeats }}
+            />
+          </p>
           <DialogClose render={<Button />}>
             <Trans i18nKey="cancel" defaults="Cancel" />
           </DialogClose>
@@ -377,14 +390,14 @@ function NoSeatsAvailableDialogContent({
 }
 
 export function InviteMemberDialog({
-  noSeatsAvailable,
+  availableSeats,
   canManageBilling,
   ...props
-}: DialogProps & { noSeatsAvailable: boolean; canManageBilling: boolean }) {
+}: DialogProps & { availableSeats: number; canManageBilling: boolean }) {
   return (
     <Dialog {...props}>
       <DialogContent size="sm">
-        {noSeatsAvailable ? (
+        {availableSeats <= 0 ? (
           <NoSeatsAvailableDialogContent canManageBilling={canManageBilling} />
         ) : (
           <>
@@ -400,6 +413,7 @@ export function InviteMemberDialog({
               </DialogDescription>
             </DialogHeader>
             <InviteMemberForm
+              availableSeats={availableSeats}
               onSuccess={() => {
                 props.onOpenChange?.(false);
               }}
