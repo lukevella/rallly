@@ -35,7 +35,7 @@ import { trpc } from "@/trpc/client";
 
 /**
  * Finalizes the poll on a date already picked, in one step: what the event
- * will carry on the left, who to notify on the right. The legacy page keeps the
+ * will carry, then who to notify. The legacy page keeps the
  * multi-step wizard in `features/poll/components/finalize-poll-dialog.tsx`.
  */
 export function FinalizeDialog({
@@ -172,7 +172,7 @@ function FinalizeContent({
   }
 
   return (
-    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[50rem]">
+    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[40rem]">
       <DialogHeader>
         <DialogTitle>{poll.title}</DialogTitle>
         <DialogDescription>
@@ -182,10 +182,8 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="grid gap-4 sm:grid-cols-[18rem_minmax(0,1fr)] sm:gap-8">
-        <aside className="flex flex-col gap-4">
-          <SummaryStep option={option} />
-        </aside>
+      <div className="flex flex-col gap-6">
+        <SummaryStep option={option} />
         {participants.length > 0 ? (
           <NotifyStep
             optionId={option.id}
