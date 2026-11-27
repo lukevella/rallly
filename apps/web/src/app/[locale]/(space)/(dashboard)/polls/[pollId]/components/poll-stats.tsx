@@ -230,7 +230,7 @@ function BestDateCard({
       </StatCardHeader>
       <StatCardFooter className="items-end">
         {current ? (
-          <div className="flex min-w-0 flex-col">
+          <div className="flex min-w-0 flex-col gap-1">
             <StatCardValue className="truncate text-lg">
               {formatDateTime(
                 current.startTime,
