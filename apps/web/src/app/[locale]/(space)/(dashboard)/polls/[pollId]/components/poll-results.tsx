@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -37,6 +38,7 @@ import {
   EmptyStateTitle,
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
+import { usePoll } from "@/features/poll/client";
 import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
 import { useCsvExporter } from "@/features/poll/components/manage-poll/use-csv-exporter";
 import {
@@ -86,11 +88,9 @@ export function PollResults({
   const { t } = useTranslation();
   const { formatDateTime } = useDateTime();
   const [sort, setSort] = React.useState<Sort>("popularity");
-  // A table stays readable with a handful of columns; past that the list scans
-  // better.
-  const [view, setView] = React.useState<View>(() =>
-    options.length < 10 ? "table" : "list",
-  );
+  const poll = usePoll();
+  // The table is the default because participant actions live on its rows.
+  const [view, setView] = React.useState<View>("table");
   const finalizeDialog = useDialog();
   const [pickedOptionId, setPickedOptionId] = React.useState<string>();
 
@@ -170,24 +170,28 @@ export function PollResults({
             <SegmentedControl
               aria-label={t("pollResultsView", { defaultValue: "View" })}
               value={view}
-              onValueChange={(value) => setView(value as View)}
+              onValueChange={(value) => {
+                setView(value as View);
+                posthog?.capture("poll_page:results_view_change", {
+                  poll_id: poll.id,
+                  view: value,
+                  option_count: options.length,
+                  participant_count: participants.length,
+                });
+              }}
             >
-              <SegmentedControlItem
-                value="list"
-                className="px-2"
-                aria-label={t("pollResultsViewList", { defaultValue: "List" })}
-              >
-                <ListIcon aria-hidden="true" className="size-4" />
-              </SegmentedControlItem>
-              <SegmentedControlItem
+              <ViewOption
                 value="table"
-                className="px-2"
-                aria-label={t("pollResultsViewTable", {
-                  defaultValue: "Table",
-                })}
+                label={t("pollResultsViewTable", { defaultValue: "Table" })}
               >
                 <Table2Icon aria-hidden="true" className="size-4" />
-              </SegmentedControlItem>
+              </ViewOption>
+              <ViewOption
+                value="list"
+                label={t("pollResultsViewList", { defaultValue: "List" })}
+              >
+                <ListIcon aria-hidden="true" className="size-4" />
+              </ViewOption>
             </SegmentedControl>
           ) : null}
           {ranked.length > 1 ? (
@@ -408,6 +412,34 @@ function VoteDot({ type }: { type?: VoteType }) {
         )}
       </span>
     </span>
+  );
+}
+
+/** An icon-only view option whose label also shows as a tooltip. */
+function ViewOption({
+  value,
+  label,
+  children,
+}: {
+  value: View;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <SegmentedControlItem
+            value={value}
+            className="px-2"
+            aria-label={label}
+          />
+        }
+      >
+        {children}
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -1161,11 +1193,13 @@ function ResultsTable({
           {participants.map((participant) => {
             const votes = votesByOption(participant);
             return (
-              <tr key={participant.id}>
+              // The row under the pointer is highlighted across, as the
+              // column is down.
+              <tr key={participant.id} className="group/row">
                 <th
                   scope="row"
                   className={cn(
-                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
+                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_9%,var(--color-background))]",
                     namesExpanded && "max-w-48",
                   )}
                 >
@@ -1180,7 +1214,7 @@ function ResultsTable({
                       key={option.id}
                       onMouseEnter={() => setHoveredId(option.id)}
                       className={cn(
-                        "border-r border-b text-center last:border-r-0",
+                        "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04]",
                         hoveredId === option.id && "bg-foreground/[0.04]",
                       )}
                     >
