@@ -3,6 +3,7 @@ import "server-only";
 import { shortUrl } from "@rallly/utils/absolute-url";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
+import { listPollActivity } from "@/features/activity/data";
 import { loadConferencingOptions } from "@/features/conferencing/loaders";
 import {
   canUserManagePoll,
@@ -136,3 +137,13 @@ export const loadPollConferencingOptions = cache(async (pollId: string) => {
   const host = owner && !owner.isGuest ? owner : null;
   return loadConferencingOptions({ userId: host?.id ?? null });
 });
+
+export const loadPollActivity = cache(
+  async (pollId: string, limit?: number) => {
+    const [scope] = await Promise.all([
+      loadActiveSpaceContentScope(),
+      loadPoll(pollId),
+    ]);
+    return listPollActivity({ pollId, spaceId: scope.spaceId, limit });
+  },
+);

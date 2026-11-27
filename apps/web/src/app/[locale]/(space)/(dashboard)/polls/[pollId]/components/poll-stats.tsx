@@ -35,10 +35,13 @@ export function PollStats({
   responseCount,
   invitedCount,
   respondedInviteCount,
+  inviteeAction,
 }: {
   responseCount: number;
   invitedCount: number;
   respondedInviteCount: number;
+  /** Sits in the invitees card's top right corner. */
+  inviteeAction?: React.ReactNode;
 }) {
   return (
     <StatCardStack>
@@ -64,9 +67,10 @@ export function PollStats({
               <MailIcon />
             </StatIcon>
             <span className="truncate">
-              <Trans i18nKey="pollStatsInvites" defaults="Invites responded" />
+              <Trans i18nKey="pollStatsInvitees" defaults="Invitees" />
             </span>
           </StatCardLabel>
+          {inviteeAction}
         </StatCardHeader>
         <StatCardFooter className="items-center">
           <StatCardValue>

@@ -5,14 +5,7 @@ import React from "react";
 import { useTranslation } from "@/i18n/client";
 
 /** A note or comment as a chat bubble, clamped to three lines with a toggle. */
-export function ChatBubble({
-  tone = "neutral",
-  children,
-}: {
-  /** Primary marks a participant's note; comments stay neutral. */
-  tone?: "neutral" | "primary";
-  children: React.ReactNode;
-}) {
+export function ChatBubble({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const ref = React.useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = React.useState(false);
@@ -35,7 +28,7 @@ export function ChatBubble({
     <blockquote
       className={cn(
         "flex w-fit max-w-prose flex-col items-start gap-1 rounded-2xl rounded-tl-sm px-3 py-2",
-        tone === "primary" ? "bg-primary/10" : "bg-foreground/5",
+        "bg-primary/15 dark:bg-primary/25",
       )}
     >
       <p

@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@rallly/ui";
+import { buttonVariants, cn } from "@rallly/ui";
 import {
   Alert,
   AlertAction,
@@ -9,23 +9,16 @@ import {
 } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import { toast } from "@rallly/ui/sonner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import copy from "copy-to-clipboard";
 import {
   CalendarCheckIcon,
   ExternalLinkIcon,
-  LinkIcon,
   LockIcon,
   PlayIcon,
-  ShareIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type React from "react";
+import React from "react";
 import { AddToCalendarButton } from "@/features/calendars/components/add-to-calendar-button";
-import {
-  SharePollDialog,
-  useSharePollDialog,
-} from "@/features/poll/components/share-dialog";
 import {
   getOpenPollLimitRefusal,
   showOpenPollLimit,
@@ -34,6 +27,9 @@ import type { PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
+
+/** Lets the sticky header tell when the share bar has scrolled away. */
+export const SHARE_BAR_ID = "poll-share-bar";
 
 /** The vote page link and the ways to share it, under an alert when the poll is closed or scheduled. */
 export function PollStatusCard({
@@ -99,11 +95,6 @@ export function PollStatusCard({
         actions={
           <>
             <CopyLinkButton inviteLink={inviteLink} />
-            <ShareButton
-              pollId={pollId}
-              pollStatus={status}
-              inviteLink={inviteLink}
-            />
             <ViewInvitePageButton inviteLink={inviteLink} />
           </>
         }
@@ -120,7 +111,10 @@ function StatusCard({
   actions: React.ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
+    <section
+      id={SHARE_BAR_ID}
+      className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md"
+    >
       <div className="flex items-center gap-4 px-5 py-3">
         <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
           <span className="shrink-0">
@@ -156,24 +150,6 @@ function EventDate({
   return <>{time ? `${date}, ${time}` : date}</>;
 }
 
-/** An icon button whose accessible label also shows as a tooltip. */
-function IconAction({
-  label,
-  render,
-  children,
-}: {
-  label: string;
-  render: React.ReactElement;
-  children: React.ReactNode;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger render={render}>{children}</TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
-  );
-}
-
 function ReopenButton({ pollId }: { pollId: string }) {
   const router = useRouter();
   // The page is server rendered, so the new status shows once it refreshes.
@@ -198,57 +174,23 @@ function ReopenButton({ pollId }: { pollId: string }) {
   );
 }
 
-function CopyLinkButton({ inviteLink }: { inviteLink: string }) {
+export function CopyLinkButton({ inviteLink }: { inviteLink: string }) {
   const { t } = useTranslation();
-  const label = t("copyLink", { defaultValue: "Copy link" });
   return (
-    <IconAction
-      label={label}
-      render={
-        <Button
-          aria-label={label}
-          size="icon"
-          onClick={() => {
-            if (copy(inviteLink)) {
-              toast.success(t("linkCopied", { defaultValue: "Link copied" }));
-            }
-          }}
-        />
-      }
+    <Button
+      onClick={() => {
+        if (copy(inviteLink)) {
+          toast.success(t("linkCopied", { defaultValue: "Link copied" }));
+        }
+      }}
     >
-      <LinkIcon aria-hidden="true" />
-    </IconAction>
-  );
-}
-
-function ShareButton({
-  pollId,
-  pollStatus,
-  inviteLink,
-}: {
-  pollId: string;
-  pollStatus: PollStatus;
-  inviteLink: string;
-}) {
-  const share = useSharePollDialog(pollId);
-  return (
-    <>
-      <Button onClick={() => share.open("manual")}>
-        <ShareIcon data-icon="inline-start" aria-hidden="true" />
-        <Trans i18nKey="share" defaults="Share" />
-      </Button>
-      <SharePollDialog
-        {...share.dialog.dialogProps}
-        pollId={pollId}
-        pollStatus={pollStatus}
-        inviteLink={inviteLink}
-      />
-    </>
+      <Trans i18nKey="copyInviteLink" defaults="Copy invite link" />
+    </Button>
   );
 }
 
 /** Opens the page participants see, in a new tab. */
-function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
+export function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
   return (
     <a
       href={inviteLink}
@@ -262,5 +204,40 @@ function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
       />
       <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" />
     </a>
+  );
+}
+
+/**
+ * The share bar's link actions, shown in the sticky header once the share bar
+ * has scrolled out of view.
+ */
+export function StickyShareActions({ inviteLink }: { inviteLink: string }) {
+  const [visible, setVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const bar = document.getElementById(SHARE_BAR_ID);
+    if (!bar) {
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry) {
+        setVisible(!entry.isIntersecting);
+      }
+    });
+    observer.observe(bar);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      inert={!visible}
+      className={cn(
+        "hidden items-center gap-1.5 transition-opacity duration-150 motion-reduce:transition-none sm:flex",
+        visible ? "opacity-100" : "pointer-events-none opacity-0",
+      )}
+    >
+      <CopyLinkButton inviteLink={inviteLink} />
+      <ViewInvitePageButton inviteLink={inviteLink} />
+    </div>
   );
 }

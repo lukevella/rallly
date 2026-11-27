@@ -44,7 +44,8 @@ export function SharePollDialog({
 }: React.ComponentProps<typeof Dialog> & {
   pollId: string;
   pollStatus: PollStatus;
-  inviteLink: string;
+  /** Omitted where the page already shows the link: email invites only. */
+  inviteLink?: string;
 }) {
   return (
     <Dialog {...dialogProps}>
@@ -54,14 +55,25 @@ export function SharePollDialog({
             <Trans i18nKey="share" defaults="Share" />
           </DialogTitle>
           <DialogDescription>
-            <Trans
-              i18nKey="shareDialogDescription"
-              defaults="Share the invite link, or invite people by email."
-            />
+            {inviteLink ? (
+              <Trans
+                i18nKey="shareDialogDescription"
+                defaults="Share the invite link, or invite people by email."
+              />
+            ) : (
+              <Trans
+                i18nKey="shareDialogEmailOnlyDescription"
+                defaults="Invite people by email."
+              />
+            )}
           </DialogDescription>
         </DialogHeader>
-        <InviteLinkRow pollId={pollId} inviteLink={inviteLink} />
-        <Separator />
+        {inviteLink ? (
+          <>
+            <InviteLinkRow pollId={pollId} inviteLink={inviteLink} />
+            <Separator />
+          </>
+        ) : null}
         <InviteByEmail pollId={pollId} pollStatus={pollStatus} />
       </DialogContent>
     </Dialog>

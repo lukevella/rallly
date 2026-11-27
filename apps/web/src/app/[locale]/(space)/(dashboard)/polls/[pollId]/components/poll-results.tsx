@@ -3,6 +3,13 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@rallly/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@rallly/ui/popover";
 import {
   SegmentedControl,
@@ -16,19 +23,34 @@ import {
   ClockIcon,
   DownloadIcon,
   ListIcon,
+  MessageSquareTextIcon,
   StarIcon,
   Table2Icon,
+  TrashIcon,
+  UsersIcon,
 } from "lucide-react";
 import React from "react";
+import {
+  EmptyState,
+  EmptyStateDescription,
+  EmptyStateIcon,
+  EmptyStateTitle,
+} from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
 import { useCsvExporter } from "@/features/poll/components/manage-poll/use-csv-exporter";
+import {
+  CopyEditLinkMenuItem,
+  DeleteParticipantModal,
+} from "@/features/poll/components/participant-dropdown";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import type { VoteType } from "@/features/poll/constants";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts, formatDuration } from "@/lib/datetime/format";
+import { RelativeTime } from "@/lib/datetime/relative-time";
+import { ChatBubble } from "./chat-bubble";
 import { PollSection, PollSectionEmpty } from "./poll-section";
 
 type Option = { id: string; startTime: Date; duration: number };
@@ -37,6 +59,10 @@ type Participant = {
   name: string;
   image: string | null;
   votes: { optionId: string; type: VoteType }[];
+  note: string | null;
+  respondedAt: Date;
+  viaInvite: boolean;
+  editUrl: string;
 };
 type Sort = "popularity" | "date";
 type View = "list" | "table";
@@ -140,7 +166,7 @@ export function PollResults({
       action={
         <div className="flex items-center gap-2">
           {rows.length > 0 ? <ExportCsvButton /> : null}
-          {rows.length > 0 && participants.length > 0 ? (
+          {rows.length > 0 ? (
             <SegmentedControl
               aria-label={t("pollResultsView", { defaultValue: "View" })}
               value={view}
@@ -191,7 +217,7 @@ export function PollResults({
             defaults="This poll has no dates."
           />
         </PollSectionEmpty>
-      ) : view === "table" && participants.length > 0 ? (
+      ) : view === "table" ? (
         <ResultsTable
           options={rows}
           participants={participants}
@@ -388,9 +414,12 @@ function VoteDot({ type }: { type?: VoteType }) {
 function PickButton({
   label,
   onClick,
+  best = false,
 }: {
   label: string;
   onClick: () => void;
+  /** The option has the most availability: the star shows gold. */
+  best?: boolean;
 }) {
   return (
     <Tooltip>
@@ -404,7 +433,10 @@ function PickButton({
           />
         }
       >
-        <StarIcon aria-hidden="true" />
+        <StarIcon
+          aria-hidden="true"
+          className={cn(best && "fill-amber-400 text-amber-500")}
+        />
       </TooltipTrigger>
       <TooltipContent>
         <Trans i18nKey="pollResultsPickTooltip" defaults="Pick this date" />
@@ -427,7 +459,7 @@ function AvailabilityBar({
   return (
     <div
       aria-hidden="true"
-      className="ms-auto flex h-1.5 w-full max-w-48 overflow-hidden rounded-full bg-foreground/10"
+      className="flex h-1.5 w-full overflow-hidden rounded-full bg-foreground/10"
     >
       <div
         className="h-full w-(--width) bg-green-500"
@@ -528,6 +560,26 @@ function optionZone(option: Option, floating: boolean) {
   return option.duration === 0 || floating ? { timeZone: "UTC" } : {};
 }
 
+/** A month heading, shared by the list and the table. */
+function MonthLabel({ month, year }: { month: string; year?: string }) {
+  return (
+    <span className="inline-flex gap-1 whitespace-nowrap text-muted-foreground text-xs uppercase">
+      <span>{month}</span>
+      {year ? <span>{year}</span> : null}
+    </span>
+  );
+}
+
+/** Weekday and day of the month, shared by the list and the table. */
+function DayLabel({ weekday, day }: { weekday: string; day: string }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
+      <span className="text-muted-foreground">{weekday}</span>
+      <span className="font-medium tabular-nums">{day}</span>
+    </span>
+  );
+}
+
 /** Weekday and day number as two cells, under the month's heading. */
 function OptionDay({
   option,
@@ -541,12 +593,7 @@ function OptionDay({
     locale,
     timeZone: optionZone(option, floating).timeZone ?? timeZone ?? "UTC",
   });
-  return (
-    <>
-      <span className="text-muted-foreground">{weekday}</span>
-      <span className="text-end tabular-nums">{day}</span>
-    </>
-  );
+  return <DayLabel weekday={weekday} day={day} />;
 }
 
 /**
@@ -566,7 +613,7 @@ function OptionTime({
   const zone = optionZone(option, floating);
   if (!showEnd) {
     return (
-      <span className="whitespace-nowrap text-end text-muted-foreground tabular-nums">
+      <span className="whitespace-nowrap text-end tabular-nums">
         {option.duration > 0
           ? formatDateTime(option.startTime, "time", zone)
           : null}
@@ -585,7 +632,7 @@ function OptionTime({
   const end = new Date(option.startTime.getTime() + option.duration * 60_000);
   return (
     <span className="col-span-3 grid grid-cols-subgrid gap-x-1.5 whitespace-nowrap text-muted-foreground tabular-nums">
-      <span className="text-end">
+      <span className="text-end text-foreground">
         {formatDateTime(option.startTime, "time", zone)}
       </span>
       <span>–</span>
@@ -712,7 +759,11 @@ function ResultsList({
         />
         {onPick && label ? (
           <span>
-            <PickButton label={label} onClick={() => onPick(option)} />
+            <PickButton
+              label={label}
+              onClick={() => onPick(option)}
+              best={best > 0 && yes + ifNeedBe === best}
+            />
           </span>
         ) : null}
       </li>
@@ -724,9 +775,9 @@ function ResultsList({
       className="grid gap-x-6 text-sm"
       style={{
         gridTemplateColumns: [
-          // Month, then the day (with times) or weekday and day number.
+          // Month, then the day.
           "auto",
-          ...(hasTimes ? ["auto"] : ["auto", "auto"]),
+          "auto",
           ...(showEndTime
             ? ["auto", "auto", "auto"]
             : hasTimes
@@ -744,11 +795,11 @@ function ResultsList({
           className="col-span-full grid grid-cols-subgrid border-button-outline border-b px-5 last:border-b-0"
         >
           {/* Level with the group's first option. */}
-          <div className="flex h-16 items-center gap-1 whitespace-nowrap">
-            <span>{month.parts.month}</span>
-            {showYear ? (
-              <span className="text-muted-foreground">{month.parts.year}</span>
-            ) : null}
+          <div className="flex h-16 items-center">
+            <MonthLabel
+              month={month.parts.month}
+              year={showYear ? month.parts.year : undefined}
+            />
           </div>
           <ol className="col-[2/-1] grid grid-cols-subgrid">
             {hasTimes
@@ -762,11 +813,11 @@ function ResultsList({
                     key={day.id}
                     className="col-span-full grid grid-cols-subgrid border-button-outline border-b last:border-b-0"
                   >
-                    <div className="flex h-16 items-center gap-1.5 whitespace-nowrap">
-                      <span className="text-muted-foreground">
-                        {day.parts.weekday}
-                      </span>
-                      <span className="tabular-nums">{day.parts.day}</span>
+                    <div className="flex h-16 items-center">
+                      <DayLabel
+                        weekday={day.parts.weekday}
+                        day={day.parts.day}
+                      />
                     </div>
                     <ol className="col-[2/-1] grid grid-cols-subgrid">
                       {day.options.map(row)}
@@ -797,37 +848,116 @@ function votesByOption(participant: Participant) {
   return new Map(participant.votes.map((vote) => [vote.optionId, vote.type]));
 }
 
-/** The avatar, with the name beside it when expanded; otherwise as a tooltip. */
-function ParticipantName({
+/**
+ * The participant's avatar, with the name beside it when expanded. Opens a
+ * menu with their note, when and how they responded, and their actions.
+ */
+function ParticipantCell({
   participant,
   expanded,
 }: {
   participant: Participant;
   expanded: boolean;
 }) {
-  const avatar = (
-    <OptimizedAvatarImage
-      size="sm"
-      name={participant.name}
-      src={participant.image ?? undefined}
-    />
-  );
-  if (expanded) {
-    return (
-      <span className="flex min-w-0 items-center gap-2">
-        {avatar}
-        <span className="min-w-0 truncate">{participant.name}</span>
-      </span>
-    );
-  }
+  const { t } = useTranslation();
+  const deleteDialog = useDialog();
+  const hasNote = Boolean(participant.note);
   return (
-    <Tooltip>
-      <TooltipTrigger render={<span className="inline-flex" />}>
-        {avatar}
-        <span className="sr-only">{participant.name}</span>
-      </TooltipTrigger>
-      <TooltipContent>{participant.name}</TooltipContent>
-    </Tooltip>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={
+            <button
+              type="button"
+              className={cn(
+                "-mx-1.5 -my-1 flex min-w-0 items-center gap-2 rounded-control-sm px-1.5 py-1 text-start hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-primary data-popup-open:bg-foreground/5",
+              )}
+              aria-label={
+                expanded
+                  ? undefined
+                  : hasNote
+                    ? t("pollResultsParticipantWithNote", {
+                        defaultValue: "{name}, left a note",
+                        name: participant.name,
+                      })
+                    : participant.name
+              }
+            />
+          }
+        >
+          <span className="relative inline-flex shrink-0">
+            <OptimizedAvatarImage
+              size="sm"
+              name={participant.name}
+              src={participant.image ?? undefined}
+            />
+          </span>
+          {expanded ? (
+            <>
+              <span className="min-w-0 truncate">{participant.name}</span>
+              {hasNote ? (
+                <MessageSquareTextIcon
+                  aria-label={t("pollResultsLeftNote", {
+                    defaultValue: "Left a note",
+                  })}
+                  className="size-3.5 shrink-0 text-muted-foreground"
+                />
+              ) : null}
+            </>
+          ) : null}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-72">
+          <div className="flex flex-col gap-3 p-2">
+            <div className="flex items-center gap-2.5">
+              <OptimizedAvatarImage
+                size="md"
+                name={participant.name}
+                src={participant.image ?? undefined}
+              />
+              <div className="min-w-0">
+                <p className="truncate font-medium text-sm">
+                  {participant.name}
+                </p>
+                <p className="flex items-center gap-1.5 text-muted-foreground text-xs">
+                  {participant.viaInvite ? (
+                    <Trans
+                      i18nKey="overviewViaInvite"
+                      defaults="Email invite"
+                    />
+                  ) : (
+                    <Trans i18nKey="overviewViaLink" defaults="Shared link" />
+                  )}
+                  <span aria-hidden="true">·</span>
+                  <RelativeTime value={participant.respondedAt} />
+                </p>
+              </div>
+            </div>
+            {participant.note ? (
+              <div className="text-sm">
+                <ChatBubble>{participant.note}</ChatBubble>
+              </div>
+            ) : null}
+          </div>
+          <DropdownMenuSeparator />
+          <CopyEditLinkMenuItem
+            editUrl={participant.editUrl}
+            participantName={participant.name}
+          />
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => deleteDialog.trigger()}
+          >
+            <TrashIcon />
+            <Trans i18nKey="delete" defaults="Delete" />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DeleteParticipantModal
+        {...deleteDialog.dialogProps}
+        participantId={participant.id}
+        participantName={participant.name}
+      />
+    </>
   );
 }
 
@@ -876,7 +1006,6 @@ function ResultsTable({
   options,
   participants,
   floating,
-  hasTimes,
   best,
   pickLabel,
   onPick,
@@ -893,13 +1022,11 @@ function ResultsTable({
   // The column under the pointer is highlighted top to bottom.
   const [hoveredId, setHoveredId] = React.useState<string | null>(null);
   const [namesExpanded, setNamesExpanded] = React.useState(false);
-  // Month and day headings span the consecutive options they share, as on
-  // the vote page's grid.
+  // Month headings span the consecutive options they share.
   const monthGroups = useDateGroups(options, { floating, by: "month" });
-  const dayGroups = useDateGroups(options, { floating, by: "day" });
   const showYear = spansYears(monthGroups);
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative overflow-x-auto overscroll-x-none">
       <table
         onMouseLeave={() => setHoveredId(null)}
         className="w-full border-separate border-spacing-0 text-sm [&_tbody_tr:last-child>*]:border-b-0 [&_td]:border-button-outline [&_th]:border-button-outline [&_th]:font-normal"
@@ -907,16 +1034,18 @@ function ResultsTable({
         <thead>
           <tr>
             <th
-              rowSpan={3}
+              rowSpan={2}
               className={cn(
                 "sticky left-0 z-10 w-px border-r border-b bg-gray-50 px-3 pb-3 align-bottom dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
                 namesExpanded ? "text-end" : "text-center",
               )}
             >
-              <ExpandNamesButton
-                expanded={namesExpanded}
-                onToggle={() => setNamesExpanded((value) => !value)}
-              />
+              {participants.length > 0 ? (
+                <ExpandNamesButton
+                  expanded={namesExpanded}
+                  onToggle={() => setNamesExpanded((value) => !value)}
+                />
+              ) : null}
             </th>
             {monthGroups.map((group) => (
               <th
@@ -925,42 +1054,10 @@ function ResultsTable({
                 colSpan={group.options.length}
                 className="h-11 border-r border-b px-3 text-start last:border-r-0"
               >
-                <span className="inline-flex gap-1">
-                  <span>{group.parts.month}</span>
-                  {showYear ? (
-                    <span className="text-muted-foreground">
-                      {group.parts.year}
-                    </span>
-                  ) : null}
-                </span>
-              </th>
-            ))}
-          </tr>
-          <tr>
-            {dayGroups.map((group) => (
-              <th
-                key={group.id}
-                scope="colgroup"
-                colSpan={group.options.length}
-                className={cn(
-                  "border-r pt-3 last:border-r-0",
-                  "pb-1",
-                  // A day with one option heads that column alone.
-                  group.options.length === 1 &&
-                    hoveredId === group.id &&
-                    "bg-foreground/[0.04]",
-                )}
-              >
-                {/* Centred over the first of the day's options, as on the vote page. */}
-                <span
-                  className="block text-center"
-                  style={{ width: `calc(100% / ${group.options.length})` }}
-                >
-                  <span className="block font-normal text-muted-foreground text-xs">
-                    {group.parts.weekday}
-                  </span>
-                  <span className="block">{group.parts.day}</span>
-                </span>
+                <MonthLabel
+                  month={group.parts.month}
+                  year={showYear ? group.parts.year : undefined}
+                />
               </th>
             ))}
           </tr>
@@ -970,19 +1067,31 @@ function ResultsTable({
               const end = new Date(
                 option.startTime.getTime() + option.duration * 60_000,
               );
+              const { weekday, day } = formatDateParts(option.startTime, {
+                locale,
+                timeZone: zone ?? "UTC",
+              });
               return (
                 <th
                   key={option.id}
                   scope="col"
                   onMouseEnter={() => setHoveredId(option.id)}
                   className={cn(
-                    "min-w-20 border-r border-b px-3 pt-2 pb-4 align-top font-normal last:border-r-0",
+                    "min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
                     hoveredId === option.id && "bg-foreground/[0.04]",
                   )}
                 >
-                  <span className="flex flex-col items-center gap-1.5">
-                    {hasTimes && option.duration > 0 ? (
-                      <span className="flex flex-col items-center gap-1.5 text-muted-foreground text-xs">
+                  <span className="flex flex-col items-center gap-2">
+                    {onPick && pickLabel ? (
+                      <PickButton
+                        label={pickLabel(option)}
+                        onClick={() => onPick(option)}
+                        best={best > 0 && availableCount(option) === best}
+                      />
+                    ) : null}
+                    <DayLabel weekday={weekday} day={day} />
+                    {option.duration > 0 ? (
+                      <span className="flex flex-col items-center gap-1 whitespace-nowrap tabular-nums">
                         <span>
                           {formatDateTime(option.startTime, "time", {
                             timeZone: zone,
@@ -992,7 +1101,7 @@ function ResultsTable({
                           <Tooltip>
                             <TooltipTrigger
                               delay={0}
-                              className="flex items-center gap-x-1"
+                              className="flex items-center gap-x-1 text-muted-foreground text-xs"
                             >
                               <ClockIcon
                                 aria-hidden="true"
@@ -1013,12 +1122,6 @@ function ResultsTable({
                         ) : null}
                       </span>
                     ) : null}
-                    {onPick && pickLabel ? (
-                      <PickButton
-                        label={pickLabel(option)}
-                        onClick={() => onPick(option)}
-                      />
-                    ) : null}
                   </span>
                 </th>
               );
@@ -1026,6 +1129,35 @@ function ResultsTable({
           </tr>
         </thead>
         <tbody>
+          {participants.length === 0 ? (
+            <tr>
+              <th
+                scope="row"
+                className="sticky left-0 z-10 border-r bg-gray-50 px-5 py-3 dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+              >
+                <span className="inline-block size-5" />
+              </th>
+              <td colSpan={options.length} className="px-5 py-10">
+                <EmptyState>
+                  <EmptyStateIcon>
+                    <UsersIcon />
+                  </EmptyStateIcon>
+                  <EmptyStateTitle>
+                    <Trans
+                      i18nKey="pollResultsTableEmpty"
+                      defaults="No responses yet"
+                    />
+                  </EmptyStateTitle>
+                  <EmptyStateDescription>
+                    <Trans
+                      i18nKey="pollResultsTableEmptyDescription"
+                      defaults="Share the poll to start collecting responses."
+                    />
+                  </EmptyStateDescription>
+                </EmptyState>
+              </td>
+            </tr>
+          ) : null}
           {participants.map((participant) => {
             const votes = votesByOption(participant);
             return (
@@ -1037,7 +1169,7 @@ function ResultsTable({
                     namesExpanded && "max-w-48",
                   )}
                 >
-                  <ParticipantName
+                  <ParticipantCell
                     participant={participant}
                     expanded={namesExpanded}
                   />
@@ -1066,43 +1198,45 @@ function ResultsTable({
             );
           })}
         </tbody>
-        <tfoot>
-          <tr>
-            <th
-              scope="row"
-              className="sticky left-0 z-10 border-t border-r bg-gray-50 px-5 py-2.5 text-start font-normal text-muted-foreground dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
-            >
-              <span className="sr-only">
-                <Trans
-                  i18nKey="pollResultsTableAvailable"
-                  defaults="Available"
-                />
-              </span>
-            </th>
-            {options.map((option) => {
-              const isBest = best > 0 && availableCount(option) === best;
-              return (
-                <td
-                  key={option.id}
-                  onMouseEnter={() => setHoveredId(option.id)}
-                  className={cn(
-                    "border-t border-r px-2 py-3 last:border-r-0",
-                    hoveredId === option.id && "bg-foreground/[0.04]",
-                  )}
-                >
-                  <span className="flex justify-center">
-                    <AvailabilityPopover
-                      option={option}
-                      participants={participants}
-                      floating={floating}
-                      highlight={isBest}
-                    />
-                  </span>
-                </td>
-              );
-            })}
-          </tr>
-        </tfoot>
+        {participants.length > 0 ? (
+          <tfoot>
+            <tr>
+              <th
+                scope="row"
+                className="sticky left-0 z-10 border-t border-r bg-gray-50 px-5 py-2.5 text-start font-normal text-muted-foreground dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+              >
+                <span className="sr-only">
+                  <Trans
+                    i18nKey="pollResultsTableAvailable"
+                    defaults="Available"
+                  />
+                </span>
+              </th>
+              {options.map((option) => {
+                const isBest = best > 0 && availableCount(option) === best;
+                return (
+                  <td
+                    key={option.id}
+                    onMouseEnter={() => setHoveredId(option.id)}
+                    className={cn(
+                      "border-t border-r px-2 py-3 last:border-r-0",
+                      hoveredId === option.id && "bg-foreground/[0.04]",
+                    )}
+                  >
+                    <span className="flex justify-center">
+                      <AvailabilityPopover
+                        option={option}
+                        participants={participants}
+                        floating={floating}
+                        highlight={isBest}
+                      />
+                    </span>
+                  </td>
+                );
+              })}
+            </tr>
+          </tfoot>
+        ) : null}
       </table>
     </div>
   );
