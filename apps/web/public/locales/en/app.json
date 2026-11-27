@@ -900,6 +900,7 @@
   "pollReopened": "Poll reopened",
   "pollResultsAvailableCount": "{count} of {total} available",
   "pollResultsEmpty": "This poll has no dates.",
+  "pollResultsFinalizeThisDate": "Finalize this date",
   "pollResultsHeading": "Results",
   "pollResultsLeftNote": "Left a note",
   "pollResultsNoOneAvailable": "No one can make it",

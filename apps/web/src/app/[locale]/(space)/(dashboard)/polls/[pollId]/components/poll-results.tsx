@@ -512,7 +512,12 @@ function AvailabilityPopover({
   const zone = optionZone(option, floating);
   const countLabel = (
     <>
-      <span aria-hidden="true">{count}</span>
+      <span aria-hidden="true">
+        {count}
+        <span className="text-muted-foreground text-xs">
+          /{participants.length}
+        </span>
+      </span>
       <span className="sr-only">
         <Trans
           i18nKey="pollResultsAvailableCount"
@@ -526,20 +531,6 @@ function AvailabilityPopover({
     "gap-1.5 px-2 tabular-nums",
     highlight ? "text-foreground" : "text-muted-foreground",
   );
-  // While a date can be picked, the count opens the finalize dialog, which
-  // shows the same breakdown with the action beside it.
-  if (onFinalize) {
-    return (
-      <Button
-        variant="ghost"
-        size="sm"
-        className={triggerClassName}
-        onClick={onFinalize}
-      >
-        {countLabel}
-      </Button>
-    );
-  }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
@@ -589,8 +580,24 @@ function AvailabilityPopover({
             participantsById={participantsById}
           />
         </div>
-        {participants.length > 0 ? (
+        {participants.length > 0 || onFinalize ? (
           <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
+            {onFinalize ? (
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={() => {
+                  // Closed first, so the finalize dialog isn't stacked on it.
+                  setOpen(false);
+                  onFinalize();
+                }}
+              >
+                <Trans
+                  i18nKey="pollResultsFinalizeThisDate"
+                  defaults="Finalize this date"
+                />
+              </Button>
+            ) : null}
             {participants.length > 0 ? (
               <p className="text-center text-muted-foreground">
                 <Trans
