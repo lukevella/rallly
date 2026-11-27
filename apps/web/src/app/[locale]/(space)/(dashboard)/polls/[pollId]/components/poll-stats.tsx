@@ -3,7 +3,12 @@
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
-import { StarIcon, UsersIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  StarIcon,
+  UsersIcon,
+} from "lucide-react";
 import React from "react";
 import {
   StatCard,
@@ -15,7 +20,7 @@ import {
 } from "@/components/stat-card";
 import type { VoteType } from "@/features/poll/constants";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { FinalizeDialog } from "./finalize-dialog";
 import { optionZone } from "./poll-results";
@@ -112,6 +117,11 @@ export function PollStats({
 }
 
 /** The date with the most availability, or how many tie for it. */
+/**
+ * The date with the most availability. When several tie, it opens on the
+ * recommended one (most yes, then fewest if need be, then earliest) and the
+ * arrows step through the others; Finalize applies to the date shown.
+ */
 function BestDateCard({
   options,
   participants,
@@ -123,17 +133,28 @@ function BestDateCard({
   timeZone: string | null;
   canFinalize: boolean;
 }) {
+  const { t } = useTranslation();
   const { formatDateTime } = useDateTime();
   const finalizeDialog = useDialog();
-  const ranked = React.useMemo(
-    () => rankOptionsByPopularity({ options, participants }),
-    [options, participants],
-  );
-  const availability = (option: (typeof ranked)[number]) =>
-    option.votes.yes.length + option.votes.ifNeedBe.length;
-  const best = ranked[0] ? availability(ranked[0]) : 0;
-  const top = best > 0 ? ranked.filter((o) => availability(o) === best) : [];
-  const single = top.length === 1 ? top[0] : undefined;
+  const top = React.useMemo(() => {
+    const ranked = rankOptionsByPopularity({ options, participants });
+    const availability = (option: (typeof ranked)[number]) =>
+      option.votes.yes.length + option.votes.ifNeedBe.length;
+    const best = ranked[0] ? availability(ranked[0]) : 0;
+    if (best === 0) {
+      return [];
+    }
+    return ranked
+      .filter((option) => availability(option) === best)
+      .sort(
+        (a, b) =>
+          b.votes.yes.length - a.votes.yes.length ||
+          a.votes.ifNeedBe.length - b.votes.ifNeedBe.length ||
+          a.startTime.getTime() - b.startTime.getTime(),
+      );
+  }, [options, participants]);
+  const [index, setIndex] = React.useState(0);
+  const current = top[Math.min(index, top.length - 1)];
   const floating = timeZone === null;
 
   return (
@@ -147,38 +168,30 @@ function BestDateCard({
             <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
           </span>
         </StatCardLabel>
-        {canFinalize && single ? (
+        {canFinalize && current ? (
           <Button size="sm" onClick={finalizeDialog.trigger}>
             <Trans i18nKey="pollStatsFinalize" defaults="Finalize" />
           </Button>
         ) : null}
       </StatCardHeader>
       <StatCardFooter className="items-end">
-        {single ? (
+        {current ? (
           <StatCardValue className="truncate text-xl">
             {formatDateTime(
-              single.startTime,
+              current.startTime,
               "weekdayMonthDayShort",
-              optionZone(single, floating),
+              optionZone(current, floating),
             )}
-            {single.duration > 0 ? (
+            {current.duration > 0 ? (
               <span className="text-muted-foreground">
                 {" "}
                 {formatDateTime(
-                  single.startTime,
+                  current.startTime,
                   "time",
-                  optionZone(single, floating),
+                  optionZone(current, floating),
                 )}
               </span>
             ) : null}
-          </StatCardValue>
-        ) : top.length > 1 ? (
-          <StatCardValue className="text-xl">
-            <Trans
-              i18nKey="pollStatsTied"
-              defaults="{count} dates tied"
-              values={{ count: top.length }}
-            />
           </StatCardValue>
         ) : (
           <span className="text-muted-foreground text-sm">
@@ -188,9 +201,45 @@ function BestDateCard({
             />
           </span>
         )}
+        {top.length > 1 ? (
+          <div className="flex shrink-0 items-center gap-1">
+            <span
+              className="text-muted-foreground text-sm tabular-nums"
+              aria-live="polite"
+            >
+              <Trans
+                i18nKey="pollStatsTiedPosition"
+                defaults="{position} of {count} tied"
+                values={{ position: index + 1, count: top.length }}
+              />
+            </span>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label={t("pollStatsPreviousTiedDate", {
+                defaultValue: "Previous tied date",
+              })}
+              disabled={index === 0}
+              onClick={() => setIndex((i) => i - 1)}
+            >
+              <ChevronLeftIcon aria-hidden="true" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label={t("pollStatsNextTiedDate", {
+                defaultValue: "Next tied date",
+              })}
+              disabled={index === top.length - 1}
+              onClick={() => setIndex((i) => i + 1)}
+            >
+              <ChevronRightIcon aria-hidden="true" />
+            </Button>
+          </div>
+        ) : null}
       </StatCardFooter>
-      {canFinalize && single ? (
-        <FinalizeDialog {...finalizeDialog.dialogProps} optionId={single.id} />
+      {canFinalize && current ? (
+        <FinalizeDialog {...finalizeDialog.dialogProps} optionId={current.id} />
       ) : null}
     </StatCard>
   );
