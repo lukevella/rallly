@@ -547,17 +547,22 @@ function DetailRow({
 export function SummaryStep({
   option,
   showDate = true,
+  showLocation = true,
+  showPendingLink = false,
 }: {
   option: RankedOption;
   /** Off where the date is already said, leaving just the time. */
   showDate?: boolean;
+  showLocation?: boolean;
+  /** Says a provider's meeting link is created on finalizing. */
+  showPendingLink?: boolean;
 }) {
   const poll = usePoll();
   const conferencing = poll.conferencing;
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4">
       <PickedDate option={option} showDate={showDate} />
-      {poll.location ? (
+      {showLocation && poll.location ? (
         <DetailRow icon={<MapPinIcon />}>{poll.location}</DetailRow>
       ) : null}
       {conferencing ? (
@@ -588,6 +593,13 @@ export function SummaryStep({
               >
                 {conferencing.uri}
               </a>
+            </div>
+          ) : showPendingLink && conferencing.provider !== "custom" ? (
+            <div className="text-muted-foreground">
+              <Trans
+                i18nKey="finalizeConferencingLinkPending"
+                defaults="The link will be generated after you finalize."
+              />
             </div>
           ) : null}
         </DetailRow>
