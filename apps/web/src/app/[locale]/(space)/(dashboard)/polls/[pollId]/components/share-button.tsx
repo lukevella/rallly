@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@rallly/ui/button";
-import { ShareIcon } from "lucide-react";
+import { MailIcon } from "lucide-react";
 import {
   SharePollDialog,
   useSharePollDialog,
@@ -20,8 +20,8 @@ export function ShareButton({
   return (
     <>
       <Button size="sm" onClick={() => share.open("manual")}>
-        <ShareIcon data-icon="inline-start" aria-hidden="true" />
-        <Trans i18nKey="share" defaults="Share" />
+        <MailIcon data-icon="inline-start" aria-hidden="true" />
+        <Trans i18nKey="pollStatsInviteByEmail" defaults="Invite by email" />
       </Button>
       <SharePollDialog
         {...share.dialog.dialogProps}

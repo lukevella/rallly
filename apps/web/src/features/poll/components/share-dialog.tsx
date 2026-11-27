@@ -52,7 +52,14 @@ export function SharePollDialog({
       <DialogContent size="lg" data-testid="invite-participant-dialog">
         <DialogHeader>
           <DialogTitle>
-            <Trans i18nKey="share" defaults="Share" />
+            {inviteLink ? (
+              <Trans i18nKey="share" defaults="Share" />
+            ) : (
+              <Trans
+                i18nKey="shareDialogInviteByEmail"
+                defaults="Invite by email"
+              />
+            )}
           </DialogTitle>
           <DialogDescription>
             {inviteLink ? (
