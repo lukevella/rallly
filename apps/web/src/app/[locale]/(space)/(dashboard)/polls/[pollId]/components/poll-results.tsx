@@ -260,8 +260,8 @@ export function PollResults({
           pickLabel={
             canPick
               ? (option) =>
-                  t("pollResultsFinalizeDate", {
-                    defaultValue: "Finalize {date}",
+                  t("pollResultsPickDate", {
+                    defaultValue: "Pick {date}",
                     date: formatDateTime(
                       option.startTime,
                       "weekdayMonthDay",
@@ -489,10 +489,7 @@ function PickButton({
         <StarIcon aria-hidden="true" />
       </TooltipTrigger>
       <TooltipContent>
-        <Trans
-          i18nKey="pollResultsFinalizeThisDate"
-          defaults="Finalize this date"
-        />
+        <Trans i18nKey="pollResultsPickThisDate" defaults="Pick this date" />
       </TooltipContent>
     </Tooltip>
   );
@@ -629,7 +626,6 @@ function AvailabilityPopover({
           <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
             {onFinalize ? (
               <Button
-                variant="primary"
                 className="w-full"
                 onClick={() => {
                   // Closed first, so the finalize dialog isn't stacked on it.
@@ -637,9 +633,10 @@ function AvailabilityPopover({
                   onFinalize();
                 }}
               >
+                <StarIcon data-icon="inline-start" aria-hidden="true" />
                 <Trans
-                  i18nKey="pollResultsFinalizeThisDate"
-                  defaults="Finalize this date"
+                  i18nKey="pollResultsPickThisDate"
+                  defaults="Pick this date"
                 />
               </Button>
             ) : null}
