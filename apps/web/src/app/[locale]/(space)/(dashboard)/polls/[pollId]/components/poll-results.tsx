@@ -448,7 +448,7 @@ function AvailabilityBar({
   return (
     <div
       aria-hidden="true"
-      className="flex h-1 w-full overflow-hidden rounded-full bg-foreground/10 dark:bg-black/30"
+      className="flex h-1 w-full overflow-hidden rounded-full bg-foreground/10"
     >
       <div
         className="h-full w-(--width) bg-green-500"
@@ -552,15 +552,6 @@ function AvailabilityPopover({
         </div>
         {participants.length > 0 || onFinalize ? (
           <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
-            {participants.length > 0 ? (
-              <p className="text-center text-muted-foreground">
-                <Trans
-                  i18nKey="pollStatsCanMakeItOfTotal"
-                  defaults="{count} of {total} can make it"
-                  values={{ count, total: participants.length }}
-                />
-              </p>
-            ) : null}
             {onFinalize ? (
               <Button
                 variant="primary"
@@ -576,6 +567,15 @@ function AvailabilityPopover({
                   defaults="Finalize this date"
                 />
               </Button>
+            ) : null}
+            {participants.length > 0 ? (
+              <p className="text-center text-muted-foreground">
+                <Trans
+                  i18nKey="pollStatsCanMakeItOfTotal"
+                  defaults="{count} of {total} can make it"
+                  values={{ count, total: participants.length }}
+                />
+              </p>
             ) : null}
           </div>
         ) : null}
