@@ -37,13 +37,13 @@ export function PollAdminViewSwitch({
         aria-hidden="true"
         className={cn(
           "flex h-3 w-5 items-center rounded-full p-0.5 transition-colors",
-          checked ? "bg-foreground/70" : "bg-foreground/15",
+          checked ? "bg-green-500" : "bg-foreground/15",
         )}
       >
         <span
           className={cn(
-            "size-2 rounded-full bg-background transition-transform motion-reduce:transition-none",
-            checked && "translate-x-2",
+            "size-2 rounded-full transition-transform motion-reduce:transition-none",
+            checked ? "translate-x-2 bg-white" : "bg-background",
           )}
         />
       </span>
