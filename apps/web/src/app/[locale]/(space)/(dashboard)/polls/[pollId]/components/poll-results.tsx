@@ -228,6 +228,14 @@ export function PollResults({
           hasTimes={hasTimes}
           best={best}
           showDuration={showEndTime}
+          onPick={
+            canPick
+              ? (option) => {
+                  setPickedOptionId(option.id);
+                  finalizeDialog.trigger();
+                }
+              : undefined
+          }
         />
       ) : (
         <ResultsList
@@ -480,6 +488,7 @@ function AvailabilityPopover({
   participants,
   floating,
   highlight,
+  onFinalize,
 }: {
   option: Option & {
     votes: { yes: string[]; ifNeedBe: string[]; no: string[] };
@@ -487,8 +496,11 @@ function AvailabilityPopover({
   participants: Participant[];
   floating: boolean;
   highlight: boolean;
+  /** Omitted once a date can no longer be picked. */
+  onFinalize?: () => void;
 }) {
   const { formatDateTime } = useDateTime();
+  const [open, setOpen] = React.useState(false);
   const count = option.votes.yes.length + option.votes.ifNeedBe.length;
   const participantsById = React.useMemo(
     () =>
@@ -497,7 +509,7 @@ function AvailabilityPopover({
   );
   const zone = optionZone(option, floating);
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={
           <Button
@@ -524,20 +536,37 @@ function AvailabilityPopover({
         align="end"
         className="w-96 max-w-[calc(100vw-2rem)] gap-4"
       >
-        <div>
-          <p className="font-medium">
-            {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
-          </p>
-          {option.duration > 0 ? (
-            <p className="text-muted-foreground tabular-nums">
-              {formatDateTime(option.startTime, "time", zone)}
-              {" – "}
-              {formatDateTime(
-                new Date(option.startTime.getTime() + option.duration * 60_000),
-                "time",
-                zone,
-              )}
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="font-medium">
+              {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
             </p>
+            {option.duration > 0 ? (
+              <p className="text-muted-foreground tabular-nums">
+                {formatDateTime(option.startTime, "time", zone)}
+                {" – "}
+                {formatDateTime(
+                  new Date(
+                    option.startTime.getTime() + option.duration * 60_000,
+                  ),
+                  "time",
+                  zone,
+                )}
+              </p>
+            ) : null}
+          </div>
+          {onFinalize ? (
+            <Button
+              size="sm"
+              className="shrink-0"
+              onClick={() => {
+                // Closed first, so the finalize dialog isn't stacked on it.
+                setOpen(false);
+                onFinalize();
+              }}
+            >
+              <Trans i18nKey="pollResultsFinalizeDate" defaults="Finalize" />
+            </Button>
           ) : null}
         </div>
         <VoteBreakdown
@@ -752,6 +781,7 @@ function ResultsList({
           participants={participants}
           floating={floating}
           highlight={best > 0 && yes + ifNeedBe === best}
+          onFinalize={onPick ? () => onPick(option) : undefined}
         />
         {onPick && label ? (
           <span>
@@ -1003,9 +1033,12 @@ function ResultsTable({
   floating,
   best,
   showDuration,
+  onPick,
 }: TableProps & {
   /** Only when options differ in length; a shared one is in the details. */
   showDuration: boolean;
+  /** Omitted once a date can no longer be picked. */
+  onPick?: (option: TableOption) => void;
 }) {
   const { formatDateTime } = useDateTime();
   const { locale, timeZone } = useDateTimeConfig();
@@ -1218,6 +1251,7 @@ function ResultsTable({
                           participants={participants}
                           floating={floating}
                           highlight={isBest}
+                          onFinalize={onPick ? () => onPick(option) : undefined}
                         />
                       ) : null}
                     </span>
