@@ -333,17 +333,14 @@ function VoteBreakdown({
   ];
 
   return (
-    <div className="@container">
-      <div className="grid @md:grid-cols-2 gap-6">
-        <BreakdownList
-          entries={available}
-          participantsById={participantsById}
-        />
-        <BreakdownList
-          entries={unavailable}
-          participantsById={participantsById}
-        />
-      </div>
+    // Available on the left, unavailable on the right; each column keeps its
+    // side even when the other is empty.
+    <div className="grid grid-cols-2 gap-x-6">
+      <BreakdownList entries={available} participantsById={participantsById} />
+      <BreakdownList
+        entries={unavailable}
+        participantsById={participantsById}
+      />
     </div>
   );
 }
@@ -355,11 +352,8 @@ function BreakdownList({
   entries: { id: string; type?: VoteType }[];
   participantsById: Map<string, Participant>;
 }) {
-  if (entries.length === 0) {
-    return null;
-  }
   return (
-    <ul className="flex flex-col gap-2.5">
+    <ul className="flex min-w-0 flex-col gap-2.5">
       {entries.map(({ id, type }) => {
         const participant = participantsById.get(id);
         return participant ? (
@@ -559,7 +553,10 @@ function AvailabilityPopover({
         </span>
         <ChevronDownIcon aria-hidden="true" className="size-3.5 opacity-60" />
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 gap-4">
+      <PopoverContent
+        align="end"
+        className="w-96 max-w-[calc(100vw-2rem)] gap-4"
+      >
         <div>
           <p className="font-medium">
             {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
