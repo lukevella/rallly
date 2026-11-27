@@ -184,7 +184,7 @@ function FinalizeContent({
       </DialogHeader>
       <div className="flex flex-col">
         {/* Inset like the notify card's content, so the two line up. */}
-        <div className="px-6 pb-6">
+        <div className="px-6 pt-2 pb-6">
           <SummaryStep option={option} />
         </div>
         {participants.length > 0 ? (
