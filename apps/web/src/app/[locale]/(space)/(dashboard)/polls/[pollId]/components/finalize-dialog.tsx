@@ -191,7 +191,12 @@ function FinalizeContent({
             }}
           />
         </DialogTitle>
-        <DialogDescription>{poll.title}</DialogDescription>
+        <DialogDescription>
+          <Trans
+            i18nKey="finalizeDialogDescription"
+            defaults="Select which participants to notify"
+          />
+        </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col">
         <div className="pt-2 pb-6">
@@ -203,19 +208,11 @@ function FinalizeContent({
           />
         </div>
         {participants.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            <p className="text-sm">
-              <Trans
-                i18nKey="finalizeDialogSelectWhoToNotify"
-                defaults="Select who to notify:"
-              />
-            </p>
-            <NotifyStep
-              optionId={option.id}
-              selectedIds={notifyIds}
-              onChange={setNotifyIds}
-            />
-          </div>
+          <NotifyStep
+            optionId={option.id}
+            selectedIds={notifyIds}
+            onChange={setNotifyIds}
+          />
         ) : (
           <p className="rounded-xl border border-card-border p-4 text-muted-foreground text-sm">
             <Trans
