@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
@@ -18,8 +19,12 @@ import {
   StatCardStack,
   StatCardValue,
 } from "@/components/stat-card";
+import { usePoll } from "@/features/poll/client";
 import type { VoteType } from "@/features/poll/constants";
-import { rankOptionsByPopularity } from "@/features/poll/utils";
+import {
+  pollEventProperties,
+  rankOptionsByPopularity,
+} from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { FinalizeDialog } from "./finalize-dialog";
@@ -135,6 +140,7 @@ function BestDateCard({
   canFinalize: boolean;
 }) {
   const { t } = useTranslation();
+  const poll = usePoll();
   const { formatDateTime } = useDateTime();
   const finalizeDialog = useDialog();
   const top = React.useMemo(() => {
@@ -204,7 +210,19 @@ function BestDateCard({
             </div>
           ) : null}
           {canFinalize && current ? (
-            <Button size="sm" onClick={finalizeDialog.trigger}>
+            <Button
+              size="sm"
+              onClick={() => {
+                posthog?.capture("poll_finalize:dialog_open", {
+                  source: "best_date_card",
+                  ...pollEventProperties({
+                    pollId: poll.id,
+                    spaceId: poll.spaceId,
+                  }),
+                });
+                finalizeDialog.trigger();
+              }}
+            >
               <Trans i18nKey="pollStatsFinalize" defaults="Finalize" />
             </Button>
           ) : null}

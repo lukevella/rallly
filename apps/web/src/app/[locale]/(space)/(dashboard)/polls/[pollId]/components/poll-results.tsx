@@ -46,7 +46,10 @@ import {
 } from "@/features/poll/components/participant-dropdown";
 import VoteIcon from "@/features/poll/components/vote-icon";
 import type { VoteType } from "@/features/poll/constants";
-import { rankOptionsByPopularity } from "@/features/poll/utils";
+import {
+  pollEventProperties,
+  rankOptionsByPopularity,
+} from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts, formatDuration } from "@/lib/datetime/format";
@@ -231,6 +234,14 @@ export function PollResults({
           onPick={
             canPick
               ? (option) => {
+                  posthog?.capture("poll_finalize:dialog_open", {
+                    source: "results_count",
+                    view,
+                    ...pollEventProperties({
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                    }),
+                  });
                   setPickedOptionId(option.id);
                   finalizeDialog.trigger();
                 }
@@ -248,6 +259,14 @@ export function PollResults({
           onPick={
             canPick
               ? (option) => {
+                  posthog?.capture("poll_finalize:dialog_open", {
+                    source: "results_count",
+                    view,
+                    ...pollEventProperties({
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                    }),
+                  });
                   setPickedOptionId(option.id);
                   finalizeDialog.trigger();
                 }
@@ -491,28 +510,44 @@ function AvailabilityPopover({
     [participants],
   );
   const zone = optionZone(option, floating);
+  const countLabel = (
+    <>
+      <span aria-hidden="true">{count}</span>
+      <span className="sr-only">
+        <Trans
+          i18nKey="pollResultsAvailableCount"
+          defaults="{count} of {total} available"
+          values={{ count, total: participants.length }}
+        />
+      </span>
+    </>
+  );
+  const triggerClassName = cn(
+    "gap-1.5 px-2 tabular-nums",
+    highlight ? "text-foreground" : "text-muted-foreground",
+  );
+  // While a date can be picked, the count opens the finalize dialog, which
+  // shows the same breakdown with the action beside it.
+  if (onFinalize) {
+    return (
+      <Button
+        variant="ghost"
+        size="sm"
+        className={triggerClassName}
+        onClick={onFinalize}
+      >
+        {countLabel}
+      </Button>
+    );
+  }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "gap-1.5 px-2 tabular-nums",
-              highlight ? "text-foreground" : "text-muted-foreground",
-            )}
-          />
+          <Button variant="ghost" size="sm" className={triggerClassName} />
         }
       >
-        <span aria-hidden="true">{count}</span>
-        <span className="sr-only">
-          <Trans
-            i18nKey="pollResultsAvailableCount"
-            defaults="{count} of {total} available"
-            values={{ count, total: participants.length }}
-          />
-        </span>
+        {countLabel}
         <ChevronDownIcon aria-hidden="true" className="size-3.5 opacity-60" />
       </PopoverTrigger>
       <PopoverContent
@@ -554,24 +589,8 @@ function AvailabilityPopover({
             participantsById={participantsById}
           />
         </div>
-        {participants.length > 0 || onFinalize ? (
+        {participants.length > 0 ? (
           <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
-            {onFinalize ? (
-              <Button
-                variant="primary"
-                className="w-full"
-                onClick={() => {
-                  // Closed first, so the finalize dialog isn't stacked on it.
-                  setOpen(false);
-                  onFinalize();
-                }}
-              >
-                <Trans
-                  i18nKey="pollResultsFinalizeThisDate"
-                  defaults="Finalize this date"
-                />
-              </Button>
-            ) : null}
             {participants.length > 0 ? (
               <p className="text-center text-muted-foreground">
                 <Trans
