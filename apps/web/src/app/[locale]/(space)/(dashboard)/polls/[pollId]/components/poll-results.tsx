@@ -1104,7 +1104,7 @@ function ResultsTable({
                       "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                   )}
                 >
-                  <span className="flex flex-col items-center gap-2">
+                  <span className="flex flex-col items-center gap-1 text-xs">
                     <DayLabel weekday={weekday} day={day} />
                     {option.duration > 0 ? (
                       <span className="flex flex-col items-center gap-1 whitespace-nowrap tabular-nums">
