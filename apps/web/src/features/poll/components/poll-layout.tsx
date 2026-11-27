@@ -7,47 +7,35 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@rallly/ui/breadcrumb";
-import { Button } from "@rallly/ui/button";
-import { BarChart2Icon, SparklesIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { BarChart2Icon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import type React from "react";
 import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
+import { PollAdminViewSwitch } from "@/features/poll/components/poll-admin-view-switch";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { PollPageShell } from "@/features/poll/components/poll-page-shell";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { Trans } from "@/i18n/client";
 import { useFeatureFlag } from "@/lib/feature-flags/client";
-import { setPollAdminView } from "@/lib/poll-admin-view-client";
 
 /**
- * Opts this browser into the new poll admin and takes the host there. Only
- * space polls have it: the new admin needs a signed in host.
+ * The switch into the new poll admin. Only space polls have it: the new
+ * admin needs a signed in host.
  */
-function TryNewViewButton() {
+function NewViewSwitch() {
   const poll = usePoll();
-  const router = useRouter();
   const enabled = useFeatureFlag("pollAdmin");
   if (!enabled || !poll.spaceId) return null;
-  return (
-    <Button
-      onClick={() => {
-        setPollAdminView({ view: "new", pollId: poll.id });
-        router.push(`/polls/${poll.id}`);
-      }}
-    >
-      <SparklesIcon data-icon="inline-start" />
-      <Trans i18nKey="pollAdminTryNewView" defaults="Try the new view" />
-    </Button>
-  );
+  return <PollAdminViewSwitch pollId={poll.id} checked={false} />;
 }
 
 const AdminControls = () => {
   return (
     <>
-      <TryNewViewButton />
+      <NewViewSwitch />
       <NotificationToggle />
       <ManagePoll />
       <PollPrimaryActions />

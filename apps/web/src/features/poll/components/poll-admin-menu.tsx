@@ -16,7 +16,6 @@ import {
   PencilIcon,
   PlayIcon,
   TrashIcon,
-  UndoIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Link } from "@/components/link";
@@ -31,7 +30,6 @@ import {
   showOpenPollLimit,
 } from "@/features/poll/limit/client";
 import { Trans, useTranslation } from "@/i18n/client";
-import { setPollAdminView } from "@/lib/poll-admin-view-client";
 import { trpc } from "@/trpc/client";
 
 /** The poll admin header's overflow menu. Reads the poll from the poll context. */
@@ -113,20 +111,6 @@ export function PollAdminMenu() {
               <Trans i18nKey="reopenPoll" defaults="Reopen poll" />
             </DropdownMenuItem>
           ) : null}
-          <DropdownMenuSeparator />
-          {/* Back to the legacy admin, for as long as both exist */}
-          <DropdownMenuItem
-            onClick={() => {
-              setPollAdminView({ view: "legacy", pollId: poll.id });
-              router.push(`/poll/${poll.id}`);
-            }}
-          >
-            <UndoIcon />
-            <Trans
-              i18nKey="pollAdminSwitchToOldView"
-              defaults="Switch to the old view"
-            />
-          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"

@@ -874,7 +874,6 @@
   "pollActivityVotesHidden": "Votes hidden",
   "pollActivityVotesShown": "Votes shown",
   "pollAdminMenu": "Poll options",
-  "pollAdminSwitchToOldView": "Switch to the old view",
   "pollAdminTryNewView": "Try the new view",
   "pollAutoClosedBadge": "Automatically closed",
   "pollAutoClosedDescription": "This poll was closed automatically because all of its dates have passed. No more responses are being accepted.",

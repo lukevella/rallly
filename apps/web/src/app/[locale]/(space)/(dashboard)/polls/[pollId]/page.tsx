@@ -9,6 +9,7 @@ import {
 } from "@/components/page";
 import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
+import { PollAdminViewSwitch } from "@/features/poll/components/poll-admin-view-switch";
 import { loadPollInvites } from "@/features/poll/invite/loaders";
 import { loadAdminPoll, loadPollActivity } from "@/features/poll/loaders";
 import { loadActiveSpace } from "@/features/space/loaders";
@@ -82,6 +83,7 @@ export default async function Page({
         >
           <div className="flex items-center gap-1.5">
             <StickyShareActions inviteLink={poll.inviteLink} />
+            <PollAdminViewSwitch pollId={poll.id} checked />
             <PollAdminMenu />
           </div>
         </PollProvider>
