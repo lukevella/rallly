@@ -532,12 +532,7 @@ function AvailabilityPopover({
           />
         }
       >
-        <span aria-hidden="true">
-          {count}
-          <span className="text-muted-foreground text-xs">
-            /{participants.length}
-          </span>
-        </span>
+        <span aria-hidden="true">{count}</span>
         <span className="sr-only">
           <Trans
             i18nKey="pollResultsAvailableCount"
