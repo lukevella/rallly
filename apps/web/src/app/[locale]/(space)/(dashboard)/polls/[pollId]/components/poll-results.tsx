@@ -26,6 +26,7 @@ import {
   DownloadIcon,
   ListIcon,
   MessageSquareTextIcon,
+  StarIcon,
   Table2Icon,
   TrashIcon,
   UsersIcon,
@@ -94,6 +95,7 @@ export function PollResults({
   const poll = usePoll();
   const [view, setView] = React.useState<View>("list");
   const finalizeDialog = useDialog();
+  const [pickedOptionId, setPickedOptionId] = React.useState<string>();
 
   const ranked = React.useMemo(
     () => rankOptionsByPopularity({ options, participants }),
@@ -127,22 +129,6 @@ export function PollResults({
         )
       : [];
   const topOption = topOptions.length === 1 ? topOptions[0] : undefined;
-  // The date selected for finalizing starts on the recommended one: most yes,
-  // then fewest if need be, then earliest.
-  const recommendedId = React.useMemo(() => {
-    const pool = topOptions.length > 0 ? topOptions : ranked;
-    return [...pool].sort(
-      (a, b) =>
-        b.votes.yes.length - a.votes.yes.length ||
-        a.votes.ifNeedBe.length - b.votes.ifNeedBe.length ||
-        a.startTime.getTime() - b.startTime.getTime(),
-    )[0]?.id;
-  }, [topOptions, ranked]);
-  const [chosenId, setChosenId] = React.useState<string>();
-  const selectedId =
-    chosenId && options.some((option) => option.id === chosenId)
-      ? chosenId
-      : recommendedId;
   const summary = topOption ? (
     <Trans
       i18nKey="pollResultsSummaryBest"
@@ -228,23 +214,6 @@ export function PollResults({
               </SegmentedControlItem>
             </SegmentedControl>
           ) : null}
-          {canPick && selectedId ? (
-            <Button
-              onClick={() => {
-                posthog?.capture("poll_finalize:dialog_open", {
-                  source: "results_header",
-                  view,
-                  ...pollEventProperties({
-                    pollId: poll.id,
-                    spaceId: poll.spaceId,
-                  }),
-                });
-                finalizeDialog.trigger();
-              }}
-            >
-              <Trans i18nKey="pollStatsFinalize" defaults="Finalize" />
-            </Button>
-          ) : null}
         </div>
       }
     >
@@ -263,8 +232,22 @@ export function PollResults({
           hasTimes={hasTimes}
           best={best}
           showDuration={showEndTime}
-          selectedId={canPick ? selectedId : undefined}
-          onSelect={canPick ? (option) => setChosenId(option.id) : undefined}
+          onPick={
+            canPick
+              ? (option) => {
+                  posthog?.capture("poll_finalize:dialog_open", {
+                    source: "results_count",
+                    view,
+                    ...pollEventProperties({
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                    }),
+                  });
+                  setPickedOptionId(option.id);
+                  finalizeDialog.trigger();
+                }
+              : undefined
+          }
         />
       ) : (
         <ResultsList
@@ -274,12 +257,42 @@ export function PollResults({
           hasTimes={hasTimes}
           showEndTime={showEndTime}
           best={best}
-          selectedId={canPick ? selectedId : undefined}
-          onSelect={canPick ? (option) => setChosenId(option.id) : undefined}
+          pickLabel={
+            canPick
+              ? (option) =>
+                  t("pollResultsPick", {
+                    defaultValue: "Pick {date}",
+                    date: formatDateTime(
+                      option.startTime,
+                      "weekdayMonthDay",
+                      optionZone(option, timeZone === null),
+                    ),
+                  })
+              : undefined
+          }
+          onPick={
+            canPick
+              ? (option, source) => {
+                  posthog?.capture("poll_finalize:dialog_open", {
+                    source: source ?? "results_count",
+                    view,
+                    ...pollEventProperties({
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                    }),
+                  });
+                  setPickedOptionId(option.id);
+                  finalizeDialog.trigger();
+                }
+              : undefined
+          }
         />
       )}
-      {canPick && selectedId ? (
-        <FinalizeDialog {...finalizeDialog.dialogProps} optionId={selectedId} />
+      {canPick && pickedOptionId ? (
+        <FinalizeDialog
+          {...finalizeDialog.dialogProps}
+          optionId={pickedOptionId}
+        />
       ) : null}
     </PollSection>
   );
@@ -454,6 +467,34 @@ function ViewOption({
   );
 }
 
+function PickButton({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={label}
+            onClick={onClick}
+          />
+        }
+      >
+        <StarIcon aria-hidden="true" />
+      </TooltipTrigger>
+      <TooltipContent>
+        <Trans i18nKey="pollResultsPickTooltip" defaults="Pick this date" />
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 /** Share of respondents available: yes first, then if need be. */
 function AvailabilityBar({
   yes,
@@ -491,6 +532,7 @@ function AvailabilityPopover({
   participants,
   floating,
   highlight,
+  onFinalize,
 }: {
   option: Option & {
     votes: { yes: string[]; ifNeedBe: string[]; no: string[] };
@@ -498,6 +540,8 @@ function AvailabilityPopover({
   participants: Participant[];
   floating: boolean;
   highlight: boolean;
+  /** Omitted once a date can no longer be picked. */
+  onFinalize?: () => void;
 }) {
   const { formatDateTime } = useDateTime();
   const [open, setOpen] = React.useState(false);
@@ -578,8 +622,24 @@ function AvailabilityPopover({
             participantsById={participantsById}
           />
         </div>
-        {participants.length > 0 ? (
+        {participants.length > 0 || onFinalize ? (
           <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
+            {onFinalize ? (
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={() => {
+                  // Closed first, so the finalize dialog isn't stacked on it.
+                  setOpen(false);
+                  onFinalize();
+                }}
+              >
+                <Trans
+                  i18nKey="pollResultsFinalizeThisDate"
+                  defaults="Finalize this date"
+                />
+              </Button>
+            ) : null}
             {participants.length > 0 ? (
               <p className="text-center text-muted-foreground">
                 <Trans
@@ -778,8 +838,8 @@ function ResultsList({
   hasTimes,
   showEndTime,
   best,
-  selectedId,
-  onSelect,
+  pickLabel,
+  onPick,
 }: {
   options: TableOption[];
   participants: Participant[];
@@ -788,10 +848,10 @@ function ResultsList({
   showEndTime: boolean;
   best: number;
   /** Omitted once a date can no longer be picked. */
-  selectedId?: string;
-  onSelect?: (option: TableOption) => void;
+  pickLabel?: (option: TableOption) => string;
+  /** `source` tells the finalize analytics which control opened it. */
+  onPick?: (option: TableOption, source?: string) => void;
 }) {
-  const { t } = useTranslation();
   const { locale, timeZone } = useDateTimeConfig();
   const months = useDateGroups(options, { floating, by: "month" });
   const showYear = spansYears(months);
@@ -800,31 +860,11 @@ function ResultsList({
   const row = (option: TableOption) => {
     const yes = option.votes.yes.length;
     const ifNeedBe = option.votes.ifNeedBe.length;
+    const label = pickLabel?.(option);
     return (
       <li
         key={option.id}
-        // Selecting a row picks the date Finalize acts on.
-        {...(onSelect
-          ? {
-              role: "radio",
-              "aria-checked": selectedId === option.id,
-              tabIndex: 0,
-              onClick: () => onSelect(option),
-              onKeyDown: (event: React.KeyboardEvent) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  onSelect(option);
-                }
-              },
-            }
-          : {})}
-        className={cn(
-          "col-span-full grid min-h-16 grid-cols-subgrid items-center border-button-outline border-b py-4 last:border-b-0",
-          onSelect &&
-            "cursor-pointer outline-none hover:bg-foreground/[0.02] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
-          selectedId === option.id &&
-            "bg-primary/[0.06] hover:bg-primary/[0.08]",
-        )}
+        className="col-span-full grid min-h-16 grid-cols-subgrid items-center border-button-outline border-b py-4 last:border-b-0"
       >
         {hasTimes ? (
           <OptionTime
@@ -841,21 +881,22 @@ function ResultsList({
           participants={participants}
           floating={floating}
           highlight={best > 0 && yes + ifNeedBe === best}
+          onFinalize={onPick ? () => onPick(option) : undefined}
         />
+        {onPick && label ? (
+          <span>
+            <PickButton
+              label={label}
+              onClick={() => onPick(option, "results_star")}
+            />
+          </span>
+        ) : null}
       </li>
     );
   };
 
   return (
     <ol
-      {...(onSelect
-        ? {
-            role: "radiogroup",
-            "aria-label": t("pollResultsSelectDate", {
-              defaultValue: "Date to finalize",
-            }),
-          }
-        : {})}
       className="grid gap-x-6 text-sm"
       style={{
         gridTemplateColumns: [
@@ -869,6 +910,7 @@ function ResultsList({
               : []),
           "minmax(3rem,1fr)",
           "auto",
+          ...(onPick ? ["auto"] : []),
         ].join(" "),
       }}
     >
@@ -1094,14 +1136,12 @@ function ResultsTable({
   floating,
   best,
   showDuration,
-  selectedId,
-  onSelect,
+  onPick,
 }: TableProps & {
   /** Only when options differ in length; a shared one is in the details. */
   showDuration: boolean;
   /** Omitted once a date can no longer be picked. */
-  selectedId?: string;
-  onSelect?: (option: TableOption) => void;
+  onPick?: (option: TableOption) => void;
 }) {
   const { formatDateTime } = useDateTime();
   const { locale, timeZone } = useDateTimeConfig();
@@ -1167,34 +1207,12 @@ function ResultsTable({
                   className={cn(
                     // Pinned under the month row; solid, so rows scroll under it.
                     "sticky top-11 z-20 min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
-                    selectedId === option.id
-                      ? "bg-[color-mix(in_oklab,var(--color-primary)_8%,var(--color-card))] dark:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--color-background))]"
-                      : hoveredId === option.id
-                        ? "bg-[color-mix(in_oklab,var(--color-foreground)_4%,var(--color-card))] dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
-                        : "bg-card dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
+                    hoveredId === option.id
+                      ? "bg-[color-mix(in_oklab,var(--color-foreground)_4%,var(--color-card))] dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+                      : "bg-card dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
                   )}
                 >
-                  {/* Selecting a column picks the date Finalize acts on. */}
-                  <span
-                    {...(onSelect
-                      ? {
-                          role: "radio",
-                          "aria-checked": selectedId === option.id,
-                          tabIndex: 0,
-                          onClick: () => onSelect(option),
-                          onKeyDown: (event: React.KeyboardEvent) => {
-                            if (event.key === "Enter" || event.key === " ") {
-                              event.preventDefault();
-                              onSelect(option);
-                            }
-                          },
-                        }
-                      : {})}
-                    className={cn(
-                      "flex flex-col items-center gap-1 rounded-control-sm outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                      onSelect && "cursor-pointer",
-                    )}
-                  >
+                  <span className="flex flex-col items-center gap-1">
                     <DayLabel weekday={weekday} day={day} />
                     {option.duration > 0 ? (
                       <span className="flex flex-col items-center gap-1 whitespace-nowrap text-xs tabular-nums">
@@ -1291,8 +1309,6 @@ function ResultsTable({
                         "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04] dark:group-hover/row:bg-foreground/[0.02]",
                         hoveredId === option.id &&
                           "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
-                        selectedId === option.id &&
-                          "bg-primary/[0.06] dark:bg-primary/[0.10]",
                       )}
                     >
                       <span className="inline-flex">
@@ -1333,8 +1349,6 @@ function ResultsTable({
                       "border-t border-r px-2 py-3 last:border-r-0",
                       hoveredId === option.id &&
                         "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
-                      selectedId === option.id &&
-                        "bg-primary/[0.06] dark:bg-primary/[0.10]",
                     )}
                   >
                     <span className="flex flex-col items-center gap-1">
@@ -1344,6 +1358,7 @@ function ResultsTable({
                           participants={participants}
                           floating={floating}
                           highlight={isBest}
+                          onFinalize={onPick ? () => onPick(option) : undefined}
                         />
                       ) : null}
                     </span>
