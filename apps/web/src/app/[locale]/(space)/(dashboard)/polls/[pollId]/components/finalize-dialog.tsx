@@ -174,9 +174,7 @@ function FinalizeContent({
   return (
     <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[50rem]">
       <DialogHeader>
-        <DialogTitle>
-          <Trans i18nKey="finalizePoll" defaults="Finalize poll" />
-        </DialogTitle>
+        <DialogTitle>{poll.title}</DialogTitle>
         <DialogDescription>
           <Trans
             i18nKey="finalizeDialogDescription"
@@ -186,7 +184,6 @@ function FinalizeContent({
       </DialogHeader>
       <div className="grid gap-4 sm:grid-cols-[18rem_minmax(0,1fr)]">
         <aside className="flex flex-col gap-4">
-          <p className="font-medium text-sm">{poll.title}</p>
           <SummaryStep option={option} />
         </aside>
         {participants.length > 0 ? (
