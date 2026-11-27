@@ -585,13 +585,13 @@ function AvailabilityPopover({
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-80 max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0"
+        className="w-88 max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0"
       >
-        <div className="flex shrink-0 flex-col gap-3 border-popover-border border-b px-4 py-3">
-          <div className="flex items-center gap-3">
+        <div className="flex shrink-0 flex-col gap-4 border-popover-border border-b p-4">
+          <div className="flex items-center gap-4">
             <DateTile option={option} floating={floating} />
             <div className="min-w-0">
-              <p className="font-medium">
+              <p className="font-medium text-base">
                 {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
               </p>
               {option.duration > 0 ? (
@@ -668,12 +668,12 @@ function DateTile({ option, floating }: { option: Option; floating: boolean }) {
   return (
     <div
       aria-hidden="true"
-      className="flex size-10 shrink-0 flex-col overflow-hidden rounded-lg border border-card-border bg-card text-center"
+      className="flex size-12 shrink-0 flex-col overflow-hidden rounded-lg border border-card-border bg-card text-center"
     >
-      <div className="border-card-border border-b text-[10px] text-muted-foreground uppercase leading-4">
+      <div className="border-card-border border-b text-[11px] text-muted-foreground uppercase leading-4">
         {weekday}
       </div>
-      <div className="flex grow items-center justify-center font-semibold text-sm tabular-nums leading-none">
+      <div className="flex grow items-center justify-center font-medium text-lg tabular-nums leading-none">
         {day}
       </div>
     </div>
