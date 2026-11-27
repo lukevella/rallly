@@ -9,7 +9,7 @@ import {
 import { RouterLoadingIndicator } from "@/components/router-loading-indicator";
 import { PollBreadcrumb } from "./components/poll-breadcrumb";
 
-/** The page's outline: title and facts, the status card and the section cards. */
+/** The page's outline: title and facts, the share bar and the section cards. */
 export default function Loading() {
   return (
     <>
@@ -27,20 +27,21 @@ export default function Loading() {
         <PageContent>
           <PageColumn>
             <div aria-hidden className="flex flex-col gap-8 px-4 pt-6 pb-16">
-              <section className="overflow-hidden rounded-xl bg-card shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
-                <div className="flex h-14 items-center justify-between border-button-outline border-b px-5">
-                  <Skeleton className="h-4 w-16" />
-                  <Skeleton className="h-8 w-24" />
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-button-outline">
-                  {[0, 1].map((i) => (
-                    <div key={i} className="flex flex-col gap-2.5 px-5 py-6">
-                      <Skeleton className="h-4 w-20" />
-                      <Skeleton className="h-9 w-12" />
-                    </div>
-                  ))}
-                </div>
+              <section className="flex h-15 items-center justify-between gap-4 rounded-xl bg-card px-5 shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-8 w-56" />
               </section>
+              <div className="flex gap-4">
+                {[0, 1].map((i) => (
+                  <div
+                    key={i}
+                    className="flex min-h-32 flex-1 flex-col justify-between rounded-xl bg-card p-4 ring-1 ring-button-outline ring-inset dark:bg-foreground/5"
+                  >
+                    <Skeleton className="h-7 w-32" />
+                    <Skeleton className="h-8 w-12" />
+                  </div>
+                ))}
+              </div>
               {[4, 3].map((rows) => (
                 <section
                   key={rows}

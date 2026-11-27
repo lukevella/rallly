@@ -35,23 +35,17 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
 
-/** The poll's status, what can be done about it, and who has answered. */
+/** The vote page link and the ways to share it, under an alert when the poll is closed or scheduled. */
 export function PollStatusCard({
   pollId,
   status,
   inviteLink,
-  responseCount,
-  invitedCount,
-  awaitingCount,
   event,
   floating,
 }: {
   pollId: string;
   status: PollStatus;
   inviteLink: string;
-  responseCount: number;
-  invitedCount: number;
-  awaitingCount: number;
   event: { id: string; start: Date; duration: number } | null;
   /** Times stored as UTC wall time: an all-day event or a floating poll. */
   floating: boolean;
@@ -110,16 +104,10 @@ export function PollStatusCard({
               pollStatus={status}
               inviteLink={inviteLink}
             />
-            <ViewVotePageButton inviteLink={inviteLink} />
+            <ViewInvitePageButton inviteLink={inviteLink} />
           </>
         }
-      >
-        <Stats
-          responseCount={responseCount}
-          invitedCount={invitedCount}
-          awaitingCount={awaitingCount}
-        />
-      </StatusCard>
+      />
     </div>
   );
 }
@@ -127,16 +115,17 @@ export function PollStatusCard({
 function StatusCard({
   inviteLink,
   actions,
-  children,
 }: {
   inviteLink: string;
   actions: React.ReactNode;
-  children: React.ReactNode;
 }) {
   return (
     <section className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
-      <header className="flex items-center gap-4 border-button-outline border-b px-5 py-3">
-        <div className="flex min-w-0 flex-1 items-center gap-2">
+      <div className="flex items-center gap-4 px-5 py-3">
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
+          <span className="shrink-0">
+            <Trans i18nKey="pollStatusCardInviteLink" defaults="Invite link:" />
+          </span>
           <a
             href={inviteLink}
             target="_blank"
@@ -147,90 +136,8 @@ function StatusCard({
           </a>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">{actions}</div>
-      </header>
-      {children}
+      </div>
     </section>
-  );
-}
-
-function Stats({
-  responseCount,
-  invitedCount,
-  awaitingCount,
-}: {
-  responseCount: number;
-  invitedCount: number;
-  awaitingCount: number;
-}) {
-  const respondedCount = invitedCount - awaitingCount;
-  return (
-    <dl className="grid grid-cols-2 divide-x divide-button-outline">
-      <div className="flex min-h-28 flex-col justify-end gap-1.5 px-5 py-5">
-        <dt className="text-muted-foreground text-sm">
-          <Trans i18nKey="pollStatusCardResponses" defaults="Responses" />
-        </dt>
-        <dd className="flex flex-col">
-          <span className="font-semibold text-3xl tabular-nums">
-            {responseCount}
-          </span>
-        </dd>
-      </div>
-      <div className="flex min-h-28 flex-col justify-end gap-1.5 px-5 py-5">
-        <dt className="text-muted-foreground text-sm">
-          <Trans i18nKey="pollStatusCardInvites" defaults="Invites" />
-        </dt>
-        <dd className="flex items-center gap-2.5">
-          <ProgressDonut value={respondedCount} max={invitedCount} />
-          <div className="flex flex-col">
-            <span className="font-semibold text-3xl tabular-nums">
-              {respondedCount}
-              <span className="font-normal text-lg text-muted-foreground">
-                {" / "}
-                {invitedCount}
-              </span>
-            </span>
-          </div>
-        </dd>
-      </div>
-    </dl>
-  );
-}
-
-function ProgressDonut({ value, max }: { value: number; max: number }) {
-  const radius = 16;
-  const circumference = 2 * Math.PI * radius;
-  const fraction = max > 0 ? value / max : 0;
-  return (
-    <svg
-      viewBox="0 0 40 40"
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={max}
-      aria-valuenow={value}
-      className="size-8 shrink-0 -rotate-90"
-    >
-      <circle
-        cx="20"
-        cy="20"
-        r={radius}
-        fill="none"
-        strokeWidth="5"
-        className="stroke-foreground/10"
-      />
-      {fraction > 0 ? (
-        <circle
-          cx="20"
-          cy="20"
-          r={radius}
-          fill="none"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - fraction)}
-          className="stroke-green-500"
-        />
-      ) : null}
-    </svg>
   );
 }
 
@@ -341,7 +248,7 @@ function ShareButton({
 }
 
 /** Opens the page participants see, in a new tab. */
-function ViewVotePageButton({ inviteLink }: { inviteLink: string }) {
+function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
   return (
     <a
       href={inviteLink}
@@ -349,7 +256,10 @@ function ViewVotePageButton({ inviteLink }: { inviteLink: string }) {
       rel="noopener noreferrer"
       className={buttonVariants({ variant: "primary" })}
     >
-      <Trans i18nKey="pollStatusCardViewVotePage" defaults="View vote page" />
+      <Trans
+        i18nKey="pollStatusCardViewInvitePage"
+        defaults="View invite page"
+      />
       <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" />
     </a>
   );

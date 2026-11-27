@@ -11,6 +11,8 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
   ChevronDownIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
   ClockIcon,
   DownloadIcon,
   ListIcon,
@@ -795,19 +797,72 @@ function votesByOption(participant: Participant) {
   return new Map(participant.votes.map((vote) => [vote.optionId, vote.type]));
 }
 
-/** The avatar alone; the name shows as a tooltip and to screen readers. */
-function ParticipantName({ participant }: { participant: Participant }) {
+/** The avatar, with the name beside it when expanded; otherwise as a tooltip. */
+function ParticipantName({
+  participant,
+  expanded,
+}: {
+  participant: Participant;
+  expanded: boolean;
+}) {
+  const avatar = (
+    <OptimizedAvatarImage
+      size="sm"
+      name={participant.name}
+      src={participant.image ?? undefined}
+    />
+  );
+  if (expanded) {
+    return (
+      <span className="flex min-w-0 items-center gap-2">
+        {avatar}
+        <span className="min-w-0 truncate">{participant.name}</span>
+      </span>
+    );
+  }
   return (
     <Tooltip>
       <TooltipTrigger render={<span className="inline-flex" />}>
-        <OptimizedAvatarImage
-          size="sm"
-          name={participant.name}
-          src={participant.image ?? undefined}
-        />
+        {avatar}
         <span className="sr-only">{participant.name}</span>
       </TooltipTrigger>
       <TooltipContent>{participant.name}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+/** Shows or hides names in the participant column. */
+function ExpandNamesButton({
+  expanded,
+  onToggle,
+}: {
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  const { t } = useTranslation();
+  const label = expanded
+    ? t("pollResultsTableHideNames", { defaultValue: "Hide names" })
+    : t("pollResultsTableShowNames", { defaultValue: "Show names" });
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            aria-label={label}
+            aria-pressed={expanded}
+            onClick={onToggle}
+          />
+        }
+      >
+        {expanded ? (
+          <ChevronsLeftIcon aria-hidden="true" />
+        ) : (
+          <ChevronsRightIcon aria-hidden="true" />
+        )}
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -837,6 +892,7 @@ function ResultsTable({
   const { locale, timeZone } = useDateTimeConfig();
   // The column under the pointer is highlighted top to bottom.
   const [hoveredId, setHoveredId] = React.useState<string | null>(null);
+  const [namesExpanded, setNamesExpanded] = React.useState(false);
   // Month and day headings span the consecutive options they share, as on
   // the vote page's grid.
   const monthGroups = useDateGroups(options, { floating, by: "month" });
@@ -852,8 +908,16 @@ function ResultsTable({
           <tr>
             <th
               rowSpan={3}
-              className="sticky left-0 z-10 w-px border-r border-b bg-gray-50 px-5 dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
-            />
+              className={cn(
+                "sticky left-0 z-10 w-px border-r border-b bg-gray-50 px-3 pb-3 align-bottom dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
+                namesExpanded ? "text-end" : "text-center",
+              )}
+            >
+              <ExpandNamesButton
+                expanded={namesExpanded}
+                onToggle={() => setNamesExpanded((value) => !value)}
+              />
+            </th>
             {monthGroups.map((group) => (
               <th
                 key={group.id}
@@ -968,9 +1032,15 @@ function ResultsTable({
               <tr key={participant.id}>
                 <th
                   scope="row"
-                  className="sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+                  className={cn(
+                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
+                    namesExpanded && "max-w-48",
+                  )}
                 >
-                  <ParticipantName participant={participant} />
+                  <ParticipantName
+                    participant={participant}
+                    expanded={namesExpanded}
+                  />
                 </th>
                 {options.map((option) => {
                   return (

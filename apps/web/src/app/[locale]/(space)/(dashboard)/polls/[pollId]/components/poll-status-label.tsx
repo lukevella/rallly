@@ -17,7 +17,7 @@ export function PollStatusLabel({
     return null;
   }
   return (
-    <span className="inline-flex shrink-0 items-center gap-2 text-muted-foreground text-sm">
+    <span className="ms-2 inline-flex shrink-0 items-center gap-2 text-muted-foreground text-sm">
       <span
         aria-hidden="true"
         className={cn("size-1.5 rounded-full ring-[3px]", tones[status])}

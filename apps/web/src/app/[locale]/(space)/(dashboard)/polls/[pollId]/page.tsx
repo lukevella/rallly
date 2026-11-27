@@ -25,6 +25,7 @@ import { PollDetails } from "./components/poll-details";
 import { PollParticipantsSection } from "./components/poll-participants";
 import { PollResults } from "./components/poll-results";
 import { PollSection, PollSections } from "./components/poll-section";
+import { PollStats } from "./components/poll-stats";
 import { PollStatusCard } from "./components/poll-status-card";
 import { PollStatusLabel } from "./components/poll-status-label";
 
@@ -111,13 +112,15 @@ export default async function Page({
                 pollId={poll.id}
                 status={poll.status}
                 inviteLink={poll.inviteLink}
-                responseCount={participants.length}
-                invitedCount={invites.length}
-                awaitingCount={
-                  invites.filter((invite) => !invite.participantId).length
-                }
                 event={poll.event}
                 floating={poll.timeZone === null}
+              />
+              <PollStats
+                responseCount={participants.length}
+                invitedCount={invites.length}
+                respondedInviteCount={
+                  invites.filter((invite) => invite.participantId).length
+                }
               />
               <PollSections>
                 <PollResults
