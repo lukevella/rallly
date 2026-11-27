@@ -30,14 +30,14 @@ export function PollAdminViewSwitch({
         setPollAdminView({ view: next ? "new" : "legacy", pollId });
         router.push(next ? `/polls/${pollId}` : `/poll/${pollId}`);
       }}
-      className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-full pr-3 pl-3.5 text-muted-foreground text-xs outline-none hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-control pr-3 pl-3.5 text-muted-foreground text-xs outline-none hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
     >
       <Trans i18nKey="pollAdminTryNewView" defaults="Try the new view" />
       <span
         aria-hidden="true"
         className={cn(
           "flex h-3 w-5 items-center rounded-full p-0.5 transition-colors",
-          checked ? "bg-green-500" : "bg-foreground/15",
+          checked ? "bg-primary" : "bg-foreground/15",
         )}
       >
         <span
