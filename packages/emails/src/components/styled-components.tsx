@@ -172,7 +172,7 @@ export const Card = (props: SectionProps) => {
   );
 };
 
-export const Signature = () => {
+export const Signature = ({ title }: { title: string }) => {
   return (
     <Section>
       <Row>
@@ -207,7 +207,7 @@ export const Signature = () => {
               fontFamily,
             }}
           >
-            Founder
+            {title}
           </UnstyledText>
         </Column>
       </Row>
