@@ -18,6 +18,7 @@ import {
 } from "@rallly/ui/segmented-control";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
+  CalendarXIcon,
   ChevronDownIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
@@ -283,9 +284,14 @@ function VoteBreakdown({
 }) {
   if (participants.length === 0) {
     return (
-      <p className="text-muted-foreground">
-        <Trans i18nKey="pollResultsNoVotes" defaults="No one has voted yet." />
-      </p>
+      <EmptyState className="py-4">
+        <EmptyStateIcon>
+          <UsersIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans i18nKey="pollResultsNoVotes" defaults="No responses yet" />
+        </EmptyStateTitle>
+      </EmptyState>
     );
   }
 
@@ -303,6 +309,29 @@ function VoteBreakdown({
     ...votes.no.map((id) => ({ id, type: "no" as VoteType | undefined })),
     ...noAnswer.map((id) => ({ id, type: undefined })),
   ];
+
+  if (available.length === 0) {
+    return (
+      <EmptyState className="py-4">
+        <EmptyStateIcon>
+          <CalendarXIcon />
+        </EmptyStateIcon>
+        <EmptyStateTitle>
+          <Trans
+            i18nKey="pollResultsNoOneAvailable"
+            defaults="No one can make it"
+          />
+        </EmptyStateTitle>
+        <EmptyStateDescription>
+          <Trans
+            i18nKey="pollResultsNoOneAvailableDescription"
+            defaults="{count, plural, one {# participant said no or didn't answer for this date.} other {# participants said no or didn't answer for this date.}}"
+            values={{ count: unavailable.length }}
+          />
+        </EmptyStateDescription>
+      </EmptyState>
+    );
+  }
 
   return (
     // Available on the left, unavailable on the right; each column keeps its
