@@ -153,6 +153,7 @@ export default async function Page({
                 {activity.length > 0 ? (
                   <PollActivitySection
                     activity={activity}
+                    participants={participants}
                     comments={comments}
                     timeZone={poll.timeZone}
                     title={
