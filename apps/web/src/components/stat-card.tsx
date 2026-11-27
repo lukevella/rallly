@@ -102,7 +102,7 @@ export function StatCardStack({
   return (
     <div
       className={cn(
-        "-mx-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] md:mx-0 md:scroll-px-0 md:px-0 md:pb-0",
+        "-mx-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto overscroll-x-none px-4 pb-1 [scrollbar-width:none] md:mx-0 md:scroll-px-0 md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden",
         className,
       )}
       {...props}
