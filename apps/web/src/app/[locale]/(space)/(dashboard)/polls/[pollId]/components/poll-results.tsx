@@ -25,7 +25,6 @@ import {
   DownloadIcon,
   ListIcon,
   MessageSquareTextIcon,
-  StarIcon,
   Table2Icon,
   TrashIcon,
   UsersIcon,
@@ -245,19 +244,6 @@ export function PollResults({
           hasTimes={hasTimes}
           showEndTime={showEndTime}
           best={best}
-          pickLabel={
-            canPick
-              ? (option) =>
-                  t("pollResultsPick", {
-                    defaultValue: "Pick {date}",
-                    date: formatDateTime(
-                      option.startTime,
-                      "weekdayMonthDay",
-                      optionZone(option, timeZone === null),
-                    ),
-                  })
-              : undefined
-          }
           onPick={
             canPick
               ? (option) => {
@@ -423,34 +409,6 @@ function ViewOption({
   );
 }
 
-function PickButton({
-  label,
-  onClick,
-}: {
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label={label}
-            onClick={onClick}
-          />
-        }
-      >
-        <StarIcon aria-hidden="true" />
-      </TooltipTrigger>
-      <TooltipContent>
-        <Trans i18nKey="pollResultsPickTooltip" defaults="Pick this date" />
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
 /** Share of respondents available: yes first, then if need be. */
 function AvailabilityBar({
   yes,
@@ -565,7 +523,10 @@ function AvailabilityPopover({
                 onFinalize();
               }}
             >
-              <Trans i18nKey="pollResultsFinalizeDate" defaults="Finalize" />
+              <Trans
+                i18nKey="pollResultsFinalizeThisDate"
+                defaults="Finalize this date"
+              />
             </Button>
           ) : null}
         </div>
@@ -740,7 +701,6 @@ function ResultsList({
   hasTimes,
   showEndTime,
   best,
-  pickLabel,
   onPick,
 }: {
   options: TableOption[];
@@ -749,7 +709,6 @@ function ResultsList({
   hasTimes: boolean;
   showEndTime: boolean;
   best: number;
-  pickLabel?: (option: TableOption) => string;
   onPick?: (option: TableOption) => void;
 }) {
   const { locale, timeZone } = useDateTimeConfig();
@@ -760,7 +719,6 @@ function ResultsList({
   const row = (option: TableOption) => {
     const yes = option.votes.yes.length;
     const ifNeedBe = option.votes.ifNeedBe.length;
-    const label = pickLabel?.(option);
     return (
       <li
         key={option.id}
@@ -783,11 +741,6 @@ function ResultsList({
           highlight={best > 0 && yes + ifNeedBe === best}
           onFinalize={onPick ? () => onPick(option) : undefined}
         />
-        {onPick && label ? (
-          <span>
-            <PickButton label={label} onClick={() => onPick(option)} />
-          </span>
-        ) : null}
       </li>
     );
   };
@@ -807,7 +760,6 @@ function ResultsList({
               : []),
           "minmax(3rem,1fr)",
           "auto",
-          ...(onPick ? ["auto"] : []),
         ].join(" "),
       }}
     >
