@@ -333,16 +333,12 @@ function VoteBreakdown({
     );
   }
 
+  // One list: who can make it first, then who can't or didn't answer.
   return (
-    // Available on the left, unavailable on the right; each column keeps its
-    // side even when the other is empty.
-    <div className="grid grid-cols-2 gap-x-6">
-      <BreakdownList entries={available} participantsById={participantsById} />
-      <BreakdownList
-        entries={unavailable}
-        participantsById={participantsById}
-      />
-    </div>
+    <BreakdownList
+      entries={[...available, ...unavailable]}
+      participantsById={participantsById}
+    />
   );
 }
 
@@ -521,7 +517,7 @@ function AvailabilityPopover({
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-96 max-w-[calc(100vw-2rem)] gap-4"
+        className="w-80 max-w-[calc(100vw-2rem)] gap-4"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
