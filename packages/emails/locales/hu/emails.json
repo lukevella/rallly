@@ -124,6 +124,7 @@
   "reviewRequest_reply": "Jó, rossz, vagy valahol a kettő között, bármilyen vélemény segít. És ha valami akadályozza a Rallly használatát, csak írj válasz levelet. Minden választ elolvasok.",
   "reviewRequest_subject": "Kérhetek egy kis szívességet?",
   "reviewRequest_thanks": "Köszönöm!",
+  "signatureFounderTitle": "A Rallly alapítója",
   "spaceInvite_button": "Meghívás elfogadása",
   "spaceInvite_content": "{inviterName} meghívott, hogy csatlakozz ide: {spaceName}, ezzel a szerepkörrel: {role}.",
   "spaceInvite_heading": "Meghívást kaptál!",

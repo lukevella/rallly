@@ -124,6 +124,7 @@
   "reviewRequest_reply": "无论评价是好是坏，还是介于两者之间，真实的评价都会有所帮助。如果 Rallly 的某些方面给您带来了不便，直接回复即可。我会阅读每一条回复。",
   "reviewRequest_subject": "能帮个小忙吗？",
   "reviewRequest_thanks": "谢谢，",
+  "signatureFounderTitle": "Rallly 创始人",
   "spaceInvite_button": "接受邀请",
   "spaceInvite_content": "{inviterName} 已邀请您以 {role} 身份加入 {spaceName} 空间。",
   "spaceInvite_heading": "您已被邀请！",

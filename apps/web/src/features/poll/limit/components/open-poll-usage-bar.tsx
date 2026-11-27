@@ -41,7 +41,7 @@ export function OpenPollUsageBar({
         className="h-2 bg-gray-100 dark:bg-gray-800"
         indicatorClassName={cn(
           "bg-none",
-          isAtLimit ? "bg-destructive" : "bg-green-500",
+          isAtLimit ? "bg-destructive-solid" : "bg-green-500",
         )}
       />
     </div>

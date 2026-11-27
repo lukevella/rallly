@@ -91,10 +91,14 @@ async function authorizeParticipantEdit({
     return { ok: false as const, reason: "closed" as const };
   }
 
-  const ownedBySession = user
-    ? participant.userId === user.id ||
-      (await hasPollAdminAccess(participant.pollId, user.id))
-    : false;
+  const isOwnResponse = !!user && participant.userId === user.id;
+  // Someone else's response edited through poll admin access. A host
+  // editing their own response counts as a participant.
+  const isHost =
+    !!user &&
+    !isOwnResponse &&
+    (await hasPollAdminAccess(participant.pollId, user.id));
+  const ownedBySession = isOwnResponse || isHost;
 
   const ownedByLink =
     !ownedBySession && token
@@ -114,7 +118,12 @@ async function authorizeParticipantEdit({
     user ??
     (participant.userId ? { id: participant.userId, isGuest: true } : null);
 
-  return { ok: true as const, participant, actor };
+  return {
+    ok: true as const,
+    participant,
+    actor,
+    actorRole: isHost ? ("host" as const) : ("participant" as const),
+  };
 }
 
 async function sendNewResponseNotificationEmail({
@@ -372,7 +381,7 @@ export const deleteParticipantAction = optionalUserActionClient
       return authorization;
     }
 
-    const { participant, actor } = authorization;
+    const { participant, actor, actorRole } = authorization;
 
     const result = await deleteParticipant({
       participantId,
@@ -383,7 +392,7 @@ export const deleteParticipantAction = optionalUserActionClient
     if (result.ok && actor) {
       track(actor, {
         event: "poll_response_delete",
-        properties: { participant_id: participant.id },
+        properties: { participant_id: participant.id, actor_role: actorRole },
         groups: { poll: participant.pollId },
       });
     }

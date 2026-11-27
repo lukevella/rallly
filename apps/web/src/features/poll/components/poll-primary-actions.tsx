@@ -10,6 +10,7 @@ import {
   SharePollDialog,
   useSharePollDialog,
 } from "@/features/poll/components/share-dialog";
+import { pollEventProperties } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 
 type ActionBarProps = {
@@ -85,7 +86,10 @@ export function PollPrimaryActions() {
     canFinalize,
     onShare: () => share.open("manual"),
     onFinalize: () => {
-      posthog?.capture("poll_finalize:dialog_open");
+      posthog?.capture(
+        "poll_finalize:dialog_open",
+        pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+      );
       finalizeDialog.trigger();
     },
   };

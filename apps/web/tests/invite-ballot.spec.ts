@@ -555,7 +555,7 @@ test.describe("invite ballot", () => {
     await prisma.user.deleteMany({ where: { email } });
   });
 
-  test("following an emailed invite link records the open", async ({
+  test("an invite open is recorded on interaction, not on load", async ({
     browser,
   }) => {
     await seedPoll({ id: "ballot-spec-open" });
@@ -567,18 +567,23 @@ test.describe("invite ballot", () => {
         token,
       },
     });
+    const openedAt = async () => {
+      const row = await prisma.pollInvite.findUniqueOrThrow({
+        where: { id: invite.id },
+        select: { openedAt: true },
+      });
+      return row.openedAt;
+    };
     const { context, page } = await freshPage(browser);
+    // A mail scanner loads the page and runs its scripts without touching it.
     await page.goto(`/invite/ballot-spec-open?token=${token}`);
+    await page.waitForLoadState("networkidle");
+    expect(await openedAt()).toBeNull();
 
-    await expect
-      .poll(async () => {
-        const row = await prisma.pollInvite.findUniqueOrThrow({
-          where: { id: invite.id },
-          select: { openedAt: true },
-        });
-        return row.openedAt;
-      })
-      .not.toBeNull();
+    await expect(async () => {
+      await page.keyboard.press("Tab");
+      expect(await openedAt()).not.toBeNull();
+    }).toPass();
     await context.close();
   });
 

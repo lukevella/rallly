@@ -124,6 +124,7 @@
   "reviewRequest_reply": "Oli arvostelu sitten hyvä, huono tai jotain siltä väliltä, rehellisestä palautteesta on apua. Jos jokin Ralllyn käytössä hankaloittaa tekemistäsi, vastaa vain tähän viestiin. Luen jokaisen vastauksen.",
   "reviewRequest_subject": "Yksi pieni palvelus?",
   "reviewRequest_thanks": "Kiitos,",
+  "signatureFounderTitle": "Ralllyn perustaja",
   "spaceInvite_button": "Hyväksy kutsu",
   "spaceInvite_content": "{inviterName} on kutsunut sinut liittymään tilaan {spaceName} roolissa {role}.",
   "spaceInvite_heading": "Olet saanut kutsun!",
