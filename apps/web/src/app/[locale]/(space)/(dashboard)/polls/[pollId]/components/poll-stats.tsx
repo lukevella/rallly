@@ -248,7 +248,8 @@ function BestDateCard({
               }}
             />
             <ProgressDonut
-              value={current.votes.yes.length + current.votes.ifNeedBe.length}
+              value={current.votes.yes.length}
+              secondary={current.votes.ifNeedBe.length}
               max={participants.length}
             />
           </span>
@@ -262,10 +263,22 @@ function BestDateCard({
 }
 
 /** A share as a ring: invitees who responded, or respondents who can make a date. */
-function ProgressDonut({ value, max }: { value: number; max: number }) {
+function ProgressDonut({
+  value,
+  secondary = 0,
+  max,
+}: {
+  value: number;
+  /** A second share after the first, in amber: if need be votes. */
+  secondary?: number;
+  max: number;
+}) {
   const radius = 15;
   const circumference = 2 * Math.PI * radius;
-  const fraction = max > 0 ? value / max : 0;
+  const primaryLength = max > 0 ? (value / max) * circumference : 0;
+  const secondaryLength = max > 0 ? (secondary / max) * circumference : 0;
+  // Round caps would overlap where two segments meet.
+  const linecap = secondary > 0 ? "butt" : "round";
   return (
     <svg
       viewBox="0 0 40 40"
@@ -280,17 +293,29 @@ function ProgressDonut({ value, max }: { value: number; max: number }) {
         strokeWidth="6"
         className="stroke-foreground/10"
       />
-      {fraction > 0 ? (
+      {primaryLength > 0 ? (
         <circle
           cx="20"
           cy="20"
           r={radius}
           fill="none"
           strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - fraction)}
+          strokeLinecap={linecap}
+          strokeDasharray={`${primaryLength} ${circumference}`}
           className="stroke-green-500"
+        />
+      ) : null}
+      {secondaryLength > 0 ? (
+        <circle
+          cx="20"
+          cy="20"
+          r={radius}
+          fill="none"
+          strokeWidth="6"
+          strokeLinecap={linecap}
+          strokeDasharray={`${secondaryLength} ${circumference}`}
+          strokeDashoffset={-primaryLength}
+          className="stroke-amber-400"
         />
       ) : null}
     </svg>
