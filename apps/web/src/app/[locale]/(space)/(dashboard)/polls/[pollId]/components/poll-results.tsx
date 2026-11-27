@@ -89,8 +89,7 @@ export function PollResults({
   const { formatDateTime } = useDateTime();
   const [sort, setSort] = React.useState<Sort>("popularity");
   const poll = usePoll();
-  // The table is the default because participant actions live on its rows.
-  const [view, setView] = React.useState<View>("table");
+  const [view, setView] = React.useState<View>("list");
   const finalizeDialog = useDialog();
   const [pickedOptionId, setPickedOptionId] = React.useState<string>();
 
@@ -181,16 +180,16 @@ export function PollResults({
               }}
             >
               <ViewOption
-                value="table"
-                label={t("pollResultsViewTable", { defaultValue: "Table" })}
-              >
-                <Table2Icon aria-hidden="true" className="size-4" />
-              </ViewOption>
-              <ViewOption
                 value="list"
                 label={t("pollResultsViewList", { defaultValue: "List" })}
               >
                 <ListIcon aria-hidden="true" className="size-4" />
+              </ViewOption>
+              <ViewOption
+                value="table"
+                label={t("pollResultsViewTable", { defaultValue: "Table" })}
+              >
+                <Table2Icon aria-hidden="true" className="size-4" />
               </ViewOption>
             </SegmentedControl>
           ) : null}
