@@ -537,7 +537,11 @@ function AvailabilityPopover({
                   zone,
                 )}
               </p>
-            ) : null}
+            ) : (
+              <p className="text-muted-foreground">
+                <Trans i18nKey="allDay" defaults="All day" />
+              </p>
+            )}
           </div>
         </div>
         {/* Scrolls on its own, so a long list keeps the header and footer
