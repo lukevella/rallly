@@ -114,10 +114,10 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: PRO_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: POLL_TITLE });
+    const pollPage = await newPollPage.create({ name: POLL_TITLE });
     await deleteAllMessages();
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
+    const dialog = await pollPage.openShareDialog();
     await expect(dialog.getByRole("button", { name: "Copy" })).toBeVisible();
 
     const field = dialog.getByLabel("Email address");
@@ -284,9 +284,11 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: CLEAN_URL_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: `${POLL_TITLE} Clean URL` });
+    const pollPage = await newPollPage.create({
+      name: `${POLL_TITLE} Clean URL`,
+    });
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
+    const dialog = await pollPage.openShareDialog();
     await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
 
     // Sending an invite refreshes the route; a router sync must not put the
@@ -333,9 +335,9 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: FREE_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: `${POLL_TITLE} Free` });
+    const pollPage = await newPollPage.create({ name: `${POLL_TITLE} Free` });
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
+    const dialog = await pollPage.openShareDialog();
     const sendButton = dialog.getByRole("button", { name: /Send invite/ });
     await expect(sendButton).toBeEnabled();
     await expect(sendButton.getByText("Pro")).toBeVisible();

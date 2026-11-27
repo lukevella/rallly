@@ -12,7 +12,6 @@ test.describe("edit options", () => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
     const pollPage = await newPollPage.create({ name: "Monthly Meetup" });
-    await pollPage.closeShareDialog();
     await pollPage.addParticipant("Mark");
     editOptionsPage = await pollPage.editOptions();
   });

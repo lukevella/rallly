@@ -6,12 +6,6 @@ import { InvitePage } from "./invite-page";
 export class PollPage {
   constructor(public readonly page: Page) {}
 
-  async closeShareDialog() {
-    const dialog = this.page.getByRole("dialog", { name: "Share" });
-    await dialog.getByRole("button", { name: "Close" }).click();
-    await expect(dialog).toBeHidden();
-  }
-
   async addComment() {
     const page = this.page;
 
@@ -19,7 +13,7 @@ export class PollPage {
 
     const sheet = page.getByRole("dialog", { name: "Comments" });
     await sheet.getByPlaceholder("Write a comment").fill("This is a comment!");
-    await sheet.getByPlaceholder("Your name…").fill("Test user");
+    await sheet.getByPlaceholder("Your name").fill("Test user");
 
     await sheet.getByRole("button", { name: "Add comment" }).click();
   }

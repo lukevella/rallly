@@ -4,16 +4,13 @@ import { posthog } from "@rallly/posthog/client";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
 import { CalendarCheck2Icon, Share2Icon } from "lucide-react";
-import * as React from "react";
 import { usePoll } from "@/features/poll/client";
 import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
 import {
   SharePollDialog,
   useSharePollDialog,
 } from "@/features/poll/components/share-dialog";
-import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import { Trans, useTranslation } from "@/i18n/client";
-import { useFlash } from "@/lib/flash/client";
 
 type ActionBarProps = {
   canFinalize: boolean;
@@ -82,18 +79,7 @@ export function PollPrimaryActions() {
   const poll = usePoll();
   const share = useSharePollDialog(poll.id);
   const finalizeDialog = useDialog();
-  const sharePollFlash = useFlash(SHARE_POLL_FLASH_KEY);
   const canFinalize = poll.status === "open" || poll.status === "closed";
-
-  // The create page flashes the new poll's id so the share dialog is the
-  // confirmation. The flash is consumed on read, so refresh and back don't
-  // reopen it. Keyed on the flash alone so a later poll id change can't
-  // replay it.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per flash arrival
-  React.useEffect(() => {
-    if (sharePollFlash !== poll.id) return;
-    share.open("poll_created");
-  }, [sharePollFlash]);
 
   const actionBarProps: ActionBarProps = {
     canFinalize,

@@ -43,7 +43,6 @@ test.describe
       const newPollPage = new NewPollPage(page);
       await newPollPage.goto();
       pollPage = await newPollPage.create({ name: "Closed Poll Meetup" });
-      await pollPage.closeShareDialog();
       pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1] as string;
       expect(pollId).toBeTruthy();
 

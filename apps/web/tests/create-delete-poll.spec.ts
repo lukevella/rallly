@@ -18,11 +18,10 @@ test.describe.serial(() => {
     await newPollPage.goto();
     // Leaves the require email switch at its default, so the stored value
     // checks what an untouched form submits.
-    const pollPage = await newPollPage.create({
+    await newPollPage.create({
       name: "Monthly Meetup",
       requireEmail: true,
     });
-    await pollPage.closeShareDialog();
 
     await expect(
       page.getByRole("heading", { name: "Monthly Meetup" }),

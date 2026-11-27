@@ -164,7 +164,7 @@ export function PollResults({
       summary={summary}
       flush={rows.length > 0}
       action={
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {rows.length > 0 ? <ExportCsvButton /> : null}
           {rows.length > 0 ? (
             <SegmentedControl

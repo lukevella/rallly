@@ -28,8 +28,8 @@ import {
 } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
+import { PollCreatedDialog } from "@/features/poll/components/poll-created-dialog";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
-import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import {
   hideOpenPollLimit,
   showOpenPollLimit,
@@ -39,7 +39,6 @@ import { isAtOpenPollLimit } from "@/features/poll/limit/utils";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
-import { setFlash } from "@/lib/flash/client";
 import { createSessionStorage } from "@/lib/session-storage";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
@@ -300,8 +299,8 @@ export const CreatePoll = ({
               clear();
               form.reset();
               setCreatedPollId(res.data.id);
-              setFlash(SHARE_POLL_FLASH_KEY, res.data.id);
-              router.push(`/poll/${res.data.id}`);
+              // The open poll count shown on this page has changed.
+              router.refresh();
             } else if (res.error.code === "OPEN_POLL_LIMIT_REACHED") {
               showOpenPollLimit("create", res.error.usage);
             } else {
@@ -369,6 +368,9 @@ export const CreatePoll = ({
             scaling, so give it height inside the resting zone. */}
         <div ref={sentinelRef} className="-mt-6 h-6" aria-hidden="true" />
       </main>
+      {createdPollId ? (
+        <PollCreatedDialog pollId={createdPollId} isGuest={!isLoggedIn} />
+      ) : null}
     </Form>
   );
 };

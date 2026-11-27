@@ -83,10 +83,21 @@ export class NewPollPage {
 
     await page.getByRole("button", { name: /^create poll$/i }).click();
 
-    // The Share dialog opening on the poll page is the success signal, so
-    // assert it here; callers that need the page behind it close it.
-    await page.waitForURL(/\/poll\/[^/?]+/);
-    await expect(page.getByRole("dialog", { name: "Share" })).toBeVisible();
+    // The poll created dialog is the success signal. It carries the invite
+    // link, whose last segment is the new poll's id; callers continue on the
+    // poll's page.
+    const dialog = page.getByRole("dialog", { name: "Poll created" });
+    // Creating can take a while on a cold dev server, as the old wait for the
+    // redirect allowed for.
+    await expect(dialog).toBeVisible({ timeout: 30_000 });
+    const inviteLink = await dialog
+      .getByText(/\/invite\/[^/?\s]+$/)
+      .textContent();
+    const pollId = inviteLink?.trim().split("/").pop();
+    if (!pollId) {
+      throw new Error("No invite link in the poll created dialog");
+    }
+    await page.goto(`/poll/${pollId}`);
     return new PollPage(page);
   }
 }
