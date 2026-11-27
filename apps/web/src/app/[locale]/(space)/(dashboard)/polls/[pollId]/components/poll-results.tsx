@@ -18,6 +18,7 @@ import {
 } from "@rallly/ui/segmented-control";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
+  CalendarIcon,
   CalendarXIcon,
   ChevronDownIcon,
   ChevronsLeftIcon,
@@ -519,7 +520,11 @@ function AvailabilityPopover({
         align="end"
         className="w-80 max-w-[calc(100vw-2rem)] gap-4"
       >
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3 pb-2">
+          <CalendarIcon
+            aria-hidden="true"
+            className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+          />
           <div className="min-w-0">
             <p className="font-medium">
               {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
