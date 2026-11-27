@@ -221,7 +221,7 @@ function PickedDate({ option }: { option: RankedOption }) {
       {/* The icon centers on the first line, not the block. */}
       <CalendarIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0">
-        <div className="truncate text-sm leading-5">
+        <div className="text-sm leading-5">
           <EventDate
             value={option.startTime}
             allDay={allDay}
@@ -229,7 +229,7 @@ function PickedDate({ option }: { option: RankedOption }) {
             preset="dateFull"
           />
         </div>
-        <div className="truncate text-muted-foreground text-sm">
+        <div className="text-muted-foreground text-sm">
           <EventTimeRange
             start={option.startTime}
             end={

@@ -172,7 +172,7 @@ function FinalizeContent({
   }
 
   return (
-    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[48rem]">
+    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[50rem]">
       <DialogHeader>
         <DialogTitle>
           <Trans i18nKey="finalizePoll" defaults="Finalize poll" />
@@ -184,7 +184,7 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_16rem]">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_18rem]">
         {participants.length > 0 ? (
           <NotifyStep
             optionId={option.id}
