@@ -1055,7 +1055,7 @@ function ResultsTable({
             <th
               rowSpan={2}
               className={cn(
-                "sticky left-0 z-10 w-px border-r border-b bg-gray-50 px-3 pb-3 align-bottom dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
+                "sticky left-0 z-10 w-px border-r border-b bg-gray-50 px-3 pb-3 align-bottom dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
                 namesExpanded ? "text-end" : "text-center",
               )}
             >
@@ -1145,7 +1145,7 @@ function ResultsTable({
             <tr>
               <th
                 scope="row"
-                className="sticky left-0 z-10 border-r bg-gray-50 px-5 py-3 dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+                className="sticky left-0 z-10 border-r bg-gray-50 px-5 py-3 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]"
               >
                 <span className="inline-block size-5" />
               </th>
@@ -1179,7 +1179,7 @@ function ResultsTable({
                 <th
                   scope="row"
                   className={cn(
-                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_9%,var(--color-background))]",
+                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_7%,var(--color-background))]",
                     namesExpanded && "max-w-48",
                   )}
                 >
@@ -1219,7 +1219,7 @@ function ResultsTable({
             <tr>
               <th
                 scope="row"
-                className="sticky left-0 z-10 border-t border-r bg-gray-50 px-5 py-2.5 text-start font-normal text-muted-foreground dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+                className="sticky left-0 z-10 border-t border-r bg-gray-50 px-5 py-2.5 text-start font-normal text-muted-foreground dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]"
               >
                 <span className="sr-only">
                   <Trans

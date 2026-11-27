@@ -10,7 +10,7 @@ export function StatCard({
   children,
 }: React.PropsWithChildren<{ href?: string; className?: string }>) {
   const classes = cn(
-    "flex min-h-32 min-w-72 flex-1 snap-start flex-col justify-between gap-4 rounded-xl bg-card p-4 text-card-foreground shadow-xs ring-1 ring-button-outline ring-inset sm:min-w-64 dark:bg-foreground/5 dark:shadow-none",
+    "flex min-h-32 min-w-72 flex-1 snap-start flex-col justify-between gap-4 rounded-xl bg-card p-4 text-card-foreground shadow-xs ring-1 ring-button-outline ring-inset sm:min-w-64 dark:bg-foreground/[0.03] dark:shadow-none",
     href && "transition-colors hover:bg-foreground/10",
     className,
   );

@@ -30,7 +30,7 @@ export default function Loading() {
         <PageContent>
           <PageColumn>
             <div aria-hidden className="flex flex-col gap-8 px-4 pt-6 pb-16">
-              <section className="flex h-15 items-center justify-between gap-4 rounded-xl bg-card px-5 shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
+              <section className="flex h-15 items-center justify-between gap-4 rounded-xl bg-card px-5 shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/[0.03] dark:shadow-black/20 dark:shadow-md">
                 <Skeleton className="h-4 w-48" />
                 <Skeleton className="h-8 w-56" />
               </section>
@@ -38,14 +38,14 @@ export default function Loading() {
                 {[0, 1].map((i) => (
                   <div
                     key={i}
-                    className="flex min-h-32 min-w-72 flex-1 flex-col justify-between rounded-xl bg-card p-4 ring-1 ring-button-outline ring-inset sm:min-w-64 dark:bg-foreground/5"
+                    className="flex min-h-32 min-w-72 flex-1 flex-col justify-between rounded-xl bg-card p-4 ring-1 ring-button-outline ring-inset sm:min-w-64 dark:bg-foreground/[0.03]"
                   >
                     <Skeleton className="h-7 w-32" />
                     <Skeleton className="h-8 w-16" />
                   </div>
                 ))}
               </div>
-              <section className="overflow-hidden rounded-xl border border-button-outline bg-card dark:bg-foreground/5">
+              <section className="overflow-hidden rounded-xl border border-button-outline bg-card dark:bg-foreground/[0.03]">
                 <div className="flex h-14 items-center justify-between border-button-outline border-b px-5">
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-8 w-48" />

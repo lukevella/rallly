@@ -109,7 +109,7 @@ function StatusCard({
   actions: React.ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
+    <section className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/[0.03] dark:shadow-black/20 dark:shadow-md">
       <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5">
         <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
           <span className="shrink-0">
