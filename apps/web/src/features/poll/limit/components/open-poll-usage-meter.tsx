@@ -50,7 +50,9 @@ function UsageDonut({
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeDashoffset={circumference * (1 - Math.min(value, 1))}
-        className={cn(isAtLimit ? "stroke-destructive" : "stroke-green-500")}
+        className={cn(
+          isAtLimit ? "stroke-destructive-solid" : "stroke-green-500",
+        )}
       />
     </svg>
   );
