@@ -274,7 +274,7 @@ function ProgressDonut({
   secondary?: number;
   max: number;
 }) {
-  const radius = 15;
+  const radius = 16;
   const circumference = 2 * Math.PI * radius;
   const primaryLength = max > 0 ? (value / max) * circumference : 0;
   const secondaryLength = max > 0 ? (secondary / max) * circumference : 0;
@@ -291,7 +291,7 @@ function ProgressDonut({
         cy="20"
         r={radius}
         fill="none"
-        strokeWidth="6"
+        strokeWidth="4"
         className="stroke-foreground/10"
       />
       {primaryLength > 0 ? (
@@ -300,7 +300,7 @@ function ProgressDonut({
           cy="20"
           r={radius}
           fill="none"
-          strokeWidth="6"
+          strokeWidth="4"
           strokeLinecap={linecap}
           strokeDasharray={`${primaryLength} ${circumference}`}
           className="stroke-green-500"
@@ -312,7 +312,7 @@ function ProgressDonut({
           cy="20"
           r={radius}
           fill="none"
-          strokeWidth="6"
+          strokeWidth="4"
           strokeLinecap={linecap}
           strokeDasharray={`${secondaryLength} ${circumference}`}
           strokeDashoffset={-primaryLength}
