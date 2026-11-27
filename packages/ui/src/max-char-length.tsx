@@ -59,7 +59,9 @@ export function MaxCharLength({
               strokeLinecap="round"
               strokeDasharray={CIRCUMFERENCE}
               strokeDashoffset={CIRCUMFERENCE * (1 - progress)}
-              className={atLimit ? "stroke-destructive" : "stroke-primary"}
+              className={
+                atLimit ? "stroke-destructive-solid" : "stroke-primary"
+              }
             />
           </svg>
           {/* The remaining count doubles as the non-color at-limit signal: it

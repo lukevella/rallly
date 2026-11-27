@@ -57,7 +57,7 @@ describe("MaxCharLength", () => {
     expect(Number.parseFloat(arc.getAttribute("stroke-dashoffset") ?? "")).toBe(
       0,
     );
-    expect(arc.classList.contains("stroke-destructive")).toBe(true);
+    expect(arc.classList.contains("stroke-destructive-solid")).toBe(true);
     expect(container.textContent).toContain("0");
   });
 

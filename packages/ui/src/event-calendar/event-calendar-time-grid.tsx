@@ -1222,7 +1222,7 @@ function EventCalendarNowIndicator({
       style={{ top: `calc(var(--ec-hour-height) * ${top})` }}
     >
       {/* hairline across the content columns only (clear of the time gutter) */}
-      <div className="absolute start-(--ec-gutter-width,4.5rem) end-0 h-px bg-destructive/40" />
+      <div className="absolute start-(--ec-gutter-width,4.5rem) end-0 h-px bg-destructive-solid/40" />
       {/* stronger segment + dot over today's column */}
       <div
         className="absolute h-px"
@@ -1231,11 +1231,11 @@ function EventCalendarNowIndicator({
           width: `calc((100% - var(--ec-gutter-width, 4.5rem)) * ${columnWidthPct / 100})`,
         }}
       >
-        <div className="absolute inset-x-0 top-0 h-px bg-destructive" />
+        <div className="absolute inset-x-0 top-0 h-px bg-destructive-solid" />
         {/* dot leads the line at today's column-start border: pulled 1px left of
             center (-start-1 = -4px vs the 6px/size-1.5 circle) so it reads as a
             distinct bullet instead of merging into the line to its right */}
-        <div className="absolute -start-1 top-0 size-1.5 -translate-y-1/2 rounded-full bg-destructive" />
+        <div className="absolute -start-1 top-0 size-1.5 -translate-y-1/2 rounded-full bg-destructive-solid" />
       </div>
     </div>
   );
