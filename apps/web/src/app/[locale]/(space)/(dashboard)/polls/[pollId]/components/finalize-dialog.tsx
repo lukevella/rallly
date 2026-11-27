@@ -34,8 +34,8 @@ import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 /**
- * Finalizes the poll on a date already picked, in one step: who to notify on
- * the left, what the event will carry on the right. The legacy page keeps the
+ * Finalizes the poll on a date already picked, in one step: what the event
+ * will carry on the left, who to notify on the right. The legacy page keeps the
  * multi-step wizard in `features/poll/components/finalize-poll-dialog.tsx`.
  */
 export function FinalizeDialog({
@@ -184,7 +184,11 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="grid gap-4 sm:grid-cols-[18rem_minmax(0,1fr)]">
+        <aside className="flex flex-col gap-4 rounded-xl bg-muted/40 p-4">
+          <p className="font-medium text-sm">{poll.title}</p>
+          <SummaryStep option={option} />
+        </aside>
         {participants.length > 0 ? (
           <NotifyStep
             optionId={option.id}
@@ -199,10 +203,6 @@ function FinalizeContent({
             />
           </p>
         )}
-        <aside className="flex flex-col gap-4 rounded-xl bg-muted/40 p-4">
-          <p className="font-medium text-sm">{poll.title}</p>
-          <SummaryStep option={option} />
-        </aside>
       </div>
       <PayWallDialog
         pricing={payWallPricing}
