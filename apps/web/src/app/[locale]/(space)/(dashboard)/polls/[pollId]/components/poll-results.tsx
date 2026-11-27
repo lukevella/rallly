@@ -587,30 +587,48 @@ function AvailabilityPopover({
         align="end"
         className="w-80 max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0"
       >
-        <div className="flex shrink-0 items-center gap-3 border-popover-border border-b px-4 py-3">
-          <DateTile option={option} floating={floating} />
-          <div className="min-w-0">
-            <p className="font-medium">
-              {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
-            </p>
-            {option.duration > 0 ? (
-              <p className="text-muted-foreground tabular-nums">
-                {formatDateTime(option.startTime, "time", zone)}
-                {" – "}
-                {formatDateTime(
-                  new Date(
-                    option.startTime.getTime() + option.duration * 60_000,
-                  ),
-                  "time",
-                  zone,
-                )}
+        <div className="flex shrink-0 flex-col gap-3 border-popover-border border-b px-4 py-3">
+          <div className="flex items-center gap-3">
+            <DateTile option={option} floating={floating} />
+            <div className="min-w-0">
+              <p className="font-medium">
+                {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
               </p>
-            ) : (
-              <p className="text-muted-foreground">
-                <Trans i18nKey="allDay" defaults="All day" />
-              </p>
-            )}
+              {option.duration > 0 ? (
+                <p className="text-muted-foreground tabular-nums">
+                  {formatDateTime(option.startTime, "time", zone)}
+                  {" – "}
+                  {formatDateTime(
+                    new Date(
+                      option.startTime.getTime() + option.duration * 60_000,
+                    ),
+                    "time",
+                    zone,
+                  )}
+                </p>
+              ) : (
+                <p className="text-muted-foreground">
+                  <Trans i18nKey="allDay" defaults="All day" />
+                </p>
+              )}
+            </div>
           </div>
+          {onFinalize ? (
+            <Button
+              className="w-full"
+              onClick={() => {
+                // Closed first, so the finalize dialog isn't stacked on it.
+                setOpen(false);
+                onFinalize();
+              }}
+            >
+              <StarIcon data-icon="inline-start" aria-hidden="true" />
+              <Trans
+                i18nKey="pollResultsPickThisDate"
+                defaults="Pick this date"
+              />
+            </Button>
+          ) : null}
         </div>
         {/* Scrolls on its own, so a long list keeps the header and footer
             in view. */}
@@ -622,24 +640,8 @@ function AvailabilityPopover({
             participantsById={participantsById}
           />
         </div>
-        {participants.length > 0 || onFinalize ? (
-          <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
-            {onFinalize ? (
-              <Button
-                className="w-full"
-                onClick={() => {
-                  // Closed first, so the finalize dialog isn't stacked on it.
-                  setOpen(false);
-                  onFinalize();
-                }}
-              >
-                <StarIcon data-icon="inline-start" aria-hidden="true" />
-                <Trans
-                  i18nKey="pollResultsPickThisDate"
-                  defaults="Pick this date"
-                />
-              </Button>
-            ) : null}
+        {participants.length > 0 ? (
+          <div className="shrink-0 border-popover-border border-t p-4">
             {participants.length > 0 ? (
               <p className="text-center text-muted-foreground">
                 <Trans
