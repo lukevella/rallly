@@ -556,7 +556,7 @@ function AvailabilityPopover({
 }
 
 // All-day dates and floating times are stored as UTC wall time.
-function optionZone(option: Option, floating: boolean) {
+export function optionZone(option: Option, floating: boolean) {
   return option.duration === 0 || floating ? { timeZone: "UTC" } : {};
 }
 

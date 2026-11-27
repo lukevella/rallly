@@ -15,34 +15,17 @@ import { Link } from "@/components/link";
 import { Trans } from "@/i18n/client";
 
 /**
- * Polls › poll title. The title joins the trail once the page heading
- * (`headingId`) has scrolled out of view, so the bar always says where you are,
- * along with the poll's status.
+ * Polls › poll title. The title and the poll's status join the trail once the
+ * page has scrolled past its heading, so the bar always says where you are.
  */
 export function PollBreadcrumb({
   title,
   status,
-  headingId,
 }: {
   title?: string;
   status?: React.ReactNode;
-  headingId?: string;
 }) {
-  const [scrolled, setScrolled] = React.useState(false);
-
-  React.useEffect(() => {
-    const heading = headingId ? document.getElementById(headingId) : null;
-    if (!heading) {
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry) {
-        setScrolled(!entry.isIntersecting);
-      }
-    });
-    observer.observe(heading);
-    return () => observer.disconnect();
-  }, [headingId]);
+  const scrolled = useScrolledPast();
 
   const fade = cn(
     "transition-opacity duration-150 motion-reduce:transition-none",
@@ -73,4 +56,32 @@ export function PollBreadcrumb({
       </BreadcrumbList>
     </Breadcrumb>
   );
+}
+
+/** How far the page scrolls before the sticky bar shows the poll's details. */
+const REVEAL_OFFSET = 120;
+
+/** Whether the page has scrolled past the point the sticky bar fills in. */
+export function useScrolledPast() {
+  const [scrolledPast, setScrolledPast] = React.useState(false);
+
+  React.useEffect(() => {
+    const check = () => {
+      // A full load briefly holds hidden copies of streamed content.
+      const scroller = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-slot="page-scroll"]'),
+      ).find((element) => !element.closest("[hidden]"));
+      setScrolledPast((scroller?.scrollTop ?? 0) > REVEAL_OFFSET);
+    };
+    check();
+    // Capture catches the inner scroll area, whose scroll events don't bubble.
+    document.addEventListener("scroll", check, {
+      capture: true,
+      passive: true,
+    });
+    return () =>
+      document.removeEventListener("scroll", check, { capture: true });
+  }, []);
+
+  return scrolledPast;
 }

@@ -56,7 +56,6 @@ export default async function Page({
         <PollBreadcrumb
           title={poll.title}
           status={<PollStatusLabel status={poll.status} />}
-          headingId="poll-title"
         />
       }
       navActions={
@@ -108,9 +107,13 @@ export default async function Page({
                 respondedInviteCount={
                   invites.filter((invite) => invite.participantId).length
                 }
-                inviteeAction={
+                inviteAction={
                   <ShareButton pollId={poll.id} pollStatus={poll.status} />
                 }
+                options={poll.options}
+                participants={participants}
+                timeZone={poll.timeZone}
+                canFinalize={poll.status !== "scheduled"}
               />
               <PollSections>
                 <PollResults

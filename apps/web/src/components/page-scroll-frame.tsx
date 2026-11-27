@@ -32,6 +32,7 @@ export function PageScrollFrame({
         ) : null}
       </div>
       <div
+        data-slot="page-scroll"
         className="relative flex min-h-0 flex-1 flex-col overflow-y-auto"
         onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 0)}
       >

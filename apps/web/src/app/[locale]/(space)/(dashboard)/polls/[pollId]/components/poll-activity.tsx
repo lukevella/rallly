@@ -638,7 +638,7 @@ function PollActivityList({
   return (
     <ol className="flex flex-col px-1">
       {items.map(({ key, createdAt, Icon, tone, description, body }) => (
-        <li key={key} className="group relative flex gap-3 pb-6 last:pb-0">
+        <li key={key} className="group relative flex gap-3 pb-9 last:pb-0">
           {/* The rail joining this event's icon to the next one */}
           <div
             aria-hidden
@@ -652,7 +652,7 @@ function PollActivityList({
           >
             <Icon aria-hidden className="size-4" />
           </div>
-          <div className="min-w-0 flex-1 space-y-1 pt-1.5">
+          <div className="min-w-0 flex-1 space-y-1.5 pt-1.5">
             <p className="text-sm leading-5">{description}</p>
             <Time
               value={createdAt}

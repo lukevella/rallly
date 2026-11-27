@@ -17,7 +17,7 @@ import {
   PlayIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import type React from "react";
 import { AddToCalendarButton } from "@/features/calendars/components/add-to-calendar-button";
 import {
   getOpenPollLimitRefusal,
@@ -27,9 +27,7 @@ import type { PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
-
-/** Lets the sticky header tell when the share bar has scrolled away. */
-export const SHARE_BAR_ID = "poll-share-bar";
+import { useScrolledPast } from "./poll-breadcrumb";
 
 /** The vote page link and the ways to share it, under an alert when the poll is closed or scheduled. */
 export function PollStatusCard({
@@ -111,10 +109,7 @@ function StatusCard({
   actions: React.ReactNode;
 }) {
   return (
-    <section
-      id={SHARE_BAR_ID}
-      className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md"
-    >
+    <section className="overflow-hidden rounded-xl bg-card text-card-foreground shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/5 dark:shadow-black/20 dark:shadow-md">
       <div className="flex items-center gap-4 px-5 py-3">
         <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm">
           <span className="shrink-0">
@@ -208,25 +203,11 @@ export function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
 }
 
 /**
- * The share bar's link actions, shown in the sticky header once the share bar
- * has scrolled out of view.
+ * The share bar's link actions, shown in the sticky header once the page has
+ * scrolled past the share bar.
  */
 export function StickyShareActions({ inviteLink }: { inviteLink: string }) {
-  const [visible, setVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    const bar = document.getElementById(SHARE_BAR_ID);
-    if (!bar) {
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry) {
-        setVisible(!entry.isIntersecting);
-      }
-    });
-    observer.observe(bar);
-    return () => observer.disconnect();
-  }, []);
+  const visible = useScrolledPast();
 
   return (
     <div
