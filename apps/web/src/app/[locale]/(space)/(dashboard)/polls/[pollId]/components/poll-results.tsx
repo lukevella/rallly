@@ -260,8 +260,8 @@ export function PollResults({
           pickLabel={
             canPick
               ? (option) =>
-                  t("pollResultsPick", {
-                    defaultValue: "Pick {date}",
+                  t("pollResultsFinalizeDate", {
+                    defaultValue: "Finalize {date}",
                     date: formatDateTime(
                       option.startTime,
                       "weekdayMonthDay",
@@ -489,7 +489,10 @@ function PickButton({
         <StarIcon aria-hidden="true" />
       </TooltipTrigger>
       <TooltipContent>
-        <Trans i18nKey="pollResultsPickTooltip" defaults="Pick this date" />
+        <Trans
+          i18nKey="pollResultsFinalizeThisDate"
+          defaults="Finalize this date"
+        />
       </TooltipContent>
     </Tooltip>
   );
