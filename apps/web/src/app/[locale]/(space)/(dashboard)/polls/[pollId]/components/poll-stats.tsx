@@ -118,9 +118,10 @@ export function PollStats({
 
 /** The date with the most availability, or how many tie for it. */
 /**
- * The date with the most availability. When several tie, it opens on the
- * recommended one (most yes, then fewest if need be, then earliest) and the
- * arrows step through the others; Finalize applies to the date shown.
+ * The date with the most availability and how many can make it. When several
+ * tie, it opens on the recommended one (most yes, then fewest if need be,
+ * then earliest) and the arrows beside Finalize step through the others;
+ * Finalize applies to the date shown.
  */
 function BestDateCard({
   options,
@@ -168,11 +169,46 @@ function BestDateCard({
             <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
           </span>
         </StatCardLabel>
-        {canFinalize && current ? (
-          <Button size="sm" onClick={finalizeDialog.trigger}>
-            <Trans i18nKey="pollStatsFinalize" defaults="Finalize" />
-          </Button>
-        ) : null}
+        <div className="flex shrink-0 items-center gap-1">
+          {top.length > 1 ? (
+            <div className="flex shrink-0 items-center gap-1">
+              <span className="sr-only" aria-live="polite">
+                <Trans
+                  i18nKey="pollStatsTiedPosition"
+                  defaults="{position} of {count} tied"
+                  values={{ position: index + 1, count: top.length }}
+                />
+              </span>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t("pollStatsPreviousTiedDate", {
+                  defaultValue: "Previous tied date",
+                })}
+                disabled={index === 0}
+                onClick={() => setIndex((i) => i - 1)}
+              >
+                <ChevronLeftIcon aria-hidden="true" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t("pollStatsNextTiedDate", {
+                  defaultValue: "Next tied date",
+                })}
+                disabled={index === top.length - 1}
+                onClick={() => setIndex((i) => i + 1)}
+              >
+                <ChevronRightIcon aria-hidden="true" />
+              </Button>
+            </div>
+          ) : null}
+          {canFinalize && current ? (
+            <Button size="sm" onClick={finalizeDialog.trigger}>
+              <Trans i18nKey="pollStatsFinalize" defaults="Finalize" />
+            </Button>
+          ) : null}
+        </div>
       </StatCardHeader>
       <StatCardFooter className="items-end">
         {current ? (
@@ -201,41 +237,16 @@ function BestDateCard({
             />
           </span>
         )}
-        {top.length > 1 ? (
-          <div className="flex shrink-0 items-center gap-1">
-            <span
-              className="text-muted-foreground text-sm tabular-nums"
-              aria-live="polite"
-            >
-              <Trans
-                i18nKey="pollStatsTiedPosition"
-                defaults="{position} of {count} tied"
-                values={{ position: index + 1, count: top.length }}
-              />
-            </span>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label={t("pollStatsPreviousTiedDate", {
-                defaultValue: "Previous tied date",
-              })}
-              disabled={index === 0}
-              onClick={() => setIndex((i) => i - 1)}
-            >
-              <ChevronLeftIcon aria-hidden="true" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label={t("pollStatsNextTiedDate", {
-                defaultValue: "Next tied date",
-              })}
-              disabled={index === top.length - 1}
-              onClick={() => setIndex((i) => i + 1)}
-            >
-              <ChevronRightIcon aria-hidden="true" />
-            </Button>
-          </div>
+        {current ? (
+          <span className="shrink-0 text-muted-foreground text-sm">
+            <Trans
+              i18nKey="pollStatsCanMakeIt"
+              defaults="{count} can make it"
+              values={{
+                count: current.votes.yes.length + current.votes.ifNeedBe.length,
+              }}
+            />
+          </span>
         ) : null}
       </StatCardFooter>
       {canFinalize && current ? (

@@ -929,6 +929,7 @@
   "pollsListStatusFilter": "Filter by status",
   "pollStatsAwaiting": "Awaiting {count}",
   "pollStatsBestDate": "Best date",
+  "pollStatsCanMakeIt": "{count} can make it",
   "pollStatsFinalize": "Finalize",
   "pollStatsInviteByEmail": "Invite by email",
   "pollStatsNextTiedDate": "Next tied date",
