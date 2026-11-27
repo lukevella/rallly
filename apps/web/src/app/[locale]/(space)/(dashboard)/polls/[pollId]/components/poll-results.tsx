@@ -1097,7 +1097,8 @@ function ResultsTable({
                   onMouseEnter={() => setHoveredId(option.id)}
                   className={cn(
                     "min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
-                    hoveredId === option.id && "bg-foreground/[0.04]",
+                    hoveredId === option.id &&
+                      "bg-foreground/[0.04] dark:bg-foreground/[0.012]",
                   )}
                 >
                   <span className="flex flex-col items-center gap-2">
@@ -1179,7 +1180,7 @@ function ResultsTable({
                 <th
                   scope="row"
                   className={cn(
-                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_7%,var(--color-background))]",
+                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_4.2%,var(--color-background))]",
                     namesExpanded && "max-w-48",
                   )}
                 >
@@ -1194,8 +1195,9 @@ function ResultsTable({
                       key={option.id}
                       onMouseEnter={() => setHoveredId(option.id)}
                       className={cn(
-                        "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04]",
-                        hoveredId === option.id && "bg-foreground/[0.04]",
+                        "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04] dark:group-hover/row:bg-foreground/[0.012]",
+                        hoveredId === option.id &&
+                          "bg-foreground/[0.04] dark:bg-foreground/[0.012]",
                       )}
                     >
                       <span className="inline-flex">
@@ -1236,7 +1238,8 @@ function ResultsTable({
                     onMouseEnter={() => setHoveredId(option.id)}
                     className={cn(
                       "border-t border-r px-2 py-3 last:border-r-0",
-                      hoveredId === option.id && "bg-foreground/[0.04]",
+                      hoveredId === option.id &&
+                        "bg-foreground/[0.04] dark:bg-foreground/[0.012]",
                     )}
                   >
                     <span className="flex flex-col items-center gap-1">
