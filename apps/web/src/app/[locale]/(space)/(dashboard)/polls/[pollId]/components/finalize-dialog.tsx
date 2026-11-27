@@ -185,7 +185,7 @@ function FinalizeContent({
         </DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 sm:grid-cols-[18rem_minmax(0,1fr)]">
-        <aside className="flex flex-col gap-4 rounded-xl bg-muted/40 p-4">
+        <aside className="flex flex-col gap-4">
           <p className="font-medium text-sm">{poll.title}</p>
           <SummaryStep option={option} />
         </aside>
