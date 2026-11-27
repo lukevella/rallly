@@ -212,15 +212,16 @@ function BestDateCard({
       </StatCardHeader>
       <StatCardFooter className="items-end">
         {current ? (
-          <StatCardValue className="truncate text-xl">
-            {formatDateTime(
-              current.startTime,
-              "weekdayMonthDayShort",
-              optionZone(current, floating),
-            )}
+          <div className="flex min-w-0 flex-col">
+            <StatCardValue className="truncate text-lg">
+              {formatDateTime(
+                current.startTime,
+                "weekdayMonthDayShort",
+                optionZone(current, floating),
+              )}
+            </StatCardValue>
             {current.duration > 0 ? (
-              <span className="text-muted-foreground">
-                {" "}
+              <span className="truncate text-muted-foreground text-sm tabular-nums">
                 {formatDateTime(
                   current.startTime,
                   "time",
@@ -228,7 +229,7 @@ function BestDateCard({
                 )}
               </span>
             ) : null}
-          </StatCardValue>
+          </div>
         ) : (
           <span className="text-muted-foreground text-sm">
             <Trans
