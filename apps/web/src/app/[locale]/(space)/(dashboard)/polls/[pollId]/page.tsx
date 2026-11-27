@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Trans } from "react-i18next/TransWithoutContext";
 import {
   PageColumn,
@@ -10,7 +11,9 @@ import { PollProvider } from "@/features/poll/client";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { loadPollInvites } from "@/features/poll/invite/loaders";
 import { loadAdminPoll, loadPollActivity } from "@/features/poll/loaders";
+import { loadActiveSpace } from "@/features/space/loaders";
 import { getTranslation } from "@/i18n/server";
+import { LEGACY_VIEW_PARAM, LEGACY_VIEW_VALUE } from "@/lib/poll-admin-view";
 import { PollActivitySection } from "./components/poll-activity";
 import { PollBreadcrumb } from "./components/poll-breadcrumb";
 import { PollDetails } from "./components/poll-details";
@@ -30,13 +33,23 @@ export default async function Page({
   params: Promise<{ pollId: string }>;
 }) {
   const { pollId } = await params;
-  const [{ poll, participants, comments }, invites, activity, { t, i18n }] =
-    await Promise.all([
-      loadAdminPoll(pollId),
-      loadPollInvites(pollId),
-      loadPollActivity(pollId),
-      getTranslation(),
-    ]);
+  const [{ poll, participants, comments }, space] = await Promise.all([
+    loadAdminPoll(pollId),
+    loadActiveSpace(),
+  ]);
+
+  // This page reads within the active space. A poll the host manages
+  // elsewhere (another space, or none) opens on the legacy page instead of
+  // a 404, which the opt in's redirect lets through.
+  if (poll.spaceId !== space.id) {
+    redirect(`/poll/${pollId}?${LEGACY_VIEW_PARAM}=${LEGACY_VIEW_VALUE}`);
+  }
+
+  const [invites, activity, { t, i18n }] = await Promise.all([
+    loadPollInvites(pollId),
+    loadPollActivity(pollId),
+    getTranslation(),
+  ]);
 
   const invitedParticipantIds = new Set(
     invites.flatMap((invite) =>

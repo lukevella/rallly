@@ -15,31 +15,15 @@ import { ExternalLinkIcon } from "lucide-react";
 import { Link } from "@/components/link";
 import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import { Trans } from "@/i18n/client";
-import { useFeatureFlag } from "@/lib/feature-flags/client";
 
 /**
  * Shown once a poll is created: the invite link to share, the page
- * participants see, and the way to the poll's page. Guests go through login
- * first, which saves the poll to their account. It can't be dismissed: the
- * only ways on are its links.
+ * participants see, and the way to the poll's page. It can't be dismissed:
+ * the only ways on are its links. Manage poll goes to the legacy page, which
+ * hosts who opted into the new one are redirected from.
  */
-export function PollCreatedDialog({
-  pollId,
-  isGuest,
-}: {
-  pollId: string;
-  isGuest: boolean;
-}) {
-  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
+export function PollCreatedDialog({ pollId }: { pollId: string }) {
   const inviteLink = shortUrl(`/invite/${pollId}`);
-  // The new poll page needs an account, so guests log in first. The legacy
-  // page it replaces is open to guests.
-  const needsLogin = isPollAdminEnabled && isGuest;
-  const manageHref = !isPollAdminEnabled
-    ? `/poll/${pollId}`
-    : needsLogin
-      ? `/login?redirectTo=${encodeURIComponent(`/polls/${pollId}`)}`
-      : `/polls/${pollId}`;
 
   return (
     <Dialog open disablePointerDismissal onOpenChange={() => {}}>
@@ -60,14 +44,6 @@ export function PollCreatedDialog({
           </DialogDescription>
         </DialogHeader>
         <InviteLinkRow pollId={pollId} inviteLink={inviteLink} />
-        {needsLogin ? (
-          <p className="text-muted-foreground text-sm">
-            <Trans
-              i18nKey="pollCreatedDialogGuestHint"
-              defaults="Log in to see responses and manage this poll. It will be saved to your account."
-            />
-          </p>
-        ) : null}
         <DialogFooter>
           <a
             href={inviteLink}
@@ -82,26 +58,18 @@ export function PollCreatedDialog({
             <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" />
           </a>
           <Link
-            href={manageHref}
+            href={`/poll/${pollId}`}
             className={buttonVariants({ variant: "primary" })}
             onClick={() =>
               posthog?.capture("poll_creation:manage_link_click", {
                 poll_id: pollId,
-                is_guest: isGuest,
               })
             }
           >
-            {needsLogin ? (
-              <Trans
-                i18nKey="pollCreatedDialogLogInToManage"
-                defaults="Log in to manage"
-              />
-            ) : (
-              <Trans
-                i18nKey="pollCreatedDialogManagePoll"
-                defaults="Manage poll"
-              />
-            )}
+            <Trans
+              i18nKey="pollCreatedDialogManagePoll"
+              defaults="Manage poll"
+            />
           </Link>
         </DialogFooter>
       </DialogContent>

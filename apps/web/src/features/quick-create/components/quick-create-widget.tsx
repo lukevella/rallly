@@ -6,17 +6,13 @@ import { Link } from "@/components/link";
 import { PollPageIcon } from "@/components/page-icons";
 import { getGuestPolls } from "@/features/quick-create/data";
 import { getTranslation } from "@/i18n/server";
-import { isFeatureEnabled } from "@/lib/feature-flags/server";
 
 import { RelativeDate } from "./relative-date";
 
 export async function QuickCreateWidget() {
   const polls = await getGuestPolls();
   const { t, i18n } = await getTranslation();
-  // The new poll page needs an account, so a guest's poll opens on its
-  // invite page; the legacy page it replaces is open to guests.
-  const pollHref = (pollId: string) =>
-    isFeatureEnabled("pollAdmin") ? `/invite/${pollId}` : `/poll/${pollId}`;
+
   return (
     <div className="space-y-8">
       <div className="space-y-6">
@@ -56,7 +52,7 @@ export async function QuickCreateWidget() {
               {polls.map((poll) => (
                 <li key={poll.id}>
                   <Link
-                    href={pollHref(poll.id)}
+                    href={`/poll/${poll.id}`}
                     className="flex items-center gap-3 rounded-2xl border border-card-border bg-card p-3 hover:bg-card-accent"
                   >
                     <div>

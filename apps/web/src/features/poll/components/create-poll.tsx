@@ -368,9 +368,7 @@ export const CreatePoll = ({
             scaling, so give it height inside the resting zone. */}
         <div ref={sentinelRef} className="-mt-6 h-6" aria-hidden="true" />
       </main>
-      {createdPollId ? (
-        <PollCreatedDialog pollId={createdPollId} isGuest={!isLoggedIn} />
-      ) : null}
+      {createdPollId ? <PollCreatedDialog pollId={createdPollId} /> : null}
     </Form>
   );
 };
