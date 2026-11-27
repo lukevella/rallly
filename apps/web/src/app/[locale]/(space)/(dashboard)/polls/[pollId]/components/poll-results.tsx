@@ -513,22 +513,6 @@ function AvailabilityPopover({
               </p>
             ) : null}
           </div>
-          {onFinalize ? (
-            <Button
-              size="sm"
-              className="shrink-0"
-              onClick={() => {
-                // Closed first, so the finalize dialog isn't stacked on it.
-                setOpen(false);
-                onFinalize();
-              }}
-            >
-              <Trans
-                i18nKey="pollResultsFinalizeThisDate"
-                defaults="Finalize this date"
-              />
-            </Button>
-          ) : null}
         </div>
         <VoteBreakdown
           optionId={option.id}
@@ -536,6 +520,21 @@ function AvailabilityPopover({
           participants={participants}
           participantsById={participantsById}
         />
+        {onFinalize ? (
+          <Button
+            className="w-full"
+            onClick={() => {
+              // Closed first, so the finalize dialog isn't stacked on it.
+              setOpen(false);
+              onFinalize();
+            }}
+          >
+            <Trans
+              i18nKey="pollResultsFinalizeThisDate"
+              defaults="Finalize this date"
+            />
+          </Button>
+        ) : null}
       </PopoverContent>
     </Popover>
   );
