@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@rallly/ui";
+import { SparklesIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Trans } from "@/i18n/client";
 import { setPollAdminView } from "@/lib/poll-admin-view-client";
@@ -32,6 +33,7 @@ export function PollAdminViewSwitch({
       }}
       className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-control pr-3 pl-3.5 text-muted-foreground text-xs outline-none hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
     >
+      <SparklesIcon aria-hidden="true" className="size-3.5 shrink-0" />
       <Trans i18nKey="pollAdminTryNewView" defaults="Try the new view" />
       <span
         aria-hidden="true"
