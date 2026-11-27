@@ -238,7 +238,7 @@ function BestDateCard({
           </span>
         )}
         {current ? (
-          <span className="shrink-0 text-muted-foreground text-sm">
+          <span className="flex shrink-0 items-center gap-2 text-muted-foreground text-sm">
             <Trans
               i18nKey="pollStatsCanMakeItOfTotal"
               defaults="{count} of {total} can make it"
@@ -246,6 +246,10 @@ function BestDateCard({
                 count: current.votes.yes.length + current.votes.ifNeedBe.length,
                 total: participants.length,
               }}
+            />
+            <ProgressDonut
+              value={current.votes.yes.length + current.votes.ifNeedBe.length}
+              max={participants.length}
             />
           </span>
         ) : null}
@@ -257,7 +261,7 @@ function BestDateCard({
   );
 }
 
-/** How many of the invited have responded, as a ring. */
+/** A share as a ring: invitees who responded, or respondents who can make a date. */
 function ProgressDonut({ value, max }: { value: number; max: number }) {
   const radius = 15;
   const circumference = 2 * Math.PI * radius;
