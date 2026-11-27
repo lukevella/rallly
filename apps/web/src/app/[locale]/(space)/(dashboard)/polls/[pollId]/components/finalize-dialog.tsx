@@ -182,9 +182,9 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col gap-6">
-        {/* Inset to line up with the notify card's checkboxes. */}
-        <div className="px-6">
+      <div className="flex flex-col">
+        {/* Inset like the notify card's content, so the two line up. */}
+        <div className="p-6">
           <SummaryStep option={option} />
         </div>
         {participants.length > 0 ? (
