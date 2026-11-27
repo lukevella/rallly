@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants, cn } from "@rallly/ui";
+import { buttonVariants } from "@rallly/ui";
 import {
   Alert,
   AlertAction,
@@ -27,7 +27,6 @@ import type { PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
-import { useScrolledPast } from "./poll-breadcrumb";
 
 /** The vote page link and the ways to share it, under an alert when the poll is closed or scheduled. */
 export function PollStatusCard({
@@ -202,26 +201,5 @@ export function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
       />
       <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" />
     </a>
-  );
-}
-
-/**
- * The share bar's link actions, shown in the sticky header once the page has
- * scrolled past the share bar.
- */
-export function StickyShareActions({ inviteLink }: { inviteLink: string }) {
-  const visible = useScrolledPast();
-
-  return (
-    <div
-      inert={!visible}
-      className={cn(
-        "hidden items-center gap-1.5 transition-opacity duration-150 motion-reduce:transition-none sm:flex",
-        visible ? "opacity-100" : "pointer-events-none opacity-0",
-      )}
-    >
-      <CopyLinkButton inviteLink={inviteLink} />
-      <ViewInvitePageButton inviteLink={inviteLink} />
-    </div>
   );
 }

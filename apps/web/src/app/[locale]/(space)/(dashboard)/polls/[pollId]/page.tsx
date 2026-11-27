@@ -22,10 +22,7 @@ import { PollDetails } from "./components/poll-details";
 import { PollResults } from "./components/poll-results";
 import { PollSections } from "./components/poll-section";
 import { PollStats } from "./components/poll-stats";
-import {
-  PollStatusCard,
-  StickyShareActions,
-} from "./components/poll-status-card";
+import { PollStatusCard } from "./components/poll-status-card";
 import { PollStatusLabel } from "./components/poll-status-label";
 import { ShareButton } from "./components/share-button";
 
@@ -83,7 +80,6 @@ export default async function Page({
           viewerRole="admin"
         >
           <div className="flex items-center gap-1.5">
-            <StickyShareActions inviteLink={poll.inviteLink} />
             <PollAdminViewSwitch pollId={poll.id} checked />
             <NotificationToggle />
             <PollAdminMenu />
