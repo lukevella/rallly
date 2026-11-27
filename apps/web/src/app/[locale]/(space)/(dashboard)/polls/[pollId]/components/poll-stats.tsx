@@ -1,15 +1,9 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
-import { cn } from "@rallly/ui";
 import { Button } from "@rallly/ui/button";
 import { useDialog } from "@rallly/ui/dialog";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  StarIcon,
-  UsersIcon,
-} from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import React from "react";
 import {
   StatCard,
@@ -35,26 +29,6 @@ type Participant = {
   id: string;
   votes: { optionId: string; type: VoteType }[];
 };
-
-function StatIcon({
-  className,
-  children,
-}: {
-  className: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "inline-flex size-7 shrink-0 items-center justify-center rounded-lg [&_svg]:size-4",
-        className,
-      )}
-    >
-      {children}
-    </span>
-  );
-}
 
 /**
  * Two cards: who has responded (with email invite progress and the way to
@@ -85,13 +59,8 @@ export function PollStats({
     <StatCardStack>
       <StatCard>
         <StatCardHeader>
-          <StatCardLabel className="flex min-w-0 items-center gap-2">
-            <StatIcon className="bg-violet-500/10 text-violet-600 dark:text-violet-400">
-              <UsersIcon />
-            </StatIcon>
-            <span className="truncate">
-              <Trans i18nKey="pollStatsResponses" defaults="Responses" />
-            </span>
+          <StatCardLabel className="self-center font-medium text-base text-foreground">
+            <Trans i18nKey="pollStatsResponses" defaults="Responses" />
           </StatCardLabel>
           {inviteAction}
         </StatCardHeader>
@@ -167,13 +136,8 @@ function BestDateCard({
   return (
     <StatCard>
       <StatCardHeader>
-        <StatCardLabel className="flex min-w-0 items-center gap-2">
-          <StatIcon className="bg-amber-500/10 text-amber-600 dark:text-amber-400">
-            <StarIcon />
-          </StatIcon>
-          <span className="truncate">
-            <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
-          </span>
+        <StatCardLabel className="self-center font-medium text-base text-foreground">
+          <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
         </StatCardLabel>
         <div className="flex shrink-0 items-center gap-1">
           {top.length > 1 ? (
