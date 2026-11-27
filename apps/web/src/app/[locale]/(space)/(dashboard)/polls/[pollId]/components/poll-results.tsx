@@ -1104,10 +1104,10 @@ function ResultsTable({
                       "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                   )}
                 >
-                  <span className="flex flex-col items-center gap-1 text-xs">
+                  <span className="flex flex-col items-center gap-1">
                     <DayLabel weekday={weekday} day={day} />
                     {option.duration > 0 ? (
-                      <span className="flex flex-col items-center gap-1 whitespace-nowrap tabular-nums">
+                      <span className="flex flex-col items-center gap-1 whitespace-nowrap text-xs tabular-nums">
                         <span>
                           {formatDateTime(option.startTime, "time", {
                             timeZone: zone,
