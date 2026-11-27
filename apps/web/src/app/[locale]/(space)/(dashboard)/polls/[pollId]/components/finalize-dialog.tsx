@@ -182,7 +182,7 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="grid gap-4 sm:grid-cols-[18rem_minmax(0,1fr)]">
+      <div className="grid gap-4 sm:grid-cols-[18rem_minmax(0,1fr)] sm:gap-8">
         <aside className="flex flex-col gap-4">
           <SummaryStep option={option} />
         </aside>
