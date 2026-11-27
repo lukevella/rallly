@@ -124,6 +124,7 @@
   "reviewRequest_reply": "Qu’il soit positif, négatif ou entre les deux, un avis honnête est toujours utile. Et si quelque chose dans Rallly vous pose problème, répondez simplement à ce message. Je lis toutes les réponses.",
   "reviewRequest_subject": "Un petit service ?",
   "reviewRequest_thanks": "Merci,",
+  "signatureFounderTitle": "Fondateur de Rallly",
   "spaceInvite_button": "Accepter l'invitation",
   "spaceInvite_content": "{inviterName} vous a invité à rejoindre l'espace {spaceName} en tant que {role}.",
   "spaceInvite_heading": "Vous êtes invité !",
