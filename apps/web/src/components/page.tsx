@@ -1,9 +1,12 @@
 // The layout every app page is built from: PageShell > PageHeader (PageColumn >
 // PageTitle + PageToolbar) and PageContent (PageColumn > content).
+// Every page starts with the same full width bar, so the title always sits at
+// the same place on screen; a detail page puts its back link in the bar.
 import { cn } from "@rallly/ui";
 import { SidebarTrigger } from "@rallly/ui/sidebar";
 import { Skeleton } from "@rallly/ui/skeleton";
 import { MenuIcon } from "lucide-react";
+import { PageScrollFrame } from "./page-scroll-frame";
 
 // Opens the sidebar on small screens, at the trailing edge of the page title.
 function MobileMenuButton() {
@@ -14,15 +17,25 @@ function MobileMenuButton() {
   );
 }
 
-// Fills the dashboard shell's bounded main area: the header stays put and
-// PageContent is the scroll area.
+// Fills the dashboard shell's bounded main area. `nav` goes in the full width
+// bar above the title (a back link); the bar is there on every page, empty or
+// not, and stays put. Everything below it, title included, scrolls together.
 export function PageShell({
   children,
+  nav,
+  navActions,
   className,
-}: React.PropsWithChildren<{ className?: string }>) {
+}: React.PropsWithChildren<{
+  nav?: React.ReactNode;
+  /** Controls at the right of the top bar, which stays put while scrolling. */
+  navActions?: React.ReactNode;
+  className?: string;
+}>) {
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
-      {children}
+      <PageScrollFrame nav={nav} navActions={navActions}>
+        {children}
+      </PageScrollFrame>
     </div>
   );
 }
@@ -39,19 +52,26 @@ export function PageHeader({
 // and sit at the trailing edge, before the mobile menu button.
 export function PageTitle({
   children,
+  badge,
   actions,
+  id,
   className,
-}: React.PropsWithChildren<{ actions?: React.ReactNode; className?: string }>) {
+}: React.PropsWithChildren<{
+  /** Sits right after the title, such as a status. */
+  badge?: React.ReactNode;
+  actions?: React.ReactNode;
+  id?: string;
+  className?: string;
+}>) {
   return (
-    <div
-      className={cn(
-        "flex items-center gap-2 px-4 pt-4 md:pt-8 lg:pt-12",
-        className,
-      )}
-    >
-      <h1 className="min-w-0 truncate font-semibold text-foreground text-xl tracking-tight md:text-2xl">
+    <div className={cn("flex min-h-9 items-center gap-2 px-4", className)}>
+      <h1
+        id={id}
+        className="min-w-0 truncate font-semibold text-foreground text-xl tracking-tight md:text-2xl"
+      >
         {children}
       </h1>
+      {badge}
       {/* One trailing group, so the actions and the menu button share the
           free space instead of each pushing itself right */}
       <div className="ml-auto flex shrink-0 items-center gap-2">
@@ -64,7 +84,7 @@ export function PageTitle({
 
 export function PageTitleSkeleton() {
   return (
-    <div className="flex items-center gap-2 px-4 pt-4 md:pt-8 lg:pt-12">
+    <div className="flex min-h-9 items-center gap-2 px-4">
       <Skeleton aria-hidden className="h-7 w-28 md:h-8" />
       <MobileMenuButton />
     </div>
@@ -102,7 +122,7 @@ export function PageToolbarSkeleton({
 // Centres a page's header and content in a max-w-5xl column. The scroll
 // area stays full width so the scrollbar sits at the edge of the main area.
 // Children bring their own px-4, so the gutter is 16px on small screens and
-// 32px from md, matching the top padding of PageTitle.
+// 32px from md.
 export function PageColumn({
   children,
   className,
@@ -145,9 +165,5 @@ export function PageContent({
   children,
   className,
 }: React.PropsWithChildren<{ className?: string }>) {
-  return (
-    <div className={cn("min-h-0 flex-1 overflow-y-auto", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("flex-1", className)}>{children}</div>;
 }

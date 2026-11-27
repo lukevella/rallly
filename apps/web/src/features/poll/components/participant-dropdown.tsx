@@ -138,7 +138,7 @@ export const ParticipantDropdown = ({
  * The per response edit link, for handing edit access to someone who
  * responded without an email (or lost the confirmation email).
  */
-const CopyEditLinkMenuItem = ({
+export const CopyEditLinkMenuItem = ({
   editUrl,
   participantName,
 }: {

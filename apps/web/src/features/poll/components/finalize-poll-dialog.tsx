@@ -564,10 +564,12 @@ function FinalizeWizard({
   step,
   onStepChange,
   onClose,
+  initialOptionId,
 }: {
   step: Step;
   onStepChange: (step: Step) => void;
   onClose: () => void;
+  initialOptionId?: string;
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
@@ -584,7 +586,9 @@ function FinalizeWizard({
     () => rankOptionsByPopularity({ options: poll.options, participants }),
     [poll.options, participants],
   );
-  const [optionId, setOptionId] = React.useState<string | null>(null);
+  const [optionId, setOptionId] = React.useState<string | null>(
+    initialOptionId ?? null,
+  );
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
@@ -755,8 +759,24 @@ function FinalizeWizard({
   );
 }
 
-export function FinalizePollDialog(props: DialogProps) {
+/**
+ * `optionId` opens the wizard with that date already picked, past the date
+ * step; Back still leads to the full list.
+ */
+export function FinalizePollDialog({
+  optionId,
+  ...props
+}: DialogProps & { optionId?: string }) {
+  const { participants } = useParticipants();
   const [step, setStep] = React.useState<Step>("date");
+  const pickedStep: Step = participants.length > 0 ? "notify" : "summary";
+  // Opening on a picked date starts past the date step. Set before paint, so
+  // the date list never flashes.
+  React.useLayoutEffect(() => {
+    if (props.open && optionId) {
+      setStep(pickedStep);
+    }
+  }, [props.open, optionId, pickedStep]);
   const onOpenChange = (open: boolean) => {
     if (!open && step !== "done") {
       posthog?.capture("poll_finalize:dialog_dismiss", { step });
@@ -775,6 +795,7 @@ export function FinalizePollDialog(props: DialogProps) {
     >
       <DialogContent className="w-auto sm:max-w-none">
         <FinalizeWizard
+          initialOptionId={optionId}
           step={step}
           onStepChange={setStep}
           onClose={() => onOpenChange(false)}
