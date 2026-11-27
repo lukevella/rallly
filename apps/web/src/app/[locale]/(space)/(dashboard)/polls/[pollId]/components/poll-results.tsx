@@ -440,12 +440,9 @@ function ViewOption({
 function PickButton({
   label,
   onClick,
-  best = false,
 }: {
   label: string;
   onClick: () => void;
-  /** The option has the most availability: the star shows gold. */
-  best?: boolean;
 }) {
   return (
     <Tooltip>
@@ -459,10 +456,7 @@ function PickButton({
           />
         }
       >
-        <StarIcon
-          aria-hidden="true"
-          className={cn(best && "fill-amber-400 text-amber-500")}
-        />
+        <StarIcon aria-hidden="true" />
       </TooltipTrigger>
       <TooltipContent>
         <Trans i18nKey="pollResultsPickTooltip" defaults="Pick this date" />
@@ -788,11 +782,7 @@ function ResultsList({
         />
         {onPick && label ? (
           <span>
-            <PickButton
-              label={label}
-              onClick={() => onPick(option)}
-              best={best > 0 && yes + ifNeedBe === best}
-            />
+            <PickButton label={label} onClick={() => onPick(option)} />
           </span>
         ) : null}
       </li>
@@ -1262,7 +1252,6 @@ function ResultsTable({
                         <PickButton
                           label={pickLabel(option)}
                           onClick={() => onPick(option)}
-                          best={isBest}
                         />
                       ) : null}
                     </span>
