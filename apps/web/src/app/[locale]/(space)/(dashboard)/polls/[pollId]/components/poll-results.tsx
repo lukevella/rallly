@@ -538,6 +538,15 @@ function AvailabilityPopover({
                 )}
               </p>
             ) : null}
+            {participants.length > 0 ? (
+              <p className="text-muted-foreground">
+                <Trans
+                  i18nKey="pollStatsCanMakeItOfTotal"
+                  defaults="{count} of {total} can make it"
+                  values={{ count, total: participants.length }}
+                />
+              </p>
+            ) : null}
           </div>
         </div>
         {/* Scrolls on its own, so a long list keeps the header and footer
@@ -553,6 +562,7 @@ function AvailabilityPopover({
         {onFinalize ? (
           <div className="shrink-0 border-popover-border border-t p-3">
             <Button
+              variant="primary"
               className="w-full"
               onClick={() => {
                 // Closed first, so the finalize dialog isn't stacked on it.
