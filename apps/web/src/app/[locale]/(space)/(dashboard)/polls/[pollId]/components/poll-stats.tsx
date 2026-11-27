@@ -89,14 +89,13 @@ export function PollStats({
           <StatCardValue>{responseCount}</StatCardValue>
           {invitedCount > 0 ? (
             <span className="flex items-center gap-2 text-muted-foreground text-sm">
-              <Trans
-                i18nKey="pollStatsInvitesResponded"
-                defaults="{responded}/{invited} invites responded"
-                values={{
-                  responded: respondedInviteCount,
-                  invited: invitedCount,
-                }}
-              />
+              {invitedCount > respondedInviteCount ? (
+                <Trans
+                  i18nKey="pollStatsAwaiting"
+                  defaults="Awaiting {count}"
+                  values={{ count: invitedCount - respondedInviteCount }}
+                />
+              ) : null}
               <ProgressDonut value={respondedInviteCount} max={invitedCount} />
             </span>
           ) : null}
