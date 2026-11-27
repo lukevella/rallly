@@ -228,27 +228,6 @@ export function PollResults({
           hasTimes={hasTimes}
           best={best}
           showDuration={showEndTime}
-          pickLabel={
-            canPick
-              ? (option) =>
-                  t("pollResultsPick", {
-                    defaultValue: "Pick {date}",
-                    date: formatDateTime(
-                      option.startTime,
-                      "weekdayMonthDay",
-                      optionZone(option, timeZone === null),
-                    ),
-                  })
-              : undefined
-          }
-          onPick={
-            canPick
-              ? (option) => {
-                  setPickedOptionId(option.id);
-                  finalizeDialog.trigger();
-                }
-              : undefined
-          }
         />
       ) : (
         <ResultsList
@@ -1023,15 +1002,10 @@ function ResultsTable({
   participants,
   floating,
   best,
-  pickLabel,
-  onPick,
   showDuration,
 }: TableProps & {
   /** Only when options differ in length; a shared one is in the details. */
   showDuration: boolean;
-  /** Omitted once a date can no longer be picked. */
-  pickLabel?: (option: TableOption) => string;
-  onPick?: (option: TableOption) => void;
 }) {
   const { formatDateTime } = useDateTime();
   const { locale, timeZone } = useDateTimeConfig();
@@ -1211,9 +1185,7 @@ function ResultsTable({
             );
           })}
         </tbody>
-        {/* Availability, and the star that picks the date, under each
-            column. */}
-        {participants.length > 0 || (onPick && pickLabel) ? (
+        {participants.length > 0 ? (
           <tfoot>
             <tr>
               <th
@@ -1246,12 +1218,6 @@ function ResultsTable({
                           participants={participants}
                           floating={floating}
                           highlight={isBest}
-                        />
-                      ) : null}
-                      {onPick && pickLabel ? (
-                        <PickButton
-                          label={pickLabel(option)}
-                          onClick={() => onPick(option)}
                         />
                       ) : null}
                     </span>
