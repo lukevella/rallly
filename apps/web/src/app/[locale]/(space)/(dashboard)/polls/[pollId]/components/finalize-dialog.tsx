@@ -198,35 +198,15 @@ function FinalizeContent({
         <DialogDescription>{poll.title}</DialogDescription>
       </DialogHeader>
       <div className="flex flex-col">
-        {/* Inset like the notify card's content, so the two line up. */}
-        <div className="px-6 pt-2 pb-6">
+        <div className="pt-2 pb-6">
           <SummaryStep option={option} showDate={false} />
         </div>
         {participants.length > 0 ? (
-          <section
-            aria-labelledby="finalize-notify"
-            className="flex flex-col gap-3"
-          >
-            <div className="px-6">
-              <h3 id="finalize-notify" className="font-medium text-sm">
-                <Trans
-                  i18nKey="notifyParticipants"
-                  defaults="Notify participants"
-                />
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="finalizeDialogNotifyDescription"
-                  defaults="They'll get an email with the date and a calendar invite."
-                />
-              </p>
-            </div>
-            <NotifyList
-              optionId={option.id}
-              selectedIds={notifyIds}
-              onChange={setNotifyIds}
-            />
-          </section>
+          <NotifyList
+            optionId={option.id}
+            selectedIds={notifyIds}
+            onChange={setNotifyIds}
+          />
         ) : (
           <p className="rounded-xl border border-card-border p-4 text-muted-foreground text-sm">
             <Trans
@@ -346,76 +326,94 @@ function NotifyList({
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-      <div className="flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 px-6">
-        <Checkbox
-          id="finalize-notify-all"
-          checked={allSelected}
-          indeterminate={!allSelected && selectedCount > 0}
-          disabled={notifiableIds.length === 0}
-          onCheckedChange={(checked) => {
-            posthog?.capture("poll_finalize:select_all_click", {
-              selected: checked,
-              ...pollEventProperties({
-                pollId: poll.id,
-                spaceId: poll.spaceId,
-              }),
-            });
-            onChange(new Set(checked ? notifiableIds : []));
-          }}
-        />
-        <Label htmlFor="finalize-notify-all" className="text-sm">
-          <Trans
-            i18nKey="notifySelectedCount"
-            defaults="{count, plural, =0 {Select all} one {# selected} other {# selected}}"
-            values={{ count: selectedCount }}
+    <section aria-labelledby="finalize-notify" className="flex flex-col gap-3">
+      <div className="flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          <h3 id="finalize-notify" className="font-medium text-sm">
+            <Trans
+              i18nKey="notifyParticipants"
+              defaults="Notify participants"
+            />
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            <Trans
+              i18nKey="finalizeDialogNotifyDescription"
+              defaults="They'll get an email with the date and a calendar invite."
+            />
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <Checkbox
+            id="finalize-notify-all"
+            checked={allSelected}
+            indeterminate={!allSelected && selectedCount > 0}
+            disabled={notifiableIds.length === 0}
+            onCheckedChange={(checked) => {
+              posthog?.capture("poll_finalize:select_all_click", {
+                selected: checked,
+                ...pollEventProperties({
+                  pollId: poll.id,
+                  spaceId: poll.spaceId,
+                }),
+              });
+              onChange(new Set(checked ? notifiableIds : []));
+            }}
           />
-        </Label>
+          <Label htmlFor="finalize-notify-all" className="text-sm">
+            <Trans
+              i18nKey="notifySelectedCount"
+              defaults="{count, plural, =0 {Select all} one {# selected} other {# selected}}"
+              values={{ count: selectedCount }}
+            />
+          </Label>
+        </div>
       </div>
-      <div className="max-h-72 overflow-y-auto pb-2">
-        {groups.map(({ group, members }) => (
-          <div key={group}>
-            <GroupLabel group={group} count={members.length} />
-            <ul className="px-2">
-              {members.map((participant) => (
-                <li
-                  key={participant.id}
-                  className="relative flex min-w-0 items-center gap-3 rounded-lg px-4 py-2 hover:bg-foreground/[0.03] has-disabled:hover:bg-transparent"
-                >
-                  <Checkbox
-                    id={`finalize-notify-${participant.id}`}
-                    className="relative z-10"
-                    checked={selectedIds.has(participant.id)}
-                    disabled={!participant.email}
-                    onCheckedChange={(checked) =>
-                      toggle(participant.id, checked)
-                    }
-                  />
-                  {/* Stretched over the row, so the whole row toggles. */}
-                  <Label
-                    htmlFor={`finalize-notify-${participant.id}`}
-                    className="flex min-w-0 flex-1 items-center gap-3 after:absolute after:inset-0 after:rounded-lg"
+      <div className="overflow-hidden rounded-xl border border-card-border bg-card">
+        <div className="max-h-72 overflow-y-auto pb-2">
+          {groups.map(({ group, members }) => (
+            <div key={group}>
+              <GroupLabel group={group} count={members.length} />
+              <ul className="px-2">
+                {members.map((participant) => (
+                  <li
+                    key={participant.id}
+                    className="relative flex min-w-0 items-center gap-3 rounded-lg px-2 py-2 hover:bg-foreground/[0.03] has-disabled:hover:bg-transparent"
                   >
-                    <OptimizedAvatarImage
-                      size="sm"
-                      name={participant.name}
-                      src={participant.image ?? undefined}
+                    <Checkbox
+                      id={`finalize-notify-${participant.id}`}
+                      className="relative z-10"
+                      checked={selectedIds.has(participant.id)}
+                      disabled={!participant.email}
+                      onCheckedChange={(checked) =>
+                        toggle(participant.id, checked)
+                      }
                     />
-                    <span className="min-w-0 truncate text-sm">
-                      {participant.name}
-                    </span>
-                    {participant.email ? (
-                      <span className="ml-auto min-w-0 truncate text-muted-foreground text-sm">
-                        {participant.email}
+                    {/* Stretched over the row, so the whole row toggles. */}
+                    <Label
+                      htmlFor={`finalize-notify-${participant.id}`}
+                      className="flex min-w-0 flex-1 items-center gap-3 after:absolute after:inset-0 after:rounded-lg"
+                    >
+                      <OptimizedAvatarImage
+                        size="sm"
+                        name={participant.name}
+                        src={participant.image ?? undefined}
+                      />
+                      <span className="min-w-0 truncate text-sm">
+                        {participant.name}
                       </span>
-                    ) : null}
-                  </Label>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                      {participant.email ? (
+                        <span className="ml-auto min-w-0 truncate text-muted-foreground text-sm">
+                          {participant.email}
+                        </span>
+                      ) : null}
+                    </Label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
