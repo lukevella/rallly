@@ -221,8 +221,17 @@ function PickedDate({
   const poll = usePoll();
   const { timeZone: displayTimeZone } = useDateTimeConfig();
   const allDay = option.duration === 0;
+  // With the date said elsewhere, an all-day date still says so here, where
+  // a timed one shows its hours.
   if (!showDate && allDay) {
-    return null;
+    return (
+      <div className="flex items-start gap-3">
+        <ClockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+        <div className="text-sm leading-5">
+          <Trans i18nKey="allDay" defaults="All day" />
+        </div>
+      </div>
+    );
   }
   // Fixed instants render in the viewer's zone; floating times have none.
   const cityTimeZone =
