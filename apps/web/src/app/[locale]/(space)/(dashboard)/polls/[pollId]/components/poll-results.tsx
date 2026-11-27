@@ -551,7 +551,7 @@ function AvailabilityPopover({
           />
         </div>
         {participants.length > 0 || onFinalize ? (
-          <div className="flex shrink-0 flex-col gap-2 border-popover-border border-t p-3">
+          <div className="flex shrink-0 flex-col gap-3 border-popover-border border-t p-4">
             {participants.length > 0 ? (
               <p className="text-center text-muted-foreground">
                 <Trans
