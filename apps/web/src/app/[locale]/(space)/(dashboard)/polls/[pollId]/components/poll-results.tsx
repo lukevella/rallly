@@ -1114,13 +1114,6 @@ function ResultsTable({
                   )}
                 >
                   <span className="flex flex-col items-center gap-2">
-                    {onPick && pickLabel ? (
-                      <PickButton
-                        label={pickLabel(option)}
-                        onClick={() => onPick(option)}
-                        best={best > 0 && availableCount(option) === best}
-                      />
-                    ) : null}
                     <DayLabel weekday={weekday} day={day} />
                     {option.duration > 0 ? (
                       <span className="flex flex-col items-center gap-1 whitespace-nowrap tabular-nums">
@@ -1232,7 +1225,9 @@ function ResultsTable({
             );
           })}
         </tbody>
-        {participants.length > 0 ? (
+        {/* Availability, and the star that picks the date, under each
+            column. */}
+        {participants.length > 0 || (onPick && pickLabel) ? (
           <tfoot>
             <tr>
               <th
@@ -1257,13 +1252,22 @@ function ResultsTable({
                       hoveredId === option.id && "bg-foreground/[0.04]",
                     )}
                   >
-                    <span className="flex justify-center">
-                      <AvailabilityPopover
-                        option={option}
-                        participants={participants}
-                        floating={floating}
-                        highlight={isBest}
-                      />
+                    <span className="flex items-center justify-center gap-1">
+                      {participants.length > 0 ? (
+                        <AvailabilityPopover
+                          option={option}
+                          participants={participants}
+                          floating={floating}
+                          highlight={isBest}
+                        />
+                      ) : null}
+                      {onPick && pickLabel ? (
+                        <PickButton
+                          label={pickLabel(option)}
+                          onClick={() => onPick(option)}
+                          best={isBest}
+                        />
+                      ) : null}
                     </span>
                   </td>
                 );
