@@ -18,7 +18,6 @@ import {
 } from "@rallly/ui/segmented-control";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
-  CalendarIcon,
   CalendarXIcon,
   ChevronDownIcon,
   ChevronsLeftIcon,
@@ -518,13 +517,10 @@ function AvailabilityPopover({
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-80 max-w-[calc(100vw-2rem)] gap-4"
+        className="w-80 max-w-[calc(100vw-2rem)] gap-0 overflow-hidden p-0"
       >
-        <div className="flex items-start gap-3 pb-2">
-          <CalendarIcon
-            aria-hidden="true"
-            className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-          />
+        <div className="flex shrink-0 items-center gap-3 border-popover-border border-b px-4 py-3">
+          <DateTile option={option} floating={floating} />
           <div className="min-w-0">
             <p className="font-medium">
               {formatDateTime(option.startTime, "weekdayMonthDay", zone)}
@@ -544,29 +540,57 @@ function AvailabilityPopover({
             ) : null}
           </div>
         </div>
-        <VoteBreakdown
-          optionId={option.id}
-          votes={option.votes}
-          participants={participants}
-          participantsById={participantsById}
-        />
+        {/* Scrolls on its own, so a long list keeps the header and footer
+            in view. */}
+        <div className="max-h-72 overflow-y-auto overscroll-contain px-4 py-3">
+          <VoteBreakdown
+            optionId={option.id}
+            votes={option.votes}
+            participants={participants}
+            participantsById={participantsById}
+          />
+        </div>
         {onFinalize ? (
-          <Button
-            className="w-full"
-            onClick={() => {
-              // Closed first, so the finalize dialog isn't stacked on it.
-              setOpen(false);
-              onFinalize();
-            }}
-          >
-            <Trans
-              i18nKey="pollResultsFinalizeThisDate"
-              defaults="Finalize this date"
-            />
-          </Button>
+          <div className="shrink-0 border-popover-border border-t p-3">
+            <Button
+              className="w-full"
+              onClick={() => {
+                // Closed first, so the finalize dialog isn't stacked on it.
+                setOpen(false);
+                onFinalize();
+              }}
+            >
+              <Trans
+                i18nKey="pollResultsFinalizeThisDate"
+                defaults="Finalize this date"
+              />
+            </Button>
+          </div>
         ) : null}
       </PopoverContent>
     </Popover>
+  );
+}
+
+/** A small calendar page: the weekday over the day of the month. */
+function DateTile({ option, floating }: { option: Option; floating: boolean }) {
+  const { locale, timeZone } = useDateTimeConfig();
+  const { weekday, day } = formatDateParts(option.startTime, {
+    locale,
+    timeZone: optionZone(option, floating).timeZone ?? timeZone ?? "UTC",
+  });
+  return (
+    <div
+      aria-hidden="true"
+      className="flex size-10 shrink-0 flex-col overflow-hidden rounded-lg border border-card-border bg-card text-center"
+    >
+      <div className="border-card-border border-b text-[10px] text-muted-foreground uppercase leading-4">
+        {weekday}
+      </div>
+      <div className="flex grow items-center justify-center font-semibold text-sm tabular-nums leading-none">
+        {day}
+      </div>
+    </div>
   );
 }
 
