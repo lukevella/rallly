@@ -191,9 +191,10 @@ export const env = createEnv({
     OPEN_POLL_LIMIT_ENABLED: z.enum(["true", "false"]).default("false"),
 
     /**
-     * Turn on the new poll page at /polls/[pollId]: links to a poll's page go
-     * there instead of the legacy page, and guests log in to manage a poll.
-     * Always on in development. Turning it back off is the rollback.
+     * Make the new poll page at /polls/[pollId] available. Hosts opt in from
+     * the legacy page and can switch back; the legacy page stays the default.
+     * Always on in development. Turning it back off is the rollback: opted in
+     * hosts return to the legacy page.
      * @default "false"
      */
     POLL_ADMIN_ENABLED: z.enum(["true", "false"]).default("false"),
