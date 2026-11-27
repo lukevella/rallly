@@ -1252,7 +1252,7 @@ function ResultsTable({
                       hoveredId === option.id && "bg-foreground/[0.04]",
                     )}
                   >
-                    <span className="flex items-center justify-center gap-1">
+                    <span className="flex flex-col items-center gap-1">
                       {participants.length > 0 ? (
                         <AvailabilityPopover
                           option={option}
