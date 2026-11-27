@@ -630,6 +630,7 @@ app.post(
             kind,
             source: "api",
             apiVersion: "v1",
+            pollId: poll.id,
             optionCount: poll.options.length,
             hasLocation: !!poll.location,
             hasConferencing: !!poll.conferencing,

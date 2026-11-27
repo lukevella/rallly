@@ -4,6 +4,7 @@ import {
   filterParticipantsByVote,
   getChosenOptionRank,
   getFinalizeTiming,
+  pollEventProperties,
   rankOptionsByPopularity,
   summarizeNotifySelection,
   toAvailabilitySpans,
@@ -383,5 +384,21 @@ describe("summarizeNotifySelection", () => {
     });
     expect(summary.notify_eligible_no_response).toBe(1);
     expect(summary.notify_selected_no_response).toBe(1);
+  });
+});
+
+describe("pollEventProperties", () => {
+  it("joins the event to the poll and its space", () => {
+    expect(pollEventProperties({ pollId: "p1", spaceId: "s1" })).toEqual({
+      poll_id: "p1",
+      $groups: { poll: "p1", space: "s1" },
+    });
+  });
+
+  it("omits the space group when the poll has no space", () => {
+    expect(pollEventProperties({ pollId: "p1", spaceId: null })).toEqual({
+      poll_id: "p1",
+      $groups: { poll: "p1" },
+    });
   });
 });

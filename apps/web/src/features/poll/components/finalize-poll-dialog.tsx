@@ -46,7 +46,10 @@ import type { VoteType } from "@/features/poll/constants";
 import { VOTE_TYPES } from "@/features/poll/constants";
 import type { PollParticipant } from "@/features/poll/types";
 import type { OptionVotes } from "@/features/poll/utils";
-import { rankOptionsByPopularity } from "@/features/poll/utils";
+import {
+  pollEventProperties,
+  rankOptionsByPopularity,
+} from "@/features/poll/utils";
 import {
   EventDate,
   EventTimeRange,
@@ -310,6 +313,7 @@ function VoteShortcut({
   onChange: (next: Set<string>) => void;
 }) {
   const { t } = useTranslation();
+  const poll = usePoll();
   const pressed = ids.every((id) => selectedIds.has(id));
   const label = {
     yes: t("notifySelectYes", {
@@ -331,6 +335,7 @@ function VoteShortcut({
           vote_type: voteType === "ifNeedBe" ? "if_need_be" : voteType,
           selected: !pressed,
           count: ids.length,
+          ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
         });
         onChange(toggleIds({ selectedIds, ids, checked: !pressed }));
       }}
@@ -350,6 +355,7 @@ function NotifyStep({
   selectedIds: Set<string>;
   onChange: (next: Set<string>) => void;
 }) {
+  const poll = usePoll();
   const { participants } = useParticipants();
   const sortedParticipants = React.useMemo(
     () =>
@@ -396,6 +402,10 @@ function NotifyStep({
           onCheckedChange={(checked) => {
             posthog?.capture("poll_finalize:select_all_click", {
               selected: checked,
+              ...pollEventProperties({
+                pollId: poll.id,
+                spaceId: poll.spaceId,
+              }),
             });
             onChange(new Set(checked ? notifiableIds : []));
           }}
@@ -591,7 +601,10 @@ function FinalizeWizard({
   const option = options.find((o) => o.id === optionId);
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
   const goTo = (next: Step) => {
-    posthog?.capture("poll_finalize:step_view", { step: next });
+    posthog?.capture("poll_finalize:step_view", {
+      step: next,
+      ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+    });
     onStepChange(next);
   };
 
@@ -756,10 +769,14 @@ function FinalizeWizard({
 }
 
 export function FinalizePollDialog(props: DialogProps) {
+  const poll = usePoll();
   const [step, setStep] = React.useState<Step>("date");
   const onOpenChange = (open: boolean) => {
     if (!open && step !== "done") {
-      posthog?.capture("poll_finalize:dialog_dismiss", { step });
+      posthog?.capture("poll_finalize:dialog_dismiss", {
+        step,
+        ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+      });
     }
     props.onOpenChange?.(open);
   };

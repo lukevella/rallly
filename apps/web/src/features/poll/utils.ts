@@ -276,3 +276,21 @@ export function summarizeNotifySelection({
   summary.notify_selection_changed = selected !== eligible;
   return summary;
 }
+
+/**
+ * Properties that join a client event to its poll. `poll_id` is a plain
+ * property as well as the group because PostHog drops group associations
+ * on personless events.
+ */
+export function pollEventProperties({
+  pollId,
+  spaceId,
+}: {
+  pollId: string;
+  spaceId?: string | null;
+}) {
+  return {
+    poll_id: pollId,
+    $groups: { poll: pollId, ...(spaceId ? { space: spaceId } : {}) },
+  };
+}
