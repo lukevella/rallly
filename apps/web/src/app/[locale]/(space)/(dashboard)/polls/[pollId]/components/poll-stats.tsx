@@ -240,10 +240,11 @@ function BestDateCard({
         {current ? (
           <span className="shrink-0 text-muted-foreground text-sm">
             <Trans
-              i18nKey="pollStatsCanMakeIt"
-              defaults="{count} can make it"
+              i18nKey="pollStatsCanMakeItOfTotal"
+              defaults="{count} of {total} can make it"
               values={{
                 count: current.votes.yes.length + current.votes.ifNeedBe.length,
+                total: participants.length,
               }}
             />
           </span>
