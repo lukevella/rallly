@@ -933,7 +933,7 @@
   "pollStatsFinalize": "Finalize",
   "pollStatsInviteByEmail": "Invite by email",
   "pollStatsNextTiedDate": "Next tied date",
-  "pollStatsNoBestDate": "Shows once people respond",
+  "pollStatsNoBestDate": "Waiting for responses",
   "pollStatsPreviousTiedDate": "Previous tied date",
   "pollStatsResponses": "Responses",
   "pollStatsTiedPosition": "{position} of {count} tied",

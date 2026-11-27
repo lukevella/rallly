@@ -233,7 +233,7 @@ function BestDateCard({
           <span className="text-muted-foreground text-sm">
             <Trans
               i18nKey="pollStatsNoBestDate"
-              defaults="Shows once people respond"
+              defaults="Waiting for responses"
             />
           </span>
         )}
