@@ -39,7 +39,6 @@ import {
 } from "@/components/empty-state";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { usePoll } from "@/features/poll/client";
-import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
 import { useCsvExporter } from "@/features/poll/components/manage-poll/use-csv-exporter";
 import {
   CopyEditLinkMenuItem,
@@ -53,6 +52,7 @@ import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts, formatDuration } from "@/lib/datetime/format";
 import { RelativeTime } from "@/lib/datetime/relative-time";
 import { ChatBubble } from "./chat-bubble";
+import { FinalizeDialog } from "./finalize-dialog";
 import { PollSection, PollSectionEmpty } from "./poll-section";
 
 type Option = { id: string; startTime: Date; duration: number };
@@ -282,8 +282,8 @@ export function PollResults({
           }
         />
       )}
-      {canPick ? (
-        <FinalizePollDialog
+      {canPick && pickedOptionId ? (
+        <FinalizeDialog
           {...finalizeDialog.dialogProps}
           optionId={pickedOptionId}
         />
@@ -1098,7 +1098,7 @@ function ResultsTable({
                   className={cn(
                     "min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
                     hoveredId === option.id &&
-                      "bg-foreground/[0.04] dark:bg-foreground/[0.012]",
+                      "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                   )}
                 >
                   <span className="flex flex-col items-center gap-2">
@@ -1180,7 +1180,7 @@ function ResultsTable({
                 <th
                   scope="row"
                   className={cn(
-                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_4.2%,var(--color-background))]",
+                    "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
                     namesExpanded && "max-w-48",
                   )}
                 >
@@ -1195,9 +1195,9 @@ function ResultsTable({
                       key={option.id}
                       onMouseEnter={() => setHoveredId(option.id)}
                       className={cn(
-                        "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04] dark:group-hover/row:bg-foreground/[0.012]",
+                        "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04] dark:group-hover/row:bg-foreground/[0.02]",
                         hoveredId === option.id &&
-                          "bg-foreground/[0.04] dark:bg-foreground/[0.012]",
+                          "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                       )}
                     >
                       <span className="inline-flex">
@@ -1239,7 +1239,7 @@ function ResultsTable({
                     className={cn(
                       "border-t border-r px-2 py-3 last:border-r-0",
                       hoveredId === option.id &&
-                        "bg-foreground/[0.04] dark:bg-foreground/[0.012]",
+                        "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                     )}
                   >
                     <span className="flex flex-col items-center gap-1">

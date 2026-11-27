@@ -13,11 +13,11 @@ import {
   StatCardStack,
   StatCardValue,
 } from "@/components/stat-card";
-import { FinalizePollDialog } from "@/features/poll/components/finalize-poll-dialog";
 import type { VoteType } from "@/features/poll/constants";
 import { rankOptionsByPopularity } from "@/features/poll/utils";
 import { Trans } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
+import { FinalizeDialog } from "./finalize-dialog";
 import { optionZone } from "./poll-results";
 
 type Option = { id: string; startTime: Date; duration: number };
@@ -189,11 +189,8 @@ function BestDateCard({
           </span>
         )}
       </StatCardFooter>
-      {canFinalize ? (
-        <FinalizePollDialog
-          {...finalizeDialog.dialogProps}
-          optionId={single?.id}
-        />
+      {canFinalize && single ? (
+        <FinalizeDialog {...finalizeDialog.dialogProps} optionId={single.id} />
       ) : null}
     </StatCard>
   );

@@ -58,7 +58,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
 
-type RankedOption = {
+export type RankedOption = {
   id: string;
   startTime: Date;
   duration: number;
@@ -346,7 +346,8 @@ function VoteShortcut({
   );
 }
 
-function NotifyStep({
+/** Who to email the final date: participants with an email, by vote. */
+export function NotifyStep({
   optionId,
   selectedIds,
   onChange,
@@ -476,7 +477,7 @@ type Step = "date" | "notify" | "summary" | "done";
 const wideStepClassName = "grid w-[calc(100vw-4rem)] gap-4 sm:w-[40rem]";
 const narrowStepClassName = "grid w-[calc(100vw-4rem)] gap-4 sm:w-[26rem]";
 
-function PickedDateText({ option }: { option: RankedOption }) {
+export function PickedDateText({ option }: { option: RankedOption }) {
   const poll = usePoll();
   const allDay = option.duration === 0;
   return (
@@ -522,7 +523,7 @@ function DetailRow({
 }
 
 // What the event will carry, laid out as the confirmation email shows it.
-function SummaryStep({ option }: { option: RankedOption }) {
+export function SummaryStep({ option }: { option: RankedOption }) {
   const poll = usePoll();
   const conferencing = poll.conferencing;
   return (
