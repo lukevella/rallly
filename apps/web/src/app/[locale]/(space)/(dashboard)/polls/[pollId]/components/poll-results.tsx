@@ -1096,7 +1096,9 @@ function ResultsTable({
   const monthGroups = useDateGroups(options, { floating, by: "month" });
   const showYear = spansYears(monthGroups);
   return (
-    <div className="relative overflow-x-auto overscroll-x-none">
+    // Scrolls both ways inside a bounded height, so the header rows can stay
+    // pinned while the participants scroll under them.
+    <div className="relative max-h-[70vh] overflow-auto overscroll-x-none">
       <table
         onMouseLeave={() => setHoveredId(null)}
         className="w-full border-separate border-spacing-0 text-sm [&_tbody_tr:last-child>*]:border-b-0 [&_td]:border-button-outline [&_th]:border-button-outline [&_th]:font-normal"
@@ -1106,7 +1108,7 @@ function ResultsTable({
             <th
               rowSpan={2}
               className={cn(
-                "sticky left-0 z-10 w-px border-r border-b bg-gray-50 px-3 pb-3 align-bottom dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
+                "sticky top-0 left-0 z-30 w-px border-r border-b bg-gray-50 px-3 pb-3 align-bottom dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
                 namesExpanded ? "text-end" : "text-center",
               )}
             >
@@ -1122,7 +1124,7 @@ function ResultsTable({
                 key={group.id}
                 scope="colgroup"
                 colSpan={group.options.length}
-                className="h-11 border-r border-b px-3 text-start last:border-r-0"
+                className="sticky top-0 z-20 h-11 border-r border-b bg-card px-3 text-start last:border-r-0 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]"
               >
                 <MonthLabel
                   month={group.parts.month}
@@ -1147,9 +1149,11 @@ function ResultsTable({
                   scope="col"
                   onMouseEnter={() => setHoveredId(option.id)}
                   className={cn(
-                    "min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
-                    hoveredId === option.id &&
-                      "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
+                    // Pinned under the month row; solid, so rows scroll under it.
+                    "sticky top-11 z-20 min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
+                    hoveredId === option.id
+                      ? "bg-[color-mix(in_oklab,var(--color-foreground)_4%,var(--color-card))] dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
+                      : "bg-card dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
                   )}
                 >
                   <span className="flex flex-col items-center gap-1">
