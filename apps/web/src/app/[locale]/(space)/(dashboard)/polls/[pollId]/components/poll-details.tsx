@@ -21,10 +21,13 @@ export async function PollDetails({ poll }: { poll: Poll }) {
     )
       ? firstOption.duration
       : null;
+  const allDay =
+    poll.options.length > 0 &&
+    poll.options.every((option) => option.duration === 0);
 
   return (
     <dl className="flex flex-wrap gap-x-5 gap-y-2 px-4 pt-2 text-muted-foreground text-sm empty:hidden">
-      {sharedDuration ? (
+      {sharedDuration || allDay ? (
         <div>
           <dt className="sr-only">
             <Trans
@@ -38,7 +41,17 @@ export async function PollDetails({ poll }: { poll: Poll }) {
           <dd className="flex items-start gap-2">
             <ClockIcon aria-hidden="true" className={factIconClassName} />
             <span className="min-w-0">
-              {formatDuration(sharedDuration, i18n.language)}
+              {sharedDuration ? (
+                formatDuration(sharedDuration, i18n.language)
+              ) : (
+                <Trans
+                  t={t}
+                  i18n={i18n}
+                  ns="app"
+                  i18nKey="allDay"
+                  defaults="All day"
+                />
+              )}
             </span>
           </dd>
         </div>
