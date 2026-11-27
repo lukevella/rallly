@@ -538,15 +538,6 @@ function AvailabilityPopover({
                 )}
               </p>
             ) : null}
-            {participants.length > 0 ? (
-              <p className="text-muted-foreground">
-                <Trans
-                  i18nKey="pollStatsCanMakeItOfTotal"
-                  defaults="{count} of {total} can make it"
-                  values={{ count, total: participants.length }}
-                />
-              </p>
-            ) : null}
           </div>
         </div>
         {/* Scrolls on its own, so a long list keeps the header and footer
@@ -559,22 +550,33 @@ function AvailabilityPopover({
             participantsById={participantsById}
           />
         </div>
-        {onFinalize ? (
-          <div className="shrink-0 border-popover-border border-t p-3">
-            <Button
-              variant="primary"
-              className="w-full"
-              onClick={() => {
-                // Closed first, so the finalize dialog isn't stacked on it.
-                setOpen(false);
-                onFinalize();
-              }}
-            >
-              <Trans
-                i18nKey="pollResultsFinalizeThisDate"
-                defaults="Finalize this date"
-              />
-            </Button>
+        {participants.length > 0 || onFinalize ? (
+          <div className="flex shrink-0 flex-col gap-2 border-popover-border border-t p-3">
+            {participants.length > 0 ? (
+              <p className="text-center text-muted-foreground">
+                <Trans
+                  i18nKey="pollStatsCanMakeItOfTotal"
+                  defaults="{count} of {total} can make it"
+                  values={{ count, total: participants.length }}
+                />
+              </p>
+            ) : null}
+            {onFinalize ? (
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={() => {
+                  // Closed first, so the finalize dialog isn't stacked on it.
+                  setOpen(false);
+                  onFinalize();
+                }}
+              >
+                <Trans
+                  i18nKey="pollResultsFinalizeThisDate"
+                  defaults="Finalize this date"
+                />
+              </Button>
+            ) : null}
           </div>
         ) : null}
       </PopoverContent>
