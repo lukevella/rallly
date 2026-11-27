@@ -21,6 +21,7 @@ import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import {
   AlertTriangleIcon,
   CalendarIcon,
+  ClockIcon,
   MapPinIcon,
   StarIcon,
   VideoIcon,
@@ -209,27 +210,47 @@ function PickDateStep({
   );
 }
 
-function PickedDate({ option }: { option: RankedOption }) {
+function PickedDate({
+  option,
+  showDate = true,
+}: {
+  option: RankedOption;
+  /** Off where the date is already said, leaving just the time. */
+  showDate?: boolean;
+}) {
   const poll = usePoll();
   const { timeZone: displayTimeZone } = useDateTimeConfig();
   const allDay = option.duration === 0;
+  if (!showDate && allDay) {
+    return null;
+  }
   // Fixed instants render in the viewer's zone; floating times have none.
   const cityTimeZone =
     !allDay && poll.timeZone !== null ? displayTimeZone : undefined;
   return (
     <div className="flex items-start gap-3">
       {/* The icon centers on the first line, not the block. */}
-      <CalendarIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      {showDate ? (
+        <CalendarIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      ) : (
+        <ClockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      )}
       <div className="min-w-0">
-        <div className="text-sm leading-5">
-          <EventDate
-            value={option.startTime}
-            allDay={allDay}
-            timeZone={poll.timeZone}
-            preset="dateFull"
-          />
-        </div>
-        <div className="text-muted-foreground text-sm">
+        {showDate ? (
+          <div className="text-sm leading-5">
+            <EventDate
+              value={option.startTime}
+              allDay={allDay}
+              timeZone={poll.timeZone}
+              preset="dateFull"
+            />
+          </div>
+        ) : null}
+        <div
+          className={
+            showDate ? "text-muted-foreground text-sm" : "text-sm leading-5"
+          }
+        >
           <EventTimeRange
             start={option.startTime}
             end={
@@ -523,12 +544,19 @@ function DetailRow({
 }
 
 // What the event will carry, laid out as the confirmation email shows it.
-export function SummaryStep({ option }: { option: RankedOption }) {
+export function SummaryStep({
+  option,
+  showDate = true,
+}: {
+  option: RankedOption;
+  /** Off where the date is already said, leaving just the time. */
+  showDate?: boolean;
+}) {
   const poll = usePoll();
   const conferencing = poll.conferencing;
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4">
-      <PickedDate option={option} />
+      <PickedDate option={option} showDate={showDate} />
       {poll.location ? (
         <DetailRow icon={<MapPinIcon />}>{poll.location}</DetailRow>
       ) : null}
