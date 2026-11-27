@@ -155,6 +155,7 @@ export const deleteCommentAction = anyUserActionClient
 
     track(ctx.user, {
       event: "poll_comment_delete",
+      properties: { is_author: isAuthor },
       groups: { poll: comment.pollId },
     });
 

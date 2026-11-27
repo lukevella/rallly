@@ -12,6 +12,7 @@ import {
   useSharePollDialog,
 } from "@/features/poll/components/share-dialog";
 import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
+import { pollEventProperties } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useFlash } from "@/lib/flash/client";
 
@@ -99,7 +100,10 @@ export function PollPrimaryActions() {
     canFinalize,
     onShare: () => share.open("manual"),
     onFinalize: () => {
-      posthog?.capture("poll_finalize:dialog_open");
+      posthog?.capture(
+        "poll_finalize:dialog_open",
+        pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+      );
       finalizeDialog.trigger();
     },
   };

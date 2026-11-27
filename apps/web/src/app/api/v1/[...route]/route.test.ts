@@ -1069,6 +1069,7 @@ describe("API v1 - /polls", () => {
             kind: "date",
             source: "api",
             apiVersion: "v1",
+            pollId: "test-poll-id",
           }),
           groups: { poll: "test-poll-id", space: "test-space-id" },
         }),
