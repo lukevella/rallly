@@ -509,7 +509,7 @@ function AvailabilityBar({
   return (
     <div
       aria-hidden="true"
-      className="flex h-1 w-full overflow-hidden rounded-full bg-foreground/10"
+      className="flex h-2 w-full overflow-hidden rounded-full bg-foreground/10"
     >
       <div
         className="h-full w-(--width) bg-green-500"
