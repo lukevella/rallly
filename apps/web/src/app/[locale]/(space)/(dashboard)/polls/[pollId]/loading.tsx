@@ -17,10 +17,10 @@ export default function Loading() {
   return (
     <>
       <RouterLoadingIndicator />
-      <PageShell nav={<PollBreadcrumb />}>
+      <PageShell menuInNav nav={<PollBreadcrumb />}>
         <PageHeader>
           <PageColumn>
-            <PageTitleSkeleton />
+            <PageTitleSkeleton showMenuButton={false} />
             <div aria-hidden className="flex gap-5 px-4 pt-3">
               <Skeleton className="h-4 w-12" />
               <Skeleton className="h-4 w-24" />

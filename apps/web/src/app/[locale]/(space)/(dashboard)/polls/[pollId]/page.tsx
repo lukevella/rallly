@@ -52,6 +52,7 @@ export default async function Page({
 
   return (
     <PageShell
+      menuInNav
       nav={
         <PollBreadcrumb
           title={poll.title}
@@ -77,6 +78,7 @@ export default async function Page({
         <PageColumn>
           <PageTitle
             id="poll-title"
+            showMenuButton={false}
             badge={<PollStatusLabel status={poll.status} />}
           >
             {poll.title}

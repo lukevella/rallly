@@ -24,16 +24,34 @@ export function PageShell({
   children,
   nav,
   navActions,
+  menuInNav = false,
   className,
 }: React.PropsWithChildren<{
   nav?: React.ReactNode;
   /** Controls at the right of the top bar, which stays put while scrolling. */
   navActions?: React.ReactNode;
+  /**
+   * Puts the mobile menu button at the right of the top bar instead of
+   * after the title; the page's PageTitle then sets `showMenuButton={false}`.
+   */
+  menuInNav?: boolean;
   className?: string;
 }>) {
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
-      <PageScrollFrame nav={nav} navActions={navActions}>
+      <PageScrollFrame
+        nav={nav}
+        navActions={
+          menuInNav ? (
+            <>
+              {navActions}
+              <MobileMenuButton />
+            </>
+          ) : (
+            navActions
+          )
+        }
+      >
         {children}
       </PageScrollFrame>
     </div>
@@ -55,12 +73,15 @@ export function PageTitle({
   badge,
   actions,
   id,
+  showMenuButton = true,
   className,
 }: React.PropsWithChildren<{
   /** Sits right after the title, such as a status. */
   badge?: React.ReactNode;
   actions?: React.ReactNode;
   id?: string;
+  /** Off when the page puts the menu button in the top bar (`menuInNav`). */
+  showMenuButton?: boolean;
   className?: string;
 }>) {
   return (
@@ -76,17 +97,21 @@ export function PageTitle({
           free space instead of each pushing itself right */}
       <div className="ml-auto flex shrink-0 items-center gap-2">
         {actions}
-        <MobileMenuButton />
+        {showMenuButton ? <MobileMenuButton /> : null}
       </div>
     </div>
   );
 }
 
-export function PageTitleSkeleton() {
+export function PageTitleSkeleton({
+  showMenuButton = true,
+}: {
+  showMenuButton?: boolean;
+}) {
   return (
     <div className="flex min-h-9 items-center gap-2 px-4">
       <Skeleton aria-hidden className="h-7 w-28 md:h-8" />
-      <MobileMenuButton />
+      {showMenuButton ? <MobileMenuButton /> : null}
     </div>
   );
 }
