@@ -890,6 +890,9 @@ function ParticipantCell({
               type="button"
               className={cn(
                 "-mx-1.5 -my-1 flex min-w-0 items-center gap-2 rounded-control-sm px-1.5 py-1 text-start hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-primary data-popup-open:bg-foreground/5",
+                // Fills the cell, so a long name truncates inside the column
+                // instead of running past its edge.
+                expanded && "w-[calc(100%+0.75rem)]",
               )}
               aria-label={
                 expanded
@@ -1181,7 +1184,7 @@ function ResultsTable({
                   scope="row"
                   className={cn(
                     "sticky left-0 z-10 border-r border-b bg-gray-50 px-5 py-3 text-start font-normal group-hover/row:bg-gray-100 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))] dark:group-hover/row:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]",
-                    namesExpanded && "max-w-48",
+                    namesExpanded && "w-48 max-w-48",
                   )}
                 >
                   <ParticipantCell
