@@ -195,7 +195,7 @@ function BestDateCard({
       <StatCardFooter className="items-end">
         {current ? (
           <div className="flex min-w-0 flex-col gap-1">
-            <StatCardValue className="truncate text-lg">
+            <StatCardValue className="truncate text-base">
               {formatDateTime(
                 current.startTime,
                 "weekdayMonthDayShort",
