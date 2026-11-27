@@ -124,6 +124,7 @@
   "reviewRequest_reply": "Buena, mala o intermedia, una reseña sincera ayuda. Y si algo de Rallly te dificulta las cosas, responde a este mensaje. Leo todas las respuestas.",
   "reviewRequest_subject": "¿Un pequeño favor?",
   "reviewRequest_thanks": "Gracias,",
+  "signatureFounderTitle": "Fundador de Rallly",
   "spaceInvite_button": "Aceptar invitación",
   "spaceInvite_content": "{inviterName} te invitó a unirte al espacio {spaceName} como un {role}.",
   "spaceInvite_heading": "¡Te han invitado!",
