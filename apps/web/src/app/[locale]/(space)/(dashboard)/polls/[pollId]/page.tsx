@@ -101,7 +101,7 @@ export default async function Page({
       </PageHeader>
       <PageContent>
         <PageColumn>
-          <div className="flex flex-col gap-8 px-4 pt-6 pb-16">
+          <div className="flex flex-col gap-4 px-4 pt-6 pb-16">
             {/* The finalize dialog and participant menus read the poll from the provider */}
             <PollProvider
               poll={poll}

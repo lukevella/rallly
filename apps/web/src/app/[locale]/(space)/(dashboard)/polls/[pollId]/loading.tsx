@@ -29,7 +29,7 @@ export default function Loading() {
         </PageHeader>
         <PageContent>
           <PageColumn>
-            <div aria-hidden className="flex flex-col gap-8 px-4 pt-6 pb-16">
+            <div aria-hidden className="flex flex-col gap-4 px-4 pt-6 pb-16">
               <section className="flex h-15 items-center justify-between gap-4 rounded-xl bg-card px-5 shadow-black/5 shadow-lg ring-1 ring-button-outline ring-inset dark:bg-foreground/[0.03] dark:shadow-black/20 dark:shadow-md">
                 <Skeleton className="h-4 w-48" />
                 <Skeleton className="h-8 w-56" />
