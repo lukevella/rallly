@@ -24,6 +24,9 @@ export function PageScrollFrame({
           // Always a border, transparent at the top, so the bar never resizes.
           "flex h-12 shrink-0 items-center gap-4 border-b px-4 transition-colors md:h-14",
           scrolled ? "border-border" : "border-transparent",
+          // An empty bar keeps titles level across pages on wide screens; on
+          // phones it would only be a gap above the title.
+          !nav && !navActions && "max-md:hidden",
         )}
       >
         <div className="min-w-0 flex-1">{nav}</div>
@@ -33,7 +36,11 @@ export function PageScrollFrame({
       </div>
       <div
         data-slot="page-scroll"
-        className="relative flex min-h-0 flex-1 flex-col overflow-y-auto"
+        className={cn(
+          "relative flex min-h-0 flex-1 flex-col overflow-y-auto",
+          // Breathing room where the hidden empty bar would be.
+          !nav && !navActions && "max-md:pt-4",
+        )}
         onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 0)}
       >
         {children}
