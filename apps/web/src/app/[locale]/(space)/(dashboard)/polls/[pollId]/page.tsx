@@ -8,6 +8,7 @@ import {
   PageTitle,
 } from "@/components/page";
 import { PollProvider } from "@/features/poll/client";
+import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
 import { PollAdminViewSwitch } from "@/features/poll/components/poll-admin-view-switch";
 import { loadPollInvites } from "@/features/poll/invite/loaders";
@@ -74,7 +75,7 @@ export default async function Page({
         />
       }
       navActions={
-        // The menu reads the poll from the poll provider.
+        // The header actions read the poll from the poll provider.
         <PollProvider
           poll={poll}
           participants={participants}
@@ -84,6 +85,7 @@ export default async function Page({
           <div className="flex items-center gap-1.5">
             <StickyShareActions inviteLink={poll.inviteLink} />
             <PollAdminViewSwitch pollId={poll.id} checked />
+            <NotificationToggle />
             <PollAdminMenu />
           </div>
         </PollProvider>
