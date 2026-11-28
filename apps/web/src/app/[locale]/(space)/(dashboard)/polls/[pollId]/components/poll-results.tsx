@@ -545,11 +545,11 @@ function AvailabilityBar({
       className="flex h-2 w-full overflow-hidden rounded-full bg-foreground/10"
     >
       <div
-        className="h-full w-(--width) bg-green-500"
+        className="h-full w-(--width) bg-green-300 dark:bg-green-500/50"
         style={{ "--width": `${percent(yes)}%` } as React.CSSProperties}
       />
       <div
-        className="h-full w-(--width) bg-amber-400"
+        className="h-full w-(--width) bg-amber-200 dark:bg-amber-400/50"
         style={{ "--width": `${percent(ifNeedBe)}%` } as React.CSSProperties}
       />
     </div>
