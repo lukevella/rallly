@@ -381,10 +381,13 @@ export function NotifyStep({
   optionId,
   selectedIds,
   onChange,
+  compact = false,
 }: {
   optionId: string;
   selectedIds: Set<string>;
   onChange: (next: Set<string>) => void;
+  /** Tighter side insets, for narrower dialogs. */
+  compact?: boolean;
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
@@ -424,7 +427,12 @@ export function NotifyStep({
 
   return (
     <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-      <div className="flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 pr-3 pl-6">
+      <div
+        className={cn(
+          "flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 pr-3",
+          compact ? "pl-5" : "pl-6",
+        )}
+      >
         <Checkbox
           id="notify-all"
           checked={allSelected}
@@ -462,7 +470,12 @@ export function NotifyStep({
           ))}
         </div>
       </div>
-      <DataListRoot className="max-h-72 grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] overflow-y-auto px-2">
+      <DataListRoot
+        className={cn(
+          "max-h-72 grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] overflow-y-auto",
+          compact ? "px-1" : "px-2",
+        )}
+      >
         {sortedParticipants.map((participant) => (
           <DataListRow key={participant.id}>
             <DataListCell>

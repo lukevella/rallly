@@ -123,14 +123,14 @@ test.describe("poll admin page", () => {
     await expect(dialog.getByLabel("Carol")).toBeDisabled();
     await dialog.getByLabel("Bob").uncheck();
 
-    // The confirmation step repeats the event and how many get the email.
     await dialog.getByRole("button", { name: "Next" }).click();
     await expect(
       dialog.getByRole("heading", { name: "Review and finalize" }),
     ).toBeVisible();
-    await expect(
-      dialog.getByText("Notify 1 participant", { exact: true }),
-    ).toBeVisible();
+    // The preview of the email shows who it goes to.
+    await expect(dialog.getByTestId("finalize-preview-recipients")).toHaveText(
+      "Alice",
+    );
 
     await dialog
       .getByRole("button", { name: "Finalize and notify 1 participant" })

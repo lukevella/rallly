@@ -16,7 +16,7 @@ import {
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
-import { AlertTriangleIcon, MailIcon } from "lucide-react";
+import { AlertTriangleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { primePayWall, usePayWallStore } from "@/features/billing/client";
@@ -25,7 +25,6 @@ import { useParticipants, usePoll } from "@/features/poll/client";
 import {
   NotifyStep,
   PickedDateText,
-  SummaryStep,
 } from "@/features/poll/components/finalize-poll-dialog";
 import {
   pollEventProperties,
@@ -33,6 +32,7 @@ import {
 } from "@/features/poll/utils";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { FinalizeEmailPreview } from "./finalize-email-preview";
 
 type Step = "recipients" | "confirm";
 
@@ -230,6 +230,7 @@ function FinalizeContent({
         >
           {participants.length > 0 ? (
             <NotifyStep
+              compact
               optionId={option.id}
               selectedIds={notifyIds}
               onChange={setNotifyIds}
@@ -250,19 +251,7 @@ function FinalizeContent({
           )}
           inert={step !== "confirm"}
         >
-          <div className="flex flex-col gap-4 rounded-xl border border-card-border bg-card px-6 py-4">
-            <SummaryStep option={option} showPendingLink />
-            <div className="flex items-start gap-3">
-              <MailIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-              <p className="text-sm leading-5">
-                <Trans
-                  i18nKey="finalizeDialogNotifyCount"
-                  defaults="{count, plural, =0 {No one will be notified} one {Notify # participant} other {Notify # participants}}"
-                  values={{ count: notifyIds.size }}
-                />
-              </p>
-            </div>
-          </div>
+          <FinalizeEmailPreview option={option} recipientIds={notifyIds} />
         </div>
       </div>
       <PayWallDialog
