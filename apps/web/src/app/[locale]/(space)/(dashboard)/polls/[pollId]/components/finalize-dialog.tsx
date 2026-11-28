@@ -25,6 +25,7 @@ import { useParticipants, usePoll } from "@/features/poll/client";
 import {
   NotifyStep,
   PickedDateText,
+  SummaryStep,
 } from "@/features/poll/components/finalize-poll-dialog";
 import {
   pollEventProperties,
@@ -32,7 +33,6 @@ import {
 } from "@/features/poll/utils";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { FinalizeSummary } from "./finalize-summary";
 
 type Step = "recipients" | "confirm";
 
@@ -195,7 +195,13 @@ function FinalizeContent({
   }
 
   return (
-    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[32rem]">
+    // The confirmation has less to show, so it narrows.
+    <div
+      className={cn(
+        "grid w-[calc(100vw-4rem)] gap-4",
+        step === "recipients" ? "sm:w-[32rem]" : "sm:w-[26rem]",
+      )}
+    >
       <DialogHeader>
         <DialogTitle>
           {step === "recipients" ? (
@@ -218,42 +224,25 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      {/* Both steps share one grid cell, so the dialog keeps the taller
-          one's height and doesn't jump between them. */}
-      <div className="grid">
-        <div
-          className={cn(
-            "col-start-1 row-start-1",
-            step !== "recipients" && "invisible",
-          )}
-          inert={step !== "recipients"}
-        >
-          {participants.length > 0 ? (
-            <NotifyStep
-              compact
-              optionId={option.id}
-              selectedIds={notifyIds}
-              onChange={setNotifyIds}
+      {step === "recipients" ? (
+        participants.length > 0 ? (
+          <NotifyStep
+            compact
+            optionId={option.id}
+            selectedIds={notifyIds}
+            onChange={setNotifyIds}
+          />
+        ) : (
+          <p className="rounded-xl border border-card-border p-4 text-muted-foreground text-sm">
+            <Trans
+              i18nKey="finalizeDialogNoParticipants"
+              defaults="No one has responded, so there's no one to notify."
             />
-          ) : (
-            <p className="rounded-xl border border-card-border p-4 text-muted-foreground text-sm">
-              <Trans
-                i18nKey="finalizeDialogNoParticipants"
-                defaults="No one has responded, so there's no one to notify."
-              />
-            </p>
-          )}
-        </div>
-        <div
-          className={cn(
-            "col-start-1 row-start-1 self-start",
-            step !== "confirm" && "invisible",
-          )}
-          inert={step !== "confirm"}
-        >
-          <FinalizeSummary option={option} recipientCount={notifyIds.size} />
-        </div>
-      </div>
+          </p>
+        )
+      ) : (
+        <SummaryStep option={option} showPendingLink />
+      )}
       <PayWallDialog
         pricing={payWallPricing}
         isOpen={payWall.dialogProps.open}

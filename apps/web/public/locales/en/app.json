@@ -422,7 +422,6 @@
   "finalizePoll": "Finalize poll",
   "finalizePollDescription": "Pick the date that works best.",
   "finalizePollError": "Failed to finalize poll",
-  "finalizeRecipientCount": "{count, plural, =0 {No one will be emailed} one {# participant will get an email} other {# participants will each get their own email}}",
   "finalizeStepConfirmTitle": "Review and finalize",
   "finalizeStepCount": "Step {current} of {total}",
   "finalizeStepRecipientsTitle": "Choose who to notify",
