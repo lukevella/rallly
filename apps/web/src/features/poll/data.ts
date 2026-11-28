@@ -15,7 +15,6 @@ import type {
   PollDetails,
   PollUnavailableReason,
 } from "@/features/poll/types";
-import { isLegacyEditToken } from "@/features/poll/utils";
 import { effectiveSpaceMemberWhere } from "@/features/space/member/utils";
 import type {
   AuthorizedSpaceId,
@@ -25,7 +24,7 @@ import {
   isSpaceAttributionHidden,
   isSpaceBrandingActive,
 } from "@/features/space/utils";
-import { decryptToken } from "@/lib/session";
+import { getUserProvenEmail } from "@/features/user/data";
 
 export async function getPoll({
   pollId,
@@ -591,17 +590,13 @@ export async function getParticipant({
       id: true,
       pollId: true,
       userId: true,
+      email: true,
       poll: { select: { status: true, deleted: true } },
     },
   });
 }
 
-/**
- * The responses an emailed link may edit. A response token names exactly one
- * row. A legacy seal names a guest user instead, so it resolves to that
- * user's responses in the poll that carry an email, the only rows such a
- * link was ever sent for.
- */
+/** The response an emailed link may edit: a token names exactly one row. */
 export async function listParticipantIdsByToken({
   pollId,
   token,
@@ -609,29 +604,43 @@ export async function listParticipantIdsByToken({
   pollId: string;
   token: string;
 }) {
-  if (isLegacyEditToken(token)) {
-    const payload = await decryptToken<{ userId: string }>(token).catch(
-      () => null,
-    );
-    if (!payload?.userId) {
-      return [];
-    }
-    const participants = await prisma.participant.findMany({
-      where: {
-        pollId,
-        userId: payload.userId,
-        email: { not: null },
-      },
-      select: { id: true },
-    });
-    return participants.map((participant) => participant.id);
-  }
-
   const participant = await prisma.participant.findFirst({
     where: { pollId, token },
     select: { id: true },
   });
   return participant ? [participant.id] : [];
+}
+
+/**
+ * The responses left under the user's email, when the instance trusts
+ * their sign-in method to prove it. The email match unlocks responses on
+ * every poll, so the trust list in instance policy is the security boundary.
+ * The column is not citext, so case is folded here rather than with a
+ * pattern match, whose wildcards an address could carry.
+ */
+export async function listParticipantIdsByProvenEmail({
+  pollId,
+  userId,
+}: {
+  pollId: string;
+  userId: string;
+}) {
+  const { responseEmailLoginMethods } = await getInstancePolicy();
+  const email = await getUserProvenEmail({
+    userId,
+    trustedLoginMethods: responseEmailLoginMethods,
+  });
+  if (!email) {
+    return [];
+  }
+  const participants = await prisma.participant.findMany({
+    where: { pollId, email: { not: null } },
+    select: { id: true, email: true },
+  });
+  const target = email.toLowerCase();
+  return participants
+    .filter((participant) => participant.email?.toLowerCase() === target)
+    .map((participant) => participant.id);
 }
 
 export async function getPollWithOptions({

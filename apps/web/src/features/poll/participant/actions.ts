@@ -16,6 +16,7 @@ import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
   getParticipant,
   hasPollAdminAccess,
+  listParticipantIdsByProvenEmail,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
@@ -55,10 +56,12 @@ const pollResponseGuard = createRateLimitGuard(200, "1 h");
 type Actor = { id: string; isGuest: boolean };
 
 /**
- * Proves the caller may edit a response. Two proofs are accepted: the token
- * from the emailed link, which names the response itself, and a session that
- * owns the response or administers its poll. Admin access is bound to the
- * session only, so a link never unlocks other people's responses.
+ * Proves the caller may edit a response. Three proofs are accepted: the
+ * token from the emailed link, which names the response itself; a session
+ * that owns the response or administers its poll; and a session whose
+ * sign-in proves the email the response was left under. Admin access is
+ * bound to the session only, so a link never unlocks other people's
+ * responses.
  *
  * A poll that is no longer open accepts no edits from anyone, admins
  * included — the same rule `canEditParticipant` applies in the client. The
@@ -107,7 +110,22 @@ async function authorizeParticipantEdit({
         ).includes(participant.id)
       : false;
 
-  if (!ownedBySession && !ownedByLink) {
+  // Checked last, so `accessVia` counts only the edits nothing else allows.
+  const ownedByEmail =
+    !ownedBySession &&
+    !ownedByLink &&
+    !!user &&
+    !user.isGuest &&
+    !!participant.email
+      ? (
+          await listParticipantIdsByProvenEmail({
+            pollId: participant.pollId,
+            userId: user.id,
+          })
+        ).includes(participant.id)
+      : false;
+
+  if (!ownedBySession && !ownedByLink && !ownedByEmail) {
     throw new AppError({
       code: "FORBIDDEN",
       message: "You are not allowed to modify this participant",
@@ -123,6 +141,13 @@ async function authorizeParticipantEdit({
     participant,
     actor,
     actorRole: isHost ? ("host" as const) : ("participant" as const),
+    accessVia: isOwnResponse
+      ? ("session" as const)
+      : isHost
+        ? ("host" as const)
+        : ownedByLink
+          ? ("token" as const)
+          : ("email" as const),
   };
 }
 
@@ -320,7 +345,7 @@ export const updateParticipantVotesAction = optionalUserActionClient
       return authorization;
     }
 
-    const { participant, actor } = authorization;
+    const { participant, actor, accessVia } = authorization;
 
     const result = await updateParticipantVotes({
       participantId,
@@ -332,6 +357,7 @@ export const updateParticipantVotesAction = optionalUserActionClient
     if (result.ok && actor) {
       track(actor, {
         event: "poll_response_update",
+        properties: { access_via: accessVia },
         groups: { poll: participant.pollId },
       });
     }

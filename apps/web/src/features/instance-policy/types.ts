@@ -11,4 +11,7 @@ export type InstancePolicy = {
   spaceBrandingAllowed: boolean;
   // Attribution removal is a per-space setting rather than instance wide
   spaceAttributionConfigurable: boolean;
+  // Sign-in methods that prove the account's email, so its holder may edit
+  // responses left under that email on any poll
+  responseEmailLoginMethods: readonly string[];
 };

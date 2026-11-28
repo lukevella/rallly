@@ -72,3 +72,28 @@ export const getIdTokenEmail = (idToken: string | null) => {
     return null;
   }
 };
+
+/**
+ * The account's email when its latest sign-in proves it, otherwise null.
+ * The sign-in method is per user, not per session: an email login anywhere
+ * proves the address for the account, and a later untrusted login withdraws
+ * the proof until the next trusted one.
+ */
+export const getProvenEmail = ({
+  user,
+  trustedLoginMethods,
+}: {
+  user: {
+    email: string;
+    emailVerified: boolean | null;
+    isAnonymous: boolean;
+    lastLoginMethod: string | null;
+  };
+  trustedLoginMethods: readonly string[];
+}) =>
+  !user.isAnonymous &&
+  user.emailVerified &&
+  user.lastLoginMethod !== null &&
+  trustedLoginMethods.includes(user.lastLoginMethod)
+    ? user.email
+    : null;
