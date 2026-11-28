@@ -97,7 +97,10 @@ export class NewPollPage {
     if (!pollId) {
       throw new Error("No invite link in the poll created dialog");
     }
-    await page.goto(`/poll/${pollId}`);
+    // A client navigation, so the router keeps /new cached behind it for
+    // specs that go back to it.
+    await dialog.getByRole("link", { name: "Manage poll" }).click();
+    await page.waitForURL(`**/poll/${pollId}`);
     return new PollPage(page);
   }
 }

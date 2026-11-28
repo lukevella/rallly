@@ -74,7 +74,14 @@ export function PollStats({
                   defaults="Awaiting {count}"
                   values={{ count: invitedCount - respondedInviteCount }}
                 />
-              ) : null}
+              ) : (
+                <span className="sr-only">
+                  <Trans
+                    i18nKey="pollStatsAllInviteesResponded"
+                    defaults="All invitees responded"
+                  />
+                </span>
+              )}
               <ProgressDonut value={respondedInviteCount} max={invitedCount} />
             </span>
           ) : null}
@@ -214,10 +221,17 @@ function BestDateCard({
           </div>
         ) : (
           <span className="text-muted-foreground text-sm">
-            <Trans
-              i18nKey="pollStatsNoBestDate"
-              defaults="Waiting for responses"
-            />
+            {participants.length > 0 ? (
+              <Trans
+                i18nKey="pollStatsNoAvailableDate"
+                defaults="No dates with availability yet"
+              />
+            ) : (
+              <Trans
+                i18nKey="pollStatsNoBestDate"
+                defaults="Waiting for responses"
+              />
+            )}
           </span>
         )}
         {current ? (
@@ -238,7 +252,7 @@ function BestDateCard({
           </span>
         ) : null}
       </StatCardFooter>
-      {canFinalize && current ? (
+      {current ? (
         <FinalizeDialog {...finalizeDialog.dialogProps} optionId={current.id} />
       ) : null}
     </StatCard>

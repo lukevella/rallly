@@ -40,7 +40,7 @@ export function ChatBubble({ children }: { children: React.ReactNode }) {
       >
         {children}
       </p>
-      {clamped ? (
+      {expanded || clamped ? (
         <button
           type="button"
           className="text-muted-foreground hover:text-foreground"

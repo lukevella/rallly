@@ -197,7 +197,9 @@ export const CreatePoll = ({
   // The form persists, so it survives closing a poll to make room. The count
   // is the server's at page load, so the poll created here can't trip it.
   React.useEffect(() => {
-    if (!openPollUsage) {
+    // router.refresh() after creating brings back a count that now includes
+    // the new poll; the created dialog stays on top without the limit dialog.
+    if (!openPollUsage || createdPollId) {
       return;
     }
     if (isAtOpenPollLimit(openPollUsage)) {
@@ -205,7 +207,7 @@ export const CreatePoll = ({
     } else {
       hideOpenPollLimit("create");
     }
-  }, [openPollUsage]);
+  }, [openPollUsage, createdPollId]);
 
   // The client router reuses a page it rendered in the last minute
   // (staleTimes.dynamic), so a /new loaded before the organizer opened or

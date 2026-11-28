@@ -146,7 +146,7 @@ export default async function Page({
                   timeZone={poll.timeZone}
                   canPick={poll.status !== "scheduled"}
                 />
-                {activity.length > 0 ? (
+                {activity.length > 0 || comments.length > 0 ? (
                   <PollActivitySection
                     activity={activity}
                     participants={participants}

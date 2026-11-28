@@ -262,11 +262,22 @@ export function PollResults({
               ? (option) =>
                   t("pollResultsPickDate", {
                     defaultValue: "Pick {date}",
-                    date: formatDateTime(
-                      option.startTime,
-                      "weekdayMonthDay",
-                      optionZone(option, timeZone === null),
-                    ),
+                    date:
+                      option.duration > 0
+                        ? `${formatDateTime(
+                            option.startTime,
+                            "weekdayMonthDay",
+                            optionZone(option, timeZone === null),
+                          )} ${formatDateTime(
+                            option.startTime,
+                            "time",
+                            optionZone(option, timeZone === null),
+                          )}`
+                        : formatDateTime(
+                            option.startTime,
+                            "weekdayMonthDay",
+                            optionZone(option, timeZone === null),
+                          ),
                   })
               : undefined
           }
@@ -288,7 +299,7 @@ export function PollResults({
           }
         />
       )}
-      {canPick && pickedOptionId ? (
+      {pickedOptionId ? (
         <FinalizeDialog
           {...finalizeDialog.dialogProps}
           optionId={pickedOptionId}
@@ -898,64 +909,66 @@ function ResultsList({
   };
 
   return (
-    <ol
-      className="grid gap-x-6 text-sm"
-      style={{
-        gridTemplateColumns: [
-          // Month, then the day.
-          "auto",
-          "auto",
-          ...(showEndTime
-            ? ["auto", "auto", "auto"]
-            : hasTimes
-              ? ["auto"]
-              : []),
-          "minmax(3rem,1fr)",
-          "auto",
-          ...(onPick ? ["auto"] : []),
-        ].join(" "),
-      }}
-    >
-      {months.map((month) => (
-        <li
-          key={month.id}
-          className="col-span-full grid grid-cols-subgrid border-button-outline border-b px-5 last:border-b-0"
-        >
-          {/* Level with the group's first option. */}
-          <div className="flex h-16 items-center">
-            <MonthLabel
-              month={month.parts.month}
-              year={showYear ? month.parts.year : undefined}
-            />
-          </div>
-          <ol className="col-[2/-1] grid grid-cols-subgrid">
-            {hasTimes
-              ? groupOptions(month.options, {
-                  by: "day",
-                  floating,
-                  locale,
-                  timeZone,
-                }).map((day) => (
-                  <li
-                    key={day.id}
-                    className="col-span-full grid grid-cols-subgrid border-button-outline border-b last:border-b-0"
-                  >
-                    <div className="flex h-16 items-center">
-                      <DayLabel
-                        weekday={day.parts.weekday}
-                        day={day.parts.day}
-                      />
-                    </div>
-                    <ol className="col-[2/-1] grid grid-cols-subgrid">
-                      {day.options.map(row)}
-                    </ol>
-                  </li>
-                ))
-              : month.options.map(row)}
-          </ol>
-        </li>
-      ))}
-    </ol>
+    <div className="overflow-x-auto overscroll-x-none">
+      <ol
+        className="grid gap-x-6 text-sm"
+        style={{
+          gridTemplateColumns: [
+            // Month, then the day.
+            "auto",
+            "auto",
+            ...(showEndTime
+              ? ["auto", "auto", "auto"]
+              : hasTimes
+                ? ["auto"]
+                : []),
+            "minmax(3rem,1fr)",
+            "auto",
+            ...(onPick ? ["auto"] : []),
+          ].join(" "),
+        }}
+      >
+        {months.map((month) => (
+          <li
+            key={month.id}
+            className="col-span-full grid grid-cols-subgrid border-button-outline border-b px-5 last:border-b-0"
+          >
+            {/* Level with the group's first option. */}
+            <div className="flex h-16 items-center">
+              <MonthLabel
+                month={month.parts.month}
+                year={showYear ? month.parts.year : undefined}
+              />
+            </div>
+            <ol className="col-[2/-1] grid grid-cols-subgrid">
+              {hasTimes
+                ? groupOptions(month.options, {
+                    by: "day",
+                    floating,
+                    locale,
+                    timeZone,
+                  }).map((day) => (
+                    <li
+                      key={day.id}
+                      className="col-span-full grid grid-cols-subgrid border-button-outline border-b last:border-b-0"
+                    >
+                      <div className="flex h-16 items-center">
+                        <DayLabel
+                          weekday={day.parts.weekday}
+                          day={day.parts.day}
+                        />
+                      </div>
+                      <ol className="col-[2/-1] grid grid-cols-subgrid">
+                        {day.options.map(row)}
+                      </ol>
+                    </li>
+                  ))
+                : month.options.map(row)}
+            </ol>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 

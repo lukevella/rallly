@@ -862,6 +862,7 @@ export function FinalizePollDialog({
     >
       <DialogContent className="w-auto sm:max-w-none">
         <FinalizeWizard
+          key={optionId}
           initialOptionId={optionId}
           step={step}
           onStepChange={setStep}
