@@ -127,9 +127,9 @@ test.describe("poll admin page", () => {
     await expect(
       dialog.getByRole("heading", { name: "Review and finalize" }),
     ).toBeVisible();
-    // The preview of the email shows who it goes to.
-    await expect(dialog.getByTestId("finalize-preview-recipients")).toHaveText(
-      "Alice",
+    // The confirmation says how many get an email.
+    await expect(dialog.getByTestId("finalize-recipient-count")).toHaveText(
+      "1 participant will get an email",
     );
 
     await dialog

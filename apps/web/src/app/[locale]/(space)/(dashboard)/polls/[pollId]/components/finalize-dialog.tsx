@@ -32,7 +32,7 @@ import {
 } from "@/features/poll/utils";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { FinalizeEmailPreview } from "./finalize-email-preview";
+import { FinalizeSummary } from "./finalize-summary";
 
 type Step = "recipients" | "confirm";
 
@@ -251,7 +251,7 @@ function FinalizeContent({
           )}
           inert={step !== "confirm"}
         >
-          <FinalizeEmailPreview option={option} recipientIds={notifyIds} />
+          <FinalizeSummary option={option} recipientCount={notifyIds.size} />
         </div>
       </div>
       <PayWallDialog
