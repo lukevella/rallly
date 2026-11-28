@@ -1168,7 +1168,7 @@ function ResultsTable({
                   onMouseEnter={() => setHoveredId(option.id)}
                   className={cn(
                     // Pinned under the month row; solid, so rows scroll under it.
-                    "sticky top-11 z-20 min-w-20 border-r border-b px-3 pt-3 pb-4 text-start align-top last:border-r-0",
+                    "sticky top-11 z-20 border-r border-b px-4 py-3 text-start align-top last:border-r-0",
                     hoveredId === option.id
                       ? "bg-[color-mix(in_oklab,var(--color-foreground)_4%,var(--color-card))] dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
                       : "bg-card dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
