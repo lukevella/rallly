@@ -189,6 +189,7 @@ export async function createTestPoll({
         create: {
           content: "Test comment",
           authorName: "Test Commenter",
+          token: randomUUID().replace(/-/g, ""),
           createdAt: commentCreatedAt,
         },
       },

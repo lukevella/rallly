@@ -36,6 +36,7 @@ describe("filterCommentsForViewer", () => {
       content: "a",
       authorName: "A",
       userId: "user-1",
+      ownedByToken: false,
       createdAt: new Date(),
     },
     {
@@ -43,6 +44,15 @@ describe("filterCommentsForViewer", () => {
       content: "b",
       authorName: "B",
       userId: "user-2",
+      ownedByToken: false,
+      createdAt: new Date(),
+    },
+    {
+      id: "3",
+      content: "c",
+      authorName: "C",
+      userId: null,
+      ownedByToken: true,
       createdAt: new Date(),
     },
   ];
@@ -54,17 +64,17 @@ describe("filterCommentsForViewer", () => {
         viewerUserId: null,
         hideParticipants: false,
       }),
-    ).toHaveLength(2);
+    ).toHaveLength(3);
   });
 
-  it("returns nothing to an anonymous viewer when participants are hidden", () => {
+  it("returns an anonymous viewer only the comments their token wrote when participants are hidden", () => {
     expect(
       filterCommentsForViewer({
         comments,
         viewerUserId: null,
         hideParticipants: true,
-      }),
-    ).toEqual([]);
+      }).map((c) => c.id),
+    ).toEqual(["3"]);
   });
 
   it("returns only the viewer's comments when participants are hidden", () => {
@@ -74,7 +84,7 @@ describe("filterCommentsForViewer", () => {
         viewerUserId: "user-2",
         hideParticipants: true,
       }).map((c) => c.id),
-    ).toEqual(["2"]);
+    ).toEqual(["2", "3"]);
   });
 });
 

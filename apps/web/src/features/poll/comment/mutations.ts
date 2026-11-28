@@ -28,12 +28,15 @@ export async function addComment({
   pollId,
   userId,
   isGuest,
+  token,
   authorName,
   content,
 }: {
   pollId: string;
-  userId: string;
+  /** Null when the commenter has no session: the token alone proves them. */
+  userId: string | null;
   isGuest: boolean;
+  token: string;
   authorName: string;
   content: string;
 }): Promise<AddCommentResult> {
@@ -53,7 +56,7 @@ export async function addComment({
 
   let name = authorName;
 
-  if (!isGuest) {
+  if (userId && !isGuest) {
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: userId },
       select: { name: true },
@@ -92,6 +95,7 @@ export async function addComment({
           pollId,
           authorName: name,
           userId,
+          token,
         },
         select: {
           id: true,

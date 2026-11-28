@@ -75,7 +75,7 @@ interface CommentForm {
 function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
   const { t } = useTranslation();
   const poll = usePoll();
-  const { user, createGuestIfNeeded } = useUser();
+  const { user } = useUser();
   const { participants } = useParticipants();
 
   const authorName = React.useMemo(() => {
@@ -114,11 +114,6 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
         return t("actionErrorTooManyRequests", {
           defaultValue: "You are making too many requests",
         });
-      case "sessionUnavailable":
-        return t("guestSessionUnavailableError", {
-          defaultValue:
-            "We couldn't start a session for you. Check that cookies are enabled and try again.",
-        });
       default:
         return t("actionErrorInternalServerError", {
           defaultValue: "An internal server error occurred",
@@ -130,11 +125,6 @@ function NewCommentForm({ onSubmitted }: { onSubmitted: () => void }) {
     <form
       className="w-full"
       onSubmit={handleSubmit(async ({ authorName, content }) => {
-        const session = await createGuestIfNeeded();
-        if (!session.ok) {
-          toast.error(getCommentErrorMessage(session.reason));
-          return;
-        }
         const result = await addComment.execute({
           authorName,
           content,
