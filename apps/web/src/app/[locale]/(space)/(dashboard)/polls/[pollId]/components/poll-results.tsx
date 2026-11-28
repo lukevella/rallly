@@ -691,7 +691,12 @@ function OptionDay({
     locale,
     timeZone: optionZone(option, floating).timeZone ?? timeZone ?? "UTC",
   });
-  return <DayLabel weekday={weekday} day={day} />;
+  // Right aligned in its column, so the day numbers line up.
+  return (
+    <span className="justify-self-end">
+      <DayLabel weekday={weekday} day={day} />
+    </span>
+  );
 }
 
 /**
