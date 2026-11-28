@@ -118,7 +118,6 @@ test.describe("Email invites", () => {
     await deleteAllMessages();
 
     const dialog = await pollPage.openShareDialog();
-    await expect(dialog.getByRole("button", { name: "Copy" })).toBeVisible();
 
     const field = dialog.getByLabel("Email address");
     await field.fill(INVITEE);

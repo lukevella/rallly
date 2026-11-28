@@ -19,9 +19,11 @@ export class PollPage {
   }
 
   async openShareDialog() {
-    const dialog = this.page.getByRole("dialog", { name: "Share" });
+    // "Share" on the legacy page, "Invite by email" on the poll page
+    const dialog = this.page.getByRole("dialog", {
+      name: /^(Share|Invite by email)$/,
+    });
     if (!(await dialog.isVisible())) {
-      // "Share" on the legacy page, "Invite by email" on the poll page
       await this.page
         .getByRole("button", { name: /^(Share|Invite by email)$/ })
         .first()
@@ -32,8 +34,14 @@ export class PollPage {
   }
 
   async copyInviteLink() {
-    const dialog = await this.openShareDialog();
-    await dialog.getByRole("button", { name: "Copy" }).click();
+    // The poll page shows the link on the page; the legacy page in its dialog
+    const onPage = this.page.getByRole("button", { name: "Copy invite link" });
+    if (await onPage.isVisible()) {
+      await onPage.click();
+    } else {
+      const dialog = await this.openShareDialog();
+      await dialog.getByRole("button", { name: "Copy" }).click();
+    }
     return (await this.page.evaluate(
       "navigator.clipboard.readText()",
     )) as string;
