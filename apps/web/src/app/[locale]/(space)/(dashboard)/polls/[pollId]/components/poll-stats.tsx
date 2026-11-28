@@ -136,8 +136,15 @@ function BestDateCard({
           a.startTime.getTime() - b.startTime.getTime(),
       );
   }, [options, participants]);
-  const [index, setIndex] = React.useState(0);
-  const current = top[Math.min(index, top.length - 1)];
+  const [rawIndex, setIndex] = React.useState(0);
+  // The tie list can shrink as responses arrive; keep the index inside it.
+  const index = Math.max(0, Math.min(rawIndex, top.length - 1));
+  const current = top[index];
+  // Captured on open, so a refresh that reranks dates can't swap the date
+  // the dialog is booking or has booked.
+  const [finalizeOptionId, setFinalizeOptionId] = React.useState<string | null>(
+    null,
+  );
   const floating = timeZone === null;
 
   return (
@@ -163,7 +170,7 @@ function BestDateCard({
                   defaultValue: "Previous tied date",
                 })}
                 disabled={index === 0}
-                onClick={() => setIndex((i) => i - 1)}
+                onClick={() => setIndex(index - 1)}
               >
                 <ChevronLeftIcon aria-hidden="true" />
               </Button>
@@ -174,7 +181,7 @@ function BestDateCard({
                   defaultValue: "Next tied date",
                 })}
                 disabled={index === top.length - 1}
-                onClick={() => setIndex((i) => i + 1)}
+                onClick={() => setIndex(index + 1)}
               >
                 <ChevronRightIcon aria-hidden="true" />
               </Button>
@@ -191,6 +198,7 @@ function BestDateCard({
                     spaceId: poll.spaceId,
                   }),
                 });
+                setFinalizeOptionId(current.id);
                 finalizeDialog.trigger();
               }}
             >
@@ -252,8 +260,11 @@ function BestDateCard({
           </span>
         ) : null}
       </StatCardFooter>
-      {current ? (
-        <FinalizeDialog {...finalizeDialog.dialogProps} optionId={current.id} />
+      {finalizeOptionId ? (
+        <FinalizeDialog
+          {...finalizeDialog.dialogProps}
+          optionId={finalizeOptionId}
+        />
       ) : null}
     </StatCard>
   );
