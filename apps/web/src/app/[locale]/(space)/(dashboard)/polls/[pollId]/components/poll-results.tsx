@@ -843,8 +843,8 @@ function spansYears(groups: DateGroup<Option>[]) {
  * One row per option, grouped by month like the table's headings, each row
  * with its day and time like the table's columns. Each group's label sits to the left of its
  * first row, and every row shares one grid so dates, times and bars line up.
- * Cells pad themselves instead of using a column gap, so borders and the hover
- * highlight run edge to edge like the table's.
+ * The month column has no gap after it, so row borders and the hover
+ * highlight meet its divider; rows set their own gap between cells.
  */
 function ResultsList({
   options,
@@ -878,7 +878,7 @@ function ResultsList({
     return (
       <li
         key={option.id}
-        className="col-span-full grid min-h-16 grid-cols-subgrid items-center border-button-outline border-b py-4 last:border-b-0 hover:bg-foreground/[0.04] dark:hover:bg-foreground/[0.02] [&>*:first-child]:pl-4 [&>*:last-child]:pr-5 [&>*]:px-3"
+        className="col-span-full grid min-h-16 grid-cols-subgrid items-center gap-x-6 border-button-outline border-b py-4 pr-5 pl-4 last:border-b-0 hover:bg-foreground/[0.04] dark:hover:bg-foreground/[0.02]"
       >
         <OptionDay option={option} floating={floating} />
         {hasTimes ? (
