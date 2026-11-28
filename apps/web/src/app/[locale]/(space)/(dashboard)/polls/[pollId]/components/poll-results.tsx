@@ -511,13 +511,16 @@ function PickButton({
  * Marks a best date: one tied for the most availability, like the best date
  * card's. Passive: picking has its own control.
  */
-function BestMarker() {
+function BestMarker({ size = "default" }: { size?: "default" | "sm" }) {
   return (
     <Tooltip>
       <TooltipTrigger render={<span className="inline-flex" />}>
         <StarIcon
           aria-hidden="true"
-          className="size-4 fill-amber-400 text-amber-400"
+          className={cn(
+            "fill-amber-400 text-amber-400",
+            size === "sm" ? "size-3.5" : "size-4",
+          )}
         />
         <span className="sr-only">
           <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
@@ -1217,16 +1220,21 @@ function ResultsTable({
                   onMouseEnter={() => setHoveredId(option.id)}
                   className={cn(
                     // Pinned under the month row; solid, so rows scroll under it.
-                    "sticky top-11 z-20 min-w-20 border-r border-b px-3 pt-3 pb-4 align-top last:border-r-0",
+                    "sticky top-11 z-20 min-w-20 border-r border-b px-3 pt-3 pb-4 text-start align-top last:border-r-0",
                     hoveredId === option.id
                       ? "bg-[color-mix(in_oklab,var(--color-foreground)_4%,var(--color-card))] dark:bg-[color-mix(in_oklab,var(--color-foreground)_5%,var(--color-background))]"
                       : "bg-card dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
                   )}
                 >
-                  <span className="flex flex-col items-center gap-1">
-                    <DayLabel weekday={weekday} day={day} />
+                  <span className="flex flex-col items-start gap-1">
+                    <span className="flex items-center gap-1.5">
+                      <DayLabel weekday={weekday} day={day} />
+                      {best > 0 && availableCount(option) === best ? (
+                        <BestMarker size="sm" />
+                      ) : null}
+                    </span>
                     {option.duration > 0 ? (
-                      <span className="flex flex-col items-center gap-1 whitespace-nowrap text-xs tabular-nums">
+                      <span className="flex flex-col items-start gap-1 whitespace-nowrap text-xs tabular-nums">
                         <span>
                           {formatDateTime(option.startTime, "time", {
                             timeZone: zone,
@@ -1362,8 +1370,7 @@ function ResultsTable({
                         "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                     )}
                   >
-                    <span className="flex items-center justify-center gap-2">
-                      {isBest ? <BestMarker /> : null}
+                    <span className="flex flex-col items-center gap-1">
                       {participants.length > 0 ? (
                         <AvailabilityPopover
                           option={option}
