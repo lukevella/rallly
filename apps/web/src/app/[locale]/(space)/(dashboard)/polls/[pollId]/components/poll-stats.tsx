@@ -252,15 +252,18 @@ function BestDateCard({
           </span>
         )}
         {current ? (
-          <span className="flex shrink-0 items-center gap-2 text-muted-foreground text-sm">
-            <Trans
-              i18nKey="pollStatsCanMakeItOfTotal"
-              defaults="{count} of {total} can make it"
-              values={{
-                count: current.votes.yes.length + current.votes.ifNeedBe.length,
-                total: participants.length,
-              }}
-            />
+          <span className="flex shrink-0 items-center">
+            <span className="sr-only">
+              <Trans
+                i18nKey="pollStatsCanMakeItOfTotal"
+                defaults="{count} of {total} can make it"
+                values={{
+                  count:
+                    current.votes.yes.length + current.votes.ifNeedBe.length,
+                  total: participants.length,
+                }}
+              />
+            </span>
             <ProgressDonut
               value={current.votes.yes.length}
               secondary={current.votes.ifNeedBe.length}
