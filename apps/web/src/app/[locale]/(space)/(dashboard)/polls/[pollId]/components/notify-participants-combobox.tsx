@@ -85,7 +85,9 @@ export function NotifyParticipantsCombobox({
         className="max-h-32 min-h-0 overflow-y-auto border-0 bg-transparent px-0 py-0 focus-within:ring-0 has-data-[slot=combobox-chip]:px-0 dark:bg-transparent"
       >
         {selected.map((recipient) => (
-          <ComboboxChip key={recipient.id}>{recipient.name}</ComboboxChip>
+          <ComboboxChip key={recipient.id} className="font-normal">
+            {recipient.name}
+          </ComboboxChip>
         ))}
         <ComboboxChipsInput
           id={id}
