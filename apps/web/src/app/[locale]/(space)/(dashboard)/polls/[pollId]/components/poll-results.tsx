@@ -508,8 +508,8 @@ function PickButton({
 }
 
 /**
- * Marks a date tied for the most availability. Passive: picking has its own
- * control.
+ * Marks a best date: one tied for the most availability, like the best date
+ * card's. Passive: picking has its own control.
  */
 function BestMarker() {
   return (
@@ -520,11 +520,11 @@ function BestMarker() {
           className="size-4 fill-amber-400 text-amber-400"
         />
         <span className="sr-only">
-          <Trans i18nKey="pollResultsMostAvailable" defaults="Most available" />
+          <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
         </span>
       </TooltipTrigger>
       <TooltipContent>
-        <Trans i18nKey="pollResultsMostAvailable" defaults="Most available" />
+        <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
       </TooltipContent>
     </Tooltip>
   );
@@ -900,7 +900,7 @@ function ResultsList({
           />
         ) : null}
         <AvailabilityBar yes={yes} ifNeedBe={ifNeedBe} total={total} />
-        <span className="flex items-center justify-end gap-1">
+        <span className="flex items-center justify-end gap-2">
           {/* A slot either way, so counts stay aligned down the list. */}
           <span className="flex size-4">{isBest ? <BestMarker /> : null}</span>
           <AvailabilityPopover
@@ -1362,7 +1362,7 @@ function ResultsTable({
                         "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                     )}
                   >
-                    <span className="flex items-center justify-center gap-1">
+                    <span className="flex items-center justify-center gap-2">
                       {isBest ? <BestMarker /> : null}
                       {participants.length > 0 ? (
                         <AvailabilityPopover
