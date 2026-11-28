@@ -94,10 +94,10 @@ h2 {
   blockquote {
     @apply my-6 border-l-4 border-gray-300 pl-4 italic text-gray-700;
   }
-  pre {
+  pre:not([data-slot]) {
     @apply my-6 overflow-x-auto rounded-lg border bg-gray-50 p-4;
   }
-  code {
+  code:not([data-slot]) {
     @apply rounded px-1 py-0.5;
   }
   strong {

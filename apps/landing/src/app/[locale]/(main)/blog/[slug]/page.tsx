@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Trans } from "react-i18next/TransWithoutContext";
 import DateFormatter from "@/components/blog/date-formatter";
+import { PostCodeBlock } from "@/components/blog/post-code-block";
 import { PostFaq } from "@/components/blog/post-faq";
 import { Cta } from "@/components/home/cta";
 import { FaqItem } from "@/components/home/faq";
@@ -167,6 +168,7 @@ export default async function Page(props: {
               components={{
                 PostFaq,
                 FaqItem,
+                pre: PostCodeBlock,
                 a: ({ href, ...rest }: React.ComponentProps<"a">) => (
                   <a
                     {...rest}
