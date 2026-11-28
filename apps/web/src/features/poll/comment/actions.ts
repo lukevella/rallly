@@ -55,14 +55,11 @@ function trackCommentEvent(
   pollId: string,
   properties: Record<string, unknown>,
 ) {
+  const withPoll = { ...properties, poll_id: pollId };
   if (user) {
-    track(user, {
-      event,
-      properties: { ...properties, poll_id: pollId },
-      groups: { poll: pollId },
-    });
+    track(user, { event, properties: withPoll, groups: { poll: pollId } });
   } else {
-    trackSystemEvent({ event, properties: { ...properties, poll_id: pollId } });
+    trackSystemEvent({ event, properties: withPoll });
   }
 }
 
