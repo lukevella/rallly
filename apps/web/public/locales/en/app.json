@@ -420,8 +420,6 @@
   "finalizeDialogNoRecipients": "No one to notify",
   "finalizeDialogOutcome": "Voting closes and the date is booked. We'll email the people below.",
   "finalizeDialogPollTitle": "Finalize poll",
-  "finalizeDialogSubject": "Subject",
-  "finalizeDialogSubjectLine": "Date booked for {title}",
   "finalizeDialogTo": "To",
   "finalizeNotifyBudgetSkipped": "{count, plural, one {# participant wasn't emailed} other {# participants weren't emailed}} because this account reached its daily email limit. Share the poll link with them instead.",
   "finalizePoll": "Finalize poll",

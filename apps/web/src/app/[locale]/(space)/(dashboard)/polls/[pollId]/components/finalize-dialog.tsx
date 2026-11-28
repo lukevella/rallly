@@ -187,8 +187,8 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      {/* Laid out like the email being sent: who it goes to, its subject,
-          then the event it carries. */}
+      {/* Laid out like the email being sent: who it goes to, then the event
+          it carries. */}
       <div className="flex flex-col gap-2 pt-2 pb-2">
         <div className="overflow-hidden rounded-xl border border-card-border bg-card">
           <div className="flex items-start gap-2 border-card-border border-b pl-4">
@@ -215,18 +215,6 @@ function FinalizeContent({
                 />
               </p>
             )}
-          </div>
-          <div className="flex items-center gap-2 border-card-border border-b px-4 py-3 text-sm">
-            <span className="w-14 shrink-0 text-muted-foreground">
-              <Trans i18nKey="finalizeDialogSubject" defaults="Subject" />
-            </span>
-            <span className="min-w-0 truncate">
-              <Trans
-                i18nKey="finalizeDialogSubjectLine"
-                defaults="Date booked for {title}"
-                values={{ title: poll.title }}
-              />
-            </span>
           </div>
           <div className="p-4">
             <SummaryStep option={option} showPendingLink />
