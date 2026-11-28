@@ -59,12 +59,11 @@ test.describe("List-Unsubscribe", () => {
     await newPollPage.goto();
     const pollPage = await newPollPage.create({ name: POLL_TITLE });
 
-    const match = page.url().match(/\/poll\/([a-zA-Z0-9]+)/);
+    const match = page.url().match(/\/polls\/([a-zA-Z0-9]+)/);
     pollId = match?.[1] ?? "";
     expect(pollId).not.toBe("");
 
     inviteUrl = await pollPage.copyInviteLink();
-    await pollPage.closeShareDialog();
     await page.close();
 
     // Drop the login OTP so the first capture is the notification.

@@ -196,8 +196,7 @@ test.describe("free organizer", () => {
       page.getByRole("dialog", { name: "Open poll limit reached" }),
     ).toHaveCount(0);
 
-    const pollPage = await newPollPage.create({ name: "Third poll" });
-    await pollPage.closeShareDialog();
+    await newPollPage.create({ name: "Third poll" });
 
     // Back to /new without a full page load: the cached render says 2 of 3.
     await page.goBack();
@@ -231,9 +230,8 @@ test.describe("free organizer", () => {
       },
     });
 
-    await page.goto(`/poll/${closedId}`);
-    await page.getByRole("button", { name: "Manage" }).click();
-    await page.getByRole("menuitem", { name: "Reopen poll" }).click();
+    await page.goto(`/polls/${closedId}`);
+    await page.getByRole("button", { name: "Reopen poll" }).click();
     await expect(
       page.getByRole("dialog", { name: "Open poll limit reached" }),
     ).toBeVisible();
@@ -254,8 +252,7 @@ test("a guest is limited to one poll and keeps every poll on sign in", async ({
 
   const newPollPage = new NewPollPage(page);
   await newPollPage.goto();
-  const pollPage = await newPollPage.create({ name: "Guest poll" });
-  await pollPage.closeShareDialog();
+  await newPollPage.create({ name: "Guest poll" });
   const guestPollUrl = page.url();
 
   expect(await makePoll(page)).toMatchObject({

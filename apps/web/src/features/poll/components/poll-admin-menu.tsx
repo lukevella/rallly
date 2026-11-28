@@ -12,7 +12,6 @@ import {
 import {
   CircleStopIcon,
   CopyIcon,
-  DownloadIcon,
   MoreHorizontalIcon,
   PencilIcon,
   PlayIcon,
@@ -23,9 +22,9 @@ import { Link } from "@/components/link";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
 import { usePoll } from "@/features/poll/client";
+import { ClosePollDialog } from "@/features/poll/components/close-poll-dialog";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { DeletePollDialog } from "@/features/poll/components/manage-poll/delete-poll-dialog";
-import { useCsvExporter } from "@/features/poll/components/manage-poll/use-csv-exporter";
 import {
   getOpenPollLimitRefusal,
   showOpenPollLimit,
@@ -33,18 +32,15 @@ import {
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
-/**
- * The poll admin header's overflow menu. Reads the poll from the legacy
- * poll context because the CSV export needs every response's votes.
- */
+/** The poll admin header's overflow menu. Reads the poll from the poll context. */
 export function PollAdminMenu() {
   const poll = usePoll();
   const { t } = useTranslation();
   const router = useRouter();
   const isFree = useIsFree();
-  const { exportToCsv } = useCsvExporter();
   const duplicateDialog = useDialog();
   const deleteDialog = useDialog();
+  const closeDialog = useDialog();
   // These pages are server rendered, so a status change shows once they are
   // fetched again.
   const reopenPoll = trpc.polls.reopen.useMutation({
@@ -56,9 +52,6 @@ export function PollAdminMenu() {
       }
       router.refresh();
     },
-  });
-  const closePoll = trpc.polls.close.useMutation({
-    onSuccess: () => router.refresh(),
   });
 
   return (
@@ -87,10 +80,6 @@ export function PollAdminMenu() {
               <DropdownMenuSeparator />
             </>
           )}
-          <DropdownMenuItem onClick={exportToCsv}>
-            <DownloadIcon />
-            <Trans i18nKey="exportToCsv" defaults="Export to CSV" />
-          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               if (isFree) {
@@ -109,9 +98,7 @@ export function PollAdminMenu() {
             {isFree ? <ProBadge /> : null}
           </DropdownMenuItem>
           {poll.status === "open" ? (
-            <DropdownMenuItem
-              onClick={() => closePoll.mutate({ pollId: poll.id })}
-            >
+            <DropdownMenuItem onClick={() => closeDialog.trigger()}>
               <CircleStopIcon />
               <Trans i18nKey="closePoll" defaults="Close" />
             </DropdownMenuItem>
@@ -140,6 +127,7 @@ export function PollAdminMenu() {
         {...duplicateDialog.dialogProps}
       />
       <DeletePollDialog urlId={poll.id} {...deleteDialog.dialogProps} />
+      <ClosePollDialog pollId={poll.id} {...closeDialog.dialogProps} />
     </>
   );
 }

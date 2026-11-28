@@ -11,11 +11,10 @@ test.describe("comments disabled", () => {
   }) => {
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const pollPage = await newPollPage.create({
+    await newPollPage.create({
       name: "No Comments Meetup",
       enableComments: true,
     });
-    await pollPage.closeShareDialog();
 
     const pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
     expect(pollId).toBeTruthy();
@@ -25,7 +24,7 @@ test.describe("comments disabled", () => {
     await sheet
       .getByPlaceholder("Write a comment")
       .fill("This comment should be rejected");
-    await sheet.getByPlaceholder("Your name…").fill("Test user");
+    await sheet.getByPlaceholder("Your name").fill("Test user");
 
     // Turned off behind the page's back: the composer stays on screen.
     await prisma.poll.update({
@@ -53,7 +52,6 @@ test.describe("comments disabled", () => {
       name: "Comments Allowed Meetup",
       enableComments: true,
     });
-    await pollPage.closeShareDialog();
 
     const pollId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
     expect(pollId).toBeTruthy();

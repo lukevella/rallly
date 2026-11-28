@@ -128,6 +128,34 @@ export function rankOptionsByPopularity<T extends { id: string }>({
     .sort((a, b) => comparePopularity(a.votes, b.votes));
 }
 
+/**
+ * The best dates: the most people available, and of those the most yes votes,
+ * since if need be is a weaker answer. None while no one is available.
+ */
+export function bestOptionIds(
+  options: { id: string; votes: OptionVotes }[],
+): Set<string> {
+  const available = (votes: OptionVotes) =>
+    votes.yes.length + votes.ifNeedBe.length;
+  const top = options.reduce<OptionVotes | undefined>(
+    (best, { votes }) =>
+      !best || comparePopularity(votes, best) < 0 ? votes : best,
+    undefined,
+  );
+  if (!top || available(top) === 0) {
+    return new Set();
+  }
+  return new Set(
+    options
+      .filter(
+        ({ votes }) =>
+          available(votes) === available(top) &&
+          votes.yes.length === top.yes.length,
+      )
+      .map(({ id }) => id),
+  );
+}
+
 function comparePopularity(a: OptionVotes, b: OptionVotes) {
   const score = (votes: OptionVotes) => [
     votes.yes.length + votes.ifNeedBe.length,

@@ -6,12 +6,6 @@ import { InvitePage } from "./invite-page";
 export class PollPage {
   constructor(public readonly page: Page) {}
 
-  async closeShareDialog() {
-    const dialog = this.page.getByRole("dialog", { name: "Share" });
-    await dialog.getByRole("button", { name: "Close" }).click();
-    await expect(dialog).toBeHidden();
-  }
-
   async addComment() {
     const page = this.page;
 
@@ -19,23 +13,34 @@ export class PollPage {
 
     const sheet = page.getByRole("dialog", { name: "Comments" });
     await sheet.getByPlaceholder("Write a comment").fill("This is a comment!");
-    await sheet.getByPlaceholder("Your name…").fill("Test user");
+    await sheet.getByPlaceholder("Your name").fill("Test user");
 
     await sheet.getByRole("button", { name: "Add comment" }).click();
   }
 
   async openShareDialog() {
-    const dialog = this.page.getByRole("dialog", { name: "Share" });
+    // "Share" on the legacy page, "Invite by email" on the poll page
+    const dialog = this.page.getByRole("dialog", {
+      name: /^(Share|Invite by email)$/,
+    });
     if (!(await dialog.isVisible())) {
-      await this.page.getByRole("button", { name: "Share" }).first().click();
+      await this.page
+        .getByRole("button", { name: /^(Share|Invite by email)$/ })
+        .first()
+        .click();
     }
     await expect(dialog).toBeVisible();
     return dialog;
   }
 
   async copyInviteLink() {
-    const dialog = await this.openShareDialog();
-    await dialog.getByRole("button", { name: "Copy" }).click();
+    // The poll page shows the link on the page; the legacy page in its dialog
+    if (new URL(this.page.url()).pathname.includes("/polls/")) {
+      await this.page.getByRole("button", { name: "Copy invite link" }).click();
+    } else {
+      const dialog = await this.openShareDialog();
+      await dialog.getByRole("button", { name: "Copy" }).click();
+    }
     return (await this.page.evaluate(
       "navigator.clipboard.readText()",
     )) as string;

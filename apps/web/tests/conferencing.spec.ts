@@ -141,8 +141,7 @@ test.describe
         0,
       );
 
-      const pollPage = await newPollPage.create({ name: `Zoom poll ${runId}` });
-      await pollPage.closeShareDialog();
+      await newPollPage.create({ name: `Zoom poll ${runId}` });
 
       const poll = await prisma.poll.findFirstOrThrow({
         where: { title: `Zoom poll ${runId}` },
@@ -163,8 +162,7 @@ test.describe
         .getByLabel("Link (optional)")
         .fill("https://meet.jit.si/rallly");
 
-      const pollPage = await newPollPage.create({ name: `Link poll ${runId}` });
-      await pollPage.closeShareDialog();
+      await newPollPage.create({ name: `Link poll ${runId}` });
 
       const poll = await prisma.poll.findFirstOrThrow({
         where: { title: `Link poll ${runId}` },
@@ -185,10 +183,9 @@ test.describe
       await page.getByRole("menuitem", { name: "Custom" }).click();
       await page.getByLabel("Video call").fill("Microsoft Teams");
 
-      const pollPage = await newPollPage.create({
+      await newPollPage.create({
         name: `Named poll ${runId}`,
       });
-      await pollPage.closeShareDialog();
 
       const poll = await prisma.poll.findFirstOrThrow({
         where: { title: `Named poll ${runId}` },

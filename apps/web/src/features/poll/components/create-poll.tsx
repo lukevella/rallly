@@ -28,8 +28,8 @@ import {
 } from "@/features/poll/components/forms/poll-options-form/utils";
 import { PollSettingsForm } from "@/features/poll/components/forms/poll-settings";
 import type { NewEventData } from "@/features/poll/components/forms/types";
+import { PollCreatedDialog } from "@/features/poll/components/poll-created-dialog";
 import { SelectedOptionsCount } from "@/features/poll/components/selected-options-count";
-import { SHARE_POLL_FLASH_KEY } from "@/features/poll/constants";
 import {
   hideOpenPollLimit,
   showOpenPollLimit,
@@ -39,7 +39,6 @@ import { isAtOpenPollLimit } from "@/features/poll/limit/utils";
 import { useUser } from "@/features/user/client";
 import { UserDropdown } from "@/features/user/components/user-dropdown";
 import { Trans, useTranslation } from "@/i18n/client";
-import { setFlash } from "@/lib/flash/client";
 import { createSessionStorage } from "@/lib/session-storage";
 import { getBrowserTimeZone } from "@/lib/utils/date-time-utils";
 import { trpc } from "@/trpc/client";
@@ -198,7 +197,9 @@ export const CreatePoll = ({
   // The form persists, so it survives closing a poll to make room. The count
   // is the server's at page load, so the poll created here can't trip it.
   React.useEffect(() => {
-    if (!openPollUsage) {
+    // router.refresh() after creating brings back a count that now includes
+    // the new poll; the created dialog stays on top without the limit dialog.
+    if (!openPollUsage || createdPollId) {
       return;
     }
     if (isAtOpenPollLimit(openPollUsage)) {
@@ -206,7 +207,7 @@ export const CreatePoll = ({
     } else {
       hideOpenPollLimit("create");
     }
-  }, [openPollUsage]);
+  }, [openPollUsage, createdPollId]);
 
   // The client router reuses a page it rendered in the last minute
   // (staleTimes.dynamic), so a /new loaded before the organizer opened or
@@ -300,8 +301,14 @@ export const CreatePoll = ({
               clear();
               form.reset();
               setCreatedPollId(res.data.id);
-              setFlash(SHARE_POLL_FLASH_KEY, res.data.id);
-              router.push(`/poll/${res.data.id}`);
+              if (isLoggedIn) {
+                // The poll's page carries the invite link and the ways to
+                // invite, so signed in hosts go straight there.
+                router.push(`/polls/${res.data.id}`);
+              } else {
+                // The open poll count shown on this page has changed.
+                router.refresh();
+              }
             } else if (res.error.code === "OPEN_POLL_LIMIT_REACHED") {
               showOpenPollLimit("create", res.error.usage);
             } else {
@@ -369,6 +376,9 @@ export const CreatePoll = ({
             scaling, so give it height inside the resting zone. */}
         <div ref={sentinelRef} className="-mt-6 h-6" aria-hidden="true" />
       </main>
+      {createdPollId && !isLoggedIn ? (
+        <PollCreatedDialog pollId={createdPollId} />
+      ) : null}
     </Form>
   );
 };

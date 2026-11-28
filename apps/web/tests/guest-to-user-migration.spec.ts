@@ -30,8 +30,7 @@ test.describe.serial(() => {
     // Step 1: Create a poll as guest
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const pollPage = await newPollPage.create({ name: "Monthly Meetup" });
-    await pollPage.closeShareDialog();
+    await newPollPage.create({ name: "Monthly Meetup" });
 
     // Step 2: Navigate to registration (redirects to the combined login page)
     await page.click("text=Create an account");
@@ -41,11 +40,12 @@ test.describe.serial(() => {
     const registerPage = new RegisterPage(page);
     await registerPage.register(testUser);
 
-    // Step 4: Setup returns them to the poll, now adopted into their space
+    // Step 4: Setup returns them to the poll, now adopted into their space,
+    // which sends it on to the poll page
     await expect(
-      page.getByRole("heading", { name: "Monthly Meetup" }),
+      page.getByRole("heading", { name: "Monthly Meetup" }).first(),
     ).toBeVisible();
-    const urlId = page.url().match(/\/poll\/([^/?]+)/)?.[1];
+    const urlId = page.url().match(/\/polls\/([^/?]+)/)?.[1];
     expect(urlId).toBeTruthy();
     const poll = await prisma.poll.findUnique({ where: { id: urlId } });
     expect(poll?.spaceId).toBeTruthy();
@@ -57,8 +57,7 @@ test.describe.serial(() => {
     // Step 1: Create a poll as guest
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    const pollPage = await newPollPage.create({ name: "Board Meeting" });
-    await pollPage.closeShareDialog();
+    await newPollPage.create({ name: "Board Meeting" });
     await expect(
       page.getByRole("heading", { name: "Board Meeting" }),
     ).toBeVisible();
@@ -80,10 +79,10 @@ test.describe.serial(() => {
 
     // Step 4: Verify the poll has been linked to the logged-in user
     await expect(
-      page.getByRole("heading", { name: "Board Meeting" }),
+      page.getByRole("heading", { name: "Board Meeting" }).first(),
     ).toBeVisible();
     const url = page.url();
-    const urlId = url.match(/\/poll\/([^/]+)/)?.[1];
+    const urlId = url.match(/\/polls?\/([^/?]+)/)?.[1];
     expect(urlId).toBeTruthy();
     const [poll, user] = await Promise.all([
       prisma.poll.findUnique({ where: { id: urlId } }),

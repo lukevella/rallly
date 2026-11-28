@@ -12,6 +12,7 @@ import { RelativeDate } from "./relative-date";
 export async function QuickCreateWidget() {
   const polls = await getGuestPolls();
   const { t, i18n } = await getTranslation();
+
   return (
     <div className="space-y-8">
       <div className="space-y-6">

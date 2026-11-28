@@ -119,7 +119,8 @@
   --popover-accent: var(--color-gray-700);
 
   --card: oklch(0.24 0.006 var(--gray-hue));
-  --card-border: var(--color-gray-700);
+  /* Matches the outline on the app's other cards (button-outline). */
+  --card-border: var(--button-outline);
   --card-foreground: var(--color-white);
   --card-accent: oklch(0.26 0.006 var(--gray-hue));
 }

@@ -108,9 +108,12 @@ async function loginAs(browser: Browser, email: string) {
 }
 
 async function expectAdminPage(page: Page, pollId: string) {
+  // The poll page when the poll is in the active space, else the legacy page
   await page.goto(`/poll/${pollId}`);
-  await expect(page).toHaveURL(new RegExp(`/poll/${pollId}$`));
-  await expect(page.getByRole("button", { name: "Manage" })).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`/polls?/${pollId}$`));
+  await expect(
+    page.getByRole("button", { name: /^(Manage|Poll options)$/ }),
+  ).toBeVisible();
 }
 
 async function expectInvitePage(page: Page, pollId: string) {

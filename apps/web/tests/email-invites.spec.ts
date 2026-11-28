@@ -66,11 +66,13 @@ async function renameThroughInviteLink(
   }
 }
 
-/**
- * The poll holds one response, so the menu resolves without disambiguation.
- */
+/** Through the participant's menu in the poll page's results table. */
 async function deleteResponse(page: Page, name: string) {
-  await page.getByTestId("participant-menu").click();
+  await page.getByRole("radio", { name: "Table" }).click();
+  await page
+    .getByRole("button", { name: new RegExp(`^${name}`) })
+    .first()
+    .click();
   await page.getByRole("menuitem", { name: "Delete" }).click();
   const dialog = page.getByRole("dialog", { name: `Delete ${name}?` });
   await dialog.getByRole("button", { name: "Delete" }).click();
@@ -88,8 +90,8 @@ async function deleteResponse(page: Page, name: string) {
 
 async function reopenShareDialog(page: Page) {
   await page.reload();
-  await page.getByRole("button", { name: "Share" }).first().click();
-  return page.getByRole("dialog", { name: "Share" });
+  await page.getByRole("button", { name: "Invite by email" }).click();
+  return page.getByRole("dialog", { name: "Invite by email" });
 }
 
 test.describe("Email invites", () => {
@@ -114,11 +116,10 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: PRO_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: POLL_TITLE });
+    const pollPage = await newPollPage.create({ name: POLL_TITLE });
     await deleteAllMessages();
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
-    await expect(dialog.getByRole("button", { name: "Copy" })).toBeVisible();
+    const dialog = await pollPage.openShareDialog();
 
     const field = dialog.getByLabel("Email address");
     await field.fill(INVITEE);
@@ -311,10 +312,12 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: CLEAN_URL_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: `${POLL_TITLE} Clean URL` });
+    const pollPage = await newPollPage.create({
+      name: `${POLL_TITLE} Clean URL`,
+    });
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
-    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+    const dialog = await pollPage.openShareDialog();
+    await expect(page).toHaveURL(/\/polls\/[^/?]+$/);
 
     // Sending an invite refreshes the route; a router sync must not put the
     // consumed param back on the address bar.
@@ -323,7 +326,7 @@ test.describe("Email invites", () => {
     await field.press("Enter");
     const row = dialog.getByRole("listitem").filter({ hasText: INVITEE });
     await expect(row.getByText("Sent")).toBeVisible();
-    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+    await expect(page).toHaveURL(/\/polls\/[^/?]+$/);
     await expect(dialog).toBeVisible();
 
     // Removing a pending invite drops the row and stops its token; sending
@@ -350,7 +353,7 @@ test.describe("Email invites", () => {
 
     await page.reload();
     await expect(
-      page.getByRole("button", { name: "Share" }).first(),
+      page.getByRole("button", { name: "Invite by email" }),
     ).toBeVisible();
     await expect(dialog).toBeHidden();
   });
@@ -360,9 +363,9 @@ test.describe("Email invites", () => {
     await loginWithEmail(page, { email: FREE_HOST });
     const newPollPage = new NewPollPage(page);
     await newPollPage.goto();
-    await newPollPage.create({ name: `${POLL_TITLE} Free` });
+    const pollPage = await newPollPage.create({ name: `${POLL_TITLE} Free` });
 
-    const dialog = page.getByRole("dialog", { name: "Share" });
+    const dialog = await pollPage.openShareDialog();
     const sendButton = dialog.getByRole("button", { name: /Send invite/ });
     await expect(sendButton).toBeEnabled();
     await expect(sendButton.getByText("Pro")).toBeVisible();

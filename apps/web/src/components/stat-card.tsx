@@ -10,7 +10,7 @@ export function StatCard({
   children,
 }: React.PropsWithChildren<{ href?: string; className?: string }>) {
   const classes = cn(
-    "flex min-h-32 min-w-72 flex-1 snap-start flex-col justify-between gap-4 rounded-xl bg-card p-4 text-card-foreground shadow-xs ring-1 ring-button-outline ring-inset sm:min-w-64 dark:bg-foreground/5 dark:shadow-none",
+    "flex min-h-32 min-w-72 flex-1 snap-start flex-col justify-between gap-4 rounded-xl bg-card p-4 text-card-foreground shadow-xs ring-1 ring-button-outline ring-inset sm:min-w-64 dark:bg-foreground/[0.03] dark:shadow-none",
     href && "transition-colors hover:bg-foreground/10",
     className,
   );
@@ -102,7 +102,7 @@ export function StatCardStack({
   return (
     <div
       className={cn(
-        "-mx-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] md:mx-0 md:scroll-px-0 md:px-0 md:pb-0",
+        "-mx-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto overscroll-x-none px-4 pb-1 [scrollbar-width:none] md:mx-0 md:scroll-px-0 md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden",
         className,
       )}
       {...props}

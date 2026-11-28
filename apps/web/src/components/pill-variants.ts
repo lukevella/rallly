@@ -5,8 +5,9 @@ export const pillVariants = cva(
   {
     variants: {
       selected: {
-        true: "bg-sidebar-accent text-sidebar-accent-foreground ring-button-outline",
-        false: "text-muted-foreground ring-transparent hover:bg-sidebar-accent",
+        true: "bg-white text-foreground ring-button-outline dark:bg-foreground/5",
+        false:
+          "text-muted-foreground ring-transparent hover:bg-gray-50 dark:hover:bg-foreground/10",
       },
     },
     defaultVariants: {

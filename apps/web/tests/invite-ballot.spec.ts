@@ -548,9 +548,9 @@ test.describe("invite ballot", () => {
     await loginWithEmail(creator.page, { email });
     await creator.page.goto("/invite/ballot-spec-manage");
     const manage = creator.page.getByRole("link", { name: "Manage poll" });
-    await expect(manage).toHaveAttribute("href", "/poll/ballot-spec-manage");
+    await expect(manage).toHaveAttribute("href", "/polls/ballot-spec-manage");
     await manage.click();
-    await expect(creator.page).toHaveURL(/\/poll\/ballot-spec-manage$/);
+    await expect(creator.page).toHaveURL(/\/polls\/ballot-spec-manage$/);
     await creator.context.close();
     await prisma.user.deleteMany({ where: { email } });
   });

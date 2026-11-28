@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@rallly/ui/dropdown-menu";
-import { PlusIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import type * as React from "react";
 import { AddToCalendarMenuItems } from "@/features/calendars/components/add-to-calendar-menu-items";
 
@@ -26,8 +26,8 @@ export function AddToCalendarButton({
       <DropdownMenuTrigger
         render={<Button size={size} className={className} />}
       >
-        <PlusIcon data-icon="inline-start" />
         <Trans i18nKey="addToCalendar" defaults="Add to calendar" />
+        <ChevronDownIcon data-icon="inline-end" aria-hidden="true" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <AddToCalendarMenuItems eventId={eventId} />

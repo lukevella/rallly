@@ -21,6 +21,7 @@ import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import {
   AlertTriangleIcon,
   CalendarIcon,
+  ClockIcon,
   MapPinIcon,
   StarIcon,
   VideoIcon,
@@ -58,7 +59,7 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTimeConfig } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
 
-type RankedOption = {
+export type RankedOption = {
   id: string;
   startTime: Date;
   duration: number;
@@ -209,27 +210,56 @@ function PickDateStep({
   );
 }
 
-function PickedDate({ option }: { option: RankedOption }) {
+function PickedDate({
+  option,
+  showDate = true,
+}: {
+  option: RankedOption;
+  /** Off where the date is already said, leaving just the time. */
+  showDate?: boolean;
+}) {
   const poll = usePoll();
   const { timeZone: displayTimeZone } = useDateTimeConfig();
   const allDay = option.duration === 0;
+  // With the date said elsewhere, an all-day date still says so here, where
+  // a timed one shows its hours.
+  if (!showDate && allDay) {
+    return (
+      <div className="flex items-start gap-3">
+        <ClockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+        <div className="text-sm leading-5">
+          <Trans i18nKey="allDay" defaults="All day" />
+        </div>
+      </div>
+    );
+  }
   // Fixed instants render in the viewer's zone; floating times have none.
   const cityTimeZone =
     !allDay && poll.timeZone !== null ? displayTimeZone : undefined;
   return (
     <div className="flex items-start gap-3">
       {/* The icon centers on the first line, not the block. */}
-      <CalendarIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      {showDate ? (
+        <CalendarIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      ) : (
+        <ClockIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      )}
       <div className="min-w-0">
-        <div className="truncate text-sm leading-5">
-          <EventDate
-            value={option.startTime}
-            allDay={allDay}
-            timeZone={poll.timeZone}
-            preset="dateFull"
-          />
-        </div>
-        <div className="truncate text-muted-foreground text-sm">
+        {showDate ? (
+          <div className="text-sm leading-5">
+            <EventDate
+              value={option.startTime}
+              allDay={allDay}
+              timeZone={poll.timeZone}
+              preset="dateFull"
+            />
+          </div>
+        ) : null}
+        <div
+          className={
+            showDate ? "text-muted-foreground text-sm" : "text-sm leading-5"
+          }
+        >
           <EventTimeRange
             start={option.startTime}
             end={
@@ -346,14 +376,18 @@ function VoteShortcut({
   );
 }
 
-function NotifyStep({
+/** Who to email the final date: participants with an email, by vote. */
+export function NotifyStep({
   optionId,
   selectedIds,
   onChange,
+  compact = false,
 }: {
   optionId: string;
   selectedIds: Set<string>;
   onChange: (next: Set<string>) => void;
+  /** Tighter side insets, for narrower dialogs. */
+  compact?: boolean;
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
@@ -393,7 +427,12 @@ function NotifyStep({
 
   return (
     <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-      <div className="flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 pr-3 pl-6">
+      <div
+        className={cn(
+          "flex h-12 items-center gap-3 border-card-border border-b bg-muted/40 pr-3",
+          compact ? "pl-5" : "pl-6",
+        )}
+      >
         <Checkbox
           id="notify-all"
           checked={allSelected}
@@ -431,7 +470,12 @@ function NotifyStep({
           ))}
         </div>
       </div>
-      <DataListRoot className="max-h-72 grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] overflow-y-auto px-2">
+      <DataListRoot
+        className={cn(
+          "max-h-72 grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] overflow-y-auto",
+          compact ? "px-1" : "px-2",
+        )}
+      >
         {sortedParticipants.map((participant) => (
           <DataListRow key={participant.id}>
             <DataListCell>
@@ -476,7 +520,7 @@ type Step = "date" | "notify" | "summary" | "done";
 const wideStepClassName = "grid w-[calc(100vw-4rem)] gap-4 sm:w-[40rem]";
 const narrowStepClassName = "grid w-[calc(100vw-4rem)] gap-4 sm:w-[26rem]";
 
-function PickedDateText({ option }: { option: RankedOption }) {
+export function PickedDateText({ option }: { option: RankedOption }) {
   const poll = usePoll();
   const allDay = option.duration === 0;
   return (
@@ -522,13 +566,25 @@ function DetailRow({
 }
 
 // What the event will carry, laid out as the confirmation email shows it.
-function SummaryStep({ option }: { option: RankedOption }) {
+export function SummaryStep({
+  option,
+  showDate = true,
+  showLocation = true,
+  showPendingLink = false,
+}: {
+  option: RankedOption;
+  /** Off where the date is already said, leaving just the time. */
+  showDate?: boolean;
+  showLocation?: boolean;
+  /** Says a provider's meeting link is created on finalizing. */
+  showPendingLink?: boolean;
+}) {
   const poll = usePoll();
   const conferencing = poll.conferencing;
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4">
-      <PickedDate option={option} />
-      {poll.location ? (
+      <PickedDate option={option} showDate={showDate} />
+      {showLocation && poll.location ? (
         <DetailRow icon={<MapPinIcon />}>{poll.location}</DetailRow>
       ) : null}
       {conferencing ? (
@@ -560,6 +616,13 @@ function SummaryStep({ option }: { option: RankedOption }) {
                 {conferencing.uri}
               </a>
             </div>
+          ) : showPendingLink && conferencing.provider !== "custom" ? (
+            <div className="text-muted-foreground">
+              <Trans
+                i18nKey="finalizeConferencingLinkPending"
+                defaults="The link will be generated after you finalize."
+              />
+            </div>
           ) : null}
         </DetailRow>
       ) : null}
@@ -574,10 +637,12 @@ function FinalizeWizard({
   step,
   onStepChange,
   onClose,
+  initialOptionId,
 }: {
   step: Step;
   onStepChange: (step: Step) => void;
   onClose: () => void;
+  initialOptionId?: string;
 }) {
   const poll = usePoll();
   const { participants } = useParticipants();
@@ -594,7 +659,9 @@ function FinalizeWizard({
     () => rankOptionsByPopularity({ options: poll.options, participants }),
     [poll.options, participants],
   );
-  const [optionId, setOptionId] = React.useState<string | null>(null);
+  const [optionId, setOptionId] = React.useState<string | null>(
+    initialOptionId ?? null,
+  );
   const [notifyIds, setNotifyIds] = React.useState(
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
@@ -768,9 +835,25 @@ function FinalizeWizard({
   );
 }
 
-export function FinalizePollDialog(props: DialogProps) {
+/**
+ * `optionId` opens the wizard with that date already picked, past the date
+ * step; Back still leads to the full list.
+ */
+export function FinalizePollDialog({
+  optionId,
+  ...props
+}: DialogProps & { optionId?: string }) {
   const poll = usePoll();
+  const { participants } = useParticipants();
   const [step, setStep] = React.useState<Step>("date");
+  const pickedStep: Step = participants.length > 0 ? "notify" : "summary";
+  // Opening on a picked date starts past the date step. Set before paint, so
+  // the date list never flashes.
+  React.useLayoutEffect(() => {
+    if (props.open && optionId) {
+      setStep(pickedStep);
+    }
+  }, [props.open, optionId, pickedStep]);
   const onOpenChange = (open: boolean) => {
     if (!open && step !== "done") {
       posthog?.capture("poll_finalize:dialog_dismiss", {
@@ -792,6 +875,8 @@ export function FinalizePollDialog(props: DialogProps) {
     >
       <DialogContent className="w-auto sm:max-w-none">
         <FinalizeWizard
+          key={optionId}
+          initialOptionId={optionId}
           step={step}
           onStepChange={setStep}
           onClose={() => onOpenChange(false)}

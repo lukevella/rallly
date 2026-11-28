@@ -25,7 +25,6 @@ test.describe(() => {
       name: "Monthly Meetup",
       enableComments: true,
     });
-    await pollPage.closeShareDialog();
 
     // Extract the poll ID from the URL
     const url = page.url();
@@ -48,7 +47,6 @@ test.describe(() => {
 
   test("copy participant link", async () => {
     const inviteLink = await pollPage.copyInviteLink();
-    await pollPage.closeShareDialog();
     expect(inviteLink).toMatch(/\/invite\/[a-zA-Z0-9]+/);
   });
 

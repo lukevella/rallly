@@ -46,7 +46,6 @@ import { Link } from "@/components/link";
 import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import { showPayWall, useIsFree } from "@/features/billing/client";
 import { ProBadge } from "@/features/billing/components/pro-badge";
-import { usePollAdminHref } from "@/features/poll/client";
 import { DuplicateDialog } from "@/features/poll/components/duplicate-dialog";
 import { PollStatusIcon } from "@/features/poll/components/poll-status-icon";
 import {
@@ -57,7 +56,6 @@ import type { PollClosedReason, PollStatus } from "@/features/poll/schema";
 import { Trans, useTranslation } from "@/i18n/client";
 import { TimeRange } from "@/lib/datetime/time";
 import type { DateInput } from "@/lib/datetime/types";
-import { useFeatureFlag } from "@/lib/feature-flags/client";
 import { trpc } from "@/trpc/client";
 
 type PollRow = {
@@ -104,12 +102,11 @@ function PollTitleLink({
   status: PollStatus;
   closedReason: PollClosedReason | null;
 }) {
-  const pollAdminHref = usePollAdminHref();
   return (
     <div className="flex min-w-0 items-center gap-2">
       <HoverPrefetchLink
         className="min-w-0 truncate text-sm outline-none after:absolute after:inset-0"
-        href={pollAdminHref(id)}
+        href={`/polls/${id}`}
       >
         {title}
       </HoverPrefetchLink>
@@ -151,7 +148,6 @@ function PollRowActions({
 }) {
   const { t } = useTranslation();
   const router = useRouter();
-  const isPollAdminEnabled = useFeatureFlag("pollAdmin");
   const isFree = useIsFree();
   const deletePollDialog = useDialog();
   const duplicateDialog = useDialog();
@@ -184,11 +180,7 @@ function PollRowActions({
         <DropdownMenuContent align="end">
           {status === "scheduled" ? null : (
             <DropdownMenuItem
-              render={
-                <Link
-                  href={`/poll/${id}/edit${isPollAdminEnabled ? "?from=admin" : ""}`}
-                />
-              }
+              render={<Link href={`/poll/${id}/edit?from=admin`} />}
             >
               <PencilIcon />
               <Trans i18nKey="edit" defaults="Edit" />

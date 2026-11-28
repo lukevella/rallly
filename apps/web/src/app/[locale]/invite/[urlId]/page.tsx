@@ -157,8 +157,10 @@ async function PageContent({ params, searchParams }: PageProps) {
         <div className="flex flex-wrap items-start gap-x-3 px-4 lg:w-full lg:flex-nowrap lg:items-center lg:gap-x-4 lg:px-4">
           <div className="ml-auto flex h-12 shrink-0 items-center gap-1">
             {canManage ? (
-              <ManagePollLink pollId={poll.id}>
-                {t("managePoll", { defaultValue: "Manage poll" })}
+              <ManagePollLink pollId={poll.id} loggedIn={!!responder}>
+                {responder
+                  ? t("managePoll", { defaultValue: "Manage poll" })
+                  : t("logInToManage", { defaultValue: "Log in to manage" })}
               </ManagePollLink>
             ) : null}
             {poll.disableComments ? null : (

@@ -2,8 +2,9 @@ import "server-only";
 
 import { cache } from "react";
 import { listParticipantIdsByToken } from "@/features/poll/data";
+import { loadAdminPoll } from "@/features/poll/loaders";
 import { getSession } from "@/lib/auth";
-import { getBallotSource } from "./data";
+import { getBallotSource, listPollInvites } from "./data";
 import { projectBallot } from "./utils";
 
 /**
@@ -29,3 +30,9 @@ export const loadInviteBallot = cache(
     });
   },
 );
+
+/** The poll's live email invites, for its host. */
+export const loadPollInvites = cache(async (pollId: string) => {
+  await loadAdminPoll(pollId);
+  return listPollInvites({ pollId });
+});

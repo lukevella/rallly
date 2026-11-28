@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  bestOptionIds,
   filterCommentsForViewer,
   filterParticipantsByVote,
   getChosenOptionRank,
@@ -400,5 +401,35 @@ describe("pollEventProperties", () => {
       poll_id: "p1",
       $groups: { poll: "p1" },
     });
+  });
+});
+
+describe("bestOptionIds", () => {
+  const option = (id: string, yes: number, ifNeedBe: number) => ({
+    id,
+    votes: {
+      yes: Array.from({ length: yes }, (_, i) => `y${i}`),
+      ifNeedBe: Array.from({ length: ifNeedBe }, (_, i) => `m${i}`),
+      no: [],
+    },
+  });
+
+  it("prefers all yes over the same availability with if need be", () => {
+    const ids = bestOptionIds([
+      option("a", 4, 0),
+      option("b", 3, 1),
+      option("c", 4, 0),
+    ]);
+    expect([...ids].sort()).toEqual(["a", "c"]);
+  });
+
+  it("ranks availability above yes votes", () => {
+    const ids = bestOptionIds([option("a", 3, 0), option("b", 2, 2)]);
+    expect([...ids]).toEqual(["b"]);
+  });
+
+  it("is empty when no one is available", () => {
+    expect(bestOptionIds([option("a", 0, 0)]).size).toBe(0);
+    expect(bestOptionIds([]).size).toBe(0);
   });
 });

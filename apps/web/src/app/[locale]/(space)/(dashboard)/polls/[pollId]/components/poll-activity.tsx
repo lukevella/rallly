@@ -30,15 +30,20 @@ import {
   VenetianMaskIcon,
   VideoIcon,
 } from "lucide-react";
+import type React from "react";
+import { OptimizedAvatarImage } from "@/components/optimized-avatar-image";
 import type { PollActivityEvent, PollChange } from "@/features/activity/schema";
 import type { PollConferencing } from "@/features/conferencing/schema";
 import { conferencingProviderLabels } from "@/features/conferencing/utils";
+import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
+import type { PollComment } from "@/features/poll/types";
 import {
   EventDate,
   EventTimeRange,
 } from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
 import { Time } from "@/lib/datetime/time";
+import { ChatBubble } from "./chat-bubble";
 
 type ActivityRow = {
   id: string;
@@ -77,6 +82,7 @@ const toneClassName = {
   closed: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   milestone: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
   invite: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  comment: "bg-foreground/5 text-muted-foreground",
 };
 
 const toneByType: Record<
@@ -533,54 +539,145 @@ function ActivityDescription({
   }
 }
 
-export function PollActivityList({
+/** Everything that has happened on the poll, from its creation onwards. */
+export function PollActivitySection({
+  title,
   activity,
+  comments,
+  participants,
   timeZone,
-  className,
 }: {
+  title: React.ReactNode;
   activity: ActivityRow[];
+  comments: PollComment[];
+  /** Responses still on the poll, for their avatars. */
+  participants: Participant[];
   timeZone: string | null;
-  className?: string;
 }) {
   return (
-    <ol className={cn("flex flex-col", className)}>
-      {activity
-        .flatMap(({ id, createdAt, event }) => {
-          // An itemized edit shows one line per field it changed.
-          if (event.type === "poll_updated" && event.payload.changes?.length) {
-            return event.payload.changes.map((change, index) => ({
-              key: `${id}:${index}`,
-              createdAt,
-              Icon: iconByChange[change.field],
-              tone: toneOfChange(change),
-              description: <ChangeDescription change={change} />,
-              note: undefined,
-            }));
-          }
-          return [
-            {
-              key: id,
-              createdAt,
-              Icon: iconByType[event.type],
-              tone: toneByType[event.type],
-              description: (
-                <ActivityDescription event={event} timeZone={timeZone} />
-              ),
-              note:
-                event.type === "response_created"
-                  ? event.payload.note
-                  : undefined,
-            },
-          ];
+    <section aria-labelledby="poll-activity" className="flex flex-col gap-4">
+      <h2 id="poll-activity" className="px-1 font-medium text-sm">
+        {title}
+      </h2>
+      <PollActivityList
+        activity={activity}
+        comments={comments}
+        participants={participants}
+        timeZone={timeZone}
+      />
+    </section>
+  );
+}
+
+type Participant = { id: string; name: string; image: string | null };
+
+type ActivityItem = {
+  key: string;
+  createdAt: Date;
+  Icon: LucideIcon;
+  tone: keyof typeof toneClassName;
+  /** Takes the icon's place, for events made by a participant. */
+  avatar?: React.ReactNode;
+  description: React.ReactNode;
+  body?: React.ReactNode;
+};
+
+function eventItems(
+  row: ActivityRow,
+  timeZone: string | null,
+  participantsById: Map<string, Participant>,
+): ActivityItem[] {
+  const { id, createdAt, event } = row;
+  // An itemized edit shows one line per field it changed.
+  if (event.type === "poll_updated" && event.payload.changes?.length) {
+    return event.payload.changes.map((change, index) => ({
+      key: `${id}:${index}`,
+      createdAt,
+      Icon: iconByChange[change.field],
+      tone: toneOfChange(change),
+      description: <ChangeDescription change={change} />,
+    }));
+  }
+  const note =
+    event.type === "response_created" ? event.payload.note : undefined;
+  // A response shows who responded. The name snapshot covers a response
+  // that has since been deleted.
+  const responder =
+    event.type === "response_created"
+      ? (participantsById.get(event.participantId) ?? {
+          name: event.payload.name,
+          image: null,
         })
-        .map(({ key, createdAt, Icon, tone, description, note }) => {
-          return (
-            <li key={key} className="group relative flex gap-3 pb-6 last:pb-0">
-              {/* The rail joining this event's icon to the next one */}
-              <div
-                aria-hidden
-                className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
-              />
+      : null;
+  return [
+    {
+      key: id,
+      createdAt,
+      Icon: iconByType[event.type],
+      tone: toneByType[event.type],
+      avatar: responder ? (
+        <OptimizedAvatarImage
+          size="md"
+          name={responder.name}
+          src={responder.image ?? undefined}
+        />
+      ) : undefined,
+      description: <ActivityDescription event={event} timeZone={timeZone} />,
+      body: note ? <ChatBubble>{note}</ChatBubble> : undefined,
+    },
+  ];
+}
+
+function commentItem(comment: PollComment): ActivityItem {
+  return {
+    key: `comment:${comment.id}`,
+    createdAt: comment.createdAt,
+    Icon: MessageCircleIcon,
+    tone: "comment",
+    description: (
+      <Trans
+        i18nKey="pollActivityCommented"
+        defaults="<b>{name}</b> commented"
+        values={{ name: comment.authorName }}
+        components={{ b: <span className="font-medium" /> }}
+      />
+    ),
+    body: (
+      <ChatBubble>
+        <TruncatedLinkify>{comment.content}</TruncatedLinkify>
+      </ChatBubble>
+    ),
+  };
+}
+
+/** Events and comments interleaved, oldest first, starting with creation. */
+function PollActivityList({
+  activity,
+  comments,
+  participants,
+  timeZone,
+}: {
+  activity: ActivityRow[];
+  comments: PollComment[];
+  participants: Participant[];
+  timeZone: string | null;
+}) {
+  const participantsById = new Map(participants.map((p) => [p.id, p]));
+  const items = [
+    ...activity.flatMap((row) => eventItems(row, timeZone, participantsById)),
+    ...comments.map(commentItem),
+  ].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  return (
+    <ol className="flex flex-col px-1">
+      {items.map(
+        ({ key, createdAt, Icon, tone, avatar, description, body }) => (
+          <li key={key} className="group relative flex gap-3 pb-9 last:pb-0">
+            {/* The rail joining this event's icon to the next one */}
+            <div
+              aria-hidden
+              className="absolute top-9 bottom-1 left-4 w-px -translate-x-1/2 bg-border group-last:hidden"
+            />
+            {avatar ?? (
               <div
                 className={cn(
                   "flex size-8 shrink-0 items-center justify-center rounded-full",
@@ -589,22 +686,19 @@ export function PollActivityList({
               >
                 <Icon aria-hidden className="size-4" />
               </div>
-              <div className="min-w-0 flex-1 space-y-1 pt-1.5">
-                <p className="text-sm leading-5">{description}</p>
-                <Time
-                  value={createdAt}
-                  preset="datetime"
-                  className="block text-muted-foreground text-xs"
-                />
-                {note ? (
-                  <p className="mt-2 whitespace-pre-wrap rounded-lg border bg-card px-3 py-2 text-sm">
-                    {note}
-                  </p>
-                ) : null}
-              </div>
-            </li>
-          );
-        })}
+            )}
+            <div className="min-w-0 flex-1 space-y-1.5 pt-1.5">
+              <p className="text-sm leading-5">{description}</p>
+              <Time
+                value={createdAt}
+                preset="datetime"
+                className="block text-muted-foreground text-xs"
+              />
+              {body ? <div className="pt-1 text-sm">{body}</div> : null}
+            </div>
+          </li>
+        ),
+      )}
     </ol>
   );
 }

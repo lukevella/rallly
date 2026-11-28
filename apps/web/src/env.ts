@@ -191,6 +191,14 @@ export const env = createEnv({
     OPEN_POLL_LIMIT_ENABLED: z.enum(["true", "false"]).default("false"),
 
     /**
+     * Make the new poll page at /polls/[pollId] available. Hosts opt in from
+     * the legacy page and can switch back; the legacy page stays the default.
+     * Always on in development. Turning it back off is the rollback: opted in
+     * hosts return to the legacy page.
+     * @default "false"
+     */
+
+    /**
      * Enforce the monthly API poll quota. Only takes effect where billing is
      * enabled. Off until enforcement ships; turning it back off is the
      * rollback.
