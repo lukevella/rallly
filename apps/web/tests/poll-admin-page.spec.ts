@@ -126,6 +126,10 @@ test.describe("poll admin page", () => {
       .click();
     await expect(chips).toHaveText(["Alice"]);
 
+    // The confirmation step repeats the event and how many get the email.
+    await dialog.getByRole("button", { name: "Next" }).click();
+    await expect(dialog.getByText("Notify 1 participant")).toBeVisible();
+
     await dialog
       .getByRole("button", { name: "Finalize and notify 1 participant" })
       .click();

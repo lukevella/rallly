@@ -1,6 +1,7 @@
 "use client";
 
 import { posthog } from "@rallly/posthog/client";
+import { cn } from "@rallly/ui";
 import { Alert, AlertDescription } from "@rallly/ui/alert";
 import { Button } from "@rallly/ui/button";
 import type { DialogProps } from "@rallly/ui/dialog";
@@ -16,7 +17,7 @@ import {
 import { Label } from "@rallly/ui/label";
 import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
-import { AlertTriangleIcon } from "lucide-react";
+import { AlertTriangleIcon, CheckIcon, MailIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { primePayWall, usePayWallStore } from "@/features/billing/client";
@@ -30,14 +31,17 @@ import {
   pollEventProperties,
   rankOptionsByPopularity,
 } from "@/features/poll/utils";
-import { Trans } from "@/i18n/client";
+import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 import { NotifyParticipantsCombobox } from "./notify-participants-combobox";
 
+type Step = "recipients" | "confirm";
+
 /**
- * Finalizes the poll on a date already picked, in one step: what the event
- * will carry, then who to notify. The legacy page keeps the
- * multi-step wizard in `features/poll/components/finalize-poll-dialog.tsx`.
+ * Finalizes the poll on a date already picked, in two steps: who to notify,
+ * then a confirmation of what the event carries and how many get the email.
+ * The legacy page keeps its wizard in
+ * `features/poll/components/finalize-poll-dialog.tsx`.
  */
 export function FinalizeDialog({
   optionId,
@@ -45,10 +49,11 @@ export function FinalizeDialog({
 }: DialogProps & { optionId: string }) {
   const poll = usePoll();
   const [done, setDone] = React.useState(false);
+  const [step, setStep] = React.useState<Step>("recipients");
   const onOpenChange = (open: boolean) => {
     if (!open && !done) {
       posthog?.capture("poll_finalize:dialog_dismiss", {
-        step: "notify",
+        step,
         ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
       });
     }
@@ -61,12 +66,26 @@ export function FinalizeDialog({
       // Reset once the close animation ends, so the closing dialog keeps
       // showing what it was on.
       onOpenChangeComplete={(open) => {
-        if (!open) setDone(false);
+        if (!open) {
+          setDone(false);
+          setStep("recipients");
+        }
       }}
     >
       <DialogContent className="w-auto sm:max-w-none">
         <FinalizeContent
           optionId={optionId}
+          step={step}
+          onStepChange={(next) => {
+            posthog?.capture("poll_finalize:step_view", {
+              step: next,
+              ...pollEventProperties({
+                pollId: poll.id,
+                spaceId: poll.spaceId,
+              }),
+            });
+            setStep(next);
+          }}
           done={done}
           onDone={() => setDone(true)}
           onClose={() => onOpenChange(false)}
@@ -80,11 +99,15 @@ export function FinalizeDialog({
 // an email.
 function FinalizeContent({
   optionId,
+  step,
+  onStepChange,
   done,
   onDone,
   onClose,
 }: {
   optionId: string;
+  step: Step;
+  onStepChange: (step: Step) => void;
   done: boolean;
   onDone: () => void;
   onClose: () => void;
@@ -181,82 +204,182 @@ function FinalizeContent({
           <Trans i18nKey="finalizeDialogPollTitle" defaults="Finalize poll" />
         </DialogTitle>
         <DialogDescription>
-          <Trans
-            i18nKey="finalizeDialogOutcome"
-            defaults="Voting closes and the date is booked. We'll email the people below."
-          />
+          {step === "recipients" ? (
+            <Trans
+              i18nKey="finalizeDialogRecipientsDescription"
+              defaults="Choose who gets an email with the booked date."
+            />
+          ) : (
+            <Trans
+              i18nKey="finalizeDialogConfirmDescription"
+              defaults="Voting closes and the date is booked."
+            />
+          )}
         </DialogDescription>
       </DialogHeader>
-      {/* Laid out like the email being sent: who it goes to, then the event
-          it carries. */}
-      <div className="flex flex-col gap-2 pt-2 pb-2">
-        <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-          <div className="flex items-start gap-2 border-card-border border-b pl-4 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-inset">
-            <Label
-              htmlFor={toId}
-              className="w-14 shrink-0 py-3 font-normal text-muted-foreground leading-5"
-            >
-              <Trans i18nKey="finalizeDialogTo" defaults="To" />
-            </Label>
-            {recipientCount > 0 ? (
-              <div className="min-w-0 flex-1 py-3 pr-4">
-                <NotifyParticipantsCombobox
-                  id={toId}
-                  optionId={option.id}
-                  selectedIds={notifyIds}
-                  onChange={setNotifyIds}
-                />
-              </div>
-            ) : (
-              <p className="py-3 pr-4 text-muted-foreground text-sm">
-                <Trans
-                  i18nKey="finalizeDialogNoRecipients"
-                  defaults="No one to notify"
-                />
-              </p>
-            )}
+      <FinalizeStepper step={step} />
+      {step === "recipients" ? (
+        <div className="flex flex-col gap-2">
+          <div className="overflow-hidden rounded-xl border border-card-border bg-card">
+            <div className="flex items-start gap-2 pl-4 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-inset">
+              <Label
+                htmlFor={toId}
+                className="w-14 shrink-0 py-3 font-normal text-muted-foreground leading-5"
+              >
+                <Trans i18nKey="finalizeDialogTo" defaults="To" />
+              </Label>
+              {recipientCount > 0 ? (
+                <div className="min-w-0 flex-1 py-3 pr-4">
+                  <NotifyParticipantsCombobox
+                    id={toId}
+                    optionId={option.id}
+                    selectedIds={notifyIds}
+                    onChange={setNotifyIds}
+                  />
+                </div>
+              ) : (
+                <p className="py-3 pr-4 text-muted-foreground text-sm">
+                  <Trans
+                    i18nKey="finalizeDialogNoRecipients"
+                    defaults="No one to notify"
+                  />
+                </p>
+              )}
+            </div>
           </div>
-          <div className="p-4">
-            <SummaryStep option={option} showPendingLink />
+          {participants.length > recipientCount ? (
+            <p className="text-muted-foreground text-xs">
+              <Trans
+                i18nKey="notifyComboboxWithoutEmail"
+                defaults="{count, plural, one {# participant has no email and won't be notified.} other {# participants have no email and won't be notified.}}"
+                values={{ count: participants.length - recipientCount }}
+              />
+            </p>
+          ) : null}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4 rounded-xl border border-card-border bg-card p-4">
+          <SummaryStep option={option} showPendingLink />
+          <div className="flex items-start gap-3">
+            <MailIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+            <p className="text-sm leading-5">
+              <Trans
+                i18nKey="finalizeDialogNotifyCount"
+                defaults="{count, plural, =0 {No one will be notified} one {Notify # participant} other {Notify # participants}}"
+                values={{ count: notifyIds.size }}
+              />
+            </p>
           </div>
         </div>
-        {participants.length > recipientCount ? (
-          <p className="text-muted-foreground text-xs">
-            <Trans
-              i18nKey="notifyComboboxWithoutEmail"
-              defaults="{count, plural, one {# participant has no email and won't be notified.} other {# participants have no email and won't be notified.}}"
-              values={{ count: participants.length - recipientCount }}
-            />
-          </p>
-        ) : null}
-      </div>
+      )}
       <PayWallDialog
         pricing={payWallPricing}
         isOpen={payWall.dialogProps.open}
         onOpenChange={payWall.dialogProps.onOpenChange}
       />
       <DialogFooter>
-        <Button onClick={onClose}>
-          <Trans i18nKey="cancel" defaults="Cancel" />
-        </Button>
-        <Button
-          variant="primary"
-          loading={finalize.isPending}
-          onClick={() => {
-            finalize.mutate({
-              pollId: poll.id,
-              optionId: option.id,
-              notifyParticipantIds: Array.from(notifyIds),
-            });
-          }}
-        >
-          <Trans
-            i18nKey="finalizeAndNotify"
-            defaults="{count, plural, =0 {Finalize} one {Finalize and notify # participant} other {Finalize and notify # participants}}"
-            values={{ count: notifyIds.size }}
-          />
-        </Button>
+        {step === "recipients" ? (
+          <>
+            <Button onClick={onClose}>
+              <Trans i18nKey="cancel" defaults="Cancel" />
+            </Button>
+            <Button variant="primary" onClick={() => onStepChange("confirm")}>
+              <Trans i18nKey="next" defaults="Next" />
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              disabled={finalize.isPending}
+              onClick={() => onStepChange("recipients")}
+            >
+              <Trans i18nKey="back" defaults="Back" />
+            </Button>
+            <Button
+              variant="primary"
+              loading={finalize.isPending}
+              onClick={() => {
+                finalize.mutate({
+                  pollId: poll.id,
+                  optionId: option.id,
+                  notifyParticipantIds: Array.from(notifyIds),
+                });
+              }}
+            >
+              <Trans
+                i18nKey="finalizeAndNotify"
+                defaults="{count, plural, =0 {Finalize} one {Finalize and notify # participant} other {Finalize and notify # participants}}"
+                values={{ count: notifyIds.size }}
+              />
+            </Button>
+          </>
+        )}
       </DialogFooter>
     </div>
+  );
+}
+
+/** Where the dialog is: choosing recipients, then confirming. */
+function FinalizeStepper({ step }: { step: Step }) {
+  const { t } = useTranslation();
+  const steps: { id: Step; label: string }[] = [
+    {
+      id: "recipients",
+      label: t("finalizeStepRecipients", { defaultValue: "Who to notify" }),
+    },
+    {
+      id: "confirm",
+      label: t("finalizeStepConfirm", { defaultValue: "Confirm" }),
+    },
+  ];
+  const current = steps.findIndex((s) => s.id === step);
+  return (
+    <ol className="flex items-center gap-3 text-sm">
+      {steps.map((s, index) => {
+        const state =
+          index < current
+            ? "complete"
+            : index === current
+              ? "current"
+              : "upcoming";
+        return (
+          <li
+            key={s.id}
+            aria-current={state === "current" ? "step" : undefined}
+            className="flex items-center gap-3"
+          >
+            {index > 0 ? (
+              <span aria-hidden="true" className="h-px w-8 bg-card-border" />
+            ) : null}
+            <span className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "flex size-5 items-center justify-center rounded-full text-xs tabular-nums",
+                  state === "upcoming"
+                    ? "border border-card-border text-muted-foreground"
+                    : "bg-primary text-primary-foreground",
+                )}
+              >
+                {state === "complete" ? (
+                  <CheckIcon className="size-3" />
+                ) : (
+                  index + 1
+                )}
+              </span>
+              <span
+                className={cn(
+                  state === "upcoming"
+                    ? "text-muted-foreground"
+                    : "font-medium text-foreground",
+                )}
+              >
+                {s.label}
+              </span>
+            </span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
