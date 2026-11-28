@@ -31,6 +31,8 @@ export function filterParticipantsByVote<
 /**
  * With hidden participants, a viewer who is not the host sees only their
  * own comments; the author names would otherwise reveal who responded.
+ * A comment is the viewer's when their session wrote it or they hold its
+ * poll token.
  */
 export function filterCommentsForViewer({
   comments,
@@ -44,10 +46,11 @@ export function filterCommentsForViewer({
   if (!hideParticipants) {
     return comments;
   }
-  if (!viewerUserId) {
-    return [];
-  }
-  return comments.filter((comment) => comment.userId === viewerUserId);
+  return comments.filter(
+    (comment) =>
+      comment.ownedByToken ||
+      (viewerUserId !== null && comment.userId === viewerUserId),
+  );
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;

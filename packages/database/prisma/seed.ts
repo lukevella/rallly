@@ -229,6 +229,7 @@ async function main() {
           content: c.content,
           authorName: c.authorName,
           userId: c.userId,
+          token: generateAccessToken(),
         })),
       });
       commentCount += poll.comments.length;

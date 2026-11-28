@@ -893,22 +893,34 @@ export async function listPollParticipants({ pollId }: { pollId: string }) {
   }));
 }
 
+/**
+ * The token itself never leaves this function: a comment only reports
+ * whether the viewer's token matches it.
+ */
 export async function listPollComments({
   pollId,
+  viewerToken = null,
 }: {
   pollId: string;
+  viewerToken?: string | null;
 }): Promise<PollComment[]> {
-  return prisma.comment.findMany({
+  const comments = await prisma.comment.findMany({
     where: { pollId },
     select: {
       id: true,
       content: true,
       authorName: true,
       userId: true,
+      token: true,
       createdAt: true,
     },
     orderBy: [{ createdAt: "asc" }],
   });
+
+  return comments.map(({ token, ...comment }) => ({
+    ...comment,
+    ownedByToken: viewerToken !== null && token === viewerToken,
+  }));
 }
 
 export async function searchPolls({

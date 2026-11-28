@@ -129,7 +129,13 @@ async function seedComment({
   userId?: string;
 }) {
   await prisma.comment.create({
-    data: { pollId, authorName, content, userId },
+    data: {
+      pollId,
+      authorName,
+      content,
+      userId,
+      token: randomUUID().replace(/-/g, ""),
+    },
   });
 }
 
@@ -703,6 +709,12 @@ test.describe("invite ballot", () => {
     expect(
       await prisma.comment.count({ where: { pollId: "ballot-spec-comment" } }),
     ).toBe(1);
+    // The poll token proved them: commenting started no guest session.
+    expect(
+      (await context.cookies()).some((cookie) =>
+        cookie.name.includes("session_token"),
+      ),
+    ).toBe(false);
     await context.close();
   });
 

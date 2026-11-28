@@ -34,7 +34,7 @@ import {
   deleteCommentAction,
 } from "@/features/poll/comment/actions";
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
-import { ensureSession, runBallotAction } from "@/features/poll/invite/client";
+import { runBallotAction } from "@/features/poll/invite/client";
 import {
   MAX_COMMENT_AUTHOR_NAME_LENGTH,
   MAX_COMMENT_LENGTH,
@@ -64,11 +64,6 @@ function useCommentErrorMessage() {
       case "tooManyRequests":
         return t("actionErrorTooManyRequests", {
           defaultValue: "You are making too many requests",
-        });
-      case "sessionUnavailable":
-        return t("guestSessionUnavailableError", {
-          defaultValue:
-            "We couldn't start a session for you. Check that cookies are enabled and try again.",
         });
       default:
         return t("actionErrorInternalServerError", {
@@ -152,11 +147,6 @@ function NewCommentForm({
         if (isSubmitting || !name.trim() || !content.trim()) return;
         setIsSubmitting(true);
         try {
-          const session = await ensureSession();
-          if (!session.ok) {
-            toast.error(getErrorMessage(session.reason));
-            return;
-          }
           const result = await runBallotAction(() =>
             addCommentAction({
               pollId,

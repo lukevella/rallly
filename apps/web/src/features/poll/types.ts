@@ -65,5 +65,7 @@ export type PollComment = {
   content: string;
   authorName: string;
   userId: string | null;
+  /** The viewer holds the poll token this comment was written with. */
+  ownedByToken: boolean;
   createdAt: Date;
 };

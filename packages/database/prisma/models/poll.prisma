@@ -199,6 +199,8 @@ model Comment {
   content    String
   pollId     String    @map("poll_id")
   authorName String    @map("author_name")
+  /// Proves authorship without a session: the per-poll token cookie of the browser that wrote the comment (a browser's comments on one poll share it). App minted like Participant.token, never a DB default. Rows that predate minting were backfilled with gen_random_uuid() hex. Nullable for one release so the previous release can still insert while the backfill applies
+  token      String?
   userId     String?   @map("user_id")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")

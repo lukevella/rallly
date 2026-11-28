@@ -5,6 +5,7 @@ import { canUserManagePoll, listPollComments } from "@/features/poll/data";
 import { loadPollDetails } from "@/features/poll/loaders";
 import { filterCommentsForViewer } from "@/features/poll/utils";
 import { getSession } from "@/lib/auth";
+import { getPollToken } from "@/lib/poll-token/server";
 
 /**
  * The name and email a signed-in viewer's new response starts with. Null for
@@ -28,10 +29,11 @@ export const loadOptionalResponder = cache(async () => {
  * their own.
  */
 export const loadVoteComments = cache(async (pollId: string) => {
-  const [poll, session, canManage] = await Promise.all([
+  const [poll, session, canManage, viewerToken] = await Promise.all([
     loadPollDetails(pollId),
     getSession(),
     loadCanManagePoll(pollId),
+    getPollToken(pollId),
   ]);
 
   if (!poll || poll.disableComments) {
@@ -40,13 +42,15 @@ export const loadVoteComments = cache(async (pollId: string) => {
 
   const viewerUserId = session?.user?.id ?? null;
   const comments = filterCommentsForViewer({
-    comments: await listPollComments({ pollId }),
+    comments: await listPollComments({ pollId, viewerToken }),
     viewerUserId,
     hideParticipants: poll.hideParticipants,
   });
 
   return comments.map((comment) => {
-    const isOwn = viewerUserId !== null && comment.userId === viewerUserId;
+    const isOwn =
+      comment.ownedByToken ||
+      (viewerUserId !== null && comment.userId === viewerUserId);
     return {
       id: comment.id,
       authorName: comment.authorName,
