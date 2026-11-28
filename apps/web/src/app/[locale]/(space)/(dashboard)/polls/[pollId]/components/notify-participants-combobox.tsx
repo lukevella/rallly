@@ -96,14 +96,17 @@ export function NotifyParticipantsCombobox({
           className="min-h-0 flex-1 border-0 bg-transparent px-0 py-0 focus-within:ring-0 has-data-[slot=combobox-chip]:px-0 dark:bg-transparent"
         >
           {selected.slice(0, VISIBLE_CHIPS).map((recipient) => (
-            <ComboboxChip key={recipient.id} className="font-normal">
+            <ComboboxChip
+              key={recipient.id}
+              className="font-normal dark:bg-foreground/10"
+            >
               {recipient.name}
             </ComboboxChip>
           ))}
           {hidden > 0 ? (
             <button
               type="button"
-              className="flex h-[calc(--spacing(5.25))] items-center rounded-sm bg-muted px-1.5 text-muted-foreground text-xs hover:text-foreground"
+              className="flex h-[calc(--spacing(5.25))] items-center rounded-sm bg-muted px-1.5 text-muted-foreground text-xs hover:text-foreground dark:bg-foreground/10"
               onClick={() => {
                 inputRef.current?.focus();
                 setOpen(true);
