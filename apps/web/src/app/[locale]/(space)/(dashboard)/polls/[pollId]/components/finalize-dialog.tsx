@@ -178,12 +178,12 @@ function FinalizeContent({
     <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[32rem]">
       <DialogHeader>
         <DialogTitle>
-          <Trans i18nKey="finalizeDialogFinalizeTitle" defaults="Finalize" />
+          <Trans i18nKey="finalizeDialogPollTitle" defaults="Finalize poll" />
         </DialogTitle>
         <DialogDescription>
           <Trans
-            i18nKey="finalizeDialogDescription"
-            defaults="Select which participants to notify"
+            i18nKey="finalizeDialogOutcome"
+            defaults="Voting closes and the date is booked. We'll email the people below."
           />
         </DialogDescription>
       </DialogHeader>
