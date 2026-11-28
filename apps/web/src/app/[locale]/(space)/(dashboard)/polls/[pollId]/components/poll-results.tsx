@@ -1061,8 +1061,8 @@ function ExpandNamesButton({
 }) {
   const { t } = useTranslation();
   const label = expanded
-    ? t("pollResultsTableHideNames", { defaultValue: "Hide names" })
-    : t("pollResultsTableShowNames", { defaultValue: "Show names" });
+    ? t("pollResultsTableCollapse", { defaultValue: "Collapse" })
+    : t("pollResultsTableExpand", { defaultValue: "Expand" });
   return (
     <Tooltip>
       <TooltipTrigger
