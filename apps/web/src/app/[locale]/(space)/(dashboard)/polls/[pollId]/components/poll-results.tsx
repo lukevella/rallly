@@ -203,7 +203,16 @@ export function PollResults({
             <SegmentedControl
               aria-label={t("pollResultsSort", { defaultValue: "Sort by" })}
               value={sort}
-              onValueChange={(value) => setSort(value as Sort)}
+              onValueChange={(value) => {
+                posthog?.capture("poll_page:results_sort_change", {
+                  sort: value,
+                  ...pollEventProperties({
+                    pollId: poll.id,
+                    spaceId: poll.spaceId,
+                  }),
+                });
+                setSort(value as Sort);
+              }}
             >
               <SegmentedControlItem value="popularity" className="px-3 text-sm">
                 <Trans
@@ -571,6 +580,7 @@ function AvailabilityPopover({
   participants,
   floating,
   highlight,
+  view,
   onFinalize,
 }: {
   option: Option & {
@@ -579,10 +589,22 @@ function AvailabilityPopover({
   participants: Participant[];
   floating: boolean;
   highlight: boolean;
+  /** Which results view it sits in, for analytics. */
+  view: "list" | "table";
   /** Omitted once a date can no longer be picked. */
   onFinalize?: () => void;
 }) {
-  const [open, setOpen] = React.useState(false);
+  const poll = usePoll();
+  const [open, setOpenState] = React.useState(false);
+  const setOpen = (next: boolean) => {
+    if (next) {
+      posthog?.capture("poll_page:breakdown_open", {
+        view,
+        ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+      });
+    }
+    setOpenState(next);
+  };
   const count = option.votes.yes.length + option.votes.ifNeedBe.length;
   const participantsById = React.useMemo(
     () =>
@@ -859,6 +881,7 @@ function ResultsList({
             participants={participants}
             floating={floating}
             highlight={isBest}
+            view="list"
             onFinalize={onPick ? () => onPick(option) : undefined}
           />
         </span>
@@ -1109,6 +1132,7 @@ function ResultsTable({
   const { locale, timeZone } = useDateTimeConfig();
   // The column under the pointer is highlighted top to bottom.
   const [hoveredId, setHoveredId] = React.useState<string | null>(null);
+  const poll = usePoll();
   const [namesExpanded, setNamesExpanded] = React.useState(false);
   // Month headings span the consecutive options they share.
   const monthGroups = useDateGroups(options, { floating, by: "month" });
@@ -1133,7 +1157,17 @@ function ResultsTable({
               {participants.length > 0 ? (
                 <ExpandNamesButton
                   expanded={namesExpanded}
-                  onToggle={() => setNamesExpanded((value) => !value)}
+                  onToggle={() => {
+                    if (!namesExpanded) {
+                      posthog?.capture("poll_page:names_expand", {
+                        ...pollEventProperties({
+                          pollId: poll.id,
+                          spaceId: poll.spaceId,
+                        }),
+                      });
+                    }
+                    setNamesExpanded(!namesExpanded);
+                  }}
                 />
               ) : null}
             </th>
@@ -1325,6 +1359,7 @@ function ResultsTable({
                           participants={participants}
                           floating={floating}
                           highlight={isBest}
+                          view="table"
                           onFinalize={onPick ? () => onPick(option) : undefined}
                         />
                       ) : null}

@@ -1,5 +1,6 @@
 "use client";
 
+import { posthog } from "@rallly/posthog/client";
 import { buttonVariants } from "@rallly/ui";
 import {
   Alert,
@@ -19,11 +20,13 @@ import {
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { AddToCalendarButton } from "@/features/calendars/components/add-to-calendar-button";
+import { usePoll } from "@/features/poll/client";
 import {
   getOpenPollLimitRefusal,
   showOpenPollLimit,
 } from "@/features/poll/limit/client";
 import type { PollStatus } from "@/features/poll/schema";
+import { pollEventProperties } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { trpc } from "@/trpc/client";
@@ -173,9 +176,13 @@ function ReopenButton({ pollId }: { pollId: string }) {
 
 export function CopyLinkButton({ inviteLink }: { inviteLink: string }) {
   const { t } = useTranslation();
+  const poll = usePoll();
   return (
     <Button
       onClick={() => {
+        posthog?.capture("poll_page:invite_link_copy", {
+          ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+        });
         if (copy(inviteLink)) {
           toast.success(t("linkCopied", { defaultValue: "Link copied" }));
         }
@@ -188,9 +195,15 @@ export function CopyLinkButton({ inviteLink }: { inviteLink: string }) {
 
 /** Opens the page participants see, in a new tab. */
 export function ViewInvitePageButton({ inviteLink }: { inviteLink: string }) {
+  const poll = usePoll();
   return (
     <a
       href={inviteLink}
+      onClick={() =>
+        posthog?.capture("poll_page:invite_page_open", {
+          ...pollEventProperties({ pollId: poll.id, spaceId: poll.spaceId }),
+        })
+      }
       target="_blank"
       rel="noopener noreferrer"
       className={buttonVariants({ variant: "primary" })}

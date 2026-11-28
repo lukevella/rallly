@@ -170,7 +170,16 @@ function BestDateCard({
                   defaultValue: "Previous tied date",
                 })}
                 disabled={index === 0}
-                onClick={() => setIndex(index - 1)}
+                onClick={() => {
+                  posthog?.capture("poll_page:best_date_step", {
+                    direction: "previous",
+                    ...pollEventProperties({
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                    }),
+                  });
+                  setIndex(index - 1);
+                }}
               >
                 <ChevronLeftIcon aria-hidden="true" />
               </Button>
@@ -181,7 +190,16 @@ function BestDateCard({
                   defaultValue: "Next tied date",
                 })}
                 disabled={index === top.length - 1}
-                onClick={() => setIndex(index + 1)}
+                onClick={() => {
+                  posthog?.capture("poll_page:best_date_step", {
+                    direction: "next",
+                    ...pollEventProperties({
+                      pollId: poll.id,
+                      spaceId: poll.spaceId,
+                    }),
+                  });
+                  setIndex(index + 1);
+                }}
               >
                 <ChevronRightIcon aria-hidden="true" />
               </Button>
