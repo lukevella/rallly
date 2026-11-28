@@ -54,11 +54,11 @@ function getLanguage(language: string) {
     return name;
   }
 
-  if (name in languages) {
+  if (Object.hasOwn(languages, name)) {
     return name as keyof typeof languages;
   }
 
-  return aliases[name] ?? null;
+  return Object.hasOwn(aliases, name) ? aliases[name] : null;
 }
 
 // Loads a language and returns a highlighter for it, or null for a language

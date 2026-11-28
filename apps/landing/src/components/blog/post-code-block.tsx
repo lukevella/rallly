@@ -10,7 +10,7 @@ import {
 import { highlightCode } from "@rallly/ui/lib/highlighter";
 import React from "react";
 
-const shellLanguages = new Set(["sh", "bash", "shell", "zsh"]);
+const shellLanguages = new Set(["sh", "bash", "shell", "shellscript", "zsh"]);
 
 function getCode(children: React.ReactNode) {
   const child = React.Children.only(children);
@@ -36,7 +36,8 @@ export async function PostCodeBlock({
 
   const { code, language } = parsed;
   const lines = language ? await highlightCode(code, language) : null;
-  const title = language && shellLanguages.has(language) ? "Terminal" : null;
+  const title =
+    language && shellLanguages.has(language.toLowerCase()) ? "Terminal" : null;
   const copyButton = <CodeBlockCopyButton value={code} />;
 
   return (
