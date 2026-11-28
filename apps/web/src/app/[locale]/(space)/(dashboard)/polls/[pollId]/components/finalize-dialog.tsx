@@ -247,7 +247,7 @@ function FinalizeContent({
           )}
           inert={step !== "confirm"}
         >
-          <div className="flex flex-col gap-4 rounded-xl border border-card-border bg-card p-4">
+          <div className="flex flex-col gap-4 rounded-xl border border-card-border bg-card px-6 py-4">
             <SummaryStep option={option} showPendingLink />
             <div className="flex items-start gap-3">
               <MailIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
