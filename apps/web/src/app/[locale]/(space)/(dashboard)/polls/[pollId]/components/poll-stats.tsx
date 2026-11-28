@@ -22,7 +22,7 @@ import {
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
 import { FinalizeDialog } from "./finalize-dialog";
-import { optionZone } from "./poll-results";
+import { optionZone } from "./option-date";
 
 type Option = { id: string; startTime: Date; duration: number };
 type Participant = {
@@ -210,26 +210,32 @@ function BestDateCard({
           ) : null}
         </div>
       </StatCardHeader>
-      <StatCardFooter className="items-end">
+      <StatCardFooter className="flex-wrap items-end gap-y-2">
         {current ? (
-          <div className="flex min-w-0 flex-col gap-1">
-            <StatCardValue className="truncate text-base">
-              {formatDateTime(
-                current.startTime,
-                "weekdayMonthDayShort",
-                optionZone(current, floating),
-              )}
-            </StatCardValue>
+          <StatCardValue className="whitespace-nowrap text-base">
+            {formatDateTime(
+              current.startTime,
+              "weekdayMonthDayShort",
+              optionZone(current, floating),
+            )}
             {current.duration > 0 ? (
-              <span className="truncate text-muted-foreground text-sm tabular-nums">
-                {formatDateTime(
-                  current.startTime,
-                  "time",
-                  optionZone(current, floating),
-                )}
-              </span>
+              <>
+                <span
+                  aria-hidden="true"
+                  className="mx-1.5 text-muted-foreground"
+                >
+                  ·
+                </span>
+                <span className="tabular-nums">
+                  {formatDateTime(
+                    current.startTime,
+                    "time",
+                    optionZone(current, floating),
+                  )}
+                </span>
+              </>
             ) : null}
-          </div>
+          </StatCardValue>
         ) : (
           <span className="text-muted-foreground text-sm">
             {participants.length > 0 ? (

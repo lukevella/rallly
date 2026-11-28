@@ -30,9 +30,9 @@ import {
   pollEventProperties,
   rankOptionsByPopularity,
 } from "@/features/poll/utils";
-import { EventDate } from "@/features/scheduled-event/components/event-date-time";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { OptionDateHeader } from "./option-date";
 
 /**
  * Finalizes the poll on a date already picked, in one step: what the event
@@ -176,20 +176,7 @@ function FinalizeContent({
     <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[40rem]">
       <DialogHeader>
         <DialogTitle>
-          <Trans
-            i18nKey="finalizeDialogTitle"
-            defaults="Schedule for <date />"
-            components={{
-              date: (
-                <EventDate
-                  value={option.startTime}
-                  allDay={option.duration === 0}
-                  timeZone={poll.timeZone}
-                  preset="dateFull"
-                />
-              ),
-            }}
-          />
+          <Trans i18nKey="finalizeDialogFinalizeTitle" defaults="Finalize" />
         </DialogTitle>
         <DialogDescription>
           <Trans
@@ -199,13 +186,16 @@ function FinalizeContent({
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col">
-        <div className="pt-2 pb-6">
-          <SummaryStep
-            option={option}
-            showDate={false}
-            showLocation={false}
-            showPendingLink
-          />
+        <div className="flex flex-col gap-4 pt-2 pb-6">
+          <OptionDateHeader option={option} floating={poll.timeZone === null} />
+          {poll.conferencing ? (
+            <SummaryStep
+              option={option}
+              showWhen={false}
+              showLocation={false}
+              showPendingLink
+            />
+          ) : null}
         </div>
         {participants.length > 0 ? (
           <NotifyStep
