@@ -137,7 +137,7 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
     props.requireParticipantEmail ?? poll?.requireParticipantEmail ?? false;
   const pollId = props.pollId ?? poll?.id;
   const { timeZone } = useDateTimeConfig();
-  const { user, createGuestIfNeeded } = useUser();
+  const { user } = useUser();
   const isLoggedIn = user && !user.isGuest;
   const form = useForm({
     resolver: zodResolver(schema),
@@ -172,11 +172,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
         return t("newParticipantFormErrorUnauthorized", {
           defaultValue:
             "We couldn't verify your session. Please refresh the page and try again.",
-        });
-      case "sessionUnavailable":
-        return t("guestSessionUnavailableError", {
-          defaultValue:
-            "We couldn't start a session for you. Check that cookies are enabled and try again.",
         });
       default:
         return t("newParticipantFormSubmitError", {
@@ -283,13 +278,6 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
             if (!pollId) {
               throw new Error("NewParticipantForm needs a pollId");
             }
-            const session = await createGuestIfNeeded();
-            if (!session.ok) {
-              setError("root", {
-                message: getSubmitErrorMessage(session.reason),
-              });
-              return;
-            }
             const result = await addParticipant.execute({
               name: data.name,
               votes: props.votes,
@@ -305,8 +293,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               });
               return;
             }
-            // poll_response_submit is captured on the server under the guest's
-            // user id, so it can't be joined to the browser's $pageview.
+            // poll_response_submit is captured on the server under the
+            // session user or the response id, so it can't be joined to the
+            // browser's $pageview.
             posthog?.capture("poll_response:form_submit", {
               poll_id: pollId,
               tier: poll?.space?.tier,

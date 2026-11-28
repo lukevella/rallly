@@ -597,41 +597,44 @@ export async function getParticipant({
 }
 
 /**
- * The responses an emailed link may edit. A response token names exactly one
- * row. A legacy seal names a guest user instead, so it resolves to that
- * user's responses in the poll that carry an email, the only rows such a
- * link was ever sent for.
+ * The responses a set of emailed link tokens may edit. A response token names
+ * exactly one row. A legacy seal names a guest user instead, so it resolves
+ * to that user's responses in the poll that carry an email, the only rows
+ * such a link was ever sent for.
  */
-export async function listParticipantIdsByToken({
+export async function listParticipantIdsByTokens({
   pollId,
-  token,
+  tokens,
 }: {
   pollId: string;
-  token: string;
+  tokens: string[];
 }) {
-  if (isLegacyEditToken(token)) {
-    const payload = await decryptToken<{ userId: string }>(token).catch(
-      () => null,
-    );
-    if (!payload?.userId) {
-      return [];
-    }
-    const participants = await prisma.participant.findMany({
-      where: {
-        pollId,
-        userId: payload.userId,
-        email: { not: null },
-      },
-      select: { id: true },
-    });
-    return participants.map((participant) => participant.id);
+  const responseTokens = tokens.filter((token) => !isLegacyEditToken(token));
+  const legacyUserIds = (
+    await Promise.all(
+      tokens
+        .filter(isLegacyEditToken)
+        .map((token) =>
+          decryptToken<{ userId: string }>(token).catch(() => null),
+        ),
+    )
+  ).flatMap((payload) => (payload?.userId ? [payload.userId] : []));
+
+  if (responseTokens.length === 0 && legacyUserIds.length === 0) {
+    return [];
   }
 
-  const participant = await prisma.participant.findFirst({
-    where: { pollId, token },
+  const participants = await prisma.participant.findMany({
+    where: {
+      pollId,
+      OR: [
+        { token: { in: responseTokens } },
+        { userId: { in: legacyUserIds }, email: { not: null } },
+      ],
+    },
     select: { id: true },
   });
-  return participant ? [participant.id] : [];
+  return participants.map((participant) => participant.id);
 }
 
 export async function getPollWithOptions({

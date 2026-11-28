@@ -29,6 +29,32 @@ describe("proxy", () => {
     const res = await proxy(request("GET", "/invite/abc123"));
     expect(res.headers.get("x-middleware-rewrite")).toContain("/invite/abc123");
   });
+
+  it("remembers the token from an emailed invite link", async () => {
+    const res = await proxy(request("GET", "/invite/abc123?token=t1"));
+    const cookie = res.cookies.get("rallly-voter-abc123");
+    expect(cookie?.value).toBe("t1");
+    expect(cookie?.path).toBe("/invite/abc123");
+    expect(cookie?.httpOnly).toBe(true);
+  });
+
+  it("keeps the tokens the browser already holds", async () => {
+    const req = request("GET", "/invite/abc123?invite=t2");
+    req.cookies.set("rallly-voter-abc123", "t1");
+    const res = await proxy(req);
+    expect(res.cookies.get("rallly-voter-abc123")?.value).toBe("t2,t1");
+  });
+
+  it.each([
+    "/invite/abc123",
+    "/invite/abc123?token=not%20a%20token",
+    "/poll/abc123?token=t1",
+  ])("sets no voter cookie for %s", async (path) => {
+    const res = await proxy(request("GET", path));
+    expect(
+      res.cookies.getAll().some(({ name }) => name.startsWith("rallly-voter")),
+    ).toBe(false);
+  });
 });
 
 describe("proxy on the API host", () => {

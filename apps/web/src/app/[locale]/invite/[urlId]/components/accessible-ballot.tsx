@@ -59,7 +59,6 @@ import { PollConferencingSummary } from "@/features/conferencing/components/poll
 import TruncatedLinkify from "@/features/poll/components/truncated-linkify";
 import type { FailureDetail } from "@/features/poll/invite/client";
 import {
-  ensureSession,
   runBallotAction,
   useBallotErrorMessage,
   useBallotState,
@@ -716,20 +715,17 @@ export function AccessibleBallot({
       | { ok: true }
       | { ok: false; reason: string; detail?: FailureDetail };
     if (isNew) {
-      const session = await ensureSession();
-      result = session.ok
-        ? await runBallotAction(() =>
-            addParticipantAction({
-              pollId: ballot.pollId,
-              name: String(data.get("name") ?? ""),
-              email: String(data.get("email") ?? ""),
-              note: String(data.get("note") ?? ""),
-              timeZone: viewerTimeZone ?? undefined,
-              token,
-              votes,
-            }),
-          )
-        : session;
+      result = await runBallotAction(() =>
+        addParticipantAction({
+          pollId: ballot.pollId,
+          name: String(data.get("name") ?? ""),
+          email: String(data.get("email") ?? ""),
+          note: String(data.get("note") ?? ""),
+          timeZone: viewerTimeZone ?? undefined,
+          token,
+          votes,
+        }),
+      );
     } else {
       const participantId = state.activeResponseId;
       result = participantId
@@ -757,8 +753,8 @@ export function AccessibleBallot({
     setAnswersBeforeShortcut(null);
     setJustSaved(isNew ? "response" : "changes");
     if (isNew) {
-      // poll_response_submit is captured on the server under the guest's user
-      // id, so it can't be joined to the browser's $pageview.
+      // poll_response_submit is captured on the server under the session user
+      // or the response id, so it can't be joined to the browser's $pageview.
       // The same name as the old page, so the two compare. What the response
       // holds goes with it, since the server's copy can't be joined either.
       const countOf = (type: BallotVote) =>

@@ -33,10 +33,14 @@ export type BallotSource = {
   }[];
 };
 
-/** Who is looking: their session user and the responses their link names. */
+/**
+ * Who is looking: their session user, the responses their link names, and
+ * the responses their browser remembers for the poll.
+ */
 export type BallotViewer = {
   userId: string | null;
   linkedResponseIds: string[];
+  rememberedResponseIds: string[];
 };
 
 /** Everyone's answers, with each person listed once however many options there are. */

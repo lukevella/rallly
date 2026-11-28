@@ -58,8 +58,10 @@ export function projectBallot({
   viewer: BallotViewer;
 }): Ballot {
   const linked = new Set(viewer.linkedResponseIds);
+  const remembered = new Set(viewer.rememberedResponseIds);
   const isOwn = (response: BallotSource["responses"][number]) =>
     linked.has(response.id) ||
+    remembered.has(response.id) ||
     (viewer.userId !== null && response.userId === viewer.userId);
 
   // The response an edit link names comes first, so it is the one the ballot

@@ -128,9 +128,14 @@ export type AddParticipantResult =
     }
   | { ok: false; reason: WriteRefusal };
 
+/**
+ * Saves a new response. The response belongs to no user: its token, held in
+ * the voter's cookie and in the emailed link, is what proves who may edit it.
+ * `actorUserId` is the session user, if any, for the activity log only.
+ */
 export async function addParticipant({
   pollId,
-  userId,
+  actorUserId,
   locale,
   name,
   email,
@@ -140,7 +145,7 @@ export async function addParticipant({
   votes,
 }: {
   pollId: string;
-  userId: string;
+  actorUserId: string | undefined;
   locale: string;
   name: string;
   email?: string;
@@ -195,7 +200,6 @@ export async function addParticipant({
           note,
           timeZone,
           token: editToken,
-          userId,
           locale,
           votes: {
             createMany: {
@@ -237,7 +241,7 @@ export async function addParticipant({
         {
           pollId,
           type: "response_created",
-          userId,
+          userId: actorUserId,
           participantId: participant.id,
           payload: {
             name: participant.name,
