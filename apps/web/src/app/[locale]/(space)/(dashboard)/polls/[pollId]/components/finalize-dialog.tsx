@@ -191,15 +191,15 @@ function FinalizeContent({
           then the event it carries. */}
       <div className="flex flex-col gap-2 pt-2 pb-2">
         <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-          <div className="flex items-center gap-2 border-card-border border-b pl-4">
+          <div className="flex items-start gap-2 border-card-border border-b pl-4">
             <Label
               htmlFor={toId}
-              className="w-14 shrink-0 font-normal text-muted-foreground"
+              className="w-14 shrink-0 py-3 font-normal text-muted-foreground leading-5"
             >
               <Trans i18nKey="finalizeDialogTo" defaults="To" />
             </Label>
             {recipientCount > 0 ? (
-              <div className="min-w-0 flex-1 py-1 pr-1">
+              <div className="min-w-0 flex-1 py-3 pr-4">
                 <NotifyParticipantsCombobox
                   id={toId}
                   optionId={option.id}

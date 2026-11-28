@@ -2,11 +2,14 @@
 
 import {
   Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
   ComboboxContent,
   ComboboxEmpty,
-  ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  useComboboxAnchor,
 } from "@rallly/ui/combobox";
 import React from "react";
 import { useParticipants } from "@/features/poll/client";
@@ -28,8 +31,8 @@ function voteRank(vote: VoteType | undefined) {
 }
 
 /**
- * Who gets the finalized email. The field says how many are picked; the list
- * shows each participant's vote on the date being finalized. Only participants
+ * Who gets the finalized email, as removable chips; the list shows each
+ * participant's vote on the date being finalized. Only participants
  * with an email can be picked, and picking no one finalizes silently.
  */
 export function NotifyParticipantsCombobox({
@@ -45,6 +48,7 @@ export function NotifyParticipantsCombobox({
 }) {
   const { t } = useTranslation();
   const { participants } = useParticipants();
+  const anchorRef = useComboboxAnchor();
   const recipients = React.useMemo(
     () =>
       participants
@@ -76,19 +80,23 @@ export function NotifyParticipantsCombobox({
       itemToStringLabel={(r: Recipient) => r.name}
       isItemEqualToValue={(a: Recipient, b: Recipient) => a.id === b.id}
     >
-      {/* The selection lives in the popup, so the input's only resting
-            text is the count; typing replaces it with a query. */}
-      <ComboboxInput
-        id={id}
-        className="w-full border-transparent shadow-none dark:bg-transparent"
-        showClear={selected.length > 0}
-        placeholder={t("notifyComboboxCount", {
-          defaultValue:
-            "{count, plural, =0 {No one} one {# participant} other {# participants}}",
-          count: selected.length,
-        })}
-      />
-      <ComboboxContent>
+      <ComboboxChips
+        ref={anchorRef}
+        className="max-h-32 min-h-0 overflow-y-auto border-0 bg-transparent px-0 py-0 focus-within:ring-0 has-data-[slot=combobox-chip]:px-0 dark:bg-transparent"
+      >
+        {selected.map((recipient) => (
+          <ComboboxChip key={recipient.id}>{recipient.name}</ComboboxChip>
+        ))}
+        <ComboboxChipsInput
+          id={id}
+          placeholder={
+            selected.length === 0
+              ? t("notifyComboboxNoOne", { defaultValue: "No one" })
+              : undefined
+          }
+        />
+      </ComboboxChips>
+      <ComboboxContent anchor={anchorRef.current}>
         <ComboboxEmpty>
           <Trans
             i18nKey="notifyComboboxEmpty"
