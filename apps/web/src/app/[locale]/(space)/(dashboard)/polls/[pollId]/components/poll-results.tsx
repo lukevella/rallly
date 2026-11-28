@@ -207,7 +207,10 @@ export function PollResults({
               onValueChange={(value) => {
                 setView(value as View);
                 posthog?.capture("poll_page:results_view_change", {
-                  poll_id: poll.id,
+                  ...pollEventProperties({
+                    pollId: poll.id,
+                    spaceId: poll.spaceId,
+                  }),
                   view: value,
                   option_count: options.length,
                   participant_count: participants.length,
