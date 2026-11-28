@@ -16,6 +16,7 @@ import {
 import { usePoll } from "@/features/poll/client";
 import type { VoteType } from "@/features/poll/constants";
 import {
+  bestOptionIds,
   pollEventProperties,
   rankOptionsByPopularity,
 } from "@/features/poll/utils";
@@ -121,20 +122,11 @@ function BestDateCard({
   const finalizeDialog = useDialog();
   const top = React.useMemo(() => {
     const ranked = rankOptionsByPopularity({ options, participants });
-    const availability = (option: (typeof ranked)[number]) =>
-      option.votes.yes.length + option.votes.ifNeedBe.length;
-    const best = ranked[0] ? availability(ranked[0]) : 0;
-    if (best === 0) {
-      return [];
-    }
+    const bestIds = bestOptionIds(ranked);
+    // Tied on every count, so they step through in date order.
     return ranked
-      .filter((option) => availability(option) === best)
-      .sort(
-        (a, b) =>
-          b.votes.yes.length - a.votes.yes.length ||
-          a.votes.ifNeedBe.length - b.votes.ifNeedBe.length ||
-          a.startTime.getTime() - b.startTime.getTime(),
-      );
+      .filter((option) => bestIds.has(option.id))
+      .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   }, [options, participants]);
   const [rawIndex, setIndex] = React.useState(0);
   // The tie list can shrink as responses arrive; keep the index inside it.

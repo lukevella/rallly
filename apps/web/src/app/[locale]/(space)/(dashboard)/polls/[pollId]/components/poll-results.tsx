@@ -49,6 +49,7 @@ import {
 import VoteIcon from "@/features/poll/components/vote-icon";
 import type { VoteType } from "@/features/poll/constants";
 import {
+  bestOptionIds,
   pollEventProperties,
   rankOptionsByPopularity,
 } from "@/features/poll/utils";
@@ -119,17 +120,8 @@ export function PollResults({
   const showEndTime =
     hasTimes &&
     !options.every((option) => option.duration === options[0]?.duration);
-  const best = ranked[0]
-    ? ranked[0].votes.yes.length + ranked[0].votes.ifNeedBe.length
-    : 0;
-
-  const topOptions =
-    best > 0
-      ? ranked.filter(
-          (option) =>
-            option.votes.yes.length + option.votes.ifNeedBe.length === best,
-        )
-      : [];
+  const bestIds = bestOptionIds(ranked);
+  const topOptions = ranked.filter((option) => bestIds.has(option.id));
   const topOption = topOptions.length === 1 ? topOptions[0] : undefined;
   const summary = topOption ? (
     <Trans
@@ -278,7 +270,7 @@ export function PollResults({
           participants={participants}
           floating={timeZone === null}
           hasTimes={hasTimes}
-          best={best}
+          bestIds={bestIds}
           showDuration={showEndTime}
           onPick={onPick}
         />
@@ -289,7 +281,7 @@ export function PollResults({
           floating={timeZone === null}
           hasTimes={hasTimes}
           showEndTime={showEndTime}
-          best={best}
+          bestIds={bestIds}
           pickLabel={pickLabel}
           onPick={onPick}
         />
@@ -502,8 +494,8 @@ function PickButton({
 }
 
 /**
- * Marks a best date: one tied for the most availability, like the best date
- * card's. Passive: picking has its own control.
+ * Marks a best date (see bestOptionIds), the same ones the best date card
+ * steps through. Passive: picking has its own control.
  */
 function BestMarker({ size = "default" }: { size?: "default" | "sm" }) {
   return (
@@ -819,7 +811,7 @@ function ResultsList({
   floating,
   hasTimes,
   showEndTime,
-  best,
+  bestIds,
   pickLabel,
   onPick,
 }: {
@@ -828,7 +820,7 @@ function ResultsList({
   floating: boolean;
   hasTimes: boolean;
   showEndTime: boolean;
-  best: number;
+  bestIds: Set<string>;
   /** Omitted once a date can no longer be picked. */
   pickLabel?: (option: TableOption) => string;
   /** `source` tells the finalize analytics which control opened it. */
@@ -842,7 +834,7 @@ function ResultsList({
     const yes = option.votes.yes.length;
     const ifNeedBe = option.votes.ifNeedBe.length;
     const label = pickLabel?.(option);
-    const isBest = best > 0 && yes + ifNeedBe === best;
+    const isBest = bestIds.has(option.id);
     return (
       <li
         key={option.id}
@@ -931,12 +923,8 @@ type TableProps = {
   participants: Participant[];
   floating: boolean;
   hasTimes: boolean;
-  best: number;
+  bestIds: Set<string>;
 };
-
-function availableCount(option: TableOption) {
-  return option.votes.yes.length + option.votes.ifNeedBe.length;
-}
 
 function votesByOption(participant: Participant) {
   return new Map(participant.votes.map((vote) => [vote.optionId, vote.type]));
@@ -1103,7 +1091,7 @@ function ResultsTable({
   options,
   participants,
   floating,
-  best,
+  bestIds,
   showDuration,
   onPick,
 }: TableProps & {
@@ -1195,9 +1183,7 @@ function ResultsTable({
                   <span className="flex flex-col items-start gap-1">
                     <span className="flex items-center gap-1.5">
                       <DayLabel weekday={weekday} day={day} />
-                      {best > 0 && availableCount(option) === best ? (
-                        <BestMarker size="sm" />
-                      ) : null}
+                      {bestIds.has(option.id) ? <BestMarker size="sm" /> : null}
                     </span>
                     {option.duration > 0 ? (
                       <span className="flex flex-col items-start gap-1 whitespace-nowrap text-xs tabular-nums">
@@ -1325,7 +1311,7 @@ function ResultsTable({
                 </span>
               </th>
               {options.map((option) => {
-                const isBest = best > 0 && availableCount(option) === best;
+                const isBest = bestIds.has(option.id);
                 return (
                   <td
                     key={option.id}
