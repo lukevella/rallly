@@ -215,8 +215,6 @@ function PickedDate({
   showDate = true,
 }: {
   option: RankedOption;
-  /** Off where the date and time are shown on their own. */
-  showWhen?: boolean;
   /** Off where the date is already said, leaving just the time. */
   showDate?: boolean;
 }) {
@@ -557,14 +555,11 @@ function DetailRow({
 // What the event will carry, laid out as the confirmation email shows it.
 export function SummaryStep({
   option,
-  showWhen = true,
   showDate = true,
   showLocation = true,
   showPendingLink = false,
 }: {
   option: RankedOption;
-  /** Off where the date and time are shown on their own. */
-  showWhen?: boolean;
   /** Off where the date is already said, leaving just the time. */
   showDate?: boolean;
   showLocation?: boolean;
@@ -575,7 +570,7 @@ export function SummaryStep({
   const conferencing = poll.conferencing;
   return (
     <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4">
-      {showWhen ? <PickedDate option={option} showDate={showDate} /> : null}
+      <PickedDate option={option} showDate={showDate} />
       {showLocation && poll.location ? (
         <DetailRow icon={<MapPinIcon />}>{poll.location}</DetailRow>
       ) : null}

@@ -32,7 +32,6 @@ import {
 } from "@/features/poll/utils";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { OptionDateHeader } from "./option-date";
 
 /**
  * Finalizes the poll on a date already picked, in one step: what the event
@@ -186,16 +185,8 @@ function FinalizeContent({
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col">
-        <div className="flex flex-col gap-4 pt-2 pb-6">
-          <OptionDateHeader option={option} floating={poll.timeZone === null} />
-          {poll.conferencing ? (
-            <SummaryStep
-              option={option}
-              showWhen={false}
-              showLocation={false}
-              showPendingLink
-            />
-          ) : null}
+        <div className="pt-2 pb-6">
+          <SummaryStep option={option} showLocation={false} showPendingLink />
         </div>
         {participants.length > 0 ? (
           <NotifyStep
