@@ -212,7 +212,7 @@ function BestDateCard({
       </StatCardHeader>
       <StatCardFooter className="flex-wrap items-end gap-y-2">
         {current ? (
-          <StatCardValue className="whitespace-nowrap text-base">
+          <StatCardValue className="whitespace-nowrap text-xl">
             {formatDateTime(
               current.startTime,
               "weekdayMonthDayShort",
