@@ -641,8 +641,7 @@ function AvailabilityPopover({
             </Button>
           ) : null}
         </div>
-        {/* Scrolls on its own, so a long list keeps the header and footer
-            in view. */}
+        {/* Scrolls on its own, so a long list keeps the header in view. */}
         <div className="max-h-72 overflow-y-auto overscroll-contain px-4 py-3">
           <VoteBreakdown
             optionId={option.id}
@@ -651,19 +650,6 @@ function AvailabilityPopover({
             participantsById={participantsById}
           />
         </div>
-        {participants.length > 0 ? (
-          <div className="shrink-0 border-popover-border border-t p-4">
-            {participants.length > 0 ? (
-              <p className="text-center text-muted-foreground">
-                <Trans
-                  i18nKey="pollStatsCanMakeItOfTotal"
-                  defaults="{count} of {total} can make it"
-                  values={{ count, total: participants.length }}
-                />
-              </p>
-            ) : null}
-          </div>
-        ) : null}
       </PopoverContent>
     </Popover>
   );
