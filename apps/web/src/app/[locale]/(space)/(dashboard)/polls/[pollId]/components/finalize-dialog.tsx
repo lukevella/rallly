@@ -243,7 +243,10 @@ function FinalizeContent({
           </p>
         )
       ) : (
-        <SummaryStep option={option} showPendingLink />
+        <div className="flex flex-col gap-4">
+          <p className="font-medium text-sm">{poll.title}</p>
+          <SummaryStep option={option} showPendingLink />
+        </div>
       )}
       <PayWallDialog
         pricing={payWallPricing}
