@@ -115,18 +115,11 @@ test.describe("poll admin page", () => {
     const dialog = page.getByRole("dialog", { name: "Finalize poll" });
     await expect(dialog).toBeVisible();
 
-    // Everyone with an email starts in the To field; Carol has none.
-    const chips = dialog.locator('[data-slot="combobox-chip"]');
-    await expect(chips).toHaveText(["Alice", "Bob"]);
-    await expect(
-      dialog.getByText("1 participant has no email and won't be notified."),
-    ).toBeVisible();
-
-    await chips
-      .filter({ hasText: "Bob" })
-      .getByRole("button", { name: "Remove" })
-      .click();
-    await expect(chips).toHaveText(["Alice"]);
+    // Everyone with an email starts selected; Carol has none to send to.
+    await expect(dialog.getByLabel("Alice")).toBeChecked();
+    await expect(dialog.getByLabel("Bob")).toBeChecked();
+    await expect(dialog.getByLabel("Carol")).toBeDisabled();
+    await dialog.getByLabel("Bob").uncheck();
 
     // The confirmation step repeats the event and how many get the email.
     await dialog.getByRole("button", { name: "Next" }).click();

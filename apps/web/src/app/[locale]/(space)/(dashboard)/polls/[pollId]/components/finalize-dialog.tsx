@@ -14,7 +14,6 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
-import { Label } from "@rallly/ui/label";
 import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import { AlertTriangleIcon, CheckIcon, MailIcon } from "lucide-react";
@@ -24,6 +23,7 @@ import { primePayWall, usePayWallStore } from "@/features/billing/client";
 import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import { useParticipants, usePoll } from "@/features/poll/client";
 import {
+  NotifyStep,
   PickedDateText,
   SummaryStep,
 } from "@/features/poll/components/finalize-poll-dialog";
@@ -33,7 +33,6 @@ import {
 } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
-import { NotifyParticipantsCombobox } from "./notify-participants-combobox";
 
 type Step = "recipients" | "confirm";
 
@@ -129,8 +128,6 @@ function FinalizeContent({
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
-  const toId = React.useId();
-  const recipientCount = participants.filter((p) => p.email).length;
 
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
@@ -218,60 +215,53 @@ function FinalizeContent({
         </DialogDescription>
       </DialogHeader>
       <FinalizeStepper step={step} />
-      {step === "recipients" ? (
-        <div className="flex flex-col gap-2">
-          <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-            <div className="flex items-start gap-2 pl-4 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-inset">
-              <Label
-                htmlFor={toId}
-                className="w-14 shrink-0 py-3 font-normal text-muted-foreground leading-5"
-              >
-                <Trans i18nKey="finalizeDialogTo" defaults="To" />
-              </Label>
-              {recipientCount > 0 ? (
-                <div className="min-w-0 flex-1 py-3 pr-4">
-                  <NotifyParticipantsCombobox
-                    id={toId}
-                    optionId={option.id}
-                    selectedIds={notifyIds}
-                    onChange={setNotifyIds}
-                  />
-                </div>
-              ) : (
-                <p className="py-3 pr-4 text-muted-foreground text-sm">
-                  <Trans
-                    i18nKey="finalizeDialogNoRecipients"
-                    defaults="No one to notify"
-                  />
-                </p>
-              )}
+      {/* Both steps share one grid cell, so the dialog keeps the taller
+          one's height and doesn't jump between them. */}
+      <div className="grid">
+        <div
+          className={cn(
+            "col-start-1 row-start-1",
+            step !== "recipients" && "invisible",
+          )}
+          inert={step !== "recipients"}
+        >
+          {participants.length > 0 ? (
+            <NotifyStep
+              optionId={option.id}
+              selectedIds={notifyIds}
+              onChange={setNotifyIds}
+            />
+          ) : (
+            <p className="rounded-xl border border-card-border p-4 text-muted-foreground text-sm">
+              <Trans
+                i18nKey="finalizeDialogNoParticipants"
+                defaults="No one has responded, so there's no one to notify."
+              />
+            </p>
+          )}
+        </div>
+        <div
+          className={cn(
+            "col-start-1 row-start-1 self-start",
+            step !== "confirm" && "invisible",
+          )}
+          inert={step !== "confirm"}
+        >
+          <div className="flex flex-col gap-4 rounded-xl border border-card-border bg-card p-4">
+            <SummaryStep option={option} showPendingLink />
+            <div className="flex items-start gap-3">
+              <MailIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+              <p className="text-sm leading-5">
+                <Trans
+                  i18nKey="finalizeDialogNotifyCount"
+                  defaults="{count, plural, =0 {No one will be notified} one {Notify # participant} other {Notify # participants}}"
+                  values={{ count: notifyIds.size }}
+                />
+              </p>
             </div>
           </div>
-          {participants.length > recipientCount ? (
-            <p className="text-muted-foreground text-xs">
-              <Trans
-                i18nKey="notifyComboboxWithoutEmail"
-                defaults="{count, plural, one {# participant has no email and won't be notified.} other {# participants have no email and won't be notified.}}"
-                values={{ count: participants.length - recipientCount }}
-              />
-            </p>
-          ) : null}
         </div>
-      ) : (
-        <div className="flex flex-col gap-4 rounded-xl border border-card-border bg-card p-4">
-          <SummaryStep option={option} showPendingLink />
-          <div className="flex items-start gap-3">
-            <MailIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-            <p className="text-sm leading-5">
-              <Trans
-                i18nKey="finalizeDialogNotifyCount"
-                defaults="{count, plural, =0 {No one will be notified} one {Notify # participant} other {Notify # participants}}"
-                values={{ count: notifyIds.size }}
-              />
-            </p>
-          </div>
-        </div>
-      )}
+      </div>
       <PayWallDialog
         pricing={payWallPricing}
         isOpen={payWall.dialogProps.open}
