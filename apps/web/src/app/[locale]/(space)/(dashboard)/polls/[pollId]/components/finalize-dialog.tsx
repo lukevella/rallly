@@ -186,7 +186,7 @@ function FinalizeContent({
       </DialogHeader>
       <div className="flex flex-col">
         <div className="pt-2 pb-6">
-          <SummaryStep option={option} showLocation={false} showPendingLink />
+          <SummaryStep option={option} showPendingLink />
         </div>
         {participants.length > 0 ? (
           <NotifyStep
