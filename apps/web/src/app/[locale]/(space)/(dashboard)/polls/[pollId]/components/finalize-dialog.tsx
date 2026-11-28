@@ -324,7 +324,9 @@ function FinalizeStepper({ step }: { step: Step }) {
   ];
   const current = steps.findIndex((s) => s.id === step);
   return (
-    <ol className="flex items-center gap-3 text-sm">
+    // One equal segment per step: a bar that fills as the step is reached,
+    // with the step's number and name under it.
+    <ol className="grid grid-cols-2 gap-3 text-sm">
       {steps.map((s, index) => {
         const state =
           index < current
@@ -336,11 +338,15 @@ function FinalizeStepper({ step }: { step: Step }) {
           <li
             key={s.id}
             aria-current={state === "current" ? "step" : undefined}
-            className="flex items-center gap-3"
+            className="flex flex-col gap-2"
           >
-            {index > 0 ? (
-              <span aria-hidden="true" className="h-px w-8 bg-card-border" />
-            ) : null}
+            <span
+              aria-hidden="true"
+              className={cn(
+                "h-1 rounded-full",
+                state === "upcoming" ? "bg-card-border" : "bg-primary",
+              )}
+            />
             <span className="flex items-center gap-2">
               <span
                 aria-hidden="true"
