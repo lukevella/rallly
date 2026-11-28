@@ -1176,7 +1176,7 @@ function ResultsTable({
                 key={group.id}
                 scope="colgroup"
                 colSpan={group.options.length}
-                className="sticky top-0 z-20 h-11 border-r border-b bg-card px-3 text-start last:border-r-0 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]"
+                className="sticky top-0 z-20 h-11 border-r border-b bg-card px-4 text-start last:border-r-0 dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]"
               >
                 <MonthLabel
                   month={group.parts.month}
