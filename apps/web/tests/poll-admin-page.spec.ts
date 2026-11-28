@@ -112,8 +112,10 @@ test.describe("poll admin page", () => {
     await page
       .getByRole("button", { name: "Pick this date", exact: true })
       .click();
-    const dialog = page.getByRole("dialog", { name: "Finalize poll" });
-    await expect(dialog).toBeVisible();
+    const dialog = page.getByRole("dialog");
+    await expect(
+      dialog.getByRole("heading", { name: "Choose who to notify" }),
+    ).toBeVisible();
 
     // Everyone with an email starts selected; Carol has none to send to.
     await expect(dialog.getByLabel("Alice")).toBeChecked();
@@ -123,6 +125,9 @@ test.describe("poll admin page", () => {
 
     // The confirmation step repeats the event and how many get the email.
     await dialog.getByRole("button", { name: "Next" }).click();
+    await expect(
+      dialog.getByRole("heading", { name: "Review and finalize" }),
+    ).toBeVisible();
     await expect(dialog.getByText("Notify 1 participant")).toBeVisible();
 
     await dialog

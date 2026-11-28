@@ -198,23 +198,26 @@ function FinalizeContent({
     <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[32rem]">
       <DialogHeader>
         <DialogTitle>
-          <Trans i18nKey="finalizeDialogPollTitle" defaults="Finalize poll" />
-        </DialogTitle>
-        <DialogDescription>
           {step === "recipients" ? (
             <Trans
-              i18nKey="finalizeDialogRecipientsDescription"
-              defaults="Choose who gets an email with the booked date."
+              i18nKey="finalizeStepRecipientsTitle"
+              defaults="Choose who to notify"
             />
           ) : (
             <Trans
-              i18nKey="finalizeDialogConfirmDescription"
-              defaults="Voting closes and the date is booked."
+              i18nKey="finalizeStepConfirmTitle"
+              defaults="Review and finalize"
             />
           )}
+        </DialogTitle>
+        <DialogDescription>
+          <Trans
+            i18nKey="finalizeStepCount"
+            defaults="Step {current} of {total}"
+            values={{ current: STEPS.indexOf(step) + 1, total: STEPS.length }}
+          />
         </DialogDescription>
       </DialogHeader>
-      <FinalizeStepper step={step} />
       {/* Both steps share one grid cell, so the dialog keeps the taller
           one's height and doesn't jump between them. */}
       <div className="grid">
@@ -310,16 +313,3 @@ function FinalizeContent({
 }
 
 const STEPS: Step[] = ["recipients", "confirm"];
-
-/** Where the dialog is, as a step count. */
-function FinalizeStepper({ step }: { step: Step }) {
-  return (
-    <p className="text-muted-foreground text-sm">
-      <Trans
-        i18nKey="finalizeStepCount"
-        defaults="Step {current} of {total}"
-        values={{ current: STEPS.indexOf(step) + 1, total: STEPS.length }}
-      />
-    </p>
-  );
-}
