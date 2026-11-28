@@ -128,7 +128,9 @@ test.describe("poll admin page", () => {
     await expect(
       dialog.getByRole("heading", { name: "Review and finalize" }),
     ).toBeVisible();
-    await expect(dialog.getByText("Notify 1 participant")).toBeVisible();
+    await expect(
+      dialog.getByText("Notify 1 participant", { exact: true }),
+    ).toBeVisible();
 
     await dialog
       .getByRole("button", { name: "Finalize and notify 1 participant" })
