@@ -13,11 +13,13 @@ import React from "react";
 const shellLanguages = new Set(["sh", "bash", "shell", "shellscript", "zsh"]);
 
 function getCode(children: React.ReactNode) {
-  const child = React.Children.only(children);
-  if (!React.isValidElement<React.ComponentProps<"code">>(child)) {
+  if (
+    !React.isValidElement<React.ComponentProps<"code">>(children) ||
+    children.type !== "code"
+  ) {
     return null;
   }
-  const { className, children: text } = child.props;
+  const { className, children: text } = children.props;
   if (typeof text !== "string") {
     return null;
   }
