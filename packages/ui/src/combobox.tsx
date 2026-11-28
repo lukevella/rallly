@@ -253,7 +253,7 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
-          className="-ml-1 opacity-50 hover:opacity-100"
+          className="opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
           render={
             <Button
