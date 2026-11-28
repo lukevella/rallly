@@ -64,6 +64,10 @@ export function createTransportForProvider(provider: EmailProvider) {
         host: process.env.SMTP_HOST,
         port,
         secure,
+        // Name sent in EHLO/HELO. Unset, nodemailer uses os.hostname() and
+        // replaces a hostname without a dot (most container hostnames) with
+        // "[127.0.0.1]", which some relays refuse.
+        name: process.env.SMTP_NAME,
         auth: hasAuth
           ? {
               user: process.env.SMTP_USER,

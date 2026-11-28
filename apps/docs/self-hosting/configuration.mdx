@@ -74,6 +74,10 @@ An SMTP server is required to send magic-link sign-in emails and notifications.
   <Note>Available from v4.8.0 and later.</Note>
 </ParamField>
 
+<ParamField path="SMTP_NAME">
+  Hostname Rallly sends in the SMTP `EHLO` greeting, such as `rallly.example.com`. If unset, nodemailer uses the machine's hostname, and replaces a hostname without a dot (as in most containers) with `[127.0.0.1]`. Google Workspace's SMTP relay has been seen to refuse that greeting intermittently with `421 4.7.0`. See [nodemailer SMTP options](https://nodemailer.com/smtp).
+</ParamField>
+
 <ParamField path="SMTP_DEBUG" deprecated>
   No longer supported since v4.16.0 and can be removed from your configuration. Send failures are now logged with the SMTP server's response (`errorResponse`, `errorResponseCode`, `errorCommand`), which covers the cases this option was used for. For connection level diagnosis, run `openssl s_client -starttls smtp -connect <host>:<port>` for STARTTLS (`SMTP_SECURE=false`), or `openssl s_client -connect <host>:<port>` for implicit TLS (`SMTP_SECURE=true`, usually port 465).
 </ParamField>
