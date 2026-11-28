@@ -195,8 +195,10 @@ function FinalizeContent({
   }
 
   return (
-    // The confirmation has less to show, so it narrows.
+    // The confirmation has less to show, so it narrows. Marked as a dialog
+    // step, so the footer spans the dialog's edges.
     <div
+      data-slot="dialog-step"
       className={cn(
         "grid w-[calc(100vw-4rem)] gap-4",
         step === "recipients" ? "sm:w-[32rem]" : "sm:w-[26rem]",
