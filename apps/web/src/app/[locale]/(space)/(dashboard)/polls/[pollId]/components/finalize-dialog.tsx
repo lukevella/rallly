@@ -22,7 +22,6 @@ import { primePayWall, usePayWallStore } from "@/features/billing/client";
 import { PayWallDialog } from "@/features/billing/components/pay-wall-dialog";
 import { useParticipants, usePoll } from "@/features/poll/client";
 import {
-  NotifyStep,
   PickedDateText,
   SummaryStep,
 } from "@/features/poll/components/finalize-poll-dialog";
@@ -32,6 +31,7 @@ import {
 } from "@/features/poll/utils";
 import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
+import { NotifyParticipantsCombobox } from "./notify-participants-combobox";
 
 /**
  * Finalizes the poll on a date already picked, in one step: what the event
@@ -189,8 +189,7 @@ function FinalizeContent({
           <SummaryStep option={option} showPendingLink />
         </div>
         {participants.length > 0 ? (
-          <NotifyStep
-            optionId={option.id}
+          <NotifyParticipantsCombobox
             selectedIds={notifyIds}
             onChange={setNotifyIds}
           />
