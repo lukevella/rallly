@@ -56,7 +56,9 @@ async function getExpandedSubscription(subscriptionId: string) {
  * Recomputes a space's tier from its subscriptions so the tier reflects whether
  * *any* subscription is active, rather than the state of a single webhook event.
  * Must run after the triggering subscription's `active` flag has been written in
- * the same transaction. Returns the resolved tier.
+ * the same transaction. Returns the resolved tier, or null when the space was
+ * deleted after the caller's existence check (account deletion cancels the
+ * subscription in Stripe and then cascades the space, racing this webhook).
  */
 async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
   const activeSubscription = await tx.subscription.findFirst({
@@ -66,7 +68,7 @@ async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
 
   const tier = activeSubscription ? "pro" : "hobby";
 
-  await tx.space.update({
+  const { count } = await tx.space.updateMany({
     where: { id: spaceId },
     data: {
       tier,
@@ -75,6 +77,10 @@ async function syncSpaceTier(tx: Prisma.TransactionClient, spaceId: string) {
         : {}),
     },
   });
+
+  if (count === 0) {
+    return null;
+  }
 
   if (tier === "hobby") {
     await tx.spaceMemberInvite.deleteMany({ where: { spaceId } });
@@ -345,6 +351,10 @@ async function onCustomerSubscriptionCreated(event: Stripe.Event) {
     return syncSpaceTier(tx, spaceId);
   });
 
+  if (tier === null) {
+    return;
+  }
+
   identifyGroup({
     groupType: "space",
     groupKey: spaceId,
@@ -409,6 +419,10 @@ async function onCustomerSubscriptionDeleted(event: Stripe.Event) {
 
     return syncSpaceTier(tx, spaceId);
   });
+
+  if (tier === null) {
+    return;
+  }
 
   identifyGroup({
     groupType: "space",
@@ -526,6 +540,10 @@ async function onCustomerSubscriptionUpdated(event: Stripe.Event) {
 
     return syncSpaceTier(tx, spaceId);
   });
+
+  if (tier === null) {
+    return;
+  }
 
   identifyGroup({
     groupType: "space",
