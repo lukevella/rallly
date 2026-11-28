@@ -840,9 +840,11 @@ function spansYears(groups: DateGroup<Option>[]) {
 }
 
 /**
- * One row per option, grouped by month and, when the poll has times, by day,
- * matching the table's headings. Each group's label sits to the left of its
+ * One row per option, grouped by month like the table's headings, each row
+ * with its day and time like the table's columns. Each group's label sits to the left of its
  * first row, and every row shares one grid so dates, times and bars line up.
+ * Cells pad themselves instead of using a column gap, so borders and the hover
+ * highlight run edge to edge like the table's.
  */
 function ResultsList({
   options,
@@ -865,7 +867,6 @@ function ResultsList({
   /** `source` tells the finalize analytics which control opened it. */
   onPick?: (option: TableOption, source?: string) => void;
 }) {
-  const { locale, timeZone } = useDateTimeConfig();
   const months = useDateGroups(options, { floating, by: "month" });
   const showYear = spansYears(months);
   const total = participants.length;
@@ -877,17 +878,16 @@ function ResultsList({
     return (
       <li
         key={option.id}
-        className="col-span-full grid min-h-16 grid-cols-subgrid items-center border-button-outline border-b py-4 last:border-b-0"
+        className="col-span-full grid min-h-16 grid-cols-subgrid items-center border-button-outline border-b py-4 last:border-b-0 hover:bg-foreground/[0.04] dark:hover:bg-foreground/[0.02] [&>*:first-child]:pl-4 [&>*:last-child]:pr-5 [&>*]:px-3"
       >
+        <OptionDay option={option} floating={floating} />
         {hasTimes ? (
           <OptionTime
             option={option}
             floating={floating}
             showEnd={showEndTime}
           />
-        ) : (
-          <OptionDay option={option} floating={floating} />
-        )}
+        ) : null}
         <AvailabilityBar yes={yes} ifNeedBe={ifNeedBe} total={total} />
         <AvailabilityPopover
           option={option}
@@ -911,7 +911,7 @@ function ResultsList({
   return (
     <div className="overflow-x-auto overscroll-x-none">
       <ol
-        className="grid gap-x-6 text-sm"
+        className="grid text-sm"
         style={{
           gridTemplateColumns: [
             // Month, then the day.
@@ -931,39 +931,20 @@ function ResultsList({
         {months.map((month) => (
           <li
             key={month.id}
-            className="col-span-full grid grid-cols-subgrid border-button-outline border-b px-5 last:border-b-0"
+            className="col-span-full grid grid-cols-subgrid border-button-outline border-b last:border-b-0"
           >
-            {/* Level with the group's first option. */}
-            <div className="flex h-16 items-center">
-              <MonthLabel
-                month={month.parts.month}
-                year={showYear ? month.parts.year : undefined}
-              />
+            {/* Runs the group's height; the label sits level with its first
+                option. */}
+            <div className="border-button-outline border-r px-5">
+              <div className="flex h-16 items-center">
+                <MonthLabel
+                  month={month.parts.month}
+                  year={showYear ? month.parts.year : undefined}
+                />
+              </div>
             </div>
             <ol className="col-[2/-1] grid grid-cols-subgrid">
-              {hasTimes
-                ? groupOptions(month.options, {
-                    by: "day",
-                    floating,
-                    locale,
-                    timeZone,
-                  }).map((day) => (
-                    <li
-                      key={day.id}
-                      className="col-span-full grid grid-cols-subgrid border-button-outline border-b last:border-b-0"
-                    >
-                      <div className="flex h-16 items-center">
-                        <DayLabel
-                          weekday={day.parts.weekday}
-                          day={day.parts.day}
-                        />
-                      </div>
-                      <ol className="col-[2/-1] grid grid-cols-subgrid">
-                        {day.options.map(row)}
-                      </ol>
-                    </li>
-                  ))
-                : month.options.map(row)}
+              {month.options.map(row)}
             </ol>
           </li>
         ))}
