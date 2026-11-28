@@ -902,6 +902,7 @@
   "pollResultsEmpty": "This poll has no dates.",
   "pollResultsHeading": "Results",
   "pollResultsLeftNote": "Left a note",
+  "pollResultsMostAvailable": "Most available",
   "pollResultsNoOneAvailable": "No one can make it",
   "pollResultsNoOneAvailableDescription": "{count, plural, one {# participant said no or didn't answer for this date.} other {# participants said no or didn't answer for this date.}}",
   "pollResultsNoVotes": "No responses yet",

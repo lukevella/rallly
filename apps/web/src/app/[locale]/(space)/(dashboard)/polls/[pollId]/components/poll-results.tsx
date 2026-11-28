@@ -18,6 +18,7 @@ import {
 } from "@rallly/ui/segmented-control";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@rallly/ui/tooltip";
 import {
+  CalendarCheckIcon,
   CalendarXIcon,
   ChevronDownIcon,
   ChevronsLeftIcon,
@@ -497,10 +498,33 @@ function PickButton({
           />
         }
       >
-        <StarIcon aria-hidden="true" />
+        <CalendarCheckIcon aria-hidden="true" />
       </TooltipTrigger>
       <TooltipContent>
         <Trans i18nKey="pollResultsPickThisDate" defaults="Pick this date" />
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+/**
+ * Marks a date tied for the most availability. Passive: picking has its own
+ * control.
+ */
+function BestMarker() {
+  return (
+    <Tooltip>
+      <TooltipTrigger render={<span className="inline-flex" />}>
+        <StarIcon
+          aria-hidden="true"
+          className="size-4 fill-amber-400 text-amber-400"
+        />
+        <span className="sr-only">
+          <Trans i18nKey="pollResultsMostAvailable" defaults="Most available" />
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>
+        <Trans i18nKey="pollResultsMostAvailable" defaults="Most available" />
       </TooltipContent>
     </Tooltip>
   );
@@ -633,7 +657,7 @@ function AvailabilityPopover({
                 onFinalize();
               }}
             >
-              <StarIcon data-icon="inline-start" aria-hidden="true" />
+              <CalendarCheckIcon data-icon="inline-start" aria-hidden="true" />
               <Trans
                 i18nKey="pollResultsPickThisDate"
                 defaults="Pick this date"
@@ -861,6 +885,7 @@ function ResultsList({
     const yes = option.votes.yes.length;
     const ifNeedBe = option.votes.ifNeedBe.length;
     const label = pickLabel?.(option);
+    const isBest = best > 0 && yes + ifNeedBe === best;
     return (
       <li
         key={option.id}
@@ -875,13 +900,17 @@ function ResultsList({
           />
         ) : null}
         <AvailabilityBar yes={yes} ifNeedBe={ifNeedBe} total={total} />
-        <AvailabilityPopover
-          option={option}
-          participants={participants}
-          floating={floating}
-          highlight={best > 0 && yes + ifNeedBe === best}
-          onFinalize={onPick ? () => onPick(option) : undefined}
-        />
+        <span className="flex items-center justify-end gap-1">
+          {/* A slot either way, so counts stay aligned down the list. */}
+          <span className="flex size-4">{isBest ? <BestMarker /> : null}</span>
+          <AvailabilityPopover
+            option={option}
+            participants={participants}
+            floating={floating}
+            highlight={isBest}
+            onFinalize={onPick ? () => onPick(option) : undefined}
+          />
+        </span>
         {onPick && label ? (
           <span>
             <PickButton
@@ -1333,7 +1362,8 @@ function ResultsTable({
                         "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                     )}
                   >
-                    <span className="flex flex-col items-center gap-1">
+                    <span className="flex items-center justify-center gap-1">
+                      {isBest ? <BestMarker /> : null}
                       {participants.length > 0 ? (
                         <AvailabilityPopover
                           option={option}
