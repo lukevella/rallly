@@ -32,11 +32,6 @@ export const featureFlagConfig: FeatureFlagConfig = {
   calendars: isCalendarsEnabled,
   conferencing: isConferencingEnabled,
   eventTypes: isEventTypesEnabled,
-  // The new poll page at /polls/[pollId]. Always on in development; an
-  // instance opts in with POLL_ADMIN_ENABLED until it replaces the legacy
-  // page.
-  pollAdmin:
-    env.NODE_ENV === "development" || env.POLL_ADMIN_ENABLED === "true",
   quickCreate: isQuickCreateEnabled,
   // Self-hosted runs one process, so a per-process counter is an exact rate
   // limit and Redis is not required. Cloud runs many short-lived instances,

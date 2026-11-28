@@ -14,28 +14,14 @@ import { Link } from "@/components/link";
 import { usePoll } from "@/features/poll/client";
 import ManagePoll from "@/features/poll/components/manage-poll";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
-import { PollAdminViewSwitch } from "@/features/poll/components/poll-admin-view-switch";
 import { LegacyPollContextProvider } from "@/features/poll/components/poll-context-provider";
 import { PollPageShell } from "@/features/poll/components/poll-page-shell";
 import { PollPrimaryActions } from "@/features/poll/components/poll-primary-actions";
 import { Trans } from "@/i18n/client";
-import { useFeatureFlag } from "@/lib/feature-flags/client";
-
-/**
- * The switch into the new poll admin. Only space polls have it: the new
- * admin needs a signed in host.
- */
-function NewViewSwitch() {
-  const poll = usePoll();
-  const enabled = useFeatureFlag("pollAdmin");
-  if (!enabled || !poll.spaceId) return null;
-  return <PollAdminViewSwitch pollId={poll.id} checked={false} />;
-}
 
 const AdminControls = () => {
   return (
     <>
-      <NewViewSwitch />
       <NotificationToggle />
       <ManagePoll />
       <PollPrimaryActions />

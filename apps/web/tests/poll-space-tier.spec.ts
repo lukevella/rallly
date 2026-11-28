@@ -110,7 +110,7 @@ test("a poll in a pro space keeps its pro features while a hobby space is active
     .getByRole("button", { name: "Duplicate" })
     .click();
 
-  await expect(page).toHaveURL(/\/poll\/(?!space-tier-)[\w-]+$/);
+  await expect(page).toHaveURL(/\/polls?\/(?!space-tier-)[\w-]+$/);
   await expect(
     page.getByRole("heading", { name: "Team offsite copy" }).first(),
   ).toBeVisible();

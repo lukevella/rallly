@@ -8,7 +8,6 @@ export interface FeatureFlagConfig {
   calendars: boolean;
   conferencing: boolean;
   eventTypes: boolean;
-  pollAdmin: boolean;
   quickCreate: boolean;
   inProcessRateLimit: boolean;
   api: boolean;

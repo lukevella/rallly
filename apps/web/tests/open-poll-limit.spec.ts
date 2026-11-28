@@ -230,9 +230,8 @@ test.describe("free organizer", () => {
       },
     });
 
-    await page.goto(`/poll/${closedId}`);
-    await page.getByRole("button", { name: "Manage" }).click();
-    await page.getByRole("menuitem", { name: "Reopen poll" }).click();
+    await page.goto(`/polls/${closedId}`);
+    await page.getByRole("button", { name: "Reopen poll" }).click();
     await expect(
       page.getByRole("dialog", { name: "Open poll limit reached" }),
     ).toBeVisible();

@@ -83,24 +83,38 @@ export class NewPollPage {
 
     await page.getByRole("button", { name: /^create poll$/i }).click();
 
-    // The poll created dialog is the success signal. It carries the invite
-    // link, whose last segment is the new poll's id; callers continue on the
-    // poll's page.
+    // Signed in hosts land on the poll's page; guests get the poll created
+    // dialog, whose invite link ends in the new poll's id, and continue on
+    // the legacy page they still manage it from. Creating can take a while
+    // on a cold dev server.
     const dialog = page.getByRole("dialog", { name: "Poll created" });
-    // Creating can take a while on a cold dev server, as the old wait for the
-    // redirect allowed for.
-    await expect(dialog).toBeVisible({ timeout: 30_000 });
-    const inviteLink = await dialog
-      .getByText(/\/invite\/[^/?\s]+$/)
-      .textContent();
-    const pollId = inviteLink?.trim().split("/").pop();
+    const pollPageUrl = /\/polls\/([^/?#]+)$/;
+    await expect(async () => {
+      expect(
+        pollPageUrl.test(new URL(page.url()).pathname) ||
+          (await dialog.isVisible()),
+      ).toBe(true);
+    }).toPass({ timeout: 30_000 });
+
+    let pollId = new URL(page.url()).pathname.match(pollPageUrl)?.[1];
     if (!pollId) {
-      throw new Error("No invite link in the poll created dialog");
+      const inviteLink = await dialog
+        .getByText(/\/invite\/[^/?\s]+$/)
+        .textContent();
+      pollId = inviteLink?.trim().split("/").pop();
+      await expect(
+        dialog.getByRole("link", { name: "Log in to manage" }),
+      ).toHaveAttribute(
+        "href",
+        `/login?redirectTo=${encodeURIComponent(`/polls/${pollId}`)}`,
+      );
     }
-    // A client navigation, so the router keeps /new cached behind it for
-    // specs that go back to it.
-    await dialog.getByRole("link", { name: "Manage poll" }).click();
-    await page.waitForURL(`**/poll/${pollId}`);
+    if (!pollId) {
+      throw new Error("Couldn't tell which poll was created");
+    }
+    if (!pollPageUrl.test(new URL(page.url()).pathname)) {
+      await page.goto(`/poll/${pollId}`);
+    }
     return new PollPage(page);
   }
 }

@@ -358,11 +358,12 @@ test.describe("Booking a poll", () => {
     }
 
     await loginWithEmail(page, { email: BOOKING_HOST_EMAIL });
-    await page.goto(`/poll/${poll.id}`);
-    await page.getByRole("button", { name: "Finalize" }).click();
+    await page.goto(`/polls/${poll.id}`);
+    await page
+      .getByRole("button", { name: "Pick this date", exact: true })
+      .click();
 
     const dialog = page.getByRole("dialog");
-    await dialog.getByRole("button", { name: /September/ }).click();
 
     // Everyone with an email starts selected; keep only the first Alice.
     await dialog.getByLabel("Alice Again").uncheck();

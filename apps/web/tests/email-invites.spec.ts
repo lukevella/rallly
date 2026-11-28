@@ -316,7 +316,7 @@ test.describe("Email invites", () => {
     });
 
     const dialog = await pollPage.openShareDialog();
-    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+    await expect(page).toHaveURL(/\/polls\/[^/?]+$/);
 
     // Sending an invite refreshes the route; a router sync must not put the
     // consumed param back on the address bar.
@@ -325,7 +325,7 @@ test.describe("Email invites", () => {
     await field.press("Enter");
     const row = dialog.getByRole("listitem").filter({ hasText: INVITEE });
     await expect(row.getByText("Sent")).toBeVisible();
-    await expect(page).toHaveURL(/\/poll\/[^/?]+$/);
+    await expect(page).toHaveURL(/\/polls\/[^/?]+$/);
     await expect(dialog).toBeVisible();
 
     // Removing a pending invite drops the row and stops its token; sending
@@ -352,7 +352,7 @@ test.describe("Email invites", () => {
 
     await page.reload();
     await expect(
-      page.getByRole("button", { name: "Share" }).first(),
+      page.getByRole("button", { name: "Invite by email" }),
     ).toBeVisible();
     await expect(dialog).toBeHidden();
   });

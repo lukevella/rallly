@@ -41,7 +41,6 @@ import {
   SEARCH_INDEX_STALE_TIME,
   SEARCH_QUERY_MAX_LENGTH,
 } from "@/features/navigation/constants";
-import { usePollAdminHref } from "@/features/poll/client";
 import { getEventListStatus } from "@/features/scheduled-event/utils";
 import { setActiveSpaceAction } from "@/features/space/actions";
 import { useSpace } from "@/features/space/client";
@@ -248,7 +247,6 @@ function SearchResults({
   onSelect: (href: string, type: string) => void;
 }) {
   const { formatDateTime } = useDateTime();
-  const pollAdminHref = usePollAdminHref();
 
   return (
     <>
@@ -258,7 +256,7 @@ function SearchResults({
             <CommandItem
               key={poll.id}
               value={resultValue("poll", poll.id, query)}
-              onSelect={() => onSelect(pollAdminHref(poll.id), "poll")}
+              onSelect={() => onSelect(`/polls/${poll.id}`, "poll")}
             >
               <BarChart2Icon className="size-4 shrink-0 text-muted-foreground" />
               <span className="truncate">{poll.title}</span>

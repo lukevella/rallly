@@ -301,8 +301,14 @@ export const CreatePoll = ({
               clear();
               form.reset();
               setCreatedPollId(res.data.id);
-              // The open poll count shown on this page has changed.
-              router.refresh();
+              if (isLoggedIn) {
+                // The poll's page carries the invite link and the ways to
+                // invite, so signed in hosts go straight there.
+                router.push(`/polls/${res.data.id}`);
+              } else {
+                // The open poll count shown on this page has changed.
+                router.refresh();
+              }
             } else if (res.error.code === "OPEN_POLL_LIMIT_REACHED") {
               showOpenPollLimit("create", res.error.usage);
             } else {
@@ -370,7 +376,9 @@ export const CreatePoll = ({
             scaling, so give it height inside the resting zone. */}
         <div ref={sentinelRef} className="-mt-6 h-6" aria-hidden="true" />
       </main>
-      {createdPollId ? <PollCreatedDialog pollId={createdPollId} /> : null}
+      {createdPollId && !isLoggedIn ? (
+        <PollCreatedDialog pollId={createdPollId} />
+      ) : null}
     </Form>
   );
 };

@@ -197,7 +197,6 @@ export const env = createEnv({
      * hosts return to the legacy page.
      * @default "false"
      */
-    POLL_ADMIN_ENABLED: z.enum(["true", "false"]).default("false"),
 
     /**
      * Enforce the monthly API poll quota. Only takes effect where billing is
@@ -369,7 +368,6 @@ export const env = createEnv({
     EMAIL_QUEUE_SCHEDULER_ENABLED: process.env.EMAIL_QUEUE_SCHEDULER_ENABLED,
     OPEN_POLL_LIMIT_ENABLED: process.env.OPEN_POLL_LIMIT_ENABLED,
     API_POLL_QUOTA_ENABLED: process.env.API_POLL_QUOTA_ENABLED,
-    POLL_ADMIN_ENABLED: process.env.POLL_ADMIN_ENABLED,
     EMAIL_INVITE_QUOTA_ENABLED: process.env.EMAIL_INVITE_QUOTA_ENABLED,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     MAINTENANCE_BYPASS_TOKEN: process.env.MAINTENANCE_BYPASS_TOKEN,

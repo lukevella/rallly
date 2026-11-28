@@ -17,10 +17,10 @@ import { InviteLinkRow } from "@/features/poll/components/invite-link-row";
 import { Trans } from "@/i18n/client";
 
 /**
- * Shown once a poll is created: the invite link to share, the page
- * participants see, and the way to the poll's page. It can't be dismissed:
- * the only ways on are its links. Manage poll goes to the legacy page, which
- * hosts who opted into the new one are redirected from.
+ * Shown to a guest once their poll is created, since the poll's page needs
+ * an account: the invite link to share, the page participants see, and a
+ * way to log in to manage the poll. It can't be dismissed: the only ways on
+ * are its links. Signed in hosts go straight to the poll's page instead.
  */
 export function PollCreatedDialog({ pollId }: { pollId: string }) {
   const inviteLink = shortUrl(`/invite/${pollId}`);
@@ -38,8 +38,8 @@ export function PollCreatedDialog({ pollId }: { pollId: string }) {
           </DialogTitle>
           <DialogDescription>
             <Trans
-              i18nKey="pollCreatedDialogDescription"
-              defaults="Share the invite link with the people you want to respond."
+              i18nKey="pollCreatedDialogGuestDescription"
+              defaults="Share the invite link with the people you want to respond. Log in to manage this poll and see who responded."
             />
           </DialogDescription>
         </DialogHeader>
@@ -58,18 +58,15 @@ export function PollCreatedDialog({ pollId }: { pollId: string }) {
             <ExternalLinkIcon data-icon="inline-end" aria-hidden="true" />
           </a>
           <Link
-            href={`/poll/${pollId}`}
+            href={`/login?redirectTo=${encodeURIComponent(`/polls/${pollId}`)}`}
             className={buttonVariants({ variant: "primary" })}
             onClick={() =>
-              posthog?.capture("poll_creation:manage_link_click", {
+              posthog?.capture("poll_creation:login_to_manage_click", {
                 poll_id: pollId,
               })
             }
           >
-            <Trans
-              i18nKey="pollCreatedDialogManagePoll"
-              defaults="Manage poll"
-            />
+            <Trans i18nKey="logInToManage" defaults="Log in to manage" />
           </Link>
         </DialogFooter>
       </DialogContent>

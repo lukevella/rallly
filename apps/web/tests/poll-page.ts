@@ -21,7 +21,11 @@ export class PollPage {
   async openShareDialog() {
     const dialog = this.page.getByRole("dialog", { name: "Share" });
     if (!(await dialog.isVisible())) {
-      await this.page.getByRole("button", { name: "Share" }).first().click();
+      // "Share" on the legacy page, "Invite by email" on the poll page
+      await this.page
+        .getByRole("button", { name: /^(Share|Invite by email)$/ })
+        .first()
+        .click();
     }
     await expect(dialog).toBeVisible();
     return dialog;

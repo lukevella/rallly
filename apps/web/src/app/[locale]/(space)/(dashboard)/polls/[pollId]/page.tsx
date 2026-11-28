@@ -10,12 +10,10 @@ import {
 import { PollProvider } from "@/features/poll/client";
 import { NotificationToggle } from "@/features/poll/components/notification-toggle";
 import { PollAdminMenu } from "@/features/poll/components/poll-admin-menu";
-import { PollAdminViewSwitch } from "@/features/poll/components/poll-admin-view-switch";
 import { loadPollInvites } from "@/features/poll/invite/loaders";
 import { loadAdminPoll, loadPollActivity } from "@/features/poll/loaders";
 import { loadActiveSpace } from "@/features/space/loaders";
 import { getTranslation } from "@/i18n/server";
-import { LEGACY_VIEW_PARAM, LEGACY_VIEW_VALUE } from "@/lib/poll-admin-view";
 import { PollActivitySection } from "./components/poll-activity";
 import { PollBreadcrumb } from "./components/poll-breadcrumb";
 import { PollDetails } from "./components/poll-details";
@@ -38,10 +36,10 @@ export default async function Page({
   ]);
 
   // This page reads within the active space. A poll the host manages
-  // elsewhere (another space, or none) opens on the legacy page instead of
-  // a 404, which the opt in's redirect lets through.
+  // elsewhere (another space, or none) opens on the legacy page, which
+  // sends only active space polls here.
   if (poll.spaceId !== space.id) {
-    redirect(`/poll/${pollId}?${LEGACY_VIEW_PARAM}=${LEGACY_VIEW_VALUE}`);
+    redirect(`/poll/${pollId}`);
   }
 
   const [invites, activity, { t, i18n }] = await Promise.all([
@@ -80,7 +78,6 @@ export default async function Page({
           viewerRole="admin"
         >
           <div className="flex items-center gap-1.5">
-            <PollAdminViewSwitch pollId={poll.id} checked />
             <NotificationToggle />
             <PollAdminMenu />
           </div>
