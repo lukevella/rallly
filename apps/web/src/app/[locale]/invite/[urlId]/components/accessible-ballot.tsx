@@ -435,11 +435,9 @@ export function AccessibleBallot({
   }, [hasChanges]);
   // Not while there are changes to save: it would say saved over unsaved answers.
   const notice =
-    justSaved === "checkEmail"
+    justSaved === "checkEmail" || (active && ballot.canRespond && !hasChanges)
       ? justSaved
-      : active && ballot.canRespond && !hasChanges
-        ? justSaved
-        : null;
+      : null;
   // A first response is thanked in place of the form, until the viewer goes
   // back to it. The thanks is as short as the details step, so the card and a
   // phone's page are laid out the same way for both.
@@ -1446,7 +1444,7 @@ export function AccessibleBallot({
               />
             </span>
           </output>
-        ) : notice === "checkEmail" ? (
+        ) : showThanks && (active || notice === "checkEmail") ? (
           <section
             aria-labelledby="thanks-heading"
             className="flex flex-1 flex-col items-center justify-center py-8 text-center"
@@ -1460,64 +1458,39 @@ export function AccessibleBallot({
               tabIndex={-1}
               className="mt-4 text-balance font-semibold text-lg tracking-tight outline-none"
             >
-              <Trans i18nKey="checkYourEmail" defaults="Check your email" />
+              {notice === "checkEmail" ? (
+                <Trans i18nKey="checkYourEmail" defaults="Check your email" />
+              ) : (
+                <Trans
+                  i18nKey="voteThanksTitle"
+                  defaults="Thanks, {name}"
+                  values={{ name: active?.name }}
+                />
+              )}
             </h2>
             <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-sm">
-              <Trans
-                i18nKey="responseLinkSent"
-                defaults="We sent a link to {email}. Use it to see or change your response."
-                values={{ email: linkSentTo }}
-              />
+              {notice === "checkEmail" ? (
+                <Trans
+                  i18nKey="responseLinkSent"
+                  defaults="We sent a link to {email}. Use it to see or change your response."
+                  values={{ email: linkSentTo }}
+                />
+              ) : (
+                <Trans
+                  i18nKey="voteThanksBody"
+                  defaults="Your response has been saved. The organizer can now see your availability."
+                />
+              )}
             </p>
             <Button
               type="button"
               className="mt-6"
               onClick={() => {
-                capture("poll_vote:check_email_back_click");
-                cardBefore.current =
-                  mainRef.current
-                    ?.closest("[data-invite-card]")
-                    ?.getBoundingClientRect() ?? null;
-                setJustSaved(null);
-                requestAnimationFrame(() =>
-                  formHeadingRef.current?.focus({ preventScroll: true }),
+                capture(
+                  notice === "checkEmail"
+                    ? "poll_vote:check_email_back_click"
+                    : "poll_vote:view_response_click",
                 );
-              }}
-            >
-              <Trans i18nKey="backToPoll" defaults="Back to poll" />
-            </Button>
-          </section>
-        ) : showThanks && active ? (
-          <section
-            aria-labelledby="thanks-heading"
-            className="flex flex-1 flex-col items-center justify-center py-8 text-center"
-          >
-            <SuccessCheck state="in">
-              <SuccessCheckIcon />
-            </SuccessCheck>
-            <h2
-              id="thanks-heading"
-              ref={thanksHeadingRef}
-              tabIndex={-1}
-              className="mt-4 text-balance font-semibold text-lg tracking-tight outline-none"
-            >
-              <Trans
-                i18nKey="voteThanksTitle"
-                defaults="Thanks, {name}"
-                values={{ name: active.name }}
-              />
-            </h2>
-            <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-sm">
-              <Trans
-                i18nKey="voteThanksBody"
-                defaults="Your response has been saved. The organizer can now see your availability."
-              />
-            </p>
-            <Button
-              type="button"
-              className="mt-6"
-              onClick={() => {
-                capture("poll_vote:view_response_click");
                 // So the card grows back to the answers rather than jumping.
                 cardBefore.current =
                   mainRef.current
@@ -1530,10 +1503,14 @@ export function AccessibleBallot({
                 );
               }}
             >
-              <Trans
-                i18nKey="voteThanksBack"
-                defaults="View or change response"
-              />
+              {notice === "checkEmail" ? (
+                <Trans i18nKey="backToPoll" defaults="Back to poll" />
+              ) : (
+                <Trans
+                  i18nKey="voteThanksBack"
+                  defaults="View or change response"
+                />
+              )}
             </Button>
             {showCreatePollPrompt ? (
               <div className="mt-8 flex flex-col items-center">

@@ -137,7 +137,7 @@ export type AddParticipantResult =
   | {
       ok: true;
       created: false;
-      existingResponse: { id: string; email: string | null; token: string };
+      existingResponse: { email: string; token: string };
       poll: ResponsePoll;
     }
   | { ok: false; reason: WriteRefusal };
@@ -205,21 +205,27 @@ export async function addParticipant({
 
       // Read under the lock, so a concurrent submit with the same address
       // cannot pass this check too. The column is citext.
-      const existingResponse = email
-        ? await tx.participant.findUnique({
-            where: { pollId_email: { pollId, email } },
-            select: {
-              id: true,
-              email: true,
-              token: true,
-              poll: { select: responsePollSelect },
-            },
-          })
-        : null;
+      if (email) {
+        const existing = await tx.participant.findUnique({
+          where: { pollId_email: { pollId, email } },
+          select: {
+            email: true,
+            token: true,
+            poll: { select: responsePollSelect },
+          },
+        });
 
-      if (existingResponse) {
-        const { poll, ...response } = existingResponse;
-        return { created: false as const, existingResponse: response, poll };
+        if (existing) {
+          return {
+            created: false as const,
+            // The stored address, which can differ from `email` in case.
+            existingResponse: {
+              email: existing.email ?? email,
+              token: existing.token,
+            },
+            poll: existing.poll,
+          };
+        }
       }
 
       // A response answering an emailed invite takes the invite's token, so

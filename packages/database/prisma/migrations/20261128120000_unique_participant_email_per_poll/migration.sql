@@ -2,19 +2,24 @@
 -- like poll_invites.email. Where a poll has several responses with the same
 -- address, keep the earliest one and remove the others.
 
+-- The form trims addresses and sends a blank one as no address, but older
+-- rows can hold either. Text to citext needs no table rewrite, so the access
+-- exclusive lock of the type change is short.
 BEGIN;
 
--- Blocks new responses until the unique index is in place, so the release
--- that still serves traffic cannot add a duplicate in between.
-LOCK TABLE participants IN SHARE ROW EXCLUSIVE MODE;
-
-ALTER TABLE participants ALTER COLUMN email TYPE citext;
-
--- The form trims addresses and sends a blank one as no address, but older
--- rows can hold either.
 UPDATE participants
 SET email = NULLIF(btrim(email), '')
 WHERE email IS DISTINCT FROM NULLIF(btrim(email), '');
+
+ALTER TABLE participants ALTER COLUMN email TYPE citext;
+
+COMMIT;
+
+BEGIN;
+
+-- Blocks new responses until the unique index is in place, so the release
+-- that still serves traffic cannot add a duplicate in between. Reads go on.
+LOCK TABLE participants IN SHARE ROW EXCLUSIVE MODE;
 
 CREATE TEMP TABLE duplicate_participants AS
 SELECT id

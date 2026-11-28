@@ -204,35 +204,32 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           <SuccessCheck state="in">
             <SuccessCheckIcon />
           </SuccessCheck>
-          {checkEmailAt ? (
-            <DialogHeader>
-              <DialogTitle>
+          <DialogHeader>
+            <DialogTitle>
+              {checkEmailAt ? (
                 <Trans i18nKey="checkYourEmail" defaults="Check your email" />
-              </DialogTitle>
-              <DialogDescription>
+              ) : (
+                <Trans
+                  i18nKey="newParticipantDialogSuccessTitle"
+                  defaults="Your response has been saved"
+                />
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              {checkEmailAt ? (
                 <Trans
                   i18nKey="responseLinkSent"
                   defaults="We sent a link to {email}. Use it to see or change your response."
                   values={{ email: checkEmailAt }}
                 />
-              </DialogDescription>
-            </DialogHeader>
-          ) : (
-            <DialogHeader>
-              <DialogTitle>
-                <Trans
-                  i18nKey="newParticipantDialogSuccessTitle"
-                  defaults="Your response has been saved"
-                />
-              </DialogTitle>
-              <DialogDescription>
+              ) : (
                 <Trans
                   i18nKey="newParticipantDialogSuccessDescription"
                   defaults="The organizer can now see your availability."
                 />
-              </DialogDescription>
-            </DialogHeader>
-          )}
+              )}
+            </DialogDescription>
+          </DialogHeader>
         </div>
         <Button className="w-full" onClick={props.onCancel}>
           <Trans

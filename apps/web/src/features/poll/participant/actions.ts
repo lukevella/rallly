@@ -348,17 +348,14 @@ export const addParticipantAction = optionalUserActionClient
     // with an email, so a submit does not tell whether an address responded.
     if (!result.created) {
       const { poll, existingResponse } = result;
-      if (existingResponse.email) {
-        const existingEmail = existingResponse.email;
-        after(() =>
-          sendExistingResponseLink({
-            email: existingEmail,
-            locale,
-            poll,
-            token: existingResponse.token,
-          }),
-        );
-      }
+      after(() =>
+        sendExistingResponseLink({
+          email: existingResponse.email,
+          locale,
+          poll,
+          token: existingResponse.token,
+        }),
+      );
       return { ok: true as const, checkEmail: true as const };
     }
 
