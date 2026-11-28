@@ -53,7 +53,7 @@ export async function getNotificationRecipient({
 }: {
   pollId: string;
   type: ActivityEventType;
-  excludeUserId: string;
+  excludeUserId: string | undefined;
 }): Promise<
   | { ok: true; recipient: NotificationRecipient }
   | { ok: false; reason: NotificationSkipReason }

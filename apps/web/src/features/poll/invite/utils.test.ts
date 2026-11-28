@@ -85,13 +85,21 @@ function ballotSource(overrides: Partial<BallotSource> = {}): BallotSource {
   };
 }
 
-const anonymous = { userId: null, linkedResponseIds: [] };
+const anonymous = {
+  userId: null,
+  linkedResponseIds: [],
+  rememberedResponseIds: [],
+};
 
 describe("projectBallot", () => {
   it("marks responses owned by session user", () => {
     const ballot = projectBallot({
       source: ballotSource(),
-      viewer: { userId: "u1", linkedResponseIds: [] },
+      viewer: {
+        userId: "u1",
+        linkedResponseIds: [],
+        rememberedResponseIds: [],
+      },
     });
     expect(ballot.ownResponses.map((r) => r.id)).toEqual(["r1"]);
   });
@@ -99,7 +107,19 @@ describe("projectBallot", () => {
   it("marks responses owned by link token", () => {
     const ballot = projectBallot({
       source: ballotSource(),
-      viewer: { userId: null, linkedResponseIds: ["r2"] },
+      viewer: {
+        userId: null,
+        linkedResponseIds: ["r2"],
+        rememberedResponseIds: [],
+      },
+    });
+    expect(ballot.ownResponses.map((r) => r.id)).toEqual(["r2"]);
+  });
+
+  it("marks responses the browser remembers", () => {
+    const ballot = projectBallot({
+      source: ballotSource(),
+      viewer: { ...anonymous, rememberedResponseIds: ["r2"] },
     });
     expect(ballot.ownResponses.map((r) => r.id)).toEqual(["r2"]);
   });
@@ -116,7 +136,11 @@ describe("projectBallot", () => {
           { ...older, userId: "u1" },
         ],
       },
-      viewer: { userId: "u1", linkedResponseIds: [older.id] },
+      viewer: {
+        userId: "u1",
+        linkedResponseIds: [older.id],
+        rememberedResponseIds: [],
+      },
     });
     expect(ballot.ownResponses.map((r) => r.id)).toEqual([older.id, newest.id]);
   });
@@ -135,7 +159,11 @@ describe("projectBallot", () => {
   it("hides other names when participants are hidden", () => {
     const ballot = projectBallot({
       source: ballotSource({ hideParticipants: true }),
-      viewer: { userId: "u1", linkedResponseIds: [] },
+      viewer: {
+        userId: "u1",
+        linkedResponseIds: [],
+        rememberedResponseIds: [],
+      },
     });
     expect(ballot.tallies?.responses).toEqual([
       { id: "r1", name: "Ann" },
@@ -150,7 +178,11 @@ describe("projectBallot", () => {
     expect(
       projectBallot({
         source,
-        viewer: { userId: "u1", linkedResponseIds: [] },
+        viewer: {
+          userId: "u1",
+          linkedResponseIds: [],
+          rememberedResponseIds: [],
+        },
       }).tallies,
     ).not.toBeNull();
   });

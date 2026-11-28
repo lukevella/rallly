@@ -1,6 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { API_DOCS_URL } from "@/features/api-keys/constants";
+import {
+  addVoterToken,
+  getVoterCookie,
+  isVoterToken,
+} from "@/features/poll/participant/utils";
 import { setRefCookie } from "@/lib/acquisition";
 import { getLocaleFromRequest, setLocaleCookie } from "@/lib/locale/server";
 import {
@@ -50,6 +55,26 @@ async function handleMaintenance(req: NextRequest) {
 // invite or notification email, in bursts. Rendering these pages for them
 // opens a database connection per request for a response with no body.
 const EMAIL_LINK_PATH = /^\/(?:invite|poll|unsubscribe)\/[^/]+\/?$/;
+
+const INVITE_PATH = /^\/invite\/([\w-]+)\/?$/;
+
+// A server component render cannot write cookies, so the token from an
+// emailed invite link is remembered here, on the way to the page. The page
+// reads the token from the URL for this render and from the cookie after.
+function rememberVoterLink(req: NextRequest, res: NextResponse) {
+  const { nextUrl } = req;
+  const pollId = nextUrl.pathname.match(INVITE_PATH)?.[1];
+  const token =
+    nextUrl.searchParams.get("token") ?? nextUrl.searchParams.get("invite");
+
+  if (req.method !== "GET" || !pollId || !token || !isVoterToken(token)) {
+    return;
+  }
+
+  const cookie = getVoterCookie(pollId);
+  const value = addVoterToken(req.cookies.get(cookie.name)?.value, token);
+  res.cookies.set(cookie.name, value, cookie.options);
+}
 
 // The API host shares this deployment, so without this every app page would
 // render there too. `/v1` and `/api` never reach the proxy (see the matcher),
@@ -112,6 +137,8 @@ export const proxy = async (req: NextRequest) => {
   setRefCookie(req, res);
 
   setPathname(req, res);
+
+  rememberVoterLink(req, res);
 
   return res;
 };

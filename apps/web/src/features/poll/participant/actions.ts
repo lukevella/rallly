@@ -5,6 +5,7 @@ import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/ne
 import { createLogger } from "@rallly/logger";
 import { absoluteUrl, shortUrl } from "@rallly/utils/absolute-url";
 import { Effect } from "effect";
+import { cookies } from "next/headers";
 import { after } from "next/server";
 import { getInstanceBranding, getSpaceBranding } from "@/emails/branding";
 import { env } from "@/env";
@@ -16,7 +17,7 @@ import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
   getParticipant,
   hasPollAdminAccess,
-  listParticipantIdsByToken,
+  listParticipantIdsByTokens,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
 import {
@@ -31,34 +32,62 @@ import {
   renameParticipantSchema,
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
+import {
+  addVoterToken,
+  getVoterCookie,
+  parseVoterTokens,
+} from "@/features/poll/participant/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
 import { createRateLimitGuard } from "@/lib/rate-limit";
 import {
-  anyUserActionClient,
   createRateLimitMiddleware,
   optionalUserActionClient,
 } from "@/lib/safe-action/server";
 
 const logger = createLogger("participants");
 
-// Guest sessions are free to mint, so a per-user limit would reset with a new
-// session, and it would also refuse a host entering responses for others.
-// The per-IP and per-poll limits hold regardless of session.
-// The IP limit is loose because offices, schools and mobile carriers put many
-// people behind one address. The largest poll in 90 days took 295 responses
-// in total, p99 is 23, so the per-poll cap does not touch real use.
+// A response needs no session, so the limits key on the client address and
+// the poll. A per-user limit would also refuse a host entering responses for
+// others. The IP limits are loose because offices, schools and mobile
+// carriers put many people behind one address. The largest poll in 90 days
+// took 295 responses in total, p99 is 23, so the per-poll cap and the cap on
+// one address in one poll do not touch real use.
 const pollResponseGuard = createRateLimitGuard(200, "1 h");
+const ipPollResponseGuard = createRateLimitGuard(100, "1 h");
 
 type Actor = { id: string; isGuest: boolean };
 
+async function readVoterTokens(pollId: string) {
+  const cookieStore = await cookies();
+  return parseVoterTokens(cookieStore.get(getVoterCookie(pollId).name)?.value);
+}
+
+// Server actions can write cookies, unlike a server component render. The
+// page re-render in the same response already reads the new value.
+async function rememberVoterToken(pollId: string, token: string) {
+  const cookieStore = await cookies();
+  const cookie = getVoterCookie(pollId);
+  cookieStore.set(
+    cookie.name,
+    addVoterToken(cookieStore.get(cookie.name)?.value, token),
+    cookie.options,
+  );
+}
+
+// Analytics for a voter with no session goes under the response id, without
+// a person profile, so the submit and later edits of one response join.
+const toAnalyticsActor = (actor: Actor | null, participantId: string) =>
+  actor ?? { id: participantId, isGuest: true };
+
 /**
- * Proves the caller may edit a response. Two proofs are accepted: the token
- * from the emailed link, which names the response itself, and a session that
- * owns the response or administers its poll. Admin access is bound to the
- * session only, so a link never unlocks other people's responses.
+ * Proves the caller may edit a response. Two proofs are accepted: a token
+ * that names the response itself, from the emailed link or from the cookie
+ * this browser got when it submitted or opened the response, and a session
+ * that owns the response or administers its poll. Admin access is bound to
+ * the session only, so a link never unlocks other people's responses.
  *
  * A poll that is no longer open accepts no edits from anyone, admins
  * included — the same rule `canEditParticipant` applies in the client. The
@@ -100,12 +129,16 @@ async function authorizeParticipantEdit({
     (await hasPollAdminAccess(participant.pollId, user.id));
   const ownedBySession = isOwnResponse || isHost;
 
-  const ownedByLink =
-    !ownedBySession && token
-      ? (
-          await listParticipantIdsByToken({ pollId: participant.pollId, token })
-        ).includes(participant.id)
-      : false;
+  let ownedByLink = false;
+  if (!ownedBySession) {
+    const voterTokens = await readVoterTokens(participant.pollId);
+    const tokens = token ? [token, ...voterTokens] : voterTokens;
+    ownedByLink =
+      tokens.length > 0 &&
+      (
+        await listParticipantIdsByTokens({ pollId: participant.pollId, tokens })
+      ).includes(participant.id);
+  }
 
   if (!ownedBySession && !ownedByLink) {
     throw new AppError({
@@ -139,7 +172,7 @@ async function sendNewResponseNotificationEmail({
   participantName: string;
   participantEmail: string | null;
   note: string | null;
-  excludeUserId: string;
+  excludeUserId: string | undefined;
 }) {
   try {
     const result = await getNotificationRecipient({
@@ -196,7 +229,7 @@ async function sendNewResponseNotificationEmail({
   }
 }
 
-export const addParticipantAction = anyUserActionClient
+export const addParticipantAction = optionalUserActionClient
   .metadata({ actionName: "add_participant" })
   .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
   .inputSchema(addParticipantSchema)
@@ -205,11 +238,17 @@ export const addParticipantAction = anyUserActionClient
 
     ctx.event.pollId = pollId;
     await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);
+    if (ctx.event.ip) {
+      await ipPollResponseGuard(
+        `add_participant:ip_poll:${ctx.event.ip}:${pollId}`,
+        ctx.event,
+      );
+    }
     const locale = await getLocale();
 
     const result = await addParticipant({
       pollId,
-      userId: ctx.user.id,
+      actorUserId: ctx.user?.id,
       locale,
       name,
       email,
@@ -224,6 +263,8 @@ export const addParticipantAction = anyUserActionClient
     }
 
     const { participant, poll, editToken, viaInvite, totalResponses } = result;
+
+    await rememberVoterToken(pollId, editToken);
 
     if (email) {
       after(async () => {
@@ -264,7 +305,7 @@ export const addParticipantAction = anyUserActionClient
         participantName: participant.name,
         participantEmail: participant.email,
         note: participant.note,
-        excludeUserId: ctx.user.id,
+        excludeUserId: ctx.user?.id,
       }),
     );
 
@@ -276,7 +317,7 @@ export const addParticipantAction = anyUserActionClient
       { yes: 0, ifNeedBe: 0, no: 0 },
     );
 
-    track(ctx.user, {
+    track(toAnalyticsActor(ctx.user, participant.id), {
       event: "poll_response_submit",
       properties: {
         participant_id: participant.id,
@@ -329,8 +370,8 @@ export const updateParticipantVotesAction = optionalUserActionClient
       votes,
     });
 
-    if (result.ok && actor) {
-      track(actor, {
+    if (result.ok) {
+      track(toAnalyticsActor(actor, participantId), {
         event: "poll_response_update",
         groups: { poll: participant.pollId },
       });
@@ -389,8 +430,8 @@ export const deleteParticipantAction = optionalUserActionClient
       actorUserId: actor?.id,
     });
 
-    if (result.ok && actor) {
-      track(actor, {
+    if (result.ok) {
+      track(toAnalyticsActor(actor, participantId), {
         event: "poll_response_delete",
         properties: { participant_id: participant.id, actor_role: actorRole },
         groups: { poll: participant.pollId },
