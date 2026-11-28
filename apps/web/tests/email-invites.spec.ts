@@ -66,11 +66,12 @@ async function renameThroughInviteLink(
   }
 }
 
-/**
- * The poll holds one response, so the menu resolves without disambiguation.
- */
+/** Through the participant's menu in the poll page's results. */
 async function deleteResponse(page: Page, name: string) {
-  await page.getByTestId("participant-menu").click();
+  await page
+    .getByRole("button", { name: new RegExp(`^${name}`) })
+    .first()
+    .click();
   await page.getByRole("menuitem", { name: "Delete" }).click();
   const dialog = page.getByRole("dialog", { name: `Delete ${name}?` });
   await dialog.getByRole("button", { name: "Delete" }).click();

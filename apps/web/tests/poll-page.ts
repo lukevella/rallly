@@ -35,9 +35,8 @@ export class PollPage {
 
   async copyInviteLink() {
     // The poll page shows the link on the page; the legacy page in its dialog
-    const onPage = this.page.getByRole("button", { name: "Copy invite link" });
-    if (await onPage.isVisible()) {
-      await onPage.click();
+    if (new URL(this.page.url()).pathname.includes("/polls/")) {
+      await this.page.getByRole("button", { name: "Copy invite link" }).click();
     } else {
       const dialog = await this.openShareDialog();
       await dialog.getByRole("button", { name: "Copy" }).click();
