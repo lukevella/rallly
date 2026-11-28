@@ -66,8 +66,9 @@ async function renameThroughInviteLink(
   }
 }
 
-/** Through the participant's menu in the poll page's results. */
+/** Through the participant's menu in the poll page's results table. */
 async function deleteResponse(page: Page, name: string) {
+  await page.getByRole("radio", { name: "Table" }).click();
   await page
     .getByRole("button", { name: new RegExp(`^${name}`) })
     .first()
