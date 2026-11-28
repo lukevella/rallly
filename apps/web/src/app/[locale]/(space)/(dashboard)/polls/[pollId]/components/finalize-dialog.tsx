@@ -348,17 +348,13 @@ function FinalizeStepper({ step }: { step: Step }) {
               )}
             />
             <span className="flex items-center gap-2">
+              {/* Just the number in muted text, or a tick once done. */}
               <span
                 aria-hidden="true"
-                className={cn(
-                  "flex size-5 items-center justify-center rounded-full text-xs tabular-nums",
-                  state === "upcoming"
-                    ? "border border-card-border text-muted-foreground"
-                    : "bg-primary text-primary-foreground",
-                )}
+                className="flex w-3 justify-center text-muted-foreground tabular-nums"
               >
                 {state === "complete" ? (
-                  <CheckIcon className="size-3" />
+                  <CheckIcon className="size-3.5 text-primary" />
                 ) : (
                   index + 1
                 )}
