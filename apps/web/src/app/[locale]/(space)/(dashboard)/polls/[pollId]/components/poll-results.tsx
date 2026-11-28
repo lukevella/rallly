@@ -55,7 +55,6 @@ import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime, useDateTimeConfig } from "@/lib/datetime/client";
 import { formatDateParts, formatDuration } from "@/lib/datetime/format";
 import { RelativeTime } from "@/lib/datetime/relative-time";
-import { useBestDateHighlight } from "./best-date-highlight";
 import { ChatBubble } from "./chat-bubble";
 import { FinalizeDialog } from "./finalize-dialog";
 import { PollSection, PollSectionEmpty } from "./poll-section";
@@ -857,7 +856,6 @@ function ResultsList({
   const months = useDateGroups(options, { floating, by: "month" });
   const showYear = spansYears(months);
   const total = participants.length;
-  const { optionId: highlightedId } = useBestDateHighlight();
 
   const row = (option: TableOption) => {
     const yes = option.votes.yes.length;
@@ -866,16 +864,8 @@ function ResultsList({
     return (
       <li
         key={option.id}
-        className={cn(
-          "relative col-span-full grid min-h-16 grid-cols-subgrid items-center gap-x-6 border-button-outline border-b py-4 pr-5 pl-4 last:border-b-0 hover:bg-foreground/[0.04] dark:hover:bg-foreground/[0.02]",
-        )}
+        className="col-span-full grid min-h-16 grid-cols-subgrid items-center gap-x-6 border-button-outline border-b py-4 pr-5 pl-4 last:border-b-0 hover:bg-foreground/[0.04] dark:hover:bg-foreground/[0.02]"
       >
-        {option.id === highlightedId ? (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-1 rounded-lg border-2 border-primary"
-          />
-        ) : null}
         <OptionDay option={option} floating={floating} />
         {hasTimes ? (
           <OptionTime
@@ -1118,27 +1108,6 @@ function ExpandNamesButton({
 }
 
 /**
- * One cell's piece of the rounded ring around the best date card's column:
- * the header draws the top, the footer the bottom, each row the sides. Each
- * piece covers its cell's bottom border so the sides run unbroken.
- */
-function ColumnRing({ part }: { part: "top" | "middle" | "bottom" | "all" }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "pointer-events-none absolute inset-x-0.5 border-primary",
-        part === "top" && "top-0.5 -bottom-px rounded-t-lg border-2 border-b-0",
-        part === "middle" && "inset-y-0 -bottom-px border-x-2",
-        part === "bottom" &&
-          "-top-px bottom-0.5 rounded-b-lg border-2 border-t-0",
-        part === "all" && "inset-y-0.5 rounded-lg border-2",
-      )}
-    />
-  );
-}
-
-/**
  * Everyone's answer to every option as a grid: participants down the side,
  * options across the top in the current sort order, the best columns tinted.
  * Runs edge to edge in its section and scrolls sideways with names pinned.
@@ -1160,8 +1129,6 @@ function ResultsTable({
   const { locale, timeZone } = useDateTimeConfig();
   // The column under the pointer is highlighted top to bottom.
   const [hoveredId, setHoveredId] = React.useState<string | null>(null);
-  // The best date card's date is ringed down its column.
-  const { optionId: highlightedId } = useBestDateHighlight();
   const [namesExpanded, setNamesExpanded] = React.useState(false);
   // Month headings span the consecutive options they share.
   const monthGroups = useDateGroups(options, { floating, by: "month" });
@@ -1227,11 +1194,6 @@ function ResultsTable({
                       : "bg-card dark:bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-background))]",
                   )}
                 >
-                  {highlightedId === option.id ? (
-                    <ColumnRing
-                      part={participants.length > 0 ? "top" : "all"}
-                    />
-                  ) : null}
                   <span className="flex flex-col items-center gap-1">
                     <DayLabel weekday={weekday} day={day} />
                     {option.duration > 0 ? (
@@ -1326,14 +1288,11 @@ function ResultsTable({
                       key={option.id}
                       onMouseEnter={() => setHoveredId(option.id)}
                       className={cn(
-                        "relative border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04] dark:group-hover/row:bg-foreground/[0.02]",
+                        "border-r border-b text-center last:border-r-0 group-hover/row:bg-foreground/[0.04] dark:group-hover/row:bg-foreground/[0.02]",
                         hoveredId === option.id &&
                           "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                       )}
                     >
-                      {highlightedId === option.id ? (
-                        <ColumnRing part="middle" />
-                      ) : null}
                       <span className="inline-flex">
                         <VoteIcon
                           type={votes.get(option.id)}
@@ -1369,14 +1328,11 @@ function ResultsTable({
                     key={option.id}
                     onMouseEnter={() => setHoveredId(option.id)}
                     className={cn(
-                      "relative border-t border-r px-2 py-3 last:border-r-0",
+                      "border-t border-r px-2 py-3 last:border-r-0",
                       hoveredId === option.id &&
                         "bg-foreground/[0.04] dark:bg-foreground/[0.02]",
                     )}
                   >
-                    {highlightedId === option.id ? (
-                      <ColumnRing part="bottom" />
-                    ) : null}
                     <span className="flex flex-col items-center gap-1">
                       {participants.length > 0 ? (
                         <AvailabilityPopover

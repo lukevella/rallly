@@ -21,7 +21,6 @@ import {
 } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
-import { useBestDateHighlight } from "./best-date-highlight";
 import { FinalizeDialog } from "./finalize-dialog";
 import { optionZone } from "./poll-results";
 
@@ -141,12 +140,6 @@ function BestDateCard({
   // The tie list can shrink as responses arrive; keep the index inside it.
   const index = Math.max(0, Math.min(rawIndex, top.length - 1));
   const current = top[index];
-  // The results ring the date shown here.
-  const { setOptionId: setHighlightedId } = useBestDateHighlight();
-  const currentId = current?.id ?? null;
-  React.useEffect(() => {
-    setHighlightedId(currentId);
-  }, [currentId, setHighlightedId]);
   // Captured on open, so a refresh that reranks dates can't swap the date
   // the dialog is booking or has booked.
   const [finalizeOptionId, setFinalizeOptionId] = React.useState<string | null>(
