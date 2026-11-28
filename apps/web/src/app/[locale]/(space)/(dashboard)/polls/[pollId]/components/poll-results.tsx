@@ -280,7 +280,6 @@ export function PollResults({
           hasTimes={hasTimes}
           best={best}
           showDuration={showEndTime}
-          pickLabel={pickLabel}
           onPick={onPick}
         />
       ) : (
@@ -545,11 +544,11 @@ function AvailabilityBar({
       className="flex h-2 w-full overflow-hidden rounded-full bg-foreground/10"
     >
       <div
-        className="h-full w-(--width) bg-green-300 dark:bg-green-500/50"
+        className="h-full w-(--width) bg-green-500"
         style={{ "--width": `${percent(yes)}%` } as React.CSSProperties}
       />
       <div
-        className="h-full w-(--width) bg-amber-200 dark:bg-amber-400/50"
+        className="h-full w-(--width) bg-amber-400"
         style={{ "--width": `${percent(ifNeedBe)}%` } as React.CSSProperties}
       />
     </div>
@@ -1106,13 +1105,10 @@ function ResultsTable({
   floating,
   best,
   showDuration,
-  pickLabel,
   onPick,
 }: TableProps & {
   /** Only when options differ in length; a shared one is in the details. */
   showDuration: boolean;
-  /** Omitted once a date can no longer be picked. */
-  pickLabel?: (option: TableOption) => string;
   /** `source` tells the finalize analytics which control opened it. */
   onPick?: (option: TableOption, source?: string) => void;
 }) {
@@ -1349,12 +1345,6 @@ function ResultsTable({
                           highlight={isBest}
                           view="table"
                           onFinalize={onPick ? () => onPick(option) : undefined}
-                        />
-                      ) : null}
-                      {onPick && pickLabel ? (
-                        <PickButton
-                          label={pickLabel(option)}
-                          onClick={() => onPick(option, "results_star")}
                         />
                       ) : null}
                     </span>
