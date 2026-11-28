@@ -162,6 +162,43 @@ export function PollResults({
     />
   ) : null;
 
+  const pickLabel = canPick
+    ? (option: TableOption) =>
+        t("pollResultsPickDate", {
+          defaultValue: "Pick {date}",
+          date:
+            option.duration > 0
+              ? `${formatDateTime(
+                  option.startTime,
+                  "weekdayMonthDay",
+                  optionZone(option, timeZone === null),
+                )} ${formatDateTime(
+                  option.startTime,
+                  "time",
+                  optionZone(option, timeZone === null),
+                )}`
+              : formatDateTime(
+                  option.startTime,
+                  "weekdayMonthDay",
+                  optionZone(option, timeZone === null),
+                ),
+        })
+    : undefined;
+  /** `source` tells the finalize analytics which control opened it. */
+  const onPick = canPick
+    ? (option: TableOption, source?: string) => {
+        posthog?.capture("poll_finalize:dialog_open", {
+          source: source ?? "results_count",
+          view,
+          ...pollEventProperties({
+            pollId: poll.id,
+            spaceId: poll.spaceId,
+          }),
+        });
+        setPickedOptionId(option.id);
+        finalizeDialog.trigger();
+      }
+    : undefined;
   return (
     <PollSection
       id="poll-results"
@@ -243,22 +280,8 @@ export function PollResults({
           hasTimes={hasTimes}
           best={best}
           showDuration={showEndTime}
-          onPick={
-            canPick
-              ? (option) => {
-                  posthog?.capture("poll_finalize:dialog_open", {
-                    source: "results_count",
-                    view,
-                    ...pollEventProperties({
-                      pollId: poll.id,
-                      spaceId: poll.spaceId,
-                    }),
-                  });
-                  setPickedOptionId(option.id);
-                  finalizeDialog.trigger();
-                }
-              : undefined
-          }
+          pickLabel={pickLabel}
+          onPick={onPick}
         />
       ) : (
         <ResultsList
@@ -268,46 +291,8 @@ export function PollResults({
           hasTimes={hasTimes}
           showEndTime={showEndTime}
           best={best}
-          pickLabel={
-            canPick
-              ? (option) =>
-                  t("pollResultsPickDate", {
-                    defaultValue: "Pick {date}",
-                    date:
-                      option.duration > 0
-                        ? `${formatDateTime(
-                            option.startTime,
-                            "weekdayMonthDay",
-                            optionZone(option, timeZone === null),
-                          )} ${formatDateTime(
-                            option.startTime,
-                            "time",
-                            optionZone(option, timeZone === null),
-                          )}`
-                        : formatDateTime(
-                            option.startTime,
-                            "weekdayMonthDay",
-                            optionZone(option, timeZone === null),
-                          ),
-                  })
-              : undefined
-          }
-          onPick={
-            canPick
-              ? (option, source) => {
-                  posthog?.capture("poll_finalize:dialog_open", {
-                    source: source ?? "results_count",
-                    view,
-                    ...pollEventProperties({
-                      pollId: poll.id,
-                      spaceId: poll.spaceId,
-                    }),
-                  });
-                  setPickedOptionId(option.id);
-                  finalizeDialog.trigger();
-                }
-              : undefined
-          }
+          pickLabel={pickLabel}
+          onPick={onPick}
         />
       )}
       {pickedOptionId ? (
@@ -1121,12 +1106,15 @@ function ResultsTable({
   floating,
   best,
   showDuration,
+  pickLabel,
   onPick,
 }: TableProps & {
   /** Only when options differ in length; a shared one is in the details. */
   showDuration: boolean;
   /** Omitted once a date can no longer be picked. */
-  onPick?: (option: TableOption) => void;
+  pickLabel?: (option: TableOption) => string;
+  /** `source` tells the finalize analytics which control opened it. */
+  onPick?: (option: TableOption, source?: string) => void;
 }) {
   const { formatDateTime } = useDateTime();
   const { locale, timeZone } = useDateTimeConfig();
@@ -1361,6 +1349,12 @@ function ResultsTable({
                           highlight={isBest}
                           view="table"
                           onFinalize={onPick ? () => onPick(option) : undefined}
+                        />
+                      ) : null}
+                      {onPick && pickLabel ? (
+                        <PickButton
+                          label={pickLabel(option)}
+                          onClick={() => onPick(option, "results_star")}
                         />
                       ) : null}
                     </span>
