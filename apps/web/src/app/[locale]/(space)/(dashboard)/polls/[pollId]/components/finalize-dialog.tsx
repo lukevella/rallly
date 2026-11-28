@@ -336,10 +336,11 @@ function FinalizeStepper({ step }: { step: Step }) {
           <li
             key={s.id}
             aria-current={state === "current" ? "step" : undefined}
-            className="flex items-center gap-3"
+            // Later steps stretch, so their connector fills the width.
+            className={cn("flex items-center gap-3", index > 0 && "flex-1")}
           >
             {index > 0 ? (
-              <span aria-hidden="true" className="h-px w-8 bg-card-border" />
+              <span aria-hidden="true" className="h-px flex-1 bg-card-border" />
             ) : null}
             <span className="flex items-center gap-2">
               <span
