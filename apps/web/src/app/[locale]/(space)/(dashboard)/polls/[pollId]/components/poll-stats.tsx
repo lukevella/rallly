@@ -59,7 +59,7 @@ export function PollStats({
     <StatCardStack>
       <StatCard>
         <StatCardHeader>
-          <StatCardLabel className="self-center">
+          <StatCardLabel className="self-center font-medium text-foreground">
             <Trans i18nKey="pollStatsResponses" defaults="Responses" />
           </StatCardLabel>
           {inviteAction}
@@ -150,7 +150,7 @@ function BestDateCard({
   return (
     <StatCard>
       <StatCardHeader>
-        <StatCardLabel className="self-center">
+        <StatCardLabel className="self-center font-medium text-foreground">
           <Trans i18nKey="pollStatsBestDate" defaults="Best date" />
         </StatCardLabel>
         <div className="flex shrink-0 items-center gap-1">
