@@ -25,6 +25,7 @@ import {
   isSpaceBrandingActive,
 } from "@/features/space/utils";
 import { getUserProvenEmail } from "@/features/user/data";
+import { isSameEmail } from "@/features/user/utils";
 
 export async function getPoll({
   pollId,
@@ -612,34 +613,35 @@ export async function listParticipantIdsByToken({
 }
 
 /**
- * The responses left under the user's email, when the instance trusts
- * their sign-in method to prove it. The email match unlocks responses on
- * every poll, so the trust list in instance policy is the security boundary.
- * The column is not citext, so case is folded here rather than with a
- * pattern match, whose wildcards an address could carry.
+ * The user's email when the instance trusts their sign-in method to prove
+ * it. An email match unlocks responses on every poll, so the trust list in
+ * instance policy is the security boundary.
  */
-export async function listParticipantIdsByProvenEmail({
-  pollId,
-  userId,
-}: {
-  pollId: string;
-  userId: string;
-}) {
+export async function getResponseEmailProof(userId: string) {
   const { responseEmailLoginMethods } = await getInstancePolicy();
-  const email = await getUserProvenEmail({
+  return getUserProvenEmail({
     userId,
     trustedLoginMethods: responseEmailLoginMethods,
   });
-  if (!email) {
-    return [];
-  }
+}
+
+/** The responses in a poll left under an email the caller has proven. */
+export async function listParticipantIdsByEmail({
+  pollId,
+  email,
+}: {
+  pollId: string;
+  email: string;
+}) {
   const participants = await prisma.participant.findMany({
     where: { pollId, email: { not: null } },
     select: { id: true, email: true },
   });
-  const target = email.toLowerCase();
   return participants
-    .filter((participant) => participant.email?.toLowerCase() === target)
+    .filter(
+      (participant) =>
+        participant.email !== null && isSameEmail(participant.email, email),
+    )
     .map((participant) => participant.id);
 }
 

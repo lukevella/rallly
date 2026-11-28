@@ -2,12 +2,19 @@ import "server-only";
 
 import { cache } from "react";
 import {
-  listParticipantIdsByProvenEmail,
+  getResponseEmailProof,
+  listParticipantIdsByEmail,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
-import { getSession } from "@/lib/auth";
+import { getSession, getUserIdIfLoggedIn } from "@/lib/auth";
 import { getBallotSource } from "./data";
 import { projectBallot } from "./utils";
+
+async function listEmailResponseIds(pollId: string) {
+  const userId = await getUserIdIfLoggedIn();
+  const email = userId ? await getResponseEmailProof(userId) : null;
+  return email ? listParticipantIdsByEmail({ pollId, email }) : [];
+}
 
 /**
  * The invite ballot as the current viewer may see it. The shared read is
@@ -16,20 +23,12 @@ import { projectBallot } from "./utils";
  */
 export const loadInviteBallot = cache(
   async (pollId: string, token?: string) => {
-    const sessionRead = getSession();
     const [source, session, linkedResponseIds, emailResponseIds] =
       await Promise.all([
         getBallotSource({ pollId }),
-        sessionRead,
+        getSession(),
         token ? listParticipantIdsByToken({ pollId, token }) : [],
-        sessionRead.then((session) =>
-          session && !session.user.isGuest
-            ? listParticipantIdsByProvenEmail({
-                pollId,
-                userId: session.user.id,
-              })
-            : [],
-        ),
+        listEmailResponseIds(pollId),
       ]);
 
     if (!source) {

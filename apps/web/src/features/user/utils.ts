@@ -74,6 +74,13 @@ export const getIdTokenEmail = (idToken: string | null) => {
 };
 
 /**
+ * Response emails are stored as typed, not citext, so case is folded here
+ * rather than with a pattern match, whose wildcards an address could carry.
+ */
+export const isSameEmail = (a: string, b: string) =>
+  a.toLowerCase() === b.toLowerCase();
+
+/**
  * The account's email when its latest sign-in proves it, otherwise null.
  * The sign-in method is per user, not per session: an email login anywhere
  * proves the address for the account, and a later untrusted login withdraws

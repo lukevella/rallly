@@ -13,7 +13,6 @@ import {
   getPollStatusCounts,
   getPolls,
   getPollWithAvailability,
-  listParticipantIdsByToken,
   listPollComments,
   listPollParticipants,
 } from "@/features/poll/data";
@@ -165,15 +164,6 @@ export const loadPollResponseActivity = cache(
       participantId,
     });
   },
-);
-
-/**
- * The token from the emailed link is its own proof of scope: no session is
- * consulted, so a forwarded link acts for the response it names.
- */
-export const loadParticipantIdsByToken = cache(
-  async (pollId: string, token: string) =>
-    listParticipantIdsByToken({ pollId, token }),
 );
 
 // One read of the poll row per request, shared by availability and details.
