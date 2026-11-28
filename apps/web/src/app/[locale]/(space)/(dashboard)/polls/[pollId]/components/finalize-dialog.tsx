@@ -13,6 +13,7 @@ import {
   DialogTitle,
   useDialog,
 } from "@rallly/ui/dialog";
+import { Label } from "@rallly/ui/label";
 import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
 import { AlertTriangleIcon } from "lucide-react";
@@ -105,6 +106,8 @@ function FinalizeContent({
     () => new Set(participants.filter((p) => p.email).map((p) => p.id)),
   );
   const [skippedNotifications, setSkippedNotifications] = React.useState(0);
+  const toId = React.useId();
+  const recipientCount = participants.filter((p) => p.email).length;
 
   const finalize = trpc.polls.book.useMutation({
     onSuccess: (data) => {
@@ -172,7 +175,7 @@ function FinalizeContent({
   }
 
   return (
-    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[40rem]">
+    <div className="grid w-[calc(100vw-4rem)] gap-4 sm:w-[32rem]">
       <DialogHeader>
         <DialogTitle>
           <Trans i18nKey="finalizeDialogFinalizeTitle" defaults="Finalize" />
@@ -184,23 +187,60 @@ function FinalizeContent({
           />
         </DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col">
-        <div className="pt-2 pb-6">
-          <SummaryStep option={option} showPendingLink />
+      {/* Laid out like the email being sent: who it goes to, its subject,
+          then the event it carries. */}
+      <div className="flex flex-col gap-2 pt-2 pb-2">
+        <div className="overflow-hidden rounded-xl border border-card-border bg-card">
+          <div className="flex items-center gap-2 border-card-border border-b pl-4">
+            <Label
+              htmlFor={toId}
+              className="w-14 shrink-0 font-normal text-muted-foreground"
+            >
+              <Trans i18nKey="finalizeDialogTo" defaults="To" />
+            </Label>
+            {recipientCount > 0 ? (
+              <div className="min-w-0 flex-1 py-1 pr-1">
+                <NotifyParticipantsCombobox
+                  id={toId}
+                  optionId={option.id}
+                  selectedIds={notifyIds}
+                  onChange={setNotifyIds}
+                />
+              </div>
+            ) : (
+              <p className="py-3 pr-4 text-muted-foreground text-sm">
+                <Trans
+                  i18nKey="finalizeDialogNoRecipients"
+                  defaults="No one to notify"
+                />
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-2 border-card-border border-b px-4 py-3 text-sm">
+            <span className="w-14 shrink-0 text-muted-foreground">
+              <Trans i18nKey="finalizeDialogSubject" defaults="Subject" />
+            </span>
+            <span className="min-w-0 truncate">
+              <Trans
+                i18nKey="finalizeDialogSubjectLine"
+                defaults="Date booked for {title}"
+                values={{ title: poll.title }}
+              />
+            </span>
+          </div>
+          <div className="p-4">
+            <SummaryStep option={option} showPendingLink />
+          </div>
         </div>
-        {participants.length > 0 ? (
-          <NotifyParticipantsCombobox
-            selectedIds={notifyIds}
-            onChange={setNotifyIds}
-          />
-        ) : (
-          <p className="rounded-xl border border-card-border p-4 text-muted-foreground text-sm">
+        {participants.length > recipientCount ? (
+          <p className="text-muted-foreground text-xs">
             <Trans
-              i18nKey="finalizeDialogNoParticipants"
-              defaults="No one has responded, so there's no one to notify."
+              i18nKey="notifyComboboxWithoutEmail"
+              defaults="{count, plural, one {# participant has no email and won't be notified.} other {# participants have no email and won't be notified.}}"
+              values={{ count: participants.length - recipientCount }}
             />
           </p>
-        )}
+        ) : null}
       </div>
       <PayWallDialog
         pricing={payWallPricing}
