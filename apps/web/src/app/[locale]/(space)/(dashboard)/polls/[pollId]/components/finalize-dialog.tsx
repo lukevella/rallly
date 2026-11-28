@@ -191,7 +191,7 @@ function FinalizeContent({
           it carries. */}
       <div className="flex flex-col gap-2 pt-2 pb-2">
         <div className="overflow-hidden rounded-xl border border-card-border bg-card">
-          <div className="flex items-start gap-2 border-card-border border-b pl-4">
+          <div className="flex items-start gap-2 border-card-border border-b pl-4 has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-inset">
             <Label
               htmlFor={toId}
               className="w-14 shrink-0 py-3 font-normal text-muted-foreground leading-5"

@@ -98,9 +98,9 @@ export function NotifyParticipantsCombobox({
           {selected.slice(0, VISIBLE_CHIPS).map((recipient) => (
             <ComboboxChip
               key={recipient.id}
-              className="font-normal dark:bg-foreground/10"
+              className="min-w-0 max-w-full font-normal dark:bg-foreground/10"
             >
-              {recipient.name}
+              <span className="min-w-0 truncate">{recipient.name}</span>
             </ComboboxChip>
           ))}
           {hidden > 0 ? (
