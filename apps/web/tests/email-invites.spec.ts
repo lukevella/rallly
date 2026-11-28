@@ -88,8 +88,8 @@ async function deleteResponse(page: Page, name: string) {
 
 async function reopenShareDialog(page: Page) {
   await page.reload();
-  await page.getByRole("button", { name: "Share" }).first().click();
-  return page.getByRole("dialog", { name: "Share" });
+  await page.getByRole("button", { name: "Invite by email" }).click();
+  return page.getByRole("dialog", { name: "Invite by email" });
 }
 
 test.describe("Email invites", () => {
