@@ -101,8 +101,10 @@ test.describe("poll admin page", () => {
     await loginWithEmail(page, { email: HOST_EMAIL });
     await page.goto(`/polls/${poll.id}`);
 
-    // One best date, so the card offers no tied dates to step through.
-    await expect(page.getByText(/Sep 10 ·/)).toBeVisible();
+    // One best date: the card shows it with no tied dates to step through,
+    // and the results star only that row (its label and the card heading).
+    await expect(page.getByText(/Sep 10/).first()).toBeVisible();
+    await expect(page.getByText("Best date", { exact: true })).toHaveCount(2);
     await expect(
       page.getByRole("button", { name: "Next tied date" }),
     ).toHaveCount(0);
