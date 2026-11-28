@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { addVoterToken, getVoterCookie, parseVoterTokens } from "./utils";
+import { getNextVoterCookie, getVoterCookie, parseVoterTokens } from "./utils";
+
+const addVoterToken = (value: string | undefined, token: string) =>
+  getNextVoterCookie("abc123", value, token).value;
 
 describe("getVoterCookie", () => {
   it("scopes the cookie to the poll by name and path", () => {

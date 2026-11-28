@@ -20,6 +20,7 @@ import {
   listParticipantIdsByTokens,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import { loadVoterTokens } from "@/features/poll/participant/loaders";
 import {
   addParticipant,
   deleteParticipant,
@@ -33,9 +34,8 @@ import {
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
 import {
-  addVoterToken,
+  getNextVoterCookie,
   getVoterCookie,
-  parseVoterTokens,
 } from "@/features/poll/participant/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
@@ -60,21 +60,16 @@ const ipPollResponseGuard = createRateLimitGuard(100, "1 h");
 
 type Actor = { id: string; isGuest: boolean };
 
-async function readVoterTokens(pollId: string) {
-  const cookieStore = await cookies();
-  return parseVoterTokens(cookieStore.get(getVoterCookie(pollId).name)?.value);
-}
-
 // Server actions can write cookies, unlike a server component render. The
 // page re-render in the same response already reads the new value.
 async function rememberVoterToken(pollId: string, token: string) {
   const cookieStore = await cookies();
-  const cookie = getVoterCookie(pollId);
-  cookieStore.set(
-    cookie.name,
-    addVoterToken(cookieStore.get(cookie.name)?.value, token),
-    cookie.options,
+  const { name, value, options } = getNextVoterCookie(
+    pollId,
+    cookieStore.get(getVoterCookie(pollId).name)?.value,
+    token,
   );
+  cookieStore.set(name, value, options);
 }
 
 // Analytics for a voter with no session goes under the response id, without
@@ -129,16 +124,17 @@ async function authorizeParticipantEdit({
     (await hasPollAdminAccess(participant.pollId, user.id));
   const ownedBySession = isOwnResponse || isHost;
 
-  let ownedByLink = false;
-  if (!ownedBySession) {
-    const voterTokens = await readVoterTokens(participant.pollId);
-    const tokens = token ? [token, ...voterTokens] : voterTokens;
-    ownedByLink =
-      tokens.length > 0 &&
-      (
-        await listParticipantIdsByTokens({ pollId: participant.pollId, tokens })
-      ).includes(participant.id);
-  }
+  const voterTokens = ownedBySession
+    ? []
+    : await loadVoterTokens(participant.pollId);
+  const ownedByLink =
+    !ownedBySession &&
+    (
+      await listParticipantIdsByTokens({
+        pollId: participant.pollId,
+        tokens: token ? [token, ...voterTokens] : voterTokens,
+      })
+    ).includes(participant.id);
 
   if (!ownedBySession && !ownedByLink) {
     throw new AppError({
@@ -237,13 +233,14 @@ export const addParticipantAction = optionalUserActionClient
     const { pollId, votes, name, email, note, timeZone, token } = parsedInput;
 
     ctx.event.pollId = pollId;
-    await pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event);
-    if (ctx.event.ip) {
-      await ipPollResponseGuard(
-        `add_participant:ip_poll:${ctx.event.ip}:${pollId}`,
-        ctx.event,
-      );
-    }
+    await Promise.all([
+      pollResponseGuard(`add_participant:poll:${pollId}`, ctx.event),
+      ctx.event.ip &&
+        ipPollResponseGuard(
+          `add_participant:ip_poll:${ctx.event.ip}:${pollId}`,
+          ctx.event,
+        ),
+    ]);
     const locale = await getLocale();
 
     const result = await addParticipant({

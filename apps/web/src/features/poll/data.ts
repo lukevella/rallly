@@ -628,12 +628,8 @@ export async function listParticipantIdsByTokens({
     where: {
       pollId,
       OR: [
-        ...(responseTokens.length > 0
-          ? [{ token: { in: responseTokens } }]
-          : []),
-        ...(legacyUserIds.length > 0
-          ? [{ userId: { in: legacyUserIds }, email: { not: null } }]
-          : []),
+        { token: { in: responseTokens } },
+        { userId: { in: legacyUserIds }, email: { not: null } },
       ],
     },
     select: { id: true },

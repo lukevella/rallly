@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { API_DOCS_URL } from "@/features/api-keys/constants";
 import {
-  addVoterToken,
+  getNextVoterCookie,
   getVoterCookie,
   isVoterToken,
 } from "@/features/poll/participant/utils";
@@ -63,17 +63,23 @@ const INVITE_PATH = /^\/invite\/([\w-]+)\/?$/;
 // reads the token from the URL for this render and from the cookie after.
 function rememberVoterLink(req: NextRequest, res: NextResponse) {
   const { nextUrl } = req;
-  const pollId = nextUrl.pathname.match(INVITE_PATH)?.[1];
-  const token =
-    nextUrl.searchParams.get("token") ?? nextUrl.searchParams.get("invite");
-
-  if (req.method !== "GET" || !pollId || !token || !isVoterToken(token)) {
+  const pollId =
+    req.method === "GET" ? nextUrl.pathname.match(INVITE_PATH)?.[1] : null;
+  if (!pollId) {
     return;
   }
 
-  const cookie = getVoterCookie(pollId);
-  const value = addVoterToken(req.cookies.get(cookie.name)?.value, token);
-  res.cookies.set(cookie.name, value, cookie.options);
+  const token =
+    nextUrl.searchParams.get("token") ?? nextUrl.searchParams.get("invite");
+  if (!token || !isVoterToken(token)) {
+    return;
+  }
+
+  const current = req.cookies.get(getVoterCookie(pollId).name)?.value;
+  const cookie = getNextVoterCookie(pollId, current, token);
+  if (cookie.value !== current) {
+    res.cookies.set(cookie.name, cookie.value, cookie.options);
+  }
 }
 
 // The API host shares this deployment, so without this every app page would

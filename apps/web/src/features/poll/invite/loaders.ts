@@ -15,20 +15,23 @@ import { projectBallot } from "./utils";
  */
 export const loadInviteBallot = cache(
   async (pollId: string, token?: string) => {
-    const [source, session, voterTokens] = await Promise.all([
-      getBallotSource({ pollId }),
-      getSession(),
-      loadVoterTokens(pollId),
-    ]);
+    const [source, session, linkedResponseIds, rememberedResponseIds] =
+      await Promise.all([
+        getBallotSource({ pollId }),
+        getSession(),
+        token ? listParticipantIdsByTokens({ pollId, tokens: [token] }) : [],
+        // The link's token is usually in the cookie too; it is read once.
+        loadVoterTokens(pollId).then((voterTokens) =>
+          listParticipantIdsByTokens({
+            pollId,
+            tokens: voterTokens.filter((voterToken) => voterToken !== token),
+          }),
+        ),
+      ]);
 
     if (!source) {
       return null;
     }
-
-    const [linkedResponseIds, rememberedResponseIds] = await Promise.all([
-      token ? listParticipantIdsByTokens({ pollId, tokens: [token] }) : [],
-      listParticipantIdsByTokens({ pollId, tokens: voterTokens }),
-    ]);
 
     return projectBallot({
       source,

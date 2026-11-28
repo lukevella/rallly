@@ -38,7 +38,7 @@ export function parseVoterTokens(value: string | undefined) {
  * The cookie value with `token` added, newest first. The oldest tokens drop
  * out when the value grows past what a browser keeps.
  */
-export function addVoterToken(value: string | undefined, token: string) {
+function addVoterToken(value: string | undefined, token: string) {
   const tokens = [
     token,
     ...parseVoterTokens(value).filter((existing) => existing !== token),
@@ -52,4 +52,14 @@ export function addVoterToken(value: string | undefined, token: string) {
     serialized = candidate;
   }
   return serialized;
+}
+
+/** The voter cookie for the poll, with `token` added to its current value. */
+export function getNextVoterCookie(
+  pollId: string,
+  value: string | undefined,
+  token: string,
+) {
+  const cookie = getVoterCookie(pollId);
+  return { ...cookie, value: addVoterToken(value, token) };
 }
