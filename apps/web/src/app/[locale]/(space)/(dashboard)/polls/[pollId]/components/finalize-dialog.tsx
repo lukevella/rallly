@@ -16,7 +16,7 @@ import {
 } from "@rallly/ui/dialog";
 import { toast } from "@rallly/ui/sonner";
 import { SuccessCheck, SuccessCheckIcon } from "@rallly/ui/success-check";
-import { AlertTriangleIcon, CheckIcon, MailIcon } from "lucide-react";
+import { AlertTriangleIcon, MailIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { primePayWall, usePayWallStore } from "@/features/billing/client";
@@ -31,7 +31,7 @@ import {
   pollEventProperties,
   rankOptionsByPopularity,
 } from "@/features/poll/utils";
-import { Trans, useTranslation } from "@/i18n/client";
+import { Trans } from "@/i18n/client";
 import { trpc } from "@/trpc/client";
 
 type Step = "recipients" | "confirm";
@@ -309,69 +309,17 @@ function FinalizeContent({
   );
 }
 
-/** Where the dialog is: choosing recipients, then confirming. */
+const STEPS: Step[] = ["recipients", "confirm"];
+
+/** Where the dialog is, as a step count. */
 function FinalizeStepper({ step }: { step: Step }) {
-  const { t } = useTranslation();
-  const steps: { id: Step; label: string }[] = [
-    {
-      id: "recipients",
-      label: t("finalizeStepRecipients", { defaultValue: "Who to notify" }),
-    },
-    {
-      id: "confirm",
-      label: t("finalizeStepConfirm", { defaultValue: "Confirm" }),
-    },
-  ];
-  const current = steps.findIndex((s) => s.id === step);
   return (
-    // One equal segment per step: a bar that fills as the step is reached,
-    // with the step's number and name under it.
-    <ol className="grid grid-cols-2 gap-3 text-sm">
-      {steps.map((s, index) => {
-        const state =
-          index < current
-            ? "complete"
-            : index === current
-              ? "current"
-              : "upcoming";
-        return (
-          <li
-            key={s.id}
-            aria-current={state === "current" ? "step" : undefined}
-            className="flex flex-col gap-2"
-          >
-            <span
-              aria-hidden="true"
-              className={cn(
-                "h-1 rounded-full",
-                state === "upcoming" ? "bg-card-border" : "bg-primary",
-              )}
-            />
-            <span className="flex items-center gap-2">
-              {/* Just the number in muted text, or a tick once done. */}
-              <span
-                aria-hidden="true"
-                className="flex w-3 justify-center text-muted-foreground tabular-nums"
-              >
-                {state === "complete" ? (
-                  <CheckIcon className="size-3.5 text-primary" />
-                ) : (
-                  index + 1
-                )}
-              </span>
-              <span
-                className={cn(
-                  state === "upcoming"
-                    ? "text-muted-foreground"
-                    : "font-medium text-foreground",
-                )}
-              >
-                {s.label}
-              </span>
-            </span>
-          </li>
-        );
-      })}
-    </ol>
+    <p className="text-muted-foreground text-sm">
+      <Trans
+        i18nKey="finalizeStepCount"
+        defaults="Step {current} of {total}"
+        values={{ current: STEPS.indexOf(step) + 1, total: STEPS.length }}
+      />
+    </p>
   );
 }
