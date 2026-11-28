@@ -1,6 +1,6 @@
 "use client";
 
-import { useParticipants, usePoll } from "@/features/poll/client";
+import { useParticipants } from "@/features/poll/client";
 import type { RankedOption } from "@/features/poll/components/finalize-poll-dialog";
 import { SummaryStep } from "@/features/poll/components/finalize-poll-dialog";
 import { Trans, useTranslation } from "@/i18n/client";
@@ -9,10 +9,8 @@ import { Trans, useTranslation } from "@/i18n/client";
 const NAMED_RECIPIENTS = 3;
 
 /**
- * The email participants get once the poll is finalized, as a preview: who it
- * goes to, then its message and the event it carries. The copy mirrors the
- * finalized participant email in `packages/emails`; the line about each
- * participant's own vote is left out because it differs per recipient.
+ * What the finalized email carries: who it goes to, then the event's date,
+ * location and video call.
  */
 export function FinalizeEmailPreview({
   option,
@@ -21,7 +19,6 @@ export function FinalizeEmailPreview({
   option: RankedOption;
   recipientIds: Set<string>;
 }) {
-  const poll = usePoll();
   const { participants } = useParticipants();
   const { i18n } = useTranslation();
   const names = participants
@@ -60,28 +57,8 @@ export function FinalizeEmailPreview({
           )}
         </span>
       </div>
-      <div className="flex flex-col gap-4 px-5 py-5 text-sm">
-        <p className="font-medium text-base">
-          <Trans
-            i18nKey="finalizePreviewHeading"
-            defaults="Final date booked!"
-          />
-        </p>
-        <p>
-          <Trans
-            i18nKey="finalizePreviewIntro"
-            defaults="<b>{hostName}</b> has booked <b>{title}</b> for the following date:"
-            values={{ hostName: poll.user?.name ?? "", title: poll.title }}
-            components={{ b: <strong className="font-medium" /> }}
-          />
-        </p>
+      <div className="px-5 py-4">
         <SummaryStep option={option} showPendingLink />
-        <p>
-          <Trans
-            i18nKey="finalizePreviewAttachment"
-            defaults="Please find attached a calendar invite for this event."
-          />
-        </p>
       </div>
     </div>
   );
