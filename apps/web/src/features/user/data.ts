@@ -3,7 +3,7 @@ import "server-only";
 import type { User } from "@rallly/database";
 import { prisma } from "@rallly/database";
 import type { UserDTO } from "@/features/user/schema";
-import { getIdTokenEmail } from "@/features/user/utils";
+import { getIdTokenEmail, getProvenEmail } from "@/features/user/utils";
 
 export const createUserDTO = (user: User): UserDTO => ({
   id: user.id,
@@ -33,6 +33,30 @@ export const getUser = async (userId: string) => {
 
   return createUserDTO(user);
 };
+
+/**
+ * Read from the database, not the session snapshot, so a change of email
+ * or sign-in method applies at once.
+ */
+export async function getUserProvenEmail({
+  userId,
+  trustedLoginMethods,
+}: {
+  userId: string;
+  trustedLoginMethods: readonly string[];
+}) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      email: true,
+      emailVerified: true,
+      isAnonymous: true,
+      lastLoginMethod: true,
+    },
+  });
+
+  return user ? getProvenEmail({ user, trustedLoginMethods }) : null;
+}
 
 export function getUserProfile(userId: string) {
   return prisma.user.findUnique({

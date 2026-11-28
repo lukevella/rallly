@@ -15,6 +15,7 @@ import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
   getParticipant,
+  getResponseEmailProof,
   hasPollAdminAccess,
   listParticipantIdsByToken,
 } from "@/features/poll/data";
@@ -31,6 +32,7 @@ import {
   renameParticipantSchema,
   updateParticipantVotesSchema,
 } from "@/features/poll/participant/schema";
+import { isSameEmail } from "@/features/user/utils";
 import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
@@ -55,10 +57,54 @@ const pollResponseGuard = createRateLimitGuard(200, "1 h");
 type Actor = { id: string; isGuest: boolean };
 
 /**
- * Proves the caller may edit a response. Two proofs are accepted: the token
- * from the emailed link, which names the response itself, and a session that
- * owns the response or administers its poll. Admin access is bound to the
- * session only, so a link never unlocks other people's responses.
+ * The first proof that lets the caller edit the response, or null. The
+ * email proof comes last, so `email` counts only the edits nothing else
+ * allows.
+ */
+async function resolveAccessVia({
+  participant,
+  token,
+  user,
+}: {
+  participant: {
+    id: string;
+    pollId: string;
+    userId: string | null;
+    email: string | null;
+  };
+  token: string | undefined;
+  user: Actor | null;
+}) {
+  if (user && participant.userId === user.id) {
+    return "session" as const;
+  }
+  if (user && (await hasPollAdminAccess(participant.pollId, user.id))) {
+    return "host" as const;
+  }
+  if (
+    token &&
+    (
+      await listParticipantIdsByToken({ pollId: participant.pollId, token })
+    ).includes(participant.id)
+  ) {
+    return "token" as const;
+  }
+  if (user && !user.isGuest && participant.email) {
+    const email = await getResponseEmailProof(user.id);
+    if (email && isSameEmail(email, participant.email)) {
+      return "email" as const;
+    }
+  }
+  return null;
+}
+
+/**
+ * Proves the caller may edit a response. Three proofs are accepted: the
+ * token from the emailed link, which names the response itself; a session
+ * that owns the response or administers its poll; and a session whose
+ * sign-in proves the email the response was left under. Admin access is
+ * bound to the session only, so a link never unlocks other people's
+ * responses.
  *
  * A poll that is no longer open accepts no edits from anyone, admins
  * included — the same rule `canEditParticipant` applies in the client. The
@@ -91,23 +137,9 @@ async function authorizeParticipantEdit({
     return { ok: false as const, reason: "closed" as const };
   }
 
-  const isOwnResponse = !!user && participant.userId === user.id;
-  // Someone else's response edited through poll admin access. A host
-  // editing their own response counts as a participant.
-  const isHost =
-    !!user &&
-    !isOwnResponse &&
-    (await hasPollAdminAccess(participant.pollId, user.id));
-  const ownedBySession = isOwnResponse || isHost;
+  const accessVia = await resolveAccessVia({ participant, token, user });
 
-  const ownedByLink =
-    !ownedBySession && token
-      ? (
-          await listParticipantIdsByToken({ pollId: participant.pollId, token })
-        ).includes(participant.id)
-      : false;
-
-  if (!ownedBySession && !ownedByLink) {
+  if (!accessVia) {
     throw new AppError({
       code: "FORBIDDEN",
       message: "You are not allowed to modify this participant",
@@ -122,7 +154,10 @@ async function authorizeParticipantEdit({
     ok: true as const,
     participant,
     actor,
-    actorRole: isHost ? ("host" as const) : ("participant" as const),
+    // A host editing their own response counts as a participant.
+    actorRole:
+      accessVia === "host" ? ("host" as const) : ("participant" as const),
+    accessVia,
   };
 }
 
@@ -320,7 +355,7 @@ export const updateParticipantVotesAction = optionalUserActionClient
       return authorization;
     }
 
-    const { participant, actor } = authorization;
+    const { participant, actor, accessVia } = authorization;
 
     const result = await updateParticipantVotes({
       participantId,
@@ -332,6 +367,7 @@ export const updateParticipantVotesAction = optionalUserActionClient
     if (result.ok && actor) {
       track(actor, {
         event: "poll_response_update",
+        properties: { access_via: accessVia },
         groups: { poll: participant.pollId },
       });
     }

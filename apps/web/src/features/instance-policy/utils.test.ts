@@ -56,4 +56,16 @@ describe("deriveInstancePolicy", () => {
       ).toBe(true);
     });
   });
+
+  describe("responseEmailLoginMethods", () => {
+    it.each([
+      true,
+      false,
+    ])("trusts only email and Google sign-in (self-hosted: %s)", (isSelfHosted) => {
+      expect(
+        deriveInstancePolicy({ isSelfHosted, whiteLabelAddon: false })
+          .responseEmailLoginMethods,
+      ).toEqual(["email", "google"]);
+    });
+  });
 });

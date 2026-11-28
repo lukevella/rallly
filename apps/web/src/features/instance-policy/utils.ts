@@ -21,5 +21,10 @@ export function deriveInstancePolicy({
     // Self-hosted attribution is licensed at instance level (white label
     // addon + HIDE_ATTRIBUTION), not chosen per space
     spaceAttributionConfigurable: !isSelfHosted,
+    // The same on both today. "email" is the OTP and password logins, both
+    // proven by mail to the address; Google asserts email_verified.
+    // Microsoft accounts are keyed on oid with an address the tenant sets,
+    // and an OIDC directory may omit email_verified, so neither is trusted
+    responseEmailLoginMethods: ["email", "google"],
   };
 }

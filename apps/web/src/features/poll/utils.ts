@@ -9,15 +9,6 @@ export const generateAccessToken = customAlphabet(
   32,
 );
 
-/**
- * Confirmation emails sent before responses carried their own token linked
- * to an iron-session seal of the guest's user id. Seals are self describing,
- * so the branch is picked by prefix without a failed lookup.
- */
-export function isLegacyEditToken(token: string) {
-  return token.startsWith("Fe26.2*");
-}
-
 export function filterParticipantsByVote<
   T extends { votes: { optionId: string; type: VoteType }[] },
 >(participants: T[], optionId: string, voteType: VoteType): T[] {

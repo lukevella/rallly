@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { getIdTokenEmail, isOwnAvatarKey, toGuestSessionResult } from "./utils";
+import {
+  getIdTokenEmail,
+  getProvenEmail,
+  isOwnAvatarKey,
+  toGuestSessionResult,
+} from "./utils";
 
 describe("toGuestSessionResult", () => {
   it("succeeds when sign-in returns no error", () => {
@@ -92,5 +97,57 @@ describe("getIdTokenEmail", () => {
     expect(getIdTokenEmail(null)).toBeNull();
     expect(getIdTokenEmail("not-a-jwt")).toBeNull();
     expect(getIdTokenEmail("a.%%%.c")).toBeNull();
+  });
+});
+
+describe("getProvenEmail", () => {
+  const trustedLoginMethods = ["email", "google"];
+  const user = {
+    email: "ann@example.com",
+    emailVerified: true,
+    isAnonymous: false,
+    lastLoginMethod: "email",
+  };
+
+  it("returns the email after a trusted sign-in", () => {
+    expect(getProvenEmail({ user, trustedLoginMethods })).toBe(
+      "ann@example.com",
+    );
+  });
+
+  it("returns null after an untrusted sign-in", () => {
+    expect(
+      getProvenEmail({
+        user: { ...user, lastLoginMethod: "microsoft" },
+        trustedLoginMethods,
+      }),
+    ).toBeNull();
+  });
+
+  it("returns null when no sign-in method is recorded", () => {
+    expect(
+      getProvenEmail({
+        user: { ...user, lastLoginMethod: null },
+        trustedLoginMethods,
+      }),
+    ).toBeNull();
+  });
+
+  it("returns null when the email is not verified", () => {
+    expect(
+      getProvenEmail({
+        user: { ...user, lastLoginMethod: "google", emailVerified: false },
+        trustedLoginMethods,
+      }),
+    ).toBeNull();
+  });
+
+  it("returns null for a guest", () => {
+    expect(
+      getProvenEmail({
+        user: { ...user, isAnonymous: true },
+        trustedLoginMethods,
+      }),
+    ).toBeNull();
   });
 });
