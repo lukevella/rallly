@@ -31,8 +31,12 @@ export class InvitePage {
     }
     await page.getByRole("button", { name: "Confirm" }).click();
 
+    // A response with an email is not thanked by name: the page says the
+    // same thing whether or not the address already had a response.
     await expect(
-      page.getByRole("heading", { name: `Thanks, ${name}` }),
+      page.getByRole("heading", {
+        name: email ? "Check your email" : `Thanks, ${name}`,
+      }),
     ).toBeVisible();
   }
 }

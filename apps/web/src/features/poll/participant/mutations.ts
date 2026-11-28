@@ -10,7 +10,6 @@ import {
 } from "@/features/poll/invite/mutations";
 import { revalidatePollPages } from "@/features/poll/mutations";
 import { generateAccessToken } from "@/features/poll/utils";
-import type { SpaceTier } from "@/features/space/schema";
 import { scheduleWebhookDispatch } from "@/features/webhook/mutations";
 
 type WriteRefusal = "notFound" | "closed" | "full" | "tentativeVotesNotAllowed";
@@ -99,32 +98,47 @@ function refusal(error: unknown) {
   throw error;
 }
 
+const responsePollSelect = {
+  id: true,
+  userId: true,
+  title: true,
+  allowTentativeVotes: true,
+  space: {
+    select: {
+      id: true,
+      tier: true,
+      showBranding: true,
+      hideAttribution: true,
+      primaryColor: true,
+      image: true,
+    },
+  },
+} satisfies Prisma.PollSelect;
+
+export type ResponsePoll = Prisma.PollGetPayload<{
+  select: typeof responsePollSelect;
+}>;
+
 export type AddParticipantResult =
   | {
       ok: true;
+      created: true;
       participant: {
         id: string;
         name: string;
         email: string | null;
         note: string | null;
       };
-      poll: {
-        id: string;
-        userId: string | null;
-        title: string;
-        allowTentativeVotes: boolean;
-        space: {
-          id: string;
-          tier: SpaceTier;
-          showBranding: boolean;
-          hideAttribution: boolean;
-          primaryColor: string | null;
-          image: string | null;
-        } | null;
-      };
+      poll: ResponsePoll;
       editToken: string;
       viaInvite: boolean;
       totalResponses: number;
+    }
+  | {
+      ok: true;
+      created: false;
+      existingResponse: { id: string; email: string | null; token: string };
+      poll: ResponsePoll;
     }
   | { ok: false; reason: WriteRefusal };
 
@@ -132,6 +146,10 @@ export type AddParticipantResult =
  * Saves a new response. The response belongs to no user: its token, held in
  * the voter's cookie and in the emailed link, is what proves who may edit it.
  * `actorUserId` is the session user, if any, for the activity log only.
+ *
+ * A poll keeps one response per email address. When `email` already has a
+ * response, nothing is written and the existing response comes back, so the
+ * caller can email its edit link to that address.
  */
 export async function addParticipant({
   pollId,
@@ -185,6 +203,25 @@ export async function addParticipant({
         throw new WriteRefusedError("full");
       }
 
+      // Read under the lock, so a concurrent submit with the same address
+      // cannot pass this check too. The column is citext.
+      const existingResponse = email
+        ? await tx.participant.findUnique({
+            where: { pollId_email: { pollId, email } },
+            select: {
+              id: true,
+              email: true,
+              token: true,
+              poll: { select: responsePollSelect },
+            },
+          })
+        : null;
+
+      if (existingResponse) {
+        const { poll, ...response } = existingResponse;
+        return { created: false as const, existingResponse: response, poll };
+      }
+
       // A response answering an emailed invite takes the invite's token, so
       // the link the invitee already holds names it.
       const invite = token
@@ -216,24 +253,7 @@ export async function addParticipant({
           name: true,
           email: true,
           note: true,
-          poll: {
-            select: {
-              id: true,
-              userId: true,
-              title: true,
-              allowTentativeVotes: true,
-              space: {
-                select: {
-                  id: true,
-                  tier: true,
-                  showBranding: true,
-                  hideAttribution: true,
-                  primaryColor: true,
-                  image: true,
-                },
-              },
-            },
-          },
+          poll: { select: responsePollSelect },
         },
       });
 
@@ -261,6 +281,7 @@ export async function addParticipant({
       const { poll, ...participantFields } = participant;
 
       return {
+        created: true as const,
         participant: participantFields,
         poll,
         editToken,
@@ -269,7 +290,9 @@ export async function addParticipant({
       };
     });
 
-    revalidatePollPages();
+    if (result.created) {
+      revalidatePollPages();
+    }
 
     return { ok: true, ...result };
   } catch (error) {

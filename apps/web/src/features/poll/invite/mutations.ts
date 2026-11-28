@@ -146,13 +146,9 @@ export async function sendPollInvite({
     return { ok: false, reason: "dailyLimit" };
   }
 
-  // Participant.email is plain text, so the match is made insensitive here;
-  // PollInvite.email is citext and its unique index handles it.
-  const participant = await prisma.participant.findFirst({
-    where: {
-      pollId,
-      email: { equals: email, mode: "insensitive" },
-    },
+  // Both emails are citext, so the unique lookups match any case.
+  const participant = await prisma.participant.findUnique({
+    where: { pollId_email: { pollId, email } },
     select: { id: true },
   });
 

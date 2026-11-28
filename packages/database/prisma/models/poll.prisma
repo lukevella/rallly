@@ -80,7 +80,8 @@ model Poll {
 model Participant {
   id        String    @id @default(cuid())
   name      String
-  email     String?
+  /// One response per address on a poll. A submit with an address that already has a response writes nothing and emails that response's edit link instead
+  email     String?   @db.Citext
   note      String?
   /// Per response edit link: grants edit access to this response without a session. App minted at creation, CSPRNG alphanumeric ≥32 chars (nanoid customAlphabet — url safe with no linkifier edge cases, unlike base64url); never a DB default so a code path that forgets to mint fails loudly. A response created through an emailed invite takes the invite's token. Rows that predate minting were backfilled with gen_random_uuid() hex
   token     String    @unique
@@ -97,6 +98,7 @@ model Participant {
   poll Poll  @relation(fields: [pollId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@unique([pollId, email])
   @@index([pollId], type: Hash)
   @@index([userId])
   @@map("participants")

@@ -1328,65 +1328,35 @@ export const polls = router({
         method: "publish",
       });
 
-      // A poll can have several participants sharing an email; an event holds at
-      // most one invite per email, so collapse them, keeping the most committal
-      // response (accepted > tentative > declined > pending) so a stale "no"
-      // duplicate can't bury an "accepted". No vote on the option is pending,
-      // not declined: the invitee never answered.
+      // No vote on the option is pending, not declined: the invitee never
+      // answered.
       const inviteStatusByVote = {
         yes: "accepted",
         ifNeedBe: "tentative",
         no: "declined",
       } as const;
-      const inviteStatusRank = {
-        accepted: 0,
-        tentative: 1,
-        declined: 2,
-        pending: 3,
-      };
-      const invitesByEmail = new Map<
-        string,
-        {
-          uid: string;
-          inviteeName: string;
-          inviteeEmail: string;
-          inviteeTimeZone: string | null | undefined;
-          inviteeLocale: string | null;
-          status: keyof typeof inviteStatusRank;
-        }
-      >();
-      // An address is emailed when any participant behind it was selected.
       const notifyIds = new Set(input.notifyParticipantIds);
-      const notifyEmails = new Set(
-        poll.participants.flatMap((p) =>
-          p.email && notifyIds.has(p.id) ? [p.email.trim().toLowerCase()] : [],
-        ),
-      );
-      for (const p of poll.participants) {
-        if (!p.email) continue;
+      const invites = poll.participants.flatMap((p) => {
+        if (!p.email) return [];
         const vote = p.votes.find((v) => v.optionId === input.optionId)?.type;
-        const status = vote ? inviteStatusByVote[vote] : "pending";
-        const key = p.email.trim().toLowerCase();
-        const existing = invitesByEmail.get(key);
-        if (
-          existing &&
-          inviteStatusRank[existing.status] <= inviteStatusRank[status]
-        ) {
-          continue;
-        }
-        invitesByEmail.set(key, {
-          uid: nanoid(),
-          inviteeName: p.name,
-          inviteeEmail: p.email,
-          inviteeTimeZone: p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
-          inviteeLocale: p.locale,
-          status,
-        });
-      }
-      const inviteData = Array.from(invitesByEmail.values());
-      const selectedInviteUids = Array.from(invitesByEmail)
-        .filter(([key]) => notifyEmails.has(key))
-        .map(([, invite]) => invite.uid);
+        return [
+          {
+            participantId: p.id,
+            invite: {
+              uid: nanoid(),
+              inviteeName: p.name,
+              inviteeEmail: p.email,
+              inviteeTimeZone: p.user?.timeZone ?? p.timeZone ?? poll.timeZone,
+              inviteeLocale: p.locale,
+              status: vote ? inviteStatusByVote[vote] : ("pending" as const),
+            },
+          },
+        ];
+      });
+      const inviteData = invites.map(({ invite }) => invite);
+      const selectedInviteUids = invites
+        .filter(({ participantId }) => notifyIds.has(participantId))
+        .map(({ invite }) => invite.uid);
 
       // Spent before the event is written, so the queue only ever holds
       // emails the budget allowed. The schedule goes ahead either way; the

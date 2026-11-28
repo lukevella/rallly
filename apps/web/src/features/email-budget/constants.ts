@@ -7,5 +7,6 @@ export const EMAIL_BUDGET_WINDOW = "24 h";
 
 export const EMAIL_BUDGET_KINDS = [
   "participant_confirmation",
+  "existing_response_link",
   "scheduled_event_invite",
 ] as const;

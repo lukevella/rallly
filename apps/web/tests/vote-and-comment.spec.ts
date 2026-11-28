@@ -2,6 +2,7 @@ import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { captureOne } from "@rallly/test-helpers";
 import { load } from "cheerio";
+import { InvitePage } from "./invite-page";
 import { NewPollPage } from "./new-poll-page";
 import type { PollPage } from "./poll-page";
 
@@ -69,6 +70,22 @@ test.describe(() => {
     }
 
     editSubmissionUrl = href;
+  });
+
+  test("a second response with the same email gets the existing edit link", async ({
+    page: newPage,
+  }) => {
+    await newPage.goto(`/invite/${pollId}`);
+    await new InvitePage(newPage).addParticipant(
+      "Impostor",
+      "TEST@example.com",
+    );
+
+    const { email } = await captureOne("test@example.com");
+    expect(email.Subject).toBe("Your response to Monthly Meetup");
+    expect(load(email.HTML)("#editSubmissionUrl").attr("href")).toBe(
+      editSubmissionUrl,
+    );
   });
 
   test("should be able to edit submission", async ({ page: newPage }) => {

@@ -62,7 +62,8 @@ interface NewParticipantModalProps {
   /** These fall back to the poll in context on the legacy surfaces. */
   pollId?: string;
   requireParticipantEmail?: boolean;
-  onSubmit?: (data: { id: string }) => void;
+  /** `id` is absent when the response was sent with an email address. */
+  onSubmit?: (data: { id?: string }) => void;
   onCancel?: () => void;
 }
 
@@ -189,6 +190,9 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
   const noteLength = watch("note")?.length ?? 0;
   const [showNote, setShowNote] = React.useState(false);
   const addParticipant = useAddParticipant();
+  // The address the edit link went to. The same answer whether or not it
+  // already had a response, so the form does not tell which.
+  const [checkEmailAt, setCheckEmailAt] = React.useState<string | null>(null);
   // An emailed invite link carries the invite token; the response takes it
   // over so the host sees who responded and the same link edits it later.
   const token = useEditToken();
@@ -200,20 +204,35 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
           <SuccessCheck state="in">
             <SuccessCheckIcon />
           </SuccessCheck>
-          <DialogHeader>
-            <DialogTitle>
-              <Trans
-                i18nKey="newParticipantDialogSuccessTitle"
-                defaults="Your response has been saved"
-              />
-            </DialogTitle>
-            <DialogDescription>
-              <Trans
-                i18nKey="newParticipantDialogSuccessDescription"
-                defaults="The organizer can now see your availability."
-              />
-            </DialogDescription>
-          </DialogHeader>
+          {checkEmailAt ? (
+            <DialogHeader>
+              <DialogTitle>
+                <Trans i18nKey="checkYourEmail" defaults="Check your email" />
+              </DialogTitle>
+              <DialogDescription>
+                <Trans
+                  i18nKey="responseLinkSent"
+                  defaults="We sent a link to {email}. Use it to see or change your response."
+                  values={{ email: checkEmailAt }}
+                />
+              </DialogDescription>
+            </DialogHeader>
+          ) : (
+            <DialogHeader>
+              <DialogTitle>
+                <Trans
+                  i18nKey="newParticipantDialogSuccessTitle"
+                  defaults="Your response has been saved"
+                />
+              </DialogTitle>
+              <DialogDescription>
+                <Trans
+                  i18nKey="newParticipantDialogSuccessDescription"
+                  defaults="The organizer can now see your availability."
+                />
+              </DialogDescription>
+            </DialogHeader>
+          )}
         </div>
         <Button className="w-full" onClick={props.onCancel}>
           <Trans
@@ -300,7 +319,12 @@ export const NewParticipantForm = (props: NewParticipantModalProps) => {
               poll_id: pollId,
               tier: poll?.space?.tier,
             });
-            props.onSubmit?.(result.participant);
+            if (result.checkEmail) {
+              setCheckEmailAt(data.email);
+              props.onSubmit?.({});
+            } else {
+              props.onSubmit?.(result.participant);
+            }
           })}
           className="space-y-4"
         >

@@ -193,10 +193,13 @@ export function AccessibleBallot({
   const barTextRef = React.useRef<HTMLParagraphElement>(null);
   const thanksHeadingRef = React.useRef<HTMLHeadingElement>(null);
   // What was just saved, said above the answers until the page is left: a first
-  // response or a change to one. A later visit has only the response bar.
+  // response or a change to one. A later visit has only the response bar. A
+  // response sent with an email says to check it instead, whether or not that
+  // address already had a response, so the page does not tell which.
   const [justSaved, setJustSaved] = React.useState<
-    "response" | "changes" | null
+    "response" | "changes" | "checkEmail" | null
   >(null);
+  const [linkSentTo, setLinkSentTo] = React.useState("");
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const [sidebarScrolls, setSidebarScrolls] = React.useState(false);
 
@@ -431,11 +434,16 @@ export function AccessibleBallot({
     hadChanges.current = hasChanges;
   }, [hasChanges]);
   // Not while there are changes to save: it would say saved over unsaved answers.
-  const notice = active && ballot.canRespond && !hasChanges ? justSaved : null;
+  const notice =
+    justSaved === "checkEmail"
+      ? justSaved
+      : active && ballot.canRespond && !hasChanges
+        ? justSaved
+        : null;
   // A first response is thanked in place of the form, until the viewer goes
   // back to it. The thanks is as short as the details step, so the card and a
   // phone's page are laid out the same way for both.
-  const showThanks = notice === "response";
+  const showThanks = notice === "response" || notice === "checkEmail";
   const compactCard = onDetailsStep || showThanks;
   const showShortcuts = isNew && votable.length > 1;
   // The option the organizer picked, where the event still lines up with one.
@@ -524,13 +532,15 @@ export function AccessibleBallot({
       return;
     }
     const target =
-      state.mode === "new"
-        ? formHeadingRef.current
-        : ((notice === "response"
-            ? thanksHeadingRef.current
-            : notice === "changes"
-              ? barTextRef.current
-              : null) ?? formHeadingRef.current);
+      notice === "checkEmail"
+        ? thanksHeadingRef.current
+        : state.mode === "new"
+          ? formHeadingRef.current
+          : ((notice === "response"
+              ? thanksHeadingRef.current
+              : notice === "changes"
+                ? barTextRef.current
+                : null) ?? formHeadingRef.current);
     target?.focus({ preventScroll: true });
   }, [state.mode, notice, hasChanges, t]);
   React.useEffect(() => {
@@ -712,7 +722,7 @@ export function AccessibleBallot({
     // So what this save announces reads as new, even with the same words.
     setStatus("");
     let result:
-      | { ok: true }
+      | { ok: true; checkEmail?: boolean }
       | { ok: false; reason: string; detail?: FailureDetail };
     if (isNew) {
       result = await runBallotAction(() =>
@@ -751,7 +761,11 @@ export function AccessibleBallot({
       return;
     }
     setAnswersBeforeShortcut(null);
-    setJustSaved(isNew ? "response" : "changes");
+    const checkEmail = isNew && result.checkEmail === true;
+    if (checkEmail) {
+      setLinkSentTo(String(data.get("email") ?? "").trim());
+    }
+    setJustSaved(checkEmail ? "checkEmail" : isNew ? "response" : "changes");
     if (isNew) {
       // poll_response_submit is captured on the server under the session user
       // or the response id, so it can't be joined to the browser's $pageview.
@@ -772,9 +786,11 @@ export function AccessibleBallot({
     // The next response, after this one is deleted, starts with none used.
     usedMarkAll.current = false;
     setStatus(
-      isNew
-        ? t("voteNoticeResponseSaved", { defaultValue: "Response saved" })
-        : t("voteNoticeChangesSaved", { defaultValue: "Changes saved" }),
+      checkEmail
+        ? t("checkYourEmail", { defaultValue: "Check your email" })
+        : isNew
+          ? t("voteNoticeResponseSaved", { defaultValue: "Response saved" })
+          : t("voteNoticeChangesSaved", { defaultValue: "Changes saved" }),
     );
   };
 
@@ -1430,6 +1446,47 @@ export function AccessibleBallot({
               />
             </span>
           </output>
+        ) : notice === "checkEmail" ? (
+          <section
+            aria-labelledby="thanks-heading"
+            className="flex flex-1 flex-col items-center justify-center py-8 text-center"
+          >
+            <SuccessCheck state="in">
+              <SuccessCheckIcon />
+            </SuccessCheck>
+            <h2
+              id="thanks-heading"
+              ref={thanksHeadingRef}
+              tabIndex={-1}
+              className="mt-4 text-balance font-semibold text-lg tracking-tight outline-none"
+            >
+              <Trans i18nKey="checkYourEmail" defaults="Check your email" />
+            </h2>
+            <p className="mt-1 max-w-xs text-pretty text-muted-foreground text-sm">
+              <Trans
+                i18nKey="responseLinkSent"
+                defaults="We sent a link to {email}. Use it to see or change your response."
+                values={{ email: linkSentTo }}
+              />
+            </p>
+            <Button
+              type="button"
+              className="mt-6"
+              onClick={() => {
+                capture("poll_vote:check_email_back_click");
+                cardBefore.current =
+                  mainRef.current
+                    ?.closest("[data-invite-card]")
+                    ?.getBoundingClientRect() ?? null;
+                setJustSaved(null);
+                requestAnimationFrame(() =>
+                  formHeadingRef.current?.focus({ preventScroll: true }),
+                );
+              }}
+            >
+              <Trans i18nKey="backToPoll" defaults="Back to poll" />
+            </Button>
+          </section>
         ) : showThanks && active ? (
           <section
             aria-labelledby="thanks-heading"

@@ -1,5 +1,6 @@
 "use server";
 
+import { sendExistingResponseEmail } from "@rallly/emails/templates/existing-response";
 import { sendNewParticipantEmail } from "@rallly/emails/templates/new-participant";
 import { sendNewParticipantConfirmationEmail } from "@rallly/emails/templates/new-participant-confirmation";
 import { createLogger } from "@rallly/logger";
@@ -12,6 +13,7 @@ import { env } from "@/env";
 import { resolveSpaceTier } from "@/features/billing/utils";
 import { chargeEmailBudget } from "@/features/email-budget/mutations";
 import { EmailBudgetStore } from "@/features/email-budget/service";
+import type { EmailBudgetKind } from "@/features/email-budget/types";
 import { getNotificationRecipient } from "@/features/notifications/data";
 import { createUnsubscribeToken } from "@/features/notifications/utils";
 import {
@@ -20,6 +22,7 @@ import {
   listParticipantIdsByTokens,
 } from "@/features/poll/data";
 import { getPollInvitePath } from "@/features/poll/invite/utils";
+import type { ResponsePoll } from "@/features/poll/participant/mutations";
 import {
   addParticipant,
   deleteParticipant,
@@ -41,7 +44,7 @@ import { getLocale } from "@/i18n/server/get-locale";
 import { runtime } from "@/lib/effect/runtime";
 import { AppError } from "@/lib/errors/app-error";
 import { flushPostHog, track, trackSystemEvent } from "@/lib/posthog";
-import { createRateLimitGuard } from "@/lib/rate-limit";
+import { createRateLimitGuard, createRatelimit } from "@/lib/rate-limit";
 import {
   createRateLimitMiddleware,
   optionalUserActionClient,
@@ -57,6 +60,9 @@ const logger = createLogger("participants");
 // one address in one poll do not touch real use.
 const pollResponseGuard = createRateLimitGuard(200, "1 h");
 const ipPollResponseGuard = createRateLimitGuard(100, "1 h");
+// Anyone can type an address, so the edit link of a response is sent again
+// at most this often. Past it the submit still says to check the email.
+const existingResponseLinkLimit = createRatelimit(3, "1 h");
 
 type Actor = { id: string; isGuest: boolean };
 
@@ -229,6 +235,82 @@ async function sendNewResponseNotificationEmail({
   }
 }
 
+/**
+ * Charges one email to the poll owner: the address was typed by the
+ * responder, so a host cannot use their poll to mail strangers.
+ */
+async function chargeResponseEmail(poll: ResponsePoll, kind: EmailBudgetKind) {
+  const { allowed } = await runtime.runPromise(
+    chargeEmailBudget({
+      ownerId: poll.userId,
+      tier: resolveSpaceTier(poll.space?.tier ?? "hobby"),
+      pollId: poll.id,
+      kind,
+      recipients: 1,
+    }).pipe(Effect.provide(EmailBudgetStore.layer)),
+  );
+  return allowed > 0;
+}
+
+async function getResponseEmailBranding(poll: ResponsePoll) {
+  return poll.space
+    ? await getSpaceBranding(poll.space)
+    : await getInstanceBranding();
+}
+
+async function sendExistingResponseLink({
+  email,
+  locale,
+  poll,
+  token,
+}: {
+  email: string;
+  locale: string;
+  poll: ResponsePoll;
+  token: string;
+}) {
+  const limited =
+    existingResponseLinkLimit &&
+    !(
+      await existingResponseLinkLimit.limit(
+        `existing_response_link:${poll.id}:${email.toLowerCase()}`,
+      )
+    ).success;
+
+  const outcome = limited
+    ? "rate_limited"
+    : (await chargeResponseEmail(poll, "existing_response_link"))
+      ? "sent"
+      : "budget_exhausted";
+
+  if (outcome === "sent") {
+    await sendExistingResponseEmail({
+      to: email,
+      locale,
+      branding: await getResponseEmailBranding(poll),
+      props: {
+        title: poll.title,
+        editSubmissionUrl: shortUrl(
+          getPollInvitePath({ pollId: poll.id, token }),
+        ),
+      },
+    });
+  }
+
+  // A system event: the submit is not joined to the response it matched,
+  // since the person who typed the address may not own it.
+  trackSystemEvent({
+    event: "poll_response:existing_email_submit",
+    properties: {
+      poll_id: poll.id,
+      space_id: poll.space?.id,
+      tier: poll.space?.tier,
+      outcome,
+    },
+  });
+  await flushPostHog();
+}
+
 export const addParticipantAction = optionalUserActionClient
   .metadata({ actionName: "add_participant" })
   .use(createRateLimitMiddleware({ requests: 60, duration: "1 m", by: "ip" }))
@@ -262,32 +344,37 @@ export const addParticipantAction = optionalUserActionClient
       return result;
     }
 
+    // Nothing was written, and the result is the same as for a new response
+    // with an email, so a submit does not tell whether an address responded.
+    if (!result.created) {
+      const { poll, existingResponse } = result;
+      if (existingResponse.email) {
+        const existingEmail = existingResponse.email;
+        after(() =>
+          sendExistingResponseLink({
+            email: existingEmail,
+            locale,
+            poll,
+            token: existingResponse.token,
+          }),
+        );
+      }
+      return { ok: true as const, checkEmail: true as const };
+    }
+
     const { participant, poll, editToken, viaInvite, totalResponses } = result;
 
     await rememberVoterToken(pollId, editToken);
 
     if (email) {
       after(async () => {
-        // Sent to an address the responder typed, so it is charged to the
-        // poll owner: a host cannot use their poll to mail strangers.
-        const { allowed } = await runtime.runPromise(
-          chargeEmailBudget({
-            ownerId: poll.userId,
-            tier: resolveSpaceTier(poll.space?.tier ?? "hobby"),
-            pollId: poll.id,
-            kind: "participant_confirmation",
-            recipients: 1,
-          }).pipe(Effect.provide(EmailBudgetStore.layer)),
-        );
-        if (allowed === 0) {
+        if (!(await chargeResponseEmail(poll, "participant_confirmation"))) {
           return;
         }
         await sendNewParticipantConfirmationEmail({
           to: email,
           locale,
-          branding: poll.space
-            ? await getSpaceBranding(poll.space)
-            : await getInstanceBranding(),
+          branding: await getResponseEmailBranding(poll),
           props: {
             title: poll.title,
             editSubmissionUrl: shortUrl(
@@ -341,7 +428,13 @@ export const addParticipantAction = optionalUserActionClient
       groups: { poll: pollId },
     });
 
-    return { ok: true as const, participant: { id: participant.id } };
+    return email
+      ? { ok: true as const, checkEmail: true as const }
+      : {
+          ok: true as const,
+          checkEmail: false as const,
+          participant: { id: participant.id },
+        };
   });
 
 export const updateParticipantVotesAction = optionalUserActionClient
