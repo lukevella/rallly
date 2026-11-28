@@ -16,6 +16,7 @@ import { loadAdminPoll, loadPollActivity } from "@/features/poll/loaders";
 import { loadActiveSpace } from "@/features/space/loaders";
 import { getTranslation } from "@/i18n/server";
 import { LEGACY_VIEW_PARAM, LEGACY_VIEW_VALUE } from "@/lib/poll-admin-view";
+import { BestDateHighlightProvider } from "./components/best-date-highlight";
 import { PollActivitySection } from "./components/poll-activity";
 import { PollBreadcrumb } from "./components/poll-breadcrumb";
 import { PollDetails } from "./components/poll-details";
@@ -109,61 +110,63 @@ export default async function Page({
               comments={comments}
               viewerRole="admin"
             >
-              <PollStatusCard
-                pollId={poll.id}
-                status={poll.status}
-                inviteLink={poll.inviteLink}
-                event={poll.event}
-                floating={poll.timeZone === null}
-              />
-              <PollStats
-                responseCount={participants.length}
-                invitedCount={invites.length}
-                respondedInviteCount={
-                  invites.filter((invite) => invite.participantId).length
-                }
-                inviteAction={
-                  <ShareButton pollId={poll.id} pollStatus={poll.status} />
-                }
-                options={poll.options}
-                participants={participants}
-                timeZone={poll.timeZone}
-                canFinalize={poll.status !== "scheduled"}
-              />
-              <PollSections>
-                <PollResults
-                  title={
-                    <Trans
-                      t={t}
-                      i18n={i18n}
-                      ns="app"
-                      i18nKey="pollResultsHeading"
-                      defaults="Results"
-                    />
+              <BestDateHighlightProvider>
+                <PollStatusCard
+                  pollId={poll.id}
+                  status={poll.status}
+                  inviteLink={poll.inviteLink}
+                  event={poll.event}
+                  floating={poll.timeZone === null}
+                />
+                <PollStats
+                  responseCount={participants.length}
+                  invitedCount={invites.length}
+                  respondedInviteCount={
+                    invites.filter((invite) => invite.participantId).length
+                  }
+                  inviteAction={
+                    <ShareButton pollId={poll.id} pollStatus={poll.status} />
                   }
                   options={poll.options}
-                  participants={tableParticipants}
+                  participants={participants}
                   timeZone={poll.timeZone}
-                  canPick={poll.status !== "scheduled"}
+                  canFinalize={poll.status !== "scheduled"}
                 />
-                {activity.length > 0 || comments.length > 0 ? (
-                  <PollActivitySection
-                    activity={activity}
-                    participants={participants}
-                    comments={comments}
-                    timeZone={poll.timeZone}
+                <PollSections>
+                  <PollResults
                     title={
                       <Trans
                         t={t}
                         i18n={i18n}
                         ns="app"
-                        i18nKey="pollActivityHeading"
-                        defaults="Activity"
+                        i18nKey="pollResultsHeading"
+                        defaults="Results"
                       />
                     }
+                    options={poll.options}
+                    participants={tableParticipants}
+                    timeZone={poll.timeZone}
+                    canPick={poll.status !== "scheduled"}
                   />
-                ) : null}
-              </PollSections>
+                  {activity.length > 0 || comments.length > 0 ? (
+                    <PollActivitySection
+                      activity={activity}
+                      participants={participants}
+                      comments={comments}
+                      timeZone={poll.timeZone}
+                      title={
+                        <Trans
+                          t={t}
+                          i18n={i18n}
+                          ns="app"
+                          i18nKey="pollActivityHeading"
+                          defaults="Activity"
+                        />
+                      }
+                    />
+                  ) : null}
+                </PollSections>
+              </BestDateHighlightProvider>
             </PollProvider>
           </div>
         </PageColumn>

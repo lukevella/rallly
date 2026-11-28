@@ -932,7 +932,6 @@
   "pollStatsAwaiting": "Awaiting {count}",
   "pollStatsBestDate": "Best date",
   "pollStatsCanMakeItOfTotal": "{count} of {total} can make it",
-  "pollStatsFinalize": "Finalize",
   "pollStatsInviteByEmail": "Invite by email",
   "pollStatsNextTiedDate": "Next tied date",
   "pollStatsNoAvailableDate": "No dates with availability yet",

@@ -21,6 +21,7 @@ import {
 } from "@/features/poll/utils";
 import { Trans, useTranslation } from "@/i18n/client";
 import { useDateTime } from "@/lib/datetime/client";
+import { useBestDateHighlight } from "./best-date-highlight";
 import { FinalizeDialog } from "./finalize-dialog";
 import { optionZone } from "./poll-results";
 
@@ -101,8 +102,8 @@ export function PollStats({
 /**
  * The date with the most availability and how many can make it. When several
  * tie, it opens on the recommended one (most yes, then fewest if need be,
- * then earliest) and the arrows beside Finalize step through the others;
- * Finalize applies to the date shown.
+ * then earliest) and the arrows beside Pick this date step through the others;
+ * Picking applies to the date shown.
  */
 function BestDateCard({
   options,
@@ -140,6 +141,12 @@ function BestDateCard({
   // The tie list can shrink as responses arrive; keep the index inside it.
   const index = Math.max(0, Math.min(rawIndex, top.length - 1));
   const current = top[index];
+  // The results ring the date shown here.
+  const { setOptionId: setHighlightedId } = useBestDateHighlight();
+  const currentId = current?.id ?? null;
+  React.useEffect(() => {
+    setHighlightedId(currentId);
+  }, [currentId, setHighlightedId]);
   // Captured on open, so a refresh that reranks dates can't swap the date
   // the dialog is booking or has booked.
   const [finalizeOptionId, setFinalizeOptionId] = React.useState<string | null>(
@@ -202,7 +209,10 @@ function BestDateCard({
                 finalizeDialog.trigger();
               }}
             >
-              <Trans i18nKey="pollStatsFinalize" defaults="Finalize" />
+              <Trans
+                i18nKey="pollResultsPickThisDate"
+                defaults="Pick this date"
+              />
             </Button>
           ) : null}
         </div>
